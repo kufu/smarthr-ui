@@ -9,7 +9,6 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
-import { DropdownScrollArea } from '../DropdownScrollArea'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
@@ -156,9 +155,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <DropdownScrollArea>
-          <div className={innerStyle}>{children}</div>
-        </DropdownScrollArea>
+        <div className={innerStyle}>{children}</div>
         <Stack gap={0.5} className={actionAreaStyle}>
           <Cluster gap={1} align="center" justify="space-between">
             {onReset && (

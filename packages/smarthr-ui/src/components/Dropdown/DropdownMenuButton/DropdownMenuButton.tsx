@@ -10,7 +10,7 @@ import React, {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '..'
+import { Dropdown, DropdownContent, DropdownTrigger } from '..'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
@@ -74,7 +74,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const containerRef = React.useRef<HTMLUListElement>(null)
 
   const triggerLabel = useMemo(() => {
     const Icon = TriggerIcon || FaEllipsisIcon
@@ -114,13 +114,13 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent>
-        <DropdownScrollArea as="ul" ref={containerRef} className={actionListStyle}>
+        <ul ref={containerRef} className={actionListStyle}>
           {React.Children.map(children, (item, i) =>
             // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
             // itemの存在チェックでfalsyな値は弾かれている想定
             item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
           )}
-        </DropdownScrollArea>
+        </ul>
       </DropdownContent>
     </Dropdown>
   )

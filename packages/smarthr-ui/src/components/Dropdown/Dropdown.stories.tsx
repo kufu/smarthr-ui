@@ -17,7 +17,6 @@ import { Dropdown } from './Dropdown'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownContent } from './DropdownContent'
 import { DropdownMenuButton } from './DropdownMenuButton'
-import { DropdownScrollArea } from './DropdownScrollArea'
 import { DropdownTrigger } from './DropdownTrigger'
 import { FilterDropdown } from './FilterDropdown'
 import { SortDropdown } from './SortDropdown'
@@ -32,7 +31,6 @@ export default {
     DropdownTrigger,
     DropdownContent,
     DropdownCloser,
-    DropdownScrollArea,
   },
   parameters: {
     withTheming: true,
@@ -72,65 +70,61 @@ export const ControllableDropdown = () => {
           <TriggerButton data-test="controlled-dropdown-trigger">制御された Dropdown</TriggerButton>
         </DropdownTrigger>
         <DropdownContent controllable>
-          <DropdownScrollArea>
-            <ControllableBoxDiv>
-              <Fieldset title="Dropdown内部">
-                <Text as="p">
-                  `DropdownControllableContent` を使うとドロップダウン制御できます。
-                </Text>
-                <Text as="p">
-                  制御されたドロップダウン内のコンテンツをクリックしても、ドロップダウンは閉じません。
-                  <br />
-                  ドロップダウンを閉じたいときは、`DropdownCloser` を使います。
-                </Text>
-                <Stack align="flex-start">
-                  <RadioButtonList>
-                    <li>
-                      <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
-                        hoge
-                      </RadioButton>
-                    </li>
-                    <li>
-                      <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
-                        fuga
-                      </RadioButton>
-                    </li>
-                    <li>
-                      <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
-                        piyo
-                      </RadioButton>
-                    </li>
-                  </RadioButtonList>
-                  <Input name="test" value={text} onChange={onChangeText} title="test" />
-                  <DropdownCloser>
-                    <Button
-                      onClick={() => setIsDialogOpen(true)}
-                      aria-controls="dropdown-dialog"
-                      aria-haspopup="dialog"
-                      data-test="dropdown-dialog-trigger"
-                    >
-                      ダイアログを開く
-                    </Button>
-                  </DropdownCloser>
-                </Stack>
-              </Fieldset>
-            </ControllableBoxDiv>
-            <ControllableBoxBottom>
-              <Cluster justify="flex-end">
+          <ControllableBoxDiv>
+            <Fieldset title="Dropdown内部">
+              <Text as="p">`DropdownControllableContent` を使うとドロップダウン制御できます。</Text>
+              <Text as="p">
+                制御されたドロップダウン内のコンテンツをクリックしても、ドロップダウンは閉じません。
+                <br />
+                ドロップダウンを閉じたいときは、`DropdownCloser` を使います。
+              </Text>
+              <Stack align="flex-start">
+                <RadioButtonList>
+                  <li>
+                    <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
+                      hoge
+                    </RadioButton>
+                  </li>
+                  <li>
+                    <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
+                      fuga
+                    </RadioButton>
+                  </li>
+                  <li>
+                    <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
+                      piyo
+                    </RadioButton>
+                  </li>
+                </RadioButtonList>
+                <Input name="test" value={text} onChange={onChangeText} title="test" />
                 <DropdownCloser>
-                  <Button>Close only</Button>
-                </DropdownCloser>
-                <DropdownCloser>
-                  <Button variant="primary" onClick={action('clicked button 1')}>
-                    Action and close
+                  <Button
+                    onClick={() => setIsDialogOpen(true)}
+                    aria-controls="dropdown-dialog"
+                    aria-haspopup="dialog"
+                    data-test="dropdown-dialog-trigger"
+                  >
+                    ダイアログを開く
                   </Button>
                 </DropdownCloser>
-                <Button variant="primary" onClick={action('clicked button 2')}>
-                  Action only
+              </Stack>
+            </Fieldset>
+          </ControllableBoxDiv>
+          <ControllableBoxBottom>
+            <Cluster justify="flex-end">
+              <DropdownCloser>
+                <Button>Close only</Button>
+              </DropdownCloser>
+              <DropdownCloser>
+                <Button variant="primary" onClick={action('clicked button 1')}>
+                  Action and close
                 </Button>
-              </Cluster>
-            </ControllableBoxBottom>
-          </DropdownScrollArea>
+              </DropdownCloser>
+              <Button variant="primary" onClick={action('clicked button 2')}>
+                Action only
+              </Button>
+            </Cluster>
+          </ControllableBoxBottom>
         </DropdownContent>
       </Dropdown>
       <Dialog isOpen={isDialogOpen} id="dropdown-dialog">
@@ -173,29 +167,25 @@ const Template: StoryFn = () => (
             <Button>入れ子にできる Dropdown</Button>
           </DropdownTrigger>
           <DropdownContent controllable>
-            <DropdownScrollArea>
-              <ControllableBoxDiv>
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button>さらに入れ子にできる Dropdown</Button>
-                  </DropdownTrigger>
-                  <DropdownContent controllable>
-                    <DropdownScrollArea>
-                      <ControllableBoxDiv>
-                        <Dropdown>
-                          <DropdownTrigger>
-                            <TriggerButton>いくらでも入れ子にできる Dropdown</TriggerButton>
-                          </DropdownTrigger>
-                          <DropdownContent>
-                            <ListMenu />
-                          </DropdownContent>
-                        </Dropdown>
-                      </ControllableBoxDiv>
-                    </DropdownScrollArea>
-                  </DropdownContent>
-                </Dropdown>
-              </ControllableBoxDiv>
-            </DropdownScrollArea>
+            <ControllableBoxDiv>
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button>さらに入れ子にできる Dropdown</Button>
+                </DropdownTrigger>
+                <DropdownContent controllable>
+                  <ControllableBoxDiv>
+                    <Dropdown>
+                      <DropdownTrigger>
+                        <TriggerButton>いくらでも入れ子にできる Dropdown</TriggerButton>
+                      </DropdownTrigger>
+                      <DropdownContent>
+                        <ListMenu />
+                      </DropdownContent>
+                    </Dropdown>
+                  </ControllableBoxDiv>
+                </DropdownContent>
+              </Dropdown>
+            </ControllableBoxDiv>
           </DropdownContent>
         </Dropdown>
       </li>

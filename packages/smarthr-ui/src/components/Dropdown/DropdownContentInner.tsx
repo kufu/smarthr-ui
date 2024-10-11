@@ -17,19 +17,11 @@ import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
 const contentInner = tv({
-  slots: {
-    wrapper:
-      'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-flex shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3',
-    controllableWrapper: 'shr-flex shr-flex-col',
-  },
+  base: 'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3 shr-overflow-y-auto',
   variants: {
     isActive: {
-      true: {
-        wrapper: 'shr-visible',
-      },
-      false: {
-        wrapper: 'shr-invisible',
-      },
+      true: 'shr-visible',
+      false: 'shr-invisible',
     },
   },
 })
@@ -64,8 +56,6 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  const { wrapper, controllableWrapper } = useMemo(() => contentInner(), [])
-
   const wrapperStyleProps = useMemo(() => {
     const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
     const rightMargin =
@@ -73,7 +63,7 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
     const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
     return {
-      className: `${wrapper({ isActive, className })}`,
+      className: contentInner({ isActive, className }),
       style: {
         insetBlockStart: contentBox.top,
         insetInlineStart: contentBox.left || undefined,
@@ -81,15 +71,14 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
         maxWidth: maxWidthStyle,
       },
     }
-  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive, wrapper])
+  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive])
   const controllableWrapperStyleProps = useMemo(
     () => ({
-      className: controllableWrapper(),
       style: {
         maxHeight: contentBox.maxHeight || undefined,
       },
     }),
-    [contentBox.maxHeight, controllableWrapper],
+    [contentBox.maxHeight],
   )
 
   useEffect(() => {
