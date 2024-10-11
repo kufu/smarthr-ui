@@ -12,8 +12,6 @@ type Props = {
   text?: ReactNode
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
-  /** 表示を遅延させるかどうか */
-  deferDisplay?: boolean
   as?: string | React.ComponentType<any>
 }
 type ElementProps = Omit<ComponentProps<'span'>, keyof Props>
@@ -120,13 +118,6 @@ const loaderStyle = tv({
         ],
       },
     },
-    deferDisplay: {
-      true: {
-        // NOTE: Loaderの表示時間が短い場合のUIのちらつきを抑えるため、opacityの変化でアニメーションの表示を遅延させる
-        wrapper: 'shr-opacity-0 shr-animate-[loader-fade-in_0s_ease_200ms_forwards]',
-      },
-      false: {},
-    },
   },
 })
 export const Loader: FC<Props & ElementProps> = ({
@@ -135,14 +126,12 @@ export const Loader: FC<Props & ElementProps> = ({
   text,
   type = 'primary',
   role = 'status',
-  deferDisplay = true,
   className,
   ...props
 }) => {
   const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
     type,
     size,
-    deferDisplay,
   })
   const wrapperStyle = useMemo(() => wrapper({ className }), [wrapper, className])
   const spinnerStyle = useMemo(() => spinner(), [spinner])
