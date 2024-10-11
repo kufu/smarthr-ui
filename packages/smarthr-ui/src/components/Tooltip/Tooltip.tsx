@@ -101,7 +101,10 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const getHandlerToShow = useCallback(
     <T,>(handler?: (e: T) => void) =>
       (e: T) => {
-        handler && handler(e)
+        if (handler) {
+          handler(e)
+        }
+
         if (!ref.current) {
           return
         }
@@ -115,6 +118,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
           )
           const wrapperWidth = ref.current.clientWidth
           const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
+
           if (!existsEllipsis) {
             return
           }
@@ -129,7 +133,10 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const getHandlerToHide = useCallback(
     <T,>(handler?: (e: T) => void) =>
       (e: T) => {
-        handler && handler(e)
+        if (handler) {
+          handler(e)
+        }
+
         setIsVisible(false)
       },
     [setIsVisible],
