@@ -36,7 +36,6 @@ const contentInner = tv({
 
 type Props = PropsWithChildren<{
   triggerRect: Rect
-  scrollable: boolean
   controllable: boolean
 }>
 
@@ -52,7 +51,6 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
 
 export const DropdownContentInner: FC<Props & ElementProps> = ({
   triggerRect,
-  scrollable,
   children,
   className,
   controllable,
@@ -83,15 +81,15 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
         maxWidth: maxWidthStyle,
       },
     }
-  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive, spacing, wrapper])
+  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive, wrapper])
   const controllableWrapperStyleProps = useMemo(
     () => ({
       className: controllableWrapper(),
       style: {
-        maxHeight: contentBox.maxHeight && scrollable ? contentBox.maxHeight : 'initial',
+        maxHeight: contentBox.maxHeight || undefined,
       },
     }),
-    [contentBox.maxHeight, scrollable, controllableWrapper],
+    [contentBox.maxHeight, controllableWrapper],
   )
 
   useEffect(() => {
