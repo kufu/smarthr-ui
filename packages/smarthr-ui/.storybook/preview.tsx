@@ -6,11 +6,7 @@ import ReactGA from 'react-ga4'
 import { Preview } from '@storybook/react'
 
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
-import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
-import { ThemeProvider as TailwindProvider } from '../src/themes/tailwind/TailwindThemeProvider'
-
-import tailwindConfig from '../tailwind.config'
 
 import '../src/styles/index.css'
 
@@ -96,11 +92,7 @@ const preview: Preview = {
 
       return (
         <ThemeProvider>
-          <ShrThemeProvider theme={theme}>
-            <TailwindProvider config={tailwindConfig}>
-              <Story />
-            </TailwindProvider>
-          </ShrThemeProvider>
+          <Story />
         </ThemeProvider>
       )
     },
