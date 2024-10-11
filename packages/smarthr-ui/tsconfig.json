@@ -13,7 +13,8 @@
     "types": [
       "node",
       "react",
-      "vitest/globals"
+      "vitest/globals",
+      "@testing-library/jest-dom"
     ],
     "jsx": "react",
     "strict": true,

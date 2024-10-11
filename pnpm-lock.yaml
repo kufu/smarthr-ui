@@ -173,6 +173,9 @@ importers:
       '@swc/core':
         specifier: ^1.7.26
         version: 1.7.26(@swc/helpers@0.5.5)
+      '@testing-library/jest-dom':
+        specifier: ^6.5.0
+        version: 6.5.0
       '@testing-library/react':
         specifier: ^16.0.1
         version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -192,8 +195,8 @@ importers:
         specifier: ^18.3.0
         version: 18.3.0
       '@types/react-test-renderer':
-        specifier: ^17.0.9
-        version: 17.0.9
+        specifier: ^18.3.0
+        version: 18.3.0
       '@types/react-transition-group':
         specifier: ^4.4.11
         version: 4.4.11
@@ -2902,8 +2905,8 @@ packages:
   '@types/react-dom@18.3.0':
     resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
 
-  '@types/react-test-renderer@17.0.9':
-    resolution: {integrity: sha512-bOfxcu5oZ+KxvACScbkTwZ4eGCtZFTz4VZCOVAIfGbThxqiXSIGipKVG8ubaYBXquUSQROzNIUzviWdSnnAlzg==}
+  '@types/react-test-renderer@18.3.0':
+    resolution: {integrity: sha512-HW4MuEYxfDbOHQsVlY/XtOvNHftCVEPhJF2pQXXwcUiUF+Oyb0usgp48HSgpK5rt8m9KZb22yqOeZm+rrVG8gw==}
 
   '@types/react-transition-group@4.4.11':
     resolution: {integrity: sha512-RM05tAniPZ5DZPzzNFP+DmrcOdD0efDUxMy3145oljWSl3x9ZV5vhme98gTxFrj2lhXvmGNnUiuDyJgY9IKkNA==}
@@ -12020,7 +12023,7 @@ snapshots:
     dependencies:
       '@types/react': 18.3.11
 
-  '@types/react-test-renderer@17.0.9':
+  '@types/react-test-renderer@18.3.0':
     dependencies:
       '@types/react': 18.3.11
 
