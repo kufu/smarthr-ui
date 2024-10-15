@@ -8,7 +8,12 @@ export const getNewExpandedItems = (
 
   if (expandableMultiply) {
     newState = new Map(prevExpandedItems)
-    isExpanded ? newState.set(itemName, itemName) : newState.delete(itemName)
+
+    if (isExpanded) {
+      newState.set(itemName, itemName)
+    } else {
+      newState.delete(itemName)
+    }
   } else {
     newState = isExpanded ? new Map([[itemName, itemName]]) : new Map()
   }

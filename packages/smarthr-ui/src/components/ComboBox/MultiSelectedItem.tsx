@@ -63,7 +63,9 @@ export function MultiSelectedItem<T>({
   const { deletable = true } = item
 
   const actualOnDelete = useCallback(() => {
-    onDelete && onDelete(item)
+    if (onDelete) {
+      onDelete(item)
+    }
   }, [item, onDelete])
 
   useEffect(() => {
