@@ -4,7 +4,6 @@ import React, {
   type PropsWithChildren,
   type ReactNode,
   useCallback,
-  useMemo,
 } from 'react'
 
 import { Button } from '../../Button'
@@ -74,15 +73,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 }) => {
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
-      console.log('handleSubmitAction', activeStep)
       e.preventDefault()
       // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
-      console.log('onSubmit', activeStep)
       onSubmit(onClickClose, e)
     },
-    [activeStep, onSubmit, onClickClose],
+    [onSubmit, onClickClose],
   )
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
