@@ -25,6 +25,8 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
   submitLabel,
   onSubmit,
   onClickClose,
+  onClickBack,
+  onClickNext,
   onPressEscape = onClickClose,
   responseMessage,
   actionDisabled = false,
@@ -68,15 +70,17 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
     if (!props.isOpen) {
       return
     }
+    onClickBack?.()
     onBackSteps()
-  }, [props.isOpen, onBackSteps])
+  }, [props.isOpen, onBackSteps, onClickBack])
 
   const handleNextSteps = useCallback(() => {
     if (!props.isOpen) {
       return
     }
+    onClickNext?.()
     onNextSteps()
-  }, [props.isOpen, onNextSteps])
+  }, [props.isOpen, onNextSteps, onClickNext])
 
   return createPortal(
     <DialogContentInner
