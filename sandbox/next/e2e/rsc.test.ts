@@ -29,7 +29,6 @@ const SERVER_COMPONENTS = [
   'TimePicker',
   'SpreadsheetTableCorner',
   'HeaderLink',
-  'DropdownScrollArea',
 ]
 
 /**
