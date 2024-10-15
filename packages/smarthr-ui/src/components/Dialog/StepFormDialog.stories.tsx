@@ -36,10 +36,6 @@ export default {
   },
 }
 
-const RadioListCluster = styled(Cluster).attrs({ gap: 1.25 })`
-  list-style: none;
-`
-
 export const Default: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [value, setValue] = React.useState('Apple')
@@ -138,3 +134,7 @@ Default.parameters = {
     },
   },
 }
+
+const RadioListCluster = styled(Cluster).attrs({ gap: 1.25 })`
+  list-style: none;
+`
