@@ -7,7 +7,6 @@ export {
   DropdownTrigger,
   DropdownContent,
   DropdownCloser,
-  DropdownScrollArea,
   FilterDropdown,
   DropdownMenuButton,
   SortDropdown,

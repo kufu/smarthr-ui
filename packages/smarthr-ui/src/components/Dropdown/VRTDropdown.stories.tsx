@@ -9,7 +9,6 @@ import { Dropdown } from './Dropdown'
 import { All, ControllableDropdown } from './Dropdown.stories'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownContent } from './DropdownContent'
-import { DropdownScrollArea } from './DropdownScrollArea'
 import { DropdownTrigger } from './DropdownTrigger'
 
 export default {
@@ -19,7 +18,6 @@ export default {
     DropdownTrigger,
     DropdownContent,
     DropdownCloser,
-    DropdownScrollArea,
   },
   parameters: {
     withTheming: true,

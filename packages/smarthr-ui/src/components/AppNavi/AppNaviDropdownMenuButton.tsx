@@ -10,7 +10,7 @@ import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button, UnstyledButton } from '../Button'
 import { RemoteDialogTrigger } from '../Dialog'
-import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../Dropdown'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { dropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuButton'
 import { FaCaretDownIcon } from '../Icon'
 
@@ -69,9 +69,7 @@ export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
         </UnstyledButton>
       </DropdownTrigger>
       <DropdownContent>
-        <DropdownScrollArea as="ul" className={actionListStyle()}>
-          {actualChildren}
-        </DropdownScrollArea>
+        <ul className={actionListStyle()}>{actualChildren}</ul>
       </DropdownContent>
     </Dropdown>
   )

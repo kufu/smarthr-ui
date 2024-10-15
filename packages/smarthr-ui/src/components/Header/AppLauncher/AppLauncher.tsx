@@ -2,7 +2,7 @@ import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../Button'
-import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
 import { FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -75,34 +75,32 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
       <DropdownContent controllable>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Stack as="nav" gap={1.5} className={contentWrapper()}>
-          <DropdownScrollArea>
-            <Stack gap={1.5}>
-              {baseApps && (
-                <Section>
+          <Stack gap={1.5}>
+            {baseApps && (
+              <Section>
+                <Stack gap={0.5} className={category()}>
+                  <Heading type="subSubBlockTitle">{baseApps.heading}</Heading>
+                  {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+                  <Cluster as="ul" gap={1} className={appList()}>
+                    {appItems(baseApps.items, link())}
+                  </Cluster>
+                </Stack>
+              </Section>
+            )}
+            <Cluster gap={1.5}>
+              {others.map(({ heading, items }, i) => (
+                <Section key={i}>
                   <Stack gap={0.5} className={category()}>
-                    <Heading type="subSubBlockTitle">{baseApps.heading}</Heading>
+                    <Heading type="subSubBlockTitle">{heading}</Heading>
                     {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                    <Cluster as="ul" gap={1} className={appList()}>
-                      {appItems(baseApps.items, link())}
-                    </Cluster>
+                    <Stack gap={0.5} as="ul" className={appList()}>
+                      {appItems(items, link())}
+                    </Stack>
                   </Stack>
                 </Section>
-              )}
-              <Cluster gap={1.5}>
-                {others.map(({ heading, items }, i) => (
-                  <Section key={i}>
-                    <Stack gap={0.5} className={category()}>
-                      <Heading type="subSubBlockTitle">{heading}</Heading>
-                      {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                      <Stack gap={0.5} as="ul" className={appList()}>
-                        {appItems(items, link())}
-                      </Stack>
-                    </Stack>
-                  </Section>
-                ))}
-              </Cluster>
-            </Stack>
-          </DropdownScrollArea>
+              ))}
+            </Cluster>
+          </Stack>
 
           {urlToShowAll && (
             <div className={footer()}>

@@ -9,7 +9,6 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
-import { DropdownScrollArea } from '../DropdownScrollArea'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
@@ -48,7 +47,7 @@ const filterDropdown = tv({
     ],
     fileteredIcon: 'shr-h-[0.5em] shr-w-[0.5em]',
     inner: 'shr-p-1.5',
-    actionArea: 'shr-border-t-shorthand shr-px-1.5 shr-py-1',
+    actionArea: 'shr-sticky shr-bottom-0 shr-border-t-shorthand shr-bg-white shr-px-1.5 shr-py-1',
     resetButtonArea: '-shr-ms-0.5',
     rightButtonArea: 'shr-ms-auto',
     message: 'shr-text-right',
@@ -156,9 +155,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <DropdownScrollArea>
-          <div className={innerStyle}>{children}</div>
-        </DropdownScrollArea>
+        <div className={innerStyle}>{children}</div>
         <Stack gap={0.5} className={actionAreaStyle}>
           <Cluster gap={1} align="center" justify="space-between">
             {onReset && (
