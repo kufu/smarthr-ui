@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [58.1.2](https://github.com/kufu/smarthr-ui/compare/v58.1.1...v58.1.2) (2024-10-15)
+
+
+### Bug Fixes
+
+* AppNaviDropdownMenuButton の current 装飾ロジックを見直し ([#4971](https://github.com/kufu/smarthr-ui/issues/4971)) ([9081990](https://github.com/kufu/smarthr-ui/commit/90819907e703fcdb7a3a08dc4c438e43c5870fae))
+
 ### [58.1.1](https://github.com/kufu/smarthr-ui/compare/v58.1.0...v58.1.1) (2024-10-09)
 
 
