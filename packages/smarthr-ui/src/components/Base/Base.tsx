@@ -5,7 +5,7 @@ import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
 
 import type { Gap } from '../../types'
 
-const base = tv({
+export const base = tv({
   base: 'smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock: {
