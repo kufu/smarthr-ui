@@ -75,10 +75,9 @@ describe('SingleComboBox', () => {
     await act(() => userEvent.click(combobox()))
     expect(listbox()).toBeInTheDocument()
 
-    // ESCで閉じる(閉じてほしいけど閉じない)
-    // FIXME: 閉じてほしいのに閉じないので、修正したらテストコードも修正する
-    await act(() => userEvent.type(combobox(), '{esc}'))
-    expect(listbox()).toBeInTheDocument() // ここが `not.toBeInTheDocument()` になる予定
+    // ESCで閉じる
+    await act(() => userEvent.keyboard('[Escape]'))
+    expect(listbox()).not.toBeInTheDocument()
   })
 
   it('コンボボックスがフォーカスされていないときに選択解除ボタンを押下してもリストボックスが表示されること', async () => {
