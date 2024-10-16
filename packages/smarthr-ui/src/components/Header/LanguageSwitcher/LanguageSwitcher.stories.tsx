@@ -42,6 +42,7 @@ export const All: StoryFn = () => {
           />
         </dd>
       </div>
+
       <div>
         <dt>narrow</dt>
         <dd className="shr-flex shr-bg-main-darken">
@@ -54,6 +55,7 @@ export const All: StoryFn = () => {
           />
         </dd>
       </div>
+
       <div>
         <dt>invert & ボタンラベル変更</dt>
         <dd className="shr-flex">
@@ -66,6 +68,7 @@ export const All: StoryFn = () => {
           />
         </dd>
       </div>
+
       <div>
         <dt>narrow invert & defaultのlocaleを変更</dt>
         <dd className="shr-flex">
