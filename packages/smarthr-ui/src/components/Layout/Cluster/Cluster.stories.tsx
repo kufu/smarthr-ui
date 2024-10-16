@@ -7,8 +7,8 @@ import { Fieldset } from '../../Fieldset'
 import { Heading } from '../../Heading'
 import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
+import { ColorBox } from '../ComponentsForStories'
 import { Stack } from '../Stack'
-import { ColorBox } from '../stories/ComponentsForStories'
 
 import { Cluster } from '.'
 

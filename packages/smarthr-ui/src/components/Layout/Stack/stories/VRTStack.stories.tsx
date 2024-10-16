@@ -2,10 +2,9 @@ import { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
-import { Stack } from '../../..'
-import { Gap } from '../../../types'
-
-import { ColorBox } from './ComponentsForStories'
+import { Stack } from '../../../..'
+import { Gap } from '../../../../types'
+import { ColorBox } from '../../ComponentsForStories'
 
 /**
  * gapはボリュームが多いため、1回ずつ出るように別途組み合わせます

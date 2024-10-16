@@ -1,9 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 
-import { Stack } from '../Stack'
-
-import { ColorBox } from './ComponentsForStories'
+import { Stack } from '..'
+import { ColorBox } from '../../ComponentsForStories'
 
 export default {
   title: 'Layouts（レイアウト）/Stack',
