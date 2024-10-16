@@ -22,24 +22,28 @@ export default {
 export const Playground: StoryObj<typeof Stack> = {}
 
 export const Inline: StoryObj<typeof Stack> = {
+  name: 'inline',
   args: {
     inline: true,
   },
 }
 
 export const Gap: StoryObj<typeof Stack> = {
+  name: 'gap',
   args: {
     gap: 'XL',
   },
 }
 
 export const Align: StoryObj<typeof Stack> = {
+  name: 'align',
   args: {
     align: 'center',
   },
 }
 
 export const As: StoryObj<typeof Stack> = {
+  name: 'as',
   args: {
     as: 'section',
   },
