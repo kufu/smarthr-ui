@@ -77,14 +77,15 @@ export default {
     ]
     return (
       <Wrapper>
-        {gap.map((g) =>
-          pictList.map((pict) => (
-            <Stack key={g} gap={g} inline={pict.inline} align={pict.align}>
+        {gap.map((g, index) => {
+          const _index = index % pictList.length
+          return (
+            <Stack key={g} gap={g} inline={pictList[_index].inline} align={pictList[_index].align}>
               <ColorBox />
               <ColorBox />
             </Stack>
-          )),
-        )}
+          )
+        })}
       </Wrapper>
     )
   },
