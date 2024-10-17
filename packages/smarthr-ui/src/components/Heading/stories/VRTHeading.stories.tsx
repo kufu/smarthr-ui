@@ -2,7 +2,7 @@
 import React from 'react'
 
 import { Stack } from '../../Layout'
-import { Heading } from '../Heading'
+import { Heading, PageHeading } from '../Heading'
 
 import type { StoryObj } from '@storybook/react'
 
@@ -20,18 +20,21 @@ export default {
     const tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
     return (
       <Stack {...args}>
-        {types.map((type) =>
-          tags.map((tag) => (
-            <>
-              <Heading type={type} tag={tag} visuallyHidden={true}>
-                {type}
-              </Heading>
-              <Heading type={type} tag={tag} visuallyHidden={false}>
-                {type}
-              </Heading>
-            </>
-          )),
-        )}
+        {types.map((type) => (
+          <>
+            <PageHeading type={type} />
+            {tags.map((tag) => (
+              <>
+                <Heading type={type} tag={tag} visuallyHidden={true}>
+                  {type}
+                </Heading>
+                <Heading type={type} tag={tag} visuallyHidden={false}>
+                  {type}
+                </Heading>
+              </>
+            ))}
+          </>
+        ))}
       </Stack>
     )
   },
