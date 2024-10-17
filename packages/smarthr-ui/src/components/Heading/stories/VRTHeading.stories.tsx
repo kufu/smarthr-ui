@@ -41,7 +41,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'skip-test-runner'],
 }
 
 export const VRT = {}
