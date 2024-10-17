@@ -1,8 +1,7 @@
 /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import React from 'react'
 
-import { Cluster, Stack } from '../../Layout'
-import { Text } from '../../Text'
+import { Stack } from '../../Layout'
 import { Heading } from '../Heading'
 
 import type { Meta, StoryObj } from '@storybook/react'
