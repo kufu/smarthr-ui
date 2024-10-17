@@ -6,12 +6,12 @@ import { Base, base } from '../Base'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-export const basePadding = Object.keys(base.variants.paddingBlock)
+const basePadding = Object.keys(base.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]
 const baseOverflow = [undefined, 'visible', 'hidden', 'clip', 'scroll', 'auto'] as const
-export const baseLayer = Object.keys(base.variants.layer).map(Number) as Array<
+const baseLayer = Object.keys(base.variants.layer).map(Number) as Array<
   ComponentProps<typeof Base>['layer']
 >
 
@@ -33,7 +33,6 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-  excludeStories: ['basePadding', 'baseLayer'],
 } as Meta<typeof Base>
 
 export const BaseControl: StoryObj<typeof Base> = {
