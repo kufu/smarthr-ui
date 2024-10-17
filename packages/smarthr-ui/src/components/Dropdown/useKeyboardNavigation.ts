@@ -49,11 +49,8 @@ export function useKeyboardNavigation(
           trigger.focus()
         } else if (!e.shiftKey && e.target === lastTabbable) {
           // move focus next of the Trigger
-          const rootTriggers = tabbable(rootTriggerRef.current)
-          const rootTrigger = rootTriggers[rootTriggers.length - 1]
-          if (rootTrigger) {
-            rootTrigger.focus()
-          }
+          e.preventDefault()
+          firstTabbable.focus() // Dropdown内の最初の要素にフォーカスを移動
         }
       } else if (e.key === 'Escape' || e.key === 'Esc') {
         if (triggerElementRef.current) {
