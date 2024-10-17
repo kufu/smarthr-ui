@@ -80,18 +80,12 @@ export const VisuallyHidden: StoryObj<typeof Heading> = {
   name: 'visuallyHidden',
   render: (args) => (
     <Stack>
-      <Cluster>
-        <Text>visuallyHidden=true:</Text>
-        <Heading {...args} visuallyHidden={true}>
-          Heading
-        </Heading>
-      </Cluster>
-      <Cluster>
-        <Text>visuallyHidden=false:</Text>
-        <Heading {...args} visuallyHidden={false}>
-          Heading
-        </Heading>
-      </Cluster>
+      <Heading {...args} visuallyHidden={true}>
+        visuallyHidden={true}
+      </Heading>
+      <Heading {...args} visuallyHidden={false}>
+        visuallyHidden=false:
+      </Heading>
     </Stack>
   ),
 }
