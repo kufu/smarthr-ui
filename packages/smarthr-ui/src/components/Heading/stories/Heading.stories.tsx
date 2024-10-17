@@ -2,7 +2,7 @@
 import React from 'react'
 
 import { Stack } from '../../Layout'
-import { Heading } from '../Heading'
+import { Heading, PageHeading } from '../Heading'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -11,11 +11,7 @@ export default {
   component: Heading,
   subcomponents: { PageHeading },
   render: (args) => <Heading {...args}>Heading</Heading>,
-  args: {
-    type: 'sectionTitle',
-    tag: undefined,
-    visuallyHidden: false,
-  },
+  args: {},
   parameters: {
     chromatic: { disableSnapshot: true },
   },

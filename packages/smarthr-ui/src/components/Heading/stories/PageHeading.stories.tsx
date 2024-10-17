@@ -10,9 +10,7 @@ export default {
   title: 'Text（テキスト）/Heading/PageHeading',
   component: PageHeading,
   render: (args) => <PageHeading {...args}>PageHeading</PageHeading>,
-  args: {
-    type: 'screenTitle',
-  },
+  args: {},
   parameters: {
     chromatic: { disableSnapshot: true },
   },
