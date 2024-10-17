@@ -4,22 +4,22 @@ import React from 'react'
 import { Stack } from '../../Layout'
 import { {{ name }} } from '../{{ name }}'
 
-import type { StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'SomeCategory（カテゴリ）/{{ name }}/VRT',
   /* ペアワイズ法による網羅 */
-  render: (args: any) => (
-    <Stack {...args}>
-      <{{ name }} />
-      <{{ name }} />
+  render: (args) => (
+    <Stack>
+      <{{ name }} {...args} />
+      <{{ name }} {...args} />
     </Stack>
   ),
   parameters: {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-}
+} as Meta<typeof {{ name }}>
 
 export const VRT = {}
 
@@ -34,14 +34,6 @@ export const VRTHover = {
     },
     // MEMO: VRT として機能していないので、解決するまでスナップショットを無効化
     chromatic: { disableSnapshot: true },
-  },
-}
-
-export const VRTKeyboardFocus: StoryObj = {
-  ...VRT,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    // FIXME: ここにフォーカス処理を書いて
   },
 }
 
