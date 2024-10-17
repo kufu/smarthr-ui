@@ -19,7 +19,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
 
-const center = tv({
+export const center = tv({
   base: 'shr-mx-auto shr-box-content shr-flex shr-flex-col shr-items-center',
   variants: {
     padding: {
