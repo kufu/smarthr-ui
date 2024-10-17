@@ -20,20 +20,18 @@ export default {
     const tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
     return (
       <Stack {...args}>
-        {types.map((type) => (
-          <Stack key={type}>
-            {tags.map((tag) => (
-              <>
-                <Heading key={tag} type={type} tag={tag} visuallyHidden={true}>
-                  {type}
-                </Heading>
-                <Heading key={tag} type={type} tag={tag} visuallyHidden={false}>
-                  {type}
-                </Heading>
-              </>
-            ))}
-          </Stack>
-        ))}
+        {types.map((type) =>
+          tags.map((tag) => (
+            <>
+              <Heading type={type} tag={tag} visuallyHidden={true}>
+                {type}
+              </Heading>
+              <Heading type={type} tag={tag} visuallyHidden={false}>
+                {type}
+              </Heading>
+            </>
+          )),
+        )}
       </Stack>
     )
   },
