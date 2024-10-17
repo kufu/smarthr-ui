@@ -1,3 +1,0 @@
-inline: true, false
-align: center, baseline, end, start, flex-start, flex-end, stretch
-
