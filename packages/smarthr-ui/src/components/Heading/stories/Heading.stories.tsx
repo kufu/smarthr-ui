@@ -50,7 +50,7 @@ export const Type: StoryObj<typeof Heading> = {
 }
 
 export const Tag: StoryObj<typeof Heading> = {
-  name: 'tag',
+  name: 'tag(非推奨)',
   render: (args) => (
     <Stack>
       <Heading {...args}>未指定(推奨)</Heading>
