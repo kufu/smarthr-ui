@@ -7,7 +7,7 @@ import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 import type { Gap, SeparateGap } from '../../../types'
 import type { ComponentPropsWithoutRef, ForwardedRef, PropsWithChildren } from 'react'
 
-const cluster = tv({
+export const cluster = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
   variants: {
     inline: {
