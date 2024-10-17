@@ -1,7 +1,7 @@
 import test, { expect } from '@playwright/test'
 
 /**
- * サーバーコンポーネントとして利用できるコンポーネント一覧
+ * サーバーコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
 const SERVER_COMPONENTS = [
   'AnchorButton',
@@ -32,7 +32,7 @@ const SERVER_COMPONENTS = [
 ]
 
 /**
- * サーバーコンポーネントでは利用できないコンポーネント一覧
+ * サーバーコンポーネントでは利用できないコンポーネント一覧(アルファベット順)
  */
 const CLIENT_COMPONENTS = [
   'AccordionPanel',
