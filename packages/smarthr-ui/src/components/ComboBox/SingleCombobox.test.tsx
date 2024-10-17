@@ -76,7 +76,7 @@ describe('SingleComboBox', () => {
     expect(listbox()).toBeInTheDocument()
 
     // ESCで閉じる
-    await act(() => userEvent.keyboard('[Escape]'))
+    await act(() => userEvent.keyboard('{escape}'))
     expect(listbox()).not.toBeInTheDocument()
   })
 
