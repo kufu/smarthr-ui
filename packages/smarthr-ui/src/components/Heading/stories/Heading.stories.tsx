@@ -9,6 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Text（テキスト）/Heading',
   component: Heading,
+  subcomponents: { PageHeading },
   render: (args) => <Heading {...args}>Heading</Heading>,
   args: {
     type: 'sectionTitle',
