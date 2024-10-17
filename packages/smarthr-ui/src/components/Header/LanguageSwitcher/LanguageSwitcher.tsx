@@ -132,7 +132,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
           {locales.map(([code, label]) => {
             const isCurrent = currentLang === code
             return (
-              <li key={code} className={languageItem()} aria-current={isCurrent}>
+              <li key={code} className={languageItem()} aria-current={isCurrent} lang={code}>
                 <Button
                   wide
                   prefix={isCurrent ? <FaCheckIcon color="MAIN" alt={checkIconAlt} /> : null}
