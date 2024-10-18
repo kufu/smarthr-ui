@@ -2,7 +2,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import { Heading } from '../Heading'
+import { Heading, PageHeading } from '../Heading'
 
 import { Article, Aside, Nav, Section } from './SectioningContent'
 
@@ -108,5 +108,19 @@ describe('SectioningContent', () => {
       </Section>,
     )
     expect(ref.current?.querySelector('h2')).toBeInTheDocument()
+  })
+
+  it('SectioningContent に PageHeading が含まれている場合、見出しレベルは常に1になること', async () => {
+    const { container } = render(
+      <Section>
+        <Section>
+          <Section>
+            <PageHeading>PageHeading</PageHeading>
+          </Section>
+        </Section>
+      </Section>,
+    )
+
+    expect(container.querySelector('h1')?.textContent).toEqual('PageHeading')
   })
 })
