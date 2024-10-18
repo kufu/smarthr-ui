@@ -2,7 +2,7 @@ import React, { createContext, useContext } from 'react'
 
 import { DialogContentInner } from './DialogContentInner'
 import { DialogContext } from './DialogWrapper'
-import { DireactChildren, UncontrolledDialogProps } from './types'
+import { DirectChildren, UncontrolledDialogProps } from './types'
 import { useDialogPortal } from './useDialogPortal'
 
 type DialogContentContextType = {
@@ -15,7 +15,7 @@ export const DialogContentContext = createContext<DialogContentContextType>({
   },
 })
 
-type Props = UncontrolledDialogProps & DireactChildren
+type Props = UncontrolledDialogProps & DirectChildren
 
 export const DialogContent: React.FC<Props> = ({ portalParent, ...props }) => {
   const { onClickClose, active } = useContext(DialogContext)

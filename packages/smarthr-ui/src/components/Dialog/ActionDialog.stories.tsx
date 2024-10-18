@@ -231,7 +231,7 @@ export const RegOpenedAction: StoryFn = () => (
       でコンテンツ領域の背景色とパディングを設定できます。
     </p>
     <label>
-      <input name="reg_opend_action_checkbox" type="checkbox" />
+      <input name="reg_opened_action_checkbox" type="checkbox" />
       Agree
     </label>
   </ActionDialog>

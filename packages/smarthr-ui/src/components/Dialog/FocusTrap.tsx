@@ -18,17 +18,17 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
     if (tabbables.length === 0) {
       return
     }
-    const firstTabbale = tabbables[0]
-    const lastTabbale = tabbables[tabbables.length - 1]
+    const firstTabbable = tabbables[0]
+    const lastTabbable = tabbables[tabbables.length - 1]
     const currentFocused = Array.from(tabbables).find((elm) => elm === e.target)
     if (
       e.shiftKey &&
-      (currentFocused === firstTabbale || document.activeElement === dummyFocusRef.current)
+      (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current)
     ) {
-      lastTabbale.focus()
+      lastTabbable.focus()
       e.preventDefault()
-    } else if (!e.shiftKey && currentFocused === lastTabbale) {
-      firstTabbale.focus()
+    } else if (!e.shiftKey && currentFocused === lastTabbable) {
+      firstTabbable.focus()
       e.preventDefault()
     }
   }, [])
