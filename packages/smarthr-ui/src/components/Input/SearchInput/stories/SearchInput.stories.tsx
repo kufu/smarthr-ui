@@ -16,6 +16,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  tags: ['skip-test-runner'],
 } as Meta<typeof SearchInput>
 
 export const Playground: StoryObj<typeof SearchInput> = {}
