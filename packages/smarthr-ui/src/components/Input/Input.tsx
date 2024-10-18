@@ -35,8 +35,8 @@ type Props = {
 }
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
 
-const bgColors = {
-  BACKGROUND: 'background',
+export const bgColors = {
+  BACKGRUOND: 'background',
   COLUMN: 'column',
   BASE_GREY: 'base-grey',
   OVER_BACKGROUND: 'over-background',
