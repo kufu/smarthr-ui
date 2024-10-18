@@ -67,7 +67,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+      // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
       onSubmit(onClickClose, e)

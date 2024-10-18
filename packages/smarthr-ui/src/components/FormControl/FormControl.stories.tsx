@@ -79,7 +79,7 @@ export const All: StoryFn = () => (
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="Textarea" helpMessage="Textaea に紐づく説明です。">
+        <FormControl title="Textarea" helpMessage="Textarea に紐づく説明です。">
           <Textarea name="textarea" value="Textarea コンポーネント" />
         </FormControl>
       </dd>

@@ -1,10 +1,10 @@
 import React, { ComponentProps } from 'react'
 
 import { DialogContentInner } from './DialogContentInner'
-import { DialogProps, DireactChildren } from './types'
+import { DialogProps, DirectChildren } from './types'
 import { useDialogPortal } from './useDialogPortal'
 
-type Props = DialogProps & DireactChildren
+type Props = DialogProps & DirectChildren
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const Dialog: React.FC<Props & ElementProps> = ({

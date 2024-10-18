@@ -404,7 +404,7 @@ const ActualMultiComboBox = <T,>(
     wrapperStyleProps,
     inputAreaStyle,
     selectedListStyle,
-    inputWrapperStlye,
+    inputWrapperStyle,
     inputStyle,
     placeholderStyle,
     suffixWrapperStyle,
@@ -421,7 +421,7 @@ const ActualMultiComboBox = <T,>(
       },
       inputAreaStyle: inputArea(),
       selectedListStyle: selectedList(),
-      inputWrapperStlye: inputWrapper({ hidden: !isFocused }),
+      inputWrapperStyle: inputWrapper({ hidden: !isFocused }),
       inputStyle: input(),
       placeholderStyle: placeholderEl(),
       suffixWrapperStyle: suffixWrapper({ disabled }),
@@ -475,7 +475,7 @@ const ActualMultiComboBox = <T,>(
           ))}
         </ul>
 
-        <div className={inputWrapperStlye}>
+        <div className={inputWrapperStyle}>
           <input
             {...rest}
             data-smarthr-ui-input="true"
