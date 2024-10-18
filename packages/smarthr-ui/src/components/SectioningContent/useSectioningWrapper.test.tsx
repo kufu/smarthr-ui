@@ -16,7 +16,7 @@ describe('useSectionWrapper', () => {
     })
   })
 
-  it('sectioningContents に含まれる要素の StyledComponent の場合、SectioningFragment が返ること', () => {
+  it('sectioningContents に含まれる要素が StyledComponent の場合、SectioningFragment が返ること', () => {
     sectioningContents.forEach((type) => {
       const component = styled[type]``
       const { result } = renderHook(() => useSectionWrapper(component))
