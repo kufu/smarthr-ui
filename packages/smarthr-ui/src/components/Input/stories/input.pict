@@ -1,0 +1,10 @@
+disabled: false, true
+error: false, true
+prefix: なし (10), あり
+suffix: なし (10), あり
+bgColor: なし (10), あり
+placeholder: なし (10), あり
+width: なし (10), あり
+
+# prefix / suffix は両立させない
+IF [prefix] = "あり" THEN [suffix] = "なし";
