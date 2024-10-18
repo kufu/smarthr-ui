@@ -123,6 +123,7 @@ const CLIENT_COMPONENTS = [
   'Textarea',
   'ThCheckbox',
   'Tooltip',
+  'WakuWakuButton',
 ]
 
 test.describe('RSC対応コンポーネントがRSCで利用できること', () => {
