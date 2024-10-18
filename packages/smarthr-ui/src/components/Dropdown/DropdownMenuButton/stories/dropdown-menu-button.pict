@@ -1,0 +1,5 @@
+triggerSize: default, s
+onlyIconTrigger: false, true
+triggerIcon: udnefined (10), 指定あり
+
+IF [triggerIcon] = "指定あり" THEN [onlyIconTrigger] = "true";

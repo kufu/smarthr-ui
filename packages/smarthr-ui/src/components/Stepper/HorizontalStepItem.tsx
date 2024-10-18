@@ -8,7 +8,7 @@ import { StepCounter } from './StepCounter'
 
 import type { HorizontalStep } from './types'
 
-const horizontallStepItem = tv({
+const horizontalStepItem = tv({
   slots: {
     wrapper: [
       'shr-group/stepItem',
@@ -79,7 +79,7 @@ export const HorizontalStepItem: FC<Props> = ({
 }) => {
   const statusType = typeof status === 'object' ? status.type : status
   const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
-    horizontallStepItem({
+    horizontalStepItem({
       status: statusType,
       current,
       isPrevStepCompleted,
