@@ -5,11 +5,13 @@ import styled from 'styled-components'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
+import { FaPencilIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
 import { TdCheckbox } from './TdCheckbox'
 import { ThCheckbox } from './ThCheckbox'
+import { WakuWakuButton } from './WakuWakuButton'
 
 import { BulkActionRow, EmptyTableBody, Table, TableReel, Td, Th } from '.'
 
@@ -277,7 +279,15 @@ export const All: StoryFn = () => (
               <Th>Protein (g)</Th>
               <Th>Button</Th>
             </tr>
-            <BulkActionRow>Bulk action area</BulkActionRow>
+            <BulkActionRow>
+              <Cluster align="center">
+                <p>50件のオブジェクトが選択されています。</p>
+                <WakuWakuButton>一覧のオブジェクト9,999件をすべて選択</WakuWakuButton>
+                <Button size="s" prefix={<FaPencilIcon />}>
+                  一括操作
+                </Button>
+              </Cluster>
+            </BulkActionRow>
           </thead>
           <tbody>
             {data.map(({ name, calories, fat, carbs, protein }, i) => (
