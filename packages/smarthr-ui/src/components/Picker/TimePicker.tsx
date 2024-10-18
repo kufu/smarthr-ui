@@ -1,43 +1,17 @@
-import React, { ComponentPropsWithoutRef, forwardRef, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import React, { forwardRef, useMemo } from 'react'
+
+import { pickerStyle } from './style'
+import { PickerProps } from './types'
 
 type Props = {
   /** フォームにエラーがあるかどうか */
   error?: boolean
 }
-type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props>
 
-const timePicker = tv({
-  slots: {
-    wrapper: [
-      'smarthr-ui-TimePicker',
-      'shr-inline-block shr-border-shorthand shr-rounded-m shr-bg-white shr-px-0.5 shr-leading-none',
-      'contrast-more:shr-border-high-contrast',
-      'focus-within:shr-focus-indicator',
-      'has-[[aria-invalid]]:shr-border-danger',
-    ],
-    inner: [
-      'shr-border-none shr-text-base disabled:shr-text-disabled shr-bg-transparent shr-text-black shr-outline-none shr-outline-0 shr-p-[unset] shr-py-0.75 shr-h-[theme(fontSize.base)] shr-tabular-nums',
-    ],
-  },
-  variants: {
-    disabled: {
-      true: {
-        wrapper: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
-      },
-    },
-    readOnly: {
-      true: {
-        wrapper: '[&&&]:shr-border-[theme(backgroundColor.background)] [&&&]:shr-bg-background',
-      },
-    },
-  },
-})
-
-export const TimePicker = forwardRef<HTMLInputElement, Props & ElementProps>(
+export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
     const { wrapperStyle, innerStyle } = useMemo(() => {
-      const { wrapper, inner } = timePicker()
+      const { wrapper, inner } = pickerStyle()
       return {
         wrapperStyle: wrapper({ className, disabled, readOnly }),
         innerStyle: inner(),
