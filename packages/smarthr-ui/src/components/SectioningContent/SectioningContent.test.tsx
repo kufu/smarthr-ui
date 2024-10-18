@@ -7,7 +7,7 @@ import { Heading } from '../Heading'
 import { Article, Aside, Nav, Section } from './SectioningContent'
 
 describe('SectioningContent', () => {
-  it('<Section> を使用すると article 要素が描画されること', async () => {
+  it('<Section> を使用すると section 要素が描画されること', async () => {
     const { container } = render(<Section></Section>)
     expect(container.querySelector('section')).toBeInTheDocument()
   })
