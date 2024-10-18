@@ -63,11 +63,11 @@ describe('SectioningContent', () => {
         </Section>
       </Section>,
     )
-    expect(container.querySelector('h2')?.textContent).toEqual('level 2')
-    expect(container.querySelector('h3')?.textContent).toEqual('level 3')
-    expect(container.querySelector('h4')?.textContent).toEqual('level 4')
-    expect(container.querySelector('h5')?.textContent).toEqual('level 5')
-    expect(container.querySelector('h6')?.textContent).toEqual('level 6')
+    expect(container.querySelector('h2')).toHaveTextContent('level 2')
+    expect(container.querySelector('h3')).toHaveTextContent('level 3')
+    expect(container.querySelector('h4')).toHaveTextContent('level 4')
+    expect(container.querySelector('h5')).toHaveTextContent('level 5')
+    expect(container.querySelector('h6')).toHaveTextContent('level 6')
   })
 
   it('SectioningContent が並列にある場合、それぞれの見出しレベルは独立してインクリメントすること', async () => {
@@ -89,11 +89,11 @@ describe('SectioningContent', () => {
       </Section>,
     )
 
-    expect(document.querySelector('h2')?.textContent).toEqual('level 2')
-    expect(document.querySelectorAll('h3')[0].textContent).toEqual('level 3-1')
-    expect(document.querySelectorAll('h3')[1].textContent).toEqual('level 3-2')
-    expect(document.querySelectorAll('h4')[0].textContent).toEqual('level 4-1')
-    expect(document.querySelectorAll('h4')[1].textContent).toEqual('level 4-2')
+    expect(document.querySelector('h2')).toHaveTextContent('level 2')
+    expect(document.querySelectorAll('h3')[0]).toHaveTextContent('level 3-1')
+    expect(document.querySelectorAll('h3')[1]).toHaveTextContent('level 3-2')
+    expect(document.querySelectorAll('h4')[0]).toHaveTextContent('level 4-1')
+    expect(document.querySelectorAll('h4')[1]).toHaveTextContent('level 4-2')
   })
 
   it('SectioningContent に含まれる見出し要素は、見出しレベルが6を超えると span になり、role と aria-level が設定される', async () => {
@@ -143,6 +143,6 @@ describe('SectioningContent', () => {
       </Section>,
     )
 
-    expect(container.querySelector('h1')?.textContent).toEqual('PageHeading')
+    expect(container.querySelector('h1')).toHaveTextContent('PageHeading')
   })
 })
