@@ -57,9 +57,6 @@ describe('SectioningContent', () => {
               <Heading>level 5</Heading>
               <Section>
                 <Heading>level 6</Heading>
-                <Section>
-                  <Heading>level 7</Heading>
-                </Section>
               </Section>
             </Section>
           </Section>
@@ -71,7 +68,6 @@ describe('SectioningContent', () => {
     expect(container.querySelector('h4')?.textContent).toEqual('level 4')
     expect(container.querySelector('h5')?.textContent).toEqual('level 5')
     expect(container.querySelector('h6')?.textContent).toEqual('level 6')
-    expect(container.querySelector('span')?.textContent).toEqual('level 7')
   })
 
   it('SectioningContent が並列にある場合、それぞれの見出しレベルは独立してインクリメントすること', async () => {
@@ -98,6 +94,32 @@ describe('SectioningContent', () => {
     expect(document.querySelectorAll('h3')[1].textContent).toEqual('level 3-2')
     expect(document.querySelectorAll('h4')[0].textContent).toEqual('level 4-1')
     expect(document.querySelectorAll('h4')[1].textContent).toEqual('level 4-2')
+  })
+
+  it('SectioningContent に含まれる見出し要素は、見出しレベルが6を超えると span になり、role と aria-level が設定される', async () => {
+    const { container } = render(
+      <Section>
+        <Heading>level 2</Heading>
+        <Section>
+          <Heading>level 3</Heading>
+          <Section>
+            <Heading>level 4</Heading>
+            <Section>
+              <Heading>level 5</Heading>
+              <Section>
+                <Heading>level 6</Heading>
+                <Section>
+                  <Heading>level 7</Heading>
+                </Section>
+              </Section>
+            </Section>
+          </Section>
+        </Section>
+      </Section>,
+    )
+    expect(container.querySelector('span')).toHaveTextContent('level 7')
+    expect(container.querySelector('span')).toHaveAttribute('role', 'heading')
+    expect(container.querySelector('span')).toHaveAttribute('aria-level', '7')
   })
 
   it('SectioningContent には ref を渡すことができる', async () => {
