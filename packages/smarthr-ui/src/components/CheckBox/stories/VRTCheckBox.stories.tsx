@@ -15,12 +15,13 @@ export default {
     const disabled = [true, false]
     const checked = [true, false]
     return (
-      <Cluster>
+      <Cluster className="shr-p-1">
         {mixed.map((isMixed) =>
           error.map((isError) =>
             disabled.map((isDisabled) =>
               checked.map((isChecked) => (
                 <CheckBox
+                  {...args}
                   key={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
                   name={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
                   mixed={isMixed}
