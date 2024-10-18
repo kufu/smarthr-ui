@@ -50,6 +50,8 @@ export const VRTHover = {
     pseudo: {
       hover: ['.smarthr-ui-CheckBox-checkBox'],
     },
+    // MEMO: VRT として機能していないので、解決するまでスナップショットを無効化
+    chromatic: { disableSnapshot: true },
   },
 }
 
