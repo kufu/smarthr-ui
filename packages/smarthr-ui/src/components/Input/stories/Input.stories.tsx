@@ -9,12 +9,29 @@ import { SearchInput } from '../SearchInput'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
+const _affixOptions = {
+  あり: <FaMagnifyingGlassIcon alt="検索" />,
+  なし: undefined,
+}
+
 export default {
   title: 'Forms（フォーム）/Input',
   component: Input,
   subcomponents: { CurrencyInput, SearchInput },
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <Input {...args} />,
+  argTypes: {
+    prefix: {
+      control: 'radio',
+      options: Object.keys(_affixOptions),
+      mapping: _affixOptions,
+    },
+    suffix: {
+      control: 'radio',
+      options: Object.keys(_affixOptions),
+      mapping: _affixOptions,
+    },
+  },
   args: {},
   parameters: {
     chromatic: { disableSnapshot: true },

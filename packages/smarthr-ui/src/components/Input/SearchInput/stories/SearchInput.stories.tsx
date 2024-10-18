@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Stack } from '../../../Layout'
+import InputStory from '../../stories/Input.stories'
 import { SearchInput } from '../SearchInput'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -12,6 +13,9 @@ export default {
   render: (args) => <SearchInput {...args} />,
   args: {
     tooltipMessage: '氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。',
+  },
+  argTypes: {
+    suffix: InputStory.argTypes?.suffix,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
