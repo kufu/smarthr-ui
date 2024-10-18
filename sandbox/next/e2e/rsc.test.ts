@@ -95,6 +95,7 @@ const CLIENT_COMPONENTS = [
   'RemoteTriggerMessageDialog',
   'Aside',
   'AppLauncher',
+  'WakuWakuButton',
 ]
 
 test.describe('RSC対応コンポーネントがRSCで利用できること', () => {
