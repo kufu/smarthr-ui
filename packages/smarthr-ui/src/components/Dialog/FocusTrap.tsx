@@ -1,4 +1,12 @@
-import React, { FC, PropsWithChildren, RefObject, useCallback, useEffect, useRef } from 'react'
+import React, {
+  PropsWithChildren,
+  RefObject,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 
@@ -6,15 +14,29 @@ type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
 }>
 
-export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
-  const ref = useRef<HTMLDivElement | null>(null)
+export type FocusTrapRef = {
+  focus: () => void
+}
+
+export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
+  const innerRef = useRef<HTMLDivElement | null>(null)
   const dummyFocusRef = useRef<HTMLDivElement>(null)
 
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      if (firstFocusTarget?.current) {
+        firstFocusTarget.current.focus()
+      } else {
+        dummyFocusRef.current?.focus()
+      }
+    },
+  }))
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key !== 'Tab' || ref.current === null) {
+    if (e.key !== 'Tab' || innerRef.current === null) {
       return
     }
-    const tabbables = tabbable(ref.current).filter((elm) => elm.tabIndex >= 0)
+    const tabbables = tabbable(innerRef.current).filter((elm) => elm.tabIndex >= 0)
     if (tabbables.length === 0) {
       return
     }
@@ -57,10 +79,10 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
   }, [firstFocusTarget])
 
   return (
-    <div ref={ref}>
+    <div ref={innerRef}>
       {/* dummy element for focus management. */}
       <div ref={dummyFocusRef} tabIndex={-1} />
       {children}
     </div>
   )
-}
+})
