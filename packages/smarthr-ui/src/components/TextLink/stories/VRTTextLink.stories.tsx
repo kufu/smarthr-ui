@@ -1,3 +1,4 @@
+import { within } from '@storybook/test'
 import React, { ComponentProps } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
@@ -48,7 +49,13 @@ export default {
   tags: ['!autodocs'],
 } as Meta<typeof TextLink>
 
-export const VRT = {}
+export const VRT: StoryObj<typeof TextLink> = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const { length, [length - 1]: last } = canvas.getAllByRole('link')
+    last.focus()
+  },
+}
 
 export const VRTForcedColors: StoryObj = {
   ...VRT,
