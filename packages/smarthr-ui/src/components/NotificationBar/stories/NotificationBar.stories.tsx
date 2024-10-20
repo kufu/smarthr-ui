@@ -59,7 +59,6 @@ export default {
     },
   },
   parameters: {
-    backgrounds: { default: 'light' },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['sampleMessages', 'sampleOnCloseHandlers'],
