@@ -1,0 +1,7 @@
+href: あり (10), なし
+prefix: あり, なし (10)
+suffix: あり, なし (10)
+targetBlank: あり, なし (10)
+
+IF [prefix] = "あり" THEN [suffix] = "なし" AND [targetBlank] = "なし";
+IF [targetBlank] = "あり" THEN [suffix] = "なし";
