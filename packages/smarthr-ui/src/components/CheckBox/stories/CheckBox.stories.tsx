@@ -18,6 +18,20 @@ export const Playground: StoryObj<typeof CheckBox> = {
   args: {},
 }
 
+export const Checked: StoryObj<typeof CheckBox> = {
+  name: 'checked',
+  args: {
+    checked: true,
+  },
+}
+
+export const Disabled: StoryObj<typeof CheckBox> = {
+  name: 'disabled',
+  args: {
+    disabled: true,
+  },
+}
+
 export const Mixed: StoryObj<typeof CheckBox> = {
   name: 'mixed',
   args: {
