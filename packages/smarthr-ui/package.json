@@ -40,7 +40,7 @@
     "@storybook/test-runner": "^0.19.1",
     "@storybook/theming": "^8.3.5",
     "@swc/core": "^1.7.35",
-    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^16.0.1",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.range": "^3.2.9",
