@@ -27,6 +27,7 @@ const SERVER_COMPONENTS = [
   'AnchorButton',
   'UpwardLink',
   'TimePicker',
+  'MonthPicker',
   'SpreadsheetTableCorner',
   'HeaderLink',
 ]
