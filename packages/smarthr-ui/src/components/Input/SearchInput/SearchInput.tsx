@@ -30,15 +30,15 @@ const searchInput = tv({
 })
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
-  ({ decorators, width, ...props }, ref) => {
+  ({ decorators, width, className, ...rest }, ref) => {
     const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
     const labelWidth = typeof width === 'number' ? `${width}px` : width
     const { label, input } = searchInput({ existsWidth: !!labelWidth })
 
     return (
-      <label className={label()} style={{ width: labelWidth }}>
+      <label className={label({ className })} style={{ width: labelWidth }}>
         <InputWithTooltip
-          {...props}
+          {...rest}
           ref={ref}
           prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
           className={input()}
