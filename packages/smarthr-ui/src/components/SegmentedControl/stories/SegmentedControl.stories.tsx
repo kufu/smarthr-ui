@@ -9,7 +9,7 @@ import {
   FaTableIcon,
 } from '../../Icon'
 import { Stack } from '../../Layout'
-import { type Option, SegmentedControl } from '../SegmentedControl'
+import { SegmentedControl } from '../SegmentedControl'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -67,6 +67,7 @@ export const Options: StoryObj<typeof SegmentedControl> = {
       />
       <SegmentedControl
         {...args}
+        isSquare={true}
         options={[
           { value: 'table', ariaLabel: 'テーブル', content: tableIcon },
           { value: 'chartBar', ariaLabel: 'バーチャート', content: chartBarIcon },
@@ -105,8 +106,26 @@ export const IsSquare: StoryObj<typeof SegmentedControl> = {
   name: 'isSquare',
   render: (args) => (
     <Stack>
-      <SegmentedControl {...args} isSquare={false} />
-      <SegmentedControl {...args} isSquare={true} />
+      <SegmentedControl
+        {...args}
+        options={[
+          { value: 'table', ariaLabel: 'テーブル', content: tableIcon },
+          { value: 'chartBar', ariaLabel: 'バーチャート', content: chartBarIcon },
+          { value: 'chartArea', ariaLabel: 'エリアチャート', content: chartAreaIcon },
+          { value: 'chartLine', ariaLabel: 'ラインチャート', content: chartLineIcon },
+          { value: 'chartPie', ariaLabel: 'パイチャート', content: chartPieIcon },
+        ]}
+        isSquare={false}
+      />
+      <SegmentedControl
+        {...args}
+        options={[
+          { value: 'departments', content: '部署', disabled: true },
+          { value: 'crew', content: '従業員', disabled: true },
+          { value: 'both', content: '部署と従業員', disabled: true },
+        ]}
+        isSquare={true}
+      />
     </Stack>
   ),
 }

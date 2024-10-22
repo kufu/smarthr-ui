@@ -16,18 +16,18 @@ const closer = tv({
 type Props = PropsWithChildren<ComponentProps<'div'>>
 
 export const DropdownCloser: React.FC<Props> = ({ children, className }) => {
-  const { onClickCloser, controllable, scrollable } = useContext(DropdownContentContext)
+  const { onClickCloser, controllable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
   const styleProps = useMemo(() => {
-    const maxHeightStyle = !controllable && scrollable ? maxHeight : undefined
+    const maxHeightStyle = controllable ? undefined : maxHeight
     return {
       className: closer({ controllable, className }),
       style: {
         maxHeight: maxHeightStyle,
       },
     }
-  }, [className, controllable, maxHeight, scrollable])
+  }, [className, controllable, maxHeight])
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation

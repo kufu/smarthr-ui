@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
-import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon } from '../../Icon'
 
 import type { DecoratorsType, LocaleMap } from '../../../types'
@@ -128,11 +128,11 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
     <Dropdown {...props}>
       <DropdownTrigger>{narrow ? NarrowTrigger : Trigger}</DropdownTrigger>
       <DropdownContent onKeyDown={handleKeyDown} role="presentation">
-        <DropdownScrollArea as="ul" className={languageItemsList()}>
+        <ul className={languageItemsList()}>
           {locales.map(([code, label]) => {
             const isCurrent = currentLang === code
             return (
-              <li key={code} className={languageItem()} aria-current={isCurrent}>
+              <li key={code} className={languageItem()} aria-current={isCurrent} lang={code}>
                 <Button
                   wide
                   prefix={isCurrent ? <FaCheckIcon color="MAIN" alt={checkIconAlt} /> : null}
@@ -144,7 +144,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
               </li>
             )
           })}
-        </DropdownScrollArea>
+        </ul>
       </DropdownContent>
     </Dropdown>
   )

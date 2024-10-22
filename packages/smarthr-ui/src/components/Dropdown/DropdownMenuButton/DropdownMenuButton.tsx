@@ -10,7 +10,7 @@ import React, {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '..'
+import { Dropdown, DropdownContent, DropdownTrigger } from '..'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
@@ -20,14 +20,11 @@ import useKeyboardNavigation from './useKeyboardNavigation'
 type Actions = ActionItem | ActionItem[]
 
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
-type ActionItemTruthyType =
+type ActionItem =
   | ReactElement<ComponentProps<typeof Button>>
   | ReactElement<ComponentProps<typeof AnchorButton>>
   | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
-// HINT: このコンポーネントは以下のような記法で利用される場合が多いため、判定に利用されうる型を許容する
-// <DropdownMenuButton>{hoge && <Button {...props} />}</DropdownMenuButton>
-type ActionItemFalsyType = null | undefined | boolean | 0 | ''
-type ActionItem = ActionItemTruthyType | ActionItemFalsyType
+  | ReactNode
 
 type Props = {
   /** 引き金となるボタンラベル */
@@ -74,7 +71,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const containerRef = React.useRef<HTMLUListElement>(null)
 
   const triggerLabel = useMemo(() => {
     const Icon = TriggerIcon || FaEllipsisIcon
@@ -114,16 +111,18 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent>
-        <DropdownScrollArea as="ul" ref={containerRef} className={actionListStyle}>
-          {React.Children.map(children, (item, i) =>
-            // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
-            // itemの存在チェックでfalsyな値は弾かれている想定
-            item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
-          )}
-        </DropdownScrollArea>
+        <ul ref={containerRef} className={actionListStyle}>
+          {React.Children.map(children, (item) => actionItem(item))}
+        </ul>
       </DropdownContent>
     </Dropdown>
   )
 }
 
-const actionItem = (item: ReactElement) => React.cloneElement(item, { variant: 'text', wide: true })
+// MEMO: {flag && <Button/>} のような書き方に対応させている
+const actionItem = (item: ReactNode) => {
+  if (!(item && React.isValidElement(item))) return null
+
+  const actualElement = React.cloneElement(item as ReactElement, { variant: 'text', wide: true })
+  return <li>{actualElement}</li>
+}

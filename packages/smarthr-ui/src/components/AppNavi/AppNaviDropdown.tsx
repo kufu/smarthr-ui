@@ -31,7 +31,6 @@ const appNaviDropdown = tv({
   },
 })
 
-/** @deprecated AppNaviDropdownMenuButton を使ってください */
 export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   children,
   dropdownContent,

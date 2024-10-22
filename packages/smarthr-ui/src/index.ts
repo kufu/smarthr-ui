@@ -7,7 +7,6 @@ export {
   DropdownTrigger,
   DropdownContent,
   DropdownCloser,
-  DropdownScrollArea,
   FilterDropdown,
   DropdownMenuButton,
   SortDropdown,
@@ -47,16 +46,7 @@ export { StatusLabel } from './components/StatusLabel'
 export { Base, BaseColumn } from './components/Base'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
-export {
-  Table,
-  TableReel,
-  Th,
-  Td,
-  ThCheckbox,
-  TdCheckbox,
-  BulkActionRow,
-  EmptyTableBody,
-} from './components/Table'
+export * from './components/Table'
 export * from './components/AppNavi'
 export { TabBar, TabItem } from './components/TabBar'
 export { Heading, PageHeading } from './components/Heading'
