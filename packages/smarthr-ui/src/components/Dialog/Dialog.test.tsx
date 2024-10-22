@@ -1,27 +1,22 @@
 import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
 import { Fieldset } from '../Fieldset'
+import { FormControl } from '../FormControl'
 import { Heading } from '../Heading'
+import { Input } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
 
 import { Dialog } from './Dialog'
 
-type Props = {
-  closeWhenClickOverlay?: boolean
-}
-
 describe('Dialog', () => {
-  const DialogTemplate: React.FC = (
-    { closeWhenClickOverlay }: Props = { closeWhenClickOverlay: false },
-  ) => {
+  const DialogTemplate: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    console.log('isOpen', isOpen)
     return (
       <>
         <Button
@@ -38,7 +33,6 @@ describe('Dialog', () => {
           onPressEscape={() => setIsOpen(false)}
           id="dialog-default"
           ariaLabel="Dialog"
-          onClickOverlay={closeWhenClickOverlay ? () => setIsOpen(false) : undefined}
         >
           <Section>
             <Heading>Dialog</Heading>
@@ -47,7 +41,7 @@ describe('Dialog', () => {
               name="dialog_datepicker"
               value={'2021-01-01'}
               formatDate={(_date) => (_date ? _date.toDateString() : '')}
-              title="test"
+              title="dialog_datepicker"
               data-test="dialog-datepicker"
             />
             <Fieldset title="Fruits" innerMargin={0.5}>
@@ -78,11 +72,11 @@ describe('Dialog', () => {
     render(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
-    await userEvent.tab()
+    await act(() => userEvent.tab())
     await act(() => userEvent.keyboard('{enter}'))
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
 
-    await userEvent.tab({ shift: true })
+    await act(() => userEvent.tab({ shift: true }))
     await act(() => userEvent.keyboard('{ }'))
     await waitFor(
       () => {
@@ -114,5 +108,61 @@ describe('Dialog', () => {
       },
       { timeout: 1000 },
     )
+  })
+
+  it('フォーカストラップが動作すること', async () => {
+    render(<DialogTemplate />)
+
+    expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
+    await act(() => userEvent.tab())
+    await act(() => userEvent.keyboard('{enter}'))
+    expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
+
+    await act(() => userEvent.tab({ shift: true }))
+    expect(screen.getByRole('button', { name: 'close' })).toHaveFocus()
+    await act(() => userEvent.tab())
+    expect(screen.getByRole('textbox', { name: 'dialog_datepicker' })).toHaveFocus()
+  })
+
+  const DialogTemplateWithFocusTrap: React.FC = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const inputRef = useRef<HTMLInputElement>(null)
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)} aria-haspopup="dialog" aria-controls="dialog-focus">
+          特定の要素をフォーカス
+        </Button>
+        <Dialog
+          isOpen={isOpen}
+          onPressEscape={() => setIsOpen(false)}
+          id="dialog-focus"
+          firstFocusTarget={inputRef}
+          ariaLabel="特定の要素をフォーカスするダイアログ"
+        >
+          <FormControl title="特定の要素をフォーカスするダイアログのInput">
+            <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
+          </FormControl>
+          <div className="shr-flex shr-justify-end">
+            <Button onClick={() => setIsOpen(false)}>close</Button>
+          </div>
+        </Dialog>
+      </>
+    )
+  }
+  it('開いた時に特定の要素をフォーカスできること', async () => {
+    render(<DialogTemplateWithFocusTrap />)
+
+    expect(
+      screen.queryByRole('dialog', { name: '特定の要素をフォーカスするダイアログ' }),
+    ).toBeNull()
+    await act(() => userEvent.tab())
+    await act(() => userEvent.keyboard('{enter}'))
+    expect(
+      screen.getByRole('dialog', { name: '特定の要素をフォーカスするダイアログ' }),
+    ).toBeVisible()
+
+    expect(
+      screen.getByRole('textbox', { name: '特定の要素をフォーカスするダイアログのInput' }),
+    ).toHaveFocus()
   })
 })
