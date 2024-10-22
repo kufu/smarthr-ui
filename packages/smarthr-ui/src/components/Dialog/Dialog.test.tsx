@@ -1,3 +1,4 @@
+import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import React, { useState } from 'react'
 
@@ -11,8 +12,14 @@ import { Section } from '../SectioningContent'
 
 import { Dialog } from './Dialog'
 
+type Props = {
+  closeWhenClickOverlay?: boolean
+}
+
 describe('Dialog', () => {
-  const DialogTemplate: React.FC = () => {
+  const DialogTemplate: React.FC = (
+    { closeWhenClickOverlay }: Props = { closeWhenClickOverlay: false },
+  ) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     console.log('isOpen', isOpen)
     return (
@@ -31,7 +38,7 @@ describe('Dialog', () => {
           onPressEscape={() => setIsOpen(false)}
           id="dialog-default"
           ariaLabel="Dialog"
-          onClickOverlay={() => setIsOpen(false)}
+          onClickOverlay={closeWhenClickOverlay ? () => setIsOpen(false) : undefined}
         >
           <Section>
             <Heading>Dialog</Heading>
@@ -71,22 +78,22 @@ describe('Dialog', () => {
     render(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
-    act(() => {
-      screen.getByRole('button', { name: 'Dialog' }).click()
-    })
+    await userEvent.tab()
+    await act(() => userEvent.keyboard('{enter}'))
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
 
-    act(() => {
-      screen.getByRole('button', { name: 'close' }).click()
-    })
+    await userEvent.tab({ shift: true })
+    await act(() => userEvent.keyboard('{ }'))
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
       },
       { timeout: 1000 },
     )
+    // ダイアログを閉じた後、トリガがフォーカスされることを確認
+    expect(screen.getByRole('button', { name: 'Dialog' })).toHaveFocus()
   })
-  it('ダイアログの外側をクリックするとダイアログが閉じること', async () => {
+  it('ダイアログの外側をクリックするとダイアログが閉じないこと', async () => {
     render(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
@@ -103,7 +110,7 @@ describe('Dialog', () => {
     })
     await waitFor(
       () => {
-        expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
+        expect(screen.queryByRole('dialog', { name: 'Dialog' })).not.toBeNull()
       },
       { timeout: 1000 },
     )
