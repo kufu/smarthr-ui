@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [59.0.0](https://github.com/kufu/smarthr-ui/compare/v58.1.2...v59.0.0) (2024-10-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* DropdownScrollArea と DropdownContent の scrollable を削除 (#5000)
+
+### Features
+
+* WakuWakuButton を追加 ([#5018](https://github.com/kufu/smarthr-ui/issues/5018)) ([ba5df40](https://github.com/kufu/smarthr-ui/commit/ba5df408774b751759775c8d679ff60dd5249b92))
+* 一括選択のチェックボックスに可視のラベルを追加 ([#4149](https://github.com/kufu/smarthr-ui/issues/4149)) ([cfd9fb8](https://github.com/kufu/smarthr-ui/commit/cfd9fb833c6eb5225758b4c677f73d6672fa2cb9))
+
+
+### Bug Fixes
+
+* AppNaviDropdown の deprecated を削除 ([#5024](https://github.com/kufu/smarthr-ui/issues/5024)) ([b8d004e](https://github.com/kufu/smarthr-ui/commit/b8d004e5e6c363b7d7c39ba45712da5dc5aec2b9))
+* DropdownScrollArea と DropdownContent の scrollable を削除 ([#5000](https://github.com/kufu/smarthr-ui/issues/5000)) ([b6f6548](https://github.com/kufu/smarthr-ui/commit/b6f65486b127f34e84295544fac3eed4df315f09))
+* **LanguageSwitcher:** スクリーンリーダーで各言語のリンクを正しく読み上げられるようにlang属性を追加 ([#5002](https://github.com/kufu/smarthr-ui/issues/5002)) ([e211233](https://github.com/kufu/smarthr-ui/commit/e211233710399e52f12a20d00ad1c256f0685a8d))
+* Loaderの表示遅延処理を削除する ([#5003](https://github.com/kufu/smarthr-ui/issues/5003)) ([8025cc3](https://github.com/kufu/smarthr-ui/commit/8025cc3ab5e9080b82597555859851b0361a568a))
+* レイアウトコンポーネントなどと StyledComponent を組み合わせた場合に、見出しレベルの自動設定が機能しない不具合を修正 ([#5028](https://github.com/kufu/smarthr-ui/issues/5028)) ([950b06b](https://github.com/kufu/smarthr-ui/commit/950b06b718998eeba9c90506f7e616ca40ede783))
+
 ### [58.1.2](https://github.com/kufu/smarthr-ui/compare/v58.1.1...v58.1.2) (2024-10-15)
 
 
