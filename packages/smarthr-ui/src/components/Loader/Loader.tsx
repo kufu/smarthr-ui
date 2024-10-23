@@ -12,7 +12,6 @@ type Props = {
   text?: ReactNode
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
-  as?: string | React.ComponentType<any>
 }
 type ElementProps = Omit<ComponentProps<'span'>, keyof Props>
 
