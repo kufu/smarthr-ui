@@ -58,7 +58,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof TextLink>
+} satisfies Meta<typeof TextLink>
 
 export const Playground: StoryObj<typeof TextLink> = {}
 

@@ -47,7 +47,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} as Meta<typeof TextLink>
+} satisfies Meta<typeof TextLink>
 
 export const VRT: StoryObj<typeof TextLink> = {
   play: async ({ canvasElement }) => {
