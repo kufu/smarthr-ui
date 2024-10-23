@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { isStyledComponent } from 'styled-components'
 
 import { SectioningFragment } from './SectioningContent'
 
@@ -7,8 +6,12 @@ type ComponentType = string | React.ComponentType<any>
 
 const sectioningContents = ['article', 'aside', 'nav', 'section']
 
+export default function isStyledComponent(target: any) {
+  return typeof target === 'object' && 'styledComponentId' in target
+}
+
 const isSectioningContent = (type: ComponentType) => {
-  const type_ = isStyledComponent(type) ? type.target : type
+  const type_ = isStyledComponent(type) ? (type as any).target : type
   return typeof type_ === 'string' && sectioningContents.includes(type_)
 }
 
