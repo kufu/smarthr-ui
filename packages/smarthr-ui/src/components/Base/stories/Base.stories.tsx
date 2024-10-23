@@ -80,9 +80,6 @@ export const Overflow: StoryObj<typeof Base> = {
       ))}
     </Stack>
   ),
-  parameters: {
-    backgrounds: { default: 'light' },
-  },
 }
 
 export const Layer: StoryObj<typeof Base> = {
