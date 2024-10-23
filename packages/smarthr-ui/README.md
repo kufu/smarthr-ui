@@ -7,7 +7,6 @@ SmartHR UI はそのすべてのアプリケーションの UI コンポーネ�
 
 [![npm version](https://badge.fury.io/js/smarthr-ui.svg)](https://badge.fury.io/js/smarthr-ui)
 [![CircleCI](https://circleci.com/gh/kufu/smarthr-ui.svg?style=shield)](https://circleci.com/gh/kufu/smarthr-ui)
-![e2e](https://github.com/kufu/smarthr-ui/workflows/e2e/badge.svg)
 
 </div>
 
