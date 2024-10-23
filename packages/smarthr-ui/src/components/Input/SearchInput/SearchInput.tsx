@@ -1,6 +1,7 @@
 import React, { ComponentProps, forwardRef, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { FaSearchIcon } from '../../Icon'
+import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
 import type { DecoratorsType } from '../../../types'
@@ -13,34 +14,34 @@ type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'p
 
 const ICON_ALT = '検索'
 
+const searchInput = tv({
+  slots: {
+    label: 'shr-inline-block',
+    input: '',
+  },
+  variants: {
+    existsWidth: {
+      true: {
+        // Tooltip > Input の構成になっているため、内部の幅を広げる
+        input: 'shr-w-full [&_.smarthr-ui-Input]:shr-w-full',
+      },
+    },
+  },
+})
+
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
-  ({ decorators, width, ...props }, ref) => {
+  ({ decorators, width, className, ...rest }, ref) => {
     const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
-    const widths = useMemo(() => {
-      const widthStyle = typeof width === 'number' ? `${width}px` : width
-
-      if (!widthStyle) {
-        return {
-          label: undefined,
-          input: undefined,
-        }
-      }
-
-      return {
-        label: {
-          width: widthStyle,
-        },
-        input: '100%',
-      }
-    }, [width])
+    const labelWidth = typeof width === 'number' ? `${width}px` : width
+    const { label, input } = searchInput({ existsWidth: !!labelWidth })
 
     return (
-      <label style={widths.label}>
+      <label className={label({ className })} style={{ width: labelWidth }}>
         <InputWithTooltip
-          {...props}
+          {...rest}
           ref={ref}
-          width={widths.input}
-          prefix={<FaSearchIcon alt={iconAlt} color="TEXT_GREY" />}
+          prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
+          className={input()}
         />
       </label>
     )
