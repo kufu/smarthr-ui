@@ -7,6 +7,7 @@ import { Fieldset } from '../../Fieldset'
 import { Heading } from '../../Heading'
 import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
+import { ColorBox } from '../ComponentsForStories'
 import { Stack } from '../Stack'
 
 import { Cluster } from '.'
@@ -117,16 +118,3 @@ const StyledBase = styled(Base)(({ theme }) => {
     background-color: ${color.BACKGROUND};
   `
 })
-
-const ColorBox = styled.div(
-  ({ theme: { radius, color } }) => css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: ${radius.m};
-    background-color: ${color.BRAND};
-    color: ${color.TEXT_WHITE};
-    width: 80px;
-    height: 80px;
-  `,
-)
