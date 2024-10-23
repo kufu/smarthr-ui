@@ -11,7 +11,7 @@ type Props = {
 export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
     const { wrapperStyle, innerStyle } = useMemo(() => {
-      const { wrapper, inner } = pickerStyle()
+      const { wrapper, inner } = pickerStyle('TimePicker')
       return {
         wrapperStyle: wrapper({ className, disabled, readOnly }),
         innerStyle: inner(),
