@@ -4,13 +4,10 @@ import React, {
   PropsWithChildren,
   ReactElement,
   forwardRef,
-  useContext,
   useMemo,
 } from 'react'
 
 import { Heading } from '../Heading'
-
-import { LevelContext } from './levelContext'
 
 type BaseProps = PropsWithChildren<{
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
@@ -66,11 +63,5 @@ export const Nav: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
   <SectioningContent {...props} ref={ref} as="nav" />
 ))
 
-export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({
-  children,
-  baseLevel,
-}) => {
-  const level = useContext(LevelContext)
-
-  return <LevelContext.Provider value={baseLevel || level + 1}>{children}</LevelContext.Provider>
-}
+export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({ children }) =>
+  children
