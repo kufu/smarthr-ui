@@ -23,7 +23,7 @@ const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
   ({ children, baseLevel = 1, as: Wrapper = 'section', ...props }, ref) => {
     const actualChildren = useMemo(
       () =>
-        React.Children.map(children, (item, i) => {
+        React.Children.map(children, (item) => {
           // item が ReactElement である場合
           if (React.isValidElement(item)) {
             if (
