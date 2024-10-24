@@ -89,7 +89,7 @@ export * from './components/ResponseMessage'
 export * from './components/Badge'
 export * from './components/Switch'
 export * from './components/Stepper'
-export * from './components/TimePicker'
+export * from './components/Picker'
 
 // layout components
 export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'

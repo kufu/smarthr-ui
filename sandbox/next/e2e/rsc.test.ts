@@ -26,6 +26,7 @@ const SERVER_COMPONENTS = [
   'Icon',
   'Loader',
   'MessageScreen',
+  'MonthPicker',
   'Nav',
   'PageCounter',
   'PageHeading',
