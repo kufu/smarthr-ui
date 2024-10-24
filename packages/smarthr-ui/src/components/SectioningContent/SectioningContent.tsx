@@ -27,7 +27,11 @@ const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
               item.type === Section ||
               item.type === Article ||
               item.type === Aside ||
-              item.type === Nav
+              item.type === Nav ||
+              item.type === 'section' ||
+              item.type === 'article' ||
+              item.type === 'aside' ||
+              item.type === 'nav'
             ) {
               return React.cloneElement(item as ReactElement, { baseLevel: baseLevel + 1 })
             }
@@ -62,6 +66,3 @@ export const Aside: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
 export const Nav: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
   <SectioningContent {...props} ref={ref} as="nav" />
 ))
-
-export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({ children }) =>
-  children

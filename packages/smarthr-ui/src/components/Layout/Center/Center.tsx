@@ -1,8 +1,6 @@
 import React, { forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
-
 import type { Gap } from '../../../types'
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
@@ -68,12 +66,6 @@ export const Center = forwardRef<HTMLDivElement, Props & ElementProps>(
       [padding, verticalCentering, className, minHeight, maxWidth],
     )
 
-    const Wrapper = useSectionWrapper(Component)
-
-    return (
-      <Wrapper>
-        <Component {...styleProps} {...props} ref={ref} />
-      </Wrapper>
-    )
+    return <Component {...styleProps} {...props} ref={ref} />
   },
 )

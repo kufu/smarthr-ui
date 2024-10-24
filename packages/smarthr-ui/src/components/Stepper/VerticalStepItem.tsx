@@ -2,7 +2,7 @@ import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
-import { SectioningFragment } from '../SectioningContent/SectioningContent'
+import { Nav } from '../SectioningContent'
 
 import { StepCounter } from './StepCounter'
 
@@ -65,7 +65,7 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
 
   return (
     <li aria-current={current} className={wrapper()}>
-      <SectioningFragment>
+      <Nav>
         <div className={headingWrapper()}>
           <StepCounter status={status} current={current} stepNumber={stepNumber} />
           <Heading type="sectionTitle" className={heading()}>
@@ -75,7 +75,7 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
         <div className={body()}>
           <div className={inner()}>{children}</div>
         </div>
-      </SectioningFragment>
+      </Nav>
     </li>
   )
 }

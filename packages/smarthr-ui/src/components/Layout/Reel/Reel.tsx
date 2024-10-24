@@ -1,8 +1,6 @@
 import React, { forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
-
 import type { Gap } from '../../../types'
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
@@ -16,7 +14,7 @@ const reel = tv({
   base: [
     'shr-flex shr-overflow-x-auto shr-overflow-y-hidden',
     '[&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto',
-    /* 
+    /*
       Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
       See https://bugs.chromium.org/p/chromium/issues/detail?id=1161709
     */
@@ -90,12 +88,6 @@ export const Reel = forwardRef<HTMLDivElement, Props>(
   ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...props }, ref) => {
     const styles = useMemo(() => reel({ gap, padding, className }), [className, gap, padding])
 
-    const Wrapper = useSectionWrapper(Component)
-
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={styles} />
-      </Wrapper>
-    )
+    return <Component {...props} ref={ref} className={styles} />
   },
 )
