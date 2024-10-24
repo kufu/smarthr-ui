@@ -1,13 +1,17 @@
-import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { LevelContext } from '../SectioningContent'
 import { STYLE_TYPE_MAP, Text, TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{
   /** テキストのスタイル */
   type?: TextProps['styleType']
+  /**
+   * 見出しレベル
+   * 通常は SectioningContent のネストレベルに応じて自動で設定されます
+   */
+  level?: number
   /**
    * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
    */
@@ -55,11 +59,11 @@ const heading = tv({
 export const Heading: FC<Props & ElementProps> = ({
   tag,
   type = 'sectionTitle',
+  level = 1,
   className,
   visuallyHidden,
   ...props
 }) => {
-  const level = useContext(LevelContext)
   const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
   const styles = useMemo(() => heading({ visuallyHidden, className }), [className, visuallyHidden])
   const actualProps = {

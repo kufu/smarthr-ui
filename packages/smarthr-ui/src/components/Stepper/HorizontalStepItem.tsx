@@ -2,7 +2,7 @@ import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
-import { SectioningFragment } from '../SectioningContent/SectioningContent'
+import { Nav } from '../SectioningContent/SectioningContent'
 
 import { StepCounter } from './StepCounter'
 
@@ -87,7 +87,7 @@ export const HorizontalStepItem: FC<Props> = ({
 
   return (
     <li aria-current={current} className={wrapper()}>
-      <SectioningFragment>
+      <Nav>
         <div className={headingWrapper()}>
           <div className={stepCounterWrapper()}>
             <span className={beforeLine()} />
@@ -98,7 +98,7 @@ export const HorizontalStepItem: FC<Props> = ({
             {label}
           </Heading>
         </div>
-      </SectioningFragment>
+      </Nav>
     </li>
   )
 }

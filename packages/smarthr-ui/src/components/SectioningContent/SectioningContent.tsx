@@ -1,6 +1,13 @@
-import React, { ComponentPropsWithRef, FC, PropsWithChildren, forwardRef, useContext } from 'react'
+import React, {
+  ComponentPropsWithRef,
+  FC,
+  PropsWithChildren,
+  ReactElement,
+  forwardRef,
+  useMemo,
+} from 'react'
 
-import { LevelContext } from './levelContext'
+import { Heading } from '../Heading'
 
 type BaseProps = PropsWithChildren<{
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
@@ -10,12 +17,41 @@ type BaseProps = PropsWithChildren<{
 type SectioningContentProps = Omit<ComponentPropsWithRef<'section'>, keyof BaseProps> & BaseProps
 
 const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
-  ({ children, baseLevel, as: Wrapper = 'section', ...props }, ref) => (
-    <Wrapper {...props} ref={ref}>
-      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-      <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
-    </Wrapper>
-  ),
+  ({ children, baseLevel = 1, as: Wrapper = 'section', ...props }, ref) => {
+    const actualChildren = useMemo(
+      () =>
+        React.Children.map(children, (item) => {
+          // item が ReactElement である場合
+          if (React.isValidElement(item)) {
+            if (
+              item.type === Section ||
+              item.type === Article ||
+              item.type === Aside ||
+              item.type === Nav ||
+              item.type === 'section' ||
+              item.type === 'article' ||
+              item.type === 'aside' ||
+              item.type === 'nav'
+            ) {
+              return React.cloneElement(item as ReactElement, { baseLevel: baseLevel + 1 })
+            }
+            if (item.type === Heading) {
+              return React.cloneElement(item as ReactElement, { level: baseLevel + 1 })
+            }
+            return item
+          } else {
+            return item
+          }
+        }),
+      [baseLevel, children],
+    )
+
+    return (
+      <Wrapper {...props} ref={ref}>
+        {actualChildren}
+      </Wrapper>
+    )
+  },
 )
 
 type Props = Omit<React.ComponentProps<typeof SectioningContent>, 'as'>
@@ -30,12 +66,3 @@ export const Aside: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
 export const Nav: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
   <SectioningContent {...props} ref={ref} as="nav" />
 ))
-
-export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({
-  children,
-  baseLevel,
-}) => {
-  const level = useContext(LevelContext)
-
-  return <LevelContext.Provider value={baseLevel || level + 1}>{children}</LevelContext.Provider>
-}

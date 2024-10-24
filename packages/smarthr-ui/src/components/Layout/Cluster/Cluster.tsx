@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { genericsForwardRef } from '../../../libs/util'
-import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
 import type { ComponentPropsWithoutRef, ForwardedRef, PropsWithChildren } from 'react'
@@ -108,13 +107,8 @@ const _Cluster = <T extends React.ElementType = 'div'>(
   )
 
   const Component = as || 'div'
-  const Wrapper = useSectionWrapper(Component)
 
-  return (
-    <Wrapper>
-      <Component {...rest} ref={ref} className={styles} />
-    </Wrapper>
-  )
+  return <Component {...rest} ref={ref} className={styles} />
 }
 
 export const Cluster = genericsForwardRef(_Cluster)

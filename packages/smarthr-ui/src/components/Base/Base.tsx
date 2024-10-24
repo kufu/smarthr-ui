@@ -1,8 +1,6 @@
 import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
-
 import type { Gap } from '../../types'
 
 export const base = tv({
@@ -129,12 +127,6 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
       })
     }, [className, layer, overflow, padding, radius])
 
-    const Wrapper = useSectionWrapper(Component)
-
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={styles} />
-      </Wrapper>
-    )
+    return <Component {...props} ref={ref} className={styles} />
   },
 )
