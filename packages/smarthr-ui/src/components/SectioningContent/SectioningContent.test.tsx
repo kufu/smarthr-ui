@@ -96,6 +96,51 @@ describe('SectioningContent', () => {
     expect(document.querySelectorAll('h4')[1]).toHaveTextContent('level 4-2')
   })
 
+  it.todo(
+    'SectioningContent が直下でなく子孫でネストされた場合でも、それぞれの見出しレベルがインクリメントされること',
+    async () => {
+      render(
+        <Section>
+          <div>
+            <Heading>level 2</Heading>
+          </div>
+          <div>
+            <Section>
+              <div>
+                <Heading>level 3-1</Heading>
+                <div>
+                  <Section>
+                    <Heading>level 4-1</Heading>
+                  </Section>
+                </div>
+              </div>
+            </Section>
+          </div>
+          <div>
+            <Section>
+              <div>
+                <Heading>level 3-2</Heading>
+                <div>
+                  <Section>
+                    <div>
+                      <Heading>level 4-2</Heading>
+                    </div>
+                  </Section>
+                </div>
+              </div>
+            </Section>
+          </div>
+        </Section>,
+      )
+
+      expect(document.querySelector('h2')).toHaveTextContent('level 2')
+      expect(document.querySelectorAll('h3')[0]).toHaveTextContent('level 3-1')
+      expect(document.querySelectorAll('h3')[1]).toHaveTextContent('level 3-2')
+      expect(document.querySelectorAll('h4')[0]).toHaveTextContent('level 4-1')
+      expect(document.querySelectorAll('h4')[1]).toHaveTextContent('level 4-2')
+    },
+  )
+
   it('SectioningContent に含まれる見出し要素は、見出しレベルが6を超えると span になり、role と aria-level が設定される', async () => {
     const { container } = render(
       <Nav>
