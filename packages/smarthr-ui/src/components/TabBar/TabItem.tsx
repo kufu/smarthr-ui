@@ -84,6 +84,7 @@ export const TabItem: FC<Props & ElementProps> = ({
         vertical="auto"
         ariaDescribedbyTarget="inner"
         aria-disabled={rest.disabled}
+        className="focus-visible:shr-focus-indicator--inner"
       >
         <TabButton {...rest} suffix={Icon} />
       </Tooltip>
