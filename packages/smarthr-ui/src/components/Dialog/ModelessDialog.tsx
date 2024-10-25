@@ -97,10 +97,7 @@ const modelessDialog = tv({
       'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
       'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
     ],
-    title: [
-      'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
-      'shr-my-1 shr-me-1',
-    ],
+    title: ['shr-my-1 shr-me-1'],
     closeButtonLayout: [
       'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
       'shr-ml-auto shr-shrink-0',
