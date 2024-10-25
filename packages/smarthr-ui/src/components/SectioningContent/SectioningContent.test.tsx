@@ -98,50 +98,47 @@ describe('SectioningContent', () => {
     expect(document.querySelectorAll('h4')[1]).toHaveTextContent('level 4-2')
   })
 
-  it.todo(
-    'SectioningContent が直下でなく子孫でネストされた場合でも、それぞれの見出しレベルがインクリメントされること',
-    async () => {
-      render(
-        <Section>
-          <div>
-            <Heading>level 2</Heading>
-          </div>
-          <div>
-            <Section>
+  it('SectioningContent が直下でなく子孫でネストされた場合でも、それぞれの見出しレベルがインクリメントされること', async () => {
+    render(
+      <Section>
+        <div>
+          <Heading>level 2</Heading>
+        </div>
+        <div>
+          <Section>
+            <div>
+              <Heading>level 3-1</Heading>
               <div>
-                <Heading>level 3-1</Heading>
-                <div>
-                  <Section>
-                    <Heading>level 4-1</Heading>
-                  </Section>
-                </div>
+                <Section>
+                  <Heading>level 4-1</Heading>
+                </Section>
               </div>
-            </Section>
-          </div>
-          <div>
-            <Section>
+            </div>
+          </Section>
+        </div>
+        <div>
+          <Section>
+            <div>
+              <Heading>level 3-2</Heading>
               <div>
-                <Heading>level 3-2</Heading>
-                <div>
-                  <Section>
-                    <div>
-                      <Heading>level 4-2</Heading>
-                    </div>
-                  </Section>
-                </div>
+                <Section>
+                  <div>
+                    <Heading>level 4-2</Heading>
+                  </div>
+                </Section>
               </div>
-            </Section>
-          </div>
-        </Section>,
-      )
+            </div>
+          </Section>
+        </div>
+      </Section>,
+    )
 
-      expect(document.querySelector('h2')).toHaveTextContent('level 2')
-      expect(document.querySelectorAll('h3')[0]).toHaveTextContent('level 3-1')
-      expect(document.querySelectorAll('h3')[1]).toHaveTextContent('level 3-2')
-      expect(document.querySelectorAll('h4')[0]).toHaveTextContent('level 4-1')
-      expect(document.querySelectorAll('h4')[1]).toHaveTextContent('level 4-2')
-    },
-  )
+    expect(document.querySelector('h2')).toHaveTextContent('level 2')
+    expect(document.querySelectorAll('h3')[0]).toHaveTextContent('level 3-1')
+    expect(document.querySelectorAll('h3')[1]).toHaveTextContent('level 3-2')
+    expect(document.querySelectorAll('h4')[0]).toHaveTextContent('level 4-1')
+    expect(document.querySelectorAll('h4')[1]).toHaveTextContent('level 4-2')
+  })
 
   it('SectioningContent がネイティブ要素の場合も、見出しレベルがインクリメントされること', async () => {
     const { container } = render(
@@ -177,7 +174,7 @@ describe('SectioningContent', () => {
     { name: 'Reel', Component: Reel },
     { name: 'Sidebar', Component: Sidebar },
   ].forEach(({ name, Component }) => {
-    it.only(`SectioningContent に <${name} as="'article'|'aside'|'nav'|'section'"> の場合も、見出しレベルがインクリメントされること`, async () => {
+    it(`SectioningContent に <${name} as="'article'|'aside'|'nav'|'section'"> の場合も、見出しレベルがインクリメントされること`, async () => {
       const { container } = render(
         <Section>
           <Heading>level 2</Heading>
