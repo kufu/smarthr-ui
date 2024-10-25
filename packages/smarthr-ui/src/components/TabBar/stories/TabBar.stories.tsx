@@ -25,12 +25,6 @@ export default {
   },
 } as Meta<typeof TabBar>
 
-export const Default: StoryObj<typeof TabBar> = {
-  args: {
-    bordered: true,
-  },
-}
-
 export const Playground: StoryObj<typeof TabBar> = {
   args: {
     bordered: true,
