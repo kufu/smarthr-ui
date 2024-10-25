@@ -1,6 +1,7 @@
 /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { render } from '@testing-library/react'
 import React from 'react'
+import styled from 'styled-components'
 
 import { Base } from '../Base'
 import { Heading, PageHeading } from '../Heading'
@@ -165,6 +166,33 @@ describe('SectioningContent', () => {
     expect(container.querySelector('h6')).toHaveTextContent('level 6')
   })
 
+  it('SectioningContent が StyledComponent でラップされている場合も、見出しレベルがインクリメントされること', async () => {
+    const StyledSection = styled(Section)``
+    const StyledArticle = styled(Article)``
+    const StyledAside = styled(Aside)``
+    const StyledNav = styled(Nav)``
+    const StyledHeading = styled(Heading)``
+    render(
+      <StyledSection>
+        <StyledHeading>level 2</StyledHeading>
+        <StyledArticle>
+          <StyledHeading>level 3</StyledHeading>
+          <StyledAside>
+            <StyledHeading>level 4</StyledHeading>
+            <StyledNav>
+              <StyledHeading>level 5</StyledHeading>
+            </StyledNav>
+          </StyledAside>
+        </StyledArticle>
+      </StyledSection>,
+    )
+
+    expect(document.querySelector('h2')).toHaveTextContent('level 2')
+    expect(document.querySelector('h3')).toHaveTextContent('level 3')
+    expect(document.querySelector('h4')).toHaveTextContent('level 4')
+    expect(document.querySelector('h5')).toHaveTextContent('level 5')
+  })
+
   // as で任意のコンポーネントになれるコンポーネントに対しても総当たりでテストする
   ;[
     { name: 'Stack', Component: Stack },
@@ -174,7 +202,7 @@ describe('SectioningContent', () => {
     { name: 'Reel', Component: Reel },
     { name: 'Sidebar', Component: Sidebar },
   ].forEach(({ name, Component }) => {
-    it(`SectioningContent に <${name} as="'article'|'aside'|'nav'|'section'"> の場合も、見出しレベルがインクリメントされること`, async () => {
+    it(`SectioningContent に <${name} as="'article'|'aside'|'nav'|'section'"> がある場合も、見出しレベルがインクリメントされること`, async () => {
       const { container } = render(
         <Section>
           <Heading>level 2</Heading>
@@ -191,6 +219,33 @@ describe('SectioningContent', () => {
               </Component>
             </Component>
           </Component>
+        </Section>,
+      )
+      expect(container.querySelector('h2')).toHaveTextContent('level 2')
+      expect(container.querySelector('h3')).toHaveTextContent('level 3')
+      expect(container.querySelector('h4')).toHaveTextContent('level 4')
+      expect(container.querySelector('h5')).toHaveTextContent('level 5')
+      expect(container.querySelector('h6')).toHaveTextContent('level 6')
+    })
+
+    it(`SectioningContent に <Styled${name} as="'article'|'aside'|'nav'|'section'"> がある場合も、見出しレベルがインクリメントされること`, async () => {
+      const StyledComponent = styled(Component)``
+      const { container } = render(
+        <Section>
+          <Heading>level 2</Heading>
+          <StyledComponent as="section">
+            <Heading>level 3</Heading>
+            <StyledComponent as="article">
+              <Heading>level 4</Heading>
+              <StyledComponent as="aside">
+                <Heading>level 5</Heading>
+                <StyledComponent as="nav">
+                  <Heading>level 6</Heading>
+                  <div></div>
+                </StyledComponent>
+              </StyledComponent>
+            </StyledComponent>
+          </StyledComponent>
         </Section>,
       )
       expect(container.querySelector('h2')).toHaveTextContent('level 2')
