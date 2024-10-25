@@ -204,11 +204,20 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
       const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
 
-      if (input && !input.getAttribute('id')) {
-        input.setAttribute('id', managedHtmlFor)
+      if (input) {
+        if (!input.getAttribute('id')) {
+          input.setAttribute('id', managedHtmlFor)
+        }
+
+        const isInputFile = input instanceof HTMLInputElement && input.type === 'file'
+        const inputLabelledByIds = input.getAttribute('aria-labelledby')
+        if (isInputFile && inputLabelledByIds) {
+          // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+          input.setAttribute('aria-labelledby', `${inputLabelledByIds} ${managedLabelId}`)
+        }
       }
     }
-  }, [managedHtmlFor, isRoleGroup])
+  }, [managedHtmlFor, isRoleGroup, managedLabelId])
   useEffect(() => {
     const inputWrapper = inputWrapperRef?.current
 
