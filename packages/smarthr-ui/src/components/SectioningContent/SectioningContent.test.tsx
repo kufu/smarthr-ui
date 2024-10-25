@@ -2,7 +2,9 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
+import { Base } from '../Base'
 import { Heading, PageHeading } from '../Heading'
+import { Center, Cluster, Reel, Sidebar, Stack } from '../Layout'
 
 import { Article, Aside, Nav, Section } from './SectioningContent'
 
@@ -140,6 +142,67 @@ describe('SectioningContent', () => {
       expect(document.querySelectorAll('h4')[1]).toHaveTextContent('level 4-2')
     },
   )
+
+  it('SectioningContent がネイティブ要素の場合も、見出しレベルがインクリメントされること', async () => {
+    const { container } = render(
+      <Section>
+        <Heading>level 2</Heading>
+        <section>
+          <Heading>level 3</Heading>
+          <article>
+            <Heading>level 4</Heading>
+            <aside>
+              <Heading>level 5</Heading>
+              <nav>
+                <Heading>level 6</Heading>
+              </nav>
+            </aside>
+          </article>
+        </section>
+      </Section>,
+    )
+    expect(container.querySelector('h2')).toHaveTextContent('level 2')
+    expect(container.querySelector('h3')).toHaveTextContent('level 3')
+    expect(container.querySelector('h4')).toHaveTextContent('level 4')
+    expect(container.querySelector('h5')).toHaveTextContent('level 5')
+    expect(container.querySelector('h6')).toHaveTextContent('level 6')
+  })
+
+  // as で任意のコンポーネントになれるコンポーネントに対しても総当たりでテストする
+  ;[
+    { name: 'Stack', Component: Stack },
+    { name: 'Clusetr', Component: Cluster },
+    { name: 'Center', Component: Center },
+    { name: 'Base', Component: Base },
+    { name: 'Reel', Component: Reel },
+    { name: 'Sidebar', Component: Sidebar },
+  ].forEach(({ name, Component }) => {
+    it.only(`SectioningContent に <${name} as="'article'|'aside'|'nav'|'section'"> の場合も、見出しレベルがインクリメントされること`, async () => {
+      const { container } = render(
+        <Section>
+          <Heading>level 2</Heading>
+          <Component as="section">
+            <Heading>level 3</Heading>
+            <Component as="article">
+              <Heading>level 4</Heading>
+              <Component as="aside">
+                <Heading>level 5</Heading>
+                <Component as="nav">
+                  <Heading>level 6</Heading>
+                  <div></div>
+                </Component>
+              </Component>
+            </Component>
+          </Component>
+        </Section>,
+      )
+      expect(container.querySelector('h2')).toHaveTextContent('level 2')
+      expect(container.querySelector('h3')).toHaveTextContent('level 3')
+      expect(container.querySelector('h4')).toHaveTextContent('level 4')
+      expect(container.querySelector('h5')).toHaveTextContent('level 5')
+      expect(container.querySelector('h6')).toHaveTextContent('level 6')
+    })
+  })
 
   it('SectioningContent に含まれる見出し要素は、見出しレベルが6を超えると span になり、role と aria-level が設定される', async () => {
     const { container } = render(
