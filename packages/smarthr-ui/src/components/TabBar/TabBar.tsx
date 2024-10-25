@@ -6,7 +6,7 @@ import { Reel } from '../Layout'
 const tabBar = tv({
   slots: {
     wrapper: 'smarthr-ui-TabBar',
-    inner: 'shr-grow shr-m-0.25',
+    inner: 'shr-grow',
   },
   variants: {
     bordered: {
