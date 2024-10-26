@@ -110,7 +110,7 @@ const balloon = tv({
   ],
 })
 
-export type Props = PropsWithChildren<
+type Props = PropsWithChildren<
   VariantProps<typeof balloon> & {
     /** レンダリングするタグ */
     as?: 'div' | 'span'
