@@ -13,7 +13,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof {{ name }}>
+} satisfies Meta<typeof {{ name }}>
 
 export const Playground: StoryObj<typeof {{ name }}> = {
   args: {
