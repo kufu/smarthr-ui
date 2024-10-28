@@ -16,7 +16,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
-import { Props as BalloonProps } from '../Balloon'
+import { Balloon } from '../Balloon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { TooltipPortal } from './TooltipPortal'
@@ -40,9 +40,9 @@ type Props = PropsWithChildren<{
   /** `true` のとき、ツールチップを表示する対象が省略されている場合のみツールチップ表示を有効にする */
   ellipsisOnly?: boolean
   /** 水平方向の位置 */
-  horizontal?: BalloonProps['horizontal'] | 'auto'
+  horizontal?: ComponentProps<typeof Balloon>['horizontal'] | 'auto'
   /** 垂直方向の位置 */
-  vertical?: BalloonProps['vertical'] | 'auto'
+  vertical?: ComponentProps<typeof Balloon>['vertical'] | 'auto'
   /** ツールチップを表示する対象の tabIndex 値 */
   tabIndex?: number
   /** ツールチップを内包要素に紐付けるかどうか */
@@ -53,8 +53,7 @@ type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby
 const tooltip = tv({
   base: [
     'smarthr-ui-Tooltip',
-    'shr-inline-block shr-max-w-full',
-    'shr-align-bottom',
+    'shr-inline-block shr-max-w-full shr-align-bottom',
     'focus-visible:shr-focus-indicator',
   ],
   variants: {
