@@ -105,16 +105,16 @@ importers:
         version: 3.4.14(ts-node@10.9.2(@swc/core@1.7.40(@swc/helpers@0.5.5))(@types/node@20.17.1)(typescript@5.6.3))
     devDependencies:
       '@babel/core':
-        specifier: ^7.25.9
+        specifier: ^7.26.0
         version: 7.26.0
       '@babel/preset-env':
-        specifier: ^7.25.9
+        specifier: ^7.26.0
         version: 7.26.0(@babel/core@7.26.0)
       '@babel/preset-react':
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.0)
       '@babel/preset-typescript':
-        specifier: ^7.25.9
+        specifier: ^7.26.0
         version: 7.26.0(@babel/core@7.26.0)
       '@storybook/addon-a11y':
         specifier: ^8.3.6
@@ -186,7 +186,7 @@ importers:
         specifier: ^3.2.9
         version: 3.2.9
       '@types/node':
-        specifier: ^20.16.15
+        specifier: ^20.17.1
         version: 20.17.1
       '@types/react':
         specifier: ^18.3.12
@@ -219,7 +219,7 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2(@babel/core@7.26.0)
       chromatic:
-        specifier: ^11.12.6
+        specifier: ^11.16.1
         version: 11.16.1
       css-loader:
         specifier: ^7.1.2
@@ -334,7 +334,7 @@ importers:
         specifier: ^1.48.2
         version: 1.48.2
       '@types/node':
-        specifier: ^20.16.15
+        specifier: ^20.17.1
         version: 20.17.1
       '@types/react':
         specifier: ^18.3.12
