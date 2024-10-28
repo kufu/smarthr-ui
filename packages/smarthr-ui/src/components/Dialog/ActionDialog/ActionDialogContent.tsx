@@ -7,7 +7,7 @@ import { useDialogPortal } from '../useDialogPortal'
 
 import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 
-type Props = BaseProps & UncontrolledDialogProps
+type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const ActionDialogContent: React.FC<Props & ElementProps> = ({
