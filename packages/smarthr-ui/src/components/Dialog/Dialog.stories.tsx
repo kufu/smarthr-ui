@@ -58,10 +58,10 @@ export default {
 }
 
 export const Default: StoryFn = () => {
-  const [opened, setOpended] = useState<'default' | 'focus' | null>(null)
+  const [opened, setOpened] = useState<'default' | 'focus' | null>(null)
   const [value, setValue] = useState('Apple')
   const [date, setDate] = useState<Date | null>(null)
-  const onClickClose = () => setOpended(null)
+  const onClickClose = () => setOpened(null)
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -69,7 +69,7 @@ export const Default: StoryFn = () => {
     <TriggerList>
       <li>
         <Button
-          onClick={() => setOpended('default')}
+          onClick={() => setOpened('default')}
           aria-haspopup="dialog"
           aria-controls="dialog-default"
           data-test="dialog-trigger"
@@ -126,7 +126,7 @@ export const Default: StoryFn = () => {
       </li>
       <li>
         <Button
-          onClick={() => setOpended('focus')}
+          onClick={() => setOpened('focus')}
           aria-haspopup="dialog"
           aria-controls="dialog-focus"
           data-test="dialog-focus-trigger"
@@ -546,7 +546,7 @@ export const RegOpenedForm: StoryFn = () => (
       でコンテンツ領域の背景色とパディングを設定できます。
     </p>
     <label>
-      <input name="reg_opend_action_checkbox" type="checkbox" />
+      <input name="reg_opened_action_checkbox" type="checkbox" />
       Agree
     </label>
   </FormDialog>
@@ -554,8 +554,8 @@ export const RegOpenedForm: StoryFn = () => (
 RegOpenedForm.parameters = { docs: { disable: true } }
 
 export const Body以外のPortalParent: StoryFn = () => {
-  const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()
-  const onClickOpen = (type: 'deault' | 'actiion' | 'message' | 'modeless') => setIsOpen(type)
+  const [isOpen, setIsOpen] = useState<'default' | 'action' | 'message' | 'modeless'>()
+  const onClickOpen = (type: 'default' | 'action' | 'message' | 'modeless') => setIsOpen(type)
   const onClickClose = () => setIsOpen(undefined)
   const portalParentRef = useRef<HTMLDivElement>(null)
 
@@ -563,7 +563,7 @@ export const Body以外のPortalParent: StoryFn = () => {
     <div ref={portalParentRef}>
       <Stack align="flex-start">
         <Button
-          onClick={() => onClickOpen('deault')}
+          onClick={() => onClickOpen('default')}
           aria-haspopup="dialog"
           aria-controls="portal-default"
           data-test="dialog-trigger"
@@ -571,7 +571,7 @@ export const Body以外のPortalParent: StoryFn = () => {
           Dialog を開く
         </Button>
         <Button
-          onClick={() => onClickOpen('actiion')}
+          onClick={() => onClickOpen('action')}
           aria-haspopup="dialog"
           aria-controls="portal-action"
         >
@@ -594,7 +594,7 @@ export const Body以外のPortalParent: StoryFn = () => {
       </Stack>
 
       <Dialog
-        isOpen={isOpen === 'deault'}
+        isOpen={isOpen === 'default'}
         onPressEscape={onClickClose}
         id="portal-default"
         ariaLabel="Dialog"
@@ -613,7 +613,7 @@ export const Body以外のPortalParent: StoryFn = () => {
         </FooterCluster>
       </Dialog>
       <ActionDialog
-        isOpen={isOpen === 'actiion'}
+        isOpen={isOpen === 'action'}
         title="ActionDialog"
         actionText="保存"
         onClickAction={(closeDialog) => {

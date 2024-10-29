@@ -36,7 +36,7 @@ const accordionPanelTrigger = tv({
       'shr-group shr-bg-transparent shr-border-none shr-appearance-none shr-w-full shr-px-1 shr-py-0.75 shr-cursor-pointer shr-text-inherit shr-text-color-inherit shr-text-left',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
-      // Base 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Base に overflw: hidden を与えるとフォーカスリングが表示されなくなる）
+      // Base 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Base に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
       '[.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
     ],
     leftIcon: 'shr-transition-transform shr-duration-100 group-aria-expanded:shr-rotate-90',

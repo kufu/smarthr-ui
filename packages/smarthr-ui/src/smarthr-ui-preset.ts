@@ -44,6 +44,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
+    focus: ['focus-indicator', 'focus-indicator--inner'],
   },
 }
 
@@ -61,7 +62,6 @@ export default {
       black: defaultColor.GREY_100,
       white: defaultColor.WHITE,
       'white-darken': theme('colors.white-darken'),
-      link: defaultColor.TEXT_LINK,
       background: defaultColor.BACKGROUND,
       border: theme('colors.grey.20'),
       brand: theme('colors.brand'),
@@ -112,6 +112,7 @@ export default {
       'white-darken': darkenColor(defaultColor.WHITE),
       main: defaultColor.MAIN,
       'main-darken': darkenColor(defaultColor.MAIN),
+      link: defaultColor.TEXT_LINK,
       brand: defaultColor.BRAND,
       outline: defaultColor.OUTLINE,
       danger: defaultColor.DANGER,
@@ -185,7 +186,9 @@ export default {
       white: theme('colors.white'),
       'white-darken': theme('colors.white-darken'),
       disabled: theme('colors.grey.30'),
-      link: defaultColor.TEXT_LINK,
+      link: theme('colors.link'),
+      // ACTION_BACKGROUND とコントラスト比 4.5 を達成するために調整
+      'link-darken': darkenColor(theme('colors.link'), 0.062),
       grey: theme('colors.grey.65'),
       danger: theme('colors.danger'),
       'color-inherit': 'inherit',
@@ -212,6 +215,7 @@ export default {
         disabled: theme('colors.grey.20 / 50%'),
         darken: darkenColor(theme('colors.grey.20')),
         'high-contrast': theme('colors.grey.100'),
+        link: theme('colors.link'),
       }),
       strokeWidth: {
         '0.5': '0.5',
@@ -382,6 +386,11 @@ export default {
           outline: 'none',
           isolation: 'isolate',
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+        },
+        '.focus-indicator--inner': {
+          outline: 'none',
+          isolation: 'isolate',
+          boxShadow: `inset 0 0 0 2px ${theme('colors.outline')}, inset 0 0 0 4px ${theme('colors.white')}`,
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),

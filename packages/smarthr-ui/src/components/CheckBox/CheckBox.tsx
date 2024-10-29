@@ -50,7 +50,7 @@ const checkbox = tv({
     iconWrap: [
       'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-1/2 shr-inline-block shr-h-[theme(fontSize.2xs)] shr-w-[theme(fontSize.2xs)] -shr-translate-x-1/2 -shr-translate-y-1/2 shr-text-2xs',
       'shr-text-transparent peer-checked:shr-text-white peer-indeterminate:shr-text-white',
-      'peer-disabled:peer-indeteminate:shr-text-white-darken peer-disabled:peer-checked:shr-text-white-darken',
+      'peer-disabled:peer-indeterminate:shr-text-white-darken peer-disabled:peer-checked:shr-text-white-darken',
       'forced-colors:shr-hidden',
     ],
     innerWrapper:

@@ -26,7 +26,7 @@ glob(SRC_PATH).then(
       },
     )
     const docs = fileParser.parse(targets).map(({ props, ...other }) => {
-      const fileteredProps = Object.keys(props).flatMap((name) => {
+      const filteredProps = Object.keys(props).flatMap((name) => {
         const propItem = props[name]
         const declarations = propItem.declarations
 
@@ -43,7 +43,7 @@ glob(SRC_PATH).then(
 
       return {
         ...other,
-        props: fileteredProps,
+        props: filteredProps,
       }
     })
     await fs.writeFile(

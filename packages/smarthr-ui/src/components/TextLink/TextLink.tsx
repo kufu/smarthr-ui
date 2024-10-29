@@ -11,7 +11,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { ElementRef, ElementRefProps } from '../../types'
-import { FaExternalLinkAltIcon } from '../Icon'
+import { FaUpRightFromSquareIcon } from '../Icon'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
@@ -64,7 +64,7 @@ export const TextLink: TextLinkComponent = forwardRef(
     const Component = elementAs || 'a'
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
-        return <FaExternalLinkAltIcon aria-label="別タブで開く" />
+        return <FaUpRightFromSquareIcon aria-label="別タブで開く" />
       }
       return suffix
     }, [suffix, target])

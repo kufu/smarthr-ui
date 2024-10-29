@@ -46,16 +46,7 @@ export { StatusLabel } from './components/StatusLabel'
 export { Base, BaseColumn } from './components/Base'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
-export {
-  Table,
-  TableReel,
-  Th,
-  Td,
-  ThCheckbox,
-  TdCheckbox,
-  BulkActionRow,
-  EmptyTableBody,
-} from './components/Table'
+export * from './components/Table'
 export * from './components/AppNavi'
 export { TabBar, TabItem } from './components/TabBar'
 export { Heading, PageHeading } from './components/Heading'
@@ -98,7 +89,7 @@ export * from './components/ResponseMessage'
 export * from './components/Badge'
 export * from './components/Switch'
 export * from './components/Stepper'
-export * from './components/TimePicker'
+export * from './components/Picker'
 
 // layout components
 export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'

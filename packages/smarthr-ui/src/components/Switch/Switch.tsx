@@ -21,7 +21,8 @@ const switchStyle = tv({
       'supports-[not_selector(:has(+_*))]:shr-border-[revert] supports-[not_selector(:has(+_*))]:shr-bg-[revert]',
 
       // Switch ツマミ
-      'before:shr-box-border before:shr-inline-block before:shr-size-[theme(fontSize.base)] before:shr-scale-[calc(2/3)] before:shr-rounded-full before:shr-border before:shr-border-solid before:shr-border-[theme(colors.grey.30)] before:shr-bg-[theme(colors.grey.30)] before:shr-transition-[transform,margin] before:shr-duration-150 before:shr-ease-out before:shr-content-[""]',
+      'before:shr-box-border before:shr-inline-block before:shr-size-[theme(fontSize.base)] before:shr-scale-[calc(2/3)] before:shr-rounded-full before:shr-border before:shr-border-solid before:shr-border-[theme(textColor.grey)] before:shr-bg-[theme(textColor.grey)] before:shr-transition-[transform,margin] before:shr-duration-150 before:shr-ease-out before:shr-content-[""]',
+      'has-[input:disabled:not(:checked)]:before:shr-border-[theme(textColor.disabled)] has-[input:disabled:not(:checked)]:before:shr-bg-[theme(textColor.disabled)]',
       'has-[:checked]:before:shr-border-shorthand has-[:checked]:before:shr-ms-[theme(fontSize.base)] has-[:checked]:before:shr-scale-100 has-[:checked]:before:shr-bg-white',
       'forced-colors:has-[input:not(:disabled)]:before:shr-bg-[ButtonBorder]',
       'forced-colors:has-[:disabled:not(:checked)]:before:shr-border-solid forced-colors:has-[:disabled:not(:checked)]:before:shr-border-[GrayText]',

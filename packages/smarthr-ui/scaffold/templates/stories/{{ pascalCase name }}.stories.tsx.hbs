@@ -13,15 +13,9 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof {{ name }}>
+} satisfies Meta<typeof {{ name }}>
 
-export const Default: StoryObj<typeof {{ name }}> = {
-  args: {
-  },
-}
-
-export const {{ name }}Control: StoryObj<typeof {{ name }}> = {
-  name: 'Playground',
+export const Playground: StoryObj<typeof {{ name }}> = {
   args: {
   },
 }
@@ -29,6 +23,5 @@ export const {{ name }}Control: StoryObj<typeof {{ name }}> = {
 export const SomeProps: StoryObj<typeof {{ name }}> = {
   name: 'someProps',
   args: {
-    someProps: someValue,
   },
 }
