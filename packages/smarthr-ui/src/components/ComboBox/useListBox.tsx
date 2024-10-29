@@ -40,7 +40,6 @@ type Props<T> = {
 type Rect = {
   top: number
   left: number
-  $width: number | string
   height?: number
 }
 
@@ -91,8 +90,20 @@ export const useListBox = <T,>({
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
-    $width: 0,
   })
+  // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
+  const [triggerWidth, setTriggerWidth] = useState(0)
+
+  useEffect(() => {
+    if (!triggerRef.current) {
+      setTriggerWidth(0)
+      return
+    }
+
+    const rect = triggerRef.current.getBoundingClientRect()
+
+    setTriggerWidth(rect.width)
+  }, [triggerRef.current, isExpanded])
 
   const calculateRect = useCallback(() => {
     if (!listBoxRef.current || !triggerRef.current) {
@@ -129,9 +140,9 @@ export const useListBox = <T,>({
     setListBoxRect({
       top,
       left: rect.left + window.pageXOffset,
-      $width: rect.width,
       height,
     })
+    setTriggerWidth(rect.width)
   }, [listBoxRef, triggerRef])
 
   const activeRef = useRef<HTMLButtonElement>(null)
@@ -235,15 +246,15 @@ export const useListBox = <T,>({
     loaderWrapperStyle,
     noItemsStyle,
   } = useMemo(() => {
-    const { top, left, $width, height } = listBoxRect
-    const dropdownListWidth = dropdownWidth || $width
+    const { top, left, height } = listBoxRect
+    const dropdownListWidth = dropdownWidth || triggerWidth
     return {
       wrapperStyleProps: {
         className: wrapper(),
         style: {
           top: `${top}px`,
           left: `${left}px`,
-          width: `${$width}px`,
+          width: `${triggerWidth}px`,
         },
       },
       dropdownListStyleProps: {
@@ -264,6 +275,7 @@ export const useListBox = <T,>({
     dropdownWidth,
     helpMessage,
     listBoxRect,
+    triggerWidth,
     loaderWrapper,
     noItems,
     spacing,

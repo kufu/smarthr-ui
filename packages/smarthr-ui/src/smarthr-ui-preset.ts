@@ -44,6 +44,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
+    focus: ['focus-indicator', 'focus-indicator--inner'],
   },
 }
 
@@ -385,6 +386,11 @@ export default {
           outline: 'none',
           isolation: 'isolate',
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+        },
+        '.focus-indicator--inner': {
+          outline: 'none',
+          isolation: 'isolate',
+          boxShadow: `inset 0 0 0 2px ${theme('colors.outline')}, inset 0 0 0 4px ${theme('colors.white')}`,
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),

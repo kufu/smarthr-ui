@@ -13,7 +13,7 @@ const tabItem = tv({
       'shr-group/tabitem',
       'shr-relative shr-px-1 shr-py-0.75 shr-inline-flex shr-items-center shr-gap-0.5',
       'hover:shr-bg-white-darken',
-      'focus-visible:shr-z-1',
+      'focus-visible:shr-z-1 focus-visible:shr-focus-indicator--inner',
       'disabled:shr-cursor-not-allowed disabled:shr-bg-transparent',
       'aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1',
       'forced-colors:aria-selected:before:shr-bg-[Highlight]',

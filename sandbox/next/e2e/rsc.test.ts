@@ -14,6 +14,7 @@ const SERVER_COMPONENTS = [
   'HeaderLink',
   'Icon',
   'Loader',
+  'MonthPicker',
   'RangeSeparator',
   'ResponseMessage',
   'SmartHRLogo',

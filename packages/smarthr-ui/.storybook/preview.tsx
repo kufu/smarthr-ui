@@ -9,6 +9,7 @@ import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
 import '../src/styles/index.css'
+import { backgroundColor } from '../src/themes'
 
 const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 
@@ -77,6 +78,10 @@ const preview: Preview = {
     },
     chromatic: {
       forcedColors: 'none',
+    },
+    backgrounds: {
+      default: 'light',
+      values: [{ name: 'light', value: backgroundColor.background }],
     },
   },
   decorators: [
