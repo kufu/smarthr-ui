@@ -11,6 +11,9 @@ export default {
   component: Select,
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <Select {...args} />,
+  argTypes: {
+    disabled: { control: 'boolean' },
+  },
   args: {
     options: [...Array(2)].map((_, i) => ({ label: `選択肢${i + 1}`, value: `${i + 1}` })),
   },
