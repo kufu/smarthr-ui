@@ -53,6 +53,7 @@ export function useKeyboardNavigation(
           const rootTrigger = rootTriggers[rootTriggers.length - 1]
           if (rootTrigger) {
             rootTrigger.focus()
+            onClickCloser()
           }
         }
       } else if (e.key === 'Escape' || e.key === 'Esc') {
