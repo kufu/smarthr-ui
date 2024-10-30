@@ -1,0 +1,5 @@
+disabled: true, false (10)
+error: true, false (10)
+width: あり, なし
+size: default, s
+hasBlank: true, false

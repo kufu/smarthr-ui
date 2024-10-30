@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [60.0.0](https://github.com/kufu/smarthr-ui/compare/v59.0.0...v60.0.0) (2024-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* TimePicker/MonthPickerにtypeを指定できないようにする (#5051)
+
+### Features
+
+* 月選択UI (`MonthPicker`) を追加したい ([#5030](https://github.com/kufu/smarthr-ui/issues/5030)) ([f0c7dbe](https://github.com/kufu/smarthr-ui/commit/f0c7dbe3682b5df84eb02b5267bf0df380bc1ee0))
+
+
+### Bug Fixes
+
+* Comboboxの選択肢表示位置がズレてしまう問題を修正 ([#5047](https://github.com/kufu/smarthr-ui/issues/5047)) ([4b030cc](https://github.com/kufu/smarthr-ui/commit/4b030ccbd8789af1de11979c9c3f0b9e045c0106))
+* ModelessDialog のグラブ領域を修正 ([#5055](https://github.com/kufu/smarthr-ui/issues/5055)) ([0635680](https://github.com/kufu/smarthr-ui/commit/063568068b8bad4f8e358ae64cddf60a47ea8e3e))
+* SearchInput に幅があたらない不具合を修正 ([#5036](https://github.com/kufu/smarthr-ui/issues/5036)) ([95eca0b](https://github.com/kufu/smarthr-ui/commit/95eca0b6a10eb8c609c8a520c5e458263283575b))
+* **Switch:** 未選択時のコントラスト比を 3:1 確保する ([#5027](https://github.com/kufu/smarthr-ui/issues/5027)) ([f109afa](https://github.com/kufu/smarthr-ui/commit/f109afa8083d3ae4623e6f95c37e8be30135f488))
+* TabBar が margin を持たないように修正 ([#5054](https://github.com/kufu/smarthr-ui/issues/5054)) ([032f9b7](https://github.com/kufu/smarthr-ui/commit/032f9b7ff04c4069d5f5a99fa6e0db1028601546))
+* TimePicker/MonthPickerにtypeを指定できないようにする ([#5051](https://github.com/kufu/smarthr-ui/issues/5051)) ([c109eff](https://github.com/kufu/smarthr-ui/commit/c109eff6f709fe29544cad5aab340a04c29b66eb))
+
 ## [59.0.0](https://github.com/kufu/smarthr-ui/compare/v58.1.2...v59.0.0) (2024-10-22)
 
 

@@ -8,7 +8,7 @@ import { Stack } from '../../Layout'
 import { TabBar } from '../TabBar'
 import { TabItem } from '../TabItem'
 
-import type { StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Navigation（ナビゲーション）/TabBar/VRT',
@@ -20,84 +20,71 @@ export default {
    * true     false    true     なし    あり
    * true     true     false    あり    あり
    * true     false    false    なし    なし */
-  render: (args: any) => (
-    <Stack {...args}>
-      <TabBar bordered={false}>
-        <TabItem id="tab1" onClick={action('clicked')} suffix={<Badge count={100} />}>
-          タブ1
-        </TabItem>
-        <TabItem
-          id="tab2"
-          onClick={action('clicked')}
-          selected
-          disabled
-          disabledDetail={{ message: 'タブが無効な理由' }}
-        >
-          タブ2
-        </TabItem>
-      </TabBar>
-      <TabBar>
-        <TabItem
-          id="tab3"
-          onClick={action('clicked')}
-          selected
-          disabled
-          suffix={<Badge count={100} />}
-        >
-          タブ3
-        </TabItem>
-        <TabItem
-          id="tab4"
-          onClick={action('clicked')}
-          disabled
-          disabledDetail={{ message: 'タブが無効な理由' }}
-        >
-          タブ4
-        </TabItem>
-        <TabItem
-          id="tab5"
-          onClick={action('clicked')}
-          selected
-          suffix={<FaCircleExclamationIcon color="DANGER" />}
-          disabledDetail={{ message: 'タブが無効な理由' }}
-        >
-          タブ5
-        </TabItem>
-        <TabItem id="tab6" onClick={action('clicked')}>
-          タブ6
-        </TabItem>
-      </TabBar>
+  render: (args) => (
+    <Stack>
+      {[undefined, 'hover', 'focus-visible'].map((variant) => (
+        <Stack id={variant} key={variant}>
+          <TabBar {...args} bordered={false}>
+            <TabItem id="tab1" onClick={action('clicked')} suffix={<Badge count={100} />}>
+              タブ1
+            </TabItem>
+            <TabItem
+              id="tab2"
+              onClick={action('clicked')}
+              selected
+              disabled
+              disabledDetail={{ message: 'タブが無効な理由' }}
+            >
+              タブ2
+            </TabItem>
+          </TabBar>
+          <TabBar>
+            <TabItem
+              id="tab3"
+              onClick={action('clicked')}
+              selected
+              disabled
+              suffix={<Badge count={100} />}
+            >
+              タブ3
+            </TabItem>
+            <TabItem
+              id="tab4"
+              onClick={action('clicked')}
+              disabled
+              disabledDetail={{ message: 'タブが無効な理由' }}
+            >
+              タブ4
+            </TabItem>
+            <TabItem
+              id="tab5"
+              onClick={action('clicked')}
+              selected
+              suffix={<FaCircleExclamationIcon color="DANGER" />}
+              disabledDetail={{ message: 'タブが無効な理由' }}
+            >
+              タブ5
+            </TabItem>
+            <TabItem id="tab6" onClick={action('clicked')}>
+              タブ6
+            </TabItem>
+          </TabBar>
+        </Stack>
+      ))}
     </Stack>
   ),
   parameters: {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-}
+} satisfies Meta<typeof TabBar>
 
-export const VRT = {}
-
-export const VRTHover = {
-  ...VRT,
-  args: {
-    id: 'hover',
-  },
+export const VRT = {
   parameters: {
     pseudo: {
       hover: ['#hover .smarthr-ui-TabItem'],
+      focusVisible: ['#focus-visible .smarthr-ui-TabItem'],
     },
-    // MEMO: VRT として機能していないので、解決するまでスナップショットを無効化
-    chromatic: { disableSnapshot: true },
-  },
-}
-
-export const VRTKeyboardFocus: StoryObj = {
-  ...VRT,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const tabs = canvas.getAllByRole('tab')
-    // bordered で disabledDetail が存在するアイテムにフォーカス
-    tabs[3].focus()
   },
 }
 
