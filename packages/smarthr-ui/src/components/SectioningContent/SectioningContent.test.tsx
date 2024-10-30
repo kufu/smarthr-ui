@@ -1,6 +1,6 @@
 /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { render } from '@testing-library/react'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
 import { Base } from '../Base'
@@ -192,8 +192,6 @@ describe('SectioningContent', () => {
     expect(document.querySelector('h4')).toHaveTextContent('level 4')
     expect(document.querySelector('h5')).toHaveTextContent('level 5')
   })
-
-  // as で任意のコンポーネントになれるコンポーネントに対しても総当たりでテストする
   ;[
     { name: 'Stack', Component: Stack },
     { name: 'Clusetr', Component: Cluster },
@@ -202,6 +200,7 @@ describe('SectioningContent', () => {
     { name: 'Reel', Component: Reel },
     { name: 'Sidebar', Component: Sidebar },
   ].forEach(({ name, Component }) => {
+    // as で任意のコンポーネントになれるコンポーネントに対しても総当たりでテストする
     it(`SectioningContent に <${name} as="'article'|'aside'|'nav'|'section'"> がある場合も、見出しレベルがインクリメントされること`, async () => {
       const { container } = render(
         <Section>
@@ -281,6 +280,26 @@ describe('SectioningContent', () => {
     expect(container.querySelector('span')).toHaveAttribute('role', 'heading')
     expect(container.querySelector('span')).toHaveAttribute('aria-level', '7')
   })
+
+  it.todo(
+    'SectioningContent がカスタムコンポーネントでラップされている場合も、見出しレベルがインクリメントされること',
+    async () => {
+      const CustomSection: React.FC<{ children: ReactNode }> = ({ children }) => (
+        <Section>{children}</Section>
+      )
+      render(
+        <CustomSection>
+          <Heading>level 2</Heading>
+          <CustomSection>
+            <Heading>level 3</Heading>
+          </CustomSection>
+        </CustomSection>,
+      )
+
+      expect(document.querySelector('h2')).toHaveTextContent('level 2')
+      expect(document.querySelector('h3')).toHaveTextContent('level 3')
+    },
+  )
 
   it('SectioningContent には ref を渡すことができる', async () => {
     const ref = React.createRef<HTMLDivElement>()
