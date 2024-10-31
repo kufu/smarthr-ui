@@ -15,18 +15,10 @@ describe('Dialog (Portal Parent)', () => {
 
     return (
       <div ref={portalParentRef}>
-        <Button
-          onClick={() => setIsOpen(true)}
-          aria-haspopup="dialog"
-          aria-controls="portal-default"
-        >
-          Dialog を開く
-        </Button>
-
+        <Button onClick={() => setIsOpen(true)}>Dialog を開く</Button>
         <Dialog
           isOpen={isOpen}
           onPressEscape={() => setIsOpen(false)}
-          id="portal-default"
           ariaLabel="Dialog"
           portalParent={portalParentRef}
         >

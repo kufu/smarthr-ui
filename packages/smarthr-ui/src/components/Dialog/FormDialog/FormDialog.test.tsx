@@ -14,30 +14,17 @@ describe('FormDialog', () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>
-        <Button
-          onClick={() => setIsOpen(true)}
-          aria-haspopup="dialog"
-          aria-controls="dialog-form"
-          // 別のスタッキングコンテキストがダイアログ背景よりも上に来ないことを確認するための記述
-          style={{ position: 'relative', zIndex: 21 }}
-        >
-          FormDialog
-        </Button>
+        <Button onClick={() => setIsOpen(true)}>FormDialog</Button>
         <FormDialog
           isOpen={isOpen}
           title="FormDialog"
-          subtitle="副題"
           actionText="保存"
-          decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
-          onSubmit={(closeDialog, e) => {
+          onSubmit={(closeDialog) => {
             closeDialog()
           }}
           onClickClose={() => {
             setIsOpen(false)
           }}
-          id="dialog-form"
-          width="40em"
-          subActionArea={<Button>サブアクション</Button>}
         >
           <Text>ダイアログの中身です</Text>
         </FormDialog>
@@ -82,7 +69,6 @@ describe('FormDialog', () => {
             onClickClose={() => {
               setIsOpen(false)
             }}
-            decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
             firstFocusTarget={openedFocusRef}
           >
             <FormControl

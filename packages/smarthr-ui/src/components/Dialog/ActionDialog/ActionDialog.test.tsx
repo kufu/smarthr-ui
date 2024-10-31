@@ -11,25 +11,12 @@ describe('ActionDialog', () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>
-        <Button
-          onClick={() => setIsOpen(true)}
-          aria-haspopup="dialog"
-          aria-controls="dialog-action"
-          // 別のスタッキングコンテキストがダイアログ背景よりも上に来ないことを確認するための記述
-          style={{ position: 'relative', zIndex: 21 }}
-        >
-          ActionDialog
-        </Button>
+        <Button onClick={() => setIsOpen(true)}>ActionDialog</Button>
         <ActionDialog
           isOpen={isOpen}
           title="ActionDialog"
-          subtitle="副題"
           actionText="保存"
-          decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
           onClickClose={() => setIsOpen(false)}
-          id="dialog-action"
-          width="40em"
-          subActionArea={<Button>サブアクション</Button>}
           onClickAction={(closeDialog) => {
             closeDialog()
           }}

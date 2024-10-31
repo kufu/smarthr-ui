@@ -11,23 +11,12 @@ describe('MessageDialog', () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>
-        <Button
-          onClick={() => setIsOpen(true)}
-          aria-haspopup="dialog"
-          aria-controls="dialog-message"
-          // 別のスタッキングコンテキストがダイアログ背景よりも上に来ないことを確認するための記述
-          style={{ position: 'relative', zIndex: 21 }}
-        >
-          MessageDialog
-        </Button>
+        <Button onClick={() => setIsOpen(true)}>MessageDialog</Button>
         <MessageDialog
           isOpen={isOpen}
           title="MessageDialog"
-          subtitle="副題"
           description={<p>説明です</p>}
           onClickClose={() => setIsOpen(false)}
-          decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
-          id="dialog-message"
         />
       </>
     )

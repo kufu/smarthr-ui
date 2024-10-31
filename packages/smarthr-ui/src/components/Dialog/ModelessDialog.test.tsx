@@ -12,22 +12,12 @@ describe('ModelessDialog', () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>
-        <Button
-          onClick={() => setIsOpen(true)}
-          aria-haspopup="dialog"
-          aria-controls="modeless-dialog-2"
-        >
-          ModelessDialog
-        </Button>
+        <Button onClick={() => setIsOpen(true)}>ModelessDialog</Button>
         <ModelessDialog
           isOpen={isOpen}
           // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
           header={<Heading tag="h2">座標指定表示</Heading>}
           onClickClose={() => setIsOpen(false)}
-          onPressEscape={() => setIsOpen(false)}
-          bottom={100}
-          right="10%"
-          id="modeless-dialog-2"
         >
           <p>ダイアログの中身</p>
         </ModelessDialog>

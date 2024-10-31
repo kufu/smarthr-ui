@@ -18,16 +18,14 @@ describe('DialogWrapper', () => {
     const DialogContentTemplate = () => (
       <DialogWrapper>
         <DialogTrigger>
-          <Button aria-haspopup="dialog" aria-controls="dialog-uncontrolled">
-            Dialog
-          </Button>
+          <Button>Dialog</Button>
         </DialogTrigger>
-        <DialogContent id="dialog-uncontrolled" ariaLabelledby="dialog-title">
+        <DialogContent ariaLabelledby="dialog-title">
           <Section>
             <Heading id="dialog-title">DialogContent</Heading>
             <p>Uncontrolled Dialog.</p>
             <DialogCloser>
-              <Button data-test="dialog-closer">Close</Button>
+              <Button>Close</Button>
             </DialogCloser>
           </Section>
         </DialogContent>
@@ -80,13 +78,7 @@ describe('DialogWrapper', () => {
     const MessageDialogContentTemplate = () => (
       <DialogWrapper>
         <DialogTrigger>
-          <Button
-            aria-haspopup="dialog"
-            aria-controls="dialog-uncontrolled-message"
-            data-test="message-dialog-trigger"
-          >
-            MessageDialog
-          </Button>
+          <Button>MessageDialog</Button>
         </DialogTrigger>
         <MessageDialogContent
           title="Uncontrolled Message Dialog"
@@ -105,7 +97,6 @@ describe('DialogWrapper', () => {
               mollit anim id est laborum.
             </p>
           }
-          id="dialog-uncontrolled-message"
         />
       </DialogWrapper>
     )
@@ -158,9 +149,7 @@ describe('DialogWrapper', () => {
     const ActionDialogContentTemplate = () => (
       <DialogWrapper>
         <DialogTrigger>
-          <Button aria-haspopup="dialog" aria-controls="dialog-uncontrolled-action">
-            ActionDialog
-          </Button>
+          <Button>ActionDialog</Button>
         </DialogTrigger>
         <ActionDialogContent
           title="Uncontrolled Action Dialog"
@@ -169,7 +158,6 @@ describe('DialogWrapper', () => {
           onClickAction={(closeDialog) => {
             closeDialog()
           }}
-          id="dialog-uncontrolled-action"
         >
           <p>
             The content of ActionDialogContent is freely implemented by the user as children.

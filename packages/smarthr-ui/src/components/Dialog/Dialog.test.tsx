@@ -19,21 +19,8 @@ describe('Dialog', () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>
-        <Button
-          onClick={() => setIsOpen(true)}
-          aria-haspopup="dialog"
-          aria-controls="dialog-default"
-          // 別のスタッキングコンテキストがダイアログ背景よりも上に来ないことを確認するための記述
-          style={{ zIndex: 21, position: 'relative' }}
-        >
-          Dialog
-        </Button>
-        <Dialog
-          isOpen={isOpen}
-          onPressEscape={() => setIsOpen(false)}
-          id="dialog-default"
-          ariaLabel="Dialog"
-        >
+        <Button onClick={() => setIsOpen(true)}>Dialog</Button>
+        <Dialog isOpen={isOpen} ariaLabel="Dialog">
           <Section>
             <Heading>Dialog</Heading>
             <p>The value of isOpen must be managed by you, but you can customize content freely.</p>
@@ -42,9 +29,8 @@ describe('Dialog', () => {
               value={'2021-01-01'}
               formatDate={(_date) => (_date ? _date.toDateString() : '')}
               title="dialog_datepicker"
-              data-test="dialog-datepicker"
             />
-            <Fieldset title="Fruits" innerMargin={0.5}>
+            <Fieldset title="Fruits">
               <Cluster as="ul">
                 <li>
                   <RadioButton name="Apple" checked>
@@ -60,7 +46,7 @@ describe('Dialog', () => {
               </Cluster>
             </Fieldset>
           </Section>
-          <div className="shr-flex shr-justify-end">
+          <div>
             <Button onClick={() => setIsOpen(false)}>close</Button>
           </div>
         </Dialog>
@@ -129,20 +115,17 @@ describe('Dialog', () => {
     const inputRef = useRef<HTMLInputElement>(null)
     return (
       <>
-        <Button onClick={() => setIsOpen(true)} aria-haspopup="dialog" aria-controls="dialog-focus">
-          特定の要素をフォーカス
-        </Button>
+        <Button onClick={() => setIsOpen(true)}>特定の要素をフォーカス</Button>
         <Dialog
           isOpen={isOpen}
           onPressEscape={() => setIsOpen(false)}
-          id="dialog-focus"
           firstFocusTarget={inputRef}
           ariaLabel="特定の要素をフォーカスするダイアログ"
         >
           <FormControl title="特定の要素をフォーカスするダイアログのInput">
-            <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
+            <Input ref={inputRef} name="input_focus_target" />
           </FormControl>
-          <div className="shr-flex shr-justify-end">
+          <div>
             <Button onClick={() => setIsOpen(false)}>close</Button>
           </div>
         </Dialog>
