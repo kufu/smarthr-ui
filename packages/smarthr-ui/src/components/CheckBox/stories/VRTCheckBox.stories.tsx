@@ -1,5 +1,4 @@
 import { Heading } from '@storybook/blocks'
-import { fireEvent, within } from '@storybook/test'
 import React from 'react'
 
 import { Cluster, Stack } from '../../Layout'
