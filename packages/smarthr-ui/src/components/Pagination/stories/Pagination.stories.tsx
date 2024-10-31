@@ -25,7 +25,7 @@ export const Playground: StoryObj<typeof Pagination> = {}
 export const Total: StoryObj<typeof Pagination> = {
   name: 'total',
   args: {
-    total: 999,
+    total: 7,
   },
 }
 
