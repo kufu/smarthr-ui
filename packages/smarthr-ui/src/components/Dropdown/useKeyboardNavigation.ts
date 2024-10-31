@@ -47,6 +47,7 @@ export function useKeyboardNavigation(
           // focus the Trigger
           e.preventDefault()
           trigger.focus()
+          onClickCloser()
         } else if (!e.shiftKey && e.target === lastTabbable) {
           // move focus next of the Trigger
           const rootTriggers = tabbable(rootTriggerRef.current)

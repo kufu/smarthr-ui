@@ -59,6 +59,19 @@ describe('Dropdown', () => {
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
 
+  it('ドロップダウン展開後にShift+Tabでトリガーにフォーカスが戻るとドロップダウンが閉じること', async () => {
+    render(template)
+    act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
+
+    await userEvent.tab()
+    expect(screen.getByRole('button', { name: 'Button1' })).toHaveFocus()
+
+    await userEvent.tab({ shift: true })
+    expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
+    expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
+  })
+
   it('ドロップダウンからフォーカスが外れるとドロップダウンが閉じること', async () => {
     render(template)
 
