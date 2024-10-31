@@ -58,4 +58,20 @@ describe('Dropdown', () => {
     act(() => document.body.click())
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
+
+  it('ドロップダウンからフォーカスが外れるとドロップダウンが閉じること', async () => {
+    render(template)
+
+    act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
+
+    await userEvent.tab()
+    expect(screen.getByRole('button', { name: 'Button1' })).toHaveFocus()
+    await userEvent.tab()
+    expect(screen.getByRole('button', { name: 'Button2' })).toHaveFocus()
+    await userEvent.tab()
+    expect(screen.getByRole('button', { name: 'Button3' })).toHaveFocus()
+    await userEvent.tab()
+    expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
+  })
 })
