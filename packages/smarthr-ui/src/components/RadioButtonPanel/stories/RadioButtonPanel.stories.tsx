@@ -4,11 +4,20 @@ import { RadioButtonPanel } from '../RadioButtonPanel'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
+const _asOptions = { なし: undefined, '<span>': 'span', '<p>': 'p' }
+
 export default {
   title: 'Forms（フォーム）/RadioButtonPanel',
   component: RadioButtonPanel,
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <RadioButtonPanel {...args} />,
+  argTypes: {
+    as: {
+      control: 'radio',
+      options: Object.keys(_asOptions),
+      mapping: _asOptions,
+    },
+  },
   args: {
     children: 'ラジオボタンパネル',
   },
