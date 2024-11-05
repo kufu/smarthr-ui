@@ -225,6 +225,9 @@ export default {
       minHeight: ({ theme }) => ({
         ...theme('spacing'),
       }),
+      borderWidth: {
+        6: '6px',
+      },
       borderColor: ({ theme }) => ({
         default: theme('colors.grey.20'),
         disabled: theme('colors.grey.20 / 50%'),
