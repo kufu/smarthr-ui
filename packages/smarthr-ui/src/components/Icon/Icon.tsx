@@ -394,3 +394,4 @@ export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
 
 export { WarningIcon } from './WarningIcon'
 export { SparklesIcon } from './SparklesIcon'
+export { LanguageIcon } from './LanguageIcon'
