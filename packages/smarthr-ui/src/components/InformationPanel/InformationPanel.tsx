@@ -34,11 +34,13 @@ const CLOSE_BUTTON_LABEL = '閉じる'
 export const informationPanel = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
-    header: 'shr-py-1 shr-px-1.5',
+    header: 'shr-p-1.5',
     heading: 'smarthr-ui-InformationPanel-title',
     togglableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
-    content:
-      'smarthr-ui-InformationPanel-content shr-border-t-shorthand shr-py-1.25 shr-px-1.5 shr-text-base aria-hidden:shr-hidden',
+    content: [
+      'smarthr-ui-InformationPanel-content',
+      'shr-p-1.5 shr-pt-0 shr-text-base aria-hidden:shr-hidden',
+    ],
   },
   variants: {
     type: {
@@ -49,7 +51,10 @@ export const informationPanel = tv({
       sync: {},
     },
     bold: {
-      true: {},
+      true: {
+        header: 'shr-py-1',
+        content: 'shr-pt-1',
+      },
       false: {},
     },
   },
@@ -60,7 +65,6 @@ export const informationPanel = tv({
       className: {
         header: 'shr-text-white',
         heading: '[&_.smarthr-ui-Icon]:shr-fill-white',
-        content: 'shr-border-transparent',
       },
     },
     {
