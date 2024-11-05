@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [60.0.1](https://github.com/kufu/smarthr-ui/compare/v60.0.0...v60.0.1) (2024-11-05)
+
+
+### Bug Fixes
+
+* FloatArea の z-index を見直し ([#5066](https://github.com/kufu/smarthr-ui/issues/5066)) ([befa773](https://github.com/kufu/smarthr-ui/commit/befa7738d2af8969f40a4e862766081d9c530832))
+* FormControl内のInputFileのアクセシブルネームに可視ラベルを含める ([#5056](https://github.com/kufu/smarthr-ui/issues/5056)) ([b8a69db](https://github.com/kufu/smarthr-ui/commit/b8a69db9e723b6be1b57221c6b33cb9d95d97714))
+* TabItem に disabledDetail があるときのフォーカスリングを修正 ([#5057](https://github.com/kufu/smarthr-ui/issues/5057)) ([236a744](https://github.com/kufu/smarthr-ui/commit/236a744d82b1098dc67d2ab5b1e0031e3456e648))
+
 ## [60.0.0](https://github.com/kufu/smarthr-ui/compare/v59.0.0...v60.0.0) (2024-10-29)
 
 
