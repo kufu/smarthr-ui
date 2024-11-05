@@ -70,7 +70,7 @@ const select = tv({
       },
       s: {
         selectEl: [
-          'shr-px-0.5 shr-py-0.25 shr-text-sm',
+          'shr-px-0.5 shr-py-0.25 shr-pe-1.5 shr-text-sm',
           /* padding に依る積み上げでは文字が見切れてしまうため */
           'shr-min-h-[calc(theme(fontSize.sm)_+_theme(spacing[0.5])_*_2_+_theme(spacing.px)_*_2)]',
         ],

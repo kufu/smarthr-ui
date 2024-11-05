@@ -42,8 +42,6 @@ type Props = {
   onClick: (pageNumber: number) => void
   /** 現在のページの前後に表示するページ番号のボタンの数 */
   padding?: number
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
@@ -54,7 +52,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   current,
   onClick,
   padding = 4,
-  className = '',
+  className,
   withoutNumbers = false,
   ...props
 }) => {

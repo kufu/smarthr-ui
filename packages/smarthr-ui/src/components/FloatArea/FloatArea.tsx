@@ -8,7 +8,7 @@ import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 const floatArea = tv({
-  base: 'smarthr-ui-FloatArea shr-z-[500]',
+  base: 'smarthr-ui-FloatArea shr-z-fixed-menu',
   variants: {
     fixed: {
       true: 'shr-fixed',
