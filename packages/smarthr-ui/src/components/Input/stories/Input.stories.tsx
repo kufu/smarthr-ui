@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import React from 'react'
 
+import { backgroundColor } from '../../../themes'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { CurrencyInput } from '../CurrencyInput'
@@ -30,6 +31,9 @@ export default {
       control: 'radio',
       options: Object.keys(_affixOptions),
       mapping: _affixOptions,
+    },
+    readOnly: {
+      control: 'boolean',
     },
   },
   args: {},
@@ -110,6 +114,17 @@ export const Width: StoryObj<typeof Input> = {
       ))}
     </Stack>
   ),
+}
+
+export const ReadOnly: StoryObj<typeof Input> = {
+  name: 'readOnly',
+  args: {
+    readOnly: true,
+    value: '読み取り専用',
+  },
+  parameters: {
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
+  },
 }
 
 export const Handlers: StoryObj<typeof Input> = {
