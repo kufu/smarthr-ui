@@ -1,0 +1,15 @@
+value: あり,なし
+placeholder: あり, なし
+disabled: true, false
+error: true, false
+width: あり,なし
+from: あり,なし
+to: あり,なし
+showAlternative: あり,なし
+formatDate: あり,なし
+
+# value がない場合、formatDate も不要
+IF [value] = "なし" THEN [formatDate] = "なし";
+
+# value がない場合、showAlternative も不要
+IF [value] = "なし" THEN [formatDate] = "なし";
