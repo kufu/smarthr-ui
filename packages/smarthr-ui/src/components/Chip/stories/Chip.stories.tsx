@@ -9,6 +9,11 @@ export default {
   title: 'Data Display（データ表示）/Chip',
   component: Chip,
   render: (args) => <Chip {...args} />,
+  argTypes: {
+    size: {
+      control: 'select',
+    },
+  },
   args: {
     children: 'ラベル',
   },
