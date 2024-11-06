@@ -5,7 +5,7 @@ import { userEvent, within } from '@storybook/test'
 import dayjs from 'dayjs'
 import React from 'react'
 
-import { Cluster, Stack } from '../../Layout'
+import { Cluster } from '../../Layout'
 import { DatePicker } from '../DatePicker'
 
 import type { Meta, StoryObj } from '@storybook/react'
