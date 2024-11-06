@@ -19,8 +19,6 @@ type Props = PropsWithChildren<{
   titleTag?: HeadingTagTypes
   /** `true` のとき、開閉ボタンを表示する */
   togglable?: boolean
-  /** パネルの開閉の状態 */
-  active?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
@@ -49,6 +47,12 @@ export const informationPanel = tv({
       warning: {},
       error: {},
       sync: {},
+    },
+    active: {
+      true: {},
+      false: {
+        header: 'shr-py-1',
+      },
     },
     bold: {
       true: {
@@ -124,7 +128,11 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
     setActive(activeProps)
   }, [activeProps])
 
-  const { wrapper, header, heading, togglableButton, content } = informationPanel({ type, bold })
+  const { wrapper, header, heading, togglableButton, content } = informationPanel({
+    type,
+    active,
+    bold,
+  })
 
   return (
     <Base {...props} overflow="hidden" as="section" className={wrapper({ className })}>
