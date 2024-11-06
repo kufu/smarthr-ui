@@ -69,7 +69,7 @@ export const VRTForcedColors: StoryObj = {
 }
 
 export const VRTExpanded: StoryObj = {
-  render: (args) => <DatePicker {...args} />,
+  render: (args) => <DatePicker {...args} className="shr-min-w-[500px] shr-h-[500px]" />,
   args: {
     value: '2024/11/06',
   },
@@ -104,5 +104,5 @@ export const VRTExpandedFromToForcedColor: StoryObj = {
 
 export const VRTExpandedBottom: StoryObj = {
   ...VRTExpanded,
-  render: (args) => <DatePicker {...args} className="shr-fixed shr-bottom-0" />,
+  render: (args) => <DatePicker {...args} className="shr-mt-[1000px]" />,
 }
