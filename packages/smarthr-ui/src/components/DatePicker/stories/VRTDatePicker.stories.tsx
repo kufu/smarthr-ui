@@ -87,15 +87,11 @@ export const VRTExpandedForcedColor: StoryObj = {
 }
 
 export const VRTExpandedFromTo: StoryObj = {
-  render: (args) => <DatePicker {...args} />,
+  ...VRTExpanded,
   args: {
     value: '2024/11/06',
     from: dayjs('2024/11/03').toDate(),
     to: dayjs('2024/11/09').toDate(),
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByRole('textbox'))
   },
 }
 
