@@ -12,6 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Forms（フォーム）/DatePicker/VRT',
+  /* ペアワイズ法による網羅 */
   component: DatePicker,
   render: (args) => {
     const value = '2024/11/06'
@@ -103,5 +104,9 @@ export const VRTExpandedFromToForcedColor: StoryObj = {
 
 export const VRTExpandedBottom: StoryObj = {
   ...VRTExpanded,
-  render: (args) => <DatePicker {...args} className="shr-mt-[1000px]" />,
+  render: (args) => (
+    <div className="shr-w-full shr-h-[100vh] shr-relative">
+      <DatePicker {...args} className="shr-absolute shr-bottom-0" />
+    </div>
+  ),
 }
