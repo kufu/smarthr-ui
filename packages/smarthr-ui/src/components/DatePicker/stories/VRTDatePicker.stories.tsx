@@ -12,7 +12,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Forms（フォーム）/DatePicker/VRT',
-  /* ペアワイズ法による網羅 */
   component: DatePicker,
   render: (args) => {
     const value = '2024/11/06'
