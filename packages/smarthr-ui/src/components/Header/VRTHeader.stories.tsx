@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { InformationPanel } from '../InformationPanel'
 
 import { Header } from './Header'
-import { All } from './Header.stories'
 
 export default {
   title: 'Navigation（ナビゲーション）/Header',
@@ -21,7 +20,7 @@ export const VRTFocusVisible: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です">
       通常のボタンがfocusされた状態で表示されます
     </VRTInformationPanel>
-    <All />
+    {/* <All /> */}
   </>
 )
 VRTFocusVisible.parameters = {
@@ -36,9 +35,7 @@ export const VRTDropDown: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です">
       ドロップダウンを表示した状態で表示されます
     </VRTInformationPanel>
-    <WrapperForDropdown>
-      <All />
-    </WrapperForDropdown>
+    <WrapperForDropdown>{/* <All /> */}</WrapperForDropdown>
   </>
 )
 VRTDropDown.play = async ({ canvasElement }) => {
@@ -52,9 +49,7 @@ export const VRTLauncher: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です">
       ランチャーを表示した状態で表示されます
     </VRTInformationPanel>
-    <WrapperForLauncher>
-      <All />
-    </WrapperForLauncher>
+    <WrapperForLauncher>{/* <All /> */}</WrapperForLauncher>
   </>
 )
 VRTLauncher.play = async ({ canvasElement }) => {
@@ -68,7 +63,7 @@ export const VRTNarrowTablet: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です">
       タブレットの画面幅で表示されます
     </VRTInformationPanel>
-    <All />
+    {/* <All /> */}
   </>
 )
 VRTNarrowTablet.parameters = {
@@ -87,7 +82,7 @@ export const VRTNarrowMobile: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です">
       モバイルの画面幅で表示されます
     </VRTInformationPanel>
-    <All />
+    {/* <All /> */}
   </>
 )
 VRTNarrowMobile.parameters = {
@@ -106,9 +101,7 @@ export const VRTForcedColors: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
-    <WrapperForLauncher>
-      <All />
-    </WrapperForLauncher>
+    <WrapperForLauncher>{/* <All /> */}</WrapperForLauncher>
   </>
 )
 VRTForcedColors.parameters = {
