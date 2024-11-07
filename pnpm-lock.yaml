@@ -54,7 +54,7 @@ importers:
         version: 9.0.5(stylelint@16.10.0(typescript@5.6.3))
       stylelint-config-smarthr:
         specifier: ^3.0.1
-        version: 3.0.1(postcss-styled-syntax@0.6.4(postcss@8.4.47))(stylelint-config-standard@36.0.1(stylelint@16.10.0(typescript@5.6.3)))(stylelint@16.10.0(typescript@5.6.3))
+        version: 3.0.1(postcss-styled-syntax@0.7.0(postcss@8.4.47))(stylelint-config-standard@36.0.1(stylelint@16.10.0(typescript@5.6.3)))(stylelint@16.10.0(typescript@5.6.3))
       stylelint-config-standard:
         specifier: ^36.0.1
         version: 36.0.1(stylelint@16.10.0(typescript@5.6.3))
@@ -258,8 +258,8 @@ importers:
         specifier: ^8.1.1
         version: 8.1.1(postcss@8.4.47)(typescript@5.6.3)(webpack@5.96.1(@swc/core@1.8.0(@swc/helpers@0.5.5))(esbuild@0.21.5))
       postcss-styled-syntax:
-        specifier: ^0.6.4
-        version: 0.6.4(postcss@8.4.47)
+        specifier: ^0.7.0
+        version: 0.7.0(postcss@8.4.47)
       postcss-syntax:
         specifier: ^0.36.2
         version: 0.36.2(postcss@8.4.47)
@@ -6414,8 +6414,8 @@ packages:
     resolution: {integrity: sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==}
     engines: {node: '>=4'}
 
-  postcss-styled-syntax@0.6.4:
-    resolution: {integrity: sha512-uWiLn+9rKgIghUYmTHvXMR6MnyPULMe9Gv3bV537Fg4FH6CA6cn21WMjKss2Qb98LUhT847tKfnRGG3FhSOgUQ==}
+  postcss-styled-syntax@0.7.0:
+    resolution: {integrity: sha512-OeStzPkHJ1/WDGRKm/JuVK8UdJbjt3U7AFC+zUc9omJ79SaXSxWoy+PXxJz7t8vOO8HcUgCLndNEQfLvZ74TuQ==}
     engines: {node: '>=14.17'}
     peerDependencies:
       postcss: ^8.4.21
@@ -15262,7 +15262,7 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-styled-syntax@0.6.4(postcss@8.4.47):
+  postcss-styled-syntax@0.7.0(postcss@8.4.47):
     dependencies:
       postcss: 8.4.47
       typescript: 5.6.3
@@ -16112,9 +16112,9 @@ snapshots:
     dependencies:
       stylelint: 16.10.0(typescript@5.6.3)
 
-  stylelint-config-smarthr@3.0.1(postcss-styled-syntax@0.6.4(postcss@8.4.47))(stylelint-config-standard@36.0.1(stylelint@16.10.0(typescript@5.6.3)))(stylelint@16.10.0(typescript@5.6.3)):
+  stylelint-config-smarthr@3.0.1(postcss-styled-syntax@0.7.0(postcss@8.4.47))(stylelint-config-standard@36.0.1(stylelint@16.10.0(typescript@5.6.3)))(stylelint@16.10.0(typescript@5.6.3)):
     dependencies:
-      postcss-styled-syntax: 0.6.4(postcss@8.4.47)
+      postcss-styled-syntax: 0.7.0(postcss@8.4.47)
       stylelint: 16.10.0(typescript@5.6.3)
       stylelint-config-standard: 36.0.1(stylelint@16.10.0(typescript@5.6.3))
 
