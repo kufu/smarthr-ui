@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "add": "^2.0.6",
     "next": "14.2.15",
+    "pnpm": "^9.12.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "smarthr-ui": "workspace:*"
+    "smarthr-ui": "https://pkg.pr.new/kufu/smarthr-ui@5071"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.2",
