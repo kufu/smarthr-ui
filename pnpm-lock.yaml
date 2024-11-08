@@ -317,15 +317,9 @@ importers:
 
   sandbox/next:
     dependencies:
-      add:
-        specifier: ^2.0.6
-        version: 2.0.6
       next:
         specifier: 14.2.15
         version: 14.2.15(@playwright/test@1.48.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      pnpm:
-        specifier: ^9.12.3
-        version: 9.12.3
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -333,8 +327,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       smarthr-ui:
-        specifier: https://pkg.pr.new/kufu/smarthr-ui@5071
-        version: https://pkg.pr.new/kufu/smarthr-ui@5071(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(ts-node@10.9.2(@swc/core@1.7.42(@swc/helpers@0.5.5))(@types/node@20.17.6)(typescript@5.6.3))
+        specifier: workspace:*
+        version: link:../../packages/smarthr-ui
     devDependencies:
       '@playwright/test':
         specifier: ^1.48.2
@@ -3082,9 +3076,6 @@ packages:
 
   add-stream@1.0.0:
     resolution: {integrity: sha512-qQLMr+8o0WC4FZGQTcJiKBVC59JylcPSrTtk6usvmIDFUOCKegapy1VHQwRbFMOFyb/inzUVqHs+eMYKDM1YeQ==}
-
-  add@2.0.6:
-    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
 
   adjust-sourcemap-loader@4.0.0:
     resolution: {integrity: sha512-OXwN5b9pCUXNQHJpwwD2qP40byEmSgzj8B4ydSN0uMNYWiFmJ6x6KwUllMmfk8Rwu/HJDFR7U8ubsWBoN0Xp0A==}
@@ -6506,11 +6497,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  pnpm@9.12.3:
-    resolution: {integrity: sha512-zOD53pxafJW++UQWnMXf6HQav7FFB4wNUIuGgFaEiofIHmJiRstglny9f9KabAYu9z/4QNlrPIbECsks9KgT7g==}
-    engines: {node: '>=18.12'}
-    hasBin: true
-
   polished@4.3.1:
     resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
     engines: {node: '>=10'}
@@ -7278,14 +7264,6 @@ packages:
   slice-ansi@7.1.0:
     resolution: {integrity: sha512-bSiSngZ/jWeX93BqeIAbImyTbEihizcwNjFoRUIY/T1wWQsfsm2Vw1agPKylXvQTU7iASGdHhyqRlqQzfz+Htg==}
     engines: {node: '>=18'}
-
-  smarthr-ui@https://pkg.pr.new/kufu/smarthr-ui@5071:
-    resolution: {tarball: https://pkg.pr.new/kufu/smarthr-ui@5071}
-    version: 60.0.0
-    peerDependencies:
-      react: ^18.3.1
-      react-dom: ^18.3.1
-      styled-components: ^5.0.1
 
   snake-case@3.0.4:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
@@ -11620,8 +11598,6 @@ snapshots:
 
   add-stream@1.0.0: {}
 
-  add@2.0.6: {}
-
   adjust-sourcemap-loader@4.0.0:
     dependencies:
       loader-utils: 2.0.4
@@ -11939,18 +11915,6 @@ snapshots:
       lodash: 4.17.21
       picomatch: 2.3.1
       styled-components: 5.3.11(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
-
-  babel-plugin-styled-components@2.1.4(styled-components@5.3.11(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(supports-color@5.5.0):
-    dependencies:
-      '@babel/helper-annotate-as-pure': 7.25.9
-      '@babel/helper-module-imports': 7.25.9(supports-color@5.5.0)
-      '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.0)
-      lodash: 4.17.21
-      picomatch: 2.3.1
-      styled-components: 5.3.11(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -15725,8 +15689,6 @@ snapshots:
       ora: 8.1.0
       v8flags: 4.0.1
 
-  pnpm@9.12.3: {}
-
   polished@4.3.1:
     dependencies:
       '@babel/runtime': 7.24.5
@@ -16477,26 +16439,6 @@ snapshots:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 5.0.0
 
-  smarthr-ui@https://pkg.pr.new/kufu/smarthr-ui@5071(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(ts-node@10.9.2(@swc/core@1.7.42(@swc/helpers@0.5.5))(@types/node@20.17.6)(typescript@5.6.3)):
-    dependencies:
-      '@smarthr/wareki': 1.2.0
-      dayjs: 1.11.13
-      lodash.merge: 4.6.2
-      lodash.range: 3.2.0
-      polished: 4.3.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-draggable: 4.4.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-icons: 5.3.0(react@18.3.1)
-      react-innertext: 1.1.5(@types/react@18.3.12)(react@18.3.1)
-      react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      styled-components: 5.3.11(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
-      tailwind-variants: 0.2.1(tailwindcss@3.4.14(ts-node@10.9.2(@swc/core@1.7.42(@swc/helpers@0.5.5))(@types/node@20.17.6)(typescript@5.6.3)))
-      tailwindcss: 3.4.14(ts-node@10.9.2(@swc/core@1.7.42(@swc/helpers@0.5.5))(@types/node@20.17.6)(typescript@5.6.3))
-    transitivePeerDependencies:
-      - '@types/react'
-      - ts-node
-
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
@@ -16747,24 +16689,6 @@ snapshots:
       '@emotion/stylis': 0.8.5
       '@emotion/unitless': 0.7.5
       babel-plugin-styled-components: 2.1.4(@babel/core@7.26.0)(styled-components@5.3.11(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(supports-color@5.5.0)
-      css-to-react-native: 3.2.0
-      hoist-non-react-statics: 3.3.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-is: 18.3.1
-      shallowequal: 1.1.0
-      supports-color: 5.5.0
-    transitivePeerDependencies:
-      - '@babel/core'
-
-  styled-components@5.3.11(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1):
-    dependencies:
-      '@babel/helper-module-imports': 7.25.9(supports-color@5.5.0)
-      '@babel/traverse': 7.25.9(supports-color@5.5.0)
-      '@emotion/is-prop-valid': 1.2.2
-      '@emotion/stylis': 0.8.5
-      '@emotion/unitless': 0.7.5
-      babel-plugin-styled-components: 2.1.4(styled-components@5.3.11(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))(supports-color@5.5.0)
       css-to-react-native: 3.2.0
       hoist-non-react-statics: 3.3.1
       react: 18.3.1
