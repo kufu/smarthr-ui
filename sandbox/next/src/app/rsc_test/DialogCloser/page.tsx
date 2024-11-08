@@ -1,9 +1,11 @@
 import React from 'react'
 import { DialogCloser } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function DialogCloserPage() {
   return (
     <>
-      <div>Success: DialogCloser</div>
+      <RSCChecker actualComponent={DialogCloser} />
       <DialogCloser />
     </>
   )

@@ -1,9 +1,11 @@
 import React from 'react'
 import { StatusLabel } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function StatusLabelPage() {
   return (
     <>
-      <div>Success: StatusLabel</div>
+      <RSCChecker actualComponent={StatusLabel} />
       <StatusLabel>StatusLabel</StatusLabel>
     </>
   )

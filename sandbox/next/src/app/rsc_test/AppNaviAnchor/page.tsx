@@ -1,9 +1,11 @@
 import React from 'react'
 import { AppNaviAnchor } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function AppNaviAnchorPage() {
   return (
     <>
-      <div>Success: AppNaviAnchor</div>
+      <RSCChecker actualComponent={AppNaviAnchor} />
       <AppNaviAnchor href="/">AppNaviAnchor</AppNaviAnchor>
     </>
   )

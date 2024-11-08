@@ -1,9 +1,11 @@
 import React from 'react'
 import { AppNaviDropdownMenuButton } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function AppNaviDropdownMenuButtonPage() {
   return (
     <>
-      <div>Success: AppNaviDropdownMenuButton</div>
+      <RSCChecker actualComponent={AppNaviDropdownMenuButton} />
       <AppNaviDropdownMenuButton label="label" />
     </>
   )

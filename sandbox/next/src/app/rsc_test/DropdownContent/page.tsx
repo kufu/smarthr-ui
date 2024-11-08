@@ -1,9 +1,11 @@
 import React from 'react'
 import { DropdownContent } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function DropdownContentPage() {
   return (
     <>
-      <div>Success: DropdownContent</div>
+      <RSCChecker actualComponent={DropdownContent} />
       <DropdownContent />
     </>
   )

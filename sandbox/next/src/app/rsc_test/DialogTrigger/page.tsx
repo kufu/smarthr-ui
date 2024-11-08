@@ -1,9 +1,11 @@
 import React from 'react'
 import { DialogTrigger } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function DialogTriggerPage() {
   return (
     <>
-      <div>Success: DialogTrigger</div>
+      <RSCChecker actualComponent={DialogTrigger} />
       <DialogTrigger />
     </>
   )

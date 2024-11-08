@@ -1,9 +1,11 @@
 import React from 'react'
 import { UpwardLink } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function UpwardLinkPage() {
   return (
     <>
-      <div>Success: UpwardLink</div>
+      <RSCChecker actualComponent={UpwardLink} />
       <UpwardLink href="/">UpwardLink</UpwardLink>
     </>
   )

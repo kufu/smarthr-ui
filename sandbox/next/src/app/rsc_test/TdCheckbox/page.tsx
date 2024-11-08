@@ -1,9 +1,11 @@
 import React from 'react'
 import { TdCheckbox } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function TdCheckboxPage() {
   return (
     <>
-      <div>Success: TdCheckbox</div>
+      <RSCChecker actualComponent={TdCheckbox} />
       <TdCheckbox name="name" aria-labelledby="label" />
     </>
   )

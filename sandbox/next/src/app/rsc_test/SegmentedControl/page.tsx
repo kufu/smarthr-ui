@@ -1,9 +1,11 @@
 import React from 'react'
 import { SegmentedControl } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function SegmentedControlPage() {
   return (
     <>
-      <div>Success: SegmentedControl</div>
+      <RSCChecker actualComponent={SegmentedControl} />
       <SegmentedControl options={[]} />
     </>
   )

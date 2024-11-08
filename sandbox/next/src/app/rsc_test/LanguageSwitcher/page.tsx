@@ -1,9 +1,11 @@
 import React from 'react'
 import { LanguageSwitcher } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function LanguageSwitcherPage() {
   return (
     <>
-      <div>Success: LanguageSwitcher</div>
+      <RSCChecker actualComponent={LanguageSwitcher} />
       <LanguageSwitcher localeMap={{}} />
     </>
   )

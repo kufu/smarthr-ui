@@ -1,9 +1,11 @@
 import React from 'react'
 import { Base } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function BasePage() {
   return (
     <>
-      <div>Success: Base</div>
+      <RSCChecker actualComponent={Base} />
       <Base />
     </>
   )
