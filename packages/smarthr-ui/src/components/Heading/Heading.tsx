@@ -1,5 +1,3 @@
-'use client'
-
 import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 

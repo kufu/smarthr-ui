@@ -1,5 +1,3 @@
-'use client'
-
 import React, { forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
@@ -18,7 +16,7 @@ const reel = tv({
   base: [
     'shr-flex shr-overflow-x-auto shr-overflow-y-hidden',
     '[&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto',
-    /*
+    /* 
       Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
       See https://bugs.chromium.org/p/chromium/issues/detail?id=1161709
     */

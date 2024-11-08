@@ -1,5 +1,3 @@
-'use client'
-
 import React, { ReactElement, forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
