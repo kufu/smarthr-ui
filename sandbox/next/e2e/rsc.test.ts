@@ -10,14 +10,8 @@ const SERVER_COMPONENTS = [
   'AppNaviCustomTag',
   'Badge',
   'Balloon',
-  'BaseColumn',
   'Chip',
-  'CompactInformationPanel',
-  'DefinitionList',
-  'ErrorScreen',
-  'FloatArea',
   'HeaderLink',
-  'Heading',
   'Icon',
   'Loader',
   'MonthPicker',
@@ -41,7 +35,7 @@ const SERVER_COMPONENTS = [
 /**
  * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
-const CLIENT_COMPONENTS: string[] = ['Article', 'Aside', 'Base', 'Center', 'Cluster']
+const CLIENT_COMPONENTS: string[] = []
 
 /**
  * サーバーコンポーネント内では利用できないコンポーネント一覧(アルファベット順)
@@ -59,13 +53,21 @@ const DISABLED_COMPONENTS = [
   'AppNavi',
   'AppNaviDropdown',
   'AppNaviDropdownMenuButton',
+  'Article',
+  'Aside',
+  'Base',
+  'BaseColumn',
   'BottomFixedArea',
   'BulkActionRow',
   'Button',
   'Calendar',
+  'Center',
   'CheckBox',
+  'Cluster',
+  'CompactInformationPanel',
   'CurrencyInput',
   'DatePicker',
+  'DefinitionList',
   'Dialog',
   'DialogCloser',
   'DialogContent',
@@ -78,14 +80,17 @@ const DISABLED_COMPONENTS = [
   'DropdownMenuButton',
   'DropdownTrigger',
   'EmptyTableBody',
+  'ErrorScreen',
   'Fieldset',
   'FilterDropdown',
   'FlashMessage',
+  'FloatArea',
   'FormControl',
   'FormDialog',
   'FormDialogContent',
   'Header',
   'HeaderDropdownMenuButton',
+  'Heading',
   'InformationPanel',
   'InputFile',
   'LanguageSwitcher',
