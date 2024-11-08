@@ -1,5 +1,4 @@
-import { fireEvent, within } from '@storybook/test'
-import React, { ComponentProps } from 'react'
+import React from 'react'
 
 import { Stack } from '../../Layout'
 import { AccordionPanel } from '../AccordionPanel'
@@ -32,6 +31,10 @@ export default {
               </AccordionPanelItem>
             ),
           )}
+          <AccordionPanelItem name="disabled">
+            <AccordionPanelTrigger disabled>disabled なアコーディオンパネル</AccordionPanelTrigger>
+            <AccordionPanelContent>アコーディオンパネルコンテンツ</AccordionPanelContent>
+          </AccordionPanelItem>
           <AccordionPanelItem name="long-trigger-name">
             <AccordionPanelTrigger>
               Chromatic環境では必ず折り返されるほど長いアコーディオンパネルトリガー名を持つアコーディオンパネルを作るために試行錯誤の結果生まれたアコーディオンパネルトリガー名
