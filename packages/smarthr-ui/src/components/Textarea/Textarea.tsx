@@ -77,7 +77,6 @@ const textarea = tv({
     ],
     counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
     counterText: 'shr-text-black',
-    srOnlyNotice: 'shr-sr-only',
   },
   variants: {
     error: {
@@ -236,7 +235,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       [autoResize, maxRows, onInput, rows],
     )
     const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
-      const { textareaEl, counter, counterText, srOnlyNotice } = textarea()
+      const { textareaEl, counter, counterText } = textarea()
       return {
         textareaStyleProps: {
           className: textareaEl({ className }),
@@ -244,7 +243,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         },
         counterStyle: counter(),
         counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count < 0) }),
-        srOnlyNoticeStyle: srOnlyNotice(),
       }
     }, [className, count, maxLetters, width])
 
@@ -276,9 +274,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
           </span>
         </span>
 
-        <VisuallyHiddenText aria-live="polite" aria-atomic={true}>
-          {srCounterMessage}
-        </VisuallyHiddenText>
+        <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
           こちらは文字カウンター付きの入力欄です。最大{maxLetters}文字まで入力できます。
         </VisuallyHiddenText>
