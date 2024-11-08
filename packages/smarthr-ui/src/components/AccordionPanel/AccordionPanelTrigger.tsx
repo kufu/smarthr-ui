@@ -34,6 +34,7 @@ const accordionPanelTrigger = tv({
     button: [
       'smarthr-ui-AccordionPanel-trigger',
       'shr-group shr-bg-transparent shr-border-none shr-appearance-none shr-w-full shr-px-1 shr-py-0.75 shr-cursor-pointer shr-text-inherit shr-text-color-inherit shr-text-left',
+      'disabled:shr-bg-white-darken disabled:shr-text-disabled disabled:shr-cursor-not-allowed',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
       // Base 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Base に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
