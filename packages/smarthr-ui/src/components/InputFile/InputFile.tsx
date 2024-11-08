@@ -55,6 +55,9 @@ const inputFile = tv({
       },
     },
   },
+  defaultVariants: {
+    size: 'default',
+  },
 })
 
 export type Props = VariantProps<typeof inputFile> & {
@@ -76,7 +79,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
     {
       className,
-      size = 'default',
+      size,
       label,
       hasFileList = true,
       onChange,
