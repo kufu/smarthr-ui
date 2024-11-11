@@ -1,8 +1,7 @@
 import React, { ComponentProps } from 'react'
 
-import { Stack } from '../Layout'
-
-import { Switch } from './Switch'
+import { Stack } from '../../Layout'
+import { Switch } from '../Switch'
 
 import type { Meta } from '@storybook/react'
 
