@@ -7,7 +7,7 @@ import { useDialogPortal } from '../useDialogPortal'
 
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
-type Props = BaseProps & UncontrolledDialogProps
+type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const MessageDialogContent: React.FC<Props & ElementProps> = ({
@@ -37,6 +37,7 @@ export const MessageDialogContent: React.FC<Props & ElementProps> = ({
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}
+      ariaLabelledby={titleId}
     >
       <MessageDialogContentInner
         title={title}

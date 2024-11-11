@@ -39,7 +39,7 @@ export const MessageDialog: React.FC<Props & ElementProps> = ({
   return createPortal(
     <DialogContentInner
       {...props}
-      aria-labelledby={titleId}
+      ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}
     >
