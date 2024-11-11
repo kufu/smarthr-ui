@@ -54,7 +54,7 @@
     "axe-playwright": "^2.0.3",
     "babel-loader": "^9.2.1",
     "babel-plugin-polyfill-corejs2": "^0.4.11",
-    "babel-plugin-polyfill-regenerator": "^0.6.2",
+    "babel-plugin-polyfill-regenerator": "^0.6.3",
     "css-loader": "^7.1.2",
     "chromatic": "^11.16.3",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
