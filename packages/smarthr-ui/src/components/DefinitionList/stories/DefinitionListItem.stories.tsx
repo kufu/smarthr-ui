@@ -26,6 +26,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  tags: ['skip-test-runner'],
 } satisfies Meta<typeof DefinitionListItem>
 
 export const Playground: StoryObj<typeof DefinitionListItem> = {
