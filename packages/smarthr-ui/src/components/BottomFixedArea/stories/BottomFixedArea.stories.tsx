@@ -50,7 +50,11 @@ export default {
   },
   args: {},
   parameters: {
-    layout: 'fullscreen',
+    docs: {
+      story: {
+        height: '200px',
+      },
+    },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['_primaryButtonOptions', '_secondaryButtonOptions', '_tertiaryLinksOptions'],
