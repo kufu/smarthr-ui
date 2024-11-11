@@ -17,6 +17,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  tags: ['skip-test-runner'],
 } satisfies Meta<typeof Textarea>
 
 export const Playground: StoryObj<typeof Textarea> = {

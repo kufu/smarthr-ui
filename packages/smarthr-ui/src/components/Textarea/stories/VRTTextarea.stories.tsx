@@ -32,7 +32,7 @@ export default {
     },
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'skip-test-runner'],
 } satisfies Meta<typeof Textarea>
 
 export const VRT = {}
