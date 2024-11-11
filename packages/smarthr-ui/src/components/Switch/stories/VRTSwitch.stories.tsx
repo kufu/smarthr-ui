@@ -6,7 +6,7 @@ import { Switch } from '../Switch'
 import type { Meta } from '@storybook/react'
 
 /**
- * $ pict input.pict
+ * $ pict switch.pict
  * dangerouslyLabelHidden  defaultChecked  disabled
  * true                    true            true
  * true                    false           false
@@ -43,14 +43,21 @@ const _cases: Array<ComponentProps<typeof Switch>> = [
 export default {
   title: 'Forms（フォーム）/Switch/VRT',
   render: (args) => (
-    <Stack align="flex-start">
-      {_cases.map((props, i) => (
-        <Switch {...props} {...args} key={i} />
+    <Stack>
+      {[undefined, 'focus-visible'].map((id) => (
+        <Stack align="flex-start" id={id} key={id}>
+          {_cases.map((props, i) => (
+            <Switch {...props} {...args} key={i} />
+          ))}
+        </Stack>
       ))}
     </Stack>
   ),
   parameters: {
     chromatic: { disableSnapshot: false },
+    pseudo: {
+      focusVisible: ['#focus-visible input'],
+    },
   },
   tags: ['!autodocs', 'skip-test-runner'],
 } as Meta<typeof Switch>
