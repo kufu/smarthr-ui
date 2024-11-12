@@ -38,7 +38,7 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   maxColumns,
   fullWidth,
   term,
-  termStyleType = 'subSubBlockTitle',
+  termStyleType = 'subBlockTitle',
   description,
   children,
   className,
