@@ -65,7 +65,9 @@ export const VRTFocusVisible: StoryObj<typeof Calendar> = {
 export const VRTFocusVisibleForcedColors: StoryObj<typeof Calendar> = {
   ...VRTFocusVisible,
   parameters: {
-    ...VRTFocusVisible.parameters,
+    pseudo: {
+      focusVisible: ['button'],
+    },
     chromatic: { forcedColors: 'active' },
   },
 }
