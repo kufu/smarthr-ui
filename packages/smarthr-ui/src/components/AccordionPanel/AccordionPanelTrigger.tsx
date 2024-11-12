@@ -46,7 +46,7 @@ const accordionPanelTrigger = tv({
   compoundSlots: [
     {
       slots: ['leftIcon', 'rightIcon'],
-      className: 'group-aria-expanded:shrink-0',
+      className: 'shr-shrink-0',
     },
   ],
 })
