@@ -64,6 +64,9 @@ const bottomFixedArea = tv({
   },
 })
 
+/**
+ * @deprecated BottomFixedArea は非推奨です。FloatArea を使ってください。 https://smarthr.design/products/components/float-area/
+ */
 export const BottomFixedArea: FC<Props & ElementProps> = ({
   description,
   primaryButton,
