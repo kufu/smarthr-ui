@@ -1,17 +1,18 @@
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { spacing } from '../../themes'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
-type DefinitionListItemProps = {
+type DefinitionListItemProps = PropsWithChildren<{
   term: ReactNode
-  termStyleType: 'blockTitle' | 'subBlockTitle'
+  termStyleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
+  /** @deprecated DefinitionList で items を使う時の props です。children を使ってください。 */
   description?: ReactNode
   fullWidth?: boolean
   maxColumns?: number
-}
+}>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof DefinitionListItemProps>
 
 const definitionListItem = tv({
@@ -37,8 +38,9 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   maxColumns,
   fullWidth,
   term,
-  termStyleType,
+  termStyleType = 'subBlockTitle',
   description,
+  children,
   className,
 }) => {
   const { wrapperStyleProps, termStyle, descriptionStyle } = useMemo(() => {
@@ -57,15 +59,15 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
       termStyle: termEl(),
       descriptionStyle: descriptionEl(),
     }
-  }, [className, fullWidth, maxColumns, spacing])
+  }, [className, fullWidth, maxColumns])
 
   return (
     <Stack {...wrapperStyleProps} gap={0.25}>
-      <Text as="dt" size="S" leading="TIGHT" styleType={termStyleType} className={termStyle}>
+      <Text as="dt" leading="TIGHT" styleType={termStyleType} className={termStyle}>
         {term}
       </Text>
       <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={descriptionStyle}>
-        {description}
+        {children ?? description}
       </Text>
     </Stack>
   )

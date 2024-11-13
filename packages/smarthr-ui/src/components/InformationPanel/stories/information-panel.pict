@@ -1,0 +1,6 @@
+type: success, infor, warning, error, sync
+bold: false, true
+togglable: false (10), true
+active: false, true (10)
+
+IF [bold] = "true" THEN [type] IN {"success", "warning", "error"};

@@ -48,12 +48,15 @@ const inputFile = tv({
     },
     disabled: {
       true: {
-        inputWrapper: 'shr-border-default/50 shr-bg-white/50 shr-text-disabled',
+        inputWrapper: 'shr-border-disabled shr-bg-white-darken shr-text-disabled',
       },
       false: {
         inputWrapper: 'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
       },
     },
+  },
+  defaultVariants: {
+    size: 'default',
   },
 })
 
@@ -76,7 +79,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
     {
       className,
-      size = 'default',
+      size,
       label,
       hasFileList = true,
       onChange,
