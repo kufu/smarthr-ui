@@ -68,5 +68,8 @@ export const VRTForcedColors = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
+    pseudo: {
+      focusVisible: ['#focus-visible .smarthr-ui-Switch'],
+    },
   },
 }
