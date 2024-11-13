@@ -27,7 +27,7 @@ export const _tertiaryLinksOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/BottomFixedArea',
+  title: 'Navigation（ナビゲーション）/BottomFixedArea（非推奨）',
   component: BottomFixedArea,
   render: (args) => <BottomFixedArea {...args} />,
   argTypes: {

@@ -43,11 +43,14 @@ export const DefinitionList: FC<Props & ElementProps> = ({
             termStyleType={termStyleType}
           />
         ))}
-      {React.Children.map(children, (child) =>
-        React.cloneElement(child as React.ReactElement, {
-          maxColumns,
-          termStyleType,
-        }),
+      {React.Children.map(
+        children,
+        (child) =>
+          React.isValidElement(child) &&
+          React.cloneElement(child as React.ReactElement, {
+            maxColumns,
+            termStyleType,
+          }),
       )}
     </Cluster>
   )

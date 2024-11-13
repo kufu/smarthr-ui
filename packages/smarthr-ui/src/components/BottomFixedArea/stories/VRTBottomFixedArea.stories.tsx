@@ -11,7 +11,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/BottomFixedArea/VRT',
+  title: 'Navigation（ナビゲーション）/BottomFixedArea（非推奨）/VRT',
   render: (args) => <BottomFixedArea {...args} />,
   args: {
     description: '領域や操作に対する説明を書けます。',
