@@ -56,7 +56,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: false },
     pseudo: {
-      focusVisible: ['#focus-visible input'],
+      focusVisible: ['#focus-visible .smarthr-ui-Switch'],
     },
   },
   tags: ['!autodocs', 'skip-test-runner'],
