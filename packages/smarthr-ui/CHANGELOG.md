@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [60.1.1](https://github.com/kufu/smarthr-ui/compare/v60.1.0...v60.1.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* **BottomFixedArea:** deprecated ([#5098](https://github.com/kufu/smarthr-ui/issues/5098)) ([71b08a0](https://github.com/kufu/smarthr-ui/commit/71b08a0a0e572b4abab01d54d9d876adce6e38ef))
+* **DefinitionList:** children に null が渡ってきた場合の不具合を修正 ([#5105](https://github.com/kufu/smarthr-ui/issues/5105)) ([fbc2902](https://github.com/kufu/smarthr-ui/commit/fbc2902b66e8867eeea2bac969f6ed55fc0aa190))
+
 ## [60.1.0](https://github.com/kufu/smarthr-ui/compare/v60.0.1...v60.1.0) (2024-11-13)
 
 
