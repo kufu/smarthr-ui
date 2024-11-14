@@ -70,7 +70,7 @@ jobs:
           branch: 'merge-release-${{ env.NEW_TAG }}'
           labels: release candidate
       - name: Send message to Slack
-        uses: slackapi/slack-github-action@v1.27.0
+        uses: slackapi/slack-github-action@v1.27.1
         with:
           payload: |
             {
