@@ -31,6 +31,9 @@ export const Type: StoryObj<typeof PageHeading> = {
       <PageHeading {...args} type="sectionTitle">
         SectionTitle
       </PageHeading>
+      <PageHeading {...args} type="subSectionTitle">
+        SectionTitle
+      </PageHeading>
       <PageHeading {...args} type="blockTitle">
         BlockTitle
       </PageHeading>

@@ -124,6 +124,7 @@ export const StyleType: StoryObj<typeof Text> = {
     <Stack>
       <Text {...args} styleType="screenTitle" />
       <Text {...args} styleType="sectionTitle" />
+      <Text {...args} styleType="subSectionTitle" />
       <Text {...args} styleType="blockTitle" />
       <Text {...args} styleType="subBlockTitle" />
       <Text {...args} styleType="subSubBlockTitle" />
