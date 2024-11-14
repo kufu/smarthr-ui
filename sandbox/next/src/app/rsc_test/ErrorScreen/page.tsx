@@ -1,9 +1,11 @@
 import React from 'react'
 import { ErrorScreen } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function ErrorScreenPage() {
   return (
     <>
-      <div>Success: ErrorScreen</div>
+      <RSCChecker actualComponent={ErrorScreen} />
       <ErrorScreen />
     </>
   )

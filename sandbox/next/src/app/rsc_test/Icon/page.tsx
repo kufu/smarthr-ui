@@ -1,9 +1,11 @@
 import React from 'react'
 import { FaAddressBookIcon } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker'
 export default function IconPage() {
   return (
     <>
-      <div>Success: Icon</div>
+      <RSCChecker actualComponent={FaAddressBookIcon} />
       <FaAddressBookIcon />
     </>
   )

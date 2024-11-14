@@ -1,9 +1,11 @@
 import React from 'react'
 import { MessageScreen } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function MessageScreenPage() {
   return (
     <>
-      <div>Success: MessageScreen</div>
+      <RSCChecker actualComponent={MessageScreen} />
       <MessageScreen />
     </>
   )

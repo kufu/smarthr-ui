@@ -1,9 +1,11 @@
 import React from 'react'
 import { TextLink } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function TextLinkPage() {
   return (
     <>
-      <div>Success: TextLink</div>
+      <RSCChecker actualComponent={TextLink} />
       <TextLink href="/">TextLink</TextLink>
     </>
   )

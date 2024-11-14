@@ -1,9 +1,11 @@
 import React from 'react'
 import { FormDialog } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function FormDialogPage() {
   return (
     <>
-      <div>Success: FormDialog</div>
+      <RSCChecker actualComponent={FormDialog} />
       <FormDialog
         isOpen={true}
         actionText="actionText"

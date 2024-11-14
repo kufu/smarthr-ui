@@ -1,9 +1,11 @@
 import React from 'react'
 import { ThCheckbox } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function ThCheckboxPage() {
   return (
     <>
-      <div>Success: ThCheckbox</div>
+      <RSCChecker actualComponent={ThCheckbox} />
       <ThCheckbox />
     </>
   )

@@ -1,9 +1,11 @@
 import React from 'react'
 import { Button } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function ButtonPage() {
   return (
     <>
-      <div>Success: Button</div>
+      <RSCChecker actualComponent={Button} />
       <Button />
     </>
   )

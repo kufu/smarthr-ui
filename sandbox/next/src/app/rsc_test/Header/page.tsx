@@ -1,9 +1,11 @@
 import React from 'react'
 import { Header } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function HeaderPage() {
   return (
     <>
-      <div>Success: Header</div>
+      <RSCChecker actualComponent={Header} />
       <Header />
     </>
   )

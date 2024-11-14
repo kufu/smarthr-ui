@@ -1,9 +1,11 @@
 import React from 'react'
 import { Nav } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function NavPage() {
   return (
     <>
-      <div>Success: Nav</div>
+      <RSCChecker actualComponent={Nav} />
       <Nav />
     </>
   )

@@ -1,9 +1,11 @@
 import React from 'react'
 import { VisuallyHiddenText } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function VisuallyHiddenTextPage() {
   return (
     <>
-      <div>Success: VisuallyHiddenText</div>
+      <RSCChecker actualComponent={VisuallyHiddenText} />
       <VisuallyHiddenText>VisuallyHiddenText</VisuallyHiddenText>
     </>
   )

@@ -1,9 +1,11 @@
 import React from 'react'
 import { MessageDialog } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function MessageDialogPage() {
   return (
     <>
-      <div>Success: MessageDialog</div>
+      <RSCChecker actualComponent={MessageDialog} />
       <MessageDialog
         title="title"
         description="description"

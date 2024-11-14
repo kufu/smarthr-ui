@@ -1,9 +1,11 @@
 import React from 'react'
 import { SpreadsheetTable } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function SpreadsheetTablePage() {
   return (
     <>
-      <div>Success: SpreadsheetTable</div>
+      <RSCChecker actualComponent={SpreadsheetTable} />
       <SpreadsheetTable
         data={[
           ['A', 'B', 'C'],

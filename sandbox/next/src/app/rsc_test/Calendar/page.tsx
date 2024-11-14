@@ -1,9 +1,11 @@
 import React from 'react'
 import { Calendar } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function CalendarPage() {
   return (
     <>
-      <div>Success: Calendar</div>
+      <RSCChecker actualComponent={Calendar} />
       <Calendar onSelectDate={() => {}} />
     </>
   )
