@@ -15,10 +15,10 @@ import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { textColor } from '../../themes'
+import { Calendar } from '../Calendar'
 import { FaCalendarAltIcon } from '../Icon'
 import { Input } from '../Input'
 
-import { Calendar } from './Calendar'
 import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
 import { useGlobalKeyDown } from './useGlobalKeyDown'
