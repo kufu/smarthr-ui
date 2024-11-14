@@ -6,7 +6,7 @@ import { Calendar } from '../Calendar'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker/Calendar',
+  title: 'Data Display（データ表示）/DatePicker/Calendar',
   component: Calendar,
   // argsType で date を指定した場合、args が Date でなく UnixTime(number) になってしまうため変換する
   // refs: https://github.com/storybookjs/storybook/issues/11822

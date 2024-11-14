@@ -8,7 +8,7 @@ import { Calendar } from '../Calendar'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker/Calendar/VRT',
+  title: 'Data Display（データ表示）/DatePicker/Calendar/VRT',
   render: (args) => (
     <Cluster gap="S">
       <Calendar value={dayjs('2024/11/06').toDate()} onSelectDate={args.onSelectDate} />
