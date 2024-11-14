@@ -117,14 +117,15 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
         <a href={logoHref} className={logoLink()}>
           {logo}
         </a>
-        {enableNew && featureName && (
-          <AppLauncher
-            apps={apps}
-            enableNew={enableNew}
-            decorators={{ triggerLabel: () => featureName }}
-          />
-        )}
-        {currentTenantName && <div className={tenantInfoStyle()}>{tenantInfo}</div>}
+        {enableNew
+          ? featureName && (
+              <AppLauncher
+                apps={apps}
+                enableNew={enableNew}
+                decorators={{ triggerLabel: () => featureName }}
+              />
+            )
+          : currentTenantName && <div className={tenantInfoStyle()}>{tenantInfo}</div>}
       </Cluster>
       <Cluster
         align="center"
