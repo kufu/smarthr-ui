@@ -60,7 +60,7 @@ const getStringLength = (value: string | number | readonly string[]) => {
 
 const TEXT_BEFORE_MAXLETTERS_COUNT = 'あと'
 const TEXT_AFTER_MAXLETTERS_COUNT = '文字'
-const TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED = '超過'
+const TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED = 'オーバー'
 
 const textarea = tv({
   slots: {
@@ -253,8 +253,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       <textarea
         {...props}
         {...textareaStyleProps}
+        {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
-        aria-describedby={`${maxLettersNoticeId} ${actualMaxLettersId}`}
         onChange={handleChange}
         ref={textareaRef}
         aria-invalid={hasInputError || undefined}
@@ -274,7 +274,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
-          こちらは文字カウンター付きの入力欄です。最大{maxLetters}文字まで入力できます。
+          最大{maxLetters}文字入力できます。
         </VisuallyHiddenText>
       </span>
     ) : (
