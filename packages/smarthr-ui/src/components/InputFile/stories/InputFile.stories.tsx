@@ -4,8 +4,10 @@ import React from 'react'
 
 import { Stack } from '../../Layout'
 import { InputFile } from '../InputFile'
+import { InputFileMultiple } from '../InputFileMultiple'
 
 import type { Meta, StoryObj } from '@storybook/react'
+
 
 export default {
   title: 'Forms（フォーム）/InputFile',
@@ -78,3 +80,19 @@ export const OnChange: StoryObj<typeof InputFile> = {
   name: 'onChange',
   args: { onChange: action('changed') },
 }
+
+const C = () => {
+  const [files, setFiles] = React.useState<File[]>([])
+  const onChange = (e)=> {
+    console.log('hello')
+    setFiles(e.target.files)
+  }
+  return (
+    <>
+    <InputFileMultiple multiple files={files} label="ファイルを選択" onChange={onChange} />
+    <button onClick={() => setFiles(null)}>Clear</button>
+  </>
+    )
+}
+
+export const Test = () => <C />
