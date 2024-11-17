@@ -434,7 +434,7 @@ export default {
         'p, dl': {
           marginBlock: 'unset',
         },
-        ul: {
+        'menu, ul': {
           marginBlock: 'unset',
           paddingInlineStart: 'unset',
         },
