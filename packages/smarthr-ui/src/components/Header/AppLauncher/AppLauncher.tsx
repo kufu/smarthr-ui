@@ -34,9 +34,10 @@ const TRIGGER_LABEL = 'アプリ'
 const appLauncher = tv({
   slots: {
     appsButton: [
-      'shr-border-transparent shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
+      'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
       'hover:shr-border-transparent hover:shr-bg-transparent',
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
+      'forced-colors:shr-border-shorthand',
     ],
     contentWrapper: ['smarthr-ui-AppLauncher', 'shr-p-1.5 shr-leading-normal'],
     category: 'smarthr-ui-AppLauncher-category',

@@ -27,9 +27,10 @@ const CHECK_ICON_ALT = '選択中'
 const appLauncher = tv({
   slots: {
     switchButton: [
-      'shr-border-transparent shr-font-normal shr-text-white shr-transition-transform shr-duration-100 shr-bg-transparent shr-px-0.25',
+      'shr-border-none shr-font-normal shr-text-white shr-transition-transform shr-duration-100 shr-bg-transparent shr-px-0.25',
       'hover:shr-border-transparent hover:shr-bg-transparent',
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
+      'forced-colors:shr-border-shorthand',
       '[&>svg]:aria-expanded:shr-rotate-180',
     ],
     languageItemsList: ['shr-p-0.5'],

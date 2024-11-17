@@ -7,14 +7,15 @@ type Props = ComponentProps<typeof TextLink> & VariantProps<typeof headerLink>
 
 const headerLink = tv({
   base: [
+    'shr-inline-flex shr-items-center',
     'shr-px-0.25 shr-text-white shr-shadow-none',
-    'hover:shr-text-white',
     'focus-visible:shr-focus-indicator',
-    '[.smarthr-ui-Header-enable-new_&]:shr-text-black',
+    '[&_.smarthr-ui-Icon]:shr-block',
   ],
   variants: {
     enableNew: {
-      true: ['shr-px-0.5', 'hover:shr-shadow-underline'],
+      true: ['shr-px-0.5 shr-text-black', 'hover:shr-shadow-underline'],
+      false: 'hover:shr-text-white',
     },
   },
 })
