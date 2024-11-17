@@ -39,7 +39,9 @@ export default {
         <DropdownMenuButton {...args} {...props} key={i}>
           <DropdownMenuGroup name="グループ1">
             <Button>操作1</Button>
-            <Button>操作2</Button>
+            <Button disabled disabledDetail={{ message: '非推奨な理由' }}>
+              操作2
+            </Button>
           </DropdownMenuGroup>
           <Button>操作3</Button>
           <DropdownMenuGroup name="グループ2">
