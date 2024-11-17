@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions'
 import React, { type FC, type ReactNode } from 'react'
 
 import { AnchorButton, Button } from '../Button'
+import { DropdownMenuGroup } from '../Dropdown/DropdownMenuButton'
 
 import { AppNavi } from './AppNavi'
 import { AppNaviAnchor } from './AppNaviAnchor'
@@ -37,6 +38,10 @@ export const Default: StoryFn = () => (
     <AppNaviDropdownMenuButton label="設定">
       <Button>権限</Button>
       <AnchorButton href="#">その他</AnchorButton>
+      <DropdownMenuGroup name="グループ">
+        <Button>権限</Button>
+        <AnchorButton href="#">その他</AnchorButton>
+      </DropdownMenuGroup>
     </AppNaviDropdownMenuButton>
     <AppNaviCustomTag tag={Link} href="/">
       カスタムタグ
