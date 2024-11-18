@@ -1,18 +1,13 @@
 import { action } from '@storybook/addon-actions'
-import { StoryFn } from '@storybook/react'
-import React, { useState } from 'react'
+import React from 'react'
 
-import { LocaleMap } from '../../../types'
-import { Stack } from '../../Layout'
+import { backgroundColor } from '../../../themes'
 
 import { LanguageSwitcher } from '.'
 
-export default {
-  title: 'Navigation（ナビゲーション）/Header/LanguageSwitcher',
-  component: LanguageSwitcher,
-}
+import type { Meta, StoryObj } from '@storybook/react'
 
-const localeMap: LocaleMap = {
+const localeMap = {
   ja: '日本語',
   'en-us': 'English',
   pt: 'Português',
@@ -22,65 +17,79 @@ const localeMap: LocaleMap = {
   'zh-tw': '繁體中文',
 }
 
-export const All: StoryFn = () => {
-  const [currentLang, setLang] = useState<string>('ja')
+export default {
+  title: 'Navigation（ナビゲーション）/Header/LanguageSwitcher',
+  component: LanguageSwitcher,
+  render: (args) => <LanguageSwitcher {...args} />,
+  args: {
+    localeMap,
+  },
+  parameters: {
+    backgrounds: {
+      values: [{ name: 'light', value: backgroundColor.brand }],
+    },
+    chromatic: { disableSnapshot: true },
+  },
+} satisfies Meta<typeof LanguageSwitcher>
 
-  const handleLanguageSelect = (code: string) => {
-    setLang(code)
-    action('onLanguageSelect')
-  }
+export const Playground: StoryObj<typeof LanguageSwitcher> = {}
 
-  return (
-    <Stack gap={1} as="dl">
-      <div>
-        <dt>normal</dt>
-        <dd className="shr-flex shr-bg-main-darken">
-          <LanguageSwitcher
-            locale={currentLang}
-            localeMap={localeMap}
-            onLanguageSelect={handleLanguageSelect}
-          />
-        </dd>
-      </div>
+export const LocaleMap: StoryObj<typeof LanguageSwitcher> = {
+  name: 'localeMap',
+  args: {
+    localeMap,
+  },
+}
 
-      <div>
-        <dt>narrow</dt>
-        <dd className="shr-flex shr-bg-main-darken">
-          <LanguageSwitcher
-            narrow
-            locale={currentLang}
-            localeMap={localeMap}
-            onLanguageSelect={handleLanguageSelect}
-            decorators={{ checkIconAlt: () => 'selected' }}
-          />
-        </dd>
-      </div>
+export const Loacle: StoryObj<typeof LanguageSwitcher> = {
+  name: 'locale',
+  args: {
+    locale: 'en-us',
+  },
+}
 
-      <div>
-        <dt>invert & ボタンラベル変更</dt>
-        <dd className="shr-flex">
-          <LanguageSwitcher
-            invert
-            locale={currentLang}
-            localeMap={localeMap}
-            onLanguageSelect={handleLanguageSelect}
-            decorators={{ triggerLabel: () => '言語選択' }}
-          />
-        </dd>
-      </div>
+export const DefaultLocale: StoryObj<typeof LanguageSwitcher> = {
+  name: 'defaultLocale',
+  args: {
+    defaultLocale: 'pt',
+  },
+}
 
-      <div>
-        <dt>narrow invert & defaultのlocaleを変更</dt>
-        <dd className="shr-flex">
-          <LanguageSwitcher
-            narrow
-            invert
-            locale={Object.keys(localeMap)[1]}
-            localeMap={localeMap}
-            onLanguageSelect={handleLanguageSelect}
-          />
-        </dd>
-      </div>
-    </Stack>
-  )
+export const Narrow: StoryObj<typeof LanguageSwitcher> = {
+  name: 'narrow',
+  args: {
+    narrow: true,
+  },
+}
+
+export const OnLanguageSelect: StoryObj<typeof LanguageSwitcher> = {
+  name: 'onLanguageSelect',
+  args: {
+    onLanguageSelect: action('selected'),
+  },
+}
+
+export const Invert: StoryObj<typeof LanguageSwitcher> = {
+  name: 'invert',
+  args: {
+    invert: true,
+  },
+  parameters: {
+    backgrounds: {
+      values: [{ name: 'light', value: backgroundColor.background }],
+    },
+  },
+}
+
+export const EnableNew: StoryObj<typeof LanguageSwitcher> = {
+  name: 'enableNew',
+  render: (args) => <LanguageSwitcher {...args} />,
+  args: {
+    enableNew: true,
+  },
+  parameters: {
+    backgrounds: {
+      values: [{ name: 'light', value: backgroundColor.white }],
+    },
+  },
 }
