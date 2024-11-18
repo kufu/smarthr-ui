@@ -13,8 +13,6 @@ const SERVER_COMPONENTS = [
   'BaseColumn',
   'Chip',
   'CompactInformationPanel',
-  'DefinitionList',
-  'DefinitionListItem',
   'ErrorScreen',
   'FloatArea',
   'HeaderLink',
@@ -25,10 +23,14 @@ const SERVER_COMPONENTS = [
   'PageCounter',
   'RangeSeparator',
   'ResponseMessage',
+  'SideNav',
   'SmartHRLogo',
   'SpreadsheetTable',
   'SpreadsheetTableCorner',
   'StatusLabel',
+  'Stepper',
+  'Switch',
+  'TabBar',
   'Table',
   'Td',
   'Text',
@@ -44,15 +46,18 @@ const SERVER_COMPONENTS = [
  * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
 const CLIENT_COMPONENTS: string[] = [
-  'Article',
-  'Aside',
-  'Base',
-  'Center',
-  'Cluster',
-  'Heading',
-  'Nav',
-  'PageHeading',
-  'Reel',
+  'Article',        // 見出しレベルの自動生成のため
+  'Aside',          // 見出しレベルの自動生成のため
+  'Base',           // 見出しレベルの自動生成のため
+  'Center',         // 見出しレベルの自動生成のため
+  'Cluster',        // 見出しレベルの自動生成のため
+  'Heading',        // 見出しレベルの自動生成のため
+  'Nav',            // 見出しレベルの自動生成のため
+  'PageHeading',    // 見出しレベルの自動生成のため
+  'Reel',           // 見出しレベルの自動生成のため
+  'Section',        // 見出しレベルの自動生成のため
+  'Sidebar',        // 見出しレベルの自動生成のため
+  'Stack',          // 見出しレベルの自動生成のため
 ]
 
 /**
@@ -78,6 +83,8 @@ const DISABLED_COMPONENTS = [
   'CheckBox',
   'CurrencyInput',
   'DatePicker',
+  'DefinitionList',
+  'DefinitionListItem',
   'Dialog',
   'DialogCloser',
   'DialogContent',
@@ -115,17 +122,10 @@ const DISABLED_COMPONENTS = [
   'RemoteTriggerFormDialog',
   'RemoteTriggerMessageDialog',
   'SearchInput',
-  'Section',
   'SegmentedControl',
   'Select',
-  'SideNav',
-  'Sidebar',
   'SingleComboBox',
   'SortDropdown',
-  'Stack',
-  'Stepper',
-  'Switch',
-  'TabBar',
   'TabItem',
   'TableReel',
   'TdCheckbox',
