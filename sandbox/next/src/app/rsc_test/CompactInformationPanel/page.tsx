@@ -1,9 +1,11 @@
 import React from 'react'
 import { CompactInformationPanel } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function CompactInformationPanelPage() {
   return (
     <>
-      <div>Success: CompactInformationPanel</div>
+      <RSCChecker actualComponent={CompactInformationPanel} />
       <CompactInformationPanel />
     </>
   )

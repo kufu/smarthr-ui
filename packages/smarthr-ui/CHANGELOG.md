@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [60.1.1](https://github.com/kufu/smarthr-ui/compare/v60.1.0...v60.1.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* **BottomFixedArea:** deprecated ([#5098](https://github.com/kufu/smarthr-ui/issues/5098)) ([71b08a0](https://github.com/kufu/smarthr-ui/commit/71b08a0a0e572b4abab01d54d9d876adce6e38ef))
+* **DefinitionList:** children に null が渡ってきた場合の不具合を修正 ([#5105](https://github.com/kufu/smarthr-ui/issues/5105)) ([fbc2902](https://github.com/kufu/smarthr-ui/commit/fbc2902b66e8867eeea2bac969f6ed55fc0aa190))
+
+## [60.1.0](https://github.com/kufu/smarthr-ui/compare/v60.0.1...v60.1.0) (2024-11-13)
+
+
+### Features
+
+* **DefinitionList:** Composition できるように修正 ([#5094](https://github.com/kufu/smarthr-ui/issues/5094)) ([e888f0a](https://github.com/kufu/smarthr-ui/commit/e888f0a90d56d32608036582e133e736ca43266a))
+* **InformationPanel:** bold を追加しつつ装飾を見直し ([#5075](https://github.com/kufu/smarthr-ui/issues/5075)) ([e27744d](https://github.com/kufu/smarthr-ui/commit/e27744dd22eb6fe2b08abfa90567b36a0ad41abc))
+
+
+### Bug Fixes
+
+* **AccordionPanelTrigger:** disabled な装飾を追加 ([#5086](https://github.com/kufu/smarthr-ui/issues/5086)) ([c13b38c](https://github.com/kufu/smarthr-ui/commit/c13b38cf02c51ff036c3ff24fcf3f591062a55e5))
+* **AccordionPanelTrigger:** キャレットが shrink してしまう不具合を修正 ([#5101](https://github.com/kufu/smarthr-ui/issues/5101)) ([f27862f](https://github.com/kufu/smarthr-ui/commit/f27862f48524ba91e8eb5c642f83eaee81ac0d40))
+* DropdownContentの最後の要素でTabを押したときDropdownを閉じる ([#5070](https://github.com/kufu/smarthr-ui/issues/5070)) ([ceaf059](https://github.com/kufu/smarthr-ui/commit/ceaf059f289074de59ac681477d2300c40c4363d))
+* **InputFile:** disabled の装飾を修正 ([#5085](https://github.com/kufu/smarthr-ui/issues/5085)) ([e9e0af1](https://github.com/kufu/smarthr-ui/commit/e9e0af141539c2daf181824da435c2c61454515a))
+* **ModelessDialog:** ヘッダー部にキーボードフォーカスが当たると文字列が消えてしまう不具合を修正 ([#5090](https://github.com/kufu/smarthr-ui/issues/5090)) ([7765378](https://github.com/kufu/smarthr-ui/commit/77653786d55d8d01dae8da0d998758098db209db))
+
+### [60.0.1](https://github.com/kufu/smarthr-ui/compare/v60.0.0...v60.0.1) (2024-11-05)
+
+
+### Bug Fixes
+
+* FloatArea の z-index を見直し ([#5066](https://github.com/kufu/smarthr-ui/issues/5066)) ([befa773](https://github.com/kufu/smarthr-ui/commit/befa7738d2af8969f40a4e862766081d9c530832))
+* FormControl内のInputFileのアクセシブルネームに可視ラベルを含める ([#5056](https://github.com/kufu/smarthr-ui/issues/5056)) ([b8a69db](https://github.com/kufu/smarthr-ui/commit/b8a69db9e723b6be1b57221c6b33cb9d95d97714))
+* TabItem に disabledDetail があるときのフォーカスリングを修正 ([#5057](https://github.com/kufu/smarthr-ui/issues/5057)) ([236a744](https://github.com/kufu/smarthr-ui/commit/236a744d82b1098dc67d2ab5b1e0031e3456e648))
+
 ## [60.0.0](https://github.com/kufu/smarthr-ui/compare/v59.0.0...v60.0.0) (2024-10-29)
 
 

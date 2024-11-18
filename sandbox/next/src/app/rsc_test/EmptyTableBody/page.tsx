@@ -1,9 +1,11 @@
 import React from 'react'
 import { EmptyTableBody } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function EmptyTableBodyPage() {
   return (
     <>
-      <div>Success: EmptyTableBody</div>
+      <RSCChecker actualComponent={EmptyTableBody} />
       <EmptyTableBody />
     </>
   )

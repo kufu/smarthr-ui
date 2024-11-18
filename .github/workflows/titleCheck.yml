@@ -15,7 +15,7 @@ jobs:
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          regex="^(feat|fix|docs|chore|style|refactor|perf|test)!?(\([^\)]+\))?:[[:space:]].+"
+          regex="^(feat|fix|docs|chore|style|refactor|perf|test)(\([^\)]+\))?!?:[[:space:]].+"
           if [[ "$PR_TITLE" =~ $regex ]]; then
               echo OK
           else

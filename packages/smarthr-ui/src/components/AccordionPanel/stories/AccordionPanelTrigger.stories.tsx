@@ -20,6 +20,7 @@ export default {
   ),
   argTypes: {
     children: { control: 'text' },
+    disabled: { control: 'boolean' },
   },
   args: {
     children: 'アコーディオンパネル',
@@ -76,4 +77,11 @@ export const HeadingTag: StoryObj<typeof AccordionPanelTrigger> = {
       ))}
     </AccordionPanel>
   ),
+}
+
+export const Disabled: StoryObj<typeof AccordionPanelTrigger> = {
+  name: 'disabled',
+  args: {
+    disabled: true,
+  },
 }

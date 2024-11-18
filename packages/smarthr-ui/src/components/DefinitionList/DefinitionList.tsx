@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, useMemo } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
@@ -7,14 +7,16 @@ import { DefinitionListItem } from './DefinitionListItem'
 
 type ItemType = ComponentProps<typeof DefinitionListItem>
 
-type Props = {
-  /** 定義リストのアイテムの配列 */
-  items: Array<Omit<ItemType, 'termStyleType'>>
+type Props = PropsWithChildren<{
+  /** 定義リストのアイテムの配列
+   * @deprecated DefinitionListItem を使ってください
+   */
+  items?: Array<Omit<ItemType, 'termStyleType'>>
   /** 最大列数 */
   maxColumns?: number
   /** 用語の見た目の種類 */
   termStyleType?: ItemType['termStyleType']
-}
+}>
 type ElementProps = Omit<ComponentProps<'dl'>, keyof Props>
 
 const definitionList = tv({
@@ -24,21 +26,32 @@ const definitionList = tv({
 export const DefinitionList: FC<Props & ElementProps> = ({
   items,
   maxColumns,
-  termStyleType = 'subBlockTitle',
+  termStyleType,
+  children,
   className,
 }) => {
   const styles = useMemo(() => definitionList({ className }), [className])
 
   return (
     <Cluster as="dl" gap={1.5} className={styles}>
-      {items.map((item, index) => (
-        <DefinitionListItem
-          {...item}
-          key={index}
-          maxColumns={maxColumns}
-          termStyleType={termStyleType}
-        />
-      ))}
+      {items &&
+        items.map((item, index) => (
+          <DefinitionListItem
+            {...item}
+            key={index}
+            maxColumns={maxColumns}
+            termStyleType={termStyleType}
+          />
+        ))}
+      {React.Children.map(
+        children,
+        (child) =>
+          React.isValidElement(child) &&
+          React.cloneElement(child as React.ReactElement, {
+            maxColumns,
+            termStyleType,
+          }),
+      )}
     </Cluster>
   )
 }

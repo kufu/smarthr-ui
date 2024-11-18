@@ -52,7 +52,7 @@ export { TabBar, TabItem } from './components/TabBar'
 export { Heading, PageHeading } from './components/Heading'
 export { Select } from './components/Select'
 export { DropZone } from './components/DropZone'
-export { DefinitionList } from './components/DefinitionList'
+export { DefinitionList, DefinitionListItem } from './components/DefinitionList'
 export {
   AccordionPanel,
   AccordionPanelItem,

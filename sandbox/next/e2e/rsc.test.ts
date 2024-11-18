@@ -33,9 +33,15 @@ const SERVER_COMPONENTS = [
 ]
 
 /**
- * サーバーコンポーネントでは利用できないコンポーネント一覧(アルファベット順)
+ * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
-const CLIENT_COMPONENTS = [
+const CLIENT_COMPONENTS: string[] = []
+
+/**
+ * サーバーコンポーネント内では利用できないコンポーネント一覧(アルファベット順)
+ * FIXME: すべての use client を付与して CLIENT_COMPONENTS に移動する
+ */
+const DISABLED_COMPONENTS = [
   'AccordionPanel',
   'AccordionPanelContent',
   'AccordionPanelItem',
@@ -131,18 +137,27 @@ test.describe('RSC対応コンポーネントがRSCで利用できること', ()
   for (const component of SERVER_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
-      await expect(page.getByText(`Success: ${component}`)).toBeVisible()
+      await expect(page.getByText('This is server component')).toBeVisible()
+      await expect(page.getByText('Server Error')).not.toBeVisible()
+    })
+  }
+
+  for (const component of CLIENT_COMPONENTS) {
+    test(component, async ({ page }) => {
+      await page.goto(`http://localhost:3000/rsc_test/${component}`)
+      await expect(page.getByText('This is client component')).toBeVisible()
       await expect(page.getByText('Server Error')).not.toBeVisible()
     })
   }
 })
 
 test.describe('RSC非対応コンポーネントはRSCでエラーになること', () => {
-  for (const component of CLIENT_COMPONENTS) {
+  for (const component of DISABLED_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
       await expect(page.getByText(/Server Error|Unhandled Runtime Error/)).toBeVisible()
-      await expect(page.getByText(`Success: ${component}`)).not.toBeVisible()
+      await expect(page.getByText('This is server component')).not.toBeVisible()
+      await expect(page.getByText('This is client component')).not.toBeVisible()
     })
   }
 })

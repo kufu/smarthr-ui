@@ -1,9 +1,11 @@
 import React from 'react'
 import { AppLauncher } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function AppLauncherPage() {
   return (
     <>
-      <div>Success: AppLauncher</div>
+      <RSCChecker actualComponent={AppLauncher} />
       <AppLauncher apps={[]} />
     </>
   )

@@ -1,110 +1,57 @@
 import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
+import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 
-const statusLabel = tv({
+export const statusLabel = tv({
   base: [
     'smarthr-ui-StatusLabel',
-    'shr-box-content',
-    'shr-font-bold',
-    'shr-inline-flex',
-    'shr-items-center',
-    'shr-justify-center',
-    'shr-gap-0.25',
-    'shr-px-0.5',
-    'shr-py-0.25',
-    'shr-whitespace-nowrap',
-    'shr-text-sm',
+    'shr-box-content shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25 shr-border-shorthand shr-border-current shr-bg-white shr-px-0.5 shr-py-0.25 shr-whitespace-nowrap shr-text-sm shr-font-bold shr-min-w-[3.5em] shr-min-h-em',
     // ラベルが天地中央に揃わないため暫定対応
     'shr-leading-[0]',
-    'shr-min-w-[3.5em]',
-    'shr-min-h-em',
-    'shr-border-shorthand',
   ],
   variants: {
     type: {
-      grey: [],
-      blue: [],
-      green: [],
-      red: [],
-      warning: ['shr-bg-warning-yellow', 'shr-text-black'],
-      error: ['shr-bg-danger', 'shr-border-danger', 'shr-text-white'],
+      grey: ['shr-border-grey-20 shr-text-grey', 'contrast-more:shr-border-high-contrast'],
+      blue: 'shr-text-main',
+      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
+       * https://smarthr.design/basics/colors/#h4-1 */
+      green: 'shr-text-[#0f7f85]',
+      red: 'shr-text-danger',
+      warning: 'shr-border-warning-yellow shr-bg-warning-yellow shr-text-black',
+      error: 'shr-bg-danger shr-border-danger shr-text-white',
     },
     bold: {
-      true: [],
+      true: 'shr-text-white',
     },
   },
   compoundVariants: [
     {
-      type: ['blue', 'green', 'red', 'warning'],
-      bold: false,
-      className: ['shr-border-current'],
-    },
-    {
-      type: ['grey', 'blue', 'green', 'red'],
-      bold: false,
-      className: ['shr-bg-white'],
-    },
-    {
       type: 'grey',
-      bold: false,
-      class: ['shr-border-grey-20', 'shr-text-grey', 'contrast-more:shr-border-high-contrast'],
+      bold: true,
+      class: 'shr-border-grey-65 shr-bg-[theme(colors.grey.65)]',
     },
     {
       type: 'blue',
-      bold: false,
-      class: ['shr-text-main'],
-    },
-    {
-      type: 'green',
-      bold: false,
-      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
-       * https://smarthr.design/basics/colors/#h4-1 */
-      class: ['shr-text-[#0f7f85]'],
-    },
-    {
-      type: 'red',
-      bold: false,
-      class: ['shr-text-danger'],
-    },
-    {
-      type: 'warning',
-      bold: false,
-      class: ['shr-border-warning-yellow'],
-    },
-    {
-      type: ['grey', 'blue', 'green', 'red', 'error'],
       bold: true,
-      class: ['shr-text-white'],
-    },
-    {
-      type: 'grey',
-      bold: true,
-      class: ['shr-bg-[theme(colors.grey.65)]', 'shr-border-grey-65'],
-    },
-
-    {
-      type: 'blue',
-      bold: true,
-      class: ['shr-bg-main', 'shr-border-main'],
+      class: 'shr-border-main shr-bg-main',
     },
     {
       type: 'green',
       bold: true,
       /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
        * https://smarthr.design/basics/colors/#h4-1 */
-      class: ['shr-border-[#0f7f85]', 'shr-bg-[#0f7f85]'],
+      class: 'shr-border-[#0f7f85] shr-bg-[#0f7f85]',
     },
     {
       type: 'red',
       bold: true,
-      class: ['shr-bg-danger', 'shr-border-danger'],
+      class: 'shr-border-danger shr-bg-danger',
     },
     {
       type: 'warning',
       bold: true,
-      class: ['shr-border-current', 'shr-text-black'],
+      class: 'shr-border-current shr-text-black',
     },
   ],
 })
@@ -122,10 +69,10 @@ export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
   const Icon = useMemo(() => {
     switch (true) {
       case type === 'warning' && bold: {
-        return FaExclamationTriangleIcon
+        return FaTriangleExclamationIcon
       }
       case type === 'error' && bold: {
-        return FaExclamationCircleIcon
+        return FaCircleExclamationIcon
       }
       default: {
         return React.Fragment

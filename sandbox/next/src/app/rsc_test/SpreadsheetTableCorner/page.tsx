@@ -1,9 +1,11 @@
 import React from 'react'
 import { SpreadsheetTableCorner } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function SpreadsheetTableCornerPage() {
   return (
     <>
-      <div>Success: SpreadsheetTableCorner</div>
+      <RSCChecker actualComponent={SpreadsheetTableCorner} />
       <SpreadsheetTableCorner />
     </>
   )
