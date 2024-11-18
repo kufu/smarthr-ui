@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Forms（フォーム）/Fieldset/VRT',
   render: (args) => (
-    <Stack gap={4}>
+    <Stack gap={4} as="form">
       {[false, true].map((dangerouslyTitleHidden) =>
         [false, true].map((disabled) => (
           <Fieldset
