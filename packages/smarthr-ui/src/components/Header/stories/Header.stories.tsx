@@ -4,6 +4,7 @@ import React from 'react'
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Header } from '../Header'
+import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
 import { HeaderLink } from '../HeaderLink'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 
@@ -93,6 +94,7 @@ const _appsOptions = {
 export default {
   title: 'Navigation（ナビゲーション）/Header',
   component: Header,
+  subcomponents: { HeaderLink, HeaderDropdownMenuButton },
   render: (args) => <Header {...args} />,
   argTypes: {
     logo: {
@@ -118,7 +120,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} satisfies Meta<typeof Header>
+} as Meta<typeof Header>
 
 export const Playground: StoryObj<typeof Header> = {
   args: {},

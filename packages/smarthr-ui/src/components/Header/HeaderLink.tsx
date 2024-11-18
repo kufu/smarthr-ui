@@ -3,7 +3,7 @@ import { VariantProps, tv } from 'tailwind-variants'
 
 import { TextLink } from '../TextLink'
 
-type Props = ComponentProps<typeof TextLink> & VariantProps<typeof headerLink>
+type Props = Omit<ComponentProps<typeof TextLink>, 'suffix'> & VariantProps<typeof headerLink>
 
 const headerLink = tv({
   base: [
