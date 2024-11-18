@@ -110,176 +110,178 @@ export const SingleCombobox: StoryFn = () => {
 
   return (
     <Stack>
-      <FormControl title="デフォルト">
-        <SingleComboBox
-          name="default"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-          onChangeSelected={(item) => {
-            action('onChangeSelected')(item)
-            setSelectedItem(item)
-          }}
-          onFocus={action('onFocus')}
-          onBlur={action('onBlur')}
-          data-test="single-combobox-default"
-        />
-      </FormControl>
-      <FormControl title="アイテム追加可能">
-        <SingleComboBox
-          name="onAdd"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="新しいアイテムを追加できます。"
-          creatable
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-          onAdd={handleAddItem}
-          data-test="single-combobox-creatable"
-        />
-      </FormControl>
-      <FormControl title="Disabled">
-        <SingleComboBox
-          name="disabled"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="Disabled なコンボボックス"
-          disabled
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-          data-test="single-combobox-disabled"
-        />
-      </FormControl>
-      <FormControl title="必須">
-        <SingleComboBox
-          name="required"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="Required なコンボボックス"
-          required
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-          data-test="single-combobox-disabled"
-        />
-      </FormControl>
-      <FormControl title="その他属性">
-        <SingleComboBox
-          name="inputAttributes"
-          items={items}
-          selectedItem={selectedItem}
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-          data-test="single-combobox-disabled"
-          aria-label="inputAttributes"
-        />
-      </FormControl>
-      <FormControl title="エラー表示" autoBindErrorInput={false}>
-        <SingleComboBox
-          name="error"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          error
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-        />
-      </FormControl>
-      <FormControl title="エラー表示 with FormControl" errorMessages={['エラーメッセージ']}>
-        <SingleComboBox
-          name="error"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-        />
-      </FormControl>
-      <FormControl title="読込中">
-        <SingleComboBox
-          name="isLoading"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          isLoading
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-        />
-      </FormControl>
-      <FormControl title="文言変更">
-        <SingleComboBox
-          name="decorator"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-          decorators={{
-            noResultText: (text) => `no result.(${text})`,
-            destroyButtonIconAlt: (text) => `destroy.(${text})`,
-          }}
-        />
-      </FormControl>
-      <FormControl title="100%幅">
-        <SingleComboBox
-          name="widthFull"
-          items={items}
-          selectedItem={selectedItem}
-          width="100%"
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-        />
-      </FormControl>
-      <FormControl title="ドロップダウンリストの幅を指定(38文字)">
-        <SingleComboBox
-          name="dropdownWidth38em"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownWidth="38em"
-          dropdownHelpMessage="入力でフィルタリングできます。（ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキスト）"
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-        />
-      </FormControl>
-      <FormControl title="アイテム数が多い時">
-        <SingleComboBox
-          name="manyItems"
-          items={manyItems}
-          selectedItem={null}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onSelect={action('onSelect')}
-        />
-      </FormControl>
-      <FormControl title="クリアボタンクリック時のデフォルトの挙動を無効化">
-        <SingleComboBox
-          name="onClearClick"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onSelect={handleSelectItem}
-          onClearClick={(e) => {
-            e.preventDefault()
-            handleClear()
-          }}
-          onChangeSelected={(item) => {
-            action('onChangeSelected')(item)
-            setSelectedItem(item)
-          }}
-          data-test="single-combobox-default"
-        />
-      </FormControl>
-      <FormControl title="デフォルトの選択肢あり">
-        <SingleComboBox
-          name="defaultItemSingleCombobox"
-          items={itemsForDefault}
-          selectedItem={selectedItemForDefault}
-          defaultItem={itemsForDefault[0]}
-          onSelect={handleSelectItemForDefault}
-          onClear={handleClearForDefault}
-        />
-      </FormControl>
+      <form>
+        <FormControl title="デフォルト">
+          <SingleComboBox
+            name="default"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+            onChangeSelected={(item) => {
+              action('onChangeSelected')(item)
+              setSelectedItem(item)
+            }}
+            onFocus={action('onFocus')}
+            onBlur={action('onBlur')}
+            data-test="single-combobox-default"
+          />
+        </FormControl>
+        <FormControl title="アイテム追加可能">
+          <SingleComboBox
+            name="onAdd"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="新しいアイテムを追加できます。"
+            creatable
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+            onAdd={handleAddItem}
+            data-test="single-combobox-creatable"
+          />
+        </FormControl>
+        <FormControl title="Disabled">
+          <SingleComboBox
+            name="disabled"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="Disabled なコンボボックス"
+            disabled
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+            data-test="single-combobox-disabled"
+          />
+        </FormControl>
+        <FormControl title="必須">
+          <SingleComboBox
+            name="required"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="Required なコンボボックス"
+            required
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+            data-test="single-combobox-disabled"
+          />
+        </FormControl>
+        <FormControl title="その他属性">
+          <SingleComboBox
+            name="inputAttributes"
+            items={items}
+            selectedItem={selectedItem}
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+            data-test="single-combobox-disabled"
+            aria-label="inputAttributes"
+          />
+        </FormControl>
+        <FormControl title="エラー表示" autoBindErrorInput={false}>
+          <SingleComboBox
+            name="error"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            error
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+          />
+        </FormControl>
+        <FormControl title="エラー表示 with FormControl" errorMessages={['エラーメッセージ']}>
+          <SingleComboBox
+            name="error"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+          />
+        </FormControl>
+        <FormControl title="読込中">
+          <SingleComboBox
+            name="isLoading"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            isLoading
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+          />
+        </FormControl>
+        <FormControl title="文言変更">
+          <SingleComboBox
+            name="decorator"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+            decorators={{
+              noResultText: (text) => `no result.(${text})`,
+              destroyButtonIconAlt: (text) => `destroy.(${text})`,
+            }}
+          />
+        </FormControl>
+        <FormControl title="100%幅">
+          <SingleComboBox
+            name="widthFull"
+            items={items}
+            selectedItem={selectedItem}
+            width="100%"
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+          />
+        </FormControl>
+        <FormControl title="ドロップダウンリストの幅を指定(38文字)">
+          <SingleComboBox
+            name="dropdownWidth38em"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownWidth="38em"
+            dropdownHelpMessage="入力でフィルタリングできます。（ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキスト）"
+            onSelect={handleSelectItem}
+            onClear={handleClear}
+          />
+        </FormControl>
+        <FormControl title="アイテム数が多い時">
+          <SingleComboBox
+            name="manyItems"
+            items={manyItems}
+            selectedItem={null}
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            onSelect={action('onSelect')}
+          />
+        </FormControl>
+        <FormControl title="クリアボタンクリック時のデフォルトの挙動を無効化">
+          <SingleComboBox
+            name="onClearClick"
+            items={items}
+            selectedItem={selectedItem}
+            dropdownHelpMessage="入力でフィルタリングできます。"
+            onSelect={handleSelectItem}
+            onClearClick={(e) => {
+              e.preventDefault()
+              handleClear()
+            }}
+            onChangeSelected={(item) => {
+              action('onChangeSelected')(item)
+              setSelectedItem(item)
+            }}
+            data-test="single-combobox-default"
+          />
+        </FormControl>
+        <FormControl title="デフォルトの選択肢あり">
+          <SingleComboBox
+            name="defaultItemSingleCombobox"
+            items={itemsForDefault}
+            selectedItem={selectedItemForDefault}
+            defaultItem={itemsForDefault[0]}
+            onSelect={handleSelectItemForDefault}
+            onClear={handleClearForDefault}
+          />
+        </FormControl>
+      </form>
       <form
         onSubmit={() => {
           throw new Error('このsubmitは発火しません')
