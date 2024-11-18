@@ -110,7 +110,7 @@ export const SingleCombobox: StoryFn = () => {
 
   return (
     <Stack>
-      <form>
+      <Stack as="form">
         <FormControl title="デフォルト">
           <SingleComboBox
             name="default"
@@ -281,7 +281,7 @@ export const SingleCombobox: StoryFn = () => {
             onClear={handleClearForDefault}
           />
         </FormControl>
-      </form>
+      </Stack>
       <form
         onSubmit={() => {
           throw new Error('このsubmitは発火しません')
