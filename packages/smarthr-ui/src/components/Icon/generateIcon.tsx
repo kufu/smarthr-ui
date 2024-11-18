@@ -146,7 +146,7 @@ export const createIcon = (SvgIcon: IconType) => {
       }
 
       return color
-    }, [color, colors, textColor])
+    }, [color])
 
     const existsText = !!text
     const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
