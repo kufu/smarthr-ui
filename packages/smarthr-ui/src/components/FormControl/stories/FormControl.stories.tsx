@@ -37,7 +37,10 @@ const _errorMessages = {
 export default {
   title: 'Forms（フォーム）/FormControl',
   component: FormControl,
-  render: (args) => <FormControl {...args} />,
+  render: (args) => (
+    // eslint-disable-next-line smarthr/a11y-form-control-in-form
+    <FormControl {...args} />
+  ),
   argTypes: {
     children: {
       options: Object.keys(_childrenOptions),
@@ -85,7 +88,7 @@ export const Title: StoryObj<typeof FormControl> = {
 export const TitleType: StoryObj<typeof FormControl> = {
   name: 'titleType',
   render: (args) => (
-    <Stack>
+    <Stack as="form">
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((titleType) => (
         <FormControl
           {...args}
