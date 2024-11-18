@@ -3,6 +3,7 @@ import React from 'react'
 
 import { Base, BaseColumn } from '../Base'
 import { DefinitionList } from '../DefinitionList'
+import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
 import { Heading } from '../Heading'
 import { Input } from '../Input'
@@ -104,7 +105,7 @@ const vSteps: VerticalStep[] = [
 export const _Default: StoryFn = () => {
   const [activeIndex, setActiveIndex] = React.useState(0)
   return (
-    <Stack gap={1.25}>
+    <Stack gap={1.25} as="form">
       <FormControl title="現在地（0始まり）">
         <Input
           type="number"
@@ -113,16 +114,14 @@ export const _Default: StoryFn = () => {
           onChange={({ target: { value } }) => setActiveIndex(Number(value))}
         />
       </FormControl>
-      <Stack gap={0.5} align="flex-start" as="section">
-        <Heading type="blockTitle">横型</Heading>
+      <Fieldset title="横型">
         <Center>
           <Stepper type="horizontal" activeIndex={activeIndex} steps={hSteps} />
         </Center>
-      </Stack>
-      <Stack gap={0.5} as="section">
-        <Heading type="blockTitle">縦型</Heading>
+      </Fieldset>
+      <Fieldset title="縦型">
         <Stepper type="vertical" activeIndex={activeIndex} steps={vSteps} />
-      </Stack>
+      </Fieldset>
     </Stack>
   )
 }
