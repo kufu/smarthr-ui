@@ -19,7 +19,7 @@ export const _childrenOptions = {
     </Cluster>
   ),
   form: (
-    <Cluster gap={1}>
+    <Cluster gap={1} as="form">
       <FormControl title="姓" titleType="subBlockTitle">
         <Input name="lastName" />
       </FormControl>
@@ -33,7 +33,10 @@ export const _childrenOptions = {
 export default {
   title: 'Forms（フォーム）/Fieldset',
   component: Fieldset,
-  render: (args) => <Fieldset {...args} />,
+  render: (args) => (
+    // eslint-disable-next-line smarthr/a11y-form-control-in-form
+    <Fieldset {...args} />
+  ),
   argTypes: {
     children: {
       control: 'radio',
@@ -75,7 +78,7 @@ export const Title: StoryObj<typeof Fieldset> = {
 export const TitleType: StoryObj<typeof Fieldset> = {
   name: 'titleType',
   render: (args) => (
-    <Stack>
+    <Stack as="form">
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((titleType) => (
         <Fieldset
           {...args}
