@@ -11,6 +11,7 @@ import {
   FaArrowDownWideShort,
   FaArrowLeft,
   FaArrowRight,
+  FaArrowRightArrowLeft,
   FaArrowRotateLeft,
   FaArrowRotateRight,
   FaArrowUp,
@@ -206,6 +207,7 @@ export const FaArrowDownIcon = /*#__PURE__*/ createIcon(FaArrowDown)
 export const FaArrowDownWideShortIcon = /*#__PURE__*/ createIcon(FaArrowDownWideShort)
 export const FaArrowLeftIcon = /*#__PURE__*/ createIcon(FaArrowLeft)
 export const FaArrowRightIcon = /*#__PURE__*/ createIcon(FaArrowRight)
+export const FaArrowRightArrowLeftIcon = /*#__PURE__*/ createIcon(FaArrowRightArrowLeft)
 export const FaArrowRotateLeftIcon = /*#__PURE__*/ createIcon(FaArrowRotateLeft)
 export const FaArrowRotateRightIcon = /*#__PURE__*/ createIcon(FaArrowRotateRight)
 export const FaArrowUp19Icon = /*#__PURE__*/ createIcon(FaArrowUp19)
