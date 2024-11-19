@@ -10,17 +10,29 @@ const SERVER_COMPONENTS = [
   'AppNaviCustomTag',
   'Badge',
   'Balloon',
+  'BaseColumn',
   'Chip',
+  'CompactInformationPanel',
+  'DefinitionList',
+  'DefinitionListItem',
+  'ErrorScreen',
+  'FloatArea',
   'HeaderLink',
   'Icon',
   'Loader',
+  'MessageScreen',
   'MonthPicker',
+  'PageCounter',
   'RangeSeparator',
   'ResponseMessage',
+  'SideNav',
   'SmartHRLogo',
   'SpreadsheetTable',
   'SpreadsheetTableCorner',
   'StatusLabel',
+  'Stepper',
+  'Switch',
+  'TabBar',
   'Table',
   'Td',
   'Text',
@@ -35,7 +47,20 @@ const SERVER_COMPONENTS = [
 /**
  * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
-const CLIENT_COMPONENTS: string[] = []
+const CLIENT_COMPONENTS: string[] = [
+  'Article',        // 見出しレベルの自動生成のため
+  'Aside',          // 見出しレベルの自動生成のため
+  'Base',           // 見出しレベルの自動生成のため
+  'Center',         // 見出しレベルの自動生成のため
+  'Cluster',        // 見出しレベルの自動生成のため
+  'Heading',        // 見出しレベルの自動生成のため
+  'Nav',            // 見出しレベルの自動生成のため
+  'PageHeading',    // 見出しレベルの自動生成のため
+  'Reel',           // 見出しレベルの自動生成のため
+  'Section',        // 見出しレベルの自動生成のため
+  'Sidebar',        // 見出しレベルの自動生成のため
+  'Stack',          // 見出しレベルの自動生成のため
+]
 
 /**
  * サーバーコンポーネント内では利用できないコンポーネント一覧(アルファベット順)
@@ -53,21 +78,13 @@ const DISABLED_COMPONENTS = [
   'AppNavi',
   'AppNaviDropdown',
   'AppNaviDropdownMenuButton',
-  'Article',
-  'Aside',
-  'Base',
-  'BaseColumn',
   'BottomFixedArea',
   'BulkActionRow',
   'Button',
   'Calendar',
-  'Center',
   'CheckBox',
-  'Cluster',
-  'CompactInformationPanel',
   'CurrencyInput',
   'DatePicker',
-  'DefinitionList',
   'Dialog',
   'DialogCloser',
   'DialogContent',
@@ -80,50 +97,35 @@ const DISABLED_COMPONENTS = [
   'DropdownMenuButton',
   'DropdownTrigger',
   'EmptyTableBody',
-  'ErrorScreen',
   'Fieldset',
   'FilterDropdown',
   'FlashMessage',
-  'FloatArea',
   'FormControl',
   'FormDialog',
   'FormDialogContent',
   'Header',
   'HeaderDropdownMenuButton',
-  'Heading',
   'InformationPanel',
   'InputFile',
   'LanguageSwitcher',
   'LineClamp',
   'MessageDialog',
   'MessageDialogContent',
-  'MessageScreen',
   'ModelessDialog',
   'MultiComboBox',
-  'Nav',
   'NotificationBar',
-  'PageCounter',
-  'PageHeading',
   'Pagination',
   'RadioButton',
   'RadioButtonPanel',
-  'Reel',
   'RemoteDialogTrigger',
   'RemoteTriggerActionDialog',
   'RemoteTriggerFormDialog',
   'RemoteTriggerMessageDialog',
   'SearchInput',
-  'Section',
   'SegmentedControl',
   'Select',
-  'SideNav',
-  'Sidebar',
   'SingleComboBox',
   'SortDropdown',
-  'Stack',
-  'Stepper',
-  'Switch',
-  'TabBar',
   'TabItem',
   'TableReel',
   'TdCheckbox',
