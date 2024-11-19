@@ -1,28 +1,9 @@
-import { useEffect, useState } from 'react'
+'use client'
+import { createContext, useContext } from 'react'
 
-import { defaultBreakpoint } from '../../themes/createBreakpoint'
-
-const mediaQuery = {
-  narrow: `(max-width: ${defaultBreakpoint.SP}px)`,
-}
+export const DeviceContext = createContext<boolean | null>(null)
 
 export const useDevice = () => {
-  const [isNarrowView, setIsNarrowView] = useState(matchMedia(mediaQuery.narrow).matches)
-  const handleChange = (e: MediaQueryListEvent) => {
-    setIsNarrowView(e.matches)
-  }
-
-  useEffect(() => {
-    const matchQueryList = matchMedia(mediaQuery.narrow)
-
-    matchQueryList.addEventListener('change', handleChange)
-
-    return () => {
-      matchQueryList.removeEventListener('change', handleChange)
-    }
-  }, [])
-
-  return {
-    isNarrowView,
-  }
+  const isNarrowView = useContext(DeviceContext)
+  return { isNarrowView }
 }

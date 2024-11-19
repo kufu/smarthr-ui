@@ -96,7 +96,7 @@ export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'
-export { useDevice } from './hooks/useDevice'
+export { useDevice, DeviceProvider } from './hooks/useDevice'
 
 // themes
 export { createTheme } from './themes/createTheme'
