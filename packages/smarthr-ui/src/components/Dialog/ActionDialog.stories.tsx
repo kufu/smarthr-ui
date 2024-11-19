@@ -46,6 +46,7 @@ export const Action_Dialog: StoryFn = () => {
     setResponseMessage(undefined)
   }
   const [openModelessDialog, setOpenModelessDialog] = useState(false)
+  const [openModelessDialog2, setOpenModelessDialog2] = useState(false)
 
   return (
     <Cluster>
@@ -59,6 +60,21 @@ export const Action_Dialog: StoryFn = () => {
       >
         ActionDialog
       </Button>
+      <Button onClick={() => setOpenModelessDialog2(!openModelessDialog2)}>モードレス</Button>
+      <ModelessDialog
+        isOpen={openModelessDialog2}
+        // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+        header="ほげ"
+        onClickClose={() => setOpenModelessDialog2(false)}
+        onPressEscape={() => setOpenModelessDialog2(false)}
+        id="modeless-dialog-2"
+        data-test="dialog"
+      >
+        <p>
+          bottom: 100px
+          <br /> right: 10%
+        </p>
+      </ModelessDialog>
       <ActionDialog
         isOpen={openedDialog === 'normal'}
         title="ActionDialog"
