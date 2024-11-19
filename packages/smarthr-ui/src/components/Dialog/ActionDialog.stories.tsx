@@ -10,6 +10,7 @@ import {
   ActionDialogContent,
   ActionDialogWithTrigger,
   DialogTrigger,
+  ModelessDialog,
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
 } from '.'
@@ -44,6 +45,7 @@ export const Action_Dialog: StoryFn = () => {
     setOpenedDialog(null)
     setResponseMessage(undefined)
   }
+  const [openModelessDialog, setOpenModelessDialog] = useState(false)
 
   return (
     <Cluster>
@@ -77,6 +79,21 @@ export const Action_Dialog: StoryFn = () => {
       >
         <Stack>
           <p>ActionDialog の本文です。</p>
+          <Button onClick={() => setOpenModelessDialog(!openModelessDialog)}>ほげ</Button>
+          <ModelessDialog
+            isOpen={openModelessDialog}
+            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+            header="ほげ"
+            onClickClose={() => setOpenModelessDialog(false)}
+            onPressEscape={() => setOpenModelessDialog(false)}
+            id="modeless-dialog-2"
+            data-test="dialog"
+          >
+            <p>
+              bottom: 100px
+              <br /> right: 10%
+            </p>
+          </ModelessDialog>
           <Cluster>
             <Button
               onClick={() =>
