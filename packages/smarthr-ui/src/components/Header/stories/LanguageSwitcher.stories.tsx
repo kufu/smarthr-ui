@@ -2,8 +2,7 @@ import { action } from '@storybook/addon-actions'
 import React from 'react'
 
 import { backgroundColor } from '../../../themes'
-
-import { LanguageSwitcher } from '.'
+import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
