@@ -39,7 +39,7 @@
     "@storybook/test": "^8.4.4",
     "@storybook/test-runner": "^0.19.1",
     "@storybook/theming": "^8.4.4",
-    "@swc/core": "^1.8.0",
+    "@swc/core": "^1.9.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@types/lodash.merge": "^4.6.9",
