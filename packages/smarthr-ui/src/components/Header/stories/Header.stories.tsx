@@ -40,7 +40,7 @@ const _childrenOptions = {
   なし: undefined,
   あり: <div>children</div>,
 }
-const _appsOptions = {
+export const _appsOptions = {
   あり: [
     {
       type: 'base',
@@ -120,6 +120,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  excludeStories: ['_appsOptions'],
 } as Meta<typeof Header>
 
 export const Playground: StoryObj<typeof Header> = {
