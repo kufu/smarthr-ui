@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [61.0.0](https://github.com/kufu/smarthr-ui/compare/v60.1.1...v61.0.0) (2024-11-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **FloatArea:** fixed と top、width を削除 (#5099)
+
+### Features
+
+* **FloatArea:** fixed と top、width を削除 ([#5099](https://github.com/kufu/smarthr-ui/issues/5099)) ([5650cb5](https://github.com/kufu/smarthr-ui/commit/5650cb5f3a413c6904ef772472b94e71dd3d13ab))
+* **Icon:** FaArrowRightArrowLeft を追加 ([#5114](https://github.com/kufu/smarthr-ui/issues/5114)) ([e4dff72](https://github.com/kufu/smarthr-ui/commit/e4dff721486676fb8ca20d1fcbe78e948f8d7d3c))
+* レイアウト系コンポーネントをサーバーコンポーネント内でも利用できるようにする ([#5071](https://github.com/kufu/smarthr-ui/issues/5071)) ([135daaf](https://github.com/kufu/smarthr-ui/commit/135daaf47b1173c831d03d261ddd4387293c4273))
+
 ### [60.1.1](https://github.com/kufu/smarthr-ui/compare/v60.1.0...v60.1.1) (2024-11-13)
 
 
