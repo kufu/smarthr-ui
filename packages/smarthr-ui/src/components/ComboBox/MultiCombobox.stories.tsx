@@ -104,7 +104,7 @@ export const MultiCombobox: StoryFn = () => {
   )
 
   return (
-    <Stack as="form">
+    <Stack>
       <FormControl title="デフォルト">
         <MultiComboBox
           name="default"

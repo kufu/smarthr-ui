@@ -85,50 +85,42 @@ export const Default: StoryFn = () => {
           ariaLabel="Dialog"
           data-test="dialog-content"
         >
-          <form>
-            <Fieldset title="Dialog" titleType="sectionTitle">
-              <p>
-                The value of isOpen must be managed by you, but you can customize content freely.
-              </p>
-              <DatePicker
-                name="dialog_datepicker"
-                value={date?.toDateString()}
-                formatDate={(_date) => (_date ? _date.toDateString() : '')}
-                onChangeDate={(_date) => setDate(_date)}
-                title="test"
-                data-test="dialog-datepicker"
-              />
-              <Fieldset title="Fruits" innerMargin={0.5}>
-                <RadioListCluster forwardedAs="ul">
-                  <li>
-                    <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
-                      Apple
-                    </RadioButton>
-                  </li>
-                  <li>
-                    <RadioButton
-                      name="Orange"
-                      checked={value === 'Orange'}
-                      onChange={onChangeValue}
-                    >
-                      Orange
-                    </RadioButton>
-                  </li>
-                  <li>
-                    <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
-                      Grape
-                    </RadioButton>
-                  </li>
-                </RadioListCluster>
-              </Fieldset>
+          <Fieldset title="Dialog" titleType="sectionTitle">
+            <p>The value of isOpen must be managed by you, but you can customize content freely.</p>
+            <DatePicker
+              name="dialog_datepicker"
+              value={date?.toDateString()}
+              formatDate={(_date) => (_date ? _date.toDateString() : '')}
+              onChangeDate={(_date) => setDate(_date)}
+              title="test"
+              data-test="dialog-datepicker"
+            />
+            <Fieldset title="Fruits" innerMargin={0.5}>
+              <RadioListCluster forwardedAs="ul">
+                <li>
+                  <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
+                    Apple
+                  </RadioButton>
+                </li>
+                <li>
+                  <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
+                    Orange
+                  </RadioButton>
+                </li>
+                <li>
+                  <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
+                    Grape
+                  </RadioButton>
+                </li>
+              </RadioListCluster>
             </Fieldset>
-            {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-            <FooterCluster>
-              <Button onClick={onClickClose} data-test="dialog-closer">
-                close
-              </Button>
-            </FooterCluster>
-          </form>
+          </Fieldset>
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+          <FooterCluster>
+            <Button onClick={onClickClose} data-test="dialog-closer">
+              close
+            </Button>
+          </FooterCluster>
         </Dialog>
       </li>
       <li>
@@ -147,17 +139,15 @@ export const Default: StoryFn = () => {
           id="dialog-focus"
           ariaLabel="特定の要素をフォーカスするダイアログ"
         >
-          <form>
-            <FormControl title="特定の要素をフォーカスするダイアログ">
-              <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
-            </FormControl>
-            {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-            <FooterCluster>
-              <Button onClick={onClickClose} data-test="dialog-closer">
-                close
-              </Button>
-            </FooterCluster>
-          </form>
+          <FormControl title="特定の要素をフォーカスするダイアログ">
+            <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
+          </FormControl>
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+          <FooterCluster>
+            <Button onClick={onClickClose} data-test="dialog-closer">
+              close
+            </Button>
+          </FooterCluster>
         </Dialog>
       </li>
     </TriggerList>

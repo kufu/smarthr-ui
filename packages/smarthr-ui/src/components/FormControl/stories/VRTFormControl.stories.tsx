@@ -7,10 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Forms（フォーム）/FormControl/VRT',
-  render: (args) => (
-    // eslint-disable-next-line smarthr/a11y-form-control-in-form
-    <FormControl {...args} />
-  ),
+  render: (args) => <FormControl {...args} />,
   args: {
     // eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
     children: <Input />,

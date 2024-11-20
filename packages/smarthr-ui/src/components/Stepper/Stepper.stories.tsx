@@ -105,7 +105,7 @@ const vSteps: VerticalStep[] = [
 export const _Default: StoryFn = () => {
   const [activeIndex, setActiveIndex] = React.useState(0)
   return (
-    <Stack gap={1.25} as="form">
+    <Stack gap={1.25}>
       <FormControl title="現在地（0始まり）">
         <Input
           type="number"

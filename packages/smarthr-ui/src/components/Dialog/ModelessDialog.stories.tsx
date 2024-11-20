@@ -60,7 +60,7 @@ export const Modeless_Dialog: StoryFn = () => {
               `valuetext.(${txt}: ${data?.left}, ${data?.top})`,
           }}
         >
-          <Stack gap="S" as="form">
+          <Stack gap="S">
             <Fieldset title="ラジオボタン" innerMargin={0.5}>
               <Cluster gap={1.25}>
                 <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
