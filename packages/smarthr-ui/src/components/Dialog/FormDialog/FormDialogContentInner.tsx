@@ -79,12 +79,11 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
+      <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <form onSubmit={handleSubmitAction}>
-        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-        <Stack gap={0} className={wrapper()}>
-          <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
+        <div className={wrapper()}>
           <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
             {children}
           </DialogBody>
@@ -118,7 +117,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
               </div>
             )}
           </Stack>
-        </Stack>
+        </div>
       </form>
     </Section>
   )
