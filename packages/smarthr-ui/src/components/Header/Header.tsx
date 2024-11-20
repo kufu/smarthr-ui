@@ -48,7 +48,7 @@ type Props = {
   logoHref?: string
   /** 機能名（enableNew と合わせて使います） */
   featureName?: ReactNode
-  /** 機能郡（enableNew と合わせて使います） */
+  /** 機能群（enableNew と合わせて使います） */
   apps?: ComponentProps<typeof AppLauncher>['apps']
   /** テナント一覧 */
   tenants?: Tenant[]
