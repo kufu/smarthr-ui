@@ -7,8 +7,8 @@
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "eslint": "^8.57.0",
-    "eslint-config-smarthr": "^7.1.0",
-    "eslint-plugin-storybook": "^0.11.0",
+    "eslint-config-smarthr": "^7.2.0",
+    "eslint-plugin-storybook": "^0.11.1",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
@@ -27,7 +27,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@9.12.3",
+  "packageManager": "pnpm@9.13.2",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.9",
@@ -35,7 +35,8 @@
       "minimist": "1.2.8",
       "react": "^18.3.1",
       "react-dom": "^18.3.1",
-      "micromatch@<4.0.8": ">=4.0.8"
+      "micromatch@<4.0.8": ">=4.0.8",
+      "cross-spawn@<7.0.5": ">=7.0.5"
     }
   }
 }

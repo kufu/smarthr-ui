@@ -1,9 +1,11 @@
 import React from 'react'
 import { Loader } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function LoaderPage() {
   return (
     <>
-      <div>Success: Loader</div>
+      <RSCChecker actualComponent={Loader} />
       <Loader />
     </>
   )

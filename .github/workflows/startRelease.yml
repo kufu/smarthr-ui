@@ -70,7 +70,7 @@ jobs:
           labels: ${{ env.ISSUE_LABELS }}
       - name: Send GitHub Action trigger data to Slack
         if: ${{ github.event.client_payload.channel_id != null }}
-        uses: slackapi/slack-github-action@v1.27.0
+        uses: slackapi/slack-github-action@v2.0.0
         with:
           channel-id: ${{ github.event.client_payload.channel_id }}
           payload: ${{ github.event.client_payload.say }}

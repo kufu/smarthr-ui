@@ -1,9 +1,11 @@
 import React from 'react'
 import { Select } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function SelectPage() {
   return (
     <>
-      <div>Success: Select</div>
+      <RSCChecker actualComponent={Select} />
       <Select name="name" options={[]} />
     </>
   )

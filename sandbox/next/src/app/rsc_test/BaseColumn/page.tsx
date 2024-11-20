@@ -1,9 +1,11 @@
 import React from 'react'
 import { BaseColumn } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function BaseColumnPage() {
   return (
     <>
-      <div>Success: BaseColumn</div>
+      <RSCChecker actualComponent={BaseColumn} />
       <BaseColumn />
     </>
   )

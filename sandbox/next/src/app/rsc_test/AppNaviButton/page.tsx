@@ -1,9 +1,11 @@
 import React from 'react'
 import { AppNaviButton } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function AppNaviButtonPage() {
   return (
     <>
-      <div>Success: AppNaviButton</div>
+      <RSCChecker actualComponent={AppNaviButton} />
       <AppNaviButton>AppNaviButton</AppNaviButton>
     </>
   )

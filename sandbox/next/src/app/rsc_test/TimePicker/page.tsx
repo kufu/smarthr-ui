@@ -1,9 +1,11 @@
 import React from 'react'
 import { TimePicker } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function TimePickerPage() {
   return (
     <>
-      <div>Success: TimePicker</div>
+      <RSCChecker actualComponent={TimePicker} />
       <TimePicker name="name" />
     </>
   )

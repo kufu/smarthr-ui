@@ -1,9 +1,11 @@
 import React from 'react'
 import { FormControl } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function FormControlPage() {
   return (
     <>
-      <div>Success: FormControl</div>
+      <RSCChecker actualComponent={FormControl} />
       <FormControl title="title" />
     </>
   )

@@ -10,17 +10,29 @@ const SERVER_COMPONENTS = [
   'AppNaviCustomTag',
   'Badge',
   'Balloon',
+  'BaseColumn',
   'Chip',
+  'CompactInformationPanel',
+  'DefinitionList',
+  'DefinitionListItem',
+  'ErrorScreen',
+  'FloatArea',
   'HeaderLink',
   'Icon',
   'Loader',
+  'MessageScreen',
   'MonthPicker',
+  'PageCounter',
   'RangeSeparator',
   'ResponseMessage',
+  'SideNav',
   'SmartHRLogo',
   'SpreadsheetTable',
   'SpreadsheetTableCorner',
   'StatusLabel',
+  'Stepper',
+  'Switch',
+  'TabBar',
   'Table',
   'Td',
   'Text',
@@ -33,9 +45,28 @@ const SERVER_COMPONENTS = [
 ]
 
 /**
- * サーバーコンポーネントでは利用できないコンポーネント一覧(アルファベット順)
+ * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
-const CLIENT_COMPONENTS = [
+const CLIENT_COMPONENTS: string[] = [
+  'Article',        // 見出しレベルの自動生成のため
+  'Aside',          // 見出しレベルの自動生成のため
+  'Base',           // 見出しレベルの自動生成のため
+  'Center',         // 見出しレベルの自動生成のため
+  'Cluster',        // 見出しレベルの自動生成のため
+  'Heading',        // 見出しレベルの自動生成のため
+  'Nav',            // 見出しレベルの自動生成のため
+  'PageHeading',    // 見出しレベルの自動生成のため
+  'Reel',           // 見出しレベルの自動生成のため
+  'Section',        // 見出しレベルの自動生成のため
+  'Sidebar',        // 見出しレベルの自動生成のため
+  'Stack',          // 見出しレベルの自動生成のため
+]
+
+/**
+ * サーバーコンポーネント内では利用できないコンポーネント一覧(アルファベット順)
+ * FIXME: すべての use client を付与して CLIENT_COMPONENTS に移動する
+ */
+const DISABLED_COMPONENTS = [
   'AccordionPanel',
   'AccordionPanelContent',
   'AccordionPanelItem',
@@ -47,21 +78,13 @@ const CLIENT_COMPONENTS = [
   'AppNavi',
   'AppNaviDropdown',
   'AppNaviDropdownMenuButton',
-  'Article',
-  'Aside',
-  'Base',
-  'BaseColumn',
   'BottomFixedArea',
   'BulkActionRow',
   'Button',
   'Calendar',
-  'Center',
   'CheckBox',
-  'Cluster',
-  'CompactInformationPanel',
   'CurrencyInput',
   'DatePicker',
-  'DefinitionList',
   'Dialog',
   'DialogCloser',
   'DialogContent',
@@ -74,50 +97,35 @@ const CLIENT_COMPONENTS = [
   'DropdownMenuButton',
   'DropdownTrigger',
   'EmptyTableBody',
-  'ErrorScreen',
   'Fieldset',
   'FilterDropdown',
   'FlashMessage',
-  'FloatArea',
   'FormControl',
   'FormDialog',
   'FormDialogContent',
   'Header',
   'HeaderDropdownMenuButton',
-  'Heading',
   'InformationPanel',
   'InputFile',
   'LanguageSwitcher',
   'LineClamp',
   'MessageDialog',
   'MessageDialogContent',
-  'MessageScreen',
   'ModelessDialog',
   'MultiComboBox',
-  'Nav',
   'NotificationBar',
-  'PageCounter',
-  'PageHeading',
   'Pagination',
   'RadioButton',
   'RadioButtonPanel',
-  'Reel',
   'RemoteDialogTrigger',
   'RemoteTriggerActionDialog',
   'RemoteTriggerFormDialog',
   'RemoteTriggerMessageDialog',
   'SearchInput',
-  'Section',
   'SegmentedControl',
   'Select',
-  'SideNav',
-  'Sidebar',
   'SingleComboBox',
   'SortDropdown',
-  'Stack',
-  'Stepper',
-  'Switch',
-  'TabBar',
   'TabItem',
   'TableReel',
   'TdCheckbox',
@@ -131,18 +139,27 @@ test.describe('RSC対応コンポーネントがRSCで利用できること', ()
   for (const component of SERVER_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
-      await expect(page.getByText(`Success: ${component}`)).toBeVisible()
+      await expect(page.getByText('This is server component')).toBeVisible()
+      await expect(page.getByText('Server Error')).not.toBeVisible()
+    })
+  }
+
+  for (const component of CLIENT_COMPONENTS) {
+    test(component, async ({ page }) => {
+      await page.goto(`http://localhost:3000/rsc_test/${component}`)
+      await expect(page.getByText('This is client component')).toBeVisible()
       await expect(page.getByText('Server Error')).not.toBeVisible()
     })
   }
 })
 
 test.describe('RSC非対応コンポーネントはRSCでエラーになること', () => {
-  for (const component of CLIENT_COMPONENTS) {
+  for (const component of DISABLED_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
       await expect(page.getByText(/Server Error|Unhandled Runtime Error/)).toBeVisible()
-      await expect(page.getByText(`Success: ${component}`)).not.toBeVisible()
+      await expect(page.getByText('This is server component')).not.toBeVisible()
+      await expect(page.getByText('This is client component')).not.toBeVisible()
     })
   }
 })

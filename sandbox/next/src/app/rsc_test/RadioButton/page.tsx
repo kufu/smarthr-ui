@@ -1,9 +1,11 @@
 import React from 'react'
 import { RadioButton } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function RadioButtonPage() {
   return (
     <>
-      <div>Success: RadioButton</div>
+      <RSCChecker actualComponent={RadioButton} />
       <RadioButton />
     </>
   )

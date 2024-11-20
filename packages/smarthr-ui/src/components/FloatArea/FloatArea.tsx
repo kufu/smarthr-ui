@@ -8,36 +8,8 @@ import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 const floatArea = tv({
-  base: 'smarthr-ui-FloatArea shr-z-fixed-menu',
+  base: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
   variants: {
-    fixed: {
-      true: 'shr-fixed',
-      false: 'shr-sticky',
-    },
-    top: {
-      0: 'shr-top-0',
-      0.25: 'shr-top-0.25',
-      0.5: 'shr-top-0.5',
-      0.75: 'shr-top-0.75',
-      1: 'shr-top-1',
-      1.25: 'shr-top-1.25',
-      1.5: 'shr-top-1.5',
-      2: 'shr-top-2',
-      2.5: 'shr-top-2.5',
-      3: 'shr-top-3',
-      3.5: 'shr-top-3.5',
-      4: 'shr-top-4',
-      8: 'shr-top-8',
-      X3S: 'shr-top-0.25',
-      XXS: 'shr-top-0.5',
-      XS: 'shr-top-1',
-      S: 'shr-top-1.5',
-      M: 'shr-top-2',
-      L: 'shr-top-2.5',
-      XL: 'shr-top-3',
-      XXL: 'shr-top-3.5',
-      X3L: 'shr-top-4',
-    } as { [key in Gap]: string },
     bottom: {
       0: 'shr-bottom-0',
       0.25: 'shr-bottom-0.25',
@@ -63,11 +35,12 @@ const floatArea = tv({
       X3L: 'shr-bottom-4',
     } as { [key in Gap]: string },
   },
+  defaultVariants: {
+    bottom: 1.5,
+  },
 })
 
 type StyleProps = {
-  /** コンポーネントの上端から、包含ブロックの上端までの間隔（基準フォントサイズの相対値または抽象値） */
-  top?: CharRelativeSize | AbstractSize
   /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
   bottom?: CharRelativeSize | AbstractSize
   /** コンポーネントの `z-index` 値 */
@@ -82,10 +55,6 @@ type Props = StyleProps & {
   tertiaryButton?: ReactNode
   /** 操作に対するフィードバックメッセージ */
   responseMessage?: ResponseMessageType
-  /** 上下の位置を固定するかどうか */
-  fixed?: boolean
-  /** コンポーネントの幅 */
-  width?: string
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -94,29 +63,27 @@ export const FloatArea: FC<Props & ElementProps> = ({
   secondaryButton,
   tertiaryButton,
   responseMessage,
-  fixed = false,
-  className,
-  top,
   bottom,
-  width,
   zIndex,
+  style,
+  className,
   ...rest
 }) => {
   const styleProps = useMemo(
     () => ({
-      className: floatArea({
-        fixed,
-        top,
-        bottom,
-        className,
-      }),
-      style: { width, zIndex },
+      style: { ...style, zIndex },
     }),
-    [className, bottom, fixed, top, width, zIndex],
+    [style, zIndex],
   )
 
   return (
-    <Base {...styleProps} {...rest} layer={3} padding={1}>
+    <Base
+      {...styleProps}
+      {...rest}
+      className={floatArea({ bottom, className })}
+      layer={3}
+      padding={1}
+    >
       <Cluster gap={1}>
         {tertiaryButton}
         <div className="shr-ms-auto">

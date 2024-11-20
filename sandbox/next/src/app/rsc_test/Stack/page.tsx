@@ -1,9 +1,11 @@
 import React from 'react'
 import { Stack } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function StackPage() {
   return (
     <>
-      <div>Success: Stack</div>
+      <RSCChecker actualComponent={Stack} />
       <Stack />
     </>
   )

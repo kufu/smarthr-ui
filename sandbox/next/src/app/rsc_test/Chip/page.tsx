@@ -1,9 +1,11 @@
 import React from 'react'
 import { Chip } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function ChipPage() {
   return (
     <>
-      <div>Success: Chip</div>
+      <RSCChecker actualComponent={Chip} />
       <Chip>Chip</Chip>
     </>
   )

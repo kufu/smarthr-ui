@@ -1,9 +1,11 @@
 import React from 'react'
 import { AccordionPanelItem } from 'smarthr-ui'
+
+import { RSCChecker } from '../components/RSCChecker';
 export default function AccordionPanelItemPage() {
   return (
     <>
-      <div>Success: AccordionPanelItem</div>
+      <RSCChecker actualComponent={AccordionPanelItem} />
       <AccordionPanelItem name="AccordionPanelItem" />
     </>
   )
