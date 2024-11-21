@@ -15,7 +15,7 @@ import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../.
 
 type Props = {
   isFiltered?: boolean
-  onApply: React.MouseEventHandler<HTMLButtonElement>
+  onApply: React.FormEventHandler<HTMLFormElement>
   onCancel?: React.MouseEventHandler<HTMLButtonElement>
   onReset?: React.MouseEventHandler<HTMLButtonElement>
   onOpen?: () => void
@@ -35,6 +35,8 @@ const TRIGGER_BUTTON_TEXT = '絞り込み'
 const APPLY_BUTTON_TEXT = '適用'
 const CANCEL_BUTTON_TEXT = 'キャンセル'
 const RESET_BUTTON_TEXT = '絞り込み条件を解除'
+
+const CONTROL_CLUSTER_GAP: React.ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
@@ -80,29 +82,33 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   triggerSize,
   ...props
 }: Props) => {
-  const status: ReactNode = useMemo(
-    () => executeDecorator(STATUS_FILTERED_TEXT, decorators?.status),
+  const texts = useMemo(
+    () => ({
+      status: executeDecorator(STATUS_FILTERED_TEXT, decorators?.status),
+      triggerButton: executeDecorator(TRIGGER_BUTTON_TEXT, decorators?.triggerButton),
+      applyButton: executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButton),
+      cancelButton: executeDecorator(CANCEL_BUTTON_TEXT, decorators?.cancelButton),
+      resetButton: executeDecorator(RESET_BUTTON_TEXT, decorators?.resetButton),
+    }),
     [decorators],
   )
-  const triggerButton: ReactNode = useMemo(
-    () => executeDecorator(TRIGGER_BUTTON_TEXT, decorators?.triggerButton),
-    [decorators],
-  )
-  const applyButton: ReactNode = useMemo(
-    () => executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButton),
-    [decorators],
-  )
-  const cancelButton: ReactNode = useMemo(
-    () => executeDecorator(CANCEL_BUTTON_TEXT, decorators?.cancelButton),
-    [decorators],
-  )
-  const resetButton: ReactNode = useMemo(
-    () => executeDecorator(RESET_BUTTON_TEXT, decorators?.resetButton),
-    [decorators],
-  )
-  const filteredIconAriaLabel = useMemo(() => innerText(status), [status])
-  const isRequestProcessing =
-    responseMessage !== undefined && responseMessage.status === 'processing'
+
+  const filteredIconAriaLabel = useMemo(() => innerText(texts.status), [texts.status])
+
+  const calcedResponseStatus: {
+    isRequestProcessing: boolean
+    visibleMessageType: 'error' | 'success' | null
+    visibleMessage: React.ReactNode
+  } = useMemo(() => {
+    const status = responseMessage?.status
+    const isVisibleMessage = status === 'success' || status === 'error'
+
+    return {
+      isRequestProcessing: status === 'processing',
+      visibleMessageType: isVisibleMessage ? status : null,
+      visibleMessage: isVisibleMessage ? responseMessage?.text : '',
+    }
+  }, [responseMessage?.status])
 
   const {
     iconWrapperStyle,
@@ -151,52 +157,58 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           }
           size={triggerSize}
         >
-          {triggerButton}
+          {texts.triggerButton}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <div className={innerStyle}>{children}</div>
-        <Stack gap={0.5} className={actionAreaStyle}>
-          <Cluster gap={1} align="center" justify="space-between">
-            {onReset && (
-              <div className={resetButtonAreaStyle}>
-                <Button
-                  variant="text"
-                  size="s"
-                  prefix={<FaRotateLeftIcon />}
-                  onClick={onReset}
-                  disabled={isRequestProcessing}
-                >
-                  {resetButton}
-                </Button>
+        <form onSubmit={onApply}>
+          <div className={innerStyle}>{children}</div>
+          <Stack gap={0.5} className={actionAreaStyle}>
+            <Cluster gap={1} align="center" justify="space-between">
+              {onReset && (
+                <div className={resetButtonAreaStyle}>
+                  <Button
+                    variant="text"
+                    size="s"
+                    prefix={<FaRotateLeftIcon />}
+                    onClick={onReset}
+                    disabled={calcedResponseStatus.isRequestProcessing}
+                  >
+                    {texts.resetButton}
+                  </Button>
+                </div>
+              )}
+
+              <Cluster
+                gap={CONTROL_CLUSTER_GAP}
+                justify="flex-end"
+                className={rightButtonAreaStyle}
+              >
+                <DropdownCloser>
+                  <Button onClick={onCancel} disabled={calcedResponseStatus.isRequestProcessing}>
+                    {texts.cancelButton}
+                  </Button>
+                </DropdownCloser>
+                <DropdownCloser>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    loading={calcedResponseStatus.isRequestProcessing}
+                  >
+                    {texts.applyButton}
+                  </Button>
+                </DropdownCloser>
+              </Cluster>
+            </Cluster>
+            {calcedResponseStatus.visibleMessageType && (
+              <div className={messageStyle}>
+                <ResponseMessage type={calcedResponseStatus.visibleMessageType} role="alert">
+                  {calcedResponseStatus.visibleMessage}
+                </ResponseMessage>
               </div>
             )}
-
-            <Cluster
-              gap={{ column: 1, row: 0.5 }}
-              justify="flex-end"
-              className={rightButtonAreaStyle}
-            >
-              <DropdownCloser>
-                <Button onClick={onCancel} disabled={isRequestProcessing}>
-                  {cancelButton}
-                </Button>
-              </DropdownCloser>
-              <DropdownCloser>
-                <Button variant="primary" onClick={onApply} loading={isRequestProcessing}>
-                  {applyButton}
-                </Button>
-              </DropdownCloser>
-            </Cluster>
-          </Cluster>
-          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-            <div className={messageStyle}>
-              <ResponseMessage type={responseMessage.status} role="alert">
-                {responseMessage.text}
-              </ResponseMessage>
-            </div>
-          )}
-        </Stack>
+          </Stack>
+        </form>
       </DropdownContent>
     </Dropdown>
   )
