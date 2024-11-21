@@ -9,6 +9,7 @@ export {
   DropdownCloser,
   FilterDropdown,
   DropdownMenuButton,
+  DropdownMenuGroup,
   SortDropdown,
 } from './components/Dropdown'
 export * from './components/FlashMessage'
