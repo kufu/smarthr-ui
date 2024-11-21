@@ -109,7 +109,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     ref,
   ) => {
     const maxLettersId = useId()
-    const maxLettersNoticeId = useId()
+    const maxLettersNoticeId = `${maxLettersId}-notice`
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -175,7 +175,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       [],
     )
 
-    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージ更新遅延しています
+    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedUpdateSrCounterMessage = useCallback(
       debounce((value: string) => {
@@ -273,7 +273,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
             {counterVisualMessage}
           </span>
         </span>
-
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
           最大{maxLetters}文字入力できます。
