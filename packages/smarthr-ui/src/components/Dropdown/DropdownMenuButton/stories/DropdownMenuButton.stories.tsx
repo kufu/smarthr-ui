@@ -3,6 +3,7 @@ import React from 'react'
 import { Button } from '../../../Button'
 import { FaGearIcon } from '../../../Icon'
 import { DropdownMenuButton } from '../DropdownMenuButton'
+import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -14,6 +15,7 @@ const _sampleTriggerIcons = {
 export default {
   title: 'Buttons（ボタン）/DropdownMenuButton',
   component: DropdownMenuButton,
+  subcomponents: { DropdownMenuGroup },
   render: (args) => (
     <DropdownMenuButton {...args}>
       <Button>操作1</Button>

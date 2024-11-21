@@ -1,10 +1,11 @@
 import { userEvent, within } from '@storybook/test'
 import React, { ComponentProps } from 'react'
 
-import { Button } from '../../../Button'
+import { AnchorButton, Button } from '../../../Button'
 import { FaGearIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { DropdownMenuButton } from '../DropdownMenuButton'
+import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -36,9 +37,17 @@ export default {
     <Cluster align="center" className="shr-h-screen">
       {_cases.map((props, i) => (
         <DropdownMenuButton {...args} {...props} key={i}>
-          <Button>操作1</Button>
-          <Button>操作2</Button>
+          <DropdownMenuGroup name="グループ1">
+            <Button>操作1</Button>
+            <Button disabled disabledDetail={{ message: '非推奨な理由' }}>
+              操作2
+            </Button>
+          </DropdownMenuGroup>
           <Button>操作3</Button>
+          <DropdownMenuGroup name="グループ2">
+            <AnchorButton href="#">操作4</AnchorButton>
+            <AnchorButton href="#">操作5</AnchorButton>
+          </DropdownMenuGroup>
         </DropdownMenuButton>
       ))}
     </Cluster>

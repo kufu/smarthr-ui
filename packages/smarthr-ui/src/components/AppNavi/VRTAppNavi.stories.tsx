@@ -68,7 +68,7 @@ export const VRTDropDown: StoryFn = () => (
 )
 VRTDropDown.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
-  const button = await canvas.findByRole('button', { name: '設定' })
+  const button = await canvas.findByRole('button', { name: '設定 候補を開く' })
   await userEvent.click(button)
 }
 
@@ -85,7 +85,7 @@ VRTForcedColors.parameters = {
 }
 VRTForcedColors.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
-  const button = await canvas.findByRole('button', { name: '設定' })
+  const button = await canvas.findByRole('button', { name: '設定 候補を開く' })
   await userEvent.click(button)
 }
 
