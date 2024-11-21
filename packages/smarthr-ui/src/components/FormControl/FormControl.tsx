@@ -162,14 +162,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }
 
     return temp.join(' ')
-  }, [
-    isRoleGroup,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
-    errorMessages,
-    managedHtmlFor,
-  ])
+  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []

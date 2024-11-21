@@ -1,7 +1,7 @@
 import {
   ChangeEventHandler,
   ComponentProps,
-  MouseEventHandler,
+  FormEventHandler,
   useCallback,
   useMemo,
   useState,
@@ -84,7 +84,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     },
     [innerFields],
   )
-  const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
+  const handleApply = useCallback<FormEventHandler<HTMLFormElement>>(() => {
     setSelectedLabel(innerSelectedField)
     setCheckedOrder(innerCheckedOrder)
     onApply({ field: innerSelectedField || '', order: innerCheckedOrder, newfields: innerFields })

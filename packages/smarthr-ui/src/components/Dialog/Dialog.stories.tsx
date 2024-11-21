@@ -85,8 +85,7 @@ export const Default: StoryFn = () => {
           ariaLabel="Dialog"
           data-test="dialog-content"
         >
-          <Section>
-            <Heading>Dialog</Heading>
+          <Fieldset title="Dialog" titleType="sectionTitle">
             <p>The value of isOpen must be managed by you, but you can customize content freely.</p>
             <DatePicker
               name="dialog_datepicker"
@@ -115,7 +114,7 @@ export const Default: StoryFn = () => {
                 </li>
               </RadioListCluster>
             </Fieldset>
-          </Section>
+          </Fieldset>
           {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
           <FooterCluster>
             <Button onClick={onClickClose} data-test="dialog-closer">

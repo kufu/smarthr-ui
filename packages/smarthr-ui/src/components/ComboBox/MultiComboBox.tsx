@@ -268,7 +268,7 @@ const ActualMultiComboBox = <T,>(
     if (isFocused) return textColor.black
     if (disabled) return textColor.disabled
     return textColor.grey
-  }, [disabled, isFocused, textColor.black, textColor.disabled, textColor.grey])
+  }, [disabled, isFocused])
 
   useOuterClick([outerRef, listBoxRef], blur)
 
@@ -335,6 +335,10 @@ const ActualMultiComboBox = <T,>(
       isComposing,
       isFocused,
       resetDeletionButtonFocus,
+      handleDelete,
+      inputValue,
+      selectedItems,
+      setInputValueIfUncontrolled,
     ],
   )
 

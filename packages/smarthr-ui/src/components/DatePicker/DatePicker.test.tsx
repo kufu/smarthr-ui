@@ -16,9 +16,11 @@ describe('DatePicker', () => {
 
   it('カレンダーから日付を選択することができる', async () => {
     render(
-      <FormControl title="DatePicker">
-        <DatePicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
-      </FormControl>,
+      <form>
+        <FormControl title="DatePicker">
+          <DatePicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
+        </FormControl>
+      </form>,
     )
     const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
 
@@ -40,9 +42,11 @@ describe('DatePicker', () => {
 
   it('フォーカスを失うときにテキストボックスの内容がフォーマットされること', async () => {
     render(
-      <FormControl title="DatePicker">
-        <DatePicker name="date" onChangeDate={vi.fn()} />
-      </FormControl>,
+      <form>
+        <FormControl title="DatePicker">
+          <DatePicker name="date" onChangeDate={vi.fn()} />
+        </FormControl>
+      </form>,
     )
     const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
     await act(() => userEvent.type(textbox, '平成4年5月29日{tab}'))

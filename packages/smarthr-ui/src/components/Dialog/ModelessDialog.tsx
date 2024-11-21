@@ -180,7 +180,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
       className: wrapperStyle,
       style,
     }
-  }, [wrapperStyle, left, right, spacing, width])
+  }, [wrapperStyle, left, right, width])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)

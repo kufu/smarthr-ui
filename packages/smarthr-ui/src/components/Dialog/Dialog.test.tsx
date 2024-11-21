@@ -6,11 +6,9 @@ import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
 import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
-import { Heading } from '../Heading'
 import { Input } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
-import { Section } from '../SectioningContent'
 
 import { Dialog } from './Dialog'
 
@@ -21,34 +19,37 @@ describe('Dialog', () => {
       <>
         <Button onClick={() => setIsOpen(true)}>Dialog</Button>
         <Dialog isOpen={isOpen} ariaLabel="Dialog">
-          <Section>
-            <Heading>Dialog</Heading>
-            <p>The value of isOpen must be managed by you, but you can customize content freely.</p>
-            <DatePicker
-              name="dialog_datepicker"
-              value={'2021-01-01'}
-              formatDate={(_date) => (_date ? _date.toDateString() : '')}
-              title="dialog_datepicker"
-            />
-            <Fieldset title="Fruits">
-              <Cluster as="ul">
-                <li>
-                  <RadioButton name="Apple" checked>
-                    Apple
-                  </RadioButton>
-                </li>
-                <li>
-                  <RadioButton name="Orange">Orange</RadioButton>
-                </li>
-                <li>
-                  <RadioButton name="Grape">Grape</RadioButton>
-                </li>
-              </Cluster>
+          <form>
+            <Fieldset title="Dialog" titleType="sectionTitle">
+              <p>
+                The value of isOpen must be managed by you, but you can customize content freely.
+              </p>
+              <DatePicker
+                name="dialog_datepicker"
+                value={'2021-01-01'}
+                formatDate={(_date) => (_date ? _date.toDateString() : '')}
+                title="dialog_datepicker"
+              />
+              <Fieldset title="Fruits">
+                <Cluster as="ul">
+                  <li>
+                    <RadioButton name="Apple" checked>
+                      Apple
+                    </RadioButton>
+                  </li>
+                  <li>
+                    <RadioButton name="Orange">Orange</RadioButton>
+                  </li>
+                  <li>
+                    <RadioButton name="Grape">Grape</RadioButton>
+                  </li>
+                </Cluster>
+              </Fieldset>
             </Fieldset>
-          </Section>
-          <div>
-            <Button onClick={() => setIsOpen(false)}>close</Button>
-          </div>
+            <div>
+              <Button onClick={() => setIsOpen(false)}>close</Button>
+            </div>
+          </form>
         </Dialog>
       </>
     )
@@ -122,12 +123,14 @@ describe('Dialog', () => {
           firstFocusTarget={inputRef}
           ariaLabel="特定の要素をフォーカスするダイアログ"
         >
-          <FormControl title="特定の要素をフォーカスするダイアログのInput">
-            <Input ref={inputRef} name="input_focus_target" />
-          </FormControl>
-          <div>
-            <Button onClick={() => setIsOpen(false)}>close</Button>
-          </div>
+          <form>
+            <FormControl title="特定の要素をフォーカスするダイアログのInput">
+              <Input ref={inputRef} name="input_focus_target" />
+            </FormControl>
+            <div>
+              <Button onClick={() => setIsOpen(false)}>close</Button>
+            </div>
+          </form>
         </Dialog>
       </>
     )
