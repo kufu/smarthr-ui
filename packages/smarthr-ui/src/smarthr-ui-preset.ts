@@ -13,6 +13,21 @@ import type { Config } from 'tailwindcss'
 defaultConfig.twMergeConfig = {
   prefix: 'shr-',
   classGroups: {
+    boxShadow: [
+      {
+        shadow: [
+          'layer-0',
+          'layer-1',
+          'layer-2',
+          'layer-3',
+          'layer-4',
+          'outline',
+          'underline',
+          'input-hover',
+          'none',
+        ],
+      },
+    ],
     'border-shorthand': [
       'border-shorthand',
       'border-t-shorthand',
@@ -210,6 +225,9 @@ export default {
       minHeight: ({ theme }) => ({
         ...theme('spacing'),
       }),
+      borderWidth: {
+        6: '6px',
+      },
       borderColor: ({ theme }) => ({
         default: theme('colors.grey.20'),
         disabled: theme('colors.grey.20 / 50%'),
