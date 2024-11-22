@@ -1,1 +1,0 @@
-export { CompactInformationPanel } from './CompactInformationPanel'
