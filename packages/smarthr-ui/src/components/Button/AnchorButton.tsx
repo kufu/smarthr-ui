@@ -14,6 +14,7 @@ import { ElementRef, ElementRefProps } from '../../types'
 
 import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
+import { DisabledDetail } from './DisabledDetail'
 import { BaseProps } from './types'
 
 type ElementProps<T extends ElementType> = Omit<
@@ -39,6 +40,7 @@ const AnchorButton = forwardRef(
       suffix,
       wide = false,
       variant = 'secondary',
+      disabledDetail,
       target,
       rel,
       elementAs,
@@ -54,7 +56,7 @@ const AnchorButton = forwardRef(
       [rel, target],
     )
 
-    return (
+    const button = (
       <ButtonWrapper
         {...props}
         size={size}
@@ -73,6 +75,12 @@ const AnchorButton = forwardRef(
         </ButtonInner>
       </ButtonWrapper>
     )
+
+    if (!props.href && disabledDetail) {
+      return <DisabledDetail button={button} disabledDetail={disabledDetail} />
+    }
+
+    return button
   },
 )
 
