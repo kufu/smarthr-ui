@@ -95,6 +95,14 @@ export const Disabled: StoryObj<typeof AnchorButton> = {
   },
 }
 
+export const DisabledDetail: StoryObj<typeof AnchorButton> = {
+  name: 'disabledDetail',
+  args: {
+    href: undefined,
+    disabledDetail: { message: 'ボタンが無効な理由' },
+  },
+}
+
 export const Square: StoryObj<typeof AnchorButton> = {
   name: 'square',
   args: {

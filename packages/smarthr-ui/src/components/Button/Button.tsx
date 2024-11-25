@@ -3,13 +3,12 @@ import { tv } from 'tailwind-variants'
 
 import { usePortal } from '../../hooks/usePortal'
 import { DecoratorsType } from '../../types'
-import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
-import { Tooltip } from '../Tooltip'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
+import { DisabledDetail } from './DisabledDetail'
 import { BaseProps } from './types'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
@@ -20,19 +19,6 @@ const buttonStyle = tv({
     loader: [
       'shr-align-bottom',
       '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
-    ],
-    disabledWrapper: [
-      'smarthr-ui-Button-disabledWrapper',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-    ],
-    disabledTooltip: [
-      'shr-overflow-y-visible',
-      /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
-      '[&_.smarthr-ui-Icon]:-shr-m-0.25',
-      /* global styleなどでborder-boxが適用されている場合表示崩れを起こす為、content-boxを指定する */
-      '[&_.smarthr-ui-Icon]:shr-box-content',
-      '[&_.smarthr-ui-Icon]:shr-p-0.25',
-      '[&_.smarthr-ui-Icon]:shr-text-grey',
     ],
   },
   variants: {
@@ -76,7 +62,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     },
     ref,
   ) => {
-    const { wrapper, loader: loaderSlot, disabledWrapper, disabledTooltip } = buttonStyle()
+    const { wrapper, loader: loaderSlot } = buttonStyle()
     const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
     const loaderStyle = useMemo(
       () => loaderSlot({ isSecondary: variant === 'secondary' }),
@@ -119,22 +105,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     )
 
     if (disabled && disabledDetail) {
-      const DisabledDetailIcon = disabledDetail.icon || FaCircleInfoIcon
-
-      return (
-        <div className={disabledWrapper()}>
-          {button}
-          <Tooltip
-            message={disabledDetail.message}
-            triggerType="icon"
-            horizontal="auto"
-            vertical="auto"
-            className={disabledTooltip()}
-          >
-            <DisabledDetailIcon />
-          </Tooltip>
-        </div>
-      )
+      return <DisabledDetail button={button} disabledDetail={disabledDetail} />
     }
 
     return button
