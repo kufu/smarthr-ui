@@ -3,8 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { usePortal } from '../../hooks/usePortal'
 import { DecoratorsType } from '../../types'
-import { FaInfoCircleIcon } from '../Icon'
-import { Cluster } from '../Layout'
+import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Tooltip } from '../Tooltip'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -18,11 +17,16 @@ type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProp
 const buttonStyle = tv({
   slots: {
     wrapper: 'smarthr-ui-Button',
-    loader:
-      'shr-align-bottom [&&&_.smarthr-ui-Loader-spinner]:shr-h-em [&&&_.smarthr-ui-Loader-spinner]:shr-w-em',
-    disabledWrapper: 'smarthr-ui-Button-disabledWrapper',
+    loader: [
+      'shr-align-bottom',
+      '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
+    ],
+    disabledWrapper: [
+      'smarthr-ui-Button-disabledWrapper',
+      'shr-inline-flex shr-items-center shr-gap-0.25',
+    ],
     disabledTooltip: [
-      '[&&&]:shr-overflow-y-visible',
+      'shr-overflow-y-visible',
       /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
       '[&_.smarthr-ui-Icon]:-shr-m-0.25',
       /* global styleなどでborder-boxが適用されている場合表示崩れを起こす為、content-boxを指定する */
@@ -34,12 +38,12 @@ const buttonStyle = tv({
   variants: {
     isSecondary: {
       true: {
-        loader: '[&&&_.smarthr-ui-Loader-line]:shr-border-disabled',
+        loader: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
       },
       false: {
         loader: [
-          '[&&&_.smarthr-ui-Loader-line]:shr-border-white/50',
-          '[&&&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
         ],
       },
     },
@@ -115,10 +119,10 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     )
 
     if (disabled && disabledDetail) {
-      const DisabledDetailIcon = disabledDetail.icon || FaInfoCircleIcon
+      const DisabledDetailIcon = disabledDetail.icon || FaCircleInfoIcon
 
       return (
-        <Cluster inline align="center" gap={0.25} className={disabledWrapper()}>
+        <div className={disabledWrapper()}>
           {button}
           <Tooltip
             message={disabledDetail.message}
@@ -129,7 +133,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
           >
             <DisabledDetailIcon />
           </Tooltip>
-        </Cluster>
+        </div>
       )
     }
 
