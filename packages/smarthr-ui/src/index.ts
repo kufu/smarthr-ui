@@ -90,6 +90,7 @@ export * from './components/Badge'
 export * from './components/Switch'
 export * from './components/Stepper'
 export * from './components/Picker'
+export * from './components/Browser'
 
 // layout components
 export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
