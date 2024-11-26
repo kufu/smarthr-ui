@@ -51,17 +51,20 @@ const appLauncher = tv({
         ],
       },
     },
-    enableNew: {
-      true: {
-        switchButton: 'shr-px-0.5',
-      },
-    },
+    // enableNew: {
+    //   true: {
+    //     switchButton: 'shr-px-0.5',
+    //   },
+    // },
   },
 })
 
+// TODO: enableNewをpropsで受け取るようになったら消す
+const enableNew = false
+
 export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   narrow,
-  enableNew,
+  // enableNew,
   invert = enableNew,
   decorators,
   localeMap,
@@ -119,7 +122,11 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   }
 
   const NarrowTrigger = (
-    <Button square suffix={<FaCaretDownIcon />} className={switchButton({ invert, enableNew })}>
+    <Button
+      square
+      suffix={<FaCaretDownIcon />}
+      className={switchButton({ invert /* enableNew */ })}
+    >
       {invert ? <LanguageIcon alt={triggerLabel} /> : <FaGlobeIcon alt={triggerLabel} />}
     </Button>
   )
@@ -128,7 +135,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
     <Button
       prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
       suffix={<FaCaretDownIcon />}
-      className={switchButton({ invert, enableNew })}
+      className={switchButton({ invert /* enableNew */ })}
     >
       {triggerLabel}
     </Button>

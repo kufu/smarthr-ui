@@ -22,17 +22,17 @@ const header = tv({
     actions: ['smarthr-ui-Header-actions', 'shr-ms-auto'],
   },
   variants: {
-    enableNew: {
-      true: {
-        wrapper: [
-          'shr-border-solid shr-border-0 shr-border-t-6 shr-border-t-brand shr-border-b shr-border-b-default shr-bg-white shr-px-1.5',
-        ],
-        logoLink: '',
-        tenantInfo: '',
-        tenantNameText: '',
-        actions: 'shr-py-0.5',
-      },
-    },
+    // enableNew: {
+    //   true: {
+    //     wrapper: [
+    //       'shr-border-solid shr-border-0 shr-border-t-6 shr-border-t-brand shr-border-b shr-border-b-default shr-bg-white shr-px-1.5',
+    //     ],
+    //     logoLink: '',
+    //     tenantInfo: '',
+    //     tenantNameText: '',
+    //     actions: 'shr-py-0.5',
+    //   },
+    // },
   },
 })
 
@@ -60,8 +60,11 @@ type Props = {
 
 type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
 
+// TODO: enableNewをpropsで受け取るようになったら消す
+const enableNew = false
+
 export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
-  enableNew,
+  // enableNew,
   logo = <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />,
   logoHref = '/',
   featureName,
@@ -78,7 +81,9 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     tenantInfo: tenantInfoStyle,
     tenantNameText,
     actions,
-  } = header({ enableNew })
+  } = header({
+    /* enableNew */
+  })
   const currentTenantName = useMemo(() => {
     if (tenants && tenants.length >= 1) {
       const current = tenants.find(({ id }) => id === currentTenantId)
@@ -120,7 +125,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
           ? featureName && (
               <AppLauncher
                 apps={apps}
-                enableNew={enableNew}
+                // enableNew={enableNew}
                 decorators={{ triggerLabel: () => featureName }}
               />
             )

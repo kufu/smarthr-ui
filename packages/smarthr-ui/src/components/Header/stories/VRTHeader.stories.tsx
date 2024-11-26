@@ -17,24 +17,28 @@ export default {
     <Stack className="shr-h-screen">
       {[undefined, 'focus-visible'].map((id) => (
         <Stack id={id} key={id}>
-          {[false, true].map((enableNew) => (
-            <Header {...args} enableNew={enableNew} key={String(enableNew)}>
-              <HeaderLink
-                href="https://support.smarthr.jp"
-                prefix={<FaRegCircleQuestionIcon />}
-                enableNew={enableNew}
-              >
-                ヘルプ
-              </HeaderLink>
-              <LanguageSwitcher
-                localeMap={{
-                  ja: '日本語',
-                  'en-us': 'English',
-                }}
-                enableNew={enableNew}
-              />
-            </Header>
-          ))}
+          {/* {[false, true].map((enableNew) => ( */}
+          <Header
+            {...args}
+            // enableNew={enableNew}
+            // key={String(enableNew)}
+          >
+            <HeaderLink
+              href="https://support.smarthr.jp"
+              prefix={<FaRegCircleQuestionIcon />}
+              // enableNew={enableNew}
+            >
+              ヘルプ
+            </HeaderLink>
+            <LanguageSwitcher
+              localeMap={{
+                ja: '日本語',
+                'en-us': 'English',
+              }}
+              // enableNew={enableNew}
+            />
+          </Header>
+          {/* ))} */}
         </Stack>
       ))}
     </Stack>

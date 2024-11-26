@@ -49,24 +49,27 @@ const appLauncher = tv({
     ],
   },
   variants: {
-    enableNew: {
-      true: {
-        appsButton: [
-          'shr-px-0.5 shr-font-bold shr-text-black',
-          '[&_>_svg]:aria-expanded:shr-rotate-180',
-          'hover:shr-bg-white-darken',
-          'focus-visible:shr-bg-white-darken',
-        ],
-      },
-    },
+    // enableNew: {
+    //   true: {
+    //     appsButton: [
+    //       'shr-px-0.5 shr-font-bold shr-text-black',
+    //       '[&_>_svg]:aria-expanded:shr-rotate-180',
+    //       'hover:shr-bg-white-darken',
+    //       'focus-visible:shr-bg-white-darken',
+    //     ],
+    //   },
+    // },
   },
 })
+
+// TODO: enableNewをpropsで受け取るようになったら消す
+const enableNew = false
 
 export const AppLauncher: React.FC<Props & ElementProps> = ({
   apps,
   urlToShowAll,
   decorators,
-  enableNew,
+  // enableNew,
   ...props
 }) => {
   const triggerLabel = useMemo(
@@ -77,7 +80,9 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   const baseApps = apps.find(({ type }) => type === 'base')
   const others = apps.filter((category) => category !== baseApps)
 
-  const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
+  const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({
+    /* enableNew */
+  })
 
   return (
     <Dropdown {...props}>

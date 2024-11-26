@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+// import { action } from '@storybook/addon-actions'
 import React from 'react'
 
 import { backgroundColor } from '../../../themes'
@@ -81,14 +81,14 @@ export const UrlToShowAll: StoryObj<typeof AppLauncher> = {
   },
 }
 
-export const EnableNew: StoryObj<typeof AppLauncher> = {
-  name: 'enableNew',
-  args: {
-    enableNew: true,
-  },
-  parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
-  },
-}
+// export const EnableNew: StoryObj<typeof AppLauncher> = {
+//   name: 'enableNew',
+//   args: {
+//     enableNew: true,
+//   },
+//   parameters: {
+//     backgrounds: {
+//       values: [{ name: 'light', value: backgroundColor.white }],
+//     },
+//   },
+// }

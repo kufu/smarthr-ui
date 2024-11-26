@@ -80,15 +80,15 @@ export const Invert: StoryObj<typeof LanguageSwitcher> = {
   },
 }
 
-export const EnableNew: StoryObj<typeof LanguageSwitcher> = {
-  name: 'enableNew',
-  render: (args) => <LanguageSwitcher {...args} />,
-  args: {
-    enableNew: true,
-  },
-  parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
-  },
-}
+// export const EnableNew: StoryObj<typeof LanguageSwitcher> = {
+//   name: 'enableNew',
+//   render: (args) => <LanguageSwitcher {...args} />,
+//   args: {
+//     enableNew: true,
+//   },
+//   parameters: {
+//     backgrounds: {
+//       values: [{ name: 'light', value: backgroundColor.white }],
+//     },
+//   },
+// }

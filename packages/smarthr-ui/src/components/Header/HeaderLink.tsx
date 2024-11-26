@@ -13,14 +13,18 @@ const headerLink = tv({
     '[&_.smarthr-ui-Icon]:shr-block',
   ],
   variants: {
-    enableNew: {
-      true: ['shr-px-0.5 shr-text-black', 'hover:shr-shadow-underline'],
-      false: 'hover:shr-text-white',
-    },
+    // enableNew: {
+    //   true: ['shr-px-0.5 shr-text-black', 'hover:shr-shadow-underline'],
+    //   false: 'hover:shr-text-white',
+    // },
   },
 })
 
-export const HeaderLink: React.FC<Props> = ({ enableNew, className, ...props }) => {
-  const style = headerLink({ enableNew, className })
+export const HeaderLink: React.FC<Props> = ({
+  // enableNew,
+  className,
+  ...props
+}) => {
+  const style = headerLink({ /* enableNew, */ className })
   return <TextLink {...props} target="_blank" suffix={null} className={style} />
 }

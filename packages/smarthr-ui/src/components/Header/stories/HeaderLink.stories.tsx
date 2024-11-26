@@ -32,16 +32,16 @@ export const Prefix: StoryObj<typeof HeaderLink> = {
   },
 }
 
-export const EnableNew: StoryObj<typeof HeaderLink> = {
-  name: 'enableNew',
-  render: (args) => <HeaderLink {...args}>ヘルプ</HeaderLink>,
-  args: {
-    prefix: <FaRegCircleQuestionIcon />,
-    enableNew: true,
-  },
-  parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
-  },
-}
+// export const EnableNew: StoryObj<typeof HeaderLink> = {
+//   name: 'enableNew',
+//   render: (args) => <HeaderLink {...args}>ヘルプ</HeaderLink>,
+//   args: {
+//     prefix: <FaRegCircleQuestionIcon />,
+//     enableNew: true,
+//   },
+//   parameters: {
+//     backgrounds: {
+//       values: [{ name: 'light', value: backgroundColor.white }],
+//     },
+//   },
+// }
