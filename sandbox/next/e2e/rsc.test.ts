@@ -14,6 +14,7 @@ const SERVER_COMPONENTS = [
   'Chip',
   'DefinitionList',
   'DefinitionListItem',
+  'DatetimeLocalPicker',
   'ErrorScreen',
   'FloatArea',
   'HeaderLink',
