@@ -85,12 +85,12 @@ const C = () => {
   const [files, setFiles] = React.useState<File[]>([])
   const onChange = (e)=> {
     console.log('hello')
-    setFiles(e.target.files)
+    setFiles(e.target.files || [])
   }
   return (
     <>
     <InputFileMultiple multiple files={files} label="ファイルを選択" onChange={onChange} />
-    <button onClick={() => setFiles(null)}>Clear</button>
+    <button onClick={() => setFiles([])}>Clear</button>
   </>
     )
 }
