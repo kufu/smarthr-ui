@@ -42,7 +42,11 @@ const SORT_DIRECTION_LABEL = {
 const thWrapper = tv({
   base: [
     'smarthr-ui-Th',
-    'shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
+    'shr-border-solid shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
+    [
+      '[.shr-table-border-vertical_&+&]:shr-border-l',
+      '[.shr-table-border-vertical_&+&]:shr-border-l-default',
+    ],
     'aria-[sort]:shr-cursor-pointer',
     'hover:aria-[sort]:shr-bg-head-darken',
     '[&:has(:focus-visible)]:aria-[sort]:shr-focus-indicator',

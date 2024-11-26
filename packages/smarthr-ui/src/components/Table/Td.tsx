@@ -41,7 +41,15 @@ export const Td: FC<Props & ElementProps> = ({
 const td = tv({
   base: [
     'smarthr-ui-Td',
-    'shr-border-t-shorthand shr-h-[calc(1em_*_theme(lineHeight.normal))] shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black',
+    'shr-border-solid shr-border-0 shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black shr-h-[calc(1em_*_theme(lineHeight.normal))]',
+    [
+      '[.shr-table-border-horizontal_&]:shr-border-t',
+      '[.shr-table-border-horizontal_&]:shr-border-t-default',
+    ],
+    [
+      '[.shr-table-border-vertical_&+&]:shr-border-l',
+      '[.shr-table-border-vertical_&+&]:shr-border-l-default',
+    ],
   ],
   variants: {
     align: {

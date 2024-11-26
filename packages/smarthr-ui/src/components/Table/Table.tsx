@@ -7,17 +7,17 @@ type ElementProps = Omit<ComponentProps<'table'>, keyof Props>
 const table = tv({
   base: [
     'smarthr-ui-Table',
-    'shr-w-full',
-    /* Headがfixed=trueの場合、separate以外だとHeadとBodyの間に隙間が生まれるため、明示的に指定しています */
-    'shr-broder-separate',
-    'shr-border-spacing-0',
-    'shr-bg-column',
+    'shr-border-collapse shr-w-full',
     '[&_tbody]:shr-bg-white',
     '[&_th]:contrast-more:shr-border-shorthand [&_th]:shr-bg-head [&_th]:contrast-more:shr-border-high-contrast',
     '[&_td]:contrast-more:shr-border-shorthand [&_td]:contrast-more:shr-border-high-contrast',
     'contrast-more:shr-border-shorthand contrast-more:shr-border-high-contrast',
   ],
   variants: {
+    borderType: {
+      horizontal: 'shr-table-border-horizontal',
+      both: 'shr-table-border-vertical shr-table-border-horizontal',
+    },
     layout: {
       auto: '',
       fixed: 'shr-table-fixed',
@@ -30,17 +30,21 @@ const table = tv({
       ],
     },
   },
+  defaultVariants: {
+    borderType: 'horizontal',
+  },
 })
 
 export const Table: FC<Props & ElementProps> = ({
+  borderType,
   fixedHead = false,
   layout = 'auto',
   className,
   ...props
 }) => {
   const styles = useMemo(
-    () => table({ fixedHead, layout, className }),
-    [className, fixedHead, layout],
+    () => table({ borderType, fixedHead, layout, className }),
+    [borderType, className, fixedHead, layout],
   )
   return <table {...props} className={styles} />
 }
