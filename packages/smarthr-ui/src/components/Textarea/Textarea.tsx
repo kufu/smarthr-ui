@@ -38,7 +38,11 @@ type Props = {
   maxLetters?: number
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<
-    'beforeMaxLettersCount' | 'afterMaxLettersCount' | 'afterMaxLettersCountExceeded'
+    | 'beforeMaxLettersCount'
+    | 'afterMaxLettersCount'
+    | 'afterMaxLettersCountExceeded'
+    | 'beforeScreenReaderMaxLettersDescription'
+    | 'afterScreenReaderMaxLettersDescription'
   >
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
@@ -63,6 +67,9 @@ const getStringLength = (value: string | number | readonly string[]) => {
 const TEXT_BEFORE_MAXLETTERS_COUNT = 'あと'
 const TEXT_AFTER_MAXLETTERS_COUNT = '文字'
 const TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED = 'オーバー'
+
+const SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION = '最大'
+const SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION = '文字入力できます'
 
 const textarea = tv({
   slots: {
@@ -118,22 +125,32 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState('')
 
-    const maxLettersCountExceeded = useMemo(
-      () =>
-        decorators?.afterMaxLettersCountExceeded?.(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED) ||
-        TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
-      [decorators],
-    )
-    const beforeMaxLettersCount = useMemo(
-      () =>
-        decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
-        TEXT_BEFORE_MAXLETTERS_COUNT,
-      [decorators],
-    )
-    const afterMaxLettersCount = useMemo(
-      () =>
-        decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
-        TEXT_AFTER_MAXLETTERS_COUNT,
+    const {
+      afterMaxLettersCount,
+      beforeMaxLettersCount,
+      maxLettersCountExceeded,
+      beforeScreenReaderMaxLettersDescription,
+      afterScreenReaderMaxLettersDescription,
+    } = useMemo(
+      () => ({
+        beforeMaxLettersCount:
+          decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
+          TEXT_BEFORE_MAXLETTERS_COUNT,
+        afterMaxLettersCount:
+          decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
+          TEXT_AFTER_MAXLETTERS_COUNT,
+        maxLettersCountExceeded:
+          decorators?.afterMaxLettersCountExceeded?.(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED) ||
+          TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
+        beforeScreenReaderMaxLettersDescription:
+          decorators?.beforeScreenReaderMaxLettersDescription?.(
+            SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+          ) || SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+        afterScreenReaderMaxLettersDescription:
+          decorators?.afterScreenReaderMaxLettersDescription?.(
+            SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+          ) || SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+      }),
       [decorators],
     )
 
@@ -275,7 +292,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         </span>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
-          最大{maxLetters}文字入力できます。
+          {beforeScreenReaderMaxLettersDescription}
+          {maxLetters}
+          {afterScreenReaderMaxLettersDescription}
         </VisuallyHiddenText>
       </span>
     ) : (
