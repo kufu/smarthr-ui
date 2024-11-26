@@ -186,7 +186,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
           onInput(e)
         }
       },
-      [autoResize, lineHeight.normal, maxRows, onInput, rows],
+      [autoResize, maxRows, onInput, rows],
     )
     const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
       const { textareaEl, counter, counterText } = textarea()

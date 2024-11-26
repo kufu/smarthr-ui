@@ -85,7 +85,7 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
       if (!active) return null
       return createPortal(props.children)
     },
-    [active, createPortal, isPortalRootMounted],
+    [active, createPortal],
   )
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import React from 'react'
 import { InformationPanel } from '../InformationPanel'
 import { Stack } from '../Layout'
 
-import { _Default } from './Stepper.stories'
+import { _Default as Default } from './Stepper.stories'
 
 import { Stepper } from '.'
 
@@ -18,7 +18,7 @@ export const _VRTStepperForcedColors: StoryFn = () => (
     <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </InformationPanel>
-    <_Default />
+    <Default />
   </Stack>
 )
 _VRTStepperForcedColors.parameters = {

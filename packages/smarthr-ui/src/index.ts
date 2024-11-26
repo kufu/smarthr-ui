@@ -9,6 +9,7 @@ export {
   DropdownCloser,
   FilterDropdown,
   DropdownMenuButton,
+  DropdownMenuGroup,
   SortDropdown,
 } from './components/Dropdown'
 export * from './components/FlashMessage'
@@ -70,7 +71,6 @@ export { FormControl } from './components/FormControl'
 export { Fieldset } from './components/Fieldset'
 export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
-export { CompactInformationPanel } from './components/CompactInformationPanel'
 export { Text, RangeSeparator } from './components/Text'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
@@ -96,7 +96,7 @@ export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'
-export { useDevice } from './hooks/useDevice'
+export { useDevice, DeviceProvider } from './hooks/useDevice'
 
 // themes
 export { createTheme } from './themes/createTheme'

@@ -1,10 +1,10 @@
 import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import { VariantProps, tv } from 'tailwind-variants'
 
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
-import { FaToolboxIcon } from '../../Icon'
+import { FaCaretDownIcon, FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { TextLink } from '../../TextLink'
@@ -26,7 +26,7 @@ type Props = {
   urlToShowAll?: string | null
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'triggerLabel'>
-}
+} & VariantProps<typeof appLauncher>
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 const TRIGGER_LABEL = 'アプリ'
@@ -34,9 +34,10 @@ const TRIGGER_LABEL = 'アプリ'
 const appLauncher = tv({
   slots: {
     appsButton: [
-      'shr-border-transparent shr-font-normal shr-text-white [&]:shr-bg-transparent [&]:shr-px-0.25',
-      'hover:shr-border-transparent hover:[&]:shr-bg-transparent',
-      'focus-visible:shr-border-transparent focus-visible:[&]:shr-bg-transparent',
+      'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
+      'hover:shr-border-transparent hover:shr-bg-transparent',
+      'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
+      'forced-colors:shr-border-shorthand',
     ],
     contentWrapper: ['smarthr-ui-AppLauncher', 'shr-p-1.5 shr-leading-normal'],
     category: 'smarthr-ui-AppLauncher-category',
@@ -44,8 +45,20 @@ const appLauncher = tv({
     link: 'smarthr-ui-AppLauncher-link',
     footer: [
       'smarthr-ui-AppLauncher-footer',
-      'shr-border-t-shorthand -shr-mx-0.75 shr-px-0.75 shr-pt-1 [&&&]:-shr-mb-0.25',
+      'shr-border-t-shorthand -shr-mx-0.75 shr-px-0.75 shr-pt-1 -shr-mb-0.25',
     ],
+  },
+  variants: {
+    enableNew: {
+      true: {
+        appsButton: [
+          'shr-px-0.5 shr-font-bold shr-text-black',
+          '[&_>_svg]:aria-expanded:shr-rotate-180',
+          'hover:shr-bg-white-darken',
+          'focus-visible:shr-bg-white-darken',
+        ],
+      },
+    },
   },
 })
 
@@ -53,6 +66,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   apps,
   urlToShowAll,
   decorators,
+  enableNew,
   ...props
 }) => {
   const triggerLabel = useMemo(
@@ -63,12 +77,16 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   const baseApps = apps.find(({ type }) => type === 'base')
   const others = apps.filter((category) => category !== baseApps)
 
-  const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher()
+  const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
 
   return (
     <Dropdown {...props}>
       <DropdownTrigger>
-        <Button prefix={<FaToolboxIcon />} className={appsButton()}>
+        <Button
+          prefix={enableNew ?? <FaToolboxIcon />}
+          suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+          className={appsButton()}
+        >
           {triggerLabel}
         </Button>
       </DropdownTrigger>

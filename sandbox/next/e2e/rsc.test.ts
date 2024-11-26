@@ -12,7 +12,6 @@ const SERVER_COMPONENTS = [
   'Balloon',
   'BaseColumn',
   'Chip',
-  'CompactInformationPanel',
   'DefinitionList',
   'DefinitionListItem',
   'ErrorScreen',

@@ -41,10 +41,9 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
     }),
     [decorators?.rangeSeparator, decorators?.rangeSeparatorVisuallyHiddenText],
   )
-  const style = useMemo(() => pageCounter({ className }), [className])
 
   return (
-    <Cluster {...props} gap={0.25} inline align="baseline" className={style}>
+    <Cluster {...props} gap={0.25} inline align="baseline" className={pageCounter({ className })}>
       <Text weight="bold" as="b">
         {start.toLocaleString()}
       </Text>

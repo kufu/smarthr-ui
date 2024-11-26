@@ -126,7 +126,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
         setRect(ref.current.getBoundingClientRect())
         setIsVisible(true)
       },
-    [ref.current, ellipsisOnly],
+    [ellipsisOnly],
   )
 
   const getHandlerToHide = useCallback(

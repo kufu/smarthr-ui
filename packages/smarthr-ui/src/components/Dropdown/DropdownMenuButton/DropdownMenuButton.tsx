@@ -1,10 +1,10 @@
 import React, {
-  ComponentProps,
-  ComponentPropsWithRef,
-  ComponentType,
-  FC,
-  ReactElement,
-  ReactNode,
+  type ComponentProps,
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type FC,
+  type ReactElement,
+  type ReactNode,
   useMemo,
 } from 'react'
 import innerText from 'react-innertext'
@@ -47,20 +47,22 @@ export const dropdownMenuButton = tv({
       'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]>.smarthr-ui-Icon:last-child]:shr-rotate-180',
     actionList: [
       'smarthr-ui-DropdownMenuButton-panel',
-      'shr-my-0 shr-list-none shr-px-0.25 shr-py-0.5',
-      '[&_.smarthr-ui-Button]:shr-w-full [&_.smarthr-ui-Button]:shr-justify-start [&_.smarthr-ui-Button]:shr-border-none [&_.smarthr-ui-Button]:shr-py-0.5 [&_.smarthr-ui-Button]:shr-font-normal',
-      '[&_.smarthr-ui-AnchorButton]:shr-w-full [&_.smarthr-ui-AnchorButton]:shr-justify-start [&_.smarthr-ui-AnchorButton]:shr-border-none [&_.smarthr-ui-AnchorButton]:shr-py-0.5 [&_.smarthr-ui-AnchorButton]:shr-font-normal',
+      'shr-list-none shr-py-0.5',
       [
         /* unset した Button の右 padding 分 */
         '[&_.smarthr-ui-Button-disabledWrapper]:shr-pe-1',
         '[&_.smarthr-ui-Button-disabledWrapper]:shr-gap-x-0.5',
         '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset]',
       ],
-      // hover 時に背景の白が出るので隠している
-      '[&_li:hover]:-shr-mx-0.25 [&_li:hover]:shr-bg-white-darken [&_li:hover]:shr-px-0.25',
+    ],
+    actionListItemButton: [
+      'shr-justify-start shr-border-none shr-py-0.5 shr-font-normal',
+      'focus-visible:shr-focus-indicator--inner',
     ],
   },
 })
+
+const { triggerWrapper, triggerButton, actionList, actionListItemButton } = dropdownMenuButton()
 
 export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
@@ -88,41 +90,44 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
   useKeyboardNavigation(containerRef)
 
-  const { triggerWrapperStyle, triggerButtonStyle, actionListStyle } = useMemo(() => {
-    const { triggerWrapper, triggerButton, actionList } = dropdownMenuButton()
-    return {
-      triggerWrapperStyle: triggerWrapper({ className }),
-      triggerButtonStyle: triggerButton(),
-      actionListStyle: actionList(),
-    }
-  }, [className])
-
   return (
     <Dropdown>
-      <DropdownTrigger className={triggerWrapperStyle}>
+      <DropdownTrigger className={triggerWrapper({ className })}>
         <Button
           {...props}
           suffix={triggerSuffix}
           size={triggerSize}
           square={onlyIconTrigger}
-          className={triggerButtonStyle}
+          className={triggerButton()}
         >
           {triggerLabel}
         </Button>
       </DropdownTrigger>
       <DropdownContent>
-        <ul ref={containerRef} className={actionListStyle}>
-          {React.Children.map(children, (item) => actionItem(item))}
-        </ul>
+        <menu ref={containerRef} className={actionList()}>
+          {renderButtonList(children)}
+        </menu>
       </DropdownContent>
     </Dropdown>
   )
 }
 
-// MEMO: {flag && <Button/>} のような書き方に対応させている
-const actionItem = (item: ReactNode) => {
-  if (!(item && React.isValidElement(item))) return null
+export const renderButtonList = (children: Actions) =>
+  React.Children.map(children, (item): ReactNode => {
+    if (!(item && React.isValidElement(item))) return null
+    if (item.type === React.Fragment) {
+      return renderButtonList(item.props.children)
+    }
 
-  const actualElement = React.cloneElement(item as ReactElement, { variant: 'text', wide: true })
-  return <li>{actualElement}</li>
-}
+    if (!(item.type === Button || item.type === AnchorButton)) {
+      return item
+    }
+
+    const actualElement = React.cloneElement(item as ReactElement, {
+      variant: 'text',
+      wide: true,
+      className: actionListItemButton({ className: item.props.className }),
+    })
+
+    return <li>{actualElement}</li>
+  })
