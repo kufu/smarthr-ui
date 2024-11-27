@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [62.0.1](https://github.com/kufu/smarthr-ui/compare/v62.0.0...v62.0.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* **Header:** enableNew を隠す ([#5140](https://github.com/kufu/smarthr-ui/issues/5140)) ([d8168f8](https://github.com/kufu/smarthr-ui/commit/d8168f8c43a70675249f6c53b14d9250ec4373f5))
+
 ## [62.0.0](https://github.com/kufu/smarthr-ui/compare/v61.0.0...v62.0.0) (2024-11-26)
 
 
