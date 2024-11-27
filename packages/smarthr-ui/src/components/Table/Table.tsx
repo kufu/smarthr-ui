@@ -23,22 +23,20 @@ const table = tv({
       fixed: 'shr-table-fixed',
     },
     fixedHead: {
-      true: [
-        '[&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0',
-        /* zIndexの値はセマンティックトークンとして管理しているため、明示的に値を指定しないと重なり順が崩れるため設定しています */
-        '[&_thead]:shr-z-fixed-menu',
-      ],
+      true: '[&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0 [&_thead]:shr-z-1',
     },
   },
   defaultVariants: {
     borderType: 'horizontal',
+    layout: 'auto',
+    fixedHead: false,
   },
 })
 
 export const Table: FC<Props & ElementProps> = ({
   borderType,
-  fixedHead = false,
-  layout = 'auto',
+  fixedHead,
+  layout,
   className,
   ...props
 }) => {
