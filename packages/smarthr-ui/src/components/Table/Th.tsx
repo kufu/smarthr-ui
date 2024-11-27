@@ -59,6 +59,11 @@ const thWrapper = tv({
       left: '',
       right: 'shr-text-right',
     },
+    vAlign: {
+      middle: '',
+      baseline: 'shr-align-baseline',
+      bottom: 'shr-align-bottom',
+    },
     fixed: {
       true: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
@@ -66,6 +71,10 @@ const thWrapper = tv({
         '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:after:shr-opacity-100',
       ],
     },
+  },
+  defaultVariants: {
+    align: 'left',
+    vAlign: 'middle',
   },
 })
 
@@ -83,7 +92,8 @@ export const Th: FC<Props & ElementProps> = ({
   sort,
   onSort,
   decorators,
-  align = 'left',
+  align,
+  vAlign,
   fixed = false,
   contentWidth,
   className,
@@ -91,7 +101,7 @@ export const Th: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const styleProps = useMemo(() => {
-    const thWrapperStyle = thWrapper({ className, align, fixed })
+    const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
     const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
     return {
       className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
@@ -100,7 +110,7 @@ export const Th: FC<Props & ElementProps> = ({
         width: convertContentWidth(contentWidth),
       },
     }
-  }, [align, className, contentWidth, fixed, style])
+  }, [align, className, contentWidth, fixed, style, vAlign])
 
   const sortLabel = useMemo(
     () =>

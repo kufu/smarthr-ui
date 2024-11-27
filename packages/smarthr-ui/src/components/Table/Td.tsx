@@ -15,8 +15,9 @@ export type Props = PropsWithChildren<
 type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
 export const Td: FC<Props & ElementProps> = ({
-  align = 'left',
-  nullable = false,
+  align,
+  vAlign,
+  nullable,
   fixed = false,
   contentWidth,
   className,
@@ -24,7 +25,7 @@ export const Td: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const styleProps = useMemo(() => {
-    const tdStyles = td({ align, nullable, fixed, className })
+    const tdStyles = td({ align, vAlign, nullable, fixed, className })
     const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
     return {
       className: `${tdStyles} ${reelShadowStyles}`.trim(),
@@ -33,7 +34,7 @@ export const Td: FC<Props & ElementProps> = ({
         ...getWidthStyle(contentWidth),
       },
     }
-  }, [align, className, contentWidth, fixed, nullable, style])
+  }, [align, className, contentWidth, fixed, nullable, style, vAlign])
 
   return <td {...props} {...styleProps} />
 }
@@ -56,6 +57,10 @@ const td = tv({
       left: '',
       right: 'shr-text-right',
     },
+    vAlign: {
+      middle: '',
+      baseline: 'shr-align-baseline',
+    },
     nullable: {
       true: "empty:after:shr-content-['-----']",
     },
@@ -65,6 +70,11 @@ const td = tv({
         '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:shr-bg-white [&.fixed]:after:shr-opacity-100',
       ],
     },
+  },
+  defaultVariants: {
+    align: 'left',
+    vAlign: 'middle',
+    nullable: false,
   },
 })
 
