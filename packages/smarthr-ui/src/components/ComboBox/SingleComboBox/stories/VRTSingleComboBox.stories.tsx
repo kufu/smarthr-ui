@@ -1,11 +1,9 @@
-import { action } from '@storybook/addon-actions'
-import { Meta, StoryFn, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within } from '@storybook/test'
-import React, { ReactNode, useCallback, useState } from 'react'
+import React from 'react'
 
 import { FormControl } from '../../../FormControl'
 import { FaCirclePlusIcon } from '../../../Icon'
-import { InformationPanel } from '../../../InformationPanel'
 import { Stack } from '../../../Layout'
 import { SingleComboBox } from '../SingleComboBox'
 
@@ -136,64 +134,6 @@ export default {
 
 export const VRT: StoryObj<typeof SingleComboBox> = {}
 
-type Item = { label: ReactNode; value: string; disabled?: boolean; data?: any }
-
-const StoryFunctionSingleComboBox: StoryFn = () => {
-  const [items, setItems] = useState<Item[]>(Object.values(defaultItems))
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
-  const [seq, setSeq] = useState(0)
-
-  const handleSelectItem = useCallback((item: Item) => {
-    action('onSelect')(item)
-    setSelectedItem(item)
-  }, [])
-  const handleClear = useCallback(() => {
-    action('onClear')()
-    setSelectedItem(null)
-  }, [])
-  const handleAddItem = useCallback(
-    (label: string) => {
-      action('onAdd')(label)
-      const newItem = {
-        label,
-        value: label,
-      }
-      setItems([...items, newItem])
-      setSelectedItem(newItem)
-      setSeq(seq + 1)
-    },
-    [items, seq],
-  )
-
-  const [itemsForDefault] = useState(Object.values(defaultItems))
-  const [selectedItemForDefault, setSelectedItemForDefault] = useState<Item | null>(null)
-
-  const handleSelectItemForDefault = useCallback((item: Item) => {
-    action('onSelect')(item)
-    setSelectedItemForDefault(item)
-  }, [])
-  const handleClearForDefault = useCallback(() => {
-    action('onClear')()
-    setSelectedItemForDefault(null)
-  }, [])
-
-  return (
-    <form>
-      <FormControl title="デフォルト" dangerouslyTitleHidden>
-        <SingleComboBox
-          name="default"
-          items={items}
-          selectedItem={selectedItem}
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onSelect={handleSelectItem}
-          onClear={handleClear}
-          data-test="single-combobox-default"
-        />
-      </FormControl>
-    </form>
-  )
-}
-
 const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const canvas = within(canvasElement)
   const textboxes = await canvas.findAllByRole('combobox')
@@ -204,6 +144,7 @@ const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
   const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
   await userEvent.click(helpMessage[0]) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
 }
+
 VRT.play = playSingle
 
 export const VRTForcedColors: StoryObj<typeof SingleComboBox> = {
