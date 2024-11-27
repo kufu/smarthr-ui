@@ -56,6 +56,8 @@ type Props = {
   currentTenantId?: string
   /** テナントが選択された時に発火するコールバック関数 */
   onTenantSelect?: (id: string) => void
+  /** @deprecated internal-ui から利用するので使わないでください。 */
+  enableNew?: boolean
 } & VariantProps<typeof header>
 
 type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
