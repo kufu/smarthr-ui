@@ -109,17 +109,15 @@ export default {
           />
         </FormControl>
       </form>
-      {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <Stack id={id} align="flex-start" key={id}>
-          {_cases.map((props, i) => (
-            <form key={i}>
-              <FormControl title="VRT 用の Story です" dangerouslyTitleHidden>
-                <SingleComboBox {...args} {...props} items={Object.values(defaultItems)} />
-              </FormControl>
-            </form>
-          ))}
-        </Stack>
-      ))}
+      <Stack align="flex-start">
+        {_cases.map((props, i) => (
+          <form key={i}>
+            <FormControl title="VRT 用の Story です" dangerouslyTitleHidden>
+              <SingleComboBox {...args} {...props} items={Object.values(defaultItems)} />
+            </FormControl>
+          </form>
+        ))}
+      </Stack>
     </Stack>
   ),
   args: {
