@@ -3,14 +3,12 @@ import { tv } from 'tailwind-variants'
 
 import { usePortal } from '../../hooks/usePortal'
 import { DecoratorsType } from '../../types'
-import { FaInfoCircleIcon } from '../Icon'
-import { Cluster } from '../Layout'
 import { Loader } from '../Loader'
-import { Tooltip } from '../Tooltip'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
+import { DisabledDetail } from './DisabledDetail'
 import { BaseProps } from './types'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
@@ -18,28 +16,20 @@ type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProp
 const buttonStyle = tv({
   slots: {
     wrapper: 'smarthr-ui-Button',
-    loader:
-      'shr-align-bottom [&&&_.smarthr-ui-Loader-spinner]:shr-h-em [&&&_.smarthr-ui-Loader-spinner]:shr-w-em',
-    disabledWrapper: 'smarthr-ui-Button-disabledWrapper',
-    disabledTooltip: [
-      '[&&&]:shr-overflow-y-visible',
-      /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
-      '[&_.smarthr-ui-Icon]:-shr-m-0.25',
-      /* global styleなどでborder-boxが適用されている場合表示崩れを起こす為、content-boxを指定する */
-      '[&_.smarthr-ui-Icon]:shr-box-content',
-      '[&_.smarthr-ui-Icon]:shr-p-0.25',
-      '[&_.smarthr-ui-Icon]:shr-text-grey',
+    loader: [
+      'shr-align-bottom',
+      '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
     ],
   },
   variants: {
     isSecondary: {
       true: {
-        loader: '[&&&_.smarthr-ui-Loader-line]:shr-border-disabled',
+        loader: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
       },
       false: {
         loader: [
-          '[&&&_.smarthr-ui-Loader-line]:shr-border-white/50',
-          '[&&&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
         ],
       },
     },
@@ -72,7 +62,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     },
     ref,
   ) => {
-    const { wrapper, loader: loaderSlot, disabledWrapper, disabledTooltip } = buttonStyle()
+    const { wrapper, loader: loaderSlot } = buttonStyle()
     const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
     const loaderStyle = useMemo(
       () => loaderSlot({ isSecondary: variant === 'secondary' }),
@@ -115,22 +105,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     )
 
     if (disabled && disabledDetail) {
-      const DisabledDetailIcon = disabledDetail.icon || FaInfoCircleIcon
-
-      return (
-        <Cluster inline align="center" gap={0.25} className={disabledWrapper()}>
-          {button}
-          <Tooltip
-            message={disabledDetail.message}
-            triggerType="icon"
-            horizontal="auto"
-            vertical="auto"
-            className={disabledTooltip()}
-          >
-            <DisabledDetailIcon />
-          </Tooltip>
-        </Cluster>
-      )
+      return <DisabledDetail button={button} disabledDetail={disabledDetail} />
     }
 
     return button

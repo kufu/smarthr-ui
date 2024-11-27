@@ -142,6 +142,7 @@ import {
   FaPlus,
   FaPowerOff,
   FaPrint,
+  FaRegCircleQuestion,
   FaRegLightbulb,
   FaReply,
   FaRightFromBracket,
@@ -340,6 +341,7 @@ export const FaPiggyBankIcon = /*#__PURE__*/ createIcon(FaPiggyBank)
 export const FaPlusIcon = /*#__PURE__*/ createIcon(FaPlus)
 export const FaPowerOffIcon = /*#__PURE__*/ createIcon(FaPowerOff)
 export const FaPrintIcon = /*#__PURE__*/ createIcon(FaPrint)
+export const FaRegCircleQuestionIcon = /*#__PURE__*/ createIcon(FaRegCircleQuestion)
 export const FaRegLightbulbIcon = /*#__PURE__*/ createIcon(FaRegLightbulb)
 export const FaReplyIcon = /*#__PURE__*/ createIcon(FaReply)
 export const FaRightFromBracketIcon = /*#__PURE__*/ createIcon(FaRightFromBracket)
@@ -394,3 +396,4 @@ export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
 
 export { WarningIcon } from './WarningIcon'
 export { SparklesIcon } from './SparklesIcon'
+export { LanguageIcon } from './LanguageIcon'

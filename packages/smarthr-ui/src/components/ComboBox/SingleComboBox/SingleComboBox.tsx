@@ -315,7 +315,7 @@ const ActualSingleComboBox = <T,>(
     if (isFocused) return textColor.black
     if (disabled) return textColor.disabled
     return textColor.grey
-  }, [disabled, isFocused, textColor.black, textColor.disabled, textColor.grey])
+  }, [disabled, isFocused])
 
   useClick(
     [outerRef, listBoxRef, clearButtonRef],

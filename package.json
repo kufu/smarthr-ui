@@ -7,13 +7,13 @@
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "eslint": "^8.57.0",
-    "eslint-config-smarthr": "^7.1.0",
-    "eslint-plugin-storybook": "^0.11.0",
-    "husky": "^9.1.6",
+    "eslint-config-smarthr": "^7.2.0",
+    "eslint-plugin-storybook": "^0.11.1",
+    "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "prettier-config-smarthr": "^1.0.0",
-    "prettier-plugin-tailwindcss": "^0.6.8",
+    "prettier-plugin-tailwindcss": "^0.6.9",
     "stylelint": "^16.10.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.1",
@@ -35,7 +35,8 @@
       "minimist": "1.2.8",
       "react": "^18.3.1",
       "react-dom": "^18.3.1",
-      "micromatch@<4.0.8": ">=4.0.8"
+      "micromatch@<4.0.8": ">=4.0.8",
+      "cross-spawn@<7.0.5": ">=7.0.5"
     }
   }
 }

@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [62.0.1](https://github.com/kufu/smarthr-ui/compare/v62.0.0...v62.0.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* **Header:** enableNew を隠す ([#5140](https://github.com/kufu/smarthr-ui/issues/5140)) ([d8168f8](https://github.com/kufu/smarthr-ui/commit/d8168f8c43a70675249f6c53b14d9250ec4373f5))
+
+## [62.0.0](https://github.com/kufu/smarthr-ui/compare/v61.0.0...v62.0.0) (2024-11-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* SSR対応や必要以上にイベントを登録しないように `useDevice` を変更した (#5119)
+* **CompactInformationPanel:** コンポーネントを削除 (#5129)
+
+### Features
+
+* AnchorButton の disabledDetail 対応 ([#5133](https://github.com/kufu/smarthr-ui/issues/5133)) ([01c76fd](https://github.com/kufu/smarthr-ui/commit/01c76fd96e13e3228a1caae3270d0e77891ff3a0))
+* **AppNavi:** 補足領域を追加 ([#5127](https://github.com/kufu/smarthr-ui/issues/5127)) ([798976f](https://github.com/kufu/smarthr-ui/commit/798976f15ed99801ffab46aca82c138df6102376))
+* **CompactInformationPanel:** コンポーネントを削除 ([#5129](https://github.com/kufu/smarthr-ui/issues/5129)) ([15a0453](https://github.com/kufu/smarthr-ui/commit/15a0453bb2d2767dffc38008fc92b3d941f6dbb2))
+* DropdownMenuGroup を追加 ([#5115](https://github.com/kufu/smarthr-ui/issues/5115)) ([3026b20](https://github.com/kufu/smarthr-ui/commit/3026b2086dfa9856f14395b65ec0af01ca6c6de9))
+* 新 Header 切り替えフラグを追加 ([#5083](https://github.com/kufu/smarthr-ui/issues/5083)) ([58caa90](https://github.com/kufu/smarthr-ui/commit/58caa90637b7532d6a9787791e3ba00963598145))
+
+
+### Bug Fixes
+
+* **Button:** disabled の説明が不用意に折り返されないように見直し ([#5132](https://github.com/kufu/smarthr-ui/issues/5132)) ([5b24fda](https://github.com/kufu/smarthr-ui/commit/5b24fdadb280c3e5419e28c0aaf7a28821e23101))
+* eslintのwarningを解消する ([#5117](https://github.com/kufu/smarthr-ui/issues/5117)) ([e5646bf](https://github.com/kufu/smarthr-ui/commit/e5646bf249cdf635a8e03dfe8ac681bbe108fcee))
+* FilterDropdownをformでマークアップする ([#5126](https://github.com/kufu/smarthr-ui/issues/5126)) ([a19e54a](https://github.com/kufu/smarthr-ui/commit/a19e54a92d7041b248e8db72127e86b9c8df3770))
+* SSR対応や必要以上にイベントを登録しないように `useDevice` を変更した ([#5119](https://github.com/kufu/smarthr-ui/issues/5119)) ([893421a](https://github.com/kufu/smarthr-ui/commit/893421a2d35ee1d5a3a8fed357f46215ac41615c))
+
+## [61.0.0](https://github.com/kufu/smarthr-ui/compare/v60.1.1...v61.0.0) (2024-11-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **FloatArea:** fixed と top、width を削除 (#5099)
+
+### Features
+
+* **FloatArea:** fixed と top、width を削除 ([#5099](https://github.com/kufu/smarthr-ui/issues/5099)) ([5650cb5](https://github.com/kufu/smarthr-ui/commit/5650cb5f3a413c6904ef772472b94e71dd3d13ab))
+* **Icon:** FaArrowRightArrowLeft を追加 ([#5114](https://github.com/kufu/smarthr-ui/issues/5114)) ([e4dff72](https://github.com/kufu/smarthr-ui/commit/e4dff721486676fb8ca20d1fcbe78e948f8d7d3c))
+* レイアウト系コンポーネントをサーバーコンポーネント内でも利用できるようにする ([#5071](https://github.com/kufu/smarthr-ui/issues/5071)) ([135daaf](https://github.com/kufu/smarthr-ui/commit/135daaf47b1173c831d03d261ddd4387293c4273))
+
 ### [60.1.1](https://github.com/kufu/smarthr-ui/compare/v60.1.0...v60.1.1) (2024-11-13)
 
 

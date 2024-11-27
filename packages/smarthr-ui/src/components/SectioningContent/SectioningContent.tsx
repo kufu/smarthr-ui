@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ComponentPropsWithRef, FC, PropsWithChildren, forwardRef, useContext } from 'react'
 
 import { LevelContext } from './levelContext'

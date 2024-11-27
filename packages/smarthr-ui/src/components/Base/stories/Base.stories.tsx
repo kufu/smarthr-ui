@@ -3,6 +3,7 @@ import React, { ComponentProps } from 'react'
 import { Gap } from '../../../types'
 import { Stack } from '../../Layout'
 import { Base, base } from '../Base'
+import { BaseColumn } from '../BaseColumn'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -18,6 +19,7 @@ const baseLayer = Object.keys(base.variants.layer).map(Number) as Array<
 export default {
   title: 'Data Display（データ表示）/Base',
   component: Base,
+  subcomponents: { BaseColumn },
   render: (args) => <Base {...args} />,
   argTypes: {
     padding: {
@@ -26,6 +28,7 @@ export default {
     overflow: {
       options: baseOverflow,
     },
+    as: { control: 'text' },
   },
   args: {
     children: <div className="shr-h-2" />,

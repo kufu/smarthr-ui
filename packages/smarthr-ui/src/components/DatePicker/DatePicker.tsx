@@ -287,14 +287,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       if (isInputFocused || isCalendarShown) return textColor.black
       if (disabled) return textColor.disabled
       return textColor.grey
-    }, [
-      isInputFocused,
-      isCalendarShown,
-      textColor.black,
-      textColor.disabled,
-      textColor.grey,
-      disabled,
-    ])
+    }, [isInputFocused, isCalendarShown, disabled])
 
     return (
       <div

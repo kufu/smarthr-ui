@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Nav } from '../SectioningContent'
@@ -20,8 +20,12 @@ type Props = PropsWithChildren<{
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >
-  /** ドロップダウンにキャレットを表示するかどうか */
+  /** ドロップダウンにキャレットを表示するかどうか
+   * @deprecated キャレットの省略は非推奨です
+   */
   displayDropdownCaret?: boolean
+  /** 追加の領域 */
+  additionalArea?: ReactNode
 }>
 
 const appNavi = tv({
@@ -36,8 +40,11 @@ const appNavi = tv({
       'shr-flex shr-items-stretch shr-gap-1 shr-self-stretch',
     ],
     listItem: ['smarthr-ui-AppNavi-listItem', 'shr-list-none'],
+    additionalAreaEl: 'shr-ms-auto',
   },
 })
+
+const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = appNavi()
 
 export const AppNavi: FC<Props & ElementProps> = ({
   label,
@@ -45,60 +52,62 @@ export const AppNavi: FC<Props & ElementProps> = ({
   className,
   children,
   displayDropdownCaret = false,
+  additionalArea,
   ...props
-}) => {
-  const { wrapperStyle, statusLabelStyle, buttonsStyle, listItemStyle } = useMemo(() => {
-    const { wrapper, statusLabel, buttonsEl, listItem } = appNavi()
-    return {
-      wrapperStyle: wrapper({ className }),
-      statusLabelStyle: statusLabel(),
-      buttonsStyle: buttonsEl(),
-      listItemStyle: listItem(),
-    }
-  }, [className])
+}) => (
+  // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+  <Nav {...props} className={wrapper({ className })}>
+    {label && <StatusLabel className={statusLabel()}>{label}</StatusLabel>}
 
-  return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Nav {...props} className={wrapperStyle}>
-      {label && <StatusLabel className={statusLabelStyle}>{label}</StatusLabel>}
-
-      {buttons && (
-        <ul className={buttonsStyle}>
-          {buttons.map((button, i) => {
-            if ('tag' in button) {
-              return (
-                <li key={i} className={listItemStyle}>
-                  <AppNaviCustomTag {...button} />
-                </li>
-              )
-            }
-
-            if ('href' in button) {
-              return (
-                <li key={i} className={listItemStyle}>
-                  <AppNaviAnchor {...button} />
-                </li>
-              )
-            }
-
-            if ('dropdownContent' in button) {
-              return (
-                <li key={i} className={listItemStyle}>
-                  <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
-                </li>
-              )
-            }
-
+    <ul className={buttonsEl()}>
+      {buttons &&
+        buttons.map((button, i) => {
+          if ('tag' in button) {
             return (
-              <li key={i} className={listItemStyle}>
-                <AppNaviButton {...button} />
+              <li key={i} className={listItem()}>
+                <AppNaviCustomTag {...button} />
               </li>
             )
-          })}
-        </ul>
-      )}
+          }
 
-      {children}
-    </Nav>
-  )
-}
+          if ('href' in button) {
+            return (
+              <li key={i} className={listItem()}>
+                <AppNaviAnchor {...button} />
+              </li>
+            )
+          }
+
+          if ('dropdownContent' in button) {
+            return (
+              <li key={i} className={listItem()}>
+                <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
+              </li>
+            )
+          }
+
+          return (
+            <li key={i} className={listItem()}>
+              <AppNaviButton {...button} />
+            </li>
+          )
+        })}
+      {renderButtons(children)}
+    </ul>
+
+    {additionalArea && <div className={additionalAreaEl()}>{additionalArea}</div>}
+  </Nav>
+)
+
+const renderButtons = (children: ReactNode) =>
+  React.Children.map(children, (child): ReactNode => {
+    if (!(child && React.isValidElement(child))) {
+      return null
+    }
+
+    if (child.type === React.Fragment) {
+      return renderButtons(child.props.children)
+    }
+
+    return <li className={listItem()}>{child}</li>
+  })

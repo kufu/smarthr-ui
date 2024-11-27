@@ -140,7 +140,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
           width: typeof width === 'number' ? `${width}px` : width,
         },
       }
-    }, [backgroundColor, bgColor, className, disabled, readOnly, width])
+    }, [bgColor, className, disabled, readOnly, width])
     const { input, affix } = inner()
 
     return (

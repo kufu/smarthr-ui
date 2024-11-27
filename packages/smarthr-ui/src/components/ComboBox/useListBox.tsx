@@ -103,7 +103,7 @@ export const useListBox = <T,>({
     const rect = triggerRef.current.getBoundingClientRect()
 
     setTriggerWidth(rect.width)
-  }, [triggerRef.current, isExpanded])
+  }, [isExpanded, triggerRef])
 
   const calculateRect = useCallback(() => {
     if (!listBoxRef.current || !triggerRef.current) {
@@ -278,7 +278,6 @@ export const useListBox = <T,>({
     triggerWidth,
     loaderWrapper,
     noItems,
-    spacing,
     wrapper,
   ])
 

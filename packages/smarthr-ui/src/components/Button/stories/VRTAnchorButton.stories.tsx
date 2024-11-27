@@ -11,48 +11,126 @@ import type { StoryFn, StoryObj } from '@storybook/react'
 type Variant = ComponentProps<typeof Button>['variant']
 
 /**
- * $ pict anchor-button.pixt.txt
- * size    disabled prefix suffix square  wide
- * s       true     なし    なし    false   false
- * default false    あり    なし    false   true
- * default true     なし    あり    false   true
- * s       false    なし    なし    true    false
- * default true     なし    なし    true    false
- * s       false    なし    あり    false   false
- * s       true     あり    なし    false   true
- * s       true     あり    なし    false   false
+ * $ pict anchor-button.txt
+ * size    disabled disabledDetail prefix suffix square wide
+ * default true     あり            なし    なし    false  false
+ * s       false    なし            なし    あり    false  true
+ * s       true     なし            なし    あり    false  false
+ * default false    なし            なし    なし    true   false
+ * default true     なし            なし    あり    false  true
+ * s       true     なし            あり    なし    false  true
+ * s       true     あり            なし    あり    false  false
+ * default true     あり            あり    なし    false  false
+ * s       true     あり            なし    なし    true   false
+ * s       false    なし            あり    なし    false  false
  */
-const Template: StoryFn = (args) => (
-  <Stack {...args}>
-    {(['secondary', 'primary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
-      <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
-        <Cluster align="center">
-          <AnchorButton variant={variant} size="s">
-            ボタン
-          </AnchorButton>
-          <AnchorButton variant={variant} prefix={<FaCirclePlusIcon />} wide href="#">
-            ボタン
-          </AnchorButton>
-          <AnchorButton variant={variant} suffix={<FaCaretDownIcon />} wide>
-            ボタン
-          </AnchorButton>
-          <AnchorButton variant={variant} size="s" square href="#">
-            <FaCirclePlusIcon alt="ボタン" />
-          </AnchorButton>
-          <AnchorButton variant={variant} square>
-            <FaCirclePlusIcon alt="ボタン" />
-          </AnchorButton>
-          <AnchorButton variant={variant} size="s" suffix={<FaCaretDownIcon />} href="#">
-            ボタン
-          </AnchorButton>
-          <AnchorButton variant={variant} size="s" prefix={<FaCirclePlusIcon />} wide>
-            ボタン
-          </AnchorButton>
-          <AnchorButton variant={variant} size="s" prefix={<FaCirclePlusIcon />}>
-            ボタン
-          </AnchorButton>
-        </Cluster>
-      </BaseColumn>
+const _cases: Array<ComponentProps<typeof AnchorButton>> = [
+  {
+    size: 'default',
+    href: undefined,
+    disabledDetail: { message: 'ボタンが無効な理由' },
+    prefix: undefined,
+    suffix: undefined,
+    square: false,
+    wide: false,
+  },
+  {
+    size: 's',
+    href: '#',
+    disabledDetail: undefined,
+    prefix: undefined,
+    suffix: <FaCaretDownIcon />,
+    square: false,
+    wide: true,
+  },
+  {
+    size: 's',
+    href: undefined,
+    disabledDetail: undefined,
+    prefix: undefined,
+    suffix: <FaCaretDownIcon />,
+    square: false,
+    wide: false,
+  },
+  {
+    size: 'default',
+    href: '#',
+    disabledDetail: undefined,
+    prefix: undefined,
+    suffix: undefined,
+    square: true,
+    wide: false,
+  },
+  {
+    size: 'default',
+    href: undefined,
+    disabledDetail: undefined,
+    prefix: undefined,
+    suffix: <FaCaretDownIcon />,
+    square: false,
+    wide: true,
+  },
+  {
+    size: 's',
+    href: undefined,
+    disabledDetail: undefined,
+    prefix: <FaCirclePlusIcon />,
+    suffix: undefined,
+    square: false,
+    wide: true,
+  },
+  {
+    size: 's',
+    href: undefined,
+    disabledDetail: { message: 'ボタンが無効な理由' },
+    prefix: undefined,
+    suffix: <FaCaretDownIcon />,
+    square: false,
+    wide: false,
+  },
+  {
+    size: 'default',
+    href: undefined,
+    disabledDetail: { message: 'ボタンが無効な理由' },
+    prefix: <FaCirclePlusIcon />,
+    suffix: undefined,
+    square: false,
+    wide: false,
+  },
+  {
+    size: 's',
+    href: undefined,
+    disabledDetail: { message: 'ボタンが無効な理由' },
+    prefix: undefined,
+    suffix: undefined,
+    square: true,
+    wide: false,
+  },
+  {
+    size: 's',
+    href: '#',
+    disabledDetail: undefined,
+    prefix: <FaCirclePlusIcon />,
+    suffix: undefined,
+    square: false,
+    wide: false,
+  },
+]
+
+const Template: StoryFn<typeof AnchorButton> = (args) => (
+  <Stack>
+    {[undefined, 'hover', 'focus-visible'].map((id) => (
+      <Stack id={id} key={id}>
+        {(['secondary', 'primary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
+          <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+            <Cluster align="center">
+              {_cases.map((props, index) => (
+                <AnchorButton {...args} {...props} variant={variant} key={index} />
+              ))}
+            </Cluster>
+          </BaseColumn>
+        ))}
+      </Stack>
     ))}
   </Stack>
 )
@@ -60,32 +138,20 @@ const Template: StoryFn = (args) => (
 export default {
   title: 'Buttons（ボタン）/Button/AnchorButton/VRT',
   render: Template,
+  args: {
+    children: 'ボタン',
+  },
   parameters: {
+    pseudo: {
+      hover: ['#hover .smarthr-ui-AnchorButton'],
+      focusVisible: ['#focus-visible .smarthr-ui-AnchorButton'],
+    },
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
 }
 
 export const VRT = {}
-
-export const VRTHover = {
-  render: () => (
-    <>
-      <Template id="hover" />
-      <Template id="focus" />
-      <Template id="focus-visible" />
-      <Template id="active" />
-    </>
-  ),
-  parameters: {
-    pseudo: {
-      hover: ['#hover .smarthr-ui-AnchorButton'],
-      focus: ['#focus .smarthr-ui-AnchorButton'],
-      focusVisible: ['#focus-visible .smarthr-ui-AnchorButton'],
-      active: ['#active .smarthr-ui-AnchorButton'],
-    },
-  },
-}
 
 export const VRTForcedColors: StoryObj = {
   ...VRT,
