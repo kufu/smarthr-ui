@@ -1,12 +1,10 @@
 import { action } from '@storybook/addon-actions'
 import React from 'react'
 
-import { FaRegCircleQuestionIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Header } from '../Header'
 import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
 import { HeaderLink } from '../HeaderLink'
-import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -115,6 +113,7 @@ export default {
       options: Object.keys(_childrenOptions),
       mapping: _childrenOptions,
     },
+    enableNew: { control: false },
   },
   args: {},
   parameters: {
@@ -173,39 +172,5 @@ export const Children: StoryObj<typeof Header> = {
   name: 'children',
   args: {
     children: _childrenOptions.あり,
-  },
-}
-
-export const EnableNew: StoryObj<typeof Header> = {
-  name: 'enableNew',
-  render: ({ enableNew, ...rest }) => (
-    <Header {...rest} enableNew={enableNew}>
-      <HeaderLink
-        href="https://support.smarthr.jp"
-        prefix={<FaRegCircleQuestionIcon />}
-        enableNew={enableNew}
-      >
-        ヘルプ
-      </HeaderLink>
-      <LanguageSwitcher
-        locale="ja"
-        localeMap={{
-          ja: '日本語',
-          'en-us': 'English',
-          pt: 'Português',
-          vi: 'Tiếng Việt',
-          ko: '한국어',
-          'zh-cn': '简体中文',
-          'zh-tw': '繁體中文',
-        }}
-        onLanguageSelect={action('selected')}
-        enableNew
-      />
-    </Header>
-  ),
-  args: {
-    enableNew: true,
-    featureName: '基本機能',
-    apps: _appsOptions.あり,
   },
 }
