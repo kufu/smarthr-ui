@@ -5,7 +5,7 @@ import { ErrorScreen } from '../ErrorScreen'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Page Templates（ページテンプレート）/ErrorScreen',
+  title: 'Page Templates（ページテンプレート）/ErrorScreen/VRT',
   render: (args) => <ErrorScreen {...args} />,
   parameters: {
     chromatic: { disableSnapshot: false },
