@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [62.1.0](https://github.com/kufu/smarthr-ui/compare/v62.0.1...v62.1.0) (2024-11-28)
+
+
+### Features
+
+* DatetimeLocalPicker を追加 ([#5138](https://github.com/kufu/smarthr-ui/issues/5138)) ([6fc38a1](https://github.com/kufu/smarthr-ui/commit/6fc38a16222bf796a710a0d30a595e21ed22cc2e))
+* **Table:** 縦線を引くための bordetType を追加、ほか ([#5144](https://github.com/kufu/smarthr-ui/issues/5144)) ([216df36](https://github.com/kufu/smarthr-ui/commit/216df366afecf4e58e71f6696276fb32d5dea5a5))
+
+
+### Bug Fixes
+
+* **DropdownMenuButton:** RemoteDialogTrigger の考慮漏れを修正 ([#5147](https://github.com/kufu/smarthr-ui/issues/5147)) ([63f209a](https://github.com/kufu/smarthr-ui/commit/63f209aad67e5d38610035e50a6b2219656d99ab))
+
 ### [62.0.1](https://github.com/kufu/smarthr-ui/compare/v62.0.0...v62.0.1) (2024-11-27)
 
 
