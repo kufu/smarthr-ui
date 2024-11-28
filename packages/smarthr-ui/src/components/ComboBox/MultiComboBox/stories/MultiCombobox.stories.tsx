@@ -2,10 +2,9 @@ import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React, { ReactNode, useCallback, useState } from 'react'
 
-import { FormControl } from '../FormControl'
-import { Stack } from '../Layout'
-
-import { MultiComboBox } from '.'
+import { FormControl } from '../../../FormControl'
+import { Stack } from '../../../Layout'
+import { MultiComboBox } from '../MultiComboBox'
 
 export default {
   title: 'Forms（フォーム）/MultiComboBox',

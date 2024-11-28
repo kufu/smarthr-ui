@@ -2,12 +2,11 @@ import { StoryFn } from '@storybook/react'
 import { userEvent, within } from '@storybook/test'
 import React from 'react'
 
-import { InformationPanel } from '../InformationPanel'
-import { Stack } from '../Layout'
+import { InformationPanel } from '../../../InformationPanel'
+import { Stack } from '../../../Layout'
+import { MultiComboBox } from '../MultiComboBox'
 
 import { MultiCombobox as StoriesMultiComboBox } from './MultiCombobox.stories'
-
-import { MultiComboBox } from '.'
 
 export default {
   title: 'Forms（フォーム）/MultiComboBox',
