@@ -1,6 +1,8 @@
+import { action } from '@storybook/addon-actions'
 import React from 'react'
 
-import { Button } from '../../../Button'
+import { AnchorButton, Button } from '../../../Button'
+import { RemoteDialogTrigger } from '../../../Dialog'
 import { FaGearIcon } from '../../../Icon'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
@@ -19,8 +21,10 @@ export default {
   render: (args) => (
     <DropdownMenuButton {...args}>
       <Button>操作1</Button>
-      <Button>操作2</Button>
-      <Button>操作3</Button>
+      <AnchorButton href="#">操作2</AnchorButton>
+      <RemoteDialogTrigger targetId="remoteDialog" onClick={action('open-remote-dialog')}>
+        <Button>操作3</Button>
+      </RemoteDialogTrigger>
     </DropdownMenuButton>
   ),
   argTypes: {
