@@ -42,7 +42,11 @@ const SORT_DIRECTION_LABEL = {
 const thWrapper = tv({
   base: [
     'smarthr-ui-Th',
-    'shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
+    'shr-border-solid shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
+    [
+      '[.shr-table-border-vertical_&+&]:shr-border-l',
+      '[.shr-table-border-vertical_&+&]:shr-border-l-default',
+    ],
     'aria-[sort]:shr-cursor-pointer',
     'hover:aria-[sort]:shr-bg-head-darken',
     '[&:has(:focus-visible)]:aria-[sort]:shr-focus-indicator',
@@ -55,6 +59,11 @@ const thWrapper = tv({
       left: '',
       right: 'shr-text-right',
     },
+    vAlign: {
+      middle: '',
+      baseline: 'shr-align-baseline',
+      bottom: 'shr-align-bottom',
+    },
     fixed: {
       true: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
@@ -62,6 +71,10 @@ const thWrapper = tv({
         '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:after:shr-opacity-100',
       ],
     },
+  },
+  defaultVariants: {
+    align: 'left',
+    vAlign: 'middle',
   },
 })
 
@@ -79,7 +92,8 @@ export const Th: FC<Props & ElementProps> = ({
   sort,
   onSort,
   decorators,
-  align = 'left',
+  align,
+  vAlign,
   fixed = false,
   contentWidth,
   className,
@@ -87,7 +101,7 @@ export const Th: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const styleProps = useMemo(() => {
-    const thWrapperStyle = thWrapper({ className, align, fixed })
+    const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
     const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
     return {
       className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
@@ -96,7 +110,7 @@ export const Th: FC<Props & ElementProps> = ({
         width: convertContentWidth(contentWidth),
       },
     }
-  }, [align, className, contentWidth, fixed, style])
+  }, [align, className, contentWidth, fixed, style, vAlign])
 
   const sortLabel = useMemo(
     () =>

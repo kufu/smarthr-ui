@@ -119,7 +119,9 @@ export const renderButtonList = (children: Actions) =>
       return renderButtonList(item.props.children)
     }
 
-    if (!(item.type === Button || item.type === AnchorButton)) {
+    if (
+      !(item.type === Button || item.type === AnchorButton || item.type === RemoteDialogTrigger)
+    ) {
       return item
     }
 
