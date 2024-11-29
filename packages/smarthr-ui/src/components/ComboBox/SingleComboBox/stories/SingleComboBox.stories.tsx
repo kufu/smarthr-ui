@@ -97,6 +97,16 @@ export const SelectedItem: StoryObj<typeof SingleComboBox> = {
 
 export const DefaultItem: StoryObj<typeof SingleComboBox> = {
   name: 'defaultItem',
+  render: (args) => {
+    const [selectItem, setSelectItem] = useState(args.defaultItem)
+    return (
+      <SingleComboBox
+        {...args}
+        selectedItem={selectItem ?? null}
+        onSelect={(item) => setSelectItem(item)}
+      />
+    )
+  },
   args: {
     defaultItem: defaultItems['option 4'],
   },
