@@ -72,7 +72,8 @@ jobs:
         if: ${{ github.event.client_payload.channel_id != null }}
         uses: slackapi/slack-github-action@v2.0.0
         with:
-          channel-id: ${{ github.event.client_payload.channel_id }}
-          payload: ${{ github.event.client_payload.say }}
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ github.event.client_payload.channel_id }}
+            text: ${{ github.event.client_payload.say }}
