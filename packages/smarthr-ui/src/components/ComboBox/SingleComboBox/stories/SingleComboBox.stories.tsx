@@ -1,12 +1,13 @@
+/* eslint-disable smarthr/a11y-input-in-form-control */
 import { Meta, StoryObj } from '@storybook/react'
-import React from 'react'
+import React, { useState } from 'react'
 
-import { FormControl } from '../../../FormControl'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { SingleComboBox } from '../SingleComboBox'
 
-const defaultItems = {
+// eslint-disable-next-line storybook/prefer-pascal-case
+export const defaultItems = {
   'option 1': {
     label: 'option 1',
     value: 'value-1',
@@ -50,7 +51,9 @@ const defaultItems = {
     value: 'value-7',
   },
 }
-const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
+
+// eslint-disable-next-line storybook/prefer-pascal-case
+export const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
 
 export default {
   title: 'Forms（フォーム）/SingleComboBox',
@@ -58,7 +61,6 @@ export default {
   args: {
     items: Object.values(defaultItems),
     selectedItem: null,
-    defaultItem: defaultItems['option 1'],
   },
   argTypes: {
     items: { control: 'object' },
@@ -81,6 +83,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  excludeStories: ['defaultItems', 'prefixes'],
 } as Meta<typeof SingleComboBox>
 
 export const Playground: StoryObj<typeof SingleComboBox> = {}
@@ -94,6 +97,16 @@ export const SelectedItem: StoryObj<typeof SingleComboBox> = {
 
 export const DefaultItem: StoryObj<typeof SingleComboBox> = {
   name: 'defaultItem',
+  render: (args) => {
+    const [selectItem, setSelectItem] = useState(args.defaultItem)
+    return (
+      <SingleComboBox
+        {...args}
+        selectedItem={selectItem ?? null}
+        onSelect={(item) => setSelectItem(item)}
+      />
+    )
+  },
   args: {
     defaultItem: defaultItems['option 4'],
   },
@@ -102,16 +115,10 @@ export const DefaultItem: StoryObj<typeof SingleComboBox> = {
 export const Prefix: StoryObj<typeof SingleComboBox> = {
   name: 'prefix',
   render: (args) => (
-    <form>
-      <Stack gap={1}>
-        <FormControl title="prefixなし" dangerouslyTitleHidden>
-          <SingleComboBox {...args} prefix={prefixes['なし']} />
-        </FormControl>
-        <FormControl title="prefixあり" dangerouslyTitleHidden>
-          <SingleComboBox {...args} prefix={prefixes['あり']} />
-        </FormControl>
-      </Stack>
-    </form>
+    <Stack gap={1}>
+      <SingleComboBox {...args} prefix={prefixes['なし']} />
+      <SingleComboBox {...args} prefix={prefixes['あり']} />
+    </Stack>
   ),
 }
 
@@ -147,7 +154,7 @@ export const IsLoading: StoryObj<typeof SingleComboBox> = {
 export const Width: StoryObj<typeof SingleComboBox> = {
   name: 'width',
   args: {
-    width: '500px',
+    width: '20rem',
   },
 }
 
@@ -161,6 +168,6 @@ export const DropdownHelpMessage: StoryObj<typeof SingleComboBox> = {
 export const DropdownWidth: StoryObj<typeof SingleComboBox> = {
   name: 'dropdownWidth',
   args: {
-    dropdownWidth: '300px',
+    dropdownWidth: '30rem',
   },
 }
