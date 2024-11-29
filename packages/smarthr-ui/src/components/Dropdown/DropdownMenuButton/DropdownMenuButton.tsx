@@ -10,7 +10,7 @@ import React, {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { Dropdown, DropdownContent, DropdownTrigger } from '..'
+import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
@@ -119,9 +119,7 @@ export const renderButtonList = (children: Actions) =>
       return renderButtonList(item.props.children)
     }
 
-    if (
-      !(item.type === Button || item.type === AnchorButton || item.type === RemoteDialogTrigger)
-    ) {
+    if (item.type === DropdownMenuGroup) {
       return item
     }
 
