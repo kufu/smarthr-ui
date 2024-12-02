@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useMemo } from 'react'
+import React, { FC, PropsWithChildren } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -14,6 +14,7 @@ export type AppNaviButtonProps = PropsWithChildren<{
   /** クリックイベントのハンドラ */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }>
+type ElementProps = Omit<React.ComponentPropsWithRef<'button'>, keyof AppNaviButtonProps>
 
 const appNaviButton = tv({
   extend: appNaviItemStyle,
@@ -22,27 +23,22 @@ const appNaviButton = tv({
   },
 })
 
-export const AppNaviButton: FC<AppNaviButtonProps> = ({
+export const AppNaviButton: FC<AppNaviButtonProps & ElementProps> = ({
   children,
   icon: Icon,
   current = false,
   onClick,
+  className,
 }) => {
-  const { wrapperStyle, iconStyle } = useMemo(() => {
-    const { wrapper, icon } = appNaviButton({ active: current })
-    return {
-      wrapperStyle: wrapper(),
-      iconStyle: icon(),
-    }
-  }, [current])
+  const { wrapper, icon } = appNaviButton({ active: current })
 
   return (
     <UnstyledButton
       aria-current={current ? 'page' : undefined}
       onClick={onClick}
-      className={wrapperStyle}
+      className={wrapper({ className })}
     >
-      {Icon && <Icon className={iconStyle} />}
+      {Icon && <Icon className={icon()} />}
       {children}
     </UnstyledButton>
   )

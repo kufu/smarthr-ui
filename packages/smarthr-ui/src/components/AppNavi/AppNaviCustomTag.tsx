@@ -1,4 +1,4 @@
-import React, { ComponentType, FC, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentType, FC, PropsWithChildren } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { ComponentProps as IconProps } from '../Icon'
@@ -26,19 +26,14 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   tag: Tag,
   icon: Icon,
   current = false,
+  className,
   ...props
 }) => {
-  const { wrapperStyle, iconStyle } = useMemo(() => {
-    const { wrapper, icon } = appNaviCustomTag({ active: current })
-    return {
-      wrapperStyle: wrapper(),
-      iconStyle: icon(),
-    }
-  }, [current])
+  const { wrapper, icon } = appNaviCustomTag({ active: current })
 
   return (
-    <Tag {...props} aria-current={current ? 'page' : undefined} className={wrapperStyle}>
-      {Icon && <Icon className={iconStyle} />}
+    <Tag {...props} aria-current={current ? 'page' : undefined} className={wrapper({ className })}>
+      {Icon && <Icon className={icon()} />}
       {children}
     </Tag>
   )

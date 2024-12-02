@@ -8,6 +8,8 @@ type AppNaviDropdownMenuButtonProps = PropsWithChildren<{
   label: ReactNode
 }>
 
+type ElementProps = Omit<React.ComponentPropsWithRef<'div'>, keyof AppNaviDropdownMenuButtonProps>
+
 const dropdownMenuButton = tv({
   base: [
     'smarthr-ui-AppNavi-dropdownMenuButton',
@@ -32,9 +34,10 @@ const dropdownMenuButton = tv({
   ],
 })
 
-export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
+export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps & ElementProps> = ({
   label,
   children,
+  className,
 }) => (
   <DropdownMenuButton
     label={
@@ -44,7 +47,7 @@ export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
         <span hidden>{children}</span>
       </>
     }
-    className={dropdownMenuButton()}
+    className={dropdownMenuButton({ className })}
   >
     {children}
   </DropdownMenuButton>

@@ -7,7 +7,6 @@ import React, {
   ReactElement,
   Ref,
   forwardRef,
-  useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -51,18 +50,12 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
       icon: Icon,
       current = false,
       elementAs,
+      className,
       ...others
     }: PropsWithoutRef<AppNaviAnchorProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const { wrapperStyle, iconStyle } = useMemo(() => {
-      const { wrapper, icon } = appNaviAnchor({ active: current })
-      return {
-        wrapperStyle: wrapper(),
-        iconStyle: icon(),
-      }
-    }, [current])
-
+    const { wrapper, icon } = appNaviAnchor({ active: current })
     const Component = elementAs || 'a'
 
     return (
@@ -71,9 +64,9 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
         ref={ref}
         href={href}
         aria-current={current ? 'page' : undefined}
-        className={wrapperStyle}
+        className={wrapper({ className })}
       >
-        {Icon && <Icon className={iconStyle} />}
+        {Icon && <Icon className={icon()} />}
         {children}
       </Component>
     )
