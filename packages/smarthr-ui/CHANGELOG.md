@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [62.1.1](https://github.com/kufu/smarthr-ui/compare/v62.1.0...v62.1.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* FilterDropdownのonApplyがsubmitキャンセルされるバグを修正 ([#5152](https://github.com/kufu/smarthr-ui/issues/5152)) ([e891740](https://github.com/kufu/smarthr-ui/commit/e8917406afb38939808b5b94be622a79dd4bf8de))
+
 ## [62.1.0](https://github.com/kufu/smarthr-ui/compare/v62.0.1...v62.1.0) (2024-11-28)
 
 
