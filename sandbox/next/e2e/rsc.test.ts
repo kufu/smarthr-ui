@@ -73,10 +73,19 @@ const CLIENT_COMPONENTS: string[] = [
   'DialogTrigger',  // ダイアログ開閉状態管理のためのuseContext
   'DialogWrapper',  // ダイアログ開閉状態管理のためのuseState
   'DropZone',       // 選択されたファイル保持のためのuseRef
-  'Heading',        // 見出しレベルの自動生成のため
+  'FormDialog',           // ダイアログ描画のためのcreatePortal
+  'FormDialogContent',    // ダイアログ描画のためのcreatePortal
+  'Heading',              // 見出しレベルの自動生成のため
+  'MessageDialog',        // ダイアログ描画のためのcreatePortal
+  'MessageDialogContent', // ダイアログ描画のためのcreatePortal
+  'ModelessDialog',       // ダイアログ描画のためのcreatePortal
   'Nav',            // 見出しレベルの自動生成のため
   'PageHeading',    // 見出しレベルの自動生成のため
   'Reel',           // 見出しレベルの自動生成のため
+  'RemoteDialogTrigger',        // children を clone するため
+  'RemoteTriggerActionDialog',  // ダイアログ開閉管理のためのuseState
+  'RemoteTriggerFormDialog',    // ダイアログ開閉管理のためのuseState
+  'RemoteTriggerMessageDialog', // ダイアログ開閉管理のためのuseState
   'Section',        // 見出しレベルの自動生成のため
   'Sidebar',        // 見出しレベルの自動生成のため
   'Stack',          // 見出しレベルの自動生成のため
@@ -108,24 +117,15 @@ const DISABLED_COMPONENTS = [
   'FilterDropdown',
   'FlashMessage',
   'FormControl',
-  'FormDialog',
-  'FormDialogContent',
   'Header',
   'HeaderDropdownMenuButton',
   'InformationPanel',
   'InputFile',
   'LanguageSwitcher',
   'LineClamp',
-  'MessageDialog',
-  'MessageDialogContent',
-  'ModelessDialog',
   'MultiComboBox',
   'RadioButton',
   'RadioButtonPanel',
-  'RemoteDialogTrigger',
-  'RemoteTriggerActionDialog',
-  'RemoteTriggerFormDialog',
-  'RemoteTriggerMessageDialog',
   'SearchInput',
   'SegmentedControl',
   'Select',
