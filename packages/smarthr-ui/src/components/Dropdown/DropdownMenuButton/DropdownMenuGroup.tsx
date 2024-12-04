@@ -13,7 +13,7 @@ type ElementProps = Omit<ComponentProps<'li'>, keyof Props>
 const dropdownMenuGroup = tv({
   slots: {
     group: [
-      'shr-ui-DropdownMenuGroup',
+      'smarthr-ui-DropdownMenuGroup',
       [
         '[&:not(:first-child)]:shr-relative',
         '[&:not(:first-child)]:shr-mt-0.5',
