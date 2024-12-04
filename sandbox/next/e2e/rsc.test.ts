@@ -48,6 +48,10 @@ const SERVER_COMPONENTS = [
  * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
 const CLIENT_COMPONENTS: string[] = [
+  'AccordionPanel',        // 開閉状態のステート管理
+  'AccordionPanelContent', // AccordionPanelItemContext
+  'AccordionPanelItem',    // AccordionPanelItemContext
+  'AccordionPanelTrigger', // AccordionPanelItemContext
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため
   'Base',           // 見出しレベルの自動生成のため
@@ -67,10 +71,6 @@ const CLIENT_COMPONENTS: string[] = [
  * FIXME: すべての use client を付与して CLIENT_COMPONENTS に移動する
  */
 const DISABLED_COMPONENTS = [
-  'AccordionPanel',
-  'AccordionPanelContent',
-  'AccordionPanelItem',
-  'AccordionPanelTrigger',
   'ActionDialog',
   'ActionDialogContent',
   'ActionDialogWithTrigger',
