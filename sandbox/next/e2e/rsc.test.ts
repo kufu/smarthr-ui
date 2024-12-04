@@ -22,7 +22,9 @@ const SERVER_COMPONENTS = [
   'Loader',
   'MessageScreen',
   'MonthPicker',
+  'NotificationBar',
   'PageCounter',
+  'Pagination',
   'RangeSeparator',
   'ResponseMessage',
   'SideNav',
@@ -35,9 +37,11 @@ const SERVER_COMPONENTS = [
   'TabBar',
   'Table',
   'Td',
+  'TdCheckbox',
   'Text',
   'TextLink',
   'Th',
+  'ThCheckbox',
   'TimePicker',
   'UnstyledButton',
   'UpwardLink',
@@ -58,6 +62,7 @@ const CLIENT_COMPONENTS: string[] = [
   'Aside',          // 見出しレベルの自動生成のため
   'Base',           // 見出しレベルの自動生成のため
   'Button',         // live region を使うためのcreatePortal
+  'CheckBox',       // indeterminate 状態管理のための useRef
   'Center',         // 見出しレベルの自動生成のため
   'Cluster',        // 見出しレベルの自動生成のため
   'Heading',        // 見出しレベルの自動生成のため
@@ -85,7 +90,6 @@ const DISABLED_COMPONENTS = [
   'BottomFixedArea',
   'BulkActionRow',
   'Calendar',
-  'CheckBox',
   'CurrencyInput',
   'DatePicker',
   'Dialog',
@@ -116,8 +120,6 @@ const DISABLED_COMPONENTS = [
   'MessageDialogContent',
   'ModelessDialog',
   'MultiComboBox',
-  'NotificationBar',
-  'Pagination',
   'RadioButton',
   'RadioButtonPanel',
   'RemoteDialogTrigger',
@@ -131,8 +133,6 @@ const DISABLED_COMPONENTS = [
   'SortDropdown',
   'TabItem',
   'TableReel',
-  'TdCheckbox',
-  'ThCheckbox',
 ]
 
 test.describe('RSC対応コンポーネントがRSCで利用できること', () => {
