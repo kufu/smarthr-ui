@@ -42,19 +42,22 @@ const SERVER_COMPONENTS = [
   'UnstyledButton',
   'UpwardLink',
   'VisuallyHiddenText',
+  'WakuWakuButton',
 ]
 
 /**
  * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
 const CLIENT_COMPONENTS: string[] = [
-  'AccordionPanel',        // 開閉状態のステート管理
+  'AccordionPanel',        // 開閉状態の管理
   'AccordionPanelContent', // AccordionPanelItemContext
   'AccordionPanelItem',    // AccordionPanelItemContext
   'AccordionPanelTrigger', // AccordionPanelItemContext
+  'ActionDialog',          // ダイアログ描画のためのcreatePortal
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため
   'Base',           // 見出しレベルの自動生成のため
+  'Button',         // live region を使うためのcreatePortal
   'Center',         // 見出しレベルの自動生成のため
   'Cluster',        // 見出しレベルの自動生成のため
   'Heading',        // 見出しレベルの自動生成のため
@@ -64,6 +67,8 @@ const CLIENT_COMPONENTS: string[] = [
   'Section',        // 見出しレベルの自動生成のため
   'Sidebar',        // 見出しレベルの自動生成のため
   'Stack',          // 見出しレベルの自動生成のため
+  'Tooltip',        // 開閉状態の管理
+  'Textarea',       // オートフォーカスや文字数カウントのための状態管理
 ]
 
 /**
@@ -71,7 +76,6 @@ const CLIENT_COMPONENTS: string[] = [
  * FIXME: すべての use client を付与して CLIENT_COMPONENTS に移動する
  */
 const DISABLED_COMPONENTS = [
-  'ActionDialog',
   'ActionDialogContent',
   'ActionDialogWithTrigger',
   'AppLauncher',
@@ -80,7 +84,6 @@ const DISABLED_COMPONENTS = [
   'AppNaviDropdownMenuButton',
   'BottomFixedArea',
   'BulkActionRow',
-  'Button',
   'Calendar',
   'CheckBox',
   'CurrencyInput',
@@ -129,10 +132,7 @@ const DISABLED_COMPONENTS = [
   'TabItem',
   'TableReel',
   'TdCheckbox',
-  'Textarea',
   'ThCheckbox',
-  'Tooltip',
-  'WakuWakuButton',
 ]
 
 test.describe('RSC対応コンポーネントがRSCで利用できること', () => {
