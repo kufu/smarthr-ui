@@ -1,7 +1,7 @@
 import React from 'react'
 import { ActionDialogContent } from 'smarthr-ui'
 
-import { RSCChecker } from '../components/RSCChecker';
+import { RSCChecker } from '../components/RSCChecker'
 export default function ActionDialogContentPage() {
   return (
     <>
@@ -11,7 +11,6 @@ export default function ActionDialogContentPage() {
         titleId="titleId"
         contentBgColor="white"
         actionText="actionText"
-        onClickAction={() => {}}
       />
     </>
   )

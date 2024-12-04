@@ -57,14 +57,22 @@ const CLIENT_COMPONENTS: string[] = [
   'AccordionPanelContent', // AccordionPanelItemContext
   'AccordionPanelItem',    // AccordionPanelItemContext
   'AccordionPanelTrigger', // AccordionPanelItemContext
-  'ActionDialog',          // ダイアログ描画のためのcreatePortal
+  'ActionDialog',            // ダイアログ描画のためのcreatePortal
+  'ActionDialogContent',     // ダイアログ描画のためのcreatePortal
+  'ActionDialogWithTrigger', // ダイアログ描画のためのcreatePortal
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため
   'Base',           // 見出しレベルの自動生成のため
   'Button',         // live region を使うためのcreatePortal
-  'CheckBox',       // indeterminate 状態管理のための useRef
+  'CheckBox',       // indeterminate 状態管理のためのuseRef
   'Center',         // 見出しレベルの自動生成のため
   'Cluster',        // 見出しレベルの自動生成のため
+  'Dialog',         // ダイアログ描画のためのcreatePortal
+  'DialogContent',  // ダイアログ描画のためのcreatePortal
+  'DialogCloser',   // ダイアログ開閉状態管理のためのuseContext
+  'DialogTrigger',  // ダイアログ開閉状態管理のためのuseContext
+  'DialogWrapper',  // ダイアログ開閉状態管理のためのuseState
+  'DropZone',       // 選択されたファイル保持のためのuseRef
   'Heading',        // 見出しレベルの自動生成のため
   'Nav',            // 見出しレベルの自動生成のため
   'PageHeading',    // 見出しレベルの自動生成のため
@@ -81,8 +89,6 @@ const CLIENT_COMPONENTS: string[] = [
  * FIXME: すべての use client を付与して CLIENT_COMPONENTS に移動する
  */
 const DISABLED_COMPONENTS = [
-  'ActionDialogContent',
-  'ActionDialogWithTrigger',
   'AppLauncher',
   'AppNavi',
   'AppNaviDropdown',
@@ -92,12 +98,6 @@ const DISABLED_COMPONENTS = [
   'Calendar',
   'CurrencyInput',
   'DatePicker',
-  'Dialog',
-  'DialogCloser',
-  'DialogContent',
-  'DialogTrigger',
-  'DialogWrapper',
-  'DropZone',
   'Dropdown',
   'DropdownCloser',
   'DropdownContent',
