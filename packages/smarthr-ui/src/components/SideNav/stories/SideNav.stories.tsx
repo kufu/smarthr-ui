@@ -1,55 +1,75 @@
+/* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { action } from '@storybook/addon-actions'
-import React, { ComponentProps, useState } from 'react'
+import React from 'react'
 
+import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { SideNav } from '../SideNav'
+import { SideNav, SideNavItemButtonProps } from '../SideNav'
+import { SideNavItemButton, SideNavSizeType } from '../SideNavItemButton'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-type items = ComponentProps<typeof SideNav>['items']
-
-export const SideNavItems: items = [
+export const SideNavItems: SideNavItemButtonProps[] = [
   {
     id: 'id-1',
-    title: ' one!',
+    children: 'サイドナビ1',
     isSelected: true,
   },
   {
     id: 'id-2',
-    title: 'two!',
+    children: 'サイドナビ2',
     isSelected: false,
   },
   {
     id: 'id-3',
-    title: 'three!',
+    children: 'サイドナビ3',
     isSelected: false,
-  },
-  {
-    id: 'id-4',
-    title: 'four!',
-    isSelected: false,
-    prefix: <StatusLabel>default</StatusLabel>,
-  },
-  {
-    id: 'id-5',
-    title: 'five!',
-    isSelected: false,
-    prefix: <StatusLabel type="blue">blue</StatusLabel>,
+    prefix: <StatusLabel>ラベル</StatusLabel>,
   },
 ]
+
+const _sideItems: { [key: string]: SideNavItemButtonProps[] } = {
+  notSelected: [
+    {
+      id: 'id-1',
+      title: 'サイドナビ',
+      isSelected: false,
+    },
+  ],
+  isSelected: [
+    {
+      id: 'id-1',
+      title: 'サイドナビ',
+      isSelected: true,
+    },
+  ],
+  prefix: [
+    {
+      id: 'id-1',
+      title: 'サイドナビ',
+      isSelected: false,
+      prefix: <StatusLabel>ラベル</StatusLabel>,
+    },
+  ],
+}
 
 export default {
   title: 'Navigation（ナビゲーション）/SideNav',
   component: SideNav,
   render: (args) => (
-    <div style={{ width: '200px' }}>
-      <SideNav {...args} />
-    </div>
+    <SideNav {...args}>
+      {SideNavItems.map((item) => (
+        <SideNavItemButton
+          key={item.id}
+          id={item.id}
+          isSelected={item.isSelected}
+          prefix={item.prefix}
+        >
+          {item.children}
+        </SideNavItemButton>
+      ))}
+    </SideNav>
   ),
-  args: {
-    size: 'default',
-    items: SideNavItems,
-  },
   excludeStories: ['SideNavItems'],
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -60,32 +80,44 @@ export const Playground: StoryObj<typeof SideNav> = {
   args: {},
 }
 
-export const Size: StoryObj<typeof SideNav> = {
-  args: {
-    size: 's',
+export const Items: StoryObj<typeof SideNav> = {
+  name: 'items（非推奨）',
+  argTypes: {
+    items: {
+      control: 'radio',
+      options: Object.keys(_sideItems),
+      mapping: _sideItems,
+    },
   },
+  args: {
+    items: _sideItems.notSelected,
+  },
+  render: (args) => <SideNav items={args.items} />,
+}
+
+export const Size: StoryObj<typeof SideNav> = {
+  name: 'size',
+  render: (args) => (
+    <Stack>
+      {[undefined, 'default', 's'].map((size, i) => (
+        <SideNav {...args} key={size} size={size as SideNavSizeType}>
+          {SideNavItems.map((item) => (
+            <SideNavItemButton
+              key={item.id + i}
+              id={item.id + i}
+              isSelected={item.isSelected}
+              prefix={item.prefix}
+            >
+              {item.children}
+            </SideNavItemButton>
+          ))}
+        </SideNav>
+      ))}
+    </Stack>
+  ),
 }
 
 export const OnClick: StoryObj<typeof SideNav> = {
-  render: (args) => {
-    const [selectItem, setSelectItem] = useState(SideNavItems)
-    return (
-      <div style={{ width: '200px' }}>
-        <SideNav
-          {...args}
-          items={selectItem}
-          onClick={(_, id) => {
-            setSelectItem((prevItems) =>
-              prevItems.map((item) =>
-                item.id === id ? { ...item, isSelected: true } : { ...item, isSelected: false },
-              ),
-            )
-            args.onClick?.(_, id)
-          }}
-        />
-      </div>
-    )
-  },
   args: {
     onClick: (_, id) => {
       action('clicked')(id)
