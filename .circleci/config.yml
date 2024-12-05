@@ -118,7 +118,7 @@ jobs:
   a11y-test:
     executor: node-active-lts-browsers
     working_directory: ~/repo
-    resource_class: medium
+    resource_class: medium+
     steps:
       - setup-for-test
       - install-noto-sans-cjk-jp
