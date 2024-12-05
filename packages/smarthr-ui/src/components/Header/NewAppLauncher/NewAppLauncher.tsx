@@ -1,39 +1,37 @@
-import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, { FC, ReactNode } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { AnchorButton, Button } from '../../Button'
+import { textColor } from '../../../themes'
+import { AnchorButton, Button, UnstyledButton } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
-import { FaArrowRightIcon, FaCaretDownIcon, FaStarIcon, FaToolboxIcon } from '../../Icon'
+import {
+  FaArrowRightIcon,
+  FaCaretDownIcon,
+  FaCircleXmarkIcon,
+  FaStarIcon,
+  FaToolboxIcon,
+} from '../../Icon'
 import { SearchInput } from '../../Input'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { SideNav } from '../../SideNav'
+import { Text } from '../../Text'
 
 import { SortDropdown } from './SortDropdown'
+import { Feature, Page, TEXT } from './constants'
 import { useAppLauncher } from './useAppLauncher'
 
 import type { DecoratorsType } from '../../../types'
 
-type Category = {
-  type?: string
-  heading: ReactNode
-  items: AppItem[]
-}
-type AppItem = {
-  label: ReactNode
-  url: string
-  target?: string
-}
 type Props = {
-  apps: Category[]
-  urlToShowAll?: string | null
+  /** 機能一覧 */
+  features: Feature[]
+  /** 新しいデザインを適用するかどうか */
+  enableNew?: boolean
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'triggerLabel'>
-} & VariantProps<typeof appLauncher>
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
-
-const TRIGGER_LABEL = 'アプリ'
+  decorators?: DecoratorsType<keyof typeof TEXT>
+}
 
 const appLauncher = tv({
   slots: {
@@ -70,10 +68,12 @@ const appLauncher = tv({
       'shr-min-h-[2rem] shr-py-0.75 shr-px-1',
       '[&_.smarthr-ui-Heading]:shr-text-black',
     ],
-    list: ['shr-list-none'],
+    scrollArea: ['shr-overflow-y-scroll shr-h-[509px]'],
+    list: ['shr-list-none', '[&>li]:shr-px-0.5 [&>li]:shr-py-0.25'],
+    listEmpty: ['shr-p-1 shr-text-center'],
     listItem: [
       'smarthr-ui-AppLauncher-listItem',
-      'shr-grid shr-grid-cols-[1rem_1fr_1rem] shr-gap-0.75 shr-min-h-[2.5rem] shr-px-1.5 shr-leading-tight shr-text-left shr-whitespace-nowrap',
+      'shr-grid shr-grid-cols-[1rem_1fr_1rem] shr-gap-0.75 shr-min-h-[2.5rem] shr-px-1 shr-py-0 shr-leading-tight shr-text-left shr-whitespace-nowrap',
     ],
   },
   variants: {
@@ -97,23 +97,25 @@ const appLauncher = tv({
         sideNav: ['[&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-text-grey'],
       },
     },
+    favorite: {
+      false: {
+        listItem: ['shr-grid-cols-[1fr_1rem]'],
+      },
+    },
   },
 })
 
-export const NewAppLauncher: React.FC<Props & ElementProps> = ({
-  apps,
-  urlToShowAll,
-  decorators,
-  enableNew,
-  ...props
-}) => {
-  const { hoge } = useAppLauncher()
-  console.log(hoge)
-
-  const triggerLabel = useMemo(
-    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
-    [decorators],
-  )
+export const NewAppLauncher: FC<Props> = ({ features: baseFeatures, enableNew, decorators }) => {
+  const {
+    features,
+    page,
+    mode,
+    sortType,
+    searchQuery,
+    changePage,
+    setSortType,
+    changeSearchQuery,
+  } = useAppLauncher(baseFeatures)
 
   const {
     appsButton,
@@ -126,21 +128,37 @@ export const NewAppLauncher: React.FC<Props & ElementProps> = ({
     main,
     mainInner,
     contentHead,
+    scrollArea,
     list,
+    listEmpty,
     listItem,
   } = appLauncher({
     enableNew,
   })
 
+  const pageMap: Record<Page, ReactNode> = {
+    favorite: decorators?.favoriteModeText?.(TEXT.favoriteModeText) || TEXT.favoriteModeText,
+    all: decorators?.allModeText?.(TEXT.allModeText) || TEXT.allModeText,
+  }
+  const text = {
+    triggerLabel: decorators?.triggerLabel?.(TEXT.triggerLabel) || TEXT.triggerLabel,
+    searchInputTitle:
+      decorators?.searchInputTitle?.(TEXT.searchInputTitle) || TEXT.searchInputTitle,
+    listText: decorators?.listText?.(TEXT.listText) || TEXT.listText,
+    searchResultText:
+      decorators?.searchResultText?.(TEXT.searchResultText) || TEXT.searchResultText,
+    emptyText: decorators?.emptyText?.(TEXT.emptyText) || TEXT.emptyText,
+  }
+
   return (
-    <Dropdown {...props}>
+    <Dropdown>
       <DropdownTrigger>
         <Button
           prefix={enableNew ?? <FaToolboxIcon />}
           suffix={enableNew ? <FaCaretDownIcon /> : undefined}
           className={appsButton()}
         >
-          {triggerLabel}
+          {text.triggerLabel}
         </Button>
       </DropdownTrigger>
 
@@ -148,20 +166,26 @@ export const NewAppLauncher: React.FC<Props & ElementProps> = ({
         <div className={contentWrapper()}>
           <div className={searchArea()}>
             <SearchInput
-              type="search"
               name="search"
-              title="アプリ名を入力してください。"
-              tooltipMessage="アプリ名を入力してください。"
+              title={String(text.searchInputTitle)}
+              tooltipMessage={text.searchInputTitle}
               width="100%"
-              // // value={searchQuery}
-              // suffix={
-              //   searchQuery && (
-              //     <SearchClearButton onClick={() => onChangeSearchQuery('')}>
-              //       <FaCircleXmarkIcon />
-              //     </SearchClearButton>
-              //   )
-              // }
-              // onChange={(e) => onChangeSearchQuery(e.target.value)}
+              value={searchQuery}
+              suffix={
+                mode === 'search' && (
+                  <UnstyledButton
+                    onClick={() => {
+                      // 別のキューにしないとドロップダウンが閉じてしまう
+                      setTimeout(() => {
+                        changeSearchQuery('')
+                      }, 0)
+                    }}
+                  >
+                    <FaCircleXmarkIcon />
+                  </UnstyledButton>
+                )
+              }
+              onChange={(e) => changeSearchQuery(e.target.value)}
             />
           </div>
 
@@ -173,20 +197,27 @@ export const NewAppLauncher: React.FC<Props & ElementProps> = ({
                 items={[
                   {
                     id: 'favorite',
-                    title: 'よく使うアプリ',
-                    // prefix: <FaStarIcon color={page === 'favorite' && mode !== 'search' ? theme.color.WHITE : undefined} />,
-                    prefix: <FaStarIcon />,
-                    // isSelected: page === 'favorite' && mode !== 'search',
-                    isSelected: false,
+                    title: pageMap.favorite,
+                    prefix: (
+                      <FaStarIcon
+                        color={
+                          mode !== 'search' && page === 'favorite' ? textColor.white : undefined
+                        }
+                      />
+                    ),
+                    isSelected: mode !== 'search' && page === 'favorite',
                   },
                 ]}
+                onClick={(_, id) => {
+                  changePage(id as Page)
+                }}
               />
 
               <hr />
 
               <Section>
                 <Heading className={sideNavHeading()} type="subSubBlockTitle">
-                  アプリ一覧
+                  {text.listText}
                 </Heading>
 
                 <SideNav
@@ -195,11 +226,13 @@ export const NewAppLauncher: React.FC<Props & ElementProps> = ({
                   items={[
                     {
                       id: 'all',
-                      title: 'すべてのアプリ',
-                      // isSelected: page === 'all' && mode !== 'search',
-                      isSelected: true,
+                      title: pageMap.all,
+                      isSelected: mode !== 'search' && page === 'all',
                     },
                   ]}
+                  onClick={(_, id) => {
+                    changePage(id as Page)
+                  }}
                 />
               </Section>
             </div>
@@ -207,54 +240,43 @@ export const NewAppLauncher: React.FC<Props & ElementProps> = ({
             <main className={main()}>
               <Section className={mainInner()}>
                 <Cluster className={contentHead()} align="center" justify="space-between">
-                  <Heading type="subSubBlockTitle">すべてのアプリ</Heading>
+                  <Heading type="subSubBlockTitle">
+                    {mode === 'search' ? text.searchResultText : pageMap[page]}
+                  </Heading>
 
-                  <SortDropdown />
+                  {(mode === 'search' || page === 'all') && (
+                    <SortDropdown
+                      sortType={sortType}
+                      onSelectSortType={(value) => setSortType(value)}
+                    />
+                  )}
                 </Cluster>
 
-                <ul className={list()}>
-                  <li>
-                    <AnchorButton
-                      className={listItem()}
-                      variant="text"
-                      href="https://example.com"
-                      prefix={<FaStarIcon />}
-                      suffix={<FaArrowRightIcon />}
-                      wide
-                      target="_blank"
-                    >
-                      機能1
-                    </AnchorButton>
-                  </li>
-
-                  <li>
-                    <AnchorButton
-                      className={listItem()}
-                      variant="text"
-                      href="https://example.com"
-                      prefix={<FaStarIcon />}
-                      suffix={<FaArrowRightIcon />}
-                      wide
-                      target="_blank"
-                    >
-                      機能2
-                    </AnchorButton>
-                  </li>
-
-                  <li>
-                    <AnchorButton
-                      className={listItem()}
-                      variant="text"
-                      href="https://example.com"
-                      prefix={<FaStarIcon />}
-                      suffix={<FaArrowRightIcon />}
-                      wide
-                      target="_blank"
-                    >
-                      機能3
-                    </AnchorButton>
-                  </li>
-                </ul>
+                <div className={scrollArea()}>
+                  <ul className={list()}>
+                    {features.length === 0 ? (
+                      <div className={listEmpty()}>
+                        <Text size="S">{text.emptyText}</Text>
+                      </div>
+                    ) : (
+                      features.map((feature) => (
+                        <li key={feature.id}>
+                          <AnchorButton
+                            className={listItem({ favorite: page === 'favorite' })}
+                            variant="text"
+                            href={feature.url}
+                            prefix={page === 'favorite' && <FaStarIcon />}
+                            suffix={<FaArrowRightIcon />}
+                            wide
+                            target="_blank"
+                          >
+                            {feature.name}
+                          </AnchorButton>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                </div>
               </Section>
             </main>
           </div>
