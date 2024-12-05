@@ -1,7 +1,7 @@
 import React from 'react'
 import { DropZone } from 'smarthr-ui'
 
-import { RSCChecker } from '../components/RSCChecker'
+import { RSCChecker } from '../components/RSCChecker';
 export default function DropZonePage() {
   return (
     <>
