@@ -1,7 +1,7 @@
 import React from 'react'
 import { CheckBox } from 'smarthr-ui'
 
-import { RSCChecker } from '../components/RSCChecker';
+import { RSCChecker } from '../components/RSCChecker'
 export default function CheckBoxPage() {
   return (
     <>
