@@ -1,0 +1,4 @@
+disabled: true, false
+error: true, false
+width: あり, なし
+selectedItems: 一つ, 複数, なし
