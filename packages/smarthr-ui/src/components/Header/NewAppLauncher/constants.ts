@@ -4,6 +4,7 @@ export const TEXT = {
   favoriteModeText: 'よく使うアプリ',
   allModeText: 'すべてのアプリ',
   listText: 'アプリ一覧',
+  helpText: 'よく使うアプリとは',
   searchResultText: '検索結果',
   emptyText: '該当するアプリが見つかりませんでした。',
   sortDropdownLabel: '表示順',
