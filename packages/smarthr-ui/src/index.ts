@@ -80,6 +80,7 @@ export {
   HeaderLink,
   HeaderDropdownMenuButton,
   LanguageSwitcher,
+  NewAppLauncher,
 } from './components/Header'
 export { PageCounter } from './components/PageCounter'
 export { Article, Aside, Nav, Section } from './components/SectioningContent'
