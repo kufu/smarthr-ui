@@ -61,10 +61,10 @@ const SERVER_COMPONENTS = [
  * サーバーコンポーネント内で、クライアントコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
 const CLIENT_COMPONENTS: string[] = [
-  'AccordionPanel',        // 開閉状態の管理
-  'AccordionPanelContent', // AccordionPanelItemContext
-  'AccordionPanelItem',    // AccordionPanelItemContext
-  'AccordionPanelTrigger', // AccordionPanelItemContext
+  'AccordionPanel',        // 開閉状態の管理のためのuseStateなど
+  'AccordionPanelContent', // 開いているパネル名を共有するためのuseContext
+  'AccordionPanelItem',    // 開いているパネル名を共有するためのuseContext
+  'AccordionPanelTrigger', // 開いているパネル名を共有するためのuseContext
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため
   'Base',           // 見出しレベルの自動生成のため
