@@ -103,12 +103,14 @@ commands:
 jobs:
   node-maintenance:
     executor: node-maintenance
+    resource_class: small
     steps:
       - setup-for-test
       - check-source
       - run-npm-test
   node-active-lts:
     executor: node-active-lts
+    resource_class: small
     steps:
       - setup-for-test
       - check-source
@@ -116,7 +118,7 @@ jobs:
   a11y-test:
     executor: node-active-lts-browsers
     working_directory: ~/repo
-    resource_class: medium+
+    resource_class: medium
     steps:
       - setup-for-test
       - install-noto-sans-cjk-jp
@@ -124,19 +126,19 @@ jobs:
   e2e-test:
     executor: node-active-lts-browsers
     working_directory: ~/repo
-    resource_class: large
+    resource_class: medium+
     steps:
       - setup-for-test
       - run-e2e-test
   chromatic-deployment:
     executor: node-active-lts
-    resource_class: medium+
+    resource_class: small
     steps:
       - setup-for-test
       - run-chromatic
   chromatic-deployment-master:
     executor: node-active-lts
-    resource_class: medium+
+    resource_class: small
     steps:
       - setup-for-test
       - run-chromatic-master
