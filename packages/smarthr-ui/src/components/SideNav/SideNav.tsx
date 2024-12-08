@@ -3,11 +3,16 @@ import { tv } from 'tailwind-variants'
 
 import { OnClick, SideNavItemButton, SideNavSizeType } from './SideNavItemButton'
 
-type SideNavItemButtonProps = Omit<ComponentProps<typeof SideNavItemButton>, 'size' | 'onClick'>
+export type SideNavItemButtonProps = Omit<
+  ComponentProps<typeof SideNavItemButton>,
+  'size' | 'onClick'
+>
 
 type Props = {
-  /** 各アイテムのデータの配列 */
-  items: SideNavItemButtonProps[]
+  /** 各アイテムのデータの配列
+   * @deprecated SideNavItemButton を使ってください
+   */
+  items?: SideNavItemButtonProps[]
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
@@ -26,23 +31,37 @@ export const SideNav: FC<Props & ElementProps> = ({
   size = 'default',
   onClick,
   className,
+  children,
   ...props
 }) => {
   const styles = useMemo(() => sideNav({ className }), [className])
 
   return (
     <ul {...props} className={styles}>
-      {items.map((item) => (
-        <SideNavItemButton
-          id={item.id}
-          title={item.title}
-          prefix={item.prefix}
-          isSelected={item.isSelected}
-          size={size}
-          key={item.id}
-          onClick={onClick}
-        />
-      ))}
+      {items &&
+        items.map((item) => (
+          <SideNavItemButton
+            id={item.id}
+            title={item.title}
+            prefix={item.prefix}
+            isSelected={item.isSelected}
+            size={size}
+            key={item.id}
+            onClick={onClick}
+          />
+        ))}
+      {React.Children.map(
+        children,
+        (child) =>
+          React.isValidElement(child) &&
+          React.cloneElement(
+            child as React.ReactElement<ComponentPropsWithoutRef<typeof SideNavItemButton>>,
+            {
+              onClick,
+              size,
+            },
+          ),
+      )}
     </ul>
   )
 }
