@@ -15,8 +15,9 @@ export type Props = PropsWithChildren<
 type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
 export const Td: FC<Props & ElementProps> = ({
-  align = 'left',
-  nullable = false,
+  align,
+  vAlign,
+  nullable,
   fixed = false,
   contentWidth,
   className,
@@ -24,7 +25,7 @@ export const Td: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const styleProps = useMemo(() => {
-    const tdStyles = td({ align, nullable, fixed, className })
+    const tdStyles = td({ align, vAlign, nullable, fixed, className })
     const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
     return {
       className: `${tdStyles} ${reelShadowStyles}`.trim(),
@@ -33,7 +34,7 @@ export const Td: FC<Props & ElementProps> = ({
         ...getWidthStyle(contentWidth),
       },
     }
-  }, [align, className, contentWidth, fixed, nullable, style])
+  }, [align, className, contentWidth, fixed, nullable, style, vAlign])
 
   return <td {...props} {...styleProps} />
 }
@@ -41,12 +42,24 @@ export const Td: FC<Props & ElementProps> = ({
 const td = tv({
   base: [
     'smarthr-ui-Td',
-    'shr-border-t-shorthand shr-h-[calc(1em_*_theme(lineHeight.normal))] shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black',
+    'shr-border-solid shr-border-0 shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black shr-h-[calc(1em_*_theme(lineHeight.normal))]',
+    [
+      '[.shr-table-border-horizontal_&]:shr-border-t',
+      '[.shr-table-border-horizontal_&]:shr-border-t-default',
+    ],
+    [
+      '[.shr-table-border-vertical_&+&]:shr-border-l',
+      '[.shr-table-border-vertical_&+&]:shr-border-l-default',
+    ],
   ],
   variants: {
     align: {
       left: '',
       right: 'shr-text-right',
+    },
+    vAlign: {
+      middle: '',
+      baseline: 'shr-align-baseline',
     },
     nullable: {
       true: "empty:after:shr-content-['-----']",
@@ -57,6 +70,11 @@ const td = tv({
         '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:shr-bg-white [&.fixed]:after:shr-opacity-100',
       ],
     },
+  },
+  defaultVariants: {
+    align: 'left',
+    vAlign: 'middle',
+    nullable: false,
   },
 })
 
