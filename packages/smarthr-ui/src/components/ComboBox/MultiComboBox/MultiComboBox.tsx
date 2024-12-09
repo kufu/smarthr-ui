@@ -13,19 +13,19 @@ import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { useOuterClick } from '../../hooks/useOuterClick'
-import { genericsForwardRef } from '../../libs/util'
-import { textColor } from '../../themes'
-import { FaCaretDownIcon } from '../Icon'
+import { useOuterClick } from '../../../hooks/useOuterClick'
+import { genericsForwardRef } from '../../../libs/util'
+import { textColor } from '../../../themes'
+import { FaCaretDownIcon } from '../../Icon'
+import { useFocusControl } from '../useFocusControl'
+import { useListBox } from '../useListBox'
+import { useOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
-import { useFocusControl } from './useFocusControl'
-import { useListBox } from './useListBox'
-import { useOptions } from './useOptions'
 
-import type { BaseProps, ComboBoxItem } from './types'
-import type { DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../../types'
+import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
   /**
