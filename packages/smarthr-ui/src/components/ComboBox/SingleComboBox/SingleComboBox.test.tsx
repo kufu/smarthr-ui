@@ -2,7 +2,7 @@ import { userEvent } from '@storybook/test'
 import { render, screen } from '@testing-library/react'
 import React, { ComponentProps, act } from 'react'
 
-import { FormControl } from '../FormControl'
+import { FormControl } from '../../FormControl'
 
 import { SingleComboBox } from './SingleComboBox'
 
