@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ComponentProps, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
