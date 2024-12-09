@@ -1,3 +1,5 @@
+'use client'
+
 import React, { type FC, type PropsWithChildren, type ReactNode, useCallback } from 'react'
 
 import { Button } from '../../Button'
