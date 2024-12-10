@@ -1,3 +1,5 @@
+'use client'
+
 import React, { FC, PropsWithChildren, useCallback, useEffect, useId, useState } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 

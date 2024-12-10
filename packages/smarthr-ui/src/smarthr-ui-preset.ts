@@ -465,6 +465,10 @@ export default {
         input: {
           paddingInline: 'unset',
         },
+        'input[type=search]': {
+          appearance: 'none',
+          boxSizing: 'unset',
+        },
         textarea: {
           marginInline: 'unset',
         },
