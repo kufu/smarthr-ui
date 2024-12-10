@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [62.2.0](https://github.com/kufu/smarthr-ui/compare/v62.1.1...v62.2.0) (2024-12-10)
+
+
+### Features
+
+* Browserコンポーネントを実装 ([#5125](https://github.com/kufu/smarthr-ui/issues/5125)) ([b1a1bc6](https://github.com/kufu/smarthr-ui/commit/b1a1bc62e83d8bfa5b47cde6c4695405f362f00a))
+* ほぼすべてのコンポーネントをサーバーコンポーネント内で利用できるようにする ([#5167](https://github.com/kufu/smarthr-ui/issues/5167)) ([69d74c4](https://github.com/kufu/smarthr-ui/commit/69d74c4df1a74580b2ddb4475cef7c77f4ded7dd))
+
+
+### Bug Fixes
+
+* declarationsが空配列の場合も後続の処理をスキップする ([#5182](https://github.com/kufu/smarthr-ui/issues/5182)) ([fd654f3](https://github.com/kufu/smarthr-ui/commit/fd654f30ad0e722e53068d625a2682953b50f36e))
+* **DropdownMenuButton:** ボタンリストの装飾適用条件を緩和 ([#5154](https://github.com/kufu/smarthr-ui/issues/5154)) ([fe67ad9](https://github.com/kufu/smarthr-ui/commit/fe67ad9695fa2befd7e42cf2dd20b8d60824d7ea))
+* **DropdownMenuGroup:** オーバーライド用のクラス名を追加 ([#5162](https://github.com/kufu/smarthr-ui/issues/5162)) ([1463828](https://github.com/kufu/smarthr-ui/commit/14638281b99c49c3df88415afc6c61ab7655ec7a))
+* input[type=search] のスタイルを normalize ([#5172](https://github.com/kufu/smarthr-ui/issues/5172)) ([34ab280](https://github.com/kufu/smarthr-ui/commit/34ab280a538e0796c77840bd205421c432d5e270))
+
 ### [62.1.1](https://github.com/kufu/smarthr-ui/compare/v62.1.0...v62.1.1) (2024-12-03)
 
 
