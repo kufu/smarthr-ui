@@ -33,8 +33,8 @@
       "@babel/helper-compilation-targets": "^7.25.9",
       "@types/react": "^18.3.14",
       "minimist": "1.2.8",
-      "react": "^18.3.1",
-      "react-dom": "^18.3.1",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0",
       "micromatch@<4.0.8": ">=4.0.8",
       "cross-spawn@<7.0.5": ">=7.0.5"
     }

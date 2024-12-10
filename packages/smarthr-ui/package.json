@@ -69,11 +69,11 @@
     "postcss-loader": "^8.1.1",
     "postcss-styled-syntax": "^0.7.0",
     "postcss-syntax": "^0.36.2",
-    "react": "^18.3.1",
+    "react": "^19.0.0",
     "react-docgen-typescript": "^2.2.2",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.0.0",
     "react-ga4": "^2.1.0",
-    "react-test-renderer": "^18.3.1",
+    "react-test-renderer": "^19.0.0",
     "rimraf": "^6.0.1",
     "standard-version": "^9.3.2",
     "storybook": "^8.4.7",
@@ -88,8 +88,8 @@
     "webpack": "^5.97.1"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
     "styled-components": "^5.0.1"
   },
   "bugs": {
