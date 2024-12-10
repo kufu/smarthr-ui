@@ -45,7 +45,7 @@
     "@types/lodash.range": "^3.2.9",
     "@types/node": "^20.17.9",
     "@types/react": "^18.3.14",
-    "@types/react-dom": "^18.3.2",
+    "@types/react-dom": "^19.0.2",
     "@types/react-test-renderer": "^19.0.0",
     "@types/react-transition-group": "^4.4.11",
     "@types/styled-components": "^5.1.34",
