@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
+import { Text } from '../../../Text'
 import { SingleComboBox } from '../SingleComboBox'
 
 // eslint-disable-next-line storybook/prefer-pascal-case
@@ -103,6 +104,14 @@ export default {
       control: 'radio',
       options: Object.keys(prefixes),
       mapping: prefixes,
+    },
+    dropdownHelpMessage: {
+      control: { type: 'select' },
+      options: ['文字列', 'ReactNode'],
+      mapping: {
+        文字列: 'ヘルプメッセージ',
+        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
+      },
     },
   },
   parameters: {
