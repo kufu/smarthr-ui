@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ComponentPropsWithRef } from 'react'
 import { type FC, type MouseEventHandler } from 'react'
 

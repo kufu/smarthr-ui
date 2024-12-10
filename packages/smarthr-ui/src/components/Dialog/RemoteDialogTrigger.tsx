@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ReactElement, cloneElement, useCallback, useMemo } from 'react'
 
 import { Button } from '../Button'

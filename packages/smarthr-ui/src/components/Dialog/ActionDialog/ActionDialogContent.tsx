@@ -1,3 +1,5 @@
+'use client'
+
 import React, { HTMLAttributes, useCallback, useContext, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'

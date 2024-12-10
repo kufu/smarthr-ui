@@ -1,3 +1,5 @@
+'use client'
+
 import React, { PropsWithChildren, createContext, useState } from 'react'
 
 type DialogContextType = {

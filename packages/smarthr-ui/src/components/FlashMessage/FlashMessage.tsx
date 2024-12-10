@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ComponentPropsWithoutRef, FC, ReactNode, useEffect, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 

@@ -1,3 +1,5 @@
+'use client'
+
 import React, { PropsWithChildren, useContext } from 'react'
 
 import { DialogContentContext } from './DialogContent'
