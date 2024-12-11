@@ -9,7 +9,7 @@ import { SideNavItemButton, SideNavSizeType } from '../SideNavItemButton'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-export const SideNavItems: SideNavItemButtonProps[] = [
+export const _sideNavItems: SideNavItemButtonProps[] = [
   {
     id: 'id-1',
     children: 'サイドナビ1',
@@ -28,49 +28,34 @@ export const SideNavItems: SideNavItemButtonProps[] = [
   },
 ]
 
-const _sideItems: { [key: string]: SideNavItemButtonProps[] } = {
-  notSelected: [
-    {
-      id: 'id-1',
-      title: 'サイドナビ',
-      isSelected: false,
-    },
-  ],
-  isSelected: [
-    {
-      id: 'id-1',
-      title: 'サイドナビ',
-      isSelected: true,
-    },
-  ],
-  prefix: [
-    {
-      id: 'id-1',
-      title: 'サイドナビ',
-      isSelected: false,
-      prefix: <StatusLabel>ラベル</StatusLabel>,
-    },
-  ],
-}
-
 export default {
   title: 'Navigation（ナビゲーション）/SideNav',
   component: SideNav,
-  render: (args) => (
-    <SideNav {...args}>
-      {SideNavItems.map((item) => (
-        <SideNavItemButton
-          key={item.id}
-          id={item.id}
-          isSelected={item.isSelected}
-          prefix={item.prefix}
-        >
-          {item.children}
-        </SideNavItemButton>
-      ))}
-    </SideNav>
-  ),
-  excludeStories: ['SideNavItems'],
+  argTypes: {
+    items: {
+      control: false,
+    },
+  },
+  render: (args) => {
+    const { items, ...props } = args
+    return items ? (
+      <SideNav {...props} items={items} />
+    ) : (
+      <SideNav {...props}>
+        {_sideNavItems.map((item) => (
+          <SideNavItemButton
+            key={item.id}
+            id={item.id}
+            isSelected={item.isSelected}
+            prefix={item.prefix}
+          >
+            {item.children}
+          </SideNavItemButton>
+        ))}
+      </SideNav>
+    )
+  },
+  excludeStories: ['_sideNavItems'],
   parameters: {
     chromatic: { disableSnapshot: true },
   },
@@ -84,15 +69,31 @@ export const Items: StoryObj<typeof SideNav> = {
   name: 'items（非推奨）',
   argTypes: {
     items: {
-      control: 'radio',
-      options: Object.keys(_sideItems),
-      mapping: _sideItems,
+      control: { disable: false, type: 'object' },
     },
   },
   args: {
-    items: _sideItems.notSelected,
+    items: [
+      {
+        id: 'id-1',
+        title: 'サイドナビ1',
+        isSelected: false,
+      },
+
+      {
+        id: 'id-2',
+        title: 'サイドナビ2',
+        isSelected: true,
+      },
+
+      {
+        id: 'id-3',
+        title: 'サイドナビ3',
+        isSelected: false,
+        prefix: <StatusLabel>ラベル</StatusLabel>,
+      },
+    ],
   },
-  render: (args) => <SideNav items={args.items} />,
 }
 
 export const Size: StoryObj<typeof SideNav> = {
@@ -100,8 +101,8 @@ export const Size: StoryObj<typeof SideNav> = {
   render: (args) => (
     <Stack>
       {[undefined, 'default', 's'].map((size, i) => (
-        <SideNav {...args} key={size} size={size as SideNavSizeType}>
-          {SideNavItems.map((item) => (
+        <SideNav {...args} key={i} size={size as SideNavSizeType}>
+          {_sideNavItems.map((item) => (
             <SideNavItemButton
               key={item.id + i}
               id={item.id + i}
@@ -118,15 +119,10 @@ export const Size: StoryObj<typeof SideNav> = {
 }
 
 export const OnClick: StoryObj<typeof SideNav> = {
+  name: 'onClick',
   args: {
     onClick: (_, id) => {
       action('clicked')(id)
     },
-  },
-}
-
-export const ClassName = {
-  args: {
-    className: 'shr-bg-white',
   },
 }

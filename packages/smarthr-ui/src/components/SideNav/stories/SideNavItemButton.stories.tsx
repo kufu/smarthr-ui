@@ -10,7 +10,11 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Navigation（ナビゲーション）/SideNav/SideNavItemButton',
   component: SideNavItemButton,
-  render: (args) => <SideNavItemButton {...args}>サイドナビ</SideNavItemButton>,
+  render: (args) => (
+    <ul>
+      <SideNavItemButton {...args}>サイドナビ</SideNavItemButton>
+    </ul>
+  ),
   argTypes: {
     id: { control: 'text' },
     isSelected: { control: 'boolean' },
@@ -23,6 +27,12 @@ export default {
     id: 'id-1',
   },
   parameters: {
+    docs: {
+      source: {
+        transform: (code: string) =>
+          code.replace(/<ul>|<\/ul>|<Stack as="ul">|<\/Stack>/g, '').trim(),
+      },
+    },
     chromatic: { disableSnapshot: true },
   },
   tags: ['skip-test-runner'],
@@ -56,9 +66,9 @@ export const Selected: StoryObj<typeof SideNavItemButton> = {
 export const Size: StoryObj<typeof SideNavItemButton> = {
   name: 'size',
   render: (args) => (
-    <Stack>
+    <Stack as="ul">
       {[undefined, 'default', 's'].map((size, i) => (
-        <SideNavItemButton {...args} id={i.toString()} key={size} size={size as SideNavSizeType}>
+        <SideNavItemButton {...args} id={i.toString()} key={i} size={size as SideNavSizeType}>
           サイドナビ{i + 1}
         </SideNavItemButton>
       ))}
