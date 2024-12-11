@@ -30,7 +30,7 @@ glob(SRC_PATH).then(
         const propItem = props[name]
         const declarations = propItem.declarations
 
-        if (!declarations) {
+        if (!declarations || declarations.length === 0) {
           return propItem
         }
 
