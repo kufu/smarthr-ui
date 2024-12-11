@@ -17,8 +17,6 @@ type Props = {
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: OnClick
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
 
@@ -50,18 +48,20 @@ export const SideNav: FC<Props & ElementProps> = ({
             onClick={onClick}
           />
         ))}
-      {React.Children.map(
-        children,
-        (child) =>
-          React.isValidElement(child) &&
-          React.cloneElement(
-            child as React.ReactElement<ComponentPropsWithoutRef<typeof SideNavItemButton>>,
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          const childProps = child.props as ComponentPropsWithoutRef<typeof SideNavItemButton>
+
+          return React.cloneElement(
+            child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
             {
-              onClick,
               size,
+              ...(childProps.onClick ? {} : { onClick }),
             },
-          ),
-      )}
+          )
+        }
+        return child
+      })}
     </ul>
   )
 }
