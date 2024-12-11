@@ -93,7 +93,7 @@ export const EmptyTableBody: React.FC<Props & ElementProps> = ({ children, paddi
     <tbody {...props} ref={countHeadCellRef}>
       <tr>
         <Td colSpan={count} className={tdStyles}>
-          <Center>{children}</Center>
+          <Center className="shr-text-center">{children}</Center>
         </Td>
       </tr>
     </tbody>
