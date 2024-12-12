@@ -3,8 +3,6 @@
 import React, { ComponentPropsWithRef, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Center } from '../Layout'
-
 import { Td } from './Td'
 import { useTableHeadCellCount } from './useTableHeadCellCount'
 
