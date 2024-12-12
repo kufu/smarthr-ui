@@ -19,7 +19,7 @@ type Props = PropsWithChildren<{
 type ElementProps = Omit<ComponentPropsWithRef<'tbody'>, keyof Props>
 
 const emptyTableBodyCell = tv({
-  base: '',
+  base: 'shr-text-center',
   variants: {
     paddingBlock: {
       0: 'shr-py-0',
@@ -93,7 +93,7 @@ export const EmptyTableBody: React.FC<Props & ElementProps> = ({ children, paddi
     <tbody {...props} ref={countHeadCellRef}>
       <tr>
         <Td colSpan={count} className={tdStyles}>
-          <Center className="shr-text-center">{children}</Center>
+          {children}
         </Td>
       </tr>
     </tbody>
