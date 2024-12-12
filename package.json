@@ -31,7 +31,7 @@
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.9",
-      "@types/react": "^18.3.14",
+      "@types/react": "^18.3.16",
       "minimist": "1.2.8",
       "react": "^19.0.0",
       "react-dom": "^19.0.0",
