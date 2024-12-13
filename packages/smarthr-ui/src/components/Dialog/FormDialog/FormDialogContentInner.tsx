@@ -89,7 +89,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={wrapper()}>
+    <Section className={wrapper({ className: 'shr-flex shr-flex-col' })}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <form onSubmit={handleSubmitAction} className={form()}>
         <div className={contentWrapper()}>
