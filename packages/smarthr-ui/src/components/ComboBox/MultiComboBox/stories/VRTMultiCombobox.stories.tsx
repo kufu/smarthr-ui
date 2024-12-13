@@ -7,7 +7,7 @@ import { Stack } from '../../../Layout'
 import { ComboBoxItem } from '../../types'
 import { MultiComboBox } from '../MultiComboBox'
 
-import { defaultItems } from './MultiCombobox.stories'
+import { defaultItems } from './MultiComboBox.stories'
 
 /*
  * pict multiComboBox.pict

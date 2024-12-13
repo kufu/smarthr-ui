@@ -1,4 +1,5 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
+import { useArgs } from '@storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 
@@ -54,6 +55,26 @@ export const defaultItems = {
 export default {
   title: 'Forms（フォーム）/MultiComboBox',
   component: MultiComboBox,
+  render: (args) => {
+    const [_, setArgs] = useArgs()
+    return (
+      <MultiComboBox
+        {...args}
+        onDelete={(item) =>
+          setArgs({
+            selectedItems: args.selectedItems.filter(
+              (selectedItem) => selectedItem.value !== item.value,
+            ),
+          })
+        }
+        onSelect={(item) =>
+          setArgs({
+            selectedItems: [...args.selectedItems, item],
+          })
+        }
+      />
+    )
+  },
   args: {
     items: Object.values(defaultItems),
     selectedItems: [],
@@ -68,7 +89,7 @@ export default {
     },
   },
   excludeStories: ['defaultItems'],
-} as Meta<typeof MultiComboBox>
+} as Meta<typeof MultiComboBox<{ option: string }>>
 
 export const Playground: StoryObj<typeof MultiComboBox> = {}
 
