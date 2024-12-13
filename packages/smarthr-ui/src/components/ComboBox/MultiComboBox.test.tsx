@@ -5,9 +5,8 @@ import React, { ComponentProps, act } from 'react'
 import { FormControl } from '../FormControl'
 
 import { MultiComboBox } from './MultiComboBox'
-import { SingleComboBox } from './SingleComboBox'
 
-describe('SingleComboBox', () => {
+describe('MultiComboBox', () => {
   beforeEach(() => {
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
       cb(0)
@@ -298,5 +297,35 @@ describe('SingleComboBox', () => {
 
     // Backspace によって削除した末尾アイテムはテキスト化されること
     expect(combobox()).toHaveValue('option 2')
+  })
+
+  it('選択済みのアイテムをクリックしてもアイテムが追加されないこと', async () => {
+    const onSelect = vi.fn()
+    render(template({ onSelect }))
+
+    // コンボボックスをクリックしてリストボックスを表示
+    await act(() => userEvent.click(combobox()))
+
+    // 選択中のアイテムをクリックしても onSelect が呼ばれないこと
+    await act(() => userEvent.click(screen.getByRole('option', { name: 'option 1' })))
+    expect(onSelect).not.toHaveBeenCalled()
+  })
+
+  it('labelにJSX Elementを渡した場合、選択済みのアイテムをクリックしてもアイテムが追加されないこと', async () => {
+    const onSelect = vi.fn()
+    render(
+      template({
+        onSelect,
+        items: [{ label: <>option 1</>, value: 'value-1' }],
+        selectedItems: [{ label: <>option 1</>, value: 'value-1' }],
+      }),
+    )
+
+    // コンボボックスをクリックしてリストボックスを表示
+    await act(() => userEvent.click(combobox()))
+
+    // 選択中のアイテムをクリックしても onSelect が呼ばれないこと
+    await act(() => userEvent.click(screen.getByRole('option', { name: 'option 1' })))
+    expect(onSelect).not.toHaveBeenCalled()
   })
 })
