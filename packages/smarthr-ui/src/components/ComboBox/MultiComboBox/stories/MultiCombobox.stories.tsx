@@ -4,6 +4,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 
 import { Stack } from '../../../Layout'
+import { Text } from '../../../Text'
 import { MultiComboBox } from '../MultiComboBox'
 
 // eslint-disable-next-line storybook/prefer-pascal-case
@@ -82,6 +83,14 @@ export default {
   argTypes: {
     items: { control: 'object' },
     selectedItems: { control: 'object' },
+    dropdownHelpMessage: {
+      control: { type: 'select' },
+      options: ['文字列', 'ReactNode'],
+      mapping: {
+        文字列: 'ヘルプメッセージ',
+        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
+      },
+    },
   },
   parameters: {
     parameters: {
