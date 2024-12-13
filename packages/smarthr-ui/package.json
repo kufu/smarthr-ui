@@ -32,6 +32,7 @@
     "@storybook/blocks": "^8.4.7",
     "@storybook/cli": "^8.4.7",
     "@storybook/manager-api": "^8.4.7",
+    "@storybook/preview-api": "^8.4.7",
     "@storybook/react": "^8.4.7",
     "@storybook/react-webpack5": "^8.4.7",
     "@storybook/source-loader": "^8.4.7",
