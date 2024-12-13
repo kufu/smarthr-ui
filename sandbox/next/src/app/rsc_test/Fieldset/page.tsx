@@ -5,7 +5,7 @@ import { RSCChecker } from '../components/RSCChecker';
 export default function FieldSetPage() {
   return (
     <>
-      <div>Success: FieldSet</div>
+      <RSCChecker actualComponent={Fieldset} />
       <Fieldset title="title" />
     </>
   )

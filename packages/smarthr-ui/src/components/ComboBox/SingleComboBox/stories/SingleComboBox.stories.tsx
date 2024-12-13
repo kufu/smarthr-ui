@@ -1,9 +1,11 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
+import { useArgs } from '@storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 import React, { useState } from 'react'
 
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
+import { Text } from '../../../Text'
 import { SingleComboBox } from '../SingleComboBox'
 
 // eslint-disable-next-line storybook/prefer-pascal-case
@@ -12,34 +14,45 @@ export const defaultItems = {
     label: 'option 1',
     value: 'value-1',
     data: {
-      name: 'test',
-      age: 23,
+      option: 'option 1',
     },
   },
   'option 2': {
     label: 'option 2',
     value: 'value-2',
     data: {
-      name: 'test 2',
-      age: 34,
+      option: 'option 2',
     },
   },
   'option 3': {
     label: 'option 3',
     value: 'value-3',
     disabled: true,
+    data: {
+      option: 'option 3',
+    },
   },
   'option 4': {
     label: 'option 4',
     value: 'value-4',
+    data: {
+      option: 'option 4',
+    },
   },
   'option 5': {
     label: 'option 5',
     value: 'value-5',
+    data: {
+      option: 'option 5',
+    },
   },
   'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）': {
     label: 'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
     value: 'value-6',
+    data: {
+      option:
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
+    },
   },
   アイテムのラベルがReactNodeの場合: {
     label: (
@@ -49,6 +62,9 @@ export const defaultItems = {
       </Stack>
     ),
     value: 'value-7',
+    data: {
+      option: 'アイテムのラベルがReactNodeの場合',
+    },
   },
 }
 
@@ -58,6 +74,16 @@ export const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
 export default {
   title: 'Forms（フォーム）/SingleComboBox',
   component: SingleComboBox,
+  render: (args) => {
+    const [, setArgs] = useArgs()
+    return (
+      <SingleComboBox
+        {...args}
+        onClearClick={() => setArgs({ selectedItem: null })}
+        onSelect={(item) => setArgs({ selectedItem: item.data?.option })}
+      />
+    )
+  },
   args: {
     items: Object.values(defaultItems),
     selectedItem: null,
@@ -79,12 +105,20 @@ export default {
       options: Object.keys(prefixes),
       mapping: prefixes,
     },
+    dropdownHelpMessage: {
+      control: { type: 'select' },
+      options: ['文字列', 'ReactNode'],
+      mapping: {
+        文字列: 'ヘルプメッセージ',
+        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
+      },
+    },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['defaultItems', 'prefixes'],
-} as Meta<typeof SingleComboBox>
+} as Meta<typeof SingleComboBox<{ option: string }>>
 
 export const Playground: StoryObj<typeof SingleComboBox> = {}
 

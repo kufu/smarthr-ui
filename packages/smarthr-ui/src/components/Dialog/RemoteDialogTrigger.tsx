@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ReactElement, cloneElement, useCallback, useMemo } from 'react'
 
 import { Button } from '../Button'
@@ -18,7 +20,7 @@ export const RemoteDialogTrigger: React.FC<
     onClick?: (open: () => void) => void
     children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls' | 'variant'>
   }
-> = ({ targetId, children, onClick, variant }) => {
+> = ({ targetId, children, onClick, variant, ...rest }) => {
   const actualOnClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       if (onClick) {
@@ -38,8 +40,9 @@ export const RemoteDialogTrigger: React.FC<
         'aria-haspopup': 'true',
         'aria-controls': targetId,
         variant,
+        ...rest,
       }),
-    [children, variant, targetId, actualOnClick],
+    [children, actualOnClick, targetId, variant, rest],
   )
 
   return actualTrigger

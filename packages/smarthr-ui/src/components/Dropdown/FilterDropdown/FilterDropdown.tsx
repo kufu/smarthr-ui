@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
@@ -15,7 +17,7 @@ import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../.
 
 type Props = {
   isFiltered?: boolean
-  onApply: React.FormEventHandler<HTMLFormElement>
+  onApply: React.MouseEventHandler<HTMLButtonElement>
   onCancel?: React.MouseEventHandler<HTMLButtonElement>
   onReset?: React.MouseEventHandler<HTMLButtonElement>
   onOpen?: () => void
@@ -37,6 +39,10 @@ const CANCEL_BUTTON_TEXT = 'キャンセル'
 const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 
 const CONTROL_CLUSTER_GAP: React.ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
+
+const ON_SUBMIT = (e: React.FormEvent) => {
+  e.preventDefault()
+}
 
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
@@ -161,7 +167,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <form onSubmit={onApply}>
+        <form onSubmit={ON_SUBMIT}>
           <div className={innerStyle}>{children}</div>
           <Stack gap={0.5} className={actionAreaStyle}>
             <Cluster gap={1} align="center" justify="space-between">
@@ -191,8 +197,8 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                 </DropdownCloser>
                 <DropdownCloser>
                   <Button
-                    type="submit"
                     variant="primary"
+                    onClick={onApply}
                     loading={calcedResponseStatus.isRequestProcessing}
                   >
                     {texts.applyButton}

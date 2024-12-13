@@ -72,9 +72,6 @@ jobs:
       - name: Send message to Slack
         uses: slackapi/slack-github-action@v2.0.0
         with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           payload: |
-            {
-              "text": "<!subteam^S01RJL6PHJ8> npm publish が完了しました。Release Pull Request を手動でマージしたらリリース完了です。"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            text: "<!subteam^S01RJL6PHJ8> npm publish が完了しました。Release Pull Request を手動でマージしたらリリース完了です。"

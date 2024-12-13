@@ -1,3 +1,5 @@
+'use client'
+
 import React, { ComponentPropsWithRef, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -68,13 +70,13 @@ const emptyTableBodyCell = tv({
       X3L: 'shr-px-4',
     } as { [key in Gap]: string },
   },
+  defaultVariants: {
+    paddingBlock: 4,
+    paddingInline: 4,
+  },
 })
 
-export const EmptyTableBody: React.FC<Props & ElementProps> = ({
-  children,
-  padding = 4,
-  ...props
-}) => {
+export const EmptyTableBody: React.FC<Props & ElementProps> = ({ children, padding, ...props }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
   const tdStyles = useMemo(() => {

@@ -2,6 +2,7 @@ import { userEvent, within } from '@storybook/test'
 import React, { ComponentProps } from 'react'
 
 import { AnchorButton, Button } from '../../../Button'
+import { RemoteDialogTrigger } from '../../../Dialog'
 import { FaGearIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { DropdownMenuButton } from '../DropdownMenuButton'
@@ -43,7 +44,9 @@ export default {
               操作2
             </Button>
           </DropdownMenuGroup>
-          <Button>操作3</Button>
+          <RemoteDialogTrigger targetId="remote-dialog">
+            <Button>操作3</Button>
+          </RemoteDialogTrigger>
           <DropdownMenuGroup name="グループ2">
             <AnchorButton href="#">操作4</AnchorButton>
             <AnchorButton href="#">操作5</AnchorButton>

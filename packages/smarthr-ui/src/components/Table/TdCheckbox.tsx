@@ -1,50 +1,39 @@
-import React, { ReactNode, forwardRef, useMemo } from 'react'
+import React, { ComponentProps, PropsWithChildren, forwardRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
-import { Center } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
 
-type Props = {
+type Props = PropsWithChildren<{
   /** 値を特定するための行 id */
   'aria-labelledby': string
-  /** aria-labelledby では特定できない場合に補足するための不可視ラベル */
-  children?: ReactNode
-}
+}> &
+  Pick<ComponentProps<typeof Td>, 'vAlign'>
 
 const tdCheckbox = tv({
   slots: {
-    inner: 'shr-absolute shr-inset-0 [&:not(:has([disabled]))]:shr-cursor-pointer',
-    wrapper: 'shr-relative shr-w-[theme(fontSize.base)] [&]:shr-p-0.75',
-    checkbox: '[&]:shr-block',
+    inner: [
+      'shr-flex shr-justify-center shr-py-0.75 shr-px-1',
+      '[&:not(:has([disabled]))]:shr-cursor-pointer',
+    ],
+    wrapper: 'shr-p-0 shr-w-[theme(fontSize.base)]',
+    checkbox: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
   },
 })
 
 export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
-  ({ 'aria-labelledby': ariaLabelledby, children, className, ...others }, ref) => {
-    const { wrapperStyle, innerStyle, checkboxStyle } = useMemo(() => {
-      const { wrapper, inner, checkbox } = tdCheckbox()
-      return {
-        wrapperStyle: wrapper({ className }),
-        innerStyle: inner(),
-        checkboxStyle: checkbox(),
-      }
-    }, [className])
+  ({ vAlign, 'aria-labelledby': ariaLabelledby, children, className, ...others }, ref) => {
+    const { wrapper, inner, checkbox } = tdCheckbox()
 
     return (
       // Td に必要な属性やイベントは不要
-      <Td className={wrapperStyle}>
-        <Center as="label" verticalCentering className={innerStyle}>
-          <CheckBox
-            {...others}
-            ref={ref}
-            aria-labelledby={ariaLabelledby}
-            className={checkboxStyle}
-          />
+      <Td vAlign={vAlign} className={wrapper({ className })}>
+        <label className={inner()}>
+          <CheckBox {...others} ref={ref} aria-labelledby={ariaLabelledby} className={checkbox()} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
-        </Center>
+        </label>
       </Td>
     )
   },
