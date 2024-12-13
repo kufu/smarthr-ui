@@ -5,6 +5,7 @@ import React, {
   type ReactNode,
   useCallback,
 } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
@@ -46,6 +47,13 @@ export type FormDialogContentInnerProps = BaseProps & {
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
 
+const formDialogContentInner = tv({
+  slots: {
+    form: 'shr-overflow-y-auto shr-flex-auto shr-flex shr-flex-col',
+    contentWrapper: 'shr-overflow-y-auto shr-flex-auto',
+  },
+})
+
 export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   children,
   title,
@@ -77,47 +85,48 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+  const { form, contentWrapper } = formDialogContentInner()
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section>
+    <Section className={wrapper()}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
-      <form onSubmit={handleSubmitAction}>
-        <div className={wrapper()}>
+      <form onSubmit={handleSubmitAction} className={form()}>
+        <div className={contentWrapper()}>
           <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
             {children}
           </DialogBody>
-          <Stack gap={0.5} className={actionArea()}>
-            <Cluster justify="space-between">
-              {subActionArea}
-              <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
-                <Button
-                  onClick={onClickClose}
-                  disabled={closeDisabled || isRequestProcessing}
-                  className="smarthr-ui-Dialog-closeButton"
-                >
-                  {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-                </Button>
-                <Button
-                  type="submit"
-                  variant={actionTheme}
-                  disabled={actionDisabled}
-                  loading={isRequestProcessing}
-                  className="smarthr-ui-Dialog-actionButton"
-                >
-                  {actionText}
-                </Button>
-              </Cluster>
-            </Cluster>
-            {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-              <div className={message()}>
-                <ResponseMessage type={responseMessage.status} role="alert">
-                  {responseMessage.text}
-                </ResponseMessage>
-              </div>
-            )}
-          </Stack>
         </div>
+        <Stack gap={0.5} className={actionArea()}>
+          <Cluster justify="space-between">
+            {subActionArea}
+            <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
+              <Button
+                onClick={onClickClose}
+                disabled={closeDisabled || isRequestProcessing}
+                className="smarthr-ui-Dialog-closeButton"
+              >
+                {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+              </Button>
+              <Button
+                type="submit"
+                variant={actionTheme}
+                disabled={actionDisabled}
+                loading={isRequestProcessing}
+                className="smarthr-ui-Dialog-actionButton"
+              >
+                {actionText}
+              </Button>
+            </Cluster>
+          </Cluster>
+          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+            <div className={message()}>
+              <ResponseMessage type={responseMessage.status} role="alert">
+                {responseMessage.text}
+              </ResponseMessage>
+            </div>
+          )}
+        </Stack>
       </form>
     </Section>
   )
