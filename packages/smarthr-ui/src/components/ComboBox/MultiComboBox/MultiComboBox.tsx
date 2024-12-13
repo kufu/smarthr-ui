@@ -197,11 +197,7 @@ const ActualMultiComboBox = <T,>(
       requestAnimationFrame(() => {
         if (onDelete) onDelete(item)
         if (onChangeSelected)
-          onChangeSelected(
-            selectedItems.filter(
-              (selected) => selected.label !== item.label || selected.value !== item.value,
-            ),
-          )
+          onChangeSelected(selectedItems.filter((selected) => selected.value !== item.value))
       })
     },
     [onChangeSelected, onDelete, selectedItems],
@@ -211,9 +207,7 @@ const ActualMultiComboBox = <T,>(
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = selectedItems.find(
-          (item) => item.label === selected.label && item.value === selected.value,
-        )
+        const matchedSelectedItem = selectedItems.find((item) => item.value === selected.value)
         if (matchedSelectedItem !== undefined) {
           if (matchedSelectedItem.deletable !== false) {
             handleDelete(selected)
@@ -468,7 +462,7 @@ const ActualMultiComboBox = <T,>(
           className={selectedListStyle}
         >
           {selectedItems.map((selectedItem, i) => (
-            <li key={`${selectedItem.label}-${selectedItem.value}`}>
+            <li key={selectedItem.value}>
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
