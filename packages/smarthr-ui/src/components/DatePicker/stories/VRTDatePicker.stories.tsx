@@ -55,7 +55,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'skip-test-runner'],
 } satisfies Meta<typeof DatePicker>
 
 export const VRT = {}

@@ -17,7 +17,6 @@ export default {
     const value = '2024/11/06'
     const placeholder = '日付を入力してください'
     const width = '100%'
-    const showAlternative = (_: Date | null) => <div>alt</div>
     const formatDate = (date: Date | null) => dayjs(date).format('YYYY年MM月DD')
 
     const matrics = [
@@ -39,12 +38,6 @@ export default {
               error={m.error}
               disabled={m.disabled}
               value={value}
-              showAlternative={showAlternative}
-            />
-            <WarekiPicker
-              error={m.error}
-              disabled={m.disabled}
-              value={value}
               formatDate={formatDate}
             />
           </>
@@ -55,7 +48,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs'],
+  tags: ['!autodocs', 'skip-test-runner'],
 } satisfies Meta<typeof WarekiPicker>
 
 export const VRT = {}

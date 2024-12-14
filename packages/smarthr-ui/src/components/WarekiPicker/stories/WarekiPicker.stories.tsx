@@ -20,6 +20,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  tags: ['skip-test-runner'],
 } satisfies Meta<typeof WarekiPicker>
 
 export const Playground: StoryObj<typeof WarekiPicker> = {

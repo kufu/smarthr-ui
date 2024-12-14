@@ -49,10 +49,15 @@ export const Type: StoryObj<typeof Input> = {
   name: 'type',
   render: (args) => (
     <Stack>
-      {[undefined, 'text', 'number', 'password'].map((type) => (
-        // eslint-disable-next-line smarthr/a11y-input-in-form-control
-        <Input {...args} type={type} key={type} />
-      ))}
+      {[undefined, 'text', 'number', 'password', 'date', 'datetime-local', 'time', 'month'].map(
+        (type) => (
+          <label key={type}>
+            {`${type ?? '未指定'}： `}
+            {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
+            <Input {...args} type={type} key={type} />
+          </label>
+        ),
+      )}
     </Stack>
   ),
 }
