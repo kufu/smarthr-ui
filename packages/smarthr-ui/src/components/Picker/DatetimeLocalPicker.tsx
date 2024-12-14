@@ -8,6 +8,7 @@ type Props = {
   error?: boolean
 }
 
+/** @deprecated DatetimeLocalPicker は非推奨です。Input[type="datetime-local"] を使ってください。 */
 export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
     const { wrapperStyle, innerStyle } = useMemo(() => {
