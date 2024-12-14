@@ -76,6 +76,7 @@ const datePicker = tv({
   },
 })
 
+/** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
 export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
   (
     {

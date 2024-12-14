@@ -6,13 +6,13 @@ import dayjs from 'dayjs'
 import React from 'react'
 
 import { Cluster } from '../../Layout'
-import { DatePicker } from '../DatePicker'
+import { WarekiPicker } from '../WarekiPicker'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker（非推奨）/VRT',
-  component: DatePicker,
+  title: 'Forms（フォーム）/WarekiPicker/VRT',
+  component: WarekiPicker,
   render: (args) => {
     const value = '2024/11/06'
     const placeholder = '日付を入力してください'
@@ -31,17 +31,17 @@ export default {
       <Cluster>
         {matrics.map((m) => (
           <>
-            <DatePicker {...args} error={m.error} disabled={m.disabled} />
-            <DatePicker error={m.error} disabled={m.disabled} placeholder={placeholder} />
-            <DatePicker error={m.error} disabled={m.disabled} value={value} />
-            <DatePicker error={m.error} disabled={m.disabled} width={width} />
-            <DatePicker
+            <WarekiPicker {...args} error={m.error} disabled={m.disabled} />
+            <WarekiPicker error={m.error} disabled={m.disabled} placeholder={placeholder} />
+            <WarekiPicker error={m.error} disabled={m.disabled} value={value} />
+            <WarekiPicker error={m.error} disabled={m.disabled} width={width} />
+            <WarekiPicker
               error={m.error}
               disabled={m.disabled}
               value={value}
               showAlternative={showAlternative}
             />
-            <DatePicker
+            <WarekiPicker
               error={m.error}
               disabled={m.disabled}
               value={value}
@@ -56,7 +56,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof DatePicker>
+} satisfies Meta<typeof WarekiPicker>
 
 export const VRT = {}
 
@@ -68,7 +68,7 @@ export const VRTForcedColors: StoryObj = {
 }
 
 export const VRTExpanded: StoryObj = {
-  render: (args) => <DatePicker {...args} className="shr-min-w-[500px] shr-h-[500px]" />,
+  render: (args) => <WarekiPicker {...args} className="shr-min-w-[500px] shr-h-[500px]" />,
   args: {
     value: '2024/11/06',
   },
@@ -105,7 +105,7 @@ export const VRTExpandedBottom: StoryObj = {
   ...VRTExpanded,
   render: (args) => (
     <div className="shr-w-full shr-h-[100vh] shr-relative">
-      <DatePicker {...args} className="shr-absolute shr-bottom-0" />
+      <WarekiPicker {...args} className="shr-absolute shr-bottom-0" />
     </div>
   ),
 }

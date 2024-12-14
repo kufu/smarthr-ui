@@ -3,14 +3,14 @@ import { userEvent, within } from '@storybook/test'
 import dayjs from 'dayjs'
 import React from 'react'
 
-import { DatePicker } from '../DatePicker'
+import { WarekiPicker } from '../WarekiPicker'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker（非推奨）',
-  component: DatePicker,
-  render: (args) => <DatePicker {...args} />,
+  title: 'Forms（フォーム）/WarekiPicker',
+  component: WarekiPicker,
+  render: (args) => <WarekiPicker {...args} />,
   args: {},
   argTypes: {
     value: {
@@ -20,48 +20,48 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} satisfies Meta<typeof DatePicker>
+} satisfies Meta<typeof WarekiPicker>
 
-export const Playground: StoryObj<typeof DatePicker> = {
+export const Playground: StoryObj<typeof WarekiPicker> = {
   args: {},
 }
 
-export const Value: StoryObj<typeof DatePicker> = {
+export const Value: StoryObj<typeof WarekiPicker> = {
   name: 'value',
   args: {
     value: '2024-11-06',
   },
 }
 
-export const Disabled: StoryObj<typeof DatePicker> = {
+export const Disabled: StoryObj<typeof WarekiPicker> = {
   name: 'disabled',
   args: {
     disabled: true,
   },
 }
 
-export const PlaceHolder: StoryObj<typeof DatePicker> = {
+export const PlaceHolder: StoryObj<typeof WarekiPicker> = {
   name: 'placeholder',
   args: {
     placeholder: '日付を選択してください',
   },
 }
 
-export const Error: StoryObj<typeof DatePicker> = {
+export const Error: StoryObj<typeof WarekiPicker> = {
   name: 'error',
   args: {
     error: true,
   },
 }
 
-export const Width: StoryObj<typeof DatePicker> = {
+export const Width: StoryObj<typeof WarekiPicker> = {
   name: 'width',
   args: {
     width: '500px',
   },
 }
 
-export const From: StoryObj<typeof DatePicker> = {
+export const From: StoryObj<typeof WarekiPicker> = {
   name: 'from',
   args: {
     from: dayjs().subtract(3, 'day').toDate(),
@@ -72,7 +72,7 @@ export const From: StoryObj<typeof DatePicker> = {
   },
 }
 
-export const To: StoryObj<typeof DatePicker> = {
+export const To: StoryObj<typeof WarekiPicker> = {
   name: 'to',
   args: {
     to: dayjs().add(3, 'day').toDate(),
@@ -83,7 +83,7 @@ export const To: StoryObj<typeof DatePicker> = {
   },
 }
 
-export const ParseInput: StoryObj<typeof DatePicker> = {
+export const ParseInput: StoryObj<typeof WarekiPicker> = {
   name: 'parseInput',
   args: {
     value: '2024年11月06日',
@@ -91,19 +91,9 @@ export const ParseInput: StoryObj<typeof DatePicker> = {
   },
 }
 
-export const FormatDate: StoryObj<typeof DatePicker> = {
+export const FormatDate: StoryObj<typeof WarekiPicker> = {
   name: 'formatDate',
   args: {
     formatDate: (date) => dayjs(date).format('YYYY年MM月DD日'),
-  },
-}
-
-export const ShowAlternative: StoryObj<typeof DatePicker> = {
-  name: 'showAlternative',
-  args: {
-    showAlternative: (date) => {
-      const dateSet = ['日', '月', '火', '水', '木', '金', '土']
-      return dateSet[dayjs(date).day()]
-    },
   },
 }
