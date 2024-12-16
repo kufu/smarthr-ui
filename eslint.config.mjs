@@ -37,7 +37,13 @@ export default [
       ],
     },
   },
-  { ignores: [
-    '!packages/smarthr-ui/src/**/*.{ts,tsx}',
-  ] },
+  {
+    ignores: [
+      'sandbox/',
+      'storybook-static/',
+      'packages/smarthr-ui/esm/',
+      'packages/smarthr-ui/lib/',
+      'packages/smarthr-ui/.storybook',
+    ]
+  },
 ]
