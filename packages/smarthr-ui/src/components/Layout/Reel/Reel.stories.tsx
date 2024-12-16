@@ -29,7 +29,6 @@ export const All: StoryFn = () => {
   return (
     <Stack as="article" gap="M" style={{ padding: '20px' }}>
       <header>
-        {}
         <Heading>Reel</Heading>
       </header>
       <Stack as="section">
