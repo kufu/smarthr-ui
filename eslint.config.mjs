@@ -39,6 +39,7 @@ export default [
   },
   {
     ignores: [
+      '**/*.{mjs,js}',
       'sandbox/',
       'storybook-static/',
       'packages/smarthr-ui/esm/',
