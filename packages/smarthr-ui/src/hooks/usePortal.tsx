@@ -42,7 +42,6 @@ export function usePortal() {
       document.body.removeChild(portalRoot)
     }
     // spread parentSeqs array for deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [portalRoot, ...parentSeqs])
 
   const isChildPortal = useCallback(

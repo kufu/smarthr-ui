@@ -60,7 +60,7 @@ export function ButtonWrapper({
   if (props.isAnchor) {
     const { anchorRef, elementAs, isAnchor: _, ...others } = props
     const Component = elementAs || 'a'
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
+
     return <Component {...others} className={anchorStyle} ref={anchorRef} />
   } else {
     const { buttonRef, disabled, onClick, ...others } = props

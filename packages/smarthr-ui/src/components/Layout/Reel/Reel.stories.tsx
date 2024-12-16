@@ -29,11 +29,11 @@ export const All: StoryFn = () => {
   return (
     <Stack as="article" gap="M" style={{ padding: '20px' }}>
       <header>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+        {}
         <Heading>Reel</Heading>
       </header>
       <Stack as="section">
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+        {}
         <Heading type="sectionTitle">
           with <code>gap</code>, <code>padding</code>
         </Heading>
@@ -46,7 +46,7 @@ export const All: StoryFn = () => {
         </Reel>
       </Stack>
       <Stack as="section">
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+        {}
         <Heading type="sectionTitle">
           <code>TabBar</code>
         </Heading>
@@ -66,7 +66,7 @@ export const All: StoryFn = () => {
         </Reel>
       </Stack>
       <Stack as="section">
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+        {}
         <Heading type="sectionTitle">
           <code>Table</code>
         </Heading>

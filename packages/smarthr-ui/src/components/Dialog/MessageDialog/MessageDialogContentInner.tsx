@@ -42,7 +42,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {description}
       </DialogBody>
-      {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+      {}
       <Cluster as="footer" justify="flex-end" className={actionArea()}>
         <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
           {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
