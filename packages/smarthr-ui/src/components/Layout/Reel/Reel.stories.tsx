@@ -32,7 +32,6 @@ export const All: StoryFn = () => {
         <Heading>Reel</Heading>
       </header>
       <Stack as="section">
-        {}
         <Heading type="sectionTitle">
           with <code>gap</code>, <code>padding</code>
         </Heading>
@@ -45,7 +44,6 @@ export const All: StoryFn = () => {
         </Reel>
       </Stack>
       <Stack as="section">
-        {}
         <Heading type="sectionTitle">
           <code>TabBar</code>
         </Heading>
@@ -65,7 +63,6 @@ export const All: StoryFn = () => {
         </Reel>
       </Stack>
       <Stack as="section">
-        {}
         <Heading type="sectionTitle">
           <code>Table</code>
         </Heading>
