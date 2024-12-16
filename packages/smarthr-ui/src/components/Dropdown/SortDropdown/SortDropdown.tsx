@@ -88,12 +88,14 @@ export const SortDropdown: FC<Props & ElementProps> = ({
       <DropdownContent controllable>
         <form onSubmit={handleApply}>
           <Stack className={bodyStyle}>
-            <Select
-              name="sortFields"
-              options={innerFields}
-              onChange={handleChange}
-              className={selectStyle}
-            />
+            <FormControl title={sortFieldLabel}>
+              <Select
+                name="sortFields"
+                options={innerFields}
+                onChange={handleChange}
+                className={selectStyle}
+              />
+            </FormControl>
             <Fieldset title={sortOrderLabel} innerMargin={0.5}>
               <Cluster gap={1.25}>
                 <RadioButton
