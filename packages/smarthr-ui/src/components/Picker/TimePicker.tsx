@@ -20,7 +20,6 @@ export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
 
     return (
       <span className={wrapperStyle}>
-        {}
         <input
           {...rest}
           data-smarthr-ui-input="true"
