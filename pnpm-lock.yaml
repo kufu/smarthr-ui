@@ -6,7 +6,7 @@ settings:
 
 overrides:
   '@babel/helper-compilation-targets': ^7.25.9
-  '@types/react': ^18.3.16
+  '@types/react': ^18.3.17
   minimist: 1.2.8
   react: ^19.0.0
   react-dom: ^19.0.0
@@ -96,7 +96,7 @@ importers:
         version: 5.4.0(react@19.0.0)
       react-innertext:
         specifier: ^1.1.5
-        version: 1.1.5(@types/react@18.3.16)(react@19.0.0)
+        version: 1.1.5(@types/react@18.3.17)(react@19.0.0)
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -127,7 +127,7 @@ importers:
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-essentials':
         specifier: ^8.4.7
-        version: 8.4.7(@types/react@18.3.16)(storybook@8.4.7(prettier@3.4.2))
+        version: 8.4.7(@types/react@18.3.17)(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-interactions':
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))
@@ -181,7 +181,7 @@ importers:
         version: 6.6.3
       '@testing-library/react':
         specifier: ^16.1.0
-        version: 16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.2(@types/react@18.3.16))(@types/react@18.3.16)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.2(@types/react@18.3.17))(@types/react@18.3.17)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/lodash.merge':
         specifier: ^4.6.9
         version: 4.6.9
@@ -192,17 +192,17 @@ importers:
         specifier: ^20.17.10
         version: 20.17.10
       '@types/react':
-        specifier: ^18.3.16
-        version: 18.3.16
+        specifier: ^18.3.17
+        version: 18.3.17
       '@types/react-dom':
         specifier: ^19.0.2
-        version: 19.0.2(@types/react@18.3.16)
+        version: 19.0.2(@types/react@18.3.17)
       '@types/react-test-renderer':
         specifier: ^19.0.0
         version: 19.0.0
       '@types/react-transition-group':
         specifier: ^4.4.12
-        version: 4.4.12(@types/react@18.3.16)
+        version: 4.4.12(@types/react@18.3.17)
       '@types/styled-components':
         specifier: ^5.1.34
         version: 5.1.34
@@ -340,11 +340,11 @@ importers:
         specifier: ^20.17.10
         version: 20.17.10
       '@types/react':
-        specifier: ^18.3.16
-        version: 18.3.16
+        specifier: ^18.3.17
+        version: 18.3.17
       '@types/react-dom':
         specifier: ^19.0.2
-        version: 19.0.2(@types/react@18.3.16)
+        version: 19.0.2(@types/react@18.3.17)
       postcss:
         specifier: ^8.4.49
         version: 8.4.49
@@ -1418,7 +1418,7 @@ packages:
   '@mdx-js/react@3.1.0':
     resolution: {integrity: sha512-QjHtSaoameoalGnKDT3FoIl4+9RwyTmo9ZJGBdLOks/YOiWHoRDI3PUwEzOE7kEmGcV3AFcp9K6dYu9rEuKLAQ==}
     peerDependencies:
-      '@types/react': ^18.3.16
+      '@types/react': ^18.3.17
       react: ^19.0.0
 
   '@next/env@14.2.20':
@@ -1948,7 +1948,7 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       '@testing-library/dom': ^10.0.0
-      '@types/react': ^18.3.16
+      '@types/react': ^18.3.17
       '@types/react-dom': ^18.0.0 || ^19.0.0
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -2078,7 +2078,7 @@ packages:
   '@types/react-dom@19.0.2':
     resolution: {integrity: sha512-c1s+7TKFaDRRxr1TxccIX2u7sfCnc3RxkVyBIUA2lCpyqCF+QoAwQ/CBg7bsMdVwP120HEH143VQezKtef5nCg==}
     peerDependencies:
-      '@types/react': ^18.3.16
+      '@types/react': ^18.3.17
 
   '@types/react-test-renderer@19.0.0':
     resolution: {integrity: sha512-qDVnNybqFm2eZKJ4jD34EvRd6VHD67KjgnWaEMM0Id9L22EpWe3nOSVKHWL1XWRCxUWe3lhXwlEeCKD1BlJCQA==}
@@ -2086,10 +2086,10 @@ packages:
   '@types/react-transition-group@4.4.12':
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
     peerDependencies:
-      '@types/react': ^18.3.16
+      '@types/react': ^18.3.17
 
-  '@types/react@18.3.16':
-    resolution: {integrity: sha512-oh8AMIC4Y2ciKufU8hnKgs+ufgbA/dhPTACaZPM86AbwX9QwnFtSoPWEeRUj8fge+v6kFt78BXcDhAU1SrrAsw==}
+  '@types/react@18.3.17':
+    resolution: {integrity: sha512-opAQ5no6LqJNo9TqnxBKsgnkIYHozW9KSTlFVoSUJYh1Fl/sswkEoqIugRSm7tbh6pABtYjGAjW+GOS23j8qbw==}
 
   '@types/resolve@1.20.6':
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==}
@@ -5789,7 +5789,7 @@ packages:
   react-innertext@1.1.5:
     resolution: {integrity: sha512-PWAqdqhxhHIv80dT9znP2KvS+hfkbRovFp4zFYHFFlOoQLRiawIic81gKb3U1wEyJZgMwgs3JoLtwryASRWP3Q==}
     peerDependencies:
-      '@types/react': ^18.3.16
+      '@types/react': ^18.3.17
       react: ^19.0.0
 
   react-is@16.13.1:
@@ -8387,10 +8387,10 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mdx-js/react@3.1.0(@types/react@18.3.16)(react@19.0.0)':
+  '@mdx-js/react@3.1.0(@types/react@18.3.17)(react@19.0.0)':
     dependencies:
       '@types/mdx': 2.0.5
-      '@types/react': 18.3.16
+      '@types/react': 18.3.17
       react: 19.0.0
 
   '@next/env@14.2.20': {}
@@ -8548,9 +8548,9 @@ snapshots:
       storybook: 8.4.7(prettier@3.4.2)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-docs@8.4.7(@types/react@18.3.16)(storybook@8.4.7(prettier@3.4.2))':
+  '@storybook/addon-docs@8.4.7(@types/react@18.3.17)(storybook@8.4.7(prettier@3.4.2))':
     dependencies:
-      '@mdx-js/react': 3.1.0(@types/react@18.3.16)(react@19.0.0)
+      '@mdx-js/react': 3.1.0(@types/react@18.3.17)(react@19.0.0)
       '@storybook/blocks': 8.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.4.7(prettier@3.4.2))
       '@storybook/csf-plugin': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/react-dom-shim': 8.4.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.4.7(prettier@3.4.2))
@@ -8561,12 +8561,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@storybook/addon-essentials@8.4.7(@types/react@18.3.16)(storybook@8.4.7(prettier@3.4.2))':
+  '@storybook/addon-essentials@8.4.7(@types/react@18.3.17)(storybook@8.4.7(prettier@3.4.2))':
     dependencies:
       '@storybook/addon-actions': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-backgrounds': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-controls': 8.4.7(storybook@8.4.7(prettier@3.4.2))
-      '@storybook/addon-docs': 8.4.7(@types/react@18.3.16)(storybook@8.4.7(prettier@3.4.2))
+      '@storybook/addon-docs': 8.4.7(@types/react@18.3.17)(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-highlight': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-measure': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-outline': 8.4.7(storybook@8.4.7(prettier@3.4.2))
@@ -9023,15 +9023,15 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/react@16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.2(@types/react@18.3.16))(@types/react@18.3.16)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@testing-library/react@16.1.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.2(@types/react@18.3.17))(@types/react@18.3.17)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@babel/runtime': 7.24.0
       '@testing-library/dom': 10.4.0
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
-      '@types/react': 18.3.16
-      '@types/react-dom': 19.0.2(@types/react@18.3.16)
+      '@types/react': 18.3.17
+      '@types/react-dom': 19.0.2(@types/react@18.3.17)
 
   '@testing-library/user-event@14.5.2(@testing-library/dom@10.4.0)':
     dependencies:
@@ -9098,7 +9098,7 @@ snapshots:
 
   '@types/hoist-non-react-statics@3.3.1':
     dependencies:
-      '@types/react': 18.3.16
+      '@types/react': 18.3.17
       hoist-non-react-statics: 3.3.2
 
   '@types/html-minifier-terser@6.1.0': {}
@@ -9157,19 +9157,19 @@ snapshots:
 
   '@types/prop-types@15.7.3': {}
 
-  '@types/react-dom@19.0.2(@types/react@18.3.16)':
+  '@types/react-dom@19.0.2(@types/react@18.3.17)':
     dependencies:
-      '@types/react': 18.3.16
+      '@types/react': 18.3.17
 
   '@types/react-test-renderer@19.0.0':
     dependencies:
-      '@types/react': 18.3.16
+      '@types/react': 18.3.17
 
-  '@types/react-transition-group@4.4.12(@types/react@18.3.16)':
+  '@types/react-transition-group@4.4.12(@types/react@18.3.17)':
     dependencies:
-      '@types/react': 18.3.16
+      '@types/react': 18.3.17
 
-  '@types/react@18.3.16':
+  '@types/react@18.3.17':
     dependencies:
       '@types/prop-types': 15.7.3
       csstype: 3.0.8
@@ -9183,7 +9183,7 @@ snapshots:
   '@types/styled-components@5.1.34':
     dependencies:
       '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 18.3.16
+      '@types/react': 18.3.17
       csstype: 3.0.8
 
   '@types/through@0.0.33':
@@ -13458,9 +13458,9 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  react-innertext@1.1.5(@types/react@18.3.16)(react@19.0.0):
+  react-innertext@1.1.5(@types/react@18.3.17)(react@19.0.0):
     dependencies:
-      '@types/react': 18.3.16
+      '@types/react': 18.3.17
       react: 19.0.0
 
   react-is@16.13.1: {}
