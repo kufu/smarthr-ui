@@ -111,7 +111,7 @@
   "license": "MIT",
   "lint-staged": {
     "*.{ts,tsx}": [
-      "pnpm ui eslint --fix",
+      "eslint --fix",
       "prettier --write",
       "stylelint --fix"
     ]
