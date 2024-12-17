@@ -4,13 +4,13 @@
   "description": "SmartHR ui components built with React.",
   "author": "SmartHR-UI Team",
   "devDependencies": {
-    "@commitlint/cli": "^19.6.0",
+    "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "eslint": "^8.57.0",
     "eslint-config-smarthr": "^7.3.0",
     "eslint-plugin-storybook": "^0.11.1",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
+    "lint-staged": "^15.2.11",
     "prettier": "^3.4.2",
     "prettier-config-smarthr": "^1.0.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
@@ -31,12 +31,14 @@
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.9",
-      "@types/react": "^18.3.14",
+      "@types/react": "^18.3.17",
       "minimist": "1.2.8",
       "react": "^19.0.0",
       "react-dom": "^19.0.0",
       "micromatch@<4.0.8": ">=4.0.8",
-      "cross-spawn@<7.0.5": ">=7.0.5"
+      "cross-spawn@<7.0.5": ">=7.0.5",
+      "tar@<6.2.1": ">=6.2.1",
+      "nanoid": "3.3.8"
     }
   }
 }
