@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [62.2.1](https://github.com/kufu/smarthr-ui/compare/v62.2.0...v62.2.1) (2024-12-17)
+
+
+### Bug Fixes
+
+* **EmptyTableBody:** 文字列が中央揃えになるよう修正 ([#5186](https://github.com/kufu/smarthr-ui/issues/5186)) ([d10d1be](https://github.com/kufu/smarthr-ui/commit/d10d1be73b794ac04939ab9d3a6efd89b97fdc43))
+* nanoidのバージョンを3.3.8にあげる ([#5187](https://github.com/kufu/smarthr-ui/issues/5187)) ([1af0bff](https://github.com/kufu/smarthr-ui/commit/1af0bff2446b09d84eac98974ecb2489c02fd0c4))
+
 ## [62.2.0](https://github.com/kufu/smarthr-ui/compare/v62.1.1...v62.2.0) (2024-12-10)
 
 
