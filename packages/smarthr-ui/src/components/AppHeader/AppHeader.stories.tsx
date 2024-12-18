@@ -131,6 +131,7 @@ const meta = {
       ],
       indexUrl: 'https://exmaple.com',
     },
+    mobileAdditionalContent: <AdditionalContent>mobileAdditionalContent</AdditionalContent>,
   },
 } satisfies Meta<typeof AppHeader>
 

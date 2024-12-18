@@ -32,6 +32,7 @@ export type HeaderProps = ComponentProps<typeof Header> & {
   navigations?: Navigation[] | null
   desktopNavigationAdditionalContent?: ReactNode
   releaseNote?: ReleaseNoteProps | null
+  mobileAdditionalContent?: ReactNode
 }
 
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup
@@ -54,7 +55,7 @@ type NavigationButton = {
   current?: boolean
 }
 
-type NavigationGroup = {
+export type NavigationGroup = {
   children: ReactElement | string
   childNavigations: Array<ChildNavigation | ChildNavigationGroup>
   current?: boolean
