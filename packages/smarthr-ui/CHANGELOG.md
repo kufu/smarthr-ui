@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [62.2.3](https://github.com/kufu/smarthr-ui/compare/v62.2.2...v62.2.3) (2024-12-18)
+
+
+### Bug Fixes
+
+* **FormDialog:** コンテンツがスクロールできるよう修正 ([#5192](https://github.com/kufu/smarthr-ui/issues/5192)) ([2af1c20](https://github.com/kufu/smarthr-ui/commit/2af1c20cf5cbab08e58caa0917ad546b62ba49ed))
+* **ModelessDialog:** modeless dialog閉じたときのフォーカス処理修正 ([#5177](https://github.com/kufu/smarthr-ui/issues/5177)) ([1590159](https://github.com/kufu/smarthr-ui/commit/15901594157eb4ecea0667dc492a5f0292bb3abe))
+* **Textarea:** 最大文字数を超えたエラーを色以外でも表現する ([#5084](https://github.com/kufu/smarthr-ui/issues/5084)) ([0cc1ab4](https://github.com/kufu/smarthr-ui/commit/0cc1ab4813f7c7c363d568e225d335619d207779))
+
 ### [62.2.2](https://github.com/kufu/smarthr-ui/compare/v62.2.1...v62.2.2) (2024-12-18)
 
 
