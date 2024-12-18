@@ -127,7 +127,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   contentPadding,
   footer,
   isOpen,
-  onClickClose,
   onPressEscape,
   resizable = false,
   width,
@@ -143,6 +142,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   ...props
 }) => {
   const labelId = useId()
+  const lastFocusElementRef = useRef<HTMLElement | null>(null)
   const { createPortal } = useDialogPortal(portalParent, id)
 
   const {
@@ -310,13 +310,38 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     }
   }, [isOpen])
 
+  const onClickClose = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      lastFocusElementRef.current?.focus()
+      props.onClickClose?.(e)
+    },
+    [props],
+  )
+
   useHandleEscape(
     useCallback(() => {
       if (isOpen && onPressEscape) {
+        lastFocusElementRef.current?.focus()
         onPressEscape()
       }
     }, [isOpen, onPressEscape]),
   )
+
+  useEffect(() => {
+    const focusHandler = (e: FocusEvent) => {
+      if (!(e.target instanceof HTMLElement)) return
+
+      // e.target(現在フォーカスがあたっている要素)がModeless dialogの中の要素であれば、lastFocusElementRefに代入しない
+      if (wrapperRef?.current?.contains(e.target)) {
+        return
+      }
+
+      lastFocusElementRef.current = e.target
+    }
+
+    document.addEventListener('focus', focusHandler, true)
+    return () => document.removeEventListener('focus', focusHandler, true)
+  }, [])
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={overlapStyle}>
