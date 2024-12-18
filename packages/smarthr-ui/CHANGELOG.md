@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [62.2.2](https://github.com/kufu/smarthr-ui/compare/v62.2.1...v62.2.2) (2024-12-18)
+
+
+### Bug Fixes
+
+* **Th:** ソートアイコンが左寄せになっていたのを修正 ([#5205](https://github.com/kufu/smarthr-ui/issues/5205)) ([85a29ec](https://github.com/kufu/smarthr-ui/commit/85a29ece8ad4ec522f01eee27414aaada7c93fe7))
+
 ### [62.2.1](https://github.com/kufu/smarthr-ui/compare/v62.2.0...v62.2.1) (2024-12-17)
 
 
