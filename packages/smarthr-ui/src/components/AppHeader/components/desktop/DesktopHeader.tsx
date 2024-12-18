@@ -1,7 +1,16 @@
 import React, { FC } from 'react'
+import { tv } from 'tailwind-variants'
 
+import { Button } from '../../../Button'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'
-import { FaCircleQuestionIcon, FaGraduationCapIcon, FaRegCircleQuestionIcon } from '../../../Icon'
+import {
+  FaCaretDownIcon,
+  FaCircleQuestionIcon,
+  FaGraduationCapIcon,
+  FaRegCircleQuestionIcon,
+  FaToolboxIcon,
+} from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { useLocale } from '../../hooks/useLocale'
 import { useTranslate } from '../../hooks/useTranslate'
@@ -12,6 +21,30 @@ import { Translate } from '../common/Translate'
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo.tsx'
+
+const desktopHeader = tv({
+  slots: {
+    wrapper: 'max-[751px]:!shr-hidden',
+    appsButton: [
+      'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
+      'hover:shr-border-transparent hover:shr-bg-transparent',
+      'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
+      'forced-colors:shr-border-shorthand',
+    ],
+  },
+  variants: {
+    enableNew: {
+      true: {
+        appsButton: [
+          'shr-px-0.5 shr-font-bold shr-text-black',
+          '[&_>_svg]:aria-expanded:shr-rotate-180',
+          'hover:shr-bg-white-darken',
+          'focus-visible:shr-bg-white-darken',
+        ],
+      },
+    },
+  },
+})
 
 export const DesktopHeader: FC<HeaderProps> = ({
   enableNew,
@@ -33,12 +66,14 @@ export const DesktopHeader: FC<HeaderProps> = ({
   const translate = useTranslate()
   const { locale } = useLocale()
 
+  const { wrapper, appsButton } = desktopHeader()
+
   return (
     <>
       <Header
         {...props}
         enableNew={enableNew}
-        className={`${className} max-[751px]:!shr-hidden`}
+        className={`${className} ${wrapper()}`}
         featureName={appName}
         tenants={tenants}
         currentTenantId={currentTenantId}
@@ -46,7 +81,25 @@ export const DesktopHeader: FC<HeaderProps> = ({
         <Cluster align="center" className="shr--me-0.25">
           {!enableNew && (
             <>
-              {features && features.length > 0 && <AppLauncher features={features} />}
+              {features && features.length > 0 && (
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      prefix={enableNew ?? <FaToolboxIcon />}
+                      suffix={enableNew ?? <FaCaretDownIcon />}
+                      className={appsButton()}
+                    >
+                      <Translate>
+                        {translate('DesktopHeader/DesktopHeader/appLauncherLabel')}
+                      </Translate>
+                    </Button>
+                  </DropdownTrigger>
+
+                  <DropdownContent controllable>
+                    <AppLauncher features={features} />
+                  </DropdownContent>
+                </Dropdown>
+              )}
 
               {schoolUrl && (
                 <HeaderLink

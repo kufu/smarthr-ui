@@ -84,7 +84,7 @@ export const translation = {
     'Launcher/favoriteModeText': 'Aplikasi yang sering digunakan',
     'Launcher/allModeText': 'Semua aplikasi',
     'Launcher/listText': 'Daftar aplikasi',
-    'Launcher/helpText': '', // よく使うアプリとは
+    'Launcher/helpText': 'よく使うアプリとは', // TODO: 「よく使うアプリとは」の翻訳
     'Launcher/searchResultText': 'Hasil penelusuran',
     'Launcher/emptyText': 'Tidak ditemukan aplikasi yang sesuai.',
     'Launcher/sortDropdownLabel': 'Urutan tampilan',
@@ -114,7 +114,7 @@ export const translation = {
     'Launcher/favoriteModeText': 'Favorite Apps',
     'Launcher/allModeText': 'All Apps',
     'Launcher/listText': 'App List',
-    'Launcher/helpText': '', // よく使うアプリとは
+    'Launcher/helpText': 'よく使うアプリとは', // TODO: 「よく使うアプリとは」の翻訳
     'Launcher/searchResultText': 'Search results',
     'Launcher/emptyText': 'App not found.',
     'Launcher/sortDropdownLabel': 'Sort by',
@@ -145,7 +145,7 @@ export const translation = {
     'Launcher/favoriteModeText': 'Apps Favoritos',
     'Launcher/allModeText': 'Todos os Apps',
     'Launcher/listText': 'Lista de Apps',
-    'Launcher/helpText': '', // よく使うアプリとは
+    'Launcher/helpText': 'よく使うアプリとは', // TODO: 「よく使うアプリとは」の翻訳
     'Launcher/searchResultText': 'Resultados de pesquisa',
     'Launcher/emptyText': 'App não encontrado.',
     'Launcher/sortDropdownLabel': 'Ordenar por',
@@ -175,7 +175,7 @@ export const translation = {
     'Launcher/favoriteModeText': 'Tính năng thường dùng',
     'Launcher/allModeText': 'Tất cả Tính năng',
     'Launcher/listText': 'Danh sách các tính năng',
-    'Launcher/helpText': '', // よく使うアプリとは
+    'Launcher/helpText': 'よく使うアプリとは', // TODO: 「よく使うアプリとは」の翻訳
     'Launcher/searchResultText': 'Kết quả tìm kiếm',
     'Launcher/emptyText': 'Không tìm thấy tính năng tương thích.',
     'Launcher/sortDropdownLabel': 'Thứ tự hiển thị',
@@ -206,7 +206,7 @@ export const translation = {
     'Launcher/favoriteModeText': '자주 사용하는 앱',
     'Launcher/allModeText': '모든 앱',
     'Launcher/listText': '앱 리스트',
-    'Launcher/helpText': '', // よく使うアプリとは
+    'Launcher/helpText': 'よく使うアプリとは', // TODO: 「よく使うアプリとは」の翻訳
     'Launcher/searchResultText': '검색결과',
     'Launcher/emptyText': '해당하는 앱을 발견할수 없습니다.',
     'Launcher/sortDropdownLabel': '표시순서',
@@ -236,7 +236,7 @@ export const translation = {
     'Launcher/favoriteModeText': '常用功能',
     'Launcher/allModeText': '所有功能',
     'Launcher/listText': '功能一览表',
-    'Launcher/helpText': '', // よく使うアプリとは
+    'Launcher/helpText': 'よく使うアプリとは', // TODO: 「よく使うアプリとは」の翻訳
     'Launcher/searchResultText': '搜索结果',
     'Launcher/emptyText': '未找到匹配的功能。',
     'Launcher/sortDropdownLabel': '显示排序',
@@ -266,7 +266,7 @@ export const translation = {
     'Launcher/favoriteModeText': '常用功能',
     'Launcher/allModeText': '所有功能',
     'Launcher/listText': '功能一覽表',
-    'Launcher/helpText': '', // よく使うアプリとは
+    'Launcher/helpText': 'よく使うアプリとは', // TODO: 「よく使うアプリとは」の翻訳
     'Launcher/searchResultText': '搜尋結果',
     'Launcher/emptyText': '未找到符合的功能。',
     'Launcher/sortDropdownLabel': '顯示排序',

@@ -5,6 +5,7 @@ import { AnchorButton } from '../../../Button'
 import { FaArrowRightIcon, FaStarIcon } from '../../../Icon'
 import { LineClamp } from '../../../LineClamp'
 import { Text } from '../../../Text'
+import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Launcher } from '../../types'
 
@@ -34,6 +35,7 @@ type Props = {
 }
 
 export const AppLauncherFeatures: FC<Props> = ({ features, page }) => {
+  const isDesktop = useMediaQuery(mediaQuery.desktop)
   const translate = useTranslate()
   const { empty, list, listItem } = appLauncherFeatures()
 
@@ -60,7 +62,7 @@ export const AppLauncherFeatures: FC<Props> = ({ features, page }) => {
             wide
             target="_blank"
           >
-            <LineClamp maxLines={2}>{feature.name}</LineClamp>
+            {isDesktop ? <LineClamp maxLines={2}>{feature.name}</LineClamp> : feature.name}
           </AnchorButton>
         </li>
       ))}
