@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 
 import { DesktopHeader } from './components/desktop/DesktopHeader'
+import { MobileHeader } from './components/mobile/MobileHeader'
 import { LocaleContextProvider } from './hooks/useLocale'
 import { mediaQuery, useMediaQuery } from './hooks/useMediaQuery'
-import { MobileHeader } from './components/mobile/MobileHeader'
 import { HeaderProps } from './types'
 
 export const AppHeader: FC<HeaderProps> = ({ locale, children, ...props }) => {
