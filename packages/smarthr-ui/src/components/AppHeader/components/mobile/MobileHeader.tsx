@@ -4,6 +4,7 @@ import { Header } from '../../../Header'
 import { useLocale } from '../../hooks/useLocale'
 import { HeaderProps, NavigationGroup } from '../../types'
 
+import { AppLauncherContext } from './AppLauncherContext'
 import { Help } from './Help'
 import { Menu } from './Menu'
 import { NavigationContext } from './NavigationContext'
@@ -13,6 +14,7 @@ import { UserInfo } from './UserInfo'
 
 export const MobileHeader: FC<HeaderProps> = ({
   navigations,
+  features,
   releaseNote,
   className = '',
   tenants,
@@ -26,6 +28,7 @@ export const MobileHeader: FC<HeaderProps> = ({
   mobileAdditionalContent,
   ...props
 }) => {
+  const [isAppLauncherSelected, setIsAppLauncherSelected] = useState(false)
   const [isReleaseNoteSelected, setIsReleaseNoteSelected] = useState(false)
   const [selectedNavigationGroup, setSelectedNavigationGroup] = useState<NavigationGroup | null>(
     null,
@@ -37,46 +40,54 @@ export const MobileHeader: FC<HeaderProps> = ({
   const isMenuAvailable = navigations && navigations.length > 0
 
   return (
-    <NavigationContext.Provider
+    <AppLauncherContext.Provider
       value={{
-        navigations: navigations ?? [],
-        selectedNavigationGroup,
-        setSelectedNavigationGroup,
+        features,
+        isAppLauncherSelected,
+        setIsAppLauncherSelected,
       }}
     >
-      <ReleaseNoteContext.Provider
+      <NavigationContext.Provider
         value={{
-          releaseNote,
-          isReleaseNoteSelected,
-          setIsReleaseNoteSelected,
+          navigations: navigations ?? [],
+          selectedNavigationGroup,
+          setSelectedNavigationGroup,
         }}
       >
-        <Header
-          {...props}
-          className={`${className} min-[752px]:!shr-hidden`}
-          tenants={isMenuAvailable ? undefined : tenants}
+        <ReleaseNoteContext.Provider
+          value={{
+            releaseNote,
+            isReleaseNoteSelected,
+            setIsReleaseNoteSelected,
+          }}
         >
-          {children}
+          <Header
+            {...props}
+            className={`${className} min-[752px]:!shr-hidden`}
+            tenants={isMenuAvailable ? undefined : tenants}
+          >
+            {children}
 
-          <Help helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} />
+            <Help helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} />
 
-          <UserInfo {...userInfo} locale={locale} />
+            <UserInfo {...userInfo} locale={locale} />
 
-          {isMenuAvailable && (
-            <Menu
-              appName={appName}
-              tenantSelector={
-                <TenantSelector
-                  tenants={tenants}
-                  currentTenantId={currentTenantId}
-                  onTenantSelect={onTenantSelect}
-                />
-              }
-              additionalContent={mobileAdditionalContent}
-            />
-          )}
-        </Header>
-      </ReleaseNoteContext.Provider>
-    </NavigationContext.Provider>
+            {isMenuAvailable && (
+              <Menu
+                appName={appName}
+                tenantSelector={
+                  <TenantSelector
+                    tenants={tenants}
+                    currentTenantId={currentTenantId}
+                    onTenantSelect={onTenantSelect}
+                  />
+                }
+                additionalContent={mobileAdditionalContent}
+              />
+            )}
+          </Header>
+        </ReleaseNoteContext.Provider>
+      </NavigationContext.Provider>
+    </AppLauncherContext.Provider>
   )
 }

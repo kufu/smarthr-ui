@@ -19,6 +19,8 @@ import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
 import { useTranslate } from '../../hooks/useTranslate'
 
+import { AppLauncher } from './AppLauncher'
+import { AppLauncherContext } from './AppLauncherContext'
 import { MenuSubHeader } from './MenuSubHeader'
 import { Navigation } from './Navigation'
 import { NavigationContext } from './NavigationContext'
@@ -50,7 +52,8 @@ export const MenuDialog: FC<
 > = ({ children, isOpen, setIsOpen, tenantSelector }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
-  // const { isAppLauncherSelected, setIsAppLauncherSelected } = useContext(AppLauncherContext)
+  const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
+    useContext(AppLauncherContext)
 
   const [contentBuffer, setContentBuffer] = useState<ReactNode>(null)
   const translate = useTranslate()
@@ -64,19 +67,9 @@ export const MenuDialog: FC<
       <Section role="dialog" aria-modal="true" className={wrapper()} ref={domRef}>
         <div className={header()}>
           <Cluster justify="space-between" align="center">
-            {isReleaseNoteSelected ? (
+            {isAppLauncherSelected ? (
               <MenuSubHeader
-                title={translate('MobileHeader/Menu/latestReleaseNotes')}
-                onClickBack={() => setIsReleaseNoteSelected(false)}
-              />
-            ) : selectedNavigationGroup ? (
-              <NavigationGroupHeader currentNavigationGroup={selectedNavigationGroup} />
-            ) : (
-              <div>{tenantSelector}</div>
-            )}
-            {/* {isAppLauncherSelected ? (
-              <MenuSubHeader
-                title={translate('MobileHeader/Menu/appList')}
+                title={translate('Launcher/listText')}
                 onClickBack={() => setIsAppLauncherSelected(false)}
               />
             ) : isReleaseNoteSelected ? (
@@ -88,7 +81,7 @@ export const MenuDialog: FC<
               <NavigationGroupHeader currentNavigationGroup={selectedNavigationGroup} />
             ) : (
               <div>{tenantSelector}</div>
-            )} */}
+            )}
 
             <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
               <FaXmarkIcon role="img" aria-label={translate('MobileHeader/Menu/closeMenu')} />
@@ -96,40 +89,32 @@ export const MenuDialog: FC<
           </Cluster>
         </div>
 
-        <div className={content()}>
-          {isReleaseNoteSelected ? (
-            <ReleaseNote />
-          ) : selectedNavigationGroup ? (
-            <Navigation
-              navigations={selectedNavigationGroup.childNavigations}
-              onClickNavigation={() => setIsOpen(false)}
-            />
-          ) : (
-            children
-          )}
-
-          {/* {isAppLauncherSelected ? (
-            <AppLauncher />
-          ) : isReleaseNoteSelected ? (
-            <ReleaseNote />
-          ) : selectedNavigationGroup ? (
-            <Navigation
-              navigations={selectedNavigationGroup.childNavigations}
-              onClickNavigation={() => setIsOpen(false)}
-            />
-          ) : (
-            children
-          )} */}
-        </div>
+        {isAppLauncherSelected && features && features.length > 0 ? (
+          <AppLauncher features={features} />
+        ) : (
+          <div className={content()}>
+            {isReleaseNoteSelected ? (
+              <ReleaseNote />
+            ) : selectedNavigationGroup ? (
+              <Navigation
+                navigations={selectedNavigationGroup.childNavigations}
+                onClickNavigation={() => setIsOpen(false)}
+              />
+            ) : (
+              children
+            )}
+          </div>
+        )}
       </Section>
     )
   }, [
     translate,
     children,
-    // isAppLauncherSelected,
+    features,
+    isAppLauncherSelected,
     isReleaseNoteSelected,
     selectedNavigationGroup,
-    // setIsAppLauncherSelected,
+    setIsAppLauncherSelected,
     setIsOpen,
     setIsReleaseNoteSelected,
     tenantSelector,
@@ -140,13 +125,13 @@ export const MenuDialog: FC<
       setContentBuffer(renderedContent)
     } else {
       setIsReleaseNoteSelected(false)
-      // setIsAppLauncherSelected(false)
+      setIsAppLauncherSelected(false)
       setSelectedNavigationGroup(null)
     }
   }, [
     isOpen,
     renderedContent,
-    // setIsAppLauncherSelected,
+    setIsAppLauncherSelected,
     setIsReleaseNoteSelected,
     setSelectedNavigationGroup,
   ])
