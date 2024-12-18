@@ -17,6 +17,7 @@ import { tv } from 'tailwind-variants'
 import { debounce } from '../../libs/debounce'
 import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../types'
 
@@ -36,7 +37,13 @@ type Props = {
   /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
   maxLetters?: number
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'beforeMaxLettersCount' | 'afterMaxLettersCount'>
+  decorators?: DecoratorsType<
+    | 'beforeMaxLettersCount'
+    | 'afterMaxLettersCount'
+    | 'afterMaxLettersCountExceeded'
+    | 'beforeScreenReaderMaxLettersDescription'
+    | 'afterScreenReaderMaxLettersDescription'
+  >
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -59,6 +66,10 @@ const getStringLength = (value: string | number | readonly string[]) => {
 
 const TEXT_BEFORE_MAXLETTERS_COUNT = 'あと'
 const TEXT_AFTER_MAXLETTERS_COUNT = '文字'
+const TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED = 'オーバー'
+
+const SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION = '最大'
+const SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION = '文字入力できます'
 
 const textarea = tv({
   slots: {
@@ -72,15 +83,12 @@ const textarea = tv({
       'aria-[invalid]:shr-border-danger',
     ],
     counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
-    counterText: 'shr-font-bold',
+    counterText: 'shr-text-black',
   },
   variants: {
     error: {
       true: {
         counterText: 'shr-text-danger',
-      },
-      false: {
-        counterText: 'shr-text-grey',
       },
     },
   },
@@ -108,24 +116,60 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     ref,
   ) => {
     const maxLettersId = useId()
+    const maxLettersNoticeId = `${maxLettersId}-notice`
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const currentValue = props.defaultValue || props.value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
-    const beforeMaxLettersCount = useMemo(
-      () =>
-        decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
-        TEXT_BEFORE_MAXLETTERS_COUNT,
+    const [srCounterMessage, setSrCounterMessage] = useState('')
+
+    const {
+      afterMaxLettersCount,
+      beforeMaxLettersCount,
+      maxLettersCountExceeded,
+      beforeScreenReaderMaxLettersDescription,
+      afterScreenReaderMaxLettersDescription,
+    } = useMemo(
+      () => ({
+        beforeMaxLettersCount:
+          decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
+          TEXT_BEFORE_MAXLETTERS_COUNT,
+        afterMaxLettersCount:
+          decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
+          TEXT_AFTER_MAXLETTERS_COUNT,
+        maxLettersCountExceeded:
+          decorators?.afterMaxLettersCountExceeded?.(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED) ||
+          TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
+        beforeScreenReaderMaxLettersDescription:
+          decorators?.beforeScreenReaderMaxLettersDescription?.(
+            SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+          ) || SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+        afterScreenReaderMaxLettersDescription:
+          decorators?.afterScreenReaderMaxLettersDescription?.(
+            SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+          ) || SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+      }),
       [decorators],
     )
-    const afterMaxLettersCount = useMemo(
-      () =>
-        decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
-        TEXT_AFTER_MAXLETTERS_COUNT,
-      [decorators],
+
+    const getCounterMessage = useCallback(
+      (counterValue: number) => {
+        if (maxLetters === undefined) return
+
+        if (counterValue > maxLetters) {
+          // {count}文字オーバー
+          return `${counterValue - maxLetters}${afterMaxLettersCount}${maxLettersCountExceeded}`
+        }
+
+        // あと{count}文字
+        return `${beforeMaxLettersCount}${maxLetters - counterValue}${afterMaxLettersCount}`
+      },
+      [maxLetters, maxLettersCountExceeded, afterMaxLettersCount, beforeMaxLettersCount],
     )
+
+    const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
 
     useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
       ref,
@@ -140,12 +184,27 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedUpdateCount = useCallback(
-      debounce((value) => {
+      debounce((value: string) => {
         startTransition(() => {
           setCount(getStringLength(value))
         })
       }, 200),
       [],
+    )
+
+    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedUpdateSrCounterMessage = useCallback(
+      debounce((value: string) => {
+        startTransition(() => {
+          const counterText = getCounterMessage(getStringLength(value))
+
+          if (counterText) {
+            setSrCounterMessage(counterText)
+          }
+        })
+      }, 1000),
+      [getCounterMessage],
     )
 
     const handleChange = useCallback(
@@ -155,10 +214,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         }
 
         if (maxLetters) {
-          debouncedUpdateCount(event.currentTarget.value)
+          const inputValue = event.currentTarget.value
+          debouncedUpdateCount(inputValue)
+          debouncedUpdateSrCounterMessage(inputValue)
         }
       },
-      [debouncedUpdateCount, maxLetters, onChange],
+      [debouncedUpdateCount, maxLetters, onChange, debouncedUpdateSrCounterMessage],
     )
 
     const handleInput = useCallback(
@@ -198,19 +259,24 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
           style: { width: typeof width === 'number' ? `${width}px` : width },
         },
         counterStyle: counter(),
-        counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count <= 0) }),
+        counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count < 0) }),
       }
     }, [className, count, maxLetters, width])
+
+    const hasInputError = useMemo(() => {
+      const isCharLengthExceeded = maxLetters && count > maxLetters
+      return error || isCharLengthExceeded || undefined
+    }, [error, maxLetters, count])
 
     const body = (
       <textarea
         {...props}
         {...textareaStyleProps}
+        {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
-        aria-describedby={actualMaxLettersId}
         onChange={handleChange}
         ref={textareaRef}
-        aria-invalid={error || undefined}
+        aria-invalid={hasInputError || undefined}
         rows={interimRows}
         onInput={handleInput}
       />
@@ -219,13 +285,17 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     return maxLetters ? (
       <span>
         {body}
-        <span className={counterStyle} id={actualMaxLettersId}>
-          {beforeMaxLettersCount}
-          <span className={counterTextStyle}>
-            {maxLetters - count}/{maxLetters}
+        <span className={counterStyle}>
+          <span className={counterTextStyle} id={actualMaxLettersId} aria-hidden={true}>
+            {counterVisualMessage}
           </span>
-          {afterMaxLettersCount}
         </span>
+        <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
+        <VisuallyHiddenText id={maxLettersNoticeId}>
+          {beforeScreenReaderMaxLettersDescription}
+          {maxLetters}
+          {afterScreenReaderMaxLettersDescription}
+        </VisuallyHiddenText>
       </span>
     ) : (
       body
