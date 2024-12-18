@@ -2,10 +2,9 @@ import React, { FC, ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
-import { Button, UnstyledButton } from '../../../Button'
-import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
+import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
-import { FaCaretDownIcon, FaCircleXmarkIcon, FaStarIcon, FaToolboxIcon } from '../../../Icon'
+import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
@@ -19,21 +18,12 @@ import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
 
 type Props = {
-  /** 機能一覧 */
   features: Array<Launcher['feature']>
-  /** 新しいデザインを適用するかどうか */
-  enableNew?: boolean
 }
 
 const appLauncher = tv({
   slots: {
-    appsButton: [
-      'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
-      'hover:shr-border-transparent hover:shr-bg-transparent',
-      'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
-      'forced-colors:shr-border-shorthand',
-    ],
-    contentWrapper: [
+    wrapper: [
       'smarthr-ui-AppLauncher',
       'shr-grid shr-grid-rows-[auto_1fr] shr-w-[38rem] shr-h-[40rem]',
     ],
@@ -64,16 +54,6 @@ const appLauncher = tv({
     scrollArea: ['shr-overflow-y-scroll shr-h-[509px]'],
   },
   variants: {
-    enableNew: {
-      true: {
-        appsButton: [
-          'shr-px-0.5 shr-font-bold shr-text-black',
-          '[&_>_svg]:aria-expanded:shr-rotate-180',
-          'hover:shr-bg-white-darken',
-          'focus-visible:shr-bg-white-darken',
-        ],
-      },
-    },
     noIcon: {
       true: {
         sideNav: ['[&_.smarthr-ui-SideNav-item>button]:shr-pl-1.5'],
@@ -87,7 +67,7 @@ const appLauncher = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ features: baseFeatures, enableNew }) => {
+export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   const translate = useTranslate()
   const {
     features,
@@ -101,8 +81,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, enableNew }) =>
   } = useAppLauncher(baseFeatures)
 
   const {
-    appsButton,
-    contentWrapper,
+    wrapper,
     searchArea,
     inner,
     side,
@@ -113,9 +92,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, enableNew }) =>
     mainInner,
     contentHead,
     scrollArea,
-  } = appLauncher({
-    enableNew,
-  })
+  } = appLauncher()
 
   const pageMap: Record<Launcher['page'], ReactNode> = {
     favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
@@ -123,128 +100,112 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, enableNew }) =>
   }
 
   return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button
-          prefix={enableNew ?? <FaToolboxIcon />}
-          suffix={enableNew ?? <FaCaretDownIcon />}
-          className={appsButton()}
-        >
-          <Translate>{translate('DesktopHeader/DesktopHeader/appLauncherLabel')}</Translate>
-        </Button>
-      </DropdownTrigger>
-
-      <DropdownContent controllable>
-        <div className={contentWrapper()}>
-          <div className={searchArea()}>
-            <SearchInput
-              name="search"
-              title={translate('Launcher/searchInputTitle')}
-              tooltipMessage={<Translate>{translate('Launcher/searchInputTitle')}</Translate>}
-              width="100%"
-              value={searchQuery}
-              suffix={
-                mode === 'search' && (
-                  <UnstyledButton
-                    onClick={() => {
-                      // 別のキューにしないとドロップダウンが閉じてしまう
-                      setTimeout(() => {
-                        changeSearchQuery('')
-                      }, 0)
-                    }}
-                  >
-                    <FaCircleXmarkIcon />
-                  </UnstyledButton>
-                )
-              }
-              onChange={(e) => changeSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div className={inner()}>
-            <div className={side()}>
-              <SideNav
-                className={sideNav({ selected: false })}
-                size="s"
-                items={[
-                  {
-                    id: 'favorite',
-                    title: pageMap.favorite,
-                    prefix: (
-                      <FaStarIcon
-                        color={
-                          mode !== 'search' && page === 'favorite' ? textColor.white : undefined
-                        }
-                      />
-                    ),
-                    isSelected: mode !== 'search' && page === 'favorite',
-                  },
-                ]}
-                onClick={(_, id) => {
-                  changePage(id as Launcher['page'])
+    <div className={wrapper()}>
+      <div className={searchArea()}>
+        <SearchInput
+          name="search"
+          title={translate('Launcher/searchInputTitle')}
+          tooltipMessage={<Translate>{translate('Launcher/searchInputTitle')}</Translate>}
+          width="100%"
+          value={searchQuery}
+          suffix={
+            mode === 'search' && (
+              <UnstyledButton
+                onClick={() => {
+                  // 別のキューにしないとドロップダウンが閉じてしまう
+                  setTimeout(() => {
+                    changeSearchQuery('')
+                  }, 0)
                 }}
-              />
+              >
+                <FaCircleXmarkIcon />
+              </UnstyledButton>
+            )
+          }
+          onChange={(e) => changeSearchQuery(e.target.value)}
+        />
+      </div>
 
-              <hr />
+      <div className={inner()}>
+        <div className={side()}>
+          <SideNav
+            className={sideNav({ selected: false })}
+            size="s"
+            items={[
+              {
+                id: 'favorite',
+                title: pageMap.favorite,
+                prefix: (
+                  <FaStarIcon
+                    color={mode !== 'search' && page === 'favorite' ? textColor.white : undefined}
+                  />
+                ),
+                isSelected: mode !== 'search' && page === 'favorite',
+              },
+            ]}
+            onClick={(_, id) => {
+              changePage(id as Launcher['page'])
+            }}
+          />
 
-              <Section>
-                <Heading className={sideNavHeading()} type="subSubBlockTitle">
-                  <Translate>{translate('Launcher/listText')}</Translate>
-                </Heading>
+          <hr />
 
-                <SideNav
-                  className={sideNav({ noIcon: true, selected: true })}
-                  size="s"
-                  items={[
-                    {
-                      id: 'all',
-                      title: pageMap.all,
-                      isSelected: mode !== 'search' && page === 'all',
-                    },
-                  ]}
-                  onClick={(_, id) => {
-                    changePage(id as Launcher['page'])
-                  }}
-                />
-              </Section>
+          <Section>
+            <Heading className={sideNavHeading()} type="subSubBlockTitle">
+              <Translate>{translate('Launcher/listText')}</Translate>
+            </Heading>
 
-              <div className={help()}>
-                <TextLink
-                  href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
-                  target="_blank"
-                >
-                  <Translate>{translate('Launcher/helpText')}</Translate>
-                </TextLink>
-              </div>
-            </div>
+            <SideNav
+              className={sideNav({ noIcon: true, selected: true })}
+              size="s"
+              items={[
+                {
+                  id: 'all',
+                  title: pageMap.all,
+                  isSelected: mode !== 'search' && page === 'all',
+                },
+              ]}
+              onClick={(_, id) => {
+                changePage(id as Launcher['page'])
+              }}
+            />
+          </Section>
 
-            <main className={main()}>
-              <Section className={mainInner()}>
-                <Cluster className={contentHead()} align="center" justify="space-between">
-                  <Heading type="subSubBlockTitle">
-                    {mode === 'search' ? (
-                      <Translate>{translate('Launcher/searchResultText')}</Translate>
-                    ) : (
-                      pageMap[page]
-                    )}
-                  </Heading>
-
-                  {(mode === 'search' || page === 'all') && (
-                    <AppLauncherSortDropdown
-                      sortType={sortType}
-                      onSelectSortType={(value) => setSortType(value)}
-                    />
-                  )}
-                </Cluster>
-
-                <div className={scrollArea()}>
-                  <AppLauncherFeatures features={features} page={page} />
-                </div>
-              </Section>
-            </main>
+          <div className={help()}>
+            <TextLink
+              href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
+              target="_blank"
+            >
+              <Translate>{translate('Launcher/helpText')}</Translate>
+            </TextLink>
           </div>
         </div>
-      </DropdownContent>
-    </Dropdown>
+
+        <main className={main()}>
+          <Section className={mainInner()}>
+            <Cluster className={contentHead()} align="center" justify="space-between">
+              <Heading type="subSubBlockTitle">
+                {mode === 'search' ? (
+                  <Translate>{translate('Launcher/searchResultText')}</Translate>
+                ) : (
+                  pageMap[page]
+                )}
+              </Heading>
+
+              {(mode === 'search' || page === 'all') && (
+                <AppLauncherSortDropdown
+                  sortType={sortType}
+                  onSelectSortType={(value) => setSortType(value)}
+                />
+              )}
+            </Cluster>
+
+            <div className={scrollArea()}>
+              <AppLauncherFeatures features={features} page={page} />
+            </div>
+          </Section>
+        </main>
+      </div>
+    </div>
   )
 }
