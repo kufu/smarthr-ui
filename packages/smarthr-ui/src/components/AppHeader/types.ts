@@ -32,6 +32,7 @@ export type HeaderProps = ComponentProps<typeof Header> & {
   navigations?: Navigation[] | null
   desktopNavigationAdditionalContent?: ReactNode
   releaseNote?: ReleaseNoteProps | null
+  features?: Array<Launcher['feature']>
   mobileAdditionalContent?: ReactNode
 }
 
@@ -76,4 +77,23 @@ export type ReleaseNoteProps = {
   }>
   loading?: boolean | null
   error?: boolean | null
+}
+
+const launcher = {
+  pages: ['favorite', 'all'],
+  modes: ['default', 'search'],
+  sortTypes: ['default', 'name/asc', 'name/desc'],
+} as const
+
+export type Launcher = {
+  feature: {
+    id: string
+    name: string
+    url: string
+    favorite: boolean
+    position: number | null
+  }
+  page: (typeof launcher)['pages'][number]
+  mode: (typeof launcher)['modes'][number]
+  sortType: (typeof launcher)['sortTypes'][number]
 }

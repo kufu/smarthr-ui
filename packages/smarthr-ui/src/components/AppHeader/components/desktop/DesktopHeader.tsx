@@ -9,6 +9,7 @@ import { localeMap } from '../../multilingualization'
 import { HeaderProps } from '../../types'
 import { Translate } from '../common/Translate'
 
+import { AppLauncher, NewAppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo.tsx'
 
@@ -26,6 +27,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
   navigations,
   desktopNavigationAdditionalContent,
   releaseNote,
+  features,
   ...props
 }) => {
   const translate = useTranslate()
@@ -42,14 +44,20 @@ export const DesktopHeader: FC<HeaderProps> = ({
         currentTenantId={currentTenantId}
       >
         <Cluster align="center" className="shr--me-0.25">
-          {!enableNew && schoolUrl && (
-            <HeaderLink
-              href={schoolUrl}
-              prefix={<FaGraduationCapIcon />}
-              className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
-            >
-              <Translate>{translate('common/school')}</Translate>
-            </HeaderLink>
+          {!enableNew && (
+            <>
+              {features && features.length > 0 && <AppLauncher features={features} />}
+
+              {schoolUrl && (
+                <HeaderLink
+                  href={schoolUrl}
+                  prefix={<FaGraduationCapIcon />}
+                  className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
+                >
+                  <Translate>{translate('common/school')}</Translate>
+                </HeaderLink>
+              )}
+            </>
           )}
 
           {helpPageUrl && (
