@@ -159,7 +159,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         if (maxLetters === undefined) return
 
         if (counterValue > maxLetters) {
-          // {count}文字超過
+          // {count}文字オーバー
           return `${counterValue - maxLetters}${afterMaxLettersCount}${maxLettersCountExceeded}`
         }
 
