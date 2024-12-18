@@ -48,7 +48,11 @@ export type FormDialogContentInnerProps = BaseProps & {
 const CLOSE_BUTTON_LABEL = 'キャンセル'
 
 const formDialogContentInner = tv({
+  extend: dialogContentInner,
   slots: {
+    // 領域を狭くしたときにwrapperも縮むようにflexを使用
+    wrapper: 'shr-flex shr-flex-col',
+    // 領域を狭くしたときにwrapperも縮むようにflexを使用
     form: 'shr-overflow-y-auto shr-flex-auto shr-flex shr-flex-col',
     contentWrapper: 'shr-overflow-y-auto shr-flex-auto',
   },
@@ -84,12 +88,12 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   )
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
-  const { form, contentWrapper } = formDialogContentInner()
+  const { form, contentWrapper, wrapper, actionArea, buttonArea, message } =
+    formDialogContentInner()
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={wrapper({ className: 'shr-flex shr-flex-col' })}>
+    <Section className={wrapper()}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <form onSubmit={handleSubmitAction} className={form()}>
         <div className={contentWrapper()}>
