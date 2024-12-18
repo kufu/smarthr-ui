@@ -4,10 +4,11 @@ import { tv } from 'tailwind-variants'
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
 import { usePortal } from '../../../../hooks/usePortal'
 import { Button } from '../../../Button'
-import { FaBarsIcon } from '../../../Icon'
+import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
+import { AppLauncherContext } from './AppLauncherContext'
 import { MenuAccordion } from './MenuAccordion'
 import { MenuButton } from './MenuButton'
 import { MenuDialog } from './MenuDialog'
@@ -34,7 +35,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   const { navigations } = useContext(NavigationContext)
   const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
-  // const { appLauncher, setIsAppLauncherSelected } = useContext(AppLauncherContext)
+  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
 
   const translate = useTranslate()
   const { createPortal } = usePortal()
@@ -61,7 +62,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
-          {/* {appLauncher && (
+          {features && features.length > 0 && (
             <div className={menuItemBlockStyle}>
               <Button
                 variant="secondary"
@@ -74,10 +75,10 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
                 }
                 onClick={() => setIsAppLauncherSelected(true)}
               >
-                <Translate>{translate('MobileHeader/Menu/allAppButton')}</Translate>
+                <Translate>{translate('Launcher/listText')}</Translate>
               </Button>
             </div>
-          )} */}
+          )}
 
           {navigations.length > 0 && appName ? (
             <div className={menuItemBlockStyle}>

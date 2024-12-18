@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useRef } from 'react'
+import React, { FC, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -39,10 +39,10 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
   const triggerRef = useRef<HTMLButtonElement>(null)
   const { trigger, stack, contentButton } = sortDropdown()
 
-  const sortMap: Record<Launcher['sortType'], ReactNode> = {
-    default: <Translate>{translate('Launcher/sortDropdownOrderDefault')}</Translate>,
-    'name/asc': <Translate>{translate('Launcher/sortDropdownOrderNameAsc')}</Translate>,
-    'name/desc': <Translate>{translate('Launcher/sortDropdownOrderNameDesc')}</Translate>,
+  const sortMap: Record<Launcher['sortType'], string> = {
+    default: translate('Launcher/sortDropdownOrderDefault'),
+    'name/asc': translate('Launcher/sortDropdownOrderNameAsc'),
+    'name/desc': translate('Launcher/sortDropdownOrderNameDesc'),
   }
 
   return (
@@ -87,7 +87,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
                 }, 0)
               }}
             >
-              {value}
+              <Translate>{value}</Translate>
             </Button>
           ))}
         </Stack>

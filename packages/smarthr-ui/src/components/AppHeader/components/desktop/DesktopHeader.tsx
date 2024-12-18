@@ -9,7 +9,7 @@ import { localeMap } from '../../multilingualization'
 import { HeaderProps } from '../../types'
 import { Translate } from '../common/Translate'
 
-import { AppLauncher, NewAppLauncher } from './AppLauncher'
+import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo.tsx'
 

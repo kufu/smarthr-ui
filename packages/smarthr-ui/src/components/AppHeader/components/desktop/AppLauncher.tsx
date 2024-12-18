@@ -2,29 +2,21 @@ import React, { FC, ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
-import { AnchorButton, Button, UnstyledButton } from '../../../Button'
+import { Button, UnstyledButton } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Heading } from '../../../Heading'
-import {
-  FaArrowRightIcon,
-  FaCaretDownIcon,
-  FaCircleXmarkIcon,
-  FaStarIcon,
-  FaToolboxIcon,
-} from '../../../Icon'
+import { FaCaretDownIcon, FaCircleXmarkIcon, FaStarIcon, FaToolboxIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
-import { LineClamp } from '../../../LineClamp'
 import { Section } from '../../../SectioningContent'
 import { SideNav } from '../../../SideNav'
-import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Launcher } from '../../types'
+import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
+import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
-
-import { AppLauncherSortDropdown } from './AppLauncherSortDropdown'
 
 type Props = {
   /** 機能一覧 */
@@ -70,12 +62,6 @@ const appLauncher = tv({
       '[&_.smarthr-ui-Heading]:shr-text-black',
     ],
     scrollArea: ['shr-overflow-y-scroll shr-h-[509px]'],
-    list: ['shr-list-none', '[&>li]:shr-px-0.5 [&>li]:shr-py-0.25'],
-    listEmpty: ['shr-p-1 shr-text-center'],
-    listItem: [
-      'smarthr-ui-AppLauncher-listItem',
-      'shr-grid shr-grid-cols-[1rem_1fr_1rem] shr-gap-0.75 shr-min-h-[2.5rem] shr-px-1 shr-py-0 shr-leading-tight shr-text-left shr-whitespace-normal',
-    ],
   },
   variants: {
     enableNew: {
@@ -96,11 +82,6 @@ const appLauncher = tv({
     selected: {
       false: {
         sideNav: ['[&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-text-grey'],
-      },
-    },
-    favorite: {
-      false: {
-        listItem: ['shr-grid-cols-[1fr_1rem]'],
       },
     },
   },
@@ -132,9 +113,6 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, enableNew }) =>
     mainInner,
     contentHead,
     scrollArea,
-    list,
-    listEmpty,
-    listItem,
   } = appLauncher({
     enableNew,
   })
@@ -260,31 +238,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, enableNew }) =>
                 </Cluster>
 
                 <div className={scrollArea()}>
-                  <ul className={list()}>
-                    {features.length === 0 ? (
-                      <div className={listEmpty()}>
-                        <Text size="S">
-                          <Translate>{translate('Launcher/emptyText')}</Translate>
-                        </Text>
-                      </div>
-                    ) : (
-                      features.map((feature) => (
-                        <li key={feature.id}>
-                          <AnchorButton
-                            className={listItem({ favorite: page === 'favorite' })}
-                            variant="text"
-                            href={feature.url}
-                            prefix={page === 'favorite' && <FaStarIcon />}
-                            suffix={<FaArrowRightIcon />}
-                            wide
-                            target="_blank"
-                          >
-                            <LineClamp maxLines={2}>{feature.name}</LineClamp>
-                          </AnchorButton>
-                        </li>
-                      ))
-                    )}
-                  </ul>
+                  <AppLauncherFeatures features={features} page={page} />
                 </div>
               </Section>
             </main>
