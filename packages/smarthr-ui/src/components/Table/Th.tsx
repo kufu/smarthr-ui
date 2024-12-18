@@ -148,10 +148,10 @@ export const Th: FC<Props & ElementProps> = ({
 }
 
 const sortButton = tv({
-  base: '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold shr-items-center',
+  base: '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold shr-items-center shr-justify-between',
   variants: {
     align: {
-      left: 'shr-justify-between',
+      left: '',
       right: 'shr-justify-end',
     },
   },
