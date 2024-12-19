@@ -4,6 +4,8 @@ import React, {
   type PropsWithChildren,
   type ReactNode,
   useCallback,
+  useContext,
+  useMemo,
 } from 'react'
 
 import { Button } from '../../Button'
@@ -13,6 +15,12 @@ import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
+
+import {
+  StepFormDialogActionContext,
+  StepFormDialogContext,
+  StepItem,
+} from './StepFormDialogProvider'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
@@ -26,8 +34,14 @@ export type BaseProps = PropsWithChildren<
       /**
        * アクションボタンをクリックした時に発火するコールバック関数
        * @param closeDialog ダイアログを閉じる関数
+       * @param currentStep onSubmitが発火した時のステップ
+       * @returns 次のステップに遷移する場合は次のステップ、遷移しない場合はundefined
        */
-      onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>) => void
+      onSubmit: (
+        closeDialog: () => void,
+        e: FormEvent<HTMLFormElement>,
+        currentStep: StepItem,
+      ) => StepItem | undefined
       /** アクションボタンを無効にするかどうか */
       actionDisabled?: boolean
       /** 閉じるボタンを無効にするかどうか */
@@ -38,11 +52,10 @@ export type BaseProps = PropsWithChildren<
 >
 
 export type StepFormDialogContentInnerProps = BaseProps & {
+  firstStep: StepItem
   onClickClose: () => void
   responseMessage?: ResponseMessageType
-  activeStep: number
   stepLength: number
-  onClickNext?: () => void
   onClickBack?: () => void
 }
 
@@ -55,39 +68,62 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   title,
   titleId,
   subtitle,
-  titleTag,
   contentBgColor,
   contentPadding,
   submitLabel,
   actionTheme = 'primary',
-  activeStep,
   stepLength,
+  firstStep,
   onSubmit,
   onClickClose,
   responseMessage,
   actionDisabled = false,
   closeDisabled,
   decorators,
-  onClickNext,
   onClickBack,
 }) => {
+  const { currentStep, stepQueue } = useContext(StepFormDialogContext)
+  const { setCurrentStep } = useContext(StepFormDialogActionContext)
+  const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
+
+  const handleCloseAction = useCallback(() => {
+    onClickClose()
+    setTimeout(() => {
+      // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
+      stepQueue.current = [firstStep]
+      setCurrentStep(firstStep)
+    }, 300)
+  }, [firstStep, stepQueue, setCurrentStep, onClickClose])
+
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
-      onSubmit(onClickClose, e)
+
+      const next = onSubmit(handleCloseAction, e, currentStep)
+      if (!next) {
+        return
+      }
+      setCurrentStep(next)
     },
-    [onSubmit, onClickClose],
+    [currentStep, onSubmit, setCurrentStep, handleCloseAction],
   )
+  const handleBackAction = useCallback(() => {
+    if (onClickBack) {
+      onClickBack()
+    }
+    const prev = stepQueue.current.pop() ?? firstStep
+    setCurrentStep(prev)
+  }, [firstStep, stepQueue, onClickBack, setCurrentStep])
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
 
   const actionText =
-    activeStep === stepLength - 1
+    activeStep === stepLength
       ? submitLabel
       : decorators?.nextButtonLabel?.(NEXT_BUTTON_LABEL) || NEXT_BUTTON_LABEL
 
@@ -98,9 +134,8 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
         {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
         <Stack gap={0} className={wrapper()}>
           <DialogHeader
-            title={`${title} ${activeStep + 1}/${stepLength}`}
+            title={`${title} ${activeStep}/${stepLength}`}
             subtitle={subtitle}
-            titleTag={titleTag}
             titleId={titleId}
           />
           <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
@@ -108,26 +143,25 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           </DialogBody>
           <Stack gap={0.5} className={actionArea()}>
             <Cluster justify="space-between">
-              {activeStep > 0 && (
-                <Button onClick={onClickBack} className="smarthr-ui-Dialog-backButton">
+              {activeStep > 1 && (
+                <Button onClick={handleBackAction} className="smarthr-ui-Dialog-backButton">
                   {decorators?.backButtonLabel?.(BACK_BUTTON_LABEL) || BACK_BUTTON_LABEL}
                 </Button>
               )}
               <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
                 <Button
-                  onClick={onClickClose}
+                  onClick={handleCloseAction}
                   disabled={closeDisabled || isRequestProcessing}
                   className="smarthr-ui-Dialog-closeButton"
                 >
                   {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
                 </Button>
                 <Button
-                  type={activeStep === stepLength - 1 ? 'submit' : 'button'}
+                  type={'submit'}
                   variant={actionTheme}
                   disabled={actionDisabled}
                   loading={isRequestProcessing}
                   className="smarthr-ui-Dialog-actionButton"
-                  onClick={onClickNext}
                 >
                   {actionText}
                 </Button>

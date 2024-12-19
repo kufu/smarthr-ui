@@ -11,7 +11,7 @@ import { Input } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
-import { StepFormDialog } from './StepFormDialog'
+import { StepFormDialog, StepFormDialogItem } from './StepFormDialog'
 
 import { ActionDialog, ActionDialogContent, DialogTrigger } from '.'
 
@@ -42,6 +42,14 @@ export const Default: StoryFn = () => {
   const [responseMessage, setResponseMessage] =
     useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const stepOrder = [
+    { id: 'a', stepNumber: 1 },
+    {
+      id: 'b',
+      stepNumber: 2,
+    },
+    { id: 'c', stepNumber: 3 },
+  ]
 
   return (
     <Cluster>
@@ -59,69 +67,83 @@ export const Default: StoryFn = () => {
         title="FormDialog"
         subtitle="副題"
         submitLabel="保存"
-        decorators={{ closeButtonLabel: () => '閉じる', nextButtonLabel: () => 'Next' }}
-        onSubmit={(closeDialog) => {
-          action('executed')()
+        firstStep={stepOrder[0]}
+        onSubmit={(closeDialog, e, currentStep) => {
+          action('onSubmit')()
           setResponseMessage(undefined)
-          closeDialog()
+          const currentStepIndex = stepOrder.findIndex((step) => step.id === currentStep.id)
+          if (currentStepIndex >= 2) {
+            closeDialog()
+          }
+          if (currentStepIndex === 0) {
+            const grape = e.currentTarget.elements.namedItem('Grape') as HTMLInputElement
+            if (grape.checked) {
+              return stepOrder[2]
+            }
+          }
+          return stepOrder.at(currentStepIndex + 1)
         }}
         onClickClose={() => {
           action('closed')()
           setOpenedDialog(null)
           setResponseMessage(undefined)
         }}
-        onClickNext={() => {
-          action('next')()
-        }}
         onClickBack={() => {
           action('back')()
         }}
+        stepLength={3}
         responseMessage={responseMessage}
         id="dialog-form"
         data-test="form-dialog-content"
         width="40em"
       >
-        <Fieldset title="fruits" innerMargin={0.5}>
-          <RadioListCluster forwardedAs="ul">
-            <li>
-              <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
-                Apple
-              </RadioButton>
-            </li>
-            <li>
-              <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
-                Orange
-              </RadioButton>
-            </li>
-            <li>
-              <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
-                Grape
-              </RadioButton>
-            </li>
-          </RadioListCluster>
-        </Fieldset>
-        <FormControl title="Sample">
-          <Input type="text" name="text" />
-        </FormControl>
-        <Fieldset title="fruits" innerMargin={0.5}>
-          <ul>
-            <li>
-              <CheckBox name="1">CheckBox</CheckBox>
-            </li>
+        <StepFormDialogItem {...stepOrder[0]}>
+          <Fieldset title="fruits" innerMargin={0.5}>
+            <RadioListCluster forwardedAs="ul">
+              <li>
+                <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
+                  Apple
+                </RadioButton>
+              </li>
+              <li>
+                <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
+                  Orange
+                </RadioButton>
+              </li>
+              <li>
+                <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
+                  これを選ぶとステップ2を飛ばして3に進みます
+                </RadioButton>
+              </li>
+            </RadioListCluster>
+          </Fieldset>
+        </StepFormDialogItem>
+        <StepFormDialogItem {...stepOrder[1]}>
+          <FormControl id="b" title="Sample">
+            <Input type="text" name="text" />
+          </FormControl>
+        </StepFormDialogItem>
+        <StepFormDialogItem {...stepOrder[2]}>
+          <Fieldset title="fruits" innerMargin={0.5}>
+            <ul>
+              <li>
+                <CheckBox name="1">CheckBox</CheckBox>
+              </li>
 
-            <li>
-              <CheckBox name="error" error>
-                CheckBox / error
-              </CheckBox>
-            </li>
+              <li>
+                <CheckBox name="error" error>
+                  CheckBox / error
+                </CheckBox>
+              </li>
 
-            <li>
-              <CheckBox name="disabled" disabled>
-                CheckBox / disabled
-              </CheckBox>
-            </li>
-          </ul>
-        </Fieldset>
+              <li>
+                <CheckBox name="disabled" disabled>
+                  CheckBox / disabled
+                </CheckBox>
+              </li>
+            </ul>
+          </Fieldset>
+        </StepFormDialogItem>
       </StepFormDialog>
     </Cluster>
   )
