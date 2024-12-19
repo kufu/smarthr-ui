@@ -26,13 +26,13 @@ const Link: React.FC<{
 
 export const Template: StoryFn<typeof AppNavi> = (args) => (
   <AppNavi {...args}>
-    <AppNaviButton current>ボタン</AppNaviButton>
+    <AppNaviButton>ボタン</AppNaviButton>
     <AppNaviAnchor href="/">アンカーボタン</AppNaviAnchor>
     <AppNaviDropdownMenuButton label="ドロップダウンボタン">
       <Button>ボタン</Button>
       <AnchorButton href="#">アンカーボタン</AnchorButton>
       <DropdownMenuGroup name="グループ">
-        <Button>権限</Button>
+        <Button aria-current="page">権限</Button>
         <AnchorButton href="#">その他</AnchorButton>
       </DropdownMenuGroup>
     </AppNaviDropdownMenuButton>
