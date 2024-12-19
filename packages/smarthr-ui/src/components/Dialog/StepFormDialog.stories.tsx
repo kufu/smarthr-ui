@@ -64,23 +64,22 @@ export const Default: StoryFn = () => {
       {/* // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <StepFormDialog
         isOpen={openedDialog === 'normal'}
-        title="FormDialog"
-        subtitle="副題"
+        title="StepFormDialog"
         submitLabel="保存"
         firstStep={stepOrder[0]}
         onSubmit={(closeDialog, e, currentStep) => {
           action('onSubmit')()
           setResponseMessage(undefined)
-          const currentStepIndex = stepOrder.findIndex((step) => step.id === currentStep.id)
-          if (currentStepIndex >= 2) {
+          if (currentStep.id === stepOrder[2].id) {
             closeDialog()
           }
-          if (currentStepIndex === 0) {
-            const grape = e.currentTarget.elements.namedItem('Grape') as HTMLInputElement
-            if (grape.checked) {
+          if (currentStep.id === stepOrder[0].id) {
+            const skip = e.currentTarget.elements.namedItem('skip') as HTMLInputElement
+            if (skip.checked) {
               return stepOrder[2]
             }
           }
+          const currentStepIndex = stepOrder.findIndex((step) => step.id === currentStep.id)
           return stepOrder.at(currentStepIndex + 1)
         }}
         onClickClose={() => {
@@ -111,7 +110,7 @@ export const Default: StoryFn = () => {
                 </RadioButton>
               </li>
               <li>
-                <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
+                <RadioButton name="skip" checked={value === 'skip'} onChange={onChange}>
                   これを選ぶとステップ2を飛ばして3に進みます
                 </RadioButton>
               </li>
@@ -152,7 +151,7 @@ export const Default: StoryFn = () => {
 Default.parameters = {
   docs: {
     description: {
-      story: '`FormDialog with step` is a form dialog that can be divided into multiple steps.',
+      story: '`StepFormDialog` is a form dialog that can be divided into multiple steps.',
     },
   },
 }
