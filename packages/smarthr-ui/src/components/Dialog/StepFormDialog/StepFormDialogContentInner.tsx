@@ -144,7 +144,11 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <Stack gap={0.5} className={actionArea()}>
             <Cluster justify="space-between">
               {activeStep > 1 && (
-                <Button onClick={handleBackAction} className="smarthr-ui-Dialog-backButton">
+                <Button
+                  onClick={handleBackAction}
+                  disabled={isRequestProcessing}
+                  className="smarthr-ui-Dialog-backButton"
+                >
                   {decorators?.backButtonLabel?.(BACK_BUTTON_LABEL) || BACK_BUTTON_LABEL}
                 </Button>
               )}
