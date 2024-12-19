@@ -8,6 +8,7 @@ type Props = {
   error?: boolean
 }
 
+/** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
 export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
     const { wrapperStyle, innerStyle } = useMemo(() => {

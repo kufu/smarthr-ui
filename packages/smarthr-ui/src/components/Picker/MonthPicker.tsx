@@ -8,6 +8,7 @@ type Props = {
   error?: boolean
 }
 
+/** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
 export const MonthPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
     const { wrapperStyle, innerStyle } = useMemo(() => {
