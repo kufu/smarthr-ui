@@ -79,6 +79,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      intl-messageformat:
+        specifier: ^10.7.10
+        version: 10.7.10
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
