@@ -70,8 +70,14 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     }
   }, [className])
   const { name } = useContext(AccordionPanelItemContext)
-  const { iconPosition, expandedItems, onClickTrigger, onClickProps, expandableMultiply } =
-    useContext(AccordionPanelContext)
+  const {
+    iconPosition,
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+    expandableMultiply,
+    handleKeyPress,
+  } = useContext(AccordionPanelContext)
 
   const isExpanded = getIsInclude(expandedItems, name)
 
@@ -98,6 +104,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         aria-expanded={isExpanded}
         aria-controls={`${name}-content`}
         onClick={handleClick}
+        onKeyDown={handleKeyPress}
         className={buttonStyle}
         data-component="AccordionHeaderButton"
         type="button"

@@ -39,6 +39,7 @@ export const AccordionPanelContext = React.createContext<{
   expandedItems: Map<string, string>
   expandableMultiply: boolean
   parentRef: React.RefObject<HTMLDivElement> | null
+  handleKeyPress?: (event: React.KeyboardEvent<HTMLElement>) => void
   onClickTrigger?: (itemName: string, isExpanded: boolean) => void
   onClickProps?: (expandedItems: string[]) => void
 }>({
@@ -71,7 +72,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
     [expandableMultiply, expandedItems],
   )
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLElement>): void => {
     if (!parentRef?.current) {
       return
     }
@@ -118,16 +119,11 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         iconPosition,
         expandableMultiply,
         parentRef,
+        handleKeyPress,
       }}
     >
       {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-      <div
-        {...props}
-        className={styles}
-        ref={parentRef}
-        onKeyDown={handleKeyPress}
-        role="presentation"
-      />
+      <div {...props} className={styles} ref={parentRef} role="presentation" />
     </AccordionPanelContext.Provider>
   )
 }
