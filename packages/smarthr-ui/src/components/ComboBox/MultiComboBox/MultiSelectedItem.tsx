@@ -1,12 +1,12 @@
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { UnstyledButton } from '../Button'
-import { Chip } from '../Chip'
-import { FaTimesCircleIcon } from '../Icon'
+import { UnstyledButton } from '../../Button'
+import { Chip } from '../../Chip'
+import { FaTimesCircleIcon } from '../../Icon'
+import { ComboBoxItem } from '../types'
 
 import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
-import { ComboBoxItem } from './types'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }
