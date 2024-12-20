@@ -10,6 +10,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../hooks/useIntl'
 import { ElementRef, ElementRefProps } from '../../types'
 import { FaUpRightFromSquareIcon } from '../Icon'
 
@@ -61,13 +62,21 @@ export const TextLink: TextLinkComponent = forwardRef(
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
+    const { formatMessage } = useIntl()
     const Component = elementAs || 'a'
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
-        return <FaUpRightFromSquareIcon aria-label="別タブで開く" />
+        return (
+          <FaUpRightFromSquareIcon
+            aria-label={formatMessage({
+              id: 'smarthr-ui/TextLink/OpenInNewTab',
+              defaultMessage: '別タブで開く',
+            })}
+          />
+        )
       }
       return suffix
-    }, [suffix, target])
+    }, [suffix, target, formatMessage])
     const actualHref = useMemo(() => {
       if (href) {
         return href
