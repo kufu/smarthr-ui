@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions'
 import React, { ComponentPropsWithoutRef } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
+import { IntlProvider } from '../../IntlProvider/IntlProvider'
 import { UpwardLink } from '../../UpwardLink'
 import { TextLink } from '../TextLink'
 
@@ -30,7 +31,11 @@ export default {
   title: 'Navigation（ナビゲーション）/TextLink',
   component: TextLink,
   subcomponents: { UpwardLink },
-  render: (args) => <TextLink {...args} />,
+  render: (args) => (
+    <IntlProvider locale="ja">
+      <TextLink {...args} />
+    </IntlProvider>
+  ),
   argTypes: {
     href: {
       control: 'text',
