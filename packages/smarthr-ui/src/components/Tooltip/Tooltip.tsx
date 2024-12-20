@@ -111,7 +111,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
           return
         }
 
-        // Tooltipのtriggerではない要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+        // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
         if (!ref.current?.contains((e as React.BaseSyntheticEvent).target)) {
           return
         }
@@ -141,32 +141,17 @@ export const Tooltip: FC<Props & ElementProps> = ({
     const pointerHandler = (e: FocusEvent) => {
       if (!(e.target instanceof HTMLElement) || !ref.current) return
 
-      const currentPointerTarget = e.target
-
-      if (!ref.current.contains(currentPointerTarget)) {
+      if (!ref.current.contains(document.activeElement)) {
         setIsVisible(false)
       }
 
-      if (ref.current.contains(currentPointerTarget)) {
+      if (ref.current.contains(e.target)) {
         setIsVisible(true)
       }
     }
 
     document.addEventListener('pointerenter', pointerHandler, true)
     return () => document.removeEventListener('pointerenter', pointerHandler, true)
-  }, [])
-
-  useEffect(() => {
-    const focusHandler = (e: FocusEvent) => {
-      if (!(e.target instanceof HTMLElement) || !ref.current) return
-
-      if (!ref.current.contains(e.target)) {
-        setIsVisible(false)
-      }
-    }
-
-    document.addEventListener('focus', focusHandler, true)
-    return () => document.removeEventListener('focus', focusHandler, true)
   }, [])
 
   const getHandlerToHide = useCallback(
