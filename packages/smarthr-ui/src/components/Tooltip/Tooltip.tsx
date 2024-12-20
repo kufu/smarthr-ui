@@ -7,6 +7,7 @@ import React, {
   ReactElement,
   ReactNode,
   useCallback,
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -110,6 +111,13 @@ export const Tooltip: FC<Props & ElementProps> = ({
           return
         }
 
+        setRect(ref.current.getBoundingClientRect())
+
+        // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+        if (!ref.current?.contains(document.activeElement)) {
+          return
+        }
+
         if (ellipsisOnly) {
           const outerWidth = parseInt(
             window
@@ -125,7 +133,6 @@ export const Tooltip: FC<Props & ElementProps> = ({
           }
         }
 
-        setRect(ref.current.getBoundingClientRect())
         setIsVisible(true)
       },
     [ellipsisOnly],
@@ -154,6 +161,24 @@ export const Tooltip: FC<Props & ElementProps> = ({
         : children,
     [children, isInnerTarget, messageId],
   )
+
+  // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)にpointerで移動されたときのtooltipの表示・非表示の処理
+  useEffect(() => {
+    const pointerHandler = (e: PointerEvent) => {
+      if (!(e.target instanceof HTMLElement) || !ref.current) return
+
+      if (!ref.current.contains(document.activeElement)) {
+        setIsVisible(false)
+      }
+
+      if (ref.current.contains(e.target)) {
+        setIsVisible(true)
+      }
+    }
+
+    document.addEventListener('pointerenter', pointerHandler, true)
+    return () => document.removeEventListener('pointerenter', pointerHandler, true)
+  }, [])
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
