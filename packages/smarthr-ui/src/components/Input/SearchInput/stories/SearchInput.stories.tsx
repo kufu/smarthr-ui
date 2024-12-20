@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Forms（フォーム）/SearchInput',
   component: SearchInput,
-  // eslint-disable-next-line smarthr/a11y-input-in-form-control
+
   render: (args) => <SearchInput {...args} />,
   args: {
     tooltipMessage: '氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。',
@@ -55,7 +55,6 @@ export const Width: StoryObj<typeof SearchInput> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 200].map((width) => (
-        // eslint-disable-next-line smarthr/a11y-input-in-form-control
         <SearchInput {...args} width={width} key={width} />
       ))}
     </Stack>

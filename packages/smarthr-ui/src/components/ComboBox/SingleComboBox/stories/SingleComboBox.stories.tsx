@@ -8,7 +8,6 @@ import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { SingleComboBox } from '../SingleComboBox'
 
-// eslint-disable-next-line storybook/prefer-pascal-case
 export const defaultItems = {
   'option 1': {
     label: 'option 1',
@@ -68,7 +67,6 @@ export const defaultItems = {
   },
 }
 
-// eslint-disable-next-line storybook/prefer-pascal-case
 export const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
 
 export default {
