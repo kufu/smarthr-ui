@@ -7,6 +7,7 @@ import React, {
   ReactElement,
   ReactNode,
   useCallback,
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -110,6 +111,11 @@ export const Tooltip: FC<Props & ElementProps> = ({
           return
         }
 
+        // Tooltipのtriggerではない要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+        if (!ref.current?.contains((e as React.BaseSyntheticEvent).target)) {
+          return
+        }
+
         if (ellipsisOnly) {
           const outerWidth = parseInt(
             window
@@ -130,6 +136,38 @@ export const Tooltip: FC<Props & ElementProps> = ({
       },
     [ellipsisOnly],
   )
+
+  useEffect(() => {
+    const pointerHandler = (e: FocusEvent) => {
+      if (!(e.target instanceof HTMLElement) || !ref.current) return
+
+      const currentPointerTarget = e.target
+
+      if (!ref.current.contains(currentPointerTarget)) {
+        setIsVisible(false)
+      }
+
+      if (ref.current.contains(currentPointerTarget)) {
+        setIsVisible(true)
+      }
+    }
+
+    document.addEventListener('pointerenter', pointerHandler, true)
+    return () => document.removeEventListener('pointerenter', pointerHandler, true)
+  }, [])
+
+  useEffect(() => {
+    const focusHandler = (e: FocusEvent) => {
+      if (!(e.target instanceof HTMLElement) || !ref.current) return
+
+      if (!ref.current.contains(e.target)) {
+        setIsVisible(false)
+      }
+    }
+
+    document.addEventListener('focus', focusHandler, true)
+    return () => document.removeEventListener('focus', focusHandler, true)
+  }, [])
 
   const getHandlerToHide = useCallback(
     <T,>(handler?: (e: T) => void) =>
