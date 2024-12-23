@@ -20,7 +20,7 @@ import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
-import { UserInfo } from './UserInfo.tsx'
+import { UserInfo } from './UserInfo'
 
 const desktopHeader = tv({
   slots: {
