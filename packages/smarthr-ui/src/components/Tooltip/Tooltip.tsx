@@ -114,7 +114,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
         setRect(ref.current.getBoundingClientRect())
 
         // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
-        if (!ref.current?.contains(document.activeElement)) {
+        if (!ref.current.contains(document.activeElement)) {
           return
         }
 
