@@ -90,7 +90,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     onClickClose()
     setTimeout(() => {
       // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
-      stepQueue.current = [firstStep]
+      stepQueue.current = []
       setCurrentStep(firstStep)
     }, 300)
   }, [firstStep, stepQueue, setCurrentStep, onClickClose])
@@ -102,6 +102,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
 
+      stepQueue.current.push(currentStep)
       const next = onSubmit(handleCloseAction, e, currentStep)
       if (!next) {
         return
