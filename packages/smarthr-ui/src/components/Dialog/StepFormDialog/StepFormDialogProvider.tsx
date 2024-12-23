@@ -29,7 +29,7 @@ type Props = {
 }
 export const StepFormDialogProvider: React.FC<Props> = ({ children, firstStep }) => {
   const [currentStep, setCurrentStep] = useState<StepItem>(firstStep)
-  const stepQueue = useRef<StepItem[]>([firstStep])
+  const stepQueue = useRef<StepItem[]>([])
 
   return (
     <StepFormDialogContext.Provider value={{ currentStep, stepQueue }}>
