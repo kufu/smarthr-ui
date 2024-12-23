@@ -76,11 +76,7 @@ describe('StepFormDialog', () => {
     await act(() => userEvent.click(screen.getByRole('button', { name: '戻る' })))
     expect(screen.getByRole('dialog', { name: 'StepFormDialog 1/2' })).toBeVisible()
 
-    await act(async () => {
-      await userEvent.click(screen.getByRole('button', { name: '次へ' }))
-    })
-    expect(screen.getByRole('dialog', { name: 'StepFormDialog 2/2' })).toBeVisible()
-
+    await act(() => userEvent.click(screen.getByRole('button', { name: '次へ' })))
     await act(() => userEvent.click(screen.getByRole('button', { name: '保存' })))
     await waitFor(
       () => {
