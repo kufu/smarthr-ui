@@ -86,7 +86,9 @@ describe('StepFormDialog', () => {
     expect(screen.getByRole('dialog', { name: 'StepFormDialog 2/2' })).toBeVisible()
 
     await act(() => userEvent.click(screen.getByRole('button', { name: '保存' })))
-    await act(() => userEvent.keyboard('{ }'))
+    await act(async () => {
+      await userEvent.keyboard('{ }')
+    })
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'StepFormDialog 2/2' })).toBeNull()
