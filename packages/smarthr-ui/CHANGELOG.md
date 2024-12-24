@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [62.3.0](https://github.com/kufu/smarthr-ui/compare/v62.2.3...v62.3.0) (2024-12-24)
+
+
+### Features
+
+* AppHeader コンポーネントを追加  ([#5203](https://github.com/kufu/smarthr-ui/issues/5203)) ([4804f44](https://github.com/kufu/smarthr-ui/commit/4804f4479a1173d79a19f1590060131cc67c1c66))
+* WarekiPicker を追加 ([#5196](https://github.com/kufu/smarthr-ui/issues/5196)) ([30ea4bf](https://github.com/kufu/smarthr-ui/commit/30ea4bfdc471e1fa0c800180701796e863353d9d))
+
 ### [62.2.3](https://github.com/kufu/smarthr-ui/compare/v62.2.2...v62.2.3) (2024-12-18)
 
 
