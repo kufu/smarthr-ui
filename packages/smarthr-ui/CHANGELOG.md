@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [62.3.1](https://github.com/kufu/smarthr-ui/compare/v62.3.0...v62.3.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* AppHeader を Server Component から呼べるようにする ([#5226](https://github.com/kufu/smarthr-ui/issues/5226)) ([cc9c481](https://github.com/kufu/smarthr-ui/commit/cc9c4812d05ff76a9a855f5907cd13bd7baa19ff))
+
 ## [62.3.0](https://github.com/kufu/smarthr-ui/compare/v62.2.3...v62.3.0) (2024-12-24)
 
 
