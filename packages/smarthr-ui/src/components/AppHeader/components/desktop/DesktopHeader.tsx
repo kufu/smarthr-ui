@@ -5,7 +5,6 @@ import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'
 import {
-  FaCaretDownIcon,
   FaCircleQuestionIcon,
   FaGraduationCapIcon,
   FaRegCircleQuestionIcon,
@@ -84,11 +83,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
               {features && features.length > 0 && (
                 <Dropdown>
                   <DropdownTrigger>
-                    <Button
-                      prefix={enableNew ?? <FaToolboxIcon />}
-                      suffix={enableNew ?? <FaCaretDownIcon />}
-                      className={appsButton()}
-                    >
+                    <Button prefix={enableNew ?? <FaToolboxIcon />} className={appsButton()}>
                       <Translate>
                         {translate('DesktopHeader/DesktopHeader/appLauncherLabel')}
                       </Translate>
