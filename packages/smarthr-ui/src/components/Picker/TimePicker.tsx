@@ -8,6 +8,7 @@ type Props = {
   error?: boolean
 }
 
+/** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
 export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
     const { wrapperStyle, innerStyle } = useMemo(() => {
@@ -20,7 +21,6 @@ export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
 
     return (
       <span className={wrapperStyle}>
-        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
           data-smarthr-ui-input="true"
