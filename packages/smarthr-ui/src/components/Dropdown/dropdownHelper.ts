@@ -45,11 +45,9 @@ export function getContentBoxStyle(
   if (triggerRect.bottom + contentSize.height <= windowSize.height) {
     // ドロップダウンのサイズがトリガの下側の領域に収まる場合
     contentBox.top = `${scroll.top + triggerRect.bottom + DROPDOWN_MENU_GAP - 5}px`
-    console.log('test 下側')
   } else if (triggerRect.top - contentSize.height >= 0) {
     // ドロップダウンのサイズがトリガの上側の領域に収まる場合
     contentBox.top = `${scroll.top + triggerRect.top - contentSize.height - DROPDOWN_MENU_GAP + 5}px`
-    console.log('test 上側')
   } else {
     const padding = 10
     const triggerHeight = triggerRect.bottom - triggerRect.top
@@ -58,12 +56,10 @@ export function getContentBoxStyle(
       // 下側の領域のほうが広い場合
       contentBox.top = `${scroll.top + triggerRect.bottom + DROPDOWN_MENU_GAP - 5}px`
       contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
-      console.log('test 下側が広い')
     } else {
       // 上側の領域のほうが広い場合
       contentBox.top = `${scroll.top + padding - DROPDOWN_MENU_GAP + 5}px`
       contentBox.maxHeight = `${triggerRect.top - padding}px`
-      console.log('test 上側が広い')
     }
   }
 
