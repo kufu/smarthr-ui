@@ -114,6 +114,11 @@ export default {
       mapping: _childrenOptions,
     },
     enableNew: { control: false },
+    headerColor: { control: 'color' },
+    textColor: {
+      control: 'select',
+      options: ['inherit', 'TEXT_BLACK', 'TEXT_WHITE', 'TEXT_GREY', 'TEXT_DISABLED', 'TEXT_LINK'],
+    },
   },
   args: {},
   parameters: {

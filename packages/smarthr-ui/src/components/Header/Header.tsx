@@ -10,7 +10,7 @@ import { AppLauncher, HeaderDropdownMenuButton } from '.'
 
 const header = tv({
   slots: {
-    wrapper: ['smarthr-ui-Header', 'shr-bg-brand shr-px-1.25', 'max-md:shr-px-0.75'],
+    wrapper: ['smarthr-ui-Header', 'shr-px-1.25', 'max-md:shr-px-0.75', 'shr-bg-brand'],
     logoLink: [
       'smarthr-ui-Header-logoLink',
       /* ロゴが持つ padding 分だけ調整 */
@@ -58,6 +58,10 @@ type Props = {
   onTenantSelect?: (id: string) => void
   /** @deprecated internal-ui から利用するので使わないでください。 */
   enableNew?: boolean
+  /** ヘッダーの背景色を指定します */
+  headerColor?: string
+  /** ヘッダーの文字色を指定します */
+  textColor?: 'inherit' | 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
 } & VariantProps<typeof header>
 
 type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
@@ -73,6 +77,8 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   onTenantSelect,
   children,
   className,
+  headerColor,
+  textColor = 'TEXT_WHITE',
 }) => {
   const {
     wrapper,
@@ -92,7 +98,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   const tenantInfo = useMemo(
     () =>
       tenants && tenants.length > 1 ? (
-        <HeaderDropdownMenuButton label={currentTenantName}>
+        <HeaderDropdownMenuButton label={currentTenantName} textColor={textColor}>
           {tenants.map(({ id, name }) => (
             <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
               {name}
@@ -100,11 +106,11 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
           ))}
         </HeaderDropdownMenuButton>
       ) : (
-        <Text color="TEXT_WHITE" className={tenantNameText()}>
+        <Text color={textColor} className={tenantNameText()}>
           {currentTenantName}
         </Text>
       ),
-    [currentTenantName, onTenantSelect, tenants, tenantNameText],
+    [currentTenantName, onTenantSelect, tenants, tenantNameText, textColor],
   )
 
   return (
@@ -113,6 +119,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
       justify="space-between"
       gap={{ column: 0.25, row: 0 }}
       className={wrapper({ className })}
+      style={headerColor ? { backgroundColor: headerColor } : undefined}
     >
       <Cluster align="center" gap={{ column: 0.25, row: 0 }}>
         <a href={logoHref} className={logoLink()}>
