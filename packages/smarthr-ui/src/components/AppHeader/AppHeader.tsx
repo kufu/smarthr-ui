@@ -1,3 +1,5 @@
+'use client'
+
 import React, { FC } from 'react'
 
 import { DesktopHeader } from './components/desktop/DesktopHeader'
