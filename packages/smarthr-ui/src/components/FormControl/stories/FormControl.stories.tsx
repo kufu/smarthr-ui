@@ -54,7 +54,7 @@ export default {
   },
   args: {
     title: 'フォームコントロール',
-    // eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
+
     children: <Input />,
   },
   parameters: {
