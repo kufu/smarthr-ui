@@ -23,6 +23,11 @@ export function isEventFromChild(e: Event, parent: Element | null): boolean {
   return path.includes(parent)
 }
 
+/**
+ * dropdown menu buttonとdropdown menu contentの間にスペースがあくための10px分
+ */
+const DROPDOWN_MENU_GAP = 10
+
 export function getContentBoxStyle(
   triggerRect: Rect,
   contentSize: Size,
@@ -39,22 +44,26 @@ export function getContentBoxStyle(
 
   if (triggerRect.bottom + contentSize.height <= windowSize.height) {
     // ドロップダウンのサイズがトリガの下側の領域に収まる場合
-    contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
+    contentBox.top = `${scroll.top + triggerRect.bottom + DROPDOWN_MENU_GAP - 5}px`
+    console.log('test 下側')
   } else if (triggerRect.top - contentSize.height >= 0) {
-    // ドロップダウンのサイズがトリガの上川の領域に収まる場合
-    contentBox.top = `${scroll.top + triggerRect.top - contentSize.height + 5}px`
+    // ドロップダウンのサイズがトリガの上側の領域に収まる場合
+    contentBox.top = `${scroll.top + triggerRect.top - contentSize.height - DROPDOWN_MENU_GAP + 5}px`
+    console.log('test 上側')
   } else {
     const padding = 10
     const triggerHeight = triggerRect.bottom - triggerRect.top
 
     if (triggerRect.top + triggerHeight / 2 < windowSize.height / 2) {
       // 下側の領域のほうが広い場合
-      contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
+      contentBox.top = `${scroll.top + triggerRect.bottom + DROPDOWN_MENU_GAP - 5}px`
       contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
+      console.log('test 下側が広い')
     } else {
       // 上側の領域のほうが広い場合
-      contentBox.top = `${scroll.top + padding + 5}px`
+      contentBox.top = `${scroll.top + padding - DROPDOWN_MENU_GAP + 5}px`
       contentBox.maxHeight = `${triggerRect.top - padding}px`
+      console.log('test 上側が広い')
     }
   }
 
