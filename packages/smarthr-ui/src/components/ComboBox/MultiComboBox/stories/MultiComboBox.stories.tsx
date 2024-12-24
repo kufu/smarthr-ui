@@ -93,9 +93,7 @@ export default {
     },
   },
   parameters: {
-    parameters: {
-      chromatic: { disableSnapshot: true },
-    },
+    chromatic: { disableSnapshot: true },
   },
   excludeStories: ['defaultItems'],
 } as Meta<typeof MultiComboBox<{ option: string }>>
