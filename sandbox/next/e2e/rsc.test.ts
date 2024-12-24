@@ -65,6 +65,7 @@ const CLIENT_COMPONENTS: string[] = [
   'AccordionPanelContent', // 開いているパネル名を共有するためのuseContext
   'AccordionPanelItem',    // 開いているパネル名を共有するためのuseContext
   'AccordionPanelTrigger', // 開いているパネル名を共有するためのuseContext
+  'AppHeader',      // ドロップダウンやダイアログを表示するためのuseStateなど
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため
   'Base',           // 見出しレベルの自動生成のため
