@@ -60,10 +60,10 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const comboboxes = await canvas.findAllByRole('combobox')
   comboboxes[comboboxes.length - 1].focus()
   const body = canvasElement.ownerDocument.body
-  const option1 = await within(body).findByRole('button', { name: 'option 1' })
+  const option1 = await within(body).findByRole('option', { name: 'option 1' })
   await userEvent.click(option1)
   await waitForRAF()
-  const option2 = await within(body).findByRole('button', { name: 'option 2' })
+  const option2 = await within(body).findByRole('option', { name: 'option 2' })
   await userEvent.click(option2)
   await waitForRAF()
   const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
