@@ -50,7 +50,6 @@ const CLOSE_BUTTON_LABEL = 'キャンセル'
 const formDialogContentInner = tv({
   extend: dialogContentInner,
   slots: {
-    // 領域を狭くしたときにwrapperも縮むようにflexを使用
     form: 'shr-contents',
   },
 })
