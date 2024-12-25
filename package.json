@@ -6,8 +6,8 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
-    "eslint": "^8.57.0",
-    "eslint-config-smarthr": "^7.3.0",
+    "eslint": "^9.17.0",
+    "eslint-config-smarthr": "^8.0.0",
     "eslint-plugin-storybook": "^0.11.1",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
@@ -31,7 +31,7 @@
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.9",
-      "@types/react": "^18.3.17",
+      "@types/react": "^18.3.18",
       "minimist": "1.2.8",
       "react": "^19.0.0",
       "react-dom": "^19.0.0",

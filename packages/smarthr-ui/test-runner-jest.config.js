@@ -32,11 +32,6 @@ module.exports = {
     'ComboBox.stories.tsx',
     'FieldSet.stories.tsx',
     'Switch.stories.tsx',
-    /**
-     * error: "Form elements must have labels"
-     * error: "Elements must only use allowed ARIA attributes"
-     */
-    'DatePicker.stories.tsx',
     'FormControl.stories.tsx', // DatePicker を含むために除外
     /**
      * error: "ARIA attributes must conform to valid values"

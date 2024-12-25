@@ -91,6 +91,8 @@ export * from './components/Switch'
 export * from './components/Stepper'
 export * from './components/Picker'
 export * from './components/Browser'
+export * from './components/WarekiPicker'
+export { AppHeader } from './components/AppHeader'
 
 // layout components
 export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'

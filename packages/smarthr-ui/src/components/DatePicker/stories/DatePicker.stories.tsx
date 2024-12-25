@@ -8,7 +8,7 @@ import { DatePicker } from '../DatePicker'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker',
+  title: 'Forms（フォーム）/DatePicker（非推奨）',
   component: DatePicker,
   render: (args) => <DatePicker {...args} />,
   args: {},
@@ -20,6 +20,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  tags: ['skip-test-runner'],
 } satisfies Meta<typeof DatePicker>
 
 export const Playground: StoryObj<typeof DatePicker> = {
