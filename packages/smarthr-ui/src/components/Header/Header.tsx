@@ -26,6 +26,7 @@ const header = tv({
       true: {
         wrapper: [
           'shr-border-solid shr-border-0 shr-border-t-6 shr-border-t-brand shr-border-b shr-border-b-default shr-bg-white shr-px-1.5',
+          // '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-text-black'
         ],
         logoLink: '',
         tenantInfo: '',
