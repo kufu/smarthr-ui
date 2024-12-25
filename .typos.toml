@@ -1,0 +1,3 @@
+files.ignore-files = [
+  './packages/smarthr-ui/CHANGELOG.md',
+]
