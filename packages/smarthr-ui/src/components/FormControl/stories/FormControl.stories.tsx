@@ -99,7 +99,7 @@ export const TitleType: StoryObj<typeof FormControl> = {
 }
 
 export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'dangerouslyTitleHidden（非推奨）',
+  name: 'dangerouslyTitleHidden（利用注意）',
   args: {
     dangerouslyTitleHidden: true,
   },
