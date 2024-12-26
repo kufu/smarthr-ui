@@ -3,3 +3,7 @@ extend-exclude = [
   'CHANGELOG.md',
   'smarthr-ui-props.json',
 ]
+
+[default.extend-words]
+BACKGROUNDS = 'BACKGROUNDS'
+BACKGRUOND = 'BACKGRUOND'
