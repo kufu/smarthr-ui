@@ -230,10 +230,10 @@ const button = tv({
         'shr-text-black',
         'focus-visible:shr-border-darken',
         'focus-visible:shr-bg-white-darken',
-        'focus-visible:constrast-more:shr-border-high-contrast',
+        'focus-visible:contrast-more:shr-border-high-contrast',
         'hover:shr-border-darken',
         'hover:shr-bg-white-darken',
-        'hover:constrast-more:shr-border-high-contrast',
+        'hover:contrast-more:shr-border-high-contrast',
       ],
     },
     {

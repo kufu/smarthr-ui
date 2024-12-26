@@ -7,7 +7,7 @@ import { AppNaviButton } from '../AppNaviButton'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-const _iconOptoins = {
+const _iconOptions = {
   なし: undefined,
   あり: FaGearIcon,
 }
@@ -19,8 +19,8 @@ export default {
   argTypes: {
     icon: {
       control: 'radio',
-      options: Object.keys(_iconOptoins),
-      mapping: _iconOptoins,
+      options: Object.keys(_iconOptions),
+      mapping: _iconOptions,
     },
   },
   args: {
@@ -40,7 +40,7 @@ export const Playground: StoryObj<typeof AppNaviButton> = {}
 export const Icon: StoryObj<typeof AppNaviButton> = {
   name: 'icon',
   args: {
-    icon: _iconOptoins['あり'],
+    icon: _iconOptions['あり'],
   },
 }
 
