@@ -6,7 +6,7 @@ import { AppNaviAnchor } from '../AppNaviAnchor'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-const _iconOptoins = {
+const _iconOptions = {
   なし: undefined,
   あり: FaGearIcon,
 }
@@ -28,8 +28,8 @@ export default {
   argTypes: {
     icon: {
       control: 'radio',
-      options: Object.keys(_iconOptoins),
-      mapping: _iconOptoins,
+      options: Object.keys(_iconOptions),
+      mapping: _iconOptions,
     },
     elementAs: {
       control: 'radio',
@@ -64,7 +64,7 @@ export const Href: StoryObj<typeof AppNaviAnchor> = {
 export const Icon: StoryObj<typeof AppNaviAnchor> = {
   name: 'icon',
   args: {
-    icon: _iconOptoins['あり'],
+    icon: _iconOptions['あり'],
   },
 }
 

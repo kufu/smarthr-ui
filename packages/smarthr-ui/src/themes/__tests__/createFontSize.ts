@@ -53,7 +53,7 @@ describe('createFontSize', () => {
     expect(actual.XXL).toBe(`${8 / 5}rem`)
   })
 
-  it('the value from scaleFactor wil be overridden if a deprecated abstract value is specified', () => {
+  it('the value from scaleFactor will be overridden if a deprecated abstract value is specified', () => {
     const actual = createFontSize({
       scaleFactor: 8,
       S: '1.1rem',

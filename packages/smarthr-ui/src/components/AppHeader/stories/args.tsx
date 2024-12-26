@@ -36,8 +36,8 @@ export const args: ComponentProps<typeof AppHeader> = {
   ],
   currentTenantId: 'tenant-1',
   onTenantSelect: action('テナント選択'),
-  schoolUrl: 'https://exmaple.com',
-  helpPageUrl: 'https://exmaple.com',
+  schoolUrl: 'https://example.com',
+  helpPageUrl: 'https://example.com',
   locale: {
     selectedLocale: 'ja',
     onSelectLocale: action('locale'),
@@ -47,18 +47,18 @@ export const args: ComponentProps<typeof AppHeader> = {
     empCode: '001',
     firstName: '須磨',
     lastName: '栄子',
-    accountUrl: 'https://exmaple.com',
+    accountUrl: 'https://example.com',
   },
   desktopAdditionalContent: <AdditionalContent>desktopAdditionalContent</AdditionalContent>,
   navigations: [
     {
       children: 'aタグ',
-      href: 'https://exmaple.com',
+      href: 'https://example.com',
     },
     {
       children: 'カスタムタグ',
       elementAs: CustomLink,
-      to: 'https://exmaple.com',
+      to: 'https://example.com',
     },
     {
       children: 'ボタン',
@@ -69,12 +69,12 @@ export const args: ComponentProps<typeof AppHeader> = {
       childNavigations: [
         {
           children: 'aタグ',
-          href: 'https://exmaple.com',
+          href: 'https://example.com',
         },
         {
           children: 'カスタムタグ',
           elementAs: CustomLink,
-          to: 'https://exmaple.com',
+          to: 'https://example.com',
         },
         {
           children: 'ボタン',
@@ -90,12 +90,12 @@ export const args: ComponentProps<typeof AppHeader> = {
           childNavigations: [
             {
               children: 'グループ1_アイテム1',
-              href: 'https://exmaple.com',
+              href: 'https://example.com',
               current: true,
             },
             {
               children: 'グループ1_アイテム2',
-              href: 'https://exmaple.com',
+              href: 'https://example.com',
             },
           ],
         },
@@ -104,11 +104,11 @@ export const args: ComponentProps<typeof AppHeader> = {
           childNavigations: [
             {
               children: 'グループ2_アイテム1',
-              href: 'https://exmaple.com',
+              href: 'https://example.com',
             },
             {
               children: 'グループ2_アイテム2',
-              href: 'https://exmaple.com',
+              href: 'https://example.com',
             },
           ],
         },
@@ -122,18 +122,18 @@ export const args: ComponentProps<typeof AppHeader> = {
     links: [
       {
         title: 'リリースノート1',
-        url: 'https://exmaple.com',
+        url: 'https://example.com',
       },
       {
         title: 'リリースノート2',
-        url: 'https://exmaple.com',
+        url: 'https://example.com',
       },
       {
         title: 'リリースノート3',
-        url: 'https://exmaple.com',
+        url: 'https://example.com',
       },
     ],
-    indexUrl: 'https://exmaple.com',
+    indexUrl: 'https://example.com',
   },
   features: [
     buildFeature(1, '従業員リスト', false),

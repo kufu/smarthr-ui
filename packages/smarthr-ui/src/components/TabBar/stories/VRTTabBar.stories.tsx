@@ -13,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Navigation（ナビゲーション）/TabBar/VRT',
   /* ペアワイズ法による網羅
-   * bordered selected diasbled suffix disabledDetail
+   * bordered selected disabled suffix disabledDetail
    * false    false    false    あり    なし
    * false    true     true     なし    あり
    * true     true     true     あり    なし

@@ -9,13 +9,13 @@ import type { Meta } from '@storybook/react'
  * $ pict information-panel.pict
  * type    bold   togglable active
  * success false  true      true
- * infor   false  false     false
+ * info    false  false     false
  * error   true   false     true
  * sync    false  false     false
  * sync    false  true      false
  * success true   false     false
  * warning true   true      true
- * infor   false  true      true
+ * info    false  true      true
  * error   false  true      false
  * warning false  false     false
  * sync    false  false     true
