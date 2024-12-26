@@ -1,3 +1,4 @@
-files.ignore-files = [
+[files]
+extend-exclude = [
   './packages/smarthr-ui/CHANGELOG.md',
 ]
