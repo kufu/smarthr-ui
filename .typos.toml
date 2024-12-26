@@ -1,4 +1,5 @@
 [files]
 extend-exclude = [
   'CHANGELOG.md',
+  'smarthr-ui-props.json',
 ]
