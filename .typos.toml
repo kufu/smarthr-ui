@@ -1,4 +1,4 @@
 [files]
 extend-exclude = [
-  './packages/smarthr-ui/CHANGELOG.md',
+  'CHANGELOG.md',
 ]
