@@ -5,6 +5,3 @@ extend-exclude = [
 ]
 
 [default.extend-words]
-# https://github.com/kufu/smarthr-ui/pull/5230 で修正予定
-BACKGROUNDS = 'BACKGROUNDS'
-BACKGRUOND = 'BACKGRUOND'
