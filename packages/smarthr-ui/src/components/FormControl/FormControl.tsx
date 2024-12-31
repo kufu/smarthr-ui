@@ -29,6 +29,10 @@ type Props = PropsWithChildren<{
   titleType?: TextProps['styleType']
   /** タイトルの見出しを視覚的に隠すかどうか */
   dangerouslyTitleHidden?: boolean
+  /** タイトル右のヘルプダイアログ用などアイコンを設置する領域 */
+  titleSuffixArea?: ReactNode
+  /** ヘッダーの右のボタン用領域 */
+  subActionArea?: ReactNode
   /** label 要素に適用する `htmlFor` 値 */
   htmlFor?: string
   /** label 要素に適用する `id` 値 */
@@ -67,6 +71,7 @@ const formGroup = tv({
     ],
     label: [
       'smarthr-ui-FormControl-label',
+      'shr-float-left',
       // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
       'shr-self-start',
       'shr-px-[unset]',
@@ -76,32 +81,66 @@ const formGroup = tv({
   },
 })
 
+const MARGIN_MAPPER: { [key in Gap]: number } = {
+  0: 0,
+  0.25: 0.25,
+  0.5: 0.5,
+  0.75: 0.75,
+  1: 1,
+  1.25: 1.25,
+  1.5: 1.5,
+  2: 2,
+  2.5: 2.5,
+  3: 3,
+  3.5: 3.5,
+  4: 4,
+  8: 8,
+  X3S: 0.25,
+  XXS: 0.5,
+  XS: 1,
+  S: 1.5,
+  M: 2,
+  L: 2.5,
+  XL: 3,
+  XXL: 3.5,
+  X3L: 4,
+}
+const MARGIN_MAPPER_KEYS = Object.keys(MARGIN_MAPPER)
+
+const bodyWrapper = tv({
+  base: ['shr-clear-both'],
+  variants: {
+    innerMargin: MARGIN_MAPPER_KEYS.reduce(
+      (prev, key) => {
+        prev[key] = `[&&&]:shr-pt-${MARGIN_MAPPER[key]}`
+
+        return prev
+      },
+      {} as { [key in Gap]: string },
+    ),
+  },
+  compoundVariants: [
+    {
+      innerMargin: undefined,
+      className: 'shr-pt-1',
+    },
+    {
+      innerMargin: undefined,
+      className: 'shr-pt-0.5',
+    },
+  ],
+})
+
 const childrenWrapper = tv({
   variants: {
-    innerMargin: {
-      0: '[&&&]:shr-mt-0',
-      0.25: '[&&&]:shr-mt-0.25',
-      0.5: '[&&&]:shr-mt-0.5',
-      0.75: '[&&&]:shr-mt-0.75',
-      1: '[&&&]:shr-mt-1',
-      1.25: '[&&&]:shr-mt-1.25',
-      1.5: '[&&&]:shr-mt-1.5',
-      2: '[&&&]:shr-mt-2',
-      2.5: '[&&&]:shr-mt-2.5',
-      3: '[&&&]:shr-mt-3',
-      3.5: '[&&&]:shr-mt-3.5',
-      4: '[&&&]:shr-mt-4',
-      8: '[&&&]:shr-mt-8',
-      X3S: '[&&&]:shr-mt-0.25',
-      XXS: '[&&&]:shr-mt-0.5',
-      XS: '[&&&]:shr-mt-1',
-      S: '[&&&]:shr-mt-1.5',
-      M: '[&&&]:shr-mt-2',
-      L: '[&&&]:shr-mt-2.5',
-      XL: '[&&&]:shr-mt-3',
-      XXL: '[&&&]:shr-mt-3.5',
-      X3L: '[&&&]:shr-mt-4',
-    } as { [key in Gap]: string },
+    innerMargin: MARGIN_MAPPER_KEYS.reduce(
+      (prev, key) => {
+        prev[key] = `[&&&]:shr-mt-${MARGIN_MAPPER[key]}`
+
+        return prev
+      },
+      {} as { [key in Gap]: string },
+    ),
     isRoleGroup: {
       true: '',
       false: '',
@@ -125,6 +164,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
   dangerouslyTitleHidden = false,
+  titleSuffixArea,
+  subActionArea,
   htmlFor,
   labelId,
   innerMargin,
@@ -173,17 +214,25 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
-    useMemo(() => {
-      const { wrapper, label, errorList, errorIcon } = formGroup()
-      return {
-        wrapperStyle: wrapper({ className }),
-        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-        errorListStyle: errorList(),
-        errorIconStyle: errorIcon(),
-        childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
-      }
-    }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+  const {
+    wrapperStyle,
+    labelStyle,
+    errorListStyle,
+    errorIconStyle,
+    bodyWrapperStyle,
+    childrenWrapperStyle,
+  } = useMemo(() => {
+    const { wrapper, label, errorList, errorIcon } = formGroup()
+
+    return {
+      wrapperStyle: wrapper({ className }),
+      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+      errorListStyle: errorList(),
+      errorIconStyle: errorIcon(),
+      bodyWrapperStyle: bodyWrapper({ innerMargin }),
+      childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
+    }
+  }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   useEffect(() => {
     if (isRoleGroup) {
@@ -252,11 +301,11 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
 
+  const Component = as || 'div'
+
   return (
-    <Stack
+    <Component
       {...props}
-      as={as}
-      gap={innerMargin ?? 0.5}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
       className={wrapperStyle}
@@ -271,22 +320,28 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         title={title}
         statusLabelList={statusLabelList}
       />
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
-      <ErrorMessageList
-        errorMessages={actualErrorMessages}
-        managedHtmlFor={managedHtmlFor}
-        errorListStyle={errorListStyle}
-        errorIconStyle={errorIconStyle}
-      />
-      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
-        {children}
-      </div>
-      <SupplementaryMessageText
-        supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={managedHtmlFor}
-      />
-    </Stack>
+      {titleSuffixArea && (
+        <div className="shr-float-left shr-ml-0.5 shr-align-middle">{titleSuffixArea}</div>
+      )}
+      {subActionArea && <div className="shr-float-right">{subActionArea}</div>}
+      <Stack className={bodyWrapperStyle} gap={innerMargin ?? 0.5} inline={false}>
+        <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
+        <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+        <ErrorMessageList
+          errorMessages={actualErrorMessages}
+          managedHtmlFor={managedHtmlFor}
+          errorListStyle={errorListStyle}
+          errorIconStyle={errorIconStyle}
+        />
+        <div className={childrenWrapperStyle} ref={inputWrapperRef}>
+          {children}
+        </div>
+        <SupplementaryMessageText
+          supplementaryMessage={supplementaryMessage}
+          managedHtmlFor={managedHtmlFor}
+        />
+      </Stack>
+    </Component>
   )
 }
 
@@ -309,28 +364,29 @@ const TitleCluster = React.memo<
     titleType,
     title,
     statusLabelList,
-  }) => (
-    <Cluster
-      align="center"
-      htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
-      id={managedLabelId}
-      className={labelStyle}
-      as={isRoleGroup ? 'legend' : 'label'}
-      // Stack 対象にしないための hidden
-      hidden={dangerouslyTitleHidden || undefined}
-    >
-      <Text as="span" styleType={titleType}>
-        {title}
-      </Text>
-      {statusLabelList.length > 0 && (
-        <Cluster gap={0.25} as="span">
-          {statusLabelList.map((prop, index) => (
-            <StatusLabel {...prop} key={index} />
-          ))}
-        </Cluster>
-      )}
-    </Cluster>
-  ),
+  }) => {
+    const Component = isRoleGroup ? 'legend' : 'label'
+
+    return (
+      <Component
+        align="center"
+        htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
+        id={managedLabelId}
+        className={labelStyle}
+        // Stack 対象にしないための hidden
+        hidden={dangerouslyTitleHidden || undefined}
+      >
+        <Text styleType={titleType}>{title}</Text>
+        {statusLabelList.length > 0 && (
+          <Cluster gap={0.25} as="span">
+            {statusLabelList.map((prop, index) => (
+              <StatusLabel {...prop} key={index} />
+            ))}
+          </Cluster>
+        )}
+      </Component>
+    )
+  },
 )
 
 const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(

@@ -11,6 +11,7 @@ import { Stack } from '../../Layout'
 import { MonthPicker, TimePicker } from '../../Picker'
 import { Select } from '../../Select'
 import { STYLE_TYPE_MAP } from '../../Text'
+import { TextLink } from '../../TextLink'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
 
@@ -96,6 +97,20 @@ export const TitleType: StoryObj<typeof FormControl> = {
       ))}
     </Stack>
   ),
+}
+
+export const TitleSuffixArea: StoryObj<typeof FormControl> = {
+  name: 'titleSuffixArea',
+  args: {
+    titleSuffixArea: <TextLink href="https://www.google.com/">外部リンク</TextLink>,
+  },
+}
+
+export const SubActionArea: StoryObj<typeof FormControl> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: <TextLink href="https://www.google.com/">外部リンク</TextLink>,
+  },
 }
 
 export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {

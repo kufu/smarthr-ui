@@ -32,6 +32,8 @@ export default {
   ),
   args: {
     title: 'フィールドセットタイトル',
+    titleSuffixArea: 'タイトルサフィックスエリア',
+    subActionArea: 'サブアクションエリア',
     statusLabelProps: { type: 'grey', children: '任意' },
     helpMessage: 'フィールドセットの補足となるヘルプメッセージを入れます。',
     exampleMessage: '入力欄に入れる入力例',
