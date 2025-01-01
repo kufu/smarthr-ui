@@ -18,7 +18,7 @@ import { StatusLabel } from '../StatusLabel'
 import { Text, TextProps } from '../Text'
 import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
 
-import type { Gap } from '../../types'
+import type { PositiveGap } from '../../types'
 
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
 
@@ -38,7 +38,7 @@ type Props = PropsWithChildren<{
   /** label 要素に適用する `id` 値 */
   labelId?: string
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
-  innerMargin?: Gap
+  innerMargin?: PositiveGap
   /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
   statusLabelProps?: StatusLabelProps | StatusLabelProps[]
   /** タイトルの下に表示するヘルプメッセージ */
@@ -69,19 +69,13 @@ const formGroup = tv({
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
-    label: [
-      'smarthr-ui-FormControl-label',
-      'shr-float-left',
-      // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
-      'shr-self-start',
-      'shr-px-[unset]',
-    ],
+    label: ['smarthr-ui-FormControl-label', 'shr-float-left', 'shr-px-[unset]'],
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
   },
 })
 
-const MARGIN_MAPPER: { [key in Gap]: number } = {
+const MARGIN_MAPPER: { [key in PositiveGap]: number } = {
   0: 0,
   0.25: 0.25,
   0.5: 0.5,
@@ -105,7 +99,7 @@ const MARGIN_MAPPER: { [key in Gap]: number } = {
   XXL: 3.5,
   X3L: 4,
 }
-const MARGIN_MAPPER_KEYS = Object.keys(MARGIN_MAPPER)
+const MARGIN_MAPPER_KEYS = Object.keys(MARGIN_MAPPER) as PositiveGap[]
 
 const bodyWrapper = tv({
   base: ['shr-clear-both'],
@@ -116,7 +110,7 @@ const bodyWrapper = tv({
 
         return prev
       },
-      {} as { [key in Gap]: string },
+      {} as { [key in PositiveGap]: string },
     ),
   },
   compoundVariants: [
@@ -139,7 +133,7 @@ const childrenWrapper = tv({
 
         return prev
       },
-      {} as { [key in Gap]: string },
+      {} as { [key in PositiveGap]: string },
     ),
     isRoleGroup: {
       true: '',
@@ -159,6 +153,8 @@ const childrenWrapper = tv({
     },
   ],
 })
+
+const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
 export const ActualFormControl: React.FC<Props & ElementProps> = ({
   title,
@@ -186,8 +182,11 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const managedLabelId = labelId || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isRoleGroup = as === 'fieldset'
-  const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
+  const statusLabelList = useMemo(
+    () => (Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]),
+    [statusLabelProps],
+  )
   const describedbyIds = useMemo(() => {
     const temp = []
 
@@ -235,73 +234,70 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   useEffect(() => {
-    if (isRoleGroup) {
-      return
-    }
+    if (!isRoleGroup) {
+      const inputWrapper = inputWrapperRef?.current
 
-    const inputWrapper = inputWrapperRef?.current
+      if (inputWrapper) {
+        // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+        if (!document.getElementById(managedHtmlFor)) {
+          const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-    if (inputWrapper) {
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      if (document.getElementById(managedHtmlFor)) {
-        return
-      }
+          if (input) {
+            if (!input.getAttribute('id')) {
+              input.setAttribute('id', managedHtmlFor)
+            }
 
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+            const isInputFile = input instanceof HTMLInputElement && input.type === 'file'
 
-      if (input) {
-        if (!input.getAttribute('id')) {
-          input.setAttribute('id', managedHtmlFor)
-        }
+            if (isInputFile) {
+              const attributeName = 'aria-labelledby'
+              const inputLabelledByIds = input.getAttribute(attributeName)
 
-        const isInputFile = input instanceof HTMLInputElement && input.type === 'file'
-        const inputLabelledByIds = input.getAttribute('aria-labelledby')
-        if (isInputFile && inputLabelledByIds) {
-          // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-          input.setAttribute('aria-labelledby', `${inputLabelledByIds} ${managedLabelId}`)
+              if (inputLabelledByIds) {
+                // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+                input.setAttribute(attributeName, `${inputLabelledByIds} ${managedLabelId}`)
+              }
+            }
+          }
         }
       }
     }
   }, [managedHtmlFor, isRoleGroup, managedLabelId])
   useEffect(() => {
-    const inputWrapper = inputWrapperRef?.current
+    if (describedbyIds) {
+      const inputWrapper = inputWrapperRef?.current
 
-    if (inputWrapper) {
       // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      if (!describedbyIds || inputWrapper.querySelector(`[aria-describedby="${describedbyIds}"]`)) {
-        return
-      }
+      if (inputWrapper && !inputWrapper.querySelector(`[aria-describedby="${describedbyIds}"]`)) {
+        const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+        const attributeName = 'aria-describedby'
 
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
-
-      if (input && !input.getAttribute('aria-describedby')) {
-        input.setAttribute('aria-describedby', describedbyIds)
+        if (input && !input.getAttribute(attributeName)) {
+          input.setAttribute(attributeName, describedbyIds)
+        }
       }
     }
   }, [describedbyIds, isRoleGroup])
   useEffect(() => {
-    if (!autoBindErrorInput) {
-      return
-    }
+    if (autoBindErrorInput) {
+      const inputWrapper = inputWrapperRef?.current
 
-    const inputWrapper = inputWrapperRef?.current
+      if (inputWrapper) {
+        const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-    if (inputWrapper) {
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
-
-      if (!input) {
-        return
-      }
-
-      if (actualErrorMessages.length > 0) {
-        input.setAttribute('aria-invalid', 'true')
-      } else {
-        input.removeAttribute('aria-invalid')
+        if (input) {
+          const attributeName = 'aria-invalid'
+          if (actualErrorMessages.length > 0) {
+            input.setAttribute(attributeName, 'true')
+          } else {
+            input.removeAttribute(attributeName)
+          }
+        }
       }
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
 
-  const Component = as || 'div'
+  const Component = as
 
   return (
     <Component
@@ -324,7 +320,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         <div className="shr-float-left shr-ml-0.5 shr-align-middle">{titleSuffixArea}</div>
       )}
       {subActionArea && <div className="shr-float-right">{subActionArea}</div>}
-      <Stack className={bodyWrapperStyle} gap={innerMargin ?? 0.5} inline={false}>
+      <Stack className={bodyWrapperStyle} gap={innerMargin ?? 0.5}>
         <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
         <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
         <ErrorMessageList
@@ -369,7 +365,6 @@ const TitleCluster = React.memo<
 
     return (
       <Component
-        align="center"
         htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
         id={managedLabelId}
         className={labelStyle}
@@ -378,7 +373,7 @@ const TitleCluster = React.memo<
       >
         <Text styleType={titleType}>{title}</Text>
         {statusLabelList.length > 0 && (
-          <Cluster gap={0.25} as="span">
+          <Cluster className="shr-ml-0.5" gap={0.25} inline={true} as="span">
             {statusLabelList.map((prop, index) => (
               <StatusLabel {...prop} key={index} />
             ))}
@@ -418,12 +413,8 @@ const ErrorMessageList = React.memo<{
   managedHtmlFor: string
   errorListStyle: string
   errorIconStyle: string
-}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) => {
-  if (errorMessages.length === 0) {
-    return null
-  }
-
-  return (
+}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) =>
+  errorMessages.length > 0 ? (
     <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
@@ -431,8 +422,8 @@ const ErrorMessageList = React.memo<{
         </p>
       ))}
     </div>
-  )
-})
+  ) : null,
+)
 
 const SupplementaryMessageText = React.memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
