@@ -5,6 +5,7 @@ import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 import { STYLE_TYPE_MAP } from '../../Text'
+import { TextLink } from '../../TextLink'
 import { Fieldset } from '../Fieldset'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -86,6 +87,20 @@ export const TitleType: StoryObj<typeof Fieldset> = {
       ))}
     </Stack>
   ),
+}
+
+export const TitleSuffixArea: StoryObj<typeof Fieldset> = {
+  name: 'titleSuffixArea',
+  args: {
+    titleSuffixArea: <TextLink href="https://www.google.com/">外部リンク</TextLink>,
+  },
+}
+
+export const SubActionArea: StoryObj<typeof Fieldset> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: <TextLink href="https://www.google.com/">外部リンク</TextLink>,
+  },
 }
 
 export const DangerouslyTitleHidden: StoryObj<typeof Fieldset> = {

@@ -12,6 +12,8 @@ export default {
     // eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
     children: <Input />,
     title: 'フォームコントロール',
+    titleSuffixArea: 'タイトルサフィックスエリア',
+    subActionArea: 'サブアクションエリア',
     statusLabelProps: { type: 'grey', children: '任意' },
     helpMessage: 'フォームコントロールの補足となるヘルプメッセージを入れます。',
     exampleMessage: '入力欄に入れる入力例',
