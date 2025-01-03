@@ -21,17 +21,6 @@ export const getNewExpandedItems = (
   return newState
 }
 
-export const keycodes = {
-  SPACE: 32,
-  ENTER: 13,
-  HOME: 36,
-  END: 35,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40,
-  LEFT: 37,
-}
-
 export const getSiblingButtons = (parent: HTMLDivElement): HTMLElement[] =>
   Array.from(parent.querySelectorAll('[data-component="AccordionHeaderButton"]'))
 
