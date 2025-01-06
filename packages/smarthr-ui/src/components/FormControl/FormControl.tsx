@@ -118,6 +118,8 @@ const childrenWrapper = tv({
   ],
 })
 
+const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
+
 export const ActualFormControl: React.FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
@@ -126,7 +128,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   htmlFor,
   labelId,
   innerMargin,
-  statusLabelProps = [],
+  statusLabelProps,
   helpMessage,
   exampleMessage,
   errorMessages,
@@ -143,7 +145,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const managedLabelId = labelId || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isRoleGroup = as === 'fieldset'
-  const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const describedbyIds = useMemo(() => {
     const temp = []
@@ -163,6 +164,13 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
+  const statusLabelList = useMemo(() => {
+    if (!statusLabelProps) {
+      return []
+    }
+
+    return Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
+  }, [statusLabelProps])
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -184,68 +192,63 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   useEffect(() => {
-    if (isRoleGroup) {
-      return
-    }
+    if (!isRoleGroup) {
+      const inputWrapper = inputWrapperRef?.current
 
-    const inputWrapper = inputWrapperRef?.current
+      if (inputWrapper) {
+        // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+        if (!document.getElementById(managedHtmlFor)) {
+          const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-    if (inputWrapper) {
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      if (document.getElementById(managedHtmlFor)) {
-        return
-      }
+          if (input) {
+            if (!input.getAttribute('id')) {
+              input.setAttribute('id', managedHtmlFor)
+            }
 
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+            if (input instanceof HTMLInputElement && input.type === 'file') {
+              const attrName = 'aria-labelledby'
+              const inputLabelledByIds = input.getAttribute(attrName)
 
-      if (input) {
-        if (!input.getAttribute('id')) {
-          input.setAttribute('id', managedHtmlFor)
-        }
-
-        const isInputFile = input instanceof HTMLInputElement && input.type === 'file'
-        const inputLabelledByIds = input.getAttribute('aria-labelledby')
-        if (isInputFile && inputLabelledByIds) {
-          // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-          input.setAttribute('aria-labelledby', `${inputLabelledByIds} ${managedLabelId}`)
+              if (inputLabelledByIds) {
+                // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+                input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
+              }
+            }
+          }
         }
       }
     }
   }, [managedHtmlFor, isRoleGroup, managedLabelId])
   useEffect(() => {
-    const inputWrapper = inputWrapperRef?.current
+    if (describedbyIds) {
+      const attrName = 'aria-describedby'
+      const inputWrapper = inputWrapperRef?.current
 
-    if (inputWrapper) {
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      if (!describedbyIds || inputWrapper.querySelector(`[aria-describedby="${describedbyIds}"]`)) {
-        return
-      }
+      if (inputWrapper && !inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
+        const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
-
-      if (input && !input.getAttribute('aria-describedby')) {
-        input.setAttribute('aria-describedby', describedbyIds)
+        if (input && !input.getAttribute(attrName)) {
+          input.setAttribute(attrName, describedbyIds)
+        }
       }
     }
-  }, [describedbyIds, isRoleGroup])
+  }, [describedbyIds])
   useEffect(() => {
-    if (!autoBindErrorInput) {
-      return
-    }
+    if (autoBindErrorInput) {
+      const inputWrapper = inputWrapperRef?.current
 
-    const inputWrapper = inputWrapperRef?.current
+      if (inputWrapper) {
+        const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-    if (inputWrapper) {
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+        if (input) {
+          const attrName = 'aria-invalid'
 
-      if (!input) {
-        return
-      }
-
-      if (actualErrorMessages.length > 0) {
-        input.setAttribute('aria-invalid', 'true')
-      } else {
-        input.removeAttribute('aria-invalid')
+          if (actualErrorMessages.length > 0) {
+            input.setAttribute(attrName, 'true')
+          } else {
+            input.removeAttribute(attrName)
+          }
+        }
       }
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
@@ -322,23 +325,30 @@ const TitleCluster = React.memo<
         )}
       </>
     )
-    const clusterAttrs = isRoleGroup
+    const labelAttrs = isRoleGroup
       ? { 'aria-hidden': 'true' }
-      : { htmlFor: managedHtmlFor, as: 'label' }
+      : {
+          htmlFor: managedHtmlFor,
+          id: managedLabelId,
+          as: 'label' as React.ComponentProps<typeof Cluster>['as'],
+        }
 
     return (
       <>
-        {isRoleGroup && <VisuallyHiddenText as="legend">{body}</VisuallyHiddenText>}
-        <Cluster justify="space-between">
+        {isRoleGroup && (
+          <VisuallyHiddenText id={managedLabelId} as="legend">
+            {body}
+          </VisuallyHiddenText>
+        )}
+        <Cluster
+          justify="space-between"
+          // HINT: legendが存在する場合、Stackの余白が狂ってしまう&常にこのClusterはUI上先頭になるため、margin-topを0固定する
+          className="[&&&]:shr-mt-0"
+          // HINT: dangerouslyTitleHiddenの場合、Stackの余白計算を正常にするためのhidden
+          hidden={dangerouslyTitleHidden || undefined}
+        >
           {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-          <Cluster
-            {...clusterAttrs}
-            align="center"
-            id={managedLabelId}
-            className={labelStyle}
-            // Stack 対象にしないための hidden
-            hidden={dangerouslyTitleHidden || undefined}
-          >
+          <Cluster {...labelAttrs} align="center" className={labelStyle}>
             {body}
           </Cluster>
           {subActionArea && <div className="shr-grow">{subActionArea}</div>}
