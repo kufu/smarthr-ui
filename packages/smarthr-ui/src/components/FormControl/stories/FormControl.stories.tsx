@@ -7,10 +7,11 @@ import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
 import { CurrencyInput, Input } from '../../Input'
 import { InputFile } from '../../InputFile'
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { MonthPicker, TimePicker } from '../../Picker'
 import { Select } from '../../Select'
 import { STYLE_TYPE_MAP } from '../../Text'
+import { TextLink } from '../../TextLink'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
 
@@ -96,6 +97,17 @@ export const TitleType: StoryObj<typeof FormControl> = {
       ))}
     </Stack>
   ),
+}
+
+export const SubActionArea: StoryObj<typeof FormControl> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: (
+      <Cluster justify="end">
+        <TextLink href="https://www.google.com/">外部リンク</TextLink>
+      </Cluster>
+    ),
+  },
 }
 
 export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {

@@ -5,6 +5,7 @@ import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 import { STYLE_TYPE_MAP } from '../../Text'
+import { TextLink } from '../../TextLink'
 import { Fieldset } from '../Fieldset'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -86,6 +87,17 @@ export const TitleType: StoryObj<typeof Fieldset> = {
       ))}
     </Stack>
   ),
+}
+
+export const SubActionArea: StoryObj<typeof Fieldset> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: (
+      <Cluster justify="end">
+        <TextLink href="https://www.google.com/">外部リンク</TextLink>
+      </Cluster>
+    ),
+  },
 }
 
 export const DangerouslyTitleHidden: StoryObj<typeof Fieldset> = {

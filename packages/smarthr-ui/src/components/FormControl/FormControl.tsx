@@ -16,7 +16,7 @@ import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
 import { Text, TextProps } from '../Text'
-import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
 
@@ -27,6 +27,8 @@ type Props = PropsWithChildren<{
   title: ReactNode
   /** タイトルの見出しのタイプ */
   titleType?: TextProps['styleType']
+  /** タイトル右の領域 */
+  subActionArea?: ReactNode
   /** タイトルの見出しを視覚的に隠すかどうか */
   dangerouslyTitleHidden?: boolean
   /** label 要素に適用する `htmlFor` 値 */
@@ -65,12 +67,7 @@ const formGroup = tv({
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
-    label: [
-      'smarthr-ui-FormControl-label',
-      // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
-      'shr-self-start',
-      'shr-px-[unset]',
-    ],
+    label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
   },
@@ -124,6 +121,7 @@ const childrenWrapper = tv({
 export const ActualFormControl: React.FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
+  subActionArea,
   dangerouslyTitleHidden = false,
   htmlFor,
   labelId,
@@ -270,6 +268,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         titleType={titleType}
         title={title}
         statusLabelList={statusLabelList}
+        subActionArea={subActionArea}
       />
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
       <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
@@ -291,7 +290,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 }
 
 const TitleCluster = React.memo<
-  Pick<Props, 'dangerouslyTitleHidden' | 'title'> & {
+  Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
     statusLabelList: StatusLabelProps[]
     isRoleGroup: boolean
@@ -309,28 +308,44 @@ const TitleCluster = React.memo<
     titleType,
     title,
     statusLabelList,
-  }) => (
-    <Cluster
-      align="center"
-      htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
-      id={managedLabelId}
-      className={labelStyle}
-      as={isRoleGroup ? 'legend' : 'label'}
-      // Stack 対象にしないための hidden
-      hidden={dangerouslyTitleHidden || undefined}
-    >
-      <Text as="span" styleType={titleType}>
-        {title}
-      </Text>
-      {statusLabelList.length > 0 && (
-        <Cluster gap={0.25} as="span">
-          {statusLabelList.map((prop, index) => (
-            <StatusLabel {...prop} key={index} />
-          ))}
+    subActionArea,
+  }) => {
+    const body = (
+      <>
+        <Text styleType={titleType}>{title}</Text>
+        {statusLabelList.length > 0 && (
+          <Cluster gap={0.25} as="span">
+            {statusLabelList.map((prop, index) => (
+              <StatusLabel {...prop} key={index} />
+            ))}
+          </Cluster>
+        )}
+      </>
+    )
+    const clusterAttrs = isRoleGroup
+      ? { 'aria-hidden': 'true' }
+      : { htmlFor: managedHtmlFor, as: 'label' }
+
+    return (
+      <>
+        {isRoleGroup && <VisuallyHiddenText as="legend">{body}</VisuallyHiddenText>}
+        <Cluster justify="space-between">
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+          <Cluster
+            {...clusterAttrs}
+            align="center"
+            id={managedLabelId}
+            className={labelStyle}
+            // Stack 対象にしないための hidden
+            hidden={dangerouslyTitleHidden || undefined}
+          >
+            {body}
+          </Cluster>
+          {subActionArea && <div className="shr-grow">{subActionArea}</div>}
         </Cluster>
-      )}
-    </Cluster>
-  ),
+      </>
+    )
+  },
 )
 
 const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
@@ -362,12 +377,8 @@ const ErrorMessageList = React.memo<{
   managedHtmlFor: string
   errorListStyle: string
   errorIconStyle: string
-}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) => {
-  if (errorMessages.length === 0) {
-    return null
-  }
-
-  return (
+}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) =>
+  errorMessages.length > 0 ? (
     <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
@@ -375,8 +386,8 @@ const ErrorMessageList = React.memo<{
         </p>
       ))}
     </div>
-  )
-})
+  ) : null,
+)
 
 const SupplementaryMessageText = React.memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
