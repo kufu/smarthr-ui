@@ -17,51 +17,6 @@ export default {
   },
 }
 
-const defaultItems = [
-  {
-    label: 'option 1',
-    value: 'value-1',
-    data: {
-      name: 'test',
-      age: 23,
-    },
-  },
-  {
-    label: 'option 2',
-    value: 'value-2',
-    data: {
-      name: 'test 2',
-      age: 34,
-    },
-  },
-  {
-    label: 'option 3',
-    value: 'value-3',
-    disabled: true,
-  },
-  {
-    label: 'option 4',
-    value: 'value-4',
-  },
-  {
-    label: 'option 5',
-    value: 'value-5',
-  },
-  {
-    label: 'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
-    value: 'value-6',
-  },
-  {
-    label: (
-      <Stack as="span" gap={0.25}>
-        <span>アイテムのラベルがReactNodeの場合</span>
-        <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
-      </Stack>
-    ),
-    value: 'value-7',
-  },
-]
-
 const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
   label: `option ${i}`,
   value: `option ${i}`,
@@ -69,8 +24,54 @@ const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
 
 type Item = { label: ReactNode; value: string; disabled?: boolean; data?: any }
 
-export const MultiCombobox: StoryFn = () => {
-  const [items, setItems] = useState<Item[]>(defaultItems)
+const MultiComboboxComponent = () => {
+  const defaultItems = [
+    {
+      label: 'option 1',
+      value: 'value-1',
+      data: {
+        name: 'test',
+        age: 23,
+      },
+    },
+    {
+      label: 'option 2',
+      value: 'value-2',
+      data: {
+        name: 'test 2',
+        age: 34,
+      },
+    },
+    {
+      label: 'option 3',
+      value: 'value-3',
+      disabled: true,
+    },
+    {
+      label: 'option 4',
+      value: 'value-4',
+    },
+    {
+      label: 'option 5',
+      value: 'value-5',
+    },
+    {
+      label:
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
+      value: 'value-6',
+    },
+    {
+      label: (
+        <Stack as="span" gap={0.25}>
+          <span>アイテムのラベルがReactNodeの場合</span>
+          <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
+        </Stack>
+      ),
+      value: 'value-7',
+    },
+  ]
+  const [addedItems, setAddedItems] = useState<Item[]>([])
+  const items = [...defaultItems, ...addedItems]
   const [selectedItems, setSelectedItems] = useState<Item[]>([])
   const [seq, setSeq] = useState(0)
   const [controlledInputValue, setControlledInputValue] = useState<string>('')
@@ -96,11 +97,11 @@ export const MultiCombobox: StoryFn = () => {
         label,
         value: label,
       }
-      setItems([...items, newItem])
+      setAddedItems([...addedItems, newItem])
       setSelectedItems([...selectedItems, newItem])
       setSeq(seq + 1)
     },
-    [items, selectedItems, seq],
+    [addedItems, selectedItems, seq],
   )
 
   return (
@@ -293,3 +294,5 @@ export const MultiCombobox: StoryFn = () => {
     </Stack>
   )
 }
+
+export const MultiCombobox: StoryFn = () => <MultiComboboxComponent />
