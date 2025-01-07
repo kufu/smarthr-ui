@@ -1,8 +1,9 @@
 import React, { ComponentProps } from 'react'
 import { FormattedMessage as RawFormattedMessage } from 'react-intl'
 
-import { locale as ja } from '../../locales/ja'
-import { Messages } from '../../locales/types'
+import { ja } from '../../locales'
+
+type Messages = Record<keyof typeof ja, string>
 
 type Props<Id extends keyof Messages> = Omit<
   ComponentProps<typeof RawFormattedMessage>,

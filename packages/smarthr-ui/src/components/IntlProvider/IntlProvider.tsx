@@ -3,8 +3,9 @@
 import React, { FC, PropsWithChildren } from 'react'
 import { IntlProvider as ReactIntlProvider } from 'react-intl'
 
-import { locale as ja } from '../../locales/ja'
-import { Messages } from '../../locales/types'
+import { ja } from '../../locales'
+
+type Messages = Record<keyof typeof ja, string>
 
 const localeMap = {
   ja,
