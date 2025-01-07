@@ -50,11 +50,7 @@ const CLOSE_BUTTON_LABEL = 'キャンセル'
 const formDialogContentInner = tv({
   extend: dialogContentInner,
   slots: {
-    // 領域を狭くしたときにwrapperも縮むようにflexを使用
-    wrapper: 'shr-flex shr-flex-col',
-    // 領域を狭くしたときにwrapperも縮むようにflexを使用
-    form: 'shr-overflow-y-auto shr-flex-auto shr-flex shr-flex-col',
-    contentWrapper: 'shr-overflow-y-auto shr-flex-auto',
+    form: 'shr-contents',
   },
 })
 
@@ -88,19 +84,16 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   )
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
-  const { form, contentWrapper, wrapper, actionArea, buttonArea, message } =
-    formDialogContentInner()
+  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={wrapper()}>
+    // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
+    <Stack gap={0} as={Section} className={wrapper()}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <form onSubmit={handleSubmitAction} className={form()}>
-        <div className={contentWrapper()}>
-          <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-            {children}
-          </DialogBody>
-        </div>
+        <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+          {children}
+        </DialogBody>
         <Stack gap={0.5} className={actionArea()}>
           <Cluster justify="space-between">
             {subActionArea}
@@ -132,6 +125,6 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
           )}
         </Stack>
       </form>
-    </Section>
+    </Stack>
   )
 }

@@ -1,4 +1,4 @@
-type: success, infor, warning, error, sync
+type: success, info, warning, error, sync
 bold: false, true
 togglable: false (10), true
 active: false, true (10)

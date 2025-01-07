@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [63.0.0](https://github.com/kufu/smarthr-ui/compare/v62.3.1...v63.0.0) (2025-01-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **typo:** BACKGRUOND → BACKGROUND (#5230)
+
+### Bug Fixes
+
+* **typo:** BACKGRUOND → BACKGROUND ([#5230](https://github.com/kufu/smarthr-ui/issues/5230)) ([efd166a](https://github.com/kufu/smarthr-ui/commit/efd166aa2c9632b583e7244344da8faa0daeed76))
+
 ### [62.3.1](https://github.com/kufu/smarthr-ui/compare/v62.3.0...v62.3.1) (2024-12-24)
 
 
