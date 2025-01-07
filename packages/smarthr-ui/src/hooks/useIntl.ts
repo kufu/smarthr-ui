@@ -6,14 +6,10 @@ import {
   useIntl as useReactIntl,
 } from 'react-intl'
 
-import { locale as ja } from '../locales/ja'
-import { Messages } from '../locales/types'
+import { ja } from '../locales'
 
-/**
- * MEMO:
- * src/components/parts/FormattedMessage/FormattedMessage.tsx
- * と同じやり方で型を拡張している
- */
+type Messages = Record<keyof typeof ja, string>
+
 type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescriptor, 'id'> & {
   id: T
   defaultMessage: (typeof ja)[T]
@@ -21,7 +17,6 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
 
 export const useIntl = () => {
   const intl = useReactIntl()
-  // const lang = useLanguage()
   const lang = intl.locale
 
   const formatMessage = useCallback(
@@ -35,7 +30,8 @@ export const useIntl = () => {
 
   const formatDate = useCallback(
     (date: Date, opts?: Intl.DateTimeFormatOptions & { jaFormat?: boolean }): string => {
-      // 日本語の場合デザインシステム上のフォーマットは「YYYY/MM/DD」形式なので、それに合わせるための対応
+      // localeがjaの場合、フォーマットを YYYY/MM/DD 形式にする
+      // 参考: https://smarthr.design/products/contents/idiomatic-usage/count/#h2-3
       const slashFormat = !opts?.jaFormat && lang === 'ja'
 
       const overrideOpts: Intl.DateTimeFormatOptions = {
