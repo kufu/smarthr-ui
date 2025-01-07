@@ -32,7 +32,7 @@ export const VRTNameOnly: Story = {
       empCode: null,
       firstName: '須磨',
       lastName: '栄子',
-      accountUrl: 'https://exmaple.com',
+      accountUrl: 'https://example.com',
     },
   },
 }
@@ -44,7 +44,7 @@ export const VRTEmpCodeOnly: Story = {
       empCode: '001',
       firstName: null,
       lastName: null,
-      accountUrl: 'https://exmaple.com',
+      accountUrl: 'https://example.com',
     },
   },
 }
@@ -56,7 +56,7 @@ export const VRTEmailOnly: Story = {
       empCode: null,
       firstName: null,
       lastName: null,
-      accountUrl: 'https://exmaple.com',
+      accountUrl: 'https://example.com',
     },
   },
 }
@@ -68,7 +68,7 @@ export const VRTNoUserInfo: Story = {
       empCode: null,
       firstName: null,
       lastName: null,
-      accountUrl: 'https://exmaple.com',
+      accountUrl: 'https://example.com',
     },
   },
 }
@@ -116,7 +116,7 @@ export const VRTReleaseNoteLoading: Story = {
     releaseNote: {
       loading: true,
       links: [],
-      indexUrl: 'https://exmaple.com',
+      indexUrl: 'https://example.com',
     },
   },
   play: async ({ canvasElement }) => {
@@ -130,7 +130,7 @@ export const VRTReleaseNoteError: Story = {
     releaseNote: {
       error: true,
       links: [],
-      indexUrl: 'https://exmaple.com',
+      indexUrl: 'https://example.com',
     },
   },
   play: async ({ canvasElement }) => {
