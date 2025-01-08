@@ -1,4 +1,4 @@
-import React, { type ComponentProps } from 'react'
+import React, { type ComponentProps, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { FaArrowLeftIcon } from '../Icon'
@@ -21,7 +21,8 @@ type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> &
   }
 
 export const UpwardLink: React.FC<Props> = ({ indent = true, className, elementAs, ...rest }) => {
-  const style = upwardLink({ indent, className })
+  const style = useMemo(() => upwardLink({ indent, className }), [indent, className])
+
   return (
     <div className={style}>
       <TextLink {...rest} elementAs={elementAs} prefix={<FaArrowLeftIcon />} />
