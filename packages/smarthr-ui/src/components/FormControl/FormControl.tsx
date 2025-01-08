@@ -10,6 +10,7 @@ import React, {
   useRef,
 } from 'react'
 import { useId } from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon } from '../Icon'
@@ -337,7 +338,7 @@ const TitleCluster = React.memo<
       <>
         {isRoleGroup && (
           <VisuallyHiddenText id={managedLabelId} as="legend">
-            {body}
+            {innerText(body)}
           </VisuallyHiddenText>
         )}
         <Cluster
