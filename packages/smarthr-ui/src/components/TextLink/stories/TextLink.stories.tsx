@@ -31,11 +31,7 @@ export default {
   title: 'Navigation（ナビゲーション）/TextLink',
   component: TextLink,
   subcomponents: { UpwardLink },
-  render: (args) => (
-    <IntlProvider locale="ja">
-      <TextLink {...args} />
-    </IntlProvider>
-  ),
+  render: (args) => <TextLink {...args} />,
   argTypes: {
     href: {
       control: 'text',
