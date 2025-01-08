@@ -145,7 +145,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
 
   const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
-  const styles = tooltip({ isIcon, className })
+  const styles = useMemo(() => tooltip({ isIcon, className }), [isIcon, className])
   const isInnerTarget = ariaDescribedbyTarget === 'inner'
   const childrenWithProps = useMemo(
     () =>
