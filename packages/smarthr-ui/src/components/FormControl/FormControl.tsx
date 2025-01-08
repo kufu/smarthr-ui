@@ -259,7 +259,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       {...props}
       as={as}
       gap={innerMargin ?? 0.5}
-      aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
       className={wrapperStyle}
     >
@@ -336,11 +335,7 @@ const TitleCluster = React.memo<
 
     return (
       <>
-        {isRoleGroup && (
-          <VisuallyHiddenText id={managedLabelId} as="legend">
-            {innerText(body)}
-          </VisuallyHiddenText>
-        )}
+        {isRoleGroup && <VisuallyHiddenText as="legend">{innerText(body)}</VisuallyHiddenText>}
         <Cluster
           justify="space-between"
           // HINT: legendが存在する場合、Stackの余白が狂ってしまう&常にこのClusterはUI上先頭になるため、margin-topを0固定する
