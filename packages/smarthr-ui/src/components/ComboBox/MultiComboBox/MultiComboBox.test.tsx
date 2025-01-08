@@ -2,10 +2,9 @@ import { userEvent } from '@storybook/test'
 import { render, screen } from '@testing-library/react'
 import React, { ComponentProps, act } from 'react'
 
-import { FormControl } from '../FormControl'
+import { FormControl } from '../../FormControl'
 
 import { MultiComboBox } from './MultiComboBox'
-import { SingleComboBox } from './SingleComboBox'
 
 describe('SingleComboBox', () => {
   beforeEach(() => {
