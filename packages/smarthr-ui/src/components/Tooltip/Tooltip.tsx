@@ -99,36 +99,64 @@ export const Tooltip: FC<Props & ElementProps> = ({
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
 
-  const getHandlerToShow = useCallback(
-    <T,>(handler?: (e: T) => void) =>
-      (e: T) => {
-        if (handler) {
-          handler(e)
-        }
+  const toShowAction = useCallback(() => {
+    if (!ref.current) {
+      return
+    }
 
-        if (!ref.current) {
-          return
-        }
+    // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+    if (!ref.current.contains((e as React.BaseSyntheticEvent).target)) {
+      return
+    }
 
-        if (ellipsisOnly) {
-          const outerWidth = parseInt(
-            window
-              .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-              .width.match(/\d+/)![0],
-            10,
-          )
-          const wrapperWidth = ref.current.clientWidth
-          const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
+    if (ellipsisOnly) {
+      const outerWidth = parseInt(
+        window
+          .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+          .width.match(/\d+/)![0],
+        10,
+      )
+      const wrapperWidth = ref.current.clientWidth
+      const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
 
-          if (!existsEllipsis) {
-            return
-          }
-        }
+      if (!existsEllipsis) {
+        return
+      }
+    }
 
-        setRect(ref.current.getBoundingClientRect())
-        setIsVisible(true)
-      },
-    [ellipsisOnly],
+    setRect(ref.current.getBoundingClientRect())
+    setIsVisible(true)
+  }, [ellipsisOnly])
+
+  const actualOnPointerEnter: Props['onPointerEnter'] = useCallback(
+    (e) => {
+      if (onPointerEnter) {
+        onPointerEnter(e)
+      }
+
+      toShowAction()
+    },
+    [toShowAction, onPointerEnter],
+  )
+  const actualOnTouchStart: Props['onTouchStart'] = useCallback(
+    (e) => {
+      if (onTouchStart) {
+        onTouchStart(e)
+      }
+
+      toShowAction()
+    },
+    [toShowAction, onTouchStart],
+  )
+  const actualOnFocus: Props['onFocus'] = useCallback(
+    (e) => {
+      if (onFocus) {
+        onFocus(e)
+      }
+
+      toShowAction()
+    },
+    [toShowAction, onFocus],
   )
 
   const getHandlerToHide = useCallback(
@@ -161,9 +189,9 @@ export const Tooltip: FC<Props & ElementProps> = ({
       {...props}
       aria-describedby={isInnerTarget ? undefined : messageId}
       ref={ref}
-      onPointerEnter={getHandlerToShow(onPointerEnter)}
-      onTouchStart={getHandlerToShow(onTouchStart)}
-      onFocus={getHandlerToShow(onFocus)}
+      onPointerEnter={actualOnPointerEnter}
+      onTouchStart={actualOnTouchStart}
+      onFocus={actualOnFocus}
       onPointerLeave={getHandlerToHide(onPointerLeave)}
       onTouchEnd={getHandlerToHide(onTouchEnd)}
       onBlur={getHandlerToHide(onBlur)}
