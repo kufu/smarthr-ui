@@ -3,21 +3,14 @@
 import React, { FC, PropsWithChildren } from 'react'
 import { IntlProvider as ReactIntlProvider } from 'react-intl'
 
-import { ja } from '../../locales'
-
-type Messages = Record<keyof typeof ja, string>
-
-const localeMap = {
-  ja,
-} as const
+import * as locales from '../../locales'
 
 type Props = PropsWithChildren<{
-  locale: keyof typeof localeMap
-  messages: Messages
+  locale: keyof typeof locales
 }>
 
 export const IntlProvider: FC<Props> = ({ locale, children }) => (
-  <ReactIntlProvider locale={locale} messages={localeMap[locale]}>
+  <ReactIntlProvider locale={locale} messages={locales[locale]}>
     {children}
   </ReactIntlProvider>
 )
