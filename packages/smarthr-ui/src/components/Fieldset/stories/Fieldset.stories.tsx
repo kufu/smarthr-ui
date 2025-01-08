@@ -94,7 +94,7 @@ export const SubActionArea: StoryObj<typeof Fieldset> = {
   args: {
     subActionArea: (
       <Cluster justify="end">
-        <TextLink href="https://www.google.com/">外部リンク</TextLink>
+        <TextLink href="https://example.com/">リンク</TextLink>
       </Cluster>
     ),
   },

@@ -183,6 +183,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
     useMemo(() => {
       const { wrapper, label, errorList, errorIcon } = formGroup()
+
       return {
         wrapperStyle: wrapper({ className }),
         labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
@@ -193,63 +194,79 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   useEffect(() => {
-    if (!isRoleGroup) {
-      const inputWrapper = inputWrapperRef?.current
+    if (isRoleGroup) {
+      return
+    }
 
-      if (inputWrapper) {
-        // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-        if (!document.getElementById(managedHtmlFor)) {
-          const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const inputWrapper = inputWrapperRef?.current
 
-          if (input) {
-            if (!input.getAttribute('id')) {
-              input.setAttribute('id', managedHtmlFor)
-            }
+    if (!inputWrapper) {
+      return
+    }
 
-            if (input instanceof HTMLInputElement && input.type === 'file') {
-              const attrName = 'aria-labelledby'
-              const inputLabelledByIds = input.getAttribute(attrName)
+    // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+    if (document.getElementById(managedHtmlFor)) {
+      return
+    }
 
-              if (inputLabelledByIds) {
-                // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-                input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
-              }
-            }
-          }
-        }
+    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+    if (!input) {
+      return
+    }
+
+    if (!input.getAttribute('id')) {
+      input.setAttribute('id', managedHtmlFor)
+    }
+
+    if (input instanceof HTMLInputElement && input.type === 'file') {
+      const attrName = 'aria-labelledby'
+      const inputLabelledByIds = input.getAttribute(attrName)
+
+      if (inputLabelledByIds) {
+        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+        input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
       }
     }
   }, [managedHtmlFor, isRoleGroup, managedLabelId])
   useEffect(() => {
-    if (describedbyIds) {
-      const attrName = 'aria-describedby'
-      const inputWrapper = inputWrapperRef?.current
+    if (!describedbyIds) {
+      return
+    }
 
-      if (inputWrapper && !inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
-        const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const attrName = 'aria-describedby'
+    const inputWrapper = inputWrapperRef?.current
 
-        if (input && !input.getAttribute(attrName)) {
-          input.setAttribute(attrName, describedbyIds)
-        }
-      }
+    if (!inputWrapper || inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
+      return
+    }
+
+    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+    if (input && !input.getAttribute(attrName)) {
+      input.setAttribute(attrName, describedbyIds)
     }
   }, [describedbyIds])
   useEffect(() => {
-    if (autoBindErrorInput) {
-      const inputWrapper = inputWrapperRef?.current
+    if (!autoBindErrorInput) {
+      return
+    }
 
-      if (inputWrapper) {
-        const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const inputWrapper = inputWrapperRef?.current
 
-        if (input) {
-          const attrName = 'aria-invalid'
+    if (!inputWrapper) {
+      return
+    }
 
-          if (actualErrorMessages.length > 0) {
-            input.setAttribute(attrName, 'true')
-          } else {
-            input.removeAttribute(attrName)
-          }
-        }
+    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+    if (input) {
+      const attrName = 'aria-invalid'
+
+      if (actualErrorMessages.length > 0) {
+        input.setAttribute(attrName, 'true')
+      } else {
+        input.removeAttribute(attrName)
       }
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
