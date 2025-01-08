@@ -159,17 +159,27 @@ export const Tooltip: FC<Props & ElementProps> = ({
     [toShowAction, onFocus],
   )
 
-  const getHandlerToHide = useCallback(
-    <T,>(handler?: (e: T) => void) =>
-      (e: T) => {
-        if (handler) {
-          handler(e)
-        }
+  const actualOnPointerLeave: Props['onPointerLeave'] = useCallback(() => {
+    if (onPointerLeave) {
+      onPointerLeave(e)
+    }
 
-        setIsVisible(false)
-      },
-    [setIsVisible],
-  )
+    setIsVisible(false)
+  }, [onPointerLeave])
+  const actualOnTouchEnd: Props['onTouchEnd'] = useCallback(() => {
+    if (onTouchEnd) {
+      onTouchEnd(e)
+    }
+
+    setIsVisible(false)
+  }, [onTouchEnd])
+  const actualOnBlur: Props['onBlur'] = useCallback(() => {
+    if (onBlur) {
+      onBlur(e)
+    }
+
+    setIsVisible(false)
+  }, [onBlur])
 
   const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
@@ -192,9 +202,9 @@ export const Tooltip: FC<Props & ElementProps> = ({
       onPointerEnter={actualOnPointerEnter}
       onTouchStart={actualOnTouchStart}
       onFocus={actualOnFocus}
-      onPointerLeave={getHandlerToHide(onPointerLeave)}
-      onTouchEnd={getHandlerToHide(onTouchEnd)}
-      onBlur={getHandlerToHide(onBlur)}
+      onPointerLeave={actualOnPointerLeave}
+      onTouchEnd={actualOnTouchEnd}
+      onBlur={actualOnBlur}
       tabIndex={tabIndex}
       className={styles}
     >
