@@ -70,7 +70,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   children,
   triggerType,
   multiLine,
-  ellipsisOnly = false,
+  ellipsisOnly,
   horizontal = 'left',
   vertical = 'bottom',
   tabIndex = 0,
@@ -99,87 +99,99 @@ export const Tooltip: FC<Props & ElementProps> = ({
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
 
-  const toShowAction = useCallback(() => {
-    if (!ref.current) {
-      return
-    }
-
-    // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
-    if (!ref.current.contains((e as React.BaseSyntheticEvent).target)) {
-      return
-    }
-
-    if (ellipsisOnly) {
-      const outerWidth = parseInt(
-        window
-          .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-          .width.match(/\d+/)![0],
-        10,
-      )
-      const wrapperWidth = ref.current.clientWidth
-      const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
-
-      if (!existsEllipsis) {
+  const toShowAction = useCallback(
+    (e: React.BaseSyntheticEvent) => {
+      if (!ref.current) {
         return
       }
-    }
 
-    setRect(ref.current.getBoundingClientRect())
-    setIsVisible(true)
-  }, [ellipsisOnly])
+      // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+      if (!ref.current.contains(e.target)) {
+        return
+      }
 
-  const actualOnPointerEnter: Props['onPointerEnter'] = useCallback(
-    (e) => {
+      if (ellipsisOnly) {
+        const outerWidth = parseInt(
+          window
+            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+            .width.match(/\d+/)![0],
+          10,
+        )
+        const wrapperWidth = ref.current.clientWidth
+        const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
+
+        if (!existsEllipsis) {
+          return
+        }
+      }
+
+      setRect(ref.current.getBoundingClientRect())
+      setIsVisible(true)
+    },
+    [ellipsisOnly],
+  )
+
+  const actualOnPointerEnter = useCallback(
+    (e: React.PointerEvent<HTMLSpanElement>) => {
       if (onPointerEnter) {
         onPointerEnter(e)
       }
 
-      toShowAction()
+      toShowAction(e)
     },
     [toShowAction, onPointerEnter],
   )
-  const actualOnTouchStart: Props['onTouchStart'] = useCallback(
-    (e) => {
+  const actualOnTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLSpanElement>) => {
       if (onTouchStart) {
         onTouchStart(e)
       }
 
-      toShowAction()
+      toShowAction(e)
     },
     [toShowAction, onTouchStart],
   )
-  const actualOnFocus: Props['onFocus'] = useCallback(
-    (e) => {
+  const actualOnFocus = useCallback(
+    (e: React.FocusEvent<HTMLSpanElement>) => {
       if (onFocus) {
         onFocus(e)
       }
 
-      toShowAction()
+      toShowAction(e)
     },
     [toShowAction, onFocus],
   )
 
-  const actualOnPointerLeave: Props['onPointerLeave'] = useCallback(() => {
-    if (onPointerLeave) {
-      onPointerLeave(e)
-    }
+  const actualOnPointerLeave = useCallback(
+    (e: React.PointerEvent<HTMLSpanElement>) => {
+      if (onPointerLeave) {
+        onPointerLeave(e)
+      }
 
-    setIsVisible(false)
-  }, [onPointerLeave])
-  const actualOnTouchEnd: Props['onTouchEnd'] = useCallback(() => {
-    if (onTouchEnd) {
-      onTouchEnd(e)
-    }
+      setIsVisible(false)
+    },
+    [onPointerLeave],
+  )
+  const actualOnTouchEnd = useCallback(
+    (e: React.TouchEvent<HTMLSpanElement>) => {
+      if (onTouchEnd) {
+        onTouchEnd(e)
+      }
 
-    setIsVisible(false)
-  }, [onTouchEnd])
-  const actualOnBlur: Props['onBlur'] = useCallback(() => {
-    if (onBlur) {
-      onBlur(e)
-    }
+      setIsVisible(false)
+    },
+    [onTouchEnd],
+  )
+  const actualOnBlur = useCallback(
+    (e: React.FocusEvent<HTMLSpanElement>) => {
+      if (onBlur) {
+        onBlur(e)
+      }
 
-    setIsVisible(false)
-  }, [onBlur])
+      setIsVisible(false)
+    },
+    [onBlur],
+  )
 
   const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
