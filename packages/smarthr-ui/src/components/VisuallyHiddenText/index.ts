@@ -1,1 +1,1 @@
-export { VisuallyHiddenText } from './VisuallyHiddenText'
+export { VisuallyHiddenText, visuallyHiddenText } from './VisuallyHiddenText'
