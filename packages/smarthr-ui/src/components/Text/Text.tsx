@@ -37,6 +37,12 @@ export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof text> } =
     color: 'TEXT_GREY',
   },
 }
+const UNDEFINED_STYLE_VALUES = {
+  size: undefined,
+  leading: undefined,
+  weight: undefined,
+  color: undefined,
+}
 
 const text = tv({
   variants: {
@@ -104,18 +110,20 @@ export const Text = <T extends React.ElementType = 'span'>({
   ...props
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
   const styles = useMemo(() => {
-    const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType as StyleType] : null
+    const styleTypeValues = styleType
+      ? STYLE_TYPE_MAP[styleType as StyleType]
+      : UNDEFINED_STYLE_VALUES
 
     return text({
-      size: size || styleTypeValues?.size,
-      weight: weight || styleTypeValues?.weight,
-      color: color || styleTypeValues?.color,
-      leading: leading || styleTypeValues?.leading,
+      size: size || styleTypeValues.size,
+      weight: weight || styleTypeValues.weight,
+      color: color || styleTypeValues.color,
+      leading: leading || styleTypeValues.leading,
       italic,
       whiteSpace,
       className,
     })
-  }, [size, weight, italic, color, leading, whiteSpace, className, styleTypeValues])
+  }, [size, weight, italic, color, leading, whiteSpace, className, styleType])
 
   return <Component {...props} className={styles} />
 }
