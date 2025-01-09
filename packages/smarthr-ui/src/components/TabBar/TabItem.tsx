@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -104,6 +104,7 @@ const TabButton: FC<Props & ElementProps> = ({
 }) => {
   const { wrapperStyle, labelStyle, suffixStyle } = useMemo(() => {
     const { wrapper, label, suffixWrapper } = tabItem({ isTouchDevice })
+
     return {
       wrapperStyle: wrapper({ className }),
       labelStyle: label(),
@@ -111,13 +112,15 @@ const TabButton: FC<Props & ElementProps> = ({
     }
   }, [className])
 
+  const actualOnClick = useCallback(() => onClick(id), [id])
+
   return (
     <UnstyledButton
       {...rest}
       type="button"
       id={id}
       className={wrapperStyle}
-      onClick={() => onClick(id)}
+      onClick={actualOnClick}
     >
       <span className={labelStyle}>{children}</span>
       {suffix && <span className={suffixStyle}>{suffix}</span>}
