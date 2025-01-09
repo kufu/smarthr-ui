@@ -12,25 +12,26 @@ export const useReelCells = () => {
     }
 
     const handleScroll = () => {
-      const stickyCells = currentRef.querySelectorAll('.fixedElement') || []
+      const stickyCells = currentRef.querySelectorAll('.fixedElement')
+
+      if (!stickyCells) {
+        return
+      }
+
       const scrollLeft = currentRef.scrollLeft
       const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
+      const shouldFix = maxScrollLeft > 0 && scrollLeft < maxScrollLeft
+      const settableShowShadow = shouldFix
+        ? scrollLeft > 0
+        : maxScrollLeft !== 0 || scrollLeft !== 0
 
       stickyCells.forEach((cell) => {
-        const shouldFix = maxScrollLeft > 0 && scrollLeft < maxScrollLeft
-
-        if (shouldFix) {
-          cell.classList.add('fixed')
-          setShowShadow(scrollLeft > 0)
-        } else {
-          cell.classList.remove('fixed')
-          setShowShadow(maxScrollLeft === 0 && scrollLeft === 0 ? false : true)
-        }
+        cell.classList.toggle('fixed', shouldFix)
+        setShowShadow(settableShowShadow)
       })
     }
 
     handleScroll()
-
     currentRef.addEventListener('scroll', handleScroll)
 
     const observer = new window.ResizeObserver(handleScroll)
