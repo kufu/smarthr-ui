@@ -103,6 +103,7 @@ export const Th: FC<Props & ElementProps> = ({
   const styleProps = useMemo(() => {
     const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
     const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
+
     return {
       className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
       style: {

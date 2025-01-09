@@ -1,4 +1,4 @@
-import React, { ComponentProps, PropsWithChildren, forwardRef } from 'react'
+import React, { ComponentProps, PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
@@ -25,13 +25,26 @@ const tdCheckbox = tv({
 
 export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
   ({ vAlign, 'aria-labelledby': ariaLabelledby, children, className, ...others }, ref) => {
-    const { wrapper, inner, checkbox } = tdCheckbox()
+    const { wrapperStyle, innerStyle, checkboxStyle } = useMemo(() => {
+      const { wrapper, inner, checkbox } = tdCheckbox()
+
+      return {
+        wrapperStyle: wrapper({ className }),
+        innerStyle: inner(),
+        checkboxStyle: checkbox(),
+      }
+    }, [className])
 
     return (
       // Td に必要な属性やイベントは不要
-      <Td vAlign={vAlign} className={wrapper({ className })}>
-        <label className={inner()}>
-          <CheckBox {...others} ref={ref} aria-labelledby={ariaLabelledby} className={checkbox()} />
+      <Td vAlign={vAlign} className={wrapperStyle}>
+        <label className={innerStyle}>
+          <CheckBox
+            {...others}
+            ref={ref}
+            aria-labelledby={ariaLabelledby}
+            className={checkboxStyle}
+          />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>
       </Td>
