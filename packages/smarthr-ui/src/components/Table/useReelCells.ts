@@ -33,9 +33,7 @@ export const useReelCells = () => {
 
     currentRef.addEventListener('scroll', handleScroll)
 
-    const observer = new window.ResizeObserver(() => {
-      handleScroll()
-    })
+    const observer = new window.ResizeObserver(handleScroll)
 
     observer.observe(currentRef)
 
