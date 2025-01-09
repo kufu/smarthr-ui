@@ -100,7 +100,7 @@ const childrenWrapper = tv({
       XXL: '[&&&]:shr-mt-3.5',
       X3L: '[&&&]:shr-mt-4',
     } as { [key in Gap]: string },
-    isRoleGroup: {
+    isFieldset: {
       true: '',
       false: '',
     },
@@ -108,12 +108,12 @@ const childrenWrapper = tv({
   compoundVariants: [
     {
       innerMargin: undefined,
-      isRoleGroup: true,
+      isFieldset: true,
       className: '[:not([hidden])_~_&&&]:shr-mt-1',
     },
     {
       innerMargin: undefined,
-      isRoleGroup: false,
+      isFieldset: false,
       className: '[:not([hidden])_~_&&&]:shr-mt-0.5',
     },
   ],
@@ -145,7 +145,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const managedHtmlFor = htmlFor || defaultHtmlFor
   const managedLabelId = labelId || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
-  const isRoleGroup = as === 'fieldset'
+  const isFieldset = as === 'fieldset'
 
   const describedbyIds = useMemo(() => {
     const temp = []
@@ -189,12 +189,12 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
         errorListStyle: errorList(),
         errorIconStyle: errorIcon(),
-        childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
+        childrenWrapperStyle: childrenWrapper({ innerMargin, isFieldset }),
       }
-    }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+    }, [className, dangerouslyTitleHidden, innerMargin, isFieldset])
 
   useEffect(() => {
-    if (isRoleGroup) {
+    if (isFieldset) {
       return
     }
 
@@ -228,7 +228,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
       }
     }
-  }, [managedHtmlFor, isRoleGroup, managedLabelId])
+  }, [managedHtmlFor, isFieldset, managedLabelId])
   useEffect(() => {
     if (!describedbyIds) {
       return
@@ -276,11 +276,11 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       {...props}
       as={as}
       gap={innerMargin ?? 0.5}
-      aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
+      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={wrapperStyle}
     >
       <TitleCluster
-        isRoleGroup={isRoleGroup}
+        isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
         labelStyle={labelStyle}
@@ -313,14 +313,14 @@ const TitleCluster = React.memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
     statusLabelList: StatusLabelProps[]
-    isRoleGroup: boolean
+    isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
     labelStyle: string
   }
 >(
   ({
-    isRoleGroup,
+    isFieldset,
     managedHtmlFor,
     managedLabelId,
     labelStyle,
@@ -342,7 +342,7 @@ const TitleCluster = React.memo<
         )}
       </>
     )
-    const labelAttrs = isRoleGroup
+    const labelAttrs = isFieldset
       ? { 'aria-hidden': 'true' }
       : {
           htmlFor: managedHtmlFor,
@@ -352,7 +352,7 @@ const TitleCluster = React.memo<
 
     return (
       <>
-        {isRoleGroup && <VisuallyHiddenText as="legend">{innerText(body)}</VisuallyHiddenText>}
+        {isFieldset && <VisuallyHiddenText as="legend">{innerText(body)}</VisuallyHiddenText>}
         <Cluster
           justify="space-between"
           // HINT: legendが存在する場合、Stackの余白が狂ってしまう&常にこのClusterはUI上先頭になるため、margin-topを0固定する
