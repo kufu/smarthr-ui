@@ -1,4 +1,4 @@
-import React, { type FC } from 'react'
+import React, { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
@@ -57,23 +57,33 @@ type Props = VerticalStep & {
 }
 
 export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
-  const statusType = typeof status === 'object' ? status.type : status
-  const { wrapper, headingWrapper, heading, body, inner } = verticalStepItem({
-    status: statusType,
-    current,
-  })
+  const { wrapperStyle, headingWrapperStyle, headingStyle, bodyStyle, innerStyle } = useMemo(() => {
+    const statusType = typeof status === 'object' ? status.type : status
+    const { wrapper, headingWrapper, heading, body, inner } = verticalStepItem({
+      status: statusType,
+      current,
+    })
+
+    return {
+      wrapperStyle: wrapper(),
+      headingWrapperStyle: headingWrapper(),
+      headingStyle: heading(),
+      bodyStyle: body(),
+      innerStyle: inner(),
+    }
+  }, [current, status])
 
   return (
-    <li aria-current={current} className={wrapper()}>
+    <li aria-current={current} className={wrapperStyle}>
       <SectioningFragment>
-        <div className={headingWrapper()}>
+        <div className={headingWrapperStyle}>
           <StepCounter status={status} current={current} stepNumber={stepNumber} />
-          <Heading type="sectionTitle" className={heading()}>
+          <Heading type="sectionTitle" className={headingStyle}>
             {label}
           </Heading>
         </div>
-        <div className={body()}>
-          <div className={inner()}>{children}</div>
+        <div className={bodyStyle}>
+          <div className={innerStyle}>{children}</div>
         </div>
       </SectioningFragment>
     </li>
