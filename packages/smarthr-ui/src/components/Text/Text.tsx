@@ -103,21 +103,19 @@ export const Text = <T extends React.ElementType = 'span'>({
   className,
   ...props
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType as StyleType] : null
+  const styles = useMemo(() => {
+    const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType as StyleType] : null
 
-  const styles = useMemo(
-    () =>
-      text({
-        size: size || styleTypeValues?.size,
-        weight: weight || styleTypeValues?.weight,
-        color: color || styleTypeValues?.color,
-        italic,
-        leading: leading || styleTypeValues?.leading,
-        whiteSpace,
-        className,
-      }),
-    [size, weight, italic, color, leading, whiteSpace, className, styleTypeValues],
-  )
+    return text({
+      size: size || styleTypeValues?.size,
+      weight: weight || styleTypeValues?.weight,
+      color: color || styleTypeValues?.color,
+      leading: leading || styleTypeValues?.leading,
+      italic,
+      whiteSpace,
+      className,
+    })
+  }, [size, weight, italic, color, leading, whiteSpace, className, styleTypeValues])
 
   return <Component {...props} className={styles} />
 }
