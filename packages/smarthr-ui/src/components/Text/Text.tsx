@@ -95,9 +95,14 @@ export const Text = <T extends React.ElementType = 'span'>({
   styleType,
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
+  size,
+  italic,
+  color,
+  leading,
+  whiteSpace,
+  className,
   ...props
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const { size, italic, color, leading, whiteSpace, className, ...others } = props
   const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType as StyleType] : null
 
   const styles = useMemo(
@@ -114,5 +119,5 @@ export const Text = <T extends React.ElementType = 'span'>({
     [size, weight, italic, color, leading, whiteSpace, className, styleTypeValues],
   )
 
-  return <Component {...others} className={styles} />
+  return <Component {...props} className={styles} />
 }
