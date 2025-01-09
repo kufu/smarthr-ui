@@ -11,7 +11,6 @@ import { Cluster, Stack } from '../../Layout'
 import { MonthPicker, TimePicker } from '../../Picker'
 import { Select } from '../../Select'
 import { STYLE_TYPE_MAP } from '../../Text'
-import { TextLink } from '../../TextLink'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
 
@@ -103,8 +102,9 @@ export const SubActionArea: StoryObj<typeof FormControl> = {
   name: 'subActionArea',
   args: {
     subActionArea: (
-      <Cluster justify="end">
-        <TextLink href="https://example.com/">リンク</TextLink>
+      <Cluster justify="space-between">
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
       </Cluster>
     ),
   },

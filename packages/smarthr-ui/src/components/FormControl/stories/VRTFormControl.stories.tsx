@@ -16,8 +16,8 @@ export default {
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">
-        <div>ABC</div>
-        <div>DEF</div>
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
       </Cluster>
     ),
     helpMessage: 'フォームコントロールの補足となるヘルプメッセージを入れます。',

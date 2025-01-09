@@ -5,7 +5,6 @@ import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 import { STYLE_TYPE_MAP } from '../../Text'
-import { TextLink } from '../../TextLink'
 import { Fieldset } from '../Fieldset'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -93,8 +92,9 @@ export const SubActionArea: StoryObj<typeof Fieldset> = {
   name: 'subActionArea',
   args: {
     subActionArea: (
-      <Cluster justify="end">
-        <TextLink href="https://example.com/">リンク</TextLink>
+      <Cluster justify="space-between">
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
       </Cluster>
     ),
   },
