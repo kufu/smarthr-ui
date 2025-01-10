@@ -24,15 +24,10 @@ const stepper = tv({
   },
 })
 
-const isStepCompleted = (step: Step | undefined) => {
-  if (!step) return false
-
-  const { status } = step
-  const statusType = typeof status === 'object' ? status.type : status
-  return statusType === 'completed'
-}
-
 export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...rest }) => {
+  const isHorizontal = type === 'horizontal'
+  const ItemComponent = isHorizontal ? HorizontalStepItem : VerticalStepItem
+
   const style = stepper({ type, className })
 
   return (
@@ -40,11 +35,12 @@ export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...res
       {steps.map((step, index) => (
         <StepItem
           key={index}
-          type={type}
+          Component={ItemComponent}
           activeIndex={activeIndex}
           index={index}
           step={step}
-          previousStep={steps[index - 1]}
+          // 装飾上、horizontalの場合、前のステップが完了しているかどうかチェックする必要がある
+          previousStepStatus={isHorizontal ? steps[index - 1]?.status : undefined}
         />
       ))}
     </ol>
@@ -52,30 +48,28 @@ export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...res
 }
 
 const StepItem: FC<
-  Pick<Props, 'activeIndex' | 'type'> & {
+  Pick<Props, 'activeIndex'> & {
+    Component: typeof HorizontalStepItem | typeof VerticalStepItem
     step: Step
-    previousStep: Step | undefined
+    previousStepStatus: Step['status'] | undefined
     index: number
   }
-> = ({ Component, step, index, activeIndex, type }) => {
-  const Component = useMemo(() => {
-    switch (type) {
-      case 'horizontal':
-        return HorizontalStepItem
-      case 'vertical':
-        return VerticalStepItem
-    }
-  }, [type])
+> = ({ Component, step, previousStepStatus, index, activeIndex }) => {
+  const isPrevStepCompleted = useMemo(() => {
+    if (!previousStepStatus) return false
 
-  const stepItemProps = {
-    ...step,
-    stepNumber: index + 1,
-    current: index === activeIndex,
-    ...(type === 'horizontal'
-      ? // 装飾上、前のステップが完了しているかどうかが必要
-        { isPrevStepCompleted: isStepCompleted(previousStep) }
-      : {}),
-  }
+    const statusType =
+      typeof previousStepStatus === 'object' ? previousStepStatus.type : previousStepStatus
 
-  return <Component {...stepItemProps} />
+    return statusType === 'completed'
+  }, [previousStepStatus])
+
+  return (
+    <Component
+      {...step}
+      isPrevStepCompleted={isPrevStepCompleted}
+      stepNumber={index + 1}
+      current={index === activeIndex}
+    />
+  )
 }
