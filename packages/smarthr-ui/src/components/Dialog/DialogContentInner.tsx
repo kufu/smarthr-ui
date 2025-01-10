@@ -42,7 +42,7 @@ export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * ダイアログを開いた時にフォーカスする対象
    */
-  firstFocusTarget?: RefObject<HTMLElement>
+  firstFocusTarget?: RefObject<HTMLElement | null>
   /**
    * ダイアログの `aria-label`
    */

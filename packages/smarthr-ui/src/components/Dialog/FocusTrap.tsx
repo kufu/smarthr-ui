@@ -3,7 +3,7 @@ import React, { FC, PropsWithChildren, RefObject, useCallback, useEffect, useRef
 import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
-  firstFocusTarget?: RefObject<HTMLElement>
+  firstFocusTarget?: RefObject<HTMLElement | null>
 }>
 
 export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {

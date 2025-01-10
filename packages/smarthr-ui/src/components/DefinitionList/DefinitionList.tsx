@@ -47,7 +47,7 @@ export const DefinitionList: FC<Props & ElementProps> = ({
         children,
         (child) =>
           React.isValidElement(child) &&
-          React.cloneElement(child as React.ReactElement, {
+          React.cloneElement(child as React.ReactElement<any>, {
             maxColumns,
             termStyleType,
           }),

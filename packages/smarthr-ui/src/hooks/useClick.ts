@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useEffect } from 'react'
 
 export function useClick(
-  innerRefs: Array<RefObject<HTMLElement>>,
+  innerRefs: Array<RefObject<HTMLElement | null>>,
   innerCallback: (e: MouseEvent) => void,
   outerCallback: (e: MouseEvent) => void,
 ) {

@@ -77,7 +77,7 @@ type Props = PropsWithChildren<{
   /**
    * ポータルの container となる DOM 要素を追加する親要素
    */
-  portalParent?: HTMLElement | RefObject<HTMLElement>
+  portalParent?: HTMLElement | RefObject<HTMLElement | null>
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonIconAlt'> & {
     dialogHandlerAriaLabel?: (txt: string) => string
@@ -356,7 +356,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
         }}
         position={position}
         bounds={draggableBounds}
-        nodeRef={wrapperRef}
+        nodeRef={wrapperRef as RefObject<HTMLDivElement>}
       >
         <Base
           {...props}

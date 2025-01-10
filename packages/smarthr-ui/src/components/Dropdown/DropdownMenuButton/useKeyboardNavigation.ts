@@ -39,7 +39,7 @@ const moveFocus = (
   }
 }
 
-const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
+const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement | null>) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!containerRef.current || !document.activeElement) {

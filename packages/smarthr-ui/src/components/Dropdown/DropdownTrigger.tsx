@@ -49,7 +49,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
 
         foundFirstElement = true
 
-        return React.cloneElement(child as ReactElement, {
+        return React.cloneElement(child as ReactElement<any>, {
           onClick: (e: MouseEvent) => {
             // 引き金となる要素が disabled な場合は発火させない
             if (includeDisabledTrigger(children)) {
@@ -59,8 +59,8 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
             const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
             onClickTrigger({ top, right, bottom, left })
 
-            if (child.props.onClick) {
-              child.props.onClick(e)
+            if ((child.props as any).onClick) {
+              ;(child.props as any).onClick(e)
             }
           },
         })

@@ -13,7 +13,7 @@ export type Props<T> = {
   disabled: boolean
   onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
-  buttonRef: RefObject<HTMLButtonElement>
+  buttonRef: RefObject<HTMLButtonElement | null>
   decorators?: {
     destroyButtonIconAlt?: (text: string) => string
   }

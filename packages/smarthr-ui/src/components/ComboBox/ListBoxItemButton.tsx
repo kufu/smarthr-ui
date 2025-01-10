@@ -12,7 +12,7 @@ type Props<T> = {
   onAdd: (option: ComboBoxOption<T>) => void
   onSelect: (option: ComboBoxOption<T>) => void
   onMouseOver: (option: ComboBoxOption<T>) => void
-  activeRef: RefObject<HTMLButtonElement>
+  activeRef: RefObject<HTMLButtonElement | null>
 }
 
 const button = tv({

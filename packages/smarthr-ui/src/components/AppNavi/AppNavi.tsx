@@ -106,7 +106,7 @@ const renderButtons = (children: ReactNode) =>
     }
 
     if (child.type === React.Fragment) {
-      return renderButtons(child.props.children)
+      return renderButtons((child as any).props.children)
     }
 
     return <li className={listItem()}>{child}</li>

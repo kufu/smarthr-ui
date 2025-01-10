@@ -54,7 +54,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
       ...others
     }: PropsWithoutRef<AppNaviAnchorProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
-  ): ReactElement => {
+  ): ReactElement<any> => {
     const { wrapperStyle, iconStyle } = useMemo(() => {
       const { wrapper, icon } = appNaviAnchor({ active: current })
       return {
