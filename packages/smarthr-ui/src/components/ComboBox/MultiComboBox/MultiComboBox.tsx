@@ -19,12 +19,12 @@ import { useOuterClick } from '../../../hooks/useOuterClick'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { FaCaretDownIcon } from '../../Icon'
+import { areComboBoxItemsEqual } from '../comboBoxHelper'
 import { useFocusControl } from '../useFocusControl'
 import { useListBox } from '../useListBox'
 import { useOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
-import { areComboBoxItemsEqual } from './comboBoxHelper'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import type { DecoratorsType } from '../../../types'
