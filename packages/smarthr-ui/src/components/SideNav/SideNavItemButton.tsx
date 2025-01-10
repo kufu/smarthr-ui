@@ -51,23 +51,20 @@ const sideNavItem = tv({
   },
 })
 
-export const SideNavItemButton: FC<Props> = ({
-  id,
-  title,
-  prefix,
-  isSelected = false,
-  size,
-  onClick,
-}) => {
-  const handleClick = useMemo(() => (
-    onClick ? ((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)) : undefined
-  ), [onClick])
+export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, size, onClick }) => {
+  const handleClick = useMemo(
+    () =>
+      onClick
+        ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)
+        : undefined,
+    [onClick],
+  )
 
   const { wrapperStyle, buttonStyle, buttonInnerStyle } = useMemo(() => {
     const { wrapper, button, buttonInner } = sideNavItem()
 
     return {
-      wrapperStyle: wrapper({ selected: isSelected }),
+      wrapperStyle: wrapper({ selected: isSelected || false }),
       buttonStyle: button({ size }),
       buttonInnerStyle: buttonInner(),
     }
