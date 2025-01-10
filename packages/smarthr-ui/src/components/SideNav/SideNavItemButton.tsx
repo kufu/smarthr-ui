@@ -59,12 +59,13 @@ export const SideNavItemButton: FC<Props> = ({
   size,
   onClick,
 }) => {
-  const handleClick = onClick
-    ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, id)
-    : undefined
+  const handleClick = useMemo(() => (
+    onClick ? ((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)) : undefined
+  ), [onClick])
 
   const { wrapperStyle, buttonStyle, buttonInnerStyle } = useMemo(() => {
     const { wrapper, button, buttonInner } = sideNavItem()
+
     return {
       wrapperStyle: wrapper({ selected: isSelected }),
       buttonStyle: button({ size }),
@@ -74,7 +75,7 @@ export const SideNavItemButton: FC<Props> = ({
 
   return (
     <li className={wrapperStyle}>
-      <UnstyledButton onClick={handleClick} className={buttonStyle}>
+      <UnstyledButton className={buttonStyle} onClick={handleClick} value={id}>
         <Cluster inline align="center" as="span">
           {prefix}
           <span className={buttonInnerStyle}>{title}</span>
