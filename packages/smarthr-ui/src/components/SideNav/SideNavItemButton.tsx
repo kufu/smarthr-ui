@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -10,8 +10,10 @@ export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: s
 type Props = {
   /** アイテムの識別子 */
   id: string
-  /** アイテムのタイトル */
-  title: ReactNode
+  /** アイテムのタイトル
+   * @deprecated SideNav で items を使う時の props です。children を使ってください。
+   */
+  title?: ReactNode
   /** タイトルのプレフィックスの内容。通常、StatusLabel の配置に用います。 */
   prefix?: ReactNode
   /** 選択されているアイテムかどうか */
@@ -22,9 +24,11 @@ type Props = {
   onClick?: OnClick
 }
 
+type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof Props>
+
 const sideNavItem = tv({
   slots: {
-    wrapper: ['smarthr-ui-SideNav-item'],
+    wrapper: ['smarthr-ui-SideNav-item', 'shr-list-none'],
     button: ['shr-w-full shr-leading-none [&]:shr-box-border', 'focus-visible:shr-focus-indicator'],
     buttonInner: 'smarthr-ui-SideNav-itemTitle',
   },
@@ -51,13 +55,14 @@ const sideNavItem = tv({
   },
 })
 
-export const SideNavItemButton: FC<Props> = ({
+export const SideNavItemButton: FC<Props & ElementProps> = ({
   id,
   title,
   prefix,
   isSelected = false,
-  size,
+  size = 'default',
   onClick,
+  children,
 }) => {
   const handleClick = onClick
     ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, id)
@@ -77,7 +82,7 @@ export const SideNavItemButton: FC<Props> = ({
       <UnstyledButton onClick={handleClick} className={buttonStyle}>
         <Cluster inline align="center" as="span">
           {prefix}
-          <span className={buttonInnerStyle}>{title}</span>
+          <span className={buttonInnerStyle}>{children ?? title}</span>
         </Cluster>
       </UnstyledButton>
     </li>
