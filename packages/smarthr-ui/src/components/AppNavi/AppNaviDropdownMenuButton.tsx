@@ -1,6 +1,7 @@
-import React, { type FC, type PropsWithChildren, type ReactNode } from 'react'
+import React, { type FC, type PropsWithChildren, ReactElement, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { DropdownMenuGroup } from '../Dropdown'
 import { DropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuButton'
 
 type AppNaviDropdownMenuButtonProps = PropsWithChildren<{
@@ -8,29 +9,57 @@ type AppNaviDropdownMenuButtonProps = PropsWithChildren<{
   label: ReactNode
 }>
 
-const dropdownMenuButton = tv({
-  base: [
-    'smarthr-ui-AppNavi-dropdownMenuButton',
-    [
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-border-none',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.5',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-text-grey',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-rounded-none',
+const { trigger: triggerStyle, actionItem: actionItemStyle } = tv({
+  slots: {
+    trigger: [
+      'smarthr-ui-AppNavi-dropdownMenuButton',
+      [
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-border-none',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.5',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-text-grey',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-rounded-none',
+      ],
+      [
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-relative',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-text-black',
+      ],
+      [
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-content-[""]',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-absolute',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bottom-0',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-inset-x-0',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-h-0.25',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bg-main',
+      ],
     ],
-    [
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-relative',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-text-black',
+    actionItem: [
+      'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
+      // aria-current-page より詳細度を確実に上げる
+      '[&&]:hover:shr-bg-head-darken',
     ],
-    [
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-content-[""]',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-absolute',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bottom-0',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-inset-x-0',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-h-0.25',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bg-main',
-    ],
-  ],
-})
+  },
+})()
+
+const renderItemList = (children: ReactNode) =>
+  React.Children.map(children, (item): ReactNode => {
+    if (!React.isValidElement(item)) {
+      return null
+    }
+
+    if (item.type === React.Fragment) {
+      return renderItemList(item.props.children)
+    }
+
+    if (item.type === DropdownMenuGroup) {
+      return (
+        <DropdownMenuGroup {...item.props}>{renderItemList(item.props.children)}</DropdownMenuGroup>
+      )
+    }
+
+    return React.cloneElement(item as ReactElement, {
+      className: actionItemStyle({ className: item.props.className }),
+    })
+  })
 
 export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
   label,
@@ -44,8 +73,8 @@ export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
         <span hidden>{children}</span>
       </>
     }
-    className={dropdownMenuButton()}
+    className={triggerStyle()}
   >
-    {children}
+    {renderItemList(children)}
   </DropdownMenuButton>
 )
