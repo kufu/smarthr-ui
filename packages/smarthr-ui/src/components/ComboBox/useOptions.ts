@@ -1,13 +1,13 @@
 import { useCallback, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
 
-import { convertMatchableString } from './comboBoxHelper'
+import { areComboBoxItemsEqual, convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem, ComboBoxOption } from './types'
 
 const defaultIsItemSelected = <T>(
   targetItem: ComboBoxItem<T>,
   selectedItems: Array<ComboBoxItem<T>>,
-) => selectedItems.find((selectedItem) => selectedItem.value === targetItem.value) !== undefined
+) => selectedItems.some((item) => areComboBoxItemsEqual(item, targetItem))
 
 export function useOptions<T>({
   items,
@@ -41,7 +41,7 @@ export function useOptions<T>({
       if (Array.isArray(selected)) {
         return isItemSelected(item, selected)
       } else {
-        return selected !== null && selected.value === item.value
+        return selected !== null && areComboBoxItemsEqual(selected, item)
       }
     },
     [isItemSelected, selected],

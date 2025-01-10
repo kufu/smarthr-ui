@@ -24,6 +24,7 @@ import { useListBox } from '../useListBox'
 import { useOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
+import { areComboBoxItemsEqual } from './comboBoxHelper'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import type { DecoratorsType } from '../../../types'
@@ -197,7 +198,9 @@ const ActualMultiComboBox = <T,>(
       requestAnimationFrame(() => {
         if (onDelete) onDelete(item)
         if (onChangeSelected)
-          onChangeSelected(selectedItems.filter((selected) => selected.value !== item.value))
+          onChangeSelected(
+            selectedItems.filter((selected) => !areComboBoxItemsEqual(selected, item)),
+          )
       })
     },
     [onChangeSelected, onDelete, selectedItems],
@@ -207,7 +210,9 @@ const ActualMultiComboBox = <T,>(
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = selectedItems.find((item) => item.value === selected.value)
+        const matchedSelectedItem = selectedItems.find((item) =>
+          areComboBoxItemsEqual(item, selected),
+        )
         if (matchedSelectedItem !== undefined) {
           if (matchedSelectedItem.deletable !== false) {
             handleDelete(selected)
@@ -462,7 +467,7 @@ const ActualMultiComboBox = <T,>(
           className={selectedListStyle}
         >
           {selectedItems.map((selectedItem, i) => (
-            <li key={selectedItem.value}>
+            <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
