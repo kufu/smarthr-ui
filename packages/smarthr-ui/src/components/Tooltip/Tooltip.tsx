@@ -150,7 +150,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const childrenWithProps = useMemo(
     () =>
       isInnerTarget
-        ? React.cloneElement(children as ReactElement, { 'aria-describedby': messageId })
+        ? React.cloneElement(children as ReactElement<any>, { 'aria-describedby': messageId })
         : children,
     [children, isInnerTarget, messageId],
   )

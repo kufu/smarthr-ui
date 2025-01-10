@@ -6,8 +6,8 @@ import { DropdownContext } from './Dropdown'
 import { getFirstTabbable } from './dropdownHelper'
 
 export function useKeyboardNavigation(
-  wrapperRef: RefObject<HTMLDivElement>,
-  dummyFocusRef: RefObject<HTMLElement>,
+  wrapperRef: RefObject<HTMLDivElement | null>,
+  dummyFocusRef: RefObject<HTMLElement | null>,
 ) {
   const { triggerElementRef, rootTriggerRef, onClickCloser } = useContext(DropdownContext)
 

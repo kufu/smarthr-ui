@@ -143,13 +143,13 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       if (React.isValidElement(child)) {
         const childClassName = child.props.className ?? ''
         if (i === 0) {
-          return React.cloneElement(child as ReactElement, {
+          return React.cloneElement(child as ReactElement<any>, {
             className: `${firstItemStyleProps.className} ${childClassName}`,
             style: { ...firstItemStyleProps.style, ...child.props.style },
           })
         }
         if (i === React.Children.count(children) - 1) {
-          return React.cloneElement(child as ReactElement, {
+          return React.cloneElement(child as ReactElement<any>, {
             className: `${lastItemStyleProps.className} ${childClassName}`,
             style: { ...lastItemStyleProps.style, ...child.props.style },
           })

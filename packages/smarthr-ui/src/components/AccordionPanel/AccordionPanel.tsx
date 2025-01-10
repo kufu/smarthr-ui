@@ -38,7 +38,7 @@ export const AccordionPanelContext = React.createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
   expandableMultiply: boolean
-  parentRef: React.RefObject<HTMLDivElement> | null
+  parentRef: React.RefObject<HTMLDivElement | null> | null
   onClickTrigger?: (itemName: string, isExpanded: boolean) => void
   onClickProps?: (expandedItems: string[]) => void
 }>({

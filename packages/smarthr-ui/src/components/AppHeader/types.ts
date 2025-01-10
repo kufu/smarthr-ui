@@ -39,31 +39,31 @@ export type HeaderProps = ComponentProps<typeof Header> & {
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup
 
 type NavigationLink = {
-  children: ReactElement | string
+  children: ReactElement<any> | string
   href: string
   current?: boolean
 }
 
 type NavigationCustomTag = {
-  children: ReactElement | string
+  children: ReactElement<any> | string
   elementAs: ComponentType<any>
   current?: boolean
 } & { [key: string]: any }
 
 type NavigationButton = {
-  children: ReactElement | string
+  children: ReactElement<any> | string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   current?: boolean
 }
 
 export type NavigationGroup = {
-  children: ReactElement | string
+  children: ReactElement<any> | string
   childNavigations: Array<ChildNavigation | ChildNavigationGroup>
   current?: boolean
 }
 
 export type ChildNavigationGroup = {
-  title: ReactElement | string
+  title: ReactElement<any> | string
   childNavigations: ChildNavigation[]
 }
 

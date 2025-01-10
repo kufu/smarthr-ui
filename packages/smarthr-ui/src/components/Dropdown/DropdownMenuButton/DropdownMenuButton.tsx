@@ -125,7 +125,7 @@ export const renderButtonList = (children: Actions) =>
       return item
     }
 
-    const actualElement = React.cloneElement(item as ReactElement, {
+    const actualElement = React.cloneElement(item as ReactElement<any>, {
       variant: 'text',
       wide: true,
       className: actionListItemButton({ className: item.props.className }),

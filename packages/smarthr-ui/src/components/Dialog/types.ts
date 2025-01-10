@@ -13,7 +13,7 @@ type PortalProps = {
   /**
    * DOM 上でダイアログの要素を追加する親要素
    */
-  portalParent?: HTMLElement | RefObject<HTMLElement>
+  portalParent?: HTMLElement | RefObject<HTMLElement | null>
 }
 
 export type DialogProps = CommonProps & ControlledProps & PortalProps

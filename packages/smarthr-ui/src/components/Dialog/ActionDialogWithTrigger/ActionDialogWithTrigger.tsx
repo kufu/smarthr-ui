@@ -8,7 +8,7 @@ type ToggleModalActionType = () => void
 
 export const ActionDialogWithTrigger: React.FC<
   Omit<React.ComponentProps<typeof ActionDialog>, 'isOpen' | 'onClickClose' | 'onPressEscape'> & {
-    trigger: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
+    trigger: Omit<ReactElement<any>, 'onClick' | 'aria-haspopup' | 'aria-controls'>
     onClickTrigger?: (open: ToggleModalActionType) => void
     onClickClose?: (close: ToggleModalActionType) => void
     onPressEscape?: (close: ToggleModalActionType) => void
@@ -47,7 +47,7 @@ export const ActionDialogWithTrigger: React.FC<
 
   const actualTrigger = useMemo(
     () =>
-      cloneElement(trigger as ReactElement, {
+      cloneElement(trigger as ReactElement<any>, {
         onClick: onClickOpen,
         'aria-haspopup': 'true',
         'aria-controls': actualId,

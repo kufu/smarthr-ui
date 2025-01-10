@@ -18,7 +18,7 @@ export const RemoteDialogTrigger: React.FC<
   Pick<React.ComponentProps<typeof Button>, 'variant'> & {
     targetId: string
     onClick?: (open: () => void) => void
-    children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls' | 'variant'>
+    children: Omit<ReactElement<any>, 'onClick' | 'aria-haspopup' | 'aria-controls' | 'variant'>
   }
 > = ({ targetId, children, onClick, variant, ...rest }) => {
   const actualOnClick = useCallback(
@@ -35,7 +35,7 @@ export const RemoteDialogTrigger: React.FC<
   )
   const actualTrigger = useMemo(
     () =>
-      cloneElement(children as ReactElement, {
+      cloneElement(children as ReactElement<any>, {
         onClick: actualOnClick,
         'aria-haspopup': 'true',
         'aria-controls': targetId,

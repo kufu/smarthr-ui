@@ -71,7 +71,7 @@ export function getContentBoxStyle(
   return contentBox
 }
 
-export function getFirstTabbable(ref: RefObject<HTMLElement>) {
+export function getFirstTabbable(ref: RefObject<HTMLElement | null>) {
   if (ref.current) {
     const tabbables = tabbable(ref.current)
     const firstTabbable = tabbables[0]

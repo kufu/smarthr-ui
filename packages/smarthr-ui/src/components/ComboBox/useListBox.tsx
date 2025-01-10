@@ -33,7 +33,7 @@ type Props<T> = {
   onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
   isLoading?: boolean
-  triggerRef: RefObject<HTMLElement>
+  triggerRef: RefObject<HTMLElement | null>
   decorators?: DecoratorsType<'noResultText' | 'loadingText'>
 }
 

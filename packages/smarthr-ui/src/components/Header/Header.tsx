@@ -43,7 +43,7 @@ type Tenant = PropsWithChildren<{
 
 type Props = {
   /** ロゴ */
-  logo?: ReactElement
+  logo?: ReactElement<any>
   /** ロゴリンク */
   logoHref?: string
   /** 機能名（enableNew と合わせて使います） */
