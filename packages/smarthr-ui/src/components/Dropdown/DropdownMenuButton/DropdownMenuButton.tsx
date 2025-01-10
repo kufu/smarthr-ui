@@ -118,7 +118,7 @@ export const renderButtonList = (children: Actions) =>
   React.Children.map(children, (item): ReactNode => {
     if (!(item && React.isValidElement(item))) return null
     if (item.type === React.Fragment) {
-      return renderButtonList(item.props.children)
+      return renderButtonList((item.props as any).children)
     }
 
     if (item.type === DropdownMenuGroup) {
@@ -128,7 +128,7 @@ export const renderButtonList = (children: Actions) =>
     const actualElement = React.cloneElement(item as ReactElement<any>, {
       variant: 'text',
       wide: true,
-      className: actionListItemButton({ className: item.props.className }),
+      className: actionListItemButton({ className: (item.props as any).className }),
     })
 
     return <li>{actualElement}</li>

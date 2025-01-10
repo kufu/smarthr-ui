@@ -59,8 +59,8 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
             const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
             onClickTrigger({ top, right, bottom, left })
 
-            if (child.props.onClick) {
-              child.props.onClick(e)
+            if ((child.props as any).onClick) {
+              ;(child.props as any).onClick(e)
             }
           },
         })
