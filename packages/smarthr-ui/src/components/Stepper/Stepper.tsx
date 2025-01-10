@@ -33,7 +33,32 @@ const isStepCompleted = (step: Step | undefined) => {
 }
 
 export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...rest }) => {
-  const ActualStepItem = useMemo(() => {
+  const style = stepper({ type, className })
+
+  return (
+    <ol {...rest} className={style}>
+      {steps.map((step, index) => (
+        <StepItem
+          key={index}
+          type={type}
+          activeIndex={activeIndex}
+          index={index}
+          step={step}
+          previousStep={steps[index - 1]}
+        />
+      ))}
+    </ol>
+  )
+}
+
+const StepItem: FC<
+  Pick<Props, 'activeIndex' | 'type'> & {
+    step: Step
+    previousStep: Step | undefined
+    index: number
+  }
+> = ({ Component, step, index, activeIndex, type }) => {
+  const Component = useMemo(() => {
     switch (type) {
       case 'horizontal':
         return HorizontalStepItem
@@ -41,22 +66,16 @@ export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...res
         return VerticalStepItem
     }
   }, [type])
-  const style = stepper({ type, className })
 
-  return (
-    <ol {...rest} className={style}>
-      {steps.map((step, id) => {
-        const stepItemProps = {
-          ...step,
-          stepNumber: id + 1,
-          current: id === activeIndex,
-          ...(type === 'horizontal'
-            ? // 装飾上、前のステップが完了しているかどうかが必要
-              { isPrevStepCompleted: isStepCompleted(steps[id - 1]) }
-            : {}),
-        }
-        return <ActualStepItem {...stepItemProps} key={id} />
-      })}
-    </ol>
-  )
+  const stepItemProps = {
+    ...step,
+    stepNumber: index + 1,
+    current: index === activeIndex,
+    ...(type === 'horizontal'
+      ? // 装飾上、前のステップが完了しているかどうかが必要
+        { isPrevStepCompleted: isStepCompleted(previousStep) }
+      : {}),
+  }
+
+  return <Component {...stepItemProps} />
 }
