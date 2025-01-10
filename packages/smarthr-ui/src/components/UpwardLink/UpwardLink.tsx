@@ -4,7 +4,7 @@ import { VariantProps, tv } from 'tailwind-variants'
 import { FaArrowLeftIcon } from '../Icon'
 import { TextLink } from '../TextLink'
 
-const upwardLink = tv({
+const styleGenerator = tv({
   base: 'shr-leading-none',
   variants: {
     indent: {
@@ -15,13 +15,13 @@ const upwardLink = tv({
 })
 
 type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> &
-  VariantProps<typeof upwardLink> & {
+  VariantProps<typeof styleGenerator> & {
     /** `TextLink`に渡す `elementAs` をオプションで指定 */
     elementAs?: ComponentProps<typeof TextLink>['elementAs']
   }
 
 export const UpwardLink: React.FC<Props> = ({ indent = true, className, elementAs, ...rest }) => {
-  const style = useMemo(() => upwardLink({ indent, className }), [indent, className])
+  const style = useMemo(() => styleGenerator({ indent, className }), [indent, className])
 
   return (
     <div className={style}>
