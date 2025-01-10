@@ -110,6 +110,11 @@ export const Tooltip: FC<Props & ElementProps> = ({
           return
         }
 
+        // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+        if (!ref.current.contains((e as React.BaseSyntheticEvent).target)) {
+          return
+        }
+
         if (ellipsisOnly) {
           const outerWidth = parseInt(
             window
