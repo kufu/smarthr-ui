@@ -1,3 +1,75 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @media (forced-colors: active) {
+        html {
+            --forced-colors-main: Highlight;
+            --forced-colors-black: CanvasText;
+            --forced-colors-white: Canvas;
+            --forced-colors-white-darken: Canvas;
+            --forced-colors-disabled: GrayText;
+            --forced-colors-link: LinkText;
+            --forced-colors-grey: Canvas;
+            --forced-colors-danger: Highlight;
+            --forced-colors-transparent: transparent;
+        }
+
+        .shr-bg-main {
+            background-color: var(--forced-colors-main) !important;
+        }
+
+        .shr-text-main {
+            color: var(--forced-colors-main) !important;
+        }
+
+        .shr-fill-main {
+            fill: var(--forced-colors-main) !important;
+        }
+
+        .shr-border-main {
+            border-color: ButtonBorder !important;
+        }
+
+        .shr-bg-black {
+            background-color: var(--forced-colors-black) !important;
+        }
+
+        .shr-text-black {
+            color: var(--forced-colors-black) !important;
+        }
+
+        .shr-fill-black {
+            fill: var(--forced-colors-black) !important;
+        }
+
+        .shr-border-black {
+            border-color: var(--forced-colors-black) !important;
+        }
+
+        .shr-bg-disabled {
+            background-color: var(--forced-colors-disabled) !important;
+        }
+
+        .shr-text-disabled {
+            color: var(--forced-colors-disabled) !important;
+        }
+
+        .shr-fill-disabled {
+            fill: var(--forced-colors-disabled) !important;
+        }
+
+        .shr-border-disabled {
+            border-color: var(--forced-colors-disabled) !important;
+        }
+
+        .shr-border-danger {
+            border-color: AccentColorText !important;
+        }
+
+        [class*="shr-shadow-layer"] {
+            border: 1px solid ButtonBorder;
+        }
+    }
+}
