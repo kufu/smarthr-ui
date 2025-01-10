@@ -70,7 +70,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   children,
   triggerType,
   multiLine,
-  ellipsisOnly = false,
+  ellipsisOnly,
   horizontal = 'left',
   vertical = 'bottom',
   tabIndex = 0,
@@ -99,53 +99,103 @@ export const Tooltip: FC<Props & ElementProps> = ({
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
 
-  const getHandlerToShow = useCallback(
-    <T,>(handler?: (e: T) => void) =>
-      (e: T) => {
-        if (handler) {
-          handler(e)
-        }
+  const toShowAction = useCallback(
+    (e: React.BaseSyntheticEvent) => {
+      if (!ref.current) {
+        return
+      }
 
-        if (!ref.current) {
+      // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+      if (!ref.current.contains(e.target)) {
+        return
+      }
+
+      if (ellipsisOnly) {
+        const outerWidth = parseInt(
+          window
+            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+            .width.match(/\d+/)![0],
+          10,
+        )
+        const wrapperWidth = ref.current.clientWidth
+        const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
+
+        if (!existsEllipsis) {
           return
         }
+      }
 
-        if (ellipsisOnly) {
-          const outerWidth = parseInt(
-            window
-              .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-              .width.match(/\d+/)![0],
-            10,
-          )
-          const wrapperWidth = ref.current.clientWidth
-          const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
-
-          if (!existsEllipsis) {
-            return
-          }
-        }
-
-        setRect(ref.current.getBoundingClientRect())
-        setIsVisible(true)
-      },
+      setRect(ref.current.getBoundingClientRect())
+      setIsVisible(true)
+    },
     [ellipsisOnly],
   )
 
-  const getHandlerToHide = useCallback(
-    <T,>(handler?: (e: T) => void) =>
-      (e: T) => {
-        if (handler) {
-          handler(e)
-        }
+  const actualOnPointerEnter = useCallback(
+    (e: React.PointerEvent<HTMLSpanElement>) => {
+      if (onPointerEnter) {
+        onPointerEnter(e)
+      }
 
-        setIsVisible(false)
-      },
-    [setIsVisible],
+      toShowAction(e)
+    },
+    [toShowAction, onPointerEnter],
+  )
+  const actualOnTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLSpanElement>) => {
+      if (onTouchStart) {
+        onTouchStart(e)
+      }
+
+      toShowAction(e)
+    },
+    [toShowAction, onTouchStart],
+  )
+  const actualOnFocus = useCallback(
+    (e: React.FocusEvent<HTMLSpanElement>) => {
+      if (onFocus) {
+        onFocus(e)
+      }
+
+      toShowAction(e)
+    },
+    [toShowAction, onFocus],
+  )
+
+  const actualOnPointerLeave = useCallback(
+    (e: React.PointerEvent<HTMLSpanElement>) => {
+      if (onPointerLeave) {
+        onPointerLeave(e)
+      }
+
+      setIsVisible(false)
+    },
+    [onPointerLeave],
+  )
+  const actualOnTouchEnd = useCallback(
+    (e: React.TouchEvent<HTMLSpanElement>) => {
+      if (onTouchEnd) {
+        onTouchEnd(e)
+      }
+
+      setIsVisible(false)
+    },
+    [onTouchEnd],
+  )
+  const actualOnBlur = useCallback(
+    (e: React.FocusEvent<HTMLSpanElement>) => {
+      if (onBlur) {
+        onBlur(e)
+      }
+
+      setIsVisible(false)
+    },
+    [onBlur],
   )
 
   const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
-  const styles = tooltip({ isIcon, className })
+  const styles = useMemo(() => tooltip({ isIcon, className }), [isIcon, className])
   const isInnerTarget = ariaDescribedbyTarget === 'inner'
   const childrenWithProps = useMemo(
     () =>
@@ -161,12 +211,12 @@ export const Tooltip: FC<Props & ElementProps> = ({
       {...props}
       aria-describedby={isInnerTarget ? undefined : messageId}
       ref={ref}
-      onPointerEnter={getHandlerToShow(onPointerEnter)}
-      onTouchStart={getHandlerToShow(onTouchStart)}
-      onFocus={getHandlerToShow(onFocus)}
-      onPointerLeave={getHandlerToHide(onPointerLeave)}
-      onTouchEnd={getHandlerToHide(onTouchEnd)}
-      onBlur={getHandlerToHide(onBlur)}
+      onPointerEnter={actualOnPointerEnter}
+      onTouchStart={actualOnTouchStart}
+      onFocus={actualOnFocus}
+      onPointerLeave={actualOnPointerLeave}
+      onTouchEnd={actualOnTouchEnd}
+      onBlur={actualOnBlur}
       tabIndex={tabIndex}
       className={styles}
     >
