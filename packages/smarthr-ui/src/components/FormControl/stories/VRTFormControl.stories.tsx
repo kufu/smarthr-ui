@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Input } from '../../Input'
+import { Cluster } from '../../Layout'
 import { FormControl } from '../FormControl'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -13,6 +14,12 @@ export default {
     children: <Input />,
     title: 'フォームコントロール',
     statusLabelProps: { type: 'grey', children: '任意' },
+    subActionArea: (
+      <Cluster justify="space-between">
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
+      </Cluster>
+    ),
     helpMessage: 'フォームコントロールの補足となるヘルプメッセージを入れます。',
     exampleMessage: '入力欄に入れる入力例',
     errorMessages: ['入力されていません', '20文字以上入力してください。'],
