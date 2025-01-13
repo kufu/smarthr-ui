@@ -102,12 +102,14 @@ const ActualSelect = <T extends string>(
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       if (onChange) onChange(e)
+
       if (onChangeValue) {
         const flattenOptions = options.reduce(
           (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
           [] as Array<Option<T>>,
         )
         const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
+
         if (selectedOption) {
           onChangeValue(selectedOption.value)
         }
@@ -150,42 +152,45 @@ const ActualSelect = <T extends string>(
         className={selectStyle}
       >
         <BlankOption hasBlank={hasBlank} decorator={decorators?.blankLabel} />
-        {options.map((option) => {
-          if ('value' in option) {
-            return (
-              <option {...option} key={option.value}>
-                {option.label}
-              </option>
-            )
-          }
-
-          const { options: groupedOptions, ...optgroup } = option
-
-          return (
-            <optgroup {...optgroup} key={optgroup.label}>
-              {groupedOptions.map((groupedOption) => (
-                <option {...groupedOption} key={groupedOption.value}>
-                  {groupedOption.label}
-                </option>
-              ))}
-            </optgroup>
-          )
-        })}
-        <NotOmittingLablesInMobileSafari className={blankOptGroupStyle} />
+        {options.map((option, index) => (
+          <Option {...option} key={index} />
+        ))}
+        <NotOmittingLabelsInMobileSafari className={blankOptGroupStyle} />
       </select>
       <StyledFaSortIcon className={iconWrapStyle} />
     </span>
   )
 }
 
-const BlankOption = React.memo<Pick<Props, 'hasBlank'> & { decorator: DecoratorType | undefined }>(
+const BlankOption = React.memo<{
+  hasBlank: boolean | undefined
+  decorator: DecoratorType | undefined
+}>(
   ({ hasBlank, decorator }) =>
     hasBlank && <option value="">{decorator?.(BLANK_LABEL) || BLANK_LABEL}</option>,
 )
 
+const Option = React.memo<Props<string>['options'][number]>((option) => {
+  if ('value' in option) {
+    return <option {...option}>{option.label}</option>
+  }
+
+  const { options: groupedOptions, ...optgroup } = option
+
+  return (
+    <optgroup {...optgroup} key={optgroup.label}>
+      {groupedOptions.map((groupedOption) => (
+        <option {...groupedOption} key={groupedOption.value}>
+          {groupedOption.label}
+        </option>
+      ))}
+    </optgroup>
+  )
+})
+
 // Support for not omitting labels in Mobile Safari
-const NotOmittingLablesInMobileSafari = React.memo<{ className: string }>(
-  ({ blankOptGroupStyle }) => isMobileSafari && <optgroup className={className} />,
+const NotOmittingLabelsInMobileSafari = React.memo<{ className: string }>(
+  ({ className }) => isMobileSafari && <optgroup className={className} />,
 )
 
 const StyledFaSortIcon = React.memo<{ className: string }>(({ className }) => (
