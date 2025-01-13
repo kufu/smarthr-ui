@@ -13,7 +13,7 @@ import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
 
-import type { DecoratorsType } from '../../types'
+import type { DecoratorType, DecoratorsType } from '../../types'
 
 type Option<T extends string> = {
   value: T
@@ -149,9 +149,7 @@ const ActualSelect = <T extends string>(
         ref={ref}
         className={selectStyle}
       >
-        {hasBlank && (
-          <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
-        )}
+        <BlankOption hasBlank={hasBlank} decorator={decorators?.blankLabel} />
         {options.map((option) => {
           if ('value' in option) {
             return (
@@ -179,6 +177,11 @@ const ActualSelect = <T extends string>(
     </span>
   )
 }
+
+const BlankOption = React.memo<Pick<Props, 'hasBlank'> & { decorator: DecoratorType | undefined }>(
+  ({ hasBlank, decorator }) =>
+    hasBlank && <option value="">{decorator?.(BLANK_LABEL) || BLANK_LABEL}</option>,
+)
 
 // Support for not omitting labels in Mobile Safari
 const NotOmittingLablesInMobileSafari = React.memo<{ className: string }>(
