@@ -173,10 +173,7 @@ const ActualSelect = <T extends string>(
             </optgroup>
           )
         })}
-        {
-          // Support for not omitting labels in Mobile Safari
-          isMobileSafari && <optgroup className={blankOptGroupStyle} />
-        }
+        <NotOmittingLablesInMobileSafari blankOptGroupStyle={blankOptGroupStyle} />
       </select>
       <span className={iconWrapStyle}>
         <FaSortIcon />
@@ -184,5 +181,10 @@ const ActualSelect = <T extends string>(
     </span>
   )
 }
+
+// Support for not omitting labels in Mobile Safari
+const NotOmittingLablesInMobileSafari = React.memo<{ blankOptGroupStyle: string }>(
+  ({ blankOptGroupStyle }) => isMobileSafari && <optgroup className={blankOptGroupStyle} />,
+)
 
 export const Select = genericsForwardRef(ActualSelect)
