@@ -147,8 +147,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     }
   }, [handleKeyDown])
 
-  const includesSelected = useMemo(
-    () => value && options.some((option) => option.value === value),
+  const excludesSelected = useMemo(
+    () => !value || options.every((option) => option.value !== value),
     [options, value],
   )
   const getRovingTabIndex = useCallback(
@@ -157,13 +157,13 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
         return -1
       }
 
-      if (!includesSelected) {
+      if (excludesSelected) {
         return index === 0 ? 0 : -1
       }
 
       return option.value === value ? 0 : -1
     },
-    [includesSelected, isFocused, value],
+    [excludesSelected, isFocused, value],
   )
 
   return (
