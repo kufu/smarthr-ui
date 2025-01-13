@@ -151,6 +151,45 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     () => !value || options.every((option) => option.value !== value),
     [options, value],
   )
+
+  return (
+    <div
+      {...props}
+      className={containerStyle}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      ref={containerRef}
+      role="toolbar"
+    >
+      <div role="radiogroup" className={buttonGroupStyle}>
+        {options.map((option, index) => (
+          <SegmentedControlOption key={option.value} option={option} index={index} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const SegmentedControlOption: FC<
+  Pick<Props, 'onClickOption' | 'size' | 'isSquare' | 'value'> & {
+    option: Props[number]
+    index: number
+    isFocused: boolean
+    excludesSelected: boolean
+    buttonStyle: string
+  }
+> = ({
+  onClickOption,
+  size,
+  isSquare,
+  value,
+  option,
+  index,
+  isFocused,
+  excludesSelected,
+  buttonStyle,
+}) => {
+  const onClick = onClickOption ? () => onClickOption(option.value) : undefined
   const getRovingTabIndex = useCallback(
     (option: Option, index: number) => {
       if (isFocused) {
@@ -167,36 +206,19 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   )
 
   return (
-    <div
-      {...props}
-      className={containerStyle}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      ref={containerRef}
-      role="toolbar"
+    <Button
+      aria-label={option.ariaLabel}
+      key={option.value}
+      disabled={option.disabled}
+      onClick={onClick}
+      size={size}
+      square={isSquare}
+      tabIndex={getRovingTabIndex(option, index)}
+      role="radio"
+      aria-checked={!!value && value === option.value}
+      className={buttonStyle}
     >
-      <div role="radiogroup" className={buttonGroupStyle}>
-        {options.map((option, i) => {
-          const onClick = onClickOption ? () => onClickOption(option.value) : undefined
-
-          return (
-            <Button
-              aria-label={option.ariaLabel}
-              key={option.value}
-              disabled={option.disabled}
-              onClick={onClick}
-              size={size}
-              square={isSquare}
-              tabIndex={getRovingTabIndex(option, i)}
-              role="radio"
-              aria-checked={!!value && value === option.value}
-              className={buttonStyle}
-            >
-              {option.content}
-            </Button>
-          )
-        })}
-      </div>
-    </div>
+      {option.content}
+    </Button>
   )
 }
