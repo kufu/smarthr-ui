@@ -66,18 +66,17 @@ export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
   children,
   ...props
 }) => {
-  const Icon = useMemo(() => {
-    switch (true) {
-      case type === 'warning' && bold: {
-        return FaTriangleExclamationIcon
-      }
-      case type === 'error' && bold: {
-        return FaCircleExclamationIcon
-      }
-      default: {
-        return React.Fragment
+  const icon = useMemo(() => {
+    if (bold) {
+      switch (type) {
+        case 'warning':
+          return <FaTriangleExclamationIcon />
+        case 'error':
+          return <FaCircleExclamationIcon />
       }
     }
+
+    return null
   }, [type, bold])
 
   const wrapperStyle = useMemo(
@@ -92,7 +91,7 @@ export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
 
   return (
     <span {...props} className={wrapperStyle}>
-      <Icon />
+      {icon}
       {children}
     </span>
   )
