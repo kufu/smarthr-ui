@@ -76,6 +76,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const { containerStyle, buttonGroupStyle, buttonStyle } = useMemo(() => {
     const { container, buttonGroup, button } = segmentedControl()
+
     return {
       containerStyle: container({ className }),
       buttonGroupStyle: buttonGroup(),
@@ -88,16 +89,21 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
       if (!isFocused || !containerRef.current || !document.activeElement) {
         return
       }
+
       const radios = Array.from(
         containerRef.current.querySelectorAll('[role="radio"]:not(:disabled)'),
       )
+
       if (radios.length < 2) {
         return
       }
+
       const focusedIndex = radios.indexOf(document.activeElement)
+
       if (focusedIndex === -1) {
         return
       }
+
       switch (e.key) {
         case 'Down':
         case 'ArrowDown':
@@ -105,9 +111,11 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
         case 'ArrowRight': {
           const nextIndex = focusedIndex + 1
           const nextRadio = radios[nextIndex % radios.length]
+
           if (nextRadio instanceof HTMLButtonElement) {
             nextRadio.focus()
           }
+
           break
         }
         case 'Up':
@@ -116,9 +124,11 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
         case 'ArrowLeft': {
           const nextIndex = focusedIndex - 1
           const nextRadio = radios[(nextIndex + radios.length) % radios.length]
+
           if (nextRadio instanceof HTMLButtonElement) {
             nextRadio.focus()
           }
+
           break
         }
       }
@@ -128,6 +138,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
@@ -142,6 +153,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
       if (!includesSelected) {
         return index === 0 ? 0 : -1
       }
+
       return option.value === value ? 0 : -1
     },
     [includesSelected, isFocused, value],
