@@ -189,7 +189,10 @@ const SegmentedControlOption: FC<
   excludesSelected,
   buttonStyle,
 }) => {
-  const onClick = onClickOption ? () => onClickOption(option.value) : undefined
+  const onClick = useMemo(
+    () => (onClickOption ? () => onClickOption(option.value) : undefined),
+    [option.value, onClickOption],
+  )
   const getRovingTabIndex = useCallback(
     (option: Option, index: number) => {
       if (isFocused) {
@@ -207,15 +210,14 @@ const SegmentedControlOption: FC<
 
   return (
     <Button
+      role="radio"
       aria-label={option.ariaLabel}
-      key={option.value}
+      aria-checked={!!value && value === option.value}
       disabled={option.disabled}
+      tabIndex={getRovingTabIndex(option, index)}
       onClick={onClick}
       size={size}
       square={isSquare}
-      tabIndex={getRovingTabIndex(option, index)}
-      role="radio"
-      aria-checked={!!value && value === option.value}
       className={buttonStyle}
     >
       {option.content}
