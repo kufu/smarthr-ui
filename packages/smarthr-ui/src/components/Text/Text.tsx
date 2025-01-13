@@ -37,6 +37,12 @@ export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof text> } =
     color: 'TEXT_GREY',
   },
 }
+const UNDEFINED_STYLE_VALUES = {
+  size: undefined,
+  leading: undefined,
+  weight: undefined,
+  color: undefined,
+}
 
 const text = tv({
   variants: {
@@ -95,24 +101,29 @@ export const Text = <T extends React.ElementType = 'span'>({
   styleType,
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
+  size,
+  italic,
+  color,
+  leading,
+  whiteSpace,
+  className,
   ...props
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const { size, italic, color, leading, whiteSpace, className, ...others } = props
-  const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType as StyleType] : null
+  const styles = useMemo(() => {
+    const styleTypeValues = styleType
+      ? STYLE_TYPE_MAP[styleType as StyleType]
+      : UNDEFINED_STYLE_VALUES
 
-  const styles = useMemo(
-    () =>
-      text({
-        size: size || styleTypeValues?.size,
-        weight: weight || styleTypeValues?.weight,
-        color: color || styleTypeValues?.color,
-        italic,
-        leading: leading || styleTypeValues?.leading,
-        whiteSpace,
-        className,
-      }),
-    [size, weight, italic, color, leading, whiteSpace, className, styleTypeValues],
-  )
+    return text({
+      size: size || styleTypeValues.size,
+      weight: weight || styleTypeValues.weight,
+      color: color || styleTypeValues.color,
+      leading: leading || styleTypeValues.leading,
+      italic,
+      whiteSpace,
+      className,
+    })
+  }, [size, weight, italic, color, leading, whiteSpace, className, styleType])
 
-  return <Component {...others} className={styles} />
+  return <Component {...props} className={styles} />
 }
