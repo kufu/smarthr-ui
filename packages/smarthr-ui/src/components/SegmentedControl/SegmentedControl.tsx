@@ -84,6 +84,9 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     }
   }, [className])
 
+  const onFocus = useCallback(() => setIsFocused(true), [])
+  const onBlur = useCallback(() => setIsFocused(false), [])
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!isFocused || !containerRef.current || !document.activeElement) {
@@ -163,8 +166,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     <div
       {...props}
       className={containerStyle}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
+      onFocus={onFocus}
+      onBlur={onBlur}
       ref={containerRef}
       role="toolbar"
     >
