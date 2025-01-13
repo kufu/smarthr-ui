@@ -163,16 +163,27 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     >
       <div role="radiogroup" className={buttonGroupStyle}>
         {options.map((option, index) => (
-          <SegmentedControlOption key={option.value} option={option} index={index} />
+          <SegmentedControlButton
+            key={option.value}
+            option={option}
+            index={index}
+            onClickOption={onClickOption}
+            size={size}
+            isSquare={isSquare}
+            value={value}
+            isFocused={isFocused}
+            excludesSelected={excludesSelected}
+            buttonStyle={buttonStyle}
+          />
         ))}
       </div>
     </div>
   )
 }
 
-const SegmentedControlOption: FC<
+const SegmentedControlButton: FC<
   Pick<Props, 'onClickOption' | 'size' | 'isSquare' | 'value'> & {
-    option: Props[number]
+    option: Props['options'][number]
     index: number
     isFocused: boolean
     excludesSelected: boolean
@@ -193,28 +204,26 @@ const SegmentedControlOption: FC<
     () => (onClickOption ? () => onClickOption(option.value) : undefined),
     [option.value, onClickOption],
   )
-  const getRovingTabIndex = useCallback(
-    (option: Option, index: number) => {
-      if (isFocused) {
-        return -1
-      }
+  const checked = value === option.value
+  const tabIndex = useMemo(() => {
+    if (isFocused) {
+      return -1
+    }
 
-      if (excludesSelected) {
-        return index === 0 ? 0 : -1
-      }
+    if (excludesSelected) {
+      return index === 0 ? 0 : -1
+    }
 
-      return option.value === value ? 0 : -1
-    },
-    [excludesSelected, isFocused, value],
-  )
+    return checked ? 0 : -1
+  }, [excludesSelected, isFocused, checked, index])
 
   return (
     <Button
       role="radio"
       aria-label={option.ariaLabel}
-      aria-checked={!!value && value === option.value}
+      aria-checked={checked && !!value}
       disabled={option.disabled}
-      tabIndex={getRovingTabIndex(option, index)}
+      tabIndex={tabIndex}
       onClick={onClick}
       size={size}
       square={isSquare}
