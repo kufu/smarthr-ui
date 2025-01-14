@@ -158,12 +158,19 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   message,
   onClose,
   children,
-  role = type.match(/^(info|sync)$/) ? 'status' : 'alert',
+  role,
   base = 'none',
   layer,
   className,
   ...props
 }) => {
+  const actualRole = useMemo(() => {
+    if (role) {
+      return role
+    }
+
+    return type.match(/^(info|sync)$/) ? 'status' : 'alert'
+  }, [role, type])
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   const { baseComponent: WrapBase = React.Fragment, baseProps = {} } = useMemo(
@@ -206,7 +213,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...props} className={wrapperStyle} role={role}>
+      <div {...props} className={wrapperStyle} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
           <div className={messageAreaStyle}>
             <Icon text={message} iconGap={0.5} className={iconStyle} />
