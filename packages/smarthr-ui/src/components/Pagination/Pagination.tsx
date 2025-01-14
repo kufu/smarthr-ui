@@ -87,10 +87,10 @@ const ActualPagination: React.FC<Props> = ({
     }
 
     return [
-      ...range(current - padding, current).filter((page) => page >= 1),
-      ...range(current, current + padding + 1).filter((page) => page <= total),
+      ...range(Math.max(current - padding, 1), current),
+      ...range(current, Math.min(current + padding, total) + 1),
     ]
-  }, [withoutNumbers])
+  }, [current, total, padding, withoutNumbers])
   const pages = pageNumbers.map((page) => (
     <li
       key={`pagination-${page}`}
