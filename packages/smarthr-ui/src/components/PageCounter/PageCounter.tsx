@@ -30,17 +30,23 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const rangeSeparatorDecorators = useMemo(
-    () => ({
-      text: () => executeDecorator(RANGE_SEPARATOR, decorators?.rangeSeparator),
+  const rangeSeparatorDecorators = useMemo(() => {
+    if (!decorators) {
+      return {
+        text: () => RANGE_SEPARATOR,
+        visuallyHiddenText: () => RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT,
+      }
+    }
+
+    return {
+      text: () => executeDecorator(RANGE_SEPARATOR, decorators.rangeSeparator),
       visuallyHiddenText: () =>
         executeDecorator(
           RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT,
-          decorators?.rangeSeparatorVisuallyHiddenText,
+          decorators.rangeSeparatorVisuallyHiddenText,
         ),
-    }),
-    [decorators?.rangeSeparator, decorators?.rangeSeparatorVisuallyHiddenText],
-  )
+    }
+  }, [decorators])
 
   return (
     <Cluster {...props} gap={0.25} inline align="baseline" className={pageCounter({ className })}>
