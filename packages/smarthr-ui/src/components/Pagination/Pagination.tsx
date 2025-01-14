@@ -33,7 +33,7 @@ const pagination = tv({
   },
 })
 
-type Props = {
+type BaseProps = {
   /** 全ページ数 */
   total: number
   /** 現在のページ */
@@ -46,15 +46,18 @@ type Props = {
   withoutNumbers?: boolean
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type Props = BaseProps & ElementProps
 
-export const Pagination: React.FC<Props & ElementProps> = ({
+export const Pagination: React.FC<Props> = (props) => props.total > 1 ? (<ActualPagination {...props} />) : null
+
+const ActualPagination: React.FC<Props> = ({
   total,
   current,
   onClick,
   padding = 4,
   className,
   withoutNumbers = false,
-  ...props
+  ...props,
 }) => {
   const {
     wrapperStyle,
@@ -76,8 +79,6 @@ export const Pagination: React.FC<Props & ElementProps> = ({
       lastListItemStyle: lastListItem(itemArg),
     }
   }, [className, withoutNumbers])
-
-  if (total <= 1) return null
 
   const pages = !withoutNumbers
     ? [
