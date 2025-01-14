@@ -39,7 +39,7 @@ export const PaginationControllerItemButton: React.FC<Props> = ({
   targetPage,
   onClick,
 }) => {
-  const { Icon, ...iconProps } = getIconProps(direction, double)
+  const { Icon, alt } = getIconProps(direction, double)
 
   return (
     <Button
@@ -48,9 +48,9 @@ export const PaginationControllerItemButton: React.FC<Props> = ({
       className="shr-rounded-s"
       onClick={() => onClick(targetPage)}
       disabled={disabled}
-      aria-label={iconProps.alt}
+      aria-label={alt}
     >
-      <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={iconProps.alt} />
+      <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
     </Button>
   )
 }
