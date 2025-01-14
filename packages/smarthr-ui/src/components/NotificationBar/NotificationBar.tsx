@@ -19,8 +19,8 @@ export const notificationBar = tv({
     wrapper:
       'smarthr-ui-NotificationBar shr-flex shr-items-baseline shr-justify-between shr-gap-0.5 shr-p-0.75',
     inner: 'shr-flex-grow',
-    iconWrapper: [
-      'smarthr-ui-NotificationBar-iconWrapper',
+    messageArea: [
+      'smarthr-ui-NotificationBar-messageArea',
       'shr-flex shr-grow',
       '[&_.smarthr-ui-Icon-withText]:shr-leading-tight',
     ],
@@ -50,6 +50,11 @@ export const notificationBar = tv({
       sync: {
         icon: 'shr-text-main',
       },
+    },
+    /** 強調するかどうか */
+    bold: {
+      true: '',
+      false: '',
     },
     /** スライドインするかどうか */
     animate: {
@@ -133,6 +138,7 @@ type Props = PropsWithChildren<
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
+type ActualProps = Props & ElementProps & BaseProps
 
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
@@ -149,9 +155,9 @@ const ICON_MAPPER = {
     ...ABSTRACT_ICON_MAPPER,
     warning: FaTriangleExclamationIcon,
   },
-}
+} as const
 
-export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
+export const NotificationBar: React.FC<ActualProps> = ({
   type,
   bold,
   animate,
@@ -187,17 +193,15 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
           },
     [base, layer],
   )
-  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
-
   const {
     wrapperStyle,
     innerStyle,
-    iconWrapperStyle,
+    messageAreaStyle,
     iconStyle,
     actionAreaStyle,
     closeButtonStyle,
   } = useMemo(() => {
-    const { wrapper, inner, iconWrapper, icon, actionArea, closeButton } = notificationBar({
+    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
       type,
       bold: !!bold,
       base: base || 'none',
@@ -206,7 +210,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     return {
       wrapperStyle: wrapper({ animate, className }),
       innerStyle: inner(),
-      iconWrapperStyle: iconWrapper(),
+      messageAreaStyle: messageArea(),
       iconStyle: icon(),
       actionAreaStyle: actionArea(),
       closeButtonStyle: closeButton(),
@@ -217,7 +221,13 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     <WrapBase {...baseProps}>
       <div {...props} className={wrapperStyle} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
-          <IconArea message={message} iconWrapperStyle={iconWrapperStyle} iconStyle={iconStyle} />
+          <MessageArea
+            message={message}
+            bold={bold}
+            type={type}
+            messageAreaStyle={messageAreaStyle}
+            iconStyle={iconStyle}
+          />
           {children && (
             <Cluster align="center" justify="flex-end" className={actionAreaStyle}>
               {children}
@@ -230,15 +240,19 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   )
 }
 
-const IconArea = React.memo<
-  Pick<Props, 'message'> & { iconWrapperStyle: string; iconStyle: string }
->(({ message, iconWrapperStyle, iconStyle }) => (
-  <div className={iconWrapperStyle}>
-    <Icon text={message} iconGap={0.5} className={iconStyle} />
-  </div>
-))
+const MessageArea = React.memo<
+  Pick<ActualProps, 'message' | 'bold' | 'type'> & { messageAreaStyle: string; iconStyle: string }
+>(({ message, bold, type, messageAreaStyle, iconStyle }) => {
+  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
-const CloseButton = React.memo<Pick<Props, 'onClose'> & { className: string }>(
+  return (
+    <div className={messageAreaStyle}>
+      <Icon text={message} iconGap={0.5} className={iconStyle} />
+    </div>
+  )
+})
+
+const CloseButton = React.memo<Pick<ActualProps, 'onClose'> & { className: string }>(
   ({ onClose, className }) =>
     onClose && (
       <Button variant="text" size="s" onClick={onClose} className={className}>
