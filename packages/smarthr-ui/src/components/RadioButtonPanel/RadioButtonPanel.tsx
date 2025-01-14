@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentProps, useMemo, useRef } from 'react'
+import React, { ComponentProps, useCallback, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
@@ -32,14 +32,14 @@ const radioButtonPanel = tv({
 export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...props }) => {
   const styles = useMemo(
     () => radioButtonPanel({ disabled: !!props.disabled, className }),
-    [className, props.disabled],
+    [props.disabled, className],
   )
 
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
-  const handleOuterClick = () => {
+  const handleOuterClick = useCallback(() => {
     innerRef.current?.click()
-  }
+  }, [innerRef.current])
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
