@@ -88,6 +88,18 @@ export const TitleType: StoryObj<typeof Fieldset> = {
   ),
 }
 
+export const SubActionArea: StoryObj<typeof Fieldset> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: (
+      <Cluster justify="space-between">
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
+      </Cluster>
+    ),
+  },
+}
+
 export const DangerouslyTitleHidden: StoryObj<typeof Fieldset> = {
   name: 'dangerouslyTitleHidden（非推奨）',
   args: {

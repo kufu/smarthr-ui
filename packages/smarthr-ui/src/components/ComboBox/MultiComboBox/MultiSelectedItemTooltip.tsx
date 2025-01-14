@@ -1,6 +1,6 @@
 import React, { FC, PropsWithChildren, ReactNode } from 'react'
 
-import { Tooltip } from '../Tooltip'
+import { Tooltip } from '../../Tooltip'
 
 type Props = PropsWithChildren<{
   needsTooltip: boolean

@@ -9,18 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "14.2.20",
+    "next": "15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "smarthr-ui": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
-    "@types/node": "^20.17.11",
+    "@types/node": "^20.17.12",
     "@types/react": "^18.3.18",
-    "@types/react-dom": "^19.0.2",
+    "@types/react-dom": "^19.0.3",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
