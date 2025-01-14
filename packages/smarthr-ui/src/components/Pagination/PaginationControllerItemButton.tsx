@@ -17,29 +17,25 @@ type Props = {
   double?: boolean
 }
 
-const getIconProps = (
-  direction: 'prev' | 'next',
-  double: boolean,
-): {
-  Icon: React.ComponentType<IconProps>
-  alt: '最初へ' | '前へ' | '次へ' | '最後へ'
-} =>
-  direction === 'prev'
-    ? double
-      ? { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' }
-      : { Icon: FaChevronLeftIcon, alt: '前へ' }
-    : double
-      ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
-      : { Icon: FaChevronRightIcon, alt: '次へ' }
+const ICON_MAPPER = {
+  prev: {
+    single: { Icon: FaChevronLeftIcon, alt: '前へ' },
+    double: { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' },
+  },
+  next: {
+    single: { Icon: FaChevronRightIcon, alt: '次へ' },
+    double: { Icon: FaAngleDoubleRightIcon, alt: '最後へ' },
+  },
+}
 
 export const PaginationControllerItemButton: React.FC<Props> = ({
   direction,
   disabled,
-  double = false,
+  double,
   targetPage,
   onClick,
 }) => {
-  const { Icon, alt } = getIconProps(direction, double)
+  const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
   return (
     <Button
