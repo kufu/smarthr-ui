@@ -134,7 +134,7 @@ type Props = PropsWithChildren<
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
 
-const BASE_ICON_MAPPER = {
+const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
   success: FaCircleCheckIcon,
   error: FaCircleExclamationIcon,
@@ -142,11 +142,11 @@ const BASE_ICON_MAPPER = {
 }
 const ICON_MAPPER = {
   normal: {
-    ...BASE_ICON_MAPPER,
+    ...ABSTRACT_ICON_MAPPER,
     warning: WarningIcon,
   },
   bold: {
-    ...BASE_ICON_MAPPER,
+    ...ABSTRACT_ICON_MAPPER,
     warning: FaTriangleExclamationIcon,
   },
 }
@@ -171,21 +171,23 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
 
     return type.match(/^(info|sync)$/) ? 'status' : 'alert'
   }, [role, type])
-  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
-
-  const { baseComponent: WrapBase = React.Fragment, baseProps = {} } = useMemo(
+  const { WrapBase, baseProps } = useMemo(
     () =>
       base === 'base'
         ? {
-            baseComponent: Base,
+            WrapBase: Base,
             baseProps: {
               layer,
               overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
             },
           }
-        : {},
+        : {
+            WrapBase: React.Fragment,
+            baseProps: {},
+          },
     [base, layer],
   )
+  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   const {
     wrapperStyle,
