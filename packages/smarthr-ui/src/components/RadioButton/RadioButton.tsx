@@ -5,7 +5,6 @@ import React, {
   ComponentPropsWithRef,
   PropsWithChildren,
   forwardRef,
-  useCallback,
   useId,
   useMemo,
 } from 'react'
@@ -69,13 +68,6 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
       }
     }, [props.disabled, className])
 
-    const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-      (e) => {
-        if (onChange) onChange(e)
-      },
-      [onChange],
-    )
-
     const defaultId = useId()
     const radioButtonId = props.id || defaultId
 
@@ -87,7 +79,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             data-smarthr-ui-input="true"
             type="radio"
             id={radioButtonId}
-            onChange={handleChange}
+            onChange={onChange}
             className={inputStyle}
             // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
             //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
