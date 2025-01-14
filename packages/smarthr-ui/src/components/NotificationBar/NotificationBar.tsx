@@ -226,12 +226,17 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
             </Cluster>
           )}
         </Cluster>
-        {onClose && (
-          <Button variant="text" size="s" onClick={onClose} className={closeButtonStyle}>
-            <FaXmarkIcon alt="閉じる" />
-          </Button>
-        )}
+        <CloseButton onClose={onClose} className={closeButtonStyle} />
       </div>
     </WrapBase>
   )
 }
+
+const CloseButton = React.memo<Pick<Props, 'onClose'> & { className: string }>(
+  ({ onClose, className }) =>
+    onClose && (
+      <Button variant="text" size="s" onClick={onClose} className={className}>
+        <FaXmarkIcon alt="閉じる" />
+      </Button>
+    ),
+)
