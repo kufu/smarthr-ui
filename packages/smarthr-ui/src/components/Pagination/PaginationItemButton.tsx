@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import { Button } from '../Button'
 
@@ -10,23 +10,29 @@ type Props = {
 
 export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
   const attrs = useMemo(() => {
-    if (page === currentPage) {
-      return {
-        'aria-current': 'page',
-        disabled: true,
-      }
+    const disabled = page === currentPage
+    const result = {
+      'aria-label': `${page}ページ目`,
+      disabled,
     }
 
-    return {
-      disabled: false,
+    if (disabled) {
+      result['aria-current'] = 'page'
     }
+
+    return result
   }, [currentPage, page])
+
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent) => onClick(parseInt(e.currentTarget.value, 10)),
+    [],
+  )
 
   return (
     <Button
       {...attrs}
-      aria-label={`${page}ページ目`}
-      onClick={() => onClick(page)}
+      onClick={actualOnClick}
+      value={page}
       square
       size="s"
       className="shr-rounded-s aria-current-page:shr-cursor-default aria-current-page:shr-border-solid aria-current-page:shr-border-main aria-current-page:shr-bg-main aria-current-page:shr-text-white"
