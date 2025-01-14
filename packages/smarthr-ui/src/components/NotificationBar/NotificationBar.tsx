@@ -19,8 +19,8 @@ export const notificationBar = tv({
     wrapper:
       'smarthr-ui-NotificationBar shr-flex shr-items-baseline shr-justify-between shr-gap-0.5 shr-p-0.75',
     inner: 'shr-flex-grow',
-    messageArea: [
-      'smarthr-ui-NotificationBar-messageArea',
+    iconWrapper: [
+      'smarthr-ui-NotificationBar-iconWrapper',
       'shr-flex shr-grow',
       '[&_.smarthr-ui-Icon-withText]:shr-leading-tight',
     ],
@@ -192,12 +192,12 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   const {
     wrapperStyle,
     innerStyle,
-    messageAreaStyle,
+    iconWrapperStyle,
     iconStyle,
     actionAreaStyle,
     closeButtonStyle,
   } = useMemo(() => {
-    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
+    const { wrapper, inner, iconWrapper, icon, actionArea, closeButton } = notificationBar({
       type,
       bold: !!bold,
       base: base || 'none',
@@ -206,7 +206,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     return {
       wrapperStyle: wrapper({ animate, className }),
       innerStyle: inner(),
-      messageAreaStyle: messageArea(),
+      iconWrapperStyle: iconWrapper(),
       iconStyle: icon(),
       actionAreaStyle: actionArea(),
       closeButtonStyle: closeButton(),
@@ -217,7 +217,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     <WrapBase {...baseProps}>
       <div {...props} className={wrapperStyle} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
-          <div className={messageAreaStyle}>
+          <div className={iconWrapperStyle}>
             <Icon text={message} iconGap={0.5} className={iconStyle} />
           </div>
           {children && (
