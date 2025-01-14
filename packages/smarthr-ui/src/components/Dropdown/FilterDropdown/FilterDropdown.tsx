@@ -13,7 +13,8 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import type { DecoratorsType, ResponseMessageType, executeDecorator } from '../../../types'
+import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import { executeDecorator } from '../../../types'
 
 type Props = {
   isFiltered?: boolean
@@ -85,16 +86,25 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   triggerSize,
   ...props
 }: Props) => {
-  const texts = useMemo(
-    () => ({
-      status: executeDecorator(STATUS_FILTERED_TEXT, decorators?.status),
-      triggerButton: executeDecorator(TRIGGER_BUTTON_TEXT, decorators?.triggerButton),
-      applyButton: executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButton),
-      cancelButton: executeDecorator(CANCEL_BUTTON_TEXT, decorators?.cancelButton),
-      resetButton: executeDecorator(RESET_BUTTON_TEXT, decorators?.resetButton),
-    }),
-    [decorators],
-  )
+  const texts = useMemo(() => {
+    if (!decorators) {
+      return {
+        status: STATUS_FILTERED_TEXT,
+        triggerButton: TRIGGER_BUTTON_TEXT,
+        applyButton: APPLY_BUTTON_TEXT,
+        cancelButton: CANCEL_BUTTON_TEXT,
+        resetButton: RESET_BUTTON_TEXT,
+      }
+    }
+
+    return {
+      status: executeDecorator(STATUS_FILTERED_TEXT, decorators.status),
+      triggerButton: executeDecorator(TRIGGER_BUTTON_TEXT, decorators.triggerButton),
+      applyButton: executeDecorator(APPLY_BUTTON_TEXT, decorators.applyButton),
+      cancelButton: executeDecorator(CANCEL_BUTTON_TEXT, decorators.cancelButton),
+      resetButton: executeDecorator(RESET_BUTTON_TEXT, decorators.resetButton),
+    }
+  }, [decorators])
 
   const filteredIconAriaLabel = useMemo(() => innerText(texts.status), [texts.status])
 

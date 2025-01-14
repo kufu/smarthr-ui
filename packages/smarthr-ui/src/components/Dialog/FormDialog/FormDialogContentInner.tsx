@@ -4,6 +4,7 @@ import React, {
   type PropsWithChildren,
   type ReactNode,
   useCallback,
+  useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -15,7 +16,8 @@ import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { executeDecorator, DecoratorsType, ResponseMessageType } from '../../../types'
+import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import { executeDecorator } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -86,6 +88,13 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 
   const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
 
+  const decoratedTexts = useMemo(
+    () => ({
+      closeButtonLabel: executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel),
+    }),
+    [decorators],
+  )
+
   return (
     // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
     <Stack gap={0} as={Section} className={wrapper()}>
@@ -103,7 +112,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
                 disabled={closeDisabled || isRequestProcessing}
                 className="smarthr-ui-Dialog-closeButton"
               >
-                {executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel)}
+                {decoratedTexts.closeButtonLabel}
               </Button>
               <Button
                 type="submit"

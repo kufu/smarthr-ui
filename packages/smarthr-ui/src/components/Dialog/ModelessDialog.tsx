@@ -27,7 +27,8 @@ import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
 import { useDialogPortal } from './useDialogPortal'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Props = PropsWithChildren<{
   /**
@@ -199,11 +200,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
 
-  const dialogHandlerAriaLabel = useMemo(
-    () =>
-      executeDecorator(DIALOG_HANDLER_ARIA_LABEL, decorators?.dialogHandlerAriaLabel),
-    [decorators],
-  )
   const defaultAriaValuetext = useMemo(
     () =>
       wrapperPosition
@@ -211,6 +207,23 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
         : '',
     [wrapperPosition],
   )
+
+  const decoratedTexts = useMemo(() => {
+    if (!decorators) {
+      return {
+        dialogHandlerAriaLabel: DIALOG_HANDLER_ARIA_LABEL,
+        closeButtonIconAlt: CLOSE_BUTTON_ICON_ALT,
+      }
+    }
+
+    return {
+      dialogHandlerAriaLabel: executeDecorator(
+        DIALOG_HANDLER_ARIA_LABEL,
+        decorators.dialogHandlerAriaLabel,
+      ),
+      closeButtonIconAlt: executeDecorator(CLOSE_BUTTON_ICON_ALT, decorators.closeButtonIconAlt),
+    }
+  }, [decorators])
   const dialogHandlerAriaValuetext = useMemo(
     () =>
       defaultAriaValuetext
@@ -218,10 +231,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
           defaultAriaValuetext
         : undefined,
     [defaultAriaValuetext, wrapperPosition, decorators],
-  )
-  const closeButtonIconAlt = useMemo(
-    () => executeDecorator(decorators?.closeButtonIconAlt, decorators?.closeButtonIconAlt),
-    [decorators],
   )
 
   const topStyle = centering.top !== undefined ? centering.top : top
@@ -383,7 +392,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
               className={dialogHandlerStyle}
               tabIndex={0}
               role="slider"
-              aria-label={dialogHandlerAriaLabel}
+              aria-label={decoratedTexts.dialogHandlerAriaLabel}
               aria-valuetext={dialogHandlerAriaValuetext}
               onKeyDown={handleArrowKey}
             >
@@ -400,7 +409,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
                 onClick={onClickClose}
                 className="smarthr-ui-ModelessDialog-closeButton"
               >
-                <FaXmarkIcon alt={closeButtonIconAlt} />
+                <FaXmarkIcon alt={decoratedTexts.closeButtonIconAlt} />
               </Button>
             </div>
           </div>

@@ -1,6 +1,14 @@
 'use client'
 
-import React, { FC, PropsWithChildren, useCallback, useEffect, useId, useState } from 'react'
+import React, {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useEffect,
+  useId,
+  useState,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { Base, BaseElementProps } from '../Base'
@@ -10,7 +18,8 @@ import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Props = PropsWithChildren<{
   /** パネルのタイトル */
@@ -136,6 +145,20 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
     bold,
   })
 
+  const decoratedTexts = useMemo(() => {
+    if (!decorators) {
+      return {
+        closeButtonLabel: CLOSE_BUTTON_LABEL,
+        openButtonLabel: OPEN_BUTTON_LABEL,
+      }
+    }
+
+    return {
+      closeButtonLabel: executeDecorator(CLOSE_BUTTON_LABEL, decorators.closeButtonLabel),
+      openButtonLabel: executeDecorator(OPEN_BUTTON_LABEL, decorators.openButtonLabel),
+    }
+  }, [decorators])
+
   return (
     <Base {...props} overflow="hidden" as="section" className={wrapper({ className })}>
       <Cluster align="center" justify="space-between" className={header()}>
@@ -154,9 +177,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
             aria-controls={contentId}
             className={togglableButton()}
           >
-            {active
-              ? executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel)
-              : executeDecorator(OPEN_BUTTON_LABEL, decorators?.openButtonLabel)}
+            {active ? decoratedTexts.closeButtonLabel : decoratedTexts.openButtonLabel}
           </Button>
         )}
       </Cluster>

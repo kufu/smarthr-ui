@@ -2,7 +2,8 @@ import React, { ReactNode, useMemo } from 'react'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { executeDecorator, DecoratorType, DecoratorsType } from '../../types'
+import type { DecoratorType, DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Props = {
   decorators?: DecoratorsType<'text' | 'visuallyHiddenText'>

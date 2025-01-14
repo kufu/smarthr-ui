@@ -4,7 +4,8 @@ import { tv } from 'tailwind-variants'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
-import type { executeDecorator, DecoratorsType } from '../../../types'
+import type { DecoratorsType } from '../../../types'
+import { executeDecorator } from '../../../types'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */

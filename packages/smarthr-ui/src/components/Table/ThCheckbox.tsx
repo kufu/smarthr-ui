@@ -6,7 +6,8 @@ import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 
 import { Th } from './Th'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Props = {
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
@@ -39,16 +40,34 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ vAlign, decorators, className, ...others }, ref) => {
     const { wrapper, inner, balloon, checkbox } = thCheckbox()
 
-    const checkAllInvisibleLabel = useMemo(() => executeDecorator(CHECK_ALL_INVISIBLE_LABEL, decorators?.checkAllInvisibleLabel), [decorators])
-    const checkColumnName = useMemo(() => executeDecorator(CHECK_COLUMN_NAME, decorators?.checkColumnName), [decorators])
+    const decoratedTexts = useMemo(() => {
+      if (!decorators) {
+        return {
+          checkAllInvisibleLabel: CHECK_ALL_INVISIBLE_LABEL,
+          checkColumnName: CHECK_COLUMN_NAME,
+        }
+      }
+
+      return {
+        checkAllInvisibleLabel: executeDecorator(
+          CHECK_ALL_INVISIBLE_LABEL,
+          decorators.checkAllInvisibleLabel,
+        ),
+        checkColumnName: executeDecorator(CHECK_COLUMN_NAME, decorators.checkColumnName),
+      }
+    }, [decorators])
 
     return (
       // Th に必要な属性やイベントは不要
-      <Th vAlign={vAlign} className={wrapper({ className })} aria-label={checkColumnName}>
+      <Th
+        vAlign={vAlign}
+        className={wrapper({ className })}
+        aria-label={decoratedTexts.checkColumnName}
+      >
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={inner()}>
           <Balloon as="span" horizontal="left" vertical="middle" className={balloon()}>
-            <span className="shr-p-0.5 shr-block">{checkAllInvisibleLabel}</span>
+            <span className="shr-p-0.5 shr-block">{decoratedTexts.checkAllInvisibleLabel}</span>
           </Balloon>
           <CheckBox {...others} ref={ref} className={checkbox()} />
         </label>

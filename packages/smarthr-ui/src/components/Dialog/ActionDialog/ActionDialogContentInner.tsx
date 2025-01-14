@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type FC, type PropsWithChildren, type ReactNode, useCallback } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
@@ -9,7 +9,8 @@ import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { executeDecorator, DecoratorsType, ResponseMessageType } from '../../../types'
+import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import { executeDecorator } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -65,6 +66,13 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
   const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
 
+  const decoratedTexts = useMemo(
+    () => ({
+      closeButtonLabel: executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel),
+    }),
+    [decorators],
+  )
+
   return (
     // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
     <Stack gap={0} as="section" className={wrapper()}>
@@ -81,7 +89,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
               disabled={closeDisabled || isRequestProcessing}
               className="smarthr-ui-Dialog-closeButton"
             >
-              {executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel)}
+              {decoratedTexts.closeButtonLabel}
             </Button>
             <Button
               variant={actionTheme}

@@ -9,7 +9,8 @@ import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { TextLink } from '../../TextLink'
 
-import type { executeDecorator, DecoratorsType } from '../../../types'
+import type { DecoratorsType } from '../../../types'
+import { executeDecorator } from '../../../types'
 
 type Category = {
   type?: string

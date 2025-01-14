@@ -24,7 +24,7 @@ import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 
 import type { DecoratorsType } from '../../types'
-import type { executeDecorator } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
@@ -282,9 +282,23 @@ export const useListBox = <T,>({
     wrapper,
   ])
 
+  const decoratedTexts = useMemo(() => {
+    if (!decorators) {
+      return {
+        loadingText: LOADING_TEXT,
+        noResultText: NO_RESULT_TEXT,
+      }
+    }
+
+    return {
+      loadingText: executeDecorator(LOADING_TEXT, decorators.loadingText),
+      noResultText: executeDecorator(NO_RESULT_TEXT, decorators.noResultText),
+    }
+  }, [decorators])
+
   const statusText = useMemo(() => {
-    return isExpanded && isLoading ? executeDecorator(LOADING_TEXT, decorators?.loadingText) : ''
-  }, [decorators, isExpanded, isLoading])
+    return isExpanded && isLoading ? decoratedTexts.loadingText : ''
+  }, [isExpanded, isLoading, decoratedTexts.loadingText])
 
   const renderListBox = useCallback(
     () =>
@@ -311,7 +325,7 @@ export const useListBox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={noItemsStyle}>
-                  {executeDecorator(NO_RESULT_TEXT, decorators?.noResultText)}
+                  {decoratedTexts.noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (

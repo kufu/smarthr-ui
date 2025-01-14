@@ -4,7 +4,8 @@ import { tv } from 'tailwind-variants'
 import { Cluster } from '../Layout'
 import { RangeSeparator, Text } from '../Text'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Props = {
   start: number

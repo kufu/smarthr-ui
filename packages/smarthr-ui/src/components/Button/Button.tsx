@@ -78,7 +78,16 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     const disabledOnLoading = loading || disabled
     const actualChildren = loading && square ? loader : children
 
-    const statusText = useMemo(() => loading ? executeDecorator(LOADING_TEXT, decorators?.loading) : '', [decorators, loading])
+    const decoratedTexts = useMemo(
+      () => ({
+        loading: executeDecorator(LOADING_TEXT, decorators?.loading),
+      }),
+      [decorators],
+    )
+    const statusText = useMemo(
+      () => (loading ? decoratedTexts.loading : ''),
+      [decoratedTexts.loading, loading],
+    )
 
     const button = (
       <ButtonWrapper

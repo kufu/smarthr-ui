@@ -23,24 +23,34 @@ const APPLY_BUTTON_TEXT = '適用'
 const CANCEL_BUTTON_TEXT = 'キャンセル'
 
 export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators }: Props) => {
-  const sortFieldLabel = useMemo(
-    () => executeDecorator(SORT_FIELD_LABEL, decorators?.sortFieldLabel),
-    [decorators],
-  )
-  const sortOrderLabel = useMemo(
-    () => executeDecorator(SORT_ORDER_LABEL, decorators?.sortOrderLabel),
-    [decorators],
-  )
-  const ascLabel = useMemo(() => executeDecorator(ASC_LABEL, decorators?.ascLabel), [decorators])
-  const descLabel = useMemo(() => executeDecorator(DESC_LABEL, decorators?.descLabel), [decorators])
-  const applyButtonLabel = useMemo(
-    () => executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButtonLabel),
-    [decorators],
-  )
-  const cancelButtonLabel = useMemo(
-    () => executeDecorator(CANCEL_BUTTON_TEXT, decorators?.cancelButtonLabel),
-    [decorators],
-  )
+  const {
+    sortFieldLabel,
+    sortOrderLabel,
+    ascLabel,
+    descLabel,
+    applyButtonLabel,
+    cancelButtonLabel,
+  } = useMemo(() => {
+    if (!decorators) {
+      return {
+        sortFieldLabel: SORT_FIELD_LABEL,
+        sortOrderLabel: SORT_ORDER_LABEL,
+        ascLabel: ASC_LABEL,
+        descLabel: DESC_LABEL,
+        applyButtonLabel: APPLY_BUTTON_TEXT,
+        cancelButtonLabel: CANCEL_BUTTON_TEXT,
+      }
+    }
+
+    return {
+      sortFieldLabel: executeDecorator(SORT_FIELD_LABEL, decorators.sortFieldLabel),
+      sortOrderLabel: executeDecorator(SORT_ORDER_LABEL, decorators.sortOrderLabel),
+      ascLabel: executeDecorator(ASC_LABEL, decorators.ascLabel),
+      descLabel: executeDecorator(DESC_LABEL, decorators.descLabel),
+      applyButtonLabel: executeDecorator(APPLY_BUTTON_TEXT, decorators.applyButtonLabel),
+      cancelButtonLabel: executeDecorator(CANCEL_BUTTON_TEXT, decorators.cancelButtonLabel),
+    }
+  }, [decorators])
 
   // 外向きの値
   const [selectedLabel, setSelectedLabel] = useState<string>()

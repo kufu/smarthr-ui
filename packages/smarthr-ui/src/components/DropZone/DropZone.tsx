@@ -17,7 +17,8 @@ import { tv } from 'tailwind-variants'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 const dropZone = tv({
   slots: {

@@ -8,7 +8,8 @@ import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
 
-import type { executeDecorator, DecoratorsType, LocaleMap } from '../../../types'
+import type { DecoratorsType, LocaleMap } from '../../../types'
+import { executeDecorator } from '../../../types'
 
 export type Props = {
   narrow?: boolean
@@ -73,14 +74,19 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   ...rest
 }) => {
   const locales = useMemo(() => Object.entries(localeMap), [localeMap])
-  const triggerLabel = useMemo(
-    () => executeDecorator(TRIGGER_LABEL, decorators?.triggerLabel),
-    [decorators],
-  )
-  const checkIconAlt = useMemo(
-    () => executeDecorator(CHECK_ICON_ALT, decorators?.checkIconAlt),
-    [decorators],
-  )
+  const { triggerLabel, checkIconAlt } = useMemo(() => {
+    if (!decorators) {
+      return {
+        triggerLabel: TRIGGER_LABEL,
+        checkIconAlt: CHECK_ICON_ALT,
+      }
+    }
+
+    return {
+      triggerLabel: executeDecorator(TRIGGER_LABEL, decorators.triggerLabel),
+      checkIconAlt: executeDecorator(CHECK_ICON_ALT, decorators.checkIconAlt),
+    }
+  }, [decorators])
 
   const currentLang = useMemo(
     () => locale || defaultLocale || Object.keys(localeMap)[0],

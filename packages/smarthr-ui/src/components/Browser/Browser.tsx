@@ -40,13 +40,19 @@ const NOT_FOUND_DESCRIPTION = '別の条件を試してください。'
 export const Browser: FC<Props> = (props) => {
   const { value, decorators, onSelectItem } = props
 
-  const decoratedTexts = useMemo(
-    () => ({
-      notFoundTitle: executeDecorator(NOT_FOUND_TITLE, decorators?.notFoundTitle),
-      notFoundDescription: executeDecorator(NOT_FOUND_DESCRIPTION, decorators?.notFoundDescription),
-    }),
-    [decorators],
-  )
+  const decoratedTexts = useMemo(() => {
+    if (!decorators) {
+      return {
+        notFoundTitle: NOT_FOUND_TITLE,
+        notFoundDescription: NOT_FOUND_DESCRIPTION,
+      }
+    }
+
+    return {
+      notFoundTitle: executeDecorator(NOT_FOUND_TITLE, decorators.notFoundTitle),
+      notFoundDescription: executeDecorator(NOT_FOUND_DESCRIPTION, decorators.notFoundDescription),
+    }
+  }, [decorators])
 
   const rootNode = useMemo(() => RootNode.from({ children: props.items }), [props.items])
 

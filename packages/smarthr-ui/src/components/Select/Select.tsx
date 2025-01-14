@@ -13,7 +13,8 @@ import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Option<T extends string> = {
   value: T

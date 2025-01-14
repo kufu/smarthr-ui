@@ -18,7 +18,8 @@ import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 const inputFile = tv({
   slots: {

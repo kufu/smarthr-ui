@@ -20,7 +20,8 @@ import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { executeDecorator, DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../types'
+import { executeDecorator } from '../../types'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */
@@ -132,21 +133,40 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       maxLettersCountExceeded,
       beforeScreenReaderMaxLettersDescription,
       afterScreenReaderMaxLettersDescription,
-    } = useMemo(
-      () => ({
-        beforeMaxLettersCount:
-          executeDecorator(TEXT_BEFORE_MAXLETTERS_COUNT, decorators?.beforeMaxLettersCount),
-        afterMaxLettersCount:
-          executeDecorator(TEXT_AFTER_MAXLETTERS_COUNT, decorators?.afterMaxLettersCount),
-        maxLettersCountExceeded:
-          executeDecorator(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED, decorators?.afterMaxLettersCountExceeded),
-        beforeScreenReaderMaxLettersDescription:
-          executeDecorator(SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION, decorators?.beforeScreenReaderMaxLettersDescription),
-        afterScreenReaderMaxLettersDescription:
-          executeDecorator(SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION, decorators?.afterScreenReaderMaxLettersDescription),
-      }),
-      [decorators],
-    )
+    } = useMemo(() => {
+      if (!decorators) {
+        return {
+          beforeMaxLettersCount: TEXT_BEFORE_MAXLETTERS_COUNT,
+          afterMaxLettersCount: TEXT_AFTER_MAXLETTERS_COUNT,
+          maxLettersCountExceeded: TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
+          beforeScreenReaderMaxLettersDescription: SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+          afterScreenReaderMaxLettersDescription: SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+        }
+      }
+
+      return {
+        beforeMaxLettersCount: executeDecorator(
+          TEXT_BEFORE_MAXLETTERS_COUNT,
+          decorators.beforeMaxLettersCount,
+        ),
+        afterMaxLettersCount: executeDecorator(
+          TEXT_AFTER_MAXLETTERS_COUNT,
+          decorators.afterMaxLettersCount,
+        ),
+        maxLettersCountExceeded: executeDecorator(
+          TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
+          decorators.afterMaxLettersCountExceeded,
+        ),
+        beforeScreenReaderMaxLettersDescription: executeDecorator(
+          SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+          decorators.beforeScreenReaderMaxLettersDescription,
+        ),
+        afterScreenReaderMaxLettersDescription: executeDecorator(
+          SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+          decorators.afterScreenReaderMaxLettersDescription,
+        ),
+      }
+    }, [decorators])
 
     const getCounterMessage = useCallback(
       (counterValue: number) => {

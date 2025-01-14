@@ -89,6 +89,12 @@ export function MultiSelectedItem<T>({
     }),
     [deleteButton, deleteButtonIcon, disabled, enableEllipsis, itemLabel, wrapper],
   )
+  const decoratedTexts = useMemo(
+    () => ({
+      destroyButtonIconAlt: executeDecorator(DESTROY_BUTTON_TEXT, decorators?.destroyButtonIconAlt),
+    }),
+    [decorators],
+  )
 
   return (
     <MultiSelectedItemTooltip needsTooltip={needsTooltip} text={item.label}>
@@ -116,7 +122,7 @@ export function MultiSelectedItem<T>({
           >
             <FaTimesCircleIcon
               color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-              alt={executeDecorator(DESTROY_BUTTON_TEXT, decorators?.destroyButtonIconAlt)}
+              alt={decoratedTexts.destroyButtonIconAlt}
               className={deleteButtonIconStyle}
             />
           </UnstyledButton>

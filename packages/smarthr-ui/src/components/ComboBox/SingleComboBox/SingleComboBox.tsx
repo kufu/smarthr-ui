@@ -25,7 +25,8 @@ import { Input } from '../../Input'
 import { useListBox } from '../useListBox'
 import { useOptions } from '../useOptions'
 
-import type { executeDecorator, DecoratorsType } from '../../../types'
+import type { DecoratorsType } from '../../../types'
+import { executeDecorator } from '../../../types'
 import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
@@ -385,6 +386,12 @@ const ActualSingleComboBox = <T,>(
     needsClearButton,
     clearButtonIcon,
   ])
+  const decoratedTexts = useMemo(
+    () => ({
+      destroyButtonIconAlt: executeDecorator(DESTROY_BUTTON_TEXT, decorators?.destroyButtonIconAlt),
+    }),
+    [decorators],
+  )
 
   return (
     <div {...wrapperStyleProps} ref={outerRef}>
@@ -409,7 +416,7 @@ const ActualSingleComboBox = <T,>(
             >
               <FaCircleXmarkIcon
                 color="TEXT_BLACK"
-                alt={executeDecorator(DESTROY_BUTTON_TEXT, decorators?.destroyButtonIconAlt)}
+                alt={decoratedTexts.destroyButtonIconAlt}
                 className={clearButtonIconStyle}
               />
             </UnstyledButton>
