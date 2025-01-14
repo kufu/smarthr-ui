@@ -1,17 +1,21 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 import { Button } from '../Button'
 
 type Props = {
   page: number
   currentPage: number
-  onClick: () => void
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
   const attrs = useMemo(() => {
     const disabled = page === currentPage
-    const result = {
+    const result: {
+      'aria-label': string
+      disabled: boolean
+      'aria-current'?: 'page'
+    } = {
       'aria-label': `${page}ページ目`,
       disabled,
     }

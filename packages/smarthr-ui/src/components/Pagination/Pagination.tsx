@@ -45,7 +45,7 @@ type BaseProps = {
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 type Props = BaseProps & ElementProps
 
 export const Pagination: React.FC<Props> = (props) =>
@@ -92,17 +92,24 @@ const ActualPagination: React.FC<Props> = ({
     ]
   }, [current, total, padding, withoutNumbers])
 
-  const prevAttrs = {
-    disabled: current === 1,
-    direction: 'prev',
-  }
-  const nextAttrs = {
-    disabled: current === total,
-    direction: 'next',
-  }
+  const controllerAttrs = useMemo(
+    () => ({
+      prev: {
+        disabled: current === 1,
+        direction: 'prev' as const,
+      },
+      next: {
+        disabled: current === total,
+        direction: 'next' as const,
+      },
+    }),
+    [current, total],
+  )
 
   const actualOnClick = useCallback(
-    (e: React.MouseEvent) => onClick(parseInt(e.currentTarget.value, 10)),
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick(parseInt(e.currentTarget.value, 10))
+    },
     [onClick],
   )
 
@@ -113,7 +120,7 @@ const ActualPagination: React.FC<Props> = ({
         <Cluster as="ul" className={listStyle}>
           <li className={firstListItemStyle}>
             <PaginationControllerItemButton
-              {...prevAttrs}
+              {...controllerAttrs.prev}
               onClick={actualOnClick}
               targetPage={1}
               double
@@ -121,7 +128,7 @@ const ActualPagination: React.FC<Props> = ({
           </li>
           <li className={prevListItemStyle}>
             <PaginationControllerItemButton
-              {...prevAttrs}
+              {...controllerAttrs.prev}
               onClick={actualOnClick}
               targetPage={current - 1}
             />
@@ -136,14 +143,14 @@ const ActualPagination: React.FC<Props> = ({
           ))}
           <li className={nextListItemStyle}>
             <PaginationControllerItemButton
-              {...nextAttrs}
+              {...controllerAttrs.next}
               onClick={actualOnClick}
               targetPage={current + 1}
             />
           </li>
           <li className={lastListItemStyle}>
             <PaginationControllerItemButton
-              {...nextAttrs}
+              {...controllerAttrs.next}
               onClick={actualOnClick}
               targetPage={total}
               double

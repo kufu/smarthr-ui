@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import { Button } from '../Button'
 import {
@@ -6,12 +6,11 @@ import {
   FaAngleDoubleRightIcon,
   FaChevronLeftIcon,
   FaChevronRightIcon,
-  ComponentProps as IconProps,
 } from '../Icon'
 
 type Props = {
   targetPage: number
-  onClick: () => void
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
   direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
