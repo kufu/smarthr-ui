@@ -1,7 +1,7 @@
 import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { DecoratorsType } from '../../types'
+import { executeDecorator, DecoratorsType } from '../../types'
 import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'
@@ -42,9 +42,8 @@ export const Browser: FC<Props> = (props) => {
 
   const decoratedTexts = useMemo(
     () => ({
-      notFoundTitle: decorators?.notFoundTitle?.(NOT_FOUND_TITLE) ?? NOT_FOUND_TITLE,
-      notFoundDescription:
-        decorators?.notFoundDescription?.(NOT_FOUND_DESCRIPTION) ?? NOT_FOUND_DESCRIPTION,
+      notFoundTitle: executeDecorator(NOT_FOUND_TITLE, decorators?.notFoundTitle),
+      notFoundDescription: executeDecorator(NOT_FOUND_DESCRIPTION, decorators?.notFoundDescription),
     }),
     [decorators],
   )

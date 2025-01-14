@@ -18,7 +18,7 @@ import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
-import type { DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 const inputFile = tv({
   slots: {
@@ -112,7 +112,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const destroyButtonText = useMemo(
-      () => decorators?.destroy?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
+      () => executeDecorator(DESTROY_BUTTON_TEXT, decorators?.destroy),
       [decorators],
     )
 

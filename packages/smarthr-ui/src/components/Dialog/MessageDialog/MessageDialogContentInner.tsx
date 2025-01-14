@@ -6,7 +6,7 @@ import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { DecoratorsType } from '../../../types'
+import type { executeDecorator, DecoratorsType } from '../../../types'
 
 export type BaseProps = DialogHeaderProps &
   DialogBodyProps & {
@@ -44,7 +44,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
       </DialogBody>
       <Cluster as="footer" justify="flex-end" className={actionArea()}>
         <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
-          {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+          {executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel)}
         </Button>
       </Cluster>
     </Stack>

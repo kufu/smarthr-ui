@@ -6,7 +6,7 @@ import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 
 import { Th } from './Th'
 
-import type { DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 type Props = {
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
@@ -39,21 +39,8 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ vAlign, decorators, className, ...others }, ref) => {
     const { wrapper, inner, balloon, checkbox } = thCheckbox()
 
-    const checkAllInvisibleLabel = useMemo(() => {
-      if (decorators && decorators.checkAllInvisibleLabel) {
-        return decorators.checkAllInvisibleLabel(CHECK_ALL_INVISIBLE_LABEL)
-      }
-
-      return CHECK_ALL_INVISIBLE_LABEL
-    }, [decorators])
-
-    const checkColumnName = useMemo(() => {
-      if (decorators && decorators.checkColumnName) {
-        return decorators.checkColumnName(CHECK_COLUMN_NAME)
-      }
-
-      return CHECK_COLUMN_NAME
-    }, [decorators])
+    const checkAllInvisibleLabel = useMemo(() => executeDecorator(CHECK_ALL_INVISIBLE_LABEL, decorators?.checkAllInvisibleLabel), [decorators])
+    const checkColumnName = useMemo(() => executeDecorator(CHECK_COLUMN_NAME, decorators?.checkColumnName), [decorators])
 
     return (
       // Th に必要な属性やイベントは不要

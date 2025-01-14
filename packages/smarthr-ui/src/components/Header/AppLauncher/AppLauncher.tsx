@@ -9,7 +9,7 @@ import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { TextLink } from '../../TextLink'
 
-import type { DecoratorsType } from '../../../types'
+import type { executeDecorator, DecoratorsType } from '../../../types'
 
 type Category = {
   type?: string
@@ -70,7 +70,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   ...props
 }) => {
   const triggerLabel = useMemo(
-    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
+    () => executeDecorator(TRIGGER_LABEL, decorators?.triggerLabel),
     [decorators],
   )
 

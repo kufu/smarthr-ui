@@ -4,7 +4,7 @@ import React, { ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { usePortal } from '../../hooks/usePortal'
-import { DecoratorsType } from '../../types'
+import { executeDecorator, DecoratorsType } from '../../types'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -78,10 +78,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     const disabledOnLoading = loading || disabled
     const actualChildren = loading && square ? loader : children
 
-    const statusText = useMemo(() => {
-      const loadingText = decorators?.loading?.(LOADING_TEXT) ?? LOADING_TEXT
-      return loading ? loadingText : ''
-    }, [decorators, loading])
+    const statusText = useMemo(() => loading ? executeDecorator(LOADING_TEXT, decorators?.loading) : '', [decorators, loading])
 
     const button = (
       <ButtonWrapper

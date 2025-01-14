@@ -11,6 +11,7 @@ import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import { SortDropdown } from './SortDropdown'
 import { sortDropdownStyle } from './style'
+import { executeDecorator } from '../../../types'
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
@@ -23,21 +24,21 @@ const CANCEL_BUTTON_TEXT = 'キャンセル'
 
 export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators }: Props) => {
   const sortFieldLabel = useMemo(
-    () => decorators?.sortFieldLabel?.(SORT_FIELD_LABEL) || SORT_FIELD_LABEL,
+    () => executeDecorator(SORT_FIELD_LABEL, decorators?.sortFieldLabel),
     [decorators],
   )
   const sortOrderLabel = useMemo(
-    () => decorators?.sortOrderLabel?.(SORT_ORDER_LABEL) || SORT_ORDER_LABEL,
+    () => executeDecorator(SORT_ORDER_LABEL, decorators?.sortOrderLabel),
     [decorators],
   )
-  const ascLabel = useMemo(() => decorators?.ascLabel?.(ASC_LABEL) || ASC_LABEL, [decorators])
-  const descLabel = useMemo(() => decorators?.descLabel?.(DESC_LABEL) || DESC_LABEL, [decorators])
+  const ascLabel = useMemo(() => executeDecorator(ASC_LABEL, decorators?.ascLabel), [decorators])
+  const descLabel = useMemo(() => executeDecorator(DESC_LABEL, decorators?.descLabel), [decorators])
   const applyButtonLabel = useMemo(
-    () => decorators?.applyButtonLabel?.(APPLY_BUTTON_TEXT) || APPLY_BUTTON_TEXT,
+    () => executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButtonLabel),
     [decorators],
   )
   const cancelButtonLabel = useMemo(
-    () => decorators?.cancelButtonLabel?.(CANCEL_BUTTON_TEXT) || CANCEL_BUTTON_TEXT,
+    () => executeDecorator(CANCEL_BUTTON_TEXT, decorators?.cancelButtonLabel),
     [decorators],
   )
 

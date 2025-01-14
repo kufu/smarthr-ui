@@ -26,7 +26,7 @@ import { useOptions } from '../useOptions'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
-import type { DecoratorsType } from '../../../types'
+import type { executeDecorator, DecoratorsType } from '../../../types'
 import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
@@ -461,10 +461,7 @@ const ActualMultiComboBox = <T,>(
       <div className={inputAreaStyle}>
         <ul
           id={selectedListId}
-          aria-label={
-            decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
-            SELECTED_LIST_ARIA_LABEL
-          }
+          aria-label={executeDecorator(SELECTED_LIST_ARIA_LABEL, decorators?.selectedListAriaLabel)}
           className={selectedListStyle}
         >
           {selectedItems.map((selectedItem, i) => (

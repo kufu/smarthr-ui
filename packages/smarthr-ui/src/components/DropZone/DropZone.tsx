@@ -17,7 +17,7 @@ import { tv } from 'tailwind-variants'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
-import type { DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 const dropZone = tv({
   slots: {
@@ -79,7 +79,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
     )
 
     const selectButtonLabel = useMemo(
-      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
+      () => executeDecorator(SELECT_BUTTON_LABEL, decorators?.selectButtonLabel),
       [decorators],
     )
 

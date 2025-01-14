@@ -10,7 +10,7 @@ import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-import type { DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 type Props = PropsWithChildren<{
   /** パネルのタイトル */
@@ -155,8 +155,8 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
             className={togglableButton()}
           >
             {active
-              ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-              : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
+              ? executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel)
+              : executeDecorator(OPEN_BUTTON_LABEL, decorators?.openButtonLabel)}
           </Button>
         )}
       </Cluster>

@@ -27,7 +27,7 @@ import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
 import { useDialogPortal } from './useDialogPortal'
 
-import type { DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 type Props = PropsWithChildren<{
   /**
@@ -201,7 +201,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
 
   const dialogHandlerAriaLabel = useMemo(
     () =>
-      decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
+      executeDecorator(DIALOG_HANDLER_ARIA_LABEL, decorators?.dialogHandlerAriaLabel),
     [decorators],
   )
   const defaultAriaValuetext = useMemo(
@@ -220,7 +220,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     [defaultAriaValuetext, wrapperPosition, decorators],
   )
   const closeButtonIconAlt = useMemo(
-    () => decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
+    () => executeDecorator(decorators?.closeButtonIconAlt, decorators?.closeButtonIconAlt),
     [decorators],
   )
 

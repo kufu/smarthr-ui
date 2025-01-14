@@ -5,6 +5,7 @@ import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
 import { ComboBoxItem } from '../types'
+import { executeDecorator } from '../../../types'
 
 import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
 
@@ -115,7 +116,7 @@ export function MultiSelectedItem<T>({
           >
             <FaTimesCircleIcon
               color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-              alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+              alt={executeDecorator(DESTROY_BUTTON_TEXT, decorators?.destroyButtonIconAlt)}
               className={deleteButtonIconStyle}
             />
           </UnstyledButton>

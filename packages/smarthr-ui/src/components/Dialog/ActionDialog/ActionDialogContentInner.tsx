@@ -9,7 +9,7 @@ import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import type { executeDecorator, DecoratorsType, ResponseMessageType } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -81,7 +81,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
               disabled={closeDisabled || isRequestProcessing}
               className="smarthr-ui-Dialog-closeButton"
             >
-              {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+              {executeDecorator(CLOSE_BUTTON_LABEL, decorators?.closeButtonLabel)}
             </Button>
             <Button
               variant={actionTheme}

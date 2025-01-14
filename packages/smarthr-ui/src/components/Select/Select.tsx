@@ -13,7 +13,7 @@ import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
 
-import type { DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 type Option<T extends string> = {
   value: T
@@ -150,7 +150,7 @@ const ActualSelect = <T extends string>(
         className={selectStyle}
       >
         {hasBlank && (
-          <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
+          <option value="">{executeDecorator(BLANK_LABEL, decorators?.blankLabel)}</option>
         )}
         {options.map((option) => {
           if ('value' in option) {

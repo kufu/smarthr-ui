@@ -13,7 +13,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
+import type { DecoratorsType, ResponseMessageType, executeDecorator } from '../../../types'
 
 type Props = {
   isFiltered?: boolean
@@ -43,9 +43,6 @@ const CONTROL_CLUSTER_GAP: React.ComponentProps<typeof Cluster>['gap'] = { colum
 const ON_SUBMIT = (e: React.FormEvent) => {
   e.preventDefault()
 }
-
-const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
-  decorator?.(defaultText) || defaultText
 
 const filterDropdown = tv({
   slots: {

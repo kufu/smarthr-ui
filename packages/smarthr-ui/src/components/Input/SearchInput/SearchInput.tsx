@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
-import type { DecoratorsType } from '../../../types'
+import type { executeDecorator, DecoratorsType } from '../../../types'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
@@ -31,7 +31,7 @@ const searchInput = tv({
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ decorators, width, className, ...rest }, ref) => {
-    const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
+    const iconAlt = useMemo(() => executeDecorator(ICON_ALT, decorators?.iconAlt), [decorators])
     const labelWidth = typeof width === 'number' ? `${width}px` : width
     const { label, input } = searchInput({ existsWidth: !!labelWidth })
 

@@ -5,3 +5,6 @@ export type DecoratorsType<T extends string> = {
 }
 
 export type DecoratorType = (text: string) => ReactNode
+
+export const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
+  decorator?.(defaultText) || defaultText

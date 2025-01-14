@@ -20,7 +20,7 @@ import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */
@@ -135,22 +135,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     } = useMemo(
       () => ({
         beforeMaxLettersCount:
-          decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
-          TEXT_BEFORE_MAXLETTERS_COUNT,
+          executeDecorator(TEXT_BEFORE_MAXLETTERS_COUNT, decorators?.beforeMaxLettersCount),
         afterMaxLettersCount:
-          decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
-          TEXT_AFTER_MAXLETTERS_COUNT,
+          executeDecorator(TEXT_AFTER_MAXLETTERS_COUNT, decorators?.afterMaxLettersCount),
         maxLettersCountExceeded:
-          decorators?.afterMaxLettersCountExceeded?.(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED) ||
-          TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
+          executeDecorator(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED, decorators?.afterMaxLettersCountExceeded),
         beforeScreenReaderMaxLettersDescription:
-          decorators?.beforeScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+          executeDecorator(SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION, decorators?.beforeScreenReaderMaxLettersDescription),
         afterScreenReaderMaxLettersDescription:
-          decorators?.afterScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+          executeDecorator(SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION, decorators?.afterScreenReaderMaxLettersDescription),
       }),
       [decorators],
     )

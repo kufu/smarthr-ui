@@ -25,7 +25,7 @@ import { Input } from '../../Input'
 import { useListBox } from '../useListBox'
 import { useOptions } from '../useOptions'
 
-import type { DecoratorsType } from '../../../types'
+import type { executeDecorator, DecoratorsType } from '../../../types'
 import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
@@ -409,7 +409,7 @@ const ActualSingleComboBox = <T,>(
             >
               <FaCircleXmarkIcon
                 color="TEXT_BLACK"
-                alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+                alt={executeDecorator(DESTROY_BUTTON_TEXT, decorators?.destroyButtonIconAlt)}
                 className={clearButtonIconStyle}
               />
             </UnstyledButton>

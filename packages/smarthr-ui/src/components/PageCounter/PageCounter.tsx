@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 import { Cluster } from '../Layout'
 import { RangeSeparator, Text } from '../Text'
 
-import type { DecoratorType, DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorsType } from '../../types'
 
 type Props = {
   start: number
@@ -13,9 +13,6 @@ type Props = {
   decorators?: DecoratorsType<'rangeSeparator' | 'rangeSeparatorVisuallyHiddenText'>
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
-
-const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
-  decorator?.(defaultText) || defaultText
 
 const RANGE_SEPARATOR = '–'
 const RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT = 'から'

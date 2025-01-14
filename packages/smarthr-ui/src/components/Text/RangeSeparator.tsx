@@ -2,7 +2,7 @@ import React, { ReactNode, useMemo } from 'react'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { DecoratorType, DecoratorsType } from '../../types'
+import type { executeDecorator, DecoratorType, DecoratorsType } from '../../types'
 
 type Props = {
   decorators?: DecoratorsType<'text' | 'visuallyHiddenText'>
@@ -17,11 +17,11 @@ const executeDecorator = (defaultText: string, decorator: DecoratorType | undefi
 export const RangeSeparator: React.FC<Props> = ({ decorators }) => {
   const text: ReactNode = useMemo(
     () => executeDecorator(DEFAULT_TEXT, decorators?.text),
-    [decorators?.text],
+    [decorators],
   )
   const visuallyHiddenText: ReactNode = useMemo(
     () => executeDecorator(DEFAULT_VISUALLY_HIDDEN_TEXT, decorators?.visuallyHiddenText),
-    [decorators?.visuallyHiddenText],
+    [decorators],
   )
 
   return (
