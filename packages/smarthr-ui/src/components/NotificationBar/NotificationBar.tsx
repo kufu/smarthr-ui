@@ -159,7 +159,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   onClose,
   children,
   role,
-  base = 'none',
+  base,
   layer,
   className,
   ...props
@@ -198,7 +198,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
       type,
       bold: !!bold,
-      base,
+      base: base || 'none',
     })
 
     return {
