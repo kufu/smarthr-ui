@@ -53,18 +53,23 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
       <BoldNumber>{start}</BoldNumber>
       <RangeSeparator decorators={rangeSeparatorDecorators} />
       <BoldNumber>{end}</BoldNumber>
-      {total > 0 && (
-        <>
-          <span>/</span>
-          <BoldNumber>{total}</BoldNumber>
-        </>
-      )}
+      <Total>{total}</Total>
     </Cluster>
   )
 }
 
-const BoldNumber = React.memo<{ children: number }>(() => (
+const BoldNumber = React.memo<{ children: number }>(({ children }) => (
   <Text weight="bold" as="b">
     {children.toLocaleString()}
   </Text>
 ))
+
+const Total = React.memo<{ children: number }>(
+  ({ children }) =>
+    children > 0 && (
+      <>
+        <span>/</span>
+        <BoldNumber>{children}</BoldNumber>
+      </>
+    ),
+)
