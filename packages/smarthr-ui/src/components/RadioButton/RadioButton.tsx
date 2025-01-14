@@ -58,14 +58,16 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
   ({ onChange, children, className, required, ...props }, ref) => {
     const { wrapperStyle, innerWrapperStyle, boxStyle, inputStyle, labelStyle } = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = radioButton()
+      const actualDisabledAttrs = { disabled: !!props.disabled }
+
       return {
         wrapperStyle: wrapper({ className }),
         innerWrapperStyle: innerWrapper(),
-        boxStyle: box({ disabled: !!props.disabled }),
+        boxStyle: box(actualDisabledAttrs),
         inputStyle: input(),
-        labelStyle: label({ disabled: !!props.disabled }),
+        labelStyle: label(actualDisabledAttrs),
       }
-    }, [className, props.disabled])
+    }, [props.disabled, className])
 
     const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
       (e) => {
