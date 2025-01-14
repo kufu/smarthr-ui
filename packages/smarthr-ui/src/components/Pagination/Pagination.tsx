@@ -56,8 +56,6 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } = pagination()
-
   const {
     wrapperStyle,
     listStyle,
@@ -66,6 +64,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
     nextListItemStyle,
     lastListItemStyle,
   } = useMemo(() => {
+    const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } = pagination()
     const itemArg = { withoutNumbers }
 
     return {
@@ -76,16 +75,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
       nextListItemStyle: nextListItem(itemArg),
       lastListItemStyle: lastListItem(itemArg),
     }
-  }, [
-    className,
-    withoutNumbers,
-    wrapper,
-    list,
-    firstListItem,
-    prevListItem,
-    nextListItem,
-    lastListItem,
-  ])
+  }, [className, withoutNumbers])
 
   if (total <= 1) return null
 
