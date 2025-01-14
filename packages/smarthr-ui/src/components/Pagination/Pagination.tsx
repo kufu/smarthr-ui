@@ -91,14 +91,6 @@ const ActualPagination: React.FC<Props> = ({
       ...range(current, Math.min(current + padding, total) + 1),
     ]
   }, [current, total, padding, withoutNumbers])
-  const pages = pageNumbers.map((page) => (
-    <li
-      key={`pagination-${page}`}
-      className={page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'}
-    >
-      <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
-    </li>
-  ))
 
   const disabledPrev = current === 1
   const disabledNext = current === total
@@ -125,7 +117,14 @@ const ActualPagination: React.FC<Props> = ({
               disabled={disabledPrev}
             />
           </li>
-          {pages}
+          {pageNumbers.map((page) => (
+            <li
+              key={`pagination-${page}`}
+              className={page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'}
+            >
+              <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
+            </li>
+          ))}
           <li className={nextListItemStyle}>
             <PaginationControllerItemButton
               onClick={onClick}
