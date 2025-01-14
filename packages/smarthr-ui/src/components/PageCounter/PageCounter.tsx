@@ -25,7 +25,7 @@ const pageCounter = tv({ base: 'shr-text-base' })
 export const PageCounter: React.FC<Props & ElementProps> = ({
   start,
   end,
-  total = 0,
+  total,
   decorators,
   className,
   ...props
@@ -64,8 +64,8 @@ const BoldNumber = React.memo<{ children: number }>(({ children }) => (
   </Text>
 ))
 
-const Total = React.memo<{ children: number }>(
-  ({ children }) =>
+const Total = React.memo<{ children: number | undefined }>(
+  ({ children = 0 }) =>
     children > 0 && (
       <>
         <span>/</span>
