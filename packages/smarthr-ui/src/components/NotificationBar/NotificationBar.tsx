@@ -217,9 +217,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     <WrapBase {...baseProps}>
       <div {...props} className={wrapperStyle} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
-          <div className={iconWrapperStyle}>
-            <Icon text={message} iconGap={0.5} className={iconStyle} />
-          </div>
+          <IconArea message={message} iconWrapperStyle={iconWrapperStyle} iconStyle={iconStyle} />
           {children && (
             <Cluster align="center" justify="flex-end" className={actionAreaStyle}>
               {children}
@@ -231,6 +229,14 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     </WrapBase>
   )
 }
+
+const IconArea = React.memo<
+  Pick<Props, 'message'> & { iconWrapperStyle: string; iconStyle: string }
+>(({ message, iconWrapperStyle, iconStyle }) => (
+  <div className={iconWrapperStyle}>
+    <Icon text={message} iconGap={0.5} className={iconStyle} />
+  </div>
+))
 
 const CloseButton = React.memo<Pick<Props, 'onClose'> & { className: string }>(
   ({ onClose, className }) =>
