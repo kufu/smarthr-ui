@@ -51,11 +51,6 @@ export const notificationBar = tv({
         icon: 'shr-text-main',
       },
     },
-    /** 強調するかどうか */
-    bold: {
-      true: '',
-      false: '',
-    },
     /** スライドインするかどうか */
     animate: {
       true: {
@@ -141,7 +136,7 @@ type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
 
 export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   type,
-  bold = false,
+  bold,
   animate,
   message,
   onClose,
@@ -195,9 +190,10 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   } = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
       type,
-      bold,
+      bold: !!bold,
       base,
     })
+
     return {
       wrapperStyle: wrapper({ animate, className }),
       innerStyle: inner(),
