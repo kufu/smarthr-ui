@@ -50,21 +50,21 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
 
   return (
     <Cluster {...props} gap={0.25} inline align="baseline" className={pageCounter({ className })}>
-      <Text weight="bold" as="b">
-        {start.toLocaleString()}
-      </Text>
+      <BoldNumber>{start}</BoldNumber>
       <RangeSeparator decorators={rangeSeparatorDecorators} />
-      <Text weight="bold" as="b">
-        {end.toLocaleString()}
-      </Text>
+      <BoldNumber>{end}</BoldNumber>
       {total > 0 && (
         <>
           <span>/</span>
-          <Text weight="bold" as="b">
-            {total.toLocaleString()}
-          </Text>
+          <BoldNumber>{total}</BoldNumber>
         </>
       )}
     </Cluster>
   )
 }
+
+const BoldNumber = React.memo<{ children: number }>(() => (
+  <Text weight="bold" as="b">
+    {children.toLocaleString()}
+  </Text>
+))
