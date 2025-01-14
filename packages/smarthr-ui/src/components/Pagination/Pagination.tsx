@@ -48,7 +48,8 @@ type BaseProps = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 type Props = BaseProps & ElementProps
 
-export const Pagination: React.FC<Props> = (props) => props.total > 1 ? (<ActualPagination {...props} />) : null
+export const Pagination: React.FC<Props> = (props) =>
+  props.total > 1 ? <ActualPagination {...props} /> : null
 
 const ActualPagination: React.FC<Props> = ({
   total,
@@ -57,7 +58,7 @@ const ActualPagination: React.FC<Props> = ({
   padding = 4,
   className,
   withoutNumbers = false,
-  ...props,
+  ...props
 }) => {
   const {
     wrapperStyle,
@@ -80,21 +81,24 @@ const ActualPagination: React.FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const pages = !withoutNumbers
-    ? [
-        ...range(current - padding, current).filter((page) => page >= 1),
-        ...range(current, current + padding + 1).filter((page) => page <= total),
-      ].map((page) => (
-        <li
-          key={`pagination-${page}`}
-          className={
-            page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'
-          }
-        >
-          <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
-        </li>
-      ))
-    : null
+  const pageNumbers = useMemo(() => {
+    if (withoutNumbers) {
+      return []
+    }
+
+    return [
+      ...range(current - padding, current).filter((page) => page >= 1),
+      ...range(current, current + padding + 1).filter((page) => page <= total),
+    ]
+  }, [withoutNumbers])
+  const pages = pageNumbers.map((page) => (
+    <li
+      key={`pagination-${page}`}
+      className={page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'}
+    >
+      <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
+    </li>
+  ))
 
   const disabledPrev = current === 1
   const disabledNext = current === total
