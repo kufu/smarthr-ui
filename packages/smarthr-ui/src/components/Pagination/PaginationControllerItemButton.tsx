@@ -11,7 +11,7 @@ import {
 
 type Props = {
   targetPage: number
-  onClick: (pageNumber: number) => void
+  onClick: () => void
   direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
@@ -37,16 +37,11 @@ export const PaginationControllerItemButton: React.FC<Props> = ({
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
-  const actualOnClick = useCallback(
-    (e: React.MouseEvent) => onClick(parseInt(e.currentTarget.value, 10)),
-    [],
-  )
-
   return (
     <Button
       aria-label={alt}
       disabled={disabled}
-      onClick={actualOnClick}
+      onClick={onClick}
       value={targetPage}
       square
       size="s"

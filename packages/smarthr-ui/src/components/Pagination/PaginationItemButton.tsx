@@ -5,7 +5,7 @@ import { Button } from '../Button'
 type Props = {
   page: number
   currentPage: number
-  onClick: (pageNumber: number) => void
+  onClick: () => void
 }
 
 export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
@@ -23,15 +23,10 @@ export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onCli
     return result
   }, [currentPage, page])
 
-  const actualOnClick = useCallback(
-    (e: React.MouseEvent) => onClick(parseInt(e.currentTarget.value, 10)),
-    [],
-  )
-
   return (
     <Button
       {...attrs}
-      onClick={actualOnClick}
+      onClick={onClick}
       value={page}
       square
       size="s"

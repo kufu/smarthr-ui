@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useMemo } from 'react'
+import React, { HTMLAttributes, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -101,6 +101,11 @@ const ActualPagination: React.FC<Props> = ({
     direction: 'next',
   }
 
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent) => onClick(parseInt(e.currentTarget.value, 10)),
+    [onClick],
+  )
+
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Nav {...props} className={wrapperStyle} aria-label="ページネーション">
@@ -109,7 +114,7 @@ const ActualPagination: React.FC<Props> = ({
           <li className={firstListItemStyle}>
             <PaginationControllerItemButton
               {...prevAttrs}
-              onClick={onClick}
+              onClick={actualOnClick}
               targetPage={1}
               double
             />
@@ -117,7 +122,7 @@ const ActualPagination: React.FC<Props> = ({
           <li className={prevListItemStyle}>
             <PaginationControllerItemButton
               {...prevAttrs}
-              onClick={onClick}
+              onClick={actualOnClick}
               targetPage={current - 1}
             />
           </li>
@@ -126,20 +131,20 @@ const ActualPagination: React.FC<Props> = ({
               key={page}
               className={`smarthr-ui-Pagination-${page === current ? 'current' : 'page'}`}
             >
-              <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
+              <PaginationItemButton page={page} currentPage={current} onClick={actualOnClick} />
             </li>
           ))}
           <li className={nextListItemStyle}>
             <PaginationControllerItemButton
               {...nextAttrs}
-              onClick={onClick}
+              onClick={actualOnClick}
               targetPage={current + 1}
             />
           </li>
           <li className={lastListItemStyle}>
             <PaginationControllerItemButton
               {...nextAttrs}
-              onClick={onClick}
+              onClick={actualOnClick}
               targetPage={total}
               double
             />
