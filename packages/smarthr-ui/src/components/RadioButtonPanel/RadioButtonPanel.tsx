@@ -10,7 +10,7 @@ type Props = ComponentProps<typeof RadioButton> & {
   as?: string | React.ComponentType<any>
 }
 
-const MEANLESS_TAG_NAMES = ['div', 'span']
+const MEANLESS_TAG_NAME_REGEX = /^(div|span)$/
 
 const radioButtonPanel = tv({
   base: [
@@ -34,6 +34,10 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
     () => radioButtonPanel({ disabled: !!props.disabled, className }),
     [props.disabled, className],
   )
+  const role = useMemo(
+    () => (MEANLESS_TAG_NAME_REGEX.test(as ? `${as}` : '') ? 'presentation' : undefined),
+    [as],
+  )
 
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
@@ -43,13 +47,7 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <Base
-      padding={1}
-      role={MEANLESS_TAG_NAMES.includes(`${as || ''}`) ? 'presentation' : undefined}
-      onClick={handleOuterClick}
-      as={as}
-      className={styles}
-    >
+    <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={styles}>
       <RadioButton {...props} ref={innerRef} />
     </Base>
   )
