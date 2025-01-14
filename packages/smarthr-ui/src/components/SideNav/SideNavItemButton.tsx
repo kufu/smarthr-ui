@@ -64,7 +64,7 @@ export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, si
     const { wrapper, button, buttonInner } = sideNavItem()
 
     return {
-      wrapperStyle: wrapper({ selected: isSelected || false }),
+      wrapperStyle: wrapper({ selected: !!isSelected }),
       buttonStyle: button({ size }),
       buttonInnerStyle: buttonInner(),
     }
