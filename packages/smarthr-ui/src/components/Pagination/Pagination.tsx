@@ -124,7 +124,7 @@ const ActualPagination: React.FC<Props> = ({
           {pageNumbers.map((page) => (
             <li
               key={page}
-              className={page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'}
+              className={`smarthr-ui-Pagination-${page === current ? 'current' : 'page'}`}
             >
               <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
             </li>
