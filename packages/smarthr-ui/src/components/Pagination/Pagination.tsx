@@ -92,8 +92,14 @@ const ActualPagination: React.FC<Props> = ({
     ]
   }, [current, total, padding, withoutNumbers])
 
-  const disabledPrev = current === 1
-  const disabledNext = current === total
+  const prevAttrs = {
+    disabled: current === 1,
+    direction: 'prev',
+  }
+  const nextAttrs = {
+    disabled: current === total,
+    direction: 'next',
+  }
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
@@ -102,19 +108,17 @@ const ActualPagination: React.FC<Props> = ({
         <Cluster as="ul" className={listStyle}>
           <li className={firstListItemStyle}>
             <PaginationControllerItemButton
+              {...prevAttrs}
               onClick={onClick}
-              direction="prev"
               targetPage={1}
-              disabled={disabledPrev}
               double
             />
           </li>
           <li className={prevListItemStyle}>
             <PaginationControllerItemButton
+              {...prevAttrs}
               onClick={onClick}
-              direction="prev"
               targetPage={current - 1}
-              disabled={disabledPrev}
             />
           </li>
           {pageNumbers.map((page) => (
@@ -127,18 +131,16 @@ const ActualPagination: React.FC<Props> = ({
           ))}
           <li className={nextListItemStyle}>
             <PaginationControllerItemButton
+              {...nextAttrs}
               onClick={onClick}
-              direction="next"
               targetPage={current + 1}
-              disabled={disabledNext}
             />
           </li>
           <li className={lastListItemStyle}>
             <PaginationControllerItemButton
+              {...nextAttrs}
               onClick={onClick}
-              direction="next"
               targetPage={total}
-              disabled={disabledNext}
               double
             />
           </li>
