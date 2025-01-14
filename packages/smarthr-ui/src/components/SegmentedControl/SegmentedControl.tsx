@@ -152,6 +152,14 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     [options, value],
   )
 
+  const actualOnClickOption = useMemo(
+    () =>
+      onClickOption
+        ? (e: React.MouseEvent<HTMLButtonElement>) => onClickOption(e.currentTarget.value)
+        : undefined,
+    [onClickOption],
+  )
+
   return (
     <div
       {...props}
@@ -167,7 +175,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
             key={option.value}
             option={option}
             index={index}
-            onClickOption={onClickOption}
+            onClick={actualOnClickOption}
             size={size}
             isSquare={isSquare}
             value={value}
@@ -182,7 +190,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 }
 
 const SegmentedControlButton: FC<
-  Pick<Props, 'onClickOption' | 'size' | 'isSquare' | 'value'> & {
+  Pick<Props, 'size' | 'isSquare' | 'value'> & {
+    onClick: undefined | ((e: React.MouseEvent<HTMLButtonElement>) => void)
     option: Props['options'][number]
     index: number
     isFocused: boolean
@@ -190,7 +199,7 @@ const SegmentedControlButton: FC<
     buttonStyle: string
   }
 > = ({
-  onClickOption,
+  onClick,
   size,
   isSquare,
   value,
@@ -200,10 +209,6 @@ const SegmentedControlButton: FC<
   excludesSelected,
   buttonStyle,
 }) => {
-  const onClick = useMemo(
-    () => (onClickOption ? () => onClickOption(option.value) : undefined),
-    [option.value, onClickOption],
-  )
   const checked = value === option.value
   const tabIndex = useMemo(() => {
     if (isFocused) {
@@ -224,6 +229,7 @@ const SegmentedControlButton: FC<
       aria-checked={checked && !!value}
       disabled={option.disabled}
       tabIndex={tabIndex}
+      value={option.value}
       onClick={onClick}
       size={size}
       square={isSquare}
