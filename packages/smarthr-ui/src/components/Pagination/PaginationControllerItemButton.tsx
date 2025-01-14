@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import { Button } from '../Button'
 import {
@@ -37,14 +37,20 @@ export const PaginationControllerItemButton: React.FC<Props> = ({
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent) => onClick(parseInt(e.currentTarget.value, 10)),
+    [],
+  )
+
   return (
     <Button
+      aria-label={alt}
+      disabled={disabled}
+      onClick={actualOnClick}
+      value={targetPage}
       square
       size="s"
       className="shr-rounded-s"
-      onClick={() => onClick(targetPage)}
-      disabled={disabled}
-      aria-label={alt}
     >
       <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
     </Button>
