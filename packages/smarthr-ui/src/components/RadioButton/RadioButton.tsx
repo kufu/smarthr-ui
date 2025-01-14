@@ -92,13 +92,19 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
           />
           <span className={boxStyle} aria-hidden="true" />
         </span>
-
-        {children && (
-          <label htmlFor={radioButtonId} className={labelStyle}>
-            {children}
-          </label>
-        )}
+        <LabeledChildren htmlFor={radioButtonId} className={labelStyle}>
+          {children}
+        </LabeledChildren>
       </span>
     )
   },
+)
+
+const LabeledChildren = React.memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
+  ({ htmlFor, className, children }) =>
+    children && (
+      <label htmlFor={htmlFor} className={className}>
+        {children}
+      </label>
+    ),
 )
