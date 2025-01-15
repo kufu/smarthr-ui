@@ -75,7 +75,7 @@ export type Props = VariantProps<typeof inputFile> & {
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
 
 const DESTROY_BUTTON_TEXT = '削除'
-const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 }
+const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
@@ -180,7 +180,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         {!disabled && hasFileList && files.length > 0 && (
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileListStyle}>
             {files.map((file, index) => (
-              <li key={`${file.name}-${index}`} className={fileItemStyle}>
+              <li key={index} className={fileItemStyle}>
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
                 <Button
                   variant="text"
