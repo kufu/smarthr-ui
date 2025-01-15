@@ -85,13 +85,13 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       [formatValue, onFocus],
     )
 
-    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    const handleBlur = useCallback((e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(false)
 
       if (onBlur) {
         onBlur(e)
       }
-    }
+    }, [onBlur])
 
     const classNames = useClassNames()
 
