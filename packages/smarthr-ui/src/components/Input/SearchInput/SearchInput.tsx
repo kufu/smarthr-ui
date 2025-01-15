@@ -32,9 +32,12 @@ const searchInput = tv({
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ decorators, width, className, ...rest }, ref) => {
     const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
-    const labelStyleAttr = useMemo(() => ({
-      width: typeof width === 'number' ? `${width}px` : width,
-    }), [width])
+    const labelStyleAttr = useMemo(
+      () => ({
+        width: typeof width === 'number' ? `${width}px` : width,
+      }),
+      [width],
+    )
     const { label, input } = searchInput({ existsWidth: !!labelStyleAttr.width })
 
     return (
@@ -42,10 +45,14 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
+          prefix={<MemoizedFaMagnifyingGlassIcon alt={iconAlt} />}
           className={input()}
         />
       </label>
     )
   },
 )
+
+const MemoizedFaMagnifyingGlassIcon = React.memo<{ alt: React.ReactNode }>(({ alt }) => (
+  <FaMagnifyingGlassIcon alt={alt} color="TEXT_GREY" />
+))
