@@ -114,12 +114,20 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
-    const rowGap = gap instanceof Object ? gap.row : gap
-    const columnGap = gap instanceof Object ? gap.column : gap
+    const gaps = useMemo(() => {
+      if (gap instanceof Object) {
+        return gap
+      }
+
+      return {
+        row: gap,
+        column: gap,
+      }
+    }, [gap])
 
     const wrapperStyle = useMemo(
-      () => sidebar({ align, rowGap, columnGap, className }),
-      [align, rowGap, columnGap, className],
+      () => sidebar({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
+      [align, gaps.row, gaps.column, className],
     )
     const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
       const { firstItem, lastItem } = sidebarItem({ right })
@@ -150,8 +158,7 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
             className: `${firstItemStyleProps.className} ${childClassName}`,
             style: { ...firstItemStyleProps.style, ...child.props.style },
           })
-        }
-        if (i === maxChildrenIndex) {
+        } else if (i === maxChildrenIndex) {
           return React.cloneElement(child as ReactElement, {
             className: `${lastItemStyleProps.className} ${childClassName}`,
             style: { ...lastItemStyleProps.style, ...child.props.style },
