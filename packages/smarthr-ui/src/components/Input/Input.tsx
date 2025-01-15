@@ -6,6 +6,7 @@ import React, {
   ReactNode,
   WheelEvent,
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -123,6 +124,8 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       [props.type],
     )
 
+    const onClickFocus = useCallback(() => innerRef.current?.focus(), [])
+
     useEffect(() => {
       if (autoFocus && innerRef.current) {
         innerRef.current.focus()
@@ -155,10 +158,8 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     }, [])
 
     return (
-      <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()} role="presentation">
-        {prefix && (
-          <span className={innerStyleProps.prefix}>{prefix}</span>
-        )}
+      <span {...wrapperStyleProps} onClick={onClickFocus} role="presentation">
+        {prefix && <span className={innerStyleProps.prefix}>{prefix}</span>}
         <input
           {...props}
           data-smarthr-ui-input="true"
@@ -171,9 +172,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
           aria-invalid={error || undefined}
           className={innerStyleProps.input}
         />
-        {suffix && (
-          <span className={innerStyleProps.suffix}>{suffix}</span>
-        )}
+        {suffix && <span className={innerStyleProps.suffix}>{suffix}</span>}
       </span>
     )
   },
