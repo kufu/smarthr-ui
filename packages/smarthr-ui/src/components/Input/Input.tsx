@@ -134,6 +134,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       const color = bgColor
         ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
         : undefined
+
       return {
         className: wrapperStyle,
         style: {
@@ -143,12 +144,20 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
         },
       }
     }, [bgColor, className, disabled, readOnly, width])
-    const { input, affix } = inner()
+    const innerStyleProps = useMemo(() => {
+      const { input, affix } = inner()
+
+      return {
+        input: input(),
+        prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
+        suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
+      }
+    }, [])
 
     return (
       <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()} role="presentation">
         {prefix && (
-          <span className={affix({ className: 'smarthr-ui-Input-prefix' })}>{prefix}</span>
+          <span className={innerStyleProps.prefix}>{prefix}</span>
         )}
         <input
           {...props}
@@ -160,10 +169,10 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
           readOnly={readOnly}
           ref={innerRef}
           aria-invalid={error || undefined}
-          className={input()}
+          className={innerStyleProps.input}
         />
         {suffix && (
-          <span className={affix({ className: 'smarthr-ui-Input-suffix' })}>{suffix}</span>
+          <span className={innerStyleProps.suffix}>{suffix}</span>
         )}
       </span>
     )
