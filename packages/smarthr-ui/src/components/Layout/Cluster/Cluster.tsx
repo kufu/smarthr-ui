@@ -97,7 +97,7 @@ type Props<T extends React.ElementType> = PropsWithChildren<
 > &
   ComponentPropsWithoutRef<T>
 
-const _Cluster = <T extends React.ElementType = 'div'>(
+const ActualCluster = <T extends React.ElementType = 'div'>(
   { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
@@ -119,4 +119,4 @@ const _Cluster = <T extends React.ElementType = 'div'>(
   )
 }
 
-export const Cluster = genericsForwardRef(_Cluster)
+export const Cluster = genericsForwardRef(ActualCluster)

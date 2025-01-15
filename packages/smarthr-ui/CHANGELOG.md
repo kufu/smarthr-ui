@@ -2,6 +2,72 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [64.0.0](https://github.com/kufu/smarthr-ui/compare/v63.0.0...v64.0.0) (2025-01-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* FormControl,Fieldsetのtitleにアイコンやボタンを含めずマークアップできるよう属性を追加 (#5235)
+
+### Features
+
+* FormControl,Fieldsetのtitleにアイコンやボタンを含めずマークアップできるよう属性を追加 ([#5235](https://github.com/kufu/smarthr-ui/issues/5235)) ([042e888](https://github.com/kufu/smarthr-ui/commit/042e888c24234e733fc8dbb9443acfb93359b0e3))
+
+
+### Bug Fixes
+
+* Textareaの文字数カウントテキストの生成時、ReactComponentが利用される場合があることの考慮漏れを対応 ([#5269](https://github.com/kufu/smarthr-ui/issues/5269)) ([9dbd633](https://github.com/kufu/smarthr-ui/commit/9dbd633f38800649bf51d57f8f2b5d398c3d9940))
+
+## [63.0.0](https://github.com/kufu/smarthr-ui/compare/v62.3.1...v63.0.0) (2025-01-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **typo:** BACKGRUOND → BACKGROUND (#5230)
+
+### Bug Fixes
+
+* **typo:** BACKGRUOND → BACKGROUND ([#5230](https://github.com/kufu/smarthr-ui/issues/5230)) ([efd166a](https://github.com/kufu/smarthr-ui/commit/efd166aa2c9632b583e7244344da8faa0daeed76))
+
+### [62.3.1](https://github.com/kufu/smarthr-ui/compare/v62.3.0...v62.3.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* AppHeader を Server Component から呼べるようにする ([#5226](https://github.com/kufu/smarthr-ui/issues/5226)) ([cc9c481](https://github.com/kufu/smarthr-ui/commit/cc9c4812d05ff76a9a855f5907cd13bd7baa19ff))
+
+## [62.3.0](https://github.com/kufu/smarthr-ui/compare/v62.2.3...v62.3.0) (2024-12-24)
+
+
+### Features
+
+* AppHeader コンポーネントを追加  ([#5203](https://github.com/kufu/smarthr-ui/issues/5203)) ([4804f44](https://github.com/kufu/smarthr-ui/commit/4804f4479a1173d79a19f1590060131cc67c1c66))
+* WarekiPicker を追加 ([#5196](https://github.com/kufu/smarthr-ui/issues/5196)) ([30ea4bf](https://github.com/kufu/smarthr-ui/commit/30ea4bfdc471e1fa0c800180701796e863353d9d))
+
+### [62.2.3](https://github.com/kufu/smarthr-ui/compare/v62.2.2...v62.2.3) (2024-12-18)
+
+
+### Bug Fixes
+
+* **FormDialog:** コンテンツがスクロールできるよう修正 ([#5192](https://github.com/kufu/smarthr-ui/issues/5192)) ([2af1c20](https://github.com/kufu/smarthr-ui/commit/2af1c20cf5cbab08e58caa0917ad546b62ba49ed))
+* **ModelessDialog:** modeless dialog閉じたときのフォーカス処理修正 ([#5177](https://github.com/kufu/smarthr-ui/issues/5177)) ([1590159](https://github.com/kufu/smarthr-ui/commit/15901594157eb4ecea0667dc492a5f0292bb3abe))
+* **Textarea:** 最大文字数を超えたエラーを色以外でも表現する ([#5084](https://github.com/kufu/smarthr-ui/issues/5084)) ([0cc1ab4](https://github.com/kufu/smarthr-ui/commit/0cc1ab4813f7c7c363d568e225d335619d207779))
+
+### [62.2.2](https://github.com/kufu/smarthr-ui/compare/v62.2.1...v62.2.2) (2024-12-18)
+
+
+### Bug Fixes
+
+* **Th:** ソートアイコンが左寄せになっていたのを修正 ([#5205](https://github.com/kufu/smarthr-ui/issues/5205)) ([85a29ec](https://github.com/kufu/smarthr-ui/commit/85a29ece8ad4ec522f01eee27414aaada7c93fe7))
+
+### [62.2.1](https://github.com/kufu/smarthr-ui/compare/v62.2.0...v62.2.1) (2024-12-17)
+
+
+### Bug Fixes
+
+* **EmptyTableBody:** 文字列が中央揃えになるよう修正 ([#5186](https://github.com/kufu/smarthr-ui/issues/5186)) ([d10d1be](https://github.com/kufu/smarthr-ui/commit/d10d1be73b794ac04939ab9d3a6efd89b97fdc43))
+* nanoidのバージョンを3.3.8にあげる ([#5187](https://github.com/kufu/smarthr-ui/issues/5187)) ([1af0bff](https://github.com/kufu/smarthr-ui/commit/1af0bff2446b09d84eac98974ecb2489c02fd0c4))
+
 ## [62.2.0](https://github.com/kufu/smarthr-ui/compare/v62.1.1...v62.2.0) (2024-12-10)
 
 

@@ -74,6 +74,4 @@ jobs:
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
-          payload: |
-            channel: ${{ github.event.client_payload.channel_id }}
-            text: ${{ github.event.client_payload.say }}
+          payload: ${{ github.event.client_payload.say }}

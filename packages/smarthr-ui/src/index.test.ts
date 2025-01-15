@@ -9,10 +9,12 @@ const readdir = util.promisify(fs.readdir)
 
 const IGNORE_COMPONENTS = ['Experimental']
 const IGNORE_INNER_DIRS = [
-  'FlashMessage/FlashMessageList',
   'Input/InputWithTooltip',
   'Browser/models',
   'stories',
+  'AppHeader/components',
+  'AppHeader/hooks',
+  'AppHeader/multilingualization',
 ]
 
 describe('index', () => {
@@ -33,11 +35,11 @@ describe('index', () => {
       if (innerComponents.length === 0) {
         return
       }
-      const exportedCompoenntsFromInnerDir = await getExportedDirectoryComponents(
+      const exportedComponentsFromInnerDir = await getExportedDirectoryComponents(
         indexPath,
         `./components/${dirName}`,
       )
-      expect(exportedCompoenntsFromInnerDir.sort()).toEqual(
+      expect(exportedComponentsFromInnerDir.sort()).toEqual(
         expect.arrayContaining(innerComponents.sort()),
       )
     })

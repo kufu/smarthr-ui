@@ -60,7 +60,7 @@ export function ButtonWrapper({
   if (props.isAnchor) {
     const { anchorRef, elementAs, isAnchor: _, ...others } = props
     const Component = elementAs || 'a'
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
+
     return <Component {...others} className={anchorStyle} ref={anchorRef} />
   } else {
     const { buttonRef, disabled, onClick, ...others } = props
@@ -230,10 +230,10 @@ const button = tv({
         'shr-text-black',
         'focus-visible:shr-border-darken',
         'focus-visible:shr-bg-white-darken',
-        'focus-visible:constrast-more:shr-border-high-contrast',
+        'focus-visible:contrast-more:shr-border-high-contrast',
         'hover:shr-border-darken',
         'hover:shr-bg-white-darken',
-        'hover:constrast-more:shr-border-high-contrast',
+        'hover:contrast-more:shr-border-high-contrast',
       ],
     },
     {

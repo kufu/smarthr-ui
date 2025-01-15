@@ -7,7 +7,7 @@ import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
 import { CurrencyInput, Input } from '../../Input'
 import { InputFile } from '../../InputFile'
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { MonthPicker, TimePicker } from '../../Picker'
 import { Select } from '../../Select'
 import { STYLE_TYPE_MAP } from '../../Text'
@@ -54,7 +54,7 @@ export default {
   },
   args: {
     title: 'フォームコントロール',
-    // eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
+
     children: <Input />,
   },
   parameters: {
@@ -98,8 +98,20 @@ export const TitleType: StoryObj<typeof FormControl> = {
   ),
 }
 
+export const SubActionArea: StoryObj<typeof FormControl> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: (
+      <Cluster justify="space-between">
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
+      </Cluster>
+    ),
+  },
+}
+
 export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'dangerouslyTitleHidden（非推奨）',
+  name: 'dangerouslyTitleHidden（利用注意）',
   args: {
     dangerouslyTitleHidden: true,
   },
