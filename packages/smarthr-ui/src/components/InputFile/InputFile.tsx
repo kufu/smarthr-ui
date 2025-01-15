@@ -1,5 +1,4 @@
 'use client'
-
 import React, {
   ComponentPropsWithRef,
   ReactNode,
@@ -206,14 +205,22 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
           />
-          <span className={prefixStyle}>
-            <FaFolderOpenIcon />
-          </span>
-          <span id={labelId} aria-hidden="true">
-            {label}
-          </span>
+          <StyledFaFolderOpenIcon className={prefixStyle} />
+          <LabelRender id={labelId} label={label} />
         </span>
       </Stack>
     )
   },
 )
+
+const StyledFaFolderOpenIcon = React.memo<{ className: string }>(({ className }) => (
+  <span className={className}>
+    <FaFolderOpenIcon />
+  </span>
+))
+
+const LabelRender = React.memo<{ id: string; label: ReactNode }>(({ id, label }) => (
+  <span id={id} aria-hidden="true">
+    {label}
+  </span>
+))
