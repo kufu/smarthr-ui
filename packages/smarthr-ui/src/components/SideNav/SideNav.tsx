@@ -55,6 +55,7 @@ export const SideNav: FC<Props & ElementProps> = ({
           return React.cloneElement(
             child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
             {
+              // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
               size,
               ...(childProps.onClick ? {} : { onClick }),
             },

@@ -28,7 +28,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof Props>
 
 const sideNavItem = tv({
   slots: {
-    wrapper: ['smarthr-ui-SideNav-item', 'shr-list-none'],
+    wrapper: ['smarthr-ui-SideNav-item'],
     button: ['shr-w-full shr-leading-none [&]:shr-box-border', 'focus-visible:shr-focus-indicator'],
     buttonInner: 'smarthr-ui-SideNav-itemTitle',
   },
@@ -77,7 +77,7 @@ export const SideNavItemButton: FC<Props & ElementProps> = ({
 
     return {
       wrapperStyle: wrapper({ selected: !!isSelected }),
-      buttonStyle: button({ size }),
+      buttonStyle: button({ size: size ?? 'default' }),
       buttonInnerStyle: buttonInner(),
     }
   }, [isSelected, size])

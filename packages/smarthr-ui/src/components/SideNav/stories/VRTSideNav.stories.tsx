@@ -19,7 +19,7 @@ export default {
     },
   },
   render: (args) => (
-    <Stack gap={2}>
+    <Stack gap={2} className="shr-p-1">
       {[undefined, 'hover', 'focus-visible'].map((id, index) => (
         <React.Fragment key={index}>
           {_casse.map((size, i) => (

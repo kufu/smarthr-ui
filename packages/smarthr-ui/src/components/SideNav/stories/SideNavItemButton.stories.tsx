@@ -11,12 +11,13 @@ export default {
   title: 'Navigation（ナビゲーション）/SideNav/SideNavItemButton',
   component: SideNavItemButton,
   render: (args) => (
-    <ul>
-      <SideNavItemButton {...args}>サイドナビ</SideNavItemButton>
+    <ul className="shr-list-none">
+      <SideNavItemButton {...args} />
     </ul>
   ),
   argTypes: {
     id: { control: 'text' },
+    children: { control: 'text' },
     isSelected: { control: 'boolean' },
     size: {
       description: 'SideNavItemButton に指定せず、SideNav に指定してください。',
@@ -25,17 +26,11 @@ export default {
   },
   args: {
     id: 'id-1',
+    children: 'サイドナビ',
   },
   parameters: {
-    docs: {
-      source: {
-        transform: (code: string) =>
-          code.replace(/<ul>|<\/ul>|<Stack as="ul">|<\/Stack>/g, '').trim(),
-      },
-    },
     chromatic: { disableSnapshot: true },
   },
-  tags: ['skip-test-runner'],
 } as Meta<typeof SideNavItemButton>
 
 export const Playground: StoryObj<typeof SideNavItemButton> = {
@@ -46,6 +41,7 @@ export const Title: StoryObj<typeof SideNavItemButton> = {
   name: 'title（非推奨）',
   args: {
     title: 'サイドナビ',
+    children: undefined,
   },
 }
 
@@ -66,7 +62,7 @@ export const Selected: StoryObj<typeof SideNavItemButton> = {
 export const Size: StoryObj<typeof SideNavItemButton> = {
   name: 'size',
   render: (args) => (
-    <Stack as="ul">
+    <Stack as="ul" className="shr-list-none">
       {[undefined, 'default', 's'].map((size, i) => (
         <SideNavItemButton {...args} id={i.toString()} key={i} size={size as SideNavSizeType}>
           サイドナビ{i + 1}
