@@ -98,25 +98,26 @@ type Props<T extends React.ElementType> = PropsWithChildren<
   ComponentPropsWithoutRef<T>
 
 const ActualCluster = <T extends React.ElementType = 'div'>(
-  {
-    as: Component = 'div',
-    gap = 0.5,
-    inline = false,
-    align,
-    justify,
-    className,
-    ...rest
-  }: Props<T>,
+  { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
-  const rowGap = gap instanceof Object ? gap.row : gap
-  const columnGap = gap instanceof Object ? gap.column : gap
+  const gaps = useMemo(() => {
+    if (gap instanceof Object) {
+      return gap
+    }
+
+    return {
+      row: gap,
+      column: gap,
+    }
+  }, [gap])
 
   const styles = useMemo(
-    () => cluster({ inline, rowGap, columnGap, align, justify, className }),
-    [inline, rowGap, columnGap, align, justify, className],
+    () => cluster({ inline, rowGap: gaps.row, columnGap: gaps.column, align, justify, className }),
+    [inline, gaps.row, gaps.column, align, justify, className],
   )
 
+  const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
 
   return (
