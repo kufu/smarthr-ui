@@ -130,17 +130,28 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
     setActive(activeProps)
   }, [activeProps])
 
-  const { wrapper, header, heading, togglableButton, content } = informationPanel({
-    type,
-    active,
-    bold,
-  })
+  const { wrapperStyle, headerStyle, headingStyle, togglableButtonStyle, contentStyle } =
+    useMemo(() => {
+      const { wrapper, header, heading, togglableButton, content } = informationPanel({
+        type,
+        active,
+        bold,
+      })
+
+      return {
+        wrapperStyle: wrapper({ className }),
+        headerStyle: header(),
+        headingStyle: heading(),
+        togglableButtonStyle: togglableButton(),
+        contentStyle: content(),
+      }
+    }, [active, bold, type, className])
 
   return (
-    <Base {...props} overflow="hidden" as="section" className={wrapper({ className })}>
-      <Cluster align="center" justify="space-between" className={header()}>
+    <Base {...props} overflow="hidden" as="section" className={wrapperStyle}>
+      <Cluster align="center" justify="space-between" className={headerStyle}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <Heading type="blockTitle" tag={titleTag} id={titleId} className={heading()}>
+        <Heading type="blockTitle" tag={titleTag} id={titleId} className={headingStyle}>
           <ResponseMessage type={type} iconGap={0.5}>
             {title}
           </ResponseMessage>
@@ -152,7 +163,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
             onClick={handleClickTrigger}
             aria-expanded={togglable ? active : undefined}
             aria-controls={contentId}
-            className={togglableButton()}
+            className={togglableButtonStyle}
           >
             {active
               ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
@@ -160,7 +171,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
           </Button>
         )}
       </Cluster>
-      <div id={contentId} aria-hidden={!active} className={content()}>
+      <div id={contentId} aria-hidden={!active} className={contentStyle}>
         {children}
       </div>
     </Base>
