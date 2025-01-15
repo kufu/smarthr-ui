@@ -76,6 +76,7 @@ export type Props = VariantProps<typeof inputFile> & {
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
 
 const DESTROY_BUTTON_TEXT = '削除'
+const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 }
 
 export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
@@ -132,8 +133,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         if (isUpdatingFilesDirectly.current) {
           return
         }
-        const newFiles = Array.from(e.target.files ?? [])
-        updateFiles(newFiles)
+
+        updateFiles(Array.from(e.target.files ?? []))
       },
       [isUpdatingFilesDirectly, updateFiles],
     )
@@ -143,13 +144,17 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         if (!inputRef.current) {
           return
         }
+
         const newFiles = files.filter((_, i) => index !== i)
+
         updateFiles(newFiles)
 
         const buff = new DataTransfer()
+
         newFiles.forEach((file) => {
           buff.items.add(file)
         })
+
         isUpdatingFilesDirectly.current = true
         inputRef.current.files = buff.files
         isUpdatingFilesDirectly.current = false
@@ -160,7 +165,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     return (
       <Stack align="flex-start" className={wrapperStyle}>
         {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={{ block: 0.5, inline: 1 }} className={fileList()}>
+          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileList()}>
             {files.map((file, index) => (
               <li key={`${file.name}-${index}`} className={fileItem()}>
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
