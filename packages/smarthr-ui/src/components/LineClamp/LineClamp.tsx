@@ -64,6 +64,10 @@ export const LineClamp: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
+  if (maxLines < 1 || maxLines > 6) {
+    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+  }
+
   const [isTooltipVisible, setTooltipVisible] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const shadowRef = useRef<HTMLSpanElement>(null)
@@ -82,10 +86,6 @@ export const LineClamp: FC<Props & ElementProps> = ({
 
     setTooltipVisible(result)
   }, [maxLines, children])
-
-  if (maxLines < 1) {
-    throw new Error('"maxLines" cannot be less than 0.')
-  }
 
   const { baseStyle, clampedLineStyle, shadowElementWrapperStyle, shadowElementStyle } =
     useMemo(() => {
