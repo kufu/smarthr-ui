@@ -98,7 +98,15 @@ type Props<T extends React.ElementType> = PropsWithChildren<
   ComponentPropsWithoutRef<T>
 
 const ActualCluster = <T extends React.ElementType = 'div'>(
-  { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
+  {
+    as: Component = 'div',
+    gap = 0.5,
+    inline = false,
+    align,
+    justify,
+    className,
+    ...rest
+  }: Props<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
   const rowGap = gap instanceof Object ? gap.row : gap
@@ -109,7 +117,6 @@ const ActualCluster = <T extends React.ElementType = 'div'>(
     [inline, rowGap, columnGap, align, justify, className],
   )
 
-  const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
 
   return (
