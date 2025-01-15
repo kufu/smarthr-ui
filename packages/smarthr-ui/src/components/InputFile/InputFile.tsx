@@ -152,11 +152,12 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const handleDelete = useCallback(
-      (index: number) => {
+      (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!inputRef.current) {
           return
         }
 
+        const index = parseInt(e.currentTarget.value, 10)
         const newFiles = files.filter((_, i) => index !== i)
 
         updateFiles(newFiles)
@@ -184,7 +185,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
                 <Button
                   variant="text"
                   prefix={<FaTrashCanIcon />}
-                  onClick={() => handleDelete(index)}
+                  value={index}
+                  onClick={handleDelete}
                   className="smarthr-ui-InputFile-deleteButton"
                 >
                   {destroyButtonText}
