@@ -96,12 +96,25 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
 
-    const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
-    const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
-    const inputWrapperStyle = useMemo(
-      () => inputWrapper({ size, disabled }),
-      [disabled, inputWrapper, size],
-    )
+    const {
+      wrapperStyle,
+      inputWrapperStyle,
+      fileListStyle,
+      fileItemStyle,
+      inputStyle,
+      prefixStyle,
+    } = useMemo(() => {
+      const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
+
+      return {
+        wrapperStyle: wrapper({ className }),
+        inputWrapperStyle: inputWrapper({ size, disabled }),
+        fileListStyle: fileList(),
+        fileItemStyle: fileItem(),
+        inputStyle: input(),
+        prefixStyle: prefix(),
+      }
+    }, [disabled, size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
@@ -165,9 +178,9 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     return (
       <Stack align="flex-start" className={wrapperStyle}>
         {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileList()}>
+          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileListStyle}>
             {files.map((file, index) => (
-              <li key={`${file.name}-${index}`} className={fileItem()}>
+              <li key={`${file.name}-${index}`} className={fileItemStyle}>
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
                 <Button
                   variant="text"
@@ -188,12 +201,12 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
             type="file"
             onChange={handleChange}
             disabled={disabled}
-            className={input()}
+            className={inputStyle}
             ref={inputRef}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
           />
-          <span className={prefix()}>
+          <span className={prefixStyle}>
             <FaFolderOpenIcon />
           </span>
           <span id={labelId} aria-hidden="true">
