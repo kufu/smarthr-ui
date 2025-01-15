@@ -85,15 +85,18 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       [formatValue, onFocus],
     )
 
-    const handleBlur = useCallback((e: FocusEvent<HTMLInputElement>) => {
-      setIsFocused(false)
+    const handleBlur = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => {
+        setIsFocused(false)
 
-      if (onBlur) {
-        onBlur(e)
-      }
-    }, [onBlur])
+        if (onBlur) {
+          onBlur(e)
+        }
+      },
+      [onBlur],
+    )
 
-    const classNames = useClassNames()
+    const classNames = useClassNames(className)
 
     return (
       <Input
@@ -102,7 +105,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={innerRef}
-        className={`${className} ${classNames.wrapper}`}
+        className={classNames.wrapper}
       />
     )
   },
