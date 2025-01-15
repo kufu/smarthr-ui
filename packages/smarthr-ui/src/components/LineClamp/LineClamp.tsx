@@ -99,7 +99,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
       }
     }, [maxLines, className])
 
-  const ActualLineClamp = () => (
+  const actualLineClamp = (
     <span {...props} className={baseStyle}>
       <span className={clampedLineStyle} ref={ref}>
         {children}
@@ -115,9 +115,9 @@ export const LineClamp: FC<Props & ElementProps> = ({
 
   return isTooltipVisible ? (
     <Tooltip message={children} multiLine vertical="auto">
-      <ActualLineClamp />
+      {actualLineClamp}
     </Tooltip>
   ) : (
-    <ActualLineClamp />
+    actualLineClamp
   )
 }
