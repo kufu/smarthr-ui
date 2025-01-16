@@ -112,7 +112,7 @@ const wrapper = tv({
 })
 
 export const generateIcon = (SvgIcon: IconType) => {
-  const Icon: React.FC<Props> = ({
+  const Icon = React.memo<Props>(({
     color,
     className,
     role = 'img',
@@ -183,7 +183,7 @@ export const generateIcon = (SvgIcon: IconType) => {
         {svgIcon}
       </>
     )
-  }
+  })
 
   Icon.displayName = SvgIcon.name
 
