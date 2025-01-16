@@ -6,16 +6,17 @@ import React, {
   ReactNode,
   useMemo,
 } from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Variant } from './types'
 
 type BaseProps = {
   size: 'default' | 's'
-  square: boolean
+  square?: boolean
   wide: boolean
   variant: Variant
-  $loading?: boolean
+  loading?: boolean
   className: string
   children: ReactNode
   elementAs?: ElementType
@@ -38,16 +39,17 @@ export function ButtonWrapper({
   size,
   square,
   wide = false,
-  $loading,
+  loading,
   className,
   ...props
 }: Props) {
   const { buttonStyle, anchorStyle } = useMemo(() => {
+    const _square = square ?? !innerText(props.children)
     const { default: defaultButton, anchor } = button({
       variant,
       size,
-      square,
-      loading: $loading,
+      square: _square,
+      loading,
       wide,
     })
 
@@ -55,7 +57,7 @@ export function ButtonWrapper({
       buttonStyle: defaultButton({ className }),
       anchorStyle: anchor({ className }),
     }
-  }, [$loading, className, size, square, variant, wide])
+  }, [loading, className, size, square, variant, wide, props.children])
 
   if (props.isAnchor) {
     const { anchorRef, elementAs, isAnchor: _, ...others } = props
