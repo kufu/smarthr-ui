@@ -12,7 +12,7 @@ import { ResponseMessage } from '../ResponseMessage'
 
 import type { DecoratorsType } from '../../types'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
   title: React.ReactNode
   /**
@@ -27,6 +27,8 @@ type Props = PropsWithChildren<{
   decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
 }> &
   VariantProps<typeof informationPanel>
+
+type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
 const OPEN_BUTTON_LABEL = '開く'
 const CLOSE_BUTTON_LABEL = '閉じる'
@@ -101,11 +103,11 @@ export const informationPanel = tv({
   ],
 })
 
-export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> = ({
+export const InformationPanel: FC<Props> = ({
   title,
   titleTag,
   type = 'info',
-  togglable = false,
+  togglable,
   active: activeProps = true,
   bold,
   className,
@@ -117,14 +119,6 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
   const [active, setActive] = useState(activeProps)
   const titleId = useId()
   const contentId = useId()
-
-  const handleClickTrigger = useCallback(() => {
-    if (onClickTrigger) {
-      onClickTrigger(active)
-    } else {
-      setActive(!active)
-    }
-  }, [active, onClickTrigger])
 
   useEffect(() => {
     setActive(activeProps)
@@ -174,23 +168,49 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
           </ResponseMessage>
         </Heading>
         {togglable && (
-          <Button
-            suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-            size="s"
-            onClick={handleClickTrigger}
-            aria-expanded={togglable ? active : undefined}
-            aria-controls={contentId}
+          <TogglableButton
+            active={active}
+            onClickTrigger={onClickTrigger}
+            setActive={setActive}
+            contentId={contentId}
             className={currentStyles.togglableButton}
-          >
-            {active
-              ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-              : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
-          </Button>
+          />
         )}
       </Cluster>
       <div id={contentId} aria-hidden={!active} className={currentStyles.content}>
         {children}
       </div>
     </Base>
+  )
+}
+
+const TogglableButton: React.FC<
+  Pick<Props, 'active' | 'onClickTrigger'> & {
+    setActive: (flg: boolean) => void
+    contentId: string
+    className: string
+  }
+> = ({ active, onClickTrigger, setActive, contentId, className }) => {
+  const handleClickTrigger = useCallback(() => {
+    if (onClickTrigger) {
+      onClickTrigger(active)
+    } else {
+      setActive(!active)
+    }
+  }, [active, onClickTrigger])
+
+  return (
+    <Button
+      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+      size="s"
+      onClick={handleClickTrigger}
+      aria-expanded={active}
+      aria-controls={contentId}
+      className={className}
+    >
+      {active
+        ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
+        : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
+    </Button>
   )
 }
