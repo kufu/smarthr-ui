@@ -128,7 +128,7 @@ const Logo = React.memo<
 ))
 
 const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'enableNew'>>(
-  ({ featureName, apps, enableNew }) => {
+  ({ featureName, apps = [], enableNew }) => {
     const decorators = useMemo(() => {
       if (!featureName) {
         return undefined
@@ -137,9 +137,7 @@ const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'ena
       return { triggerLabel: () => featureName }
     }, [featureName])
 
-    return (
-      featureName && <AppLauncher apps={apps || []} enableNew={enableNew} decorators={decorators} />
-    )
+    return featureName && <AppLauncher apps={apps} enableNew={enableNew} decorators={decorators} />
   },
 )
 
