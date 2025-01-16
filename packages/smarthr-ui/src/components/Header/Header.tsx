@@ -95,17 +95,12 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     }
   }, [enableNew, className])
 
-  const actualLogo = useMemo(
-    () => logo || <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />,
-    [logo, enableNew],
-  )
-
   return (
     <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={styles.wrapper}>
       <Cluster align="center" gap={COMMON_GAP}>
-        <a href={logoHref} className={styles.logoLink}>
-          {actualLogo}
-        </a>
+        <Logo href={logoHref} enableNew={enableNew} className={styles.logoLink}>
+          {logo}
+        </Logo>
         {enableNew ? (
           <MemoizedAppLauncher featureName={featureName} apps={apps} enableNew={enableNew} />
         ) : (
@@ -123,6 +118,14 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     </Cluster>
   )
 }
+
+const Logo = React.memo<
+  Pick<Props, 'enableNew'> & { children: Props['logo']; href: Props['href']; className: string }
+>(({ children, href, enableNew, className }) => (
+  <a href={href} className={className}>
+    {children || <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />}
+  </a>
+))
 
 const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'enableNew'>>(
   ({ featureName, apps, enableNew, featureName }) => {
