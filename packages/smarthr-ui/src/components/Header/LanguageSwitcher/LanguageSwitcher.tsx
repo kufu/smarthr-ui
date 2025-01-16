@@ -25,6 +25,8 @@ type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 const TRIGGER_LABEL = 'Language'
 const CHECK_ICON_ALT = '選択中'
+const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
+const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
 
 const appLauncher = tv({
   slots: {
@@ -107,26 +109,21 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, target, currentTarget } = e
 
-    if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+    if (!ARROW_KEY_REGEX.test(key)) {
       return
     }
-
-    const isUp = key === 'ArrowUp' || key === 'ArrowLeft'
-    const isDown = key === 'ArrowDown' || key === 'ArrowRight'
 
     e.preventDefault()
 
     const buttons = tabbable(currentTarget)
     const i = buttons.indexOf(target as HTMLElement)
 
-    if (isDown) {
-      if (i + 1 === buttons.length) {
-        buttons.at(0)?.focus()
-      } else {
-        buttons.at(i + 1)?.focus()
-      }
-    } else if (isUp) {
+    if (ARROW_UPS_REGEX.test(key)) {
       buttons.at(i - 1)?.focus()
+    } else if (i + 1 === buttons.length) {
+      buttons.at(0)?.focus()
+    } else {
+      buttons.at(i + 1)?.focus()
     }
   }
 
