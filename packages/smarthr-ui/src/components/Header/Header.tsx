@@ -64,7 +64,7 @@ type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
 
 export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   enableNew,
-  logo = <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />,
+  logo,
   logoHref = '/',
   featureName,
   apps = [],
@@ -81,6 +81,9 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     tenantNameText,
     actions,
   } = header({ enableNew })
+
+  const actualLogo = useMemo(() => logo || <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />, [logo, enableNew])
+
   const currentTenantName = useMemo(() => {
     if (tenants && tenants.length >= 1) {
       const current = tenants.find(({ id }) => id === currentTenantId)
@@ -116,7 +119,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     >
       <Cluster align="center" gap={{ column: 0.25, row: 0 }}>
         <a href={logoHref} className={logoLink()}>
-          {logo}
+          {actualLogo}
         </a>
         {enableNew
           ? featureName && (
