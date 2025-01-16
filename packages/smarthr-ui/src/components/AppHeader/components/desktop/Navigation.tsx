@@ -1,10 +1,23 @@
 import React, { ComponentProps, FC, Fragment, ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { AppNavi } from '../../../AppNavi'
+import {
+  AppNavi,
+  AppNaviAnchor,
+  AppNaviButton,
+  AppNaviCustomTag,
+  AppNaviDropdownMenuButton,
+} from '../../../AppNavi'
+import { AnchorButton, Button } from '../../../Button'
+import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
 import { Text } from '../../../Text'
-import { ChildNavigation, Navigation as NavigationType, ReleaseNoteProps } from '../../types'
+import {
+  ChildNavigation,
+  ChildNavigationGroup,
+  Navigation as NavigationType,
+  ReleaseNoteProps,
+} from '../../types'
 import { isChildNavigation, isChildNavigationGroup } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 
@@ -33,24 +46,24 @@ export const Navigation: FC<Props> = ({
   additionalContent,
   releaseNote,
   enableNew,
-}) => {
-  const buttons = buildButtonsFromNavigations(navigations)
+}) => (
+  // const buttons = buildButtonsFromNavigations(navigations)
 
-  return (
-    <AppNavi
-      label={enableNew ? undefined : appName}
-      buttons={buttons}
-      className={appNavi({ withReleaseNote: !!releaseNote })}
-      displayDropdownCaret
-      additionalArea={
-        <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
-          {additionalContent}
-          {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
-        </Cluster>
-      }
-    />
-  )
-}
+  <AppNavi
+    label={enableNew ? undefined : appName}
+    // buttons={buttons}
+    className={appNavi({ withReleaseNote: !!releaseNote })}
+    displayDropdownCaret
+    additionalArea={
+      <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
+        {additionalContent}
+        {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
+      </Cluster>
+    }
+  >
+    {buildNavigations(navigations)}
+  </AppNavi>
+)
 
 const navigationTitle = tv({
   base: ['shr-px-1 shr-pt-0.5 shr-pb-0.25'],
@@ -59,6 +72,56 @@ const navigationTitle = tv({
 const separator = tv({
   base: ['[&&]:shr-mx-0 [&&]:shr-my-0.5 [&&]:shr-border-b-shorthand'],
 })
+
+const buildNavigations = (
+  navigations: NavigationType[],
+): ComponentProps<typeof AppNavi>['children'] => (
+  <>
+    {navigations.map((navigation) => {
+      if ('elementAs' in navigation) {
+        return <AppNaviCustomTag {...navigation} key="hoge" tag={navigation.elementAs} />
+      }
+      if ('href' in navigation) {
+        return <AppNaviAnchor {...navigation} key="hoge" />
+      }
+      if ('childNavigations' in navigation) {
+        return (
+          <AppNaviDropdownMenuButton label={navigation.children} key="hoge">
+            {buildDropdownMenu(navigation.childNavigations)}
+          </AppNaviDropdownMenuButton>
+        )
+      }
+
+      return <AppNaviButton {...navigation} key="hoge" />
+    })}
+  </>
+)
+
+const buildDropdownMenu = (
+  navigations: Array<ChildNavigation | ChildNavigationGroup>,
+): ComponentProps<typeof AppNaviDropdownMenuButton>['children'] => (
+  <>
+    {navigations.map((navigation) => {
+      if ('elementAs' in navigation) {
+        const Component = navigation.elementAs
+        return <Component {...navigation} key="hoge" />
+      }
+      if ('href' in navigation) {
+        return (
+          <AnchorButton {...navigation} aria-current={navigation.current && 'page'} key="hoge" />
+        )
+      }
+      if ('title' in navigation) {
+        return (
+          <DropdownMenuGroup name={navigation.title} key="hoge">
+            {buildDropdownMenu(navigation.childNavigations)}
+          </DropdownMenuGroup>
+        )
+      }
+      return <Button {...navigation} aria-current={navigation.current && 'page'} key="hoge" />
+    })}
+  </>
+)
 
 // TODO smarthr-ui 側でグループ化された Navigation が対応されたら AppNaviDropdownMenuButton を使った実装に変更する
 const buildButtonsFromNavigations = (
