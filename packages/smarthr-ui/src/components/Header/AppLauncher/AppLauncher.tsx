@@ -127,7 +127,14 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                 {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                 <Cluster as="ul" gap={1} className={styles.appList}>
                   {calculatedApps.base.items.map((item) => (
-                    <LinkListItem key={item.label} item={item} className={styles.link} />
+                    <LinkListItem
+                      key={item.label}
+                      href={item.url}
+                      target={item.target}
+                      className={styles.link}
+                    >
+                      {item.label}
+                    </LinkListItem>
                   ))}
                 </Cluster>
               </Stack>
@@ -139,7 +146,14 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                   {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                   <Stack gap={0.5} as="ul" className={styles.appList}>
                     {items.map((item) => (
-                      <LinkListItem key={item.label} item={item} className={styles.link} />
+                      <LinkListItem
+                        key={item.label}
+                        href={item.url}
+                        target={item.target}
+                        className={styles.link}
+                      >
+                        {item.label}
+                      </LinkListItem>
                     ))}
                   </Stack>
                 </Stack>
@@ -164,10 +178,15 @@ const TextLinkToShowAll = React.memo<{ href: string; className: string }>(
     ),
 )
 
-const LinkListItem: React.FC<{ item: AppItem; className: string }> = ({ item, className }) => (
+const LinkListItem = React.memo<{
+  href: AppItem['url']
+  target: AppItem['target']
+  children: AppItem['label']
+  className: string
+}>(({ href, target, children, className }) => (
   <li>
-    <TextLink href={item.url} target={item.target} className={className}>
-      {item.label}
+    <TextLink href={href} target={target} className={className}>
+      {children}
     </TextLink>
   </li>
-)
+))
