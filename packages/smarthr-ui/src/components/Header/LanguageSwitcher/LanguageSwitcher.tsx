@@ -117,14 +117,15 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
 
     const buttons = tabbable(currentTarget)
     const i = buttons.indexOf(target as HTMLElement)
+    let buttonAt = 0
 
     if (ARROW_UPS_REGEX.test(key)) {
-      buttons.at(i - 1)?.focus()
+      buttonAt = i - 1
     } else if (i + 1 === buttons.length) {
-      buttons.at(0)?.focus()
-    } else {
-      buttons.at(i + 1)?.focus()
+      buttonAt = i + 1
     }
+
+    buttons.at(buttonAt)?.focus()
   }
 
   const NarrowTrigger = (
