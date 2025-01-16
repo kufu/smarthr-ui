@@ -107,19 +107,17 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   )
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const { key, target, currentTarget } = e
-
-    if (!ARROW_KEY_REGEX.test(key)) {
+    if (!ARROW_KEY_REGEX.test(e.key)) {
       return
     }
 
     e.preventDefault()
 
-    const buttons = tabbable(currentTarget)
-    const i = buttons.indexOf(target as HTMLElement)
+    const buttons = tabbable(e.currentTarget)
+    const i = buttons.indexOf(e.target as HTMLElement)
     let buttonAt = 0
 
-    if (ARROW_UPS_REGEX.test(key)) {
+    if (ARROW_UPS_REGEX.test(e.key)) {
       buttonAt = i - 1
     } else if (i + 1 === buttons.length) {
       buttonAt = i + 1
