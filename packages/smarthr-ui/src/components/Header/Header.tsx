@@ -121,7 +121,11 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
           currentTenantName && (
             <div className={styles.tenantInfo}>
               {tenants && tenants.length > 1 ? (
-                <MultiTenantDropdownMenuButton label={currentTenantName} tenants={tenants} onTenantSelect={onTenantSelect} />
+                <MultiTenantDropdownMenuButton
+                  label={currentTenantName}
+                  tenants={tenants}
+                  onTenantSelect={onTenantSelect}
+                />
               ) : (
                 <OnlyOneTenant className={styles.tenantNameText}>{currentTenantName}</OnlyOneTenant>
               )}
@@ -150,11 +154,23 @@ const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'ena
   },
 )
 
-const MultiTenantDropdownMenuButton = React.memo<Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: string }>(({ label, tenants, onTenantSelect }) => {
+const MultiTenantDropdownMenuButton = React.memo<
+  Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: string }
+>(({ label, tenants, onTenantSelect }) => {
+  const onClick = useMemo(
+    () =>
+      onTenantSelect
+        ? (e: React.MouseEvent<HTMLButtonElement>) => {
+            onTenantSelect(e.currentTarget.value)
+          }
+        : undefined,
+    [onTenantSelect],
+  )
+
   return (
     <HeaderDropdownMenuButton label={label}>
       {tenants.map(({ id, name }) => (
-        <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
+        <Button key={id} value={id} onClick={onClick}>
           {name}
         </Button>
       ))}
@@ -162,8 +178,10 @@ const MultiTenantDropdownMenuButton = React.memo<Pick<Required<Props>, 'tenants'
   )
 })
 
-const OnlyOneTenant = React.memo<PropsWithChildren<{ className: string }>>(({ className, children }) => (
-  <Text color="TEXT_WHITE" className={className}>
-    {children}
-  </Text>
-))
+const OnlyOneTenant = React.memo<PropsWithChildren<{ className: string }>>(
+  ({ className, children }) => (
+    <Text color="TEXT_WHITE" className={className}>
+      {children}
+    </Text>
+  ),
+)
