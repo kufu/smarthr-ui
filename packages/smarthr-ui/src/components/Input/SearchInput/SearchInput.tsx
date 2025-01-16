@@ -45,14 +45,10 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<MemoizedFaMagnifyingGlassIcon alt={iconAlt} />}
+          prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
           className={input()}
         />
       </label>
     )
   },
 )
-
-const MemoizedFaMagnifyingGlassIcon = React.memo<{ alt: React.ReactNode }>(({ alt }) => (
-  <FaMagnifyingGlassIcon alt={alt} color="TEXT_GREY" />
-))
