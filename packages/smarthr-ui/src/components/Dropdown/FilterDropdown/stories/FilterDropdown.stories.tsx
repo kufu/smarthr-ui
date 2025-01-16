@@ -66,3 +66,10 @@ export const Handlers: StoryObj<typeof FilterDropdown> = {
     onClose: action('close'),
   },
 }
+
+export const OnlyIconTrigger: StoryObj<typeof FilterDropdown> = {
+  name: 'onlyIconTrigger',
+  args: {
+    onlyIconTrigger: true,
+  },
+}

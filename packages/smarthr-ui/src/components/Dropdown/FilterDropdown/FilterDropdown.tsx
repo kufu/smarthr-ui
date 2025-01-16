@@ -29,6 +29,8 @@ type Props = {
   responseMessage?: ResponseMessageType
   /** 引き金となるボタンの大きさ */
   triggerSize?: ButtonProps['size']
+  /** 引き金となるボタンをアイコンのみとするかどうか */
+  onlyIconTrigger?: boolean
 }
 type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
 
@@ -86,6 +88,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   decorators,
   responseMessage,
   triggerSize,
+  onlyIconTrigger = false,
   ...props
 }: Props) => {
   const texts = useMemo(() => {
@@ -175,25 +178,34 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     messageStyle,
   } = styles[isFiltered ? 'filtered' : 'unfiltered']
 
+  const { buttonSuffix, buttonContent } = useMemo(() => {
+    const FilterIcon = (
+      <span className={iconWrapperStyle}>
+        <FaFilterIcon {...(onlyIconTrigger && { alt: texts.triggerButton })} />
+        {isFiltered ? (
+          <FaCircleCheckIcon aria-label={filteredIconAriaLabel} className={filteredIconStyle} />
+        ) : null}
+      </span>
+    )
+
+    return {
+      buttonSuffix: !onlyIconTrigger ? FilterIcon : undefined,
+      buttonContent: onlyIconTrigger ? FilterIcon : texts.triggerButton,
+    }
+  }, [
+    isFiltered,
+    texts.triggerButton,
+    onlyIconTrigger,
+    filteredIconAriaLabel,
+    iconWrapperStyle,
+    filteredIconStyle,
+  ])
+
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger>
-        <Button
-          {...props}
-          suffix={
-            <span className={iconWrapperStyle}>
-              <FaFilterIcon />
-              {isFiltered && (
-                <FaCircleCheckIcon
-                  aria-label={filteredIconAriaLabel}
-                  className={filteredIconStyle}
-                />
-              )}
-            </span>
-          }
-          size={triggerSize}
-        >
-          {texts.triggerButton}
+      <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: texts.triggerButton }}>
+        <Button {...props} suffix={buttonSuffix} square={onlyIconTrigger} size={triggerSize}>
+          {buttonContent}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
