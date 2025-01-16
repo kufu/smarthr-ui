@@ -92,7 +92,9 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   }, [apps])
 
   const styles = useMemo(() => {
-    const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
+    const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({
+      enableNew,
+    })
 
     return {
       appsButton: appsButton(),
@@ -120,27 +122,23 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
         <Stack as="nav" gap={1.5} className={styles.contentWrapper}>
           <Stack gap={1.5}>
             {calculatedApps.base && (
-              <Section>
-                <Stack gap={0.5} className={styles.category}>
-                  <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
-                  {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                  <Cluster as="ul" gap={1} className={styles.appList}>
-                    {appItems(calculatedApps.base.items, styles.link)}
-                  </Cluster>
-                </Stack>
-              </Section>
+              <Stack gap={0.5} className={styles.category} as="section">
+                <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
+                {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+                <Cluster as="ul" gap={1} className={styles.appList}>
+                  {appItems(calculatedApps.base.items, styles.link)}
+                </Cluster>
+              </Stack>
             )}
             <Cluster gap={1.5}>
               {calculatedApps.others.map(({ heading, items }, i) => (
-                <Section key={i}>
-                  <Stack gap={0.5} className={styles.category}>
-                    <Heading type="subSubBlockTitle">{heading}</Heading>
-                    {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                    <Stack gap={0.5} as="ul" className={styles.appList}>
-                      {appItems(items, styles.link)}
-                    </Stack>
+                <Stack key={i} gap={0.5} className={styles.category} as="section">
+                  <Heading type="subSubBlockTitle">{heading}</Heading>
+                  {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+                  <Stack gap={0.5} as="ul" className={styles.appList}>
+                    {appItems(items, styles.link)}
                   </Stack>
-                </Section>
+                </Stack>
               ))}
             </Cluster>
           </Stack>
