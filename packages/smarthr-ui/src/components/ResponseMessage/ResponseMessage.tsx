@@ -31,7 +31,7 @@ const ICON_MAPPER = {
   warning: WarningIcon,
   error: FaCircleExclamationIcon,
   sync: FaRotateIcon,
-}
+} as const
 
 export const ResponseMessage: React.FC<Props> = ({ type = 'info', children, ...other }) => {
   const styles = useMemo(() => responseMessage({ type }), [type])
