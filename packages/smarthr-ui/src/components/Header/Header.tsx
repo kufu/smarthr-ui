@@ -115,31 +115,27 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
         <a href={logoHref} className={styles.logoLink}>
           {actualLogo}
         </a>
-        {enableNew
-          ? featureName && (
-              <AppLauncher
-                apps={apps}
-                enableNew={enableNew}
-                decorators={{ triggerLabel: () => featureName }}
-              />
-            )
-          : currentTenantName && (
-              <div className={styles.tenantInfo}>
-                {tenants && tenants.length > 1 ? (
-                  <HeaderDropdownMenuButton label={currentTenantName}>
-                    {tenants.map(({ id, name }) => (
-                      <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
-                        {name}
-                      </Button>
-                    ))}
-                  </HeaderDropdownMenuButton>
-                ) : (
-                  <Text color="TEXT_WHITE" className={styles.tenantNameText}>
-                    {currentTenantName}
-                  </Text>
-                )}
-              </div>
-            )}
+        {enableNew ? (
+          <MemoizedAppLauncher featureName={featureName} apps={apps} enableNew={enableNew} />
+        ) : (
+          currentTenantName && (
+            <div className={styles.tenantInfo}>
+              {tenants && tenants.length > 1 ? (
+                <HeaderDropdownMenuButton label={currentTenantName}>
+                  {tenants.map(({ id, name }) => (
+                    <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
+                      {name}
+                    </Button>
+                  ))}
+                </HeaderDropdownMenuButton>
+              ) : (
+                <Text color="TEXT_WHITE" className={styles.tenantNameText}>
+                  {currentTenantName}
+                </Text>
+              )}
+            </div>
+          )
+        )}
       </Cluster>
       <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={styles.actions}>
         {children}
@@ -147,3 +143,17 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     </Cluster>
   )
 }
+
+const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'enableNew'>>(
+  ({ featureName, apps, enableNew, featureName }) => {
+    const decorators = useMemo(() => {
+      if (!featureName) {
+        return undefined
+      }
+
+      return { triggerLabel: () => featureName }
+    }, [featureName])
+
+    return featureName && <AppLauncher apps={apps} enableNew={enableNew} decorators={decorators} />
+  },
+)
