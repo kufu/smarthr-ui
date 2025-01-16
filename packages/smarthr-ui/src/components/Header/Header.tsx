@@ -62,15 +62,15 @@ type Props = {
 
 type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
 
-const COMMON_GAP = { column: 0.25, row: 0 }
-const CHILDREN_GAP = { column: 0.5, row: 0.25 }
+const COMMON_GAP = { column: 0.25, row: 0 } as const
+const CHILDREN_GAP = { column: 0.5, row: 0.25 } as const
 
 export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   enableNew,
   logo,
-  logoHref = '/',
+  logoHref,
   featureName,
-  apps = [],
+  apps,
   tenants,
   currentTenantId,
   onTenantSelect,
@@ -120,15 +120,15 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
 }
 
 const Logo = React.memo<
-  Pick<Props, 'enableNew'> & { children: Props['logo']; href: Props['href']; className: string }
+  Pick<Props, 'enableNew'> & { children: Props['logo']; href: Props['logoHref']; className: string }
 >(({ children, href, enableNew, className }) => (
-  <a href={href} className={className}>
+  <a href={href || '/'} className={className}>
     {children || <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />}
   </a>
 ))
 
 const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'enableNew'>>(
-  ({ featureName, apps, enableNew, featureName }) => {
+  ({ featureName, apps, enableNew }) => {
     const decorators = useMemo(() => {
       if (!featureName) {
         return undefined
@@ -137,7 +137,9 @@ const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'ena
       return { triggerLabel: () => featureName }
     }, [featureName])
 
-    return featureName && <AppLauncher apps={apps} enableNew={enableNew} decorators={decorators} />
+    return (
+      featureName && <AppLauncher apps={apps || []} enableNew={enableNew} decorators={decorators} />
+    )
   },
 )
 
@@ -175,7 +177,7 @@ const TenantSwitcher = React.memo<
 })
 
 const MultiTenantDropdownMenuButton = React.memo<
-  Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: string }
+  Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: ReactNode }
 >(({ label, tenants, onTenantSelect }) => {
   const onClick = useMemo(
     () =>
