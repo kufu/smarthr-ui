@@ -106,25 +106,26 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, target, currentTarget } = e
+
     if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(key)) {
       return
     }
+
     const isUp = key === 'ArrowUp' || key === 'ArrowLeft'
     const isDown = key === 'ArrowDown' || key === 'ArrowRight'
 
     e.preventDefault()
+
     const buttons = tabbable(currentTarget)
     const i = buttons.indexOf(target as HTMLElement)
 
     if (isDown) {
       if (i + 1 === buttons.length) {
         buttons.at(0)?.focus()
-        return
+      } else {
+        buttons.at(i + 1)?.focus()
       }
-      buttons.at(i + 1)?.focus()
-      return
-    }
-    if (isUp) {
+    } else if (isUp) {
       buttons.at(i - 1)?.focus()
     }
   }
