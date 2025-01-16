@@ -6,7 +6,6 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
-import { Section } from '../../SectioningContent'
 import { TextLink } from '../../TextLink'
 
 import type { DecoratorsType } from '../../../types'
@@ -69,14 +68,9 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   enableNew,
   ...props
 }) => {
-  const triggerLabel = useMemo(
-    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
-    [decorators],
-  )
-
   const calculatedApps = useMemo(() => {
     const result: {
-      base: Props['apps'][number]
+      base: Props['apps'][number] | undefined
       others: Props['apps']
     } = { base: undefined, others: [] }
 
@@ -108,15 +102,11 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
 
   return (
     <Dropdown {...props}>
-      <DropdownTrigger>
-        <Button
-          prefix={enableNew ?? <FaToolboxIcon />}
-          suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-          className={styles.appsButton}
-        >
-          {triggerLabel}
-        </Button>
-      </DropdownTrigger>
+      <MemoizedDropdownTrigger
+        enableNew={enableNew}
+        decorators={decorators}
+        className={styles.appsButton}
+      />
       <DropdownContent controllable>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Stack as="nav" gap={1.5} className={styles.contentWrapper}>
@@ -124,11 +114,10 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
             {calculatedApps.base && (
               <Stack gap={0.5} className={styles.category} as="section">
                 <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
-                {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                 <Cluster as="ul" gap={1} className={styles.appList}>
-                  {calculatedApps.base.items.map((item) => (
+                  {calculatedApps.base.items.map((item, index) => (
                     <LinkListItem
-                      key={item.label}
+                      key={index}
                       href={item.url}
                       target={item.target}
                       className={styles.link}
@@ -143,11 +132,10 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
               {calculatedApps.others.map(({ heading, items }, i) => (
                 <Stack key={i} gap={0.5} className={styles.category} as="section">
                   <Heading type="subSubBlockTitle">{heading}</Heading>
-                  {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                   <Stack gap={0.5} as="ul" className={styles.appList}>
-                    {items.map((item) => (
+                    {items.map((item, index) => (
                       <LinkListItem
-                        key={item.label}
+                        key={index}
                         href={item.url}
                         target={item.target}
                         className={styles.link}
@@ -167,7 +155,28 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   )
 }
 
-const TextLinkToShowAll = React.memo<{ href: string; className: string }>(
+const MemoizedDropdownTrigger = React.memo<
+  Pick<Props, 'enableNew' | 'decorators'> & { className: string }
+>(({ enableNew, className, decorators }) => {
+  const triggerLabel = useMemo(
+    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
+    [decorators],
+  )
+
+  return (
+    <DropdownTrigger>
+      <Button
+        prefix={enableNew ?? <FaToolboxIcon />}
+        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+        className={className}
+      >
+        {triggerLabel}
+      </Button>
+    </DropdownTrigger>
+  )
+})
+
+const TextLinkToShowAll = React.memo<{ href: Props['urlToShowAll']; className: string }>(
   ({ href, className }) =>
     href && (
       <div className={className}>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactNode, HTMLAttributes, useCallback, useMemo } from 'react'
+import React, { HTMLAttributes, ReactNode, useCallback, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { tabbable } from '../../../libs/tabbable'
@@ -144,7 +144,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
       <DropdownContent onKeyDown={handleKeyDown} role="presentation">
         <ul className={styles.languageItemsList}>
           {locales.map(([code, label]) => (
-            <LanguageListItem
+            <LanguageListItemButton
               key={code}
               code={code}
               className={styles.languageItem}
@@ -154,7 +154,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
               iconAlt={decoratedTexts.checkIconAlt}
             >
               {label}
-            </LanguageListItem>
+            </LanguageListItemButton>
           ))}
         </ul>
       </DropdownContent>
@@ -162,14 +162,14 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   )
 }
 
-const LanguageListItem = React.memo<{
+const LanguageListItemButton = React.memo<{
   code: string
   children: string
   className: string
   buttonStyle: string
   current: boolean
   iconAlt: ReactNode
-  handleLanguageSelect: (e: React.KeyboardEvent<HTMLDivElement>) => void
+  handleLanguageSelect?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }>(({ code, children, buttonStyle, className, current, iconAlt, handleLanguageSelect }) => (
   <li key={code} className={className} aria-current={current} lang={code}>
     <Button
