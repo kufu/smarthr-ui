@@ -112,78 +112,81 @@ const wrapper = tv({
 })
 
 export const generateIcon = (SvgIcon: IconType) => {
-  const Icon = React.memo<Props>(({
-    color,
-    className,
-    role = 'img',
-    alt,
-    'aria-hidden': ariaHidden,
-    focusable = false,
-    text,
-    iconGap = 0.25,
-    right,
-    size,
-    ...props
-  }) => {
-    const hasLabelByAria =
-      props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
-    const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
+  const Icon = React.memo<Props>(
+    ({
+      color,
+      className,
+      role = 'img',
+      alt,
+      'aria-hidden': ariaHidden,
+      focusable = false,
+      text,
+      iconGap = 0.25,
+      right,
+      size,
+      ...props
+    }) => {
+      const hasLabelByAria =
+        props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
+      const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
 
-    const iconStyle = useMemo(() => icon({ className }), [className])
-    const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
+      const iconStyle = useMemo(() => icon({ className }), [className])
+      const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
 
-    const replacedColor = useMemo(() => {
-      if (color && existsColor(color)) {
-        const colorName = colorSet[color]
+      const replacedColor = useMemo(() => {
+        if (color && existsColor(color)) {
+          const colorName = colorSet[color]
 
-        if (colorName in textColor) {
-          return textColor[colorName as keyof typeof textColor]
+          if (colorName in textColor) {
+            return textColor[colorName as keyof typeof textColor]
+          }
+
+          return colors[colorName as keyof typeof colors]
         }
 
-        return colors[colorName as keyof typeof colors]
+        return color
+      }, [color])
+
+      const existsText = !!text
+      const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
+      const svgIcon = (
+        <SvgIcon
+          {...props}
+          stroke="currentColor"
+          fill="currentColor"
+          strokeWidth="0"
+          // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
+          size={iconSize}
+          width={iconSize}
+          height={iconSize}
+          color={replacedColor}
+          className={iconStyle}
+          role={role}
+          aria-hidden={isAriaHidden || alt !== undefined || undefined}
+          focusable={focusable}
+        />
+      )
+      const visuallyHiddenAlt = alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>
+
+      if (existsText) {
+        return (
+          <span className={wrapperStyle}>
+            {right && text}
+            {visuallyHiddenAlt}
+            {svgIcon}
+            {!right && text}
+          </span>
+        )
       }
 
-      return color
-    }, [color])
-
-    const existsText = !!text
-    const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
-    const svgIcon = (
-      <SvgIcon
-        {...props}
-        stroke="currentColor"
-        fill="currentColor"
-        strokeWidth="0"
-        // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
-        size={iconSize}
-        width={iconSize}
-        height={iconSize}
-        color={replacedColor}
-        className={iconStyle}
-        role={role}
-        aria-hidden={isAriaHidden || alt !== undefined || undefined}
-        focusable={focusable}
-      />
-    )
-
-    if (existsText) {
       return (
-        <span className={wrapperStyle}>
-          {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
-          {right && text}
+        <>
+          {visuallyHiddenAlt}
           {svgIcon}
-          {!right && text}
-        </span>
+        </>
       )
-    }
-
-    return (
-      <>
-        {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
-        {svgIcon}
-      </>
-    )
-  })
+    },
+  )
 
   Icon.displayName = SvgIcon.name
 
