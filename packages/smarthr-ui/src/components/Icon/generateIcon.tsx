@@ -126,9 +126,20 @@ export const generateIcon = (SvgIcon: IconType) => {
       size,
       ...props
     }) => {
-      const hasLabelByAria =
-        props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
-      const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
+      const actualAriaHidden = useMemo(() => {
+        if (ariaHidden !== undefined) {
+          return ariaHidden
+        }
+
+        if (
+          alt !== undefined ||
+          (props['aria-label'] === undefined && props['aria-labelledby'] === undefined)
+        ) {
+          return true
+        }
+
+        return undefined
+      }, [ariaHidden, alt, props['aria-label'], props['aria-labelledby']])
 
       const iconStyle = useMemo(() => icon({ className }), [className])
       const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
@@ -162,7 +173,7 @@ export const generateIcon = (SvgIcon: IconType) => {
           color={replacedColor}
           className={iconStyle}
           role={role}
-          aria-hidden={isAriaHidden || alt !== undefined || undefined}
+          aria-hidden={actualAriaHidden}
           focusable={focusable}
         />
       )
