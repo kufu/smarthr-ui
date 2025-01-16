@@ -91,7 +91,18 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
     return result
   }, [apps])
 
-  const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
+  const styles = useMemo(() => {
+    const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
+
+    return {
+      appsButton: appsButton(),
+      contentWrapper: contentWrapper(),
+      category: category(),
+      appList: appList(),
+      link: link(),
+      footer: footer(),
+    }
+  }, [enableNew])
 
   return (
     <Dropdown {...props}>
@@ -99,22 +110,22 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
         <Button
           prefix={enableNew ?? <FaToolboxIcon />}
           suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-          className={appsButton()}
+          className={styles.appsButton}
         >
           {triggerLabel}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <Stack as="nav" gap={1.5} className={contentWrapper()}>
+        <Stack as="nav" gap={1.5} className={styles.contentWrapper}>
           <Stack gap={1.5}>
             {calculatedApps.base && (
               <Section>
-                <Stack gap={0.5} className={category()}>
+                <Stack gap={0.5} className={styles.category}>
                   <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
                   {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                  <Cluster as="ul" gap={1} className={appList()}>
-                    {appItems(calculatedApps.base.items, link())}
+                  <Cluster as="ul" gap={1} className={styles.appList}>
+                    {appItems(calculatedApps.base.items, styles.link)}
                   </Cluster>
                 </Stack>
               </Section>
@@ -122,11 +133,11 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
             <Cluster gap={1.5}>
               {calculatedApps.others.map(({ heading, items }, i) => (
                 <Section key={i}>
-                  <Stack gap={0.5} className={category()}>
+                  <Stack gap={0.5} className={styles.category}>
                     <Heading type="subSubBlockTitle">{heading}</Heading>
                     {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                    <Stack gap={0.5} as="ul" className={appList()}>
-                      {appItems(items, link())}
+                    <Stack gap={0.5} as="ul" className={styles.appList}>
+                      {appItems(items, styles.link)}
                     </Stack>
                   </Stack>
                 </Section>
@@ -135,7 +146,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
           </Stack>
 
           {urlToShowAll && (
-            <div className={footer()}>
+            <div className={styles.footer}>
               <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
                 すべて見る
               </TextLink>
