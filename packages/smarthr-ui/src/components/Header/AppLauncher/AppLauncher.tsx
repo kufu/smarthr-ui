@@ -75,12 +75,20 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   )
 
   const calculatedApps = useMemo(() => {
-    const base = apps.find(({ type }) => type === 'base')
+    const result: {
+      base: Props['apps'][number]
+      others: Props['apps']
+    } = { base: undefined, others: [] }
 
-    return {
-      base,
-      others: apps.filter((category) => category !== base),
-    }
+    apps.forEach((app) => {
+      if (app.type === 'base') {
+        result.base = app
+      } else {
+        result.others.push(app)
+      }
+    })
+
+    return result
   }, [apps])
 
   const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
