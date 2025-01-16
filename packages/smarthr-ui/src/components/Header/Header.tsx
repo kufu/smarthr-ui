@@ -62,6 +62,9 @@ type Props = {
 
 type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
 
+const COMMON_GAP = { column: 0.25, row: 0 }
+const CHILDREN_GAP = { column: 0.5, row: 0.25 }
+
 export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   enableNew,
   logo,
@@ -82,7 +85,10 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     actions,
   } = header({ enableNew })
 
-  const actualLogo = useMemo(() => logo || <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />, [logo, enableNew])
+  const actualLogo = useMemo(
+    () => logo || <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />,
+    [logo, enableNew],
+  )
 
   const currentTenantName = useMemo(() => {
     if (tenants && tenants.length >= 1) {
@@ -114,10 +120,10 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     <Cluster
       as="header"
       justify="space-between"
-      gap={{ column: 0.25, row: 0 }}
+      gap={COMMON_GAP}
       className={wrapper({ className })}
     >
-      <Cluster align="center" gap={{ column: 0.25, row: 0 }}>
+      <Cluster align="center" gap={COMMON_GAP}>
         <a href={logoHref} className={logoLink()}>
           {actualLogo}
         </a>
@@ -131,12 +137,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
             )
           : currentTenantName && <div className={tenantInfoStyle()}>{tenantInfo}</div>}
       </Cluster>
-      <Cluster
-        align="center"
-        justify="flex-end"
-        gap={{ column: 0.5, row: 0.25 }}
-        className={actions()}
-      >
+      <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={actions()}>
         {children}
       </Cluster>
     </Cluster>
