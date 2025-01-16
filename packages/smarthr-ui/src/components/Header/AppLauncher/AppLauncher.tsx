@@ -146,19 +146,23 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
               ))}
             </Cluster>
           </Stack>
-
-          {urlToShowAll && (
-            <div className={styles.footer}>
-              <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
-                すべて見る
-              </TextLink>
-            </div>
-          )}
+          <TextLinkToShowAll href={urlToShowAll} className={styles.footer} />
         </Stack>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const TextLinkToShowAll = React.memo<{ href: string; className: string }>(
+  ({ href, className }) =>
+    href && (
+      <div className={className}>
+        <TextLink href={href} style={{ width: 'fit-content' }}>
+          すべて見る
+        </TextLink>
+      </div>
+    ),
+)
 
 const LinkListItem: React.FC<{ item: AppItem; className: string }> = ({ item, className }) => (
   <li>
