@@ -1,6 +1,14 @@
 'use client'
 
-import React, { FC, PropsWithChildren, useCallback, useEffect, useId, useState } from 'react'
+import React, {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { Base, BaseElementProps } from '../Base'
@@ -197,7 +205,21 @@ const TogglableButton: React.FC<
     } else {
       setActive(!active)
     }
-  }, [active, onClickTrigger])
+  }, [active, onClickTrigger, setActive])
+
+  const decoratedTexts = useMemo(() => {
+    if (!decorators) {
+      return {
+        active: CLOSE_BUTTON_LABEL,
+        inactive: OPEN_BUTTON_LABEL,
+      }
+    }
+
+    return {
+      active: decorators.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
+      inactive: decorators.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL,
+    }
+  }, [decorators])
 
   return (
     <Button
@@ -208,9 +230,7 @@ const TogglableButton: React.FC<
       aria-controls={contentId}
       className={className}
     >
-      {active
-        ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-        : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
+      {decoratedTexts[active ? 'active' : 'inactive']}
     </Button>
   )
 }
