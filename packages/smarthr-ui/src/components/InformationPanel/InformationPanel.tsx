@@ -169,6 +169,7 @@ export const InformationPanel: FC<Props> = ({
   return (
     <Base {...props} overflow="hidden" as="section" className={currentStyles.wrapper}>
       <Cluster align="center" justify="space-between" className={currentStyles.header}>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading tag={titleTag} id={titleId} className={currentStyles.heading} type={type}>
           {title}
         </MemoizedHeading>
@@ -179,6 +180,7 @@ export const InformationPanel: FC<Props> = ({
             setActive={setActive}
             contentId={contentId}
             className={currentStyles.togglableButton}
+            decorators={decorators}
           />
         )}
       </Cluster>
@@ -205,12 +207,13 @@ const MemoizedHeading = React.memo<
 ))
 
 const TogglableButton: React.FC<
-  Pick<Props, 'active' | 'onClickTrigger'> & {
+  Pick<Props, 'onClickTrigger' | 'decorators'> & {
+    active: boolean
     setActive: (flg: boolean) => void
     contentId: string
     className: string
   }
-> = ({ active, onClickTrigger, setActive, contentId, className }) => {
+> = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
   const handleClickTrigger = useCallback(() => {
     if (onClickTrigger) {
       onClickTrigger(active)
