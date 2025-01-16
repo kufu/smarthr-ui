@@ -100,15 +100,6 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     [logo, enableNew],
   )
 
-  const currentTenantName = useMemo(() => {
-    if (tenants && tenants.length >= 1) {
-      const current = tenants.find(({ id }) => id === currentTenantId)
-      return current ? current.name : tenants[0].name
-    }
-
-    return undefined
-  }, [currentTenantId, tenants])
-
   return (
     <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={styles.wrapper}>
       <Cluster align="center" gap={COMMON_GAP}>
@@ -118,19 +109,12 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
         {enableNew ? (
           <MemoizedAppLauncher featureName={featureName} apps={apps} enableNew={enableNew} />
         ) : (
-          currentTenantName && (
-            <div className={styles.tenantInfo}>
-              {tenants && tenants.length > 1 ? (
-                <MultiTenantDropdownMenuButton
-                  label={currentTenantName}
-                  tenants={tenants}
-                  onTenantSelect={onTenantSelect}
-                />
-              ) : (
-                <OnlyOneTenant className={styles.tenantNameText}>{currentTenantName}</OnlyOneTenant>
-              )}
-            </div>
-          )
+          <TenantSwitcher
+            currentTenantId={currentTenantId}
+            tenants={tenants}
+            styles={styles}
+            onTenantSelect={onTenantSelect}
+          />
         )}
       </Cluster>
       <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={styles.actions}>
@@ -153,6 +137,39 @@ const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'ena
     return featureName && <AppLauncher apps={apps} enableNew={enableNew} decorators={decorators} />
   },
 )
+
+const TenantSwitcher = React.memo<
+  Pick<Props, 'currentTenantId' | 'tenants' | 'onTenantSelect'> & {
+    styles: { tenantInfo: string; tenantNameText: string }
+  }
+>(({ currentTenantId, tenants, styles, onTenantSelect }) => {
+  const currentTenantName = useMemo(() => {
+    if (tenants && tenants.length >= 1) {
+      const current = tenants.find(({ id }) => id === currentTenantId)
+      return current ? current.name : tenants[0].name
+    }
+
+    return undefined
+  }, [currentTenantId, tenants])
+
+  return (
+    currentTenantName && (
+      <div className={styles.tenantInfo}>
+        {tenants && tenants.length > 1 ? (
+          <MultiTenantDropdownMenuButton
+            label={currentTenantName}
+            tenants={tenants}
+            onTenantSelect={onTenantSelect}
+          />
+        ) : (
+          <Text color="TEXT_WHITE" className={styles.tenantNameText}>
+            {currentTenantName}
+          </Text>
+        )}
+      </div>
+    )
+  )
+})
 
 const MultiTenantDropdownMenuButton = React.memo<
   Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: string }
@@ -177,11 +194,3 @@ const MultiTenantDropdownMenuButton = React.memo<
     </HeaderDropdownMenuButton>
   )
 })
-
-const OnlyOneTenant = React.memo<PropsWithChildren<{ className: string }>>(
-  ({ className, children }) => (
-    <Text color="TEXT_WHITE" className={className}>
-      {children}
-    </Text>
-  ),
-)
