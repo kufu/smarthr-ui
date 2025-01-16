@@ -77,13 +77,23 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   children,
   className,
 }) => {
-  const {
-    wrapper,
-    logoLink,
-    tenantInfo: tenantInfoStyle,
-    tenantNameText,
-    actions,
-  } = header({ enableNew })
+  const styles = useMemo(() => {
+    const {
+      wrapper,
+      logoLink,
+      tenantInfo: tenantInfoStyle,
+      tenantNameText,
+      actions,
+    } = header({ enableNew })
+
+    return {
+      wrapper: wrapper({ className }),
+      logoLink: logoLink(),
+      tenantInfo: tenantInfoStyle(),
+      tenantNameText: tenantNameText(),
+      actions: actions(),
+    }
+  }, [enableNew, className])
 
   const actualLogo = useMemo(
     () => logo || <SmartHRLogo fill={enableNew ? 'brand' : undefined} className="shr-p-0.75" />,
@@ -109,7 +119,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
           ))}
         </HeaderDropdownMenuButton>
       ) : (
-        <Text color="TEXT_WHITE" className={tenantNameText()}>
+        <Text color="TEXT_WHITE" className={styles.tenantNameText}>
           {currentTenantName}
         </Text>
       ),
@@ -117,14 +127,9 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   )
 
   return (
-    <Cluster
-      as="header"
-      justify="space-between"
-      gap={COMMON_GAP}
-      className={wrapper({ className })}
-    >
+    <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={styles.wrapper}>
       <Cluster align="center" gap={COMMON_GAP}>
-        <a href={logoHref} className={logoLink()}>
+        <a href={logoHref} className={styles.logoLink}>
           {actualLogo}
         </a>
         {enableNew
@@ -135,9 +140,9 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
                 decorators={{ triggerLabel: () => featureName }}
               />
             )
-          : currentTenantName && <div className={tenantInfoStyle()}>{tenantInfo}</div>}
+          : currentTenantName && <div className={styles.tenantInfo}>{tenantInfo}</div>}
       </Cluster>
-      <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={actions()}>
+      <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={styles.actions}>
         {children}
       </Cluster>
     </Cluster>
