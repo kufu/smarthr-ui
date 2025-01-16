@@ -169,12 +169,9 @@ export const InformationPanel: FC<Props> = ({
   return (
     <Base {...props} overflow="hidden" as="section" className={currentStyles.wrapper}>
       <Cluster align="center" justify="space-between" className={currentStyles.header}>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <Heading type="blockTitle" tag={titleTag} id={titleId} className={currentStyles.heading}>
-          <ResponseMessage type={type} iconGap={0.5}>
-            {title}
-          </ResponseMessage>
-        </Heading>
+        <MemoizedHeading tag={titleTag} id={titleId} className={currentStyles.heading} type={type}>
+          {title}
+        </MemoizedHeading>
         {togglable && (
           <TogglableButton
             active={active}
@@ -191,6 +188,21 @@ export const InformationPanel: FC<Props> = ({
     </Base>
   )
 }
+
+const MemoizedHeading = React.memo<
+  Pick<Props, 'type'> & {
+    tag: Props['titleTag']
+    id: string
+    className: string
+    children: Props['title']
+  }
+>(({ type, children, ...rect }) => (
+  <Heading {...rect} type="blockTitle">
+    <ResponseMessage type={type} iconGap={0.5}>
+      {children}
+    </ResponseMessage>
+  </Heading>
+))
 
 const TogglableButton: React.FC<
   Pick<Props, 'active' | 'onClickTrigger'> & {
