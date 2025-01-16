@@ -14,8 +14,6 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
  */
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
-export const generateIcon = (svg: IconType) => createIcon(svg)
-
 export const colorSet = {
   TEXT_BLACK: 'black',
   TEXT_WHITE: 'white',
@@ -113,7 +111,7 @@ const wrapper = tv({
   },
 })
 
-export const createIcon = (SvgIcon: IconType) => {
+export const generateIcon = (SvgIcon: IconType) => {
   const Icon: React.FC<Props> = ({
     color,
     className,
