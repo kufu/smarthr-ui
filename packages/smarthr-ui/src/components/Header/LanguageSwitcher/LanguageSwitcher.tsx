@@ -143,32 +143,46 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
       />
       <DropdownContent onKeyDown={handleKeyDown} role="presentation">
         <ul className={styles.languageItemsList}>
-          {locales.map(([code, label]) => {
-            const isCurrent = currentLang === code
-
-            return (
-              <li key={code} className={styles.languageItem} aria-current={isCurrent} lang={code}>
-                <Button
-                  value={code}
-                  onClick={handleLanguageSelect}
-                  wide
-                  prefix={
-                    isCurrent ? (
-                      <FaCheckIcon color="MAIN" alt={decoratedTexts.checkIconAlt} />
-                    ) : null
-                  }
-                  className={styles.languageButton}
-                >
-                  {label}
-                </Button>
-              </li>
-            )
-          })}
+          {locales.map(([code, label]) => (
+            <LanguageListItem
+              key={code}
+              code={code}
+              className={styles.languageItem}
+              buttonStyle={styles.languageButton}
+              current={currentLang === code}
+              handleLanguageSelect={handleLanguageSelect}
+              iconAlt={decoratedTexts.checkIconAlt}
+            >
+              {label}
+            </LanguageListItem>
+          ))}
         </ul>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const LanguageListItem = React.memo<{
+  code: string
+  children: string
+  className: string
+  buttonStyle: string
+  current: boolean
+  iconAlt: ReactNode
+  handleLanguageSelect: (e: React.KeyboardEvent<HTMLDivElement>) => void
+}>(({ code, children, buttonStyle, className, current, iconAlt, handleLanguageSelect }) => (
+  <li key={code} className={className} aria-current={current} lang={code}>
+    <Button
+      value={code}
+      onClick={handleLanguageSelect}
+      wide
+      prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
+      className={buttonStyle}
+    >
+      {children}
+    </Button>
+  </li>
+))
 
 const MemoizedDropdownTrigger = React.memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: ReactNode }
