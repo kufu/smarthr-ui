@@ -88,13 +88,20 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
       checkIconAlt: decorators.checkIconAlt?.(CHECK_ICON_ALT) || CHECK_ICON_ALT,
     }
   }, [decorators])
-
   const currentLang = useMemo(
     () => locale || defaultLocale || Object.keys(localeMap)[0],
     [locale, defaultLocale, localeMap],
   )
+  const styles = useMemo(() => {
+    const { languageButton, languageItemsList, languageItem, switchButton } = appLauncher()
 
-  const { languageButton, languageItemsList, languageItem, switchButton } = appLauncher()
+    return {
+      languageButton: languageButton(),
+      languageItemsList: languageItemsList(),
+      languageItem: languageItem(),
+      switchButton: switchButton({ invert, enableNew }),
+    }
+  }, [enableNew, invert])
 
   const handleLanguageSelect = useMemo(
     () =>
@@ -128,29 +135,32 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
 
   return (
     <Dropdown {...rest}>
-      <DropdownTrigger>{narrow ? (
-        <Button square suffix={<FaCaretDownIcon />} className={switchButton({ invert, enableNew })}>
-          {invert ? (
-            <LanguageIcon alt={decoratedTexts.triggerLabel} />
-          ) : (
-            <FaGlobeIcon alt={decoratedTexts.triggerLabel} />
-          )}
-        </Button>
-      ) : (
-        <Button
-          prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
-          suffix={<FaCaretDownIcon />}
-          className={switchButton({ invert, enableNew })}
-        >
-          {decoratedTexts.triggerLabel}
-        </Button>
-      )}</DropdownTrigger>
+      <DropdownTrigger>
+        {narrow ? (
+          <Button square suffix={<FaCaretDownIcon />} className={styles.switchButton}>
+            {invert ? (
+              <LanguageIcon alt={decoratedTexts.triggerLabel} />
+            ) : (
+              <FaGlobeIcon alt={decoratedTexts.triggerLabel} />
+            )}
+          </Button>
+        ) : (
+          <Button
+            prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
+            suffix={<FaCaretDownIcon />}
+            className={styles.switchButton}
+          >
+            {decoratedTexts.triggerLabel}
+          </Button>
+        )}
+      </DropdownTrigger>
       <DropdownContent onKeyDown={handleKeyDown} role="presentation">
-        <ul className={languageItemsList()}>
+        <ul className={styles.languageItemsList}>
           {locales.map(([code, label]) => {
             const isCurrent = currentLang === code
+
             return (
-              <li key={code} className={languageItem()} aria-current={isCurrent} lang={code}>
+              <li key={code} className={styles.languageItem} aria-current={isCurrent} lang={code}>
                 <Button
                   value={code}
                   onClick={handleLanguageSelect}
@@ -160,7 +170,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
                       <FaCheckIcon color="MAIN" alt={decoratedTexts.checkIconAlt} />
                     ) : null
                   }
-                  className={languageButton()}
+                  className={styles.languageButton}
                 >
                   {label}
                 </Button>
