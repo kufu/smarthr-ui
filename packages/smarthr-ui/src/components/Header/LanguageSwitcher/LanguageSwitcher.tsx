@@ -73,14 +73,19 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   ...rest
 }) => {
   const locales = useMemo(() => Object.entries(localeMap), [localeMap])
-  const triggerLabel = useMemo(
-    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
-    [decorators],
-  )
-  const checkIconAlt = useMemo(
-    () => decorators?.checkIconAlt?.(CHECK_ICON_ALT) || CHECK_ICON_ALT,
-    [decorators],
-  )
+  const decoratedTexts = useMemo(() => {
+    if (!decorators) {
+      return {
+        triggerLabel: TRIGGER_LABEL,
+        checkIconAlt: CHECK_ICON_ALT,
+      }
+    }
+
+    return {
+      triggerLabel: decorators.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
+      checkIconAlt: decorators.checkIconAlt?.(CHECK_ICON_ALT) || CHECK_ICON_ALT,
+    }
+  }, [decorators])
 
   const currentLang = useMemo(
     () => locale || defaultLocale || Object.keys(localeMap)[0],
@@ -122,7 +127,11 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
 
   const NarrowTrigger = (
     <Button square suffix={<FaCaretDownIcon />} className={switchButton({ invert, enableNew })}>
-      {invert ? <LanguageIcon alt={triggerLabel} /> : <FaGlobeIcon alt={triggerLabel} />}
+      {invert ? (
+        <LanguageIcon alt={decoratedTexts.triggerLabel} />
+      ) : (
+        <FaGlobeIcon alt={decoratedTexts.triggerLabel} />
+      )}
     </Button>
   )
 
@@ -132,7 +141,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
       suffix={<FaCaretDownIcon />}
       className={switchButton({ invert, enableNew })}
     >
-      {triggerLabel}
+      {decoratedTexts.triggerLabel}
     </Button>
   )
 
@@ -147,7 +156,11 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
               <li key={code} className={languageItem()} aria-current={isCurrent} lang={code}>
                 <Button
                   wide
-                  prefix={isCurrent ? <FaCheckIcon color="MAIN" alt={checkIconAlt} /> : null}
+                  prefix={
+                    isCurrent ? (
+                      <FaCheckIcon color="MAIN" alt={decoratedTexts.checkIconAlt} />
+                    ) : null
+                  }
                   onClick={() => handleLanguageSelect(code)}
                   className={languageButton()}
                 >
