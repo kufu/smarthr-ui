@@ -94,11 +94,15 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
 
   const { languageButton, languageItemsList, languageItem, switchButton } = appLauncher()
 
-  const handleLanguageSelect = (code: string) => {
-    if (onLanguageSelect !== undefined) {
-      onLanguageSelect(code)
-    }
-  }
+  const handleLanguageSelect = useMemo(
+    () =>
+      onLanguageSelect
+        ? (e: React.MouseEvent<HTMLButtonElement>) => {
+            onLanguageSelect(e.currentTarget.value)
+          }
+        : undefined,
+    [onLanguageSelect],
+  )
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, target, currentTarget } = e
@@ -155,13 +159,14 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
             return (
               <li key={code} className={languageItem()} aria-current={isCurrent} lang={code}>
                 <Button
+                  value={code}
+                  onClick={handleLanguageSelect}
                   wide
                   prefix={
                     isCurrent ? (
                       <FaCheckIcon color="MAIN" alt={decoratedTexts.checkIconAlt} />
                     ) : null
                   }
-                  onClick={() => handleLanguageSelect(code)}
                   className={languageButton()}
                 >
                   {label}
