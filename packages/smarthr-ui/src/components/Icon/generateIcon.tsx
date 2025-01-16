@@ -121,7 +121,7 @@ export const generateIcon = (SvgIcon: IconType) => {
     focusable = false,
     text,
     iconGap = 0.25,
-    right = false,
+    right,
     size,
     ...props
   }) => {
