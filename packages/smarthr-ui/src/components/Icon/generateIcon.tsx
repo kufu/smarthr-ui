@@ -158,7 +158,6 @@ export const generateIcon = (SvgIcon: IconType) => {
         return color
       }, [color])
 
-      const existsText = !!text
       const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
@@ -179,7 +178,7 @@ export const generateIcon = (SvgIcon: IconType) => {
       )
       const visuallyHiddenAlt = alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>
 
-      if (existsText) {
+      if (text) {
         return (
           <span className={wrapperStyle}>
             {right && text}
