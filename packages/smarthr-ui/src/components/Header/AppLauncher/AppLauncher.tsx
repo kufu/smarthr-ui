@@ -74,8 +74,14 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
     [decorators],
   )
 
-  const baseApps = apps.find(({ type }) => type === 'base')
-  const others = apps.filter((category) => category !== baseApps)
+  const calculatedApps = useMemo(() => {
+    const base = apps.find(({ type }) => type === 'base')
+
+    return {
+      base,
+      others: apps.filter((category) => category !== base),
+    }
+  }, [apps])
 
   const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
 
@@ -94,19 +100,19 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Stack as="nav" gap={1.5} className={contentWrapper()}>
           <Stack gap={1.5}>
-            {baseApps && (
+            {calculatedApps.base && (
               <Section>
                 <Stack gap={0.5} className={category()}>
-                  <Heading type="subSubBlockTitle">{baseApps.heading}</Heading>
+                  <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
                   {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                   <Cluster as="ul" gap={1} className={appList()}>
-                    {appItems(baseApps.items, link())}
+                    {appItems(calculatedApps.base.items, link())}
                   </Cluster>
                 </Stack>
               </Section>
             )}
             <Cluster gap={1.5}>
-              {others.map(({ heading, items }, i) => (
+              {calculatedApps.others.map(({ heading, items }, i) => (
                 <Section key={i}>
                   <Stack gap={0.5} className={category()}>
                     <Heading type="subSubBlockTitle">{heading}</Heading>
