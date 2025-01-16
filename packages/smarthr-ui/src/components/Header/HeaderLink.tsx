@@ -22,5 +22,6 @@ const headerLink = tv({
 
 export const HeaderLink: React.FC<Props> = ({ enableNew, className, ...props }) => {
   const style = headerLink({ enableNew, className })
-  return <TextLink {...props} target="_blank" suffix={null} className={style} />
+
+  return <TextLink {...props} target="_blank" className={style} />
 }
