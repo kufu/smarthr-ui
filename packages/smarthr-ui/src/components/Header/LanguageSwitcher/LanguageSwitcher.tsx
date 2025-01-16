@@ -1,6 +1,6 @@
 'use client'
 
-import React, { HTMLAttributes, useCallback, useMemo } from 'react'
+import React, { ReactNode, HTMLAttributes, useCallback, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { tabbable } from '../../../libs/tabbable'
@@ -135,25 +135,12 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
 
   return (
     <Dropdown {...rest}>
-      <DropdownTrigger>
-        {narrow ? (
-          <Button square suffix={<FaCaretDownIcon />} className={styles.switchButton}>
-            {invert ? (
-              <LanguageIcon alt={decoratedTexts.triggerLabel} />
-            ) : (
-              <FaGlobeIcon alt={decoratedTexts.triggerLabel} />
-            )}
-          </Button>
-        ) : (
-          <Button
-            prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
-            suffix={<FaCaretDownIcon />}
-            className={styles.switchButton}
-          >
-            {decoratedTexts.triggerLabel}
-          </Button>
-        )}
-      </DropdownTrigger>
+      <MemoizedDropdownTrigger
+        narrow={narrow}
+        invert={invert}
+        className={styles.switchButton}
+        label={decoratedTexts.triggerLabel}
+      />
       <DropdownContent onKeyDown={handleKeyDown} role="presentation">
         <ul className={styles.languageItemsList}>
           {locales.map(([code, label]) => {
@@ -182,3 +169,23 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
     </Dropdown>
   )
 }
+
+const MemoizedDropdownTrigger = React.memo<
+  Pick<Props, 'narrow' | 'invert'> & { className: string; label: ReactNode }
+>(({ narrow, invert, className, label }) => (
+  <DropdownTrigger>
+    {narrow ? (
+      <Button square suffix={<FaCaretDownIcon />} className={className}>
+        {invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />}
+      </Button>
+    ) : (
+      <Button
+        prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
+        suffix={<FaCaretDownIcon />}
+        className={className}
+      >
+        {label}
+      </Button>
+    )}
+  </DropdownTrigger>
+))
