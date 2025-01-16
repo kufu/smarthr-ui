@@ -108,23 +108,6 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
 
     return undefined
   }, [currentTenantId, tenants])
-  const tenantInfo = useMemo(
-    () =>
-      tenants && tenants.length > 1 ? (
-        <HeaderDropdownMenuButton label={currentTenantName}>
-          {tenants.map(({ id, name }) => (
-            <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
-              {name}
-            </Button>
-          ))}
-        </HeaderDropdownMenuButton>
-      ) : (
-        <Text color="TEXT_WHITE" className={styles.tenantNameText}>
-          {currentTenantName}
-        </Text>
-      ),
-    [currentTenantName, onTenantSelect, tenants, tenantNameText],
-  )
 
   return (
     <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={styles.wrapper}>
@@ -140,7 +123,23 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
                 decorators={{ triggerLabel: () => featureName }}
               />
             )
-          : currentTenantName && <div className={styles.tenantInfo}>{tenantInfo}</div>}
+          : currentTenantName && (
+              <div className={styles.tenantInfo}>
+                {tenants && tenants.length > 1 ? (
+                  <HeaderDropdownMenuButton label={currentTenantName}>
+                    {tenants.map(({ id, name }) => (
+                      <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
+                        {name}
+                      </Button>
+                    ))}
+                  </HeaderDropdownMenuButton>
+                ) : (
+                  <Text color="TEXT_WHITE" className={styles.tenantNameText}>
+                    {currentTenantName}
+                  </Text>
+                )}
+              </div>
+            )}
       </Cluster>
       <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={styles.actions}>
         {children}
