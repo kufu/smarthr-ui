@@ -130,28 +130,45 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
     setActive(activeProps)
   }, [activeProps])
 
-  const { wrapperStyle, headerStyle, headingStyle, togglableButtonStyle, contentStyle } =
-    useMemo(() => {
-      const { wrapper, header, heading, togglableButton, content } = informationPanel({
-        type,
-        active,
-        bold,
-      })
+  const styles = useMemo(() => {
+    const withActive = informationPanel({
+      type,
+      active: true,
+      bold,
+    })
+    const withInactive = informationPanel({
+      type,
+      active: false,
+      bold,
+    })
 
-      return {
-        wrapperStyle: wrapper({ className }),
-        headerStyle: header(),
-        headingStyle: heading(),
-        togglableButtonStyle: togglableButton(),
-        contentStyle: content(),
-      }
-    }, [active, bold, type, className])
+    const wrapperProps = { className }
+
+    return {
+      active: {
+        wrapper: withActive.wrapper(wrapperProps),
+        header: withActive.header(),
+        heading: withActive.heading(),
+        togglableButton: withActive.togglableButton(),
+        content: withActive.content(),
+      },
+      inactive: {
+        wrapper: withInactive.wrapper(wrapperProps),
+        header: withInactive.header(),
+        heading: withInactive.heading(),
+        togglableButton: withInactive.togglableButton(),
+        content: withInactive.content(),
+      },
+    }
+  }, [bold, type, className])
+
+  const currentStyles = styles[active ? 'active' : 'inactive']
 
   return (
-    <Base {...props} overflow="hidden" as="section" className={wrapperStyle}>
-      <Cluster align="center" justify="space-between" className={headerStyle}>
+    <Base {...props} overflow="hidden" as="section" className={currentStyles.wrapper}>
+      <Cluster align="center" justify="space-between" className={currentStyles.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <Heading type="blockTitle" tag={titleTag} id={titleId} className={headingStyle}>
+        <Heading type="blockTitle" tag={titleTag} id={titleId} className={currentStyles.heading}>
           <ResponseMessage type={type} iconGap={0.5}>
             {title}
           </ResponseMessage>
@@ -163,7 +180,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
             onClick={handleClickTrigger}
             aria-expanded={togglable ? active : undefined}
             aria-controls={contentId}
-            className={togglableButtonStyle}
+            className={currentStyles.togglableButton}
           >
             {active
               ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
@@ -171,7 +188,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
           </Button>
         )}
       </Cluster>
-      <div id={contentId} aria-hidden={!active} className={contentStyle}>
+      <div id={contentId} aria-hidden={!active} className={currentStyles.content}>
         {children}
       </div>
     </Base>
