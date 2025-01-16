@@ -126,7 +126,9 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                 <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
                 {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                 <Cluster as="ul" gap={1} className={styles.appList}>
-                  {appItems(calculatedApps.base.items, styles.link)}
+                  {calculatedApps.base.items.map((item) => (
+                    <LinkListItem key={item.label} item={item} className={styles.link} />
+                  ))}
                 </Cluster>
               </Stack>
             )}
@@ -136,7 +138,9 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                   <Heading type="subSubBlockTitle">{heading}</Heading>
                   {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                   <Stack gap={0.5} as="ul" className={styles.appList}>
-                    {appItems(items, styles.link)}
+                    {items.map((item) => (
+                      <LinkListItem key={item.label} item={item} className={styles.link} />
+                    ))}
                   </Stack>
                 </Stack>
               ))}
@@ -156,11 +160,10 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   )
 }
 
-const appItems = (items: AppItem[], linkStyle: string) =>
-  items.map((item, index) => (
-    <li key={index}>
-      <TextLink href={item.url} target={item.target} className={linkStyle}>
-        {item.label}
-      </TextLink>
-    </li>
-  ))
+const LinkListItem: React.FC<{ item: AppItem; className: string }> = ({ item, className }) => (
+  <li>
+    <TextLink href={item.url} target={item.target} className={className}>
+      {item.label}
+    </TextLink>
+  </li>
+)
