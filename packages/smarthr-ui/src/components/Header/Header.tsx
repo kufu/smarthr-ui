@@ -121,17 +121,9 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
           currentTenantName && (
             <div className={styles.tenantInfo}>
               {tenants && tenants.length > 1 ? (
-                <HeaderDropdownMenuButton label={currentTenantName}>
-                  {tenants.map(({ id, name }) => (
-                    <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
-                      {name}
-                    </Button>
-                  ))}
-                </HeaderDropdownMenuButton>
+                <MultiTenantDropdownMenuButton label={currentTenantName} tenants={tenants} onTenantSelect={onTenantSelect} />
               ) : (
-                <Text color="TEXT_WHITE" className={styles.tenantNameText}>
-                  {currentTenantName}
-                </Text>
+                <OnlyOneTenant className={styles.tenantNameText}>{currentTenantName}</OnlyOneTenant>
               )}
             </div>
           )
@@ -157,3 +149,21 @@ const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'ena
     return featureName && <AppLauncher apps={apps} enableNew={enableNew} decorators={decorators} />
   },
 )
+
+const MultiTenantDropdownMenuButton = React.memo<Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: string }>(({ label, tenants, onTenantSelect }) => {
+  return (
+    <HeaderDropdownMenuButton label={label}>
+      {tenants.map(({ id, name }) => (
+        <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
+          {name}
+        </Button>
+      ))}
+    </HeaderDropdownMenuButton>
+  )
+})
+
+const OnlyOneTenant = React.memo<PropsWithChildren<{ className: string }>>(({ className, children }) => (
+  <Text color="TEXT_WHITE" className={className}>
+    {children}
+  </Text>
+))
