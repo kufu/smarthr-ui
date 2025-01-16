@@ -1,6 +1,6 @@
 'use client'
 
-import React, { HTMLAttributes, useMemo } from 'react'
+import React, { HTMLAttributes, useCallback, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { tabbable } from '../../../libs/tabbable'
@@ -106,7 +106,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
     [onLanguageSelect],
   )
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!ARROW_KEY_REGEX.test(e.key)) {
       return
     }
@@ -124,31 +124,27 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
     }
 
     buttons.at(buttonAt)?.focus()
-  }
-
-  const NarrowTrigger = (
-    <Button square suffix={<FaCaretDownIcon />} className={switchButton({ invert, enableNew })}>
-      {invert ? (
-        <LanguageIcon alt={decoratedTexts.triggerLabel} />
-      ) : (
-        <FaGlobeIcon alt={decoratedTexts.triggerLabel} />
-      )}
-    </Button>
-  )
-
-  const Trigger = (
-    <Button
-      prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
-      suffix={<FaCaretDownIcon />}
-      className={switchButton({ invert, enableNew })}
-    >
-      {decoratedTexts.triggerLabel}
-    </Button>
-  )
+  }, [])
 
   return (
     <Dropdown {...rest}>
-      <DropdownTrigger>{narrow ? NarrowTrigger : Trigger}</DropdownTrigger>
+      <DropdownTrigger>{narrow ? (
+        <Button square suffix={<FaCaretDownIcon />} className={switchButton({ invert, enableNew })}>
+          {invert ? (
+            <LanguageIcon alt={decoratedTexts.triggerLabel} />
+          ) : (
+            <FaGlobeIcon alt={decoratedTexts.triggerLabel} />
+          )}
+        </Button>
+      ) : (
+        <Button
+          prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
+          suffix={<FaCaretDownIcon />}
+          className={switchButton({ invert, enableNew })}
+        >
+          {decoratedTexts.triggerLabel}
+        </Button>
+      )}</DropdownTrigger>
       <DropdownContent onKeyDown={handleKeyDown} role="presentation">
         <ul className={languageItemsList()}>
           {locales.map(([code, label]) => {
