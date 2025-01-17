@@ -114,9 +114,9 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       [onSelectFiles],
     )
 
-    const onClickButton = () => {
+    const onClickButton = useCallback(() => {
       fileRef.current!.click()
-    }
+    }, [])
 
     return (
       <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
