@@ -68,7 +68,7 @@
     "plop": "^4.0.1",
     "postcss": "^8.4.49",
     "postcss-loader": "^8.1.1",
-    "postcss-styled-syntax": "^0.7.0",
+    "postcss-styled-syntax": "^0.7.1",
     "postcss-syntax": "^0.36.2",
     "react": "^19.0.0",
     "react-docgen-typescript": "^2.2.2",
