@@ -69,20 +69,15 @@ export const FloatArea: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const styleProps = useMemo(
-    () => ({
-      style: { ...style, zIndex },
-    }),
-    [style, zIndex],
-  )
+  const styleAttr = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
     <Base
-      {...styleProps}
       {...rest}
-      className={floatArea({ bottom, className })}
+      style={styleAttr}
       layer={3}
       padding={1}
+      className={floatArea({ bottom, className })}
     >
       <Cluster gap={1}>
         {tertiaryButton}
