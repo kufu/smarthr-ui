@@ -17,7 +17,7 @@ import {
   Navigation as NavigationType,
   ReleaseNoteProps,
 } from '../../types'
-import { CommonButton, commonButton } from '../common/CommonButton'
+import { commonButton } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
