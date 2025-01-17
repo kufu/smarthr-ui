@@ -2,7 +2,7 @@ import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import { Gap, ResponseMessageType } from '../../types'
+import { Gap, ResponseMessageTypeWithoutProcessing } from '../../types'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
@@ -54,7 +54,7 @@ type Props = StyleProps & {
   /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
   /** 操作に対するフィードバックメッセージ */
-  responseMessage?: ResponseMessageType
+  responseMessage?: ResponseMessageTypeWithoutProcessing
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -83,7 +83,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
         {tertiaryButton}
         <div className="shr-ms-auto">
           <Cluster gap={1} align="center">
-            {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+            {responseMessage && (
               <ResponseMessage type={responseMessage.status}>
                 {responseMessage.text}
               </ResponseMessage>
