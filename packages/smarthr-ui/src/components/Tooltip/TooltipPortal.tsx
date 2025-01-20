@@ -147,7 +147,7 @@ export const TooltipPortal: FC<Props> = ({
         vertical={actualVertical || 'bottom'}
         className={balloonStyle}
       >
-        <p className={balloonTextStyle}>{message}</p>
+        <div className={balloonTextStyle}>{message}</div>
       </Balloon>
     </div>
   )
