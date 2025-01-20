@@ -18,8 +18,16 @@ export type ContentBoxStyle = {
 }
 
 export function isEventFromChild(e: Event, parent: Element | null): boolean {
+  if (!parent) {
+    return false
+  }
+
   const path = e.composedPath()
-  if (path.length === 0 || !parent) return false
+
+  if (path.length === 0) {
+    return false
+  }
+
   return path.includes(parent)
 }
 
