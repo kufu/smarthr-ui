@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react'
+import type { FC, JSX, ReactNode } from 'react'
 
 type Props = {
   shouldWrapContent: boolean
