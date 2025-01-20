@@ -30,6 +30,7 @@ export const DropdownCloser: React.FC<Props> = ({ children, className }) => {
   )
 
   return (
+    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <div style={styleProps} className={closerStyle} onClick={onClickCloser} role="presentation">
       {children}
     </div>

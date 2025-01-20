@@ -44,7 +44,7 @@ export function useKeyboardNavigation(
           if (e.target === firstTabbable || e.target === dummyFocusRef.current) {
             // focus the Trigger
             e.preventDefault()
-            trigger.focus()
+            trigger!.focus()
             onClickCloser()
           }
         } else if (e.target === tabbablesInContent.at(-1)) {
