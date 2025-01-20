@@ -30,8 +30,10 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
     if (!triggerElementRef.current) {
       return
     }
+
     // apply ARIA to all focusable elements in trigger
     const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
+
     triggers.forEach((trigger) => {
       trigger.setAttribute('aria-expanded', active.toString())
       trigger.setAttribute('aria-controls', contentId)
@@ -54,13 +56,9 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
 
             return React.cloneElement(child as ReactElement, {
               onClick: (e: MouseEvent) => {
-                const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
+                onClickTrigger(e.currentTarget.getBoundingClientRect())
 
-                onClickTrigger({ top, right, bottom, left })
-
-                if (child.props.onClick) {
-                  child.props.onClick(e)
-                }
+                child.props.onClick?.(e)
               },
             })
           })}
