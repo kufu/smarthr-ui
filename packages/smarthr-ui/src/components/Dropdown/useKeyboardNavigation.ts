@@ -77,16 +77,11 @@ export function useKeyboardNavigation(
         }
 
         if (wrapperRef.current) {
-          const tabbablesInContent = tabbable(wrapperRef.current)
-
-          tabbablesInContent.some((inner) => {
+          tabbable(wrapperRef.current).forEach((inner) => {
             if (inner === e.target) {
               // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
               onClickCloser()
-              return true
             }
-
-            return false
           })
         }
       }
