@@ -61,16 +61,16 @@ export function useKeyboardNavigation(
           }
         }
       } else if (KEY_ESCAPE.test(e.key)) {
-        const trigger = getFirstTabbable(triggerElementRef)
-
-        if (trigger && e.target === trigger) {
-          // close the dropdown when the Trigger is focused and Esc key is pressed
+        if (e.target && e.target === dummyFocusRef.current) {
           onClickCloser()
 
           return
         }
 
-        if (e.target && e.target === dummyFocusRef.current) {
+        const trigger = getFirstTabbable(triggerElementRef)
+
+        if (trigger && e.target === trigger) {
+          // close the dropdown when the Trigger is focused and Esc key is pressed
           onClickCloser()
 
           return
