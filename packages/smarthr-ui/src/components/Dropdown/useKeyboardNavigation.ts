@@ -5,6 +5,8 @@ import { tabbable } from '../../libs/tabbable'
 import { DropdownContext } from './Dropdown'
 import { getFirstTabbable } from './dropdownHelper'
 
+const KEY_ESCAPE = /^Esc(ape)?$/
+
 export function useKeyboardNavigation(
   wrapperRef: RefObject<HTMLDivElement>,
   dummyFocusRef: RefObject<HTMLElement>,
@@ -14,18 +16,16 @@ export function useKeyboardNavigation(
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Tab') {
-        if (
-          !wrapperRef.current ||
-          !triggerElementRef.current ||
-          !rootTriggerRef ||
-          !rootTriggerRef.current
-        ) {
+        if (!wrapperRef.current || !triggerElementRef.current || !rootTriggerRef?.current) {
           return
         }
+
         const tabbablesInContent = tabbable(wrapperRef.current)
+
         if (tabbablesInContent.length === 0) {
           return
         }
+
         const triggers = tabbable(triggerElementRef.current)
         const trigger = triggers[triggers.length - 1]
         const firstTabbable = tabbablesInContent[0]
@@ -36,9 +36,11 @@ export function useKeyboardNavigation(
             // move focus previous of the Trigger
             return
           }
+
           // focus a first tabbable element in the dropdown content
           e.preventDefault()
           firstTabbable.focus()
+
           return
         } else if (
           e.shiftKey &&
@@ -52,34 +54,40 @@ export function useKeyboardNavigation(
           // move focus next of the Trigger
           const rootTriggers = tabbable(rootTriggerRef.current)
           const rootTrigger = rootTriggers[rootTriggers.length - 1]
+
           if (rootTrigger) {
             rootTrigger.focus()
             onClickCloser()
           }
         }
-      } else if (e.key === 'Escape' || e.key === 'Esc') {
+      } else if (KEY_ESCAPE.test(e.key)) {
         if (triggerElementRef.current) {
           const trigger = getFirstTabbable(triggerElementRef)
+
           if (trigger && e.target === trigger) {
             // close the dropdown when the Trigger is focused and Esc key is pressed
             onClickCloser()
+
             return
           }
         }
 
         if (e.target && e.target === dummyFocusRef.current) {
           onClickCloser()
+
           return
         }
 
         if (wrapperRef.current) {
           const tabbablesInContent = tabbable(wrapperRef.current)
+
           tabbablesInContent.some((inner) => {
             if (inner === e.target) {
               // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
               onClickCloser()
               return true
             }
+
             return false
           })
         }
@@ -87,8 +95,10 @@ export function useKeyboardNavigation(
     },
     [wrapperRef, triggerElementRef, rootTriggerRef, dummyFocusRef, onClickCloser],
   )
+
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
