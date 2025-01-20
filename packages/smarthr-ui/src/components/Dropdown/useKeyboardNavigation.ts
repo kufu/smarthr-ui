@@ -26,8 +26,7 @@ export function useKeyboardNavigation(
           return
         }
 
-        const triggers = tabbable(triggerElementRef.current)
-        const trigger = triggers[triggers.length - 1]
+        const trigger = tabbable(triggerElementRef.current).at(-1)
         const firstTabbable = tabbablesInContent[0]
 
         if (e.target === trigger) {
@@ -48,10 +47,9 @@ export function useKeyboardNavigation(
             trigger.focus()
             onClickCloser()
           }
-        } else if (e.target === tabbablesInContent[tabbablesInContent.length - 1]) {
+        } else if (e.target === tabbablesInContent.at(-1)) {
           // move focus next of the Trigger
-          const rootTriggers = tabbable(rootTriggerRef.current)
-          const rootTrigger = rootTriggers[rootTriggers.length - 1]
+          const rootTrigger = tabbable(rootTriggerRef.current).at(-1)
 
           if (rootTrigger) {
             rootTrigger.focus()
