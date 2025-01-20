@@ -6,6 +6,7 @@ import React, {
   PropsWithChildren,
   ReactNode,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useId,
@@ -72,8 +73,10 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
       if (isEventFromChild(e, triggerElementRef.current) || isChildPortal(e.target)) {
         return
       }
+
       setActive(false)
     }
+
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {
@@ -85,21 +88,36 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
     () => (props) => {
       if (!active) return null
+
       return createPortal(props.children)
     },
     [active, createPortal],
   )
 
+  // set the displayName explicit for DevTools
+  DropdownContentRoot.displayName = 'DropdownContentRoot'
+
   useEffect(() => {
     if (isPortalRootMounted()) {
-      if (active) onOpen?.()
-      else onClose?.()
+      if (active) {
+        onOpen?.()
+      } else {
+        onClose?.()
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
-  // set the displayName explicit for DevTools
-  DropdownContentRoot.displayName = 'DropdownContentRoot'
+  const onClickCloser = useCallback(() => {
+    setActive(false)
+
+    // return focus to the Trigger
+    const trigger = getFirstTabbable(triggerElementRef)
+
+    if (trigger) {
+      trigger.focus()
+    }
+  }, [])
 
   return (
     <PortalParentProvider>
@@ -114,14 +132,7 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
             setActive(newActive)
             if (newActive) setTriggerRect(rect)
           },
-          onClickCloser: () => {
-            setActive(false)
-            // return focus to the Trigger
-            const trigger = getFirstTabbable(triggerElementRef)
-            if (trigger) {
-              trigger.focus()
-            }
-          },
+          onClickCloser,
           DropdownContentRoot,
           contentId,
         }}

@@ -22,9 +22,12 @@ export const DropdownCloser: React.FC<Props> = ({ children, className }) => {
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
   const closerStyle = useMemo(() => closer({ controllable, className }), [controllable, className])
-  const styleProps = useMemo(() => ({
-    maxHeight: controllable ? undefined : maxHeight,
-  }), [maxHeight, controllable])
+  const styleProps = useMemo(
+    () => ({
+      maxHeight: controllable ? undefined : maxHeight,
+    }),
+    [maxHeight, controllable],
+  )
 
   return (
     <div style={styleProps} className={closerStyle} onClick={onClickCloser} role="presentation">
