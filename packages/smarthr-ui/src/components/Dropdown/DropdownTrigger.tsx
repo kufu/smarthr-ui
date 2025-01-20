@@ -33,7 +33,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
     // apply ARIA to all focusable elements in trigger
     const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
     triggers.forEach((trigger) => {
-      trigger.setAttribute('aria-expanded', String(active))
+      trigger.setAttribute('aria-expanded', active.toString())
       trigger.setAttribute('aria-controls', contentId)
     })
   }, [triggerElementRef, active, contentId])
