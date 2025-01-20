@@ -21,19 +21,13 @@ export const DropdownCloser: React.FC<Props> = ({ children, className }) => {
   const { onClickCloser, controllable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
-  const styleProps = useMemo(() => {
-    const maxHeightStyle = controllable ? undefined : maxHeight
-    return {
-      className: closer({ controllable, className }),
-      style: {
-        maxHeight: maxHeightStyle,
-      },
-    }
-  }, [className, controllable, maxHeight])
+  const closerStyle = useMemo(() => closer({ controllable, className }), [controllable, className])
+  const styleProps = useMemo(() => ({
+    maxHeight: controllable ? undefined : maxHeight,
+  }), [maxHeight, controllable])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <div {...styleProps} onClick={onClickCloser} role="presentation">
+    <div style={styleProps} className={closerStyle} onClick={onClickCloser} role="presentation">
       {children}
     </div>
   )
