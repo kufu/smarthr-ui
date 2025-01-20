@@ -29,7 +29,6 @@ export function useKeyboardNavigation(
         const triggers = tabbable(triggerElementRef.current)
         const trigger = triggers[triggers.length - 1]
         const firstTabbable = tabbablesInContent[0]
-        const lastTabbable = tabbablesInContent[tabbablesInContent.length - 1]
 
         if (e.target === trigger) {
           if (e.shiftKey) {
@@ -42,15 +41,14 @@ export function useKeyboardNavigation(
           firstTabbable.focus()
 
           return
-        } else if (
-          e.shiftKey &&
-          (e.target === firstTabbable || e.target === dummyFocusRef.current)
-        ) {
-          // focus the Trigger
-          e.preventDefault()
-          trigger.focus()
-          onClickCloser()
-        } else if (!e.shiftKey && e.target === lastTabbable) {
+        } else if (e.shiftKey) {
+          if (e.target === firstTabbable || e.target === dummyFocusRef.current) {
+            // focus the Trigger
+            e.preventDefault()
+            trigger.focus()
+            onClickCloser()
+          }
+        } else if (e.target === tabbablesInContent[tabbablesInContent.length - 1]) {
           // move focus next of the Trigger
           const rootTriggers = tabbable(rootTriggerRef.current)
           const rootTrigger = rootTriggers[rootTriggers.length - 1]
