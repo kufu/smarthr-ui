@@ -18,7 +18,13 @@ import { TextProps } from '../Text'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
-import { getNewExpandedItems } from './accordionPanelHelper'
+import {
+  focusFirstSibling,
+  focusLastSibling,
+  focusNextSibling,
+  focusPreviousSibling,
+  getNewExpandedItems,
+} from './accordionPanelHelper'
 
 type Props = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
@@ -70,8 +76,14 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     }
   }, [className])
   const { name } = useContext(AccordionPanelItemContext)
-  const { iconPosition, expandedItems, onClickTrigger, onClickProps, expandableMultiply } =
-    useContext(AccordionPanelContext)
+  const {
+    iconPosition,
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+    expandableMultiply,
+    parentRef,
+  } = useContext(AccordionPanelContext)
 
   const isExpanded = getIsInclude(expandedItems, name)
 
@@ -89,6 +101,42 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     }
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = useCallback(
+    (event): void => {
+      if (!parentRef?.current) {
+        return
+      }
+
+      const item = event.target as HTMLElement
+
+      switch (event.key) {
+        case 'Home': {
+          event.preventDefault()
+          focusFirstSibling(parentRef.current)
+          break
+        }
+        case 'End': {
+          event.preventDefault()
+          focusLastSibling(parentRef.current)
+          break
+        }
+        case 'ArrowLeft':
+        case 'ArrowUp': {
+          event.preventDefault()
+          focusPreviousSibling(item, parentRef.current)
+          break
+        }
+        case 'ArrowRight':
+        case 'ArrowDown': {
+          event.preventDefault()
+          focusNextSibling(item, parentRef.current)
+          break
+        }
+      }
+    },
+    [parentRef],
+  )
+
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={headingTag} type={headingType}>
@@ -98,6 +146,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         aria-expanded={isExpanded}
         aria-controls={`${name}-content`}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
         className={buttonStyle}
         data-component="AccordionHeaderButton"
         type="button"
