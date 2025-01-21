@@ -86,10 +86,7 @@ const ActualPagination: React.FC<Props> = ({
       return []
     }
 
-    return [
-      ...range(Math.max(current - padding, 1), current),
-      ...range(current, Math.min(current + padding, total) + 1),
-    ]
+    return range(Math.max(current - padding, 1), Math.min(current + padding, total) + 1)
   }, [current, total, padding, withoutNumbers])
 
   const controllerAttrs = useMemo(
