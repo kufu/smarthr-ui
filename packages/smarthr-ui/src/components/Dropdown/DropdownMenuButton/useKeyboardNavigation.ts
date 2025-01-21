@@ -62,16 +62,12 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
             acc.hoveredItem = item
           }
 
-          const isDisabled = isElementDisabled(item)
+          if (!isElementDisabled(item)) {
+            acc.tabbableItems.push(item)
 
-          if (isDisabled) {
-            return acc
-          }
-
-          acc.tabbableItems.push(item)
-
-          if (document.activeElement === item) {
-            acc.focusedIndex = acc.tabbableItems.length - 1
+            if (document.activeElement === item) {
+              acc.focusedIndex = acc.tabbableItems.length - 1
+            }
           }
 
           return acc
