@@ -81,9 +81,7 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
 
       if (['Up', 'ArrowUp', 'Left', 'ArrowLeft'].includes(e.key)) {
         moveFocus(-1, enabledItems, focusedIndex, hoveredItem)
-      }
-
-      if (['Down', 'ArrowDown', 'Right', 'ArrowRight'].includes(e.key)) {
+      } else if (['Down', 'ArrowDown', 'Right', 'ArrowRight'].includes(e.key)) {
         moveFocus(1, enabledItems, focusedIndex, hoveredItem)
       }
     },
