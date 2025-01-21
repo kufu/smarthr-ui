@@ -3,6 +3,7 @@ import {
   ComponentProps,
   FormEventHandler,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react'
@@ -53,12 +54,13 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   const [innerSelectedField, setInnerSelectedField] = useState<string>()
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
-  useMemo(() => {
+  useEffect(() => {
     if (selectedLabel) return
 
     // 初期値は option に紛れているので、選択されている項目を取得
     const defaultField =
       sortFields.find((field) => 'selected' in field && field.selected) || sortFields[0]
+
     setSelectedLabel(defaultField.label)
     setInnerSelectedField(defaultField.label)
   }, [selectedLabel, sortFields])
@@ -66,6 +68,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   // 外向きな値で構成
   const triggerLabel = useMemo(() => {
     const sortLabel = checkedOrder === 'asc' ? decoratedTexts.ascLabel : decoratedTexts.descLabel
+
     return `${selectedLabel}（${sortLabel}）`
   }, [decoratedTexts.ascLabel, decoratedTexts.descLabel, selectedLabel, checkedOrder])
 
@@ -82,6 +85,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
         ...field,
         selected: field.label === newLabel,
       }))
+
       setInnerFields(newFields)
       setInnerSelectedField(newLabel)
     },
@@ -95,6 +99,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
 
   const styles = useMemo(() => {
     const { body, select, footer } = sortDropdownStyle()
+
     return {
       bodyStyle: body(),
       selectStyle: select(),
