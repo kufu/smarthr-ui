@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
+import React, { ComponentProps, ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -119,40 +119,46 @@ const loaderStyle = tv({
     },
   },
 })
-export const Loader: FC<Props & ElementProps> = ({
-  size = 'm',
-  alt = '処理中',
-  text,
-  type = 'primary',
-  role = 'status',
-  className,
-  ...props
-}) => {
-  const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
-    type,
-    size,
-  })
-  const wrapperStyle = useMemo(() => wrapper({ className }), [wrapper, className])
-  const spinnerStyle = useMemo(() => spinner(), [spinner])
-  const cogStyle = useMemo(() => cog(), [cog])
-  const textStyle = useMemo(() => textSlot(), [textSlot])
 
-  return (
-    <span {...props} className={wrapperStyle} role={role}>
-      <span className={spinnerStyle}>
-        {[...Array(4)].map((_, index) => (
-          <span className={line({ lineNum: (index + 1) as 1 | 2 | 3 | 4 })} key={index}>
-            <span className={cogStyle}>
-              <span className={cogInner({ position: 'left' })} />
+export const Loader = React.memo<Props & ElementProps>(
+  ({
+    size = 'm',
+    alt = '処理中',
+    text,
+    type = 'primary',
+    role = 'status',
+    className,
+    ...props
+  }) => {
+    const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
+      type,
+      size,
+    })
+
+    const wrapperStyle = wrapper({ className })
+    const spinnerStyle = spinner()
+    const cogStyle = cog()
+    const cogInnerLeftStyle = cogInner({ position: 'left' })
+    const cogInnerRightStyle = cogInner({ position: 'right' })
+    const textStyle = textSlot()
+
+    return (
+      <span {...props} className={wrapperStyle} role={role}>
+        <span className={spinnerStyle}>
+          {[...Array(4)].map((_, index) => (
+            <span className={line({ lineNum: (index + 1) as 1 | 2 | 3 | 4 })} key={index}>
+              <span className={cogStyle}>
+                <span className={cogInnerLeftStyle} />
+              </span>
+              <span className={cogStyle}>
+                <span className={cogInnerRightStyle} />
+              </span>
             </span>
-            <span className={cogStyle}>
-              <span className={cogInner({ position: 'right' })} />
-            </span>
-          </span>
-        ))}
-        <VisuallyHiddenText>{alt}</VisuallyHiddenText>
+          ))}
+          <VisuallyHiddenText>{alt}</VisuallyHiddenText>
+        </span>
+        {text && <span className={textStyle}>{text}</span>}
       </span>
-      {text && <span className={textStyle}>{text}</span>}
-    </span>
-  )
-}
+    )
+  },
+)
