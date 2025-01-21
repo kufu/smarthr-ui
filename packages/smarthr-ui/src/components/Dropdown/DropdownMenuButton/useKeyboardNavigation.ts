@@ -16,7 +16,7 @@ const KEY_DOWN_REGEX = /^(Arrow)?(Down|Right)$/
 
 const moveFocus = (
   direction: 1 | -1,
-  enabledItems: Element[],
+  tabbableItems: Element[],
   focusedIndex: number,
   hoveredItem: Element | null,
 ) => {
@@ -24,16 +24,16 @@ const moveFocus = (
 
   if (focusedIndex > -1) {
     // フォーカスされているアイテムが存在する場合
-    nextIndex = (focusedIndex + direction + enabledItems.length) % enabledItems.length
+    nextIndex = (focusedIndex + direction + tabbableItems.length) % tabbableItems.length
   } else if (hoveredItem) {
     // ホバー状態のアイテムが存在する場合
     nextIndex =
-      (enabledItems.indexOf(hoveredItem) + direction + enabledItems.length) % enabledItems.length
+      (tabbableItems.indexOf(hoveredItem) + direction + tabbableItems.length) % tabbableItems.length
   } else if (direction === -1) {
-    nextIndex = enabledItems.length - 1
+    nextIndex = tabbableItems.length - 1
   }
 
-  const nextItem = enabledItems[nextIndex]
+  const nextItem = tabbableItems[nextIndex]
 
   if (nextItem instanceof HTMLElement) {
     nextItem.focus()
@@ -48,11 +48,7 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
       }
 
       const allItems = Array.from(containerRef.current.querySelectorAll('li > *'))
-      const {
-        hoveredItem,
-        tabbableItems: enabledItems,
-        focusedIndex,
-      } = allItems.reduce(
+      const { hoveredItem, tabbableItems, focusedIndex } = allItems.reduce(
         (
           acc: {
             hoveredItem: Element | null
@@ -83,9 +79,9 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
       )
 
       if (KEY_UP_REGEX.test(e.key)) {
-        moveFocus(-1, enabledItems, focusedIndex, hoveredItem)
+        moveFocus(-1, tabbableItems, focusedIndex, hoveredItem)
       } else if (KEY_DOWN_REGEX.test(e.key)) {
-        moveFocus(1, enabledItems, focusedIndex, hoveredItem)
+        moveFocus(1, tabbableItems, focusedIndex, hoveredItem)
       }
     },
     [containerRef],
