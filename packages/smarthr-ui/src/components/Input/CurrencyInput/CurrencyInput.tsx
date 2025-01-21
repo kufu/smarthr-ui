@@ -39,6 +39,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         if (!innerRef.current || formatted === innerRef.current.value) {
           return
         }
+
         innerRef.current.value = formatted
 
         if (onFormatValue) {
@@ -68,27 +69,34 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [isFocused, props.value, formatValue])
 
-    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-      setIsFocused(true)
-      if (innerRef.current) {
-        const commaExcluded = innerRef.current.value.replace(/,/g, '')
-        formatValue(commaExcluded)
-      }
+    const handleFocus = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => {
+        setIsFocused(true)
 
-      if (onFocus) {
-        onFocus(e)
-      }
-    }
+        if (innerRef.current) {
+          const commaExcluded = innerRef.current.value.replace(/,/g, '')
+          formatValue(commaExcluded)
+        }
 
-    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-      setIsFocused(false)
+        if (onFocus) {
+          onFocus(e)
+        }
+      },
+      [formatValue, onFocus],
+    )
 
-      if (onBlur) {
-        onBlur(e)
-      }
-    }
+    const handleBlur = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => {
+        setIsFocused(false)
 
-    const classNames = useClassNames()
+        if (onBlur) {
+          onBlur(e)
+        }
+      },
+      [onBlur],
+    )
+
+    const classNames = useClassNames(className)
 
     return (
       <Input
@@ -97,7 +105,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={innerRef}
-        className={`${className} ${classNames.wrapper}`}
+        className={classNames.wrapper}
       />
     )
   },

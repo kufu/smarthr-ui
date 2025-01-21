@@ -13,14 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { flatArrayToMap } from '../../libs/map'
 
-import {
-  focusFirstSibling,
-  focusLastSibling,
-  focusNextSibling,
-  focusPreviousSibling,
-  getNewExpandedItems,
-  keycodes,
-} from './accordionPanelHelper'
+import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = PropsWithChildren<{
   /** アイコンの左右位置 */
@@ -71,40 +64,6 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
     [expandableMultiply, expandedItems],
   )
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>): void => {
-    if (!parentRef?.current) {
-      return
-    }
-
-    const keyCode = event.keyCode
-    const item = event.target as HTMLElement
-
-    switch (keyCode) {
-      case keycodes.HOME: {
-        event.preventDefault()
-        focusFirstSibling(parentRef.current)
-        break
-      }
-      case keycodes.END: {
-        event.preventDefault()
-        focusLastSibling(parentRef.current)
-        break
-      }
-      case keycodes.LEFT:
-      case keycodes.UP: {
-        event.preventDefault()
-        focusPreviousSibling(item, parentRef.current)
-        break
-      }
-      case keycodes.RIGHT:
-      case keycodes.DOWN: {
-        event.preventDefault()
-        focusNextSibling(item, parentRef.current)
-        break
-      }
-    }
-  }
-
   useEffect(() => {
     if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
   }, [defaultExpanded])
@@ -121,13 +80,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
       }}
     >
       {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-      <div
-        {...props}
-        className={styles}
-        ref={parentRef}
-        onKeyDown={handleKeyPress}
-        role="presentation"
-      />
+      <div {...props} className={styles} ref={parentRef} role="presentation" />
     </AccordionPanelContext.Provider>
   )
 }
