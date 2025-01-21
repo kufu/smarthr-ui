@@ -79,12 +79,12 @@ export const LineClamp: FC<Props & ElementProps> = ({
     // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-    const result =
+    const isMultiLineOverflow =
       el && shadowEl
         ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
         : false
 
-    setTooltipVisible(result)
+    setTooltipVisible(isMultiLineOverflow)
   }, [maxLines, children])
 
   const { baseStyle, clampedLineStyle, shadowElementWrapperStyle, shadowElementStyle } =
