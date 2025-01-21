@@ -70,15 +70,10 @@ export const FloatArea: FC<Props & ElementProps> = ({
   ...rest
 }) => {
   const styleAttr = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
+  const actualClassName = useMemo(() => floatArea({ bottom, className }), [bottom, className])
 
   return (
-    <Base
-      {...rest}
-      style={styleAttr}
-      layer={3}
-      padding={1}
-      className={floatArea({ bottom, className })}
-    >
+    <Base {...rest} style={styleAttr} layer={3} padding={1} className={actualClassName}>
       <Cluster gap={1}>
         {tertiaryButton}
         <div className="shr-ms-auto">
