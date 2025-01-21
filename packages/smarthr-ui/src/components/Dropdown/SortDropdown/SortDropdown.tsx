@@ -93,7 +93,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                 <RadioButton
                   name="sortOrder"
                   value="asc"
-                  defaultChecked={innerCheckedOrder === 'asc'}
+                  checked={innerCheckedOrder === 'asc'}
                   onChange={onChangeSortOrderRadio}
                 >
                   {labels.asc}
@@ -101,7 +101,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                 <RadioButton
                   name="sortOrder"
                   value="desc"
-                  defaultChecked={innerCheckedOrder === 'desc'}
+                  checked={innerCheckedOrder === 'desc'}
                   onChange={onChangeSortOrderRadio}
                 >
                   {labels.desc}
