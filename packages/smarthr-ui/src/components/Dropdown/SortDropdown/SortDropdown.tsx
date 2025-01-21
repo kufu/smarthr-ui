@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentPropsWithRef } from 'react'
+import React, { ComponentPropsWithRef, ReactNode } from 'react'
 import { type FC, type MouseEventHandler } from 'react'
 
 import { Button } from '../../Button'
@@ -121,14 +121,18 @@ export const SortDropdown: FC<Props & ElementProps> = ({
             <DropdownCloser>
               <Button onClick={onCancel}>{cancelButtonLabel}</Button>
             </DropdownCloser>
-            <DropdownCloser>
-              <Button type="submit" variant="primary">
-                {applyButtonLabel}
-              </Button>
-            </DropdownCloser>
+            <ApplyButton>{applyButtonLabel}</ApplyButton>
           </Cluster>
         </form>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const ApplyButton = React.memo<{ children: ReactNode }>(({ children }) => (
+  <DropdownCloser>
+    <Button type="submit" variant="primary">
+      {children}
+    </Button>
+  </DropdownCloser>
+))
