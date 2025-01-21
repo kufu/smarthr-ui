@@ -25,40 +25,51 @@ const pageCounter = tv({ base: 'shr-text-base' })
 export const PageCounter: React.FC<Props & ElementProps> = ({
   start,
   end,
-  total = 0,
+  total,
   decorators,
   className,
   ...props
 }) => {
-  const rangeSeparatorDecorators = useMemo(
-    () => ({
-      text: () => executeDecorator(RANGE_SEPARATOR, decorators?.rangeSeparator),
+  const rangeSeparatorDecorators = useMemo(() => {
+    if (!decorators) {
+      return {
+        text: () => RANGE_SEPARATOR,
+        visuallyHiddenText: () => RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT,
+      }
+    }
+
+    return {
+      text: () => executeDecorator(RANGE_SEPARATOR, decorators.rangeSeparator),
       visuallyHiddenText: () =>
         executeDecorator(
           RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT,
-          decorators?.rangeSeparatorVisuallyHiddenText,
+          decorators.rangeSeparatorVisuallyHiddenText,
         ),
-    }),
-    [decorators?.rangeSeparator, decorators?.rangeSeparatorVisuallyHiddenText],
-  )
+    }
+  }, [decorators])
 
   return (
     <Cluster {...props} gap={0.25} inline align="baseline" className={pageCounter({ className })}>
-      <Text weight="bold" as="b">
-        {start.toLocaleString()}
-      </Text>
+      <BoldNumber>{start}</BoldNumber>
       <RangeSeparator decorators={rangeSeparatorDecorators} />
-      <Text weight="bold" as="b">
-        {end.toLocaleString()}
-      </Text>
-      {total > 0 && (
-        <>
-          <span>/</span>
-          <Text weight="bold" as="b">
-            {total.toLocaleString()}
-          </Text>
-        </>
-      )}
+      <BoldNumber>{end}</BoldNumber>
+      <Total>{total}</Total>
     </Cluster>
   )
 }
+
+const BoldNumber = React.memo<{ children: number }>(({ children }) => (
+  <Text weight="bold" as="b">
+    {children.toLocaleString()}
+  </Text>
+))
+
+const Total = React.memo<{ children: number | undefined }>(
+  ({ children = 0 }) =>
+    children > 0 && (
+      <>
+        <span>/</span>
+        <BoldNumber>{children}</BoldNumber>
+      </>
+    ),
+)
