@@ -116,13 +116,15 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
 export const renderButtonList = (children: Actions) =>
   React.Children.map(children, (item): ReactNode => {
-    if (!(item && React.isValidElement(item))) return null
-    if (item.type === React.Fragment) {
-      return renderButtonList(item.props.children)
+    if (!item || !React.isValidElement(item)) {
+      return null
     }
 
-    if (item.type === DropdownMenuGroup) {
-      return item
+    switch (item.type) {
+      case React.Fragment:
+        return renderButtonList(item.props.children)
+      case DropdownMenuGroup:
+        return item
     }
 
     const actualElement = React.cloneElement(item as ReactElement, {
