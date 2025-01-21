@@ -73,33 +73,60 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   onlyIconTrigger,
   triggerIcon,
   className,
-  ...props
+  ...rest
 }) => {
   const containerRef = React.useRef<HTMLUListElement>(null)
 
   useKeyboardNavigation(containerRef)
 
+  const styles = useMemo(
+    () => ({
+      triggerWrapper: triggerWrapper({ className }),
+      triggerButton: triggerButton(),
+      actionList: actionList(),
+    }),
+    [className],
+  )
+
   return (
     <Dropdown>
-      <DropdownTrigger className={triggerWrapper({ className })}>
-        <Button
-          {...props}
-          suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
-          size={triggerSize}
-          square={onlyIconTrigger}
-          className={triggerButton()}
-        >
-          <TriggerLabel label={label} onlyIconTrigger={onlyIconTrigger} triggerIcon={triggerIcon} />
-        </Button>
-      </DropdownTrigger>
+      <MemoizedTriggerButton
+        {...rest}
+        label={label}
+        onlyIconTrigger={onlyIconTrigger}
+        triggerIcon={triggerIcon}
+        triggerSize={triggerSize}
+        className={styles.triggerWrapper}
+        buttonStyle={styles.triggerButton}
+      />
       <DropdownContent>
-        <menu ref={containerRef} className={actionList()}>
+        <menu ref={containerRef} className={styles.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const MemoizedTriggerButton = React.memo<
+  Pick<Props, 'onlyIconTrigger' | 'triggerSize' | 'label' | 'triggerIcon'> &
+    ElementProps & { wrapperStyle: string; buttonStyle: string }
+>(
+  ({ onlyIconTrigger, triggerSize, label, triggerIcon, wrapperStyle, buttonStyle, ...rest }) => (
+    <DropdownTrigger className={wrapperStyle}>
+      <Button
+        {...rest}
+        suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
+        size={triggerSize}
+        square={onlyIconTrigger}
+        className={buttonStyle}
+      >
+        <TriggerLabel label={label} onlyIconTrigger={onlyIconTrigger} triggerIcon={triggerIcon} />
+      </Button>
+    </DropdownTrigger>
+  ),
+  [],
+)
 
 const TriggerLabel = React.memo<Pick<Props, 'label' | 'onlyIconTrigger' | 'triggerIcon'>>(
   ({ label, onlyIconTrigger, triggerIcon }) => {
