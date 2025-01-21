@@ -26,12 +26,12 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   const decoratedTexts = useMemo(() => {
     if (!decorators) {
       return {
-        sortFieldLabel: SORT_FIELD_LABEL,
-        sortOrderLabel: SORT_ORDER_LABEL,
-        ascLabel: ASC_LABEL,
-        descLabel: DESC_LABEL,
-        applyButtonLabel: APPLY_BUTTON_TEXT,
-        cancelButtonLabel: CANCEL_BUTTON_TEXT,
+        sortField: SORT_FIELD_LABEL,
+        sortOrder: SORT_ORDER_LABEL,
+        asc: ASC_LABEL,
+        desc: DESC_LABEL,
+        applyButton: APPLY_BUTTON_TEXT,
+        cancelButton: CANCEL_BUTTON_TEXT,
       }
     }
 
@@ -67,10 +67,10 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
 
   // 外向きな値で構成
   const triggerLabel = useMemo(() => {
-    const sortLabel = checkedOrder === 'asc' ? decoratedTexts.ascLabel : decoratedTexts.descLabel
+    const sortLabel = checkedOrder === 'asc' ? decoratedTexts.asc : decoratedTexts.desc
 
     return `${selectedLabel}（${sortLabel}）`
-  }, [decoratedTexts.ascLabel, decoratedTexts.descLabel, selectedLabel, checkedOrder])
+  }, [decoratedTexts.asc, decoratedTexts.desc, selectedLabel, checkedOrder])
 
   const SortIcon = useMemo(
     () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
@@ -105,16 +105,16 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     const { body, select, footer } = sortDropdownStyle()
 
     return {
-      bodyStyle: body(),
-      selectStyle: select(),
-      footerStyle: footer(),
+      body: body(),
+      select: select(),
+      footer: footer(),
     }
   }, [])
 
   return {
     onChangeSortOrderRadio,
     labels: {
-      triggerLabel,
+      trigger: triggerLabel,
       ...decoratedTexts,
     },
     handler: { handleApply, handleChange },
