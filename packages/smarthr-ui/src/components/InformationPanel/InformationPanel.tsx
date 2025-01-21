@@ -198,8 +198,8 @@ const MemoizedHeading = React.memo<
     className: string
     children: Props['title']
   }
->(({ type, children, ...rect }) => (
-  <Heading {...rect} type="blockTitle">
+>(({ type, children, ...rest }) => (
+  <Heading {...rest} type="blockTitle">
     <ResponseMessage type={type} iconGap={0.5}>
       {children}
     </ResponseMessage>
