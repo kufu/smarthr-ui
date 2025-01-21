@@ -14,12 +14,39 @@ const isElementDisabled = (element: Element): boolean => {
 const KEY_UP_REGEX = /^(Arrow)?(Up|Left)$/
 const KEY_DOWN_REGEX = /^(Arrow)?(Down|Right)$/
 
-const moveFocus = (
-  direction: 1 | -1,
-  tabbableItems: Element[],
-  focusedIndex: number,
-  hoveredItem: Element | null,
-) => {
+const moveFocus = (element: Element, direction: 1 | -1) => {
+  const { hoveredItem, tabbableItems, focusedIndex } = Array.from(
+    element.querySelectorAll('li > *'),
+  ).reduce(
+    (
+      acc: {
+        hoveredItem: Element | null
+        tabbableItems: Element[]
+        focusedIndex: number
+      },
+      item,
+    ) => {
+      if (item.matches(':hover') && acc.hoveredItem === null) {
+        acc.hoveredItem = item
+      }
+
+      if (!isElementDisabled(item)) {
+        acc.tabbableItems.push(item)
+
+        if (document.activeElement === item) {
+          acc.focusedIndex = acc.tabbableItems.length - 1
+        }
+      }
+
+      return acc
+    },
+    {
+      hoveredItem: null,
+      tabbableItems: [],
+      focusedIndex: -1,
+    },
+  )
+
   let nextIndex = 0
 
   if (focusedIndex > -1) {
@@ -47,50 +74,11 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
         return
       }
 
-      let direction: null | 1 | -1 = null
-
       if (KEY_UP_REGEX.test(e.key)) {
-        direction = -1
+        moveFocus(containerRef.current, -1)
       } else if (KEY_DOWN_REGEX.test(e.key)) {
-        direction = 1
+        moveFocus(containerRef.current, 1)
       }
-
-      if (direction === null) {
-        return
-      }
-
-      const allItems = Array.from(containerRef.current.querySelectorAll('li > *'))
-      const { hoveredItem, tabbableItems, focusedIndex } = allItems.reduce(
-        (
-          acc: {
-            hoveredItem: Element | null
-            tabbableItems: Element[]
-            focusedIndex: number
-          },
-          item,
-        ) => {
-          if (item.matches(':hover') && acc.hoveredItem === null) {
-            acc.hoveredItem = item
-          }
-
-          if (!isElementDisabled(item)) {
-            acc.tabbableItems.push(item)
-
-            if (document.activeElement === item) {
-              acc.focusedIndex = acc.tabbableItems.length - 1
-            }
-          }
-
-          return acc
-        },
-        {
-          hoveredItem: null,
-          tabbableItems: [],
-          focusedIndex: -1,
-        },
-      )
-
-      moveFocus(direction, tabbableItems, focusedIndex, hoveredItem)
     },
     [containerRef],
   )
