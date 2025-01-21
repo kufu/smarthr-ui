@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [64.0.1](https://github.com/kufu/smarthr-ui/compare/v64.0.0...v64.0.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* AccordionPanelのkeydownイベントリスナーをTriggerに移動 ([#5215](https://github.com/kufu/smarthr-ui/issues/5215)) ([b139a6f](https://github.com/kufu/smarthr-ui/commit/b139a6f74a4b34d7ca7ee85622f44be2a009afbb))
+* FieldsetコンポーネントにdangerouslyTitleHiddenを設定した場合、余計な余白が出力されてしまう問題を修正 ([#5305](https://github.com/kufu/smarthr-ui/issues/5305)) ([df19c82](https://github.com/kufu/smarthr-ui/commit/df19c829536515958ea87788b63af6246c7372cb))
+* **Tooltip:** マークアップをpタグからdivタグに変更 ([#5275](https://github.com/kufu/smarthr-ui/issues/5275)) ([3557460](https://github.com/kufu/smarthr-ui/commit/35574602a37c180c04feffe1bb47fa63f2d46173))
+
 ## [64.0.0](https://github.com/kufu/smarthr-ui/compare/v63.0.0...v64.0.0) (2025-01-14)
 
 
