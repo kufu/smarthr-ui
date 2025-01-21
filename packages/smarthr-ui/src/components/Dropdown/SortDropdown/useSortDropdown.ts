@@ -22,24 +22,27 @@ const APPLY_BUTTON_TEXT = '適用'
 const CANCEL_BUTTON_TEXT = 'キャンセル'
 
 export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators }: Props) => {
-  const sortFieldLabel = useMemo(
-    () => decorators?.sortFieldLabel?.(SORT_FIELD_LABEL) || SORT_FIELD_LABEL,
-    [decorators],
-  )
-  const sortOrderLabel = useMemo(
-    () => decorators?.sortOrderLabel?.(SORT_ORDER_LABEL) || SORT_ORDER_LABEL,
-    [decorators],
-  )
-  const ascLabel = useMemo(() => decorators?.ascLabel?.(ASC_LABEL) || ASC_LABEL, [decorators])
-  const descLabel = useMemo(() => decorators?.descLabel?.(DESC_LABEL) || DESC_LABEL, [decorators])
-  const applyButtonLabel = useMemo(
-    () => decorators?.applyButtonLabel?.(APPLY_BUTTON_TEXT) || APPLY_BUTTON_TEXT,
-    [decorators],
-  )
-  const cancelButtonLabel = useMemo(
-    () => decorators?.cancelButtonLabel?.(CANCEL_BUTTON_TEXT) || CANCEL_BUTTON_TEXT,
-    [decorators],
-  )
+  const decoratedTexts = useMemo(() => {
+    if (!decorators) {
+      return {
+        sortFieldLabel: SORT_FIELD_LABEL,
+        sortOrderLabel: SORT_ORDER_LABEL,
+        ascLabel: ASC_LABEL,
+        descLabel: DESC_LABEL,
+        applyButtonLabel: APPLY_BUTTON_TEXT,
+        cancelButtonLabel: CANCEL_BUTTON_TEXT,
+      }
+    }
+
+    return {
+      sortFieldLabel: decorators.sortFieldLabel?.(SORT_FIELD_LABEL) || SORT_FIELD_LABEL,
+      sortOrderLabel: decorators.sortOrderLabel?.(SORT_ORDER_LABEL) || SORT_ORDER_LABEL,
+      ascLabel: decorators.ascLabel?.(ASC_LABEL) || ASC_LABEL,
+      descLabel: decorators.descLabel?.(DESC_LABEL) || DESC_LABEL,
+      applyButtonLabel: decorators.applyButtonLabel?.(APPLY_BUTTON_TEXT) || APPLY_BUTTON_TEXT,
+      cancelButtonLabel: decorators.cancelButtonLabel?.(CANCEL_BUTTON_TEXT) || CANCEL_BUTTON_TEXT,
+    }
+  }, [decorators])
 
   // 外向きの値
   const [selectedLabel, setSelectedLabel] = useState<string>()
@@ -62,9 +65,9 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
 
   // 外向きな値で構成
   const triggerLabel = useMemo(() => {
-    const sortLabel = checkedOrder === 'asc' ? ascLabel : descLabel
+    const sortLabel = checkedOrder === 'asc' ? decoratedTexts.ascLabel : decoratedTexts.descLabel
     return `${selectedLabel}（${sortLabel}）`
-  }, [ascLabel, descLabel, selectedLabel, checkedOrder])
+  }, [decoratedTexts.ascLabel, decoratedTexts.descLabel, selectedLabel, checkedOrder])
 
   const SortIcon = useMemo(
     () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
@@ -103,12 +106,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     setCheckedInnerOrder,
     labels: {
       triggerLabel,
-      sortFieldLabel,
-      sortOrderLabel,
-      ascLabel,
-      descLabel,
-      applyButtonLabel,
-      cancelButtonLabel,
+      ...decoratedTexts,
     },
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
