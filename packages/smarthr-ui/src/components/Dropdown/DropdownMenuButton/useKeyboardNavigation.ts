@@ -47,6 +47,18 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
         return
       }
 
+      let direction: null | 1 | -1 = null
+
+      if (KEY_UP_REGEX.test(e.key)) {
+        direction = -1
+      } else if (KEY_DOWN_REGEX.test(e.key)) {
+        direction = 1
+      }
+
+      if (direction === null) {
+        return
+      }
+
       const allItems = Array.from(containerRef.current.querySelectorAll('li > *'))
       const { hoveredItem, tabbableItems, focusedIndex } = allItems.reduce(
         (
@@ -78,11 +90,7 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
         },
       )
 
-      if (KEY_UP_REGEX.test(e.key)) {
-        moveFocus(-1, tabbableItems, focusedIndex, hoveredItem)
-      } else if (KEY_DOWN_REGEX.test(e.key)) {
-        moveFocus(1, tabbableItems, focusedIndex, hoveredItem)
-      }
+      moveFocus(direction, tabbableItems, focusedIndex, hoveredItem)
     },
     [containerRef],
   )
