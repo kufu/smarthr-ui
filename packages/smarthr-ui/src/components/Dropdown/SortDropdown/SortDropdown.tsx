@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren } from 'react'
+import React, { ComponentPropsWithRef, PropsWithChildren, ReactNode } from 'react'
 import { type FC, type MouseEventHandler } from 'react'
 
 import { Button } from '../../Button'
@@ -124,8 +124,8 @@ export const SortDropdown: FC<Props & ElementProps> = ({
 const Footer = React.memo<
   Pick<Props, 'onCancel'> & {
     className: string
-    cancelButtonLabel: string
-    applyButtonLabel: string
+    cancelButtonLabel: ReactNode
+    applyButtonLabel: ReactNode
   }
 >(({ className, onCancel, cancelButtonLabel, applyButtonLabel }) => (
   <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
