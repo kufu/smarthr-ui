@@ -76,7 +76,7 @@ const filterDropdown = tv({
 })
 
 export const FilterDropdown: FC<Props & ElementProps> = ({
-  isFiltered = false,
+  isFiltered,
   onApply,
   onCancel,
   onReset,
@@ -133,15 +133,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     }
   }, [responseMessage])
 
-  const {
-    iconWrapperStyle,
-    filteredIconStyle,
-    innerStyle,
-    actionAreaStyle,
-    resetButtonAreaStyle,
-    rightButtonAreaStyle,
-    messageStyle,
-  } = useMemo(() => {
+  const styles = useMemo(() => {
     const {
       iconWrapper,
       filteredIcon,
@@ -152,8 +144,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
       message,
     } = filterDropdown()
 
-    return {
-      iconWrapperStyle: iconWrapper({ filtered: isFiltered, triggerSize }),
+    const commonStyles = {
       filteredIconStyle: filteredIcon(),
       innerStyle: inner(),
       actionAreaStyle: actionArea(),
@@ -161,7 +152,28 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
       rightButtonAreaStyle: rightButtonArea(),
       messageStyle: message(),
     }
-  }, [isFiltered, triggerSize])
+
+    return {
+      filtered: {
+        ...commonStyles,
+        iconWrapperStyle: iconWrapper({ filtered: true, triggerSize }),
+      },
+      unfiltered: {
+        ...commonStyles,
+        iconWrapperStyle: iconWrapper({ filtered: false, triggerSize }),
+      },
+    }
+  }, [triggerSize])
+
+  const {
+    iconWrapperStyle,
+    filteredIconStyle,
+    innerStyle,
+    actionAreaStyle,
+    resetButtonAreaStyle,
+    rightButtonAreaStyle,
+    messageStyle,
+  } = styles[isFiltered ? 'filtered' : 'unfiltered']
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
@@ -171,12 +183,12 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           suffix={
             <span className={iconWrapperStyle}>
               <FaFilterIcon />
-              {isFiltered ? (
+              {isFiltered && (
                 <FaCircleCheckIcon
                   aria-label={filteredIconAriaLabel}
                   className={filteredIconStyle}
                 />
-              ) : null}
+              )}
             </span>
           }
           size={triggerSize}
