@@ -97,6 +97,10 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     onApply({ field: innerSelectedField || '', order: innerCheckedOrder, newfields: innerFields })
   }, [innerCheckedOrder, innerFields, innerSelectedField, onApply])
 
+  const onChangeSortOrderRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
+    setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
+  }, [])
+
   const styles = useMemo(() => {
     const { body, select, footer } = sortDropdownStyle()
 
@@ -108,7 +112,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   }, [])
 
   return {
-    setCheckedInnerOrder,
+    onChangeSortOrderRadio,
     labels: {
       triggerLabel,
       ...decoratedTexts,
