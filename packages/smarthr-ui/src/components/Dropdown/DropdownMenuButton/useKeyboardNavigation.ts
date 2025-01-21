@@ -4,8 +4,11 @@ const matchesDisabledState = (element: Element): boolean =>
   element.matches(':disabled') || element.getAttribute('aria-disabled') === 'true'
 
 const isElementDisabled = (element: Element): boolean => {
-  if (matchesDisabledState(element)) return true
-  return Array.from(element.querySelectorAll('*')).some((child) => matchesDisabledState(child))
+  if (matchesDisabledState(element)) {
+    return true
+  }
+
+  return Array.from(element.querySelectorAll('*')).some(matchesDisabledState)
 }
 
 const moveFocus = (
@@ -71,6 +74,7 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
           }
 
           acc.tabbableItems.push(item)
+
           if (document.activeElement === item) {
             acc.focusedIndex = acc.tabbableItems.length - 1
           }
@@ -97,6 +101,7 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
