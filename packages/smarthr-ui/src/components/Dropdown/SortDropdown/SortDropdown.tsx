@@ -109,15 +109,30 @@ export const SortDropdown: FC<Props & ElementProps> = ({
               </Cluster>
             </Fieldset>
           </Stack>
-          <Cluster gap={1} align="center" justify="flex-end" as="footer" className={styles.footer}>
-            <CancelButton onClick={onCancel}>{labels.cancelButton}</CancelButton>
-            <ApplyButton>{labels.applyButton}</ApplyButton>
-          </Cluster>
+          <Footer
+            onCancel={onCancel}
+            cancelButtonLabel={labels.cancelButton}
+            applyButtonLabel={labels.applyButton}
+            className={styles.footer}
+          />
         </form>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const Footer = React.memo<
+  Pick<Props, 'onCancel'> & {
+    className: string
+    cancelButtonLabel: string
+    applyButtonLabel: string
+  }
+>(({ className, onCancel, cancelButtonLabel, applyButtonLabel }) => (
+  <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
+    <CancelButton onClick={onCancel}>{cancelButtonLabel}</CancelButton>
+    <ApplyButton>{applyButtonLabel}</ApplyButton>
+  </Cluster>
+))
 
 const CancelButton = React.memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
   ({ onClick, children }) => (
