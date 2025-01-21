@@ -74,51 +74,6 @@ const formGroup = tv({
   },
 })
 
-const childrenWrapper = tv({
-  variants: {
-    innerMargin: {
-      0: '[&&&]:shr-mt-0',
-      0.25: '[&&&]:shr-mt-0.25',
-      0.5: '[&&&]:shr-mt-0.5',
-      0.75: '[&&&]:shr-mt-0.75',
-      1: '[&&&]:shr-mt-1',
-      1.25: '[&&&]:shr-mt-1.25',
-      1.5: '[&&&]:shr-mt-1.5',
-      2: '[&&&]:shr-mt-2',
-      2.5: '[&&&]:shr-mt-2.5',
-      3: '[&&&]:shr-mt-3',
-      3.5: '[&&&]:shr-mt-3.5',
-      4: '[&&&]:shr-mt-4',
-      8: '[&&&]:shr-mt-8',
-      X3S: '[&&&]:shr-mt-0.25',
-      XXS: '[&&&]:shr-mt-0.5',
-      XS: '[&&&]:shr-mt-1',
-      S: '[&&&]:shr-mt-1.5',
-      M: '[&&&]:shr-mt-2',
-      L: '[&&&]:shr-mt-2.5',
-      XL: '[&&&]:shr-mt-3',
-      XXL: '[&&&]:shr-mt-3.5',
-      X3L: '[&&&]:shr-mt-4',
-    } as { [key in Gap]: string },
-    isFieldset: {
-      true: '',
-      false: '',
-    },
-  },
-  compoundVariants: [
-    {
-      innerMargin: undefined,
-      isFieldset: true,
-      className: '[:not([hidden])_~_&&&]:shr-mt-1',
-    },
-    {
-      innerMargin: undefined,
-      isFieldset: false,
-      className: '[:not([hidden])_~_&&&]:shr-mt-0.5',
-    },
-  ],
-})
-
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
 export const ActualFormControl: React.FC<Props & ElementProps> = ({
@@ -128,7 +83,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   dangerouslyTitleHidden = false,
   htmlFor,
   labelId,
-  innerMargin,
+  innerMargin = 0.5,
   statusLabelProps,
   helpMessage,
   exampleMessage,
@@ -180,18 +135,16 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
-    useMemo(() => {
-      const { wrapper, label, errorList, errorIcon } = formGroup()
+  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle } = useMemo(() => {
+    const { wrapper, label, errorList, errorIcon } = formGroup()
 
-      return {
-        wrapperStyle: wrapper({ className }),
-        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-        errorListStyle: errorList(),
-        errorIconStyle: errorIcon(),
-        childrenWrapperStyle: childrenWrapper({ innerMargin, isFieldset }),
-      }
-    }, [className, dangerouslyTitleHidden, innerMargin, isFieldset])
+    return {
+      wrapperStyle: wrapper({ className }),
+      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+      errorListStyle: errorList(),
+      errorIconStyle: errorIcon(),
+    }
+  }, [dangerouslyTitleHidden, className])
 
   useEffect(() => {
     if (isFieldset) {
@@ -227,8 +180,18 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
         input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
       }
+    } else if (dangerouslyTitleHidden) {
+      const attrName = 'aria-labelledby'
+      const inputLabelledByIds = input.getAttribute(attrName)
+
+      if (!inputLabelledByIds?.match(managedLabelId)) {
+        input.setAttribute(
+          attrName,
+          inputLabelledByIds ? `${managedLabelId} ${inputLabelledByIds}` : managedLabelId,
+        )
+      }
     }
-  }, [managedHtmlFor, isFieldset, managedLabelId])
+  }, [managedHtmlFor, isFieldset, dangerouslyTitleHidden, managedLabelId])
   useEffect(() => {
     if (!describedbyIds) {
       return
@@ -275,7 +238,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     <Stack
       {...props}
       as={as}
-      gap={innerMargin ?? 0.5}
+      gap={innerMargin}
+      aria-labelledby={isFieldset ? managedLabelId : undefined}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={wrapperStyle}
     >
@@ -298,9 +262,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         errorListStyle={errorListStyle}
         errorIconStyle={errorIconStyle}
       />
-      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
-        {children}
-      </div>
+      <div ref={inputWrapperRef}>{children}</div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
         managedHtmlFor={managedHtmlFor}
@@ -342,30 +304,57 @@ const TitleCluster = React.memo<
         )}
       </>
     )
-    const labelAttrs = isFieldset
-      ? { 'aria-hidden': 'true' }
-      : {
+
+    const attrs = useMemo(() => {
+      if (dangerouslyTitleHidden) {
+        return {
+          label: null,
+          visuallyHidden: isFieldset
+            ? {
+                as: 'legend',
+                hidden: true,
+                id: managedLabelId,
+              }
+            : {
+                as: 'label',
+                hidden: true,
+                htmlFor: managedHtmlFor,
+                id: managedLabelId,
+              },
+        }
+      }
+
+      if (isFieldset) {
+        return {
+          label: { 'aria-hidden': 'true' } as const,
+          visuallyHidden: { as: 'legend', hidden: true, id: managedLabelId },
+        }
+      }
+
+      return {
+        label: {
+          as: 'label' as const,
           htmlFor: managedHtmlFor,
           id: managedLabelId,
-          as: 'label' as React.ComponentProps<typeof Cluster>['as'],
-        }
+        },
+        visuallyHidden: null,
+      }
+    }, [managedLabelId, managedHtmlFor, dangerouslyTitleHidden, isFieldset])
 
     return (
       <>
-        {isFieldset && <VisuallyHiddenText as="legend">{innerText(body)}</VisuallyHiddenText>}
-        <Cluster
-          justify="space-between"
-          // HINT: legendが存在する場合、Stackの余白が狂ってしまう&常にこのClusterはUI上先頭になるため、margin-topを0固定する
-          className="[&&&]:shr-mt-0"
-          // HINT: dangerouslyTitleHiddenの場合、Stackの余白計算を正常にするためのhidden
-          hidden={dangerouslyTitleHidden || undefined}
-        >
-          {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-          <Cluster {...labelAttrs} align="center" className={labelStyle}>
-            {body}
+        {attrs.visuallyHidden && (
+          <VisuallyHiddenText {...attrs.visuallyHidden}>{innerText(body)}</VisuallyHiddenText>
+        )}
+        {attrs.label && (
+          <Cluster justify="space-between">
+            {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+            <Cluster {...attrs.label} align="center" className={labelStyle}>
+              {body}
+            </Cluster>
+            {subActionArea && <div className="shr-grow">{subActionArea}</div>}
           </Cluster>
-          {subActionArea && <div className="shr-grow">{subActionArea}</div>}
-        </Cluster>
+        )}
       </>
     )
   },
