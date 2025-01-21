@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [64.0.0](https://github.com/kufu/smarthr-ui/compare/v63.0.0...v64.0.0) (2025-01-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* FormControl,Fieldsetのtitleにアイコンやボタンを含めずマークアップできるよう属性を追加 (#5235)
+
+### Features
+
+* FormControl,Fieldsetのtitleにアイコンやボタンを含めずマークアップできるよう属性を追加 ([#5235](https://github.com/kufu/smarthr-ui/issues/5235)) ([042e888](https://github.com/kufu/smarthr-ui/commit/042e888c24234e733fc8dbb9443acfb93359b0e3))
+
+
+### Bug Fixes
+
+* Textareaの文字数カウントテキストの生成時、ReactComponentが利用される場合があることの考慮漏れを対応 ([#5269](https://github.com/kufu/smarthr-ui/issues/5269)) ([9dbd633](https://github.com/kufu/smarthr-ui/commit/9dbd633f38800649bf51d57f8f2b5d398c3d9940))
+
 ## [63.0.0](https://github.com/kufu/smarthr-ui/compare/v62.3.1...v63.0.0) (2025-01-07)
 
 

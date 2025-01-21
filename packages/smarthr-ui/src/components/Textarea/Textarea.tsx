@@ -2,6 +2,7 @@
 
 import React, {
   ComponentPropsWithRef,
+  ReactNode,
   forwardRef,
   startTransition,
   useCallback,
@@ -123,7 +124,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const currentValue = props.defaultValue || props.value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
-    const [srCounterMessage, setSrCounterMessage] = useState('')
+    const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
     const {
       afterMaxLettersCount,
@@ -160,11 +161,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
         if (counterValue > maxLetters) {
           // {count}文字オーバー
-          return `${counterValue - maxLetters}${afterMaxLettersCount}${maxLettersCountExceeded}`
+          return (
+            <>
+              {counterValue - maxLetters}
+              {afterMaxLettersCount}
+              {maxLettersCountExceeded}
+            </>
+          )
         }
 
         // あと{count}文字
-        return `${beforeMaxLettersCount}${maxLetters - counterValue}${afterMaxLettersCount}`
+        return (
+          <>
+            {beforeMaxLettersCount}
+            {maxLetters - counterValue}
+            {afterMaxLettersCount}
+          </>
+        )
       },
       [maxLetters, maxLettersCountExceeded, afterMaxLettersCount, beforeMaxLettersCount],
     )

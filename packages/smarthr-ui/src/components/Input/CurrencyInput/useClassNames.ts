@@ -4,12 +4,13 @@ import { useClassNameGenerator } from '../../../hooks/useClassNameGenerator'
 
 import { CurrencyInput } from './CurrencyInput'
 
-export function useClassNames() {
+export function useClassNames(className: string) {
   const generate = useClassNameGenerator(CurrencyInput.displayName || 'CurrencyInput')
+
   return useMemo(
     () => ({
-      wrapper: generate(),
+      wrapper: `${className} ${generate()}`,
     }),
-    [generate],
+    [generate, className],
   )
 }
