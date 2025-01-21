@@ -125,8 +125,9 @@ export const InformationPanel: FC<Props> = ({
   ...props
 }) => {
   const [active, setActive] = useState(activeProps)
-  const titleId = useId()
-  const contentId = useId()
+  const id = useId()
+  const titleId = `${id}-title`
+  const contentId = `${id}-content`
 
   useEffect(() => {
     setActive(activeProps)
