@@ -13,7 +13,7 @@ import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
 
-import type { DecoratorsType } from '../../types'
+import type { DecoratorType, DecoratorsType } from '../../types'
 
 type Option<T extends string> = {
   value: T
@@ -102,12 +102,14 @@ const ActualSelect = <T extends string>(
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       if (onChange) onChange(e)
+
       if (onChangeValue) {
         const flattenOptions = options.reduce(
           (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
           [] as Array<Option<T>>,
         )
         const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
+
         if (selectedOption) {
           onChangeValue(selectedOption.value)
         }
@@ -149,40 +151,52 @@ const ActualSelect = <T extends string>(
         ref={ref}
         className={selectStyle}
       >
-        {hasBlank && (
-          <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
-        )}
-        {options.map((option) => {
-          if ('value' in option) {
-            return (
-              <option {...option} key={option.value}>
-                {option.label}
-              </option>
-            )
-          }
-
-          const { options: groupedOptions, ...optgroup } = option
-
-          return (
-            <optgroup {...optgroup} key={optgroup.label}>
-              {groupedOptions.map((groupedOption) => (
-                <option {...groupedOption} key={groupedOption.value}>
-                  {groupedOption.label}
-                </option>
-              ))}
-            </optgroup>
-          )
-        })}
-        {
-          // Support for not omitting labels in Mobile Safari
-          isMobileSafari && <optgroup className={blankOptGroupStyle} />
-        }
+        <BlankOption hasBlank={hasBlank} decorator={decorators?.blankLabel} />
+        {options.map((option, index) => (
+          <Option {...option} key={index} />
+        ))}
+        <NotOmittingLabelsInMobileSafari className={blankOptGroupStyle} />
       </select>
-      <span className={iconWrapStyle}>
-        <FaSortIcon />
-      </span>
+      <StyledFaSortIcon className={iconWrapStyle} />
     </span>
   )
 }
+
+const BlankOption = React.memo<{
+  hasBlank: boolean | undefined
+  decorator: DecoratorType | undefined
+}>(
+  ({ hasBlank, decorator }) =>
+    hasBlank && <option value="">{decorator?.(BLANK_LABEL) || BLANK_LABEL}</option>,
+)
+
+const Option = React.memo<Props<string>['options'][number]>((option) => {
+  if ('value' in option) {
+    return <option {...option}>{option.label}</option>
+  }
+
+  const { options: groupedOptions, ...optgroup } = option
+
+  return (
+    <optgroup {...optgroup} key={optgroup.label}>
+      {groupedOptions.map((groupedOption) => (
+        <option {...groupedOption} key={groupedOption.value}>
+          {groupedOption.label}
+        </option>
+      ))}
+    </optgroup>
+  )
+})
+
+// Support for not omitting labels in Mobile Safari
+const NotOmittingLabelsInMobileSafari = React.memo<{ className: string }>(
+  ({ className }) => isMobileSafari && <optgroup className={className} />,
+)
+
+const StyledFaSortIcon = React.memo<{ className: string }>(({ className }) => (
+  <span className={className}>
+    <FaSortIcon />
+  </span>
+))
 
 export const Select = genericsForwardRef(ActualSelect)
