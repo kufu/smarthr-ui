@@ -70,7 +70,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
   children,
   triggerSize,
-  onlyIconTrigger = false,
+  onlyIconTrigger,
   triggerIcon: TriggerIcon,
   className,
   ...props
@@ -85,10 +85,6 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       label
     )
   }, [label, TriggerIcon, onlyIconTrigger])
-  const triggerSuffix = useMemo(
-    () => (onlyIconTrigger ? undefined : <FaCaretDownIcon alt="候補を開く" />),
-    [onlyIconTrigger],
-  )
 
   useKeyboardNavigation(containerRef)
 
@@ -97,7 +93,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       <DropdownTrigger className={triggerWrapper({ className })}>
         <Button
           {...props}
-          suffix={triggerSuffix}
+          suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
           size={triggerSize}
           square={onlyIconTrigger}
           className={triggerButton()}
@@ -113,6 +109,10 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
     </Dropdown>
   )
 }
+
+const ButtonSuffixIcon = React.memo<Pick<Props, 'onlyIconTrigger'>>(
+  ({ onlyIconTrigger }) => onlyIconTrigger && <FaCaretDownIcon alt="候補を開く" />,
+)
 
 export const renderButtonList = (children: Actions) =>
   React.Children.map(children, (item): ReactNode => {
