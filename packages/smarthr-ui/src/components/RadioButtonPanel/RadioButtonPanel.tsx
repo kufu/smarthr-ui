@@ -10,8 +10,6 @@ type Props = ComponentProps<typeof RadioButton> & {
   as?: string | React.ComponentType<any>
 }
 
-const MEANLESS_TAG_NAME_REGEX = /^(div|span)$/
-
 const radioButtonPanel = tv({
   base: [
     'smarthr-ui-RadioButtonPanel',
@@ -35,7 +33,7 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
     [props.disabled, className],
   )
   const role = useMemo(
-    () => (MEANLESS_TAG_NAME_REGEX.test(as ? `${as}` : '') ? 'presentation' : undefined),
+    () => (typeof as === 'string' && /^(div|span)$/.test(as) ? 'presentation' : undefined),
     [as],
   )
 
@@ -43,7 +41,7 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
   const innerRef = useRef<HTMLInputElement>(null)
   const handleOuterClick = useCallback(() => {
     innerRef.current?.click()
-  }, [innerRef.current])
+  }, [])
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
