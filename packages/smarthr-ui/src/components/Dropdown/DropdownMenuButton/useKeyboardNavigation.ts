@@ -11,6 +11,9 @@ const isElementDisabled = (element: Element): boolean => {
   return Array.from(element.querySelectorAll('*')).some(matchesDisabledState)
 }
 
+const KEY_UP_REGEX = /^(Arrow)?(Up|Left)$/
+const KEY_DOWN_REGEX = /^(Arrow)?(Down|Right)$/
+
 const moveFocus = (
   direction: 1 | -1,
   enabledItems: Element[],
@@ -79,9 +82,9 @@ const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
         },
       )
 
-      if (['Up', 'ArrowUp', 'Left', 'ArrowLeft'].includes(e.key)) {
+      if (KEY_UP_REGEX.test(e.key)) {
         moveFocus(-1, enabledItems, focusedIndex, hoveredItem)
-      } else if (['Down', 'ArrowDown', 'Right', 'ArrowRight'].includes(e.key)) {
+      } else if (KEY_DOWN_REGEX.test(e.key)) {
         moveFocus(1, enabledItems, focusedIndex, hoveredItem)
       }
     },
