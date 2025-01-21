@@ -15,26 +15,25 @@ const inputWithTooltip = tv({
 
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
   ({ tooltipMessage, width, className, ...rest }, ref) => {
-    const widthStyle = typeof width === 'number' ? `${width}px` : width
-    const tooltipStyleProps = useMemo(() => {
-      const tooltip = inputWithTooltip({ className })
-      return {
-        className: tooltip,
-        style: {
-          width: widthStyle,
-        },
-      }
-    }, [className, widthStyle])
+    const widthStyle = useMemo(
+      () => ({
+        width: typeof width === 'number' ? `${width}px` : width,
+      }),
+      [width],
+    )
+
+    const tooltipStyleProps = useMemo(() => inputWithTooltip({ className }), [className])
 
     return (
       <Tooltip
-        {...tooltipStyleProps}
         message={tooltipMessage}
         tabIndex={-1}
         ariaDescribedbyTarget="inner"
+        className={tooltipStyleProps}
+        style={widthStyle}
       >
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
-        <Input {...rest} width={widthStyle} ref={ref} />
+        <Input {...rest} width={widthStyle.width} ref={ref} />
       </Tooltip>
     )
   },
