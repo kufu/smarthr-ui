@@ -116,14 +116,22 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     visibleMessage: React.ReactNode
   } = useMemo(() => {
     const status = responseMessage?.status
-    const isVisibleMessage = status === 'success' || status === 'error'
+    const isRequestProcessing = status === 'processing'
+
+    if (status === 'success' || status === 'error') {
+      return {
+        isRequestProcessing,
+        visibleMessageType: status,
+        visibleMessage: responseMessage?.text,
+      }
+    }
 
     return {
-      isRequestProcessing: status === 'processing',
-      visibleMessageType: isVisibleMessage ? status : null,
-      visibleMessage: isVisibleMessage ? responseMessage?.text : '',
+      isRequestProcessing,
+      visibleMessageType: null,
+      visibleMessage: '',
     }
-  }, [responseMessage?.status])
+  }, [responseMessage])
 
   const {
     iconWrapperStyle,
