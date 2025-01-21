@@ -12,29 +12,24 @@ const isElementDisabled = (element: Element): boolean => {
 }
 
 const moveFocus = (
-  direction: number,
+  direction: 1 | -1,
   enabledItems: Element[],
   focusedIndex: number,
   hoveredItem: Element | null,
 ) => {
-  const calculateNextIndex = () => {
-    if (focusedIndex > -1) {
-      // フォーカスされているアイテムが存在する場合
-      return (focusedIndex + direction + enabledItems.length) % enabledItems.length
-    }
+  let nextIndex = 0
 
-    if (hoveredItem) {
-      // ホバー状態のアイテムが存在する場合
-      return (
-        (enabledItems.indexOf(hoveredItem) + direction + enabledItems.length) % enabledItems.length
-      )
-    }
-
-    // どちらもない場合は最初のアイテムからスタート
-    return direction > 0 ? 0 : enabledItems.length - 1
+  if (focusedIndex > -1) {
+    // フォーカスされているアイテムが存在する場合
+    nextIndex = (focusedIndex + direction + enabledItems.length) % enabledItems.length
+  } else if (hoveredItem) {
+    // ホバー状態のアイテムが存在する場合
+    nextIndex =
+      (enabledItems.indexOf(hoveredItem) + direction + enabledItems.length) % enabledItems.length
+  } else if (direction === -1) {
+    nextIndex = enabledItems.length - 1
   }
 
-  const nextIndex = calculateNextIndex()
   const nextItem = enabledItems[nextIndex]
 
   if (nextItem instanceof HTMLElement) {
