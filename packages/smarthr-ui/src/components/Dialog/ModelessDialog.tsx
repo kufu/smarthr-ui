@@ -380,9 +380,8 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
           aria-labelledby={labelId}
           className={wrapperStyle}
         >
-          <div tabIndex={-1} ref={focusTargetRef}>
-            {/* dummy element for focus management. */}
-          </div>
+          {/* dummy element for focus management. */}
+          <div tabIndex={-1} ref={focusTargetRef} />
           <div className={headerStyle}>
             <div
               className={dialogHandlerStyle}
@@ -397,17 +396,11 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
             <div id={labelId} className={titleStyle}>
               {header}
             </div>
-            <div className={closeButtonLayoutStyle}>
-              <Button
-                type="button"
-                size="s"
-                square
-                onClick={actualOnClickClose}
-                className="smarthr-ui-ModelessDialog-closeButton"
-              >
-                <FaXmarkIcon alt={closeButtonIconAlt} />
-              </Button>
-            </div>
+            <CloseButton
+              onClick={actualOnClickClose}
+              className={closeButtonLayoutStyle}
+              iconAlt={closeButtonIconAlt}
+            />
           </div>
           <DialogBody
             contentBgColor={contentBgColor}
@@ -422,3 +415,21 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     </DialogOverlap>,
   )
 }
+
+const CloseButton = React.memo<{
+  className: string
+  iconAlt: ReactNode
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ onClick, iconAlt, className }) => (
+  <div className={className}>
+    <Button
+      type="button"
+      size="s"
+      square
+      onClick={onClick}
+      className="smarthr-ui-ModelessDialog-closeButton"
+    >
+      <FaXmarkIcon alt={iconAlt} />
+    </Button>
+  </div>
+))
