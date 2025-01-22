@@ -4,6 +4,7 @@ import React, {
   type PropsWithChildren,
   type ReactNode,
   useCallback,
+  useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -82,22 +83,32 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     },
     [onSubmit, onClickClose],
   )
-  const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
+  const isRequestProcessing = responseMessage?.status === 'processing'
 
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+  const styles = useMemo(() => {
+    const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+
+    return {
+      form: form(),
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+      buttonArea: buttonArea(),
+      message: message(),
+    }
+  }, [])
 
   return (
     // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
-    <Stack gap={0} as={Section} className={wrapper()}>
+    <Stack gap={0} as={Section} className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
-      <form onSubmit={handleSubmitAction} className={form()}>
+      <form onSubmit={handleSubmitAction} className={styles.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
-        <Stack gap={0.5} className={actionArea()}>
+        <Stack gap={0.5} className={styles.actionArea}>
           <Cluster justify="space-between">
             {subActionArea}
-            <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
+            <Cluster gap={{ row: 0.5, column: 1 }} className={styles.buttonArea}>
               <Button
                 onClick={onClickClose}
                 disabled={closeDisabled || isRequestProcessing}
@@ -117,7 +128,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
             </Cluster>
           </Cluster>
           {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-            <div className={message()}>
+            <div className={styles.message}>
               <ResponseMessage type={responseMessage.status} role="alert">
                 {responseMessage.text}
               </ResponseMessage>
