@@ -1,7 +1,8 @@
 import React, { type FC, useMemo } from 'react'
 
 import { Button } from '../../Button'
-import { Cluster, Section } from '../../Layout'
+import { Cluster } from '../../Layout'
+import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
