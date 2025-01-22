@@ -167,23 +167,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
       footerStyle: footerEl(),
     }
   }, [className, resizable])
-  const wrapperStyleProps = useMemo(() => {
-    const leftMargin = typeof left === 'number' ? `${left}px` : left
-    const rightMargin = typeof right === 'number' ? `${right}px` : right
-    /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
-    const style =
-      width === undefined
-        ? {
-            maxWidth: `min(calc(100vw - max(${leftMargin || 0}, ${spacing[0.5]}) - max(${
-              rightMargin || 0
-            }, ${spacing[0.5]})), 800px)`,
-          }
-        : undefined
-
-    return {
-      style,
-    }
-  }, [wrapperStyle, left, right, width])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
@@ -361,7 +344,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
       >
         <Base
           {...props}
-          {...wrapperStyleProps}
           radius="m"
           layer={3}
           style={{
