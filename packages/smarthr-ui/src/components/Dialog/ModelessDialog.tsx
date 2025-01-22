@@ -89,6 +89,8 @@ type Props = PropsWithChildren<{
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
+const DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT = (def: string, _data: DOMRect | undefined) => def
+
 const modelessDialog = tv({
   slots: {
     overlap: 'shr-inset-[unset]',
@@ -183,11 +185,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
 
-  const dialogHandlerAriaLabel = useMemo(
-    () =>
-      decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
-    [decorators],
-  )
   const defaultAriaValuetext = useMemo(
     () =>
       wrapperPosition
@@ -195,17 +192,31 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
         : '',
     [wrapperPosition],
   )
+  const decorated = useMemo(() => {
+    if (!decorators) {
+      return {
+        dialogHandlerAriaLabel: DIALOG_HANDLER_ARIA_LABEL,
+        closeButtonIconAlt: CLOSE_BUTTON_ICON_ALT,
+        dialogHandlerAriaValuetext: DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT,
+      }
+    }
+
+    return {
+      dialogHandlerAriaLabel:
+        decorators.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
+      closeButtonIconAlt:
+        decorators.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
+      dialogHandlerAriaValuetext:
+        decorators.dialogHandlerAriaValuetext || DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT,
+    }
+  }, [decorators])
   const dialogHandlerAriaValuetext = useMemo(
     () =>
       defaultAriaValuetext
-        ? decorators?.dialogHandlerAriaValuetext?.(defaultAriaValuetext, wrapperPosition) ||
+        ? decorated.dialogHandlerAriaValuetext(defaultAriaValuetext, wrapperPosition) ||
           defaultAriaValuetext
         : undefined,
-    [defaultAriaValuetext, wrapperPosition, decorators],
-  )
-  const closeButtonIconAlt = useMemo(
-    () => decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
-    [decorators],
+    [defaultAriaValuetext, wrapperPosition, decorated.dialogHandlerAriaValuetext],
   )
 
   const topStyle = centering.top !== undefined ? centering.top : top
