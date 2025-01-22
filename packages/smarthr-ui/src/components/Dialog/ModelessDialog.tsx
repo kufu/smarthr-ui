@@ -86,6 +86,8 @@ type Props = PropsWithChildren<{
 }> &
   DialogBodyProps
 
+type DraggableType = ComponentProps<typeof Draggable>
+
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
@@ -342,17 +344,20 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     return () => document.removeEventListener('focus', focusHandler, true)
   }, [])
 
+  const onDragStart: DraggableType['onStart'] = useCallback((_, data) => setPosition(data), [])
+  const onDrag: DraggableType['onDrag'] = useCallback((_, data) => {
+    setPosition((prev) => ({
+      x: prev.x + data.deltaX,
+      y: prev.y + data.deltaY,
+    }))
+  }, [])
+
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={overlapStyle}>
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
-        onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
-        onDrag={(_, data) => {
-          setPosition((prev) => ({
-            x: prev.x + data.deltaX,
-            y: prev.y + data.deltaY,
-          }))
-        }}
+        onStart={onDragStart}
+        onDrag={onDrag}
         position={position}
         bounds={draggableBounds}
         nodeRef={wrapperRef}
