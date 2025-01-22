@@ -1,14 +1,6 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  FC,
-  PropsWithChildren,
-  RefObject,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, RefObject, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
@@ -101,11 +93,10 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     useMemo(() => (onPressEscape && isOpen ? onPressEscape : undefined), [isOpen, onPressEscape]),
   )
 
-  const handleClickOverlay = useCallback(() => {
-    if (isOpen && onClickOverlay) {
-      onClickOverlay()
-    }
-  }, [isOpen, onClickOverlay])
+  const handleClickOverlay = useMemo(
+    () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
+    [isOpen, onClickOverlay],
+  )
 
   useBodyScrollLock(isOpen)
 
