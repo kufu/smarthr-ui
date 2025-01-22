@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useMemo } from 'react'
+import React, { HTMLAttributes, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -33,7 +33,7 @@ const pagination = tv({
   },
 })
 
-type Props = {
+type BaseProps = {
   /** 全ページ数 */
   total: number
   /** 現在のページ */
@@ -45,9 +45,13 @@ type Props = {
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
+type Props = BaseProps & ElementProps
 
-export const Pagination: React.FC<Props & ElementProps> = ({
+export const Pagination: React.FC<Props> = (props) =>
+  props.total > 1 ? <ActualPagination {...props} /> : null
+
+const ActualPagination: React.FC<Props> = ({
   total,
   current,
   onClick,
@@ -56,8 +60,6 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } = pagination()
-
   const {
     wrapperStyle,
     listStyle,
@@ -66,6 +68,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
     nextListItemStyle,
     lastListItemStyle,
   } = useMemo(() => {
+    const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } = pagination()
     const itemArg = { withoutNumbers }
 
     return {
@@ -76,37 +79,36 @@ export const Pagination: React.FC<Props & ElementProps> = ({
       nextListItemStyle: nextListItem(itemArg),
       lastListItemStyle: lastListItem(itemArg),
     }
-  }, [
-    className,
-    withoutNumbers,
-    wrapper,
-    list,
-    firstListItem,
-    prevListItem,
-    nextListItem,
-    lastListItem,
-  ])
+  }, [className, withoutNumbers])
 
-  if (total <= 1) return null
+  const pageNumbers = useMemo(() => {
+    if (withoutNumbers) {
+      return []
+    }
 
-  const pages = !withoutNumbers
-    ? [
-        ...range(current - padding, current).filter((page) => page >= 1),
-        ...range(current, current + padding + 1).filter((page) => page <= total),
-      ].map((page) => (
-        <li
-          key={`pagination-${page}`}
-          className={
-            page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'
-          }
-        >
-          <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
-        </li>
-      ))
-    : null
+    return range(Math.max(current - padding, 1), Math.min(current + padding, total) + 1)
+  }, [current, total, padding, withoutNumbers])
 
-  const disabledPrev = current === 1
-  const disabledNext = current === total
+  const controllerAttrs = useMemo(
+    () => ({
+      prev: {
+        disabled: current === 1,
+        direction: 'prev' as const,
+      },
+      next: {
+        disabled: current === total,
+        direction: 'next' as const,
+      },
+    }),
+    [current, total],
+  )
+
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick(parseInt(e.currentTarget.value, 10))
+    },
+    [onClick],
+  )
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
@@ -115,36 +117,39 @@ export const Pagination: React.FC<Props & ElementProps> = ({
         <Cluster as="ul" className={listStyle}>
           <li className={firstListItemStyle}>
             <PaginationControllerItemButton
-              onClick={onClick}
-              direction="prev"
+              {...controllerAttrs.prev}
+              onClick={actualOnClick}
               targetPage={1}
-              disabled={disabledPrev}
               double
             />
           </li>
           <li className={prevListItemStyle}>
             <PaginationControllerItemButton
-              onClick={onClick}
-              direction="prev"
+              {...controllerAttrs.prev}
+              onClick={actualOnClick}
               targetPage={current - 1}
-              disabled={disabledPrev}
             />
           </li>
-          {pages}
+          {pageNumbers.map((page) => (
+            <li
+              key={page}
+              className={`smarthr-ui-Pagination-${page === current ? 'current' : 'page'}`}
+            >
+              <PaginationItemButton page={page} currentPage={current} onClick={actualOnClick} />
+            </li>
+          ))}
           <li className={nextListItemStyle}>
             <PaginationControllerItemButton
-              onClick={onClick}
-              direction="next"
+              {...controllerAttrs.next}
+              onClick={actualOnClick}
               targetPage={current + 1}
-              disabled={disabledNext}
             />
           </li>
           <li className={lastListItemStyle}>
             <PaginationControllerItemButton
-              onClick={onClick}
-              direction="next"
+              {...controllerAttrs.next}
+              onClick={actualOnClick}
               targetPage={total}
-              disabled={disabledNext}
               double
             />
           </li>
