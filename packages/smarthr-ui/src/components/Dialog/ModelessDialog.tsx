@@ -227,7 +227,9 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
       if (!isOpen || document.activeElement !== e.currentTarget) {
         return
       }
+
       const movingDistance = 20
+
       switch (e.key) {
         case 'ArrowUp':
           setPosition((prev) => ({
@@ -273,10 +275,13 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     if (!wrapperRef.current || !isOpen) {
       return
     }
+
     const isXCenter = left === undefined && right === undefined
     const isYCenter = top === undefined && bottom === undefined
+
     if (isXCenter || isYCenter) {
       const rect = wrapperRef.current.getBoundingClientRect()
+
       setCentering({
         top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
         left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
@@ -289,11 +294,13 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
 
     if (centering.top) {
       setDraggableBounds({ top: centering.top * -1 })
+
       return
     }
 
     if (wrapperRef.current) {
       const rect = wrapperRef.current.getBoundingClientRect()
+
       setDraggableBounds({ top: rect.top * -1 })
     }
   }, [isOpen, centering.top])
@@ -324,17 +331,14 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
 
   useEffect(() => {
     const focusHandler = (e: FocusEvent) => {
-      if (!(e.target instanceof HTMLElement)) return
-
-      // e.target(現在フォーカスがあたっている要素)がModeless dialogの中の要素であれば、lastFocusElementRefに代入しない
-      if (wrapperRef?.current?.contains(e.target)) {
-        return
+      // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
+      if (e.target instanceof HTMLElement && !wrapperRef?.current?.contains(e.target)) {
+        lastFocusElementRef.current = e.target
       }
-
-      lastFocusElementRef.current = e.target
     }
 
     document.addEventListener('focus', focusHandler, true)
+
     return () => document.removeEventListener('focus', focusHandler, true)
   }, [])
 
