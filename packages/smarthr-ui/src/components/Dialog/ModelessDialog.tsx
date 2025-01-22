@@ -143,6 +143,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   className,
   decorators,
   id,
+  onClickClose,
   ...props
 }) => {
   const labelId = useId()
@@ -314,12 +315,12 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     }
   }, [isOpen])
 
-  const onClickClose = useCallback(
+  const actualOnClickClose = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       lastFocusElementRef.current?.focus()
-      props.onClickClose?.(e)
+      onClickClose?.(e)
     },
-    [props],
+    [onClickClose],
   )
 
   useHandleEscape(
@@ -401,7 +402,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
                 type="button"
                 size="s"
                 square
-                onClick={onClickClose}
+                onClick={actualOnClickClose}
                 className="smarthr-ui-ModelessDialog-closeButton"
               >
                 <FaXmarkIcon alt={closeButtonIconAlt} />
