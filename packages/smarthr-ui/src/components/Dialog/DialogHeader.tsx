@@ -25,7 +25,7 @@ const dialogHeader = tv({
   ],
 })
 
-export const DialogHeader: React.FC<Props> = ({ title, subtitle, titleTag, titleId }) => {
+export const DialogHeader = React.memo<Props>(({ title, subtitle, titleTag, titleId }) => {
   const style = useMemo(() => dialogHeader(), [])
 
   return (
@@ -43,4 +43,4 @@ export const DialogHeader: React.FC<Props> = ({ title, subtitle, titleTag, title
       </Stack>
     </Heading>
   )
-}
+})
