@@ -71,21 +71,26 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const { layoutStyleProps, innerStyle, backgroundStyle } = useMemo(() => {
+  const { layoutStyleProps, layoutStyle, innerStyle, backgroundStyle } = useMemo(() => {
     const { layout, inner, background } = dialogContentInner()
-    const actualWidth = typeof width === 'number' ? `${width}px` : width
 
     return {
-      layoutStyleProps: {
-        className: layout(),
-        style: {
-          width: actualWidth ?? undefined,
-        },
-      },
+      layoutStyle: layout(),
       innerStyle: inner({ className }),
       backgroundStyle: background(),
     }
-  }, [className, width])
+  }, [className])
+  const styleAttr = useMemo(() => {
+    const actualWidth = typeof width === 'number' ? `${width}px` : width
+
+    if (!actualWidth) {
+      return undefined
+    }
+
+    return {
+      width: actualWidth,
+    }
+  }, [width])
 
   const innerRef = useRef<HTMLDivElement>(null)
 
@@ -102,7 +107,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
 
   return (
     <DialogOverlap isOpen={isOpen}>
-      <div {...layoutStyleProps} id={id}>
+      <div id={id} className={layoutStyle} style={styleAttr}>
         {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
         <div onClick={handleClickOverlay} className={backgroundStyle} role="presentation" />
         <div
