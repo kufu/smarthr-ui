@@ -138,53 +138,61 @@ type Props = PropsWithChildren<
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
+type ActualProps = Props & ElementProps & BaseProps
 
-export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
+const ABSTRACT_ICON_MAPPER = {
+  info: FaCircleInfoIcon,
+  success: FaCircleCheckIcon,
+  error: FaCircleExclamationIcon,
+  sync: FaRotateIcon,
+}
+const ICON_MAPPER = {
+  normal: {
+    ...ABSTRACT_ICON_MAPPER,
+    warning: WarningIcon,
+  },
+  bold: {
+    ...ABSTRACT_ICON_MAPPER,
+    warning: FaTriangleExclamationIcon,
+  },
+} as const
+
+export const NotificationBar: React.FC<ActualProps> = ({
   type,
-  bold = false,
+  bold,
   animate,
   message,
   onClose,
   children,
-  role = type.match(/^(info|sync)$/) ? 'status' : 'alert',
-  base = 'none',
+  role,
+  base,
   layer,
   className,
   ...props
 }) => {
-  const Icon = useMemo(() => {
-    switch (type) {
-      case 'info':
-        return FaCircleInfoIcon
-      case 'success': {
-        return FaCircleCheckIcon
-      }
-      case 'warning': {
-        return bold ? FaTriangleExclamationIcon : WarningIcon
-      }
-      case 'error': {
-        return FaCircleExclamationIcon
-      }
-      case 'sync': {
-        return FaRotateIcon
-      }
+  const actualRole = useMemo(() => {
+    if (role) {
+      return role
     }
-  }, [type, bold])
 
-  const { baseComponent: WrapBase = React.Fragment, baseProps = {} } = useMemo(
+    return type.match(/^(info|sync)$/) ? 'status' : 'alert'
+  }, [role, type])
+  const { WrapBase, baseProps } = useMemo(
     () =>
       base === 'base'
         ? {
-            baseComponent: Base,
+            WrapBase: Base,
             baseProps: {
               layer,
               overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
             },
           }
-        : {},
+        : {
+            WrapBase: React.Fragment,
+            baseProps: {},
+          },
     [base, layer],
   )
-
   const {
     wrapperStyle,
     innerStyle,
@@ -195,9 +203,10 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   } = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
       type,
-      bold,
-      base,
+      bold: !!bold,
+      base: base || 'none',
     })
+
     return {
       wrapperStyle: wrapper({ animate, className }),
       innerStyle: inner(),
@@ -210,23 +219,44 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...props} className={wrapperStyle} role={role}>
+      <div {...props} className={wrapperStyle} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
-          <div className={messageAreaStyle}>
-            <Icon text={message} iconGap={0.5} className={iconStyle} />
-          </div>
+          <MessageArea
+            message={message}
+            bold={bold}
+            type={type}
+            messageAreaStyle={messageAreaStyle}
+            iconStyle={iconStyle}
+          />
           {children && (
             <Cluster align="center" justify="flex-end" className={actionAreaStyle}>
               {children}
             </Cluster>
           )}
         </Cluster>
-        {onClose && (
-          <Button variant="text" size="s" onClick={onClose} className={closeButtonStyle}>
-            <FaXmarkIcon alt="閉じる" />
-          </Button>
-        )}
+        <CloseButton onClose={onClose} className={closeButtonStyle} />
       </div>
     </WrapBase>
   )
 }
+
+const MessageArea = React.memo<
+  Pick<ActualProps, 'message' | 'bold' | 'type'> & { messageAreaStyle: string; iconStyle: string }
+>(({ message, bold, type, messageAreaStyle, iconStyle }) => {
+  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
+
+  return (
+    <div className={messageAreaStyle}>
+      <Icon text={message} iconGap={0.5} className={iconStyle} />
+    </div>
+  )
+})
+
+const CloseButton = React.memo<Pick<ActualProps, 'onClose'> & { className: string }>(
+  ({ onClose, className }) =>
+    onClose && (
+      <Button variant="text" size="s" onClick={onClose} className={className}>
+        <FaXmarkIcon alt="閉じる" />
+      </Button>
+    ),
+)

@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -15,19 +15,27 @@ const executeDecorator = (defaultText: string, decorator: DecoratorType | undefi
   decorator?.(defaultText) || defaultText
 
 export const RangeSeparator: React.FC<Props> = ({ decorators }) => {
-  const text: ReactNode = useMemo(
-    () => executeDecorator(DEFAULT_TEXT, decorators?.text),
-    [decorators?.text],
-  )
-  const visuallyHiddenText: ReactNode = useMemo(
-    () => executeDecorator(DEFAULT_VISUALLY_HIDDEN_TEXT, decorators?.visuallyHiddenText),
-    [decorators?.visuallyHiddenText],
-  )
+  const decorated = useMemo(() => {
+    if (!decorators) {
+      return {
+        text: DEFAULT_TEXT,
+        visuallyHiddenText: DEFAULT_VISUALLY_HIDDEN_TEXT,
+      }
+    }
+
+    return {
+      text: executeDecorator(DEFAULT_TEXT, decorators.text),
+      visuallyHiddenText: executeDecorator(
+        DEFAULT_VISUALLY_HIDDEN_TEXT,
+        decorators.visuallyHiddenText,
+      ),
+    }
+  }, [decorators])
 
   return (
     <>
-      <span aria-hidden="true">{text}</span>
-      <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>
+      <span aria-hidden="true">{decorated.text}</span>
+      <VisuallyHiddenText>{decorated.visuallyHiddenText}</VisuallyHiddenText>
     </>
   )
 }
