@@ -49,11 +49,28 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {description}
       </DialogBody>
-      <Cluster as="footer" justify="flex-end" className={styles.actionArea}>
-        <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
-          {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-        </Button>
-      </Cluster>
+      <FooterCluster
+        onClickClose={onClickClose}
+        decorators={decorators}
+        className={styles.actionArea}
+      />
     </Section>
   )
 }
+
+const FooterCluster = React.memo<
+  Pick<MessageDialogContentInnerProps, 'onClickClose' | 'decorators'> & { className: string }
+>(({ onClickClose, decorators, className }) => {
+  const children = useMemo(
+    () => decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
+    [decorators],
+  )
+
+  return (
+    <Cluster as="footer" justify="flex-end" className={className}>
+      <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
+        {children}
+      </Button>
+    </Cluster>
+  )
+})
