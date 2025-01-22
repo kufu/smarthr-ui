@@ -43,21 +43,23 @@ export function ButtonWrapper({
   className,
   ...props
 }: Props) {
+  const actualSquare = useMemo(() => square ?? !innerText(props.children), [props.children, square])
   const { buttonStyle, anchorStyle } = useMemo(() => {
-    const _square = square ?? !innerText(props.children)
     const { default: defaultButton, anchor } = button({
       variant,
       size,
-      square: _square,
+      square: actualSquare,
       loading,
       wide,
     })
 
+    const commonAttr = { className }
+
     return {
-      buttonStyle: defaultButton({ className }),
-      anchorStyle: anchor({ className }),
+      buttonStyle: defaultButton(commonAttr),
+      anchorStyle: anchor(commonAttr),
     }
-  }, [loading, className, size, square, variant, wide, props.children])
+  }, [loading, className, size, actualSquare, variant, wide])
 
   if (props.isAnchor) {
     const { anchorRef, elementAs, isAnchor: _, ...others } = props
