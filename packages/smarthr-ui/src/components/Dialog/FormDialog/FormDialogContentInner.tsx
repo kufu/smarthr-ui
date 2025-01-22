@@ -48,6 +48,8 @@ export type FormDialogContentInnerProps = BaseProps & {
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
 
+const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
+
 const formDialogContentInner = tv({
   extend: dialogContentInner,
   slots: {
@@ -83,7 +85,35 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     },
     [onSubmit, onClickClose],
   )
-  const isRequestProcessing = responseMessage?.status === 'processing'
+
+  const calcedResponseStatus = useMemo(() => {
+    if (!responseMessage) {
+      return {
+        isProcessing: false,
+        visibleMessage: false,
+        status: '',
+        message: '',
+      }
+    }
+
+    const isProcessing = responseMessage.status === 'processing'
+
+    if (isProcessing) {
+      return {
+        isProcessing,
+        visibleMessage: false,
+        status: responseMessage.status,
+        message: '',
+      }
+    }
+
+    return {
+      isProcessing,
+      visibleMessage: true,
+      status: responseMessage.status,
+      message: responseMessage.text,
+    }
+  }, [responseMessage])
 
   const styles = useMemo(() => {
     const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
@@ -108,10 +138,10 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
         <Stack gap={0.5} className={styles.actionArea}>
           <Cluster justify="space-between">
             {subActionArea}
-            <Cluster gap={{ row: 0.5, column: 1 }} className={styles.buttonArea}>
+            <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={styles.buttonArea}>
               <Button
                 onClick={onClickClose}
-                disabled={closeDisabled || isRequestProcessing}
+                disabled={closeDisabled || calcedResponseStatus.isProcessing}
                 className="smarthr-ui-Dialog-closeButton"
               >
                 {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
@@ -120,17 +150,17 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
                 type="submit"
                 variant={actionTheme}
                 disabled={actionDisabled}
-                loading={isRequestProcessing}
+                loading={calcedResponseStatus.isProcessing}
                 className="smarthr-ui-Dialog-actionButton"
               >
                 {actionText}
               </Button>
             </Cluster>
           </Cluster>
-          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+          {calcedResponseStatus.visibleMessage && (
             <div className={styles.message}>
-              <ResponseMessage type={responseMessage.status} role="alert">
-                {responseMessage.text}
+              <ResponseMessage type={calcedResponseStatus.status} role="alert">
+                {calcedResponseStatus.message}
               </ResponseMessage>
             </div>
           )}
