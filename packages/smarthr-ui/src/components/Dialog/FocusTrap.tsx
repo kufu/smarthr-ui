@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, RefObject, useCallback, useEffect, useRef } from 'react'
+import React, { FC, PropsWithChildren, RefObject, useEffect, useRef } from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 
@@ -15,22 +15,25 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
       if (e.key !== 'Tab' || ref.current === null) {
         return
       }
+
       const tabbables = tabbable(ref.current).filter((elm) => elm.tabIndex >= 0)
+
       if (tabbables.length === 0) {
         return
       }
+
       const firstTabbable = tabbables[0]
       const lastTabbable = tabbables[tabbables.length - 1]
-      const currentFocused = Array.from(tabbables).find((elm) => elm === e.target)
-      if (
-        e.shiftKey &&
-        (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current)
-      ) {
-        lastTabbable.focus()
+      const currentFocused = tabbables.find((elm) => elm === e.target)
+
+      if (e.shiftKey) {
+        if (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current) {
+          e.preventDefault()
+          lastTabbable.focus()
+        }
+      } else if (currentFocused === lastTabbable) {
         e.preventDefault()
-      } else if (!e.shiftKey && currentFocused === lastTabbable) {
         firstTabbable.focus()
-        e.preventDefault()
       }
     }
 
