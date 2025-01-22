@@ -31,29 +31,35 @@ type ActualProps = BaseProps & Required<StatusProps>
 export const StepStatusIcon: FC<Props> = (props) =>
   props.status ? <ActualStepStatusIcon {...(props as ActualProps)} /> : null
 
-const ICON_ALT_MAPPER = {
-  completed: '完了',
-  closed: '中断',
-}
-const ICON_COMPONENT_MAPPER = {
-  completed: FaCircleCheckIcon,
-  closed: FaCircleXmarkIcon,
+const ICON_MAPPER = {
+  completed: {
+    alt: '完了',
+    Component: FaCircleCheckIcon,
+  },
+  closed: {
+    alt: '中断',
+    Component: FaCircleXmarkIcon,
+  },
 }
 
 const ActualStepStatusIcon: FC<ActualProps> = ({ status, className, ...rest }) => {
   const actualStatus = useMemo(() => {
     const isObject = typeof status === 'object'
     const statusType = isObject ? status.type : status
+    const { alt, Component } = ICON_MAPPER[statusType]
 
     return {
       type: statusType,
-      text: (isObject ? status.text : '') || ICON_ALT_MAPPER[statusType],
-      icon: ICON_COMPONENT_MAPPER[statusType],
+      text: isObject ? status.text || alt : alt,
+      Component,
     }
   }, [status])
 
-  const style = stepStatusIcon({ status: actualStatus.type, className })
-  const Component = actualStatus.icon
+  const style = useMemo(
+    () => stepStatusIcon({ status: actualStatus.type, className }),
+    [actualStatus.type, className],
+  )
+  const Component = actualStatus.Component
 
   return <Component {...rest} alt={actualStatus.text} className={style} />
 }
