@@ -1,4 +1,4 @@
-import React, { type FC } from 'react'
+import React, { type FC, useMemo } from 'react'
 
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
@@ -33,16 +33,23 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   onClickClose,
   decorators,
 }) => {
-  const { wrapper, actionArea } = dialogContentInner()
+  const styles = useMemo(() => {
+    const { wrapper, actionArea } = dialogContentInner()
+
+    return {
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+    }
+  }, [])
 
   return (
     // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
-    <Stack gap={0} as="section" className={wrapper()}>
+    <Stack gap={0} as="section" className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {description}
       </DialogBody>
-      <Cluster as="footer" justify="flex-end" className={actionArea()}>
+      <Cluster as="footer" justify="flex-end" className={styles.actionArea}>
         <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
           {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
         </Button>
