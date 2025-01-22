@@ -330,10 +330,10 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   )
 
   useHandleEscape(
-    useMemo(actualOnPressEscape && isOpen ? actualOnPressEscape : undefined, [
-      isOpen,
-      actualOnPressEscape,
-    ]),
+    useMemo(
+      () => (actualOnPressEscape && isOpen ? actualOnPressEscape : undefined),
+      [isOpen, actualOnPressEscape],
+    ),
   )
 
   useEffect(() => {

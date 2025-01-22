@@ -71,7 +71,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const { layoutStyleProps, layoutStyle, innerStyle, backgroundStyle } = useMemo(() => {
+  const { layoutStyle, innerStyle, backgroundStyle } = useMemo(() => {
     const { layout, inner, background } = dialogContentInner()
 
     return {
@@ -128,5 +128,6 @@ const Overlay = React.memo<
     [isOpen, onClickOverlay],
   )
 
+  // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
   return <div onClick={handleClickOverlay} className={className} role="presentation" />
 })

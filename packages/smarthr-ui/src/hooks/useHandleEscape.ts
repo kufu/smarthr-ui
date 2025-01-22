@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
