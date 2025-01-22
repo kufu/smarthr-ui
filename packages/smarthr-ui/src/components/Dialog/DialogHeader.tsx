@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading, HeadingTagTypes } from '../Heading'
@@ -26,7 +26,8 @@ const dialogHeader = tv({
 })
 
 export const DialogHeader: React.FC<Props> = ({ title, subtitle, titleTag, titleId }) => {
-  const style = dialogHeader()
+  const style = useMemo(() => dialogHeader(), [])
+
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={titleTag} className={style}>
