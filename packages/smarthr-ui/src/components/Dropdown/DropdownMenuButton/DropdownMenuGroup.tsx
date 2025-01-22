@@ -47,19 +47,17 @@ export const DropdownMenuGroup: React.FC<Props & ElementProps> = ({
 
   return (
     <li className={styles.group}>
-      {name && (
-        <Text
-          as="p"
-          size="S"
-          weight="bold"
-          color="TEXT_GREY"
-          leading="NONE"
-          className={styles.groupName}
-        >
-          {name}
-        </Text>
-      )}
+      <NameText className={styles.groupName}>{name}</NameText>
       <ul>{renderButtonList(children)}</ul>
     </li>
   )
 }
+
+const NameText = React.memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) =>
+    children && (
+      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className}>
+        {children}
+      </Text>
+    ),
+)
