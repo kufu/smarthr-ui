@@ -18,7 +18,6 @@ import Draggable from 'react-draggable'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { spacing } from '../../themes'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripIcon, FaXmarkIcon } from '../Icon'
@@ -85,8 +84,6 @@ type Props = PropsWithChildren<{
   }
 }> &
   DialogBodyProps
-
-type DraggableType = ComponentProps<typeof Draggable>
 
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
@@ -345,8 +342,8 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     return () => document.removeEventListener('focus', focusHandler, true)
   }, [])
 
-  const onDragStart: DraggableType['onStart'] = useCallback((_, data) => setPosition(data), [])
-  const onDrag: DraggableType['onDrag'] = useCallback((_, data) => {
+  const onDragStart = useCallback((_: any, data: { x: number; y: number }) => setPosition(data), [])
+  const onDrag = useCallback((_: any, data: { deltaX: number; deltaY: number }) => {
     setPosition((prev) => ({
       x: prev.x + data.deltaX,
       y: prev.y + data.deltaY,
@@ -383,23 +380,19 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
           {/* dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
           <div className={headerStyle}>
-            <div
-              className={dialogHandlerStyle}
-              tabIndex={0}
-              role="slider"
-              aria-label={dialogHandlerAriaLabel}
+            <Handler
+              aria-label={decorated.dialogHandlerAriaLabel}
               aria-valuetext={dialogHandlerAriaValuetext}
-              onKeyDown={handleArrowKey}
-            >
-              <FaGripIcon />
-            </div>
+              onArrowKeyDown={handleArrowKey}
+              className={dialogHandlerStyle}
+            />
             <div id={labelId} className={titleStyle}>
               {header}
             </div>
             <CloseButton
               onClick={actualOnClickClose}
               className={closeButtonLayoutStyle}
-              iconAlt={closeButtonIconAlt}
+              iconAlt={decorated.closeButtonIconAlt}
             />
           </div>
           <DialogBody
@@ -415,6 +408,24 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     </DialogOverlap>,
   )
 }
+
+const Handler = React.memo<{
+  'aria-label': string
+  'aria-valuetext': string | undefined
+  className: string
+  onArrowKeyDown: (e: React.KeyboardEvent) => void
+}>(({ 'aria-label': ariaLabel, 'aria-valuetext': ariaValueText, className, onArrowKeyDown }) => (
+  <div
+    className={className}
+    tabIndex={0}
+    role="slider"
+    aria-label={ariaLabel}
+    aria-valuetext={ariaValueText}
+    onKeyDown={onArrowKeyDown}
+  >
+    <FaGripIcon />
+  </div>
+))
 
 const CloseButton = React.memo<{
   className: string
