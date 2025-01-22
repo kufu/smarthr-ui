@@ -68,9 +68,7 @@ const dialogContentInner = tv({
 
 export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   onClickOverlay,
-  onPressEscape = () => {
-    /* noop */
-  },
+  onPressEscape,
   isOpen,
   id,
   width,
@@ -84,6 +82,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   const { layoutStyleProps, innerStyle, backgroundStyle } = useMemo(() => {
     const { layout, inner, background } = dialogContentInner()
     const actualWidth = typeof width === 'number' ? `${width}px` : width
+
     return {
       layoutStyleProps: {
         className: layout(),
@@ -97,13 +96,9 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   }, [className, width])
 
   const innerRef = useRef<HTMLDivElement>(null)
+
   useHandleEscape(
-    useCallback(() => {
-      if (!isOpen) {
-        return
-      }
-      onPressEscape()
-    }, [isOpen, onPressEscape]),
+    useMemo(() => (onPressEscape && isOpen ? onPressEscape : undefined), [isOpen, onPressEscape]),
   )
 
   const handleClickOverlay = useCallback(() => {
