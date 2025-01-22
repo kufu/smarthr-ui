@@ -156,6 +156,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   } = useMemo(() => {
     const { overlap, wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
       modelessDialog()
+
     return {
       overlapStyle: overlap({ className }),
       wrapperStyle: wrapper({ resizable }),
@@ -178,8 +179,8 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
             }, ${spacing[0.5]})), 800px)`,
           }
         : undefined
+
     return {
-      className: wrapperStyle,
       style,
     }
   }, [wrapperStyle, left, right, width])
@@ -374,6 +375,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
+          className={wrapperStyle}
         >
           <div tabIndex={-1} ref={focusTargetRef}>
             {/* dummy element for focus management. */}
