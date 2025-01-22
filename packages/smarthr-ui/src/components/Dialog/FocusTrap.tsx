@@ -10,38 +10,40 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
   const ref = useRef<HTMLDivElement | null>(null)
   const dummyFocusRef = useRef<HTMLDivElement>(null)
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key !== 'Tab' || ref.current === null) {
-      return
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || ref.current === null) {
+        return
+      }
+      const tabbables = tabbable(ref.current).filter((elm) => elm.tabIndex >= 0)
+      if (tabbables.length === 0) {
+        return
+      }
+      const firstTabbable = tabbables[0]
+      const lastTabbable = tabbables[tabbables.length - 1]
+      const currentFocused = Array.from(tabbables).find((elm) => elm === e.target)
+      if (
+        e.shiftKey &&
+        (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current)
+      ) {
+        lastTabbable.focus()
+        e.preventDefault()
+      } else if (!e.shiftKey && currentFocused === lastTabbable) {
+        firstTabbable.focus()
+        e.preventDefault()
+      }
     }
-    const tabbables = tabbable(ref.current).filter((elm) => elm.tabIndex >= 0)
-    if (tabbables.length === 0) {
-      return
-    }
-    const firstTabbable = tabbables[0]
-    const lastTabbable = tabbables[tabbables.length - 1]
-    const currentFocused = Array.from(tabbables).find((elm) => elm === e.target)
-    if (
-      e.shiftKey &&
-      (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current)
-    ) {
-      lastTabbable.focus()
-      e.preventDefault()
-    } else if (!e.shiftKey && currentFocused === lastTabbable) {
-      firstTabbable.focus()
-      e.preventDefault()
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
     }
   }, [])
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
-
-  useEffect(() => {
     const triggerElement = document.activeElement
+
     if (firstFocusTarget?.current) {
       firstFocusTarget.current.focus()
     } else {
