@@ -98,18 +98,12 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     useMemo(() => (onPressEscape && isOpen ? onPressEscape : undefined), [isOpen, onPressEscape]),
   )
 
-  const handleClickOverlay = useMemo(
-    () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
-    [isOpen, onClickOverlay],
-  )
-
   useBodyScrollLock(isOpen)
 
   return (
     <DialogOverlap isOpen={isOpen}>
       <div id={id} className={layoutStyle} style={styleAttr}>
-        {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-        <div onClick={handleClickOverlay} className={backgroundStyle} role="presentation" />
+        <Overlay isOpen={isOpen} onClickOverlay={onClickOverlay} className={backgroundStyle} />
         <div
           {...rest}
           ref={innerRef}
@@ -125,3 +119,14 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     </DialogOverlap>
   )
 }
+
+const Overlay = React.memo<
+  Pick<DialogContentInnerProps, 'onClickOverlay' | 'isOpen'> & { className: string }
+>(({ onClickOverlay, isOpen, className }) => {
+  const handleClickOverlay = useMemo(
+    () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
+    [isOpen, onClickOverlay],
+  )
+
+  return <div onClick={handleClickOverlay} className={className} role="presentation" />
+})
