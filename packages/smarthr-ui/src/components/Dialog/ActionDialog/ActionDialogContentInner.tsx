@@ -5,6 +5,7 @@ import React, { type FC, type PropsWithChildren, type ReactNode, useCallback } f
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
+import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
@@ -99,8 +100,8 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
-    <Stack gap={0} as="section" className={styles.wrapper}>
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Section className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
@@ -135,6 +136,6 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           </div>
         )}
       </Stack>
-    </Stack>
+    </Section>
   )
 }
