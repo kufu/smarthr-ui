@@ -11,7 +11,7 @@ import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 import type { DecoratorsType } from '../../../types'
-import { type ResponseMessageType } from '../../../libs/responseMessage'
+import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -62,30 +62,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   subActionArea,
   decorators,
 }) => {
-  const calcedResponseStatus = useMemo(() => {
-    if (!responseMessage) {
-      return {
-        isProcessing: false,
-        visibleMessage: false,
-      }
-    }
-
-    if (responseMessage.status === 'processing') {
-      return {
-        isProcessing: true,
-        visibleMessage: false,
-      }
-    }
-
-    return {
-      isProcessing: false,
-      visibleMessage: true,
-      // HINT: statusがprocessingではない === success or errorであることが確定する
-      // success or error の場合、text属性も必ず存在する
-      status: responseMessage.status as 'success' | 'error',
-      message: (responseMessage as { text: string }).text,
-    }
-  }, [responseMessage])
+  const calcedResponseStatus = useResponseMessage(responseMessage)
 
   const styles = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
