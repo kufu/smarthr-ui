@@ -41,6 +41,8 @@ export type ActionDialogContentInnerProps = BaseProps & {
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
+const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
+
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
   title,
@@ -59,10 +61,6 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   subActionArea,
   decorators,
 }) => {
-  const handleClickAction = useCallback(() => {
-    onClickAction(onClickClose)
-  }, [onClickAction, onClickClose])
-
   const calcedResponseStatus = useMemo(() => {
     if (!responseMessage) {
       return {
@@ -109,21 +107,17 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       <Stack gap={0.5} className={styles.actionArea}>
         <Cluster justify="space-between">
           {subActionArea}
-          <Cluster gap={{ row: 0.5, column: 1 }} className={styles.buttonArea}>
-            <CloseButton
-              onClick={onClickClose}
-              disabled={closeDisabled || calcedResponseStatus.isProcessing}
-              decorators={decorators}
-            />
-            <ActionButton
-              variant={actionTheme}
-              disabled={actionDisabled}
-              loading={calcedResponseStatus.isProcessing}
-              onClick={handleClickAction}
-            >
-              {actionText}
-            </ActionButton>
-          </Cluster>
+          <ActionAreaCluster
+            onClickClose={onClickClose}
+            onClickAction={onClickAction}
+            closeDisabled={closeDisabled}
+            actionDisabled={actionDisabled}
+            loading={calcedResponseStatus.isProcessing}
+            actionTheme={actionTheme}
+            decorators={decorators}
+            actionText={actionText}
+            className={styles.buttonArea}
+          />
         </Cluster>
         {calcedResponseStatus.visibleMessage && (
           <div className={styles.message}>
@@ -136,6 +130,53 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
     </Section>
   )
 }
+
+const ActionAreaCluster = React.memo<
+  Pick<
+    FormDialogContentInnerProps,
+    | 'onClickClose'
+    | 'onClickAction'
+    | 'closeDisabled'
+    | 'actionDisabled'
+    | 'actionTheme'
+    | 'decorators'
+    | 'actionText'
+  > & { loading: boolean; className: string }
+>(
+  ({
+    onClickClose,
+    onClickAction,
+    closeDisabled,
+    actionDisabled,
+    loading,
+    actionTheme,
+    decorators,
+    actionText,
+    className,
+  }) => {
+    const handleClickAction = useCallback(() => {
+      onClickAction(onClickClose)
+    }, [onClickAction, onClickClose])
+
+    return (
+      <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+        <CloseButton
+          onClick={onClickClose}
+          disabled={closeDisabled || loading}
+          decorators={decorators}
+        />
+        <ActionButton
+          variant={actionTheme}
+          disabled={actionDisabled}
+          loading={loading}
+          onClick={handleClickAction}
+        >
+          {actionText}
+        </ActionButton>
+      </Cluster>
+    )
+  },
+)
 
 const ActionButton = React.memo<
   PropsWithChildren<{
