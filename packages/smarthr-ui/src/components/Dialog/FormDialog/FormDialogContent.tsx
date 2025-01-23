@@ -20,7 +20,7 @@ export const FormDialogContent: React.FC<Props & ElementProps> = ({
   actionText,
   actionTheme,
   onSubmit,
-  actionDisabled = false,
+  actionDisabled,
   portalParent,
   className = '',
   decorators,
