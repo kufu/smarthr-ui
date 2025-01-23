@@ -139,13 +139,11 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
           <Cluster justify="space-between">
             {subActionArea}
             <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={styles.buttonArea}>
-              <Button
+              <CloseButton
                 onClick={onClickClose}
                 disabled={closeDisabled || calcedResponseStatus.isProcessing}
-                className="smarthr-ui-Dialog-closeButton"
-              >
-                {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-              </Button>
+                decorators={decorators}
+              />
               <Button
                 type="submit"
                 variant={actionTheme}
@@ -169,3 +167,21 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     </Section>
   )
 }
+
+const CloseButton = React.memo<
+  Pick<FormDialogContentInnerProps, 'decorators'> & {
+    onClick: FormDialogContentInnerProps['onClickClose']
+    disabled: boolean
+  }
+>(({ onClick, disabled, decorators }) => {
+  const children = useMemo(
+    () => decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
+    [decorators],
+  )
+
+  return (
+    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+      {children}
+    </Button>
+  )
+})
