@@ -47,7 +47,6 @@ export type FormDialogContentInnerProps = BaseProps & {
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
-
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const formDialogContentInner = tv({
@@ -66,7 +65,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   contentBgColor,
   contentPadding,
   actionText,
-  actionTheme = 'primary',
+  actionTheme,
   onSubmit,
   onClickClose,
   responseMessage,
@@ -91,27 +90,23 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
       return {
         isProcessing: false,
         visibleMessage: false,
-        status: '',
-        message: '',
       }
     }
 
-    const isProcessing = responseMessage.status === 'processing'
-
-    if (isProcessing) {
+    if (responseMessage.status === 'processing') {
       return {
-        isProcessing,
+        isProcessing: true,
         visibleMessage: false,
-        status: responseMessage.status,
-        message: '',
       }
     }
 
     return {
-      isProcessing,
+      isProcessing: false,
       visibleMessage: true,
-      status: responseMessage.status,
-      message: responseMessage.text,
+      // HINT: statusがprocessingではない === success or errorであることが確定する
+      // success or error の場合、text属性も必ず存在する
+      status: responseMessage.status as 'success' | 'error',
+      message: (responseMessage as { text: string }).text,
     }
   }, [responseMessage])
 
@@ -178,7 +173,7 @@ const ActionAreaCluster = React.memo<
     closeDisabled,
     actionDisabled,
     loading,
-    actionTheme,
+    actionTheme = 'primary',
     decorators,
     actionText,
     className,
