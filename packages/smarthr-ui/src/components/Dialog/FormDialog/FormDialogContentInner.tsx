@@ -128,7 +128,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form, smarthr/a11y-heading-in-sectioning-content
     <Section className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <form onSubmit={handleSubmitAction} className={styles.form}>
@@ -138,20 +138,16 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
         <Stack gap={0.5} className={styles.actionArea}>
           <Cluster justify="space-between">
             {subActionArea}
-            <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={styles.buttonArea}>
-              <CloseButton
-                onClick={onClickClose}
-                disabled={closeDisabled || calcedResponseStatus.isProcessing}
-                decorators={decorators}
-              />
-              <ActionButton
-                variant={actionTheme}
-                disabled={actionDisabled}
-                loading={calcedResponseStatus.isProcessing}
-              >
-                {actionText}
-              </ActionButton>
-            </Cluster>
+            <ActionAreaCluster
+              onClickClose={onClickClose}
+              closeDisabled={closeDisabled}
+              actionDisabled={actionDisabled}
+              loading={calcedResponseStatus.isProcessing}
+              actionTheme={actionTheme}
+              decorators={decorators}
+              actionText={actionText}
+              className={styles.buttonArea}
+            />
           </Cluster>
           {calcedResponseStatus.visibleMessage && (
             <div className={styles.message}>
@@ -165,6 +161,40 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     </Section>
   )
 }
+
+const ActionAreaCluster = React.memo<
+  Pick<
+    FormDialogContentInnerProps,
+    | 'onClickClose'
+    | 'closeDisabled'
+    | 'actionDisabled'
+    | 'actionTheme'
+    | 'decorators'
+    | 'actionText'
+  > & { loading: boolean; className: string }
+>(
+  ({
+    onClickClose,
+    closeDisabled,
+    actionDisabled,
+    loading,
+    actionTheme,
+    decorators,
+    actionText,
+    className,
+  }) => (
+    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+      <CloseButton
+        onClick={onClickClose}
+        disabled={closeDisabled || loading}
+        decorators={decorators}
+      />
+      <ActionButton variant={actionTheme} disabled={actionDisabled} loading={loading}>
+        {actionText}
+      </ActionButton>
+    </Cluster>
+  ),
+)
 
 const ActionButton = React.memo<
   PropsWithChildren<{
