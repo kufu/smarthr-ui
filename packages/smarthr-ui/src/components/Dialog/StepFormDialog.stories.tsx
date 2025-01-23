@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React, { ComponentProps, useState } from 'react'
-import styled from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
 import { CheckBox } from '../CheckBox'
@@ -35,6 +35,10 @@ export default {
     withTheming: true,
   },
 }
+
+const radioButtonListWrapper = tv({
+  base: 'shr-list-none',
+})
 
 export const Default: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
@@ -98,7 +102,7 @@ export const Default: StoryFn = () => {
       >
         <StepFormDialogItem {...stepOrder[0]}>
           <Fieldset title="fruits" innerMargin={0.5}>
-            <RadioListCluster forwardedAs="ul">
+            <Cluster className={radioButtonListWrapper()} as="ul">
               <li>
                 <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
                   Apple
@@ -114,7 +118,7 @@ export const Default: StoryFn = () => {
                   これを選ぶとステップ2を飛ばして3に進みます
                 </RadioButton>
               </li>
-            </RadioListCluster>
+            </Cluster>
           </Fieldset>
         </StepFormDialogItem>
         <StepFormDialogItem {...stepOrder[1]}>
@@ -155,7 +159,3 @@ Default.parameters = {
     },
   },
 }
-
-const RadioListCluster = styled(Cluster).attrs({ gap: 1.25 })`
-  list-style: none;
-`
