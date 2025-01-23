@@ -15,24 +15,25 @@ export const useResponseMessage = (responseMessage: ResponseMessageType | undefi
     if (!responseMessage) {
       return {
         isProcessing: false,
-        visibleMessage: false,
+        status: null,
+        message: '',
       }
     }
 
     if (responseMessage.status === 'processing') {
       return {
         isProcessing: true,
-        visibleMessage: false,
+        status: null,
+        message: '',
       }
     }
 
     return {
       isProcessing: false,
-      visibleMessage: true,
       // HINT: statusがprocessingではない === success or errorであることが確定する
       // success or error の場合、text属性も必ず存在する
-      status: responseMessage.status as 'success' | 'error',
-      message: (responseMessage as { text: string }).text,
+      status: responseMessage.status,
+      message: responseMessage.text,
     }
   }, [responseMessage])
 

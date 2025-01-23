@@ -2,6 +2,7 @@
 
 import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
+import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -11,7 +12,6 @@ import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 import type { DecoratorsType } from '../../../types'
-import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -97,7 +97,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             className={styles.buttonArea}
           />
         </Cluster>
-        {calcedResponseStatus.visibleMessage && (
+        {calcedResponseStatus.status && (
           <div className={styles.message}>
             <ResponseMessage type={calcedResponseStatus.status} role="alert">
               {calcedResponseStatus.message}

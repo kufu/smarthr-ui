@@ -4,6 +4,7 @@ import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
 import { Button, BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -14,7 +15,6 @@ import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 import type { DecoratorType, DecoratorsType } from '../../../types'
-import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
 
 type Props = {
   isFiltered?: boolean
@@ -216,7 +216,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                 </DropdownCloser>
               </Cluster>
             </Cluster>
-            {calcedResponseStatus.visibleMessage && (
+            {calcedResponseStatus.status && (
               <div className={messageStyle}>
                 <ResponseMessage type={calcedResponseStatus.status} role="alert">
                   {calcedResponseStatus.message}

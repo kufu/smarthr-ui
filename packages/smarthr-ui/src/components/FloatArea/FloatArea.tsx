@@ -1,9 +1,9 @@
 import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type ResponseMessageTypeWithoutProcessing } from '../../libs/responseMessage'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import { Gap } from '../../types'
-import { type ResponseMessageTypeWithoutProcessing } from '../../libs/responseMessage'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
