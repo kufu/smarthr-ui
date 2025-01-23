@@ -15,8 +15,8 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../libs/decorator'
 import { debounce } from '../../libs/debounce'
+import { type DecoratorsType, useDecorators } from '../../libs/decorator'
 import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -120,34 +120,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const {
-      afterMaxLettersCount,
-      beforeMaxLettersCount,
-      maxLettersCountExceeded,
-      beforeScreenReaderMaxLettersDescription,
-      afterScreenReaderMaxLettersDescription,
-    } = useMemo(
-      () => ({
-        beforeMaxLettersCount:
-          decorators?.beforeMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.beforeMaxLettersCount) ||
-          DECORATOR_DEFAULT_TEXTS.beforeMaxLettersCount,
-        afterMaxLettersCount:
-          decorators?.afterMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount) ||
-          DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount,
-        maxLettersCountExceeded:
-          decorators?.afterMaxLettersCountExceeded?.(
-            DECORATOR_DEFAULT_TEXTS.afterMaxLettersCountExceeded,
-          ) || DECORATOR_DEFAULT_TEXTS.afterMaxLettersCountExceeded,
-        beforeScreenReaderMaxLettersDescription:
-          decorators?.beforeScreenReaderMaxLettersDescription?.(
-            DECORATOR_DEFAULT_TEXTS.beforeScreenReaderMaxLettersDescription,
-          ) || DECORATOR_DEFAULT_TEXTS.beforeScreenReaderMaxLettersDescription,
-        afterScreenReaderMaxLettersDescription:
-          decorators?.afterScreenReaderMaxLettersDescription?.(
-            DECORATOR_DEFAULT_TEXTS.afterScreenReaderMaxLettersDescription,
-          ) || DECORATOR_DEFAULT_TEXTS.afterScreenReaderMaxLettersDescription,
-      }),
-      [decorators],
+    const decorated = useDecorators<keyof typeof DECORATOR_DEFAULT_TEXTS>(
+      DECORATOR_DEFAULT_TEXTS,
+      decorators,
     )
 
     const getCounterMessage = useCallback(
@@ -159,8 +134,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
           return (
             <>
               {counterValue - maxLetters}
-              {afterMaxLettersCount}
-              {maxLettersCountExceeded}
+              {decorated.afterMaxLettersCount}
+              {decorated.afterMaxLettersCountExceeded}
             </>
           )
         }
@@ -168,13 +143,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         // あと{count}文字
         return (
           <>
-            {beforeMaxLettersCount}
+            {decorated.beforeMaxLettersCount}
             {maxLetters - counterValue}
-            {afterMaxLettersCount}
+            {decorated.afterMaxLettersCount}
           </>
         )
       },
-      [maxLetters, maxLettersCountExceeded, afterMaxLettersCount, beforeMaxLettersCount],
+      [
+        maxLetters,
+        decorated.afterMaxLettersCountExceeded,
+        decorated.afterMaxLettersCount,
+        decorated.beforeMaxLettersCount,
+      ],
     )
 
     const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
@@ -300,9 +280,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         </span>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
-          {beforeScreenReaderMaxLettersDescription}
+          {decorated.beforeScreenReaderMaxLettersDescription}
           {maxLetters}
-          {afterScreenReaderMaxLettersDescription}
+          {decorated.afterScreenReaderMaxLettersDescription}
         </VisuallyHiddenText>
       </span>
     ) : (

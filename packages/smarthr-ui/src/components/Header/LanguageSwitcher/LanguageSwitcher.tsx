@@ -3,8 +3,8 @@
 import React, { HTMLAttributes, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { tabbable } from '../../../libs/tabbable'
 import { type DecoratorsType } from '../../../libs/decorator'
+import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'

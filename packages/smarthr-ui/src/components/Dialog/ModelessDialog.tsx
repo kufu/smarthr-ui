@@ -17,8 +17,8 @@ import React, {
 import Draggable from 'react-draggable'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../libs/decorator'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { type DecoratorsType } from '../../libs/decorator'
 import { spacing } from '../../themes'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
