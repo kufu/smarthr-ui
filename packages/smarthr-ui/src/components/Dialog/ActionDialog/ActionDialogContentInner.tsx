@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type FC, type PropsWithChildren, type ReactNode, useCallback } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
@@ -133,7 +133,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
 const ActionAreaCluster = React.memo<
   Pick<
-    FormDialogContentInnerProps,
+    ActionDialogContentInnerProps,
     | 'onClickClose'
     | 'onClickAction'
     | 'closeDisabled'

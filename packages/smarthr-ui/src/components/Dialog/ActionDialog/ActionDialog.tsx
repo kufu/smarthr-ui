@@ -24,7 +24,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   onClickClose,
   onPressEscape = onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   className,
@@ -37,17 +37,15 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   const titleId = useId()
 
   const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
-      return
+    if (props.isOpen) {
+      onClickClose()
     }
-    onClickClose()
   }, [onClickClose, props.isOpen])
 
   const handleClickAction = useCallback(() => {
-    if (!props.isOpen) {
-      return
+    if (props.isOpen) {
+      onClickAction(onClickClose)
     }
-    onClickAction(onClickClose)
   }, [onClickAction, onClickClose, props.isOpen])
 
   return createPortal(
