@@ -69,7 +69,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   onSubmit,
   onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   decorators,
@@ -173,7 +173,7 @@ const ActionAreaCluster = React.memo<
     closeDisabled,
     actionDisabled,
     loading,
-    actionTheme = 'primary',
+    actionTheme,
     decorators,
     actionText,
     className,
@@ -197,7 +197,7 @@ const ActionButton = React.memo<
     disabled: FormDialogContentInnerProps['actionDisabled']
     loading: boolean
   }>
->(({ variant, disabled, loading, children }) => (
+>(({ variant = 'primary', disabled, loading, children }) => (
   <Button
     type="submit"
     variant={variant}
