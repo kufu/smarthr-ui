@@ -11,14 +11,13 @@ import React, {
 } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../libs/decorator'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
-
-import type { DecoratorsType } from '../../types'
 
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */

@@ -4,6 +4,7 @@ import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorType, type DecoratorsType } from '../../../libs/decorator'
 import { Button, BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -13,7 +14,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
+import type { ResponseMessageType } from '../../../types'
 
 type Props = {
   isFiltered?: boolean

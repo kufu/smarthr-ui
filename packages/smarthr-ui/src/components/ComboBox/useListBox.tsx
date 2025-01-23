@@ -11,6 +11,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../libs/decorator'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { spacing } from '../../themes'
@@ -22,8 +23,6 @@ import { ListBoxItemButton } from './ListBoxItemButton'
 import { ComboBoxItem, ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
-
-import type { DecoratorsType } from '../../types'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>

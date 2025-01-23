@@ -1,12 +1,11 @@
 import React, { ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../libs/decorator'
 import { Balloon } from '../Balloon'
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 
 import { Th } from './Th'
-
-import type { DecoratorsType } from '../../types'
 
 type Props = {
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {

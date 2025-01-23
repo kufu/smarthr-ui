@@ -4,11 +4,12 @@ import React, { HTMLAttributes, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { tabbable } from '../../../libs/tabbable'
+import { type DecoratorsType } from '../../../libs/decorator'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
 
-import type { DecoratorsType, LocaleMap } from '../../../types'
+import type { LocaleMap } from '../../../types'
 
 export type Props = {
   narrow?: boolean

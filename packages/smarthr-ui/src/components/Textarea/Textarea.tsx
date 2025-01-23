@@ -15,12 +15,11 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../libs/decorator'
 import { debounce } from '../../libs/debounce'
 import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */

@@ -15,6 +15,7 @@ import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../../libs/decorator'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
@@ -26,7 +27,6 @@ import { useOptions } from '../useOptions'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
-import type { DecoratorsType } from '../../../types'
 import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {

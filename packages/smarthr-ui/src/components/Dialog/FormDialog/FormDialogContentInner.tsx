@@ -7,6 +7,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../../libs/decorator'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -15,7 +16,7 @@ import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import type { ResponseMessageType } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &

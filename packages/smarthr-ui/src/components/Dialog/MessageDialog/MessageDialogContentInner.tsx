@@ -1,12 +1,11 @@
 import React, { type FC } from 'react'
 
+import { type DecoratorsType } from '../../../libs/decorator'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
-
-import type { DecoratorsType } from '../../../types'
 
 export type BaseProps = DialogHeaderProps &
   DialogBodyProps & {
