@@ -162,7 +162,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
                 </Button>
                 <Button
-                  type={'submit'}
+                  type="submit"
                   variant={actionTheme}
                   disabled={actionDisabled}
                   loading={isRequestProcessing}
