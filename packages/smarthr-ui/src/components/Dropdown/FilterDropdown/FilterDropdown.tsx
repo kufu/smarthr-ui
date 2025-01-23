@@ -14,7 +14,7 @@ import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 import type { DecoratorType, DecoratorsType } from '../../../types'
-import { type ResponseMessageType } from '../../../libs/responseMessage'
+import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
 
 type Props = {
   isFiltered?: boolean
@@ -111,28 +111,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
 
   const filteredIconAriaLabel = useMemo(() => innerText(texts.status), [texts.status])
 
-  const calcedResponseStatus: {
-    isRequestProcessing: boolean
-    visibleMessageType: 'error' | 'success' | null
-    visibleMessage: React.ReactNode
-  } = useMemo(() => {
-    const status = responseMessage?.status
-    const isRequestProcessing = status === 'processing'
-
-    if (status === 'success' || status === 'error') {
-      return {
-        isRequestProcessing,
-        visibleMessageType: status,
-        visibleMessage: responseMessage?.text,
-      }
-    }
-
-    return {
-      isRequestProcessing,
-      visibleMessageType: null,
-      visibleMessage: '',
-    }
-  }, [responseMessage])
+  const calcedResponseStatus = useResponseMessage(responseMessage)
 
   const styles = useMemo(() => {
     const {
@@ -209,7 +188,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                     size="s"
                     prefix={<FaRotateLeftIcon />}
                     onClick={onReset}
-                    disabled={calcedResponseStatus.isRequestProcessing}
+                    disabled={calcedResponseStatus.isProcessing}
                   >
                     {texts.resetButton}
                   </Button>
@@ -222,7 +201,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                 className={rightButtonAreaStyle}
               >
                 <DropdownCloser>
-                  <Button onClick={onCancel} disabled={calcedResponseStatus.isRequestProcessing}>
+                  <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
                     {texts.cancelButton}
                   </Button>
                 </DropdownCloser>
@@ -230,17 +209,17 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                   <Button
                     variant="primary"
                     onClick={onApply}
-                    loading={calcedResponseStatus.isRequestProcessing}
+                    loading={calcedResponseStatus.isProcessing}
                   >
                     {texts.applyButton}
                   </Button>
                 </DropdownCloser>
               </Cluster>
             </Cluster>
-            {calcedResponseStatus.visibleMessageType && (
+            {calcedResponseStatus.visibleMessage && (
               <div className={messageStyle}>
-                <ResponseMessage type={calcedResponseStatus.visibleMessageType} role="alert">
-                  {calcedResponseStatus.visibleMessage}
+                <ResponseMessage type={calcedResponseStatus.status} role="alert">
+                  {calcedResponseStatus.message}
                 </ResponseMessage>
               </div>
             )}
