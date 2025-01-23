@@ -24,7 +24,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   onClickClose,
   onPressEscape = onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   className,
