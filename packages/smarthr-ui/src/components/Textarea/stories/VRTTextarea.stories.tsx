@@ -21,6 +21,30 @@ export default {
           <Textarea {...args} maxLetters={5} value="テキスト" />
           <Textarea {...args} maxLetters={5} value="テキストエ" />
           <Textarea {...args} maxLetters={5} value="テキストエリア" />
+          <Textarea
+            {...args}
+            maxLetters={5}
+            value="テキストエ"
+            decorators={{
+              beforeMaxLettersCount: (org) => `(${org})`,
+              afterMaxLettersCount: (org) => `(${org})`,
+              afterMaxLettersCountExceeded: (org) => `(${org})`,
+              beforeScreenReaderMaxLettersDescription: (org) => `(${org})`,
+              afterScreenReaderMaxLettersDescription: (org) => `(${org})`,
+            }}
+          />
+          <Textarea
+            {...args}
+            maxLetters={5}
+            value="テキストエリア"
+            decorators={{
+              beforeMaxLettersCount: (org) => `(${org})`,
+              afterMaxLettersCount: (org) => `(${org})`,
+              afterMaxLettersCountExceeded: (org) => `(${org})`,
+              beforeScreenReaderMaxLettersDescription: (org) => `(${org})`,
+              afterScreenReaderMaxLettersDescription: (org) => `(${org})`,
+            }}
+          />
           <Textarea {...args} placeholder="テキストエリア" />
         </Stack>
       ))}

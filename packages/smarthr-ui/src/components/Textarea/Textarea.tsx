@@ -38,13 +38,7 @@ type Props = {
   /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
   maxLetters?: number
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<
-    | 'beforeMaxLettersCount'
-    | 'afterMaxLettersCount'
-    | 'afterMaxLettersCountExceeded'
-    | 'beforeScreenReaderMaxLettersDescription'
-    | 'afterScreenReaderMaxLettersDescription'
-  >
+  decorators?: DecoratorsType<keyof typeof DECORATOR_DEFAULT_TEXTS>
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -65,12 +59,13 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-const TEXT_BEFORE_MAXLETTERS_COUNT = 'あと'
-const TEXT_AFTER_MAXLETTERS_COUNT = '文字'
-const TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED = 'オーバー'
-
-const SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION = '最大'
-const SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION = '文字入力できます'
+const DECORATOR_DEFAULT_TEXTS = {
+  beforeMaxLettersCount: 'あと',
+  afterMaxLettersCount: '文字',
+  afterMaxLettersCountExceeded: 'オーバー',
+  beforeScreenReaderMaxLettersDescription: '最大',
+  afterScreenReaderMaxLettersDescription: '文字入力できます',
+}
 
 const textarea = tv({
   slots: {
@@ -135,22 +130,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     } = useMemo(
       () => ({
         beforeMaxLettersCount:
-          decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
-          TEXT_BEFORE_MAXLETTERS_COUNT,
+          decorators?.beforeMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.beforeMaxLettersCount) ||
+          DECORATOR_DEFAULT_TEXTS.beforeMaxLettersCount,
         afterMaxLettersCount:
-          decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
-          TEXT_AFTER_MAXLETTERS_COUNT,
+          decorators?.afterMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount) ||
+          DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount,
         maxLettersCountExceeded:
-          decorators?.afterMaxLettersCountExceeded?.(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED) ||
-          TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
+          decorators?.afterMaxLettersCountExceeded?.(
+            DECORATOR_DEFAULT_TEXTS.afterMaxLettersCountExceeded,
+          ) || DECORATOR_DEFAULT_TEXTS.afterMaxLettersCountExceeded,
         beforeScreenReaderMaxLettersDescription:
           decorators?.beforeScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
+            DECORATOR_DEFAULT_TEXTS.beforeScreenReaderMaxLettersDescription,
+          ) || DECORATOR_DEFAULT_TEXTS.beforeScreenReaderMaxLettersDescription,
         afterScreenReaderMaxLettersDescription:
           decorators?.afterScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
+            DECORATOR_DEFAULT_TEXTS.afterScreenReaderMaxLettersDescription,
+          ) || DECORATOR_DEFAULT_TEXTS.afterScreenReaderMaxLettersDescription,
       }),
       [decorators],
     )
