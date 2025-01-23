@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import { Gap } from '../../types'
-import { type ResponseMessageType } from '../../../libs/responseMessage'
+import { type ResponseMessageTypeWithoutProcessing } from '../../../libs/responseMessage'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
@@ -55,7 +55,7 @@ type Props = StyleProps & {
   /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
   /** 操作に対するフィードバックメッセージ */
-  responseMessage?: ResponseMessageType
+  responseMessage?: ResponseMessageTypeWithoutProcessing
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -70,26 +70,16 @@ export const FloatArea: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const styleProps = useMemo(
-    () => ({
-      style: { ...style, zIndex },
-    }),
-    [style, zIndex],
-  )
+  const styleAttr = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
+  const actualClassName = useMemo(() => floatArea({ bottom, className }), [bottom, className])
 
   return (
-    <Base
-      {...styleProps}
-      {...rest}
-      className={floatArea({ bottom, className })}
-      layer={3}
-      padding={1}
-    >
+    <Base {...rest} style={styleAttr} layer={3} padding={1} className={actualClassName}>
       <Cluster gap={1}>
         {tertiaryButton}
         <div className="shr-ms-auto">
           <Cluster gap={1} align="center">
-            {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+            {responseMessage && (
               <ResponseMessage type={responseMessage.status}>
                 {responseMessage.text}
               </ResponseMessage>
