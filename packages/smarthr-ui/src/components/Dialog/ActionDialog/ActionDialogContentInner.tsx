@@ -61,7 +61,31 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   const handleClickAction = useCallback(() => {
     onClickAction(onClickClose)
   }, [onClickAction, onClickClose])
-  const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
+
+  const calcedResponseStatus = useMemo(() => {
+    if (!responseMessage) {
+      return {
+        isProcessing: false,
+        visibleMessage: false,
+      }
+    }
+
+    if (responseMessage.status === 'processing') {
+      return {
+        isProcessing: true,
+        visibleMessage: false,
+      }
+    }
+
+    return {
+      isProcessing: false,
+      visibleMessage: true,
+      // HINT: statusがprocessingではない === success or errorであることが確定する
+      // success or error の場合、text属性も必ず存在する
+      status: responseMessage.status as 'success' | 'error',
+      message: (responseMessage as { text: string }).text,
+    }
+  }, [responseMessage])
 
   const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
 
@@ -78,7 +102,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
             <Button
               onClick={onClickClose}
-              disabled={closeDisabled || isRequestProcessing}
+              disabled={closeDisabled || calcedResponseStatus.isProcessing}
               className="smarthr-ui-Dialog-closeButton"
             >
               {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
@@ -87,17 +111,17 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
               variant={actionTheme}
               onClick={handleClickAction}
               disabled={actionDisabled}
-              loading={isRequestProcessing}
+              loading={calcedResponseStatus.isProcessing}
               className="smarthr-ui-Dialog-actionButton"
             >
               {actionText}
             </Button>
           </Cluster>
         </Cluster>
-        {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+        {calcedResponseStatus.visibleMessage && (
           <div className={message()}>
-            <ResponseMessage type={responseMessage.status} role="alert">
-              {responseMessage.text}
+            <ResponseMessage type={calcedResponseStatus.status} role="alert">
+              {calcedResponseStatus.message}
             </ResponseMessage>
           </div>
         )}
