@@ -87,19 +87,28 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
     }
   }, [responseMessage])
 
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+  const styles = useMemo(() => {
+    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+
+    return {
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+      buttonArea: buttonArea(),
+      message: message(),
+    }
+  }, [])
 
   return (
     // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
-    <Stack gap={0} as="section" className={wrapper()}>
+    <Stack gap={0} as="section" className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <Stack gap={0.5} className={actionArea()}>
+      <Stack gap={0.5} className={styles.actionArea}>
         <Cluster justify="space-between">
           {subActionArea}
-          <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
+          <Cluster gap={{ row: 0.5, column: 1 }} className={styles.buttonArea}>
             <Button
               onClick={onClickClose}
               disabled={closeDisabled || calcedResponseStatus.isProcessing}
@@ -119,7 +128,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           </Cluster>
         </Cluster>
         {calcedResponseStatus.visibleMessage && (
-          <div className={message()}>
+          <div className={styles.message}>
             <ResponseMessage type={calcedResponseStatus.status} role="alert">
               {calcedResponseStatus.message}
             </ResponseMessage>
