@@ -144,15 +144,13 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
                 disabled={closeDisabled || calcedResponseStatus.isProcessing}
                 decorators={decorators}
               />
-              <Button
-                type="submit"
+              <ActionButton
                 variant={actionTheme}
                 disabled={actionDisabled}
                 loading={calcedResponseStatus.isProcessing}
-                className="smarthr-ui-Dialog-actionButton"
               >
                 {actionText}
-              </Button>
+              </ActionButton>
             </Cluster>
           </Cluster>
           {calcedResponseStatus.visibleMessage && (
@@ -167,6 +165,24 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     </Section>
   )
 }
+
+const ActionButton = React.memo<
+  PropsWithChildren<{
+    variant: FormDialogContentInnerProps['actionTheme']
+    disabled: FormDialogContentInnerProps['actionDisabled']
+    loading: boolean
+  }>
+>(({ variant, disabled, loading, children }) => (
+  <Button
+    type="submit"
+    variant={variant}
+    disabled={disabled}
+    loading={loading}
+    className="smarthr-ui-Dialog-actionButton"
+  >
+    {children}
+  </Button>
+))
 
 const CloseButton = React.memo<
   Pick<FormDialogContentInnerProps, 'decorators'> & {
