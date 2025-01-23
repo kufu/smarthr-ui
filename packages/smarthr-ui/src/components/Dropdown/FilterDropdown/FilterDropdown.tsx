@@ -13,7 +13,8 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
+import type { DecoratorType, DecoratorsType } from '../../../types'
+import { type ResponseMessageType } from '../../../libs/responseMessage'
 
 type Props = {
   isFiltered?: boolean

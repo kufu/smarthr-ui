@@ -16,7 +16,8 @@ import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import type { DecoratorsType } from '../../../types'
+import { type ResponseMessageType } from '../../../libs/responseMessage'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
