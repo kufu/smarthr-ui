@@ -30,19 +30,16 @@ export const FormDialogContent: React.FC<Props & ElementProps> = ({
   const { createPortal } = useDialogPortal(portalParent)
 
   const handleClickClose = useCallback(() => {
-    if (!active) {
-      return
+    if (active) {
+      onClickClose()
     }
-    onClickClose()
   }, [active, onClickClose])
 
   const handleSubmitAction = useCallback(
     (close: () => void, e: FormEvent<HTMLFormElement>) => {
-      if (!active) {
-        return
+      if (active) {
+        onSubmit(close, e)
       }
-
-      onSubmit(close, e)
     },
     [active, onSubmit],
   )
