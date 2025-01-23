@@ -50,11 +50,11 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   contentBgColor,
   contentPadding,
   actionText,
-  actionTheme = 'primary',
+  actionTheme,
   onClickAction,
   onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   decorators,
@@ -117,15 +117,14 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             >
               {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
             </Button>
-            <Button
+            <ActionButton
               variant={actionTheme}
-              onClick={handleClickAction}
               disabled={actionDisabled}
               loading={calcedResponseStatus.isProcessing}
-              className="smarthr-ui-Dialog-actionButton"
+              onClick={handleClickAction}
             >
               {actionText}
-            </Button>
+            </ActionButton>
           </Cluster>
         </Cluster>
         {calcedResponseStatus.visibleMessage && (
@@ -139,3 +138,23 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
     </Section>
   )
 }
+
+const ActionButton = React.memo<
+  PropsWithChildren<{
+    variant: ActionDialogContentInnerProps['actionTheme']
+    disabled: ActionDialogContentInnerProps['actionDisabled']
+    loading: boolean
+    onClick: () => void
+  }>
+>(({ variant = 'primary', disabled, loading, onClick, children }) => (
+  <Button
+    type="submit"
+    variant={variant}
+    disabled={disabled}
+    loading={loading}
+    onClick={onClick}
+    className="smarthr-ui-Dialog-actionButton"
+  >
+    {children}
+  </Button>
+))
