@@ -16,11 +16,7 @@ import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import {
-  StepFormDialogActionContext,
-  StepFormDialogContext,
-  StepItem,
-} from './StepFormDialogProvider'
+import { StepFormDialogContext, StepItem } from './StepFormDialogProvider'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
@@ -82,8 +78,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   decorators,
   onClickBack,
 }) => {
-  const { currentStep, stepQueue } = useContext(StepFormDialogContext)
-  const { setCurrentStep } = useContext(StepFormDialogActionContext)
+  const { currentStep, stepQueue, setCurrentStep } = useContext(StepFormDialogContext)
   const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
 
   const handleCloseAction = useCallback(() => {
@@ -109,7 +104,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       }
       setCurrentStep(next)
     },
-    [currentStep, onSubmit, setCurrentStep, handleCloseAction],
+    [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction],
   )
   const handleBackAction = useCallback(() => {
     if (onClickBack) {
