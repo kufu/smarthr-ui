@@ -26,13 +26,10 @@ export const ActionDialogWithTrigger: React.FC<
     [onClickTrigger, open],
   )
 
-  const actualOnClickClose = useCallback(() => {
-    if (onClickClose) {
-      return onClickClose(close)
-    }
-
-    close()
-  }, [onClickClose, close])
+  const actualOnClickClose = useMemo(
+    () => (onClickClose ? () => onClickClose(close) : close),
+    [onClickClose, close],
+  )
 
   const actualOnPressEscape = useCallback(() => {
     if (onPressEscape) {
