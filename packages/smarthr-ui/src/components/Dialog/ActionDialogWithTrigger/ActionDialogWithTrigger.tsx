@@ -21,13 +21,10 @@ export const ActionDialogWithTrigger: React.FC<
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  const onClickOpen = useCallback(() => {
-    if (onClickTrigger) {
-      return onClickTrigger(open)
-    }
-
-    open()
-  }, [onClickTrigger, open])
+  const onClickOpen = useMemo(
+    () => (onClickTrigger ? () => onClickTrigger(open) : open),
+    [onClickTrigger, open],
+  )
 
   const actualOnClickClose = useCallback(() => {
     if (onClickClose) {
