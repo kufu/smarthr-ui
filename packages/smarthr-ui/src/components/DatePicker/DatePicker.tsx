@@ -336,6 +336,15 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       () => (isCalendarShown ? closeCalendar : undefined),
       [isCalendarShown, closeCalendar],
     )
+    const onKeyPressInput = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+          switchCalendarVisibility(!isCalendarShown)
+          updateDate(stringToDate(e.currentTarget.value))
+        }
+      },
+      [isCalendarShown, updateDate, switchCalendarVisibility],
+    )
 
     return (
       <div
@@ -352,13 +361,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             width="100%"
             name={name}
             onChange={onChangeInput}
-            onKeyPress={({ key, currentTarget: { value: inputString } }) => {
-              if (key === 'Enter') {
-                switchCalendarVisibility(!isCalendarShown)
-                const newDate = stringToDate(inputString)
-                updateDate(newDate)
-              }
-            }}
+            onKeyPress={onKeyPressInput}
             onFocus={() => {
               setIsInputFocused(true)
               openCalendar()
