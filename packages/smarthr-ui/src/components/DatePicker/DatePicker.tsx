@@ -332,6 +332,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       () => (isCalendarShown ? baseOnDelegateKeyDown : undefined),
       [isCalendarShown, baseOnDelegateKeyDown],
     )
+    const onChangeInput = useMemo(
+      () => (isCalendarShown ? closeCalendar : undefined),
+      [isCalendarShown, closeCalendar],
+    )
 
     return (
       <div
@@ -347,11 +351,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             data-smarthr-ui-input="true"
             width="100%"
             name={name}
-            onChange={() => {
-              if (isCalendarShown) {
-                closeCalendar()
-              }
-            }}
+            onChange={onChangeInput}
             onKeyPress={({ key, currentTarget: { value: inputString } }) => {
               if (key === 'Enter') {
                 switchCalendarVisibility(!isCalendarShown)
