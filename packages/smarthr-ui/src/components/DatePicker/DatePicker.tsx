@@ -240,32 +240,43 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
 
     const handleKeyDown = useCallback(
       (e: KeyboardEvent) => {
-        if (e.key !== 'Tab' || !inputRef.current || !calendarPortalRef.current) {
+        if (!inputRef.current || !calendarPortalRef.current || e.key !== 'Tab') {
           return
         }
+
         const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
+
         if (calendarButtons.length === 0) {
           return
         }
+
         const firstCalendarButton = calendarButtons[0]
-        const lastCalendarButton = calendarButtons[calendarButtons.length - 1]
+
         if (isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
             closeCalendar()
+
             return
           }
+
           // move focus from Input to Calendar
           e.preventDefault()
           firstCalendarButton.focus()
+
           return
         }
-        const currentFocused = Array.from(calendarButtons).find((button) => button === e.target)
-        if (e.shiftKey && currentFocused === firstCalendarButton) {
-          // move focus from Calendar to Input
-          inputRef.current.focus()
-          e.preventDefault()
-        } else if (!e.shiftKey && currentFocused === lastCalendarButton) {
+
+        const calendarButtonAry = Array.from(calendarButtons)
+        const currentFocused = calendarButtonAry.find((button) => button === e.target)
+
+        if (e.shiftKey) {
+          if (currentFocused === firstCalendarButton) {
+            // move focus from Calendar to Input
+            inputRef.current.focus()
+            e.preventDefault()
+          }
+        } else if (currentFocused === calendarButtonAry.at(-1)) {
           // move focus from Calendar to next elements of DatePicker
           inputRef.current.focus()
           closeCalendar()
