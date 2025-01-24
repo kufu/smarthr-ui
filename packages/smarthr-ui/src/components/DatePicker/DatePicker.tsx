@@ -153,7 +153,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       () => inputRef.current,
     )
 
-    const updateDate = useCallback(
+    const baseUpdateDate = useCallback(
       (newDate: Date | null) => {
         if (
           !inputRef.current ||
@@ -165,19 +165,36 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         }
 
         const isValid = !newDate || dayjs(newDate).isValid()
-        const nextDate = isValid ? newDate : null
         const errors: string[] = []
 
         if (!isValid) {
           errors.push('INVALID_DATE')
         }
 
+        const nextDate = isValid ? newDate : null
+
         inputRef.current.value = dateToString(nextDate)
         setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
-        if (onChangeDate) onChangeDate(nextDate, inputRef.current.value, { errors })
+
+        return [nextDate, errors]
       },
-      [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
+      [selectedDate, dateToString, dateToAlternativeFormat],
+    )
+    const updateDate = useMemo(
+      () =>
+        onChangeDate
+          ? (newDate: Date | null) => {
+              const result = baseUpdateDate(newDate)
+
+              if (result) {
+                const [nextDate, errors] = result
+
+                onChangeDate(nextDate, inputRef.current.value, { errors })
+              }
+            }
+          : baseUpdateDate,
+      [onChangeDate, baseUpdateDate],
     )
 
     const switchCalendarVisibility = useCallback((isVisible: boolean) => {
