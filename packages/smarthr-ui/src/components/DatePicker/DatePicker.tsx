@@ -79,6 +79,7 @@ const datePicker = tv({
 const DEFAULT_DATE_TO_STRING_FORMAT = 'YYYY/MM/DD'
 const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
+const RETURN_NULL = () => null
 
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
 export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
@@ -132,8 +133,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     )
 
     const dateToString = useMemo(() => formatDate || DEFAULT_DATE_TO_STRING, [formatDate])
-    const dateToAlternativeFormat = useMemo(() => (showAlternative ?
-        ((d: Date | null) => d ? showAlternative(d) : null) : (() => null)),
+    const dateToAlternativeFormat = useMemo(
+      () => (showAlternative ? (d: Date | null) => (d ? showAlternative(d) : null) : RETURN_NULL),
       [showAlternative],
     )
 
