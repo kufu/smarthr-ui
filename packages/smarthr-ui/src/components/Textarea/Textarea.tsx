@@ -37,7 +37,7 @@ type Props = {
   /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
   maxLetters?: number
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<keyof typeof DECORATOR_DEFAULT_TEXTS>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -64,7 +64,8 @@ const DECORATOR_DEFAULT_TEXTS = {
   afterMaxLettersCountExceeded: 'オーバー',
   beforeScreenReaderMaxLettersDescription: '最大',
   afterScreenReaderMaxLettersDescription: '文字入力できます',
-}
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const textarea = tv({
   slots: {
@@ -120,10 +121,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const decorated = useDecorators<keyof typeof DECORATOR_DEFAULT_TEXTS>(
-      DECORATOR_DEFAULT_TEXTS,
-      decorators,
-    )
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const getCounterMessage = useCallback(
       (counterValue: number) => {
