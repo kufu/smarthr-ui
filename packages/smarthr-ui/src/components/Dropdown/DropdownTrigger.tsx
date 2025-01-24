@@ -2,6 +2,7 @@
 
 import React, {
   ComponentProps,
+  FC,
   MouseEvent,
   PropsWithChildren,
   ReactElement,
@@ -14,10 +15,24 @@ import { tv } from 'tailwind-variants'
 
 import { tabbable } from '../../libs/tabbable'
 import { includeDisabledTrigger } from '../../libs/util'
-import { ConditionalWrapper } from '../ConditionalWrapper'
 import { Tooltip } from '../Tooltip'
 
 import { DropdownContext } from './Dropdown'
+
+type ConditionalWrapperProps = {
+  shouldWrapContent: boolean
+  wrapper: (children: ReactNode) => JSX.Element
+  children: ReactNode
+}
+
+/**
+ * 条件付きでラッパをレンダリングする
+ */
+export const ConditionalWrapper: FC<ConditionalWrapperProps> = ({
+  shouldWrapContent,
+  wrapper,
+  children,
+}) => (shouldWrapContent ? wrapper(children) : children)
 
 type Props = PropsWithChildren<ComponentProps<'div'>> & {
   tooltip?: { message: ReactNode; show: boolean }
@@ -27,7 +42,7 @@ const wrapper = tv({
   base: 'smarthr-ui-Dropdown shr-inline-block',
 })
 
-export const DropdownTrigger: React.FC<Props> = ({ children, className, tooltip }) => {
+export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
   const styles = useMemo(() => wrapper({ className }), [className])
 

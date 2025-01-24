@@ -181,10 +181,11 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   const { buttonSuffix, buttonContent } = useMemo(() => {
     const FilterIcon = (
       <span className={iconWrapperStyle}>
-        <FaFilterIcon {...(onlyIconTrigger && { alt: texts.triggerButton })} />
-        {isFiltered ? (
+        <FaFilterIcon alt={onlyIconTrigger ? texts.triggerButton : undefined} />
+
+        {isFiltered && (
           <FaCircleCheckIcon aria-label={filteredIconAriaLabel} className={filteredIconStyle} />
-        ) : null}
+        )}
       </span>
     )
 
