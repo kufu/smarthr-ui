@@ -284,15 +284,25 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       },
       [isInputFocused, closeCalendar],
     )
-    const handleBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
+
+    const baseHandleBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
       (e) => {
         setIsInputFocused(false)
         updateDate(e.target.value ? stringToDate(e.target.value) : null)
-
-        if (onBlur) onBlur(e)
       },
-      [onBlur, stringToDate, updateDate],
+      [stringToDate, updateDate],
     )
+    const handleBlur = useMemo<React.FocusEventHandler<HTMLInputElement>>(
+      () =>
+        onBlur
+          ? (e) => {
+              baseHandleBlur(e)
+              onBlur(e)
+            }
+          : baseHandleBlur,
+      [onBlur, baseHandleBlur],
+    )
+
     useGlobalKeyDown(handleKeyDown)
 
     const caretIconColor = useMemo(() => {
