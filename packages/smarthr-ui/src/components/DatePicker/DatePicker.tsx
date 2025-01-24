@@ -198,18 +198,16 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     )
 
     const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
-    const switchCalendarVisibility = useCallback((isVisible: boolean) => {
-      if (!isVisible) {
-        setIsCalendarShown(false)
-
-        return
-      }
-
+    const openCalendar = useCallback(() => {
       if (inputWrapperRef.current) {
         setIsCalendarShown(true)
         setInputRect(inputWrapperRef.current.getBoundingClientRect())
       }
     }, [])
+    const switchCalendarVisibility = useCallback(
+      (isVisible: boolean) => (isVisible ? closeCalendar() : openCalendar()),
+      [closeCalendar, openCalendar],
+    )
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
@@ -238,10 +236,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       inputRef.current.value = value || ''
     }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
 
-    useOuterClick(
-      [inputWrapperRef, calendarPortalRef],
-      closeCalendar,
-    )
+    useOuterClick([inputWrapperRef, calendarPortalRef], closeCalendar)
 
     const handleKeyDown = useCallback(
       (e: KeyboardEvent) => {
@@ -306,7 +301,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       <div
         onClick={() => {
           if (!disabled && !isCalendarShown) {
-            switchCalendarVisibility(true)
+            openCalendar()
           }
         }}
         onKeyDown={(e) => {
@@ -340,7 +335,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             }}
             onFocus={() => {
               setIsInputFocused(true)
-              switchCalendarVisibility(true)
+              openCalendar()
             }}
             onBlur={handleBlur}
             suffix={
