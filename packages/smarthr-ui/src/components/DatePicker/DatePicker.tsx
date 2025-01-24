@@ -197,22 +197,25 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [onChangeDate, baseUpdateDate],
     )
 
+    const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
     const switchCalendarVisibility = useCallback((isVisible: boolean) => {
       if (!isVisible) {
         setIsCalendarShown(false)
+
         return
       }
-      if (!inputWrapperRef.current) {
-        return
+
+      if (inputWrapperRef.current) {
+        setIsCalendarShown(true)
+        setInputRect(inputWrapperRef.current.getBoundingClientRect())
       }
-      setIsCalendarShown(true)
-      setInputRect(inputWrapperRef.current.getBoundingClientRect())
     }, [])
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
         return
       }
+
       /**
        * Do not format the given value in the following cases
        * - while input element is focused.
@@ -220,22 +223,24 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
        */
       if (!isInputFocused) {
         const newDate = stringToDate(value)
+
         if (newDate && dayjs(newDate).isValid()) {
           inputRef.current.value = dateToString(newDate)
           setAlternativeFormat(dateToAlternativeFormat(newDate))
           setSelectedDate(newDate)
+
           return
         }
+
         setSelectedDate(null)
       }
+
       inputRef.current.value = value || ''
     }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
 
     useOuterClick(
       [inputWrapperRef, calendarPortalRef],
-      useCallback(() => {
-        switchCalendarVisibility(false)
-      }, [switchCalendarVisibility]),
+      closeCalendar,
     )
 
     const handleKeyDown = useCallback(
@@ -252,7 +257,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         if (isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
-            switchCalendarVisibility(false)
+            closeCalendar()
             return
           }
           // move focus from Input to Calendar
@@ -268,10 +273,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         } else if (!e.shiftKey && currentFocused === lastCalendarButton) {
           // move focus from Calendar to next elements of DatePicker
           inputRef.current.focus()
-          switchCalendarVisibility(false)
+          closeCalendar()
         }
       },
-      [isInputFocused, switchCalendarVisibility],
+      [isInputFocused, closeCalendar],
     )
     const handleBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
       (e) => {
@@ -307,10 +312,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         onKeyDown={(e) => {
           if ((e.key === 'Escape' || e.key === 'Esc') && isCalendarShown) {
             e.stopPropagation()
-            requestAnimationFrame(() => {
-              // delay hiding calendar because calendar will be displayed when input is focused
-              switchCalendarVisibility(false)
-            })
+            requestAnimationFrame(closeCalendar)
             if (inputRef.current) inputRef.current.focus()
           }
         }}
@@ -326,7 +328,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             name={name}
             onChange={() => {
               if (isCalendarShown) {
-                switchCalendarVisibility(false)
+                closeCalendar()
               }
             }}
             onKeyPress={({ key, currentTarget: { value: inputString } }) => {
@@ -369,10 +371,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
               to={to}
               onSelectDate={(_, selected) => {
                 updateDate(selected)
-                requestAnimationFrame(() => {
-                  // delay hiding calendar because calendar will be displayed when input is focused
-                  switchCalendarVisibility(false)
-                })
+                // delay hiding calendar because calendar will be displayed when input is focused
+                requestAnimationFrame(closeCalendar)
                 if (inputRef.current) inputRef.current.focus()
               }}
             />
