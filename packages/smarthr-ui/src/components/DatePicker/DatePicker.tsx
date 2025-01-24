@@ -308,16 +308,18 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     const caretIconColor = useMemo(() => {
       if (isInputFocused || isCalendarShown) return textColor.black
       if (disabled) return textColor.disabled
+
       return textColor.grey
     }, [isInputFocused, isCalendarShown, disabled])
 
+    const onDelegateClick = useMemo(
+      () => (!isCalendarShown && !disabled ? openCalendar : undefined),
+      [isCalendarShown, disabled, openCalendar],
+    )
+
     return (
       <div
-        onClick={() => {
-          if (!disabled && !isCalendarShown) {
-            openCalendar()
-          }
-        }}
+        onClick={onDelegateClick}
         onKeyDown={(e) => {
           if ((e.key === 'Escape' || e.key === 'Esc') && isCalendarShown) {
             e.stopPropagation()
