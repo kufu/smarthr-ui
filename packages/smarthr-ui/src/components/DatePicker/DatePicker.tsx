@@ -349,6 +349,16 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       setIsInputFocused(true)
       openCalendar()
     }, [openCalendar])
+    const onSelectDateCalendar = useCallback(
+      (_: any, selected: Date | null) => {
+        updateDate(selected)
+        // delay hiding calendar because calendar will be displayed when input is focused
+        requestAnimationFrame(closeCalendar)
+
+        if (inputRef.current) inputRef.current.focus()
+      },
+      [updateDate, closeCalendar],
+    )
 
     return (
       <div
@@ -394,12 +404,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
               value={selectedDate || undefined}
               from={from}
               to={to}
-              onSelectDate={(_, selected) => {
-                updateDate(selected)
-                // delay hiding calendar because calendar will be displayed when input is focused
-                requestAnimationFrame(closeCalendar)
-                if (inputRef.current) inputRef.current.focus()
-              }}
+              onSelectDate={onSelectDateCalendar}
             />
           </Portal>
         )}
