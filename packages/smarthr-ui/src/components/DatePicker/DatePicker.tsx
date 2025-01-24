@@ -109,19 +109,14 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       }),
       [width],
     )
-    const {
-      containerStyle,
-      inputSuffixLayoutStyle,
-      inputSuffixWrapperStyle,
-      inputSuffixTextStyle,
-    } = useMemo(() => {
+    const styles = useMemo(() => {
       const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } = datePicker()
 
       return {
-        containerStyle: container({ className }),
-        inputSuffixLayoutStyle: inputSuffixLayout(),
-        inputSuffixWrapperStyle: inputSuffixWrapper(),
-        inputSuffixTextStyle: inputSuffixText(),
+        container: container({ className }),
+        inputSuffixLayout: inputSuffixLayout(),
+        inputSuffixWrapper: inputSuffixWrapper(),
+        inputSuffixText: inputSuffixText(),
       }
     }, [className])
 
@@ -353,7 +348,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         onClick={!isCalendarShown && !disabled ? openCalendar : undefined}
         onKeyDown={isCalendarShown ? onDelegateKeyDown : undefined}
         role="presentation"
-        className={containerStyle}
+        className={styles.container}
         style={containerStyleAttr}
       >
         <div ref={inputWrapperRef}>
@@ -367,10 +362,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             onFocus={onFocusInput}
             onBlur={handleBlur}
             suffix={
-              <span className={inputSuffixLayoutStyle}>
-                <span className={inputSuffixWrapperStyle}>
+              <span className={styles.inputSuffixLayout}>
+                <span className={styles.inputSuffixWrapper}>
                   {showAlternative && (
-                    <span className={inputSuffixTextStyle}>{alternativeFormat}</span>
+                    <span className={styles.inputSuffixText}>{alternativeFormat}</span>
                   )}
                   <FaCalendarAltIcon color={caretIconColor} />
                 </span>
