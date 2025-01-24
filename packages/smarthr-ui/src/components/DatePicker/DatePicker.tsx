@@ -316,17 +316,26 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       () => (!isCalendarShown && !disabled ? openCalendar : undefined),
       [isCalendarShown, disabled, openCalendar],
     )
+    const baseOnDelegateKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+          e.stopPropagation()
+          requestAnimationFrame(closeCalendar)
+
+          if (inputRef.current) inputRef.current.focus()
+        }
+      },
+      [closeCalendar],
+    )
+    const onDelegateKeyDown = useMemo(
+      () => (isCalendarShown ? baseOnDelegateKeyDown : undefined),
+      [isCalendarShown, baseOnDelegateKeyDown],
+    )
 
     return (
       <div
         onClick={onDelegateClick}
-        onKeyDown={(e) => {
-          if ((e.key === 'Escape' || e.key === 'Esc') && isCalendarShown) {
-            e.stopPropagation()
-            requestAnimationFrame(closeCalendar)
-            if (inputRef.current) inputRef.current.focus()
-          }
-        }}
+        onKeyDown={onDelegateKeyDown}
         role="presentation"
         className={containerStyle}
         style={containerStyleAttr}
