@@ -29,17 +29,18 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }
     left: 0,
   })
   const containerRef = useRef<HTMLDivElement>(null)
+
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
 
   useEnhancedEffect(() => {
-    if (!containerRef.current) {
-      return
+    if (containerRef.current) {
+      setPosition(getPortalPosition(inputRect, containerRef.current.offsetHeight))
     }
-    setPosition(getPortalPosition(inputRect, containerRef.current.offsetHeight))
   }, [inputRect, isPortalRootMounted])
 
   const containerStyleProps = useMemo(() => {
     const container = portal()
+
     return {
       className: container,
       style: {
