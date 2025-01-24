@@ -38,11 +38,10 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }
     }
   }, [inputRect, isPortalRootMounted])
 
-  const containerStyleProps = useMemo(() => {
-    const container = portal()
+  const style = useMemo(() => portal(), [])
 
+  const containerStyleProps = useMemo(() => {
     return {
-      className: container,
       style: {
         top: `${position.top}px`,
         left: `${position.left}px`,
@@ -50,5 +49,7 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }
     }
   }, [position.left, position.top])
 
-  return createPortal(<div {...props} {...containerStyleProps} ref={containerRef} />)
+  return createPortal(
+    <div {...props} {...containerStyleProps} ref={containerRef} className={style} />,
+  )
 })
