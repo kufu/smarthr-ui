@@ -97,9 +97,12 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     },
     ref,
   ) => {
-    const containerStyleAttr = useMemo(() => ({
-      width: typeof width === 'number' ? `${width}px` : width,
-    }), [width])
+    const containerStyleAttr = useMemo(
+      () => ({
+        width: typeof width === 'number' ? `${width}px` : width,
+      }),
+      [width],
+    )
     const {
       containerStyle,
       inputSuffixLayoutStyle,
@@ -116,13 +119,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       }
     }, [className])
 
-    const stringToDate = useCallback(
-      (str?: string | null) => {
-        if (!str) {
-          return null
-        }
-        return parseInput ? parseInput(str) : parseJpnDateString(str)
-      },
+    const stringToDate = useMemo(
+      () =>
+        parseInt
+          ? (str?: string | null) => (str ? parseInput(str) : undefined)
+          : (str?: string | null) => (str ? parseJpnDateString(str) : undefined),
       [parseInput],
     )
 
