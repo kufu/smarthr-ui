@@ -26,11 +26,13 @@ export default {
             maxLetters={5}
             value="テキストエ"
             decorators={{
-              beforeMaxLettersCount: (org) => `(${org})`,
-              afterMaxLettersCount: (org) => `(${org})`,
-              afterMaxLettersCountExceeded: (org) => `(${org})`,
-              beforeScreenReaderMaxLettersDescription: (org) => `(${org})`,
-              afterScreenReaderMaxLettersDescription: (org) => `(${org})`,
+              beforeMaxLettersCount: (org) => `beforeMaxLettersCount(${org})`,
+              afterMaxLettersCount: (org) => `afterMaxLettersCount(${org})`,
+              afterMaxLettersCountExceeded: (org) => `afterMaxLettersCountExceeded(${org})`,
+              beforeScreenReaderMaxLettersDescription: (org) =>
+                `beforeScreenReaderMaxLettersDescription(${org})`,
+              afterScreenReaderMaxLettersDescription: (org) =>
+                `afterScreenReaderMaxLettersDescription(${org})`,
             }}
           />
           <Textarea
@@ -38,11 +40,13 @@ export default {
             maxLetters={5}
             value="テキストエリア"
             decorators={{
-              beforeMaxLettersCount: (org) => `(${org})`,
-              afterMaxLettersCount: (org) => `(${org})`,
-              afterMaxLettersCountExceeded: (org) => `(${org})`,
-              beforeScreenReaderMaxLettersDescription: (org) => `(${org})`,
-              afterScreenReaderMaxLettersDescription: (org) => `(${org})`,
+              beforeMaxLettersCount: (org) => `beforeMaxLettersCount(${org})`,
+              afterMaxLettersCount: (org) => `afterMaxLettersCount(${org})`,
+              afterMaxLettersCountExceeded: (org) => `afterMaxLettersCountExceeded(${org})`,
+              beforeScreenReaderMaxLettersDescription: (org) =>
+                `beforeScreenReaderMaxLettersDescription(${org})`,
+              afterScreenReaderMaxLettersDescription: (org) =>
+                `afterScreenReaderMaxLettersDescription(${org})`,
             }}
           />
           <Textarea {...args} placeholder="テキストエリア" />
