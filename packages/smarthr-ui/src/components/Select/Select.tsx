@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorType, type DecoratorsType } from '../../libs/decorator'
+import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'

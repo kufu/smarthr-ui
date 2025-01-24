@@ -11,7 +11,7 @@ import React, {
 } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../libs/decorator'
+import { type DecoratorsType } from '../../hooks/useDecorators'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'

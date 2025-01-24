@@ -1,7 +1,7 @@
 import React, { ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../libs/decorator'
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 

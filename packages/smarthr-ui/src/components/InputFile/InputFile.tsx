@@ -12,7 +12,7 @@ import React, {
 } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../libs/decorator'
+import { type DecoratorsType } from '../../hooks/useDecorators'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'

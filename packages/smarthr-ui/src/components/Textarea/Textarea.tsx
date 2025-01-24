@@ -15,8 +15,8 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { debounce } from '../../libs/debounce'
-import { type DecoratorsType, useDecorators } from '../../libs/decorator'
 import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 
-import { type DecoratorType, type DecoratorsType } from '../../libs/decorator'
+import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type Props = {

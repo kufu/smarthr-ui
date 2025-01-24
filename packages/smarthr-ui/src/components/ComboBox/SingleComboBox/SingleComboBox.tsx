@@ -17,7 +17,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
-import { type DecoratorsType } from '../../../libs/decorator'
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'

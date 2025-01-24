@@ -1,7 +1,7 @@
 import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../libs/decorator'
+import { type DecoratorsType } from '../../hooks/useDecorators'
 import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'

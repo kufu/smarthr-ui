@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorType, type DecoratorsType } from '../../libs/decorator'
+import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
 import { Cluster } from '../Layout'
 import { RangeSeparator, Text } from '../Text'
 
