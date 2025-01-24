@@ -97,25 +97,24 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     },
     ref,
   ) => {
+    const containerStyleAttr = useMemo(() => ({
+      width: typeof width === 'number' ? `${width}px` : width,
+    }), [width])
     const {
-      containerStyleProps,
+      containerStyle,
       inputSuffixLayoutStyle,
       inputSuffixWrapperStyle,
       inputSuffixTextStyle,
     } = useMemo(() => {
       const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } = datePicker()
+
       return {
-        containerStyleProps: {
-          className: container({ className }),
-          style: {
-            width: typeof width === 'number' ? `${width}px` : width,
-          },
-        },
+        containerStyle: container({ className }),
         inputSuffixLayoutStyle: inputSuffixLayout(),
         inputSuffixWrapperStyle: inputSuffixWrapper(),
         inputSuffixTextStyle: inputSuffixText(),
       }
-    }, [className, width])
+    }, [className])
 
     const stringToDate = useCallback(
       (str?: string | null) => {
@@ -294,7 +293,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
 
     return (
       <div
-        {...containerStyleProps}
         onClick={() => {
           if (!disabled && !isCalendarShown) {
             switchCalendarVisibility(true)
@@ -311,6 +309,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
           }
         }}
         role="presentation"
+        className={containerStyle}
+        style={containerStyleAttr}
       >
         <div ref={inputWrapperRef}>
           <Input
