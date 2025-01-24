@@ -286,16 +286,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     )
     const handleBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
       (e) => {
-        const {
-          target: { value: inputString },
-        } = e
         setIsInputFocused(false)
-        if (inputString === '') {
-          updateDate(null)
-        } else {
-          const newDate = stringToDate(inputString)
-          updateDate(newDate)
-        }
+        updateDate(e.target.value ? stringToDate(e.target.value) : null)
+
         if (onBlur) onBlur(e)
       },
       [onBlur, stringToDate, updateDate],
