@@ -132,14 +132,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     )
 
     const dateToString = useMemo(() => formatDate || DEFAULT_DATE_TO_STRING, [formatDate])
-
-    const dateToAlternativeFormat = useCallback(
-      (d: Date | null) => {
-        if (!d || !showAlternative) {
-          return null
-        }
-        return showAlternative(d)
-      },
+    const dateToAlternativeFormat = useMemo(() => (showAlternative ?
+        ((d: Date | null) => d ? showAlternative(d) : null) : (() => null)),
       [showAlternative],
     )
 
