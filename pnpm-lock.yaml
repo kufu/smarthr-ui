@@ -47,8 +47,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.10
-        version: 0.6.10(prettier@3.4.2)
+        specifier: ^0.6.11
+        version: 0.6.11(prettier@3.4.2)
       stylelint:
         specifier: ^16.12.0
         version: 16.12.0(typescript@5.7.3)
@@ -4998,6 +4998,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.ismatch@4.4.0:
     resolution: {integrity: sha512-fPMfXjGQEV9Xsq/8MTSgUf255gawYRbjwMyDbcvDhXgV7enSZA0hynz6vMPnpAb5iONEzBHBPsT+0zes5Z301g==}
@@ -5815,8 +5816,8 @@ packages:
   prettier-config-smarthr@1.0.1:
     resolution: {integrity: sha512-aDP9aa/NF+PCisEyuU4k6RXYvmwEqhGNvWVnPVMJTdvlYDhRUyDiVV8HExs55aL+n2y/1lNtSYy99E4QDYgn0g==}
 
-  prettier-plugin-tailwindcss@0.6.10:
-    resolution: {integrity: sha512-ndj2WLDaMzACnr1gAYZiZZLs5ZdOeBYgOsbBmHj3nvW/6q8h8PymsXiEnKvj/9qgCCAoHyvLOisoQdIcsDvIgw==}
+  prettier-plugin-tailwindcss@0.6.11:
+    resolution: {integrity: sha512-YxaYSIvZPAqhrrEpRtonnrXdghZg1irNg4qrjboCXrpybLWVs55cW2N3juhspVJiO0JBvYJT8SYsJpc8OQSnsA==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -13780,7 +13781,7 @@ snapshots:
 
   prettier-config-smarthr@1.0.1: {}
 
-  prettier-plugin-tailwindcss@0.6.10(prettier@3.4.2):
+  prettier-plugin-tailwindcss@0.6.11(prettier@3.4.2):
     dependencies:
       prettier: 3.4.2
 
