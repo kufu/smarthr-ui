@@ -345,6 +345,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       },
       [isCalendarShown, updateDate, switchCalendarVisibility],
     )
+    const onFocusInput = useCallback(() => {
+      setIsInputFocused(true)
+      openCalendar()
+    }, [openCalendar])
 
     return (
       <div
@@ -362,10 +366,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             name={name}
             onChange={onChangeInput}
             onKeyPress={onKeyPressInput}
-            onFocus={() => {
-              setIsInputFocused(true)
-              openCalendar()
-            }}
+            onFocus={onFocusInput}
             onBlur={handleBlur}
             suffix={
               <span className={inputSuffixLayoutStyle}>
