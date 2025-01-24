@@ -80,6 +80,7 @@ const DEFAULT_DATE_TO_STRING_FORMAT = 'YYYY/MM/DD'
 const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
 const RETURN_NULL = () => null
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
 export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
@@ -318,7 +319,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     )
     const baseOnDelegateKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
-        if (e.key === 'Escape' || e.key === 'Esc') {
+        if (ESCAPE_KEY_REGEX.test(e.key)) {
           e.stopPropagation()
           requestAnimationFrame(closeCalendar)
 
