@@ -122,9 +122,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
 
     const stringToDate = useMemo(
       () =>
-        parseInt
-          ? (str?: string | null) => (str ? parseInput(str) : undefined)
-          : (str?: string | null) => (str ? parseJpnDateString(str) : undefined),
+        parseInput
+          ? (str?: string | null) => (str ? parseInput(str) : null)
+          : (str?: string | null) => (str ? parseJpnDateString(str) : null),
       [parseInput],
     )
 
@@ -168,12 +168,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         }
 
         const nextDate = isValid ? newDate : null
+        const currentValue = dateToString(nextDate)
 
-        inputRef.current.value = dateToString(nextDate)
+        inputRef.current.value = currentValue
         setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
-        return [nextDate, errors]
+        return [nextDate, currentValue, errors] as [Date | null, string, string[]]
       },
       [selectedDate, dateToString, dateToAlternativeFormat],
     )
@@ -184,9 +185,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
               const result = baseUpdateDate(newDate)
 
               if (result) {
-                const [nextDate, errors] = result
+                const [nextDate, currentValue, errors] = result
 
-                onChangeDate(nextDate, inputRef.current.value, { errors })
+                onChangeDate(nextDate, currentValue, { errors })
               }
             }
           : baseUpdateDate,
@@ -320,7 +321,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [closeCalendar],
     )
     const onKeyPressInput = useCallback(
-      (e: React.KeyboardEvent) => {
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
           switchCalendarVisibility(!isCalendarShown)
           updateDate(stringToDate(e.currentTarget.value))
@@ -362,14 +363,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             onFocus={onFocusInput}
             onBlur={handleBlur}
             suffix={
-              <span className={styles.inputSuffixLayout}>
-                <span className={styles.inputSuffixWrapper}>
-                  {showAlternative && (
-                    <span className={styles.inputSuffixText}>{alternativeFormat}</span>
-                  )}
-                  <FaCalendarAltIcon color={caretIconColor} />
-                </span>
-              </span>
+              <InputSuffixIcon
+                alternativeFormat={showAlternative ? alternativeFormat : null}
+                caretIconColor={caretIconColor}
+                styles={styles}
+              />
             }
             disabled={disabled}
             error={error}
@@ -395,3 +393,16 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     )
   },
 )
+
+const InputSuffixIcon = React.memo<{
+  styles: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
+  alternativeFormat: null | ReactNode
+  caretIconColor: React.ComponentProps<typeof FaCalendarAltIcon>['color']
+}>(({ styles, alternativeFormat, caretIconColor }) => (
+  <span className={styles.inputSuffixLayout}>
+    <span className={styles.inputSuffixWrapper}>
+      {alternativeFormat && <span className={styles.inputSuffixText}>{alternativeFormat}</span>}
+      <FaCalendarAltIcon color={caretIconColor} />
+    </span>
+  </span>
+))
