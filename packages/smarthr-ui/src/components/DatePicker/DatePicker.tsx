@@ -313,11 +313,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       return textColor.grey
     }, [isInputFocused, isCalendarShown, disabled])
 
-    const onDelegateClick = useMemo(
-      () => (!isCalendarShown && !disabled ? openCalendar : undefined),
-      [isCalendarShown, disabled, openCalendar],
-    )
-    const baseOnDelegateKeyDown = useCallback(
+    const onDelegateKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
         if (ESCAPE_KEY_REGEX.test(e.key)) {
           e.stopPropagation()
@@ -327,14 +323,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         }
       },
       [closeCalendar],
-    )
-    const onDelegateKeyDown = useMemo(
-      () => (isCalendarShown ? baseOnDelegateKeyDown : undefined),
-      [isCalendarShown, baseOnDelegateKeyDown],
-    )
-    const onChangeInput = useMemo(
-      () => (isCalendarShown ? closeCalendar : undefined),
-      [isCalendarShown, closeCalendar],
     )
     const onKeyPressInput = useCallback(
       (e: React.KeyboardEvent) => {
@@ -362,8 +350,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
 
     return (
       <div
-        onClick={onDelegateClick}
-        onKeyDown={onDelegateKeyDown}
+        onClick={!isCalendarShown && !disabled ? openCalendar : undefined}
+        onKeyDown={isCalendarShown ? onDelegateKeyDown : undefined}
         role="presentation"
         className={containerStyle}
         style={containerStyleAttr}
@@ -374,7 +362,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             data-smarthr-ui-input="true"
             width="100%"
             name={name}
-            onChange={onChangeInput}
+            onChange={isCalendarShown ? closeCalendar : undefined}
             onKeyPress={onKeyPressInput}
             onFocus={onFocusInput}
             onBlur={handleBlur}
