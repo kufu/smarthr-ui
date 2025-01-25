@@ -31,7 +31,7 @@ export const useSingleOptions = <T>({
     [selected],
   )
 
-  return useOptions<T>({ ...rest, isSelected })
+  return useOptions<T>(rest, isSelected)
 }
 
 export const useMultiOptions = <T>({
@@ -47,18 +47,13 @@ export const useMultiOptions = <T>({
     [selected, isItemSelected],
   )
 
-  return useOptions<T>({ ...rest, isSelected })
+  return useOptions<T>(rest, isSelected)
 }
 
-function useOptions<T>({
-  items,
-  isSelected,
-  creatable,
-  inputValue = '',
-  isFilteringDisabled = false,
-}: BaseUseOptionsProps<T> & {
-  isSelected: (item: ComboBoxItem<T>) => boolean
-}) {
+function useOptions<T>(
+  { items, creatable, inputValue = '', isFilteringDisabled = false }: BaseUseOptionsProps<T>,
+  isSelected: (item: ComboBoxItem<T>) => boolean,
+) {
   const newItemId = useId()
   const optionIdPrefix = useId()
 
