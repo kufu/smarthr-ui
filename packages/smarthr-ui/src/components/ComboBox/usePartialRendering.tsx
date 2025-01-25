@@ -9,14 +9,11 @@ export function usePartialRendering<T>({
   items: T[]
   minLength?: number
 }) {
-  const [currentItemLength, setCurrentItemLength] = useState(
-    Math.max(OPTION_INCREMENT_AMOUNT, minLength),
-  )
+  const limitter = useCallback((length: number) => Math.max(number, minLength), [minLength])
+
+  const [currentItemLength, setCurrentItemLength] = useState(limitter(OPTION_INCREMENT_AMOUNT))
   // minLength も考慮した実際のアイテム数を算出
-  const actualLength = useMemo(
-    () => Math.max(currentItemLength, minLength),
-    [currentItemLength, minLength],
-  )
+  const actualLength = useMemo(() => limitter(currentItemLength), [currentItemLength, limitter])
   const partialItems = useMemo(() => items.slice(0, actualLength), [actualLength, items])
 
   useEffect(() => {
