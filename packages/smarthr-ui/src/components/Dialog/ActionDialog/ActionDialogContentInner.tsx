@@ -2,7 +2,7 @@
 
 import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
-import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
+import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'

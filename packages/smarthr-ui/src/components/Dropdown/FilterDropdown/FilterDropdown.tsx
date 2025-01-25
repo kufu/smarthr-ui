@@ -4,7 +4,7 @@ import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { type ResponseMessageType, useResponseMessage } from '../../../libs/responseMessage'
+import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
 import { Button, BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
