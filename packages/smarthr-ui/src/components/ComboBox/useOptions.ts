@@ -13,16 +13,54 @@ const defaultIsItemSelected = <T>(
       selectedItem.label === targetItem.label && selectedItem.value === targetItem.value,
   ) !== undefined
 
-export function useOptions<T>({
-  items,
+export const useSingleOptions = <T>({
   selected,
+  ...rest
+}: {
+  selected: ComboBoxItem<T> | null
+  items: Array<ComboBoxItem<T>>
+  creatable: boolean
+  inputValue?: string
+  isFilteringDisabled?: boolean
+}) => {
+  const isSelected = useCallback(
+    (item: ComboBoxItem<T>) => selected !== null && selected.label === item.label,
+    [selected],
+  )
+
+  return useOptions<T>({ ...rest, isSelected })
+}
+
+export const useMultiOptions = <T>({
+  selected,
+  isItemSelected = defaultIsItemSelected,
+  ...rest
+}: {
+  selected: Array<ComboBoxItem<T>>
+  isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
+  items: Array<ComboBoxItem<T>>
+  creatable: boolean
+  inputValue?: string
+  isFilteringDisabled?: boolean
+}) => {
+  const isSelected = useCallback(
+    (item: ComboBoxItem<T>) => isItemSelected(item, selected),
+    [selected, isItemSelected],
+  )
+
+  return useOptions<T>({ ...rest, isSelected })
+}
+
+function useOptions<T>({
+  items,
+  isSelected,
   creatable,
   inputValue = '',
   isFilteringDisabled = false,
   isItemSelected = defaultIsItemSelected,
 }: {
   items: Array<ComboBoxItem<T>>
-  selected: (ComboBoxItem<T> | null) | Array<ComboBoxItem<T>>
+  isSelected: (item: ComboBoxItem<T>) => boolean
   creatable: boolean
   inputValue?: string
   isFilteringDisabled?: boolean
@@ -30,17 +68,6 @@ export function useOptions<T>({
 }) {
   const newItemId = useId()
   const optionIdPrefix = useId()
-
-  const isSelected = useCallback(
-    (item: ComboBoxItem<T>) => {
-      if (Array.isArray(selected)) {
-        return isItemSelected(item, selected)
-      } else {
-        return selected !== null && selected.label === item.label
-      }
-    },
-    [isItemSelected, selected],
-  )
 
   const existedOptions: Array<ComboBoxOption<T>> = useMemo(
     () =>
@@ -52,7 +79,7 @@ export function useOptions<T>({
       })),
     [isSelected, items, optionIdPrefix],
   )
-  const addingOption = useMemo(
+  const addingOption: ComboBoxOption<T> | null = useMemo(
     () =>
       creatable && inputValue && items.every((item) => item.label !== inputValue)
         ? {

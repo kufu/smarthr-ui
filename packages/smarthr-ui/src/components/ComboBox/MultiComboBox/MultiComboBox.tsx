@@ -21,7 +21,7 @@ import { textColor } from '../../../themes'
 import { FaCaretDownIcon } from '../../Icon'
 import { useFocusControl } from '../useFocusControl'
 import { useListBox } from '../useListBox'
-import { useOptions } from '../useOptions'
+import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
@@ -175,7 +175,7 @@ const ActualMultiComboBox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
-  const { options } = useOptions({
+  const { options } = useMultiOptions({
     items,
     selected: selectedItems,
     creatable,
