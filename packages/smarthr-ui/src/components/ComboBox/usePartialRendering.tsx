@@ -24,12 +24,10 @@ export function usePartialRendering<T>({
     setCurrentItemLength((current) => limitter(current + OPTION_INCREMENT_AMOUNT))
   }, [limitter])
 
-  const renderIntersection = useCallback(() => {
-    if (isAllItemsShown) {
-      return null
-    }
-    return <Intersection onIntersect={handleIntersect} />
-  }, [handleIntersect, isAllItemsShown])
+  const renderIntersection = useMemo(
+    () => (isAllItemsShown ? () => null : () => <Intersection onIntersect={handleIntersect} />),
+    [handleIntersect, isAllItemsShown],
+  )
 
   return {
     items: partialItems,
