@@ -35,10 +35,6 @@ export function useOptions<T>({
 
   const newItemId = useId()
   const optionIdPrefix = useId()
-  const getOptionId = useCallback(
-    (optionIndex: number) => `${optionIdPrefix}-${optionIndex}`,
-    [optionIdPrefix],
-  )
 
   const isSelected = useCallback(
     (item: ComboBoxItem<T>) => {
@@ -53,11 +49,12 @@ export function useOptions<T>({
 
   const allOptions: Array<ComboBoxOption<T>> = useMemo(() => {
     const _options = items.map((item, i) => ({
-      id: getOptionId(i),
+      id: `${optionIdPrefix}-${i}`,
       selected: isSelected(item),
       isNew: false,
       item,
     }))
+
     if (isInputValueAddable) {
       const addingOption = {
         id: newItemId,
@@ -67,8 +64,9 @@ export function useOptions<T>({
       }
       return [addingOption, ..._options]
     }
+
     return _options
-  }, [getOptionId, inputValue, isInputValueAddable, isSelected, items, newItemId])
+  }, [optionIdPrefix, inputValue, isInputValueAddable, isSelected, items, newItemId])
 
   const options = useMemo(() => {
     if (isFilteringDisabled) {
