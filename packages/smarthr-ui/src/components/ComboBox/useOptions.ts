@@ -28,11 +28,6 @@ export function useOptions<T>({
   isFilteringDisabled?: boolean
   isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
 }) {
-  const isInputValueAddable = useMemo(
-    () => creatable && inputValue && items.every((item) => item.label !== inputValue),
-    [creatable, inputValue, items],
-  )
-
   const newItemId = useId()
   const optionIdPrefix = useId()
 
@@ -59,7 +54,7 @@ export function useOptions<T>({
   )
   const addingOption = useMemo(
     () =>
-      isInputValueAddable
+      creatable && inputValue && items.every((item) => item.label !== inputValue)
         ? {
             id: newItemId,
             isNew: true,
@@ -67,7 +62,7 @@ export function useOptions<T>({
             item: { label: inputValue, value: inputValue },
           }
         : null,
-    [inputValue, isInputValueAddable, newItemId],
+    [inputValue, items, creatable, newItemId],
   )
 
   const allOptions: Array<ComboBoxOption<T>> = useMemo(
