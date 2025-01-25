@@ -414,15 +414,8 @@ const Handler = React.memo<{
   'aria-valuetext': string | undefined
   className: string
   onArrowKeyDown: (e: React.KeyboardEvent) => void
-}>(({ 'aria-label': ariaLabel, 'aria-valuetext': ariaValueText, className, onArrowKeyDown }) => (
-  <div
-    className={className}
-    tabIndex={0}
-    role="slider"
-    aria-label={ariaLabel}
-    aria-valuetext={ariaValueText}
-    onKeyDown={onArrowKeyDown}
-  >
+}>(({ onArrowKeyDown, ...rest }) => (
+  <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
     <FaGripIcon />
   </div>
 ))
