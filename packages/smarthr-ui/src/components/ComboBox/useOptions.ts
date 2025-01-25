@@ -71,13 +71,13 @@ export function useOptions<T>({
   )
 
   const options = useMemo(() => {
-    if (isFilteringDisabled) {
+    if (isFilteringDisabled || !inputValue) {
       return allOptions
     }
-    return allOptions.filter(({ item: { label } }) => {
-      if (!inputValue) return true
-      return convertMatchableString(innerText(label)).includes(convertMatchableString(inputValue))
-    })
+
+    return allOptions.filter(({ item: { label } }) =>
+      convertMatchableString(innerText(label)).includes(convertMatchableString(inputValue)),
+    )
   }, [allOptions, inputValue, isFilteringDisabled])
 
   return {
