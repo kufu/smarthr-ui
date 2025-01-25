@@ -13,15 +13,18 @@ const defaultIsItemSelected = <T>(
       selectedItem.label === targetItem.label && selectedItem.value === targetItem.value,
   ) !== undefined
 
-export const useSingleOptions = <T>({
-  selected,
-  ...rest
-}: {
-  selected: ComboBoxItem<T> | null
+type BaseUseOptionsProps<T> = {
   items: Array<ComboBoxItem<T>>
   creatable: boolean
   inputValue?: string
   isFilteringDisabled?: boolean
+}
+
+export const useSingleOptions = <T>({
+  selected,
+  ...rest
+}: BaseUseOptionsProps<T> & {
+  selected: ComboBoxItem<T> | null
 }) => {
   const isSelected = useCallback(
     (item: ComboBoxItem<T>) => selected !== null && selected.label === item.label,
@@ -35,13 +38,9 @@ export const useMultiOptions = <T>({
   selected,
   isItemSelected = defaultIsItemSelected,
   ...rest
-}: {
+}: BaseUseOptionsProps<T> & {
   selected: Array<ComboBoxItem<T>>
   isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
-  items: Array<ComboBoxItem<T>>
-  creatable: boolean
-  inputValue?: string
-  isFilteringDisabled?: boolean
 }) => {
   const isSelected = useCallback(
     (item: ComboBoxItem<T>) => isItemSelected(item, selected),
@@ -57,14 +56,8 @@ function useOptions<T>({
   creatable,
   inputValue = '',
   isFilteringDisabled = false,
-  isItemSelected = defaultIsItemSelected,
-}: {
-  items: Array<ComboBoxItem<T>>
+}: BaseUseOptionsProps<T> & {
   isSelected: (item: ComboBoxItem<T>) => boolean
-  creatable: boolean
-  inputValue?: string
-  isFilteringDisabled?: boolean
-  isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
 }) {
   const newItemId = useId()
   const optionIdPrefix = useId()
