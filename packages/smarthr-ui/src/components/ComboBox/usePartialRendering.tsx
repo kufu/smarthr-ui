@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
+const RETURN_NULL = () => null
 
 export function usePartialRendering<T>({
   items,
@@ -20,13 +21,20 @@ export function usePartialRendering<T>({
     [currentItemLength, items.length],
   )
 
-  const handleIntersect = useCallback(() => {
-    setCurrentItemLength((current) => limitter(current + OPTION_INCREMENT_AMOUNT))
-  }, [limitter])
+  const baseRenderIntersection = useCallback(
+    () => (
+      <Intersection
+        onIntersect={() => {
+          setCurrentItemLength((current) => limitter(current + OPTION_INCREMENT_AMOUNT))
+        }}
+      />
+    ),
+    [limitter],
+  )
 
   const renderIntersection = useMemo(
-    () => (isAllItemsShown ? () => null : () => <Intersection onIntersect={handleIntersect} />),
-    [handleIntersect, isAllItemsShown],
+    () => (isAllItemsShown ? RETURN_NULL : baseRenderIntersection),
+    [isAllItemsShown, baseRenderIntersection],
   )
 
   return {
@@ -40,9 +48,11 @@ const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
 
   useEffect(() => {
     const target = ref.current
+
     if (target === null) {
       return
     }
+
     // スクロール最下部に到達する度に表示するアイテム数を増加させるための IntersectionObserver
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -51,6 +61,7 @@ const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
     })
 
     observer.observe(target)
+
     return () => observer.disconnect()
   }, [onIntersect])
 
