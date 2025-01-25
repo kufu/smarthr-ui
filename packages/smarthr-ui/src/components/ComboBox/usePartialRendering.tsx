@@ -10,9 +10,9 @@ export function usePartialRendering<T>({
   items: T[]
   minLength?: number
 }) {
-  const limitter = useCallback((length: number) => Math.max(length, minLength), [minLength])
+  const limiter = useCallback((length: number) => Math.max(length, minLength), [minLength])
 
-  const [currentItemLength, setCurrentItemLength] = useState(limitter(OPTION_INCREMENT_AMOUNT))
+  const [currentItemLength, setCurrentItemLength] = useState(limiter(OPTION_INCREMENT_AMOUNT))
   // minLength も考慮した実際のアイテム数を算出
   const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
 
@@ -20,11 +20,11 @@ export function usePartialRendering<T>({
     () => (
       <Intersection
         onIntersect={() => {
-          setCurrentItemLength((current) => limitter(current + OPTION_INCREMENT_AMOUNT))
+          setCurrentItemLength((current) => limiter(current + OPTION_INCREMENT_AMOUNT))
         }}
       />
     ),
-    [limitter],
+    [limiter],
   )
 
   return {
