@@ -13,19 +13,16 @@ export function usePartialRendering<T>({
 
   const [currentItemLength, setCurrentItemLength] = useState(limitter(OPTION_INCREMENT_AMOUNT))
   // minLength も考慮した実際のアイテム数を算出
-  const actualLength = useMemo(() => limitter(currentItemLength), [currentItemLength, limitter])
-  const partialItems = useMemo(() => items.slice(0, actualLength), [actualLength, items])
+  const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
 
-  useEffect(() => {
-    // currentItemLength を実際の値に補正
-    setCurrentItemLength(actualLength)
-  }, [actualLength])
-
-  const isAllItemsShown = useMemo(() => actualLength >= items.length, [actualLength, items.length])
+  const isAllItemsShown = useMemo(
+    () => currentItemLength >= items.length,
+    [currentItemLength, items.length],
+  )
 
   const handleIntersect = useCallback(() => {
-    setCurrentItemLength((current) => current + OPTION_INCREMENT_AMOUNT)
-  }, [])
+    setCurrentItemLength((current) => limitter(current + OPTION_INCREMENT_AMOUNT))
+  }, [limitter])
 
   const renderIntersection = useCallback(() => {
     if (isAllItemsShown) {
