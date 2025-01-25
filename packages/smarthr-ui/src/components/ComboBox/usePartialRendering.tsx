@@ -16,7 +16,7 @@ export function usePartialRendering<T>({
   // minLength も考慮した実際のアイテム数を算出
   const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
 
-  const baseRenderIntersection = useCallback(
+  const renderIntersection = useCallback(
     () => (
       <Intersection
         onIntersect={() => {
@@ -27,14 +27,9 @@ export function usePartialRendering<T>({
     [limitter],
   )
 
-  const renderIntersection = useMemo(
-    () => (currentItemLength >= items.length ? RETURN_NULL : baseRenderIntersection),
-    [items.length, currentItemLength, baseRenderIntersection],
-  )
-
   return {
     items: partialItems,
-    renderIntersection,
+    renderIntersection: currentItemLength >= items.length ? RETURN_NULL : renderIntersection,
   }
 }
 
