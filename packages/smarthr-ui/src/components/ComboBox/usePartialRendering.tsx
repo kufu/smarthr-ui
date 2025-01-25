@@ -10,16 +10,11 @@ export function usePartialRendering<T>({
   items: T[]
   minLength?: number
 }) {
-  const limitter = useCallback((length: number) => Math.max(number, minLength), [minLength])
+  const limitter = useCallback((length: number) => Math.max(length, minLength), [minLength])
 
   const [currentItemLength, setCurrentItemLength] = useState(limitter(OPTION_INCREMENT_AMOUNT))
   // minLength も考慮した実際のアイテム数を算出
   const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
-
-  const isAllItemsShown = useMemo(
-    () => currentItemLength >= items.length,
-    [currentItemLength, items.length],
-  )
 
   const baseRenderIntersection = useCallback(
     () => (
@@ -33,8 +28,8 @@ export function usePartialRendering<T>({
   )
 
   const renderIntersection = useMemo(
-    () => (isAllItemsShown ? RETURN_NULL : baseRenderIntersection),
-    [isAllItemsShown, baseRenderIntersection],
+    () => (currentItemLength >= items.length ? RETURN_NULL : baseRenderIntersection),
+    [items.length, currentItemLength, baseRenderIntersection],
   )
 
   return {
@@ -65,5 +60,5 @@ const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
     return () => observer.disconnect()
   }, [onIntersect])
 
-  return <div ref={ref}></div>
+  return <div ref={ref} />
 }
