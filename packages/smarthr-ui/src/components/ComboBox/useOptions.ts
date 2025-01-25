@@ -47,14 +47,18 @@ export function useOptions<T>({
     [isItemSelected, selected],
   )
 
-  const allOptions: Array<ComboBoxOption<T>> = useMemo(() => {
-    const _options = items.map((item, i) => ({
-      id: `${optionIdPrefix}-${i}`,
-      selected: isSelected(item),
-      isNew: false,
-      item,
-    }))
+  const existedOptions: Array<ComboBoxOption<T>> = useMemo(
+    () =>
+      items.map((item, i) => ({
+        id: `${optionIdPrefix}-${i}`,
+        selected: isSelected(item),
+        isNew: false,
+        item,
+      })),
+    [isSelected, items, optionIdPrefix],
+  )
 
+  const allOptions: Array<ComboBoxOption<T>> = useMemo(() => {
     if (isInputValueAddable) {
       const addingOption = {
         id: newItemId,
@@ -62,11 +66,11 @@ export function useOptions<T>({
         selected: false,
         item: { label: inputValue, value: inputValue },
       }
-      return [addingOption, ..._options]
+      return [addingOption, ...existedOptions]
     }
 
-    return _options
-  }, [optionIdPrefix, inputValue, isInputValueAddable, isSelected, items, newItemId])
+    return existedOptions
+  }, [inputValue, existedOptions, isInputValueAddable, newItemId])
 
   const options = useMemo(() => {
     if (isFilteringDisabled) {
