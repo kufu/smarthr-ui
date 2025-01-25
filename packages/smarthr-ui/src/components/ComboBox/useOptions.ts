@@ -29,7 +29,7 @@ export function useOptions<T>({
   isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
 }) {
   const isInputValueAddable = useMemo(
-    () => creatable && inputValue !== '' && !items.some((item) => item.label === inputValue),
+    () => creatable && inputValue && items.every((item) => item.label !== inputValue),
     [creatable, inputValue, items],
   )
 
