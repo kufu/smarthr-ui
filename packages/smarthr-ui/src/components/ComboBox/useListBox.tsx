@@ -149,22 +149,20 @@ export const useListBox = <T,>({
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
     if (
-      navigationType !== 'key' ||
-      activeOption === null ||
       !activeRef.current ||
-      !listBoxRef.current
+      !listBoxRef.current ||
+      activeOption === null ||
+      navigationType !== 'key'
     ) {
       return
     }
+
     const activeRect = activeRef.current.getBoundingClientRect()
     const containerRect = listBoxRef.current.getBoundingClientRect()
 
-    const isActiveTopOutside = activeRect.top < containerRect.top
-    const isActiveBottomOutside = activeRect.bottom > containerRect.bottom
-
-    if (isActiveTopOutside) {
+    if (activeRect.top < containerRect.top) {
       listBoxRef.current.scrollTop -= containerRect.top - activeRect.top
-    } else if (isActiveBottomOutside) {
+    } else if (activeRect.bottom > containerRect.bottom) {
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
   }, [activeOption, listBoxRef, navigationType])
