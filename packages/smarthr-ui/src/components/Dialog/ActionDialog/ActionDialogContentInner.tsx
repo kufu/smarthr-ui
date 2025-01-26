@@ -2,6 +2,7 @@
 
 import React, { type FC, type PropsWithChildren, type ReactNode, useCallback } from 'react'
 
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -9,7 +10,7 @@ import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import type { ResponseMessageType } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
