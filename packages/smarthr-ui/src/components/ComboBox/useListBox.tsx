@@ -213,14 +213,17 @@ export const useListBox = <T,>({
     ),
   })
 
-  const handleAdd = useCallback(
-    (option: ComboBoxOption<T>) => {
-      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        if (onAdd) onAdd(option.item.value)
-      })
-    },
+  const handleAdd = useMemo(
+    () =>
+      onAdd
+        ? (option: ComboBoxOption<T>) => {
+            // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+            requestAnimationFrame(() => {
+              onAdd(option.item.value)
+            })
+          }
+        : undefined,
     [onAdd],
   )
   const handleSelect = useCallback(
@@ -349,7 +352,6 @@ export const useListBox = <T,>({
       renderIntersection,
       activeOption?.id,
       statusText,
-      handleAdd,
       handleSelect,
       handleHoverOption,
     ],

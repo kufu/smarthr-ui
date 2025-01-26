@@ -44,9 +44,15 @@ const ListBoxItemButton = <T,>({
   const { item, selected, isNew } = option
   const { label, disabled } = item
 
-  const handleAdd = useCallback(() => {
-    onAdd(option)
-  }, [onAdd, option])
+  const handleAdd = useMemo(
+    () =>
+      onAdd
+        ? () => {
+            onAdd(option)
+          }
+        : undefined,
+    [option, onAdd],
+  )
 
   const handleSelect = useCallback(() => {
     onSelect(option)
