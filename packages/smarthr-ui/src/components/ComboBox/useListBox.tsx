@@ -178,21 +178,23 @@ export const useListBox = <T,>({
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
 
-      if (e.key === 'Down' || e.key === 'ArrowDown') {
+      if (/^(Arrow)?Down$/.test(e.key)) {
         e.stopPropagation()
         moveActivePositionDown()
-      } else if (e.key === 'Up' || e.key === 'ArrowUp') {
+      } else if (/^(Arrow)?Up/.test(e.key)) {
         e.stopPropagation()
         moveActivePositionUp()
       } else if (e.key === 'Enter') {
         if (activeOption === null) {
           return
         }
+
         e.stopPropagation()
-        if (activeOption.isNew) {
-          if (onAdd) onAdd(activeOption.item.value)
-        } else {
+
+        if (!activeOption.isNew) {
           onSelect(activeOption.item)
+        } else if (onAdd) {
+          onAdd(activeOption.item.value)
         }
       } else {
         setActiveOption(null)
