@@ -240,48 +240,37 @@ export const useListBox = <T,>({
     [setActiveOption],
   )
 
-  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
-  const {
-    wrapperStyleProps,
-    dropdownListStyleProps,
-    helpMessageStyle,
-    loaderWrapperStyle,
-    noItemsStyle,
-  } = useMemo(() => {
+  const wrapperStyleAttr = useMemo(() => {
     const { top, left, height } = listBoxRect
-    const dropdownListWidth = dropdownWidth || triggerWidth
+
     return {
-      wrapperStyleProps: {
-        className: wrapper(),
-        style: {
-          top: `${top}px`,
-          left: `${left}px`,
-          width: `${triggerWidth}px`,
-        },
-      },
-      dropdownListStyleProps: {
-        className: dropdownList(),
-        style: {
-          width:
-            typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-          maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
-          height: height ? `${height}px` : undefined,
-        },
-      },
-      helpMessageStyle: helpMessage(),
-      loaderWrapperStyle: loaderWrapper(),
-      noItemsStyle: noItems(),
+      top: `${top}px`,
+      left: `${left}px`,
+      width: `${triggerWidth}px`,
     }
-  }, [
-    dropdownList,
-    dropdownWidth,
-    helpMessage,
-    listBoxRect,
-    triggerWidth,
-    loaderWrapper,
-    noItems,
-    wrapper,
-  ])
+  }, [listBoxRect, triggerWidth])
+  const dropdownListStyleAttr = useMemo(() => {
+    const { left, height } = listBoxRect
+    const dropdownListWidth = dropdownWidth || triggerWidth
+
+    return {
+      width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
+      maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
+      height: height ? `${height}px` : undefined,
+    }
+  }, [listBoxRect, triggerWidth, dropdownWidth])
+
+  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
+  const { wrapperStyle, dropdownListStyle, helpMessageStyle, loaderWrapperStyle, noItemsStyle } =
+    useMemo(() => {
+      return {
+        wrapperStyle: wrapper(),
+        dropdownListStyle: dropdownList(),
+        helpMessageStyle: helpMessage(),
+        loaderWrapperStyle: loaderWrapper(),
+        noItemsStyle: noItems(),
+      }
+    }, [dropdownList, helpMessage, loaderWrapper, noItems, wrapper])
 
   const statusText = useMemo(() => {
     const loadingText = decorators?.loadingText?.(LOADING_TEXT) ?? LOADING_TEXT
@@ -294,13 +283,14 @@ export const useListBox = <T,>({
         <>
           <VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>
 
-          <div {...wrapperStyleProps}>
+          <div className={wrapperStyle} style={wrapperStyleAttr}>
             <div
-              {...dropdownListStyleProps}
               id={listBoxId}
               ref={listBoxRef}
               role="listbox"
               aria-hidden={!isExpanded}
+              className={dropdownListStyle}
+              style={dropdownListStyleAttr}
             >
               {dropdownHelpMessage && (
                 <p className={helpMessageStyle}>
@@ -337,8 +327,8 @@ export const useListBox = <T,>({
       ),
     [
       createPortal,
-      wrapperStyleProps,
-      dropdownListStyleProps,
+      wrapperStyle,
+      dropdownListStyle,
       listBoxId,
       isExpanded,
       dropdownHelpMessage,
