@@ -279,26 +279,25 @@ export const useListBox = <T,>({
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <>
-          <VisuallyHiddenText role="status">
-            {isExpanded && isLoading ? decorated.loadingText : ''}
-          </VisuallyHiddenText>
-
-          <div className={styles.wrapper} style={wrapperStyleAttr}>
-            <div
-              id={listBoxId}
-              ref={listBoxRef}
-              role="listbox"
-              aria-hidden={!isExpanded}
-              className={styles.dropdownList}
-              style={dropdownListStyleAttr}
-            >
-              {dropdownHelpMessage && (
-                <p className={styles.helpMessage}>
-                  <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-                </p>
-              )}
-              {!isExpanded ? null : isLoading ? (
+        <div className={styles.wrapper} style={wrapperStyleAttr}>
+          {isExpanded && isLoading && (
+            <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
+          )}
+          <div
+            id={listBoxId}
+            ref={listBoxRef}
+            role="listbox"
+            aria-hidden={!isExpanded}
+            className={styles.dropdownList}
+            style={dropdownListStyleAttr}
+          >
+            {dropdownHelpMessage && (
+              <p className={styles.helpMessage}>
+                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
+              </p>
+            )}
+            {isExpanded ? (
+              isLoading ? (
                 <div className={styles.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
@@ -318,11 +317,11 @@ export const useListBox = <T,>({
                     activeRef={activeRef}
                   />
                 ))
-              )}
-              {renderIntersection()}
-            </div>
+              )
+            ) : null}
+            {renderIntersection()}
           </div>
-        </>,
+        </div>,
       ),
     [
       activeOption?.id,
