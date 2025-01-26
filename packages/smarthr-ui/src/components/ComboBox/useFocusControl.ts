@@ -14,15 +14,13 @@ export function useFocusControl(selectedItemLength: number) {
       return
     }
 
-    if (focusedIndex === null) {
-      if (inputRef.current?.selectionStart === 0) {
-        const nextIndex = deletionButtonRefs.length - 1
-
-        deletionButtonRefs[nextIndex].current?.focus()
-        setFocusedIndex(nextIndex)
-      }
-    } else {
+    if (focusedIndex !== null) {
       const nextIndex = Math.max(focusedIndex - 1, 0)
+
+      deletionButtonRefs[nextIndex].current?.focus()
+      setFocusedIndex(nextIndex)
+    } else if (inputRef.current?.selectionStart === 0) {
+      const nextIndex = deletionButtonRefs.length - 1
 
       deletionButtonRefs[nextIndex].current?.focus()
       setFocusedIndex(nextIndex)
