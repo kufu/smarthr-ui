@@ -96,7 +96,6 @@ export const useListBox = <T,>({
 
   useEffect(() => {
     if (!triggerRef.current) {
-      setTriggerWidth(0)
       return
     }
 
