@@ -11,7 +11,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { spacing } from '../../themes'
@@ -33,7 +33,7 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  decorators?: DecoratorsType<'noResultText' | 'loadingText'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 type Rect = {
@@ -42,8 +42,11 @@ type Rect = {
   height?: number
 }
 
-const NO_RESULT_TEXT = '一致する選択肢がありません'
-const LOADING_TEXT = '処理中'
+const DECORATOR_DEFAULT_TEXTS = {
+  noResultText: '一致する選択肢がありません',
+  loadingText: '処理中',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const listbox = tv({
   slots: {
@@ -271,16 +274,15 @@ export const useListBox = <T,>({
     }
   }, [])
 
-  const statusText = useMemo(() => {
-    const loadingText = decorators?.loadingText?.(LOADING_TEXT) ?? LOADING_TEXT
-    return isExpanded && isLoading ? loadingText : ''
-  }, [decorators, isExpanded, isLoading])
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   const renderListBox = useCallback(
     () =>
       createPortal(
         <>
-          <VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>
+          <VisuallyHiddenText role="status">
+            {isExpanded && isLoading ? decorated.loadingText : ''}
+          </VisuallyHiddenText>
 
           <div className={styles.wrapper} style={wrapperStyleAttr}>
             <div
@@ -302,9 +304,7 @@ export const useListBox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={styles.noItems}>
-                  {decorators?.noResultText
-                    ? decorators.noResultText(NO_RESULT_TEXT)
-                    : NO_RESULT_TEXT}
+                  {decorated.noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -325,16 +325,16 @@ export const useListBox = <T,>({
         </>,
       ),
     [
-      decorators,
       activeOption?.id,
       renderIntersection,
       partialOptions,
       options.length,
       isExpanded,
       isLoading,
-      statusText,
       dropdownHelpMessage,
       listBoxId,
+      statusText,
+      decorated,
       handleHoverOption,
       handleSelect,
       styles,
