@@ -48,6 +48,9 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
+const KEY_DOWN_REGEX = /^(Arrow)?Down$/
+const KEY_UP_REGEX = /^(Arrow)?Up/
+
 const listbox = tv({
   slots: {
     wrapper: 'shr-absolute',
@@ -180,10 +183,10 @@ export const useListBox = <T,>({
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
 
-      if (/^(Arrow)?Down$/.test(e.key)) {
+      if (KEY_DOWN_REGEX.test(e.key)) {
         e.stopPropagation()
         moveActivePositionDown()
-      } else if (/^(Arrow)?Up/.test(e.key)) {
+      } else if (KEY_UP_REGEX.test(e.key)) {
         e.stopPropagation()
         moveActivePositionUp()
       } else if (e.key === 'Enter') {
