@@ -2,7 +2,15 @@ import { createRef, useCallback, useMemo, useRef, useState } from 'react'
 
 export function useFocusControl(selectedItemLength: number) {
   const deletionButtonRefs = useMemo(
-    () => Array.from({ length: selectedItemLength }).map(() => createRef<HTMLButtonElement>()),
+    () => {
+      const refs: ReturnType<typeof createRef<HTMLButtonElement>>[] = []
+
+      for (let i = 0; i < selectedItemLength: i++) {
+        refs[i] = createRef<HTMLButtonElement>()
+      }
+
+      return refs
+    },
     [selectedItemLength],
   )
   const inputRef = useRef<HTMLInputElement>(null)
