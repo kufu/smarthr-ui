@@ -264,6 +264,7 @@ const ActualSingleComboBox = <T,>(
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange?.(e)
       onChangeInput?.(e)
+
       if (!isEditing) setIsEditing(true)
 
       const { value } = e.currentTarget
@@ -277,11 +278,6 @@ const ActualSingleComboBox = <T,>(
     },
     [isEditing, setIsEditing, setInputValue, onChange, onChangeInput, onClear, onChangeSelected],
   )
-  const handleFocus = useCallback(() => {
-    if (!isFocused) {
-      focus()
-    }
-  }, [isFocused, focus])
   const onCompositionStart = useCallback(() => setIsComposing(true), [setIsComposing])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [setIsComposing])
   const onKeyDownInput = useCallback(
@@ -427,7 +423,7 @@ const ActualSingleComboBox = <T,>(
         }
         onClick={onClickInput}
         onChange={actualOnChangeInput}
-        onFocus={handleFocus}
+        onFocus={isFocused ? undefined : focus}
         onCompositionStart={onCompositionStart}
         onCompositionEnd={onCompositionEnd}
         onKeyDown={onKeyDownInput}
