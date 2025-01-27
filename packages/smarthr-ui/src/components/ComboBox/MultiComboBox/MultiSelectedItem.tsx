@@ -1,6 +1,7 @@
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
@@ -13,12 +14,13 @@ export type Props<T> = {
   onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
-  decorators?: {
-    destroyButtonIconAlt?: (text: string) => string
-  }
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const DESTROY_BUTTON_TEXT = '削除'
+const DECORATOR_DEFAULT_TEXTS = {
+  destroyButtonIconAlt: '削除',
+} as const
+const DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const multiSelectedItem = tv({
   slots: {
@@ -142,6 +144,8 @@ const BaseDestroyButton = <T,>({
     [onClick],
   )
 
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
   return (
     <UnstyledButton
       disabled={disabled}
@@ -153,7 +157,7 @@ const BaseDestroyButton = <T,>({
     >
       <FaTimesCircleIcon
         color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-        alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+        alt={decorated.destroyButtonIconAlt}
         className={iconStyle}
       />
     </UnstyledButton>
