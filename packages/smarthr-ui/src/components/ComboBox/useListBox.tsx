@@ -21,7 +21,6 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ListBoxItemButton } from './ListBoxItemButton'
 import { ComboBoxItem, ComboBoxOption } from './types'
-import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 
 type Props<T> = {
