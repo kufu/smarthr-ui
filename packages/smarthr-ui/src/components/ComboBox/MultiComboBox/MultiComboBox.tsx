@@ -189,13 +189,12 @@ const ActualMultiComboBox = <T,>(
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        if (onDelete) onDelete(item)
-        if (onChangeSelected)
-          onChangeSelected(
-            selectedItems.filter(
-              (selected) => selected.label !== item.label || selected.value !== item.value,
-            ),
-          )
+        onDelete?.(item)
+        onChangeSelected?.(
+          selectedItems.filter(
+            (selected) => selected.label !== item.label || selected.value !== item.value,
+          ),
+        )
       })
     },
     [onChangeSelected, onDelete, selectedItems],
@@ -208,13 +207,12 @@ const ActualMultiComboBox = <T,>(
         const matchedSelectedItem = selectedItems.find(
           (item) => item.label === selected.label && item.value === selected.value,
         )
-        if (matchedSelectedItem !== undefined) {
-          if (matchedSelectedItem.deletable !== false) {
-            handleDelete(selected)
-          }
-        } else {
-          if (onSelect) onSelect(selected)
-          if (onChangeSelected) onChangeSelected(selectedItems.concat(selected))
+
+        if (matchedSelectedItem === undefined) {
+          onSelect?.(selected)
+          onChangeSelected?.(selectedItems.concat(selected))
+        } else if (matchedSelectedItem.deletable !== false) {
+          handleDelete(selected)
         }
       })
     },
@@ -250,12 +248,13 @@ const ActualMultiComboBox = <T,>(
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   const focus = useCallback(() => {
-    if (onFocus) onFocus()
+    onFocus?.()
     setIsFocused(true)
   }, [onFocus])
   const blur = useCallback(() => {
     if (!isFocused) return
-    if (onBlur) onBlur()
+
+    onBlur?.()
     setIsFocused(false)
     resetDeletionButtonFocus()
   }, [isFocused, onBlur, resetDeletionButtonFocus])
@@ -263,6 +262,7 @@ const ActualMultiComboBox = <T,>(
   const caretIconColor = useMemo(() => {
     if (isFocused) return textColor.black
     if (disabled) return textColor.disabled
+
     return textColor.grey
   }, [disabled, isFocused])
 
@@ -279,8 +279,8 @@ const ActualMultiComboBox = <T,>(
   }, [selectedItems, inputRef, setInputValueIfUncontrolled]) // highlighted 変更時には発火してほしくないため
 
   useEffect(() => {
-    if (isFocused && inputRef.current) {
-      inputRef.current.focus()
+    if (isFocused) {
+      inputRef.current?.focus()
     }
   }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
 
@@ -288,7 +288,9 @@ const ActualMultiComboBox = <T,>(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (isComposing) {
         return
-      } else if (e.key === 'Escape' || e.key === 'Esc') {
+      }
+
+      if (e.key === 'Escape' || e.key === 'Esc') {
         e.stopPropagation()
         blur()
       } else if (e.key === 'Tab') {
@@ -296,6 +298,7 @@ const ActualMultiComboBox = <T,>(
           // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
           inputRef.current?.focus()
         }
+
         blur()
       } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
         e.stopPropagation()
@@ -311,7 +314,9 @@ const ActualMultiComboBox = <T,>(
       ) {
         e.preventDefault()
         e.stopPropagation()
+
         const lastItem = selectedItems[selectedItems.length - 1]
+
         handleDelete(lastItem)
         setHighlighted(true)
         setInputValueIfUncontrolled(innerText(lastItem.label))
@@ -357,6 +362,7 @@ const ActualMultiComboBox = <T,>(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
       if (onChangeInput) onChangeInput(e)
+
       setInputValueIfUncontrolled(e.currentTarget.value)
     },
     [onChange, onChangeInput, setInputValueIfUncontrolled],
@@ -383,7 +389,7 @@ const ActualMultiComboBox = <T,>(
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
-      if (onKeyPress) onKeyPress(e)
+      onKeyPress?.(e)
     },
     [onKeyPress],
   )
@@ -411,6 +417,7 @@ const ActualMultiComboBox = <T,>(
     suffixIconStyle,
   } = useMemo(() => {
     const widthStyle = typeof width === 'number' ? `${width}px` : width
+
     return {
       wrapperStyleProps: {
         style: {
