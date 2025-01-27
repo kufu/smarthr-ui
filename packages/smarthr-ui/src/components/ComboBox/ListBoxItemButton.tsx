@@ -66,7 +66,7 @@ const ListBoxItemButton = <T,>({
   )
 
   const commonAttrs = {
-    type: 'button',
+    type: 'button' as const,
     role: 'option',
     id: option.id,
     key: option.id,
@@ -76,10 +76,12 @@ const ListBoxItemButton = <T,>({
   }
 
   return isNew ? (
+    // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button {...commonAttrs} onClick={handleAdd}>
       <MemoizedNewIconWithText label={label} />
     </button>
   ) : (
+    // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button {...commonAttrs} disabled={disabled} aria-selected={selected} onClick={handleSelect}>
       {label}
     </button>

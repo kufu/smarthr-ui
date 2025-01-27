@@ -62,10 +62,11 @@ type Props<T> = BaseProps<T> & {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
+  // HINT: useListBox内でnoResultText, loadingTextは実行される
   /**
    * コンポーネント内のテキストを変更する関数/
    */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
+  decorators?: DecoratorsType<DecoratorKeyTypes | 'noResultText' | 'loadingText'>
 }
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
@@ -323,6 +324,7 @@ const ActualSingleComboBox = <T,>(
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
+
       onKeyPress?.(e)
     },
     [onKeyPress],
@@ -404,8 +406,8 @@ const ActualSingleComboBox = <T,>(
                 className={styles.clearButtonIcon}
               />
             </UnstyledButton>
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
-            <span onClick={onClickInput} className={styles.caretDownLayout}>
+            {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
+            <span onClick={onClickInput} role="presentation" className={styles.caretDownLayout}>
               <FaCaretDownIcon color={caretIconColor} className={styles.caretDownIcon} />
             </span>
           </>
