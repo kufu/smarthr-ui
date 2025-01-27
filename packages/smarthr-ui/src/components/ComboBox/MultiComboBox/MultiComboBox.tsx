@@ -263,13 +263,6 @@ const ActualMultiComboBox = <T,>(
     resetDeletionButtonFocus()
   }, [isFocused, onBlur, resetDeletionButtonFocus])
 
-  const caretIconColor = useMemo(() => {
-    if (isFocused) return textColor.black
-    if (disabled) return textColor.disabled
-
-    return textColor.grey
-  }, [disabled, isFocused])
-
   useOuterClick([outerRef, listBoxRef], blur)
 
   useEffect(() => {
@@ -349,7 +342,11 @@ const ActualMultiComboBox = <T,>(
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      if (!disabled && !isFocused && !e.target.closest('.smarthr-ui-MultiComboBox-deleteButton')) {
+      if (
+        !disabled &&
+        !isFocused &&
+        !(e.target as HTMLElement).closest('.smarthr-ui-MultiComboBox-deleteButton')
+      ) {
         focus()
       }
     },
@@ -432,10 +429,10 @@ const ActualMultiComboBox = <T,>(
   return (
     <div
       ref={outerRef}
+      role="group"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onKeyPress={handleKeyPress}
-      role="group"
       className={styles.wrapper}
       style={wrapperStyleAttr}
     >
@@ -489,9 +486,12 @@ const ActualMultiComboBox = <T,>(
         )}
       </div>
 
-      <div className={styles.suffixWrapper}>
-        <FaCaretDownIcon color={caretIconColor} className={styles.suffixIcon} />
-      </div>
+      <MemoizedCaretDown
+        disabled={disabled}
+        isFocused={isFocused}
+        className={styles.suffixWrapper}
+        iconStyle={styles.suffixIcon}
+      />
 
       {renderListBox()}
     </div>
@@ -499,3 +499,23 @@ const ActualMultiComboBox = <T,>(
 }
 
 export const MultiComboBox = genericsForwardRef(ActualMultiComboBox)
+
+const MemoizedCaretDown = React.memo<{
+  className: string
+  iconStyle: string
+  disabled: boolean
+  isFocused: boolean
+}>(({ className, iconStyle, disabled, isFocused }) => {
+  const caretIconColor = useMemo(() => {
+    if (isFocused) return textColor.black
+    if (disabled) return textColor.disabled
+
+    return textColor.grey
+  }, [disabled, isFocused])
+
+  return (
+    <div className={className}>
+      <FaCaretDownIcon color={caretIconColor} className={iconStyle} />
+    </div>
+  )
+})

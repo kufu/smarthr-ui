@@ -115,7 +115,7 @@ export function MultiSelectedItem<T>({
 const ItemLabel = React.memo<
   PropsWithChildren<{
     enableEllipsis?: boolean
-    setNeedsTooltip: (boolean) => void
+    setNeedsTooltip: (flg: boolean) => void
     className: string
   }>
 >(({ children, enableEllipsis, setNeedsTooltip, className }) => {
