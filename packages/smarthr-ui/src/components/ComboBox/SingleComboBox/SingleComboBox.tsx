@@ -73,6 +73,7 @@ type Props<T> = BaseProps<T> & {
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
 const DESTROY_BUTTON_TEXT = '削除'
+const NOOP = () => undefined
 
 const singleCombobox = tv({
   slots: {
@@ -327,13 +328,13 @@ const ActualSingleComboBox = <T,>(
     return textColor.grey
   }, [disabled, isFocused])
 
+  const innerClick = useMemo(() => (
+    onSelect && defaultItem ? (() => onSelect(defaultItem)) : (NOOP)
+  ), [onSelect, defaultItem])
+
   useClick(
     [outerRef, listBoxRef, clearButtonRef],
-    useCallback(() => {
-      if (!isFocused && onSelect && !selectedItem && defaultItem) {
-        onSelect(defaultItem)
-      }
-    }, [isFocused, selectedItem, onSelect, defaultItem]),
+    isFocused || selectedItem ? NOOP : innerClick,
     unfocus,
   )
 
