@@ -61,12 +61,6 @@ export function MultiSelectedItem<T>({
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
 
-  const actualOnDelete = useCallback(() => {
-    if (onDelete) {
-      onDelete(item)
-    }
-  }, [item, onDelete])
-
   useEffect(() => {
     if (enableEllipsis && labelRef.current) {
       const elem = labelRef.current
@@ -93,28 +87,15 @@ export function MultiSelectedItem<T>({
       </span>
 
       {deletable && (
-        <UnstyledButton
-          className={styles.deleteButton}
+        <DestroyButton
+          item={item}
+          onDelete={onDelete}
           disabled={disabled}
-          onClick={actualOnDelete}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === 'Backspace' || e.key === ' ') {
-              e.stopPropagation()
-
-              // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
-              // このタイミングで明示的に削除処理を実行する
-              actualOnDelete()
-            }
-          }}
-          ref={buttonRef}
-          tabIndex={-1}
-        >
-          <FaTimesCircleIcon
-            color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-            alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
-            className={styles.deleteButtonIcon}
-          />
-        </UnstyledButton>
+          buttonRef={buttonRef}
+          decorators={decorators}
+          className={styles.deleteButton}
+          iconStyle={styles.deleteButtonIcon}
+        />
       )}
     </Chip>
   )
@@ -129,3 +110,50 @@ export function MultiSelectedItem<T>({
 
   return body
 }
+
+const typedMemo: <T>(c: T) => T = React.memo
+
+const BaseDestroyButton = <T,>({
+  item,
+  onDelete,
+  disabled,
+  buttonRef,
+  decorators,
+  className,
+  iconStyle,
+}: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'buttonRef' | 'decorators'> & {
+  className: string
+  iconStyle: string
+}) => {
+  const actualOnDelete = useCallback(() => {
+    if (onDelete) {
+      onDelete(item)
+    }
+  }, [item, onDelete])
+
+  return (
+    <UnstyledButton
+      disabled={disabled}
+      tabIndex={-1}
+      onClick={actualOnDelete}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === 'Backspace' || e.key === ' ') {
+          e.stopPropagation()
+
+          // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+          // このタイミングで明示的に削除処理を実行する
+          actualOnDelete()
+        }
+      }}
+      ref={buttonRef}
+      className={className}
+    >
+      <FaTimesCircleIcon
+        color={disabled ? 'TEXT_DISABLED' : 'inherit'}
+        alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+        className={iconStyle}
+      />
+    </UnstyledButton>
+  )
+}
+const DestroyButton = typedMemo(BaseDestroyButton)
