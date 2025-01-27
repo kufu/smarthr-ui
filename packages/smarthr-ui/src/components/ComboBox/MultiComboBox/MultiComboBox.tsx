@@ -77,6 +77,11 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 const NOOP = () => undefined
 
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+const ARROW_LEFT_KEY_REGEX = /^(Arrow)?Left$/
+const ARROW_RIGHT_KEY_REGEX = /^(Arrow)?Right/
+const ARROW_UP_AND_DOWN_KEY_REGEX = /^(Arrow)?(Up|Down)$/
+
 const multiCombobox = tv({
   slots: {
     wrapper: [
@@ -290,7 +295,7 @@ const ActualMultiComboBox = <T,>(
         return
       }
 
-      if (e.key === 'Escape' || e.key === 'Esc') {
+      if (ESCAPE_KEY_REGEX.test(e.key)) {
         e.stopPropagation()
         blur()
       } else if (e.key === 'Tab') {
@@ -300,10 +305,10 @@ const ActualMultiComboBox = <T,>(
         }
 
         blur()
-      } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+      } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
         e.stopPropagation()
         focusPrevDeletionButton()
-      } else if (e.key === 'Right' || e.key === 'ArrowRight') {
+      } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
         e.stopPropagation()
         focusNextDeletionButton()
       } else if (
@@ -346,12 +351,12 @@ const ActualMultiComboBox = <T,>(
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       if (
+        !disabled &&
+        !isFocused &&
         !hasParentElementByClassName(
           e.target as HTMLElement,
           'smarthr-ui-MultiComboBox-deleteButton',
-        ) &&
-        !disabled &&
-        !isFocused
+        )
       ) {
         focus()
       }
@@ -360,8 +365,8 @@ const ActualMultiComboBox = <T,>(
   )
   const handleChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange) onChange(e)
-      if (onChangeInput) onChangeInput(e)
+      onChange?.(e)
+      onChangeInput?.(e)
 
       setInputValueIfUncontrolled(e.currentTarget.value)
     },
@@ -377,7 +382,7 @@ const ActualMultiComboBox = <T,>(
   const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
   const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
+    if (ARROW_UP_AND_DOWN_KEY_REGEX.test(e.key)) {
       // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
       e.preventDefault()
     }
