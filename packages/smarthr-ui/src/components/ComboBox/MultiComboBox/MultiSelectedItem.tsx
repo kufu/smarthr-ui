@@ -112,6 +112,7 @@ export function MultiSelectedItem<T>({
 }
 
 const typedMemo: <T>(c: T) => T = React.memo
+const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
 const BaseDestroyButton = <T,>({
   item,
@@ -125,26 +126,28 @@ const BaseDestroyButton = <T,>({
   className: string
   iconStyle: string
 }) => {
-  const actualOnDelete = useCallback(() => {
-    if (onDelete) {
-      onDelete(item)
-    }
+  const onClick = useCallback(() => {
+    onDelete(item)
   }, [item, onDelete])
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (EXEC_DESTROY_KEY.test(e.key)) {
+        e.stopPropagation()
+
+        // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+        // このタイミングで明示的に削除処理を実行する
+        onClick()
+      }
+    },
+    [onClick],
+  )
 
   return (
     <UnstyledButton
       disabled={disabled}
       tabIndex={-1}
-      onClick={actualOnDelete}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === 'Backspace' || e.key === ' ') {
-          e.stopPropagation()
-
-          // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
-          // このタイミングで明示的に削除処理を実行する
-          actualOnDelete()
-        }
-      }}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
       ref={buttonRef}
       className={className}
     >
