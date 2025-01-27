@@ -14,6 +14,5 @@ export const MultiSelectedItemTooltip: FC<Props> = ({ needsTooltip, text, childr
       {children}
     </Tooltip>
   ) : (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>{children}</>
+    children
   )
