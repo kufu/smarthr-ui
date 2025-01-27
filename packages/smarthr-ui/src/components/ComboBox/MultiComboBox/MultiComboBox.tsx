@@ -25,7 +25,6 @@ import { useListBox } from '../useListBox'
 import { useOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
-import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import type { BaseProps, ComboBoxItem } from '../types'
 
@@ -350,14 +349,7 @@ const ActualMultiComboBox = <T,>(
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      if (
-        !disabled &&
-        !isFocused &&
-        !hasParentElementByClassName(
-          e.target as HTMLElement,
-          'smarthr-ui-MultiComboBox-deleteButton',
-        )
-      ) {
+      if (!disabled && !isFocused && !e.target.closest('.smarthr-ui-MultiComboBox-deleteButton')) {
         focus()
       }
     },
