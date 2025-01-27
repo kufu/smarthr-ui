@@ -121,14 +121,6 @@ export const useListBox = <T,>({
     [options],
   )
 
-  const moveActivePositionDown = useCallback(() => {
-    moveActiveOptionIndex(activeOption, 1)
-  }, [activeOption, moveActiveOptionIndex])
-
-  const moveActivePositionUp = useCallback(() => {
-    moveActiveOptionIndex(activeOption, -1)
-  }, [activeOption, moveActiveOptionIndex])
-
   useEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
@@ -230,10 +222,10 @@ export const useListBox = <T,>({
 
       if (/^(Arrow)?Down$/.test(e.key)) {
         e.stopPropagation()
-        moveActivePositionDown()
+        moveActiveOptionIndex(activeOption, 1)
       } else if (/^(Arrow)?Up/.test(e.key)) {
         e.stopPropagation()
-        moveActivePositionUp()
+        moveActiveOptionIndex(activeOption, -1)
       } else if (e.key === 'Enter') {
         if (activeOption === null) {
           return
@@ -250,7 +242,7 @@ export const useListBox = <T,>({
         setActiveOption(null)
       }
     },
-    [activeOption, moveActivePositionDown, moveActivePositionUp, onAdd, onSelect, setActiveOption],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
   )
 
   const { createPortal } = usePortal()
