@@ -357,40 +357,24 @@ const ActualSingleComboBox = <T,>(
     [style, width],
   )
 
-  const needsClearButton = selectedItem !== null && !disabled
+  const notSelected = selectedItem === null
 
-  const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
-    singleCombobox()
-  const {
-    wrapperStyle,
-    inputStyle,
-    caretDownLayoutStyle,
-    caretDownIconStyle,
-    clearButtonStyle,
-    clearButtonIconStyle,
-  } = useMemo(() => {
+  const styles = useMemo(() => {
+    const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
+      singleCombobox()
+
     return {
-      wrapperStyle: wrapper({ disabled, className }),
-      inputStyle: input(),
-      caretDownLayoutStyle: caretDownLayout(),
-      caretDownIconStyle: caretDownIcon(),
-      clearButtonStyle: clearButton({ hidden: !needsClearButton }),
-      clearButtonIconStyle: clearButtonIcon(),
+      wrapper: wrapper({ disabled, className }),
+      input: input(),
+      caretDownLayout: caretDownLayout(),
+      caretDownIcon: caretDownIcon(),
+      clearButton: clearButton({ hidden: notSelected || disabled }),
+      clearButtonIcon: clearButtonIcon(),
     }
-  }, [
-    needsClearButton,
-    wrapper,
-    disabled,
-    className,
-    input,
-    caretDownLayout,
-    caretDownIcon,
-    clearButton,
-    clearButtonIcon,
-  ])
+  }, [notSelected, disabled, className])
 
   return (
-    <div {...wrapperStyle} style={wrapperStyleAttr} ref={outerRef}>
+    <div className={styles.wrapper} style={wrapperStyleAttr} ref={outerRef}>
       <Input
         {...rest}
         data-smarthr-ui-input="true"
@@ -408,17 +392,17 @@ const ActualSingleComboBox = <T,>(
             <UnstyledButton
               onClick={onClickClear}
               ref={clearButtonRef}
-              className={clearButtonStyle}
+              className={styles.clearButton}
             >
               <FaCircleXmarkIcon
                 color="TEXT_BLACK"
                 alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
-                className={clearButtonIconStyle}
+                className={styles.clearButtonIcon}
               />
             </UnstyledButton>
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
-            <span onClick={onClickInput} className={caretDownLayoutStyle}>
-              <FaCaretDownIcon color={caretIconColor} className={caretDownIconStyle} />
+            <span onClick={onClickInput} className={styles.caretDownLayout}>
+              <FaCaretDownIcon color={caretIconColor} className={styles.caretDownIcon} />
             </span>
           </>
         }
@@ -437,7 +421,7 @@ const ActualSingleComboBox = <T,>(
         aria-expanded={isFocused}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
-        className={inputStyle}
+        className={styles.input}
       />
       {renderListBox()}
     </div>
