@@ -20,7 +20,7 @@ export type Props<T> = {
 const DECORATOR_DEFAULT_TEXTS = {
   destroyButtonIconAlt: '削除',
 } as const
-const DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const multiSelectedItem = tv({
   slots: {
