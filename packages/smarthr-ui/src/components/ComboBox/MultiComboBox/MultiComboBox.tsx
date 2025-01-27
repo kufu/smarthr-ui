@@ -424,9 +424,10 @@ const ActualMultiComboBox = <T,>(
     }
   }, [isFocused, disabled, style, width, className])
 
-  const decoratedAriaLabel = useMemo(() => (
-    decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) || SELECTED_LIST_ARIA_LABEL
-  ), [decorators])
+  const decoratedAriaLabel = useMemo(
+    () => decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) || SELECTED_LIST_ARIA_LABEL,
+    [decorators],
+  )
 
   return (
     <div
@@ -439,11 +440,7 @@ const ActualMultiComboBox = <T,>(
       style={wrapperStyleAttr}
     >
       <div className={styles.inputArea}>
-        <ul
-          id={selectedListId}
-          aria-label={decoratedAriaLabel}
-          className={styles.selectedList}
-        >
+        <ul id={selectedListId} aria-label={decoratedAriaLabel} className={styles.selectedList}>
           {selectedItems.map((selectedItem, i) => (
             <li key={`${selectedItem.label}-${selectedItem.value}`}>
               <MultiSelectedItem
