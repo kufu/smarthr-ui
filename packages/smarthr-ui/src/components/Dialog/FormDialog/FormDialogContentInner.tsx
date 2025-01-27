@@ -85,7 +85,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     [onSubmit, onClickClose],
   )
 
-  const calcedResponseStatus = useMemo(() => {
+  const calculatedResponseStatus = useMemo(() => {
     if (!responseMessage) {
       return {
         isProcessing: false,
@@ -137,17 +137,17 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
               onClickClose={onClickClose}
               closeDisabled={closeDisabled}
               actionDisabled={actionDisabled}
-              loading={calcedResponseStatus.isProcessing}
+              loading={calculatedResponseStatus.isProcessing}
               actionTheme={actionTheme}
               decorators={decorators}
               actionText={actionText}
               className={styles.buttonArea}
             />
           </Cluster>
-          {calcedResponseStatus.visibleMessage && (
+          {calculatedResponseStatus.visibleMessage && (
             <div className={styles.message}>
-              <ResponseMessage type={calcedResponseStatus.status} role="alert">
-                {calcedResponseStatus.message}
+              <ResponseMessage type={calculatedResponseStatus.status} role="alert">
+                {calculatedResponseStatus.message}
               </ResponseMessage>
             </div>
           )}
