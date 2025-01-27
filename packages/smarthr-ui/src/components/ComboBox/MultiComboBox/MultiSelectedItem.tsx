@@ -4,9 +4,8 @@ import { tv } from 'tailwind-variants'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
+import { Tooltip } from '../../Tooltip'
 import { ComboBoxItem } from '../types'
-
-import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }
@@ -70,9 +69,11 @@ export function MultiSelectedItem<T>({
 
   useEffect(() => {
     const elem = labelRef.current
+
     if (!elem || !enableEllipsis) {
       return
     }
+
     if (elem.offsetWidth < elem.scrollWidth) {
       setNeedsTooltip(true)
     }
@@ -89,38 +90,46 @@ export function MultiSelectedItem<T>({
     [deleteButton, deleteButtonIcon, disabled, enableEllipsis, itemLabel, wrapper],
   )
 
-  return (
-    <MultiSelectedItemTooltip needsTooltip={needsTooltip} text={item.label}>
-      <Chip disabled={disabled} className={wrapperStyle}>
-        <span className={itemLabelStyle} ref={labelRef}>
-          {item.label}
-        </span>
+  const body = (
+    <Chip disabled={disabled} className={wrapperStyle}>
+      <span className={itemLabelStyle} ref={labelRef}>
+        {item.label}
+      </span>
 
-        {deletable && (
-          <UnstyledButton
-            className={deleteButtonStyle}
-            disabled={disabled}
-            onClick={actualOnDelete}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === 'Backspace' || e.key === ' ') {
-                e.stopPropagation()
+      {deletable && (
+        <UnstyledButton
+          className={deleteButtonStyle}
+          disabled={disabled}
+          onClick={actualOnDelete}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === 'Backspace' || e.key === ' ') {
+              e.stopPropagation()
 
-                // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
-                // このタイミングで明示的に削除処理を実行する
-                actualOnDelete()
-              }
-            }}
-            ref={buttonRef}
-            tabIndex={-1}
-          >
-            <FaTimesCircleIcon
-              color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-              alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
-              className={deleteButtonIconStyle}
-            />
-          </UnstyledButton>
-        )}
-      </Chip>
-    </MultiSelectedItemTooltip>
+              // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+              // このタイミングで明示的に削除処理を実行する
+              actualOnDelete()
+            }
+          }}
+          ref={buttonRef}
+          tabIndex={-1}
+        >
+          <FaTimesCircleIcon
+            color={disabled ? 'TEXT_DISABLED' : 'inherit'}
+            alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+            className={deleteButtonIconStyle}
+          />
+        </UnstyledButton>
+      )}
+    </Chip>
   )
+
+  if (needsTooltip) {
+    return (
+      <Tooltip message={item.label} multiLine={true}>
+        {body}
+      </Tooltip>
+    )
+  }
+
+  return body
 }
