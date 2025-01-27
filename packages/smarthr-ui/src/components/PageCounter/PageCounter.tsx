@@ -1,10 +1,9 @@
 import React, { ComponentPropsWithoutRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
 import { Cluster } from '../Layout'
 import { RangeSeparator, Text } from '../Text'
-
-import type { DecoratorType, DecoratorsType } from '../../types'
 
 type Props = {
   start: number
