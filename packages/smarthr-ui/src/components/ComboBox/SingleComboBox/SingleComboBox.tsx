@@ -349,27 +349,28 @@ const ActualSingleComboBox = <T,>(
     }
   }, [isFocused, selectedItem, selectDefaultItem])
 
+  const wrapperStyleAttr = useMemo(
+    () => ({
+      ...style,
+      width: typeof width === 'number' ? `${width}px` : width,
+    }),
+    [style, width],
+  )
+
   const needsClearButton = selectedItem !== null && !disabled
 
   const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
     singleCombobox()
   const {
-    wrapperStyleProps,
+    wrapperStyle,
     inputStyle,
     caretDownLayoutStyle,
     caretDownIconStyle,
     clearButtonStyle,
     clearButtonIconStyle,
   } = useMemo(() => {
-    const wrapperWidth = typeof width === 'number' ? `${width}px` : width
     return {
-      wrapperStyleProps: {
-        style: {
-          ...style,
-          width: wrapperWidth,
-        },
-        className: wrapper({ disabled, className }),
-      },
+      wrapperStyle: wrapper({ disabled, className }),
       inputStyle: input(),
       caretDownLayoutStyle: caretDownLayout(),
       caretDownIconStyle: caretDownIcon(),
@@ -377,8 +378,7 @@ const ActualSingleComboBox = <T,>(
       clearButtonIconStyle: clearButtonIcon(),
     }
   }, [
-    width,
-    style,
+    needsClearButton,
     wrapper,
     disabled,
     className,
@@ -386,12 +386,11 @@ const ActualSingleComboBox = <T,>(
     caretDownLayout,
     caretDownIcon,
     clearButton,
-    needsClearButton,
     clearButtonIcon,
   ])
 
   return (
-    <div {...wrapperStyleProps} ref={outerRef}>
+    <div {...wrapperStyle} style={wrapperStyleAttr} ref={outerRef}>
       <Input
         {...rest}
         data-smarthr-ui-input="true"
