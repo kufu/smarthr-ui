@@ -59,7 +59,7 @@ const ListBoxItemButton = <T,>({
   const buttonStyle = useMemo(
     () =>
       button({
-        active: !!isActive,
+        active: isActive,
         new: isNew,
       }),
     [isActive, isNew],
