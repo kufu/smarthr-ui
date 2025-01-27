@@ -161,6 +161,7 @@ const ActualSingleComboBox = <T,>(
     inputValue,
     isFilteringDisabled: !isEditing,
   })
+
   const {
     renderListBox,
     activeOption,
@@ -174,13 +175,15 @@ const ActualSingleComboBox = <T,>(
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {
-        if (onSelect) onSelect(selected)
-        if (onChangeSelected) onChangeSelected(selected)
+        onSelect?.(selected)
+        onChangeSelected?.(selected)
+
         // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
         requestAnimationFrame(() => {
           setIsExpanded(false)
         })
+
         setIsEditing(false)
       },
       [onChangeSelected, onSelect],
@@ -192,8 +195,10 @@ const ActualSingleComboBox = <T,>(
   })
 
   const focus = useCallback(() => {
-    if (onFocus) onFocus()
+    onFocus?.()
+
     setIsFocused(true)
+
     if (!isFocused) {
       setIsExpanded(true)
     }
@@ -201,14 +206,16 @@ const ActualSingleComboBox = <T,>(
   const unfocus = useCallback(() => {
     if (!isFocused) return
 
-    if (onBlur) onBlur()
+    onBlur?.()
+
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
       setInputValue(innerText(defaultItem.label))
-      if (onSelect) onSelect(defaultItem)
+
+      onSelect?.(defaultItem)
     }
   }, [isFocused, onBlur, selectedItem, defaultItem, onSelect])
   const onClickClear = useCallback(
@@ -217,20 +224,20 @@ const ActualSingleComboBox = <T,>(
 
       let isExecutedPreventDefault = false
 
-      if (onClearClick) {
-        onClearClick({
-          ...e,
-          preventDefault: () => {
-            e.preventDefault()
-            isExecutedPreventDefault = true
-          },
-        })
-      }
+      onClearClick?.({
+        ...e,
+        preventDefault: () => {
+          e.preventDefault()
+          isExecutedPreventDefault = true
+        },
+      })
 
       if (!isExecutedPreventDefault) {
-        if (onClear) onClear()
-        if (onChangeSelected) onChangeSelected(null)
+        onClear?.()
+        onChangeSelected?.(null)
+
         inputRef.current?.focus()
+
         setIsFocused(true)
         setIsExpanded(true)
       }
@@ -241,11 +248,12 @@ const ActualSingleComboBox = <T,>(
     (e: MouseEvent) => {
       if (disabled) {
         e.stopPropagation()
+
         return
       }
-      if (inputRef.current) {
-        inputRef.current.focus()
-      }
+
+      inputRef.current?.focus()
+
       if (!isExpanded) {
         setIsExpanded(true)
       }
@@ -254,8 +262,8 @@ const ActualSingleComboBox = <T,>(
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      if (onChange) onChange(e)
-      if (onChangeInput) onChangeInput(e)
+      onChange?.(e)
+      onChangeInput?.(e)
       if (!isEditing) setIsEditing(true)
 
       const { value } = e.currentTarget
@@ -263,8 +271,8 @@ const ActualSingleComboBox = <T,>(
       setInputValue(value)
 
       if (value === '') {
-        if (onClear) onClear()
-        if (onChangeSelected) onChangeSelected(null)
+        onClear?.()
+        onChangeSelected?.(null)
       }
     },
     [isEditing, setIsEditing, setInputValue, onChange, onChangeInput, onClear, onChangeSelected],
@@ -281,6 +289,7 @@ const ActualSingleComboBox = <T,>(
       if (isComposing) {
         return
       }
+
       if (['Escape', 'Esc'].includes(e.key)) {
         if (isExpanded) {
           e.stopPropagation()
@@ -292,7 +301,9 @@ const ActualSingleComboBox = <T,>(
         if (['Down', 'ArrowDown', 'Up', 'ArrowUp'].includes(e.key)) {
           e.preventDefault()
         }
+
         inputRef.current?.focus()
+
         if (!isExpanded) {
           setIsExpanded(true)
         }
@@ -308,7 +319,7 @@ const ActualSingleComboBox = <T,>(
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
-      if (onKeyPress) onKeyPress(e)
+      onKeyPress?.(e)
     },
     [onKeyPress],
   )
@@ -316,6 +327,7 @@ const ActualSingleComboBox = <T,>(
   const caretIconColor = useMemo(() => {
     if (isFocused) return textColor.black
     if (disabled) return textColor.disabled
+
     return textColor.grey
   }, [disabled, isFocused])
 
@@ -326,22 +338,16 @@ const ActualSingleComboBox = <T,>(
         onSelect(defaultItem)
       }
     }, [isFocused, selectedItem, onSelect, defaultItem]),
-    useCallback(() => {
-      unfocus()
-    }, [unfocus]),
+    unfocus,
   )
 
   useEffect(() => {
-    if (selectedItem) {
-      setInputValue(innerText(selectedItem.label))
-    } else {
-      setInputValue('')
-    }
+    setInputValue(selectedItem ? innerText(selectedItem.label) : '')
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     } else if (!selectedItem && defaultItem) {
-      if (onSelect) onSelect(defaultItem)
+      onSelect?.(defaultItem)
     }
   }, [isFocused, selectedItem, defaultItem, onSelect])
 
