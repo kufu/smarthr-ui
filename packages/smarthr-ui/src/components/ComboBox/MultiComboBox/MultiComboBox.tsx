@@ -393,77 +393,55 @@ const ActualMultiComboBox = <T,>(
 
   const selectedListId = useId()
 
-  const {
-    wrapper,
-    inputArea,
-    selectedList,
-    inputWrapper,
-    input,
-    placeholderEl,
-    suffixWrapper,
-    suffixIcon,
-  } = multiCombobox()
-  const {
-    wrapperStyleProps,
-    inputAreaStyle,
-    selectedListStyle,
-    inputWrapperStyle,
-    inputStyle,
-    placeholderStyle,
-    suffixWrapperStyle,
-    suffixIconStyle,
-  } = useMemo(() => {
-    const widthStyle = typeof width === 'number' ? `${width}px` : width
+  const wrapperStyleAttr = useMemo(
+    () => ({
+      ...style,
+      width: typeof width === 'number' ? `${width}px` : width,
+    }),
+    [style, width],
+  )
+  const styles = useMemo(() => {
+    const {
+      wrapper,
+      inputArea,
+      selectedList,
+      inputWrapper,
+      input,
+      placeholderEl,
+      suffixWrapper,
+      suffixIcon,
+    } = multiCombobox()
 
     return {
-      wrapperStyleProps: {
-        style: {
-          ...style,
-          width: widthStyle,
-        },
-        className: wrapper({ focused: isFocused, disabled, className }),
-      },
-      inputAreaStyle: inputArea(),
-      selectedListStyle: selectedList(),
-      inputWrapperStyle: inputWrapper({ hidden: !isFocused }),
-      inputStyle: input(),
-      placeholderStyle: placeholderEl(),
-      suffixWrapperStyle: suffixWrapper({ disabled }),
-      suffixIconStyle: suffixIcon(),
+      wrapper: wrapper({ focused: isFocused, disabled, className }),
+      inputArea: inputArea(),
+      selectedList: selectedList(),
+      inputWrapper: inputWrapper({ hidden: !isFocused }),
+      input: input(),
+      placeholder: placeholderEl(),
+      suffixWrapper: suffixWrapper({ disabled }),
+      suffixIcon: suffixIcon(),
     }
-  }, [
-    className,
-    disabled,
-    input,
-    inputArea,
-    inputWrapper,
-    isFocused,
-    placeholderEl,
-    selectedList,
-    style,
-    suffixIcon,
-    suffixWrapper,
-    width,
-    wrapper,
-  ])
+  }, [isFocused, disabled, style, width, className])
 
   return (
     <div
-      {...wrapperStyleProps}
       ref={outerRef}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onKeyPress={handleKeyPress}
       role="group"
+      className={styles.wrapper}
+      style={wrapperStyleAttr}
     >
-      <div className={inputAreaStyle}>
+      <div className={styles.inputArea}>
         <ul
           id={selectedListId}
           aria-label={
             decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
             SELECTED_LIST_ARIA_LABEL
           }
-          className={selectedListStyle}
+          className={styles.selectedList}
         >
           {selectedItems.map((selectedItem, i) => (
             <li key={`${selectedItem.label}-${selectedItem.value}`}>
@@ -479,7 +457,7 @@ const ActualMultiComboBox = <T,>(
           ))}
         </ul>
 
-        <div className={inputWrapperStyle}>
+        <div className={styles.inputWrapper}>
           <input
             {...rest}
             data-smarthr-ui-input="true"
@@ -504,17 +482,17 @@ const ActualMultiComboBox = <T,>(
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
-            className={inputStyle}
+            className={styles.input}
           />
         </div>
 
         {selectedItems.length === 0 && placeholder && !isFocused && (
-          <p className={placeholderStyle}>{placeholder}</p>
+          <p className={styles.placeholder}>{placeholder}</p>
         )}
       </div>
 
-      <div className={suffixWrapperStyle}>
-        <FaCaretDownIcon color={caretIconColor} className={suffixIconStyle} />
+      <div className={styles.suffixWrapper}>
+        <FaCaretDownIcon color={caretIconColor} className={styles.suffixIcon} />
       </div>
 
       {renderListBox()}
