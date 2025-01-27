@@ -1,4 +1,12 @@
-import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  PropsWithChildren,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
@@ -59,17 +67,8 @@ export function MultiSelectedItem<T>({
   buttonRef,
   decorators,
 }: Props<T>) {
-  const labelRef = useRef<HTMLDivElement>(null)
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
-
-  useEffect(() => {
-    if (enableEllipsis && labelRef.current) {
-      const elem = labelRef.current
-
-      setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
-    }
-  }, [enableEllipsis])
 
   const styles = useMemo(() => {
     const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
@@ -84,9 +83,9 @@ export function MultiSelectedItem<T>({
 
   const body = (
     <Chip disabled={disabled} className={styles.wrapper}>
-      <span className={styles.itemLabel} ref={labelRef}>
+      <ItemLabel className={styles.itemLabel} setNeedsTooltip={setNeedsTooltip}>
         {item.label}
-      </span>
+      </ItemLabel>
 
       {deletable && (
         <DestroyButton
@@ -112,6 +111,30 @@ export function MultiSelectedItem<T>({
 
   return body
 }
+
+const ItemLabel = React.memo<
+  PropsWithChildren<{
+    enableEllipsis?: boolean
+    setNeedsTooltip: (boolean) => void
+    className: string
+  }>
+>(({ children, enableEllipsis, setNeedsTooltip, className }) => {
+  const labelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (enableEllipsis && labelRef.current) {
+      const elem = labelRef.current
+
+      setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
+    }
+  }, [enableEllipsis, setNeedsTooltip])
+
+  return (
+    <span className={className} ref={labelRef}>
+      {children}
+    </span>
+  )
+})
 
 const typedMemo: <T>(c: T) => T = React.memo
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
