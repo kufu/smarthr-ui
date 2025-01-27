@@ -1,4 +1,4 @@
-import React, { RefObject, useCallback, useMemo } from 'react'
+import React, { ReactNode, RefObject, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaPlusCircleIcon } from '../Icon'
@@ -77,7 +77,7 @@ const ListBoxItemButton = <T,>({
 
   return isNew ? (
     <button {...commonAttrs} onClick={handleAdd}>
-      <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
+      <MemoizedNewIconWithText label={label} />
     </button>
   ) : (
     <button {...commonAttrs} disabled={disabled} aria-selected={selected} onClick={handleSelect}>
@@ -85,6 +85,11 @@ const ListBoxItemButton = <T,>({
     </button>
   )
 }
+
+const MemoizedNewIconWithText = React.memo<{ label: ReactNode }>(({ label }) => (
+  <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
+))
+
 const typedMemo: <T>(c: T) => T = React.memo
 const Memoized = typedMemo(ListBoxItemButton)
 export { Memoized as ListBoxItemButton }
