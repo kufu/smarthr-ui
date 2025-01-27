@@ -17,7 +17,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
@@ -65,14 +65,16 @@ type Props<T> = BaseProps<T> & {
   /**
    * コンポーネント内のテキストを変更する関数/
    */
-  decorators?: DecoratorsType<'noResultText'> & {
-    destroyButtonIconAlt?: (text: string) => string
-  }
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
-const DESTROY_BUTTON_TEXT = '削除'
+const DECORATOR_DEFAULT_TEXTS = {
+  destroyButtonIconAlt: '削除',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+
 const NOOP = () => undefined
 
 const singleCombobox = tv({
@@ -373,6 +375,8 @@ const ActualSingleComboBox = <T,>(
     }
   }, [notSelected, disabled, className])
 
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
   return (
     <div className={styles.wrapper} style={wrapperStyleAttr} ref={outerRef}>
       <Input
@@ -396,7 +400,7 @@ const ActualSingleComboBox = <T,>(
             >
               <FaCircleXmarkIcon
                 color="TEXT_BLACK"
-                alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+                alt={decorated.destroyButtonIconAlt}
                 className={styles.clearButtonIcon}
               />
             </UnstyledButton>
