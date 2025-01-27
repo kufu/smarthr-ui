@@ -75,26 +75,26 @@ export function MultiSelectedItem<T>({
     }
   }, [enableEllipsis])
 
-  const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
-  const { wrapperStyle, itemLabelStyle, deleteButtonStyle, deleteButtonIconStyle } = useMemo(
-    () => ({
-      wrapperStyle: wrapper(),
-      itemLabelStyle: itemLabel({ enableEllipsis }),
-      deleteButtonStyle: deleteButton({ disabled }),
-      deleteButtonIconStyle: deleteButtonIcon(),
-    }),
-    [deleteButton, deleteButtonIcon, disabled, enableEllipsis, itemLabel, wrapper],
-  )
+  const styles = useMemo(() => {
+    const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
+
+    return {
+      wrapper: wrapper(),
+      itemLabel: itemLabel({ enableEllipsis }),
+      deleteButton: deleteButton({ disabled }),
+      deleteButtonIcon: deleteButtonIcon(),
+    }
+  }, [disabled, enableEllipsis])
 
   const body = (
-    <Chip disabled={disabled} className={wrapperStyle}>
-      <span className={itemLabelStyle} ref={labelRef}>
+    <Chip disabled={disabled} className={styles.wrapper}>
+      <span className={styles.itemLabel} ref={labelRef}>
         {item.label}
       </span>
 
       {deletable && (
         <UnstyledButton
-          className={deleteButtonStyle}
+          className={styles.deleteButton}
           disabled={disabled}
           onClick={actualOnDelete}
           onKeyDown={(e) => {
@@ -112,7 +112,7 @@ export function MultiSelectedItem<T>({
           <FaTimesCircleIcon
             color={disabled ? 'TEXT_DISABLED' : 'inherit'}
             alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
-            className={deleteButtonIconStyle}
+            className={styles.deleteButtonIcon}
           />
         </UnstyledButton>
       )}
