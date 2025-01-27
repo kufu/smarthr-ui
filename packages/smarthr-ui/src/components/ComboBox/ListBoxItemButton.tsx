@@ -9,7 +9,7 @@ import { ComboBoxOption } from './types'
 type Props<T> = {
   option: ComboBoxOption<T>
   isActive: boolean
-  onAdd: (option: ComboBoxOption<T>) => void
+  onAdd?: (option: ComboBoxOption<T>) => void
   onSelect: (option: ComboBoxOption<T>) => void
   onMouseOver: (option: ComboBoxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement>

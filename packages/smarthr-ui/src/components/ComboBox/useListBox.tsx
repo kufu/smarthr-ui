@@ -243,7 +243,7 @@ export const useListBox = <T,>({
   )
 
   const wrapperStyleAttr = useMemo(() => {
-    const { top, left, height } = listBoxRect
+    const { top, left } = listBoxRect
 
     return {
       top: `${top}px`,
@@ -332,7 +332,6 @@ export const useListBox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      statusText,
       decorated,
       handleHoverOption,
       handleSelect,
