@@ -13,8 +13,8 @@
       "automerge": false
     },
     {
-      "packagePatterns": ["cimg/node"],
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": ["/cimg/node/"]
     }
   ]
 }

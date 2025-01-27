@@ -78,16 +78,12 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       () => fileRef.current,
     )
 
-    const selectButtonLabel = useMemo(
-      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
-      [decorators],
-    )
-
     const onDrop = useCallback(
       (e: DragEvent<HTMLElement>) => {
         overrideEventDefault(e)
         setFilesDraggedOver(false)
         onSelectFiles(e, e.dataTransfer.files)
+
         if (fileRef.current) {
           fileRef.current.files = e.dataTransfer.files
         }
@@ -114,16 +110,14 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       [onSelectFiles],
     )
 
-    const onClickButton = () => {
+    const onClickButton = useCallback(() => {
       fileRef.current!.click()
-    }
+    }, [])
 
     return (
       <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
         {children}
-        <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
-          {selectButtonLabel}
-        </Button>
+        <SelectButton decorators={decorators} onClick={onClickButton} />
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...props}
@@ -135,6 +129,21 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
           className={input()}
         />
       </div>
+    )
+  },
+)
+
+const SelectButton = React.memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
+  ({ onClick, decorators }) => {
+    const selectButtonLabel = useMemo(
+      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
+      [decorators],
+    )
+
+    return (
+      <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
+        {selectButtonLabel}
+      </Button>
     )
   },
 )
