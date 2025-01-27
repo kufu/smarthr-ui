@@ -65,32 +65,22 @@ const ListBoxItemButton = <T,>({
     [isActive, isNew],
   )
 
+  const commonAttrs = {
+    type: 'button',
+    role: 'option',
+    id: option.id,
+    key: option.id,
+    className: buttonStyle,
+    onMouseOver: handleMouseOver,
+    ref: isActive ? activeRef : undefined,
+  }
+
   return isNew ? (
-    <button
-      type="button"
-      key={option.id}
-      onClick={handleAdd}
-      onMouseOver={handleMouseOver}
-      id={option.id}
-      role="option"
-      className={buttonStyle}
-      ref={isActive ? activeRef : undefined}
-    >
+    <button {...commonAttrs} onClick={handleAdd}>
       <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
     </button>
   ) : (
-    <button
-      type="button"
-      key={option.id}
-      disabled={disabled}
-      onClick={handleSelect}
-      onMouseOver={handleMouseOver}
-      id={option.id}
-      role="option"
-      className={buttonStyle}
-      aria-selected={selected}
-      ref={isActive ? activeRef : undefined}
-    >
+    <button {...commonAttrs} disabled={disabled} aria-selected={selected} onClick={handleSelect}>
       {label}
     </button>
   )
