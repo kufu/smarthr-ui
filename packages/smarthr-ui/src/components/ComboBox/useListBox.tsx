@@ -128,7 +128,7 @@ export const useListBox = <T,>({
     if (!isExpanded) {
       setActiveOption(null)
     }
-  }, [isExpanded, setActiveOption])
+  }, [isExpanded])
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
@@ -244,7 +244,7 @@ export const useListBox = <T,>({
         setActiveOption(null)
       }
     },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect],
   )
 
   const { createPortal } = usePortal()
@@ -276,13 +276,10 @@ export const useListBox = <T,>({
     },
     [onSelect],
   )
-  const handleHoverOption = useCallback(
-    (option: ComboBoxOption<T>) => {
-      setNavigationType('pointer')
-      setActiveOption(option)
-    },
-    [setActiveOption],
-  )
+  const handleHoverOption = useCallback((option: ComboBoxOption<T>) => {
+    setNavigationType('pointer')
+    setActiveOption(option)
+  }, [])
 
   const wrapperStyleAttr = useMemo(() => {
     const { top, left } = listBoxRect
