@@ -71,6 +71,7 @@ const formGroup = tv({
     label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
+    underTitleStack: ['[&&&]:shr-mt-0'],
   },
 })
 
@@ -184,16 +185,18 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle } = useMemo(() => {
-    const { wrapper, label, errorList, errorIcon } = formGroup()
+  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, underTitleStackStyle } =
+    useMemo(() => {
+      const { wrapper, label, errorList, errorIcon, underTitleStack } = formGroup()
 
-    return {
-      wrapperStyle: wrapper({ className }),
-      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-      errorListStyle: errorList(),
-      errorIconStyle: errorIcon(),
-    }
-  }, [dangerouslyTitleHidden, className])
+      return {
+        wrapperStyle: wrapper({ className }),
+        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+        errorListStyle: errorList(),
+        errorIconStyle: errorIcon(),
+        underTitleStackStyle: underTitleStack(),
+      }
+    }, [dangerouslyTitleHidden, className])
   const childrenWrapperStyle = useMemo(
     () => childrenWrapper({ innerMargin, isFieldset }),
     [innerMargin, isFieldset],
@@ -233,18 +236,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
         input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
       }
-    } else if (dangerouslyTitleHidden) {
-      const attrName = 'aria-labelledby'
-      const inputLabelledByIds = input.getAttribute(attrName)
-
-      if (!inputLabelledByIds?.match(managedLabelId)) {
-        input.setAttribute(
-          attrName,
-          inputLabelledByIds ? `${managedLabelId} ${inputLabelledByIds}` : managedLabelId,
-        )
-      }
     }
-  }, [managedHtmlFor, isFieldset, dangerouslyTitleHidden, managedLabelId])
+  }, [managedHtmlFor, isFieldset, managedLabelId])
   useEffect(() => {
     if (!describedbyIds) {
       return
@@ -287,26 +280,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
 
-  return (
-    <Stack
-      {...props}
-      as={as}
-      gap={innerMargin}
-      aria-labelledby={isFieldset ? managedLabelId : undefined}
-      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
-      className={wrapperStyle}
-    >
-      <TitleCluster
-        isFieldset={isFieldset}
-        managedHtmlFor={managedHtmlFor}
-        managedLabelId={managedLabelId}
-        labelStyle={labelStyle}
-        dangerouslyTitleHidden={dangerouslyTitleHidden}
-        titleType={titleType}
-        title={title}
-        statusLabelList={statusLabelList}
-        subActionArea={subActionArea}
-      />
+  let body = (
+    <>
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
       <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
       <ErrorMessageList
@@ -322,6 +297,41 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         supplementaryMessage={supplementaryMessage}
         managedHtmlFor={managedHtmlFor}
       />
+    </>
+  )
+
+  // HINT: dangerouslyTitleHiddenの場合、body以下の余白の計算を簡略化するため
+  // Stackをネストし、そのStackに対してmargin-top: 0を指定する
+  // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
+  if (dangerouslyTitleHidden) {
+    body = (
+      // eslint-disable-next-line smarthr/best-practice-for-layouts
+      <Stack gap={innerMargin} className={underTitleStackStyle}>
+        {body}
+      </Stack>
+    )
+  }
+
+  return (
+    <Stack
+      {...props}
+      as={as}
+      gap={innerMargin}
+      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
+      className={wrapperStyle}
+    >
+      <TitleCluster
+        isFieldset={isFieldset}
+        managedHtmlFor={managedHtmlFor}
+        managedLabelId={managedLabelId}
+        labelStyle={labelStyle}
+        dangerouslyTitleHidden={dangerouslyTitleHidden}
+        titleType={titleType}
+        title={title}
+        statusLabelList={statusLabelList}
+        subActionArea={subActionArea}
+      />
+      {body}
     </Stack>
   )
 }
@@ -367,12 +377,9 @@ const TitleCluster = React.memo<
           visuallyHidden: isFieldset
             ? {
                 as: 'legend',
-                hidden: true,
-                id: managedLabelId,
               }
             : {
                 as: 'label',
-                hidden: true,
                 htmlFor: managedHtmlFor,
                 id: managedLabelId,
               },
@@ -382,7 +389,7 @@ const TitleCluster = React.memo<
       if (isFieldset) {
         return {
           label: { 'aria-hidden': 'true' } as const,
-          visuallyHidden: { as: 'legend', hidden: true, id: managedLabelId },
+          visuallyHidden: { as: 'legend' },
         }
       }
 
@@ -402,7 +409,12 @@ const TitleCluster = React.memo<
           <VisuallyHiddenText {...attrs.visuallyHidden}>{innerText(body)}</VisuallyHiddenText>
         )}
         {attrs.label && (
-          <Cluster justify="space-between">
+          <Cluster
+            justify="space-between"
+            // HINT: UI上、常にトップの要素になるため、Stackの計算が狂わないよう、
+            // 常にmargin-topを0にする
+            className="[&&&]:shr--mt-0"
+          >
             {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
             <Cluster {...attrs.label} align="center" className={labelStyle}>
               {body}
