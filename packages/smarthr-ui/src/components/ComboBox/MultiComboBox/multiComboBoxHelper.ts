@@ -3,6 +3,7 @@ export function hasParentElementByClassName(
   className: string,
 ): boolean {
   if (!element) return false
+
   return (
     element.classList.contains(className) ||
     hasParentElementByClassName(element.parentElement, className)

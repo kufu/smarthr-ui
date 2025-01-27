@@ -75,6 +75,7 @@ type Props<T> = BaseProps<T> & {
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
+const NOOP = () => undefined
 
 const multiCombobox = tv({
   slots: {
@@ -182,14 +183,7 @@ const ActualMultiComboBox = <T,>(
     inputValue,
     isItemSelected,
   })
-  const setInputValueIfUncontrolled = useCallback(
-    (value: string) => {
-      if (!isInputControlled) {
-        setUncontrolledInputValue(value)
-      }
-    },
-    [isInputControlled],
-  )
+  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
