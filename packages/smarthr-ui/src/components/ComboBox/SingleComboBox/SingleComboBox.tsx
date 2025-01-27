@@ -17,6 +17,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
@@ -25,7 +26,6 @@ import { Input } from '../../Input'
 import { useListBox } from '../useListBox'
 import { useOptions } from '../useOptions'
 
-import type { DecoratorsType } from '../../../types'
 import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {

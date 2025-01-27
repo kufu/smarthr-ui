@@ -15,12 +15,11 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { debounce } from '../../libs/debounce'
 import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */
@@ -38,13 +37,7 @@ type Props = {
   /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
   maxLetters?: number
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<
-    | 'beforeMaxLettersCount'
-    | 'afterMaxLettersCount'
-    | 'afterMaxLettersCountExceeded'
-    | 'beforeScreenReaderMaxLettersDescription'
-    | 'afterScreenReaderMaxLettersDescription'
-  >
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -65,12 +58,14 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-const TEXT_BEFORE_MAXLETTERS_COUNT = 'あと'
-const TEXT_AFTER_MAXLETTERS_COUNT = '文字'
-const TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED = 'オーバー'
-
-const SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION = '最大'
-const SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION = '文字入力できます'
+const DECORATOR_DEFAULT_TEXTS = {
+  beforeMaxLettersCount: 'あと',
+  afterMaxLettersCount: '文字',
+  afterMaxLettersCountExceeded: 'オーバー',
+  beforeScreenReaderMaxLettersDescription: '最大',
+  afterScreenReaderMaxLettersDescription: '文字入力できます',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const textarea = tv({
   slots: {
@@ -126,34 +121,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const {
-      afterMaxLettersCount,
-      beforeMaxLettersCount,
-      maxLettersCountExceeded,
-      beforeScreenReaderMaxLettersDescription,
-      afterScreenReaderMaxLettersDescription,
-    } = useMemo(
-      () => ({
-        beforeMaxLettersCount:
-          decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
-          TEXT_BEFORE_MAXLETTERS_COUNT,
-        afterMaxLettersCount:
-          decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
-          TEXT_AFTER_MAXLETTERS_COUNT,
-        maxLettersCountExceeded:
-          decorators?.afterMaxLettersCountExceeded?.(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED) ||
-          TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
-        beforeScreenReaderMaxLettersDescription:
-          decorators?.beforeScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
-        afterScreenReaderMaxLettersDescription:
-          decorators?.afterScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
-      }),
-      [decorators],
-    )
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const getCounterMessage = useCallback(
       (counterValue: number) => {
@@ -164,8 +132,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
           return (
             <>
               {counterValue - maxLetters}
-              {afterMaxLettersCount}
-              {maxLettersCountExceeded}
+              {decorated.afterMaxLettersCount}
+              {decorated.afterMaxLettersCountExceeded}
             </>
           )
         }
@@ -173,13 +141,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         // あと{count}文字
         return (
           <>
-            {beforeMaxLettersCount}
+            {decorated.beforeMaxLettersCount}
             {maxLetters - counterValue}
-            {afterMaxLettersCount}
+            {decorated.afterMaxLettersCount}
           </>
         )
       },
-      [maxLetters, maxLettersCountExceeded, afterMaxLettersCount, beforeMaxLettersCount],
+      [
+        maxLetters,
+        decorated.afterMaxLettersCountExceeded,
+        decorated.afterMaxLettersCount,
+        decorated.beforeMaxLettersCount,
+      ],
     )
 
     const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
@@ -305,9 +278,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         </span>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
-          {beforeScreenReaderMaxLettersDescription}
+          {decorated.beforeScreenReaderMaxLettersDescription}
           {maxLetters}
-          {afterScreenReaderMaxLettersDescription}
+          {decorated.afterScreenReaderMaxLettersDescription}
         </VisuallyHiddenText>
       </span>
     ) : (
