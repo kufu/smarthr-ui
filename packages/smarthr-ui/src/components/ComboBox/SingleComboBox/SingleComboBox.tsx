@@ -195,6 +195,11 @@ const ActualSingleComboBox = <T,>(
     decorators,
   })
 
+  const selectDefaultItem = useMemo(
+    () => (onSelect && defaultItem ? () => onSelect(defaultItem) : NOOP),
+    [onSelect, defaultItem],
+  )
+
   const focus = useCallback(() => {
     onFocus?.()
 
@@ -216,9 +221,9 @@ const ActualSingleComboBox = <T,>(
     if (!selectedItem && defaultItem) {
       setInputValue(innerText(defaultItem.label))
 
-      onSelect?.(defaultItem)
+      selectDefaultItem()
     }
-  }, [isFocused, onBlur, selectedItem, defaultItem, onSelect])
+  }, [isFocused, onBlur, selectedItem, defaultItem, selectDefaultItem])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
@@ -328,13 +333,9 @@ const ActualSingleComboBox = <T,>(
     return textColor.grey
   }, [disabled, isFocused])
 
-  const innerClick = useMemo(() => (
-    onSelect && defaultItem ? (() => onSelect(defaultItem)) : (NOOP)
-  ), [onSelect, defaultItem])
-
   useClick(
     [outerRef, listBoxRef, clearButtonRef],
-    isFocused || selectedItem ? NOOP : innerClick,
+    isFocused || selectedItem ? NOOP : selectDefaultItem,
     unfocus,
   )
 
@@ -343,10 +344,10 @@ const ActualSingleComboBox = <T,>(
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
-    } else if (!selectedItem && defaultItem) {
-      onSelect?.(defaultItem)
+    } else if (!selectedItem) {
+      selectDefaultItem()
     }
-  }, [isFocused, selectedItem, defaultItem, onSelect])
+  }, [isFocused, selectedItem, selectDefaultItem])
 
   const needsClearButton = selectedItem !== null && !disabled
 
