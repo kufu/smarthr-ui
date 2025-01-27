@@ -336,9 +336,12 @@ export const useListBox = <T,>({
       dropdownHelpMessage,
       listBoxId,
       decorated,
+      handleAdd,
       handleHoverOption,
       handleSelect,
       styles,
+      dropdownListStyleAttr,
+      wrapperStyleAttr,
       createPortal,
     ],
   )
