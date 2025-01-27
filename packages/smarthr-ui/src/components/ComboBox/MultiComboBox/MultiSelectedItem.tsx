@@ -68,14 +68,10 @@ export function MultiSelectedItem<T>({
   }, [item, onDelete])
 
   useEffect(() => {
-    const elem = labelRef.current
+    if (enableEllipsis && labelRef.current) {
+      const elem = labelRef.current
 
-    if (!elem || !enableEllipsis) {
-      return
-    }
-
-    if (elem.offsetWidth < elem.scrollWidth) {
-      setNeedsTooltip(true)
+      setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
     }
   }, [enableEllipsis])
 
