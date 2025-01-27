@@ -11,6 +11,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { spacing } from '../../themes'
@@ -23,8 +24,6 @@ import { ComboBoxItem, ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 
-import type { DecoratorsType } from '../../types'
-
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
   dropdownHelpMessage?: ReactNode
@@ -34,7 +33,7 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  decorators?: DecoratorsType<'noResultText' | 'loadingText'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 type Rect = {
@@ -43,8 +42,11 @@ type Rect = {
   height?: number
 }
 
-const NO_RESULT_TEXT = '一致する選択肢がありません'
-const LOADING_TEXT = '処理中'
+const DECORATOR_DEFAULT_TEXTS = {
+  noResultText: '一致する選択肢がありません',
+  loadingText: '処理中',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const listbox = tv({
   slots: {
@@ -96,7 +98,6 @@ export const useListBox = <T,>({
 
   useEffect(() => {
     if (!triggerRef.current) {
-      setTriggerWidth(0)
       return
     }
 
@@ -150,22 +151,20 @@ export const useListBox = <T,>({
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
     if (
-      navigationType !== 'key' ||
-      activeOption === null ||
       !activeRef.current ||
-      !listBoxRef.current
+      !listBoxRef.current ||
+      activeOption === null ||
+      navigationType !== 'key'
     ) {
       return
     }
+
     const activeRect = activeRef.current.getBoundingClientRect()
     const containerRect = listBoxRef.current.getBoundingClientRect()
 
-    const isActiveTopOutside = activeRect.top < containerRect.top
-    const isActiveBottomOutside = activeRect.bottom > containerRect.bottom
-
-    if (isActiveTopOutside) {
+    if (activeRect.top < containerRect.top) {
       listBoxRef.current.scrollTop -= containerRect.top - activeRect.top
-    } else if (isActiveBottomOutside) {
+    } else if (activeRect.bottom > containerRect.bottom) {
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
   }, [activeOption, listBoxRef, navigationType])
@@ -181,21 +180,23 @@ export const useListBox = <T,>({
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
 
-      if (e.key === 'Down' || e.key === 'ArrowDown') {
+      if (/^(Arrow)?Down$/.test(e.key)) {
         e.stopPropagation()
         moveActivePositionDown()
-      } else if (e.key === 'Up' || e.key === 'ArrowUp') {
+      } else if (/^(Arrow)?Up/.test(e.key)) {
         e.stopPropagation()
         moveActivePositionUp()
       } else if (e.key === 'Enter') {
         if (activeOption === null) {
           return
         }
+
         e.stopPropagation()
-        if (activeOption.isNew) {
-          if (onAdd) onAdd(activeOption.item.value)
-        } else {
+
+        if (!activeOption.isNew) {
           onSelect(activeOption.item)
+        } else if (onAdd) {
+          onAdd(activeOption.item.value)
         }
       } else {
         setActiveOption(null)
@@ -214,14 +215,17 @@ export const useListBox = <T,>({
     ),
   })
 
-  const handleAdd = useCallback(
-    (option: ComboBoxOption<T>) => {
-      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        if (onAdd) onAdd(option.item.value)
-      })
-    },
+  const handleAdd = useMemo(
+    () =>
+      onAdd
+        ? (option: ComboBoxOption<T>) => {
+            // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+            requestAnimationFrame(() => {
+              onAdd(option.item.value)
+            })
+          }
+        : undefined,
     [onAdd],
   )
   const handleSelect = useCallback(
@@ -238,82 +242,68 @@ export const useListBox = <T,>({
     [setActiveOption],
   )
 
-  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
-  const {
-    wrapperStyleProps,
-    dropdownListStyleProps,
-    helpMessageStyle,
-    loaderWrapperStyle,
-    noItemsStyle,
-  } = useMemo(() => {
+  const wrapperStyleAttr = useMemo(() => {
     const { top, left, height } = listBoxRect
-    const dropdownListWidth = dropdownWidth || triggerWidth
-    return {
-      wrapperStyleProps: {
-        className: wrapper(),
-        style: {
-          top: `${top}px`,
-          left: `${left}px`,
-          width: `${triggerWidth}px`,
-        },
-      },
-      dropdownListStyleProps: {
-        className: dropdownList(),
-        style: {
-          width:
-            typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-          maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
-          height: height ? `${height}px` : undefined,
-        },
-      },
-      helpMessageStyle: helpMessage(),
-      loaderWrapperStyle: loaderWrapper(),
-      noItemsStyle: noItems(),
-    }
-  }, [
-    dropdownList,
-    dropdownWidth,
-    helpMessage,
-    listBoxRect,
-    triggerWidth,
-    loaderWrapper,
-    noItems,
-    wrapper,
-  ])
 
-  const statusText = useMemo(() => {
-    const loadingText = decorators?.loadingText?.(LOADING_TEXT) ?? LOADING_TEXT
-    return isExpanded && isLoading ? loadingText : ''
-  }, [decorators, isExpanded, isLoading])
+    return {
+      top: `${top}px`,
+      left: `${left}px`,
+      width: `${triggerWidth}px`,
+    }
+  }, [listBoxRect, triggerWidth])
+  const dropdownListStyleAttr = useMemo(() => {
+    const { left, height } = listBoxRect
+    const dropdownListWidth = dropdownWidth || triggerWidth
+
+    return {
+      width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
+      maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
+      height: height ? `${height}px` : undefined,
+    }
+  }, [listBoxRect, triggerWidth, dropdownWidth])
+
+  const styles = useMemo(() => {
+    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
+
+    return {
+      wrapper: wrapper(),
+      dropdownList: dropdownList(),
+      helpMessage: helpMessage(),
+      loaderWrapper: loaderWrapper(),
+      noItems: noItems(),
+    }
+  }, [])
+
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <>
-          <VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>
-
-          <div {...wrapperStyleProps}>
-            <div
-              {...dropdownListStyleProps}
-              id={listBoxId}
-              ref={listBoxRef}
-              role="listbox"
-              aria-hidden={!isExpanded}
-            >
-              {dropdownHelpMessage && (
-                <p className={helpMessageStyle}>
-                  <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-                </p>
-              )}
-              {!isExpanded ? null : isLoading ? (
-                <div className={loaderWrapperStyle}>
+        <div className={styles.wrapper} style={wrapperStyleAttr}>
+          {isExpanded && isLoading && (
+            <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
+          )}
+          <div
+            id={listBoxId}
+            ref={listBoxRef}
+            role="listbox"
+            aria-hidden={!isExpanded}
+            className={styles.dropdownList}
+            style={dropdownListStyleAttr}
+          >
+            {dropdownHelpMessage && (
+              <p className={styles.helpMessage}>
+                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
+              </p>
+            )}
+            {isExpanded ? (
+              isLoading ? (
+                <div className={styles.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
               ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={noItemsStyle}>
-                  {decorators?.noResultText
-                    ? decorators.noResultText(NO_RESULT_TEXT)
-                    : NO_RESULT_TEXT}
+                <p role="alert" aria-live="polite" className={styles.noItems}>
+                  {decorated.noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -327,32 +317,27 @@ export const useListBox = <T,>({
                     activeRef={activeRef}
                   />
                 ))
-              )}
-              {renderIntersection()}
-            </div>
+              )
+            ) : null}
+            {renderIntersection()}
           </div>
-        </>,
+        </div>,
       ),
     [
-      createPortal,
-      wrapperStyleProps,
-      dropdownListStyleProps,
-      listBoxId,
-      isExpanded,
-      dropdownHelpMessage,
-      helpMessageStyle,
-      isLoading,
-      loaderWrapperStyle,
-      options.length,
-      noItemsStyle,
-      decorators,
-      partialOptions,
-      renderIntersection,
       activeOption?.id,
+      renderIntersection,
+      partialOptions,
+      options.length,
+      isExpanded,
+      isLoading,
+      dropdownHelpMessage,
+      listBoxId,
       statusText,
-      handleAdd,
-      handleSelect,
+      decorated,
       handleHoverOption,
+      handleSelect,
+      styles,
+      createPortal,
     ],
   )
 
