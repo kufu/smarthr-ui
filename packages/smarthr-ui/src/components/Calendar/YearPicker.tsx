@@ -82,6 +82,8 @@ export const YearPicker: FC<Props & ElementProps> = ({
 
   useEffect(() => {
     if (focusingRef.current && isDisplayed) {
+      // HINT: 現在の年に一度focusを当てることでtab移動をしやすくする
+      // focusを当てたままでは違和感があるため、blurで解除している
       focusingRef.current.focus()
       focusingRef.current.blur()
     }
@@ -97,7 +99,8 @@ export const YearPicker: FC<Props & ElementProps> = ({
           return (
             <UnstyledButton
               key={year}
-              onClick={() => onSelectYear(year)}
+              onClick={onSelectYear}
+              value={year}
               aria-pressed={isSelectedYear}
               ref={isThisYear ? focusingRef : null}
               className={yearButtonStyle}
