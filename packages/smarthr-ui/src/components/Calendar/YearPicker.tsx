@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, useEffect, useMemo, useRef } from 'react'
+import React, { ComponentProps, FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -21,30 +21,17 @@ type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 const yearPicker = tv({
   slots: {
-    overlay: 'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white',
+    overlay:
+      'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white [[data-displayed="true"]>&]:shr-hidden',
     container:
       'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-overflow-y-auto shr-px-0.25 shr-py-0.5',
     yearButton:
       'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none',
-    yearWrapper:
+    yearWrapper: [
       'shr-box-border shr-inline-block shr-rounded-full shr-px-0.75 shr-py-0.5 shr-text-base shr-leading-none group-hover:shr-bg-base-grey group-hover:shr-text-black',
-  },
-  variants: {
-    isDisplayed: {
-      false: {
-        overlay: 'shr-hidden',
-      },
-    },
-    isThisYear: {
-      true: {
-        yearWrapper: 'shr-border-shorthand',
-      },
-    },
-    isSelected: {
-      true: {
-        yearWrapper: 'shr-bg-main shr-text-white',
-      },
-    },
+      '[[data-this-year="true"]>&]:shr-border-shorthand',
+      '[[aria-pressed="true"]>&]:shr-bg-main [[aria-pressed="true"]>&]:shr-text-white',
+    ],
   },
 })
 
@@ -57,15 +44,16 @@ export const YearPicker: FC<Props & ElementProps> = ({
   id,
   ...props
 }) => {
-  const { overlay, container, yearButton, yearWrapper } = yearPicker()
-  const { overlayStyle, containerStyle, yearButtonStyle } = useMemo(
-    () => ({
-      overlayStyle: overlay({ isDisplayed }),
-      containerStyle: container(),
-      yearButtonStyle: yearButton(),
-    }),
-    [container, isDisplayed, overlay, yearButton],
-  )
+  const styles = useMemo(() => {
+    const { overlay, container, yearButton, yearWrapper } = yearPicker()
+
+    return {
+      overlay: overlay(),
+      container: container(),
+      yearButton: yearButton(),
+      yearWrapper: yearWrapper(),
+    }
+  }, [])
   const focusingRef = useRef<HTMLButtonElement>(null)
 
   const thisYear = useMemo(() => new Date().getFullYear(), [])
@@ -73,7 +61,7 @@ export const YearPicker: FC<Props & ElementProps> = ({
     const length = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
     let result: number[] = []
 
-    for (const i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
       result[i] = fromYear + i
     }
 
@@ -89,9 +77,16 @@ export const YearPicker: FC<Props & ElementProps> = ({
     }
   }, [isDisplayed])
 
+  const onClickYear = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onSelectYear(parseInt(e.currentTarget.value, 10))
+    },
+    [onSelectYear],
+  )
+
   return (
-    <div {...props} id={id} className={overlayStyle}>
-      <div className={containerStyle}>
+    <div {...props} id={id} data-displayed={isDisplayed} className={styles.overlay}>
+      <div className={styles.container}>
         {yearArray.map((year) => {
           const isThisYear = thisYear === year
           const isSelectedYear = selectedYear === year
@@ -99,15 +94,14 @@ export const YearPicker: FC<Props & ElementProps> = ({
           return (
             <UnstyledButton
               key={year}
-              onClick={onSelectYear}
+              ref={isThisYear ? focusingRef : null}
               value={year}
               aria-pressed={isSelectedYear}
-              ref={isThisYear ? focusingRef : null}
-              className={yearButtonStyle}
+              onClick={onClickYear}
+              className={styles.yearButton}
+              data-this-year={isThisYear}
             >
-              <span className={yearWrapper({ isThisYear, isSelected: isSelectedYear })}>
-                {year}
-              </span>
+              <span className={styles.yearWrapper}>{year}</span>
             </UnstyledButton>
           )
         })}
