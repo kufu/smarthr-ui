@@ -68,11 +68,14 @@ export const YearPicker: FC<Props & ElementProps> = ({
   )
   const focusingRef = useRef<HTMLButtonElement>(null)
 
-  const thisYear = new Date().getFullYear()
-  const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
-  const yearArray = Array(numOfYear)
-    .fill(null)
-    .map((_, i) => fromYear + i)
+  const thisYear = useMemo(() => new Date().getFullYear(), [])
+  const yearArray = useMemo(() => {
+    const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
+
+    return Array(numOfYear)
+      .fill(null)
+      .map((_, i) => fromYear + i)
+  }, [toYear, fromYear])
 
   useEffect(() => {
     if (focusingRef.current && isDisplayed) {
@@ -87,6 +90,7 @@ export const YearPicker: FC<Props & ElementProps> = ({
         {yearArray.map((year) => {
           const isThisYear = thisYear === year
           const isSelectedYear = selectedYear === year
+
           return (
             <UnstyledButton
               key={year}
