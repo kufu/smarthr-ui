@@ -1,11 +1,9 @@
 'use client'
 
 import React, {
-  ChangeEventHandler,
   ComponentPropsWithRef,
   PropsWithChildren,
   forwardRef,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -65,7 +63,7 @@ const checkbox = tv({
 })
 
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed, error, onChange, className, children, ...props }, ref) => {
+  ({ checked, mixed, error, className, children, disabled, ...props }, ref) => {
     const styles = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = checkbox()
 
@@ -97,18 +95,18 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     const checkBoxId = props.id || defaultId
 
     return (
-      <span data-disabled={props.disabled?.toString()} className={styles.wrapper}>
+      <span data-disabled={disabled?.toString()} className={styles.wrapper}>
         <span className={styles.innerWrapper}>
           <input
             {...props}
-            data-smarthr-ui-input="true"
+            ref={inputRef}
             type="checkbox"
             id={checkBoxId}
             checked={checked}
-            onChange={onChange}
-            className={styles.input}
-            ref={inputRef}
+            disabled={disabled}
             aria-invalid={error || undefined}
+            className={styles.input}
+            data-smarthr-ui-input="true"
           />
           <AriaHiddenBox className={styles.box} />
           <CheckIconArea mixed={mixed} className={styles.iconWrap} iconStyle={styles.icon} />
@@ -126,7 +124,7 @@ const AriaHiddenBox = React.memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const CheckIconArea = React.memo<Pick<Props, 'mixed'> & { className: string; iconStyle }>(
+const CheckIconArea = React.memo<Pick<Props, 'mixed'> & { className: string; iconStyle: string }>(
   ({ mixed, className, iconStyle }) => (
     <span className={className}>
       {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
