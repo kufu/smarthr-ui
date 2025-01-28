@@ -54,17 +54,19 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const { wrapper, table, th, td, cellButton, dateCell } = calendarTable()
-  const { wrapperStyle, tableStyle, thStyle, tdStyle, cellButtonStyle } = useMemo(
-    () => ({
-      wrapperStyle: wrapper({ className }),
-      tableStyle: table(),
-      thStyle: th(),
-      tdStyle: td(),
-      cellButtonStyle: cellButton(),
-    }),
-    [cellButton, className, table, td, th, wrapper],
-  )
+  const { dateCell } = calendarTable()
+  const styles = useMemo(() => {
+    const { wrapper, table, th, td, cellButton } = calendarTable()
+
+    return {
+      wrapper: wrapper({ className }),
+      table: table(),
+      th: th(),
+      td: td(),
+      cellButton: cellButton(),
+    }
+  }, [className])
+
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
@@ -73,13 +75,14 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   const toDay = dayjs(to)
 
   const array = getMonthArray(currentDay.toDate())
+
   return (
-    <div className={wrapperStyle}>
-      <table {...props} className={tableStyle}>
+    <div className={styles.wrapper}>
+      <table {...props} className={styles.table}>
         <thead>
           <tr>
             {daysInWeek.map((day, i) => (
-              <th key={i} className={thStyle}>
+              <th key={i} className={styles.th}>
                 {day}
               </th>
             ))}
@@ -95,7 +98,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                 const isSelectedDate =
                   !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
                 return (
-                  <td key={dateIndex} className={tdStyle}>
+                  <td key={dateIndex} className={styles.td}>
                     {date && (
                       <UnstyledButton
                         disabled={isOutRange}
@@ -104,7 +107,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                         }
                         aria-pressed={isSelectedDate}
                         type="button"
-                        className={cellButtonStyle}
+                        className={styles.cellButton}
                       >
                         <span
                           className={dateCell({
