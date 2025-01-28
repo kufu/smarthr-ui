@@ -61,8 +61,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   const currentDay = useMemo(() => dayjs(current), [current])
   const selectedDay = useMemo(() => selected ? dayjs(selected) : null, [selected])
 
-  const fromDay = dayjs(from)
-  const toDay = dayjs(to)
+  const fromDate = useMemo(() => dayjs(from).toDate(), [from])
+  const toDate = useMemo(() => dayjs(to).toDate(), [to])
 
   const array = getMonthArray(currentDay.toDate())
 
@@ -84,7 +84,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
               {week.map((date, dateIndex) => {
                 const isOutRange =
                   !date ||
-                  !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
+                  !isBetween(currentDay.date(date).toDate(), fromDate, toDate)
                 const isSelectedDate =
                   !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
                 return (
