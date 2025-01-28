@@ -86,10 +86,11 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                   return <td key={dateIndex} className={styles.td} />
                 }
 
-                const compareDate = currentDay.date(date)
-                const isOutRange = !isBetween(compareDate.toDate(), fromDate, toDate)
+                const compareDay = currentDay.date(date)
+                const compareDate = compareDay.toDate()
+                const isOutRange = !isBetween(compareDate, fromDate, toDate)
                 const isSelectedDate =
-                  selectedDay && compareDate.isSame(selectedDay, 'date') ? true : false
+                  selectedDay && compareDay.isSame(selectedDay, 'date') ? true : false
 
                 return (
                   <td key={dateIndex} className={styles.td}>
@@ -97,11 +98,9 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                       type="button"
                       disabled={isOutRange}
                       aria-pressed={isSelectedDate}
-                      onClick={(e) =>
-                        !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
-                      }
+                      onClick={(e) => !isOutRange && onSelectDate(e, compareDate)}
                       className={styles.cellButton}
-                      data-is-today={currentDay.date(date).isSame(dayjs().startOf('date'), 'date')}
+                      data-is-today={compareDay.isSame(dayjs().startOf('date'), 'date')}
                     >
                       <span className={styles.dateCell}>{date}</span>
                     </UnstyledButton>
