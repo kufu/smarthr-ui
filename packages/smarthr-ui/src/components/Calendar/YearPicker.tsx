@@ -19,7 +19,7 @@ type Props = {
   /** 選択可能な終了年 */
   toYear: number
   /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectYear: (year: number) => void
+  onSelectYear: (e: React.MouseEvent<HTMLButtonElement>) => void
   /** 表示フラグ */
   isDisplayed: boolean
   /** HTMLのid属性 */
@@ -85,13 +85,6 @@ export const YearPicker: FC<Props & ElementProps> = ({
     }
   }, [isDisplayed])
 
-  const onClickYear = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onSelectYear(parseInt(e.currentTarget.value, 10))
-    },
-    [onSelectYear],
-  )
-
   return (
     <div {...props} id={id} data-displayed={isDisplayed} className={styles.overlay}>
       <div className={styles.container}>
@@ -103,7 +96,7 @@ export const YearPicker: FC<Props & ElementProps> = ({
             focusingRef={focusingRef}
             className={styles.yearButton}
             childrenStyle={styles.yearWrapper}
-            onClick={onClickYear}
+            onClick={onSelectYear}
           />
         ))}
       </div>

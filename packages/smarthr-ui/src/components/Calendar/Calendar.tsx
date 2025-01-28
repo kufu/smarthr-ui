@@ -5,6 +5,7 @@ import React, {
   ComponentProps,
   MouseEvent,
   forwardRef,
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -77,6 +78,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     const prevMonth = currentMonth.subtract(1, 'month')
     const nextMonth = currentMonth.add(1, 'month')
 
+    const onSelectYear = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
+      setIsSelectingYear(false)
+    }, [])
+
     return (
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       <Section {...props} ref={ref} className={containerStyle}>
@@ -127,10 +133,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             fromYear={fromDate.year()}
             toYear={toDate.year()}
             selectedYear={value?.getFullYear()}
-            onSelectYear={(year) => {
-              setCurrentMonth(currentMonth.year(year))
-              setIsSelectingYear(false)
-            }}
+            onSelectYear={onSelectYear}
             isDisplayed={isSelectingYear}
             id={yearPickerId}
           />
