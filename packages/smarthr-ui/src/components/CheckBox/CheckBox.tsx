@@ -72,25 +72,17 @@ const checkbox = tv({
 
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
   ({ checked, mixed = false, error, onChange, className, children, ...props }, ref) => {
-    const {
-      wrapperStyle,
-      innerWrapperStyle,
-      boxStyle,
-      inputStyle,
-      iconWrapStyle,
-      iconStyle,
-      labelStyle,
-    } = useMemo(() => {
+    const styles = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = checkbox()
 
       return {
-        wrapperStyle: wrapper({ className }),
-        innerWrapperStyle: innerWrapper(),
-        boxStyle: box(),
-        inputStyle: input(),
-        iconWrapStyle: iconWrap(),
-        iconStyle: icon(),
-        labelStyle: label({ disabled: props.disabled }),
+        wrapper: wrapper({ className }),
+        innerWrapper: innerWrapper(),
+        box: box(),
+        input: input(),
+        iconWrap: iconWrap(),
+        icon: icon(),
+        label: label({ disabled: props.disabled }),
       }
     }, [className, props.disabled])
 
@@ -111,8 +103,8 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     const checkBoxId = props.id || defaultId
 
     return (
-      <span className={wrapperStyle}>
-        <span className={innerWrapperStyle}>
+      <span className={styles.wrapper}>
+        <span className={styles.innerWrapper}>
           <input
             {...props}
             data-smarthr-ui-input="true"
@@ -120,18 +112,18 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
             id={checkBoxId}
             checked={checked}
             onChange={onChange}
-            className={inputStyle}
+            className={styles.input}
             ref={inputRef}
             aria-invalid={error || undefined}
           />
-          <AriaHiddenBox className={boxStyle} />
-          <span className={iconWrapStyle}>
-            {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
+          <AriaHiddenBox className={styles.box} />
+          <span className={styles.iconWrap}>
+            {mixed ? <FaMinusIcon className={styles.icon} /> : <FaCheckIcon className={styles.icon} />}
           </span>
         </span>
 
         {children && (
-          <label className={labelStyle} htmlFor={checkBoxId}>
+          <label className={styles.label} htmlFor={checkBoxId}>
             {children}
           </label>
         )}
