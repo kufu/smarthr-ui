@@ -124,7 +124,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
             ref={inputRef}
             aria-invalid={error || undefined}
           />
-          <span className={boxStyle} aria-hidden="true" />
+          <AriaHiddenBox className={boxStyle} />
           <span className={iconWrapStyle}>
             {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
           </span>
@@ -139,3 +139,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     )
   },
 )
+
+const AriaHiddenBox = React.memo<{ className: string }>(({ className }) => (
+  <span className={className} aria-hidden="true" />
+))
