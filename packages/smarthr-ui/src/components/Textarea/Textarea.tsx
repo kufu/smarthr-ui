@@ -101,7 +101,7 @@ const textarea = tv({
 
 const calculateIdealRows = (
   element?: HTMLTextAreaElement | null,
-  maxRows: number = Infinity,
+  maxRows: number = Number.MAX_SAFE_INTEGER,
 ): number => {
   if (!element) {
     return 0
