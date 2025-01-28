@@ -23,26 +23,43 @@ const stepStatusIcon = tv({
   },
 })
 
-export const StepStatusIcon: FC<
-  ComponentProps<typeof FaCircleCheckIcon> & { status?: Step['status'] }
-> = ({ status, className, ...rest }) => {
-  const [statusType, statusText] =
-    typeof status === 'object' ? [status.type, status.text] : [status]
-  const icon = useMemo(() => {
-    switch (statusType) {
-      case 'completed':
-        return { Icon: FaCircleCheckIcon, alt: '完了' }
-      case 'closed':
-        return { Icon: FaCircleXmarkIcon, alt: '中断' }
-      default:
-        return null
+type StatusProps = { status?: Step['status'] }
+type BaseProps = ComponentProps<typeof FaCircleCheckIcon>
+type Props = BaseProps & StatusProps
+type ActualProps = BaseProps & Required<StatusProps>
+
+export const StepStatusIcon: FC<Props> = (props) =>
+  props.status ? <ActualStepStatusIcon {...(props as ActualProps)} /> : null
+
+const ICON_MAPPER = {
+  completed: {
+    alt: '完了',
+    Component: FaCircleCheckIcon,
+  },
+  closed: {
+    alt: '中断',
+    Component: FaCircleXmarkIcon,
+  },
+}
+
+const ActualStepStatusIcon: FC<ActualProps> = ({ status, className, ...rest }) => {
+  const actualStatus = useMemo(() => {
+    const isObject = typeof status === 'object'
+    const statusType = isObject ? status.type : status
+    const { alt, Component } = ICON_MAPPER[statusType]
+
+    return {
+      type: statusType,
+      text: isObject ? status.text || alt : alt,
+      Component,
     }
-  }, [statusType])
+  }, [status])
 
-  if (!icon) return
+  const style = useMemo(
+    () => stepStatusIcon({ status: actualStatus.type, className }),
+    [actualStatus.type, className],
+  )
+  const Component = actualStatus.Component
 
-  const { Icon, alt } = icon
-  const style = stepStatusIcon({ status: statusType, className })
-
-  return <Icon {...rest} alt={statusText || alt} className={style} />
+  return <Component {...rest} alt={actualStatus.text} className={style} />
 }
