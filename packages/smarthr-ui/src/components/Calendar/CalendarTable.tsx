@@ -1,4 +1,4 @@
-import dayjs, { useMemo } from 'dayjs'
+import dayjs from 'dayjs'
 import React, { ComponentPropsWithoutRef, FC, MouseEvent, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -19,6 +19,8 @@ type Props = {
   selected?: Date | null
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
+
+type DayJsType = ReturnType<typeof dayjs>
 
 const calendarTable = tv({
   slots: {
@@ -65,6 +67,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   const toDate = useMemo(() => dayjs(to).toDate(), [to])
 
   const months = useMemo(() => getMonthArray(currentDay.toDate()), [currentDay])
+  // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
+  const nowDateStr = dayjs().startOf('date').toString()
 
   return (
     <div className={styles.wrapper}>
@@ -86,24 +90,17 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                   return <td key={dateIndex} className={styles.td} />
                 }
 
-                const compareDay = currentDay.date(date)
-                const compareDate = compareDay.toDate()
-
                 return (
-                  <td key={dateIndex} className={styles.td}>
-                    <UnstyledButton
-                      type="button"
-                      disabled={!isBetween(compareDate, fromDate, toDate)}
-                      aria-pressed={
-                        selectedDay && compareDay.isSame(selectedDay, 'date') ? true : false
-                      }
-                      onClick={(e) => onSelectDate(e, compareDate)}
-                      className={styles.cellButton}
-                      data-is-today={compareDay.isSame(dayjs().startOf('date'), 'date')}
-                    >
-                      <span className={styles.dateCell}>{date}</span>
-                    </UnstyledButton>
-                  </td>
+                  <SelectButtonTd
+                    date={date}
+                    currentDay={currentDay}
+                    selectedDay={selectedDay}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    nowDateStr={nowDateStr}
+                    onClick={onSelectDate}
+                    styles={styles}
+                  />
                 )
               })}
             </tr>
@@ -113,3 +110,36 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     </div>
   )
 }
+
+const SelectButtonTd = React.memo<{
+  date: number
+  currentDay: DayJsType
+  selectedDay: DayJsType | null
+  fromDate: Date
+  toDate: Date
+  nowDateStr: string
+  onClick: Props['onSelectDate']
+  styles: {
+    td: string
+    cellButton: string
+    dateCell: string
+  }
+}>(({ date, currentDay, selectedDay, fromDate, toDate, nowDateStr, styles }) => {
+  const compareDay = currentDay.date(date)
+  const compareDate = compareDay.toDate()
+
+  return (
+    <td className={styles.td}>
+      <UnstyledButton
+        type="button"
+        disabled={!isBetween(compareDate, fromDate, toDate)}
+        aria-pressed={selectedDay && compareDay.isSame(selectedDay, 'date') ? true : false}
+        onClick={(e) => onClick(e, compareDate)}
+        className={styles.cellButton}
+        data-is-today={compareDay.isSame(nowDateStr, 'date')}
+      >
+        <span className={styles.dateCell}>{date}</span>
+      </UnstyledButton>
+    </td>
+  )
+})
