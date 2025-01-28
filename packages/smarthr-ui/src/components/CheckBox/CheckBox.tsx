@@ -71,7 +71,7 @@ const checkbox = tv({
 })
 
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed = false, error, onChange, className, children, ...props }, ref) => {
+  ({ checked, mixed, error, onChange, className, children, ...props }, ref) => {
     const styles = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = checkbox()
 
@@ -117,9 +117,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
             aria-invalid={error || undefined}
           />
           <AriaHiddenBox className={styles.box} />
-          <span className={styles.iconWrap}>
-            {mixed ? <FaMinusIcon className={styles.icon} /> : <FaCheckIcon className={styles.icon} />}
-          </span>
+          <CheckIconArea mixed={mixed} className={styles.iconWrap} iconStyle={styles.icon} />
         </span>
 
         {children && (
@@ -135,3 +133,11 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
 const AriaHiddenBox = React.memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
+
+const CheckIconArea = React.memo<Pick<Props, 'mixed'> & { className: string; iconStyle }>(
+  ({ mixed, className, iconStyle }) => (
+    <span className={className}>
+      {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
+    </span>
+  ),
+)
