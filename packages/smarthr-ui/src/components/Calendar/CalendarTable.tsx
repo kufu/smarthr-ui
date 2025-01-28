@@ -59,9 +59,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   }, [className])
 
   const currentDay = useMemo(() => dayjs(current), [current])
-  const selectedDay = selected ? dayjs(selected) : null
+  const selectedDay = useMemo(() => selected ? dayjs(selected) : null, [selected])
 
-  const now = dayjs().startOf('date')
   const fromDay = dayjs(from)
   const toDay = dayjs(to)
 
@@ -99,7 +98,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
                         className={styles.cellButton}
-                        data-is-today={currentDay.date(date).isSame(now, 'date')}
+                        data-is-today={currentDay.date(date).isSame(dayjs().startOf('date'), 'date')}
                       >
                         <span className={styles.dateCell}>{date}</span>
                       </UnstyledButton>
