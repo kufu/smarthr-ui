@@ -28,20 +28,11 @@ const calendarTable = tv({
     td: 'smarthr-ui-CalendarTable-dataCell shr-p-0 shr-align-middle',
     cellButton:
       'shr-group shr-flex shr-items-center shr-justify-center shr-px-0.5 shr-py-0.25 disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
-    dateCell:
+    dateCell: [
       'shr-box-border shr-flex shr-h-[1.75rem] shr-w-[1.75rem] shr-items-center shr-justify-center shr-rounded-[50%] shr-leading-[0] group-[:not(:disabled)]:group-hover:shr-bg-base-grey group-[:not(:disabled)]:group-hover:shr-text-black',
-  },
-  variants: {
-    isToday: {
-      true: {
-        dateCell: 'shr-border-shorthand contrast-more:shr-border-high-contrast',
-      },
-    },
-    isSelected: {
-      true: {
-        dateCell: '[&&&&]:shr-bg-main [&&&&]:shr-text-white',
-      },
-    },
+      '[[aria-pressed="true"]>&&&]:shr-bg-main [[aria-pressed="true"]>&&&]:shr-text-white',
+      '[[data-is-today="true"]>&&&]:shr-border-shorthand [[aria-pressed="true"]>&&&]:contrast-more:shr-border-high-contrast',
+    ],
   },
 })
 
@@ -54,9 +45,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const { dateCell } = calendarTable()
   const styles = useMemo(() => {
-    const { wrapper, table, th, td, cellButton } = calendarTable()
+    const { wrapper, table, th, td, cellButton, dateCell } = calendarTable()
 
     return {
       wrapper: wrapper({ className }),
@@ -64,6 +54,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
       th: th(),
       td: td(),
       cellButton: cellButton(),
+      dateCell: dateCell(),
     }
   }, [className])
 
@@ -101,22 +92,16 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                   <td key={dateIndex} className={styles.td}>
                     {date && (
                       <UnstyledButton
+                        type="button"
                         disabled={isOutRange}
+                        aria-pressed={isSelectedDate}
                         onClick={(e) =>
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
-                        aria-pressed={isSelectedDate}
-                        type="button"
                         className={styles.cellButton}
+                        data-is-today={currentDay.date(date).isSame(now, 'date')}
                       >
-                        <span
-                          className={dateCell({
-                            isToday: currentDay.date(date).isSame(now, 'date'),
-                            isSelected: isSelectedDate,
-                          })}
-                        >
-                          {date}
-                        </span>
+                        <span className={styles.dateCell}>{date}</span>
                       </UnstyledButton>
                     )}
                   </td>
