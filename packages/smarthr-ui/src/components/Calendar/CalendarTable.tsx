@@ -82,10 +82,11 @@ export const CalendarTable: FC<Props & ElementProps> = ({
           {months.map((week, weekIndex) => (
             <tr key={weekIndex}>
               {week.map((date, dateIndex) => {
+                const compareDate = date ? currentDay.date(date) : null
                 const isOutRange =
-                  !date || !isBetween(currentDay.date(date).toDate(), fromDate, toDate)
+                  !compareDate || !isBetween(compareDate.toDate(), fromDate, toDate)
                 const isSelectedDate =
-                  date && selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
+                  compareDate && selectedDay && compareDate.isSame(selectedDay, 'date')
                     ? true
                     : false
 
