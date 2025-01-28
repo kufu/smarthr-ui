@@ -82,32 +82,29 @@ export const CalendarTable: FC<Props & ElementProps> = ({
           {months.map((week, weekIndex) => (
             <tr key={weekIndex}>
               {week.map((date, dateIndex) => {
-                const compareDate = date ? currentDay.date(date) : null
-                const isOutRange =
-                  !compareDate || !isBetween(compareDate.toDate(), fromDate, toDate)
+                if (!date) {
+                  return <td key={dateIndex} className={styles.td} />
+                }
+
+                const compareDate = currentDay.date(date)
+                const isOutRange = !isBetween(compareDate.toDate(), fromDate, toDate)
                 const isSelectedDate =
-                  compareDate && selectedDay && compareDate.isSame(selectedDay, 'date')
-                    ? true
-                    : false
+                  selectedDay && compareDate.isSame(selectedDay, 'date') ? true : false
 
                 return (
                   <td key={dateIndex} className={styles.td}>
-                    {date && (
-                      <UnstyledButton
-                        type="button"
-                        disabled={isOutRange}
-                        aria-pressed={isSelectedDate}
-                        onClick={(e) =>
-                          !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
-                        }
-                        className={styles.cellButton}
-                        data-is-today={currentDay
-                          .date(date)
-                          .isSame(dayjs().startOf('date'), 'date')}
-                      >
-                        <span className={styles.dateCell}>{date}</span>
-                      </UnstyledButton>
-                    )}
+                    <UnstyledButton
+                      type="button"
+                      disabled={isOutRange}
+                      aria-pressed={isSelectedDate}
+                      onClick={(e) =>
+                        !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
+                      }
+                      className={styles.cellButton}
+                      data-is-today={currentDay.date(date).isSame(dayjs().startOf('date'), 'date')}
+                    >
+                      <span className={styles.dateCell}>{date}</span>
+                    </UnstyledButton>
                   </td>
                 )
               })}
