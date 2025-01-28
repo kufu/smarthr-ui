@@ -70,11 +70,14 @@ export const YearPicker: FC<Props & ElementProps> = ({
 
   const thisYear = useMemo(() => new Date().getFullYear(), [])
   const yearArray = useMemo(() => {
-    const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
+    const length = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
+    let result: number[] = []
 
-    return Array(numOfYear)
-      .fill(null)
-      .map((_, i) => fromYear + i)
+    for (const i = 0; i < length; i++) {
+      result[i] = fromYear + i
+    }
+
+    return result
   }, [toYear, fromYear])
 
   useEffect(() => {
