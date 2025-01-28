@@ -114,11 +114,9 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
           <CheckIconArea mixed={mixed} className={styles.iconWrap} iconStyle={styles.icon} />
         </span>
 
-        {children && (
-          <label className={styles.label} htmlFor={checkBoxId}>
-            {children}
-          </label>
-        )}
+        <LabeledChildren htmlFor={checkBoxId} className={styles.label}>
+          {children}
+        </LabeledChildren>
       </span>
     )
   },
@@ -134,4 +132,13 @@ const CheckIconArea = React.memo<Pick<Props, 'mixed'> & { className: string; ico
       {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
     </span>
   ),
+)
+
+const LabeledChildren = React.memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
+  ({ children, htmlFor, className }) =>
+    children && (
+      <label htmlFor={htmlFor} className={className}>
+        {children}
+      </label>
+    ),
 )
