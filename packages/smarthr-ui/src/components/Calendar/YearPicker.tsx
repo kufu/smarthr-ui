@@ -1,4 +1,12 @@
-import React, { ComponentProps, FC, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, {
+  ComponentProps,
+  FC,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -87,25 +95,43 @@ export const YearPicker: FC<Props & ElementProps> = ({
   return (
     <div {...props} id={id} data-displayed={isDisplayed} className={styles.overlay}>
       <div className={styles.container}>
-        {yearArray.map((year) => {
-          const isThisYear = thisYear === year
-          const isSelectedYear = selectedYear === year
-
-          return (
-            <UnstyledButton
-              key={year}
-              ref={isThisYear ? focusingRef : null}
-              value={year}
-              aria-pressed={isSelectedYear}
-              onClick={onClickYear}
-              className={styles.yearButton}
-              data-this-year={isThisYear}
-            >
-              <span className={styles.yearWrapper}>{year}</span>
-            </UnstyledButton>
-          )
-        })}
+        {yearArray.map((year) => (
+          <YearButton
+            year={year}
+            thisYear={thisYear}
+            selected={selectedYear === year}
+            focusingRef={focusingRef}
+            className={styles.yearButton}
+            childrenStyle={styles.yearWrapper}
+            onClick={onClickYear}
+          />
+        ))}
       </div>
     </div>
   )
 }
+
+const YearButton = React.memo<{
+  year: number
+  thisYear: number
+  selected: boolean
+  focusingRef: RefObject<HTMLButtonElement>
+  className: string
+  childrenStyle: string
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+}>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
+  const isThisYear = thisYear === year
+
+  return (
+    <UnstyledButton
+      ref={isThisYear ? focusingRef : null}
+      value={year}
+      aria-pressed={selected}
+      onClick={onClick}
+      className={className}
+      data-this-year={isThisYear}
+    >
+      <span className={childrenStyle}>{year}</span>
+    </UnstyledButton>
+  )
+})
