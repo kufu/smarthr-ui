@@ -59,14 +59,8 @@ const checkbox = tv({
       'shr-relative shr-box-border shr-inline-block shr-h-[theme(fontSize.base)] shr-w-[theme(fontSize.base)] shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     label: [
       'smarthr-ui-CheckBox-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
+      '[[data-disabled=true]>&]:shr-pointer-events-none [[data-disabled=true]>&]:shr-cursor-not-allowed [[data-disabled=true]>&]:shr-text-disabled',
     ],
-  },
-  variants: {
-    disabled: {
-      true: {
-        label: 'shr-pointer-events-none shr-cursor-not-allowed shr-text-disabled',
-      },
-    },
   },
 })
 
@@ -82,9 +76,9 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
         input: input(),
         iconWrap: iconWrap(),
         icon: icon(),
-        label: label({ disabled: props.disabled }),
+        label: label(),
       }
-    }, [className, props.disabled])
+    }, [className])
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -103,7 +97,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     const checkBoxId = props.id || defaultId
 
     return (
-      <span className={styles.wrapper}>
+      <span data-disabled={props.disabled?.toString()} className={styles.wrapper}>
         <span className={styles.innerWrapper}>
           <input
             {...props}
