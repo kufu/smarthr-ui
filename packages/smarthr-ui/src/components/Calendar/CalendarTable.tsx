@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs, { useMemo } from 'dayjs'
 import React, { ComponentPropsWithoutRef, FC, MouseEvent, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -58,7 +58,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     }
   }, [className])
 
-  const currentDay = dayjs(current)
+  const currentDay = useMemo(() => dayjs(current), [current])
   const selectedDay = selected ? dayjs(selected) : null
 
   const now = dayjs().startOf('date')
