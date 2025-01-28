@@ -1,10 +1,11 @@
 import { ReactNode } from 'react'
 
+export type ResponseMessageTypeWithoutProcessing = {
+  status: 'success' | 'error'
+  text: ReactNode
+}
 export type ResponseMessageType =
-  | {
-      status: 'success' | 'error'
-      text: ReactNode
-    }
+  | ResponseMessageTypeWithoutProcessing
   | {
       status: 'processing'
     }
