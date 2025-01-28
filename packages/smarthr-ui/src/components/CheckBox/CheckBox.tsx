@@ -82,6 +82,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
       labelStyle,
     } = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = checkbox()
+
       return {
         wrapperStyle: wrapper({ className }),
         innerWrapperStyle: innerWrapper(),
@@ -93,14 +94,8 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
       }
     }, [className, props.disabled])
 
-    const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-      (e) => {
-        if (onChange) onChange(e)
-      },
-      [onChange],
-    )
-
     const inputRef = useRef<HTMLInputElement>(null)
+
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => inputRef.current,
@@ -124,7 +119,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
             type="checkbox"
             id={checkBoxId}
             checked={checked}
-            onChange={handleChange}
+            onChange={onChange}
             className={inputStyle}
             ref={inputRef}
             aria-invalid={error || undefined}
