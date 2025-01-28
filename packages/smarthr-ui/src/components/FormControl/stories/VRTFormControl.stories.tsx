@@ -1,14 +1,25 @@
 import React from 'react'
 
 import { Input } from '../../Input'
-import { Cluster } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { FormControl } from '../FormControl'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Forms（フォーム）/FormControl/VRT',
-  render: (args) => <FormControl {...args} />,
+  render: (args) => (
+    <Stack gap={4}>
+      {[false, true].map((dangerouslyTitleHidden) => (
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl
+          {...args}
+          key={dangerouslyTitleHidden.toString()}
+          dangerouslyTitleHidden={dangerouslyTitleHidden}
+        />
+      ))}
+    </Stack>
+  ),
   args: {
     // eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
     children: <Input />,
