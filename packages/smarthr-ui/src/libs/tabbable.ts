@@ -30,6 +30,7 @@ export function tabbable(el: HTMLElement, option?: Partial<Option>) {
   if (mergedOption.shouldIgnoreVisibility) {
     return candidates
   }
+
   return candidates.filter((candidate) => !isHidden(candidate))
 }
 
