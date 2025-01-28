@@ -59,12 +59,12 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   }, [className])
 
   const currentDay = useMemo(() => dayjs(current), [current])
-  const selectedDay = useMemo(() => selected ? dayjs(selected) : null, [selected])
+  const selectedDay = useMemo(() => (selected ? dayjs(selected) : null), [selected])
 
   const fromDate = useMemo(() => dayjs(from).toDate(), [from])
   const toDate = useMemo(() => dayjs(to).toDate(), [to])
 
-  const array = getMonthArray(currentDay.toDate())
+  const months = useMemo(() => getMonthArray(currentDay.toDate()), [currentDay])
 
   return (
     <div className={styles.wrapper}>
@@ -79,12 +79,11 @@ export const CalendarTable: FC<Props & ElementProps> = ({
           </tr>
         </thead>
         <tbody>
-          {array.map((week, weekIndex) => (
+          {months.map((week, weekIndex) => (
             <tr key={weekIndex}>
               {week.map((date, dateIndex) => {
                 const isOutRange =
-                  !date ||
-                  !isBetween(currentDay.date(date).toDate(), fromDate, toDate)
+                  !date || !isBetween(currentDay.date(date).toDate(), fromDate, toDate)
                 const isSelectedDate =
                   !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
                 return (
@@ -98,7 +97,9 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
                         className={styles.cellButton}
-                        data-is-today={currentDay.date(date).isSame(dayjs().startOf('date'), 'date')}
+                        data-is-today={currentDay
+                          .date(date)
+                          .isSame(dayjs().startOf('date'), 'date')}
                       >
                         <span className={styles.dateCell}>{date}</span>
                       </UnstyledButton>
