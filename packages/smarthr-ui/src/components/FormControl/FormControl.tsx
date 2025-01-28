@@ -406,7 +406,13 @@ const TitleCluster = React.memo<
     return (
       <>
         {attrs.visuallyHidden && (
-          <VisuallyHiddenText {...attrs.visuallyHidden}>{innerText(body)}</VisuallyHiddenText>
+          <VisuallyHiddenText {...attrs.visuallyHidden}>
+            {
+              // HINT: innerTextでは正しく文字が取得できない場合がある
+              // 安全策としてinnerTextが空を取得してきたらbody自体を埋めこみます
+              innerText(body) || body
+            }
+          </VisuallyHiddenText>
         )}
         {attrs.label && (
           <Cluster
