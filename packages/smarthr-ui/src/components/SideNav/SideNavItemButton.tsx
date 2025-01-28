@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -10,8 +10,10 @@ export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: s
 type Props = {
   /** アイテムの識別子 */
   id: string
-  /** アイテムのタイトル */
-  title: ReactNode
+  /** アイテムのタイトル
+   * @deprecated SideNav で items を使う時の props です。children を使ってください。
+   */
+  title?: ReactNode
   /** タイトルのプレフィックスの内容。通常、StatusLabel の配置に用います。 */
   prefix?: ReactNode
   /** 選択されているアイテムかどうか */
@@ -21,6 +23,8 @@ type Props = {
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: OnClick
 }
+
+type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof Props>
 
 const sideNavItem = tv({
   slots: {
@@ -51,7 +55,15 @@ const sideNavItem = tv({
   },
 })
 
-export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, size, onClick }) => {
+export const SideNavItemButton: FC<Props & ElementProps> = ({
+  id,
+  title,
+  prefix,
+  isSelected,
+  size,
+  onClick,
+  children,
+}) => {
   const handleClick = useMemo(
     () =>
       onClick
@@ -65,7 +77,7 @@ export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, si
 
     return {
       wrapperStyle: wrapper({ selected: !!isSelected }),
-      buttonStyle: button({ size }),
+      buttonStyle: button({ size: size ?? 'default' }),
       buttonInnerStyle: buttonInner(),
     }
   }, [isSelected, size])
@@ -75,7 +87,7 @@ export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, si
       <UnstyledButton className={buttonStyle} onClick={handleClick} value={id}>
         <Cluster inline align="center" as="span">
           {prefix}
-          <span className={buttonInnerStyle}>{title}</span>
+          <span className={buttonInnerStyle}>{children ?? title}</span>
         </Cluster>
       </UnstyledButton>
     </li>

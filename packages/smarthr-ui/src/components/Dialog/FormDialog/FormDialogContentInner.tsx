@@ -87,7 +87,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
+    // eslint-disable-next-line smarthr/best-practice-for-layouts
     <Stack gap={0} as={Section} className={wrapper()}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <form onSubmit={handleSubmitAction} className={form()}>
