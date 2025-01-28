@@ -85,7 +85,10 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                 const isOutRange =
                   !date || !isBetween(currentDay.date(date).toDate(), fromDate, toDate)
                 const isSelectedDate =
-                  !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
+                  date && selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
+                    ? true
+                    : false
+
                 return (
                   <td key={dateIndex} className={styles.td}>
                     {date && (
