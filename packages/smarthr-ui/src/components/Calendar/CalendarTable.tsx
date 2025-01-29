@@ -125,18 +125,24 @@ const SelectButtonTd = React.memo<{
     dateCell: string
   }
 }>(({ date, currentDay, selectedDay, fromDate, toDate, nowDateStr, styles }) => {
-  const compareDay = currentDay.date(date)
-  const compareDate = compareDay.toDate()
+  const target = useMemo(() => {
+    const day = currentDay.date(date)
+
+    return {
+      day,
+      date: day.toDate(),
+    }
+  }, [currentDay, date])
 
   return (
     <td className={styles.td}>
       <UnstyledButton
         type="button"
-        disabled={!isBetween(compareDate, fromDate, toDate)}
-        aria-pressed={selectedDay && compareDay.isSame(selectedDay, 'date') ? true : false}
-        onClick={(e) => onClick(e, compareDate)}
+        disabled={!isBetween(target.date, fromDate, toDate)}
+        aria-pressed={selectedDay && target.day.isSame(selectedDay, 'date') ? true : false}
+        onClick={(e) => onClick(e, target.date)}
         className={styles.cellButton}
-        data-is-today={compareDay.isSame(nowDateStr, 'date')}
+        data-is-today={target.day.isSame(nowDateStr, 'date')}
       >
         <span className={styles.dateCell}>{date}</span>
       </UnstyledButton>
