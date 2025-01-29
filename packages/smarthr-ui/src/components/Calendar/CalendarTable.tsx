@@ -73,15 +73,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   return (
     <div className={styles.wrapper}>
       <table {...props} className={styles.table}>
-        <thead>
-          <tr>
-            {daysInWeek.map((day, i) => (
-              <th key={i} className={styles.th}>
-                {day}
-              </th>
-            ))}
-          </tr>
-        </thead>
+        <MemoizedThead thStyle={styles.th} />
         <tbody>
           {months.map((week, weekIndex) => (
             <tr key={weekIndex}>
@@ -111,6 +103,18 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     </div>
   )
 }
+
+const MemoizedThead = React.memo<{ thStyle: string }>(({ thStyle }) => (
+  <thead>
+    <tr>
+      {daysInWeek.map((day) => (
+        <th key={day} className={thStyle}>
+          {day}
+        </th>
+      ))}
+    </tr>
+  </thead>
+))
 
 const NullTd = React.memo<{ className: string }>(({ className }) => <td className={className} />)
 
