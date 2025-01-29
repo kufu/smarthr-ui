@@ -63,15 +63,18 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     },
     ref,
   ) => {
-    const { wrapper, loader: loaderSlot } = buttonStyle()
-    const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
-    const loaderStyle = useMemo(
-      () => loaderSlot({ isSecondary: variant === 'secondary' }),
-      [loaderSlot, variant],
-    )
+    const styles = useMemo(() => {
+      const { wrapper, loader } = buttonStyle()
+
+      return {
+        wrapper: wrapper({ className }),
+        loader: loader({ isSecondary: variant === 'secondary' }),
+      }
+    }, [variant, className])
+
     const { createPortal } = usePortal()
 
-    const loader = <Loader size="s" className={loaderStyle} role="presentation" />
+    const loader = <Loader size="s" className={styles.loader} role="presentation" />
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
@@ -90,7 +93,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         square={square}
         wide={wide}
         variant={variant}
-        className={wrapperStyle}
+        className={styles.wrapper}
         buttonRef={ref}
         disabled={disabledOnLoading}
         $loading={loading}
