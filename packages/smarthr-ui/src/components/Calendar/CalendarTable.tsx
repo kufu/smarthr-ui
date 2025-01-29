@@ -60,13 +60,14 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     }
   }, [className])
 
-  const calculatedCurrent = useMemo(() => ({
-    day: dayjs(current),
-    months: getMonthArray(current),
-  }), [current])
+  const calculatedCurrent = useMemo(
+    () => ({
+      day: dayjs(current),
+      months: getMonthArray(current),
+    }),
+    [current],
+  )
 
-  const fromDate = useMemo(() => dayjs(from).toDate(), [from])
-  const toDate = useMemo(() => dayjs(to).toDate(), [to])
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
   const nowDateStr = dayjs().startOf('date').toString()
 
@@ -88,8 +89,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                     date={date}
                     calculatedCurrent={calculatedCurrent}
                     selectedDayStr={selectedDayStr}
-                    fromDate={fromDate}
-                    toDate={toDate}
+                    from={from}
+                    to={to}
                     nowDateStr={nowDateStr}
                     onClick={onSelectDate}
                     styles={styles}
@@ -124,8 +125,8 @@ const SelectTdButton = React.memo<{
     day: DayJsType
   }
   selectedDayStr: string
-  fromDate: Date
-  toDate: Date
+  from: Date
+  to: Date
   nowDateStr: string
   onClick: Props['onSelectDate']
   styles: {
@@ -133,7 +134,7 @@ const SelectTdButton = React.memo<{
     cellButton: string
     dateCell: string
   }
-}>(({ date, calculatedCurrent, selectedDayStr, fromDate, toDate, nowDateStr, onClick, styles }) => {
+}>(({ date, calculatedCurrent, selectedDayStr, from, to, nowDateStr, onClick, styles }) => {
   const target = useMemo(() => {
     const day = calculatedCurrent.day.date(date)
 
@@ -142,10 +143,7 @@ const SelectTdButton = React.memo<{
       date: day.toDate(),
     }
   }, [calculatedCurrent.day, date])
-  const disabled = useMemo(
-    () => !isBetween(target.date, fromDate, toDate),
-    [target.date, fromDate, toDate],
-  )
+  const disabled = useMemo(() => !isBetween(target.date, from, to), [target.date, from, to])
   const ariaPressed = useMemo(
     () => target.day.isSame(selectedDayStr, 'date'),
     [selectedDayStr, target.day],
