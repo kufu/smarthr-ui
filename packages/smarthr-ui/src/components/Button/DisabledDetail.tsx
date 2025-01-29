@@ -39,20 +39,35 @@ export const DisabledDetail: FC<DisabledDetailProps> = ({ button, disabledDetail
       disabledTooltip: disabledTooltip(),
     }
   }, [])
-  const DisabledDetailIcon = disabledDetail.icon ?? FaCircleInfoIcon
 
   return (
     <div className={styles.disabledWrapper}>
       {button}
-      <Tooltip
+      <TooltipIcon
+        icon={disabledDetail.icon}
         message={disabledDetail.message}
-        triggerType="icon"
-        horizontal="auto"
-        vertical="auto"
         className={styles.disabledTooltip}
-      >
-        <DisabledDetailIcon />
-      </Tooltip>
+      />
     </div>
   )
 }
+
+const TooltipIcon = React.memo<{
+  icon?: React.FunctionComponent
+  message: React.ReactNode
+  className: string
+}>(({ icon, message, className }) => {
+  const DisabledDetailIcon = icon ?? FaCircleInfoIcon
+
+  return (
+    <Tooltip
+      message={message}
+      triggerType="icon"
+      horizontal="auto"
+      vertical="auto"
+      className={className}
+    >
+      <DisabledDetailIcon />
+    </Tooltip>
+  )
+})
