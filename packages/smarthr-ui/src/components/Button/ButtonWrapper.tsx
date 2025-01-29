@@ -48,7 +48,7 @@ export function ButtonWrapper({
   ...props
 }: Props) {
   const { buttonStyle, anchorStyle } = useMemo(() => {
-    const { default: defaultButton, anchor } = button({
+    const { button, anchor } = button({
       variant,
       size,
       square,
@@ -59,7 +59,7 @@ export function ButtonWrapper({
     const commonProps = { className }
 
     return {
-      buttonStyle: defaultButton(commonProps),
+      buttonStyle: button(commonProps),
       anchorStyle: anchor(commonProps),
     }
   }, [$loading, className, size, square, variant, wide])
@@ -87,7 +87,7 @@ export function ButtonWrapper({
 
 const button = tv({
   slots: {
-    default: [
+    button: [
       'aria-disabled:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       'aria-disabled:shr-bg-clip-padding',
@@ -128,7 +128,7 @@ const button = tv({
   },
   compoundSlots: [
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       className: [
         'shr-box-border',
         'shr-cursor-pointer',
@@ -155,7 +155,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 's',
       className: [
         'shr-p-0.5',
@@ -165,34 +165,34 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 'default',
       className: ['shr-text-base'],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 'default',
       square: false,
       className: 'shr-px-1 shr-py-0.75',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 'default',
       square: true,
       className: 'shr-p-0.75',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       loading: true,
       className: 'shr-flex-row-reverse',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       wide: true,
       className: 'shr-w-full',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'primary',
       className: [
         'shr-border-main',
@@ -205,7 +205,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'primary',
       className: [
         'aria-disabled:shr-border-main/50',
@@ -223,7 +223,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'secondary',
       className: [
         'shr-border-default',
@@ -238,7 +238,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'secondary',
       className: [
         'aria-disabled:shr-border-disabled',
@@ -256,7 +256,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'danger',
       className: [
         'shr-border-danger',
@@ -269,7 +269,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'danger',
       className: [
         'aria-disabled:shr-border-danger/50',
@@ -287,7 +287,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'skeleton',
       className: [
         'shr-border-white',
@@ -302,7 +302,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'skeleton',
       className: [
         'aria-disabled:shr-border-white/50',
@@ -320,7 +320,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'text',
       className: [
         'shr-border-transparent',
@@ -331,7 +331,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'text',
       className: [
         'aria-disabled:shr-border-transparent',
