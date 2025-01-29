@@ -33,6 +33,7 @@ type Props = {
   value?: Date
 }
 type ElementProps = Omit<ComponentProps<'section'>, keyof Props>
+type DayJsType = ReturnType<typeof dayjs>
 
 const calendar = tv({
   slots: {
@@ -128,15 +129,6 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       setIsSelectingYear((current) => !current)
     }, [])
 
-    const onClickMonthPrev = useCallback(
-      () => setCurrentMonth(calculatedCurrentMonth.prev),
-      [calculatedCurrentMonth.prev],
-    )
-    const onClickMonthNext = useCallback(
-      () => setCurrentMonth(calculatedCurrentMonth.next),
-      [calculatedCurrentMonth.next],
-    )
-
     return (
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       <Section {...props} ref={ref} className={styles.container}>
@@ -158,26 +150,14 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
               <FaCaretDownIcon alt="年を選択する" />
             )}
           </Button>
-          <Cluster gap={0.5} className={styles.monthButtons}>
-            <Button
-              disabled={isSelectingYear || calculatedCurrentMonth.prev.isBefore(froms.day, 'month')}
-              onClick={onClickMonthPrev}
-              size="s"
-              square
-              className="smarthr-ui-Calendar-monthButtonPrev"
-            >
-              <FaChevronLeftIcon alt="前の月へ" />
-            </Button>
-            <Button
-              disabled={isSelectingYear || calculatedCurrentMonth.next.isAfter(tos.day, 'month')}
-              onClick={onClickMonthNext}
-              size="s"
-              square
-              className="smarthr-ui-Calendar-monthButtonNext"
-            >
-              <FaChevronRightIcon alt="次の月へ" />
-            </Button>
-          </Cluster>
+          <MonthDirectionCluster
+            isSelectingYear={isSelectingYear}
+            directionMonth={calculatedCurrentMonth}
+            from={froms.day}
+            to={tos.day}
+            setCurrentMonth={setCurrentMonth}
+            className={styles.monthButtons}
+          />
         </header>
         <div className={styles.tableLayout}>
           <YearPicker
@@ -200,3 +180,54 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     )
   },
 )
+
+const MonthDirectionCluster = React.memo<{
+  isSelectingYear: boolean
+  directionMonth: {
+    prev: DayJsType
+    next: DayJsType
+  }
+  from: DayJsType
+  to: DayJsType
+  setCurrentMonth: (day: DayJsType) => void
+  className: string
+}>(({
+  isSelectingYear,
+  directionMonth: { prev, next },
+  from,
+  to,
+  setCurrentMonth,
+  className
+}) => {
+  const onClickMonthPrev = useCallback(
+    () => setCurrentMonth(prev),
+    [prev, setCurrentMonth],
+  )
+  const onClickMonthNext = useCallback(
+    () => setCurrentMonth(next),
+    [next, setCurrentMonth],
+  )
+
+  return (
+    <Cluster gap={0.5} className={className}>
+      <Button
+        disabled={isSelectingYear || prev.isBefore(from, 'month')}
+        onClick={onClickMonthPrev}
+        size="s"
+        square
+        className="smarthr-ui-Calendar-monthButtonPrev"
+      >
+        <FaChevronLeftIcon alt="前の月へ" />
+      </Button>
+      <Button
+        disabled={isSelectingYear || next.isAfter(to, 'month')}
+        onClick={onClickMonthNext}
+        size="s"
+        square
+        className="smarthr-ui-Calendar-monthButtonNext"
+      >
+        <FaChevronRightIcon alt="次の月へ" />
+      </Button>
+    </Cluster>
+  )
+})
