@@ -54,7 +54,7 @@ export function ButtonWrapper({
   ...props
 }: Props) {
   const wrapperStyle = useMemo(() => {
-    const { button, anchor } = button({
+    const generate = button({
       variant,
       size,
       square,
@@ -62,7 +62,7 @@ export function ButtonWrapper({
       wide,
     })
 
-    const wrapper = isAnchor ? anchor : button
+    const wrapper = isAnchor ? generate.anchor : generate.button
 
     return wrapper({ className })
   }, [$loading, size, square, variant, wide, className, isAnchor])
@@ -75,7 +75,7 @@ export function ButtonWrapper({
     return (
       <Component {...others} className={wrapperStyle} ref={anchorRef}>
         {prefix}
-        <span className={innerStyle} />
+        <span className={innerStyle}>{children}</span>
         {suffix}
       </Component>
     )
@@ -92,7 +92,7 @@ export function ButtonWrapper({
         onClick={disabled ? EVENT_CANCELLER : onClick}
       >
         {prefix}
-        <span className={innerStyle} />
+        <span className={innerStyle}>{children}</span>
         {suffix}
       </button>
     )

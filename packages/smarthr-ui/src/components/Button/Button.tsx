@@ -3,7 +3,7 @@
 import React, { ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { usePortal } from '../../hooks/usePortal'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -38,10 +38,13 @@ const buttonStyle = tv({
 })
 
 export type Props = {
-  decorators?: DecoratorsType<'loading'>
+  decorators?: DecoratorsType<DECORATOR_DEFAULT_TEXTS>
 }
 
-const LOADING_TEXT = '処理中'
+const DECORATOR_DEFAULT_TEXTS = {
+  loading: '処理中',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & Props>(
   (
@@ -92,10 +95,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
       }
     }
 
-    const statusText = useMemo(() => {
-      const loadingText = decorators?.loading?.(LOADING_TEXT) ?? LOADING_TEXT
-      return loading ? loadingText : ''
-    }, [decorators, loading])
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const button = (
       <ButtonWrapper
@@ -114,7 +114,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
       >
         {
           // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-          createPortal(<VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>)
+          createPortal(<VisuallyHiddenText role="status">{loading ? decorated.loading : ''}</VisuallyHiddenText>)
         }
         {actualChildren}
       </ButtonWrapper>
