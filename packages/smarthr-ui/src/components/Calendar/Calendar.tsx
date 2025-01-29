@@ -58,11 +58,21 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         tableLayout: tableLayout(),
       }
     }, [className])
-    const fromDate = dayjs(getFromDate(from))
+
+    const froms = useMemo(() => {
+      day = dayjs(getFromDate(from))
+
+      return {
+        day,
+        date: day.toDate(),
+        year: day.year(),
+      }
+    }, [from])
+
     const toDate = dayjs(getToDate(to))
     const today = dayjs()
-    const currentDay = toDate.isBefore(today) ? toDate : fromDate.isAfter(today) ? fromDate : today
-    const isValidValue = value && isBetween(value, fromDate.toDate(), toDate.toDate())
+    const currentDay = toDate.isBefore(today) ? toDate : froms.day.isAfter(today) ? froms.day : today
+    const isValidValue = value && isBetween(value, froms.date, toDate.toDate())
 
     const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : currentDay)
     const [isSelectingYear, setIsSelectingYear] = useState(false)
@@ -109,7 +119,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           </Button>
           <Cluster gap={0.5} className={styles.monthButtons}>
             <Button
-              disabled={isSelectingYear || prevMonth.isBefore(fromDate, 'month')}
+              disabled={isSelectingYear || prevMonth.isBefore(froms.day, 'month')}
               onClick={() => setCurrentMonth(prevMonth)}
               size="s"
               square
@@ -130,7 +140,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         </header>
         <div className={styles.tableLayout}>
           <YearPicker
-            fromYear={fromDate.year()}
+            fromYear={froms.year}
             toYear={toDate.year()}
             selectedYear={value?.getFullYear()}
             onSelectYear={onSelectYear}
@@ -139,7 +149,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           />
           <CalendarTable
             current={currentMonth.toDate()}
-            from={fromDate.toDate()}
+            from={froms.date}
             to={toDate.toDate()}
             onSelectDate={onSelectDate}
             selected={isValidValue ? value : null}
