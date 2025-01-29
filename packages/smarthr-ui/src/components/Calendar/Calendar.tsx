@@ -123,6 +123,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       [currentMonth],
     )
 
+    const onClickSelectYear = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      setIsSelectingYear((current) => !current)
+    }, [])
+
     const onClickMonthPrev = useCallback(
       () => setCurrentMonth(calculatedCurrentMonth.prev),
       [calculatedCurrentMonth.prev],
@@ -140,14 +145,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             {calculatedCurrentMonth.year}年{calculatedCurrentMonth.month}月
           </div>
           <Button
-            onClick={(e) => {
-              e.stopPropagation()
-              setIsSelectingYear(!isSelectingYear)
-            }}
             size="s"
             square
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
+            onClick={onClickSelectYear}
             className="smarthr-ui-Calendar-selectingYear"
           >
             {isSelectingYear ? (
