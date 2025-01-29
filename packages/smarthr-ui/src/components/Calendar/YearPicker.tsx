@@ -1,17 +1,9 @@
-import React, {
-  ComponentProps,
-  FC,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { ComponentProps, FC, RefObject, useEffect, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 
-type Props = {
+type AbstractProps = {
   /** 選択された年 */
   selectedYear?: number
   /** 選択可能な開始年 */
@@ -25,12 +17,13 @@ type Props = {
   /** HTMLのid属性 */
   id: string
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
+type ActualProps = Omit<Props, 'isDisplayed'>
 
 const yearPicker = tv({
   slots: {
-    overlay:
-      'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white [[data-displayed="true"]>&]:shr-hidden',
+    overlay: 'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white',
     container:
       'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-overflow-y-auto shr-px-0.25 shr-py-0.5',
     yearButton:
@@ -43,12 +36,14 @@ const yearPicker = tv({
   },
 })
 
-export const YearPicker: FC<Props & ElementProps> = ({
+export const YearPicker: FC<Props & ElementProps> = ({ isDisplayed, ...rest }) =>
+  isDisplayed ? <ActualYearPicker {...rest} /> : null
+
+const ActualYearPicker: FC<ActualProps> = ({
   selectedYear,
   fromYear,
   toYear,
   onSelectYear,
-  isDisplayed,
   id,
   ...props
 }) => {
@@ -67,7 +62,7 @@ export const YearPicker: FC<Props & ElementProps> = ({
   const thisYear = useMemo(() => new Date().getFullYear(), [])
   const yearArray = useMemo(() => {
     const length = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
-    let result: number[] = []
+    const result: number[] = []
 
     for (let i = 0; i < length; i++) {
       result[i] = fromYear + i
@@ -77,19 +72,20 @@ export const YearPicker: FC<Props & ElementProps> = ({
   }, [toYear, fromYear])
 
   useEffect(() => {
-    if (focusingRef.current && isDisplayed) {
+    if (focusingRef.current) {
       // HINT: 現在の年に一度focusを当てることでtab移動をしやすくする
       // focusを当てたままでは違和感があるため、blurで解除している
       focusingRef.current.focus()
       focusingRef.current.blur()
     }
-  }, [isDisplayed])
+  }, [])
 
   return (
-    <div {...props} id={id} data-displayed={isDisplayed} className={styles.overlay}>
+    <div {...props} id={id} className={styles.overlay}>
       <div className={styles.container}>
         {yearArray.map((year) => (
           <YearButton
+            key={year}
             year={year}
             thisYear={thisYear}
             selected={selectedYear === year}

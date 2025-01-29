@@ -15,7 +15,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
-import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
+import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 
 import { CalendarTable } from './CalendarTable'
@@ -43,13 +43,16 @@ const calendar = tv({
     yearMonth: 'smarthr-ui-Calendar-yearMonth shr-me-0.5 shr-text-base shr-font-bold',
     monthButtons: 'smarthr-ui-Calendar-monthButtons shr-ms-auto shr-flex',
     tableLayout: 'shr-relative',
+    yearSelectButton:
+      'smarthr-ui-Calendar-selectingYear [&[aria-expanded="true"]_.smarthr-ui-Icon]:shr-rotate-180',
   },
 })
 
 export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
     const styles = useMemo(() => {
-      const { container, yearMonth, header, monthButtons, tableLayout } = calendar()
+      const { container, yearMonth, header, monthButtons, tableLayout, yearSelectButton } =
+        calendar()
 
       return {
         container: container({ className }),
@@ -57,10 +60,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         yearMonth: yearMonth(),
         monthButtons: monthButtons(),
         tableLayout: tableLayout(),
+        yearSelectButton: yearSelectButton(),
       }
     }, [className])
 
-    const froms = useMemo(() => {
+    const formattedFrom = useMemo(() => {
       const day = dayjs(getFromDate(from))
 
       return {
@@ -69,7 +73,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         year: day.year(),
       }
     }, [from])
-    const tos = useMemo(() => {
+    const formattedTo = useMemo(() => {
       const day = dayjs(getToDate(to))
 
       return {
@@ -80,8 +84,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     }, [to])
 
     const isValidValue = useMemo(
-      () => value && isBetween(value, froms.date, tos.date),
-      [value, froms.date, tos.date],
+      () => value && isBetween(value, formattedFrom.date, formattedTo.date),
+      [value, formattedFrom.date, formattedTo.date],
     )
 
     const [currentMonth, setCurrentMonth] = useState(
@@ -92,7 +96,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
 
         const today = dayjs()
 
-        return tos.day.isBefore(today) ? tos.day : froms.day.isAfter(today) ? froms.day : today
+        return formattedTo.day.isBefore(today)
+          ? formattedTo.day
+          : formattedFrom.day.isAfter(today)
+            ? formattedFrom.day
+            : today
       })(),
     )
     const [isSelectingYear, setIsSelectingYear] = useState(false)
@@ -100,7 +108,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     const yearPickerId = useId()
 
     useEffect(() => {
-      if (value && isValidValue) {
+      if (isValidValue) {
         setCurrentMonth(dayjs(value))
       }
     }, [value, isValidValue])
@@ -138,20 +146,21 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
             onClick={onClickSelectYear}
+            className={styles.yearSelectButton}
           />
           <MonthDirectionCluster
             isSelectingYear={isSelectingYear}
             directionMonth={calculatedCurrentMonth}
-            from={froms.day}
-            to={tos.day}
+            from={formattedFrom.day}
+            to={formattedTo.day}
             setCurrentMonth={setCurrentMonth}
             className={styles.monthButtons}
           />
         </header>
         <div className={styles.tableLayout}>
           <YearPicker
-            fromYear={froms.year}
-            toYear={tos.year}
+            fromYear={formattedFrom.year}
+            toYear={formattedTo.year}
             selectedYear={value?.getFullYear()}
             onSelectYear={onSelectYear}
             isDisplayed={isSelectingYear}
@@ -159,8 +168,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           />
           <CalendarTable
             current={calculatedCurrentMonth.date}
-            from={froms.date}
-            to={tos.date}
+            from={formattedFrom.date}
+            to={formattedTo.date}
             onSelectDate={onSelectDate}
             selected={isValidValue ? value : null}
           />
@@ -178,13 +187,10 @@ const YearSelectButton = React.memo<{
   'aria-expanded': boolean
   'aria-controls': string
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  className: string
 }>((rest) => (
-  <Button {...rest} size="s" square className="smarthr-ui-Calendar-selectingYear">
-    {rest['aria-expanded'] ? (
-      <FaCaretUpIcon alt="年を選択する" />
-    ) : (
-      <FaCaretDownIcon alt="年を選択する" />
-    )}
+  <Button {...rest} size="s" square>
+    <FaCaretDownIcon alt="年を選択する" />
   </Button>
 ))
 
