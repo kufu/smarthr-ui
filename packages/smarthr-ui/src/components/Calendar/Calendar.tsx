@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import React, {
   ComponentProps,
   MouseEvent,
+  PropsWithChildren,
   forwardRef,
   useCallback,
   useEffect,
@@ -16,7 +17,6 @@ import { tv } from 'tailwind-variants'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
-import { Section } from '../SectioningContent'
 
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
@@ -32,7 +32,7 @@ type Props = {
   /** 選択された日付 */
   value?: Date
 }
-type ElementProps = Omit<ComponentProps<'section'>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 type DayJsType = ReturnType<typeof dayjs>
 
 const calendar = tv({
@@ -109,9 +109,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       () => ({
         prev: currentMonth.subtract(1, 'month'),
         next: currentMonth.add(1, 'month'),
-        year: currentMonth.year(),
-        month: currentMonth.month() + 1,
         date: currentMonth.toDate(),
+        yearMonthStr: `${currentMonth.year()}年${currentMonth.month() + 1}月`,
       }),
       [currentMonth],
     )
@@ -130,12 +129,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     }, [])
 
     return (
-      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-      <Section {...props} ref={ref} className={styles.container}>
+      <div {...props} ref={ref} className={styles.container}>
         <header className={styles.header}>
-          <div className={styles.yearMonth}>
-            {calculatedCurrentMonth.year}年{calculatedCurrentMonth.month}月
-          </div>
+          <YearMonthRender className={styles.yearMonth}>
+            {calculatedCurrentMonth.yearMonthStr}
+          </YearMonthRender>
           <YearSelectButton
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
@@ -167,9 +165,13 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             selected={isValidValue ? value : null}
           />
         </div>
-      </Section>
+      </div>
     )
   },
+)
+
+const YearMonthRender = React.memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => <div className={className}>{children}</div>,
 )
 
 const YearSelectButton = React.memo<{
