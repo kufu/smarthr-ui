@@ -61,7 +61,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   }, [className])
 
   const currentDay = useMemo(() => dayjs(current), [current])
-  const selectedDay = useMemo(() => (selected ? dayjs(selected) : null), [selected])
+  const selectedDayStr = useMemo(() => (selected ? dayjs(selected).toString() : ''), [selected])
 
   const fromDate = useMemo(() => dayjs(from).toDate(), [from])
   const toDate = useMemo(() => dayjs(to).toDate(), [to])
@@ -94,7 +94,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                   <SelectButtonTd
                     date={date}
                     currentDay={currentDay}
-                    selectedDay={selectedDay}
+                    selectedDayStr={selectedDayStr}
                     fromDate={fromDate}
                     toDate={toDate}
                     nowDateStr={nowDateStr}
@@ -114,7 +114,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
 const SelectButtonTd = React.memo<{
   date: number
   currentDay: DayJsType
-  selectedDay: DayJsType | null
+  selectedDayStr: string
   fromDate: Date
   toDate: Date
   nowDateStr: string
@@ -124,7 +124,7 @@ const SelectButtonTd = React.memo<{
     cellButton: string
     dateCell: string
   }
-}>(({ date, currentDay, selectedDay, fromDate, toDate, nowDateStr, styles }) => {
+}>(({ date, currentDay, selectedDayStr, fromDate, toDate, nowDateStr, styles }) => {
   const target = useMemo(() => {
     const day = currentDay.date(date)
 
@@ -137,13 +137,17 @@ const SelectButtonTd = React.memo<{
     () => !isBetween(target.date, fromDate, toDate),
     [target.date, fromDate, toDate],
   )
+  const ariaPressed = useMemo(
+    () => target.day.isSame(selectedDayStr, 'date'),
+    [selectedDayStr, target.day],
+  )
 
   return (
     <td className={styles.td}>
       <UnstyledButton
         type="button"
         disabled={disabled}
-        aria-pressed={selectedDay && target.day.isSame(selectedDay, 'date') ? true : false}
+        aria-pressed={ariaPressed}
         onClick={(e) => onClick(e, target.date)}
         className={styles.cellButton}
         data-is-today={target.day.isSame(nowDateStr, 'date')}
