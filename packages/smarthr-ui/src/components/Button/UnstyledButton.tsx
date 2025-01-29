@@ -13,5 +13,6 @@ export const UnstyledButton = forwardRef<
   PropsWithChildren<ComponentProps<'button'>>
 >(({ className, type = 'button', ...props }, ref) => {
   const styles = useMemo(() => unstyledButton({ className }), [className])
+
   return <button {...props} type={type} ref={ref} className={styles} />
 })

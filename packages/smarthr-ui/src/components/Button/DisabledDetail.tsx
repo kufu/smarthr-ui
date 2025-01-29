@@ -1,4 +1,4 @@
-import React, { type FC } from 'react'
+import React, { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleInfoIcon } from '../Icon'
@@ -31,18 +31,25 @@ const disabledDetailStyle = tv({
 })
 
 export const DisabledDetail: FC<DisabledDetailProps> = ({ button, disabledDetail }) => {
-  const { disabledWrapper, disabledTooltip } = disabledDetailStyle()
+  const styles = useMemo(() => {
+    const { disabledWrapper, disabledTooltip } = disabledDetailStyle()
+
+    return {
+      disabledWrapper: disabledWrapper(),
+      disabledTooltip: disabledTooltip(),
+    }
+  }, [])
   const DisabledDetailIcon = disabledDetail.icon ?? FaCircleInfoIcon
 
   return (
-    <div className={disabledWrapper()}>
+    <div className={styles.disabledWrapper}>
       {button}
       <Tooltip
         message={disabledDetail.message}
         triggerType="icon"
         horizontal="auto"
         vertical="auto"
-        className={disabledTooltip()}
+        className={styles.disabledTooltip}
       >
         <DisabledDetailIcon />
       </Tooltip>
