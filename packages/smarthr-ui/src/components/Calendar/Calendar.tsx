@@ -119,6 +119,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         next: currentMonth.add(1, 'month'),
         date: currentMonth.toDate(),
         yearMonthStr: `${currentMonth.year()}年${currentMonth.month() + 1}月`,
+        selectedStr: currentMonth.toString(),
       }),
       [currentMonth],
     )
@@ -171,7 +172,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             from={formattedFrom.date}
             to={formattedTo.date}
             onSelectDate={onSelectDate}
-            selected={isValidValue ? value : null}
+            selectedDayStr={isValidValue ? calculatedCurrentMonth.selectedStr : ''}
           />
         </div>
       </div>

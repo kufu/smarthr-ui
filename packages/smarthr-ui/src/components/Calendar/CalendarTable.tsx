@@ -16,7 +16,7 @@ type Props = {
   /** トリガのセレクトイベントを処理するハンドラ */
   onSelectDate: (e: MouseEvent, date: Date) => void
   /** 選択された日付 */
-  selected?: Date | null
+  selectedDayStr: ''
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
@@ -43,7 +43,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   from,
   to,
   onSelectDate,
-  selected,
+  selectedDayStr,
   className,
   ...props
 }) => {
@@ -61,8 +61,6 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   }, [className])
 
   const currentDay = useMemo(() => dayjs(current), [current])
-  const selectedDayStr = useMemo(() => (selected ? dayjs(selected).toString() : ''), [selected])
-
   const fromDate = useMemo(() => dayjs(from).toDate(), [from])
   const toDate = useMemo(() => dayjs(to).toDate(), [to])
 
