@@ -191,22 +191,9 @@ const MonthDirectionCluster = React.memo<{
   to: DayJsType
   setCurrentMonth: (day: DayJsType) => void
   className: string
-}>(({
-  isSelectingYear,
-  directionMonth: { prev, next },
-  from,
-  to,
-  setCurrentMonth,
-  className
-}) => {
-  const onClickMonthPrev = useCallback(
-    () => setCurrentMonth(prev),
-    [prev, setCurrentMonth],
-  )
-  const onClickMonthNext = useCallback(
-    () => setCurrentMonth(next),
-    [next, setCurrentMonth],
-  )
+}>(({ isSelectingYear, directionMonth: { prev, next }, from, to, setCurrentMonth, className }) => {
+  const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
+  const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
 
   return (
     <Cluster gap={0.5} className={className}>
