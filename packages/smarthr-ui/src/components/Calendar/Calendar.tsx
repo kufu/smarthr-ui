@@ -104,25 +104,31 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       }
     }, [value, isValidValue])
 
-    const directionMonth = useMemo(
+    const calculatedCurrentMonth = useMemo(
       () => ({
         prev: currentMonth.subtract(1, 'month'),
         next: currentMonth.add(1, 'month'),
+        year: currentMonth.year(),
+        month: currentMonth.month() + 1,
+        date: currentMonth.toDate(),
       }),
       [currentMonth],
     )
 
-    const onSelectYear = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-      setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
-      setIsSelectingYear(false)
-    }, [currentMonth])
+    const onSelectYear = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
+        setIsSelectingYear(false)
+      },
+      [currentMonth],
+    )
 
     return (
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       <Section {...props} ref={ref} className={styles.container}>
         <header className={styles.header}>
           <div className={styles.yearMonth}>
-            {currentMonth.year()}年{currentMonth.month() + 1}月
+            {calculatedCurrentMonth.year}年{calculatedCurrentMonth.month}月
           </div>
           <Button
             onClick={(e) => {
@@ -143,8 +149,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           </Button>
           <Cluster gap={0.5} className={styles.monthButtons}>
             <Button
-              disabled={isSelectingYear || directionMonth.prev.isBefore(froms.day, 'month')}
-              onClick={() => setCurrentMonth(directionMonth.prev)}
+              disabled={isSelectingYear || calculatedCurrentMonth.prev.isBefore(froms.day, 'month')}
+              onClick={() => setCurrentMonth(calculatedCurrentMonth.prev)}
               size="s"
               square
               className="smarthr-ui-Calendar-monthButtonPrev"
@@ -152,8 +158,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
               <FaChevronLeftIcon alt="前の月へ" />
             </Button>
             <Button
-              disabled={isSelectingYear || directionMonth.next.isAfter(tos.day, 'month')}
-              onClick={() => setCurrentMonth(directionMonth.next)}
+              disabled={isSelectingYear || calculatedCurrentMonth.next.isAfter(tos.day, 'month')}
+              onClick={() => setCurrentMonth(calculatedCurrentMonth.next)}
               size="s"
               square
               className="smarthr-ui-Calendar-monthButtonNext"
@@ -172,7 +178,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             id={yearPickerId}
           />
           <CalendarTable
-            current={currentMonth.toDate()}
+            current={calculatedCurrentMonth.date}
             from={froms.date}
             to={tos.date}
             onSelectDate={onSelectDate}
