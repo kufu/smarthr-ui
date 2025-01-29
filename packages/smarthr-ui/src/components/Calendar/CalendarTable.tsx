@@ -92,6 +92,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
 
                 return (
                   <SelectButtonTd
+                    key={dateIndex}
                     date={date}
                     currentDay={currentDay}
                     selectedDayStr={selectedDayStr}
@@ -141,6 +142,7 @@ const SelectButtonTd = React.memo<{
     () => target.day.isSame(selectedDayStr, 'date'),
     [selectedDayStr, target.day],
   )
+  const dataIsToday = useMemo(() => target.day.isSame(nowDateStr, 'date'), [nowDateStr, target.day])
 
   return (
     <td className={styles.td}>
@@ -150,7 +152,7 @@ const SelectButtonTd = React.memo<{
         aria-pressed={ariaPressed}
         onClick={(e) => onClick(e, target.date)}
         className={styles.cellButton}
-        data-is-today={target.day.isSame(nowDateStr, 'date')}
+        data-is-today={dataIsToday}
       >
         <span className={styles.dateCell}>{date}</span>
       </UnstyledButton>
