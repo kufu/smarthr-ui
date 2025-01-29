@@ -78,7 +78,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       }
     }, [to])
 
-    const isValidValue = value && isBetween(value, froms.date, tos.date)
+    const isValidValue = useMemo(() => value && isBetween(value, froms.date, tos.date), [value, froms.date, tos.date])
 
     const [currentMonth, setCurrentMonth] = useState(
       (() => {
