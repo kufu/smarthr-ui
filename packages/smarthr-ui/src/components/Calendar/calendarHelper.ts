@@ -36,16 +36,24 @@ export function getMonthArray(date: Date) {
   const lastDate = day.add(1, 'month').date(0).date()
   const numOfWeek = Math.ceil((lastDate + startDay) / 7)
 
-  return Array.from({ length: numOfWeek }).map((_, weekIndex) => {
+  const result: Array<Array<number | null>> = []
+
+  for (let weekIndex = 0; weekIndex < numOfWeek; weekIndex++) {
     // 週毎の配列を形成
     const startDateInWeek = weekIndex * 7 - startDay + 1
-    return Array.from({ length: 7 }).map((__, dateIndex) => {
+    const weekNumbers: Array<number | null> = []
+
+    for (let dateIndex = 0; dateIndex < 7; dateIndex++) {
       // 1週の配列を形成
       const dateNum = startDateInWeek + dateIndex
 
-      return dateNum > 0 && dateNum <= lastDate ? dateNum : null
-    })
-  })
+      weekNumbers[dateIndex] = dateNum > 0 && dateNum <= lastDate ? dateNum : null
+    }
+
+    result[weekIndex] = weekNumbers
+  }
+
+  return result
 }
 
 export function isBetween(date: Date, from: Date, to: Date) {
