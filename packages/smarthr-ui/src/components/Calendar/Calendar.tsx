@@ -140,7 +140,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
             onClick={onClickSelectYear}
-          ></YearSelectButton>
+          />
           <MonthDirectionCluster
             isSelectingYear={isSelectingYear}
             directionMonth={calculatedCurrentMonth}
