@@ -78,7 +78,10 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       }
     }, [to])
 
-    const isValidValue = useMemo(() => value && isBetween(value, froms.date, tos.date), [value, froms.date, tos.date])
+    const isValidValue = useMemo(
+      () => value && isBetween(value, froms.date, tos.date),
+      [value, froms.date, tos.date],
+    )
 
     const [currentMonth, setCurrentMonth] = useState(
       (() => {
@@ -101,13 +104,18 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       }
     }, [value, isValidValue])
 
-    const prevMonth = currentMonth.subtract(1, 'month')
-    const nextMonth = currentMonth.add(1, 'month')
+    const directionMonth = useMemo(
+      () => ({
+        prev: currentMonth.subtract(1, 'month'),
+        next: currentMonth.add(1, 'month'),
+      }),
+      [currentMonth],
+    )
 
     const onSelectYear = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
       setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
       setIsSelectingYear(false)
-    }, [])
+    }, [currentMonth])
 
     return (
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
@@ -135,8 +143,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           </Button>
           <Cluster gap={0.5} className={styles.monthButtons}>
             <Button
-              disabled={isSelectingYear || prevMonth.isBefore(froms.day, 'month')}
-              onClick={() => setCurrentMonth(prevMonth)}
+              disabled={isSelectingYear || directionMonth.prev.isBefore(froms.day, 'month')}
+              onClick={() => setCurrentMonth(directionMonth.prev)}
               size="s"
               square
               className="smarthr-ui-Calendar-monthButtonPrev"
@@ -144,8 +152,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
               <FaChevronLeftIcon alt="前の月へ" />
             </Button>
             <Button
-              disabled={isSelectingYear || nextMonth.isAfter(tos.day, 'month')}
-              onClick={() => setCurrentMonth(nextMonth)}
+              disabled={isSelectingYear || directionMonth.next.isAfter(tos.day, 'month')}
+              onClick={() => setCurrentMonth(directionMonth.next)}
               size="s"
               square
               className="smarthr-ui-Calendar-monthButtonNext"
