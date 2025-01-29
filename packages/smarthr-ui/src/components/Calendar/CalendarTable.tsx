@@ -87,7 +87,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
             <tr key={weekIndex}>
               {week.map((date, dateIndex) => {
                 if (!date) {
-                  return <td key={dateIndex} className={styles.td} />
+                  return <NullTd key={dateIndex} className={styles.td} />
                 }
 
                 return (
@@ -111,6 +111,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     </div>
   )
 }
+
+const NullTd = React.memo<{ className: string }>(({ className }) => <td className={className} />)
 
 const SelectButtonTd = React.memo<{
   date: number
@@ -167,6 +169,6 @@ const SelectButtonTd = React.memo<{
   )
 })
 
-const SelectButtonTdDateCell = React.memo<{ children: number, className: string }>(({ children, className }) => (
-  <span className={className}>{children}</span>
-))
+const SelectButtonTdDateCell = React.memo<{ children: number; className: string }>(
+  ({ children, className }) => <span className={className}>{children}</span>,
+)
