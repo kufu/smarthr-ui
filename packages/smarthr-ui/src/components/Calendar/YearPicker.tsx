@@ -1,12 +1,4 @@
-import React, {
-  ComponentProps,
-  FC,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { ComponentProps, FC, RefObject, useEffect, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -67,7 +59,7 @@ export const YearPicker: FC<Props & ElementProps> = ({
   const thisYear = useMemo(() => new Date().getFullYear(), [])
   const yearArray = useMemo(() => {
     const length = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
-    let result: number[] = []
+    const result: number[] = []
 
     for (let i = 0; i < length; i++) {
       result[i] = fromYear + i
@@ -90,6 +82,7 @@ export const YearPicker: FC<Props & ElementProps> = ({
       <div className={styles.container}>
         {yearArray.map((year) => (
           <YearButton
+            key={year}
             year={year}
             thisYear={thisYear}
             selected={selectedYear === year}

@@ -83,7 +83,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                 }
 
                 return (
-                  <SelectButtonTd
+                  <SelectTdButton
                     key={dateIndex}
                     date={date}
                     currentDay={currentDay}
@@ -118,7 +118,7 @@ const MemoizedThead = React.memo<{ thStyle: string }>(({ thStyle }) => (
 
 const NullTd = React.memo<{ className: string }>(({ className }) => <td className={className} />)
 
-const SelectButtonTd = React.memo<{
+const SelectTdButton = React.memo<{
   date: number
   currentDay: DayJsType
   selectedDayStr: string
@@ -131,7 +131,7 @@ const SelectButtonTd = React.memo<{
     cellButton: string
     dateCell: string
   }
-}>(({ date, currentDay, selectedDayStr, fromDate, toDate, nowDateStr, styles }) => {
+}>(({ date, currentDay, selectedDayStr, fromDate, toDate, nowDateStr, onClick, styles }) => {
   const target = useMemo(() => {
     const day = currentDay.date(date)
 
