@@ -60,7 +60,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     }, [className])
 
     const froms = useMemo(() => {
-      day = dayjs(getFromDate(from))
+      const day = dayjs(getFromDate(from))
 
       return {
         day,
@@ -68,13 +68,29 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         year: day.year(),
       }
     }, [from])
+    const tos = useMemo(() => {
+      const day = dayjs(getToDate(to))
 
-    const toDate = dayjs(getToDate(to))
-    const today = dayjs()
-    const currentDay = toDate.isBefore(today) ? toDate : froms.day.isAfter(today) ? froms.day : today
-    const isValidValue = value && isBetween(value, froms.date, toDate.toDate())
+      return {
+        day,
+        date: day.toDate(),
+        year: day.year(),
+      }
+    }, [to])
 
-    const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : currentDay)
+    const isValidValue = value && isBetween(value, froms.date, tos.date)
+
+    const [currentMonth, setCurrentMonth] = useState(
+      (() => {
+        if (isValidValue) {
+          return dayjs(value)
+        }
+
+        const today = dayjs()
+
+        return tos.day.isBefore(today) ? tos.day : froms.day.isAfter(today) ? froms.day : today
+      })(),
+    )
     const [isSelectingYear, setIsSelectingYear] = useState(false)
 
     const yearPickerId = useId()
@@ -128,7 +144,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
               <FaChevronLeftIcon alt="前の月へ" />
             </Button>
             <Button
-              disabled={isSelectingYear || nextMonth.isAfter(toDate, 'month')}
+              disabled={isSelectingYear || nextMonth.isAfter(tos.day, 'month')}
               onClick={() => setCurrentMonth(nextMonth)}
               size="s"
               square
@@ -141,7 +157,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         <div className={styles.tableLayout}>
           <YearPicker
             fromYear={froms.year}
-            toYear={toDate.year()}
+            toYear={tos.year}
             selectedYear={value?.getFullYear()}
             onSelectYear={onSelectYear}
             isDisplayed={isSelectingYear}
@@ -150,7 +166,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           <CalendarTable
             current={currentMonth.toDate()}
             from={froms.date}
-            to={toDate.toDate()}
+            to={tos.date}
             onSelectDate={onSelectDate}
             selected={isValidValue ? value : null}
           />
