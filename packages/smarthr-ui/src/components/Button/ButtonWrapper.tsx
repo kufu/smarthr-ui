@@ -33,6 +33,11 @@ type Props =
   | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
   | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
 
+const EVENT_CANCELLER = (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 export function ButtonWrapper({
   variant,
   size,
@@ -51,9 +56,11 @@ export function ButtonWrapper({
       wide,
     })
 
+    const commonProps = { className }
+
     return {
-      buttonStyle: defaultButton({ className }),
-      anchorStyle: anchor({ className }),
+      buttonStyle: defaultButton(commonProps),
+      anchorStyle: anchor(commonProps),
     }
   }, [$loading, className, size, square, variant, wide])
 
@@ -64,6 +71,7 @@ export function ButtonWrapper({
     return <Component {...others} className={anchorStyle} ref={anchorRef} />
   } else {
     const { buttonRef, disabled, onClick, ...others } = props
+
     return (
       // eslint-disable-next-line smarthr/best-practice-for-button-element
       <button
@@ -71,14 +79,7 @@ export function ButtonWrapper({
         aria-disabled={disabled}
         className={buttonStyle}
         ref={buttonRef}
-        onClick={
-          disabled
-            ? (e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }
-            : onClick
-        }
+        onClick={disabled ? EVENT_CANCELLER : onClick}
       />
     )
   }
