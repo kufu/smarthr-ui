@@ -4,11 +4,14 @@ import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 
-import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
+import { daysInWeek, isBetween } from './calendarHelper'
 
 type Props = {
   /** 現在の日付 */
-  current: Date
+  current: {
+    day: DayJsType
+    months: Array<Array<number | null>>
+  }
   /** 選択可能な開始日 */
   from: Date
   /** 選択可能な終了日 */
@@ -60,14 +63,6 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     }
   }, [className])
 
-  const calculatedCurrent = useMemo(
-    () => ({
-      day: dayjs(current),
-      months: getMonthArray(current),
-    }),
-    [current],
-  )
-
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
   const nowDateStr = dayjs().startOf('date').toString()
 
@@ -76,7 +71,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
       <table {...props} className={styles.table}>
         <MemoizedThead thStyle={styles.th} />
         <tbody>
-          {calculatedCurrent.months.map((week, weekIndex) => (
+          {current.months.map((week, weekIndex) => (
             <tr key={weekIndex}>
               {week.map((date, dateIndex) => {
                 if (!date) {
@@ -87,7 +82,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                   <SelectTdButton
                     key={dateIndex}
                     date={date}
-                    calculatedCurrent={calculatedCurrent}
+                    currentDay={current.day}
                     selectedDayStr={selectedDayStr}
                     from={from}
                     to={to}
@@ -121,9 +116,7 @@ const NullTd = React.memo<{ className: string }>(({ className }) => <td classNam
 
 const SelectTdButton = React.memo<{
   date: number
-  calculatedCurrent: {
-    day: DayJsType
-  }
+  currentDayDayJsType
   selectedDayStr: string
   from: Date
   to: Date
@@ -134,15 +127,15 @@ const SelectTdButton = React.memo<{
     cellButton: string
     dateCell: string
   }
-}>(({ date, calculatedCurrent, selectedDayStr, from, to, nowDateStr, onClick, styles }) => {
+}>(({ date, currentDay, selectedDayStr, from, to, nowDateStr, onClick, styles }) => {
   const target = useMemo(() => {
-    const day = calculatedCurrent.day.date(date)
+    const day = currentDay.date(date)
 
     return {
       day,
       date: day.toDate(),
     }
-  }, [calculatedCurrent.day, date])
+  }, [currentDay, date])
   const disabled = useMemo(() => !isBetween(target.date, from, to), [target.date, from, to])
   const ariaPressed = useMemo(
     () => target.day.isSame(selectedDayStr, 'date'),

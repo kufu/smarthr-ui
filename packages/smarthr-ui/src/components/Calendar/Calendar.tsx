@@ -20,7 +20,7 @@ import { Cluster } from '../Layout'
 
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
-import { getFromDate, getToDate, isBetween, minDate } from './calendarHelper'
+import { getFromDate, getMonthArray, getToDate, isBetween, minDate } from './calendarHelper'
 
 type Props = {
   /** 選択可能な開始日 */
@@ -117,7 +117,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       () => ({
         prev: currentMonth.subtract(1, 'month'),
         next: currentMonth.add(1, 'month'),
-        date: currentMonth.toDate(),
+        day: currentMonth,
+        months: getMonthArray(currentMonth.toDate()),
         yearMonthStr: `${currentMonth.year()}年${currentMonth.month() + 1}月`,
         selectedStr: currentMonth.toString(),
       }),
@@ -168,7 +169,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             id={yearPickerId}
           />
           <CalendarTable
-            current={calculatedCurrentMonth.date}
+            current={calculatedCurrentMonth}
             from={formattedFrom.date}
             to={formattedTo.date}
             onSelectDate={onSelectDate}
