@@ -30,9 +30,7 @@ type Props = {
   onSelectItem?: (id: string) => void
 }
 
-export const BrowserItem: FC<Props> = (props) => {
-  const { selected, item, tabIndex, columnIndex, onSelectItem } = props
-
+export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
   const inputId = getElementIdFromNode(item)
   const hasChildren = item.children.length > 0
 
