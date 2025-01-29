@@ -75,8 +75,6 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
       }
     }, [variant, className])
 
-    const { createPortal } = usePortal()
-
     let actualPrefix = prefix
     let actualSuffix = suffix
     let disabledOnLoading = disabled
@@ -112,10 +110,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         prefix={actualPrefix}
         suffix={actualSuffix}
       >
-        {
-          // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-          createPortal(<VisuallyHiddenText role="status">{loading ? decorated.loading : ''}</VisuallyHiddenText>)
-        }
+        <LoadingStatus loading={loading}>{decorated.loading}</LoadingStatus>
         {actualChildren}
       </ButtonWrapper>
     )
@@ -129,3 +124,14 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
 )
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
+
+const LoadingStatus = React.memo<{ loading: boolean; children: string }>(
+  ({ loading, children }) => {
+    const { createPortal } = usePortal()
+
+    // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
+    return createPortal(
+      <VisuallyHiddenText role="status">{loading && children}</VisuallyHiddenText>,
+    )
+  },
+)
