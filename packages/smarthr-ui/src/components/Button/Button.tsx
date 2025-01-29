@@ -74,11 +74,23 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
 
     const { createPortal } = usePortal()
 
-    const loader = <Loader size="s" className={styles.loader} role="presentation" />
-    const actualPrefix = !loading && prefix
-    const actualSuffix = loading && !square ? loader : suffix
-    const disabledOnLoading = loading || disabled
-    const actualChildren = loading && square ? loader : children
+    let actualPrefix = prefix
+    let actualSuffix = suffix
+    let disabledOnLoading = disabled
+    let actualChildren = children
+
+    if (loading) {
+      actualPrefix = undefined
+      disabledOnLoading = true
+
+      const loader = <Loader size="s" className={styles.loader} role="presentation" />
+
+      if (square) {
+        actualChildren = loader
+      } else {
+        actualSuffix = loader
+      }
+    }
 
     const statusText = useMemo(() => {
       const loadingText = decorators?.loading?.(LOADING_TEXT) ?? LOADING_TEXT
