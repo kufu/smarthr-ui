@@ -123,6 +123,15 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       [currentMonth],
     )
 
+    const onClickMonthPrev = useCallback(
+      () => setCurrentMonth(calculatedCurrentMonth.prev),
+      [calculatedCurrentMonth.prev],
+    )
+    const onClickMonthNext = useCallback(
+      () => setCurrentMonth(calculatedCurrentMonth.next),
+      [calculatedCurrentMonth.next],
+    )
+
     return (
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       <Section {...props} ref={ref} className={styles.container}>
@@ -150,7 +159,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           <Cluster gap={0.5} className={styles.monthButtons}>
             <Button
               disabled={isSelectingYear || calculatedCurrentMonth.prev.isBefore(froms.day, 'month')}
-              onClick={() => setCurrentMonth(calculatedCurrentMonth.prev)}
+              onClick={onClickMonthPrev}
               size="s"
               square
               className="smarthr-ui-Calendar-monthButtonPrev"
@@ -159,7 +168,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             </Button>
             <Button
               disabled={isSelectingYear || calculatedCurrentMonth.next.isAfter(tos.day, 'month')}
-              onClick={() => setCurrentMonth(calculatedCurrentMonth.next)}
+              onClick={onClickMonthNext}
               size="s"
               square
               className="smarthr-ui-Calendar-monthButtonNext"
