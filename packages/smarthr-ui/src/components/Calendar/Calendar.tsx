@@ -65,20 +65,22 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     }, [className])
 
     const formattedFrom = useMemo(() => {
-      const day = dayjs(getFromDate(from))
+      const date = getFromDate(from)
+      const day = dayjs(date)
 
       return {
         day,
-        date: day.toDate(),
+        date,
         year: day.year(),
       }
     }, [from])
     const formattedTo = useMemo(() => {
-      const day = dayjs(getToDate(to))
+      const date = getToDate(to)
+      const day = dayjs(date)
 
       return {
         day,
-        date: day.toDate(),
+        date,
         year: day.year(),
       }
     }, [to])

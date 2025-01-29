@@ -19,7 +19,7 @@ type Props = {
   /** トリガのセレクトイベントを処理するハンドラ */
   onSelectDate: (e: MouseEvent, date: Date) => void
   /** 選択された日付 */
-  selectedDayStr: ''
+  selectedDayStr: string
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
@@ -73,12 +73,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
         <tbody>
           {current.months.map((week, weekIndex) => (
             <tr key={weekIndex}>
-              {week.map((date, dateIndex) => {
-                if (!date) {
-                  return <NullTd key={dateIndex} className={styles.td} />
-                }
-
-                return (
+              {week.map((date, dateIndex) =>
+                date ? (
                   <SelectTdButton
                     key={dateIndex}
                     date={date}
@@ -90,8 +86,10 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                     onClick={onSelectDate}
                     styles={styles}
                   />
-                )
-              })}
+                ) : (
+                  <NullTd key={dateIndex} className={styles.td} />
+                ),
+              )}
             </tr>
           ))}
         </tbody>
@@ -116,7 +114,7 @@ const NullTd = React.memo<{ className: string }>(({ className }) => <td classNam
 
 const SelectTdButton = React.memo<{
   date: number
-  currentDayDayJsType
+  currentDay: DayJsType
   selectedDayStr: string
   from: Date
   to: Date
