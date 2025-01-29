@@ -54,27 +54,38 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 
 export const Switch = forwardRef<HTMLInputElement, Props>(
   ({ children, dangerouslyLabelHidden, className, id, ...props }, ref) => {
-    const { wrapper, input, icon, iconWrapper } = useMemo(() => switchStyle(), [])
-    const ActualLabelComponent = dangerouslyLabelHidden ? VisuallyHiddenText : Text
     const defaultId = useId()
     const inputId = id || defaultId
+
+    const { wrapperStyle, inputStyle, iconStyle, iconWrapperStyle } = useMemo(() => {
+      const { wrapper, input, icon, iconWrapper } = switchStyle()
+
+      return {
+        wrapperStyle: wrapper({ className }),
+        inputStyle: input(),
+        iconStyle: icon(),
+        iconWrapperStyle: iconWrapper(),
+      }
+    }, [className])
+
+    const ActualLabelComponent = dangerouslyLabelHidden ? VisuallyHiddenText : Text
 
     return (
       <Cluster align="center">
         <ActualLabelComponent as="label" htmlFor={inputId}>
           {children}
         </ActualLabelComponent>
-        <span className={wrapper({ className })}>
+        <span className={wrapperStyle}>
           <input
             {...props}
             type="checkbox"
             role="switch"
             id={inputId}
-            className={input()}
+            className={inputStyle}
             ref={ref}
           />
-          <span className={iconWrapper()}>
-            <FaCheckIcon className={icon()} size="XXS" />
+          <span className={iconWrapperStyle}>
+            <FaCheckIcon className={iconStyle} size="XXS" />
           </span>
         </span>
       </Cluster>

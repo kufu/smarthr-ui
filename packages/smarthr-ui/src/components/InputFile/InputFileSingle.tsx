@@ -33,9 +33,10 @@ export type Props = VariantProps<typeof inputFile> & {
   decorators?: DecoratorsType<'destroy'>
   error?: boolean
 }
-type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props | 'multiple'>
 
 const DESTROY_BUTTON_TEXT = '削除'
+const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFileSingle = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
@@ -55,12 +56,25 @@ export const InputFileSingle = forwardRef<HTMLInputElement, Props & ElementProps
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
 
-    const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
-    const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
-    const inputWrapperStyle = useMemo(
-      () => inputWrapper({ size, disabled }),
-      [disabled, inputWrapper, size],
-    )
+    const {
+      wrapperStyle,
+      inputWrapperStyle,
+      fileListStyle,
+      fileItemStyle,
+      inputStyle,
+      prefixStyle,
+    } = useMemo(() => {
+      const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
+
+      return {
+        wrapperStyle: wrapper({ className }),
+        inputWrapperStyle: inputWrapper({ size, disabled }),
+        fileListStyle: fileList(),
+        fileItemStyle: fileItem(),
+        inputStyle: input(),
+        prefixStyle: prefix(),
+      }
+    }, [disabled, size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
@@ -92,24 +106,29 @@ export const InputFileSingle = forwardRef<HTMLInputElement, Props & ElementProps
         if (isUpdatingFilesDirectly.current) {
           return
         }
-        const newFiles = Array.from(e.target.files ?? [])
-        updateFiles(newFiles)
+
+        updateFiles(Array.from(e.target.files ?? []))
       },
       [isUpdatingFilesDirectly, updateFiles],
     )
 
     const handleDelete = useCallback(
-      (index: number) => {
+      (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!inputRef.current) {
           return
         }
+
+        const index = parseInt(e.currentTarget.value, 10)
         const newFiles = files.filter((_, i) => index !== i)
+
         updateFiles(newFiles)
 
         const buff = new DataTransfer()
+
         newFiles.forEach((file) => {
           buff.items.add(file)
         })
+
         isUpdatingFilesDirectly.current = true
         inputRef.current.files = buff.files
         isUpdatingFilesDirectly.current = false
@@ -120,14 +139,15 @@ export const InputFileSingle = forwardRef<HTMLInputElement, Props & ElementProps
     return (
       <Stack align="flex-start" className={wrapperStyle}>
         {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={{ block: 0.5, inline: 1 }} className={fileList()}>
+          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileListStyle}>
             {files.map((file, index) => (
-              <li key={`${file.name}-${index}`} className={fileItem()}>
+              <li key={index} className={fileItemStyle}>
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
                 <Button
                   variant="text"
                   prefix={<FaTrashCanIcon />}
-                  onClick={() => handleDelete(index)}
+                  value={index}
+                  onClick={handleDelete}
                   className="smarthr-ui-InputFile-deleteButton"
                 >
                   {destroyButtonText}
@@ -144,19 +164,27 @@ export const InputFileSingle = forwardRef<HTMLInputElement, Props & ElementProps
             type="file"
             onChange={handleChange}
             disabled={disabled}
-            className={input()}
+            className={inputStyle}
             ref={inputRef}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
           />
-          <span className={prefix()}>
-            <FaFolderOpenIcon />
-          </span>
-          <span id={labelId} aria-hidden="true">
-            {label}
-          </span>
+          <StyledFaFolderOpenIcon className={prefixStyle} />
+          <LabelRender id={labelId} label={label} />
         </span>
       </Stack>
     )
   },
 )
+
+const StyledFaFolderOpenIcon = React.memo<{ className: string }>(({ className }) => (
+  <span className={className}>
+    <FaFolderOpenIcon />
+  </span>
+))
+
+const LabelRender = React.memo<{ id: string; label: ReactNode }>(({ id, label }) => (
+  <span id={id} aria-hidden="true">
+    {label}
+  </span>
+))

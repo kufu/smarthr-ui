@@ -1,5 +1,3 @@
-'use client'
-
 import React, { ComponentPropsWithRef, ReactNode, forwardRef } from 'react'
 import { VariantProps } from 'tailwind-variants'
 
