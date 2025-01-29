@@ -133,12 +133,16 @@ const SelectButtonTd = React.memo<{
       date: day.toDate(),
     }
   }, [currentDay, date])
+  const disabled = useMemo(
+    () => !isBetween(target.date, fromDate, toDate),
+    [target.date, fromDate, toDate],
+  )
 
   return (
     <td className={styles.td}>
       <UnstyledButton
         type="button"
-        disabled={!isBetween(target.date, fromDate, toDate)}
+        disabled={disabled}
         aria-pressed={selectedDay && target.day.isSame(selectedDay, 'date') ? true : false}
         onClick={(e) => onClick(e, target.date)}
         className={styles.cellButton}
