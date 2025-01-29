@@ -47,17 +47,17 @@ const calendar = tv({
 
 export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
-    const { containerStyle, yearMonthStyle, headerStyle, monthButtonsStyle, tableLayoutStyle } =
-      useMemo(() => {
-        const { container, yearMonth, header, monthButtons, tableLayout } = calendar()
-        return {
-          containerStyle: container({ className }),
-          headerStyle: header(),
-          yearMonthStyle: yearMonth(),
-          monthButtonsStyle: monthButtons(),
-          tableLayoutStyle: tableLayout(),
-        }
-      }, [className])
+    const styles = useMemo(() => {
+      const { container, yearMonth, header, monthButtons, tableLayout } = calendar()
+
+      return {
+        container: container({ className }),
+        header: header(),
+        yearMonth: yearMonth(),
+        monthButtons: monthButtons(),
+        tableLayout: tableLayout(),
+      }
+    }, [className])
     const fromDate = dayjs(getFromDate(from))
     const toDate = dayjs(getToDate(to))
     const today = dayjs()
@@ -85,9 +85,9 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
 
     return (
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-      <Section {...props} ref={ref} className={containerStyle}>
-        <header className={headerStyle}>
-          <div className={yearMonthStyle}>
+      <Section {...props} ref={ref} className={styles.container}>
+        <header className={styles.header}>
+          <div className={styles.yearMonth}>
             {currentMonth.year()}年{currentMonth.month() + 1}月
           </div>
           <Button
@@ -107,7 +107,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
               <FaCaretDownIcon alt="年を選択する" />
             )}
           </Button>
-          <Cluster gap={0.5} className={monthButtonsStyle}>
+          <Cluster gap={0.5} className={styles.monthButtons}>
             <Button
               disabled={isSelectingYear || prevMonth.isBefore(fromDate, 'month')}
               onClick={() => setCurrentMonth(prevMonth)}
@@ -128,7 +128,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             </Button>
           </Cluster>
         </header>
-        <div className={tableLayoutStyle}>
+        <div className={styles.tableLayout}>
           <YearPicker
             fromYear={fromDate.year()}
             toYear={toDate.year()}
