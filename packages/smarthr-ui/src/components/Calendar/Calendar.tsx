@@ -136,20 +136,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           <div className={styles.yearMonth}>
             {calculatedCurrentMonth.year}年{calculatedCurrentMonth.month}月
           </div>
-          <Button
-            size="s"
-            square
+          <YearSelectButton
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
             onClick={onClickSelectYear}
-            className="smarthr-ui-Calendar-selectingYear"
-          >
-            {isSelectingYear ? (
-              <FaCaretUpIcon alt="年を選択する" />
-            ) : (
-              <FaCaretDownIcon alt="年を選択する" />
-            )}
-          </Button>
+          ></YearSelectButton>
           <MonthDirectionCluster
             isSelectingYear={isSelectingYear}
             directionMonth={calculatedCurrentMonth}
@@ -180,6 +171,20 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     )
   },
 )
+
+const YearSelectButton = React.memo<{
+  'aria-expanded': boolean
+  'aria-controls': string
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+}>((rest) => (
+  <Button {...rest} size="s" square className="smarthr-ui-Calendar-selectingYear">
+    {rest['aria-expanded'] ? (
+      <FaCaretUpIcon alt="年を選択する" />
+    ) : (
+      <FaCaretDownIcon alt="年を選択する" />
+    )}
+  </Button>
+))
 
 const MonthDirectionCluster = React.memo<{
   isSelectingYear: boolean
