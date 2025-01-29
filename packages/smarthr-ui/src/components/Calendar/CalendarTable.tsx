@@ -161,8 +161,12 @@ const SelectButtonTd = React.memo<{
         className={styles.cellButton}
         data-is-today={dataIsToday}
       >
-        <span className={styles.dateCell}>{date}</span>
+        <SelectButtonTdDateCell className={styles.dateCell}>{date}</SelectButtonTdDateCell>
       </UnstyledButton>
     </td>
   )
 })
+
+const SelectButtonTdDateCell = React.memo<{ children: number, className: string }>(({ children, className }) => (
+  <span className={className}>{children}</span>
+))
