@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import React, { ComponentPropsWithoutRef, FC, MouseEvent, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, MouseEvent, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -144,13 +144,20 @@ const SelectButtonTd = React.memo<{
   )
   const dataIsToday = useMemo(() => target.day.isSame(nowDateStr, 'date'), [nowDateStr, target.day])
 
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick(e, target.date)
+    },
+    [onClick, target.date],
+  )
+
   return (
     <td className={styles.td}>
       <UnstyledButton
         type="button"
         disabled={disabled}
         aria-pressed={ariaPressed}
-        onClick={(e) => onClick(e, target.date)}
+        onClick={actualOnClick}
         className={styles.cellButton}
         data-is-today={dataIsToday}
       >
