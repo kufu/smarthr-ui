@@ -46,13 +46,14 @@ export function ButtonWrapper({
   square,
   wide = false,
   $loading,
+  isAnchor,
   prefix,
   suffix,
   children,
   className,
   ...props
 }: Props) {
-  const styles = useMemo(() => {
+  const wrapperStyle = useMemo(() => {
     const { button, anchor } = button({
       variant,
       size,
@@ -61,30 +62,21 @@ export function ButtonWrapper({
       wide,
     })
 
-    const commonProps = { className }
+    const wrapper = isAnchor ? anchor : button
 
-    return {
-      button: button(commonProps),
-      anchor: anchor(commonProps),
-      inner: buttonInner({ size }),
-    }
-  }, [$loading, className, size, square, variant, wide])
+    return wrapper({ className })
+  }, [$loading, size, square, variant, wide, className, isAnchor])
+  const innerStyle = useMemo(() => buttonInner({ size }), [size])
 
-  const actualChildren = (
-    <>
-      {prefix}
-      <span className={styles.inner} />
-      {suffix}
-    </>
-  )
-
-  if (props.isAnchor) {
-    const { anchorRef, elementAs, isAnchor: _, ...others } = props
+  if (isAnchor) {
+    const { anchorRef, elementAs, ...others } = props
     const Component = elementAs || 'a'
 
     return (
-      <Component {...others} className={styles.anchor} ref={anchorRef}>
-        {actualChildren}
+      <Component {...others} className={wrapperStyle} ref={anchorRef}>
+        {prefix}
+        <span className={innerStyle} />
+        {suffix}
       </Component>
     )
   } else {
@@ -95,11 +87,13 @@ export function ButtonWrapper({
       <button
         {...others}
         aria-disabled={disabled}
-        className={styles.button}
+        className={wrapperStyle}
         ref={buttonRef}
         onClick={disabled ? EVENT_CANCELLER : onClick}
       >
-        {actualChildren}
+        {prefix}
+        <span className={innerStyle} />
+        {suffix}
       </button>
     )
   }
