@@ -3,6 +3,7 @@
 import React, { ComponentPropsWithRef } from 'react'
 import { type FC, type MouseEventHandler } from 'react'
 
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Fieldset } from '../../Fieldset'
 import { FormControl } from '../../FormControl'
@@ -15,8 +16,6 @@ import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 import { useSortDropdown } from './useSortDropdown'
-
-import type { DecoratorsType } from '../../../types'
 
 type SortFieldType = {
   value: string
