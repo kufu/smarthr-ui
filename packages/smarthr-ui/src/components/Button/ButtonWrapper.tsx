@@ -47,7 +47,7 @@ export function ButtonWrapper({
   className,
   ...props
 }: Props) {
-  const { buttonStyle, anchorStyle } = useMemo(() => {
+  const styles = useMemo(() => {
     const { button, anchor } = button({
       variant,
       size,
@@ -59,8 +59,8 @@ export function ButtonWrapper({
     const commonProps = { className }
 
     return {
-      buttonStyle: button(commonProps),
-      anchorStyle: anchor(commonProps),
+      button: button(commonProps),
+      anchor: anchor(commonProps),
     }
   }, [$loading, className, size, square, variant, wide])
 
@@ -68,7 +68,7 @@ export function ButtonWrapper({
     const { anchorRef, elementAs, isAnchor: _, ...others } = props
     const Component = elementAs || 'a'
 
-    return <Component {...others} className={anchorStyle} ref={anchorRef} />
+    return <Component {...others} className={styles.anchor} ref={anchorRef} />
   } else {
     const { buttonRef, disabled, onClick, ...others } = props
 
@@ -77,7 +77,7 @@ export function ButtonWrapper({
       <button
         {...others}
         aria-disabled={disabled}
-        className={buttonStyle}
+        className={styles.button}
         ref={buttonRef}
         onClick={disabled ? EVENT_CANCELLER : onClick}
       />
