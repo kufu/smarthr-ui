@@ -3,6 +3,7 @@ import React, {
   ButtonHTMLAttributes,
   ElementType,
   ForwardedRef,
+  PropsWithChildren,
   ReactNode,
   useMemo,
 } from 'react'
@@ -10,16 +11,17 @@ import { tv } from 'tailwind-variants'
 
 import { Variant } from './types'
 
-type BaseProps = {
+type BaseProps = PropsWithChildren<{
   size: 'default' | 's'
   square: boolean
   wide: boolean
   variant: Variant
   $loading?: boolean
   className: string
-  children: ReactNode
   elementAs?: ElementType
-}
+  prefix?: React.ReactNode
+  suffix?: React.ReactNode
+}>
 
 type ButtonProps = BaseProps & {
   isAnchor?: never
@@ -44,6 +46,9 @@ export function ButtonWrapper({
   square,
   wide = false,
   $loading,
+  prefix,
+  suffix,
+  children,
   className,
   ...props
 }: Props) {
@@ -61,14 +66,27 @@ export function ButtonWrapper({
     return {
       button: button(commonProps),
       anchor: anchor(commonProps),
+      inner: buttonInner({ size }),
     }
   }, [$loading, className, size, square, variant, wide])
+
+  const actualChildren = (
+    <>
+      {prefix}
+      <span className={styles.inner} />
+      {suffix}
+    </>
+  )
 
   if (props.isAnchor) {
     const { anchorRef, elementAs, isAnchor: _, ...others } = props
     const Component = elementAs || 'a'
 
-    return <Component {...others} className={styles.anchor} ref={anchorRef} />
+    return (
+      <Component {...others} className={styles.anchor} ref={anchorRef}>
+        {actualChildren}
+      </Component>
+    )
   } else {
     const { buttonRef, disabled, onClick, ...others } = props
 
@@ -80,7 +98,9 @@ export function ButtonWrapper({
         className={styles.button}
         ref={buttonRef}
         onClick={disabled ? EVENT_CANCELLER : onClick}
-      />
+      >
+        {actualChildren}
+      </button>
     )
   }
 }
@@ -349,4 +369,20 @@ const button = tv({
       ],
     },
   ],
+})
+
+const buttonInner = tv({
+  base: [
+    /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+    'shr-min-w-0',
+  ],
+  variants: {
+    size: {
+      default: '',
+      s: [
+        /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
+        'shr-leading-[0]',
+      ],
+    },
+  },
 })

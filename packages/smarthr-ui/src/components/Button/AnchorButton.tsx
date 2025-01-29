@@ -12,7 +12,6 @@ import { tv } from 'tailwind-variants'
 
 import { ElementRef, ElementRefProps } from '../../types'
 
-import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
 import { BaseProps } from './types'
@@ -69,10 +68,10 @@ const AnchorButton = forwardRef(
         isAnchor
         anchorRef={ref}
         elementAs={elementAs}
+        prefix={prefix}
+        suffix={suffix}
       >
-        <ButtonInner prefix={prefix} suffix={suffix} size={size}>
-          {children}
-        </ButtonInner>
+        {children}
       </ButtonWrapper>
     )
 

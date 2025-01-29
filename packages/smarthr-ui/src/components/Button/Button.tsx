@@ -8,7 +8,6 @@ import { DecoratorsType } from '../../types'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
 import { BaseProps } from './types'
@@ -95,14 +94,14 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         buttonRef={ref}
         disabled={disabledOnLoading}
         $loading={loading}
+        prefix={actualPrefix}
+        suffix={actualSuffix}
       >
         {
           // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
           createPortal(<VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>)
         }
-        <ButtonInner prefix={actualPrefix} suffix={actualSuffix} size={size}>
-          {actualChildren}
-        </ButtonInner>
+        {actualChildren}
       </ButtonWrapper>
     )
 
