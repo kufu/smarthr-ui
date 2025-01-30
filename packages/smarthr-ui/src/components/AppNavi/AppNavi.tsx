@@ -45,6 +45,12 @@ const appNavi = tv({
 })
 
 const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = appNavi()
+const styles = {
+  statusLabel: statusLabel(),
+  buttonsEl: buttonsEl(),
+  listItem: listItem(),
+  additionalAreaEl: additionalAreaEl(),
+}
 
 export const AppNavi: FC<Props & ElementProps> = ({
   label,
@@ -53,51 +59,55 @@ export const AppNavi: FC<Props & ElementProps> = ({
   children,
   displayDropdownCaret = false,
   additionalArea,
-  ...props
-}) => (
-  // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-  <Nav {...props} className={wrapper({ className })}>
-    {label && <StatusLabel className={statusLabel()}>{label}</StatusLabel>}
+  ...rest
+}) => {
+  const wrapperStyle = useMemo(() => wrapper({ className }), [className])
 
-    <ul className={buttonsEl()}>
-      {buttons &&
-        buttons.map((button, i) => {
-          if ('tag' in button) {
+  return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Nav {...rest} className={wrapperStyle}>
+      {label && <StatusLabel className={styles.statusLabel}>{label}</StatusLabel>}
+
+      <ul className={styles.buttonsEl}>
+        {buttons &&
+          buttons.map((button, i) => {
+            if ('tag' in button) {
+              return (
+                <li key={i} className={styles.listItem}>
+                  <AppNaviCustomTag {...button} />
+                </li>
+              )
+            }
+
+            if ('href' in button) {
+              return (
+                <li key={i} className={styles.listItem}>
+                  <AppNaviAnchor {...button} />
+                </li>
+              )
+            }
+
+            if ('dropdownContent' in button) {
+              return (
+                <li key={i} className={styles.listItem}>
+                  <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
+                </li>
+              )
+            }
+
             return (
-              <li key={i} className={listItem()}>
-                <AppNaviCustomTag {...button} />
+              <li key={i} className={styles.listItem}>
+                <AppNaviButton {...button} />
               </li>
             )
-          }
+          })}
+        {renderButtons(children)}
+      </ul>
 
-          if ('href' in button) {
-            return (
-              <li key={i} className={listItem()}>
-                <AppNaviAnchor {...button} />
-              </li>
-            )
-          }
-
-          if ('dropdownContent' in button) {
-            return (
-              <li key={i} className={listItem()}>
-                <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
-              </li>
-            )
-          }
-
-          return (
-            <li key={i} className={listItem()}>
-              <AppNaviButton {...button} />
-            </li>
-          )
-        })}
-      {renderButtons(children)}
-    </ul>
-
-    {additionalArea && <div className={additionalAreaEl()}>{additionalArea}</div>}
-  </Nav>
-)
+      {additionalArea && <div className={styles.additionalAreaEl}>{additionalArea}</div>}
+    </Nav>
+  )
+}
 
 const renderButtons = (children: ReactNode) =>
   React.Children.map(children, (child): ReactNode => {
@@ -109,5 +119,5 @@ const renderButtons = (children: ReactNode) =>
       return renderButtons(child.props.children)
     }
 
-    return <li className={listItem()}>{child}</li>
+    return <li className={styles.listItem}>{child}</li>
   })
