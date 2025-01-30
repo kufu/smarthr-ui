@@ -1,4 +1,4 @@
-import React, { type FC, type PropsWithChildren, type ReactNode } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuButton'
@@ -35,17 +35,25 @@ const dropdownMenuButton = tv({
 export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
   label,
   children,
-}) => (
-  <DropdownMenuButton
-    label={
-      <>
-        {label}
-        {/* has([aria-current="page"]) を書くために複製 */}
-        <span hidden>{children}</span>
-      </>
-    }
-    className={dropdownMenuButton()}
-  >
-    {children}
-  </DropdownMenuButton>
-)
+}) => {
+  const style = useMemo(() => dropdownMenuButton(), [])
+
+  return (
+    <DropdownMenuButton
+      label={
+        <>
+          {label}
+          <span hidden>
+            {
+              // has([aria-current="page"]) を書くために複製
+              children
+            }
+          </span>
+        </>
+      }
+      className={style}
+    >
+      {children}
+    </DropdownMenuButton>
+  )
+}
