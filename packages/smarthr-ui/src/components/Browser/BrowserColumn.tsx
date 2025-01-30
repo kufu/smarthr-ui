@@ -17,7 +17,9 @@ export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onS
     <ul className="shr-list-none shr-px-0.25 shr-py-0.5" id={getColumnId(columnIndex)}>
       {items.map((item, rowIndex) => (
         <ListItem
-          item={item}
+          itemValue={item.value}
+          itemLabel={item.label}
+          itemHasChildren={item.children.length > 0}
           value={value}
           columnIndex={columnIndex}
           rowIndex={rowIndex}
@@ -29,21 +31,24 @@ export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onS
 )
 
 const ListItem = React.memo<
-  Pick<Props, 'value' | 'columnIndex' | 'onSelectItem'> & { item: ItemNode; rowIndex: number }
->(({ item, value, columnIndex, rowIndex, onSelectItem }) => {
-  const selected = item.value === value
-  const hasChildren = item.children.length > 0
-  const ariaOwns = selected && hasChildren ? getColumnId(columnIndex + 1) : undefined
+  Pick<Props, 'value' | 'columnIndex' | 'onSelectItem'> & {
+    itemValue: ItemNode['value']
+    itemLabel: ItemNode['label']
+    itemHasChildren: boolean
+    rowIndex: number
+  }
+>(({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, onSelectItem }) => {
+  const selected = itemValue === value
+  const ariaOwns = selected && itemHasChildren ? getColumnId(columnIndex + 1) : undefined
   const tabIndex = selected || (!value && columnIndex === 0 && rowIndex === 0) ? 0 : -1
 
   return (
     <li key={rowIndex} aria-owns={ariaOwns}>
       <BrowserItem
         selected={selected}
-        item={item}
-        itemValue={item.value}
-        itemLabel={item.label}
-        itemHasChildren={hasChildren}
+        itemValue={itemValue}
+        itemLabel={itemLabel}
+        itemHasChildren={itemHasChildren}
         columnIndex={columnIndex}
         tabIndex={tabIndex}
         onSelectItem={onSelectItem}

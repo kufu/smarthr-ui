@@ -34,42 +34,48 @@ const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
   }
 }
 
-export const BrowserItem = React.memo<Props>(
-  ({ selected, itemValue, itemLabel, itemHasChildren, tabIndex, columnIndex, onSelectItem }) => {
-    const inputId = getElementIdFromNode(itemValue)
-    const style = useMemo(() => radioWrapperStyle(), [])
+export const BrowserItem: React.FC<Props> = ({
+  selected,
+  itemValue,
+  itemLabel,
+  itemHasChildren,
+  tabIndex,
+  columnIndex,
+  onSelectItem,
+}) => {
+  const inputId = getElementIdFromNode(itemValue)
+  const style = useMemo(() => radioWrapperStyle(), [])
 
-    const onChange = useMemo(
-      () =>
-        onSelectItem
-          ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
-          : undefined,
-      [onSelectItem],
-    )
+  const onChange = useMemo(
+    () =>
+      onSelectItem
+        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
+        : undefined,
+    [onSelectItem],
+  )
 
-    return (
-      <label
-        htmlFor={inputId}
-        data-selected={selected}
-        data-type={itemHasChildren ? 'parent' : 'last'}
-        className={style}
-      >
-        <input
-          className="shr-sr-only"
-          type="radio"
-          id={inputId}
-          name={`column-${columnIndex}`}
-          value={itemValue}
-          tabIndex={tabIndex}
-          onKeyDown={HANDLE_KEYDOWN}
-          onChange={onChange}
-          checked={selected}
-        />
-        <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
-      </label>
-    )
-  },
-)
+  return (
+    <label
+      htmlFor={inputId}
+      data-selected={selected}
+      data-type={itemHasChildren ? 'parent' : 'last'}
+      className={style}
+    >
+      <input
+        className="shr-sr-only"
+        type="radio"
+        id={inputId}
+        name={`column-${columnIndex}`}
+        value={itemValue}
+        tabIndex={tabIndex}
+        onKeyDown={HANDLE_KEYDOWN}
+        onChange={onChange}
+        checked={selected}
+      />
+      <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
+    </label>
+  )
+}
 
 const BodyCluster = React.memo<{ label: string; hasChildren: boolean }>(
   ({ label, hasChildren }) => (
