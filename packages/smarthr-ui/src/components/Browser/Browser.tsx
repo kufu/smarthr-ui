@@ -9,13 +9,18 @@ import { ItemNode, ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const optionsListWrapper = tv({
-  base: [
-    'smarthr-ui-Browser shr-flex shr-flex-row shr-flex-nowrap shr-min-h-[355px]',
-    '[&[data-column-length="0"]]:shr-justify-center [&[data-column-length="0"]]:shr-items-center',
-    '[&[data-column-length="1"]]:[&>div]:shr-flex-1',
-    '[&[data-column-length="2"]]:[&>div:nth-child(1)]:shr-flex-1 [&[data-column-length="2"]]:[&>div:nth-child(2)]:shr-flex-[2]',
-    '[&[data-column-length="3"]]:[&>div]:shr-flex-1',
-  ],
+  base: 'smarthr-ui-Browser shr-flex shr-flex-row shr-flex-nowrap shr-min-h-[355px]',
+  variants: {
+    columnCount: {
+      0: 'shr-justify-center shr-items-center',
+      1: '[&>div]:shr-flex-1',
+      2: '[&>div:nth-child(1)]:shr-flex-1 [&>div:nth-child(2)]:shr-flex-[2]',
+      3: '[&>div]:shr-flex-1',
+    },
+  },
+  defaultVariants: {
+    columnCount: 0,
+  },
 })
 
 type Props = {
@@ -36,9 +41,14 @@ const DECORATOR_DEFAULT_TEXTS = {
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) => {
-  const style = useMemo(() => optionsListWrapper(), [])
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
+  const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
+
+  const style = useMemo(
+    () => optionsListWrapper({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
+    [columns.length],
+  )
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   const selectedNode = useMemo(() => {
     if (value) {
@@ -47,39 +57,43 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
     return
   }, [rootNode, value])
 
-  const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
-
   // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
   const handleKeyDown: KeyboardEventHandler = useCallback(
     (e) => {
-      let target: ItemNodeLike | null = null
+      if (!selectedNode) {
+        return
+      }
+
+      let target: ItemNode | undefined = undefined
 
       switch (e.key) {
         case 'ArrowUp': {
-          if (selectedNode) {
-            target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
-          }
+          target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
 
           break
         }
         case 'ArrowDown': {
-          if (selectedNode) {
-            target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
+          target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
+
+          break
+        }
+        case 'ArrowLeft': {
+          const node = selectedNode.parent
+
+          if (node instanceof ItemNode) {
+            target = node
           }
 
           break
         }
-        case 'ArrowLeft':
-          target = selectedNode?.parent
-
-          break
         case 'ArrowRight':
         case 'Enter':
-        case ' ':
-          target = selectedNode?.getFirstChild()
+        case ' ': {
+          target = selectedNode.getFirstChild()
 
           break
+        }
       }
 
       if (target) {
@@ -93,17 +107,12 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
-    <div
-      role="application"
-      onKeyDown={handleKeyDown}
-      data-column-length={columns.length}
-      className={style}
-    >
+    <div role="application" onKeyDown={handleKeyDown} className={style}>
       {columns.length > 0 ? (
-        columns.map((items, index) => (
+        columns.map((colItems, index) => (
           <BrowserColumn
             key={index}
-            items={items}
+            items={colItems}
             index={index}
             value={value}
             onSelectItem={onSelectItem}

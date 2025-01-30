@@ -1,4 +1,4 @@
-import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
+import React, { KeyboardEventHandler, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'

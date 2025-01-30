@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import React, { FC } from 'react'
 
 import { BrowserItem } from './BrowserItem'
 import { ItemNode } from './models'
@@ -17,6 +17,7 @@ export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onS
     <ul className="shr-list-none shr-px-0.25 shr-py-0.5" id={getColumnId(columnIndex)}>
       {items.map((item, rowIndex) => (
         <ListItem
+          key={rowIndex}
           itemValue={item.value}
           itemLabel={item.label}
           itemHasChildren={item.children.length > 0}
@@ -31,10 +32,11 @@ export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onS
 )
 
 const ListItem = React.memo<
-  Pick<Props, 'value' | 'columnIndex' | 'onSelectItem'> & {
+  Pick<Props, 'value' | 'onSelectItem'> & {
     itemValue: ItemNode['value']
     itemLabel: ItemNode['label']
     itemHasChildren: boolean
+    columnIndex: Props['index']
     rowIndex: number
   }
 >(({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, onSelectItem }) => {
