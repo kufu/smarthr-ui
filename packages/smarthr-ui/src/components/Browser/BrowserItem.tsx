@@ -1,4 +1,4 @@
-import React, { FC, KeyboardEventHandler } from 'react'
+import React, { FC, KeyboardEventHandler, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
@@ -31,8 +31,13 @@ type Props = {
 }
 
 export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
-  const inputId = getElementIdFromNode(item)
-  const hasChildren = item.children.length > 0
+  const { inputId, hasChildren } = useMemo(
+    () => ({
+      inputId: getElementIdFromNode(item),
+      hasChildren: item.children.length > 0,
+    }),
+    [item],
+  )
 
   const handleKeyDown: KeyboardEventHandler = (e) => {
     if (
