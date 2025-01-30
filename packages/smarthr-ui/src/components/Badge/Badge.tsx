@@ -105,8 +105,8 @@ export const Badge: React.FC<BadgeProps> = ({ count, showZero, ...rest }) => {
 
 const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
   count,
-  overflowCount = 99,
-  type = 'blue',
+  overflowCount,
+  type,
   dot,
   children,
   className,
@@ -115,7 +115,7 @@ const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
   // HINT: boolean化することでmemoが有効になる可能性を高くする
   const withChildren = !!children
   const styles = useMemo(() => {
-    const { wrapper, pill, dotElement } = badge({ color: type, withChildren })
+    const { wrapper, pill, dotElement } = badge({ color: type | 'blue', withChildren })
 
     return {
       wrapper: wrapper({ className }),
@@ -128,14 +128,21 @@ const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
     <span {...rest} className={styles.wrapper}>
       {children}
       {dot ? (
-        <span className={styles.dot} />
+        <Dot className={styles.dot} />
       ) : (
-        count !== undefined && (
-          <Text size="XS" className={styles.pill}>
-            {count > overflowCount ? `${overflowCount}+` : count}
-          </Text>
-        )
+        <CountText count={count} overflowCount={overflowCount} className={styles.pill} />
       )}
     </span>
   )
 }
+
+const Dot = React.memo<{ className: string }>(({ className }) => <span className={className} />)
+
+const CountText = React.memo<Pick<BadgeProps, 'count' | 'overflowCount'> & { className: string }>(
+  ({ count, overflowCount = 99, className }) =>
+    count !== undefined && (
+      <Text size="XS" className={className}>
+        {count > overflowCount ? `${overflowCount}+` : count}
+      </Text>
+    ),
+)
