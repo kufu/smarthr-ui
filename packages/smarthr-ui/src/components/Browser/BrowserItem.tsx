@@ -54,6 +54,14 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
     [selected, hasChildren],
   )
 
+  const onChange = useMemo(
+    () =>
+      onSelectItem
+        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
+        : undefined,
+    [],
+  )
+
   return (
     <label htmlFor={inputId} className={style}>
       <input
@@ -64,7 +72,7 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
         value={item.value}
         tabIndex={tabIndex}
         onKeyDown={HANDLE_KEYDOWN}
-        onChange={() => onSelectItem?.(item.value)}
+        onChange={onChange}
         checked={selected}
       />
       <Cluster align="center" justify="space-between">
