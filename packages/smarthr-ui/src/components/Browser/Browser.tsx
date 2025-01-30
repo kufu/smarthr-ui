@@ -9,18 +9,13 @@ import { ItemNode, ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const optionsListWrapper = tv({
-  base: 'smarthr-ui-Browser shr-flex shr-flex-row shr-flex-nowrap shr-min-h-[355px]',
-  variants: {
-    columnCount: {
-      0: 'shr-justify-center shr-items-center',
-      1: '[&>div]:shr-flex-1',
-      2: '[&>div:nth-child(1)]:shr-flex-1 [&>div:nth-child(2)]:shr-flex-[2]',
-      3: '[&>div]:shr-flex-1',
-    },
-  },
-  defaultVariants: {
-    columnCount: 0,
-  },
+  base: [
+    'smarthr-ui-Browser shr-flex shr-flex-row shr-flex-nowrap shr-min-h-[355px]',
+    '[&[data-column-length="0"]]:shr-justify-center [&[data-column-length="0"]]:shr-items-center',
+    '[&[data-column-length="1"]]:[&>div]:shr-flex-1',
+    '[&[data-column-length="2"]]:[&>div:nth-child(1)]:shr-flex-1 [&[data-column-length="2"]]:[&>div:nth-child(2)]:shr-flex-[2]',
+    '[&[data-column-length="3"]]:[&>div]:shr-flex-1',
+  ],
 })
 
 type Props = {
@@ -40,11 +35,10 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-export const Browser: FC<Props> = (props) => {
-  const { value, decorators, onSelectItem } = props
-
+export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) => {
+  const style = useMemo(() => optionsListWrapper(), [])
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
-  const rootNode = useMemo(() => RootNode.from({ children: props.items }), [props.items])
+  const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
 
   const selectedNode = useMemo(() => {
     if (value) {
@@ -100,9 +94,10 @@ export const Browser: FC<Props> = (props) => {
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
     <div
-      className={optionsListWrapper({ columnCount: columns.length as 0 | 1 | 2 | 3 })}
-      onKeyDown={handleKeyDown}
       role="application"
+      onKeyDown={handleKeyDown}
+      data-column-length={columns.length}
+      className={style}
     >
       {columns.length > 0 ? (
         columns.map((items, index) => (
