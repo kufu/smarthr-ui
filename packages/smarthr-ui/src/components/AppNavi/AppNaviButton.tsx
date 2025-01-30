@@ -25,11 +25,11 @@ const appNaviButton = tv({
 export const AppNaviButton: FC<AppNaviButtonProps> = ({
   children,
   icon: Icon,
-  current = false,
+  current,
   onClick,
 }) => {
   const styles = useMemo(() => {
-    const { wrapper, icon } = appNaviButton({ active: current })
+    const { wrapper, icon } = appNaviButton({ active: current || false })
 
     return {
       wrapper: wrapper(),
