@@ -94,18 +94,31 @@ const badge = tv({
 
 export const Badge: React.FC<BadgeProps> = ({
   count,
+  showZero,
+  ...rest
+}) => {
+  const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
+
+  // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
+  if (actualCount === undefined && !props.dot && !props.children ) {
+    return null
+  }
+
+  return <ActualBadge {...rest} count={actualCount} />
+}
+
+const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
+  count,
   overflowCount = 99,
-  showZero = false,
   type = 'blue',
-  dot = false,
+  dot,
   children,
   className,
   ...props
 }) => {
-  const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
-
   const { wrapperStyle, pillStyle, dotStyle } = useMemo(() => {
     const { wrapper, pill, dotElement } = badge({ color: type, withChildren: !!children })
+
     return {
       wrapperStyle: wrapper({ className }),
       pillStyle: pill(),
@@ -113,18 +126,15 @@ export const Badge: React.FC<BadgeProps> = ({
     }
   }, [children, className, type])
 
-  // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
-  if (!dot && !children && actualCount === undefined) return null
-
   return (
     <span {...props} className={wrapperStyle}>
       {children}
       {dot ? (
         <span className={dotStyle} />
       ) : (
-        actualCount !== undefined && (
+        count !== undefined && (
           <Text size="XS" className={pillStyle}>
-            {actualCount > overflowCount ? `${overflowCount}+` : actualCount}
+            {count > overflowCount ? `${overflowCount}+` : count}
           </Text>
         )
       )}
