@@ -1,4 +1,4 @@
-import React, { FC, KeyboardEventHandler, useMemo } from 'react'
+import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
@@ -30,6 +30,13 @@ type Props = {
   onSelectItem?: (id: string) => void
 }
 
+const KEYDOWN_REGEX = /^((Arrow(Right|Left|Up|Down))|Enter| )$/
+const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
+  if (KEYDOWN_REGEX.test(e.key)) {
+    e.preventDefault()
+  }
+}
+
 export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
   const { inputId, hasChildren } = useMemo(
     () => ({
@@ -38,19 +45,6 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
     }),
     [item],
   )
-
-  const handleKeyDown: KeyboardEventHandler = (e) => {
-    if (
-      e.key === 'ArrowRight' ||
-      e.key === 'ArrowLeft' ||
-      e.key === 'ArrowUp' ||
-      e.key === 'ArrowDown' ||
-      e.key === 'Enter' ||
-      e.key === ' '
-    ) {
-      e.preventDefault()
-    }
-  }
 
   return (
     <label
@@ -66,7 +60,7 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
         name={`column-${columnIndex}`}
         value={item.value}
         tabIndex={tabIndex}
-        onKeyDown={handleKeyDown}
+        onKeyDown={HANDLE_KEYDOWN}
         onChange={() => onSelectItem?.(item.value)}
         checked={selected}
       />
