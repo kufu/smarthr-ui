@@ -64,40 +64,25 @@ export const Browser: FC<Props> = (props) => {
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
   const handleKeyDown: KeyboardEventHandler = useCallback(
     (e) => {
+      let target: ItemNodeLike | null = null
+
       if (e.key === 'ArrowUp' && selectedNode) {
-        const target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
-        if (target) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target.value))?.focus()
-        }
+        target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
       }
-
       if (e.key === 'ArrowDown' && selectedNode) {
-        const target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
-        if (target) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target.value))?.focus()
-        }
+        target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
       }
-
       if (e.key === 'ArrowLeft') {
-        const target = selectedNode?.parent
-        if (target instanceof ItemNode) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target.value))?.focus()
-        }
+        target = selectedNode?.parent
+      }
+      if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
+        target = selectedNode?.getFirstChild()
       }
 
-      if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
-        const target = selectedNode?.getFirstChild()
-        if (target) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target.value))?.focus()
-        }
+      if (target) {
+        e.preventDefault()
+        onSelectItem?.(target.value)
+        document.getElementById(getElementIdFromNode(target.value))?.focus()
       }
     },
     [selectedNode, onSelectItem],
