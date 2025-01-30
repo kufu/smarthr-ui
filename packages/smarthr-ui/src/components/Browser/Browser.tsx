@@ -66,17 +66,31 @@ export const Browser: FC<Props> = (props) => {
     (e) => {
       let target: ItemNodeLike | null = null
 
-      if (e.key === 'ArrowUp' && selectedNode) {
-        target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
-      }
-      if (e.key === 'ArrowDown' && selectedNode) {
-        target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
-      }
-      if (e.key === 'ArrowLeft') {
-        target = selectedNode?.parent
-      }
-      if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
-        target = selectedNode?.getFirstChild()
+      switch (e.key) {
+        case 'ArrowUp': {
+          if (selectedNode) {
+            target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
+          }
+
+          break
+        }
+        case 'ArrowDown': {
+          if (selectedNode) {
+            target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
+          }
+
+          break
+        }
+        case 'ArrowLeft':
+          target = selectedNode?.parent
+
+          break
+        case 'ArrowRight':
+        case 'Enter':
+        case ' ':
+          target = selectedNode?.getFirstChild()
+
+          break
       }
 
       if (target) {
