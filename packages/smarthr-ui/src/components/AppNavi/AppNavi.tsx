@@ -58,7 +58,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
   buttons,
   className,
   children,
-  displayDropdownCaret = false,
+  displayDropdownCaret,
   additionalArea,
   ...rest
 }) => {
