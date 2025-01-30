@@ -19,7 +19,9 @@ const radioWrapperStyle = tv({
 
 type Props = {
   selected: boolean
-  item: ItemNode
+  itemValue: ItemNode['value']
+  itemLabel: ItemNode['label']
+  itemHasChildren: boolean
   tabIndex: 0 | -1
   columnIndex: number
   onSelectItem?: (id: string) => void
@@ -33,15 +35,8 @@ const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
 }
 
 export const BrowserItem = React.memo<Props>(
-  ({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
-    const { inputId, hasChildren } = useMemo(
-      () => ({
-        inputId: getElementIdFromNode(item),
-        hasChildren: item.children.length > 0,
-      }),
-      [item],
-    )
-
+  ({ selected, itemValue, itemLabel, itemHasChildren, tabIndex, columnIndex, onSelectItem }) => {
+    const inputId = getElementIdFromNode(itemValue)
     const style = useMemo(() => radioWrapperStyle(), [])
 
     const onChange = useMemo(
@@ -56,7 +51,7 @@ export const BrowserItem = React.memo<Props>(
       <label
         htmlFor={inputId}
         data-selected={selected}
-        data-type={hasChildren ? 'parent' : 'last'}
+        data-type={itemHasChildren ? 'parent' : 'last'}
         className={style}
       >
         <input
@@ -64,13 +59,13 @@ export const BrowserItem = React.memo<Props>(
           type="radio"
           id={inputId}
           name={`column-${columnIndex}`}
-          value={item.value}
+          value={itemValue}
           tabIndex={tabIndex}
           onKeyDown={HANDLE_KEYDOWN}
           onChange={onChange}
           checked={selected}
         />
-        <BodyCluster label={item.label} hasChildren={hasChildren} />
+        <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
       </label>
     )
   },

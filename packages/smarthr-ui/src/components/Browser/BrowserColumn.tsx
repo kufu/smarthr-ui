@@ -32,7 +32,8 @@ const ListItem = React.memo<
   Pick<Props, 'value' | 'columnIndex' | 'onSelectItem'> & { item: ItemNode; rowIndex: number }
 >(({ item, value, columnIndex, rowIndex, onSelectItem }) => {
   const selected = item.value === value
-  const ariaOwns = selected && item.children.length > 0 ? getColumnId(columnIndex + 1) : undefined
+  const hasChildren = item.children.length > 0
+  const ariaOwns = selected && hasChildren ? getColumnId(columnIndex + 1) : undefined
   const tabIndex = selected || (!value && columnIndex === 0 && rowIndex === 0) ? 0 : -1
 
   return (
@@ -40,6 +41,9 @@ const ListItem = React.memo<
       <BrowserItem
         selected={selected}
         item={item}
+        itemValue={item.value}
+        itemLabel={item.label}
+        itemHasChildren={hasChildren}
         columnIndex={columnIndex}
         tabIndex={tabIndex}
         onSelectItem={onSelectItem}

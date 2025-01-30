@@ -69,7 +69,7 @@ export const Browser: FC<Props> = (props) => {
         if (target) {
           e.preventDefault()
           onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
+          document.getElementById(getElementIdFromNode(target.value))?.focus()
         }
       }
 
@@ -78,7 +78,7 @@ export const Browser: FC<Props> = (props) => {
         if (target) {
           e.preventDefault()
           onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
+          document.getElementById(getElementIdFromNode(target.value))?.focus()
         }
       }
 
@@ -87,7 +87,7 @@ export const Browser: FC<Props> = (props) => {
         if (target instanceof ItemNode) {
           e.preventDefault()
           onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
+          document.getElementById(getElementIdFromNode(target.value))?.focus()
         }
       }
 
@@ -96,7 +96,7 @@ export const Browser: FC<Props> = (props) => {
         if (target) {
           e.preventDefault()
           onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
+          document.getElementById(getElementIdFromNode(target.value))?.focus()
         }
       }
     },
