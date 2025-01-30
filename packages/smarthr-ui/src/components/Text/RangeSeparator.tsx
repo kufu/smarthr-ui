@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react'
 
+import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import type { DecoratorType, DecoratorsType } from '../../types'
 
 type Props = {
   decorators?: DecoratorsType<'text' | 'visuallyHiddenText'>
