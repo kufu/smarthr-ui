@@ -113,23 +113,22 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
     { padding, radius = 'm', overflow, layer = 1, as: Component = 'div', className, ...props },
     ref,
   ) => {
-    const styles = useMemo(() => {
-      const paddingBlock = padding instanceof Object ? padding.block : padding
-      const paddingInline = padding instanceof Object ? padding.inline : padding
+    const actualPadding = useMemo(() => {}, [])
 
-      const overflowBlock = overflow instanceof Object ? overflow.y : overflow
-      const overflowInline = overflow instanceof Object ? overflow.x : overflow
+    const styles = useMemo(() => {
+      const actualPadding = padding instanceof Object ? padding : { block: padding, inline: padding }
+      const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
       return base({
-        paddingBlock,
-        paddingInline,
+        paddingBlock: actualPadding.block,
+        paddingInline: actualPadding.inline,
         radius,
-        overflowBlock,
-        overflowInline,
+        overflowBlock: actualOverflow.y,
+        overflowInline: actualOverflow.x,
         layer,
         className,
       })
-    }, [className, layer, overflow, padding, radius])
+    }, [layer, overflow, padding, radius, className])
 
     const Wrapper = useSectionWrapper(Component)
 
