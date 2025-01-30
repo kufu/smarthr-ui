@@ -66,7 +66,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
 
   return (
     <Nav {...rest} className={wrapperStyle}>
-      <StatusLableHeading>{label}</StatusLableHeading>
+      <StatusLabelHeading>{label}</StatusLabelHeading>
       <ul className={styles.buttonsEl}>
         {buttons &&
           buttons.map((button, i) => (
@@ -90,7 +90,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
   )
 }
 
-const StatusLableHeading = React.memo<PropsWithChildren>(
+const StatusLabelHeading = React.memo<PropsWithChildren>(
   ({ children }) =>
     children && (
       <Heading className={styles.statusLabelHeading}>

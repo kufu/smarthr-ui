@@ -39,7 +39,7 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   displayCaret,
 }) => {
   const styles = useMemo(() => {
-    const { wrapper, icon } = appNaviDropdown({ active: current || false, displayCaret })
+    const { wrapper, icon } = appNaviDropdown({ active: current, displayCaret })
 
     return {
       wrapper: wrapper(),

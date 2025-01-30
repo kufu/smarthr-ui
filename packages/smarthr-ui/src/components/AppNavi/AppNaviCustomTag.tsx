@@ -29,7 +29,7 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   ...props
 }) => {
   const styles = useMemo(() => {
-    const { wrapper, icon } = appNaviCustomTag({ active: current || false })
+    const { wrapper, icon } = appNaviCustomTag({ active: current })
 
     return {
       wrapper: wrapper(),

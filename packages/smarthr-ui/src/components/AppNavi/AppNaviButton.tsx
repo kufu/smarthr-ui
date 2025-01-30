@@ -29,7 +29,7 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
   onClick,
 }) => {
   const styles = useMemo(() => {
-    const { wrapper, icon } = appNaviButton({ active: current || false })
+    const { wrapper, icon } = appNaviButton({ active: current })
 
     return {
       wrapper: wrapper(),
