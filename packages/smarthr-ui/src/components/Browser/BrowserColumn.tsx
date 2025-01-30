@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 
 import { BrowserItem } from './BrowserItem'
 import { ItemNode } from './models'
@@ -40,7 +40,10 @@ const ListItem = React.memo<
   Pick<Props, 'value' | 'columnIndex' | 'onSelectItem'> & { item: ItemNode; rowIndex: number }
 >(({ item, value, columnIndex, rowIndex, onSelectItem }) => {
   const selected = item.value === value
-  const ariaOwns = selected && item.children.length > 0 ? getColumnId(columnIndex + 1) : undefined
+  const ariaOwns = useMemo(
+    () => (selected && item.children.length > 0 ? getColumnId(columnIndex + 1) : undefined),
+    [selected, item.children.length, columnIndex],
+  )
 
   return (
     <li key={rowIndex} aria-owns={ariaOwns}>
