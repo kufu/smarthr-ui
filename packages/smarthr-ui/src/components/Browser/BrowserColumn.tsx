@@ -6,12 +6,10 @@ import { ItemNode } from './models'
 const getColumnId = (column: number) => `column-${column}`
 
 const getTabIndex = (selected: boolean, columnIndex: number, rowIndex: number, value?: string) => {
-  if (selected) {
+  if (selected || (!value && columnIndex === 0 && rowIndex === 0)) {
     return 0
   }
-  if (!value && columnIndex === 0 && rowIndex === 0) {
-    return 0
-  }
+
   return -1
 }
 
@@ -22,30 +20,26 @@ type Props = {
   onSelectItem?: (value: string) => void
 }
 
-export const BrowserColumn: FC<Props> = (props) => {
-  const { items, index: columnIndex, value, onSelectItem } = props
+export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onSelectItem }) => (
+  <div className="last:shr-flex-1 [&:not(:last-child)]:shr-w-[218px] [&:not(:last-child)]:shr-border-r-shorthand">
+    <ul className="shr-list-none shr-px-0.25 shr-py-0.5" id={getColumnId(columnIndex)}>
+      {items.map((item, rowIndex) => {
+        const selected = item.value === value
+        const ariaOwns =
+          selected && item.children.length > 0 ? getColumnId(columnIndex + 1) : undefined
 
-  return (
-    <div className="last:shr-flex-1 [&:not(:last-child)]:shr-w-[218px] [&:not(:last-child)]:shr-border-r-shorthand">
-      <ul className="shr-list-none shr-px-0.25 shr-py-0.5" id={getColumnId(columnIndex)}>
-        {items.map((item, rowIndex) => {
-          const selected = item.value === value
-          const ariaOwns =
-            selected && item.children.length > 0 ? getColumnId(columnIndex + 1) : undefined
-
-          return (
-            <li key={rowIndex} aria-owns={ariaOwns}>
-              <BrowserItem
-                selected={selected}
-                item={item}
-                columnIndex={columnIndex}
-                tabIndex={getTabIndex(selected, columnIndex, rowIndex, value)}
-                onSelectItem={onSelectItem}
-              />
-            </li>
-          )
-        })}
-      </ul>
-    </div>
-  )
-}
+        return (
+          <li key={rowIndex} aria-owns={ariaOwns}>
+            <BrowserItem
+              selected={selected}
+              item={item}
+              columnIndex={columnIndex}
+              tabIndex={getTabIndex(selected, columnIndex, rowIndex, value)}
+              onSelectItem={onSelectItem}
+            />
+          </li>
+        )
+      })}
+    </ul>
+  </div>
+)
