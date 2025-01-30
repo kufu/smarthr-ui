@@ -116,7 +116,8 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
     const actualPadding = useMemo(() => {}, [])
 
     const styles = useMemo(() => {
-      const actualPadding = padding instanceof Object ? padding : { block: padding, inline: padding }
+      const actualPadding =
+        padding instanceof Object ? padding : { block: padding, inline: padding }
       const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
       return base({

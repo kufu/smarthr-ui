@@ -38,5 +38,6 @@ export const BaseColumn: React.FC<BaseProps & Props & ElementProps> = ({
   ...props
 }) => {
   const styles = useMemo(() => baseColumn({ bgColor, className }), [bgColor, className])
+
   return <Base {...props} padding={padding} layer={0} className={styles} />
 }
