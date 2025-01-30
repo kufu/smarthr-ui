@@ -28,11 +28,12 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
   current = false,
   onClick,
 }) => {
-  const { wrapperStyle, iconStyle } = useMemo(() => {
+  const styles = useMemo(() => {
     const { wrapper, icon } = appNaviButton({ active: current })
+
     return {
-      wrapperStyle: wrapper(),
-      iconStyle: icon(),
+      wrapper: wrapper(),
+      icon: icon(),
     }
   }, [current])
 
@@ -40,9 +41,9 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
     <UnstyledButton
       aria-current={current ? 'page' : undefined}
       onClick={onClick}
-      className={wrapperStyle}
+      className={styles.wrapper}
     >
-      {Icon && <Icon className={iconStyle} />}
+      {Icon && <Icon className={styles.icon} />}
       {children}
     </UnstyledButton>
   )
