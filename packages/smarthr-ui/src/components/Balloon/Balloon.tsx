@@ -119,17 +119,13 @@ type Props = PropsWithChildren<
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-export const Balloon: FC<Props & ElementProps> = ({
-  horizontal,
-  vertical,
-  className,
-  as: Component = 'div',
-  ...props
-}) => {
-  const styles = useMemo(
-    () => balloon({ horizontal, vertical, className }),
-    [className, horizontal, vertical],
-  )
+export const Balloon = React.memo<Props & ElementProps>(
+  ({ horizontal, vertical, className, as: Component = 'div', ...props }) => {
+    const styles = useMemo(
+      () => balloon({ horizontal, vertical, className }),
+      [horizontal, vertical, className],
+    )
 
-  return <Component {...props} className={styles} />
-}
+    return <Component {...props} className={styles} />
+  },
+)
