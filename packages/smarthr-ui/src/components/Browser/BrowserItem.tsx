@@ -46,13 +46,16 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
     [item],
   )
 
-  return (
-    <label
-      htmlFor={inputId}
-      className={radioWrapperStyle({
+  const style = useMemo(
+    () =>
+      radioWrapperStyle({
         selected: selected ? (hasChildren ? 'parent' : 'last') : 'none',
-      })}
-    >
+      }),
+    [selected, hasChildren],
+  )
+
+  return (
+    <label htmlFor={inputId} className={style}>
       <input
         className="shr-sr-only"
         type="radio"
