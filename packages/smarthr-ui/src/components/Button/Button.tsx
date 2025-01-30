@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
+import React, { ButtonHTMLAttributes, PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
@@ -38,7 +38,7 @@ const buttonStyle = tv({
 })
 
 export type Props = {
-  decorators?: DecoratorsType<DECORATOR_DEFAULT_TEXTS>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 const DECORATOR_DEFAULT_TEXTS = {
@@ -125,7 +125,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
 
-const LoadingStatus = React.memo<{ loading: boolean; children: string }>(
+const LoadingStatus = React.memo<PropsWithChildren<{ loading: boolean }>>(
   ({ loading, children }) => {
     const { createPortal } = usePortal()
 

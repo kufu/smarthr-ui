@@ -19,8 +19,8 @@ type BaseProps = PropsWithChildren<{
   $loading?: boolean
   className: string
   elementAs?: ElementType
-  prefix?: React.ReactNode
-  suffix?: React.ReactNode
+  prefix?: ReactNode
+  suffix?: ReactNode
 }>
 
 type ButtonProps = BaseProps & {
@@ -46,12 +46,11 @@ export function ButtonWrapper({
   square,
   wide = false,
   $loading,
-  isAnchor,
   prefix,
   suffix,
   children,
   className,
-  ...props
+  ...rest
 }: Props) {
   const wrapperStyle = useMemo(() => {
     const generate = button({
@@ -62,14 +61,16 @@ export function ButtonWrapper({
       wide,
     })
 
-    const wrapper = isAnchor ? generate.anchor : generate.button
+    const wrapper = rest.isAnchor ? generate.anchor : generate.button
 
     return wrapper({ className })
-  }, [$loading, size, square, variant, wide, className, isAnchor])
+  }, [$loading, size, square, variant, wide, className, rest.isAnchor])
   const innerStyle = useMemo(() => buttonInner({ size }), [size])
 
-  if (isAnchor) {
-    const { anchorRef, elementAs, ...others } = props
+  // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
+  // 自動型づけできなくなってしまう
+  if (rest.isAnchor) {
+    const { anchorRef, elementAs, isAnchor: _, ...others } = rest
     const Component = elementAs || 'a'
 
     return (
@@ -80,7 +81,7 @@ export function ButtonWrapper({
       </Component>
     )
   } else {
-    const { buttonRef, disabled, onClick, ...others } = props
+    const { buttonRef, disabled, onClick, ...others } = rest
 
     return (
       // eslint-disable-next-line smarthr/best-practice-for-button-element
