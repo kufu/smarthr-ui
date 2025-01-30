@@ -55,11 +55,12 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
     }: PropsWithoutRef<AppNaviAnchorProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const { wrapperStyle, iconStyle } = useMemo(() => {
+    const styles = useMemo(() => {
       const { wrapper, icon } = appNaviAnchor({ active: current })
+
       return {
-        wrapperStyle: wrapper(),
-        iconStyle: icon(),
+        wrapper: wrapper(),
+        icon: icon(),
       }
     }, [current])
 
@@ -71,9 +72,9 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
         ref={ref}
         href={href}
         aria-current={current ? 'page' : undefined}
-        className={wrapperStyle}
+        className={styles.wrapper}
       >
-        {Icon && <Icon className={iconStyle} />}
+        {Icon && <Icon className={styles.icon} />}
         {children}
       </Component>
     )
