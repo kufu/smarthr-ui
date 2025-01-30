@@ -34,7 +34,7 @@ export const BrowserColumn: FC<Props> = (props) => {
             selected && item.children.length > 0 ? getColumnId(columnIndex + 1) : undefined
 
           return (
-            <li key={`${columnIndex}-${rowIndex}`} aria-owns={ariaOwns}>
+            <li key={rowIndex} aria-owns={ariaOwns}>
               <BrowserItem
                 selected={selected}
                 item={item}
