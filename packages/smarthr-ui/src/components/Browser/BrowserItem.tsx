@@ -59,7 +59,7 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
       onSelectItem
         ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
         : undefined,
-    [],
+    [onSelectItem],
   )
 
   return (
@@ -75,10 +75,16 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
         onChange={onChange}
         checked={selected}
       />
-      <Cluster align="center" justify="space-between">
-        <Text>{item.label}</Text>
-        {hasChildren && <FaAngleRightIcon />}
-      </Cluster>
+      <BodyCluster label={item.label} hasChildren={hasChildren} />
     </label>
   )
 }
+
+const BodyCluster = React.memo<{ label: string; hasChildren: boolean }>(
+  ({ label, hasChildren }) => (
+    <Cluster align="center" justify="space-between" as="span">
+      <Text>{label}</Text>
+      {hasChildren && <FaAngleRightIcon />}
+    </Cluster>
+  ),
+)
