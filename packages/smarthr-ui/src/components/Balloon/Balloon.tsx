@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
