@@ -1,6 +1,7 @@
 import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Heading } from '../Heading'
 import { Nav } from '../SectioningContent'
 import { StatusLabel } from '../StatusLabel'
 
@@ -34,7 +35,7 @@ const appNavi = tv({
       'smarthr-ui-AppNavi',
       'shr-flex shr-min-w-max shr-items-center shr-bg-white shr-px-1.5 shr-shadow-layer-1',
     ],
-    statusLabel: ['smarthr-ui-AppNavi-label', 'shr-me-1 shr-shrink-0'],
+    statusLabelHeading: ['smarthr-ui-AppNavi-label', 'shr-me-1 shr-shrink-0 shr-leading-none'],
     buttonsEl: [
       'smarthr-ui-AppNavi-buttons',
       'shr-flex shr-items-stretch shr-gap-1 shr-self-stretch',
@@ -44,9 +45,9 @@ const appNavi = tv({
   },
 })
 
-const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = appNavi()
+const { wrapper, statusLabelHeading, buttonsEl, listItem, additionalAreaEl } = appNavi()
 const styles = {
-  statusLabel: statusLabel(),
+  statusLabelHeading: statusLabelHeading(),
   buttonsEl: buttonsEl(),
   listItem: listItem(),
   additionalAreaEl: additionalAreaEl(),
@@ -64,10 +65,8 @@ export const AppNavi: FC<Props & ElementProps> = ({
   const wrapperStyle = useMemo(() => wrapper({ className }), [className])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Nav {...rest} className={wrapperStyle}>
-      {label && <StatusLabel className={styles.statusLabel}>{label}</StatusLabel>}
-
+      <StatusLableHeading>{label}</StatusLableHeading>
       <ul className={styles.buttonsEl}>
         {buttons &&
           buttons.map((button, i) => (
@@ -90,6 +89,15 @@ export const AppNavi: FC<Props & ElementProps> = ({
     </Nav>
   )
 }
+
+const StatusLableHeading = React.memo<PropsWithChildren>(
+  ({ children }) =>
+    children && (
+      <Heading className={styles.statusLabelHeading}>
+        <StatusLabel>{children}</StatusLabel>
+      </Heading>
+    ),
+)
 
 const renderButtons = (children: ReactNode) =>
   React.Children.map(children, (child): ReactNode => {
