@@ -92,7 +92,7 @@ const badge = tv({
   ],
 })
 
-export const Badge: React.FC<BadgeProps> = ({ count, showZero, ...rest }) => {
+export const Badge = React.memo<BadgeProps>(({ count, showZero, ...rest }) => {
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
 
   // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
@@ -101,7 +101,7 @@ export const Badge: React.FC<BadgeProps> = ({ count, showZero, ...rest }) => {
   }
 
   return <ActualBadge {...rest} count={actualCount} />
-}
+})
 
 const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
   count,
