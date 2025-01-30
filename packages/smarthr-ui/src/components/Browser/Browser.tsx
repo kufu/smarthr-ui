@@ -1,7 +1,7 @@
 import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'
@@ -31,24 +31,19 @@ type Props = {
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'notFoundTitle' | 'notFoundDescription'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const NOT_FOUND_TITLE = '該当する項目がありません。'
-const NOT_FOUND_DESCRIPTION = '別の条件を試してください。'
+const DECORATOR_DEFAULT_TEXTS = {
+  notFoundTitle: '該当する項目がありません。',
+  notFoundDescription: '別の条件を試してください。',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export const Browser: FC<Props> = (props) => {
   const { value, decorators, onSelectItem } = props
 
-  const decoratedTexts = useMemo(
-    () => ({
-      notFoundTitle: decorators?.notFoundTitle?.(NOT_FOUND_TITLE) ?? NOT_FOUND_TITLE,
-      notFoundDescription:
-        decorators?.notFoundDescription?.(NOT_FOUND_DESCRIPTION) ?? NOT_FOUND_DESCRIPTION,
-    }),
-    [decorators],
-  )
-
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const rootNode = useMemo(() => RootNode.from({ children: props.items }), [props.items])
 
   const selectedNode = useMemo(() => {
@@ -121,9 +116,9 @@ export const Browser: FC<Props> = (props) => {
         ))
       ) : (
         <Text>
-          {decoratedTexts.notFoundTitle}
+          {decorated.notFoundTitle}
           <br />
-          {decoratedTexts.notFoundDescription}
+          {decorated.notFoundDescription}
         </Text>
       )}
     </div>
