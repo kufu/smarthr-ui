@@ -93,10 +93,15 @@ const badge = tv({
 })
 
 export const Badge = React.memo<BadgeProps>(({ count, showZero, ...rest }) => {
+  // ドット表示の場合、数値表示は無いため、早期returnする
+  if (rest.dot) {
+    return <ActualBadge {...rest} />
+  }
+
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
 
-  // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
-  if (actualCount === undefined && !rest.dot && !rest.children) {
+  // 0値を表示するでもない場合は何も表示しない
+  if (actualCount === undefined && !rest.children) {
     return null
   }
 
