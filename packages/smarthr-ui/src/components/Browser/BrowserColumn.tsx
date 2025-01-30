@@ -5,14 +5,6 @@ import { ItemNode } from './models'
 
 const getColumnId = (column: number) => `column-${column}`
 
-const getTabIndex = (selected: boolean, columnIndex: number, rowIndex: number, value?: string) => {
-  if (selected || (!value && columnIndex === 0 && rowIndex === 0)) {
-    return 0
-  }
-
-  return -1
-}
-
 type Props = {
   value?: string
   items: ItemNode[]
@@ -45,13 +37,24 @@ const ListItem = React.memo<
     [selected, item.children.length, columnIndex],
   )
 
+  // HINT: valueのままmemo化の依存関係にすると、キャッシュ効率が悪いため
+  // booleanに変更してなるべく変化がない状態にする
+  const nullValue = !value
+  const tabIndex = useMemo(() => {
+    if (selected || (nullValue && columnIndex === 0 && rowIndex === 0)) {
+      return 0
+    }
+
+    return -1
+  }, [nullValue, selected, columnIndex, rowIndex])
+
   return (
     <li key={rowIndex} aria-owns={ariaOwns}>
       <BrowserItem
         selected={selected}
         item={item}
         columnIndex={columnIndex}
-        tabIndex={getTabIndex(selected, columnIndex, rowIndex, value)}
+        tabIndex={tabIndex}
         onSelectItem={onSelectItem}
       />
     </li>
