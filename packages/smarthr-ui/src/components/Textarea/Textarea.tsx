@@ -1,7 +1,9 @@
 'use client'
 
 import React, {
+  ChangeEvent,
   ComponentPropsWithRef,
+  ReactNode,
   forwardRef,
   startTransition,
   useCallback,
@@ -97,6 +99,20 @@ const textarea = tv({
   },
 })
 
+const calculateIdealRows = (
+  element?: HTMLTextAreaElement | null,
+  maxRows: number = Number.MAX_SAFE_INTEGER,
+): number => {
+  if (!element) {
+    return 0
+  }
+  // 現在の入力値に応じた行数
+  const currentInputValueRows = Math.floor(
+    element.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
+  )
+  return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
+}
+
 export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
   (
     {
@@ -123,7 +139,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const currentValue = props.defaultValue || props.value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
-    const [srCounterMessage, setSrCounterMessage] = useState('')
+    const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
     const {
       afterMaxLettersCount,
@@ -160,11 +176,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
         if (counterValue > maxLetters) {
           // {count}文字オーバー
-          return `${counterValue - maxLetters}${afterMaxLettersCount}${maxLettersCountExceeded}`
+          return (
+            <>
+              {counterValue - maxLetters}
+              {afterMaxLettersCount}
+              {maxLettersCountExceeded}
+            </>
+          )
         }
 
         // あと{count}文字
-        return `${beforeMaxLettersCount}${maxLetters - counterValue}${afterMaxLettersCount}`
+        return (
+          <>
+            {beforeMaxLettersCount}
+            {maxLetters - counterValue}
+            {afterMaxLettersCount}
+          </>
+        )
       },
       [maxLetters, maxLettersCountExceeded, afterMaxLettersCount, beforeMaxLettersCount],
     )
@@ -175,12 +203,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       ref,
       () => textareaRef.current,
     )
-
-    useEffect(() => {
-      if (autoFocus && textareaRef && textareaRef.current) {
-        textareaRef.current.focus()
-      }
-    }, [autoFocus])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedUpdateCount = useCallback(
@@ -208,49 +230,54 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
 
     const handleChange = useCallback(
-      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (onChange) {
-          onChange(event)
-        }
-
+      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (maxLetters) {
-          const inputValue = event.currentTarget.value
+          const inputValue = e.currentTarget.value
           debouncedUpdateCount(inputValue)
           debouncedUpdateSrCounterMessage(inputValue)
         }
+
+        onChange?.(e)
       },
       [debouncedUpdateCount, maxLetters, onChange, debouncedUpdateSrCounterMessage],
     )
 
+    // autoFocus時に、フォーカスを当てる
+    useEffect(() => {
+      if (autoFocus && textareaRef && textareaRef.current) {
+        textareaRef.current.focus()
+      }
+    }, [autoFocus])
+
+    // autoResize時に、初期値での高さを指定
+    useEffect(() => {
+      if (!autoResize) {
+        return
+      }
+      if (!textareaRef.current) {
+        return
+      }
+
+      setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
+    }, [setInterimRows, maxRows, autoResize])
+
     const handleInput = useCallback(
-      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (!autoResize) {
-          return onInput && onInput(e)
-        }
+      (e: ChangeEvent<HTMLTextAreaElement>) => {
+        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
+        e.target.rows = 0
 
-        const previousRows = e.target.rows
-        // 消したことを検知できないので必ず初期化
-        e.target.rows = rows
-
-        const currentRows = Math.floor(
-          e.target.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
-        )
-
-        if (previousRows === currentRows) {
+        if (autoResize) {
+          const currentRows = calculateIdealRows(e.target, maxRows)
+          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
           e.target.rows = currentRows
-        } else if (maxRows < currentRows) {
-          // 最大まで達したとき高さが潰れないように代入
-          e.target.rows = maxRows
+          setInterimRows(currentRows)
         }
 
-        setInterimRows(currentRows < maxRows ? currentRows : maxRows)
-
-        if (onInput) {
-          onInput(e)
-        }
+        onInput?.(e)
       },
-      [autoResize, maxRows, onInput, rows],
+      [autoResize, maxRows, onInput],
     )
+
     const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
       const { textareaEl, counter, counterText } = textarea()
       return {

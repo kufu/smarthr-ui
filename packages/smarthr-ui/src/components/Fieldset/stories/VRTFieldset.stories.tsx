@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { Fieldset } from '../Fieldset'
 
 import { _childrenOptions } from './Fieldset.stories'
@@ -33,6 +33,12 @@ export default {
   args: {
     title: 'フィールドセットタイトル',
     statusLabelProps: { type: 'grey', children: '任意' },
+    subActionArea: (
+      <Cluster justify="space-between">
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
+      </Cluster>
+    ),
     helpMessage: 'フィールドセットの補足となるヘルプメッセージを入れます。',
     exampleMessage: '入力欄に入れる入力例',
     errorMessages: ['入力されていません', '20文字以上入力してください。'],

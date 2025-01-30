@@ -7,7 +7,7 @@ import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
 import { CurrencyInput, Input } from '../../Input'
 import { InputFile } from '../../InputFile'
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { MonthPicker, TimePicker } from '../../Picker'
 import { Select } from '../../Select'
 import { STYLE_TYPE_MAP } from '../../Text'
@@ -96,6 +96,18 @@ export const TitleType: StoryObj<typeof FormControl> = {
       ))}
     </Stack>
   ),
+}
+
+export const SubActionArea: StoryObj<typeof FormControl> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: (
+      <Cluster justify="space-between">
+        <div>サブアクションエリア（start)</div>
+        <div>サブアクションエリア（end)</div>
+      </Cluster>
+    ),
+  },
 }
 
 export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {

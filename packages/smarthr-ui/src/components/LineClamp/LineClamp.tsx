@@ -64,33 +64,33 @@ export const LineClamp: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
+  if (maxLines < 1 || maxLines > 6) {
+    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+  }
+
   const [isTooltipVisible, setTooltipVisible] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const shadowRef = useRef<HTMLSpanElement>(null)
 
-  const isMultiLineOverflow = () => {
+  useEffect(() => {
     const el = ref.current
     const shadowEl = shadowRef.current
 
     // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-    return el && shadowEl
-      ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
-      : false
-  }
+    const isMultiLineOverflow =
+      el && shadowEl
+        ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
+        : false
 
-  useEffect(() => {
-    setTooltipVisible(isMultiLineOverflow())
+    setTooltipVisible(isMultiLineOverflow)
   }, [maxLines, children])
-
-  if (maxLines < 1) {
-    throw new Error('"maxLines" cannot be less than 0.')
-  }
 
   const { baseStyle, clampedLineStyle, shadowElementWrapperStyle, shadowElementStyle } =
     useMemo(() => {
       const { base, clampedLine, shadowElementWrapper, shadowElement } = lineClamp({ maxLines })
+
       return {
         baseStyle: base({ className }),
         clampedLineStyle: clampedLine(),
@@ -99,7 +99,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
       }
     }, [maxLines, className])
 
-  const ActualLineClamp = () => (
+  const actualLineClamp = (
     <span {...props} className={baseStyle}>
       <span className={clampedLineStyle} ref={ref}>
         {children}
@@ -115,9 +115,9 @@ export const LineClamp: FC<Props & ElementProps> = ({
 
   return isTooltipVisible ? (
     <Tooltip message={children} multiLine vertical="auto">
-      <ActualLineClamp />
+      {actualLineClamp}
     </Tooltip>
   ) : (
-    <ActualLineClamp />
+    actualLineClamp
   )
 }

@@ -38,6 +38,7 @@ type Props = Pick<Step, 'status'> & {
 export const StepCounter: FC<Props> = ({ status, current, stepNumber }) => {
   const statusType = typeof status === 'object' ? status.type : status
   const { wrapper, counter, statusIcon } = style({ status: statusType, current })
+
   return (
     <span className={wrapper()}>
       <span className={counter()} aria-hidden>

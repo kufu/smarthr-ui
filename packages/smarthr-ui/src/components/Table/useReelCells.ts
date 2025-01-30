@@ -7,42 +7,40 @@ export const useReelCells = () => {
   useEffect(() => {
     const currentRef = tableWrapperRef.current
 
+    if (!currentRef) {
+      return () => undefined
+    }
+
     const handleScroll = () => {
-      if (currentRef) {
-        const stickyCells = currentRef.querySelectorAll('.fixedElement') || []
-        const scrollLeft = currentRef.scrollLeft
-        const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
+      const stickyCells = currentRef.querySelectorAll('.fixedElement')
 
-        stickyCells.forEach((cell) => {
-          const shouldFix = maxScrollLeft > 0 && scrollLeft < maxScrollLeft
-
-          if (shouldFix) {
-            cell.classList.add('fixed')
-            setShowShadow(scrollLeft > 0)
-          } else {
-            cell.classList.remove('fixed')
-            setShowShadow(maxScrollLeft === 0 && scrollLeft === 0 ? false : true)
-          }
-        })
+      if (!stickyCells) {
+        return
       }
+
+      const scrollLeft = currentRef.scrollLeft
+      const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
+      const shouldFix = maxScrollLeft > 0 && scrollLeft < maxScrollLeft
+      const settableShowShadow = shouldFix
+        ? scrollLeft > 0
+        : maxScrollLeft !== 0 || scrollLeft !== 0
+
+      stickyCells.forEach((cell) => {
+        cell.classList.toggle('fixed', shouldFix)
+        setShowShadow(settableShowShadow)
+      })
     }
+
     handleScroll()
+    currentRef.addEventListener('scroll', handleScroll)
 
-    currentRef?.addEventListener('scroll', handleScroll)
+    const observer = new window.ResizeObserver(handleScroll)
 
-    const observer = new window.ResizeObserver(() => {
-      handleScroll()
-    })
-
-    if (currentRef) {
-      observer.observe(currentRef)
-    }
+    observer.observe(currentRef)
 
     return () => {
-      if (currentRef) {
-        currentRef.removeEventListener('scroll', handleScroll)
-        observer.unobserve(currentRef)
-      }
+      currentRef.removeEventListener('scroll', handleScroll)
+      observer.unobserve(currentRef)
     }
   }, [tableWrapperRef, setShowShadow])
 

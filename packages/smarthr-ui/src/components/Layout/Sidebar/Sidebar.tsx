@@ -114,18 +114,27 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
-    const rowGap = gap instanceof Object ? gap.row : gap
-    const columnGap = gap instanceof Object ? gap.column : gap
+    const gaps = useMemo(() => {
+      if (gap instanceof Object) {
+        return gap
+      }
+
+      return {
+        row: gap,
+        column: gap,
+      }
+    }, [gap])
 
     const wrapperStyle = useMemo(
-      () => sidebar({ align, rowGap, columnGap, className }),
-      [align, rowGap, columnGap, className],
+      () => sidebar({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
+      [align, gaps.row, gaps.column, className],
     )
     const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
       const { firstItem, lastItem } = sidebarItem({ right })
       const styleProps = {
         minWidth: contentsMinWidth,
       }
+
       return {
         firstItemStyleProps: {
           className: firstItem(),
@@ -139,16 +148,17 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
     }, [contentsMinWidth, right])
 
     // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
+    const maxChildrenIndex = React.Children.count(children) - 1
     const styledChildren = React.Children.map(children, (child, i) => {
       if (React.isValidElement(child)) {
         const childClassName = child.props.className ?? ''
+
         if (i === 0) {
           return React.cloneElement(child as ReactElement, {
             className: `${firstItemStyleProps.className} ${childClassName}`,
             style: { ...firstItemStyleProps.style, ...child.props.style },
           })
-        }
-        if (i === React.Children.count(children) - 1) {
+        } else if (i === maxChildrenIndex) {
           return React.cloneElement(child as ReactElement, {
             className: `${lastItemStyleProps.className} ${childClassName}`,
             style: { ...lastItemStyleProps.style, ...child.props.style },
