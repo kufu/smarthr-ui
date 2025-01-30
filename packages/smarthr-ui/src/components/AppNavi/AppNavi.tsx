@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Nav } from '../SectioningContent'
@@ -70,37 +70,19 @@ export const AppNavi: FC<Props & ElementProps> = ({
 
       <ul className={styles.buttonsEl}>
         {buttons &&
-          buttons.map((button, i) => {
-            if ('tag' in button) {
-              return (
-                <li key={i} className={styles.listItem}>
-                  <AppNaviCustomTag {...button} />
-                </li>
-              )
-            }
-
-            if ('href' in button) {
-              return (
-                <li key={i} className={styles.listItem}>
-                  <AppNaviAnchor {...button} />
-                </li>
-              )
-            }
-
-            if ('dropdownContent' in button) {
-              return (
-                <li key={i} className={styles.listItem}>
-                  <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
-                </li>
-              )
-            }
-
-            return (
-              <li key={i} className={styles.listItem}>
+          buttons.map((button, i) => (
+            <li key={i} className={styles.listItem}>
+              {'tag' in button ? (
+                <AppNaviCustomTag {...button} />
+              ) : 'href' in button ? (
+                <AppNaviAnchor {...button} />
+              ) : 'dropdownContent' in button ? (
+                <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
+              ) : (
                 <AppNaviButton {...button} />
-              </li>
-            )
-          })}
+              )}
+            </li>
+          ))}
         {renderButtons(children)}
       </ul>
 
