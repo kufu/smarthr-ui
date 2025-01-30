@@ -9,17 +9,12 @@ import { ItemNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const radioWrapperStyle = tv({
-  base: 'shr-block shr-px-1 shr-py-0.5 shr-rounded-m focus-within:shr-shadow-outline',
-  variants: {
-    selected: {
-      parent: 'shr-bg-white-darken',
-      last: 'shr-bg-main shr-text-white forced-colors:shr-bg-[Highlight]',
-      none: 'hover:shr-bg-white-darken',
-    },
-  },
-  defaultVariants: {
-    selected: 'none',
-  },
+  base: [
+    'shr-block shr-px-1 shr-py-0.5 shr-rounded-m focus-within:shr-shadow-outline',
+    '[&[data-selected="true"][data-type="parent"]]:shr-bg-white-darken',
+    '[&[data-selected="true"][data-type="last"]]:shr-bg-main [&[data-selected="true"][data-type="last"]]:shr-text-white [&[data-selected="true"][data-type="last"]]:forced-colors:shr-bg-[Highlight]',
+    '[&[data-selected="false"]]:hover:shr-bg-white-darken',
+  ],
 })
 
 type Props = {
@@ -37,48 +32,49 @@ const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
   }
 }
 
-export const BrowserItem = React.memo<Props>(({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
-  const { inputId, hasChildren } = useMemo(
-    () => ({
-      inputId: getElementIdFromNode(item),
-      hasChildren: item.children.length > 0,
-    }),
-    [item],
-  )
-
-  const style = useMemo(
-    () =>
-      radioWrapperStyle({
-        selected: selected ? (hasChildren ? 'parent' : 'last') : 'none',
+export const BrowserItem = React.memo<Props>(
+  ({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
+    const { inputId, hasChildren } = useMemo(
+      () => ({
+        inputId: getElementIdFromNode(item),
+        hasChildren: item.children.length > 0,
       }),
-    [selected, hasChildren],
-  )
+      [item],
+    )
 
-  const onChange = useMemo(
-    () =>
-      onSelectItem
-        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
-        : undefined,
-    [onSelectItem],
-  )
+    const style = useMemo(() => radioWrapperStyle(), [])
 
-  return (
-    <label htmlFor={inputId} className={style}>
-      <input
-        className="shr-sr-only"
-        type="radio"
-        id={inputId}
-        name={`column-${columnIndex}`}
-        value={item.value}
-        tabIndex={tabIndex}
-        onKeyDown={HANDLE_KEYDOWN}
-        onChange={onChange}
-        checked={selected}
-      />
-      <BodyCluster label={item.label} hasChildren={hasChildren} />
-    </label>
-  )
-})
+    const onChange = useMemo(
+      () =>
+        onSelectItem
+          ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
+          : undefined,
+      [onSelectItem],
+    )
+
+    return (
+      <label
+        htmlFor={inputId}
+        data-selected={selected}
+        data-type={hasChildren ? 'parent' : 'last'}
+        className={style}
+      >
+        <input
+          className="shr-sr-only"
+          type="radio"
+          id={inputId}
+          name={`column-${columnIndex}`}
+          value={item.value}
+          tabIndex={tabIndex}
+          onKeyDown={HANDLE_KEYDOWN}
+          onChange={onChange}
+          checked={selected}
+        />
+        <BodyCluster label={item.label} hasChildren={hasChildren} />
+      </label>
+    )
+  },
+)
 
 const BodyCluster = React.memo<{ label: string; hasChildren: boolean }>(
   ({ label, hasChildren }) => (
