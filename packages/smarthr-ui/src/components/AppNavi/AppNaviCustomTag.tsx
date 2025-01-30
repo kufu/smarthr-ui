@@ -28,17 +28,18 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   current = false,
   ...props
 }) => {
-  const { wrapperStyle, iconStyle } = useMemo(() => {
+  const styles = useMemo(() => {
     const { wrapper, icon } = appNaviCustomTag({ active: current })
+
     return {
-      wrapperStyle: wrapper(),
-      iconStyle: icon(),
+      wrapper: wrapper(),
+      icon: icon(),
     }
   }, [current])
 
   return (
-    <Tag {...props} aria-current={current ? 'page' : undefined} className={wrapperStyle}>
-      {Icon && <Icon className={iconStyle} />}
+    <Tag {...props} aria-current={current ? 'page' : undefined} className={styles.wrapper}>
+      {Icon && <Icon className={styles.icon} />}
       {children}
     </Tag>
   )
