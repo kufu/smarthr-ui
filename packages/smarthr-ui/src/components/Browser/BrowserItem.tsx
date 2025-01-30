@@ -37,7 +37,7 @@ const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
   }
 }
 
-export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
+export const BrowserItem = React.memo<Props>(({ selected, item, tabIndex, columnIndex, onSelectItem }) => {
   const { inputId, hasChildren } = useMemo(
     () => ({
       inputId: getElementIdFromNode(item),
@@ -78,7 +78,7 @@ export const BrowserItem: FC<Props> = ({ selected, item, tabIndex, columnIndex, 
       <BodyCluster label={item.label} hasChildren={hasChildren} />
     </label>
   )
-}
+})
 
 const BodyCluster = React.memo<{ label: string; hasChildren: boolean }>(
   ({ label, hasChildren }) => (
