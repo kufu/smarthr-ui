@@ -56,63 +56,62 @@ export const UserInfo: FC<Props> = ({
   return <ActualUserInfo accountUrl={accountUrl} displayName={displayName} />
 }
 
-const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = ({
-  accountUrl,
-  displayName,
-}) => {
-  const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
-  const { locale } = useLocale()
-  const translate = useTranslate()
+const ActualUserInfo = React.memo<Pick<Props, 'accountUrl'> & { displayName: string }>(
+  ({ accountUrl, displayName }) => {
+    const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
+    const { locale } = useLocale()
+    const translate = useTranslate()
 
-  const styles = useMemo(() => {
-    const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = userInfo()
+    const styles = useMemo(() => {
+      const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = userInfo()
 
-    return {
-      iconButton: iconButton(),
-      iconButtonInner: iconButtonInner(),
-      dropdownUserName: dropdownUserName(),
-      dropdownButtonArea: dropdownButtonArea(),
-    }
-  }, [])
-  const tlanslated = useMemo(
-    () => ({
-      account: translate('MobileHeader/UserInfo/account'),
-      userSetting: translate('common/userSetting'),
-    }),
-    [translate],
-  )
+      return {
+        iconButton: iconButton(),
+        iconButtonInner: iconButtonInner(),
+        dropdownUserName: dropdownUserName(),
+        dropdownButtonArea: dropdownButtonArea(),
+      }
+    }, [])
+    const tlanslated = useMemo(
+      () => ({
+        account: translate('MobileHeader/UserInfo/account'),
+        userSetting: translate('common/userSetting'),
+      }),
+      [translate],
+    )
 
-  return (
-    <>
-      <Dropdown>
-        <AccountDropdownTrigger
-          ariaLabel={tlanslated.account}
-          className={styles.iconButton}
-          innerStyle={styles.iconButtonInner}
-        />
-        <DropdownContent>
-          <DisplayName className={styles.dropdownUserName}>{displayName}</DisplayName>
+    return (
+      <>
+        <Dropdown>
+          <AccountDropdownTrigger
+            ariaLabel={tlanslated.account}
+            className={styles.iconButton}
+            innerStyle={styles.iconButtonInner}
+          />
+          <DropdownContent>
+            <DisplayName className={styles.dropdownUserName}>{displayName}</DisplayName>
 
-          {(locale || accountUrl) && (
-            <div className={styles.dropdownButtonArea}>
-              {locale && <LanguageButton setDialogOpen={setLanguageDialogOpen} />}
+            {(locale || accountUrl) && (
+              <div className={styles.dropdownButtonArea}>
+                {locale && <LanguageButton setDialogOpen={setLanguageDialogOpen} />}
 
-              <AccountURLButton href={accountUrl}>{tlanslated.userSetting}</AccountURLButton>
-            </div>
-          )}
-        </DropdownContent>
-      </Dropdown>
+                <AccountURLButton href={accountUrl}>{tlanslated.userSetting}</AccountURLButton>
+              </div>
+            )}
+          </DropdownContent>
+        </Dropdown>
 
-      {locale && (
-        <LanguageDialog
-          locale={locale}
-          isOpen={languageDialogOpen}
-          setOpen={setLanguageDialogOpen}
-        />
-      )}
-    </>
-  )
-}
+        {locale && (
+          <LanguageDialog
+            locale={locale}
+            isOpen={languageDialogOpen}
+            setOpen={setLanguageDialogOpen}
+          />
+        )}
+      </>
+    )
+  },
+)
 
 const AccountDropdownTrigger = React.memo<{
   className: string
