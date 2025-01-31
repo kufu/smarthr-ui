@@ -85,28 +85,17 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
   return (
     <>
       <Dropdown>
-        <DropdownTrigger>
-          <Button variant="skeleton" size="s" square className={styles.iconButton}>
-            <span className={styles.iconButtonInner}>
-              <FaUserLargeIcon
-                role="img"
-                aria-label={tlanslated.account}
-                className="shr-fill-grey"
-              />
-            </span>
-          </Button>
-        </DropdownTrigger>
-
+        <AccountDropdownTrigger
+          ariaLabel={tlanslated.account}
+          className={styles.iconButton}
+          innerStyle={styles.iconButtonInner}
+        />
         <DropdownContent>
-          <div className={styles.dropdownUserName}>
-            <p>{displayName}</p>
-          </div>
+          <DisplayName className={styles.dropdownUserName}>{displayName}</DisplayName>
 
           {(locale || accountUrl) && (
             <div className={styles.dropdownButtonArea}>
-              {locale && (
-                <LanguageButton setDialogOpen={setLanguageDialogOpen} />
-              )}
+              {locale && <LanguageButton setDialogOpen={setLanguageDialogOpen} />}
 
               <AccountURLButton href={accountUrl}>{tlanslated.userSetting}</AccountURLButton>
             </div>
@@ -125,30 +114,55 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
   )
 }
 
-const LanguageButton = React.memo<{ setDialogOpen: (flg: boolean) => void }>(({ setDialogOpen }) => (
-  <CommonButton
-    elementAs="button"
-    type="button"
-    onClick={() => setDialogOpen(true)}
-    prefix={<FaGlobeIcon />}
-  >
-    Language
-  </CommonButton>
+const AccountDropdownTrigger = React.memo<{
+  className: string
+  innerStyle: string
+  ariaLabel: string
+}>(({ className, innerStyle, ariaLabel }) => (
+  <DropdownTrigger>
+    <Button variant="skeleton" size="s" square className={className}>
+      <span className={innerStyle}>
+        <FaUserLargeIcon role="img" aria-label={ariaLabel} className="shr-fill-grey" />
+      </span>
+    </Button>
+  </DropdownTrigger>
 ))
 
-const AccountURLButton = React.memo<PropsWithChildren<{ href?: string | null }>>(({ href, children }) => (
-  href && (
+const DisplayName = React.memo<{ className: string; children: string }>(
+  ({ className, children }) => (
+    <div className={className}>
+      <p>{children}</p>
+    </div>
+  ),
+)
+
+const LanguageButton = React.memo<{ setDialogOpen: (flg: boolean) => void }>(
+  ({ setDialogOpen }) => (
     <CommonButton
-      elementAs="a"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      prefix={<FaGearIcon />}
+      elementAs="button"
+      type="button"
+      onClick={() => setDialogOpen(true)}
+      prefix={<FaGlobeIcon />}
     >
-      <Translate>{children}</Translate>
+      Language
     </CommonButton>
-  )
-))
+  ),
+)
+
+const AccountURLButton = React.memo<PropsWithChildren<{ href?: string | null }>>(
+  ({ href, children }) =>
+    href && (
+      <CommonButton
+        elementAs="a"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<FaGearIcon />}
+      >
+        <Translate>{children}</Translate>
+      </CommonButton>
+    ),
+)
 
 const LanguageDialog = React.memo<{
   locale: ExistLocaleType
