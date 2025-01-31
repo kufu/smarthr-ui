@@ -22,18 +22,20 @@ type Props = {
 }
 
 export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSelect }) => {
-  if (!tenants || tenants.length === 0 || !currentTenantId) {
-    return null
-  }
+  const tenantName = useMemo(() => {
+    if (!tenants || tenants.length === 0 || !currentTenantId) {
+      return undefined
+    }
 
-  const tenantName = tenants.find((tenant) => tenant.id === currentTenantId)?.name
+    return tenants.find((tenant) => tenant.id === currentTenantId)?.name
+  }, [tenants, currentTenantId])
 
   if (!tenantName) {
     return null
   }
 
   if (tenants.length === 1 || !onTenantSelect) {
-    return <Text as="p">{tenantName}</Text>
+    return <TenantNameText>{tenantName}</TenantNameText>
   }
 
   return (
@@ -45,6 +47,10 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
     />
   )
 }
+
+const TenantNameText = React.memo<{ children: string }>(({ children }) => (
+  <Text as="p">{children}</Text>
+))
 
 const TenantDropdown: FC<
   Pick<Required<Props>, 'tenants' | 'currentTenantId' | 'onTenantSelect'> & { tenantName: string }
