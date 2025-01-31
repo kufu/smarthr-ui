@@ -78,17 +78,26 @@ const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ re
         </Stack>
       )}
 
-      <div className={styles.indexLinkWrapper}>
-        <a
-          href={releaseNote.indexUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.indexLinkAnchor}
-        >
-          <Translate>{translated.seeAll}</Translate>
-          <FaUpRightFromSquareIcon className={styles.icon} />
-        </a>
-      </div>
+      <IndexLink href={releaseNote.indexUrl} styles={styles}>
+        {translated.seeAll}
+      </IndexLink>
     </div>
   )
 }
+
+const IndexLink = React.memo<{
+  styles: {
+    indexLinkWrapper: string
+    indexLinkAnchor: string
+    icon: string
+  }
+  href: string
+  children: string
+}>(({ href, styles, children }) => (
+  <div className={styles.indexLinkWrapper}>
+    <a href={href} target="_blank" rel="noopener noreferrer" className={styles.indexLinkAnchor}>
+      <Translate>{children}</Translate>
+      <FaUpRightFromSquareIcon className={styles.icon} />
+    </a>
+  </div>
+))
