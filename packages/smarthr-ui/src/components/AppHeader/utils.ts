@@ -28,7 +28,7 @@ export const isChildNavigation = (
   'href' in navigation || 'elementAs' in navigation || 'onClick' in navigation
 
 export const isChildNavigationGroup = (
-  navigation: Navigation | ChildNavigationGroup | undefined,
+  navigation: Navigation | ChildNavigationGroup,
 ): navigation is ChildNavigationGroup =>
   navigation &&
   'childNavigations' in navigation &&
