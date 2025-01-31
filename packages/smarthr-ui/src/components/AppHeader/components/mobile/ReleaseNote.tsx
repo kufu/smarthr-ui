@@ -9,6 +9,7 @@ import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
+import { HeaderProps } from '../../types'
 
 const releaseNoteStyle = tv({
   slots: {
@@ -23,13 +24,13 @@ const releaseNoteStyle = tv({
 })
 
 export const ReleaseNote: FC = () => {
-  const translate = useTranslate()
   const { releaseNote } = useContext(ReleaseNoteContext)
 
-  if (!releaseNote) {
-    return null
-  }
+  return releaseNote ? <ActualReleaseNote releaseNote={releaseNote} /> : null
+}
 
+const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ releaseNote }) => {
+  const translate = useTranslate()
   const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = releaseNoteStyle()
 
   return (
