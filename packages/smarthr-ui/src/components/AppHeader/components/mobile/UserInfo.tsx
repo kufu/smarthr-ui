@@ -105,14 +105,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
           {(locale || accountUrl) && (
             <div className={styles.dropdownButtonArea}>
               {locale && (
-                <CommonButton
-                  elementAs="button"
-                  type="button"
-                  onClick={() => setLanguageDialogOpen(true)}
-                  prefix={<FaGlobeIcon />}
-                >
-                  Language
-                </CommonButton>
+                <LanguageButton setDialogOpen={setLanguageDialogOpen} />
               )}
 
               <AccountURLButton href={accountUrl}>{tlanslated.userSetting}</AccountURLButton>
@@ -131,6 +124,17 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
     </>
   )
 }
+
+const LanguageButton = React.memo<{ setDialogOpen: (flg: boolean) => void }>(({ setDialogOpen }) => (
+  <CommonButton
+    elementAs="button"
+    type="button"
+    onClick={() => setDialogOpen(true)}
+    prefix={<FaGlobeIcon />}
+  >
+    Language
+  </CommonButton>
+))
 
 const AccountURLButton = React.memo<PropsWithChildren<{ href?: string | null }>>(({ href, children }) => (
   href && (
