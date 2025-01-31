@@ -100,8 +100,13 @@ const sortFeatures = (
 
 // 文字列 a が文字列 b を含んでいたら true を返す
 export const looseInclude = (a: string, b: string) => {
+  if (a.includes(b)) {
+    return true
+  }
+
   const normalizedA = normalize(a)
   const normalizedB = normalize(b)
+
   return normalizedA.includes(normalizedB)
 }
 
