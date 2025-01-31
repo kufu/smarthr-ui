@@ -87,12 +87,15 @@ const sortFeatures = (
       ? features.filter((feature) => looseInclude(feature.name, searchQuery))
       : [...features]
 
-  if (sortType === 'name/asc') {
-    featuresRes.sort((a, b) => a.name.localeCompare(b.name))
-  }
+  switch (sortType) {
+    case 'name/asc':
+      featuresRes.sort((a, b) => a.name.localeCompare(b.name))
 
-  if (sortType === 'name/desc') {
-    featuresRes.sort((a, b) => b.name.localeCompare(a.name))
+      break
+    case 'name/desc':
+      featuresRes.sort((a, b) => b.name.localeCompare(a.name))
+
+      break
   }
 
   return featuresRes
@@ -100,6 +103,7 @@ const sortFeatures = (
 
 // 文字列 a が文字列 b を含んでいたら true を返す
 export const looseInclude = (a: string, b: string) => {
+  // HINT: normalizeは1文字ずつ変換処理を行う関係で思いため、変換せずにマッチするかどうかを確認する
   if (a.includes(b)) {
     return true
   }
