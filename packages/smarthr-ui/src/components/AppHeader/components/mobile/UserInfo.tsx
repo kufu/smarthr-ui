@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import React, { FC, PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -26,6 +26,8 @@ const userInfo = tv({
 })
 
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
+
+type ExistLocaleType = Exclude<ReturnType<typeof useLocale>['locale'], null>
 
 export const UserInfo: FC<Props> = ({
   arbitraryDisplayName,
@@ -113,17 +115,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
                 </CommonButton>
               )}
 
-              {accountUrl && (
-                <CommonButton
-                  elementAs="a"
-                  href={accountUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  prefix={<FaGearIcon />}
-                >
-                  <Translate>{tlanslated.userSetting}</Translate>
-                </CommonButton>
-              )}
+              <AccountURLButton href={accountUrl}>{tlanslated.userSetting}</AccountURLButton>
             </div>
           )}
         </DropdownContent>
@@ -140,7 +132,19 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
   )
 }
 
-type ExistLocaleType = Exclude<ReturnType<typeof useLocale>['locale'], null>
+const AccountURLButton = React.memo<PropsWithChildren<{ href?: string | null }>>(({ href, children }) => (
+  href && (
+    <CommonButton
+      elementAs="a"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      prefix={<FaGearIcon />}
+    >
+      <Translate>{children}</Translate>
+    </CommonButton>
+  )
+))
 
 const LanguageDialog = React.memo<{
   locale: ExistLocaleType
