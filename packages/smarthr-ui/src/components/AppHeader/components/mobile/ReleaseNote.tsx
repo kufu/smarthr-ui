@@ -30,8 +30,18 @@ export const ReleaseNote: FC = () => {
 }
 
 const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ releaseNote }) => {
+  const styles = useMemo(() => {
+    const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = releaseNoteStyle()
+
+    return {
+      anchor: anchor(),
+      icon: icon(),
+      indexLinkWrapper: indexLinkWrapper(),
+      indexLinkAnchor: indexLinkAnchor(),
+    }
+  }, [])
+
   const translate = useTranslate()
-  const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = releaseNoteStyle()
 
   return (
     <div>
@@ -47,24 +57,29 @@ const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ re
         <Stack>
           {releaseNote.links.slice(0, 5).map((link) => (
             <div key={link.url}>
-              <a href={link.url} target="_blank" rel="noopener noreferrer" className={anchor()}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.anchor}
+              >
                 {link.title}
-                <FaUpRightFromSquareIcon className={icon()} />
+                <FaUpRightFromSquareIcon className={styles.icon} />
               </a>
             </div>
           ))}
         </Stack>
       )}
 
-      <div className={indexLinkWrapper()}>
+      <div className={styles.indexLinkWrapper}>
         <a
           href={releaseNote.indexUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={indexLinkAnchor()}
+          className={styles.indexLinkAnchor}
         >
           <Translate>{translate('common/seeAllReleaseNotes')}</Translate>
-          <FaUpRightFromSquareIcon className={icon()} />
+          <FaUpRightFromSquareIcon className={styles.icon} />
         </a>
       </div>
     </div>
