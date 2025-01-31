@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, useCallback } from 'react'
+import React, { ComponentProps, FC, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -46,9 +46,9 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
   )
 }
 
-const TenantDropdown = React.memo<
+const TenantDropdown: FC<
   Pick<Required<Props>, 'tenants' | 'currentTenantId' | 'onTenantSelect'> & { tenantName: string }
->(({ tenantName, tenants, currentTenantId, onTenantSelect }) => {
+> = ({ tenantName, tenants, currentTenantId, onTenantSelect }) => {
   const onClickTenantName = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (e.getAttribute('data-current') !== 'true') {
@@ -60,12 +60,7 @@ const TenantDropdown = React.memo<
 
   return (
     <Dropdown>
-      <DropdownTrigger>
-        <button type="button" className={tenantDropdownTriggerButton()}>
-          {tenantName}
-          <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
-        </button>
-      </DropdownTrigger>
+      <TenantDropdownTrigger>{tenantName}</TenantDropdownTrigger>
 
       <DropdownContent controllable>
         <div className="shr-p-0.5">
@@ -84,5 +79,18 @@ const TenantDropdown = React.memo<
         </div>
       </DropdownContent>
     </Dropdown>
+  )
+}
+
+const TenantDropdownTrigger = React.memo<{ children: string }>(({ children }) => {
+  const style = useMemo(() => tenantDropdownTriggerButton(), [])
+
+  return (
+    <DropdownTrigger>
+      <button type="button" className={style}>
+        {children}
+        <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
+      </button>
+    </DropdownTrigger>
   )
 })
