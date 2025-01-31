@@ -25,7 +25,9 @@ const userInfo = tv({
   },
 })
 
-export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
+type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
+
+export const UserInfo: FC<Props> = ({
   arbitraryDisplayName,
   email,
   empCode,
@@ -33,10 +35,6 @@ export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
   lastName,
   accountUrl,
 }) => {
-  const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
-  const { locale } = useLocale()
-  const translate = useTranslate()
-
   const displayName =
     arbitraryDisplayName ??
     buildDisplayName({
@@ -49,6 +47,17 @@ export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
   if (!displayName) {
     return null
   }
+
+  return <ActualUserInfo accountUrl={accountUrl} displayName={displayName} />
+}
+
+const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = ({
+  accountUrl,
+  displayName,
+}) => {
+  const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
+  const { locale } = useLocale()
+  const translate = useTranslate()
 
   const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = userInfo()
 
