@@ -72,10 +72,13 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
       dropdownButtonArea: dropdownButtonArea(),
     }
   }, [])
-  const tlanslated = useMemo(() => ({
-    account: translate('MobileHeader/UserInfo/account'),
-    userSetting: translate('common/userSetting'),
-  }), [translate])
+  const tlanslated = useMemo(
+    () => ({
+      account: translate('MobileHeader/UserInfo/account'),
+      userSetting: translate('common/userSetting'),
+    }),
+    [translate],
+  )
 
   return (
     <>
