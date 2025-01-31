@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC } from 'react'
+import React, { ComponentProps, FC, useCallback } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -49,6 +49,15 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
 const TenantDropdown = React.memo<
   Pick<Required<Props>, 'tenants' | 'currentTenantId' | 'onTenantSelect'> & { tenantName: string }
 >(({ tenantName, tenants, currentTenantId, onTenantSelect }) => {
+  const onClickTenantName = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (e.getAttribute('data-current') !== 'true') {
+        onTenantSelect(e.currentTarget.value)
+      }
+    },
+    [onTenantSelect],
+  )
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -60,21 +69,18 @@ const TenantDropdown = React.memo<
 
       <DropdownContent controllable>
         <div className="shr-p-0.5">
-          {tenants.map((tenant) => {
-            const isCurrent = tenant.id === currentTenantId
-
-            return (
-              <CommonButton
-                elementAs="button"
-                type="button"
-                current={isCurrent}
-                key={tenant.id}
-                onClick={() => !isCurrent && onTenantSelect(tenant.id)}
-              >
-                {tenant.name}
-              </CommonButton>
-            )
-          })}
+          {tenants.map((tenant) => (
+            <CommonButton
+              key={tenant.id}
+              elementAs="button"
+              type="button"
+              current={tenant.id === currentTenantId}
+              value={tenant.id}
+              onClick={onClickTenantName}
+            >
+              {tenant.name}
+            </CommonButton>
+          ))}
         </div>
       </DropdownContent>
     </Dropdown>

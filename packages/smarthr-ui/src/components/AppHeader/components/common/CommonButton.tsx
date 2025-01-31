@@ -54,7 +54,7 @@ export const CommonButton: FC<Props> = ({
 
   if (elementAs === 'a') {
     return (
-      <a {...(props as AnchorProps)} className={commonButtonStyle}>
+      <a {...(props as AnchorProps)} data-current={current} className={commonButtonStyle}>
         {prefix}
         {props.children}
       </a>
@@ -62,7 +62,7 @@ export const CommonButton: FC<Props> = ({
   } else if (elementAs === 'button') {
     return (
       // eslint-disable-next-line smarthr/best-practice-for-button-element
-      <button {...(props as ButtonProps)} className={commonButtonStyle}>
+      <button {...(props as ButtonProps)} data-current={current} className={commonButtonStyle}>
         {prefix}
         {props.children}
       </button>
