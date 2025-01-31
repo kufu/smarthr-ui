@@ -62,14 +62,23 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
   const { locale } = useLocale()
   const translate = useTranslate()
 
-  const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = userInfo()
+  const styles = useMemo(() => {
+    const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = userInfo()
+
+    return {
+      iconButton: iconButton(),
+      iconButtonInner: iconButtonInner(),
+      dropdownUserName: dropdownUserName(),
+      dropdownButtonArea: dropdownButtonArea(),
+    }
+  }, [])
 
   return (
     <>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="skeleton" size="s" square className={iconButton()}>
-            <span className={iconButtonInner()}>
+          <Button variant="skeleton" size="s" square className={styles.iconButton}>
+            <span className={styles.iconButtonInner}>
               <FaUserLargeIcon
                 role="img"
                 aria-label={translate('MobileHeader/UserInfo/account')}
@@ -80,12 +89,12 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
         </DropdownTrigger>
 
         <DropdownContent>
-          <div className={dropdownUserName()}>
+          <div className={styles.dropdownUserName}>
             <p>{displayName}</p>
           </div>
 
           {(locale || accountUrl) && (
-            <div className={dropdownButtonArea()}>
+            <div className={styles.dropdownButtonArea}>
               {locale && (
                 <CommonButton
                   elementAs="button"
