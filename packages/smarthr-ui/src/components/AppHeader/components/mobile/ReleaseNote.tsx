@@ -23,11 +23,11 @@ const releaseNoteStyle = tv({
   },
 })
 
-export const ReleaseNote: FC = () => {
+export const ReleaseNote = React.memo(() => {
   const { releaseNote } = useContext(ReleaseNoteContext)
 
   return releaseNote ? <ActualReleaseNote releaseNote={releaseNote} /> : null
-}
+})
 
 const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ releaseNote }) => {
   const styles = useMemo(() => {

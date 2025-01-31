@@ -11,6 +11,7 @@ import { HeaderProps, UserInfoProps } from '../../types'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
+import { LocaleProps } from '../../types'
 
 import { LanguageSelector } from './LanguageSelector'
 
@@ -26,8 +27,6 @@ const userInfo = tv({
 })
 
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
-
-type ExistLocaleType = Exclude<ReturnType<typeof useLocale>['locale'], null>
 
 export const UserInfo: FC<Props> = ({
   arbitraryDisplayName,
@@ -164,7 +163,7 @@ const AccountURLButton = React.memo<PropsWithChildren<{ href?: string | null }>>
 )
 
 const LanguageDialog = React.memo<{
-  locale: ExistLocaleType
+  locale: LocaleProps
   isOpen: boolean
   setOpen: (flg: boolean) => void
 }>(({ locale, isOpen, setOpen }) => {
