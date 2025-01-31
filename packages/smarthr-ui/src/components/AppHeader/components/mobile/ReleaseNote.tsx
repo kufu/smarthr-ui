@@ -42,6 +42,13 @@ const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ re
   }, [])
 
   const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      loadError: translate('common/releaseNotesLoadError'),
+      seeAll: translate('common/seeAllReleaseNotes'),
+    }),
+    [translate],
+  )
 
   return (
     <div>
@@ -51,7 +58,7 @@ const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ re
         </Center>
       ) : releaseNote.error ? (
         <Text>
-          <Translate>{translate('common/releaseNotesLoadError')}</Translate>
+          <Translate>{translated.loadError}</Translate>
         </Text>
       ) : (
         <Stack>
@@ -78,7 +85,7 @@ const ActualReleaseNote: FC<{ releaseNote: HeaderProps['releaseNote'] }> = ({ re
           rel="noopener noreferrer"
           className={styles.indexLinkAnchor}
         >
-          <Translate>{translate('common/seeAllReleaseNotes')}</Translate>
+          <Translate>{translated.seeAll}</Translate>
           <FaUpRightFromSquareIcon className={styles.icon} />
         </a>
       </div>
