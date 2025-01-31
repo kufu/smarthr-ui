@@ -37,8 +37,20 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
   }
 
   return (
+    <TenantDropdown
+      tenantName={tenantName}
+      tenants={tenants}
+      currentTenantId={currentTenantId}
+      onTenantSelect={onTenantSelect}
+    />
+  )
+}
+
+const TenantDropdown = React.memo<
+  Pick<Required<Props>, 'tenants' | 'currentTenantId' | 'onTenantSelect'> & { tenantName: string }
+>(({ tenantName, tenants, currentTenantId, onTenantSelect }) => {
+  return (
     <Dropdown>
-      {/* eslint-disable-next-line smarthr/a11y-trigger-has-button */}
       <DropdownTrigger>
         <button type="button" className={tenantDropdownTriggerButton()}>
           {tenantName}
@@ -67,4 +79,4 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
       </DropdownContent>
     </Dropdown>
   )
-}
+})
