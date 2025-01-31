@@ -39,10 +39,8 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
 
       if (mode !== 'search') {
         setMode('search')
-      } else {
-        if (q === '') {
-          setMode('default')
-        }
+      } else if (q === '') {
+        setMode('default')
       }
     },
     [mode],
@@ -70,15 +68,17 @@ const sortFeatures = (
 
     // feature の position の数値の順に並び替える。position が null の場合は最後に並べる
     return filtered.sort((a, b) => {
-      if (a.position === null && b.position === null) {
-        return 0
-      } else if (a.position === null) {
+      if (a.position === null) {
+        if (b.position === null) {
+          return 0
+        }
+
         return 1
       } else if (b.position === null) {
         return -1
-      } else {
-        return a.position - b.position
       }
+
+      return a.position - b.position
     })
   }
 
@@ -89,13 +89,9 @@ const sortFeatures = (
 
   switch (sortType) {
     case 'name/asc':
-      featuresRes.sort((a, b) => a.name.localeCompare(b.name))
-
-      break
+      return featuresRes.sort((a, b) => a.name.localeCompare(b.name))
     case 'name/desc':
-      featuresRes.sort((a, b) => b.name.localeCompare(a.name))
-
-      break
+      return featuresRes.sort((a, b) => b.name.localeCompare(a.name))
   }
 
   return featuresRes
