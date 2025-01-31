@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react'
+import React, { FC, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -130,14 +130,28 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
       </Dropdown>
 
       {locale && (
-        <Dialog
+        <LanguageDialog
+          locale={locale}
           isOpen={languageDialogOpen}
-          onClickOverlay={() => setLanguageDialogOpen(false)}
-          width={246}
-        >
-          <LanguageSelector locale={locale} onClickClose={setLanguageDialogOpen} />
-        </Dialog>
+          setOpen={setLanguageDialogOpen}
+        />
       )}
     </>
   )
 }
+
+type ExistLocaleType = Exclude<ReturnType<typeof useLocale>['locale'], null>
+
+const LanguageDialog = React.memo<{
+  locale: ExistLocaleType
+  isOpen: boolean
+  setOpen: (flg: boolean) => void
+}>(({ locale, isOpen, setOpen }) => {
+  const onClickOverlay = useCallback(() => setOpen(false), [setOpen])
+
+  return (
+    <Dialog isOpen={isOpen} onClickOverlay={onClickOverlay} width={246}>
+      <LanguageSelector locale={locale} onClickClose={setOpen} />
+    </Dialog>
+  )
+})
