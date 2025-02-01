@@ -82,9 +82,11 @@ const sortFeatures = (
     })
   }
 
+  const looseSearchQuery = normalize(searchQuery)
+
   const featuresRes =
     mode === 'search'
-      ? features.filter((feature) => looseInclude(feature.name, searchQuery))
+      ? features.filter((feature) => looseInclude(looseSearchQuery, feature.name))
       : [...features]
 
   switch (sortType) {
@@ -98,20 +100,15 @@ const sortFeatures = (
 }
 
 // 文字列 a が文字列 b を含んでいたら true を返す
-export const looseInclude = (a: string, b: string) => {
-  // HINT: normalizeは1文字ずつ変換処理を行う関係で思いため、変換せずにマッチするかどうかを確認する
-  if (a.includes(b)) {
-    return true
-  }
-
-  const normalizedA = normalize(a)
-  const normalizedB = normalize(b)
-
-  return normalizedA.includes(normalizedB)
+export const looseInclude = (looseSearchQuery: string, featureName: string): boolean => {
+  // HINT: normalizeは1文字ずつ変換処理を行う関係で重いため、変換せずにマッチするかどうかを確認する
+  return featureName.includes(looseSearchQuery) || normalize(featureName).includes(looseSearchQuery)
 }
 
 // アルファベットの大文字小文字は同じものとして扱う。カタカナとひらがなも同じものとして扱う。
 const normalize = (s: string) =>
   s
     .toLowerCase()
-    .replace(/[\u30a1-\u30f6]/g, (match) => String.fromCharCode(match.charCodeAt(0) - 0x60))
+    .replace(NORMALIZE_REGEX, (match) => String.fromCharCode(match.charCodeAt(0) - 0x60))
+
+const NORMALIZE_REGEX = /[\u30a1-\u30f6]/g
