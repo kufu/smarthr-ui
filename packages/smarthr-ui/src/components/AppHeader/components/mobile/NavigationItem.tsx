@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import type { Navigation, NavigationButton } from '../../types'
+import type { Navigation, NavigationButton, NavigationLink } from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -38,17 +38,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
   }
 
   if ('href' in navigation) {
-    return (
-      <CommonButton
-        elementAs="a"
-        href={navigation.href}
-        current={navigation.current}
-        boldWhenCurrent
-        className={itemStyle}
-      >
-        <Translate>{navigation.children}</Translate>
-      </CommonButton>
-    )
+    return <LinkButton navigation={navigation} className={itemStyle} />
   }
 
   if ('onClick' in navigation) {
@@ -63,6 +53,20 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 
   return <ItemMenuButton navigation={navigation} />
 }
+
+const LinkButton = React.memo<{ navigation: NavigationLink; className: string }>(
+  ({ navigation, className }) => (
+    <CommonButton
+      elementAs="a"
+      href={navigation.href}
+      current={navigation.current}
+      boldWhenCurrent
+      className={className}
+    >
+      <Translate>{navigation.children}</Translate>
+    </CommonButton>
+  ),
+)
 
 const OnClickableButton = React.memo<
   Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }

@@ -38,7 +38,7 @@ export type HeaderProps = ComponentProps<typeof Header> & {
 
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup
 
-type NavigationLink = {
+export type NavigationLink = {
   children: ReactElement | string
   href: string
   current?: boolean
