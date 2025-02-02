@@ -76,22 +76,27 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
 const ItemMenuButton = React.memo<{ navigation: Navigation }>(({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
-  const onClick = useCallback(() => setSelectedNavigationGroup(navigation), [navigation, setSelectedNavigationGroup])
+  const onClick = useCallback(
+    () => setSelectedNavigationGroup(navigation),
+    [navigation, setSelectedNavigationGroup],
+  )
 
-  // 子要素に current を持っているものがあるかどうか
-  const childrenHasCurrent = navigation.childNavigations.some((child) => {
-    if (isChildNavigation(child)) {
-      return child.current
-    }
+  // 自身がcurrentか、子要素に current を持っているものがあるかどうか
+  const isCurrent = useMemo(
+    () =>
+      navigation.current ||
+      navigation.childNavigations.some((child) => {
+        if (isChildNavigation(child)) {
+          return child.current
+        }
 
-    return child.childNavigations.some((c) => c.current)
-  })
+        return child.childNavigations.some((c) => c.current)
+      }),
+    [navigation.current, navigation.childNavigations],
+  )
 
   return (
-    <MenuButton
-      onClick={onClick}
-      isCurrent={navigation.current || childrenHasCurrent}
-    >
+    <MenuButton onClick={onClick} isCurrent={isCurrent}>
       <Translate>{navigation.children}</Translate>
     </MenuButton>
   )
