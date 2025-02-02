@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Navigation } from '../../types'
@@ -18,7 +18,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
   onClickNavigation,
 }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
-  const navigationItemStyle = navigationItem()
+  const itemStyle = useMemo(() => navigationItem(), [])
 
   if ('elementAs' in navigation) {
     const { children, elementAs: Tag, current, ...rest } = navigation
@@ -31,7 +31,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
         className={commonButton({
           current,
           boldWhenCurrent: true,
-          className: [navigationItemStyle, rest.className],
+          className: [itemStyle, rest.className],
         })}
       >
         <Translate>{children}</Translate>
@@ -46,7 +46,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
         href={navigation.href}
         current={navigation.current}
         boldWhenCurrent
-        className={navigationItemStyle}
+        className={itemStyle}
       >
         <Translate>{navigation.children}</Translate>
       </CommonButton>
@@ -64,7 +64,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
         }}
         current={navigation.current}
         boldWhenCurrent
-        className={navigationItemStyle}
+        className={itemStyle}
       >
         <Translate>{navigation.children}</Translate>
       </CommonButton>
