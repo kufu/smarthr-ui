@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, useCallback, useContext } from 'react'
 
 import { NavigationGroup } from '../../types'
 
@@ -10,10 +10,10 @@ export const NavigationGroupHeader: FC<{
 }> = ({ currentNavigationGroup }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
-  return (
-    <MenuSubHeader
-      title={currentNavigationGroup.children}
-      onClickBack={() => setSelectedNavigationGroup(null)}
-    />
+  const onClickBack = useCallback(
+    () => setSelectedNavigationGroup(null),
+    [setSelectedNavigationGroup],
   )
+
+  return <MenuSubHeader title={currentNavigationGroup.children} onClickBack={onClickBack} />
 }
