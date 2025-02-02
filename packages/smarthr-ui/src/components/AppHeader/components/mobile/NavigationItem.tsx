@@ -17,7 +17,6 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
   navigation,
   onClickNavigation,
 }) => {
-  const { setSelectedNavigationGroup } = useContext(NavigationContext)
   const itemStyle = useMemo(() => navigationItem(), [])
 
   if ('elementAs' in navigation) {
@@ -71,6 +70,12 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
     )
   }
 
+  return <ItemMenuButton navigation={navigation} />
+}
+
+const ItemMenuButton = React.memo<{ navigation: Navigation }>(({ navigation }) => {
+  const { setSelectedNavigationGroup } = useContext(NavigationContext)
+
   // 子要素に current を持っているものがあるかどうか
   const childrenHasCurrent = navigation.childNavigations.some((child) => {
     if (isChildNavigation(child)) {
@@ -88,4 +93,4 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
       <Translate>{navigation.children}</Translate>
     </MenuButton>
   )
-}
+})
