@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, useCallback, useMemo } from 'react'
+import React, { ComponentProps, FC, ReactNode, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -53,11 +53,12 @@ const TenantNameText = React.memo<{ children: string }>(({ children }) => (
 ))
 
 const TenantDropdown: FC<
-  Pick<Required<Props>, 'tenants' | 'currentTenantId' | 'onTenantSelect'> & { tenantName: string }
+  Props<Props, 'tenants' | 'currentTenantId'> &
+    Pick<Required<Props>, 'onTenantSelect'> & { tenantName: ReactNode }
 > = ({ tenantName, tenants, currentTenantId, onTenantSelect }) => {
   const onClickTenantName = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (e.getAttribute('data-current') !== 'true') {
+      if (e.currentTarget.getAttribute('data-current') !== 'true') {
         onTenantSelect(e.currentTarget.value)
       }
     },
