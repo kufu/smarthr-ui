@@ -50,7 +50,7 @@ type NavigationCustomTag = {
   current?: boolean
 } & { [key: string]: any }
 
-type NavigationButton = {
+export type NavigationButton = {
   children: ReactElement | string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   current?: boolean

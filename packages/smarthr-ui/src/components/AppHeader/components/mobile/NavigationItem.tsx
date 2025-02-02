@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Navigation } from '../../types'
+import type { Navigation, NavigationButton } from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -13,10 +13,9 @@ const navigationItem = tv({
   base: ['[&&]:shr-px-0.5'],
 })
 
-export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () => void }> = ({
-  navigation,
-  onClickNavigation,
-}) => {
+type Props = { navigation: Navigation; onClickNavigation: () => void }
+
+export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => {
   const itemStyle = useMemo(() => navigationItem(), [])
 
   if ('elementAs' in navigation) {
@@ -54,24 +53,41 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
 
   if ('onClick' in navigation) {
     return (
-      <CommonButton
-        elementAs="button"
-        type="button"
-        onClick={(e) => {
-          navigation.onClick(e)
-          onClickNavigation()
-        }}
-        current={navigation.current}
-        boldWhenCurrent
+      <OnClickableButton
+        navigation={navigation}
+        onClickNavigation={onClickNavigation}
         className={itemStyle}
-      >
-        <Translate>{navigation.children}</Translate>
-      </CommonButton>
+      />
     )
   }
 
   return <ItemMenuButton navigation={navigation} />
 }
+
+const OnClickableButton = React.memo<
+  Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }
+>(({ navigation, onClickNavigation, className }) => {
+  const onClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      navigation.onClick(e)
+      onClickNavigation()
+    },
+    [navigation, onClickNavigation],
+  )
+
+  return (
+    <CommonButton
+      elementAs="button"
+      type="button"
+      onClick={onClick}
+      current={navigation.current}
+      boldWhenCurrent
+      className={className}
+    >
+      <Translate>{navigation.children}</Translate>
+    </CommonButton>
+  )
+})
 
 const ItemMenuButton = React.memo<{ navigation: Navigation }>(({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
@@ -92,7 +108,7 @@ const ItemMenuButton = React.memo<{ navigation: Navigation }>(({ navigation }) =
 
         return child.childNavigations.some((c) => c.current)
       }),
-    [navigation.current, navigation.childNavigations],
+    [navigation],
   )
 
   return (
