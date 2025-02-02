@@ -54,14 +54,12 @@ export function useRemoteTrigger({
   }, [id])
 
   useEffect(() => {
-    if (onToggle) {
-      onToggle(isOpen)
-    }
-    if (onOpen && isOpen) {
-      onOpen()
-    }
-    if (onClose && !isOpen) {
-      onClose()
+    onToggle?.(isOpen)
+
+    if (isOpen) {
+      onOpen?.()
+    } else {
+      onClose?.()
     }
     // HINT: 再レンダリング際にhookを利用していないonToggleなどが渡されると意図せず発火してしまう場合がありえるため
     // onToggle, onOpen, onClose を depsに含めていません

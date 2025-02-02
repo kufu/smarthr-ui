@@ -76,7 +76,7 @@ const filterDropdown = tv({
 })
 
 export const FilterDropdown: FC<Props & ElementProps> = ({
-  isFiltered = false,
+  isFiltered,
   onApply,
   onCancel,
   onReset,
@@ -88,16 +88,25 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   triggerSize,
   ...props
 }: Props) => {
-  const texts = useMemo(
-    () => ({
-      status: executeDecorator(STATUS_FILTERED_TEXT, decorators?.status),
-      triggerButton: executeDecorator(TRIGGER_BUTTON_TEXT, decorators?.triggerButton),
-      applyButton: executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButton),
-      cancelButton: executeDecorator(CANCEL_BUTTON_TEXT, decorators?.cancelButton),
-      resetButton: executeDecorator(RESET_BUTTON_TEXT, decorators?.resetButton),
-    }),
-    [decorators],
-  )
+  const texts = useMemo(() => {
+    if (!decorators) {
+      return {
+        status: STATUS_FILTERED_TEXT,
+        triggerButton: TRIGGER_BUTTON_TEXT,
+        applyButton: APPLY_BUTTON_TEXT,
+        cancelButton: CANCEL_BUTTON_TEXT,
+        resetButton: RESET_BUTTON_TEXT,
+      }
+    }
+
+    return {
+      status: executeDecorator(STATUS_FILTERED_TEXT, decorators.status),
+      triggerButton: executeDecorator(TRIGGER_BUTTON_TEXT, decorators.triggerButton),
+      applyButton: executeDecorator(APPLY_BUTTON_TEXT, decorators.applyButton),
+      cancelButton: executeDecorator(CANCEL_BUTTON_TEXT, decorators.cancelButton),
+      resetButton: executeDecorator(RESET_BUTTON_TEXT, decorators.resetButton),
+    }
+  }, [decorators])
 
   const filteredIconAriaLabel = useMemo(() => innerText(texts.status), [texts.status])
 
@@ -107,24 +116,24 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     visibleMessage: React.ReactNode
   } = useMemo(() => {
     const status = responseMessage?.status
-    const isVisibleMessage = status === 'success' || status === 'error'
+    const isRequestProcessing = status === 'processing'
+
+    if (status === 'success' || status === 'error') {
+      return {
+        isRequestProcessing,
+        visibleMessageType: status,
+        visibleMessage: responseMessage?.text,
+      }
+    }
 
     return {
-      isRequestProcessing: status === 'processing',
-      visibleMessageType: isVisibleMessage ? status : null,
-      visibleMessage: isVisibleMessage ? responseMessage?.text : '',
+      isRequestProcessing,
+      visibleMessageType: null,
+      visibleMessage: '',
     }
-  }, [responseMessage?.status])
+  }, [responseMessage])
 
-  const {
-    iconWrapperStyle,
-    filteredIconStyle,
-    innerStyle,
-    actionAreaStyle,
-    resetButtonAreaStyle,
-    rightButtonAreaStyle,
-    messageStyle,
-  } = useMemo(() => {
+  const styles = useMemo(() => {
     const {
       iconWrapper,
       filteredIcon,
@@ -134,8 +143,8 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
       rightButtonArea,
       message,
     } = filterDropdown()
-    return {
-      iconWrapperStyle: iconWrapper({ filtered: isFiltered, triggerSize }),
+
+    const commonStyles = {
       filteredIconStyle: filteredIcon(),
       innerStyle: inner(),
       actionAreaStyle: actionArea(),
@@ -143,7 +152,28 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
       rightButtonAreaStyle: rightButtonArea(),
       messageStyle: message(),
     }
-  }, [isFiltered, triggerSize])
+
+    return {
+      filtered: {
+        ...commonStyles,
+        iconWrapperStyle: iconWrapper({ filtered: true, triggerSize }),
+      },
+      unfiltered: {
+        ...commonStyles,
+        iconWrapperStyle: iconWrapper({ filtered: false, triggerSize }),
+      },
+    }
+  }, [triggerSize])
+
+  const {
+    iconWrapperStyle,
+    filteredIconStyle,
+    innerStyle,
+    actionAreaStyle,
+    resetButtonAreaStyle,
+    rightButtonAreaStyle,
+    messageStyle,
+  } = styles[isFiltered ? 'filtered' : 'unfiltered']
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
@@ -153,12 +183,12 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           suffix={
             <span className={iconWrapperStyle}>
               <FaFilterIcon />
-              {isFiltered ? (
+              {isFiltered && (
                 <FaCircleCheckIcon
                   aria-label={filteredIconAriaLabel}
                   className={filteredIconStyle}
                 />
-              ) : null}
+              )}
             </span>
           }
           size={triggerSize}
