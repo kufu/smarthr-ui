@@ -50,17 +50,19 @@ const CustomTag = React.memo<
 >(({ navigation, onClickNavigation, className }) => {
   const { children, elementAs: Tag, current, className: navClassName, ...rest } = navigation
 
-  return (
-    /* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */
-    <Tag
-      {...rest}
-      onClick={onClickNavigation}
-      className={commonButton({
+  const style = useMemo(
+    () =>
+      commonButton({
         current,
         boldWhenCurrent: true,
         className: [className, navClassName],
-      })}
-    >
+      }),
+    [current, navClassName, className],
+  )
+
+  return (
+    /* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */
+    <Tag {...rest} onClick={onClickNavigation} className={style}>
       <Translate>{children}</Translate>
     </Tag>
   )
