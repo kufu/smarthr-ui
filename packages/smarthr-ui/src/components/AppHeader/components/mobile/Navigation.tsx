@@ -23,14 +23,14 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
         const { childNavigations } = navigation
 
         return (
-          <Fragment key={navigation.title.toString()}>
+          <Fragment key={i}>
             <Text styleType="subSubBlockTitle" as="p" className="shr-py-0.5">
               {navigation.title}
             </Text>
 
-            {childNavigations.map((childNavigation) => (
+            {childNavigations.map((childNavigation, j) => (
               <NavigationItem
-                key={childNavigation.children.toString()}
+                key={j}
                 navigation={childNavigation}
                 onClickNavigation={onClickNavigation}
               />
@@ -44,7 +44,7 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
       const nextNavigation = navigations[i + 1]
 
       return (
-        <Fragment key={navigation.children.toString()}>
+        <Fragment key={i}>
           <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
           {isChildNavigationGroup(nextNavigation) && <hr className={separator()} />}
         </Fragment>
