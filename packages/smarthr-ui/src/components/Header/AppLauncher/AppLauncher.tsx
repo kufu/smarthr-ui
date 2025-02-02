@@ -6,7 +6,6 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
-import { Section } from '../../SectioningContent'
 import { TextLink } from '../../TextLink'
 
 import type { DecoratorsType } from '../../../types'
@@ -69,75 +68,134 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   enableNew,
   ...props
 }) => {
-  const triggerLabel = useMemo(
-    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
-    [decorators],
-  )
+  const calculatedApps = useMemo(() => {
+    const result: {
+      base: Props['apps'][number] | undefined
+      others: Props['apps']
+    } = { base: undefined, others: [] }
 
-  const baseApps = apps.find(({ type }) => type === 'base')
-  const others = apps.filter((category) => category !== baseApps)
+    apps.forEach((app) => {
+      if (app.type === 'base') {
+        result.base = app
+      } else {
+        result.others.push(app)
+      }
+    })
 
-  const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({ enableNew })
+    return result
+  }, [apps])
+
+  const styles = useMemo(() => {
+    const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({
+      enableNew,
+    })
+
+    return {
+      appsButton: appsButton(),
+      contentWrapper: contentWrapper(),
+      category: category(),
+      appList: appList(),
+      link: link(),
+      footer: footer(),
+    }
+  }, [enableNew])
 
   return (
     <Dropdown {...props}>
-      <DropdownTrigger>
-        <Button
-          prefix={enableNew ?? <FaToolboxIcon />}
-          suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-          className={appsButton()}
-        >
-          {triggerLabel}
-        </Button>
-      </DropdownTrigger>
+      <MemoizedDropdownTrigger
+        enableNew={enableNew}
+        decorators={decorators}
+        className={styles.appsButton}
+      />
       <DropdownContent controllable>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <Stack as="nav" gap={1.5} className={contentWrapper()}>
+        <Stack as="nav" gap={1.5} className={styles.contentWrapper}>
           <Stack gap={1.5}>
-            {baseApps && (
-              <Section>
-                <Stack gap={0.5} className={category()}>
-                  <Heading type="subSubBlockTitle">{baseApps.heading}</Heading>
-                  {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                  <Cluster as="ul" gap={1} className={appList()}>
-                    {appItems(baseApps.items, link())}
-                  </Cluster>
-                </Stack>
-              </Section>
+            {calculatedApps.base && (
+              <Stack gap={0.5} className={styles.category} as="section">
+                <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
+                <Cluster as="ul" gap={1} className={styles.appList}>
+                  {calculatedApps.base.items.map((item, index) => (
+                    <LinkListItem
+                      key={index}
+                      href={item.url}
+                      target={item.target}
+                      className={styles.link}
+                    >
+                      {item.label}
+                    </LinkListItem>
+                  ))}
+                </Cluster>
+              </Stack>
             )}
             <Cluster gap={1.5}>
-              {others.map(({ heading, items }, i) => (
-                <Section key={i}>
-                  <Stack gap={0.5} className={category()}>
-                    <Heading type="subSubBlockTitle">{heading}</Heading>
-                    {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-                    <Stack gap={0.5} as="ul" className={appList()}>
-                      {appItems(items, link())}
-                    </Stack>
+              {calculatedApps.others.map(({ heading, items }, i) => (
+                <Stack key={i} gap={0.5} className={styles.category} as="section">
+                  <Heading type="subSubBlockTitle">{heading}</Heading>
+                  <Stack gap={0.5} as="ul" className={styles.appList}>
+                    {items.map((item, index) => (
+                      <LinkListItem
+                        key={index}
+                        href={item.url}
+                        target={item.target}
+                        className={styles.link}
+                      >
+                        {item.label}
+                      </LinkListItem>
+                    ))}
                   </Stack>
-                </Section>
+                </Stack>
               ))}
             </Cluster>
           </Stack>
-
-          {urlToShowAll && (
-            <div className={footer()}>
-              <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
-                すべて見る
-              </TextLink>
-            </div>
-          )}
+          <TextLinkToShowAll href={urlToShowAll} className={styles.footer} />
         </Stack>
       </DropdownContent>
     </Dropdown>
   )
 }
 
-const appItems = (items: AppItem[], linkStyle: string) =>
-  items.map((item, index) => (
-    <li key={index}>
-      <TextLink href={item.url} target={item.target} className={linkStyle}>
-        {item.label}
-      </TextLink>
-    </li>
-  ))
+const MemoizedDropdownTrigger = React.memo<
+  Pick<Props, 'enableNew' | 'decorators'> & { className: string }
+>(({ enableNew, className, decorators }) => {
+  const triggerLabel = useMemo(
+    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
+    [decorators],
+  )
+
+  return (
+    <DropdownTrigger>
+      <Button
+        prefix={enableNew ?? <FaToolboxIcon />}
+        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+        className={className}
+      >
+        {triggerLabel}
+      </Button>
+    </DropdownTrigger>
+  )
+})
+
+const TextLinkToShowAll = React.memo<{ href: Props['urlToShowAll']; className: string }>(
+  ({ href, className }) =>
+    href && (
+      <div className={className}>
+        <TextLink href={href} style={{ width: 'fit-content' }}>
+          すべて見る
+        </TextLink>
+      </div>
+    ),
+)
+
+const LinkListItem = React.memo<{
+  href: AppItem['url']
+  target: AppItem['target']
+  children: AppItem['label']
+  className: string
+}>(({ href, target, children, className }) => (
+  <li>
+    <TextLink href={href} target={target} className={className}>
+      {children}
+    </TextLink>
+  </li>
+))

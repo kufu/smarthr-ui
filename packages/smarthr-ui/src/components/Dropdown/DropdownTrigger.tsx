@@ -30,10 +30,12 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
     if (!triggerElementRef.current) {
       return
     }
+
     // apply ARIA to all focusable elements in trigger
     const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
+
     triggers.forEach((trigger) => {
-      trigger.setAttribute('aria-expanded', String(active))
+      trigger.setAttribute('aria-expanded', active.toString())
       trigger.setAttribute('aria-controls', contentId)
     })
   }, [triggerElementRef, active, contentId])
@@ -42,29 +44,24 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
 
   return (
     <div ref={triggerElementRef} className={styles}>
-      {React.Children.map(children, (child) => {
-        if (foundFirstElement || !React.isValidElement(child)) {
-          return child
-        }
-
-        foundFirstElement = true
-
-        return React.cloneElement(child as ReactElement, {
-          onClick: (e: MouseEvent) => {
-            // 引き金となる要素が disabled な場合は発火させない
-            if (includeDisabledTrigger(children)) {
-              return
+      {/* 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する */}
+      {includeDisabledTrigger(children)
+        ? children
+        : React.Children.map(children, (child) => {
+            if (foundFirstElement || !React.isValidElement(child)) {
+              return child
             }
 
-            const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
-            onClickTrigger({ top, right, bottom, left })
+            foundFirstElement = true
 
-            if (child.props.onClick) {
-              child.props.onClick(e)
-            }
-          },
-        })
-      })}
+            return React.cloneElement(child as ReactElement, {
+              onClick: (e: MouseEvent) => {
+                onClickTrigger(e.currentTarget.getBoundingClientRect())
+
+                child.props.onClick?.(e)
+              },
+            })
+          })}
     </div>
   )
 }
