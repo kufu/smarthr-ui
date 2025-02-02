@@ -17,8 +17,6 @@ const separator = tv({
 })
 
 export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => {
-  const separatorStyle = useMemo(() => separator(), [])
-
   return (
     <div>
       {navigations.map((navigation, i) => (
@@ -52,7 +50,7 @@ const MemoizedNavigationItem = React.memo<
           />
         ))}
 
-        {i + 1 !== navigations.length && <hr className={separatorStyle} />}
+        {i + 1 !== navigations.length && <StyledHr />}
       </Fragment>
     )
   }
@@ -62,7 +60,13 @@ const MemoizedNavigationItem = React.memo<
   return (
     <Fragment>
       <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
-      {isChildNavigationGroup(nextNavigation) && <hr className={separatorStyle} />}
+      {isChildNavigationGroup(nextNavigation) && <StyledHr />}
     </Fragment>
   )
+})
+
+const StyledHr = React.memo<>(() => {
+  const style = useMemo(() => separator(), [])
+
+  return <hr className={style} />
 })
