@@ -1,4 +1,4 @@
-import React, { FC, useContext, useMemo } from 'react'
+import React, { FC, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Navigation } from '../../types'
@@ -76,6 +76,8 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
 const ItemMenuButton = React.memo<{ navigation: Navigation }>(({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
+  const onClick = useCallback(() => setSelectedNavigationGroup(navigation), [navigation, setSelectedNavigationGroup])
+
   // 子要素に current を持っているものがあるかどうか
   const childrenHasCurrent = navigation.childNavigations.some((child) => {
     if (isChildNavigation(child)) {
@@ -87,7 +89,7 @@ const ItemMenuButton = React.memo<{ navigation: Navigation }>(({ navigation }) =
 
   return (
     <MenuButton
-      onClick={() => setSelectedNavigationGroup(navigation)}
+      onClick={onClick}
       isCurrent={navigation.current || childrenHasCurrent}
     >
       <Translate>{navigation.children}</Translate>
