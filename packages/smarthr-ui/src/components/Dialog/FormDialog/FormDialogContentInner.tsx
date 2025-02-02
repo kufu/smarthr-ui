@@ -122,7 +122,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
               className={styles.buttonArea}
             />
           </Cluster>
-          {calculatedResponseStatus.visibleMessage && (
+          {calculatedResponseStatus.message && (
             <div className={styles.message}>
               <ResponseMessage type={calculatedResponseStatus.status} role="alert">
                 {calculatedResponseStatus.message}
