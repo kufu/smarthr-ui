@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import type { Navigation, NavigationButton, NavigationLink } from '../../types'
+import type { Navigation, NavigationButton, NavigationCustomTag, NavigationLink } from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -19,21 +19,12 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
   const itemStyle = useMemo(() => navigationItem(), [])
 
   if ('elementAs' in navigation) {
-    const { children, elementAs: Tag, current, ...rest } = navigation
-
     return (
-      /* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */
-      <Tag
-        {...rest}
-        onClick={onClickNavigation}
-        className={commonButton({
-          current,
-          boldWhenCurrent: true,
-          className: [itemStyle, rest.className],
-        })}
-      >
-        <Translate>{children}</Translate>
-      </Tag>
+      <CustomTag
+        navigation={navigation}
+        onClickNavigation={onClickNavigation}
+        className={itemStyle}
+      />
     )
   }
 
@@ -53,6 +44,27 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 
   return <ItemMenuButton navigation={navigation} />
 }
+
+const CustomTag = React.memo<
+  Pick<Props, 'onClickNavigation'> & { navigation: NavigationCustomTag; className: string }
+>(({ navigation, onClickNavigation, className }) => {
+  const { children, elementAs: Tag, current, className: navClassName, ...rest } = navigation
+
+  return (
+    /* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */
+    <Tag
+      {...rest}
+      onClick={onClickNavigation}
+      className={commonButton({
+        current,
+        boldWhenCurrent: true,
+        className: [className, navClassName],
+      })}
+    >
+      <Translate>{children}</Translate>
+    </Tag>
+  )
+})
 
 const LinkButton = React.memo<{ navigation: NavigationLink; className: string }>(
   ({ navigation, className }) => (
