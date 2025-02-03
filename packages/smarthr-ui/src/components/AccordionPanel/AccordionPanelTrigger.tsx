@@ -130,33 +130,33 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   }, [actualOnClickProps, actualOnClickTrigger])
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = useCallback(
-    (event): void => {
+    (e): void => {
       if (!parentRef?.current) {
         return
       }
 
-      const item = event.target as HTMLElement
+      const item = e.target as HTMLElement
 
-      switch (event.key) {
+      switch (e.key) {
         case 'Home': {
-          event.preventDefault()
+          e.preventDefault()
           focusFirstSibling(parentRef.current)
           break
         }
         case 'End': {
-          event.preventDefault()
+          e.preventDefault()
           focusLastSibling(parentRef.current)
           break
         }
         case 'ArrowLeft':
         case 'ArrowUp': {
-          event.preventDefault()
+          e.preventDefault()
           focusPreviousSibling(item, parentRef.current)
           break
         }
         case 'ArrowRight':
         case 'ArrowDown': {
-          event.preventDefault()
+          e.preventDefault()
           focusNextSibling(item, parentRef.current)
           break
         }
@@ -180,12 +180,23 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         className={styles.button}
         data-component="AccordionHeaderButton"
       >
-        <Cluster className="shr-flex-nowrap" align="center" as="span">
-          {iconPosition === 'left' && <FaCaretRightIcon className={styles.leftIcon} />}
-          <span className={styles.title}>{children}</span>
-          {iconPosition === 'right' && <FaCaretDownIcon className={styles.rightIcon} />}
-        </Cluster>
+        <MemoizedTitle iconPosition={iconPosition} styles={styles}>
+          {children}
+        </MemoizedTitle>
       </button>
     </Heading>
   )
 }
+
+const MemoizedTitle = React.memo<
+  PropsWithChildren<{
+    iconPosition: undefined | 'left' | 'right'
+    styles: { leftIcon: string; rightIcon: string; title: string }
+  }>
+>(({ styles, iconPosition, children }) => (
+  <Cluster className="shr-flex-nowrap" align="center" as="span">
+    {iconPosition === 'left' && <FaCaretRightIcon className={styles.leftIcon} />}
+    <span className={styles.title}>{children}</span>
+    {iconPosition === 'right' && <FaCaretDownIcon className={styles.rightIcon} />}
+  </Cluster>
+))
