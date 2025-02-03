@@ -28,7 +28,7 @@ type ConditionalWrapperProps = {
 /**
  * 条件付きでラッパをレンダリングする
  */
-export const ConditionalWrapper: FC<ConditionalWrapperProps> = ({
+const ConditionalWrapper: FC<ConditionalWrapperProps> = ({
   shouldWrapContent,
   wrapper,
   children,
