@@ -87,7 +87,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     parentRef,
   } = useContext(AccordionPanelContext)
 
-  const isExpanded = getIsInclude(expandedItems, name)
+  const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
   const handleClick = useCallback(() => {
     if (onClickTrigger) onClickTrigger(name, !isExpanded)
