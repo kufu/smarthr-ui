@@ -21,18 +21,17 @@ import { DropdownContext } from './Dropdown'
 
 type ConditionalWrapperProps = {
   shouldWrapContent: boolean
-  wrapper: (children: ReactNode) => JSX.Element
-  children: ReactNode
+  wrapper: FC<PropsWithChildren>
 }
 
 /**
  * 条件付きでラッパをレンダリングする
  */
-const ConditionalWrapper: FC<ConditionalWrapperProps> = ({
+const ConditionalWrapper: FC<PropsWithChildren<ConditionalWrapperProps>> = ({
   shouldWrapContent,
   wrapper,
   children,
-}) => (shouldWrapContent ? wrapper(children) : children)
+}) => (shouldWrapContent ? wrapper({ children }) : children)
 
 type Props = PropsWithChildren<ComponentProps<'div'>> & {
   tooltip?: { message: ReactNode; show: boolean }
@@ -66,7 +65,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     <div ref={triggerElementRef} className={styles}>
       <ConditionalWrapper
         shouldWrapContent={!!tooltip?.show}
-        wrapper={(currentChildren) => (
+        wrapper={({ children: currentChildren }) => (
           <Tooltip
             message={tooltip?.message}
             horizontal="auto"
