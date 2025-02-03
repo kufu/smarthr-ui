@@ -66,15 +66,17 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   headingTag,
   ...props
 }) => {
-  const { titleStyle, buttonStyle, leftIconStyle, rightIconStyle } = useMemo(() => {
+  const styles = useMemo(() => {
     const { title, button, leftIcon, rightIcon } = accordionPanelTrigger()
+
     return {
-      titleStyle: title(),
-      buttonStyle: button({ className }),
-      leftIconStyle: leftIcon(),
-      rightIconStyle: rightIcon(),
+      title: title(),
+      button: button({ className }),
+      leftIcon: leftIcon(),
+      rightIcon: rightIcon(),
     }
   }, [className])
+
   const { name } = useContext(AccordionPanelItemContext)
   const {
     iconPosition,
@@ -147,14 +149,14 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         aria-controls={`${name}-content`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        className={buttonStyle}
+        className={styles.button}
         data-component="AccordionHeaderButton"
         type="button"
       >
         <Cluster className="shr-flex-nowrap" align="center" as="span">
-          {iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
-          <span className={titleStyle}>{children}</span>
-          {iconPosition === 'right' && <FaCaretDownIcon className={rightIconStyle} />}
+          {iconPosition === 'left' && <FaCaretRightIcon className={styles.leftIcon} />}
+          <span className={styles.title}>{children}</span>
+          {iconPosition === 'right' && <FaCaretDownIcon className={styles.rightIcon} />}
         </Cluster>
       </button>
     </Heading>
