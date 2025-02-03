@@ -89,19 +89,45 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
-  const handleClick = useCallback(() => {
-    if (onClickTrigger) onClickTrigger(name, !isExpanded)
+  const actualOnClickTrigger = useMemo(
+    () =>
+      onClickTrigger
+        ? (e: React.MouseEvent<HTMLButtonElement>) =>
+            onClickTrigger(e.currentTarget.value, !isExpanded)
+        : undefined,
+    [isExpanded, onClickTrigger],
+  )
+  const actualOnClickProps = useMemo(
+    () =>
+      onClickProps
+        ? (e: React.MouseEvent<HTMLButtonElement>) => {
+            const newExpandedItems = getNewExpandedItems(
+              expandedItems,
+              e.currentTarget.value,
+              !isExpanded,
+              expandableMultiply,
+            )
+            onClickProps(mapToKeyArray(newExpandedItems))
+          }
+        : undefined,
+    [isExpanded, expandedItems, expandableMultiply, onClickProps],
+  )
+  const handleClick = useMemo(() => {
+    if (actualOnClickTrigger) {
+      if (actualOnClickProps) {
+        return (e: React.MouseEvent<HTMLButtonElement>) => {
+          actualOnClickTrigger(e)
+          actualOnClickProps(e)
+        }
+      }
 
-    if (onClickProps) {
-      const newExpandedItems = getNewExpandedItems(
-        expandedItems,
-        name,
-        !isExpanded,
-        expandableMultiply,
-      )
-      onClickProps(mapToKeyArray(newExpandedItems))
+      return actualOnClickTrigger
+    } else if (actualOnClickProps) {
+      return actualOnClickProps
     }
-  }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
+
+    return undefined
+  }, [actualOnClickProps, actualOnClickTrigger])
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = useCallback(
     (event): void => {
@@ -144,6 +170,8 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     <Heading tag={headingTag} type={headingType}>
       <button
         {...props}
+        type="button"
+        value={name}
         id={`${name}-trigger`}
         aria-expanded={isExpanded}
         aria-controls={`${name}-content`}
@@ -151,7 +179,6 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         onKeyDown={handleKeyDown}
         className={styles.button}
         data-component="AccordionHeaderButton"
-        type="button"
       >
         <Cluster className="shr-flex-nowrap" align="center" as="span">
           {iconPosition === 'left' && <FaCaretRightIcon className={styles.leftIcon} />}
