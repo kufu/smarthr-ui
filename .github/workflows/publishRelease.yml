@@ -27,7 +27,7 @@ jobs:
           git config user.name "github-actions[bot]"
       - name: pnpm install
         run: |
-          npm install -g corepack@latest
+          sudo npm install -g corepack@latest
           corepack enable
           corepack prepare
           pnpm ui install
