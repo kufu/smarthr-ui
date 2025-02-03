@@ -36,8 +36,10 @@ export function usePortal() {
     if (!portalRoot) {
       return
     }
+
     portalRoot.dataset.portalChildOf = parentSeqs.join(',')
     document.body.appendChild(portalRoot)
+
     return () => {
       document.body.removeChild(portalRoot)
     }
@@ -54,6 +56,7 @@ export function usePortal() {
       const value: ParentContextValue = {
         seqs: parentSeqs,
       }
+
       return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
     },
     // spread parentSeqs array for deps
@@ -66,6 +69,7 @@ export function usePortal() {
       if (portalRoot === null) {
         return null
       }
+
       return createPortal(children, portalRoot)
     },
     [portalRoot],
@@ -87,7 +91,9 @@ function _isChildPortal(
   parentPortalSeq: number,
 ): boolean {
   if (!element) return false
+
   const childOf = element.dataset?.portalChildOf || ''
-  const includesSeq = childOf.split(',').includes(String(parentPortalSeq))
+  const includesSeq = childOf.split(',').includes(parentPortalSeq.toString())
+
   return includesSeq || _isChildPortal(element.parentElement, parentPortalSeq)
 }
