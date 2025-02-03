@@ -55,7 +55,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
-  const styles = useMemo(() => accordionWrapper({ className }), [className])
+  const style = useMemo(() => accordionWrapper({ className }), [className])
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -80,7 +80,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
       }}
     >
       {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-      <div {...props} className={styles} ref={parentRef} role="presentation" />
+      <div {...props} className={style} ref={parentRef} role="presentation" />
     </AccordionPanelContext.Provider>
   )
 }

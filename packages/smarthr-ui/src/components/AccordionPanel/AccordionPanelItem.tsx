@@ -27,14 +27,15 @@ const accordionPanelItem = tv({
 })
 
 export const AccordionPanelItem: FC<Props & ElementProps> = ({ name, className, ...props }) => {
-  const styles = useMemo(() => accordionPanelItem({ className }), [className])
+  const style = useMemo(() => accordionPanelItem({ className }), [className])
+
   return (
     <AccordionPanelItemContext.Provider
       value={{
         name,
       }}
     >
-      <Section {...props} className={styles} />
+      <Section {...props} className={style} />
     </AccordionPanelItemContext.Provider>
   )
 }

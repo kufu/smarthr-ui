@@ -30,9 +30,9 @@ const accordionPanelContent = tv({
 export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...props }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
-  const isInclude = getIsInclude(expandedItems, name)
+  const isInclude = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const styles = useMemo(() => accordionPanelContent({ className }), [className])
+  const style = useMemo(() => accordionPanelContent({ className }), [className])
 
   return (
     <Transition in={isInclude} timeout={150} nodeRef={wrapperRef}>
@@ -40,7 +40,7 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
         <div
           {...props}
           id={`${name}-content`}
-          className={`${styles} ${status}`}
+          className={`${style} ${status}`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
           ref={wrapperRef}
