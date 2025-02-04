@@ -25,7 +25,11 @@ export function useOuterClick(
 }
 
 function isEventIncludedParent(e: MouseEvent, parent: Element | null): boolean {
+  if (!parent) return false
+
   const path = e.composedPath()
-  if (path.length === 0 || !parent) return false
+
+  if (path.length === 0) return false
+
   return path.includes(parent)
 }
