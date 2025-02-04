@@ -48,18 +48,17 @@ const getSpacingByChar = (baseSize: number) => {
   const charSize = baseSize * 2
 
   return primitiveTokens.reduce((prev, size) => {
-    const value = !size ? '0' : `${charSize * size}px`
-
-    prev[size] = value
+    prev[size] = !size ? '0' : `${charSize * size}px`
 
     return prev
   }, {})
 }
 
 export const createSpacing = (userBaseSize: number = defaultBaseSize) => getSpacing(userBaseSize)
-export const createSpacingByChar =
-  (userBaseSize: number = defaultBaseSize) =>
-  (size: CharRelativeSize) =>
-    getSpacingByChar(userBaseSize)[size]
+export const createSpacingByChar = (userBaseSize: number = defaultBaseSize) => {
+  const spacingByChar = getSpacingByChar(userBaseSize)
+
+  return (size: CharRelativeSize) => spacingByChar[size]
+}
 
 export const defaultSpacing = createSpacing()
