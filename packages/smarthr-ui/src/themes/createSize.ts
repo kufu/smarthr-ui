@@ -51,7 +51,8 @@ export type CreatedSizeTheme = {
   }
 }
 
-const pxToRem = (value: number) => (font: number) => `${value / font}rem`
+const pxToRem = (font: number) => (value: number) => `${value / font}rem`
+const defaultPxToRem = pxToRem(defaultHtmlFontSize)
 
 const getSpace = (size: number) => ({
   XXS: size,
@@ -73,7 +74,7 @@ const defaultSpace = getSpace(defaultSpaceSize)
  * @deprecated The defaultSize will be deprecated, please use defaultFontSize, defaultSpacing or defaultBreakPoint instead
  */
 export const defaultSize: CreatedSizeTheme = {
-  pxToRem: (value: number) => pxToRem(value)(defaultHtmlFontSize),
+  pxToRem: (value: number) => defaultPxToRem(value),
   font: defaultFontSize,
   space: defaultSpace,
   mediaQuery: defaultMediaQuery,
@@ -81,11 +82,11 @@ export const defaultSize: CreatedSizeTheme = {
 
 export const createSize = (userSize: SizeProperty = {}) => {
   const space = userSize.space || {}
-  const XXS = space.defaultRem || defaultSpaceSize
+  const memoizedPxToRem = userSize.htmlFontSize ? pxToRem(userSize.htmlFontSize) : defaultPxToRem
   const created: CreatedSizeTheme = merge(
     {
-      pxToRem: (value: number) => pxToRem(value)(userSize.htmlFontSize || defaultHtmlFontSize),
-      space: getSpace(XXS),
+      pxToRem: (value: number) => memoizedPxToRem(value),
+      space: getSpace(space.defaultRem || defaultSpaceSize),
       font: { ...defaultFontSize },
       mediaQuery: { ...defaultMediaQuery },
     },
