@@ -29,6 +29,7 @@ export type AbstractSize = keyof CreatedSpacingTheme
 
 const getSpacing = (baseSize: number) => {
   const spacingByChar = createSpacingByChar(baseSize)
+
   return {
     X3S: spacingByChar(0.25),
     XXS: spacingByChar(0.5),
@@ -45,12 +46,14 @@ const getSpacing = (baseSize: number) => {
 
 const getSpacingByChar = (baseSize: number) => {
   const charSize = baseSize * 2
-  return primitiveTokens
-    .map((size) => {
-      const value = !size ? '0' : `${charSize * size}px`
-      return { [size]: value }
-    })
-    .reduce((a, c) => Object.assign(a, c), {})
+
+  return primitiveTokens.reduce((prev, size) => {
+    const value = !size ? '0' : `${charSize * size}px`
+
+    prev[size] = value
+
+    return prev
+  }, {})
 }
 
 export const createSpacing = (userBaseSize: number = defaultBaseSize) => getSpacing(userBaseSize)

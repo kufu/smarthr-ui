@@ -79,6 +79,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
   const colorProperty = getColorProperty(theme)
   const baseSize = getSpacingProperty(theme).baseSize
   const spacingByChar = createSpacingByChar(baseSize)
+
   return {
     palette: createPalette(paletteProperty),
     color: createColor(colorProperty),

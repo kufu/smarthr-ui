@@ -34,5 +34,6 @@ export const createZIndex = (userZIndex: ZIndexProperty = {}) => {
     },
     userZIndex,
   )
+
   return created
 }
