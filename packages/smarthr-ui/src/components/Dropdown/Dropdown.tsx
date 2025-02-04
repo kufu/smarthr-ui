@@ -6,6 +6,7 @@ import React, {
   PropsWithChildren,
   ReactNode,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useId,
@@ -69,11 +70,11 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
   useEffect(() => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (isEventFromChild(e, triggerElementRef.current) || isChildPortal(e.target)) {
-        return
+      if (!isEventFromChild(e, triggerElementRef.current) && !isChildPortal(e.target)) {
+        setActive(false)
       }
-      setActive(false)
     }
+
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {
@@ -83,23 +84,36 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
-    () => (props) => {
-      if (!active) return null
-      return createPortal(props.children)
-    },
+    () => (props) => (active ? createPortal(props.children) : null),
     [active, createPortal],
   )
 
+  // set the displayName explicit for DevTools
+  DropdownContentRoot.displayName = 'DropdownContentRoot'
+
   useEffect(() => {
     if (isPortalRootMounted()) {
-      if (active) onOpen?.()
-      else onClose?.()
+      ;(active ? onOpen : onClose)?.()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
-  // set the displayName explicit for DevTools
-  DropdownContentRoot.displayName = 'DropdownContentRoot'
+  const onClickTrigger = useCallback((rect: Rect) => {
+    const newActive = !active
+
+    setActive(newActive)
+
+    if (newActive) {
+      setTriggerRect(rect)
+    }
+  }, [])
+
+  const onClickCloser = useCallback(() => {
+    setActive(false)
+
+    // return focus to the Trigger
+    getFirstTabbable(triggerElementRef)?.focus()
+  }, [])
 
   return (
     <PortalParentProvider>
@@ -109,19 +123,8 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
           triggerRect,
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
-          onClickTrigger: (rect) => {
-            const newActive = !active
-            setActive(newActive)
-            if (newActive) setTriggerRect(rect)
-          },
-          onClickCloser: () => {
-            setActive(false)
-            // return focus to the Trigger
-            const trigger = getFirstTabbable(triggerElementRef)
-            if (trigger) {
-              trigger.focus()
-            }
-          },
+          onClickTrigger,
+          onClickCloser,
           DropdownContentRoot,
           contentId,
         }}
