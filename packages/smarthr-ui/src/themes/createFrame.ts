@@ -47,12 +47,11 @@ export const defaultFrame: CreatedFrameTheme = {
 }
 
 export const createFrame = (userFrame: FrameProperty = {}, userPalette: PaletteProperty = {}) => {
-  const color = userPalette.BORDER || defaultPalette.BORDER
   const created: CreatedFrameTheme = merge(
     {
       border: {
         ...defaultFrame.border,
-        default: `${lineWidth} ${lineStyle} ${color}`,
+        default: `${lineWidth} ${lineStyle} ${userPalette.BORDER || defaultPalette.BORDER}`,
         radius: { ...defaultFrame.border.radius },
       },
     },

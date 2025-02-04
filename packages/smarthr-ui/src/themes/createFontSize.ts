@@ -1,5 +1,3 @@
-import { merge } from '../libs/lodash'
-
 export const defaultHtmlFontSize = 16
 const defaultScaleFactor = 6
 
@@ -63,24 +61,21 @@ const getSizes = (scaleFactor: number) => ({
 })
 
 export const defaultFontSize: CreatedFontSizeTheme = {
+  ...getSizes(defaultScaleFactor),
   pxToRem: pxToRem(defaultHtmlFontSize),
   SHORT: 11,
   TALL: 14,
   GRANDE: 18,
   VENTI: 24,
-  ...getSizes(defaultScaleFactor),
 }
 
 export const createFontSize = (userFontSize: FontSizeProperty = {}) => {
   const { htmlFontSize, scaleFactor, ...userTokens } = userFontSize
-  const created: CreatedFontSizeTheme = merge(
-    {
-      ...defaultFontSize,
-      pxToRem: pxToRem(htmlFontSize || defaultHtmlFontSize),
-    },
-    scaleFactor ? getSizes(scaleFactor) : {},
-    userTokens,
-  )
 
-  return created
+  return {
+    ...defaultFontSize,
+    ...(scaleFactor ? getSizes(scaleFactor) : {}),
+    ...userTokens,
+    pxToRem: pxToRem(htmlFontSize || defaultHtmlFontSize),
+  } as CreatedFontSizeTheme
 }
