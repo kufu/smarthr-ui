@@ -47,7 +47,7 @@ export function usePortal() {
   }, [portalRoot, ...parentSeqs])
 
   const isChildPortal = useCallback(
-    (element: HTMLElement | null) => _isChildPortal(element, currentSeq),
+    (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
     [currentSeq],
   )
 
@@ -86,18 +86,15 @@ export function usePortal() {
   }
 }
 
-function _isChildPortal(
-  element: HTMLElement | SVGElement | null,
-  parentPortalSeq: number,
-): boolean {
+function _isChildPortal(element: HTMLElement | SVGElement | null, seqRegex: RegExp): boolean {
   if (!element) return false
 
   let includesSeq = false
   const childOf = element.dataset?.portalChildOf
 
   if (childOf) {
-    includesSeq = childOf.split(',').includes(parentPortalSeq.toString())
+    includesSeq = seqRegex.test(childOf)
   }
 
-  return includesSeq || _isChildPortal(element.parentElement, parentPortalSeq)
+  return includesSeq || _isChildPortal(element.parentElement, seqRegex)
 }
