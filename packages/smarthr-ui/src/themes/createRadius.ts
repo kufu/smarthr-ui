@@ -1,5 +1,3 @@
-import { merge } from '../libs/lodash'
-
 export type RadiusProperty = {
   s?: string
   m?: string
@@ -7,12 +5,7 @@ export type RadiusProperty = {
   full?: string
 }
 
-export type CreatedRadiusTheme = {
-  s: string
-  m: string
-  l: string
-  full: string
-}
+export type CreatedRadiusTheme = Required<RadiusProperty>
 
 export const defaultRadius: CreatedRadiusTheme = {
   s: '4px',
@@ -21,8 +14,5 @@ export const defaultRadius: CreatedRadiusTheme = {
   full: '10000px',
 }
 
-export const createRadius = (userRadius: RadiusProperty = {}) => {
-  const created: CreatedRadiusTheme = merge({ ...defaultRadius }, userRadius)
-
-  return created
-}
+export const createRadius = (userRadius: RadiusProperty = {}) =>
+  ({ ...defaultRadius, ...userRadius }) as CreatedRadiusTheme

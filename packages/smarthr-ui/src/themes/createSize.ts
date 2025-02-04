@@ -3,52 +3,40 @@ import { merge } from '../libs/lodash'
 const defaultHtmlFontSize = 16
 const defaultSpaceSize = 8
 
+type SpaceProps = {
+  defaultRem?: number
+  XXS?: number
+  XS?: number
+  S?: number
+  M?: number
+  L?: number
+  XL?: number
+  XXL?: number
+}
+type FontProps = {
+  SHORT?: number
+  TALL?: number
+  GRANDE?: number
+  VENTI?: number
+}
+type MediaQueryProps = {
+  SP?: number
+  TABLET?: number
+}
+
 export type SizeProperty = {
   htmlFontSize?: number
-  space?: {
-    defaultRem?: number
-    XXS?: number
-    XS?: number
-    S?: number
-    M?: number
-    L?: number
-    XL?: number
-    XXL?: number
-  }
+  space?: SpaceProps
   // respect for Starbucks...
-  font?: {
-    SHORT?: number
-    TALL?: number
-    GRANDE?: number
-    VENTI?: number
-  }
-  mediaQuery?: {
-    SP?: number
-    TABLET?: number
-  }
+  font?: FontProps
+  mediaQuery?: MediaQueryProps
 }
 
 export type CreatedSizeTheme = {
   pxToRem: (value: number) => string
-  space: {
-    XXS: number
-    XS: number
-    S: number
-    M: number
-    L: number
-    XL: number
-    XXL: number
-  }
-  font: {
-    SHORT: number
-    TALL: number
-    GRANDE: number
-    VENTI: number
-  }
-  mediaQuery: {
-    SP: number
-    TABLET: number
-  }
+  space: Required<SpaceProps>
+  font: Required<FontProps>
+  mediaQuery: Required<MediaQueryProps>
 }
 
 const pxToRem = (font: number) => (value: number) => `${value / font}rem`
