@@ -94,7 +94,10 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
   return (
     <Dropdown>
-      <DropdownTrigger className={triggerWrapper({ className })}>
+      <DropdownTrigger
+        className={triggerWrapper({ className })}
+        tooltip={{ show: onlyIconTrigger, message: label }}
+      >
         <Button
           {...props}
           suffix={triggerSuffix}
