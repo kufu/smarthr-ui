@@ -1,7 +1,5 @@
 import { darken, rgba, transparentize } from 'polished'
 
-import { merge } from '../libs/lodash'
-
 export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
 export type GreyScaleColors =
   | keyof typeof greyScale
@@ -73,14 +71,15 @@ export type CreatedColorTheme = Palette & {
 }
 
 export const createColor = (userColor: ColorProperty = {}) => {
-  const created: CreatedColorTheme = merge(
-    {
-      hoverColor: (value: string): string => darken(0.05, value),
-      disableColor: (value: string): string => rgba(value, 0.5),
-      ...defaultColor,
-    },
-    userColor,
-    !userColor.OUTLINE && userColor.MAIN ? { OUTLINE: transparentize(0.5, userColor.MAIN) } : null,
-  )
-  return created
+  const actualUserColor =
+    userColor.MAIN && !userColor.OUTLINE
+      ? { ...userColor, OUTLINE: transparentize(0.5, userColor.MAIN) }
+      : userColor
+
+  return {
+    ...defaultColor,
+    ...actualUserColor,
+    hoverColor: (value: string): string => darken(0.05, value),
+    disableColor: (value: string): string => rgba(value, 0.5),
+  } as CreatedColorTheme
 }
