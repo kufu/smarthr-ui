@@ -189,9 +189,16 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
       </span>
     )
 
+    if (onlyIconTrigger) {
+      return {
+        buttonSuffix: undefined,
+        buttonContent: FilterIcon,
+      }
+    }
+
     return {
-      buttonSuffix: !onlyIconTrigger ? FilterIcon : undefined,
-      buttonContent: onlyIconTrigger ? FilterIcon : texts.triggerButton,
+      buttonSuffix: FilterIcon,
+      buttonContent: texts.triggerButton,
     }
   }, [
     isFiltered,
