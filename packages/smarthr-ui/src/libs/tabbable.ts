@@ -1,4 +1,4 @@
-const candidateSelectors = [
+const candidateSelector = [
   'input:not([disabled])',
   'select:not([disabled])',
   'textarea:not([disabled])',
@@ -9,42 +9,30 @@ const candidateSelectors = [
   'video[controls]',
   '[contenteditable]:not([contenteditable="false"])',
   'details>summary',
-]
-const candidateSelector = candidateSelectors.join(',')
+].join(',')
 
 type Option = {
-  shouldIgnoreVisibility: boolean
-}
-const defaultOption: Option = {
-  shouldIgnoreVisibility: false,
+  shouldIgnoreVisibility?: boolean
 }
 
-export function tabbable(el: HTMLElement, option?: Partial<Option>) {
-  const mergedOption = {
-    ...defaultOption,
-    ...option,
-  }
+export function tabbable(el: HTMLElement, option?: Option) {
   const candidates = Array.from(el.querySelectorAll<HTMLElement>(candidateSelector)).filter(
     (element) => element.tabIndex >= 0,
   )
-  if (mergedOption.shouldIgnoreVisibility) {
+
+  if (option?.shouldIgnoreVisibility) {
     return candidates
   }
 
-  return candidates.filter((candidate) => !isHidden(candidate))
+  return candidates.filter(isVisible)
 }
 
-function isHidden(node: Element) {
-  if (getComputedStyle(node).visibility === 'hidden') return true
-  if (isDisplayNone(node)) return true
-
-  return false
+function isVisible(node: Element) {
+  return getComputedStyle(node).visibility !== 'hidden' && !isDisplayNone(node)
 }
 
-function isDisplayNone(node: Element | null): boolean {
-  if (!node) {
-    return false
-  }
+function isDisplayNone(node: Element): boolean {
   if (getComputedStyle(node).display === 'none') return true
+
   return isDisplayNone(node.parentElement)
 }
