@@ -6,11 +6,9 @@ export function useOuterClick(
 ) {
   useEffect(() => {
     const handleOuterClick = (e: MouseEvent) => {
-      if (targets.some((target) => isEventIncludedParent(e, target.current))) {
-        return
+      if (targets.every((target) => isEventExcludedParent(e, target.current))) {
+        callback(e)
       }
-
-      callback(e)
     }
 
     window.addEventListener('click', handleOuterClick)
@@ -21,12 +19,12 @@ export function useOuterClick(
   }, [callback, targets])
 }
 
-function isEventIncludedParent(e: MouseEvent, parent: Element | null): boolean {
-  if (!parent) return false
+function isEventExcludedParent(e: MouseEvent, parent: Element | null): boolean {
+  if (parent) return true
 
   const path = e.composedPath()
 
-  if (path.length === 0) return false
+  if (path.length === 0) return true
 
-  return path.includes(parent)
+  return !path.includes(parent)
 }
