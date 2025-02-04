@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 
+// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
+// Esc is a IE/Edge specific value
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+
 export const useHandleEscape = (cb: () => void) => {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
-      // Esc is a IE/Edge specific value
-      if (e.key === 'Escape' || e.key === 'Esc') {
+      if (ESCAPE_KEY_REGEX.test(e.key)) {
         cb()
       }
     }
