@@ -92,8 +92,12 @@ function _isChildPortal(
 ): boolean {
   if (!element) return false
 
-  const childOf = element.dataset?.portalChildOf || ''
-  const includesSeq = childOf.split(',').includes(parentPortalSeq.toString())
+  let includesSeq = false
+  const childOf = element.dataset?.portalChildOf
+
+  if (childOf) {
+    includesSeq = childOf.split(',').includes(parentPortalSeq.toString())
+  }
 
   return includesSeq || _isChildPortal(element.parentElement, parentPortalSeq)
 }
