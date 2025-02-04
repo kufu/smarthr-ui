@@ -22,5 +22,6 @@ export const defaultLeading: CreatedLeading = {
 export const createLeading = (userLeading: LeadingProperty = {}) => {
   const { ...userTokens } = userLeading
   const created: CreatedLeading = merge(defaultLeading, userTokens)
+
   return created
 }

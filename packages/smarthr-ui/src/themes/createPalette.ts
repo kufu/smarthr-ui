@@ -80,5 +80,6 @@ export const createPalette = (userPalette: PaletteProperty = {}) => {
     userPalette,
     !userPalette.OUTLINE && userPalette.MAIN ? { OUTLINE: userPalette.MAIN } : null,
   )
+
   return created
 }
