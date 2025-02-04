@@ -112,34 +112,41 @@ function getColorProperty(theme: ThemeProperty): ColorProperty {
   }
 }
 function getSizeProperty(theme: ThemeProperty): SizeProperty {
+  const fontSize = theme.fontSize || {}
+  const size = theme.size || {}
+  const space = size.space || {}
+  const font = size.font || {}
+
   return {
-    htmlFontSize: theme.fontSize?.htmlFontSize || theme.size?.htmlFontSize,
+    htmlFontSize: fontSize.htmlFontSize || size.htmlFontSize,
     space: {
-      defaultRem: theme.size?.space?.defaultRem,
-      XXS: theme.size?.space?.XXS,
-      XS: theme.size?.space?.XS,
-      S: theme.size?.space?.S,
-      M: theme.size?.space?.M,
-      L: theme.size?.space?.L,
-      XL: theme.size?.space?.XL,
-      XXL: theme.size?.space?.XXL,
+      defaultRem: space.defaultRem,
+      XXS: space.XXS,
+      XS: space.XS,
+      S: space.S,
+      M: space.M,
+      L: space.L,
+      XL: space.XL,
+      XXL: space.XXL,
     },
     font: {
-      SHORT: theme.fontSize?.SHORT || theme.size?.font?.SHORT,
-      TALL: theme.fontSize?.TALL || theme.size?.font?.TALL,
-      GRANDE: theme.fontSize?.GRANDE || theme.size?.font?.GRANDE,
-      VENTI: theme.fontSize?.VENTI || theme.size?.font?.VENTI,
+      SHORT: fontSize.SHORT || font.SHORT,
+      TALL: fontSize.TALL || font.TALL,
+      GRANDE: fontSize.GRANDE || font.GRANDE,
+      VENTI: fontSize.VENTI || font.VENTI,
     },
     mediaQuery: {
-      ...theme.size?.mediaQuery,
+      ...size.mediaQuery,
       ...theme.breakpoint,
     },
   }
 }
 function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
+  const size = theme.size || {}
+
   return {
-    htmlFontSize: theme.size?.htmlFontSize,
-    ...theme.size?.font,
+    htmlFontSize: size.htmlFontSize,
+    ...size.font,
     ...theme.fontSize,
   }
 }
@@ -156,23 +163,29 @@ function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
   }
 }
 function getFrameProperty(theme: ThemeProperty): FrameProperty {
+  const border = theme.border || {}
+  const frameBorder = theme.frame?.border || {}
+
   return {
     border: {
-      lineWidth: theme.border?.lineWidth || theme.frame?.border?.lineWidth,
-      lineStyle: theme.border?.lineStyle || theme.frame?.border?.lineStyle,
-      default: theme.border?.shorthand || theme.frame?.border?.default,
+      lineWidth: border.lineWidth || frameBorder.lineWidth,
+      lineStyle: border.lineStyle || frameBorder.lineStyle,
+      default: border.shorthand || frameBorder.default,
       radius: {
-        ...theme.frame?.border?.radius,
+        ...frameBorder.radius,
         ...theme.radius,
       },
     },
   }
 }
 function getBorderProperty(theme: ThemeProperty): BorderProperty {
+  const border = theme.border || {}
+  const frameBorder = theme.frame?.border || {}
+
   return {
-    lineWidth: theme.border?.lineWidth || theme.frame?.border?.lineWidth,
-    lineStyle: theme.border?.lineStyle || theme.frame?.border?.lineStyle,
-    shorthand: theme.border?.shorthand || theme.frame?.border?.default,
+    lineWidth: border.lineWidth || frameBorder.lineWidth,
+    lineStyle: border.lineStyle || frameBorder.lineStyle,
+    shorthand: border.shorthand || frameBorder.default,
   }
 }
 function getRadiusProperty(theme: ThemeProperty): RadiusProperty {
