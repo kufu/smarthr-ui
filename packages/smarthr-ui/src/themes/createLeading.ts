@@ -1,5 +1,3 @@
-import { merge } from '../libs/lodash'
-
 type Leading = {
   NONE: number
   TIGHT: number
@@ -19,9 +17,8 @@ export const defaultLeading: CreatedLeading = {
   RELAXED: 1.75,
 }
 
-export const createLeading = (userLeading: LeadingProperty = {}) => {
-  const { ...userTokens } = userLeading
-  const created: CreatedLeading = merge(defaultLeading, userTokens)
-
-  return created
-}
+export const createLeading = (userLeading: LeadingProperty = {}) =>
+  ({
+    ...defaultLeading,
+    ...userLeading,
+  }) as CreatedLeading
