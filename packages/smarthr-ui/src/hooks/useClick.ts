@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect } from 'react'
+import { RefObject, useEffect } from 'react'
 
 export function useClick(
   innerRefs: Array<RefObject<HTMLElement>>,

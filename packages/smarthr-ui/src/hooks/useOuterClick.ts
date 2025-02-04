@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect } from 'react'
+import { RefObject, useEffect } from 'react'
 
 export function useOuterClick(
   targets: Array<RefObject<HTMLElement>>,
@@ -20,11 +20,11 @@ export function useOuterClick(
 }
 
 function isEventExcludedParent(e: MouseEvent, parent: Element | null): boolean {
-  if (parent) return true
+  if (!parent) return false
 
   const path = e.composedPath()
 
-  if (path.length === 0) return true
+  if (path.length === 0) return false
 
   return !path.includes(parent)
 }
