@@ -24,10 +24,9 @@ export const MessageDialogContent: React.FC<Props & ElementProps> = ({
   const { createPortal } = useDialogPortal(portalParent)
 
   const handleClickClose = useCallback(() => {
-    if (!active) {
-      return
+    if (active) {
+      onClickClose()
     }
-    onClickClose()
   }, [active, onClickClose])
   const titleId = useId()
 

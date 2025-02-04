@@ -252,8 +252,9 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
     const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-    if (input && !input.getAttribute(attrName)) {
-      input.setAttribute(attrName, describedbyIds)
+    if (input) {
+      const attribute = input.getAttribute(attrName)
+      input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
     }
   }, [describedbyIds])
   useEffect(() => {
