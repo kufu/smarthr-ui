@@ -6,10 +6,13 @@ import React, {
   forwardRef,
 } from 'react'
 
-export const includeDisabledTrigger = (trigger: React.ReactNode) =>
-  React.Children.map(trigger, (t) => React.isValidElement(t) && t.props.disabled)?.some(
-    (bool: boolean) => bool,
-  )
+export const includeDisabledTrigger = (trigger: React.ReactNode) => {
+  if (!trigger) {
+    return false
+  }
+
+  return React.Children.toArray(trigger).some((t) => React.isValidElement(t) && t.props.disabled)
+}
 
 /** forwardRef でジェネリクスを使うためのラッパー
  * via https://www.totaltypescript.com/forwardref-with-generic-components */
