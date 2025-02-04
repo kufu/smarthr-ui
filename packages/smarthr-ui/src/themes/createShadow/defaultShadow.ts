@@ -2,7 +2,7 @@ import { transparentize } from 'polished'
 
 import { defaultColor } from '../createColor'
 
-const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
+export const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
 const defaultOutline = createOutline(defaultColor.OUTLINE)
 const defaultOutlineMargin = '4px'
 
