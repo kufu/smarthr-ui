@@ -15,7 +15,7 @@ export const useResponseMessage = (responseMessage: ResponseMessageType | undefi
     if (!responseMessage) {
       return {
         isProcessing: false,
-        status: null,
+        status: undefined,
         message: '',
       }
     }
@@ -23,7 +23,7 @@ export const useResponseMessage = (responseMessage: ResponseMessageType | undefi
     if (responseMessage.status === 'processing') {
       return {
         isProcessing: true,
-        status: null,
+        status: undefined,
         message: '',
       }
     }
