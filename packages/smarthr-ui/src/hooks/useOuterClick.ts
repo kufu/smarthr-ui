@@ -4,24 +4,21 @@ export function useOuterClick(
   targets: Array<RefObject<HTMLElement>>,
   callback: (e: MouseEvent) => void,
 ) {
-  const handleOuterClick = useCallback(
-    (e: MouseEvent) => {
+  useEffect(() => {
+    const handleOuterClick = (e: MouseEvent) => {
       if (targets.some((target) => isEventIncludedParent(e, target.current))) {
         return
       }
-      callback(e)
-    },
-    // spread targets to compare deps one by one
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [...targets, callback],
-  )
 
-  useEffect(() => {
+      callback(e)
+    }
+
     window.addEventListener('click', handleOuterClick)
+
     return () => {
       window.removeEventListener('click', handleOuterClick)
     }
-  }, [handleOuterClick])
+  }, [callback, targets])
 }
 
 function isEventIncludedParent(e: MouseEvent, parent: Element | null): boolean {
