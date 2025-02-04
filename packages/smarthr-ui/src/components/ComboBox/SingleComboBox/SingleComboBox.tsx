@@ -320,7 +320,7 @@ const ActualSingleComboBox = <T,>(
   }, [disabled, isFocused])
 
   useClick(
-    [outerRef, listBoxRef, clearButtonRef],
+    useMemo(() => [outerRef, listBoxRef, clearButtonRef], [outerRef, listBoxRef, clearButtonRef]),
     useCallback(() => {
       if (!isFocused && onSelect && !selectedItem && defaultItem) {
         onSelect(defaultItem)
