@@ -20,7 +20,7 @@ import { Tooltip } from '../Tooltip'
 import { DropdownContext } from './Dropdown'
 
 type ConditionalWrapperProps = {
-  shouldWrapContent: boolean
+  shouldWrapContent?: boolean
   wrapper: FC<PropsWithChildren>
 }
 
@@ -64,7 +64,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   return (
     <div ref={triggerElementRef} className={styles}>
       <ConditionalWrapper
-        shouldWrapContent={!!tooltip?.show}
+        shouldWrapContent={tooltip?.show}
         wrapper={({ children: currentChildren }) => (
           <Tooltip
             message={tooltip?.message}

@@ -113,7 +113,7 @@ const MemoizedTriggerButton = React.memo<
     ElementProps & { wrapperStyle: string; buttonStyle: string }
 >(({ onlyIconTrigger, triggerSize, label, triggerIcon, wrapperStyle, buttonStyle, ...rest }) => {
   const tooltip = useMemo(
-    () => ({ show: !!onlyIconTrigger, message: label }),
+    () => ({ show: onlyIconTrigger, message: label }),
     [label, onlyIconTrigger],
   )
 
