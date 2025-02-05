@@ -82,17 +82,16 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
       const select = e.currentTarget
       const newLabel = select.options[select.selectedIndex].label
       const newFields = innerFields.map((field) => {
-        if (field.label === newLabel) {
-          if (!field.selected) {
-            return {
-              ...field,
-              selected: true,
-            }
-          }
-        } else if (field.selected) {
+        if (field.label !== newLabel && field.selected) {
           return {
             ...field,
             selected: false,
+          }
+        }
+        if (field.label === newLabel && !field.selected) {
+          return {
+            ...field,
+            selected: true,
           }
         }
 
