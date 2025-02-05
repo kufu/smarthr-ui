@@ -97,7 +97,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             className={styles.buttonArea}
           />
         </Cluster>
-        {calcedResponseStatus.status && (
+        {calcedResponseStatus.message && (
           <div className={styles.message}>
             <ResponseMessage type={calcedResponseStatus.status} role="alert">
               {calcedResponseStatus.message}

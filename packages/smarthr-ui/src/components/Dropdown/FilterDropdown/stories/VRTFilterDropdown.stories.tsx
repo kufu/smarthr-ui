@@ -8,15 +8,20 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 /**
  * $ pict filter-dropdown.pict
- * triggerSize isFiltered disabled
- * s           true       true
- * s           false      false
- * default     false      true
- * default     true       false
+ * triggerSize isFiltered disabled onlyIconTrigger
+ * default     false      false    true
+ * s           true       true     false
+ * s           false      false    false
+ * default     false      true     false
+ * default     true       false    false
  */
 const _cases: Array<
-  Pick<ComponentProps<typeof FilterDropdown>, 'isFiltered' | 'triggerSize' | 'disabled'>
+  Pick<
+    ComponentProps<typeof FilterDropdown>,
+    'isFiltered' | 'triggerSize' | 'disabled' | 'onlyIconTrigger'
+  >
 > = [
+  { onlyIconTrigger: true },
   { triggerSize: 's', isFiltered: true, disabled: true },
   { triggerSize: 's' },
   { isFiltered: false, disabled: true },
@@ -41,7 +46,10 @@ export default {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const { length, [length - 1]: last } = await canvas.findAllByRole('button')
+
+    const { length, 0: first, [length - 1]: last } = await canvas.findAllByRole('button')
+
+    userEvent.hover(first)
     userEvent.click(last)
   },
   tags: ['!autodocs'],
