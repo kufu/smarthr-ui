@@ -195,7 +195,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
 
   const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
-  const styles = useMemo(() => tooltip({ isIcon, className }), [isIcon, className])
+  const style = useMemo(() => tooltip({ isIcon, className }), [isIcon, className])
   const isInnerTarget = ariaDescribedbyTarget === 'inner'
   const childrenWithProps = useMemo(
     () =>
@@ -218,7 +218,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
       onTouchEnd={actualOnTouchEnd}
       onBlur={actualOnBlur}
       tabIndex={tabIndex}
-      className={styles}
+      className={style}
     >
       {portalRoot &&
         createPortal(
