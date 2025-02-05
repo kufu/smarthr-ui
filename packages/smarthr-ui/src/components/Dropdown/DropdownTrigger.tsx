@@ -34,7 +34,7 @@ const ConditionalWrapper: FC<PropsWithChildren<ConditionalWrapperProps>> = ({
 }) => (shouldWrapContent ? wrapper({ children }) : children)
 
 type Props = PropsWithChildren<ComponentProps<'div'>> & {
-  tooltip?: { message: ReactNode; show: boolean }
+  tooltip?: { message: ReactNode; show?: boolean }
 }
 
 const wrapper = tv({
