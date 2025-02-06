@@ -309,6 +309,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       (e: React.KeyboardEvent) => {
         if (ESCAPE_KEY_REGEX.test(e.key)) {
           e.stopPropagation()
+          // delay hiding calendar because calendar will be displayed when input is focused
           requestAnimationFrame(closeCalendar)
 
           if (inputRef.current) inputRef.current.focus()
@@ -323,7 +324,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
           updateDate(stringToDate(e.currentTarget.value))
         }
       },
-      [isCalendarShown, updateDate, closeCalendar, openCalendar],
+      [isCalendarShown, updateDate, closeCalendar, openCalendar, stringToDate],
     )
     const onFocusInput = useCallback(() => {
       setIsInputFocused(true)
