@@ -8,6 +8,7 @@ import React, {
   useMemo,
 } from 'react'
 
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -18,7 +19,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, StepItem } from './StepFormDialogProvider'
 
-import type { DecoratorsType, ResponseMessageType } from '../../../types'
+import type { ResponseMessageType } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
