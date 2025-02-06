@@ -138,11 +138,9 @@ export const Th: FC<Props & ElementProps> = ({
   return (
     <th {...ariaSortProps} {...props} className={actualClassName} style={actualStyle}>
       {sort ? (
-        <SortButton align={align} onClick={onSort}>
+        <MemoizedSortButton align={align} onSort={onSort} sortLabel={sortLabel}>
           {children}
-          <SortIcon />
-          <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
-        </SortButton>
+        </MemoizedSortButton>
       ) : (
         children
       )}
@@ -160,14 +158,19 @@ const sortButton = tv({
   },
 })
 
-const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'>> = ({
-  align,
-  ...props
-}) => {
+const MemoizedSortButton = memo<
+  Pick<Props, 'align' | 'onSort'> & PropsWithChildren<{ sortLabel: string }>
+>(({ align, onSort, sortLabel, children }) => {
   const className = useMemo(() => sortButton({ align }), [align])
 
-  return <UnstyledButton {...props} className={className} />
-}
+  return (
+    <UnstyledButton align={align} onClick={onSort} className={className}>
+      {children}
+      <SortIcon />
+      <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
+    </UnstyledButton>
+  )
+})
 
 const sortIcon = tv({
   slots: {
