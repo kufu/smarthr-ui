@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
+import React, { ComponentPropsWithRef, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTableHeadCellCount } from './useTableHeadCellCount'
@@ -22,11 +22,18 @@ export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> =
 }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
-  const { wrapper, cell } = bulkActionRow()
+  const classNames = useMemo(() => {
+    const { wrapper, cell } = bulkActionRow()
+
+    return {
+      wrapper: wrapper({ className }),
+      cell: cell(),
+    }
+  }, [className])
 
   return (
-    <tr {...props} ref={countHeadCellRef} className={wrapper({ className })}>
-      <td colSpan={count} className={cell()}>
+    <tr {...props} ref={countHeadCellRef} className={classNames.wrapper}>
+      <td colSpan={count} className={classNames.cell}>
         {children}
       </td>
     </tr>
