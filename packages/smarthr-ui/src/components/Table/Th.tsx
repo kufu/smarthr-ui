@@ -162,6 +162,7 @@ const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'
   ...props
 }) => {
   const sortButtonStyle = useMemo(() => sortButton({ align }), [align])
+
   return <UnstyledButton {...props} className={sortButtonStyle} />
 }
 
@@ -190,19 +191,21 @@ const sortIcon = tv({
 })
 
 const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => {
-  const { wrapperStyle, upIconStyle, downIconStyle } = useMemo(() => {
-    const sortIconStyle = sortIcon()
+  const classNames = useMemo(() => {
+    const { wrapper, upIcon, downIcon } = sortIcon()
+    const iconAttr = { sort }
+
     return {
-      wrapperStyle: sortIconStyle.wrapper(),
-      upIconStyle: sortIconStyle.upIcon({ sort }),
-      downIconStyle: sortIconStyle.downIcon({ sort }),
+      wrapper: wrapper(),
+      upIcon: upIcon(iconAttr),
+      downIcon: downIcon(iconAttr),
     }
   }, [sort])
 
   return (
-    <span className={wrapperStyle}>
-      <FaSortUpIcon className={upIconStyle} />
-      <FaSortDownIcon className={downIconStyle} />
+    <span className={classNames.wrapper}>
+      <FaSortUpIcon className={classNames.upIcon} />
+      <FaSortDownIcon className={classNames.downIcon} />
     </span>
   )
 }
