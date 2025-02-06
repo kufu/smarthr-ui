@@ -64,7 +64,7 @@ const checkbox = tv({
 
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
   ({ checked, mixed, error, className, children, disabled, ...props }, ref) => {
-    const styles = useMemo(() => {
+    const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = checkbox()
 
       return {
@@ -95,8 +95,8 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     const checkBoxId = props.id || defaultId
 
     return (
-      <span data-disabled={disabled?.toString()} className={styles.wrapper}>
-        <span className={styles.innerWrapper}>
+      <span data-disabled={disabled?.toString()} className={classNames.wrapper}>
+        <span className={classNames.innerWrapper}>
           <input
             {...props}
             ref={inputRef}
@@ -105,14 +105,18 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
             checked={checked}
             disabled={disabled}
             aria-invalid={error || undefined}
-            className={styles.input}
+            className={classNames.input}
             data-smarthr-ui-input="true"
           />
-          <AriaHiddenBox className={styles.box} />
-          <CheckIconArea mixed={mixed} className={styles.iconWrap} iconStyle={styles.icon} />
+          <AriaHiddenBox className={classNames.box} />
+          <CheckIconArea
+            mixed={mixed}
+            className={classNames.iconWrap}
+            iconStyle={classNames.icon}
+          />
         </span>
 
-        <LabeledChildren htmlFor={checkBoxId} className={styles.label}>
+        <LabeledChildren htmlFor={checkBoxId} className={classNames.label}>
           {children}
         </LabeledChildren>
       </span>
