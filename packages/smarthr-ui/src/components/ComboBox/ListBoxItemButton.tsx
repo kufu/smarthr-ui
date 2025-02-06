@@ -62,7 +62,7 @@ const ListBoxItemButton = <T,>({
     onMouseOver(option)
   }, [onMouseOver, option])
 
-  const buttonStyle = useMemo(
+  const className = useMemo(
     () =>
       button({
         active: !!isActive,
@@ -79,7 +79,7 @@ const ListBoxItemButton = <T,>({
       onMouseOver={handleMouseOver}
       id={option.id}
       role="option"
-      className={buttonStyle}
+      className={className}
       ref={isActive ? activeRef : undefined}
     >
       <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
@@ -93,7 +93,7 @@ const ListBoxItemButton = <T,>({
       onMouseOver={handleMouseOver}
       id={option.id}
       role="option"
-      className={buttonStyle}
+      className={className}
       aria-selected={selected}
       ref={isActive ? activeRef : undefined}
     >

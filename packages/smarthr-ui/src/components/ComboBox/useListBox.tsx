@@ -245,7 +245,7 @@ export const useListBox = <T,>({
     [setActiveOption],
   )
 
-  const wrapperStyleAttr = useMemo(() => {
+  const wrapperStyle = useMemo(() => {
     const { top, left } = listBoxRect
 
     return {
@@ -254,7 +254,7 @@ export const useListBox = <T,>({
       width: `${triggerWidth}px`,
     }
   }, [listBoxRect, triggerWidth])
-  const dropdownListStyleAttr = useMemo(() => {
+  const dropdownListStyle = useMemo(() => {
     const { left, height } = listBoxRect
     const dropdownListWidth = dropdownWidth || triggerWidth
 
@@ -265,7 +265,7 @@ export const useListBox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth])
 
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
 
     return {
@@ -282,7 +282,7 @@ export const useListBox = <T,>({
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <div className={styles.wrapper} style={wrapperStyleAttr}>
+        <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
             <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
           )}
@@ -291,21 +291,21 @@ export const useListBox = <T,>({
             ref={listBoxRef}
             role="listbox"
             aria-hidden={!isExpanded}
-            className={styles.dropdownList}
-            style={dropdownListStyleAttr}
+            className={classNames.dropdownList}
+            style={dropdownListStyle}
           >
             {dropdownHelpMessage && (
-              <p className={styles.helpMessage}>
+              <p className={classNames.helpMessage}>
                 <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
               </p>
             )}
             {isExpanded ? (
               isLoading ? (
-                <div className={styles.loaderWrapper}>
+                <div className={classNames.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
               ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={styles.noItems}>
+                <p role="alert" aria-live="polite" className={classNames.noItems}>
                   {decorated.noResultText}
                 </p>
               ) : (
@@ -339,9 +339,9 @@ export const useListBox = <T,>({
       handleAdd,
       handleHoverOption,
       handleSelect,
-      styles,
-      dropdownListStyleAttr,
-      wrapperStyleAttr,
+      classNames,
+      dropdownListStyle,
+      wrapperStyle,
       createPortal,
     ],
   )
