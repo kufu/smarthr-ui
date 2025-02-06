@@ -46,7 +46,7 @@ const appNavi = tv({
 })
 
 const { wrapper, statusLabelHeading, buttonsEl, listItem, additionalAreaEl } = appNavi()
-const styles = {
+const classNames = {
   statusLabelHeading: statusLabelHeading(),
   buttonsEl: buttonsEl(),
   listItem: listItem(),
@@ -62,15 +62,15 @@ export const AppNavi: FC<Props & ElementProps> = ({
   additionalArea,
   ...rest
 }) => {
-  const wrapperStyle = useMemo(() => wrapper({ className }), [className])
+  const wrapperClassName = useMemo(() => wrapper({ className }), [className])
 
   return (
-    <Nav {...rest} className={wrapperStyle}>
+    <Nav {...rest} className={wrapperClassName}>
       <StatusLabelHeading>{label}</StatusLabelHeading>
-      <ul className={styles.buttonsEl}>
+      <ul className={classNames.buttonsEl}>
         {buttons &&
           buttons.map((button, i) => (
-            <li key={i} className={styles.listItem}>
+            <li key={i} className={classNames.listItem}>
               {'tag' in button ? (
                 <AppNaviCustomTag {...button} />
               ) : 'href' in button ? (
@@ -85,7 +85,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
         {renderButtons(children)}
       </ul>
 
-      {additionalArea && <div className={styles.additionalAreaEl}>{additionalArea}</div>}
+      {additionalArea && <div className={classNames.additionalAreaEl}>{additionalArea}</div>}
     </Nav>
   )
 }
@@ -93,7 +93,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
 const StatusLabelHeading = React.memo<PropsWithChildren>(
   ({ children }) =>
     children && (
-      <Heading className={styles.statusLabelHeading}>
+      <Heading className={classNames.statusLabelHeading}>
         <StatusLabel>{children}</StatusLabel>
       </Heading>
     ),
@@ -109,5 +109,5 @@ const renderButtons = (children: ReactNode) =>
       return renderButtons(child.props.children)
     }
 
-    return <li className={styles.listItem}>{child}</li>
+    return <li className={classNames.listItem}>{child}</li>
   })

@@ -38,7 +38,7 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   current,
   displayCaret,
 }) => {
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, icon } = appNaviDropdown({ active: current, displayCaret })
 
     return {
@@ -50,8 +50,8 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <UnstyledButton aria-current={current ? 'page' : undefined} className={styles.wrapper}>
-          {Icon && <Icon className={styles.icon} />}
+        <UnstyledButton aria-current={current ? 'page' : undefined} className={classNames.wrapper}>
+          {Icon && <Icon className={classNames.icon} />}
           {children}
           {displayCaret && <FaCaretDownIcon />}
         </UnstyledButton>

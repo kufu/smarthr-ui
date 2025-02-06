@@ -36,7 +36,7 @@ export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
   label,
   children,
 }) => {
-  const style = useMemo(() => dropdownMenuButton(), [])
+  const className = useMemo(() => dropdownMenuButton(), [])
 
   return (
     <DropdownMenuButton
@@ -51,7 +51,7 @@ export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
           </span>
         </>
       }
-      className={style}
+      className={className}
     >
       {children}
     </DropdownMenuButton>
