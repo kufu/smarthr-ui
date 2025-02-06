@@ -14,10 +14,9 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../hooks/useDecorators'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
-
-import type { DecoratorsType } from '../../types'
 
 const dropZone = tv({
   slots: {

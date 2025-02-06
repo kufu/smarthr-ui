@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [65.0.1](https://github.com/kufu/smarthr-ui/compare/v65.0.0...v65.0.1) (2025-02-04)
+
+
+### Bug Fixes
+
+* aria-describedbyがinputに紐づいている場合もFormControlのaria-describedbyを設定する ([#5344](https://github.com/kufu/smarthr-ui/issues/5344)) ([3c636f1](https://github.com/kufu/smarthr-ui/commit/3c636f109f9a93ba3e02663442a065d749473e2f))
+* SegmentedControl内の選択済み項目でButton[variant=primary]を利用する ([#5310](https://github.com/kufu/smarthr-ui/issues/5310)) ([d286b90](https://github.com/kufu/smarthr-ui/commit/d286b9061bb232c23560b5700b6c8a1960ea1053))
+
+## [65.0.0](https://github.com/kufu/smarthr-ui/compare/v64.0.1...v65.0.0) (2025-01-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* FloatAreaのresponseMessage属性の型を実装に合わせて調整する (#5299)
+
+### Bug Fixes
+
+* **AppHeader:** AppNaviを使うように修正 ([#5296](https://github.com/kufu/smarthr-ui/issues/5296)) ([f71c333](https://github.com/kufu/smarthr-ui/commit/f71c333bbd7a133e652408cafc25bdcc2a2355da))
+* **Button:** テキストのラベルが存在しない場合に自動的にsquareにする ([#5294](https://github.com/kufu/smarthr-ui/issues/5294)) ([b92fb8a](https://github.com/kufu/smarthr-ui/commit/b92fb8aaeb2ce7deee51415e05a1b77c068fe4ef))
+* FloatAreaのresponseMessage属性の型を実装に合わせて調整する ([#5299](https://github.com/kufu/smarthr-ui/issues/5299)) ([0fd3afa](https://github.com/kufu/smarthr-ui/commit/0fd3afaf17f22e4b8bc7eb270a92d02780519896))
+* FormControl、FieldsetでdangerouslyTitleHiddenを指定した場合、多くのtest用ライブラリで用意されているメソッドで対象にできなくなってしまう問題に対応したい ([#5339](https://github.com/kufu/smarthr-ui/issues/5339)) ([09fedd9](https://github.com/kufu/smarthr-ui/commit/09fedd96dac1dce378c44aa3e4a254ac3b7fddf0))
+* **Textarea:** autoResize時にvalue, defaultValueの初期値でも高さを反映するように修正 ([#5330](https://github.com/kufu/smarthr-ui/issues/5330)) ([8d09ffa](https://github.com/kufu/smarthr-ui/commit/8d09ffaf3674d90bfaf1cd30cbedbaf0f6eeb573))
+
 ### [64.0.1](https://github.com/kufu/smarthr-ui/compare/v64.0.0...v64.0.1) (2025-01-21)
 
 
