@@ -1,14 +1,13 @@
 import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { TextLink } from '../../TextLink'
-
-import type { DecoratorsType } from '../../../types'
 
 type Category = {
   type?: string

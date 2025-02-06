@@ -3,8 +3,8 @@
 import React, { ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../hooks/useDecorators'
 import { usePortal } from '../../hooks/usePortal'
-import { DecoratorsType } from '../../types'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
