@@ -1,5 +1,5 @@
 import { userEvent } from '@storybook/test'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import React, { useState } from 'react'
 
 import { Button } from '../../Button'
@@ -51,7 +51,7 @@ describe('StepFormDialog', () => {
     await act(() => userEvent.keyboard('{enter}'))
     expect(screen.getByRole('dialog', { name: 'StepFormDialog 1/2' })).toBeVisible()
 
-    await act(() => userEvent.click(screen.getByRole('button', { name: 'キャンセル' })))
+    await act(() => fireEvent.click(screen.getByRole('button', { name: 'キャンセル' })))
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'StepFormDialog 1/2' })).toBeNull()
@@ -70,13 +70,13 @@ describe('StepFormDialog', () => {
     await act(() => userEvent.keyboard('{enter}'))
     expect(screen.getByRole('dialog', { name: 'StepFormDialog 1/2' })).toBeVisible()
 
-    await act(() => userEvent.click(screen.getByRole('button', { name: '次へ' })))
+    await act(() => fireEvent.click(screen.getByRole('button', { name: '次へ' })))
     expect(screen.getByRole('dialog', { name: 'StepFormDialog 2/2' })).toBeVisible()
 
-    await act(() => userEvent.click(screen.getByRole('button', { name: '戻る' })))
+    await act(() => fireEvent.click(screen.getByRole('button', { name: '戻る' })))
     expect(screen.getByRole('dialog', { name: 'StepFormDialog 1/2' })).toBeVisible()
 
-    await act(() => userEvent.click(screen.getByRole('button', { name: '次へ' })))
+    await act(() => fireEvent.click(screen.getByRole('button', { name: '次へ' })))
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'StepFormDialog 2/2' })).toBeVisible()
@@ -84,7 +84,7 @@ describe('StepFormDialog', () => {
       { timeout: 1000 },
     )
 
-    await act(() => userEvent.click(screen.getByRole('button', { name: '保存' })))
+    await act(() => fireEvent.click(screen.getByRole('button', { name: '保存' })))
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'StepFormDialog 2/2' })).toBeNull()
