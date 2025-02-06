@@ -19,7 +19,7 @@ type ElementProps = Omit<ComponentPropsWithRef<'tbody'>, keyof Props>
 const emptyTableBodyCell = tv({
   base: 'shr-text-center',
   variants: {
-    paddingBlock: {
+    vertical: {
       0: 'shr-py-0',
       0.25: 'shr-py-0.25',
       0.5: 'shr-py-0.5',
@@ -43,7 +43,7 @@ const emptyTableBodyCell = tv({
       XXL: 'shr-py-3.5',
       X3L: 'shr-py-4',
     } as { [key in Gap]: string },
-    paddingInline: {
+    horizontal: {
       0: 'shr-px-0',
       0.25: 'shr-px-0.25',
       0.5: 'shr-px-0.5',
@@ -69,28 +69,25 @@ const emptyTableBodyCell = tv({
     } as { [key in Gap]: string },
   },
   defaultVariants: {
-    paddingBlock: 4,
-    paddingInline: 4,
+    vertical: 4,
+    horizontal: 4,
   },
 })
 
 export const EmptyTableBody: React.FC<Props & ElementProps> = ({ children, padding, ...props }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
-  const tdStyles = useMemo(() => {
-    const paddingBlock = padding instanceof Object ? padding.vertical : padding
-    const paddingInline = padding instanceof Object ? padding.horizontal : padding
+  const tdClassName = useMemo(() => {
+    const actualPadding =
+      padding instanceof Object ? padding : { vertical: padding, horizontal: padding }
 
-    return emptyTableBodyCell({
-      paddingBlock,
-      paddingInline,
-    })
+    return emptyTableBodyCell(actualPadding)
   }, [padding])
 
   return (
     <tbody {...props} ref={countHeadCellRef}>
       <tr>
-        <Td colSpan={count} className={tdStyles}>
+        <Td colSpan={count} className={tdClassName}>
           {children}
         </Td>
       </tr>

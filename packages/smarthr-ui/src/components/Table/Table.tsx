@@ -40,9 +40,10 @@ export const Table: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const styles = useMemo(
+  const actualClassName = useMemo(
     () => table({ borderType, fixedHead, layout, className }),
     [borderType, className, fixedHead, layout],
   )
-  return <table {...props} className={styles} />
+
+  return <table {...props} className={actualClassName} />
 }
