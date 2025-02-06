@@ -24,7 +24,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   onClickClose,
   onPressEscape = onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   className,
@@ -37,19 +37,16 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   const titleId = useId()
 
   const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
-      return
+    if (props.isOpen) {
+      onClickClose()
     }
-    onClickClose()
   }, [onClickClose, props.isOpen])
 
   const handleSubmitAction = useCallback(
     (close: () => void, e: FormEvent<HTMLFormElement>) => {
-      if (!props.isOpen) {
-        return
+      if (props.isOpen) {
+        onSubmit(close, e)
       }
-
-      onSubmit(close, e)
     },
     [onSubmit, props.isOpen],
   )

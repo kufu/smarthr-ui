@@ -1,4 +1,4 @@
-import React, { ComponentProps, type PropsWithChildren, type ReactNode } from 'react'
+import React, { ComponentProps, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
@@ -36,13 +36,28 @@ export const DropdownMenuGroup: React.FC<Props & ElementProps> = ({
   name,
   children,
   className,
-}) => (
-  <li className={group({ className })}>
-    {name && (
-      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={groupName()}>
-        {name}
+}) => {
+  const styles = useMemo(
+    () => ({
+      group: group({ className }),
+      groupName: groupName(),
+    }),
+    [className],
+  )
+
+  return (
+    <li className={styles.group}>
+      <NameText className={styles.groupName}>{name}</NameText>
+      <ul>{renderButtonList(children)}</ul>
+    </li>
+  )
+}
+
+const NameText = React.memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) =>
+    children && (
+      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className}>
+        {children}
       </Text>
-    )}
-    <ul>{renderButtonList(children)}</ul>
-  </li>
+    ),
 )

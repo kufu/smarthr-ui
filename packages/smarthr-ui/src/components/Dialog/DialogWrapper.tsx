@@ -1,6 +1,6 @@
 'use client'
 
-import React, { PropsWithChildren, createContext, useState } from 'react'
+import React, { PropsWithChildren, createContext, useCallback, useState } from 'react'
 
 type DialogContextType = {
   onClickTrigger: () => void
@@ -8,25 +8,25 @@ type DialogContextType = {
   active: boolean
 }
 
+const noop = () => undefined
 export const DialogContext = createContext<DialogContextType>({
-  onClickTrigger: () => {
-    /* noop */
-  },
-  onClickClose: () => {
-    /* noop */
-  },
+  onClickTrigger: noop,
+  onClickClose: noop,
   active: false,
 })
 
 export const DialogWrapper: React.FC<PropsWithChildren> = (props) => {
   const [active, setActive] = useState(false)
 
+  const onClickTrigger = useCallback(() => setActive(true), [])
+  const onClickClose = useCallback(() => setActive(false), [])
+
   return (
     <DialogContext.Provider
       {...props}
       value={{
-        onClickTrigger: () => setActive(true),
-        onClickClose: () => setActive(false),
+        onClickTrigger,
+        onClickClose,
         active,
       }}
     />

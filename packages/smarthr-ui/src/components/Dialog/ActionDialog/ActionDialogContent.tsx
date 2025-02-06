@@ -20,7 +20,7 @@ export const ActionDialogContent: React.FC<Props & ElementProps> = ({
   actionText,
   actionTheme,
   onClickAction,
-  actionDisabled = false,
+  actionDisabled,
   portalParent,
   className = '',
   decorators,
@@ -30,17 +30,15 @@ export const ActionDialogContent: React.FC<Props & ElementProps> = ({
   const { createPortal } = useDialogPortal(portalParent)
 
   const handleClickClose = useCallback(() => {
-    if (!active) {
-      return
+    if (active) {
+      onClickClose()
     }
-    onClickClose()
   }, [active, onClickClose])
 
   const handleClickAction = useCallback(() => {
-    if (!active) {
-      return
+    if (active) {
+      onClickAction(onClickClose)
     }
-    onClickAction(onClickClose)
   }, [active, onClickAction, onClickClose])
 
   const titleId = useId()
