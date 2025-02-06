@@ -106,10 +106,12 @@ const calculateIdealRows = (
   if (!element) {
     return 0
   }
+
   // 現在の入力値に応じた行数
   const currentInputValueRows = Math.floor(
     element.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
   )
+
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 

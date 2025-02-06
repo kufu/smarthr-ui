@@ -21,10 +21,10 @@ type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> &
   }
 
 export const UpwardLink: React.FC<Props> = ({ indent = true, className, elementAs, ...rest }) => {
-  const style = useMemo(() => styleGenerator({ indent, className }), [indent, className])
+  const actualClassName = useMemo(() => styleGenerator({ indent, className }), [indent, className])
 
   return (
-    <div className={style}>
+    <div className={actualClassName}>
       <TextLink {...rest} elementAs={elementAs} prefix={<FaArrowLeftIcon />} />
     </div>
   )

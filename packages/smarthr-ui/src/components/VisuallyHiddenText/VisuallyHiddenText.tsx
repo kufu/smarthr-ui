@@ -15,7 +15,7 @@ export const VisuallyHiddenText = <T extends React.ElementType = 'span'>({
   className,
   ...props
 }: Props<T>) => {
-  const styles = useMemo(() => visuallyHiddenText({ className }), [className])
+  const actualClassName = useMemo(() => visuallyHiddenText({ className }), [className])
 
-  return <Component {...props} className={styles} />
+  return <Component {...props} className={actualClassName} />
 }
