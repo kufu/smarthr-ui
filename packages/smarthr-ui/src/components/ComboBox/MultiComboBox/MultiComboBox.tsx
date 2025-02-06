@@ -389,14 +389,14 @@ const ActualMultiComboBox = <T,>(
 
   const selectedListId = useId()
 
-  const wrapperStyleAttr = useMemo(
+  const wrapperStyle = useMemo(
     () => ({
       ...style,
       width: typeof width === 'number' ? `${width}px` : width,
     }),
     [style, width],
   )
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const {
       wrapper,
       inputArea,
@@ -432,11 +432,11 @@ const ActualMultiComboBox = <T,>(
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onKeyPress={handleKeyPress}
-      className={styles.wrapper}
-      style={wrapperStyleAttr}
+      className={classNames.wrapper}
+      style={wrapperStyle}
     >
-      <div className={styles.inputArea}>
-        <ul id={selectedListId} aria-label={decoratedAriaLabel} className={styles.selectedList}>
+      <div className={classNames.inputArea}>
+        <ul id={selectedListId} aria-label={decoratedAriaLabel} className={classNames.selectedList}>
           {selectedItems.map((selectedItem, i) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
@@ -451,7 +451,7 @@ const ActualMultiComboBox = <T,>(
           ))}
         </ul>
 
-        <div className={styles.inputWrapper}>
+        <div className={classNames.inputWrapper}>
           <input
             {...rest}
             data-smarthr-ui-input="true"
@@ -476,20 +476,20 @@ const ActualMultiComboBox = <T,>(
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
-            className={styles.input}
+            className={classNames.input}
           />
         </div>
 
         {selectedItems.length === 0 && placeholder && !isFocused && (
-          <p className={styles.placeholder}>{placeholder}</p>
+          <p className={classNames.placeholder}>{placeholder}</p>
         )}
       </div>
 
       <MemoizedCaretDown
         disabled={disabled}
         isFocused={isFocused}
-        className={styles.suffixWrapper}
-        iconStyle={styles.suffixIcon}
+        className={classNames.suffixWrapper}
+        iconStyle={classNames.suffixIcon}
       />
 
       {renderListBox()}

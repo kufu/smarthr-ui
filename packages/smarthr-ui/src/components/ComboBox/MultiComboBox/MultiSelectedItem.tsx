@@ -70,7 +70,7 @@ export function MultiSelectedItem<T>({
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
 
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
 
     return {
@@ -82,8 +82,8 @@ export function MultiSelectedItem<T>({
   }, [disabled, enableEllipsis])
 
   const body = (
-    <Chip disabled={disabled} className={styles.wrapper}>
-      <ItemLabel className={styles.itemLabel} setNeedsTooltip={setNeedsTooltip}>
+    <Chip disabled={disabled} className={classNames.wrapper}>
+      <ItemLabel className={classNames.itemLabel} setNeedsTooltip={setNeedsTooltip}>
         {item.label}
       </ItemLabel>
 
@@ -94,8 +94,8 @@ export function MultiSelectedItem<T>({
           disabled={disabled}
           buttonRef={buttonRef}
           decorators={decorators}
-          className={styles.deleteButton}
-          iconStyle={styles.deleteButtonIcon}
+          className={classNames.deleteButton}
+          iconStyle={classNames.deleteButtonIcon}
         />
       )}
     </Chip>
