@@ -49,7 +49,7 @@ const AnchorButton = forwardRef(
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const style = useMemo(() => anchorButton({ className }), [className])
+    const actualClassName = useMemo(() => anchorButton({ className }), [className])
 
     const button = (
       <ButtonWrapper
@@ -58,7 +58,7 @@ const AnchorButton = forwardRef(
         square={square}
         wide={wide}
         variant={variant}
-        className={style}
+        className={actualClassName}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
         isAnchor

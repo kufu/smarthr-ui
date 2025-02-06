@@ -52,7 +52,7 @@ export function ButtonWrapper({
   className,
   ...rest
 }: Props) {
-  const wrapperStyle = useMemo(() => {
+  const wrapperClassName = useMemo(() => {
     const generate = button({
       variant,
       size,
@@ -65,7 +65,7 @@ export function ButtonWrapper({
 
     return wrapper({ className })
   }, [$loading, size, square, variant, wide, className, rest.isAnchor])
-  const innerStyle = useMemo(() => buttonInner({ size }), [size])
+  const innerClassName = useMemo(() => buttonInner({ size }), [size])
 
   // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
   // 自動型づけできなくなってしまう
@@ -74,9 +74,9 @@ export function ButtonWrapper({
     const Component = elementAs || 'a'
 
     return (
-      <Component {...others} className={wrapperStyle} ref={anchorRef}>
+      <Component {...others} className={wrapperClassName} ref={anchorRef}>
         {prefix}
-        <span className={innerStyle}>{children}</span>
+        <span className={innerClassName}>{children}</span>
         {suffix}
       </Component>
     )
@@ -88,12 +88,12 @@ export function ButtonWrapper({
       <button
         {...others}
         aria-disabled={disabled}
-        className={wrapperStyle}
+        className={wrapperClassName}
         ref={buttonRef}
         onClick={disabled ? EVENT_CANCELLER : onClick}
       >
         {prefix}
-        <span className={innerStyle}>{children}</span>
+        <span className={innerClassName}>{children}</span>
         {suffix}
       </button>
     )

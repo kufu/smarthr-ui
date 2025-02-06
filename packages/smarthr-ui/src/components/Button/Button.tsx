@@ -66,7 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     },
     ref,
   ) => {
-    const styles = useMemo(() => {
+    const classNames = useMemo(() => {
       const { wrapper, loader } = buttonStyle()
 
       return {
@@ -84,7 +84,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
       actualPrefix = undefined
       disabledOnLoading = true
 
-      const loader = <Loader size="s" className={styles.loader} role="presentation" />
+      const loader = <Loader size="s" className={classNames.loader} role="presentation" />
 
       if (square) {
         actualChildren = loader
@@ -103,7 +103,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         square={square}
         wide={wide}
         variant={variant}
-        className={styles.wrapper}
+        className={classNames.wrapper}
         buttonRef={ref}
         disabled={disabledOnLoading}
         $loading={loading}

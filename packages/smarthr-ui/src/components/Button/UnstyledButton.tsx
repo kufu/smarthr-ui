@@ -12,7 +12,7 @@ export const UnstyledButton = forwardRef<
   HTMLButtonElement,
   PropsWithChildren<ComponentProps<'button'>>
 >(({ className, type = 'button', ...props }, ref) => {
-  const styles = useMemo(() => unstyledButton({ className }), [className])
+  const actualClassName = useMemo(() => unstyledButton({ className }), [className])
 
-  return <button {...props} type={type} ref={ref} className={styles} />
+  return <button {...props} type={type} ref={ref} className={actualClassName} />
 })

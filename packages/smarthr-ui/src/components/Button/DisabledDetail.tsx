@@ -31,7 +31,7 @@ const disabledDetailStyle = tv({
 })
 
 export const DisabledDetail: FC<DisabledDetailProps> = ({ button, disabledDetail }) => {
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { disabledWrapper, disabledTooltip } = disabledDetailStyle()
 
     return {
@@ -41,12 +41,12 @@ export const DisabledDetail: FC<DisabledDetailProps> = ({ button, disabledDetail
   }, [])
 
   return (
-    <div className={styles.disabledWrapper}>
+    <div className={classNames.disabledWrapper}>
       {button}
       <TooltipIcon
         icon={disabledDetail.icon}
         message={disabledDetail.message}
-        className={styles.disabledTooltip}
+        className={classNames.disabledTooltip}
       />
     </div>
   )
