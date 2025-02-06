@@ -44,7 +44,7 @@ export const BrowserItem: React.FC<Props> = ({
   onSelectItem,
 }) => {
   const inputId = getElementIdFromNode(itemValue)
-  const style = useMemo(() => radioWrapperStyle(), [])
+  const className = useMemo(() => radioWrapperStyle(), [])
 
   const onChange = useMemo(
     () =>
@@ -59,7 +59,7 @@ export const BrowserItem: React.FC<Props> = ({
       htmlFor={inputId}
       data-selected={selected}
       data-type={itemHasChildren ? 'parent' : 'last'}
-      className={style}
+      className={className}
     >
       <input
         className="shr-sr-only"

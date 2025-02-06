@@ -44,7 +44,7 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
-  const style = useMemo(
+  const className = useMemo(
     () => optionsListWrapper({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
     [columns.length],
   )
@@ -107,7 +107,7 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
-    <div role="application" onKeyDown={handleKeyDown} className={style}>
+    <div role="application" onKeyDown={handleKeyDown} className={className}>
       {columns.length > 0 ? (
         columns.map((colItems, index) => (
           <BrowserColumn
