@@ -70,43 +70,37 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
   children,
   triggerSize,
-  onlyIconTrigger = false,
-  triggerIcon: TriggerIcon,
+  onlyIconTrigger,
+  triggerIcon,
   className,
-  ...props
+  ...rest
 }) => {
   const containerRef = React.useRef<HTMLUListElement>(null)
 
-  const triggerLabel = useMemo(() => {
-    const Icon = TriggerIcon || FaEllipsisIcon
-    return onlyIconTrigger ? (
-      <Icon alt={typeof label === 'string' ? label : innerText(label)} />
-    ) : (
-      label
-    )
-  }, [label, TriggerIcon, onlyIconTrigger])
-  const triggerSuffix = useMemo(
-    () => (onlyIconTrigger ? undefined : <FaCaretDownIcon alt="候補を開く" />),
-    [onlyIconTrigger],
-  )
-
   useKeyboardNavigation(containerRef)
+
+  const styles = useMemo(
+    () => ({
+      triggerWrapper: triggerWrapper({ className }),
+      triggerButton: triggerButton(),
+      actionList: actionList(),
+    }),
+    [className],
+  )
 
   return (
     <Dropdown>
-      <DropdownTrigger className={triggerWrapper({ className })}>
-        <Button
-          {...props}
-          suffix={triggerSuffix}
-          size={triggerSize}
-          square={onlyIconTrigger}
-          className={triggerButton()}
-        >
-          {triggerLabel}
-        </Button>
-      </DropdownTrigger>
+      <MemoizedTriggerButton
+        {...rest}
+        label={label}
+        onlyIconTrigger={onlyIconTrigger}
+        triggerIcon={triggerIcon}
+        triggerSize={triggerSize}
+        wrapperStyle={styles.triggerWrapper}
+        buttonStyle={styles.triggerButton}
+      />
       <DropdownContent>
-        <menu ref={containerRef} className={actionList()}>
+        <menu ref={containerRef} className={styles.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
@@ -114,15 +108,61 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   )
 }
 
-export const renderButtonList = (children: Actions) =>
-  React.Children.map(children, (item): ReactNode => {
-    if (!(item && React.isValidElement(item))) return null
-    if (item.type === React.Fragment) {
-      return renderButtonList(item.props.children)
+const MemoizedTriggerButton = React.memo<
+  Pick<Props, 'onlyIconTrigger' | 'triggerSize' | 'label' | 'triggerIcon'> &
+    ElementProps & { wrapperStyle: string; buttonStyle: string }
+>(({ onlyIconTrigger, triggerSize, label, triggerIcon, wrapperStyle, buttonStyle, ...rest }) => {
+  const tooltip = useMemo(
+    () => ({ show: onlyIconTrigger, message: label }),
+    [label, onlyIconTrigger],
+  )
+
+  return (
+    <DropdownTrigger className={wrapperStyle} tooltip={tooltip}>
+      <Button
+        {...rest}
+        suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
+        size={triggerSize}
+        square={onlyIconTrigger}
+        className={buttonStyle}
+      >
+        <TriggerLabelText
+          label={label}
+          onlyIconTrigger={onlyIconTrigger}
+          triggerIcon={triggerIcon}
+        />
+      </Button>
+    </DropdownTrigger>
+  )
+})
+
+const TriggerLabelText = React.memo<Pick<Props, 'label' | 'onlyIconTrigger' | 'triggerIcon'>>(
+  ({ label, onlyIconTrigger, triggerIcon }) => {
+    if (!onlyIconTrigger) {
+      return label
     }
 
-    if (item.type === DropdownMenuGroup) {
-      return item
+    const Icon = triggerIcon || FaEllipsisIcon
+
+    return <Icon alt={typeof label === 'string' ? label : innerText(label)} />
+  },
+)
+
+const ButtonSuffixIcon = React.memo<Pick<Props, 'onlyIconTrigger'>>(
+  ({ onlyIconTrigger }) => !onlyIconTrigger && <FaCaretDownIcon alt="候補を開く" />,
+)
+
+export const renderButtonList = (children: Actions) =>
+  React.Children.map(children, (item): ReactNode => {
+    if (!item || !React.isValidElement(item)) {
+      return null
+    }
+
+    switch (item.type) {
+      case React.Fragment:
+        return renderButtonList(item.props.children)
+      case DropdownMenuGroup:
+        return item
     }
 
     const actualElement = React.cloneElement(item as ReactElement, {

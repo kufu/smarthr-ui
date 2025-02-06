@@ -20,6 +20,7 @@ import { useOuterClick } from '../../../hooks/useOuterClick'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { FaCaretDownIcon } from '../../Icon'
+import { areComboBoxItemsEqual } from '../comboBoxHelper'
 import { useFocusControl } from '../useFocusControl'
 import { useListBox } from '../useListBox'
 import { useOptions } from '../useOptions'
@@ -195,9 +196,7 @@ const ActualMultiComboBox = <T,>(
       requestAnimationFrame(() => {
         onDelete?.(item)
         onChangeSelected?.(
-          selectedItems.filter(
-            (selected) => selected.label !== item.label || selected.value !== item.value,
-          ),
+          selectedItems.filter((selected) => !areComboBoxItemsEqual(selected, item)),
         )
       })
     },
@@ -208,8 +207,8 @@ const ActualMultiComboBox = <T,>(
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = selectedItems.find(
-          (item) => item.label === selected.label && item.value === selected.value,
+        const matchedSelectedItem = selectedItems.find((item) =>
+          areComboBoxItemsEqual(item, selected),
         )
 
         if (matchedSelectedItem === undefined) {
@@ -439,7 +438,7 @@ const ActualMultiComboBox = <T,>(
       <div className={styles.inputArea}>
         <ul id={selectedListId} aria-label={decoratedAriaLabel} className={styles.selectedList}>
           {selectedItems.map((selectedItem, i) => (
-            <li key={`${selectedItem.label}-${selectedItem.value}`}>
+            <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
