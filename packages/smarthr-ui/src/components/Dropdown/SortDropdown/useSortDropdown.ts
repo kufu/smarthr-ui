@@ -113,7 +113,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
   }, [])
 
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { body, select, footer } = sortDropdownStyle()
 
     return {
@@ -132,6 +132,6 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
     SortIcon,
-    styles,
+    classNames,
   }
 }

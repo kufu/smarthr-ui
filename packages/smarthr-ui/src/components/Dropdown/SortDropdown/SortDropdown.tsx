@@ -62,7 +62,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
     onChangeSortOrderRadio,
     innerValues: { innerFields, innerCheckedOrder },
     handler: { handleApply, handleChange },
-    styles,
+    classNames,
   } = useSortDropdown({
     sortFields,
     defaultOrder,
@@ -79,13 +79,13 @@ export const SortDropdown: FC<Props & ElementProps> = ({
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={handleApply}>
-          <Stack className={styles.body}>
+          <Stack className={classNames.body}>
             <FormControl title={labels.sortField}>
               <Select
                 name="sortFields"
                 options={innerFields}
                 onChange={handleChange}
-                className={styles.select}
+                className={classNames.select}
               />
             </FormControl>
             <Fieldset title={labels.sortOrder} innerMargin={0.5}>
@@ -113,7 +113,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
             onCancel={onCancel}
             cancelButtonLabel={labels.cancelButton}
             applyButtonLabel={labels.applyButton}
-            className={styles.footer}
+            className={classNames.footer}
           />
         </form>
       </DropdownContent>
