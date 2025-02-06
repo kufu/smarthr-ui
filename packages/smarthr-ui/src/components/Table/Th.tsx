@@ -5,6 +5,7 @@ import React, {
   FC,
   PropsWithChildren,
   ReactNode,
+  memo,
   useMemo,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
@@ -137,7 +138,7 @@ export const Th: FC<Props & ElementProps> = ({
       {sort ? (
         <SortButton align={align} onClick={onSort}>
           {children}
-          <SortIcon sort={sort} />
+          <SortIcon />
           <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
         </SortButton>
       ) : (
@@ -169,38 +170,31 @@ const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'
 const sortIcon = tv({
   slots: {
     wrapper: 'shr-inline-flex shr-flex-col',
-    upIcon: 'shr-text-base',
-    downIcon: '-shr-mt-em shr-text-base',
-  },
-  variants: {
-    sort: {
-      asc: {
-        upIcon: 'shr-text-black',
-        downIcon: 'shr-text-disabled',
-      },
-      desc: {
-        upIcon: 'shr-text-disabled',
-        downIcon: 'shr-text-black',
-      },
-      none: {
-        upIcon: 'shr-text-disabled',
-        downIcon: 'shr-text-disabled',
-      },
-    },
+    upIcon: [
+      'shr-text-base',
+      '[[aria-sort="none"]_&]:shr-text-disabled',
+      '[[aria-sort="ascending"]_&]:shr-text-black',
+      '[[aria-sort="descending"]_&]:shr-text-disabled',
+    ],
+    downIcon: [
+      '-shr-mt-em shr-text-base',
+      '[[aria-sort="none"]_&]:shr-text-disabled',
+      '[[aria-sort="ascending"]_&]:shr-text-disabled',
+      '[[aria-sort="descending"]_&]:shr-text-black',
+    ],
   },
 })
 
-const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => {
+const SortIcon = memo(() => {
   const classNames = useMemo(() => {
     const { wrapper, upIcon, downIcon } = sortIcon()
-    const iconAttr = { sort }
 
     return {
       wrapper: wrapper(),
-      upIcon: upIcon(iconAttr),
-      downIcon: downIcon(iconAttr),
+      upIcon: upIcon(),
+      downIcon: downIcon(),
     }
-  }, [sort])
+  }, [])
 
   return (
     <span className={classNames.wrapper}>
@@ -208,4 +202,4 @@ const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => {
       <FaSortDownIcon className={classNames.downIcon} />
     </span>
   )
-}
+})
