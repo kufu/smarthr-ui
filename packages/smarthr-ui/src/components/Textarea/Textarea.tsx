@@ -253,17 +253,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       [autoResize, maxRows, onInput],
     )
 
-    const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
+    const textareaStyle = useMemo(
+      () => ({ width: typeof width === 'number' ? `${width}px` : width }),
+      [width],
+    )
+    const countError = !!(maxLetters && maxLetters - count < 0)
+    const classNames = useMemo(() => {
       const { textareaEl, counter, counterText } = textarea()
+
       return {
-        textareaStyleProps: {
-          className: textareaEl({ className }),
-          style: { width: typeof width === 'number' ? `${width}px` : width },
-        },
-        counterStyle: counter(),
-        counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count < 0) }),
+        textarea: textareaEl({ className }),
+        counter: counter(),
+        counterText: counterText({ error: countError }),
       }
-    }, [className, count, maxLetters, width])
+    }, [countError, className])
 
     const hasInputError = useMemo(() => {
       const isCharLengthExceeded = maxLetters && count > maxLetters
@@ -273,7 +276,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const body = (
       <textarea
         {...props}
-        {...textareaStyleProps}
         {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
         onChange={handleChange}
@@ -281,14 +283,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         aria-invalid={hasInputError || undefined}
         rows={interimRows}
         onInput={handleInput}
+        className={classNames.textarea}
+        style={textareaStyle}
       />
     )
 
     return maxLetters ? (
       <span>
         {body}
-        <span className={counterStyle}>
-          <span className={counterTextStyle} id={actualMaxLettersId} aria-hidden={true}>
+        <span className={classNames.counter}>
+          <span className={classNames.counterText} id={actualMaxLettersId} aria-hidden={true}>
             {counterVisualMessage}
           </span>
         </span>
