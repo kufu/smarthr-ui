@@ -98,7 +98,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // スクロールできるようにするため、Stack[as="section"]を使用
+    // HINT: bodyをスクロールできるようにするため、Sectionではなく、Stack[as="section"][gap=0]を使用する必要がある
     // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
     <Stack as="section" gap={0} className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
