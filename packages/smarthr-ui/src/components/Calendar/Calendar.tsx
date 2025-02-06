@@ -50,7 +50,7 @@ const calendar = tv({
 
 export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
-    const styles = useMemo(() => {
+    const classNames = useMemo(() => {
       const { container, yearMonth, header, monthButtons, tableLayout, yearSelectButton } =
         calendar()
 
@@ -141,16 +141,16 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     }, [])
 
     return (
-      <div {...props} ref={ref} className={styles.container}>
-        <header className={styles.header}>
-          <YearMonthRender className={styles.yearMonth}>
+      <div {...props} ref={ref} className={classNames.container}>
+        <header className={classNames.header}>
+          <YearMonthRender className={classNames.yearMonth}>
             {calculatedCurrentMonth.yearMonthStr}
           </YearMonthRender>
           <YearSelectButton
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
             onClick={onClickSelectYear}
-            className={styles.yearSelectButton}
+            className={classNames.yearSelectButton}
           />
           <MonthDirectionCluster
             isSelectingYear={isSelectingYear}
@@ -158,10 +158,10 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             from={formattedFrom.day}
             to={formattedTo.day}
             setCurrentMonth={setCurrentMonth}
-            className={styles.monthButtons}
+            className={classNames.monthButtons}
           />
         </header>
-        <div className={styles.tableLayout}>
+        <div className={classNames.tableLayout}>
           <YearPicker
             fromYear={formattedFrom.year}
             toYear={formattedTo.year}

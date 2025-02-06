@@ -50,7 +50,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, table, th, td, cellButton, dateCell } = calendarTable()
 
     return {
@@ -67,9 +67,9 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   const nowDateStr = dayjs().startOf('date').toString()
 
   return (
-    <div className={styles.wrapper}>
-      <table {...props} className={styles.table}>
-        <MemoizedThead thStyle={styles.th} />
+    <div className={classNames.wrapper}>
+      <table {...props} className={classNames.table}>
+        <MemoizedThead thStyle={classNames.th} />
         <tbody>
           {current.months.map((week, weekIndex) => (
             <tr key={weekIndex}>
@@ -84,10 +84,10 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                     to={to}
                     nowDateStr={nowDateStr}
                     onClick={onSelectDate}
-                    styles={styles}
+                    classNames={classNames}
                   />
                 ) : (
-                  <NullTd key={dateIndex} className={styles.td} />
+                  <NullTd key={dateIndex} className={classNames.td} />
                 ),
               )}
             </tr>
@@ -120,12 +120,12 @@ const SelectTdButton = React.memo<{
   to: Date
   nowDateStr: string
   onClick: Props['onSelectDate']
-  styles: {
+  classNames: {
     td: string
     cellButton: string
     dateCell: string
   }
-}>(({ date, currentDay, selectedDayStr, from, to, nowDateStr, onClick, styles }) => {
+}>(({ date, currentDay, selectedDayStr, from, to, nowDateStr, onClick, classNames }) => {
   const target = useMemo(() => {
     const day = currentDay.date(date)
 
@@ -149,16 +149,16 @@ const SelectTdButton = React.memo<{
   )
 
   return (
-    <td className={styles.td}>
+    <td className={classNames.td}>
       <UnstyledButton
         type="button"
         disabled={disabled}
         aria-pressed={ariaPressed}
         onClick={actualOnClick}
-        className={styles.cellButton}
+        className={classNames.cellButton}
         data-is-today={dataIsToday}
       >
-        <SelectButtonTdDateCell className={styles.dateCell}>{date}</SelectButtonTdDateCell>
+        <SelectButtonTdDateCell className={classNames.dateCell}>{date}</SelectButtonTdDateCell>
       </UnstyledButton>
     </td>
   )
