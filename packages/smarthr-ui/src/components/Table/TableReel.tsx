@@ -18,17 +18,18 @@ const tableReel = tv({
 export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ className, ...props }) => {
   const { showShadow, tableWrapperRef } = useReelCells()
 
-  const { wrapperStyle, innerStyle } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, inner } = tableReel()
+
     return {
-      wrapperStyle: reelShadowStyle({ showShadow, className: wrapper({ className }) }),
-      innerStyle: inner(),
+      wrapper: reelShadowStyle({ showShadow, className: wrapper({ className }) }),
+      inner: inner(),
     }
   }, [className, showShadow])
 
   return (
-    <div className={wrapperStyle}>
-      <div {...props} ref={tableWrapperRef} className={innerStyle} />
+    <div className={classNames.wrapper}>
+      <div {...props} ref={tableWrapperRef} className={classNames.inner} />
     </div>
   )
 }
