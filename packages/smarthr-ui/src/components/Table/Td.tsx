@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, PropsWithChildren, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { reelShadowStyle } from './useReelShadow'
@@ -14,40 +14,33 @@ export type Props = PropsWithChildren<
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
-export const Td: FC<Props & ElementProps> = ({
-  align,
-  vAlign,
-  nullable,
-  fixed = false,
-  contentWidth,
-  className,
-  style,
-  ...props
-}) => {
-  const actualClassName = useMemo(() => {
-    const tdStyles = td({ align, vAlign, nullable, fixed, className })
-    const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
+export const Td = memo<Props & ElementProps>(
+  ({ align, vAlign, nullable, fixed = false, contentWidth, className, style, ...props }) => {
+    const actualClassName = useMemo(() => {
+      const tdStyles = td({ align, vAlign, nullable, fixed, className })
+      const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
 
-    return `${tdStyles} ${reelShadowStyles}`.trim()
-  }, [align, className, contentWidth, fixed, nullable, style, vAlign])
-  const actualStyle = useMemo(() => {
-    if (typeof contentWidth === 'object') {
+      return `${tdStyles} ${reelShadowStyles}`.trim()
+    }, [align, className, contentWidth, fixed, nullable, style, vAlign])
+    const actualStyle = useMemo(() => {
+      if (typeof contentWidth === 'object') {
+        return {
+          ...style,
+          width: convertContentWidth(contentWidth.base),
+          minWidth: convertContentWidth(contentWidth.min),
+          maxWidth: convertContentWidth(contentWidth.max),
+        }
+      }
+
       return {
         ...style,
-        width: convertContentWidth(contentWidth.base),
-        minWidth: convertContentWidth(contentWidth.min),
-        maxWidth: convertContentWidth(contentWidth.max),
+        width: convertContentWidth(contentWidth),
       }
-    }
+    }, [style, contentWidth])
 
-    return {
-      ...style,
-      width: convertContentWidth(contentWidth),
-    }
-  }, [style, contentWidth])
-
-  return <td {...props} className={actualClassName} style={actualStyle} />
-}
+    return <td {...props} className={actualClassName} style={actualStyle} />
+  },
+)
 
 const td = tv({
   base: [
