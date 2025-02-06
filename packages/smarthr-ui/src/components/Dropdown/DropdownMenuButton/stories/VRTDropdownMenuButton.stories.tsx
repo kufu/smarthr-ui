@@ -13,11 +13,11 @@ import type { Meta, StoryObj } from '@storybook/react'
 /**
  * $ pict dropdown-menu-button.pict
  * triggerSize onlyIconTrigger triggerIcon
- * s           true            udnefined
- * s           false           udnefined
- * default     true            udnefined
+ * s           true            undefined
+ * s           false           undefined
+ * default     true            undefined
  * s           true            指定あり
- * default     false           udnefined
+ * default     false           undefined
  * default     true            指定あり
  */
 const _cases: Array<
@@ -63,7 +63,8 @@ export default {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const { length, [length - 1]: last } = await canvas.findAllByRole('button')
+    const { length, 0: first, [length - 1]: last } = await canvas.findAllByRole('button')
+    userEvent.hover(first)
     userEvent.click(last)
   },
   tags: ['!autodocs'],

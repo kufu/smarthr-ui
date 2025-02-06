@@ -1,10 +1,9 @@
 import React, { ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
-
-import type { DecoratorsType } from '../../../types'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
