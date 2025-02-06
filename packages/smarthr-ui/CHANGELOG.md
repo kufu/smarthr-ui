@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [65.0.1](https://github.com/kufu/smarthr-ui/compare/v65.0.0...v65.0.1) (2025-02-04)
+
+
+### Bug Fixes
+
+* aria-describedbyがinputに紐づいている場合もFormControlのaria-describedbyを設定する ([#5344](https://github.com/kufu/smarthr-ui/issues/5344)) ([3c636f1](https://github.com/kufu/smarthr-ui/commit/3c636f109f9a93ba3e02663442a065d749473e2f))
+* SegmentedControl内の選択済み項目でButton[variant=primary]を利用する ([#5310](https://github.com/kufu/smarthr-ui/issues/5310)) ([d286b90](https://github.com/kufu/smarthr-ui/commit/d286b9061bb232c23560b5700b6c8a1960ea1053))
+
 ## [65.0.0](https://github.com/kufu/smarthr-ui/compare/v64.0.1...v65.0.0) (2025-01-28)
 
 

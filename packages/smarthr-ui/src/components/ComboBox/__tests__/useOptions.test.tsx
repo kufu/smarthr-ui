@@ -234,7 +234,7 @@ describe('useOptions', () => {
         expect(options[0].item).toEqual({ label: labelElement3, value: 'value3' })
       })
 
-      it('isItemSelectedが渡されていなくてoptionのインスタンスが違うとき、selectedにならないこと', () => {
+      it('isItemSelectedが渡されていなくてvalueが同じかつlabelのインスタンスが違うとき、selectedになること', () => {
         const newLabelElement1 = (
           <div>
             label<span>1</span>
@@ -250,7 +250,7 @@ describe('useOptions', () => {
 
         expect(options.length).toBe(1)
         expect(options[0].item).toEqual({ label: labelElement1, value: 'value1' })
-        expect(options[0].selected).toBeFalsy()
+        expect(options[0].selected).toBeTruthy()
         expect(options[0].isNew).toBeFalsy()
       })
     })
