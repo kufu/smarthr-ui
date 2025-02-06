@@ -101,17 +101,19 @@ export const Th: FC<Props & ElementProps> = ({
   style,
   ...props
 }) => {
-  const styleProps = useMemo(() => {
+  const actualClassName = useMemo(() => {
     const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
     const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
-    return {
-      className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
-      style: {
-        ...style,
-        width: convertContentWidth(contentWidth),
-      },
-    }
-  }, [align, className, contentWidth, fixed, style, vAlign])
+
+    return `${thWrapperStyle} ${reelShadowStyles}`.trim()
+  }, [align, className, fixed, vAlign])
+  const actualStyle = useMemo(
+    () => ({
+      ...style,
+      width: convertContentWidth(contentWidth),
+    }),
+    [style, contentWidth],
+  )
 
   const sortLabel = useMemo(
     () =>
@@ -134,7 +136,7 @@ export const Th: FC<Props & ElementProps> = ({
   )
 
   return (
-    <th {...ariaSortProps} {...props} {...styleProps}>
+    <th {...ariaSortProps} {...props} className={actualClassName} style={actualStyle}>
       {sort ? (
         <SortButton align={align} onClick={onSort}>
           {children}
@@ -162,9 +164,9 @@ const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'
   align,
   ...props
 }) => {
-  const sortButtonStyle = useMemo(() => sortButton({ align }), [align])
+  const className = useMemo(() => sortButton({ align }), [align])
 
-  return <UnstyledButton {...props} className={sortButtonStyle} />
+  return <UnstyledButton {...props} className={className} />
 }
 
 const sortIcon = tv({
