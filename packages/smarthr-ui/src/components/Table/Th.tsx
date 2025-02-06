@@ -2,7 +2,6 @@ import React, {
   AriaAttributes,
   ComponentProps,
   ComponentPropsWithoutRef,
-  FC,
   PropsWithChildren,
   ReactNode,
   memo,
@@ -88,65 +87,69 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
   return contentWidth
 }
 
-export const Th: FC<Props & ElementProps> = ({
-  children,
-  sort,
-  onSort,
-  decorators,
-  align,
-  vAlign,
-  fixed = false,
-  contentWidth,
-  className,
-  style,
-  ...props
-}) => {
-  const actualClassName = useMemo(() => {
-    const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
-    const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
+export const Th = memo<Props & ElementProps>(
+  ({
+    children,
+    sort,
+    onSort,
+    decorators,
+    align,
+    vAlign,
+    fixed = false,
+    contentWidth,
+    className,
+    style,
+    ...props
+  }) => {
+    const actualClassName = useMemo(() => {
+      const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
+      const reelShadowStyles = fixed
+        ? reelShadowStyle({ showShadow: false, direction: 'right' })
+        : ''
 
-    return `${thWrapperStyle} ${reelShadowStyles}`.trim()
-  }, [align, className, fixed, vAlign])
-  const actualStyle = useMemo(
-    () => ({
-      ...style,
-      width: convertContentWidth(contentWidth),
-    }),
-    [style, contentWidth],
-  )
+      return `${thWrapperStyle} ${reelShadowStyles}`.trim()
+    }, [align, className, fixed, vAlign])
+    const actualStyle = useMemo(
+      () => ({
+        ...style,
+        width: convertContentWidth(contentWidth),
+      }),
+      [style, contentWidth],
+    )
 
-  const sortLabel = useMemo(
-    () =>
-      sort &&
-      (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
-        SORT_DIRECTION_LABEL[sort]),
-    [decorators, sort],
-  )
-  const ariaSortProps = useMemo<
-    | {
-        'aria-sort': AriaAttributes['aria-sort']
-      }
-    | undefined
-  >(
-    () =>
-      sort && {
-        'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
-      },
-    [sort],
-  )
+    const sortLabel = useMemo(
+      () =>
+        sort &&
+        (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
+          SORT_DIRECTION_LABEL[sort]),
+      [decorators, sort],
+    )
+    const ariaSortProps = useMemo<
+      | {
+          'aria-sort': AriaAttributes['aria-sort']
+        }
+      | undefined
+    >(
+      () =>
+        sort && {
+          'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
+        },
+      [sort],
+    )
 
-  return (
-    <th {...ariaSortProps} {...props} className={actualClassName} style={actualStyle}>
-      {sort ? (
-        <MemoizedSortButton align={align} onSort={onSort} sortLabel={sortLabel}>
-          {children}
-        </MemoizedSortButton>
-      ) : (
-        children
-      )}
-    </th>
-  )
-}
+    return (
+      <th {...ariaSortProps} {...props} className={actualClassName} style={actualStyle}>
+        {sort ? (
+          <MemoizedSortButton align={align} onSort={onSort} sortLabel={sortLabel}>
+            {children}
+          </MemoizedSortButton>
+        ) : (
+          children
+        )}
+      </th>
+    )
+  },
+)
 
 const sortButton = tv({
   base: '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold shr-items-center shr-justify-between',
