@@ -1,11 +1,12 @@
 'use client'
 
-import React, { type FC, type PropsWithChildren, type ReactNode, useCallback } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
+import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
@@ -41,6 +42,8 @@ export type ActionDialogContentInnerProps = BaseProps & {
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
+const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
+
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
   title,
@@ -50,59 +53,166 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   contentBgColor,
   contentPadding,
   actionText,
-  actionTheme = 'primary',
+  actionTheme,
   onClickAction,
   onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   decorators,
 }) => {
-  const handleClickAction = useCallback(() => {
-    onClickAction(onClickClose)
-  }, [onClickAction, onClickClose])
-  const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
+  const calcedResponseStatus = useMemo(() => {
+    if (!responseMessage) {
+      return {
+        isProcessing: false,
+        visibleMessage: false,
+      }
+    }
 
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+    if (responseMessage.status === 'processing') {
+      return {
+        isProcessing: true,
+        visibleMessage: false,
+      }
+    }
+
+    return {
+      isProcessing: false,
+      visibleMessage: true,
+      // HINT: statusがprocessingではない === success or errorであることが確定する
+      // success or error の場合、text属性も必ず存在する
+      status: responseMessage.status as 'success' | 'error',
+      message: (responseMessage as { text: string }).text,
+    }
+  }, [responseMessage])
+
+  const styles = useMemo(() => {
+    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+
+    return {
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+      buttonArea: buttonArea(),
+      message: message(),
+    }
+  }, [])
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
-    <Stack gap={0} as="section" className={wrapper()}>
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Section className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <Stack gap={0.5} className={actionArea()}>
+      <Stack gap={0.5} className={styles.actionArea}>
         <Cluster justify="space-between">
           {subActionArea}
-          <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
-            <Button
-              onClick={onClickClose}
-              disabled={closeDisabled || isRequestProcessing}
-              className="smarthr-ui-Dialog-closeButton"
-            >
-              {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-            </Button>
-            <Button
-              variant={actionTheme}
-              onClick={handleClickAction}
-              disabled={actionDisabled}
-              loading={isRequestProcessing}
-              className="smarthr-ui-Dialog-actionButton"
-            >
-              {actionText}
-            </Button>
-          </Cluster>
+          <ActionAreaCluster
+            onClickClose={onClickClose}
+            onClickAction={onClickAction}
+            closeDisabled={closeDisabled}
+            actionDisabled={actionDisabled}
+            loading={calcedResponseStatus.isProcessing}
+            actionTheme={actionTheme}
+            decorators={decorators}
+            actionText={actionText}
+            className={styles.buttonArea}
+          />
         </Cluster>
-        {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-          <div className={message()}>
-            <ResponseMessage type={responseMessage.status} role="alert">
-              {responseMessage.text}
+        {calcedResponseStatus.visibleMessage && (
+          <div className={styles.message}>
+            <ResponseMessage type={calcedResponseStatus.status} role="alert">
+              {calcedResponseStatus.message}
             </ResponseMessage>
           </div>
         )}
       </Stack>
-    </Stack>
+    </Section>
   )
 }
+
+const ActionAreaCluster = React.memo<
+  Pick<
+    ActionDialogContentInnerProps,
+    | 'onClickClose'
+    | 'onClickAction'
+    | 'closeDisabled'
+    | 'actionDisabled'
+    | 'actionTheme'
+    | 'decorators'
+    | 'actionText'
+  > & { loading: boolean; className: string }
+>(
+  ({
+    onClickClose,
+    onClickAction,
+    closeDisabled,
+    actionDisabled,
+    loading,
+    actionTheme,
+    decorators,
+    actionText,
+    className,
+  }) => {
+    const handleClickAction = useCallback(() => {
+      onClickAction(onClickClose)
+    }, [onClickAction, onClickClose])
+
+    return (
+      <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+        <CloseButton
+          onClick={onClickClose}
+          disabled={closeDisabled || loading}
+          decorators={decorators}
+        />
+        <ActionButton
+          variant={actionTheme}
+          disabled={actionDisabled}
+          loading={loading}
+          onClick={handleClickAction}
+        >
+          {actionText}
+        </ActionButton>
+      </Cluster>
+    )
+  },
+)
+
+const ActionButton = React.memo<
+  PropsWithChildren<{
+    variant: ActionDialogContentInnerProps['actionTheme']
+    disabled: ActionDialogContentInnerProps['actionDisabled']
+    loading: boolean
+    onClick: () => void
+  }>
+>(({ variant = 'primary', disabled, loading, onClick, children }) => (
+  <Button
+    type="submit"
+    variant={variant}
+    disabled={disabled}
+    loading={loading}
+    onClick={onClick}
+    className="smarthr-ui-Dialog-actionButton"
+  >
+    {children}
+  </Button>
+))
+
+const CloseButton = React.memo<
+  Pick<ActionDialogContentInnerProps, 'decorators'> & {
+    onClick: ActionDialogContentInnerProps['onClickClose']
+    disabled: boolean
+  }
+>(({ onClick, disabled, decorators }) => {
+  const children = useMemo(
+    () => decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
+    [decorators],
+  )
+
+  return (
+    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+      {children}
+    </Button>
+  )
+})
