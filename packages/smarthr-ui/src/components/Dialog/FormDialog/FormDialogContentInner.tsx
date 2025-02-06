@@ -12,7 +12,6 @@ import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
-import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
@@ -124,8 +123,9 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form, smarthr/a11y-heading-in-sectioning-content
-    <Section className={styles.wrapper}>
+    // HINT: bodyをスクロールできるようにするため、Sectionではなく、Stack[as="section"][gap=0]を使用する必要がある
+    // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
+    <Stack as="section" gap={0} className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <form onSubmit={handleSubmitAction} className={styles.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
@@ -154,7 +154,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
           )}
         </Stack>
       </form>
-    </Section>
+    </Stack>
   )
 }
 
