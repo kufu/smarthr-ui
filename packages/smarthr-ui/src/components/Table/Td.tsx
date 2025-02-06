@@ -24,19 +24,29 @@ export const Td: FC<Props & ElementProps> = ({
   style,
   ...props
 }) => {
-  const styleProps = useMemo(() => {
+  const actualClassName = useMemo(() => {
     const tdStyles = td({ align, vAlign, nullable, fixed, className })
     const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
-    return {
-      className: `${tdStyles} ${reelShadowStyles}`.trim(),
-      style: {
-        ...style,
-        ...getWidthStyle(contentWidth),
-      },
-    }
-  }, [align, className, contentWidth, fixed, nullable, style, vAlign])
 
-  return <td {...props} {...styleProps} />
+    return `${tdStyles} ${reelShadowStyles}`.trim()
+  }, [align, className, contentWidth, fixed, nullable, style, vAlign])
+  const actualStyle = useMemo(() => {
+    if (typeof contentWidth === 'object') {
+      return {
+        ...style,
+        width: convertContentWidth(contentWidth.base),
+        minWidth: convertContentWidth(contentWidth.min),
+        maxWidth: convertContentWidth(contentWidth.max),
+      }
+    }
+
+    return {
+      ...style,
+      width: convertContentWidth(contentWidth),
+    }
+  }, [style, contentWidth])
+
+  return <td {...props} className={actualClassName} style={actualStyle} />
 }
 
 const td = tv({
@@ -84,18 +94,4 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
   }
 
   return contentWidth
-}
-
-const getWidthStyle = (contentWidth: Props['contentWidth']) => {
-  if (typeof contentWidth === 'object') {
-    return {
-      width: convertContentWidth(contentWidth.base),
-      minWidth: convertContentWidth(contentWidth.min),
-      maxWidth: convertContentWidth(contentWidth.max),
-    }
-  }
-
-  return {
-    width: convertContentWidth(contentWidth),
-  }
 }
