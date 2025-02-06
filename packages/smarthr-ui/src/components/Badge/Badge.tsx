@@ -119,7 +119,7 @@ const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
 }) => {
   // HINT: boolean化することでmemoが有効になる可能性を高くする
   const withChildren = !!children
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, pill, dotElement } = badge({ color: type || 'blue', withChildren })
 
     return {
@@ -130,12 +130,12 @@ const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
   }, [withChildren, type, className])
 
   return (
-    <span {...rest} className={styles.wrapper}>
+    <span {...rest} className={classNames.wrapper}>
       {children}
       {dot ? (
-        <Dot className={styles.dot} />
+        <Dot className={classNames.dot} />
       ) : (
-        <CountText count={count} overflowCount={overflowCount} className={styles.pill} />
+        <CountText count={count} overflowCount={overflowCount} className={classNames.pill} />
       )}
     </span>
   )

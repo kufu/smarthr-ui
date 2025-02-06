@@ -121,11 +121,11 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
 export const Balloon = React.memo<Props & ElementProps>(
   ({ horizontal, vertical, className, as: Component = 'div', ...props }) => {
-    const styles = useMemo(
+    const actualClassName = useMemo(
       () => balloon({ horizontal, vertical, className }),
       [horizontal, vertical, className],
     )
 
-    return <Component {...props} className={styles} />
+    return <Component {...props} className={actualClassName} />
   },
 )
