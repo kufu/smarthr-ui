@@ -1,3 +1,7 @@
+import innerText from 'react-innertext'
+
+import { ComboBoxItem } from './types'
+
 export function convertMatchableString(original: string) {
   return (
     original
@@ -12,4 +16,8 @@ export function convertMatchableString(original: string) {
       .replace(/[！-｝]/g, (str) => String.fromCharCode(str.charCodeAt(0) - 0xfee0))
       .toLowerCase()
   )
+}
+
+export function areComboBoxItemsEqual<T>(a: ComboBoxItem<T>, b: ComboBoxItem<T>) {
+  return a.value === b.value && innerText(a.label) === innerText(b.label)
 }
