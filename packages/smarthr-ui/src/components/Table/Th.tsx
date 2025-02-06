@@ -1,6 +1,5 @@
 import React, {
   AriaAttributes,
-  ComponentProps,
   ComponentPropsWithoutRef,
   PropsWithChildren,
   ReactNode,
@@ -87,6 +86,8 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
   return contentWidth
 }
 
+type ActualProps = Props & ElementProps
+
 export const Th = memo<Props & ElementProps>(
   ({
     children,
@@ -162,12 +163,15 @@ const sortButton = tv({
 })
 
 const MemoizedSortButton = memo<
-  Pick<Props, 'align' | 'onSort'> & PropsWithChildren<{ sortLabel: string }>
+  Pick<ActualProps, 'align' | 'onSort'> &
+    PropsWithChildren<{
+      sortLabel: ReactNode
+    }>
 >(({ align, onSort, sortLabel, children }) => {
   const className = useMemo(() => sortButton({ align }), [align])
 
   return (
-    <UnstyledButton align={align} onClick={onSort} className={className}>
+    <UnstyledButton onClick={onSort} className={className}>
       {children}
       <SortIcon />
       <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
