@@ -257,21 +257,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
       [width],
     )
-    const countError = !!(maxLetters && maxLetters - count < 0)
+    const countError = maxLetters && count > maxLetters
     const classNames = useMemo(() => {
       const { textareaEl, counter, counterText } = textarea()
 
       return {
         textarea: textareaEl({ className }),
         counter: counter(),
-        counterText: counterText({ error: countError }),
+        counterText: counterText({ error: !!countError }),
       }
     }, [countError, className])
-
-    const hasInputError = useMemo(() => {
-      const isCharLengthExceeded = maxLetters && count > maxLetters
-      return error || isCharLengthExceeded || undefined
-    }, [error, maxLetters, count])
 
     const body = (
       <textarea
@@ -280,7 +275,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         data-smarthr-ui-input="true"
         onChange={handleChange}
         ref={textareaRef}
-        aria-invalid={hasInputError || undefined}
+        aria-invalid={error || countError || undefined}
         rows={interimRows}
         onInput={handleInput}
         className={classNames.textarea}
