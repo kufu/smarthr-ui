@@ -1,4 +1,12 @@
-import React, { InputHTMLAttributes, ReactNode, forwardRef, memo, useId, useMemo } from 'react'
+import React, {
+  InputHTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  forwardRef,
+  memo,
+  useId,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon } from '../Icon'
@@ -68,13 +76,11 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
       }
     }, [className])
 
-    const ActualLabelComponent = dangerouslyLabelHidden ? VisuallyHiddenText : Text
-
     return (
       <Cluster align="center">
-        <ActualLabelComponent as="label" htmlFor={inputId}>
+        <MemoizedLabel htmlFor={inputId} dangerouslyLabelHidden={dangerouslyLabelHidden}>
           {children}
-        </ActualLabelComponent>
+        </MemoizedLabel>
         <span className={classNames.wrapper}>
           <input
             {...props}
@@ -90,6 +96,18 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
     )
   },
 )
+
+const MemoizedLabel = memo<
+  Pick<Props, 'dangerouslyLabelHidden'> & PropsWithChildren<{ htmlFor: string }>
+>(({ dangerouslyLabelHidden, htmlFor, children }) => {
+  const Component = dangerouslyLabelHidden ? VisuallyHiddenText : Text
+
+  return (
+    <Component as="label" htmlFor={htmlFor}>
+      {children}
+    </Component>
+  )
+})
 
 const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
   ({ className, iconClassName }) => (
