@@ -32,17 +32,18 @@ export const TabBar: FC<Props & ElementProps> = ({
   children,
   ...props
 }) => {
-  const { wrapperStyle, innerStyle } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, inner } = tabBar()
+
     return {
-      wrapperStyle: wrapper({ className }),
-      innerStyle: inner({ bordered }),
+      wrapper: wrapper({ className }),
+      inner: inner({ bordered }),
     }
   }, [bordered, className])
 
   return (
-    <Reel {...props} role="tablist" className={wrapperStyle}>
-      <div className={innerStyle}>{children}</div>
+    <Reel {...props} role="tablist" className={className.wrapper}>
+      <div className={className.inner}>{children}</div>
     </Reel>
   )
 }
