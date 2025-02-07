@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, ReactNode, forwardRef, useId, useMemo } from 'react'
+import React, { InputHTMLAttributes, ReactNode, forwardRef, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon } from '../Icon'
@@ -84,11 +84,17 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
             className={classNames.input}
             ref={ref}
           />
-          <span className={classNames.iconWrapper}>
-            <FaCheckIcon className={classNames.icon} size="XXS" />
-          </span>
+          <MemoizedSuffixIcon className={classNames.iconWrapper} iconClassName={classNames.icon} />
         </span>
       </Cluster>
     )
   },
+)
+
+const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
+  ({ className, iconClassName }) => (
+    <span className={className}>
+      <FaCheckIcon className={iconClassName} size="XXS" />
+    </span>
+  ),
 )
