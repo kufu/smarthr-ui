@@ -102,12 +102,13 @@ const TabButton: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const { wrapperStyle, labelStyle, suffixStyle } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = tabItem({ isTouchDevice })
+
     return {
-      wrapperStyle: wrapper({ className }),
-      labelStyle: label(),
-      suffixStyle: suffixWrapper(),
+      wrapper: wrapper({ className }),
+      label: label(),
+      suffixWrapper: suffixWrapper(),
     }
   }, [className])
 
@@ -116,11 +117,11 @@ const TabButton: FC<Props & ElementProps> = ({
       {...rest}
       type="button"
       id={id}
-      className={wrapperStyle}
+      className={classNames.wrapper}
       onClick={() => onClick(id)}
     >
-      <span className={labelStyle}>{children}</span>
-      {suffix && <span className={suffixStyle}>{suffix}</span>}
+      <span className={classNames.label}>{children}</span>
+      {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}
     </UnstyledButton>
   )
 }
