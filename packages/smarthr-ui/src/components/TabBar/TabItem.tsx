@@ -127,7 +127,7 @@ const TabButton: FC<Props & ElementProps> = ({
       className={classNames.wrapper}
       onClick={actualOnClick}
     >
-      <TabLabel className={classNames.label}>TabLabel</TabLabel>
+      <TabLabel className={classNames.label}>{children}</TabLabel>
       <TabButtonSuffix className={classNames.suffixWrapper}>{suffix}</TabButtonSuffix>
     </UnstyledButton>
   )

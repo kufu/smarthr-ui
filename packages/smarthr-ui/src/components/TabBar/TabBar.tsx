@@ -42,8 +42,8 @@ export const TabBar: FC<Props & ElementProps> = ({
   }, [bordered, className])
 
   return (
-    <Reel {...props} role="tablist" className={className.wrapper}>
-      <div className={className.inner}>{children}</div>
+    <Reel {...props} role="tablist" className={classNames.wrapper}>
+      <div className={classNames.inner}>{children}</div>
     </Reel>
   )
 }
