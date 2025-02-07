@@ -57,14 +57,14 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
     const defaultId = useId()
     const inputId = id || defaultId
 
-    const { wrapperStyle, inputStyle, iconStyle, iconWrapperStyle } = useMemo(() => {
+    const classNames = useMemo(() => {
       const { wrapper, input, icon, iconWrapper } = switchStyle()
 
       return {
-        wrapperStyle: wrapper({ className }),
-        inputStyle: input(),
-        iconStyle: icon(),
-        iconWrapperStyle: iconWrapper(),
+        wrapper: wrapper({ className }),
+        input: input(),
+        icon: icon(),
+        iconWrapper: iconWrapper(),
       }
     }, [className])
 
@@ -75,17 +75,17 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
         <ActualLabelComponent as="label" htmlFor={inputId}>
           {children}
         </ActualLabelComponent>
-        <span className={wrapperStyle}>
+        <span className={classNames.wrapper}>
           <input
             {...props}
             type="checkbox"
             role="switch"
             id={inputId}
-            className={inputStyle}
+            className={classNames.input}
             ref={ref}
           />
-          <span className={iconWrapperStyle}>
-            <FaCheckIcon className={iconStyle} size="XXS" />
+          <span className={classNames.iconWrapper}>
+            <FaCheckIcon className={classNames.icon} size="XXS" />
           </span>
         </span>
       </Cluster>
