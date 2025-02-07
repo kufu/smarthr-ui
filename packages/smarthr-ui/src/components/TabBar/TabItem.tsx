@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -76,6 +76,7 @@ export const TabItem: FC<Props & ElementProps> = ({
 
   if (rest.disabled && disabledDetail) {
     const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+
     return (
       <Tooltip
         {...tabAttrs}
@@ -112,16 +113,29 @@ const TabButton: FC<Props & ElementProps> = ({
     }
   }, [className])
 
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => onClick(e.currentTarget.value),
+    [onClick],
+  )
+
   return (
     <UnstyledButton
       {...rest}
       type="button"
+      value={id}
       id={id}
       className={classNames.wrapper}
-      onClick={() => onClick(id)}
+      onClick={actualOnClick}
     >
-      <span className={classNames.label}>{children}</span>
-      {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}
+      <TabLabel className={classNames.label}>TabLabel</TabLabel>
+      <TabButtonSuffix className={classNames.suffixWrapper}>{suffix}</TabButtonSuffix>
     </UnstyledButton>
   )
 }
+
+const TabLabel = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <span className={className}>{children}</span>
+))
+const TabButtonSuffix = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => children && <span className={className}>{children}</span>,
+)
