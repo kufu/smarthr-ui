@@ -30,10 +30,10 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
   children,
   ...props
 }) => {
-  const style = useMemo(() => spreadsheetTable({ className }), [className])
+  const actualClassName = useMemo(() => spreadsheetTable({ className }), [className])
 
   return (
-    <table {...props} className={style}>
+    <table {...props} className={actualClassName}>
       {data && (
         <>
           <thead>
