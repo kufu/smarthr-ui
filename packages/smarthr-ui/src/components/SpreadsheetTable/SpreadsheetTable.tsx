@@ -1,4 +1,10 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, {
+  type ComponentPropsWithoutRef,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
@@ -36,17 +42,7 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
     <table {...props} className={actualClassName}>
       {data && (
         <>
-          <thead>
-            <tr>
-              <SpreadsheetTableCorner />
-              {data[0].map((_, i) => (
-                <th key={`headRow-${i}`}>
-                  {/* アルファベットを A から自動挿入 */}
-                  {String.fromCharCode(65 + i)}
-                </th>
-              ))}
-            </tr>
-          </thead>
+          <MemoizedThead cols={data[0].length} />
           <tbody>
             {data.map((row, i) => (
               <tr key={`bodyRow-${i}`}>
@@ -63,3 +59,27 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
     </table>
   )
 }
+
+const MemoizedThead = memo<{ cols: number }>(({ cols }) => {
+  const ths: ReactNode[] = []
+
+  for (let i = 0; i < cols; i++) {
+    ths.push(
+      <th key={i}>
+        {
+          // アルファベットを A から自動挿入
+          String.fromCharCode(65 + i)
+        }
+      </th>,
+    )
+  }
+
+  return (
+    <thead>
+      <tr>
+        <SpreadsheetTableCorner />
+        {ths}
+      </tr>
+    </thead>
+  )
+})
