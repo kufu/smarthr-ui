@@ -25,18 +25,21 @@ const smarthrLogo = tv({
 export const SmartHRLogo: FC<Props & ElementProps> = ({
   alt = 'SmartHR（スマートHR）',
   width,
-  height = '1.5em',
-  fill = 'white',
+  height,
+  fill,
   className,
   ...rest
 }) => {
   const style = useMemo(
     () => ({
-      ...(width ? { width: convertValue(width) } : height && { height: convertValue(height) }),
+      ...(width ? { width: convertValue(width) } : { height: convertValue(height | '1.5em') }),
     }),
     [height, width],
   )
-  const actualClassName = useMemo(() => smarthrLogo({ className, fill }), [fill, className])
+  const actualClassName = useMemo(
+    () => smarthrLogo({ className, fill: fill ?? 'white' }),
+    [fill, className],
+  )
 
   return (
     <svg
