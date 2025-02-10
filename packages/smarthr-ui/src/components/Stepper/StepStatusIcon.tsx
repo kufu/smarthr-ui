@@ -55,11 +55,11 @@ const ActualStepStatusIcon: FC<ActualProps> = ({ status, className, ...rest }) =
     }
   }, [status])
 
-  const style = useMemo(
+  const actualClassName = useMemo(
     () => stepStatusIcon({ status: actualStatus.type, className }),
     [actualStatus.type, className],
   )
   const Component = actualStatus.Component
 
-  return <Component {...rest} alt={actualStatus.text} className={style} />
+  return <Component {...rest} alt={actualStatus.text} className={actualClassName} />
 }

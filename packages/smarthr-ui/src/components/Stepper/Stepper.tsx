@@ -28,10 +28,10 @@ export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...res
   const isHorizontal = type === 'horizontal'
   const ItemComponent = isHorizontal ? HorizontalStepItem : VerticalStepItem
 
-  const style = stepper({ type, className })
+  const actualClassName = useMemo(() => stepper({ type, className }), [type, className])
 
   return (
-    <ol {...rest} className={style}>
+    <ol {...rest} className={actualClassName}>
       {steps.map((step, index) => (
         <StepItem
           key={index}
