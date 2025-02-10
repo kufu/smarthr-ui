@@ -1,4 +1,10 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import React, {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  memo,
+  useMemo,
+} from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
@@ -56,43 +62,44 @@ export const statusLabel = tv({
   ],
 })
 
-type Props = VariantProps<typeof statusLabel>
-type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof Props>
+type BaseProps = VariantProps<typeof statusLabel>
+type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+type Props = PropsWithChildren<BaseProps & ElementProps>
 
-export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
+export const StatusLabel: FC<Props> = ({
   type = 'grey',
   bold = false,
   className,
   children,
   ...props
 }) => {
-  const icon = useMemo(() => {
-    if (bold) {
-      switch (type) {
-        case 'warning':
-          return <FaTriangleExclamationIcon />
-        case 'error':
-          return <FaCircleExclamationIcon />
-      }
-    }
-
-    return null
-  }, [type, bold])
-
-  const wrapperStyle = useMemo(
+  const actualClassName = useMemo(
     () =>
       statusLabel({
         className,
         type,
         bold,
       }),
-    [className, type, bold],
+    [type, bold, className],
   )
 
   return (
-    <span {...props} className={wrapperStyle}>
-      {icon}
+    <span {...props} className={actualClassName}>
+      <MemoizedIcon type={type} bold={bold} />
       {children}
     </span>
   )
 }
+
+const MemoizedIcon = memo<Pick<Props, 'type' | 'bold'>>(({ type, bold }) => {
+  if (bold) {
+    switch (type) {
+      case 'warning':
+        return <FaTriangleExclamationIcon />
+      case 'error':
+        return <FaCircleExclamationIcon />
+    }
+  }
+
+  return null
+})
