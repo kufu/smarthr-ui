@@ -61,10 +61,10 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
 }
 
 const MemoizedThead = memo<{ cols: number }>(({ cols }) => {
-  const ths: ReactNode[] = []
+  const columns: ReactNode[] = []
 
   for (let i = 0; i < cols; i++) {
-    ths.push(
+    columns.push(
       <th key={i}>
         {
           // アルファベットを A から自動挿入
@@ -78,7 +78,7 @@ const MemoizedThead = memo<{ cols: number }>(({ cols }) => {
     <thead>
       <tr>
         <SpreadsheetTableCorner />
-        {ths}
+        {columns}
       </tr>
     </thead>
   )
