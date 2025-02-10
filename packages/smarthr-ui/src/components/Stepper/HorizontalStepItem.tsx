@@ -1,4 +1,4 @@
-import React, { type FC } from 'react'
+import React, { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
@@ -77,24 +77,35 @@ export const HorizontalStepItem: FC<Props> = ({
   current,
   isPrevStepCompleted,
 }) => {
-  const statusType = typeof status === 'object' ? status.type : status
-  const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
-    horizontalStepItem({
-      status: statusType,
-      current,
-      isPrevStepCompleted,
-    })
+  const classNames = useMemo(() => {
+    const statusType = typeof status === 'object' ? status.type : status
+    const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
+      horizontalStepItem({
+        status: statusType,
+        current,
+        isPrevStepCompleted,
+      })
+
+    return {
+      wrapper: wrapper(),
+      headingWrapper: headingWrapper(),
+      stepCounterWrapper: stepCounterWrapper(),
+      beforeLine: beforeLine(),
+      afterLine: afterLine(),
+      heading: heading(),
+    }
+  }, [current, isPrevStepCompleted, status])
 
   return (
-    <li aria-current={current} className={wrapper()}>
+    <li aria-current={current} className={classNames.wrapper}>
       <SectioningFragment>
-        <div className={headingWrapper()}>
-          <div className={stepCounterWrapper()}>
-            <span className={beforeLine()} />
+        <div className={classNames.headingWrapper}>
+          <div className={classNames.stepCounterWrapper}>
+            <span className={classNames.beforeLine} />
             <StepCounter status={status} current={current} stepNumber={stepNumber} />
-            <span className={afterLine()} />
+            <span className={classNames.afterLine} />
           </div>
-          <Heading type="sectionTitle" className={heading()}>
+          <Heading type="sectionTitle" className={classNames.heading}>
             {label}
           </Heading>
         </div>
