@@ -45,10 +45,10 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
           <MemoizedThead cols={data[0].length} />
           <tbody>
             {data.map((row, i) => (
-              <tr key={`bodyRow-${i}`}>
+              <tr key={i}>
                 <th>{i + 1}</th>
                 {row.map((cell, j) => (
-                  <td key={`bodyCell-${i}-${j}`}>{cell}</td>
+                  <td key={`${i}-${j}`}>{cell}</td>
                 ))}
               </tr>
             ))}
