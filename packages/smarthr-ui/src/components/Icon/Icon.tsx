@@ -28,6 +28,7 @@ import {
   FaBolt,
   FaBook,
   FaBookOpen,
+  FaBookmark,
   FaBoxArchive,
   FaBuilding,
   FaBullhorn,
@@ -142,6 +143,7 @@ import {
   FaPlus,
   FaPowerOff,
   FaPrint,
+  FaRegBookmark,
   FaRegCircleQuestion,
   FaRegLightbulb,
   FaReply,
@@ -225,6 +227,7 @@ export const FaBellSlashIcon = /*#__PURE__*/ generateIcon(FaBellSlash)
 export const FaBoltIcon = /*#__PURE__*/ generateIcon(FaBolt)
 export const FaBookIcon = /*#__PURE__*/ generateIcon(FaBook)
 export const FaBookOpenIcon = /*#__PURE__*/ generateIcon(FaBookOpen)
+export const FaBookmarkIcon = /*#__PURE__*/ generateIcon(FaBookmark)
 export const FaBoxArchiveIcon = /*#__PURE__*/ generateIcon(FaBoxArchive)
 export const FaBuildingIcon = /*#__PURE__*/ generateIcon(FaBuilding)
 export const FaBullhornIcon = /*#__PURE__*/ generateIcon(FaBullhorn)
@@ -341,6 +344,7 @@ export const FaPiggyBankIcon = /*#__PURE__*/ generateIcon(FaPiggyBank)
 export const FaPlusIcon = /*#__PURE__*/ generateIcon(FaPlus)
 export const FaPowerOffIcon = /*#__PURE__*/ generateIcon(FaPowerOff)
 export const FaPrintIcon = /*#__PURE__*/ generateIcon(FaPrint)
+export const FaRegBookmarkIcon = /*#__PURE__*/ generateIcon(FaRegBookmark)
 export const FaRegCircleQuestionIcon = /*#__PURE__*/ generateIcon(FaRegCircleQuestion)
 export const FaRegLightbulbIcon = /*#__PURE__*/ generateIcon(FaRegLightbulb)
 export const FaReplyIcon = /*#__PURE__*/ generateIcon(FaReply)
