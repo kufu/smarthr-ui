@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
@@ -57,11 +57,9 @@ type Props = VerticalStep & {
 }
 
 export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
-  const statusType = typeof status === 'object' ? status.type : status
-
   const classNames = useMemo(() => {
     const { wrapper, headingWrapper, heading, body, inner } = verticalStepItem({
-      status: statusType,
+      status: typeof status === 'object' ? status.type : status,
       current,
     })
 
@@ -72,17 +70,20 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
       body: body(),
       inner: inner(),
     }
-  }, [current, statusType])
+  }, [current, status])
 
   return (
     <li aria-current={current} className={classNames.wrapper}>
       <SectioningFragment>
-        <div className={classNames.headingWrapper}>
-          <StepCounter status={status} current={current} stepNumber={stepNumber} />
-          <Heading type="sectionTitle" className={classNames.heading}>
-            {label}
-          </Heading>
-        </div>
+        <StepHeading
+          status={status}
+          current={current}
+          stepNumber={stepNumber}
+          className={classNames.headingWrapper}
+          headingClassName={classNames.heading}
+        >
+          {label}
+        </StepHeading>
         <div className={classNames.body}>
           <div className={classNames.inner}>{children}</div>
         </div>
@@ -90,3 +91,15 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
     </li>
   )
 }
+
+const StepHeading = React.memo<
+  Pick<Props, 'status' | 'current' | 'stepNumber'> &
+    PropsWithChildren<{ className: string; headingClassName: string }>
+>(({ status, current, stepNumber, children, className, headingClassName }) => (
+  <div className={className}>
+    <StepCounter status={status} current={current} stepNumber={stepNumber} />
+    <Heading type="sectionTitle" className={headingClassName}>
+      {children}
+    </Heading>
+  </div>
+))
