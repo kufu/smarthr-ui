@@ -46,14 +46,6 @@ const classNameGenerator = tv({
 })
 
 export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, size, onClick }) => {
-  const handleClick = useMemo(
-    () =>
-      onClick
-        ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)
-        : undefined,
-    [onClick],
-  )
-
   const classNames = useMemo(() => {
     const { wrapper, button, buttonInner } = classNameGenerator()
 

@@ -28,6 +28,14 @@ export const SideNav: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
+  const actualOnClick = useMemo(
+    () =>
+      onClick
+        ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)
+        : undefined,
+    [onClick],
+  )
+
   const styles = useMemo(() => sideNav({ className }), [className])
 
   return (
@@ -40,7 +48,7 @@ export const SideNav: FC<Props & ElementProps> = ({
           isSelected={item.isSelected}
           size={size}
           key={item.id}
-          onClick={onClick}
+          onClick={actualOnClick}
         />
       ))}
     </ul>
