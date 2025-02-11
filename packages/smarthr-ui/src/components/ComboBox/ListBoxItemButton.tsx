@@ -74,7 +74,6 @@ const ListBoxItemButton = <T,>({
   return isNew ? (
     <button
       type="button"
-      key={option.id}
       onClick={handleAdd}
       onMouseOver={handleMouseOver}
       id={option.id}
@@ -87,7 +86,6 @@ const ListBoxItemButton = <T,>({
   ) : (
     <button
       type="button"
-      key={option.id}
       disabled={disabled}
       onClick={handleSelect}
       onMouseOver={handleMouseOver}
