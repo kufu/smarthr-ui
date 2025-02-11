@@ -1,7 +1,7 @@
 import React, { ComponentProps, ComponentPropsWithoutRef, FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { OnClick, SideNavItemButton, SideNavSizeType } from './SideNavItemButton'
+import { SideNavItemButton, SideNavSizeType } from './SideNavItemButton'
 
 type SideNavItemButtonProps = Omit<ComponentProps<typeof SideNavItemButton>, 'size' | 'onClick'>
 
@@ -11,13 +11,13 @@ type Props = {
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: OnClick
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
 
-const sideNav = tv({
+const classNameGenerator = tv({
   base: ['smarthr-ui-SideNav', 'shr-list-none shr-bg-column'],
 })
 
@@ -36,18 +36,18 @@ export const SideNav: FC<Props & ElementProps> = ({
     [onClick],
   )
 
-  const styles = useMemo(() => sideNav({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <ul {...props} className={styles}>
+    <ul {...props} className={actualClassName}>
       {items.map((item) => (
         <SideNavItemButton
+          key={item.id}
           id={item.id}
           title={item.title}
           prefix={item.prefix}
           isSelected={item.isSelected}
           size={size}
-          key={item.id}
           onClick={actualOnClick}
         />
       ))}

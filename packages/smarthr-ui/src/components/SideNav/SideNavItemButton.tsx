@@ -5,7 +5,6 @@ import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
 
 export type SideNavSizeType = 'default' | 's'
-export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
 
 type Props = {
   /** アイテムの識別子 */
@@ -19,7 +18,7 @@ type Props = {
   /** アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: OnClick
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const classNameGenerator = tv({
@@ -58,7 +57,7 @@ export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, si
 
   return (
     <li data-selected={!!isSelected} className={classNames.wrapper}>
-      <UnstyledButton className={classNames.button} onClick={handleClick} value={id}>
+      <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
         <ButtonBodyCluster prefix={prefix} title={title} titleClassName={classNames.buttonInner} />
       </UnstyledButton>
     </li>
