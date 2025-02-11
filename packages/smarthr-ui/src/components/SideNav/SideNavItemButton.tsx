@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo } from 'react'
+import React, { FC, ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -67,11 +67,17 @@ export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, si
   return (
     <li data-selected={!!isSelected} className={classNames.wrapper}>
       <UnstyledButton className={classNames.button} onClick={handleClick} value={id}>
-        <Cluster inline align="center" as="span">
-          {prefix}
-          <span className={classNames.buttonInner}>{title}</span>
-        </Cluster>
+        <ButtonBodyCluster prefix={prefix} title={title} titleClassName={classNames.buttonInner} />
       </UnstyledButton>
     </li>
   )
 }
+
+const ButtonBodyCluster = memo<Pick<Props, 'prefix' | 'title'> & { titleClassName: string }>(
+  ({ prefix, title, titleClassName }) => (
+    <Cluster inline align="center" as="span">
+      {prefix}
+      <span className={titleClassName}>{title}</span>
+    </Cluster>
+  ),
+)
