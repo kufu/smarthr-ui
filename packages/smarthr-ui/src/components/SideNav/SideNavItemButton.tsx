@@ -22,7 +22,7 @@ type Props = {
   onClick?: OnClick
 }
 
-const sideNavItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-SideNav-item'],
     button: ['shr-w-full shr-leading-none [&]:shr-box-border', 'focus-visible:shr-focus-indicator'],
@@ -60,22 +60,22 @@ export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, si
     [onClick],
   )
 
-  const { wrapperStyle, buttonStyle, buttonInnerStyle } = useMemo(() => {
-    const { wrapper, button, buttonInner } = sideNavItem()
+  const classNames = useMemo(() => {
+    const { wrapper, button, buttonInner } = classNameGenerator()
 
     return {
-      wrapperStyle: wrapper({ selected: !!isSelected }),
-      buttonStyle: button({ size }),
-      buttonInnerStyle: buttonInner(),
+      wrapper: wrapper({ selected: !!isSelected }),
+      button: button({ size }),
+      buttonInner: buttonInner(),
     }
   }, [isSelected, size])
 
   return (
-    <li className={wrapperStyle}>
-      <UnstyledButton className={buttonStyle} onClick={handleClick} value={id}>
+    <li className={classNames.wrapper}>
+      <UnstyledButton className={classNames.button} onClick={handleClick} value={id}>
         <Cluster inline align="center" as="span">
           {prefix}
-          <span className={buttonInnerStyle}>{title}</span>
+          <span className={classNames.buttonInner}>{title}</span>
         </Cluster>
       </UnstyledButton>
     </li>
