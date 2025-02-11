@@ -8,11 +8,10 @@ import { ComboBoxOption } from './types'
 
 type Props<T> = {
   option: ComboBoxOption<T>
-  isActive: boolean
   onAdd?: (option: ComboBoxOption<T>) => void
   onSelect: (option: ComboBoxOption<T>) => void
   onMouseOver: (option: ComboBoxOption<T>) => void
-  activeRef: RefObject<HTMLButtonElement>
+  activeRef: RefObject<HTMLButtonElement> | undefined
 }
 
 const button = tv({
@@ -33,14 +32,7 @@ const button = tv({
   },
 })
 
-const ListBoxItemButton = <T,>({
-  option,
-  isActive,
-  onAdd,
-  onSelect,
-  onMouseOver,
-  activeRef,
-}: Props<T>) => {
+const ListBoxItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
   const { item, selected, isNew } = option
   const { label, disabled } = item
 
@@ -65,10 +57,10 @@ const ListBoxItemButton = <T,>({
   const className = useMemo(
     () =>
       button({
-        active: !!isActive,
+        active: !!activeRef,
         new: isNew,
       }),
-    [isActive, isNew],
+    [activeRef, isNew],
   )
 
   return isNew ? (
@@ -79,7 +71,7 @@ const ListBoxItemButton = <T,>({
       id={option.id}
       role="option"
       className={className}
-      ref={isActive ? activeRef : undefined}
+      ref={activeRef}
     >
       <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
     </button>
@@ -93,7 +85,7 @@ const ListBoxItemButton = <T,>({
       role="option"
       className={className}
       aria-selected={selected}
-      ref={isActive ? activeRef : undefined}
+      ref={activeRef}
     >
       {label}
     </button>

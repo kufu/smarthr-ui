@@ -313,11 +313,10 @@ export const useListBox = <T,>({
                   <ListBoxItemButton
                     key={option.id}
                     option={option}
-                    isActive={option.id === activeOption?.id}
                     onAdd={handleAdd}
                     onSelect={handleSelect}
                     onMouseOver={handleHoverOption}
-                    activeRef={activeRef}
+                    activeRef={option.id === activeOption?.id ? activeRef : undefined}
                   />
                 ))
               )
