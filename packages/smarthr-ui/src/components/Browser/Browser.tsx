@@ -105,6 +105,14 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
     [selectedNode, onSelectItem],
   )
 
+  const onChangeInput = useMemo(
+    () =>
+      onSelectItem
+        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
+        : undefined,
+    [onSelectItem],
+  )
+
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
     <div role="application" onKeyDown={handleKeyDown} className={className}>
@@ -115,7 +123,7 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
             items={colItems}
             index={index}
             value={value}
-            onSelectItem={onSelectItem}
+            onChangeInput={onChangeInput}
           />
         ))
       ) : (

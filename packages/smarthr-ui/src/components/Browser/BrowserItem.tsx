@@ -24,7 +24,7 @@ type Props = {
   itemHasChildren: boolean
   tabIndex: 0 | -1
   columnIndex: number
-  onSelectItem?: (id: string) => void
+  onChangeInput?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const KEYDOWN_REGEX = /^((Arrow(Right|Left|Up|Down))|Enter| )$/
@@ -41,18 +41,10 @@ export const BrowserItem: React.FC<Props> = ({
   itemHasChildren,
   tabIndex,
   columnIndex,
-  onSelectItem,
+  onChangeInput,
 }) => {
   const inputId = getElementIdFromNode(itemValue)
   const className = useMemo(() => radioWrapperStyle(), [])
-
-  const onChange = useMemo(
-    () =>
-      onSelectItem
-        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
-        : undefined,
-    [onSelectItem],
-  )
 
   return (
     <label
@@ -69,7 +61,7 @@ export const BrowserItem: React.FC<Props> = ({
         value={itemValue}
         tabIndex={tabIndex}
         onKeyDown={HANDLE_KEYDOWN}
-        onChange={onChange}
+        onChange={onChangeInput}
         checked={selected}
       />
       <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
