@@ -1,4 +1,4 @@
-import React, { type RefObject, useCallback, useMemo } from 'react'
+import React, { type ReactNode, type RefObject, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaPlusCircleIcon } from '../Icon'
@@ -19,7 +19,7 @@ const classNameGenerator = tv({
     'shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight',
     'aria-selected:shr-text-white',
     'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
-    'data-[active=true]:shr-bg-white-darken data-[active=true]:shr-text-color-inherit data-[active=true]:aria-selected:shr-bg-main-darken',
+    'data-[active=true]:shr-bg-white-darken data-[active=true]:aria-selected:shr-bg-main-darken',
     'data-[active=false]:shr-bg-white data-[active=false]:aria-selected:shr-bg-main',
   ],
   variants: {
