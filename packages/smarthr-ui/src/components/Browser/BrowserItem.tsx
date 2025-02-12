@@ -8,7 +8,7 @@ import { Text } from '../Text'
 import { ItemNode } from './models'
 import { getElementIdFromNode } from './utils'
 
-const radioWrapperStyle = tv({
+const classNameGenerator = tv({
   base: [
     'shr-block shr-px-1 shr-py-0.5 shr-rounded-m focus-within:shr-shadow-outline',
     '[&[data-selected="true"][data-type="parent"]]:shr-bg-white-darken',
@@ -43,8 +43,8 @@ export const BrowserItem: React.FC<Props> = ({
   columnIndex,
   onChangeInput,
 }) => {
-  const inputId = getElementIdFromNode(itemValue)
-  const className = useMemo(() => radioWrapperStyle(), [])
+  const inputId = useMemo(() => getElementIdFromNode(itemValue), [itemValue])
+  const className = useMemo(() => classNameGenerator(), [])
 
   return (
     <label

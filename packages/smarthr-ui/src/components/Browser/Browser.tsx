@@ -8,7 +8,7 @@ import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
-const optionsListWrapper = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Browser shr-flex shr-flex-row shr-flex-nowrap shr-min-h-[355px]',
   variants: {
     columnCount: {
@@ -45,17 +45,15 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
   const className = useMemo(
-    () => optionsListWrapper({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
+    () => classNameGenerator({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
     [columns.length],
   )
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
-  const selectedNode = useMemo(() => {
-    if (value) {
-      return rootNode.findByValue(value)
-    }
-    return
-  }, [rootNode, value])
+  const selectedNode = useMemo(
+    () => (value ? rootNode.findByValue(value) : undefined),
+    [value, rootNode],
+  )
 
   // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
