@@ -23,7 +23,7 @@ export type Props = PropsWithChildren<
   }
 >
 
-const checkbox = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-CheckBox shr-inline-flex shr-items-baseline',
     box: [
@@ -65,7 +65,7 @@ const checkbox = tv({
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
   ({ checked, mixed, error, className, children, disabled, ...props }, ref) => {
     const classNames = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = checkbox()
+      const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),
@@ -95,7 +95,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     const checkBoxId = props.id || defaultId
 
     return (
-      <span data-disabled={disabled?.toString()} className={classNames.wrapper}>
+      <span data-disabled={disabled} className={classNames.wrapper}>
         <span className={classNames.innerWrapper}>
           <input
             {...props}
@@ -112,7 +112,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
           <CheckIconArea
             mixed={mixed}
             className={classNames.iconWrap}
-            iconStyle={classNames.icon}
+            iconClassName={classNames.icon}
           />
         </span>
 
@@ -128,13 +128,13 @@ const AriaHiddenBox = React.memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const CheckIconArea = React.memo<Pick<Props, 'mixed'> & { className: string; iconStyle: string }>(
-  ({ mixed, className, iconStyle }) => (
-    <span className={className}>
-      {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
-    </span>
-  ),
-)
+const CheckIconArea = React.memo<
+  Pick<Props, 'mixed'> & { className: string; iconClassName: string }
+>(({ mixed, className, iconClassName }) => (
+  <span className={className}>
+    {mixed ? <FaMinusIcon className={iconClassName} /> : <FaCheckIcon className={iconClassName} />}
+  </span>
+))
 
 const LabeledChildren = React.memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
   ({ children, htmlFor, className }) =>
