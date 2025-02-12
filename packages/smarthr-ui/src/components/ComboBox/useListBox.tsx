@@ -50,7 +50,7 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
 
-const listbox = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-absolute',
     dropdownList: [
@@ -281,7 +281,7 @@ export const useListBox = <T,>({
     setActiveOption(option)
   }, [])
 
-  const wrapperStyleAttr = useMemo(() => {
+  const wrapperStyle = useMemo(() => {
     const { top, left } = listBoxRect
 
     return {
@@ -290,7 +290,7 @@ export const useListBox = <T,>({
       width: `${triggerWidth}px`,
     }
   }, [listBoxRect, triggerWidth])
-  const dropdownListStyleAttr = useMemo(() => {
+  const dropdownListStyle = useMemo(() => {
     const { left, height } = listBoxRect
     const dropdownListWidth = dropdownWidth || triggerWidth
 
@@ -301,8 +301,8 @@ export const useListBox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth])
 
-  const styles = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
+  const classNames = useMemo(() => {
+    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
@@ -318,7 +318,7 @@ export const useListBox = <T,>({
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <div className={styles.wrapper} style={wrapperStyleAttr}>
+        <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
             <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
           )}
@@ -327,21 +327,21 @@ export const useListBox = <T,>({
             ref={listBoxRef}
             role="listbox"
             aria-hidden={!isExpanded}
-            className={styles.dropdownList}
-            style={dropdownListStyleAttr}
+            className={classNames.dropdownList}
+            style={dropdownListStyle}
           >
             {dropdownHelpMessage && (
-              <p className={styles.helpMessage}>
+              <p className={classNames.helpMessage}>
                 <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
               </p>
             )}
             {isExpanded ? (
               isLoading ? (
-                <div className={styles.loaderWrapper}>
+                <div className={classNames.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
               ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={styles.noItems}>
+                <p role="alert" aria-live="polite" className={classNames.noItems}>
                   {decorated.noResultText}
                 </p>
               ) : (
@@ -349,11 +349,10 @@ export const useListBox = <T,>({
                   <ListBoxItemButton
                     key={option.id}
                     option={option}
-                    isActive={option.id === activeOption?.id}
                     onAdd={handleAdd}
                     onSelect={handleSelect}
                     onMouseOver={handleHoverOption}
-                    activeRef={activeRef}
+                    activeRef={option.id === activeOption?.id ? activeRef : undefined}
                   />
                 ))
               )
@@ -375,9 +374,9 @@ export const useListBox = <T,>({
       handleAdd,
       handleHoverOption,
       handleSelect,
-      styles,
-      dropdownListStyleAttr,
-      wrapperStyleAttr,
+      classNames,
+      dropdownListStyle,
+      wrapperStyle,
       createPortal,
     ],
   )
