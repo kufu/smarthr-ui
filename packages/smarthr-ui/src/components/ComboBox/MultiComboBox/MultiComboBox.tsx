@@ -197,7 +197,7 @@ const ActualMultiComboBox = <T,>(
         )
       })
     },
-    [onChangeSelected, onDelete, selectedItems],
+    [selectedItems, onChangeSelected, onDelete],
   )
   const handleSelect = useCallback(
     (selected: ComboBoxItem<T>) => {
@@ -216,7 +216,7 @@ const ActualMultiComboBox = <T,>(
         }
       })
     },
-    [handleDelete, onChangeSelected, onSelect, selectedItems],
+    [selectedItems, handleDelete, onChangeSelected, onSelect],
   )
 
   const {
@@ -318,6 +318,7 @@ const ActualMultiComboBox = <T,>(
         inputRef.current?.focus()
         resetDeletionButtonFocus()
       }
+
       handleListBoxKeyDown(e)
     },
     [
