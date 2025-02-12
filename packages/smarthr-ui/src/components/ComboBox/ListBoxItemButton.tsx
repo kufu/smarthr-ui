@@ -14,17 +14,15 @@ type Props<T> = {
   activeRef: RefObject<HTMLButtonElement> | undefined
 }
 
-const button = tv({
+const classNameGenerator = tv({
   base: [
     'shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight',
     'aria-selected:shr-text-white',
     'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
+    'data-[active=true]:shr-bg-white-darken data-[active=true]:shr-text-color-inherit data-[active=true]:aria-selected:shr-bg-main-darken',
+    'data-[active=false]:shr-bg-white data-[active=false]:aria-selected:shr-bg-main',
   ],
   variants: {
-    active: {
-      true: ['shr-bg-white-darken shr-text-color-inherit', 'aria-selected:shr-bg-main-darken'],
-      false: ['shr-bg-white', 'aria-selected:shr-bg-main'],
-    },
     new: {
       true: 'smarthr-ui-ComboBox-addButton shr-flex shr-items-center',
       false: 'smarthr-ui-ComboBox-selectButton',
@@ -33,24 +31,14 @@ const button = tv({
 })
 
 const ListBoxItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
-  const className = useMemo(
-    () =>
-      button({
-        active: !!activeRef,
-        new: option.isNew,
-      }),
-    [activeRef, option.isNew],
-  )
-
   const handleMouseOver = useCallback(() => {
     onMouseOver(option)
   }, [onMouseOver, option])
 
   const commonProps = {
-    activeRef,
     option,
     onMouseOver: handleMouseOver,
-    className,
+    activeRef,
   }
 
   return option.isNew ? (
@@ -64,7 +52,6 @@ const Memoized = typedMemo(ListBoxItemButton)
 export { Memoized as ListBoxItemButton }
 
 type ButtonType<T> = Pick<Props<T>, 'option' | 'activeRef'> & {
-  className: string
   onMouseOver: () => void
 }
 
@@ -73,8 +60,15 @@ const AddButton = <T,>({
   option,
   onAdd,
   onMouseOver,
-  className,
 }: ButtonType<T> & Pick<Props<T>, 'onAdd'>) => {
+  const className = useMemo(
+    () =>
+      classNameGenerator({
+        new: true,
+      }),
+    [],
+  )
+
   const onClick = useMemo(
     () =>
       onAdd
@@ -91,6 +85,7 @@ const AddButton = <T,>({
       type="button"
       role="option"
       id={option.id}
+      data-active={!!activeRef}
       onClick={onClick}
       onMouseOver={onMouseOver}
       className={className}
@@ -107,8 +102,15 @@ const SelectButton = <T,>({
   option,
   onSelect,
   onMouseOver,
-  className,
 }: ButtonType<T> & Pick<Props<T>, 'onSelect'>) => {
+  const className = useMemo(
+    () =>
+      classNameGenerator({
+        new: false,
+      }),
+    [],
+  )
+
   const handleSelect = useCallback(() => {
     onSelect(option)
   }, [onSelect, option])
@@ -121,8 +123,9 @@ const SelectButton = <T,>({
       id={option.id}
       disabled={option.item.disabled}
       aria-selected={option.selected}
+      data-active={!!activeRef}
       onClick={handleSelect}
-      onMouseOver={handleMouseOver}
+      onMouseOver={onMouseOver}
       className={className}
     >
       {option.item.label}
