@@ -78,7 +78,7 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const NOOP = () => undefined
 
-const singleCombobox = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-SingleComboBox shr-inline-block',
     input: 'smarthr-ui-SingleComboBox-input shr-w-full',
@@ -353,7 +353,7 @@ const ActualSingleComboBox = <T,>(
     }
   }, [isFocused, selectedItem, selectDefaultItem])
 
-  const wrapperStyleAttr = useMemo(
+  const wrapperStyle = useMemo(
     () => ({
       ...style,
       width: typeof width === 'number' ? `${width}px` : width,
@@ -363,9 +363,9 @@ const ActualSingleComboBox = <T,>(
 
   const notSelected = selectedItem === null
 
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
-      singleCombobox()
+      classNameGenerator()
 
     return {
       wrapper: wrapper({ disabled, className }),
@@ -380,7 +380,7 @@ const ActualSingleComboBox = <T,>(
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
-    <div className={styles.wrapper} style={wrapperStyleAttr} ref={outerRef}>
+    <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
         {...rest}
         data-smarthr-ui-input="true"
@@ -398,17 +398,17 @@ const ActualSingleComboBox = <T,>(
             <UnstyledButton
               onClick={onClickClear}
               ref={clearButtonRef}
-              className={styles.clearButton}
+              className={classNames.clearButton}
             >
               <FaCircleXmarkIcon
                 color="TEXT_BLACK"
                 alt={decorated.destroyButtonIconAlt}
-                className={styles.clearButtonIcon}
+                className={classNames.clearButtonIcon}
               />
             </UnstyledButton>
             {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-            <span onClick={onClickInput} role="presentation" className={styles.caretDownLayout}>
-              <FaCaretDownIcon color={caretIconColor} className={styles.caretDownIcon} />
+            <span onClick={onClickInput} role="presentation" className={classNames.caretDownLayout}>
+              <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
             </span>
           </>
         }
@@ -427,7 +427,7 @@ const ActualSingleComboBox = <T,>(
         aria-expanded={isFocused}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
-        className={styles.input}
+        className={classNames.input}
       />
       {renderListBox()}
     </div>
