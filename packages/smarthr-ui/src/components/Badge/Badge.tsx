@@ -11,13 +11,13 @@ type BaseProps = PropsWithChildren<{
   /** 0値を表示するかどうか */
   showZero?: boolean
   /** 色の種類 */
-  type?: VariantProps<typeof badge>['color']
+  type?: VariantProps<typeof classNameGenerator>['color']
   /** ドット表示するかどうか */
   dot?: boolean
 }>
 type BadgeProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps> & BaseProps
 
-const badge = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Badge shr-relative shr-inline-flex',
     pill: ['shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums'],
@@ -120,7 +120,10 @@ const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
   // HINT: boolean化することでmemoが有効になる可能性を高くする
   const withChildren = !!children
   const classNames = useMemo(() => {
-    const { wrapper, pill, dotElement } = badge({ color: type || 'blue', withChildren })
+    const { wrapper, pill, dotElement } = classNameGenerator({
+      color: type || 'blue',
+      withChildren,
+    })
 
     return {
       wrapper: wrapper({ className }),

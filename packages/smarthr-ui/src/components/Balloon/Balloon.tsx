@@ -3,7 +3,7 @@ import { VariantProps, tv } from 'tailwind-variants'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
 // 1pxほど大きめに描画してbody部分と被るようにしています。
-const balloon = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Balloon',
     'shr-relative',
@@ -111,7 +111,7 @@ const balloon = tv({
 })
 
 type Props = PropsWithChildren<
-  VariantProps<typeof balloon> & {
+  VariantProps<typeof classNameGenerator> & {
     /** レンダリングするタグ */
     as?: 'div' | 'span'
   }
@@ -122,7 +122,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 export const Balloon = React.memo<Props & ElementProps>(
   ({ horizontal, vertical, className, as: Component = 'div', ...props }) => {
     const actualClassName = useMemo(
-      () => balloon({ horizontal, vertical, className }),
+      () => classNameGenerator({ horizontal, vertical, className }),
       [horizontal, vertical, className],
     )
 
