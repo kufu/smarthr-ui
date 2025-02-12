@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentPropsWithRef } from 'react'
+import React, { ComponentPropsWithRef, PropsWithChildren, ReactNode } from 'react'
 import { type FC, type MouseEventHandler } from 'react'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
@@ -56,20 +56,12 @@ export const SortDropdown: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const {
-    labels: {
-      triggerLabel,
-      sortFieldLabel,
-      sortOrderLabel,
-      ascLabel,
-      descLabel,
-      applyButtonLabel,
-      cancelButtonLabel,
-    },
+    labels,
     SortIcon,
-    setCheckedInnerOrder,
+    onChangeSortOrderRadio,
     innerValues: { innerFields, innerCheckedOrder },
     handler: { handleApply, handleChange },
-    styles: { bodyStyle, selectStyle, footerStyle },
+    classNames,
   } = useSortDropdown({
     sortFields,
     defaultOrder,
@@ -81,53 +73,78 @@ export const SortDropdown: FC<Props & ElementProps> = ({
     <Dropdown>
       <DropdownTrigger>
         <Button {...props} suffix={<SortIcon />}>
-          {triggerLabel}
+          {labels.trigger}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={handleApply}>
-          <Stack className={bodyStyle}>
-            <FormControl title={sortFieldLabel}>
+          <Stack className={classNames.body}>
+            <FormControl title={labels.sortField}>
               <Select
                 name="sortFields"
                 options={innerFields}
                 onChange={handleChange}
-                className={selectStyle}
+                className={classNames.select}
               />
             </FormControl>
-            <Fieldset title={sortOrderLabel} innerMargin={0.5}>
+            <Fieldset title={labels.sortOrder} innerMargin={0.5}>
               <Cluster gap={1.25}>
                 <RadioButton
                   name="sortOrder"
                   value="asc"
-                  defaultChecked={innerCheckedOrder === 'asc'}
-                  onChange={() => setCheckedInnerOrder('asc')}
+                  checked={innerCheckedOrder === 'asc'}
+                  onChange={onChangeSortOrderRadio}
                 >
-                  {ascLabel}
+                  {labels.asc}
                 </RadioButton>
                 <RadioButton
                   name="sortOrder"
                   value="desc"
-                  defaultChecked={innerCheckedOrder === 'desc'}
-                  onChange={() => setCheckedInnerOrder('desc')}
+                  checked={innerCheckedOrder === 'desc'}
+                  onChange={onChangeSortOrderRadio}
                 >
-                  {descLabel}
+                  {labels.desc}
                 </RadioButton>
               </Cluster>
             </Fieldset>
           </Stack>
-          <Cluster gap={1} align="center" justify="flex-end" as="footer" className={footerStyle}>
-            <DropdownCloser>
-              <Button onClick={onCancel}>{cancelButtonLabel}</Button>
-            </DropdownCloser>
-            <DropdownCloser>
-              <Button type="submit" variant="primary">
-                {applyButtonLabel}
-              </Button>
-            </DropdownCloser>
-          </Cluster>
+          <Footer
+            onCancel={onCancel}
+            cancelButtonLabel={labels.cancelButton}
+            applyButtonLabel={labels.applyButton}
+            className={classNames.footer}
+          />
         </form>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const Footer = React.memo<
+  Pick<Props, 'onCancel'> & {
+    className: string
+    cancelButtonLabel: ReactNode
+    applyButtonLabel: ReactNode
+  }
+>(({ className, onCancel, cancelButtonLabel, applyButtonLabel }) => (
+  <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
+    <CancelButton onClick={onCancel}>{cancelButtonLabel}</CancelButton>
+    <ApplyButton>{applyButtonLabel}</ApplyButton>
+  </Cluster>
+))
+
+const CancelButton = React.memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
+  ({ onClick, children }) => (
+    <DropdownCloser>
+      <Button onClick={onClick}>{children}</Button>
+    </DropdownCloser>
+  ),
+)
+
+const ApplyButton = React.memo<PropsWithChildren>(({ children }) => (
+  <DropdownCloser>
+    <Button type="submit" variant="primary">
+      {children}
+    </Button>
+  </DropdownCloser>
+))
