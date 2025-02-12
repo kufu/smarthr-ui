@@ -1,14 +1,6 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  FC,
-  PropsWithChildren,
-  RefObject,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, RefObject, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
@@ -68,9 +60,7 @@ const dialogContentInner = tv({
 
 export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   onClickOverlay,
-  onPressEscape = () => {
-    /* noop */
-  },
+  onPressEscape,
   isOpen,
   id,
   width,
@@ -81,44 +71,39 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const { layoutStyleProps, innerStyle, backgroundStyle } = useMemo(() => {
+  const { layoutStyle, innerStyle, backgroundStyle } = useMemo(() => {
     const { layout, inner, background } = dialogContentInner()
-    const actualWidth = typeof width === 'number' ? `${width}px` : width
+
     return {
-      layoutStyleProps: {
-        className: layout(),
-        style: {
-          width: actualWidth ?? undefined,
-        },
-      },
+      layoutStyle: layout(),
       innerStyle: inner({ className }),
       backgroundStyle: background(),
     }
-  }, [className, width])
+  }, [className])
+  const styleAttr = useMemo(() => {
+    const actualWidth = typeof width === 'number' ? `${width}px` : width
+
+    if (!actualWidth) {
+      return undefined
+    }
+
+    return {
+      width: actualWidth,
+    }
+  }, [width])
 
   const innerRef = useRef<HTMLDivElement>(null)
-  useHandleEscape(
-    useCallback(() => {
-      if (!isOpen) {
-        return
-      }
-      onPressEscape()
-    }, [isOpen, onPressEscape]),
-  )
 
-  const handleClickOverlay = useCallback(() => {
-    if (isOpen && onClickOverlay) {
-      onClickOverlay()
-    }
-  }, [isOpen, onClickOverlay])
+  useHandleEscape(
+    useMemo(() => (onPressEscape && isOpen ? onPressEscape : undefined), [isOpen, onPressEscape]),
+  )
 
   useBodyScrollLock(isOpen)
 
   return (
     <DialogOverlap isOpen={isOpen}>
-      <div {...layoutStyleProps} id={id}>
-        {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-        <div onClick={handleClickOverlay} className={backgroundStyle} role="presentation" />
+      <div id={id} className={layoutStyle} style={styleAttr}>
+        <Overlay isOpen={isOpen} onClickOverlay={onClickOverlay} className={backgroundStyle} />
         <div
           {...rest}
           ref={innerRef}
@@ -134,3 +119,15 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     </DialogOverlap>
   )
 }
+
+const Overlay = React.memo<
+  Pick<DialogContentInnerProps, 'onClickOverlay' | 'isOpen'> & { className: string }
+>(({ onClickOverlay, isOpen, className }) => {
+  const handleClickOverlay = useMemo(
+    () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
+    [isOpen, onClickOverlay],
+  )
+
+  // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+  return <div onClick={handleClickOverlay} className={className} role="presentation" />
+})
