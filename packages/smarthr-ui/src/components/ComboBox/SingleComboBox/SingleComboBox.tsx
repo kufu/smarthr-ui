@@ -78,6 +78,9 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const NOOP = () => undefined
 
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
+
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-SingleComboBox shr-inline-block',
@@ -295,7 +298,7 @@ const ActualSingleComboBox = <T,>(
         return
       }
 
-      if (['Escape', 'Esc'].includes(e.key)) {
+      if (ESCAPE_KEY_REGEX.test(e.key)) {
         if (isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
@@ -303,7 +306,7 @@ const ActualSingleComboBox = <T,>(
       } else if (e.key === 'Tab') {
         unfocus()
       } else {
-        if (['Down', 'ArrowDown', 'Up', 'ArrowUp'].includes(e.key)) {
+        if (ARROW_UP_DOWN_REGEX.test(e.key)) {
           e.preventDefault()
         }
 
