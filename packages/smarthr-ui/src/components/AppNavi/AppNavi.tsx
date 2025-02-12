@@ -29,7 +29,7 @@ type Props = PropsWithChildren<{
   additionalArea?: ReactNode
 }>
 
-const appNavi = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppNavi',
@@ -45,7 +45,7 @@ const appNavi = tv({
   },
 })
 
-const { wrapper, statusLabelHeading, buttonsEl, listItem, additionalAreaEl } = appNavi()
+const { wrapper, statusLabelHeading, buttonsEl, listItem, additionalAreaEl } = classNameGenerator()
 const classNames = {
   statusLabelHeading: statusLabelHeading(),
   buttonsEl: buttonsEl(),

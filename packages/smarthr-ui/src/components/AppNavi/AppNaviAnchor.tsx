@@ -36,7 +36,7 @@ type AppNaviAnchorComponent = <T extends ElementType = 'a'>(
   props: AppNaviAnchorProps<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
-const appNaviAnchor = tv({
+const classNameGenerator = tv({
   extend: appNaviItemStyle,
   slots: {
     wrapper: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
@@ -56,7 +56,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
     const classNames = useMemo(() => {
-      const { wrapper, icon } = appNaviAnchor({ active: current })
+      const { wrapper, icon } = classNameGenerator({ active: current })
 
       return {
         wrapper: wrapper(),
