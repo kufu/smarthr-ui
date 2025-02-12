@@ -174,10 +174,7 @@ const ActualMultiComboBox = <T,>(
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
-  const isInputControlled = useMemo(
-    () => controlledInputValue !== undefined,
-    [controlledInputValue],
-  )
+  const isInputControlled = controlledInputValue !== undefined
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
