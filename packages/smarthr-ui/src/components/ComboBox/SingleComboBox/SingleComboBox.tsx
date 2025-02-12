@@ -383,16 +383,30 @@ const ActualSingleComboBox = <T,>(
     <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
         {...rest}
-        data-smarthr-ui-input="true"
-        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
-        placeholder={placeholder}
+        ref={inputRef}
         type="text"
+        role="combobox"
         name={name}
         value={inputValue}
         disabled={disabled}
         required={required}
-        prefix={prefix}
+        autoComplete={autoComplete ?? 'off'}
+        aria-haspopup="listbox"
+        aria-controls={listBoxId}
+        aria-expanded={isFocused}
+        aria-activedescendant={activeOption?.id}
+        aria-autocomplete="list"
+        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
+        placeholder={placeholder}
+        onClick={onClickInput}
+        onChange={actualOnChangeInput}
+        onFocus={isFocused ? undefined : focus}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
+        onKeyDown={onKeyDownInput}
+        onKeyPress={handleKeyPress}
         error={error}
+        prefix={prefix}
         suffix={
           <>
             <UnstyledButton
@@ -412,22 +426,8 @@ const ActualSingleComboBox = <T,>(
             </span>
           </>
         }
-        onClick={onClickInput}
-        onChange={actualOnChangeInput}
-        onFocus={isFocused ? undefined : focus}
-        onCompositionStart={onCompositionStart}
-        onCompositionEnd={onCompositionEnd}
-        onKeyDown={onKeyDownInput}
-        onKeyPress={handleKeyPress}
-        ref={inputRef}
-        autoComplete={autoComplete ?? 'off'}
-        role="combobox"
-        aria-haspopup="listbox"
-        aria-controls={listBoxId}
-        aria-expanded={isFocused}
-        aria-activedescendant={activeOption?.id}
-        aria-autocomplete="list"
         className={classNames.input}
+        data-smarthr-ui-input="true"
       />
       {renderListBox()}
     </div>
