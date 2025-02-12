@@ -22,12 +22,12 @@ export const AccordionPanelItemContext = createContext<{ name: string }>({
   name: '',
 })
 
-const accordionPanelItem = tv({
+const classNameGenerator = tv({
   base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
 })
 
 export const AccordionPanelItem: FC<Props & ElementProps> = ({ name, className, ...props }) => {
-  const style = useMemo(() => accordionPanelItem({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     <AccordionPanelItemContext.Provider
@@ -35,7 +35,7 @@ export const AccordionPanelItem: FC<Props & ElementProps> = ({ name, className, 
         name,
       }}
     >
-      <Section {...props} className={style} />
+      <Section {...props} className={actualClassName} />
     </AccordionPanelItemContext.Provider>
   )
 }

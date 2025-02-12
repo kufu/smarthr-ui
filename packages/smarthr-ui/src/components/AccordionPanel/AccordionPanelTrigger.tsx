@@ -36,7 +36,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
 
-const accordionPanelTrigger = tv({
+const classNameGenerator = tv({
   slots: {
     title: 'shr-grow shr-leading-tight',
     button: [
@@ -66,8 +66,8 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   headingTag,
   ...props
 }) => {
-  const styles = useMemo(() => {
-    const { title, button, leftIcon, rightIcon } = accordionPanelTrigger()
+  const classNames = useMemo(() => {
+    const { title, button, leftIcon, rightIcon } = classNameGenerator()
 
     return {
       title: title(),
@@ -177,10 +177,10 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         aria-controls={`${name}-content`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        className={styles.button}
+        className={classNames.button}
         data-component="AccordionHeaderButton"
       >
-        <MemoizedTitle iconPosition={iconPosition} styles={styles}>
+        <MemoizedTitle iconPosition={iconPosition} classNames={classNames}>
           {children}
         </MemoizedTitle>
       </button>
@@ -191,12 +191,12 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
 const MemoizedTitle = React.memo<
   PropsWithChildren<{
     iconPosition: undefined | 'left' | 'right'
-    styles: { leftIcon: string; rightIcon: string; title: string }
+    classNames: { leftIcon: string; rightIcon: string; title: string }
   }>
->(({ styles, iconPosition, children }) => (
+>(({ classNames, iconPosition, children }) => (
   <Cluster className="shr-flex-nowrap" align="center" as="span">
-    {iconPosition === 'left' && <FaCaretRightIcon className={styles.leftIcon} />}
-    <span className={styles.title}>{children}</span>
-    {iconPosition === 'right' && <FaCaretDownIcon className={styles.rightIcon} />}
+    {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
+    <span className={classNames.title}>{children}</span>
+    {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
   </Cluster>
 ))

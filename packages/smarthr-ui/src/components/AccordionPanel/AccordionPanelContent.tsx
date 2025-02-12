@@ -19,7 +19,7 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 type Props = PropsWithChildren
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-const accordionPanelContent = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-AccordionPanel-content',
     'shr-max-h-0 shr-transition-[max-height,_visible,_opacity] shr-duration-150 shr-ease-in-out shr-invisible shr-opacity-0',
@@ -32,18 +32,18 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
   const { expandedItems } = useContext(AccordionPanelContext)
   const isInclude = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const style = useMemo(() => accordionPanelContent({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     <Transition in={isInclude} timeout={150} nodeRef={wrapperRef}>
       {(status) => (
         <div
           {...props}
+          ref={wrapperRef}
           id={`${name}-content`}
-          className={`${style} ${status}`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
-          ref={wrapperRef}
+          className={`${actualClassName} ${status}`}
         />
       )}
     </Transition>
