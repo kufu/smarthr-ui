@@ -3,12 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { DropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuButton'
 
-type AppNaviDropdownMenuButtonProps = PropsWithChildren<{
-  /** 引き金となるボタンラベル */
-  label: ReactNode
-}>
-
-const dropdownMenuButton = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-AppNavi-dropdownMenuButton',
     [
@@ -32,11 +27,13 @@ const dropdownMenuButton = tv({
   ],
 })
 
-export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
-  label,
-  children,
-}) => {
-  const className = useMemo(() => dropdownMenuButton(), [])
+type Props = PropsWithChildren<{
+  /** 引き金となるボタンラベル */
+  label: ReactNode
+}>
+
+export const AppNaviDropdownMenuButton: FC<Props> = ({ label, children }) => {
+  const className = useMemo(() => classNameGenerator(), [])
 
   return (
     <DropdownMenuButton
