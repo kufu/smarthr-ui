@@ -1,10 +1,10 @@
-import React, { RefObject, useCallback, useMemo } from 'react'
+import React, { type RefObject, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Text } from '../Text'
 
-import { ComboBoxOption } from './types'
+import type { ComboBoxOption } from './types'
 
 type Props<T> = {
   option: ComboBoxOption<T>
@@ -33,10 +33,49 @@ const button = tv({
 })
 
 const ListBoxItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
-  const { item, selected, isNew } = option
-  const { label, disabled } = item
+  const className = useMemo(
+    () =>
+      button({
+        active: !!activeRef,
+        new: option.isNew,
+      }),
+    [activeRef, option.isNew],
+  )
 
-  const handleAdd = useMemo(
+  const handleMouseOver = useCallback(() => {
+    onMouseOver(option)
+  }, [onMouseOver, option])
+
+  const commonProps = {
+    activeRef,
+    option,
+    onMouseOver: handleMouseOver,
+    className,
+  }
+
+  return option.isNew ? (
+    <AddButton {...commonProps} onAdd={onAdd} />
+  ) : (
+    <SelectButton {...commonProps} onSelect={onSelect} />
+  )
+}
+const typedMemo: <T>(c: T) => T = React.memo
+const Memoized = typedMemo(ListBoxItemButton)
+export { Memoized as ListBoxItemButton }
+
+type ButtonType<T> = Pick<Props<T>, 'option' | 'activeRef'> & {
+  className: string
+  onMouseOver: () => void
+}
+
+const AddButton = <T,>({
+  activeRef,
+  option,
+  onAdd,
+  onMouseOver,
+  className,
+}: ButtonType<T> & Pick<Props<T>, 'onAdd'>) => {
+  const onClick = useMemo(
     () =>
       onAdd
         ? () => {
@@ -46,51 +85,47 @@ const ListBoxItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef
     [option, onAdd],
   )
 
+  return (
+    <button
+      ref={activeRef}
+      type="button"
+      role="option"
+      id={option.id}
+      onClick={onClick}
+      onMouseOver={onMouseOver}
+      className={className}
+    >
+      <FaPlusCircleIcon
+        color="TEXT_LINK"
+        text={<Text color="TEXT_LINK">「{option.item.label}」を追加</Text>}
+      />
+    </button>
+  )
+}
+const SelectButton = <T,>({
+  activeRef,
+  option,
+  onSelect,
+  onMouseOver,
+  className,
+}: ButtonType<T> & Pick<Props<T>, 'onSelect'>) => {
   const handleSelect = useCallback(() => {
     onSelect(option)
   }, [onSelect, option])
 
-  const handleMouseOver = useCallback(() => {
-    onMouseOver(option)
-  }, [onMouseOver, option])
-
-  const className = useMemo(
-    () =>
-      button({
-        active: !!activeRef,
-        new: isNew,
-      }),
-    [activeRef, isNew],
-  )
-
-  return isNew ? (
+  return (
     <button
-      type="button"
-      onClick={handleAdd}
-      onMouseOver={handleMouseOver}
-      id={option.id}
-      role="option"
-      className={className}
       ref={activeRef}
-    >
-      <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
-    </button>
-  ) : (
-    <button
       type="button"
-      disabled={disabled}
+      role="option"
+      id={option.id}
+      disabled={option.item.disabled}
+      aria-selected={option.selected}
       onClick={handleSelect}
       onMouseOver={handleMouseOver}
-      id={option.id}
-      role="option"
       className={className}
-      aria-selected={selected}
-      ref={activeRef}
     >
-      {label}
+      {option.item.label}
     </button>
   )
 }
-const typedMemo: <T>(c: T) => T = React.memo
-const Memoized = typedMemo(ListBoxItemButton)
-export { Memoized as ListBoxItemButton }
