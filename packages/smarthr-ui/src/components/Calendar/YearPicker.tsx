@@ -21,7 +21,7 @@ type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
 type Props = AbstractProps & ElementProps
 type ActualProps = Omit<Props, 'isDisplayed'>
 
-const yearPicker = tv({
+const classNameGenerator = tv({
   slots: {
     overlay: 'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white',
     container:
@@ -48,7 +48,7 @@ const ActualYearPicker: FC<ActualProps> = ({
   ...props
 }) => {
   const classNames = useMemo(() => {
-    const { overlay, container, yearButton, yearWrapper } = yearPicker()
+    const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
 
     return {
       overlay: overlay(),

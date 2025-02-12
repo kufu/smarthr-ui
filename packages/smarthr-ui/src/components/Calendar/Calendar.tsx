@@ -35,7 +35,7 @@ type Props = {
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 type DayJsType = ReturnType<typeof dayjs>
 
-const calendar = tv({
+const classNameGenerator = tv({
   slots: {
     container:
       'smarthr-ui-Calendar shr-inline-block shr-overflow-hidden shr-rounded-m shr-bg-white shr-text-black shr-shadow-layer-3 forced-colors:shr-border-shorthand forced-colors:shr-shadow-none',
@@ -52,7 +52,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
     const classNames = useMemo(() => {
       const { container, yearMonth, header, monthButtons, tableLayout, yearSelectButton } =
-        calendar()
+        classNameGenerator()
 
       return {
         container: container({ className }),

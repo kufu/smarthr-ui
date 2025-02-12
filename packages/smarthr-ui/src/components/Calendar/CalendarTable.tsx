@@ -25,7 +25,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
 type DayJsType = ReturnType<typeof dayjs>
 
-const calendarTable = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-px-0.75 shr-pb-1 shr-pt-0.25',
     table: 'smarthr-ui-CalendarTable shr-border-spacing-0 shr-text-base shr-text-black',
@@ -51,7 +51,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, table, th, td, cellButton, dateCell } = calendarTable()
+    const { wrapper, table, th, td, cellButton, dateCell } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
