@@ -26,7 +26,7 @@ type Props<T extends ElementType> = BaseProps & {
   elementAs?: T
 }
 
-const anchorButton = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-AnchorButton',
 })
 
@@ -49,7 +49,7 @@ const AnchorButton = forwardRef(
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const actualClassName = useMemo(() => anchorButton({ className }), [className])
+    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     const button = (
       <ButtonWrapper

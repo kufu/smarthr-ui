@@ -53,7 +53,7 @@ export function ButtonWrapper({
   ...rest
 }: Props) {
   const wrapperClassName = useMemo(() => {
-    const generate = button({
+    const generate = wrapperClassNameGenerator({
       variant,
       size,
       square,
@@ -65,7 +65,7 @@ export function ButtonWrapper({
 
     return wrapper({ className })
   }, [$loading, size, square, variant, wide, className, rest.isAnchor])
-  const innerClassName = useMemo(() => buttonInner({ size }), [size])
+  const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
 
   // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
   // 自動型づけできなくなってしまう
@@ -100,7 +100,7 @@ export function ButtonWrapper({
   }
 }
 
-const button = tv({
+const wrapperClassNameGenerator = tv({
   slots: {
     button: [
       'aria-disabled:shr-cursor-not-allowed',
@@ -366,7 +366,7 @@ const button = tv({
   ],
 })
 
-const buttonInner = tv({
+const innerClassNameGenerator = tv({
   base: [
     /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
     'shr-min-w-0',

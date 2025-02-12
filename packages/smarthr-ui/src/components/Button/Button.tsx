@@ -14,7 +14,7 @@ import { BaseProps } from './types'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
-const buttonStyle = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Button',
     loader: [
@@ -67,7 +67,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     ref,
   ) => {
     const classNames = useMemo(() => {
-      const { wrapper, loader } = buttonStyle()
+      const { wrapper, loader } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),

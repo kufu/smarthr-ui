@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 
-type DisabledDetailProps = {
+type Props = {
   button: React.JSX.Element
   disabledDetail: {
     icon?: React.FunctionComponent
@@ -12,13 +12,10 @@ type DisabledDetailProps = {
   }
 }
 
-const disabledDetailStyle = tv({
+const classNameGenerator = tv({
   slots: {
-    disabledWrapper: [
-      'smarthr-ui-Button-disabledWrapper',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-    ],
-    disabledTooltip: [
+    wrapper: ['smarthr-ui-Button-disabledWrapper', 'shr-inline-flex shr-items-center shr-gap-0.25'],
+    tooltip: [
       'shr-overflow-y-visible',
       /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
       '[&_.smarthr-ui-Icon]:-shr-m-0.25',
@@ -30,23 +27,23 @@ const disabledDetailStyle = tv({
   },
 })
 
-export const DisabledDetail: FC<DisabledDetailProps> = ({ button, disabledDetail }) => {
+export const DisabledDetail: FC<Props> = ({ button, disabledDetail }) => {
   const classNames = useMemo(() => {
-    const { disabledWrapper, disabledTooltip } = disabledDetailStyle()
+    const { wrapper, tooltip } = classNameGenerator()
 
     return {
-      disabledWrapper: disabledWrapper(),
-      disabledTooltip: disabledTooltip(),
+      wrapper: wrapper(),
+      tooltip: tooltip(),
     }
   }, [])
 
   return (
-    <div className={classNames.disabledWrapper}>
+    <div className={classNames.wrapper}>
       {button}
       <TooltipIcon
         icon={disabledDetail.icon}
         message={disabledDetail.message}
-        className={classNames.disabledTooltip}
+        className={classNames.tooltip}
       />
     </div>
   )
