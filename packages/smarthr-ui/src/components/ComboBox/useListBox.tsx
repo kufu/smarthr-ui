@@ -51,7 +51,7 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
 
-const listbox = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-absolute',
     dropdownList: [
@@ -266,7 +266,7 @@ export const useListBox = <T,>({
   }, [listBoxRect, triggerWidth, dropdownWidth])
 
   const classNames = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
+    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
