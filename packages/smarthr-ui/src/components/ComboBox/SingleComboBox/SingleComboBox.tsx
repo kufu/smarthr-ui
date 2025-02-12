@@ -267,7 +267,7 @@ const ActualSingleComboBox = <T,>(
         setIsExpanded(true)
       }
     },
-    [disabled, inputRef, isExpanded, setIsExpanded],
+    [disabled, inputRef, isExpanded],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -285,10 +285,10 @@ const ActualSingleComboBox = <T,>(
         onChangeSelected?.(null)
       }
     },
-    [isEditing, setIsEditing, setInputValue, onChange, onChangeInput, onClear, onChangeSelected],
+    [isEditing, onChange, onChangeInput, onClear, onChangeSelected],
   )
-  const onCompositionStart = useCallback(() => setIsComposing(true), [setIsComposing])
-  const onCompositionEnd = useCallback(() => setIsComposing(false), [setIsComposing])
+  const onCompositionStart = useCallback(() => setIsComposing(true), [])
+  const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (isComposing) {
@@ -315,7 +315,7 @@ const ActualSingleComboBox = <T,>(
       }
       handleListBoxKeyDown(e)
     },
-    [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
+    [isComposing, isExpanded, unfocus, handleListBoxKeyDown],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
