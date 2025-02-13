@@ -2,7 +2,6 @@ import { action } from '@storybook/addon-actions'
 import React, { ComponentPropsWithoutRef } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
-import { IntlProvider } from '../../IntlProvider/IntlProvider'
 import { UpwardLink } from '../../UpwardLink'
 import { TextLink } from '../TextLink'
 
