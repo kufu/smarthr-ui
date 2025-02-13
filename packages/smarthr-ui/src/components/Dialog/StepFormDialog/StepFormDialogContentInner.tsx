@@ -111,9 +111,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction],
   )
   const handleBackAction = useCallback(() => {
-    if (onClickBack) {
-      onClickBack()
-    }
+    onClickBack?.()
     const prev = stepQueue.current.pop() ?? firstStep
     setCurrentStep(prev)
   }, [firstStep, stepQueue, onClickBack, setCurrentStep])
