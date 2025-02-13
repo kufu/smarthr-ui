@@ -141,7 +141,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 
   const excludesSelected = useMemo(
     () => !value || options.every((option) => option.value !== value),
-    [options, value],
+    [value, options],
   )
 
   const actualOnClickOption = useMemo(
