@@ -142,8 +142,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Section>
       <form onSubmit={handleSubmitAction}>
-        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-        <Stack gap={0} className={classNames.wrapper}>
+        <div className={classNames.wrapper}>
           <DialogHeader
             title={`${title} ${activeStep}/${stepLength}`}
             subtitle={subtitle}
@@ -190,7 +189,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               </div>
             )}
           </Stack>
-        </Stack>
+        </div>
       </form>
     </Section>
   )
