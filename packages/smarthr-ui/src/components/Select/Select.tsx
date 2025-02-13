@@ -43,7 +43,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'select'>, keyof Props<string>
 
 const BLANK_LABEL = '選択してください'
 
-const select = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Select shr-relative shr-inline-block',
     selectEl: [
@@ -118,7 +118,8 @@ const ActualSelect = <T extends string>(
   )
 
   const { wrapperStyleProps, selectStyle, iconWrapStyle, blankOptGroupStyle } = useMemo(() => {
-    const { wrapper, selectEl, iconWrap, blankOptgroup } = select()
+    const { wrapper, selectEl, iconWrap, blankOptgroup } = classNameGenerator()
+
     return {
       wrapperStyleProps: {
         className: wrapper({ className }),
