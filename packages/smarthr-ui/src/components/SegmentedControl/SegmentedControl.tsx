@@ -82,8 +82,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   const onFocus = useCallback(() => setIsFocused(true), [])
   const onBlur = useCallback(() => setIsFocused(false), [])
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!isFocused || !containerRef.current || !document.activeElement) {
         return
       }
@@ -130,17 +130,14 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
           break
         }
       }
-    },
-    [isFocused],
-  )
+    }
 
-  useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [handleKeyDown])
+  }, [isFocused])
 
   const excludesSelected = useMemo(
     () => !value || options.every((option) => option.value !== value),
