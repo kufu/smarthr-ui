@@ -118,7 +118,16 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+  const classNames = useMemo(() => {
+    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+
+    return {
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+      buttonArea: buttonArea(),
+      message: message(),
+    }
+  }, [])
 
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
@@ -132,7 +141,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     <Section>
       <form onSubmit={handleSubmitAction}>
         {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-        <Stack gap={0} className={wrapper()}>
+        <Stack gap={0} className={classNames.wrapper}>
           <DialogHeader
             title={`${title} ${activeStep}/${stepLength}`}
             subtitle={subtitle}
@@ -141,7 +150,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
             {children}
           </DialogBody>
-          <Stack gap={0.5} className={actionArea()}>
+          <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster justify="space-between">
               {activeStep > 1 && (
                 <Button
@@ -152,7 +161,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   {decorated.backButtonLabel}
                 </Button>
               )}
-              <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
+              <Cluster gap={{ row: 0.5, column: 1 }} className={classNames.buttonArea}>
                 <Button
                   onClick={handleCloseAction}
                   disabled={closeDisabled || isRequestProcessing}
@@ -172,7 +181,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               </Cluster>
             </Cluster>
             {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-              <div className={message()}>
+              <div className={classNames.message}>
                 <ResponseMessage type={responseMessage.status} role="alert">
                   {responseMessage.text}
                 </ResponseMessage>
