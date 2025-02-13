@@ -82,7 +82,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   onSubmit,
   onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   decorators,
   onClickBack,
