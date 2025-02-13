@@ -92,7 +92,7 @@ const ActualSelect = <T extends string>(
     onChangeValue,
     error,
     width,
-    hasBlank = false,
+    hasBlank,
     decorators,
     size = 'default',
     className,
