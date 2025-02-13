@@ -17,6 +17,7 @@ import React, {
 import Draggable from 'react-draggable'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../hooks/useDecorators'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
@@ -25,8 +26,6 @@ import { FaGripIcon, FaXmarkIcon } from '../Icon'
 import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
 import { useDialogPortal } from './useDialogPortal'
-
-import type { DecoratorsType } from '../../types'
 
 type Props = PropsWithChildren<{
   /**
@@ -320,13 +319,22 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     [onClickClose],
   )
 
+  const actualOnPressEscape = useMemo(
+    () =>
+      onPressEscape
+        ? () => {
+            lastFocusElementRef.current?.focus()
+            onPressEscape()
+          }
+        : undefined,
+    [onPressEscape],
+  )
+
   useHandleEscape(
-    useCallback(() => {
-      if (isOpen && onPressEscape) {
-        lastFocusElementRef.current?.focus()
-        onPressEscape()
-      }
-    }, [isOpen, onPressEscape]),
+    useMemo(
+      () => (actualOnPressEscape && isOpen ? actualOnPressEscape : undefined),
+      [isOpen, actualOnPressEscape],
+    ),
   )
 
   useEffect(() => {

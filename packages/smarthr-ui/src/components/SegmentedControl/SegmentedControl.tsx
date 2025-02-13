@@ -49,11 +49,6 @@ const segmentedControl = tv({
       'smarthr-ui-SegmentedControl-button',
       'shr-m-0',
       'shr-rounded-none',
-      'aria-checked:shr-border-main',
-      'aria-checked:shr-bg-main',
-      'aria-checked:shr-text-white',
-      'aria-checked:hover:shr-border-main/50',
-      'aria-checked:hover:shr-bg-main/50',
       'focus-visible:shr-focus-indicator',
       'first:shr-rounded-tl-m',
       'first:shr-rounded-bl-m',
@@ -226,6 +221,7 @@ const SegmentedControlButton: FC<
     <Button
       role="radio"
       aria-label={option.ariaLabel}
+      variant={checked ? 'primary' : 'secondary'}
       aria-checked={checked && !!value}
       disabled={option.disabled}
       tabIndex={tabIndex}

@@ -4,6 +4,7 @@ import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorType, type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button, BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -13,7 +14,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
+import type { ResponseMessageType } from '../../../types'
 
 type Props = {
   isFiltered?: boolean
@@ -29,6 +30,8 @@ type Props = {
   responseMessage?: ResponseMessageType
   /** 引き金となるボタンの大きさ */
   triggerSize?: ButtonProps['size']
+  /** 引き金となるボタンをアイコンのみとするかどうか */
+  onlyIconTrigger?: boolean
 }
 type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
 
@@ -86,6 +89,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   decorators,
   responseMessage,
   triggerSize,
+  onlyIconTrigger = false,
   ...props
 }: Props) => {
   const texts = useMemo(() => {
@@ -175,25 +179,42 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     messageStyle,
   } = styles[isFiltered ? 'filtered' : 'unfiltered']
 
+  const { buttonSuffix, buttonContent } = useMemo(() => {
+    const FilterIcon = (
+      <span className={iconWrapperStyle}>
+        <FaFilterIcon alt={onlyIconTrigger ? texts.triggerButton : undefined} />
+
+        {isFiltered && (
+          <FaCircleCheckIcon aria-label={filteredIconAriaLabel} className={filteredIconStyle} />
+        )}
+      </span>
+    )
+
+    if (onlyIconTrigger) {
+      return {
+        buttonSuffix: undefined,
+        buttonContent: FilterIcon,
+      }
+    }
+
+    return {
+      buttonSuffix: FilterIcon,
+      buttonContent: texts.triggerButton,
+    }
+  }, [
+    isFiltered,
+    texts.triggerButton,
+    onlyIconTrigger,
+    filteredIconAriaLabel,
+    iconWrapperStyle,
+    filteredIconStyle,
+  ])
+
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger>
-        <Button
-          {...props}
-          suffix={
-            <span className={iconWrapperStyle}>
-              <FaFilterIcon />
-              {isFiltered && (
-                <FaCircleCheckIcon
-                  aria-label={filteredIconAriaLabel}
-                  className={filteredIconStyle}
-                />
-              )}
-            </span>
-          }
-          size={triggerSize}
-        >
-          {texts.triggerButton}
+      <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: texts.triggerButton }}>
+        <Button {...props} suffix={buttonSuffix} square={onlyIconTrigger} size={triggerSize}>
+          {buttonContent}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>

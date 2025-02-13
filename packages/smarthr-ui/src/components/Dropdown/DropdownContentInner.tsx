@@ -56,6 +56,11 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
+  const contentInnerStyle = useMemo(
+    () => contentInner({ isActive, className }),
+    [isActive, className],
+  )
+
   const wrapperStyleProps = useMemo(() => {
     const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
     const rightMargin =
@@ -63,20 +68,15 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
     const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
     return {
-      className: contentInner({ isActive, className }),
-      style: {
-        insetBlockStart: contentBox.top,
-        insetInlineStart: contentBox.left || undefined,
-        insetInlineEnd: contentBox.right || undefined,
-        maxWidth: maxWidthStyle,
-      },
+      insetBlockStart: contentBox.top,
+      insetInlineStart: contentBox.left || undefined,
+      insetInlineEnd: contentBox.right || undefined,
+      maxWidth: maxWidthStyle,
     }
-  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive])
+  }, [contentBox.left, contentBox.right, contentBox.top])
   const controllableWrapperStyleProps = useMemo(
     () => ({
-      style: {
-        maxHeight: contentBox.maxHeight || undefined,
-      },
+      maxHeight: contentBox.maxHeight || undefined,
     }),
     [contentBox.maxHeight],
   )
@@ -113,11 +113,11 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   useKeyboardNavigation(wrapperRef, focusTargetRef)
 
   return (
-    <div {...props} {...wrapperStyleProps} ref={wrapperRef}>
+    <div {...props} style={wrapperStyleProps} className={contentInnerStyle} ref={wrapperRef}>
       {/* dummy element for focus management. */}
       <div tabIndex={-1} ref={focusTargetRef} />
       {controllable ? (
-        <div {...controllableWrapperStyleProps}>{children}</div>
+        <div style={controllableWrapperStyleProps}>{children}</div>
       ) : (
         <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
           <DropdownCloser>{children}</DropdownCloser>
