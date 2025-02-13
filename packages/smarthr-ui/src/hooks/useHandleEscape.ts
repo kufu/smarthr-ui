@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 
 // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
 // Esc is a IE/Edge specific value

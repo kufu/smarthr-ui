@@ -230,8 +230,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
 
     useOuterClick(
-      () => [inputWrapperRef, calendarPortalRef],
-      [inputWrapperRef, calendarPortalRef],
+      useMemo(() => [inputWrapperRef, calendarPortalRef], [inputWrapperRef, calendarPortalRef]),
       closeCalendar,
     )
 
