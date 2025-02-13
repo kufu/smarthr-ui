@@ -41,7 +41,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-const segmentedControl = tv({
+const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-SegmentedControl shr-inline-flex',
     buttonGroup: '-shr-space-x-px',
@@ -69,13 +69,13 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { containerStyle, buttonGroupStyle, buttonStyle } = useMemo(() => {
-    const { container, buttonGroup, button } = segmentedControl()
+  const classNames = useMemo(() => {
+    const { container, buttonGroup, button } = classNameGenerator()
 
     return {
-      containerStyle: container({ className }),
-      buttonGroupStyle: buttonGroup(),
-      buttonStyle: button(),
+      container: container({ className }),
+      buttonGroup: buttonGroup(),
+      button: button(),
     }
   }, [className])
 
@@ -158,13 +158,13 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   return (
     <div
       {...props}
-      className={containerStyle}
+      className={classNames.container}
       onFocus={onFocus}
       onBlur={onBlur}
       ref={containerRef}
       role="toolbar"
     >
-      <div role="radiogroup" className={buttonGroupStyle}>
+      <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => (
           <SegmentedControlButton
             key={option.value}
@@ -176,7 +176,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
             value={value}
             isFocused={isFocused}
             excludesSelected={excludesSelected}
-            buttonStyle={buttonStyle}
+            buttonClassName={classNames.button}
           />
         ))}
       </div>
@@ -191,7 +191,7 @@ const SegmentedControlButton: FC<
     index: number
     isFocused: boolean
     excludesSelected: boolean
-    buttonStyle: string
+    buttonClassName: string
   }
 > = ({
   onClick,
@@ -202,7 +202,7 @@ const SegmentedControlButton: FC<
   index,
   isFocused,
   excludesSelected,
-  buttonStyle,
+  buttonClassName,
 }) => {
   const checked = value === option.value
   const tabIndex = useMemo(() => {
@@ -229,7 +229,7 @@ const SegmentedControlButton: FC<
       onClick={onClick}
       size={size}
       square={isSquare}
-      className={buttonStyle}
+      className={buttonClassName}
     >
       {option.content}
     </Button>
