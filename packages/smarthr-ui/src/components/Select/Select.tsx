@@ -37,7 +37,7 @@ type Props<T extends string> = {
   /** 空の選択肢を表示するかどうか */
   hasBlank?: boolean
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DECORATOR_DEFAULT_TEXTS>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'select'>, keyof Props<string> | 'children'>
@@ -94,7 +94,7 @@ const ActualSelect = <T extends string>(
     width,
     hasBlank,
     decorators,
-    size = 'default',
+    size,
     className,
     disabled,
     required,
@@ -123,11 +123,14 @@ const ActualSelect = <T extends string>(
 
   const classNames = useMemo(() => {
     const { wrapper, selectEl, iconWrap, blankOptgroup } = classNameGenerator()
+    const sizeProps = {
+      size: size || 'default',
+    }
 
     return {
       wrapper: wrapper({ className }),
-      select: selectEl({ size }),
-      iconWrap: iconWrap({ size }),
+      select: selectEl(sizeProps),
+      iconWrap: iconWrap(sizeProps),
       blankOptGroup: blankOptgroup(),
     }
   }, [className, size])
