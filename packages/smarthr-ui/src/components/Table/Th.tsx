@@ -28,7 +28,7 @@ export type Props = PropsWithChildren<
       sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
     }
     contentWidth?: CellContentWidth
-  } & VariantProps<typeof thWrapper>
+  } & VariantProps<typeof classNameGenerator>
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
 
@@ -38,7 +38,7 @@ const SORT_DIRECTION_LABEL = {
   none: '並び替えなし',
 }
 
-const thWrapper = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Th',
     'shr-border-solid shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
@@ -103,12 +103,15 @@ export const Th = memo<Props & ElementProps>(
     ...props
   }) => {
     const actualClassName = useMemo(() => {
-      const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
-      const reelShadowStyles = fixed
-        ? reelShadowStyle({ showShadow: false, direction: 'right' })
-        : ''
+      const base = classNameGenerator({ className, align, vAlign, fixed })
 
-      return `${thWrapperStyle} ${reelShadowStyles}`.trim()
+      if (!fixed) {
+        return base
+      }
+
+      const shadow = reelShadowStyle({ showShadow: false, direction: 'right' })
+
+      return `${base} ${shadow}`
     }, [align, className, fixed, vAlign])
     const actualStyle = useMemo(
       () => ({
@@ -125,21 +128,13 @@ export const Th = memo<Props & ElementProps>(
           SORT_DIRECTION_LABEL[sort]),
       [decorators, sort],
     )
-    const ariaSortProps = useMemo<
-      | {
-          'aria-sort': AriaAttributes['aria-sort']
-        }
-      | undefined
-    >(
-      () =>
-        sort && {
-          'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
-        },
+    const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
+      () => (sort && sort === 'none' ? 'none' : `${sort}ending`),
       [sort],
     )
 
     return (
-      <th {...ariaSortProps} {...props} className={actualClassName} style={actualStyle}>
+      <th {...props} aria-sort={ariaSort} className={actualClassName} style={actualStyle}>
         {sort ? (
           <MemoizedSortButton align={align} onSort={onSort} sortLabel={sortLabel}>
             {children}
@@ -152,7 +147,7 @@ export const Th = memo<Props & ElementProps>(
   },
 )
 
-const sortButton = tv({
+const sortButtonClassNameGenerator = tv({
   base: '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold shr-items-center shr-justify-between',
   variants: {
     align: {
@@ -168,7 +163,7 @@ const MemoizedSortButton = memo<
       sortLabel: ReactNode
     }>
 >(({ align, onSort, sortLabel, children }) => {
-  const className = useMemo(() => sortButton({ align }), [align])
+  const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
   return (
     <UnstyledButton onClick={onSort} className={className}>
@@ -179,7 +174,7 @@ const MemoizedSortButton = memo<
   )
 })
 
-const sortIcon = tv({
+const sortIconClassNameGenerator = tv({
   slots: {
     wrapper: 'shr-inline-flex shr-flex-col',
     upIcon: [
@@ -199,7 +194,7 @@ const sortIcon = tv({
 
 const SortIcon = memo(() => {
   const classNames = useMemo(() => {
-    const { wrapper, upIcon, downIcon } = sortIcon()
+    const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
 
     return {
       wrapper: wrapper(),
