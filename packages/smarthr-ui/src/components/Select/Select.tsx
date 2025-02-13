@@ -90,7 +90,7 @@ const ActualSelect = <T extends string>(
     options,
     onChange,
     onChangeValue,
-    error = false,
+    error,
     width,
     hasBlank = false,
     decorators,
@@ -146,7 +146,7 @@ const ActualSelect = <T extends string>(
         {...props}
         data-smarthr-ui-input="true"
         onChange={handleChange}
-        aria-invalid={error || undefined}
+        aria-invalid={error}
         disabled={disabled}
         // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
         //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
