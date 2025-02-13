@@ -6,6 +6,7 @@ import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
+import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
@@ -98,9 +99,8 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // HINT: bodyをスクロールできるようにするため、Sectionではなく、Stack[as="section"][gap=0]を使用する必要がある
-    // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
-    <Stack as="section" gap={0} className={styles.wrapper}>
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Section className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
@@ -128,7 +128,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           </div>
         )}
       </Stack>
-    </Stack>
+    </Section>
   )
 }
 
