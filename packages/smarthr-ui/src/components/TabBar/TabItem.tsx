@@ -6,7 +6,7 @@ import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 
-const tabItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-TabItem',
@@ -104,7 +104,7 @@ const TabButton: FC<Props & ElementProps> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, label, suffixWrapper } = tabItem({ isTouchDevice })
+    const { wrapper, label, suffixWrapper } = classNameGenerator({ isTouchDevice })
 
     return {
       wrapper: wrapper({ className }),

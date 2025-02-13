@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
 
-const tabBar = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-TabBar',
     inner: 'shr-grow',
@@ -26,18 +26,13 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'role'>
 
-export const TabBar: FC<Props & ElementProps> = ({
-  className,
-  bordered = true,
-  children,
-  ...props
-}) => {
+export const TabBar: FC<Props & ElementProps> = ({ className, bordered, children, ...props }) => {
   const classNames = useMemo(() => {
-    const { wrapper, inner } = tabBar()
+    const { wrapper, inner } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      inner: inner({ bordered }),
+      inner: inner({ bordered: bordered ?? true }),
     }
   }, [bordered, className])
 
