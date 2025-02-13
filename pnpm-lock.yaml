@@ -282,7 +282,7 @@ importers:
         version: 2.1.0
       react-intl:
         specifier: ^7.0.4
-        version: 7.0.4(react@19.0.0)(typescript@5.7.2)
+        version: 7.0.4(react@19.0.0)(typescript@5.7.3)
       react-test-renderer:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
@@ -8731,36 +8731,36 @@ snapshots:
       '@formatjs/fast-memoize': 2.2.5
       '@formatjs/intl-localematcher': 0.5.9
       decimal.js: 10.4.3
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@formatjs/fast-memoize@2.2.5':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@formatjs/icu-messageformat-parser@2.9.7':
     dependencies:
       '@formatjs/ecma402-abstract': 2.3.1
       '@formatjs/icu-skeleton-parser': 1.8.11
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@formatjs/icu-skeleton-parser@1.8.11':
     dependencies:
       '@formatjs/ecma402-abstract': 2.3.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@formatjs/intl-localematcher@0.5.9':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
-  '@formatjs/intl@3.0.4(typescript@5.7.2)':
+  '@formatjs/intl@3.0.4(typescript@5.7.3)':
     dependencies:
       '@formatjs/ecma402-abstract': 2.3.1
       '@formatjs/fast-memoize': 2.2.5
       '@formatjs/icu-messageformat-parser': 2.9.7
       intl-messageformat: 10.7.10
-      tslib: 2.6.2
+      tslib: 2.8.1
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.7.3
 
   '@hapi/hoek@9.3.0': {}
 
@@ -12466,7 +12466,7 @@ snapshots:
       '@formatjs/ecma402-abstract': 2.3.1
       '@formatjs/fast-memoize': 2.2.5
       '@formatjs/icu-messageformat-parser': 2.9.7
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   is-absolute@1.0.0:
     dependencies:
@@ -14271,19 +14271,19 @@ snapshots:
       '@types/react': 18.3.18
       react: 19.0.0
 
-  react-intl@7.0.4(react@19.0.0)(typescript@5.7.2):
+  react-intl@7.0.4(react@19.0.0)(typescript@5.7.3):
     dependencies:
       '@formatjs/ecma402-abstract': 2.3.1
       '@formatjs/icu-messageformat-parser': 2.9.7
-      '@formatjs/intl': 3.0.4(typescript@5.7.2)
+      '@formatjs/intl': 3.0.4(typescript@5.7.3)
       '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 18.3.18
       hoist-non-react-statics: 3.3.2
       intl-messageformat: 10.7.10
       react: 19.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     optionalDependencies:
-      typescript: 5.7.2
+      typescript: 5.7.3
 
   react-is@16.13.1: {}
 
