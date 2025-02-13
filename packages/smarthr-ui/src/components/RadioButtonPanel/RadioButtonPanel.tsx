@@ -10,7 +10,7 @@ type Props = ComponentProps<typeof RadioButton> & {
   as?: string | React.ComponentType<any>
 }
 
-const radioButtonPanel = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-RadioButtonPanel',
     'shr-border-shorthand shr-list-none shr-shadow-none',
@@ -28,8 +28,8 @@ const radioButtonPanel = tv({
 })
 
 export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...props }) => {
-  const styles = useMemo(
-    () => radioButtonPanel({ disabled: !!props.disabled, className }),
+  const actualClassName = useMemo(
+    () => classNameGenerator({ disabled: !!props.disabled, className }),
     [props.disabled, className],
   )
   const role = useMemo(
@@ -45,7 +45,7 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={styles}>
+    <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={actualClassName}>
       <RadioButton {...props} ref={innerRef} />
     </Base>
   )
