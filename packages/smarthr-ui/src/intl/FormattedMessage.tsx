@@ -1,18 +1,16 @@
 import React, { ComponentProps } from 'react'
-import { FormattedMessage as RawFormattedMessage } from 'react-intl'
+import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 
 import { ja } from './locales'
 
 type Messages = Record<keyof typeof ja, string>
 
-type Props<Id extends keyof Messages> = Omit<
-  ComponentProps<typeof RawFormattedMessage>,
-  'id' | 'defaultMessage'
-> & {
+type Props<Id extends keyof Messages> = {
   id: Id
-  defaultMessage: (typeof ja)[Id]
+  defaultText: (typeof ja)[Id]
+  values: ComponentProps<typeof ReactIntlFormattedMessage>['values']
 }
 
-export const FormattedMessage = <ID extends keyof Messages>({ values, ...props }: Props<ID>) => (
-  <RawFormattedMessage {...props} values={{ break: <br />, ...values }} />
+export const Localizer = <ID extends keyof Messages>({ values, ...props }: Props<ID>) => (
+  <ReactIntlFormattedMessage {...props} values={{ break: <br />, ...values }} />
 )
