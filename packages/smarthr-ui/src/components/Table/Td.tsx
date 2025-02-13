@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef, PropsWithChildren, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { reelShadowStyle } from './useReelShadow'
+import { reelShadowClassNameGenerator } from './useReelShadow'
 
 import type { CellContentWidth } from './type'
 
@@ -18,9 +18,11 @@ export const Td = memo<Props & ElementProps>(
   ({ align, vAlign, nullable, fixed = false, contentWidth, className, style, ...props }) => {
     const actualClassName = useMemo(() => {
       const tdStyles = td({ align, vAlign, nullable, fixed, className })
-      const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
+      const reelShadowClassNameGenerators = fixed
+        ? reelShadowClassNameGenerator({ direction: 'right' })
+        : ''
 
-      return `${tdStyles} ${reelShadowStyles}`.trim()
+      return `${tdStyles} ${reelShadowClassNameGenerators}`.trim()
     }, [align, className, contentWidth, fixed, nullable, style, vAlign])
     const actualStyle = useMemo(() => {
       if (typeof contentWidth === 'object') {

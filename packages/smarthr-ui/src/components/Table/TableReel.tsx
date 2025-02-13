@@ -4,7 +4,7 @@ import React, { ComponentPropsWithRef, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useReelCells } from './useReelCells'
-import { reelShadowStyle } from './useReelShadow'
+import { reelShadowClassNameGenerator } from './useReelShadow'
 
 type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
 
@@ -22,7 +22,7 @@ export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ classNam
     const { wrapper, inner } = tableReel()
 
     return {
-      wrapper: reelShadowStyle({ showShadow, className: wrapper({ className }) }),
+      wrapper: reelShadowClassNameGenerator({ showShadow, className: wrapper({ className }) }),
       inner: inner(),
     }
   }, [className, showShadow])

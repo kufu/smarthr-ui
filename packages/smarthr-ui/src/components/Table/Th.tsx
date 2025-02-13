@@ -12,7 +12,7 @@ import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { reelShadowStyle } from './useReelShadow'
+import { reelShadowClassNameGenerator } from './useReelShadow'
 
 import type { CellContentWidth } from './type'
 
@@ -109,7 +109,7 @@ export const Th = memo<Props & ElementProps>(
         return base
       }
 
-      const shadow = reelShadowStyle({ showShadow: false, direction: 'right' })
+      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: 'right' })
 
       return `${base} ${shadow}`
     }, [align, className, fixed, vAlign])
