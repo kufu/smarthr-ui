@@ -7,7 +7,7 @@ import { Step } from './types'
 
 import type { ComponentProps, FC } from 'react'
 
-const stepStatusIcon = tv({
+const classNameGenerator = tv({
   base: [
     'shr-bg-white shr-rounded-full shr-shadow-[0_0_0_theme(borderWidth.2)_theme(colors.white)]',
     'forced-colors:shr-fill-[Canvas] forced-colors:shr-bg-[CanvasText] forced-colors:shr-shadow-[0_0_0_theme(borderWidth.2)_Canvas]',
@@ -56,7 +56,7 @@ const ActualStepStatusIcon: FC<ActualProps> = ({ status, className, ...rest }) =
   }, [status])
 
   const actualClassName = useMemo(
-    () => stepStatusIcon({ status: actualStatus.type, className }),
+    () => classNameGenerator({ status: actualStatus.type, className }),
     [actualStatus.type, className],
   )
   const Component = actualStatus.Component

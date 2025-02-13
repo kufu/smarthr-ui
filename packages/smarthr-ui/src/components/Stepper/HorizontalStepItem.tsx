@@ -8,7 +8,7 @@ import { StepCounter } from './StepCounter'
 
 import type { HorizontalStep } from './types'
 
-const horizontalStepItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'shr-group/stepItem',
@@ -73,10 +73,9 @@ type Props = HorizontalStep & {
 export const HorizontalStepItem = React.memo<Props>(
   ({ stepNumber, label, status, current, isPrevStepCompleted }) => {
     const classNames = useMemo(() => {
-      const statusType = typeof status === 'object' ? status.type : status
       const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
-        horizontalStepItem({
-          status: statusType,
+        classNameGenerator({
+          status: typeof status === 'object' ? status.type : status,
           current,
           isPrevStepCompleted,
         })

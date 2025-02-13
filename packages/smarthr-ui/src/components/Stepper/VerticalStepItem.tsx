@@ -8,7 +8,7 @@ import { StepCounter } from './StepCounter'
 
 import type { VerticalStep } from './types'
 
-const verticalStepItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-group/stepItem',
     headingWrapper: 'shr-flex shr-items-center shr-gap-1',
@@ -58,7 +58,7 @@ type Props = VerticalStep & {
 
 export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
   const classNames = useMemo(() => {
-    const { wrapper, headingWrapper, heading, body, inner } = verticalStepItem({
+    const { wrapper, headingWrapper, heading, body, inner } = classNameGenerator({
       status: typeof status === 'object' ? status.type : status,
       current,
     })

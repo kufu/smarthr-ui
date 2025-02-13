@@ -13,7 +13,7 @@ import type { FC } from 'react'
 
 type Props = HStepperProps | VStepperProps
 
-const stepper = tv({
+const classNameGenerator = tv({
   base: ['smarthr-ui-Stepper', 'shr-list-none shr-my-0 shr-ps-0'],
   variants: {
     type: {
@@ -28,7 +28,7 @@ export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...res
   const isHorizontal = type === 'horizontal'
   const ItemComponent = isHorizontal ? HorizontalStepItem : VerticalStepItem
 
-  const actualClassName = useMemo(() => stepper({ type, className }), [type, className])
+  const actualClassName = useMemo(() => classNameGenerator({ type, className }), [type, className])
 
   return (
     <ol {...rest} className={actualClassName}>
