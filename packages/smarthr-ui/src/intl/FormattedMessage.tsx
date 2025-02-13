@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react'
 import { FormattedMessage as RawFormattedMessage } from 'react-intl'
 
-import { ja } from '../../locales'
+import { ja } from './locales'
 
 type Messages = Record<keyof typeof ja, string>
 

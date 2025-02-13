@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useIntl } from '../../hooks/useIntl'
+import { useIntl } from './useIntl'
 
 type Props = {
   date: Date

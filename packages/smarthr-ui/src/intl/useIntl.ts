@@ -6,7 +6,7 @@ import {
   useIntl as useReactIntl,
 } from 'react-intl'
 
-import { ja } from '../locales'
+import { ja } from './locales'
 
 type Messages = Record<keyof typeof ja, string>
 

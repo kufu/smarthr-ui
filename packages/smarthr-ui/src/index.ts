@@ -95,8 +95,6 @@ export * from './components/Picker'
 export * from './components/Browser'
 export * from './components/WarekiPicker'
 export { AppHeader } from './components/AppHeader'
-export { IntlProvider } from './components/IntlProvider'
-export * from './components/Formatter'
 
 // layout components
 export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
@@ -119,6 +117,9 @@ export { defaultFontSize } from './themes/createFontSize'
 export { defaultLeading } from './themes/createLeading'
 export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
+
+// localization
+export { IntlProvider, useIntl, FormattedDate } from './intl'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
