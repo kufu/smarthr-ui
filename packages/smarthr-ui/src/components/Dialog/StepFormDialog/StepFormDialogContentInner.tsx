@@ -107,11 +107,12 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       e.stopPropagation()
 
       stepQueue.current.push(currentStep)
+
       const next = onSubmit(handleCloseAction, e, currentStep)
-      if (!next) {
-        return
+
+      if (next) {
+        setCurrentStep(next)
       }
-      setCurrentStep(next)
     },
     [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction],
   )
