@@ -36,7 +36,16 @@ const thCheckbox = tv({
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ vAlign, decorators, className, ...others }, ref) => {
-    const { wrapper, inner, balloon, checkbox } = thCheckbox()
+    const classNames = useMemo(() => {
+      const { wrapper, inner, balloon, checkbox } = thCheckbox()
+
+      return {
+        wrapper: wrapper({ className }),
+        inner: inner(),
+        balloon: balloon(),
+        checkbox: checkbox(),
+      }
+    }, [className])
 
     const checkAllInvisibleLabel = useMemo(() => {
       if (decorators && decorators.checkAllInvisibleLabel) {
@@ -56,13 +65,13 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
 
     return (
       // Th に必要な属性やイベントは不要
-      <Th vAlign={vAlign} className={wrapper({ className })} aria-label={checkColumnName}>
+      <Th vAlign={vAlign} className={classNames.wrapper} aria-label={checkColumnName}>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <label className={inner()}>
-          <Balloon as="span" horizontal="left" vertical="middle" className={balloon()}>
+        <label className={classNames.inner}>
+          <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
             <span className="shr-p-0.5 shr-block">{checkAllInvisibleLabel}</span>
           </Balloon>
-          <CheckBox {...others} ref={ref} className={checkbox()} />
+          <CheckBox {...others} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>
     )
