@@ -8,10 +8,10 @@ type Props = {
   width?: number | string
   /** コンポーネントの高さ */
   height?: number | string
-} & VariantProps<typeof smarthrLogo>
+} & VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<ComponentPropsWithoutRef<'svg'>, keyof Props>
 
-const smarthrLogo = tv({
+const classNameGenerator = tv({
   base: ['smarthr-ui-SmartHRLogo', 'shr-align-bottom'],
   variants: {
     fill: {
@@ -31,7 +31,7 @@ export const SmartHRLogo = memo<Props & ElementProps>(
       [height, width],
     )
     const actualClassName = useMemo(
-      () => smarthrLogo({ className, fill: fill ?? 'white' }),
+      () => classNameGenerator({ className, fill: fill ?? 'white' }),
       [fill, className],
     )
 

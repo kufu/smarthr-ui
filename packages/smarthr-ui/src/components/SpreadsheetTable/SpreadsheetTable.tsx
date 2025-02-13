@@ -14,7 +14,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
-const spreadsheetTable = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-SpreadsheetTable shr-border-shorthand shr-border-collapse shr-bg-head',
     // th
@@ -36,7 +36,7 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
   children,
   ...props
 }) => {
-  const actualClassName = useMemo(() => spreadsheetTable({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     <table {...props} className={actualClassName}>

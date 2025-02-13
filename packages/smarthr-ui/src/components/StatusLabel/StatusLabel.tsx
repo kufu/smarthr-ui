@@ -9,7 +9,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 
-export const statusLabel = tv({
+export const classNameGenerator = tv({
   base: [
     'smarthr-ui-StatusLabel',
     'shr-box-content shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25 shr-border-shorthand shr-border-current shr-bg-white shr-px-0.5 shr-py-0.25 shr-whitespace-nowrap shr-text-sm shr-font-bold shr-min-w-[3.5em] shr-min-h-em',
@@ -62,7 +62,7 @@ export const statusLabel = tv({
   ],
 })
 
-type BaseProps = VariantProps<typeof statusLabel>
+type BaseProps = VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 type Props = PropsWithChildren<BaseProps & ElementProps>
 
@@ -75,7 +75,7 @@ export const StatusLabel: FC<Props> = ({
 }) => {
   const actualClassName = useMemo(
     () =>
-      statusLabel({
+      classNameGenerator({
         className,
         type,
         bold,
