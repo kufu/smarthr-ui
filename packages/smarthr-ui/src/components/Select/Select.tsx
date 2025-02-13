@@ -117,24 +117,25 @@ const ActualSelect = <T extends string>(
     [onChange, onChangeValue, options],
   )
 
-  const { wrapperStyleProps, selectStyle, iconWrapStyle, blankOptGroupStyle } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, selectEl, iconWrap, blankOptgroup } = classNameGenerator()
 
     return {
-      wrapperStyleProps: {
-        className: wrapper({ className }),
-        style: {
-          width: typeof width === 'number' ? `${width}px` : width,
-        },
-      },
-      selectStyle: selectEl({ size }),
-      iconWrapStyle: iconWrap({ size }),
-      blankOptGroupStyle: blankOptgroup(),
+      wrapper: wrapper({ className }),
+      select: selectEl({ size }),
+      iconWrap: iconWrap({ size }),
+      blankOptGroup: blankOptgroup(),
     }
-  }, [className, size, width])
+  }, [className, size])
+  const wrapperStyle = useMemo(
+    () => ({
+      width: typeof width === 'number' ? `${width}px` : width,
+    }),
+    [width],
+  )
 
   return (
-    <span {...wrapperStyleProps}>
+    <span className={classNames.wrapper} style={wrapperStyle}>
       <select
         {...props}
         data-smarthr-ui-input="true"
@@ -149,15 +150,15 @@ const ActualSelect = <T extends string>(
         // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
         required={isIOS ? undefined : required}
         ref={ref}
-        className={selectStyle}
+        className={classNames.select}
       >
         <BlankOption hasBlank={hasBlank} decorator={decorators?.blankLabel} />
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}
-        <NotOmittingLabelsInMobileSafari className={blankOptGroupStyle} />
+        <NotOmittingLabelsInMobileSafari className={classNames.blankOptGroup} />
       </select>
-      <StyledFaSortIcon className={iconWrapStyle} />
+      <StyledFaSortIcon className={classNames.iconWrap} />
     </span>
   )
 }
