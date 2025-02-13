@@ -6,23 +6,26 @@ import { reelShadowClassNameGenerator } from './useReelShadow'
 import type { CellContentWidth } from './type'
 
 export type Props = PropsWithChildren<
-  VariantProps<typeof td> & {
+  VariantProps<typeof classNameGenerator> & {
     contentWidth?:
       | CellContentWidth
       | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
   }
 >
-type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'classNameGenerator'>, keyof Props>
 
 export const Td = memo<Props & ElementProps>(
   ({ align, vAlign, nullable, fixed = false, contentWidth, className, style, ...props }) => {
     const actualClassName = useMemo(() => {
-      const tdStyles = td({ align, vAlign, nullable, fixed, className })
-      const reelShadowClassNameGenerators = fixed
-        ? reelShadowClassNameGenerator({ direction: 'right' })
-        : ''
+      const base = classNameGenerator({ align, vAlign, nullable, fixed, className })
 
-      return `${tdStyles} ${reelShadowClassNameGenerators}`.trim()
+      if (!fixed) {
+        return base
+      }
+
+      const shadow = reelShadowClassNameGenerator({ direction: 'right' })
+
+      return `${base} ${shadow}`
     }, [align, className, contentWidth, fixed, nullable, style, vAlign])
     const actualStyle = useMemo(() => {
       if (typeof contentWidth === 'object') {
@@ -44,7 +47,7 @@ export const Td = memo<Props & ElementProps>(
   },
 )
 
-const td = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Td',
     'shr-border-solid shr-border-0 shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black shr-h-[calc(1em_*_theme(lineHeight.normal))]',
