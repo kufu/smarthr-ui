@@ -63,6 +63,11 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
+const BUTTON_COLUMN_GAP = {
+  row: 0.5,
+  column: 1,
+} as const
+
 export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
   children,
   title,
@@ -161,7 +166,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   {decorated.backButtonLabel}
                 </Button>
               )}
-              <Cluster gap={{ row: 0.5, column: 1 }} className={classNames.buttonArea}>
+              <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 <Button
                   onClick={handleCloseAction}
                   disabled={closeDisabled || isRequestProcessing}
