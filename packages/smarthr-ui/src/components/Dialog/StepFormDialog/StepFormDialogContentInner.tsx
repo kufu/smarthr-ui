@@ -8,7 +8,7 @@ import React, {
   useMemo,
 } from 'react'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -44,7 +44,7 @@ export type BaseProps = PropsWithChildren<
       /** 閉じるボタンを無効にするかどうか */
       closeDisabled?: boolean
       /** コンポーネント内の文言を変更するための関数を設定 */
-      decorators?: DecoratorsType<'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel'>
+      decorators?: DecoratorsType<DecoratorKeyTypes>
     }
 >
 
@@ -56,9 +56,12 @@ export type StepFormDialogContentInnerProps = BaseProps & {
   onClickBack?: () => void
 }
 
-const CLOSE_BUTTON_LABEL = 'キャンセル'
-const NEXT_BUTTON_LABEL = '次へ'
-const BACK_BUTTON_LABEL = '戻る'
+const DECORATOR_DEFAULT_TEXTS = {
+  closeButtonLabel: 'キャンセル',
+  nextButtonLabel: '次へ',
+  backButtonLabel: '戻る',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
   children,
@@ -119,10 +122,12 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
 
-  const actionText =
-    activeStep === stepLength
-      ? submitLabel
-      : decorators?.nextButtonLabel?.(NEXT_BUTTON_LABEL) || NEXT_BUTTON_LABEL
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
+  const actionText = useMemo(
+    () => (activeStep === stepLength ? submitLabel : decorated.nextButtonLabel),
+    [activeStep, stepLength, submitLabel, decorated.nextButtonLabel],
+  )
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
@@ -146,7 +151,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   disabled={isRequestProcessing}
                   className="smarthr-ui-Dialog-backButton"
                 >
-                  {decorators?.backButtonLabel?.(BACK_BUTTON_LABEL) || BACK_BUTTON_LABEL}
+                  {decorated.backButtonLabel}
                 </Button>
               )}
               <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
@@ -155,7 +160,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   disabled={closeDisabled || isRequestProcessing}
                   className="smarthr-ui-Dialog-closeButton"
                 >
-                  {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+                  {decorated.closeButtonLabel}
                 </Button>
                 <Button
                   type="submit"
