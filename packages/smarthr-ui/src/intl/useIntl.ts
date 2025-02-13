@@ -1,4 +1,3 @@
-import { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
 import { useCallback } from 'react'
 import {
   PrimitiveType,
@@ -7,6 +6,8 @@ import {
 } from 'react-intl'
 
 import { ja } from './locales'
+
+import type { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
 
 type Messages = Record<keyof typeof ja, string>
 
