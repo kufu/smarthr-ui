@@ -12,7 +12,7 @@ export type Props = PropsWithChildren<
       | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
   }
 >
-type ElementProps = Omit<ComponentPropsWithoutRef<'classNameGenerator'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
 export const Td = memo<Props & ElementProps>(
   ({ align, vAlign, nullable, fixed = false, contentWidth, className, style, ...props }) => {

@@ -129,7 +129,7 @@ export const Th = memo<Props & ElementProps>(
       [decorators, sort],
     )
     const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
-      () => (sort && sort === 'none' ? 'none' : `${sort}ending`),
+      () => (sort ? (sort === 'none' ? 'none' : `${sort}ending`) : undefined),
       [sort],
     )
 

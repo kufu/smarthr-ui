@@ -5,7 +5,7 @@ import { tv } from 'tailwind-variants'
 
 import { useTableHeadCellCount } from './useTableHeadCellCount'
 
-const bulkActionRow = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-BulkActionRow',
     cell: [
@@ -23,7 +23,7 @@ export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> =
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
   const classNames = useMemo(() => {
-    const { wrapper, cell } = bulkActionRow()
+    const { wrapper, cell } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),

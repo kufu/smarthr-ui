@@ -1,10 +1,10 @@
 import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<VariantProps<typeof table>>
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
 type ElementProps = Omit<ComponentProps<'table'>, keyof Props>
 
-const table = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Table',
     'shr-border-collapse shr-w-full',
@@ -41,7 +41,7 @@ export const Table: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const actualClassName = useMemo(
-    () => table({ borderType, fixedHead, layout, className }),
+    () => classNameGenerator({ borderType, fixedHead, layout, className }),
     [borderType, className, fixedHead, layout],
   )
 

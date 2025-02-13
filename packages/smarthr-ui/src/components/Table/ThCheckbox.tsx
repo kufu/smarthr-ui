@@ -8,6 +8,7 @@ import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Th } from './Th'
 
 type Props = {
+  // HINT: checkColumnName は aria-label属性に設定されるため、型をstringのみに絞ります
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
     checkColumnName?: (text: string) => string
   }
@@ -54,7 +55,11 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
 
     return (
       // Th に必要な属性やイベントは不要
-      <Th vAlign={vAlign} className={classNames.wrapper} aria-label={decorated.checkColumnName}>
+      <Th
+        vAlign={vAlign}
+        className={classNames.wrapper}
+        aria-label={decorated.checkColumnName as string}
+      >
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={classNames.inner}>
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>

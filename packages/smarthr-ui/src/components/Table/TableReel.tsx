@@ -8,7 +8,7 @@ import { reelShadowClassNameGenerator } from './useReelShadow'
 
 type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
 
-const tableReel = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-TableReel', 'shr-relative'],
     inner: ['smarthr-ui-TableReel-inner', 'shr-relative shr-overflow-auto'],
@@ -19,7 +19,7 @@ export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ classNam
   const { showShadow, tableWrapperRef } = useReelCells()
 
   const classNames = useMemo(() => {
-    const { wrapper, inner } = tableReel()
+    const { wrapper, inner } = classNameGenerator()
 
     return {
       wrapper: reelShadowClassNameGenerator({ showShadow, className: wrapper({ className }) }),

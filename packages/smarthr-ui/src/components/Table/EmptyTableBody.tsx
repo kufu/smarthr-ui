@@ -16,7 +16,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithRef<'tbody'>, keyof Props>
 
-const emptyTableBodyCell = tv({
+const tdClassNameGenerator = tv({
   base: 'shr-text-center',
   variants: {
     vertical: {
@@ -81,7 +81,7 @@ export const EmptyTableBody: React.FC<Props & ElementProps> = ({ children, paddi
     const actualPadding =
       padding instanceof Object ? padding : { vertical: padding, horizontal: padding }
 
-    return emptyTableBodyCell(actualPadding)
+    return tdClassNameGenerator(actualPadding)
   }, [padding])
 
   return (
