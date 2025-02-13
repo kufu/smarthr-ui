@@ -118,8 +118,8 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   )
   const handleBackAction = useCallback(() => {
     onClickBack?.()
-    const prev = stepQueue.current.pop() ?? firstStep
-    setCurrentStep(prev)
+
+    setCurrentStep(stepQueue.current.pop() ?? firstStep)
   }, [firstStep, stepQueue, onClickBack, setCurrentStep])
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
@@ -136,11 +136,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   }, [])
 
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
-
-  const actionText = useMemo(
-    () => (activeStep === stepLength ? submitLabel : decorated.nextButtonLabel),
-    [activeStep, stepLength, submitLabel, decorated.nextButtonLabel],
-  )
+  const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
