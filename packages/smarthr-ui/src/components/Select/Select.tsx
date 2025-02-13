@@ -1,15 +1,16 @@
 'use client'
 
 import React, {
-  ChangeEvent,
-  ComponentPropsWithoutRef,
-  ForwardedRef,
+  type ChangeEvent,
+  type ComponentPropsWithoutRef,
+  type ForwardedRef,
+  type PropsWithChildren,
   useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
@@ -36,12 +37,15 @@ type Props<T extends string> = {
   /** 空の選択肢を表示するかどうか */
   hasBlank?: boolean
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'blankLabel'>
+  decorators?: DecoratorsType<DECORATOR_DEFAULT_TEXTS>
 }
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'select'>, keyof Props<string> | 'children'>
 
-const BLANK_LABEL = '選択してください'
+const DECORATOR_DEFAULT_TEXTS = {
+  blankLabel: '選択してください',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({
   slots: {
@@ -134,6 +138,8 @@ const ActualSelect = <T extends string>(
     [width],
   )
 
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
   return (
     <span className={classNames.wrapper} style={wrapperStyle}>
       <select
@@ -152,7 +158,7 @@ const ActualSelect = <T extends string>(
         ref={ref}
         className={classNames.select}
       >
-        <BlankOption hasBlank={hasBlank} decorator={decorators?.blankLabel} />
+        <BlankOption hasBlank={hasBlank}>{decorated.blankLabel}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}
@@ -163,13 +169,11 @@ const ActualSelect = <T extends string>(
   )
 }
 
-const BlankOption = React.memo<{
-  hasBlank: boolean | undefined
-  decorator: DecoratorType | undefined
-}>(
-  ({ hasBlank, decorator }) =>
-    hasBlank && <option value="">{decorator?.(BLANK_LABEL) || BLANK_LABEL}</option>,
-)
+const BlankOption = React.memo<
+  PropsWithChildren<{
+    hasBlank: boolean | undefined
+  }>
+>(({ hasBlank, children }) => hasBlank && <option value="">{children}</option>)
 
 const Option = React.memo<Props<string>['options'][number]>((option) => {
   if ('value' in option) {
