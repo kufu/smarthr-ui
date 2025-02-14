@@ -47,6 +47,7 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
     if (!props.isOpen) {
       return
     }
+
     focusTrapRef.current?.focus()
     onClickClose()
   }, [onClickClose, props.isOpen])
@@ -56,7 +57,9 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
       if (!props.isOpen) {
         return undefined
       }
+
       focusTrapRef.current?.focus()
+
       return onSubmit(close, e, currentStep)
     },
     [onSubmit, props.isOpen],
@@ -66,6 +69,7 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
     if (!props.isOpen) {
       return
     }
+
     focusTrapRef.current?.focus()
     onClickBack?.()
   }, [props.isOpen, onClickBack])
