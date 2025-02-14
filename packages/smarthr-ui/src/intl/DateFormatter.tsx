@@ -6,7 +6,7 @@ type Props = {
   date: Date
 }
 
-export const FormattedDate = ({ date }: Props) => {
+export const DateFormatter = ({ date }: Props) => {
   const { formatDate } = useIntl()
   return <time dateTime={date.toISOString()}>{formatDate(date)}</time>
 }
