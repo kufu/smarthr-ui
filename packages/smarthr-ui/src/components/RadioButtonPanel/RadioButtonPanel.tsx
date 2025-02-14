@@ -18,20 +18,13 @@ const classNameGenerator = tv({
     'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
     '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
     '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
+    'shr-cursor-pointer has-[:not(:disabled)]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-pointer',
     'has-[:disabled]:shr-cursor-default has-[:disabled]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-default',
   ],
-  variants: {
-    disabled: {
-      false: 'shr-cursor-pointer [&_.smarthr-ui-RadioButton-label]:shr-cursor-pointer',
-    },
-  },
 })
 
 export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...props }) => {
-  const actualClassName = useMemo(
-    () => classNameGenerator({ disabled: !!props.disabled, className }),
-    [props.disabled, className],
-  )
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
   const role = useMemo(
     () => (typeof as === 'string' && /^(div|span)$/.test(as) ? 'presentation' : undefined),
     [as],
