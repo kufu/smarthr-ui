@@ -3,6 +3,7 @@
 import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -10,8 +11,6 @@ import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
-
-import type { ResponseMessageType } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -62,30 +61,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   subActionArea,
   decorators,
 }) => {
-  const calcedResponseStatus = useMemo(() => {
-    if (!responseMessage) {
-      return {
-        isProcessing: false,
-        visibleMessage: false,
-      }
-    }
-
-    if (responseMessage.status === 'processing') {
-      return {
-        isProcessing: true,
-        visibleMessage: false,
-      }
-    }
-
-    return {
-      isProcessing: false,
-      visibleMessage: true,
-      // HINT: statusがprocessingではない === success or errorであることが確定する
-      // success or error の場合、text属性も必ず存在する
-      status: responseMessage.status as 'success' | 'error',
-      message: (responseMessage as { text: string }).text,
-    }
-  }, [responseMessage])
+  const calcedResponseStatus = useResponseMessage(responseMessage)
 
   const styles = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
@@ -120,7 +96,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             className={styles.buttonArea}
           />
         </Cluster>
-        {calcedResponseStatus.visibleMessage && (
+        {calcedResponseStatus.message && (
           <div className={styles.message}>
             <ResponseMessage type={calcedResponseStatus.status} role="alert">
               {calcedResponseStatus.message}
