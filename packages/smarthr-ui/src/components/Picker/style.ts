@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
  * @param componentType
  * コンポーネントのタイプ (例: 'Time')
  */
-export const pickerStyle = (componentType: string) =>
+export const classNameGenerator = (componentType: string) =>
   tv({
     slots: {
       wrapper: [

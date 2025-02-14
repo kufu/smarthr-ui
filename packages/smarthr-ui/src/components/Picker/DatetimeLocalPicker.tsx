@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo } from 'react'
 
-import { pickerStyle } from './style'
+import { classNameGenerator } from './style'
 import { PickerProps } from './types'
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
-      const { wrapper, inner } = pickerStyle('DatetimeLocal')
+      const { wrapper, inner } = classNameGenerator('DatetimeLocal')
 
       return {
         wrapper: wrapper({ className }),
