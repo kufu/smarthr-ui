@@ -66,32 +66,28 @@ type BaseProps = VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 type Props = PropsWithChildren<BaseProps & ElementProps>
 
-export const StatusLabel: FC<Props> = ({
-  type = 'grey',
-  bold = false,
-  className,
-  children,
-  ...props
-}) => {
-  const actualClassName = useMemo(
-    () =>
-      classNameGenerator({
-        className,
-        type,
-        bold,
-      }),
-    [type, bold, className],
-  )
+export const StatusLabel = memo<Props>(
+  ({ type = 'grey', bold = false, className, children, ...props }) => {
+    const actualClassName = useMemo(
+      () =>
+        classNameGenerator({
+          className,
+          type,
+          bold,
+        }),
+      [type, bold, className],
+    )
 
-  return (
-    <span {...props} className={actualClassName}>
-      <MemoizedIcon type={type} bold={bold} />
-      {children}
-    </span>
-  )
-}
+    return (
+      <span {...props} className={actualClassName}>
+        <Icon type={type} bold={bold} />
+        {children}
+      </span>
+    )
+  },
+)
 
-const MemoizedIcon = memo<Pick<Props, 'type' | 'bold'>>(({ type, bold }) => {
+const Icon: FC<Pick<Props, 'type' | 'bold'>> = ({ type, bold }) => {
   if (bold) {
     switch (type) {
       case 'warning':
@@ -102,4 +98,4 @@ const MemoizedIcon = memo<Pick<Props, 'type' | 'bold'>>(({ type, bold }) => {
   }
 
   return null
-})
+}
