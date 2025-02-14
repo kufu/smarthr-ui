@@ -1,14 +1,14 @@
 import { tv } from 'tailwind-variants'
 
 /**
- * @param componentName
- * コンポーネントの名前 (例: 'TimePicker')
+ * @param componentType
+ * コンポーネントのタイプ (例: 'Time')
  */
-export const pickerStyle = (componentName: string) =>
+export const pickerStyle = (componentType: string) =>
   tv({
     slots: {
       wrapper: [
-        `smarthr-ui-${componentName}`,
+        `smarthr-ui-${componentName}Picker`,
         'shr-inline-block shr-border-shorthand shr-rounded-m shr-bg-white shr-px-0.5 shr-leading-none',
         'contrast-more:shr-border-high-contrast',
         'focus-within:shr-focus-indicator',

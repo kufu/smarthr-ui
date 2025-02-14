@@ -11,16 +11,17 @@ type Props = {
 /** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
 export const MonthPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
-    const { wrapperStyle, innerStyle } = useMemo(() => {
-      const { wrapper, inner } = pickerStyle('MonthPicker')
+    const classNames = useMemo(() => {
+      const { wrapper, inner } = pickerStyle('Month')
+
       return {
-        wrapperStyle: wrapper({ className, disabled, readOnly }),
-        innerStyle: inner(),
+        wrapper: wrapper({ className, disabled, readOnly }),
+        inner: inner(),
       }
     }, [disabled, readOnly, className])
 
     return (
-      <span className={wrapperStyle}>
+      <span className={classNames.wrapper}>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
@@ -30,7 +31,7 @@ export const MonthPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
           disabled={disabled}
           readOnly={readOnly}
           aria-invalid={error || undefined}
-          className={innerStyle}
+          className={classNames.inner}
         />
       </span>
     )
