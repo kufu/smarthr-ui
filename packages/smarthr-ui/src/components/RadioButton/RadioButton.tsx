@@ -7,7 +7,7 @@ import { isIOS } from '../../libs/ua'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 
-const radioButton = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-RadioButton shr-inline-flex shr-items-baseline',
     label: 'smarthr-ui-RadioButton-label shr-ms-0.5 shr-text-base shr-leading-tight',
@@ -48,16 +48,16 @@ const radioButton = tv({
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
   ({ onChange, children, className, required, ...props }, ref) => {
-    const { wrapperStyle, innerWrapperStyle, boxStyle, inputStyle, labelStyle } = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, label } = radioButton()
+    const classNames = useMemo(() => {
+      const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
       const actualDisabledAttrs = { disabled: !!props.disabled }
 
       return {
-        wrapperStyle: wrapper({ className }),
-        innerWrapperStyle: innerWrapper(),
-        boxStyle: box(actualDisabledAttrs),
-        inputStyle: input(),
-        labelStyle: label(actualDisabledAttrs),
+        wrapper: wrapper({ className }),
+        innerWrapper: innerWrapper(),
+        box: box(actualDisabledAttrs),
+        input: input(),
+        label: label(actualDisabledAttrs),
       }
     }, [props.disabled, className])
 
@@ -65,15 +65,13 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     const radioButtonId = props.id || defaultId
 
     return (
-      <span className={wrapperStyle}>
-        <span className={innerWrapperStyle}>
+      <span className={classNames.wrapper}>
+        <span className={classNames.innerWrapper}>
           <input
             {...props}
-            data-smarthr-ui-input="true"
+            ref={ref}
             type="radio"
             id={radioButtonId}
-            onChange={onChange}
-            className={inputStyle}
             // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
             //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
             //    - エラーメッセージが表示されない
@@ -81,11 +79,13 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
             // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
             required={isIOS ? undefined : required}
-            ref={ref}
+            onChange={onChange}
+            className={classNames.input}
+            data-smarthr-ui-input="true"
           />
-          <AriaHiddenBox className={boxStyle} />
+          <AriaHiddenBox className={classNames.box} />
         </span>
-        <LabeledChildren htmlFor={radioButtonId} className={labelStyle}>
+        <LabeledChildren htmlFor={radioButtonId} className={classNames.label}>
           {children}
         </LabeledChildren>
       </span>

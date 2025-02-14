@@ -10,6 +10,8 @@ type Props = ComponentProps<typeof RadioButton> & {
   as?: string | React.ComponentType<any>
 }
 
+const NONE_ROLE_TAG_REGEX = /^(div|span)$/
+
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-RadioButtonPanel',
@@ -26,7 +28,7 @@ const classNameGenerator = tv({
 export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...props }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
   const role = useMemo(
-    () => (typeof as === 'string' && /^(div|span)$/.test(as) ? 'presentation' : undefined),
+    () => (typeof as === 'string' && NONE_ROLE_TAG_REGEX.test(as) ? 'presentation' : undefined),
     [as],
   )
 
