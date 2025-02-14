@@ -15,23 +15,23 @@ export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Prop
       const { wrapper, inner } = pickerStyle('DatetimeLocal')
 
       return {
-        wrapper: wrapper({ className, disabled, readOnly }),
+        wrapper: wrapper({ className }),
         inner: inner(),
       }
-    }, [disabled, readOnly, className])
+    }, [className])
 
     return (
       <span className={classNames.wrapper}>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
-          data-smarthr-ui-input="true"
           ref={ref}
           type="datetime-local"
           disabled={disabled}
           readOnly={readOnly}
           aria-invalid={error || undefined}
           className={classNames.inner}
+          data-smarthr-ui-input="true"
         />
       </span>
     )

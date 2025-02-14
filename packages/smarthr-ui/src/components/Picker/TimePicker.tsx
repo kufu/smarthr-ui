@@ -15,22 +15,22 @@ export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
       const { wrapper, inner } = pickerStyle('Time')
 
       return {
-        wrapper: wrapper({ className, disabled, readOnly }),
+        wrapper: wrapper({ className }),
         inner: inner(),
       }
-    }, [disabled, readOnly, className])
+    }, [disabled])
 
     return (
       <span className={classNames.wrapper}>
         <input
           {...rest}
-          data-smarthr-ui-input="true"
           ref={ref}
           type="time"
           disabled={disabled}
           readOnly={readOnly}
           aria-invalid={error || undefined}
           className={classNames.inner}
+          data-smarthr-ui-input="true"
         />
       </span>
     )

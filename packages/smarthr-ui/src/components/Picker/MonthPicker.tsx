@@ -15,10 +15,10 @@ export const MonthPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
       const { wrapper, inner } = pickerStyle('Month')
 
       return {
-        wrapper: wrapper({ className, disabled, readOnly }),
+        wrapper: wrapper({ className }),
         inner: inner(),
       }
-    }, [disabled, readOnly, className])
+    }, [className])
 
     return (
       <span className={classNames.wrapper}>
