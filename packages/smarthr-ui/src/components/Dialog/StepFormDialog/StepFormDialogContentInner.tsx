@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -18,8 +19,6 @@ import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, StepItem } from './StepFormDialogProvider'
-
-import type { ResponseMessageType } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -122,8 +121,6 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     setCurrentStep(stepQueue.current.pop() ?? firstStep)
   }, [firstStep, stepQueue, onClickBack, setCurrentStep])
 
-  const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
-
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
 
@@ -137,6 +134,8 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
+
+  const calcedResponseStatus = useResponseMessage(responseMessage)
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
@@ -156,7 +155,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               {activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
-                  disabled={isRequestProcessing}
+                  disabled={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-backButton"
                 >
                   {decorated.backButtonLabel}
@@ -165,7 +164,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 <Button
                   onClick={handleCloseAction}
-                  disabled={closeDisabled || isRequestProcessing}
+                  disabled={closeDisabled || calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-closeButton"
                 >
                   {decorated.closeButtonLabel}
@@ -174,17 +173,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   type="submit"
                   variant={actionTheme}
                   disabled={actionDisabled}
-                  loading={isRequestProcessing}
+                  loading={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-actionButton"
                 >
                   {actionText}
                 </Button>
               </Cluster>
             </Cluster>
-            {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+            {calcedResponseStatus.message && (
               <div className={classNames.message}>
-                <ResponseMessage type={responseMessage.status} role="alert">
-                  {responseMessage.text}
+                <ResponseMessage type={calcedResponseStatus.status} role="alert">
+                  {calcedResponseStatus.message}
                 </ResponseMessage>
               </div>
             )}
