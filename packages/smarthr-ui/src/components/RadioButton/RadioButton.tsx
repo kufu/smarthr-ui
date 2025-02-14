@@ -10,7 +10,11 @@ type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-RadioButton shr-inline-flex shr-items-baseline',
-    label: 'smarthr-ui-RadioButton-label shr-ms-0.5 shr-text-base shr-leading-tight',
+    label: [
+      'smarthr-ui-RadioButton-label shr-ms-0.5 shr-text-base shr-leading-tight',
+      'shr-cursor-pointer',
+      '[[data-disabled="true"]>&]:shr-cursor-[revert] [[data-disabled="true"]>&]:shr-text-disabled',
+    ],
     innerWrapper:
       'shr-relative shr-inline-block shr-h-em shr-w-em shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     box: [
@@ -24,6 +28,7 @@ const classNameGenerator = tv({
       'peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border peer-disabled:peer-checked:before:shr-bg-white-darken',
       'peer-focus-visible:shr-focus-indicator',
+      'peer-[:not(:disabled)]:peer-hover:shr-shadow-input-hover',
     ],
     input: [
       'smarthr-ui-RadioButton-radioButton shr-peer',
@@ -33,39 +38,27 @@ const classNameGenerator = tv({
       'forced-colors:shr-static forced-colors:shr-opacity-100',
     ],
   },
-  variants: {
-    disabled: {
-      true: {
-        label: 'shr-cursor-[revert] shr-text-disabled',
-      },
-      false: {
-        label: 'shr-cursor-pointer',
-        box: 'peer-hover:shr-shadow-input-hover',
-      },
-    },
-  },
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
   ({ onChange, children, className, required, ...props }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
-      const actualDisabledAttrs = { disabled: !!props.disabled }
 
       return {
         wrapper: wrapper({ className }),
         innerWrapper: innerWrapper(),
-        box: box(actualDisabledAttrs),
+        box: box(),
         input: input(),
-        label: label(actualDisabledAttrs),
+        label: label(),
       }
-    }, [props.disabled, className])
+    }, [className])
 
     const defaultId = useId()
     const radioButtonId = props.id || defaultId
 
     return (
-      <span className={classNames.wrapper}>
+      <span data-disabled={props.disabled} className={classNames.wrapper}>
         <span className={classNames.innerWrapper}>
           <input
             {...props}
