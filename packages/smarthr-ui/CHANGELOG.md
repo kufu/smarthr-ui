@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [65.1.0](https://github.com/kufu/smarthr-ui/compare/v65.0.1...v65.1.0) (2025-02-12)
+
+
+### Features
+
+* **DropdownTrigger:** Dropdown triggerでtooltipを表示できるようにする ([#5291](https://github.com/kufu/smarthr-ui/issues/5291)) ([6279377](https://github.com/kufu/smarthr-ui/commit/6279377f402d11579f55285be62f84cb3a71c184))
+
+
+### Bug Fixes
+
+* **ActionDialog,FormDialog:** スクロールできない問題を修正 ([#5367](https://github.com/kufu/smarthr-ui/issues/5367)) ([35b79ab](https://github.com/kufu/smarthr-ui/commit/35b79abfedb683516ec52a02c17af4e890aac096))
+* **MultiComboBox:** item.labelがReactNodeだった場合のitemの比較を内部の文字列によって行うように ([#5191](https://github.com/kufu/smarthr-ui/issues/5191)) ([547d2e5](https://github.com/kufu/smarthr-ui/commit/547d2e50640cb37ac55e4061b4024f30b211b951))
+
 ### [65.0.1](https://github.com/kufu/smarthr-ui/compare/v65.0.0...v65.0.1) (2025-02-04)
 
 
