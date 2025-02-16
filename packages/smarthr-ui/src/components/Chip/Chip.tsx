@@ -1,7 +1,9 @@
 import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<VariantProps<typeof chip> & ComponentPropsWithoutRef<'span'>>
+type Props = PropsWithChildren<
+  VariantProps<typeof styleGenerator> & ComponentPropsWithoutRef<'span'>
+>
 
 const styleGenerator = tv({
   base: [
