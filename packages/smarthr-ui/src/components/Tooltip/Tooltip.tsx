@@ -25,6 +25,7 @@ import { TooltipPortal } from './TooltipPortal'
 
 const subscribeFullscreenChange = (callback: () => void) => {
   window.addEventListener('fullscreenchange', callback)
+
   return () => {
     window.removeEventListener('fullscreenchange', callback)
   }
@@ -101,12 +102,8 @@ export const Tooltip: FC<Props & ElementProps> = ({
 
   const toShowAction = useCallback(
     (e: React.BaseSyntheticEvent) => {
-      if (!ref.current) {
-        return
-      }
-
       // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
-      if (!ref.current.contains(e.target)) {
+      if (!ref.current?.contains(e.target)) {
         return
       }
 
@@ -118,7 +115,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
           10,
         )
 
-        if (!(outerWidth >= 0 && outerWidth <= ref.current.clientWidth)) {
+        if (outerWidth < 0 || outerWidth > ref.current.clientWidth) {
           return
         }
       }
@@ -207,15 +204,15 @@ export const Tooltip: FC<Props & ElementProps> = ({
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
     <span
       {...props}
-      aria-describedby={isInnerTarget ? undefined : messageId}
       ref={ref}
+      tabIndex={tabIndex}
+      aria-describedby={isInnerTarget ? undefined : messageId}
       onPointerEnter={actualOnPointerEnter}
       onTouchStart={actualOnTouchStart}
       onFocus={actualOnFocus}
       onPointerLeave={actualOnPointerLeave}
       onTouchEnd={actualOnTouchEnd}
       onBlur={actualOnBlur}
-      tabIndex={tabIndex}
       className={style}
     >
       {portalRoot &&
