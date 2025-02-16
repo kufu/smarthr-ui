@@ -38,6 +38,8 @@ export {
   RemoteTriggerActionDialog,
   RemoteTriggerFormDialog,
   RemoteTriggerMessageDialog,
+  StepFormDialog,
+  StepFormDialogItem,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
