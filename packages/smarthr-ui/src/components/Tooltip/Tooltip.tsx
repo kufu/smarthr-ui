@@ -6,6 +6,7 @@ import React, {
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  memo,
   useCallback,
   useId,
   useMemo,
@@ -188,7 +189,6 @@ export const Tooltip: FC<Props & ElementProps> = ({
     [onBlur],
   )
 
-  const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
   const actualClassName = useMemo(
     () => classNameGenerator({ isIcon, className }),
@@ -233,9 +233,21 @@ export const Tooltip: FC<Props & ElementProps> = ({
           portalRoot,
         )}
       {childrenWithProps}
-      <VisuallyHiddenText id={messageId} aria-hidden={!isVisible}>
-        {hiddenText}
-      </VisuallyHiddenText>
+      <MemoizedVisuallyHiddenText id={messageId} visible={isVisible}>
+        {message}
+      </MemoizedVisuallyHiddenText>
     </span>
   )
 }
+
+const MemoizedVisuallyHiddenText = memo<PropsWithChildren<{ id: string; visible: boolean }>>(
+  ({ id, visible, children }) => {
+    const hiddenText = useMemo(() => innerText(children), [children])
+
+    return (
+      <VisuallyHiddenText id={id} aria-hidden={!visible}>
+        {hiddenText}
+      </VisuallyHiddenText>
+    )
+  },
+)
