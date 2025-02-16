@@ -126,67 +126,67 @@ export const Tooltip: FC<Props & ElementProps> = ({
     },
     [ellipsisOnly],
   )
-
-  const actualOnPointerEnter = useCallback(
-    (e: React.PointerEvent<HTMLSpanElement>) => {
-      if (onPointerEnter) {
-        onPointerEnter(e)
-      }
-
-      toShowAction(e)
-    },
-    [toShowAction, onPointerEnter],
+  const actualOnPointerEnter = useMemo(
+    () =>
+      onPointerEnter
+        ? (e: React.PointerEvent<HTMLSpanElement>) => {
+            onPointerEnter(e)
+            toShowAction(e)
+          }
+        : toShowAction,
+    [onPointerEnter, toShowAction],
   )
-  const actualOnTouchStart = useCallback(
-    (e: React.TouchEvent<HTMLSpanElement>) => {
-      if (onTouchStart) {
-        onTouchStart(e)
-      }
-
-      toShowAction(e)
-    },
-    [toShowAction, onTouchStart],
+  const actualOnTouchStart = useMemo(
+    () =>
+      onTouchStart
+        ? (e: React.TouchEvent<HTMLSpanElement>) => {
+            onTouchStart(e)
+            toShowAction(e)
+          }
+        : toShowAction,
+    [onTouchStart, toShowAction],
   )
-  const actualOnFocus = useCallback(
-    (e: React.FocusEvent<HTMLSpanElement>) => {
-      if (onFocus) {
-        onFocus(e)
-      }
-
-      toShowAction(e)
-    },
-    [toShowAction, onFocus],
+  const actualOnFocus = useMemo(
+    () =>
+      onFocus
+        ? (e: React.FocusEvent<HTMLSpanElement>) => {
+            onFocus(e)
+            toShowAction(e)
+          }
+        : toShowAction,
+    [onFocus, toShowAction],
   )
 
-  const actualOnPointerLeave = useCallback(
-    (e: React.PointerEvent<HTMLSpanElement>) => {
-      if (onPointerLeave) {
-        onPointerLeave(e)
-      }
-
-      setIsVisible(false)
-    },
-    [onPointerLeave],
+  const toCloseAction = useCallback(() => setIsVisible(false), [])
+  const actualOnPointerLeave = useMemo(
+    () =>
+      onPointerLeave
+        ? (e: React.PointerEvent<HTMLSpanElement>) => {
+            onPointerLeave(e)
+            toCloseAction()
+          }
+        : toCloseAction,
+    [onPointerLeave, toCloseAction],
   )
-  const actualOnTouchEnd = useCallback(
-    (e: React.TouchEvent<HTMLSpanElement>) => {
-      if (onTouchEnd) {
-        onTouchEnd(e)
-      }
-
-      setIsVisible(false)
-    },
-    [onTouchEnd],
+  const actualOnTouchEnd = useMemo(
+    () =>
+      onTouchEnd
+        ? (e: React.TouchEvent<HTMLSpanElement>) => {
+            onTouchEnd(e)
+            toCloseAction()
+          }
+        : toCloseAction,
+    [onTouchEnd, toCloseAction],
   )
-  const actualOnBlur = useCallback(
-    (e: React.FocusEvent<HTMLSpanElement>) => {
-      if (onBlur) {
-        onBlur(e)
-      }
-
-      setIsVisible(false)
-    },
-    [onBlur],
+  const actualOnBlur = useMemo(
+    () =>
+      onBlur
+        ? (e: React.FocusEvent<HTMLSpanElement>) => {
+            onBlur(e)
+            toCloseAction()
+          }
+        : toCloseAction,
+    [onBlur, toCloseAction],
   )
 
   const isIcon = triggerType === 'icon'
