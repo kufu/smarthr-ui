@@ -21,6 +21,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ListBoxItemButton } from './ListBoxItemButton'
 import { ComboBoxItem, ComboBoxOption } from './types'
+import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 
 type Props<T> = {
@@ -80,55 +81,14 @@ export const useListBox = <T,>({
   decorators,
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const [activeOption, setActiveOption] = useState<ComboBoxOption<T> | null>(null)
-
-  useEffect(() => {
-    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
-    setActiveOption((current) => {
-      if (current === null) {
-        return null
-      }
-
-      return options.find((option) => current.id === option.id) ?? null
-    })
-  }, [options])
-
-  const moveActiveOptionIndex = useCallback(
-    (currentActive: ComboBoxOption<T> | null, delta: -1 | 1) => {
-      if (options.every((option) => option.item.disabled)) {
-        return
-      }
-
-      const currentActiveIndex =
-        currentActive === null ? -1 : options.findIndex((option) => option.id === currentActive.id)
-      let nextIndex = 0
-
-      if (currentActiveIndex !== -1) {
-        nextIndex = (currentActiveIndex + delta + options.length) % options.length
-      } else if (delta !== 1) {
-        nextIndex = options.length - 1
-      }
-
-      const nextActive = options[nextIndex]
-
-      if (nextActive) {
-        if (nextActive.item.disabled) {
-          // skip disabled item
-          moveActiveOptionIndex(nextActive, delta)
-        } else {
-          setActiveOption(nextActive)
-        }
-      }
-    },
-    [options],
-  )
+  const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       setActiveOption(null)
     }
-  }, [isExpanded])
+  }, [isExpanded, setActiveOption])
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
@@ -244,7 +204,7 @@ export const useListBox = <T,>({
         setActiveOption(null)
       }
     },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
   )
 
   const { createPortal } = usePortal()
@@ -276,10 +236,13 @@ export const useListBox = <T,>({
     },
     [onSelect],
   )
-  const handleHoverOption = useCallback((option: ComboBoxOption<T>) => {
-    setNavigationType('pointer')
-    setActiveOption(option)
-  }, [])
+  const handleHoverOption = useCallback(
+    (option: ComboBoxOption<T>) => {
+      setNavigationType('pointer')
+      setActiveOption(option)
+    },
+    [setActiveOption],
+  )
 
   const wrapperStyle = useMemo(() => {
     const { top, left } = listBoxRect
