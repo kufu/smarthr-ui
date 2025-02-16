@@ -117,10 +117,8 @@ export const Tooltip: FC<Props & ElementProps> = ({
             .width.match(/\d+/)![0],
           10,
         )
-        const wrapperWidth = ref.current.clientWidth
-        const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
 
-        if (!existsEllipsis) {
+        if (!(outerWidth >= 0 && outerWidth <= ref.current.clientWidth)) {
           return
         }
       }
