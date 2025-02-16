@@ -53,7 +53,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby'>
 
-const tooltip = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Tooltip',
     'shr-inline-block shr-max-w-full shr-align-bottom',
@@ -190,7 +190,10 @@ export const Tooltip: FC<Props & ElementProps> = ({
 
   const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
-  const style = useMemo(() => tooltip({ isIcon, className }), [isIcon, className])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isIcon, className }),
+    [isIcon, className],
+  )
   const isInnerTarget = ariaDescribedbyTarget === 'inner'
   const childrenWithProps = useMemo(
     () =>
@@ -213,7 +216,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
       onPointerLeave={actualOnPointerLeave}
       onTouchEnd={actualOnTouchEnd}
       onBlur={actualOnBlur}
-      className={style}
+      className={actualClassName}
     >
       {portalRoot &&
         createPortal(
