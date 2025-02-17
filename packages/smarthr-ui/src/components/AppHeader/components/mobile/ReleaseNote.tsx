@@ -33,6 +33,13 @@ const ActualReleaseNote: FC<{
   data: HeaderProps['releaseNote']
 }> = () => {
   const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      error: translate('common/releaseNotesLoadError'),
+      seeAll: translate('common/seeAllReleaseNotes'),
+    }),
+    [translate],
+  )
 
   const classNames = useMemo(() => {
     const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = classNameGenerator()
@@ -53,7 +60,7 @@ const ActualReleaseNote: FC<{
         </Center>
       ) : data.error ? (
         <Text>
-          <Translate>{translate('common/releaseNotesLoadError')}</Translate>
+          <Translate>{translated.error}</Translate>
         </Text>
       ) : (
         <Stack>
@@ -80,7 +87,7 @@ const ActualReleaseNote: FC<{
           rel="noopener noreferrer"
           className={classNames.indexLinkAnchor}
         >
-          <Translate>{translate('common/seeAllReleaseNotes')}</Translate>
+          <Translate>{translated.seeAll}</Translate>
           <FaUpRightFromSquareIcon className={classNames.icon} />
         </a>
       </div>
