@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -22,23 +22,37 @@ type Props = {
 }
 
 export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSelect }) => {
-  if (!tenants || tenants.length === 0 || !currentTenantId) {
-    return null
-  }
+  const tenantName = useMemo(() => {
+    if (!tenants || !currentTenantId || tenants.length === 0) {
+      return null
+    }
 
-  const tenantName = tenants.find((tenant) => tenant.id === currentTenantId)?.name
+    return tenants.find((tenant) => tenant.id === currentTenantId)?.name
+  }, [tenants, currentTenantId])
 
-  if (!tenantName) {
-    return null
-  }
+  return tenantName ? (
+    <ActualTenantSelector
+      tenants={tenants}
+      currentTenantId={currentTenantId}
+      onTenantSelect={onTenantSelect}
+      tenantName={tenantName}
+    />
+  ) : null
+}
 
+const ActualTenantSelector: FC<Props & { tenantName: ReactNode }> = ({
+  tenants,
+  currentTenantId,
+  onTenantSelect,
+  tenantName,
+}) => {
   if (tenants.length === 1 || !onTenantSelect) {
     return <Text as="p">{tenantName}</Text>
   }
 
   return (
     <Dropdown>
-      {/* eslint-disable-next-line smarthr/a11y-trigger-has-button */}
+      {}
       <DropdownTrigger>
         <button type="button" className={tenantDropdownTriggerButton()}>
           {tenantName}
