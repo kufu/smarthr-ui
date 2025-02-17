@@ -30,8 +30,8 @@ export const ReleaseNote = memo(() => {
 })
 
 const ActualReleaseNote: FC<{
-  data: HeaderProps['releaseNote']
-}> = () => {
+  data: Exclude<Required<HeaderProps>['releaseNote'], null>
+}> = ({ data }) => {
   const translate = useTranslate()
   const translated = useMemo(
     () => ({

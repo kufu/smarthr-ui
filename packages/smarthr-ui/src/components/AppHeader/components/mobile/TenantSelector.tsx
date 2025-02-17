@@ -41,7 +41,7 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
 
   return tenantName ? (
     <ActualTenantSelector
-      tenants={tenants}
+      tenants={tenants as ActualProps['tenants']}
       currentTenantId={currentTenantId}
       onTenantSelect={onTenantSelect}
       tenantName={tenantName}
@@ -49,7 +49,8 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
   ) : null
 }
 
-type ActualProps = Props & { tenantName: ReactNode }
+type ActualProps = Omit<Props, 'tenants'> &
+  Required<Pick<Props, 'tenants'>> & { tenantName: ReactNode }
 
 const ActualTenantSelector: FC<ActualProps> = ({
   tenants,
