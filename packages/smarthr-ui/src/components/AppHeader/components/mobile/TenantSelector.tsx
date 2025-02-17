@@ -1,4 +1,13 @@
-import React, { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
+import React, {
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -40,7 +49,9 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
   ) : null
 }
 
-const ActualTenantSelector: FC<Props & { tenantName: ReactNode }> = ({
+type ActualProps = Props & { tenantName: ReactNode }
+
+const ActualTenantSelector: FC<ActualProps> = ({
   tenants,
   currentTenantId,
   onTenantSelect,
@@ -51,15 +62,28 @@ const ActualTenantSelector: FC<Props & { tenantName: ReactNode }> = ({
   }
 
   return (
-    <Dropdown>
-      {}
-      <DropdownTrigger>
-        <button type="button" className={tenantDropdownTriggerButton()}>
-          {tenantName}
-          <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
-        </button>
-      </DropdownTrigger>
+    <TenantDropdown
+      tenants={tenants}
+      currentTenantId={currentTenantId}
+      onTenantSelect={onTenantSelect}
+      tenantName={tenantName}
+    />
+  )
+}
 
+const TenantDropdown: FC<
+  Omit<ActualProps, 'onTenantSelect'> & Required<Pick<ActualProps, 'onTenantSelect'>>
+> = ({ tenants, currentTenantId, onTenantSelect, tenantName }) => {
+  const onClickTenantName = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      onTenantSelect(e.currentTarget.value)
+    },
+    [onTenantSelect],
+  )
+
+  return (
+    <Dropdown>
+      <MemoizedTenantDropdownTrigger>{tenantName}</MemoizedTenantDropdownTrigger>
       <DropdownContent controllable>
         <div className="shr-p-0.5">
           {tenants.map((tenant) => {
@@ -67,11 +91,12 @@ const ActualTenantSelector: FC<Props & { tenantName: ReactNode }> = ({
 
             return (
               <CommonButton
+                key={tenant.id}
                 elementAs="button"
                 type="button"
+                value={tenant.id}
                 current={isCurrent}
-                key={tenant.id}
-                onClick={() => !isCurrent && onTenantSelect(tenant.id)}
+                onClick={isCurrent ? undefined : onClickTenantName}
               >
                 {tenant.name}
               </CommonButton>
@@ -82,3 +107,16 @@ const ActualTenantSelector: FC<Props & { tenantName: ReactNode }> = ({
     </Dropdown>
   )
 }
+
+const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => {
+  const actualClassName = useMemo(() => tenantDropdownTriggerButton(), [])
+
+  return (
+    <DropdownTrigger>
+      <button type="button" className={actualClassName}>
+        {children}
+        <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
+      </button>
+    </DropdownTrigger>
+  )
+})
