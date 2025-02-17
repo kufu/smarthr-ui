@@ -14,7 +14,7 @@ import { Translate } from '../common/Translate'
 
 import { LanguageSelector } from './LanguageSelector'
 
-const userInfo = tv({
+const classNameGenerator = tv({
   slots: {
     iconButton: ['[&&&]:shr-border-transparent [&&]:shr-p-0.25'],
     iconButtonInner: [
@@ -66,7 +66,8 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
   )
 
   const classNames = useMemo(() => {
-    const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = userInfo()
+    const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } =
+      classNameGenerator()
 
     return {
       iconButton: iconButton(),
