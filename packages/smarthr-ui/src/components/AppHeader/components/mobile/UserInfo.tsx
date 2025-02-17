@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react'
+import React, { type FC, memo, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -27,36 +27,43 @@ const userInfo = tv({
 
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
 
-export const UserInfo: FC<Props> = ({
-  arbitraryDisplayName,
-  email,
-  empCode,
-  firstName,
-  lastName,
-  accountUrl,
-}) => {
-  const displayName = useMemo(
-    () =>
-      arbitraryDisplayName ??
-      buildDisplayName({
-        email,
-        empCode,
-        firstName,
-        lastName,
-      }),
-    [arbitraryDisplayName, email, empCode, firstName, lastName],
-  )
+export const UserInfo = memo<Props>(
+  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl }) => {
+    const displayName = useMemo(
+      () =>
+        arbitraryDisplayName ??
+        buildDisplayName({
+          email,
+          empCode,
+          firstName,
+          lastName,
+        }),
+      [arbitraryDisplayName, email, empCode, firstName, lastName],
+    )
 
-  return displayName ? <ActualUserInfo accountUrl={accountUrl} displayName={displayName} /> : null
-}
+    return displayName ? <ActualUserInfo accountUrl={accountUrl} displayName={displayName} /> : null
+  },
+)
 
 const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = ({
   displayName,
   accountUrl,
 }) => {
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
+
+  const dialogOpen = useCallback(() => setLanguageDialogOpen(true), [])
+  const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
+
   const { locale } = useLocale()
   const translate = useTranslate()
+
+  const translated = useMemo(
+    () => ({
+      account: translate('MobileHeader/UserInfo/account'),
+      userSetting: translate('common/userSetting'),
+    }),
+    [translate],
+  )
 
   const classNames = useMemo(() => {
     const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = userInfo()
@@ -68,13 +75,6 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
       dropdownButtonArea: dropdownButtonArea(),
     }
   }, [])
-  const translated = useMemo(
-    () => ({
-      account: translate('MobileHeader/UserInfo/account'),
-      userSetting: translate('common/userSetting'),
-    }),
-    [translate],
-  )
 
   return (
     <>
@@ -102,7 +102,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
                 <CommonButton
                   elementAs="button"
                   type="button"
-                  onClick={() => setLanguageDialogOpen(true)}
+                  onClick={dialogOpen}
                   prefix={<FaGlobeIcon />}
                 >
                   Language
@@ -126,11 +126,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
       </Dropdown>
 
       {locale && (
-        <Dialog
-          isOpen={languageDialogOpen}
-          onClickOverlay={() => setLanguageDialogOpen(false)}
-          width={246}
-        >
+        <Dialog isOpen={languageDialogOpen} onClickOverlay={dialogClose} width={246}>
           <LanguageSelector locale={locale} onClickClose={setLanguageDialogOpen} />
         </Dialog>
       )}
