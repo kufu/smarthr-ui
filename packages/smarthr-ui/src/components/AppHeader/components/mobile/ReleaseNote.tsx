@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { type FC, memo, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaUpRightFromSquareIcon } from '../../../Icon'
@@ -6,6 +6,7 @@ import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { useTranslate } from '../../hooks/useTranslate'
+import { HeaderProps } from '../../types'
 import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
@@ -22,29 +23,31 @@ const releaseNoteStyle = tv({
   },
 })
 
-export const ReleaseNote: FC = () => {
-  const translate = useTranslate()
+export const ReleaseNote = memo(() => {
   const { releaseNote } = useContext(ReleaseNoteContext)
 
-  if (!releaseNote) {
-    return null
-  }
+  return releaseNote ? <ActualReleaseNote data={releaseNote} /> : null
+})
 
+const ActualReleaseNote: FC<{
+  data: HeaderProps['releaseNote']
+}> = () => {
+  const translate = useTranslate()
   const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = releaseNoteStyle()
 
   return (
     <div>
-      {releaseNote.loading ? (
+      {data.loading ? (
         <Center>
           <Loader />
         </Center>
-      ) : releaseNote.error ? (
+      ) : data.error ? (
         <Text>
           <Translate>{translate('common/releaseNotesLoadError')}</Translate>
         </Text>
       ) : (
         <Stack>
-          {releaseNote.links.slice(0, 5).map((link) => (
+          {data.links.slice(0, 5).map((link) => (
             <div key={link.url}>
               <a href={link.url} target="_blank" rel="noopener noreferrer" className={anchor()}>
                 {link.title}
@@ -57,7 +60,7 @@ export const ReleaseNote: FC = () => {
 
       <div className={indexLinkWrapper()}>
         <a
-          href={releaseNote.indexUrl}
+          href={data.indexUrl}
           target="_blank"
           rel="noopener noreferrer"
           className={indexLinkAnchor()}
