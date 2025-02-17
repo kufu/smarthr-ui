@@ -8,7 +8,7 @@
     "@commitlint/config-conventional": "^19.6.0",
     "eslint": "^9.17.0",
     "eslint-config-smarthr": "^8.0.0",
-    "eslint-plugin-storybook": "^0.11.2",
+    "eslint-plugin-storybook": "^0.11.3",
     "husky": "^9.1.7",
     "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
