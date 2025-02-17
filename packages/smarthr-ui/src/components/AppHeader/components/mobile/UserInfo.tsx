@@ -68,6 +68,13 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
       dropdownButtonArea: dropdownButtonArea(),
     }
   }, [])
+  const translated = useMemo(
+    () => ({
+      account: translate('MobileHeader/UserInfo/account'),
+      userSetting: translate('common/userSetting'),
+    }),
+    [translate],
+  )
 
   return (
     <>
@@ -77,7 +84,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
             <span className={classNames.iconButtonInner}>
               <FaUserLargeIcon
                 role="img"
-                aria-label={translate('MobileHeader/UserInfo/account')}
+                aria-label={translated.account}
                 className="shr-fill-grey"
               />
             </span>
@@ -110,7 +117,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
                   rel="noopener noreferrer"
                   prefix={<FaGearIcon />}
                 >
-                  <Translate>{translate('common/userSetting')}</Translate>
+                  <Translate>{translated.userSetting}</Translate>
                 </CommonButton>
               )}
             </div>
