@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -35,20 +35,19 @@ export const UserInfo: FC<Props> = ({
   lastName,
   accountUrl,
 }) => {
-  const displayName =
-    arbitraryDisplayName ??
-    buildDisplayName({
-      email,
-      empCode,
-      firstName,
-      lastName,
-    })
+  const displayName = useMemo(
+    () =>
+      arbitraryDisplayName ??
+      buildDisplayName({
+        email,
+        empCode,
+        firstName,
+        lastName,
+      }),
+    [arbitraryDisplayName, email, empCode, firstName, lastName],
+  )
 
-  if (!displayName) {
-    return null
-  }
-
-  return <ActualUserInfo accountUrl={accountUrl} displayName={displayName} />
+  return displayName ? <ActualUserInfo accountUrl={accountUrl} displayName={displayName} /> : null
 }
 
 const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = ({
