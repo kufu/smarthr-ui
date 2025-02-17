@@ -271,7 +271,8 @@ const ActualMultiComboBox = <T,>(
     return textColor.grey
   }, [disabled, isFocused])
 
-  useOuterClick([outerRef, listBoxRef], blur)
+  const outerClickRef = useMemo(() => [outerRef, listBoxRef], [outerRef, listBoxRef])
+  useOuterClick(outerClickRef, blur)
 
   useEffect(() => {
     if (highlighted) {
