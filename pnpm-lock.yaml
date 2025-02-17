@@ -31,8 +31,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0(@types/node@22.9.1)(eslint@9.17.0(jiti@2.4.1))(jsdom@26.0.0)(less@4.2.0)(react@19.0.0)(terser@5.27.0)(typescript@5.7.3)
       eslint-plugin-storybook:
-        specifier: ^0.11.2
-        version: 0.11.2(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.3)
+        specifier: ^0.11.3
+        version: 0.11.3(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.3)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -3811,11 +3811,12 @@ packages:
     peerDependencies:
       eslint: ^9
 
-  eslint-plugin-storybook@0.11.2:
-    resolution: {integrity: sha512-0Z4DUklJrC+GHjCRXa7PYfPzWC15DaVnwaOYenpgXiCEijXPZkLKCms+rHhtoRcWccP7Z8DpOOaP1gc3P9oOwg==}
+  eslint-plugin-storybook@0.11.3:
+    resolution: {integrity: sha512-gDBnBZiyk4ZG7OMSJRaHBcuJ8TMCXgMIQ3HB/XvtN0SvSio2ZOIeYD3yGj39g/DbyCe/Bg02j/ip9tWlDEs82A==}
     engines: {node: '>= 18'}
     peerDependencies:
       eslint: '>=8'
+      typescript: '>=4.8.4 <5.8.0'
 
   eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
@@ -11562,15 +11563,15 @@ snapshots:
       eslint: 9.17.0(jiti@2.4.1)
       json5: 2.2.3
 
-  eslint-plugin-storybook@0.11.2(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.3):
+  eslint-plugin-storybook@0.11.3(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.3):
     dependencies:
       '@storybook/csf': 0.1.11
       '@typescript-eslint/utils': 8.18.0(eslint@9.17.0(jiti@2.4.1))(typescript@5.7.3)
       eslint: 9.17.0(jiti@2.4.1)
       ts-dedent: 2.2.0
+      typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
-      - typescript
 
   eslint-scope@5.1.1:
     dependencies:
