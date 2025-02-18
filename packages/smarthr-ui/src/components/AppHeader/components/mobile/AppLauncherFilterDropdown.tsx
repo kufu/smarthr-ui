@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, useCallback, useMemo } from 'react'
+import { type FC, type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -16,7 +16,7 @@ type Props = {
   onSelectPage: (page: Launcher['page']) => void
 }
 
-const filterDropdown = tv({
+const classNameGenerator = tv({
   slots: {
     trigger: [
       'smarthr-ui-AppLauncher-SortDropdown-trigger',
@@ -33,7 +33,7 @@ const filterDropdown = tv({
 
 export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => {
   const classNames = useMemo(() => {
-    const { trigger, contentBody, contentButton } = filterDropdown()
+    const { trigger, contentBody, contentButton } = classNameGenerator()
 
     return {
       trigger: trigger(),
@@ -52,18 +52,6 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
     [translate],
   )
 
-  const onClickButton = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      onSelectPage(e.currentTarget.value as Launcher['page'])
-    },
-    [onSelectPage],
-  )
-
-  const isFavorite = page === 'favorite'
-  const buttonPrefix = (
-    <FaCheckIcon color={textColor.main} alt={<Translate>{translated.checkIconAlt}</Translate>} />
-  )
-
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -73,27 +61,58 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
       </DropdownTrigger>
 
       <DropdownContent>
-        <div className={classNames.contentBody}>
-          <Button
-            value="favorite"
-            aria-selected={isFavorite}
-            onClick={onClickButton}
-            className={classNames.contentButton}
-            prefix={isFavorite && buttonPrefix}
-          >
-            <Translate>{translated.favorite}</Translate>
-          </Button>
-          <Button
-            value="all"
-            aria-selected={!isFavorite}
-            onClick={onClickButton}
-            className={classNames.contentButton}
-            prefix={!isFavorite && buttonPrefix}
-          >
-            <Translate>{translated.all}</Translate>
-          </Button>
-        </div>
+        <ContentBody
+          page={page}
+          onSelectPage={onSelectPage}
+          translated={translated}
+          className={classNames.contentBody}
+          buttonClassName={classNames.contentButton}
+        />
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const ContentBody = memo<
+  Props & {
+    translated: { favorite: string; all: string }
+    className: string
+    buttonClassName: string
+  }
+>(({ page, onSelectPage, translated, className, buttonClassName }) => {
+  const isFavorite = page === 'favorite'
+
+  const onClickButton = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      onSelectPage(e.currentTarget.value as Launcher['page'])
+    },
+    [onSelectPage],
+  )
+
+  const buttonPrefix = (
+    <FaCheckIcon color={textColor.main} alt={<Translate>{translated.checkIconAlt}</Translate>} />
+  )
+
+  return (
+    <div className={className}>
+      <Button
+        value="favorite"
+        aria-selected={isFavorite}
+        onClick={onClickButton}
+        className={buttonClassName}
+        prefix={isFavorite && buttonPrefix}
+      >
+        <Translate>{translated.favorite}</Translate>
+      </Button>
+      <Button
+        value="all"
+        aria-selected={!isFavorite}
+        onClick={onClickButton}
+        className={buttonClassName}
+        prefix={!isFavorite && buttonPrefix}
+      >
+        <Translate>{translated.all}</Translate>
+      </Button>
+    </div>
+  )
+})
