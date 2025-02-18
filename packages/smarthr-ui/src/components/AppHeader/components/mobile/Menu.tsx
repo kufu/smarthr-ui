@@ -40,12 +40,12 @@ type Props = {
 
 export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [isNavigationOpen, setIsNavigationOpen] = useState(true)
 
-  const { navigations } = useContext(NavigationContext)
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
 
   const { createPortal } = usePortal()
+
+  const close = useCallback(() => setIsOpen(false), [])
 
   useEffect(() => {
     if (isOpen) {
@@ -57,7 +57,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
     }
   }, [isOpen])
 
-  useHandleEscape(() => setIsOpen(false))
+  useHandleEscape(close)
 
   const className = useMemo(() => classNameGenerator(), [])
   const translate = useTranslate()
@@ -97,21 +97,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
             </div>
           )}
 
-          {navigations.length > 0 && appName ? (
-            <div className={className}>
-              <MenuAccordion
-                isOpen={isNavigationOpen}
-                setIsOpen={setIsNavigationOpen}
-                title={appName}
-              >
-                <Navigation navigations={navigations} onClickNavigation={() => setIsOpen(false)} />
-              </MenuAccordion>
-            </div>
-          ) : (
-            <div className={className}>
-              <Navigation navigations={navigations} onClickNavigation={() => setIsOpen(false)} />
-            </div>
-          )}
+          <NavigationAccordion appName={appName} menuClose={close} className={className} />
 
           {additionalContent && (
             <AdditionalContent title={translated.management} className={className}>
@@ -123,6 +109,36 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         </MenuDialog>,
       )}
     </>
+  )
+}
+
+const NavigationAccordion = memo<
+  Pick<Props, 'appName'> & { className: string; menuClose: () => void }
+>(({ appName, menuClose, className }) => {
+  const { navigations } = useContext(NavigationContext)
+
+  const children = <Navigation navigations={navigations} onClickNavigation={menuClose} />
+
+  return navigations.length > 0 && appName ? (
+    <ActualNavigationAccordion appName={appName} className={className}>
+      {children}
+    </ActualNavigationAccordion>
+  ) : (
+    <div className={className}>{children}</div>
+  )
+})
+
+const ActualNavigationAccordion: FC<
+  Pick<Props, 'appName'> & PropsWithChildren<{ className: string }>
+> = ({ appName, children, className }) => {
+  const [isNavigationOpen, setIsNavigationOpen] = useState(true)
+
+  return (
+    <div className={className}>
+      <MenuAccordion isOpen={isNavigationOpen} setIsOpen={setIsNavigationOpen} title={appName}>
+        {children}
+      </MenuAccordion>
+    </div>
   )
 }
 
