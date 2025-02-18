@@ -91,7 +91,7 @@ export const UserInfo: FC<Props> = ({
 
   return (
     <ActualUserInfo
-      {...reset}
+      {...rest}
       email={email}
       empCode={empCode}
       firstName={firstName}
@@ -238,22 +238,19 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
       </DropdownTrigger>
 
       <DropdownContent className={classNames.dropdownContent}>
-        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-        <Stack gap={0}>
-          {accountUrl && (
-            <CommonButton
-              elementAs="a"
-              href={accountUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              prefix={<FaGearIcon />}
-            >
-              <Translate>{translated.userSetting}</Translate>
-            </CommonButton>
-          )}
+        {accountUrl && (
+          <CommonButton
+            elementAs="a"
+            href={accountUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            prefix={<FaGearIcon />}
+          >
+            <Translate>{translated.userSetting}</Translate>
+          </CommonButton>
+        )}
 
-          {desktopAdditionalContent}
-        </Stack>
+        {desktopAdditionalContent}
       </DropdownContent>
     </Dropdown>
   )
