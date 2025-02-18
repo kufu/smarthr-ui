@@ -23,7 +23,7 @@ const filterDropdown = tv({
       'shr-gap-0.25 shr-text-grey',
       '[&[aria-expanded="true"]>.smarthr-ui-Icon]:shr-rotate-180',
     ],
-    stack: ['shr-px-0.25 shr-py-0.5'],
+    contentBody: ['shr-px-0.25 shr-py-0.5 shr-flex shr-flex-col shr-items-stretch'],
     contentButton: [
       'shr-border-none shr-justify-start shr-py-0.75 shr-font-normal shr-pl-2.5',
       'aria-selected:shr-pl-1',
@@ -33,24 +33,30 @@ const filterDropdown = tv({
 
 export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => {
   const classNames = useMemo(() => {
-    const { trigger, stack, contentButton } = filterDropdown()
+    const { trigger, contentBody, contentButton } = filterDropdown()
 
     return {
       trigger: trigger(),
-      stack: stack(),
+      contentBody: contentBody(),
       contentButton: contentButton(),
     }
   }, [])
 
   const translate = useTranslate()
-  const translated = useMemo<Record<Launcher['page'], string>>(() => ({
-    favorite: translate('Launcher/favoriteModeText'),
-    all: translate('MobileHeader/Menu/allAppButton'),
-  }), [translate])
+  const translated = useMemo<Record<Launcher['page'], string>>(
+    () => ({
+      favorite: translate('Launcher/favoriteModeText'),
+      all: translate('MobileHeader/Menu/allAppButton'),
+    }),
+    [translate],
+  )
 
-  const onClickButton = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    onSelectPage(e.currentTarget.value as Launcher['page'])
-  }, [onSelectPage])
+  const onClickButton = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      onSelectPage(e.currentTarget.value as Launcher['page'])
+    },
+    [onSelectPage],
+  )
 
   return (
     <Dropdown>
@@ -61,7 +67,7 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
       </DropdownTrigger>
 
       <DropdownContent>
-        <Stack className={classNames.stack} gap={0} align="stretch">
+        <div className={classNames.contentBody}>
           {Object.entries(translated).map(([key, value], i) => {
             const isSelected = key === page
 
@@ -85,7 +91,7 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
               </Button>
             )
           })}
-        </Stack>
+        </div>
       </DropdownContent>
     </Dropdown>
   )
