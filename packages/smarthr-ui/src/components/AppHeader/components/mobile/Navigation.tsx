@@ -18,27 +18,23 @@ const separatorClassNameGenerator = tv({
 
 export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
   <div>
-    {navigations.map((navigation, i) => {
-      if (isChildNavigationGroup(navigation)) {
-        return (
-          <ItemGroup
-            key={`title-${i}`}
-            navigation={navigation}
-            separated={i + 1 !== navigations.length}
-            onClickNavigation={onClickNavigation}
-          />
-        )
-      }
-
-      return (
+    {navigations.map((navigation, i) =>
+      isChildNavigationGroup(navigation) ? (
+        <ItemGroup
+          key={i}
+          navigation={navigation}
+          separated={i + 1 !== navigations.length}
+          onClickNavigation={onClickNavigation}
+        />
+      ) : (
         <TerminalItem
-          key={`children-${i}`}
+          key={i}
           navigation={navigation}
           nextNavigation={navigations[i + 1]}
           onClickNavigation={onClickNavigation}
         />
-      )
-    })}
+      ),
+    )}
   </div>
 )
 
@@ -66,11 +62,15 @@ const TerminalItem: FC<
     navigation: NavigationType
     nextNavigation: NavigationType | NavigationGroup['childNavigations'][number]
   }
-> = ({ navigation, nextNavigation, onClickNavigation }) => (
-  <>
-    <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
-    {isChildNavigationGroup(nextNavigation) && <Separator />}
-  </>
-)
+> = ({ navigation, nextNavigation, onClickNavigation }) => {
+  const isSeparated = useMemo(() => isChildNavigationGroup(nextNavigation), [nextNavigation])
+
+  return (
+    <>
+      <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
+      {isSeparated && <Separator />}
+    </>
+  )
+}
 
 const Separator = memo(() => <hr className={separatorClassNameGenerator()} />)
