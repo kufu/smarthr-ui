@@ -20,24 +20,13 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
   <div>
     {navigations.map((navigation, i) => {
       if (isChildNavigationGroup(navigation)) {
-        const { childNavigations } = navigation
-
         return (
-          <Fragment key={`title-${i}`}>
-            <Text styleType="subSubBlockTitle" as="p" className="shr-py-0.5">
-              {navigation.title}
-            </Text>
-
-            {childNavigations.map((childNavigation, j) => (
-              <NavigationItem
-                key={`title-${i}-${j}`}
-                navigation={childNavigation}
-                onClickNavigation={onClickNavigation}
-              />
-            ))}
-
-            {i + 1 !== navigations.length && <Separator />}
-          </Fragment>
+          <ItemGroup
+            key={`title-${i}`}
+            navigation={navigation}
+            separated={i + 1 !== navigations.length}
+            onClickNavigation={onClickNavigation}
+          />
         )
       }
 
@@ -51,6 +40,25 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
       )
     })}
   </div>
+)
+
+const ItemGroup: FC<
+  Pick<Props, 'onClickNavigation'> & {
+    navigation: NavigationGroup['childNavigations'][number]
+    separated: boolean
+  }
+> = ({ navigation: { childNavigations, title }, onClickNavigation, separated }) => (
+  <>
+    <Text styleType="subSubBlockTitle" as="p" className="shr-py-0.5">
+      {title}
+    </Text>
+
+    {childNavigations.map((childNavigation, j) => (
+      <NavigationItem key={j} navigation={childNavigation} onClickNavigation={onClickNavigation} />
+    ))}
+
+    {separated && <Separator />}
+  </>
 )
 
 const TerminalItem: FC<
