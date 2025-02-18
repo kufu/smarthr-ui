@@ -1,3 +1,4 @@
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -8,9 +9,8 @@ import { type Locale, localeMap } from '../../multilingualization'
 import { CommonButton } from '../common/CommonButton'
 
 import type { LocaleProps } from '../../types'
-import type { FC } from 'react'
 
-const languageSelector = tv({
+const classNameGenerator = tv({
   slots: {
     header: [
       'shr-flex shr-justify-between shr-gap-1 shr-items-center shr-px-1 shr-py-0.75 shr-border-b-shorthand',
@@ -27,7 +27,16 @@ type Props = {
 }
 
 export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
-  const { header, headerTitle, buttonWrapper, button } = languageSelector()
+  const classNames = useMemo(() => {
+    const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
+
+    return {
+      header: header(),
+      headerTitle: headerTitle(),
+      buttonWrapper: buttonWrapper(),
+      button: button(),
+    }
+  }, [])
 
   const onClickButton = (selectedLocale: Locale) => {
     locale.onSelectLocale(selectedLocale)
@@ -35,20 +44,20 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
 
   return (
     <Section>
-      <div className={header()}>
-        <Heading className={headerTitle()}>Language</Heading>
+      <div className={classNames.header}>
+        <Heading className={classNames.headerTitle}>Language</Heading>
 
         <Button type="button" size="s" square onClick={onClickClose}>
           <FaXmarkIcon alt="close" />
         </Button>
       </div>
 
-      <div className={buttonWrapper()}>
+      <div className={classNames.buttonWrapper}>
         {Object.keys(localeMap).map((localeKey) => (
           <CommonButton
             key={localeKey}
             elementAs="button"
-            className={button()}
+            className={classNames.button}
             type="button"
             onClick={() => onClickButton(localeKey as Locale)}
             prefix={localeKey === locale.selectedLocale && <FaCheckIcon color="MAIN" />}
