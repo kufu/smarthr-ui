@@ -41,16 +41,28 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
         )
       }
 
-      const nextNavigation = navigations[i + 1]
-
       return (
-        <Fragment key={`children-${i}`}>
-          <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
-          {isChildNavigationGroup(nextNavigation) && <Separator />}
-        </Fragment>
+        <TerminalItem
+          key={`children-${i}`}
+          navigation={navigation}
+          nextNavigation={navigations[i + 1]}
+          onClickNavigation={onClickNavigation}
+        />
       )
     })}
   </div>
+)
+
+const TerminalItem: FC<
+  Pick<Props, 'onClickNavigation'> & {
+    navigation: NavigationType
+    nextNavigation: NavigationType | NavigationGroup['childNavigations'][number]
+  }
+> = ({ navigation, nextNavigation, onClickNavigation }) => (
+  <>
+    <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
+    {isChildNavigationGroup(nextNavigation) && <Separator />}
+  </>
 )
 
 const Separator = memo(() => <hr className={separatorClassNameGenerator()} />)
