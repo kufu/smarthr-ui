@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { memo } from 'react'
 
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -12,18 +12,18 @@ type Props = {
   schoolUrl?: string | null
 }
 
-export const Help: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
-  const translate = useTranslate()
+export const Help = memo<Props>(({ helpPageUrl, schoolUrl }) =>
+  helpPageUrl || schoolUrl ? <ActualHelp helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} /> : null,
+)
 
-  if (!helpPageUrl && !schoolUrl) {
-    return null
-  }
+const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
+  const translate = useTranslate()
 
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button variant="skeleton" size="s" square className="[&&&]:shr-border-transparent">
-          <FaCircleQuestionIcon role="img" aria-label="ヘルプ" />
+          <FaCircleQuestionIcon alt="ヘルプ" />
         </Button>
       </DropdownTrigger>
 
