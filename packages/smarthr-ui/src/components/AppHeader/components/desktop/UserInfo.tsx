@@ -193,24 +193,14 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
           </Cluster>
         }
       >
-        <Stack gap={0.5} className={classNames.userSummary}>
-          <Text size="S" color="TEXT_GREY" weight="bold" leading="TIGHT">
-            {currentTenantName}
-          </Text>
-
-          {empCode || (firstName && lastName) ? (
-            <Cluster align="center">
-              {empCode && (
-                <Text size="S" color="TEXT_GREY" leading="TIGHT">
-                  {empCode}
-                </Text>
-              )}
-              {firstName && lastName && <Text leading="TIGHT">{`${lastName} ${firstName}`}</Text>}
-            </Cluster>
-          ) : (
-            <Text leading="TIGHT">{email}</Text>
-          )}
-        </Stack>
+        <UserSummaryStack
+          currentTenantName={currentTenantName}
+          empCode={empCode}
+          firstName={firstName}
+          lastName={lastName}
+          email={email}
+          className={classNames.userSummary}
+        />
         <DropdownContentButton href={accountUrl} className={classNames.dropdownContentButton}>
           {translated.userSetting}
         </DropdownContentButton>
@@ -231,6 +221,32 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
     </Dropdown>
   )
 }
+
+const UserSummaryStack = memo<
+  Pick<Props, 'empCode' | 'firstName' | 'lastName' | 'email'> & {
+    currentTenantName: string
+    className: string
+  }
+>(({ currentTenantName, empCode, firstName, lastName, email, className }) => (
+  <Stack gap={0.5} className={className}>
+    <Text size="S" color="TEXT_GREY" weight="bold" leading="TIGHT">
+      {currentTenantName}
+    </Text>
+
+    {empCode || (firstName && lastName) ? (
+      <Cluster align="center">
+        {empCode && (
+          <Text size="S" color="TEXT_GREY" leading="TIGHT">
+            {empCode}
+          </Text>
+        )}
+        {firstName && lastName && <Text leading="TIGHT">{`${lastName} ${firstName}`}</Text>}
+      </Cluster>
+    ) : (
+      <Text leading="TIGHT">{email}</Text>
+    )}
+  </Stack>
+))
 
 const DropdownContentButton = memo<PropsWithChildren<{ href: string; className: string }>>(
   ({ href, children, className }) =>
