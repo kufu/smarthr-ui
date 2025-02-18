@@ -13,11 +13,15 @@ type Props = {
 
 export const MenuSubHeader = memo<Props>(({ title, onClickBack }) => {
   const translate = useTranslate()
+  const backButtonAriaLabel = useMemo(
+    () => translate('MobileHeader/MenuSubHeader/back'),
+    [translate],
+  )
 
   return (
     <>
       <Button size="s" onClick={onClickBack}>
-        <FaArrowLeftIcon role="img" aria-label={translate('MobileHeader/MenuSubHeader/back')} />
+        <FaArrowLeftIcon role="img" aria-label={backButtonAriaLabel} />
       </Button>
 
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
