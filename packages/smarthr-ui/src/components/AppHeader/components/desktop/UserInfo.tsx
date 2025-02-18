@@ -141,6 +141,12 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
   }, [enableNew])
 
   const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      userSetting: translate('common/userSetting'),
+    }),
+    [translate],
+  )
 
   const currentTenantName = tenants?.find((tenant) => tenant.id === currentTenantId)?.name
 
@@ -211,7 +217,7 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
             prefix={<FaGearIcon />}
             className={classNames.dropdownContentButton}
           >
-            <Translate>{translate('common/userSetting')}</Translate>
+            <Translate>{translated.userSetting}</Translate>
           </AnchorButton>
         )}
 
@@ -239,7 +245,7 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
               rel="noopener noreferrer"
               prefix={<FaGearIcon />}
             >
-              <Translate>{translate('common/userSetting')}</Translate>
+              <Translate>{translated.userSetting}</Translate>
             </CommonButton>
           )}
 
