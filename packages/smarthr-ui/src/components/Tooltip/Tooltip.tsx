@@ -6,6 +6,7 @@ import React, {
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  memo,
   useCallback,
   useId,
   useMemo,
@@ -25,6 +26,7 @@ import { TooltipPortal } from './TooltipPortal'
 
 const subscribeFullscreenChange = (callback: () => void) => {
   window.addEventListener('fullscreenchange', callback)
+
   return () => {
     window.removeEventListener('fullscreenchange', callback)
   }
@@ -52,7 +54,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby'>
 
-const tooltip = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Tooltip',
     'shr-inline-block shr-max-w-full shr-align-bottom',
@@ -70,7 +72,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   children,
   triggerType,
   multiLine,
-  ellipsisOnly = false,
+  ellipsisOnly,
   horizontal = 'left',
   vertical = 'bottom',
   tabIndex = 0,
@@ -99,53 +101,99 @@ export const Tooltip: FC<Props & ElementProps> = ({
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
 
-  const getHandlerToShow = useCallback(
-    <T,>(handler?: (e: T) => void) =>
-      (e: T) => {
-        if (handler) {
-          handler(e)
-        }
+  const toShowAction = useCallback(
+    (e: React.BaseSyntheticEvent) => {
+      // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+      if (!ref.current?.contains(e.target)) {
+        return
+      }
 
-        if (!ref.current) {
+      if (ellipsisOnly) {
+        const outerWidth = parseInt(
+          window
+            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+            .width.match(/\d+/)![0],
+          10,
+        )
+
+        if (outerWidth < 0 || outerWidth > ref.current.clientWidth) {
           return
         }
+      }
 
-        if (ellipsisOnly) {
-          const outerWidth = parseInt(
-            window
-              .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-              .width.match(/\d+/)![0],
-            10,
-          )
-          const wrapperWidth = ref.current.clientWidth
-          const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
-
-          if (!existsEllipsis) {
-            return
-          }
-        }
-
-        setRect(ref.current.getBoundingClientRect())
-        setIsVisible(true)
-      },
+      setRect(ref.current.getBoundingClientRect())
+      setIsVisible(true)
+    },
     [ellipsisOnly],
   )
-
-  const getHandlerToHide = useCallback(
-    <T,>(handler?: (e: T) => void) =>
-      (e: T) => {
-        if (handler) {
-          handler(e)
-        }
-
-        setIsVisible(false)
-      },
-    [setIsVisible],
+  const actualOnPointerEnter = useMemo(
+    () =>
+      onPointerEnter
+        ? (e: React.PointerEvent<HTMLSpanElement>) => {
+            onPointerEnter(e)
+            toShowAction(e)
+          }
+        : toShowAction,
+    [onPointerEnter, toShowAction],
+  )
+  const actualOnTouchStart = useMemo(
+    () =>
+      onTouchStart
+        ? (e: React.TouchEvent<HTMLSpanElement>) => {
+            onTouchStart(e)
+            toShowAction(e)
+          }
+        : toShowAction,
+    [onTouchStart, toShowAction],
+  )
+  const actualOnFocus = useMemo(
+    () =>
+      onFocus
+        ? (e: React.FocusEvent<HTMLSpanElement>) => {
+            onFocus(e)
+            toShowAction(e)
+          }
+        : toShowAction,
+    [onFocus, toShowAction],
   )
 
-  const hiddenText = useMemo(() => innerText(message), [message])
+  const toCloseAction = useCallback(() => setIsVisible(false), [])
+  const actualOnPointerLeave = useMemo(
+    () =>
+      onPointerLeave
+        ? (e: React.PointerEvent<HTMLSpanElement>) => {
+            onPointerLeave(e)
+            toCloseAction()
+          }
+        : toCloseAction,
+    [onPointerLeave, toCloseAction],
+  )
+  const actualOnTouchEnd = useMemo(
+    () =>
+      onTouchEnd
+        ? (e: React.TouchEvent<HTMLSpanElement>) => {
+            onTouchEnd(e)
+            toCloseAction()
+          }
+        : toCloseAction,
+    [onTouchEnd, toCloseAction],
+  )
+  const actualOnBlur = useMemo(
+    () =>
+      onBlur
+        ? (e: React.FocusEvent<HTMLSpanElement>) => {
+            onBlur(e)
+            toCloseAction()
+          }
+        : toCloseAction,
+    [onBlur, toCloseAction],
+  )
+
   const isIcon = triggerType === 'icon'
-  const styles = tooltip({ isIcon, className })
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isIcon, className }),
+    [isIcon, className],
+  )
   const isInnerTarget = ariaDescribedbyTarget === 'inner'
   const childrenWithProps = useMemo(
     () =>
@@ -159,16 +207,16 @@ export const Tooltip: FC<Props & ElementProps> = ({
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
     <span
       {...props}
-      aria-describedby={isInnerTarget ? undefined : messageId}
       ref={ref}
-      onPointerEnter={getHandlerToShow(onPointerEnter)}
-      onTouchStart={getHandlerToShow(onTouchStart)}
-      onFocus={getHandlerToShow(onFocus)}
-      onPointerLeave={getHandlerToHide(onPointerLeave)}
-      onTouchEnd={getHandlerToHide(onTouchEnd)}
-      onBlur={getHandlerToHide(onBlur)}
       tabIndex={tabIndex}
-      className={styles}
+      aria-describedby={isInnerTarget ? undefined : messageId}
+      onPointerEnter={actualOnPointerEnter}
+      onTouchStart={actualOnTouchStart}
+      onFocus={actualOnFocus}
+      onPointerLeave={actualOnPointerLeave}
+      onTouchEnd={actualOnTouchEnd}
+      onBlur={actualOnBlur}
+      className={actualClassName}
     >
       {portalRoot &&
         createPortal(
@@ -185,9 +233,21 @@ export const Tooltip: FC<Props & ElementProps> = ({
           portalRoot,
         )}
       {childrenWithProps}
-      <VisuallyHiddenText id={messageId} aria-hidden={!isVisible}>
-        {hiddenText}
-      </VisuallyHiddenText>
+      <MemoizedVisuallyHiddenText id={messageId} visible={isVisible}>
+        {message}
+      </MemoizedVisuallyHiddenText>
     </span>
   )
 }
+
+const MemoizedVisuallyHiddenText = memo<PropsWithChildren<{ id: string; visible: boolean }>>(
+  ({ id, visible, children }) => {
+    const hiddenText = useMemo(() => innerText(children), [children])
+
+    return (
+      <VisuallyHiddenText id={id} aria-hidden={!visible}>
+        {hiddenText}
+      </VisuallyHiddenText>
+    )
+  },
+)
