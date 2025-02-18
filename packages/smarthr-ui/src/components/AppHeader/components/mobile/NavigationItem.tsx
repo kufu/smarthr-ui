@@ -27,9 +27,9 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
   if ('elementAs' in navigation) {
     return (
       <NavigationCustomTag
-        navigation={navigation}
+        {...navigation}
         onClickNavigation={onClickNavigation}
-        className={className}
+        className={`${className} ${navigation.className}`}
       />
     )
   }
@@ -51,20 +51,17 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
   return <NavigationGroupMenuButton navigation={navigation} />
 }
 
-const NavigationCustomTag: FC<
-  Pick<Props, 'onClickNavigation'> & { navigation: NavigationCustomTag; className: string }
-> = ({
-  navigation: { children, elementAs: Tag, current, className: navigationClassName, ...rest },
-  onClickNavigation,
-}) => {
+const NavigationCustomTag = memo<
+  NavigationCustomTag & Pick<Props, 'onClickNavigation'> & { className: string }
+>(({ children, elementAs: Tag, current, className, onClickNavigation, ...rest }) => {
   const actualClassName = useMemo(
     () =>
       commonButton({
         current,
         boldWhenCurrent: true,
-        className: [className, navigationClassName],
+        className,
       }),
-    [current, className, navigationClassName],
+    [current, className],
   )
 
   return (
@@ -73,7 +70,7 @@ const NavigationCustomTag: FC<
       <Translate>{children}</Translate>
     </Tag>
   )
-}
+})
 
 const NavigationLink = memo<NavigationLink & { className: string }>(
   ({ href, current, children, className }) => (
