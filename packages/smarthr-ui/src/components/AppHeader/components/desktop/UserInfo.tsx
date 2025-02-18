@@ -231,12 +231,9 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
 
   return (
     <Dropdown>
-      <DropdownTrigger>
-        <Button variant="text" suffix={<FaCaretDownIcon />} className={classNames.button}>
-          <Translate>{displayName}</Translate>
-        </Button>
-      </DropdownTrigger>
-
+      <DisplayNameDropdownTrigger className={classNames.button}>
+        {displayName}
+      </DisplayNameDropdownTrigger>
       <DropdownContent className={classNames.dropdownContent}>
         <AccountLink href={accountUrl}>{translated.userSetting}</AccountLink>
         {desktopAdditionalContent}
@@ -244,6 +241,16 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
     </Dropdown>
   )
 }
+
+const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => (
+    <DropdownTrigger>
+      <Button variant="text" suffix={<FaCaretDownIcon />} className={className}>
+        <Translate>{children}</Translate>
+      </Button>
+    </DropdownTrigger>
+  ),
+)
 
 const AccountLink = memo<PropsWithChildren<{ href: string }>>(
   ({ href, children }) =>
