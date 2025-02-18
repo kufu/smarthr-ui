@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, memo, useCallback, useMemo } from 'react'
+import { type FC, type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -54,12 +54,9 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
 
   return (
     <Dropdown>
-      <DropdownTrigger>
-        <Button className={classNames.trigger} size="s" suffix={<FaCaretDownIcon />}>
-          <Translate>{translated[page]}</Translate>
-        </Button>
-      </DropdownTrigger>
-
+      <MemoizedDropdownTrigger className={classNames.trigger}>
+        {translated[page]}
+      </MemoizedDropdownTrigger>
       <DropdownContent>
         <ContentBody
           page={page}
@@ -72,6 +69,16 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
     </Dropdown>
   )
 }
+
+const MemoizedDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => (
+    <DropdownTrigger>
+      <Button className={className} size="s" suffix={<FaCaretDownIcon />}>
+        <Translate>{children}</Translate>
+      </Button>
+    </DropdownTrigger>
+  ),
+)
 
 const ContentBody = memo<
   Props & {
