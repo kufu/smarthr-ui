@@ -1,7 +1,7 @@
-import React, { FC, useContext } from 'react'
+import React, { type FC, memo, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Navigation } from '../../types'
+import { type Navigation, type NavigationGroup } from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -13,11 +13,9 @@ const navigationItem = tv({
   base: ['[&&]:shr-px-0.5'],
 })
 
-export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () => void }> = ({
-  navigation,
-  onClickNavigation,
-}) => {
-  const { setSelectedNavigationGroup } = useContext(NavigationContext)
+type Props = { navigation: Navigation; onClickNavigation: () => void }
+
+export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => {
   const navigationItemStyle = navigationItem()
 
   if ('elementAs' in navigation) {
@@ -71,6 +69,12 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
     )
   }
 
+  return <MemoizedMenuButton navigation={navigation} />
+}
+
+const MemoizedMenuButton = memo<{ navigation: NavigationGroup }>(({ navigation }) => {
+  const { setSelectedNavigationGroup } = useContext(NavigationContext)
+
   // 子要素に current を持っているものがあるかどうか
   const childrenHasCurrent = navigation.childNavigations.some((child) => {
     if (isChildNavigation(child)) {
@@ -88,4 +92,4 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
       <Translate>{navigation.children}</Translate>
     </MenuButton>
   )
-}
+})
