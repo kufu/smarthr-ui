@@ -1,4 +1,4 @@
-import React, { type FC, memo, useCallback, useContext, useMemo } from 'react'
+import React, { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type Navigation, type NavigationButton, type NavigationGroup } from '../../types'
@@ -66,21 +66,28 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 
 const NavigationButton: FC<
   Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }
-> = ({ navigation, onClickNavigation, className }) => (
-  <CommonButton
-    elementAs="button"
-    type="button"
-    onClick={(e) => {
+> = ({ navigation, onClickNavigation, className }) => {
+  const onClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
       navigation.onClick(e)
       onClickNavigation()
-    }}
-    current={navigation.current}
-    boldWhenCurrent
-    className={className}
-  >
-    <Translate>{navigation.children}</Translate>
-  </CommonButton>
-)
+    },
+    [navigation.onClick, onClickNavigation],
+  )
+
+  return (
+    <CommonButton
+      elementAs="button"
+      type="button"
+      onClick={onClick}
+      current={navigation.current}
+      boldWhenCurrent
+      className={className}
+    >
+      <Translate>{navigation.children}</Translate>
+    </CommonButton>
+  )
+}
 
 const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
