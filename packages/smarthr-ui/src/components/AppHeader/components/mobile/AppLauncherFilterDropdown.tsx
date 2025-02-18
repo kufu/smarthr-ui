@@ -43,23 +43,26 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
   }, [])
 
   const translate = useTranslate()
-  const filterMap: Record<Launcher['page'], string> = {
-    favorite: translate('Launcher/favoriteModeText'),
-    all: translate('MobileHeader/Menu/allAppButton'),
-  }
+  const translated = useMemo<Record<Launcher['page'], string>>(
+    () => ({
+      favorite: translate('Launcher/favoriteModeText'),
+      all: translate('MobileHeader/Menu/allAppButton'),
+    }),
+    [translate],
+  )
 
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button className={classNames.trigger} size="s" suffix={<FaCaretDownIcon />}>
-          <Translate>{filterMap[page]}</Translate>
+          <Translate>{translated[page]}</Translate>
         </Button>
       </DropdownTrigger>
 
       <DropdownContent>
         {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
         <Stack className={classNames.stack} gap={0} align="stretch">
-          {Object.entries(filterMap).map(([key, value], i) => {
+          {Object.entries(translated).map(([key, value], i) => {
             const isSelected = key === page
 
             return (
