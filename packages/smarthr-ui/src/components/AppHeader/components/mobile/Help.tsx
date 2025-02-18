@@ -1,4 +1,4 @@
-import { type FC, memo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -18,6 +18,13 @@ export const Help = memo<Props>(({ helpPageUrl, schoolUrl }) =>
 
 const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
   const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      help: translate('common/help'),
+      school: translate('common/school'),
+    }),
+    [translate],
+  )
 
   return (
     <Dropdown>
@@ -37,7 +44,7 @@ const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
               rel="noopener noreferrer"
               prefix={<FaCircleQuestionIcon />}
             >
-              <Translate>{translate('common/help')}</Translate>
+              <Translate>{translated.help}</Translate>
             </CommonButton>
           )}
 
@@ -49,7 +56,7 @@ const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
               rel="noopener noreferrer"
               prefix={<FaGraduationCapIcon />}
             >
-              <Translate>{translate('common/school')}</Translate>
+              <Translate>{translated.school}</Translate>
             </CommonButton>
           )}
         </div>
