@@ -1,9 +1,10 @@
 import React, {
-  Dispatch,
-  FC,
-  PropsWithChildren,
-  ReactNode,
-  RefObject,
+  type Dispatch,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  type RefObject,
+  memo,
   useCallback,
   useContext,
   useEffect,
@@ -147,10 +148,7 @@ const Content: FC<
           ) : (
             tenantSelector
           )}
-
-          <Button size="s" onClick={dialogClose}>
-            <FaXmarkIcon alt={translated.closeMenu} />
-          </Button>
+          <CloseButton alt={translated.closeMenu} onClick={dialogClose} />
         </Cluster>
       </div>
 
@@ -173,3 +171,9 @@ const Content: FC<
     </Section>
   )
 }
+
+const CloseButton = memo<{ alt: ReactNode; onClick: () => void }>(({ alt, onClick }) => (
+  <Button size="s" onClick={onClick}>
+    <FaXmarkIcon alt={alt} />
+  </Button>
+))
