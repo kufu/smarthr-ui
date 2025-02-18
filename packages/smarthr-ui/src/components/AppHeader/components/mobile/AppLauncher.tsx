@@ -20,7 +20,7 @@ type Props = {
   features: Array<Launcher['feature']>
 }
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-AppLauncher', 'shr-flex shr-flex-col shr-h-full'],
     searchArea: [
@@ -48,7 +48,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   } = useAppLauncher(baseFeatures)
 
   const classNames = useMemo(() => {
-    const { wrapper, searchArea, headArea, scrollArea, bottomArea } = appLauncher()
+    const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
@@ -91,9 +91,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
 
       <Cluster className={classNames.headArea} justify="space-between" align="center">
         {mode === 'search' ? (
-          <Text size="S" weight="bold">
-            <Translate>{translated.searchResultText}</Translate>
-          </Text>
+          <SearchResultText>{translated.searchResultText}</SearchResultText>
         ) : (
           <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
         )}
@@ -111,6 +109,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     </div>
   )
 }
+
+const SearchResultText = memo<PropsWithChildren>(({ children }) => (
+  <Text size="S" weight="bold">
+    <Translate>{children}</Translate>
+  </Text>
+))
 
 const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
   <div className={className}>
