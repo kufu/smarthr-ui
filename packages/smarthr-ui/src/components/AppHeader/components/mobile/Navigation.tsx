@@ -1,4 +1,4 @@
-import React, { type FC, Fragment, memo } from 'react'
+import React, { type FC, Fragment, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../../Text'
@@ -45,17 +45,19 @@ const ItemGroup: FC<
   }
 > = ({ navigation: { childNavigations, title }, onClickNavigation, separated }) => (
   <>
-    <Text styleType="subSubBlockTitle" as="p" className="shr-py-0.5">
-      {title}
-    </Text>
-
+    <ItemGroupTitleText>{title}</ItemGroupTitleText>
     {childNavigations.map((childNavigation, j) => (
       <NavigationItem key={j} navigation={childNavigation} onClickNavigation={onClickNavigation} />
     ))}
-
     {separated && <Separator />}
   </>
 )
+
+const ItemGroupTitleText = memo<PropsWithChildren>(({ children }) => (
+  <Text styleType="subSubBlockTitle" as="p" className="shr-py-0.5">
+    {children}
+  </Text>
+))
 
 const TerminalItem: FC<
   Pick<Props, 'onClickNavigation'> & {
