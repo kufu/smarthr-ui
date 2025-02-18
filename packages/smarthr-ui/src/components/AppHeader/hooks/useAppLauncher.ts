@@ -39,10 +39,8 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
 
       if (mode !== 'search') {
         setMode('search')
-      } else {
-        if (q === '') {
-          setMode('default')
-        }
+      } else if (q === '') {
+        setMode('default')
       }
     },
     [mode],
@@ -93,43 +91,42 @@ const sortFeatures = (
 
     // feature の position の数値の順に並び替える。position が null の場合は最後に並べる
     return filtered.sort((a, b) => {
-      if (a.position === null && b.position === null) {
-        return 0
-      } else if (a.position === null) {
+      if (a.position === null) {
+        if (b.position === null) {
+          return 0
+        }
+
         return 1
       } else if (b.position === null) {
         return -1
-      } else {
-        return a.position - b.position
       }
+
+      return a.position - b.position
     })
   }
 
+  const looseSearchQuery = normalize(searchQuery)
   const featuresRes =
     mode === 'search'
-      ? features.filter((feature) => looseInclude(feature.name, searchQuery))
+      ? features.filter((feature) => looseInclude(looseSearchQuery, feature.name))
       : [...features]
 
-  if (sortType === 'name/asc') {
-    featuresRes.sort((a, b) => a.name.localeCompare(b.name))
-  }
-
-  if (sortType === 'name/desc') {
-    featuresRes.sort((a, b) => b.name.localeCompare(a.name))
+  switch (sortType) {
+    case 'name/asc':
+      return featuresRes.sort((a, b) => a.name.localeCompare(b.name))
+    case 'name/desc':
+      return featuresRes.sort((a, b) => b.name.localeCompare(a.name))
   }
 
   return featuresRes
 }
 
-// 文字列 a が文字列 b を含んでいたら true を返す
-export const looseInclude = (a: string, b: string) => {
-  const normalizedA = normalize(a)
-  const normalizedB = normalize(b)
-  return normalizedA.includes(normalizedB)
-}
+export const looseInclude = (looseSearchQuery: string, featureName: string) =>
+  // HINT: normalizeは1文字ずつ変換処理を行う関係で思いため、変換せずにマッチするかどうかを確認する
+  featureName.includes(looseSearchQuery) || normalize(featureName).includes(looseSearchQuery)
 
 // アルファベットの大文字小文字は同じものとして扱う。カタカナとひらがなも同じものとして扱う。
-const normalize = (s: string) =>
-  s
-    .toLowerCase()
-    .replace(/[\u30a1-\u30f6]/g, (match) => String.fromCharCode(match.charCodeAt(0) - 0x60))
+const normalize = (str: string) =>
+  str.toLowerCase().replace(NORMALIZE_REGEX, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60))
+
+const NORMALIZE_REGEX = /[\u30a1-\u30f6]/g
