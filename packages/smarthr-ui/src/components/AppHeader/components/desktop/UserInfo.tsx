@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button } from '../../../Button'
@@ -69,14 +69,17 @@ export const UserInfo: FC<Props> = ({
   desktopAdditionalContent,
   ...rest
 }) => {
-  const displayName =
-    arbitraryDisplayName ??
-    buildDisplayName({
-      email,
-      empCode,
-      firstName,
-      lastName,
-    })
+  const displayName = useMemo(
+    () =>
+      arbitraryDisplayName ??
+      buildDisplayName({
+        email,
+        empCode,
+        firstName,
+        lastName,
+      }),
+    [arbitraryDisplayName, email, empCode, firstName, lastName],
+  )
 
   if (!displayName) {
     return null
@@ -113,31 +116,45 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
   enableNew,
   displayName,
 }) => {
+  const classNames = useMemo(() => {
+    const {
+      userSummary,
+      dropdownMenuButton,
+      dropdownContentButton,
+      button,
+      dropdownContent,
+      accountImage,
+      placeholderImage,
+    } = userInfo({
+      enableNew,
+    })
+
+    return {
+      userSummary: userSummary(),
+      dropdownMenuButton: dropdownMenuButton(),
+      dropdownContentButton: dropdownContentButton(),
+      button: button(),
+      dropdownContent: dropdownContent(),
+      accountImage: accountImage(),
+      placeholderImage: placeholderImage(),
+    }
+  }, [enableNew])
+
   const translate = useTranslate()
+
   const currentTenantName = tenants?.find((tenant) => tenant.id === currentTenantId)?.name
-  const {
-    userSummary,
-    dropdownMenuButton,
-    dropdownContentButton,
-    button,
-    dropdownContent,
-    accountImage,
-    placeholderImage,
-  } = userInfo({
-    enableNew,
-  })
 
   if (enableNew) {
     return (
       <DropdownMenuButton
-        className={dropdownMenuButton()}
+        className={classNames.dropdownMenuButton}
         label={
           <Cluster as="span" align="center">
             {accountImageUrl ? (
               // eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text
-              <img src={accountImageUrl} className={accountImage()} aria-hidden />
+              <img src={accountImageUrl} className={classNames.accountImage} aria-hidden />
             ) : (
-              <span className={placeholderImage()}>
+              <span className={classNames.placeholderImage}>
                 <FaUserIcon color="TEXT_GREY" />
               </span>
             )}
@@ -167,7 +184,7 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
           </Cluster>
         }
       >
-        <Stack gap={0.5} className={userSummary()}>
+        <Stack gap={0.5} className={classNames.userSummary}>
           <Text size="S" color="TEXT_GREY" weight="bold" leading="TIGHT">
             {currentTenantName}
           </Text>
@@ -192,7 +209,7 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
             target="_blank"
             rel="noopener noreferrer"
             prefix={<FaGearIcon />}
-            className={dropdownContentButton()}
+            className={classNames.dropdownContentButton}
           >
             <Translate>{translate('common/userSetting')}</Translate>
           </AnchorButton>
@@ -206,12 +223,12 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button variant="text" suffix={<FaCaretDownIcon />} className={button()}>
+        <Button variant="text" suffix={<FaCaretDownIcon />} className={classNames.button}>
           <Translate>{displayName}</Translate>
         </Button>
       </DropdownTrigger>
 
-      <DropdownContent className={dropdownContent()}>
+      <DropdownContent className={classNames.dropdownContent}>
         {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
         <Stack gap={0}>
           {accountUrl && (
