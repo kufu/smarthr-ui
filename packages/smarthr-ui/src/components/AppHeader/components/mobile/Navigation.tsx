@@ -1,11 +1,16 @@
-import React, { type FC, Fragment, type PropsWithChildren, memo } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../../Text'
-import { NavigationGroup, Navigation as NavigationType } from '../../types'
 import { isChildNavigationGroup } from '../../utils'
 
 import { NavigationItem } from './NavigationItem'
+
+import type {
+  ChildNavigationGroup,
+  NavigationGroup,
+  Navigation as NavigationType,
+} from '../../types'
 
 type Props = {
   navigations: NavigationType[] | NavigationGroup['childNavigations']
@@ -40,7 +45,7 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
 
 const ItemGroup: FC<
   Pick<Props, 'onClickNavigation'> & {
-    navigation: NavigationGroup['childNavigations'][number]
+    navigation: ChildNavigationGroup
     separated: boolean
   }
 > = ({ navigation: { childNavigations, title }, onClickNavigation, separated }) => (
