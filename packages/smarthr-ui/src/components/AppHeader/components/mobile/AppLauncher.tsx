@@ -59,14 +59,22 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   }, [])
 
   const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      searchInputTitle: translate('Launcher/searchInputTitle'),
+      searchResultText: translate('Launcher/searchResultText'),
+      helpText: translate('Launcher/helpText'),
+    }),
+    [translate],
+  )
 
   return (
     <div className={classNames.wrapper}>
       <div className={classNames.searchArea}>
         <SearchInput
           name="search"
-          title={translate('Launcher/searchInputTitle')}
-          tooltipMessage={<Translate>{translate('Launcher/searchInputTitle')}</Translate>}
+          title={translated.searchInputTitle}
+          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
           suffix={
@@ -90,7 +98,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       <Cluster className={classNames.headArea} justify="space-between" align="center">
         {mode === 'search' ? (
           <Text size="S" weight="bold">
-            <Translate>{translate('Launcher/searchResultText')}</Translate>
+            <Translate>{translated.searchResultText}</Translate>
           </Text>
         ) : (
           <AppLauncherFilterDropdown page={page} onSelectPage={(p) => changePage(p)} />
@@ -114,7 +122,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
             target="_blank"
           >
-            <Translate>{translate('Launcher/helpText')}</Translate>
+            <Translate>{translated.helpText}</Translate>
           </TextLink>
         </Text>
       </div>
