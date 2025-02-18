@@ -112,8 +112,7 @@ const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children
 })
 
 const ActualFeatureButton: FC<
-  Pick<typeof AppLauncherContext, 'setIsAppLauncherSelected'> &
-    PropsWithChildren<{ className: string }>
+  PropsWithChildren<{ className: string; setIsAppLauncherSelected: (selected: boolean) => void }>
 > = ({ setIsAppLauncherSelected, children, className }) => {
   const onClick = useCallback(() => setIsAppLauncherSelected(true), [setIsAppLauncherSelected])
 
@@ -202,8 +201,7 @@ const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
 )
 
 const ActualReleaseNoteButton = memo<
-  Pick<typeof ReleaseNoteContext, 'setIsReleaseNoteSelected'> &
-    PropsWithChildren<{ className: string }>
+  PropsWithChildren<{ className: string; setIsReleaseNoteSelected: (selected: boolean) => void }>
 >(({ setIsReleaseNoteSelected, children, className }) => {
   const onClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
 

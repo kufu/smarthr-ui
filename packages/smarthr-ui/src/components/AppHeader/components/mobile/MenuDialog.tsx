@@ -10,7 +10,6 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
@@ -27,7 +26,6 @@ import { AppLauncherContext } from './AppLauncherContext'
 import { MenuSubHeading } from './MenuSubHeading'
 import { Navigation } from './Navigation'
 import { NavigationContext } from './NavigationContext'
-import { NavigationGroupHeading } from './NavigationGroupHeading'
 import { ReleaseNote } from './ReleaseNote'
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
