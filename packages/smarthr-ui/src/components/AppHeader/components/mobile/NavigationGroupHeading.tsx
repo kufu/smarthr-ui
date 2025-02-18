@@ -2,16 +2,16 @@ import React, { FC, useContext } from 'react'
 
 import { NavigationGroup } from '../../types'
 
-import { MenuSubHeader } from './MenuSubHeader'
+import { MenuSubHeading } from './MenuSubHeading'
 import { NavigationContext } from './NavigationContext'
 
-export const NavigationGroupHeader: FC<{
+export const NavigationGroupHeading: FC<{
   currentNavigationGroup: NavigationGroup
 }> = ({ currentNavigationGroup }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
   return (
-    <MenuSubHeader
+    <MenuSubHeading
       title={currentNavigationGroup.children}
       onClickBack={() => setSelectedNavigationGroup(null)}
     />
