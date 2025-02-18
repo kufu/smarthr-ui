@@ -46,15 +46,8 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
       <div className={classNames.header}>
         <Heading className={classNames.headerTitle}>Language</Heading>
 
-        <Button
-          type="button"
-          size="s"
-          square
-          onClick={() => {
-            onClickClose(false)
-          }}
-        >
-          <FaXmarkIcon role="img" aria-label="close" />
+        <Button type="button" size="s" square onClick={onClickClose}>
+          <FaXmarkIcon alt="close" />
         </Button>
       </div>
 

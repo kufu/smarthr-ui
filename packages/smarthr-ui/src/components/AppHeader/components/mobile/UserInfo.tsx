@@ -107,7 +107,7 @@ export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
           onClickOverlay={() => setLanguageDialogOpen(false)}
           width={246}
         >
-          <LanguageSelector locale={locale} onClickClose={setLanguageDialogOpen} />
+          <LanguageSelector locale={locale} onClickClose={() => setLanguageDialogOpen(false)} />
         </Dialog>
       )}
     </>
