@@ -1,4 +1,4 @@
-import React, { type FC, type MouseEvent, memo, useCallback, useMemo } from 'react'
+import React, { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -27,7 +27,7 @@ type Props = {
 
 const LOCALE_KEYS = Object.keys(localeMap)
 
-export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
+export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
   const classNames = useMemo(() => {
     const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
 
@@ -66,7 +66,7 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
       </div>
     </Section>
   )
-}
+})
 
 const SelectorHeading = memo<
   Pick<Props, 'onClickClose'> & { wrapperClassName: string; className: string }
