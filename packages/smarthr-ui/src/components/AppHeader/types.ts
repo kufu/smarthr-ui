@@ -44,7 +44,7 @@ export type NavigationLink = {
   current?: boolean
 }
 
-type NavigationCustomTag = {
+export type NavigationCustomTag = {
   children: ReactElement | string
   elementAs: ComponentType<any>
   current?: boolean

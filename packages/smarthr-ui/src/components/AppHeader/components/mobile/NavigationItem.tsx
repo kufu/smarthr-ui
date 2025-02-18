@@ -4,6 +4,7 @@ import { tv } from 'tailwind-variants'
 import {
   type Navigation,
   type NavigationButton,
+  type NavigationCustomTag,
   type NavigationGroup,
   type NavigationLink,
 } from '../../types'
@@ -24,22 +25,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
   const actualClassName = classNameGenerator()
 
   if ('elementAs' in navigation) {
-    const { children, elementAs: Tag, current, className, ...rest } = navigation
-
-    return (
-      // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-      <Tag
-        {...rest}
-        onClick={onClickNavigation}
-        className={commonButton({
-          current,
-          boldWhenCurrent: true,
-          className: [actualClassName, className],
-        })}
-      >
-        <Translate>{children}</Translate>
-      </Tag>
-    )
+    return <NavigationCustomTag navigation={navigation} onClickNavigation={onClickNavigation} />
   }
 
   if ('href' in navigation) {
@@ -58,6 +44,26 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 
   return <NavigationGroupMenuButton navigation={navigation} />
 }
+
+const NavigationCustomTag: FC<
+  Pick<Props, 'onClickNavigation'> & { navigation: NavigationCustomTag }
+> = ({
+  navigation: { children, elementAs: Tag, current, className, ...rest },
+  onClickNavigation,
+}) => (
+  // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+  <Tag
+    {...rest}
+    onClick={onClickNavigation}
+    className={commonButton({
+      current,
+      boldWhenCurrent: true,
+      className: [actualClassName, className],
+    })}
+  >
+    <Translate>{children}</Translate>
+  </Tag>
+)
 
 const NavigationLink = memo<NavigationLink & { className: string }>(
   ({ href, current, children, className }) => (
