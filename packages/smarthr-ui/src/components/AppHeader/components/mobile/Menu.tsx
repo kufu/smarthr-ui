@@ -43,6 +43,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   const { createPortal } = usePortal()
 
+  const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
   useEffect(() => {
@@ -71,10 +72,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   return (
     <>
-      <Button variant="secondary" size="s" onClick={() => setIsOpen(true)} aria-haspopup="true">
-        <FaBarsIcon alt={translated.open} />
-      </Button>
-
+      <OpenButton onClick={open} alt={translated.open} />
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
           <FeatureButton className={className}>{translated.launcherListText}</FeatureButton>
@@ -90,6 +88,12 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
     </>
   )
 }
+
+const OpenButton = memo<{ alt: ReactNode; onClick: () => void }>(({ onClick, alt }) => (
+  <Button size="s" onClick={onClick} aria-haspopup="true">
+    <FaBarsIcon alt={alt} />
+  </Button>
+))
 
 const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => {
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
