@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react'
+import React, { type FC, memo, useMemo } from 'react'
 
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'

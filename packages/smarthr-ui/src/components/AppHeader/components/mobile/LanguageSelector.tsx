@@ -22,7 +22,7 @@ const classNameGenerator = tv({
 
 type Props = {
   locale: LocaleProps
-  onClickClose: (isOpen: boolean) => void
+  onClickClose: () => void
 }
 
 const LOCALE_KEYS = Object.keys(localeMap)
