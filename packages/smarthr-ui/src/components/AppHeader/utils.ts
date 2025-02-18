@@ -11,12 +11,15 @@ export const buildDisplayName = ({
   firstName?: string | null
   lastName?: string | null
 }) => {
-  const empCodeStr = empCode ? `（${empCode}）` : ''
+  if (firstName && lastName) {
+    return `${lastName} ${firstName}${empCode ? `（${empCode}）` : ''}`
+  } else if (empCode) {
+    return empCode
+  } else if (email) {
+    return email
+  }
 
-  return (
-    (firstName && lastName ? `${lastName} ${firstName}` + empCodeStr : empCode ? empCode : email) ??
-    ''
-  )
+  return ''
 }
 
 export const isChildNavigation = (
