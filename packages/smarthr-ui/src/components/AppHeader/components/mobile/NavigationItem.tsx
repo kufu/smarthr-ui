@@ -1,4 +1,4 @@
-import React, { type FC, memo, useContext } from 'react'
+import React, { type FC, memo, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type Navigation, type NavigationGroup } from '../../types'
@@ -75,20 +75,27 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 const MemoizedMenuButton = memo<{ navigation: NavigationGroup }>(({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
-  // 子要素に current を持っているものがあるかどうか
-  const childrenHasCurrent = navigation.childNavigations.some((child) => {
-    if (isChildNavigation(child)) {
-      return child.current
-    }
+  const onClick = useCallback(
+    () => setSelectedNavigationGroup(navigation),
+    [navigation, setSelectedNavigationGroup],
+  )
 
-    return child.childNavigations.some((c) => c.current)
-  })
+  // 子要素に current を持っているものがあるかどうか
+  const isCurrent = useMemo(
+    () =>
+      navigation.current ||
+      navigation.childNavigations.some((child) => {
+        if (isChildNavigation(child)) {
+          return child.current
+        }
+
+        return child.childNavigations.some((c) => c.current)
+      }),
+    [navigation],
+  )
 
   return (
-    <MenuButton
-      onClick={() => setSelectedNavigationGroup(navigation)}
-      isCurrent={navigation.current || childrenHasCurrent}
-    >
+    <MenuButton onClick={onClick} isCurrent={isCurrent}>
       <Translate>{navigation.children}</Translate>
     </MenuButton>
   )
