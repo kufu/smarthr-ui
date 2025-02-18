@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react'
+import React, { type PropsWithChildren, memo } from 'react'
 
 import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
@@ -9,7 +9,7 @@ type Props = {
   isCurrent?: boolean
 }
 
-export const MenuButton: FC<PropsWithChildren<Props>> = ({ children, onClick, isCurrent }) => (
+export const MenuButton = memo<PropsWithChildren<Props>>(({ children, onClick, isCurrent }) => (
   <CommonButton
     elementAs="button"
     type="button"
@@ -21,4 +21,4 @@ export const MenuButton: FC<PropsWithChildren<Props>> = ({ children, onClick, is
     <Translate>{children}</Translate>
     <FaAngleRightIcon color="TEXT_BLACK" />
   </CommonButton>
-)
+))
