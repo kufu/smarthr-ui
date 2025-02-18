@@ -1,7 +1,7 @@
 import React, { type FC, memo, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type Navigation, type NavigationGroup } from '../../types'
+import { type Navigation, type NavigationButton, type NavigationGroup } from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -53,26 +53,36 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 
   if ('onClick' in navigation) {
     return (
-      <CommonButton
-        elementAs="button"
-        type="button"
-        onClick={(e) => {
-          navigation.onClick(e)
-          onClickNavigation()
-        }}
-        current={navigation.current}
-        boldWhenCurrent
+      <NavigationButton
+        navigation={navigation}
+        onClickNavigation={onClickNavigation}
         className={actualClassName}
-      >
-        <Translate>{navigation.children}</Translate>
-      </CommonButton>
+      />
     )
   }
 
-  return <MemoizedMenuButton navigation={navigation} />
+  return <NavigationGroupMenuButton navigation={navigation} />
 }
 
-const MemoizedMenuButton = memo<{ navigation: NavigationGroup }>(({ navigation }) => {
+const NavigationButton: FC<
+  Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }
+> = ({ navigation, onClickNavigation, className }) => (
+  <CommonButton
+    elementAs="button"
+    type="button"
+    onClick={(e) => {
+      navigation.onClick(e)
+      onClickNavigation()
+    }}
+    current={navigation.current}
+    boldWhenCurrent
+    className={className}
+  >
+    <Translate>{navigation.children}</Translate>
+  </CommonButton>
+)
+
+const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
   const onClick = useCallback(
@@ -99,4 +109,4 @@ const MemoizedMenuButton = memo<{ navigation: NavigationGroup }>(({ navigation }
       <Translate>{navigation.children}</Translate>
     </MenuButton>
   )
-})
+}
