@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react'
+import React, { type FC, type MouseEvent, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -37,15 +37,17 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
     }
   }, [])
 
-  const onClickButton = (selectedLocale: Locale) => {
-    locale.onSelectLocale(selectedLocale)
-  }
+  const onClickLocale = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      locale.onSelectLocale(e.currentTarget.value as Locale)
+    },
+    [locale],
+  )
 
   return (
     <Section>
       <div className={classNames.header}>
         <Heading className={classNames.headerTitle}>Language</Heading>
-
         <Button type="button" size="s" square onClick={onClickClose}>
           <FaXmarkIcon alt="close" />
         </Button>
@@ -56,10 +58,11 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
           <CommonButton
             key={localeKey}
             elementAs="button"
-            className={classNames.button}
             type="button"
-            onClick={() => onClickButton(localeKey as Locale)}
+            value={localeKey}
+            onClick={onClickLocale}
             prefix={localeKey === locale.selectedLocale && <FaCheckIcon color="MAIN" />}
+            className={classNames.button}
           >
             {localeMap[localeKey as Locale]}
           </CommonButton>
