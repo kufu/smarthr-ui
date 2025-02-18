@@ -108,8 +108,8 @@ const buildDropdownMenu = (
             key={`${index}-${navigation.children.toString()}`}
             aria-current={current}
             className={commonButton({
-              current: navigation.current,
-              className: navigation.className,
+              current,
+              className,
             })}
           />
         )
