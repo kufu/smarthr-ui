@@ -42,7 +42,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     sortType,
     searchQuery,
     changePage,
-    onSelectSortType,
+    setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
@@ -78,13 +78,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
-          suffix={
-            mode === 'search' && (
-              <UnstyledButton onClick={onClickClearSearchQuery}>
-                <FaCircleXmarkIcon />
-              </UnstyledButton>
-            )
-          }
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
           onChange={onChangeSearchQuery}
         />
       </div>
@@ -109,6 +103,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     </div>
   )
 }
+
+const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
+  <UnstyledButton onClick={onClick}>
+    <FaCircleXmarkIcon />
+  </UnstyledButton>
+))
 
 const SearchResultText = memo<PropsWithChildren>(({ children }) => (
   <Text size="S" weight="bold">
