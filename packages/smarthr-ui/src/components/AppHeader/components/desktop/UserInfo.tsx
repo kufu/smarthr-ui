@@ -13,7 +13,7 @@ import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 // HeaderDropdownMenuButton と同じスタイルを適用
-const userInfo = tv({
+const classNameGenerator = tv({
   slots: {
     userSummary: [
       'shr-relative -shr-mt-0.5 -shr-mx-0.25 shr-p-1',
@@ -125,7 +125,7 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
       dropdownContent,
       accountImage,
       placeholderImage,
-    } = userInfo({
+    } = classNameGenerator({
       enableNew,
     })
 
@@ -214,41 +214,40 @@ const DropdownMenuLabel = memo<
     currentTenantName,
     accountImageClassName,
     placeHolderImageClassName,
-  }) => (
-    <Cluster as="span" align="center">
-      {accountImageUrl ? (
-        // eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text
-        <img src={accountImageUrl} className={accountImageClassName} aria-hidden />
-      ) : (
-        <span className={placeHolderImageClassName}>
-          <FaUserIcon color="TEXT_GREY" />
-        </span>
-      )}
+  }) => {
+    const body = []
 
-      <Cluster align="center" as="span">
-        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-        <Stack gap={0} className="-shr-my-1" as="span" align="flex-start">
-          {currentTenantName && (
-            <Text size="XS" leading="NORMAL">
-              {currentTenantName}
-            </Text>
-          )}
+    if (currentTenantName) {
+      body.push(currentTenantName)
+    }
 
-          {firstName && lastName ? (
-            <Text size="XS" leading="NORMAL">
-              {firstName} {lastName}
-            </Text>
-          ) : (
-            email && (
-              <Text size="XS" leading="NORMAL">
-                {email}
-              </Text>
-            )
-          )}
-        </Stack>
+    if (firstName && lastName) {
+      body.push(`${firstName} ${lastName}`)
+    } else if (email) {
+      body.push(email)
+    }
+
+    if (body.length === 2) {
+      body.splice(1, 0, <br />)
+    }
+
+    return (
+      <Cluster as="span" align="flex-start">
+        {accountImageUrl ? (
+          // eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text
+          <img src={accountImageUrl} className={accountImageClassName} aria-hidden />
+        ) : (
+          <span className={placeHolderImageClassName}>
+            <FaUserIcon color="TEXT_GREY" />
+          </span>
+        )}
+
+        <Text size="XS" leading="NORMAL" className="-shr-my-1 shr-text-left">
+          {body}
+        </Text>
       </Cluster>
-    </Cluster>
-  ),
+    )
+  },
 )
 
 const UserSummaryStack = memo<
