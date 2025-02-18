@@ -41,7 +41,7 @@ export const AccordionPanelContext = React.createContext<{
   parentRef: null,
 })
 
-const accordionWrapper = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-AccordionPanel',
 })
 
@@ -55,7 +55,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
-  const styles = useMemo(() => accordionWrapper({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -79,8 +79,8 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-      <div {...props} className={styles} ref={parentRef} role="presentation" />
+      {}
+      <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )
 }
