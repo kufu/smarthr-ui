@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -25,6 +25,14 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
   const wrapperClassName = useMemo(() => wrapperClassNameGenerator(), [])
 
   const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      releaseNote: translate('common/releaseNote'),
+      loadError: translate('common/releaseNotesLoadError'),
+      seeAll: translate('common/seeAllReleaseNotes'),
+    }),
+    [translate],
+  )
 
   return (
     <div className="shr-border-l-shorthand shr-ms-0.5">
@@ -34,7 +42,7 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
             suffix={<FaCaretDownIcon />}
             className="shr-border-none shr-font-normal shr-rounded-none [&[aria-expanded='true']>.smarthr-ui-Icon:last-child]:shr-rotate-180"
           >
-            <Translate>{translate('common/releaseNote')}</Translate>
+            <Translate>{translated.releaseNote}</Translate>
           </Button>
         </DropdownTrigger>
 
@@ -47,7 +55,7 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
             ) : error || !links ? (
               <div className="shr-p-0.75 shr-whitespace-pre-wrap">
                 <Text>
-                  <Translate>{translate('common/releaseNotesLoadError')}</Translate>
+                  <Translate>{translated.loadError}</Translate>
                 </Text>
               </div>
             ) : (
@@ -74,7 +82,7 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
                     className="shr-leading-normal [&&]:shr-underline"
                     style={{ boxShadow: 'none' }}
                   >
-                    <Translate>{translate('common/seeAllReleaseNotes')}</Translate>
+                    <Translate>{translated.seeAll}</Translate>
                   </TextLink>
                 </div>
               </div>
