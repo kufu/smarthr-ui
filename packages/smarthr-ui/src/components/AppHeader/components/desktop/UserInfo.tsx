@@ -211,19 +211,9 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
             <Text leading="TIGHT">{email}</Text>
           )}
         </Stack>
-
-        {accountUrl && (
-          <AnchorButton
-            href={accountUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            prefix={<FaGearIcon />}
-            className={classNames.dropdownContentButton}
-          >
-            <Translate>{translated.userSetting}</Translate>
-          </AnchorButton>
-        )}
-
+        <DropdownContentButton href={accountUrl} className={classNames.dropdownContentButton}>
+          {translated.userSetting}
+        </DropdownContentButton>
         {desktopAdditionalContent}
       </DropdownMenuButton>
     )
@@ -242,6 +232,21 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
   )
 }
 
+const DropdownContentButton = memo<PropsWithChildren<{ href: string; className: string }>>(
+  ({ href, children, className }) =>
+    href && (
+      <AnchorButton
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<FaGearIcon />}
+        className={className}
+      >
+        <Translate>{children}</Translate>
+      </AnchorButton>
+    ),
+)
+
 const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => (
     <DropdownTrigger>
@@ -254,7 +259,7 @@ const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>
 
 const AccountLink = memo<PropsWithChildren<{ href: string }>>(
   ({ href, children }) =>
-    accountUrl && (
+    href && (
       <CommonButton
         elementAs="a"
         href={href}
