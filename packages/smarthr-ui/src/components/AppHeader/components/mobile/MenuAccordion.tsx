@@ -4,7 +4,9 @@ import React, {
   type PropsWithChildren,
   type ReactNode,
   memo,
+  useCallback,
   useId,
+  useMemo,
 } from 'react'
 
 import { Button } from '../../../Button'
@@ -37,7 +39,16 @@ export const ActualMenuAccordion: FC<Props> = ({ isOpen, children, ...rest }) =>
 
 const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
   ({ isOpen, setIsOpen, title, id }) => {
+    const onClick = useCallback(() => setIsOpen((prev) => !prev), [setIsOpen])
+
     const translate = useTranslate()
+    const translated = useMemo(
+      () => ({
+        close: translate('MobileHeader/MenuAccordion/close'),
+        open: translate('MobileHeader/MenuAccordion/open'),
+      }),
+      [translate],
+    )
 
     return (
       <Cluster justify="space-between" align="center">
@@ -50,12 +61,12 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
           aria-expanded={isOpen}
           aria-controls={id}
           className="[&&]:shr-p-0.25 [&&]:shr-min-h-0"
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={onClick}
         >
           {isOpen ? (
-            <FaCaretUpIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/close')} />
+            <FaCaretUpIcon alt={translated.close} />
           ) : (
-            <FaCaretDownIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/open')} />
+            <FaCaretDownIcon alt={translated.open} />
           )}
         </Button>
       </Cluster>
