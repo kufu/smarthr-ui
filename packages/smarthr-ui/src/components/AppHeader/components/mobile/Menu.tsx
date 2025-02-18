@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext, useEffect, useState } from 'react'
+import React, { type FC, type ReactNode, useContext, useEffect, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
@@ -16,7 +16,7 @@ import { Navigation } from './Navigation'
 import { NavigationContext } from './NavigationContext'
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
-const menuItemBlock = tv({
+const classNameGenerator = tv({
   base: ['shr-border-t-shorthand shr-py-1', 'first:shr-border-t-0 first:shr-pt-0'],
 })
 
@@ -37,7 +37,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
 
-  const translate = useTranslate()
   const { createPortal } = usePortal()
 
   useEffect(() => {
@@ -52,18 +51,28 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   useHandleEscape(() => setIsOpen(false))
 
-  const menuItemBlockStyle = menuItemBlock()
+  const className = useMemo(() => classNameGenerator(), [])
+  const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      open: translate('MobileHeader/Menu/openMenu'),
+      launcherListText: translate('Launcher/listText'),
+      management: translate('MobileHeader/Menu/managementMenu'),
+      releaseNote: translate('common/releaseNote'),
+    }),
+    [translate],
+  )
 
   return (
     <>
       <Button variant="secondary" size="s" onClick={() => setIsOpen(true)} aria-haspopup="true">
-        <FaBarsIcon role="img" aria-label={translate('MobileHeader/Menu/openMenu')} />
+        <FaBarsIcon alt={translated.open} />
       </Button>
 
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
           {features && features.length > 0 && (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <Button
                 variant="secondary"
                 wide
@@ -75,13 +84,13 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
                 }
                 onClick={() => setIsAppLauncherSelected(true)}
               >
-                <Translate>{translate('Launcher/listText')}</Translate>
+                <Translate>{translated.launcherListText}</Translate>
               </Button>
             </div>
           )}
 
           {navigations.length > 0 && appName ? (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <MenuAccordion
                 isOpen={isNavigationOpen}
                 setIsOpen={setIsNavigationOpen}
@@ -91,17 +100,17 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
               </MenuAccordion>
             </div>
           ) : (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <Navigation navigations={navigations} onClickNavigation={() => setIsOpen(false)} />
             </div>
           )}
 
           {additionalContent && (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <MenuAccordion
                 isOpen={isAdditionalContentOpen}
                 setIsOpen={setIsAdditionalContentOpen}
-                title={translate('MobileHeader/Menu/managementMenu')}
+                title={translated.management}
               >
                 {additionalContent}
               </MenuAccordion>
@@ -109,9 +118,9 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           )}
 
           {releaseNote && (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <MenuButton onClick={() => setIsReleaseNoteSelected(true)}>
-                {translate('common/releaseNote')}
+                {translated.releaseNote}
               </MenuButton>
             </div>
           )}
