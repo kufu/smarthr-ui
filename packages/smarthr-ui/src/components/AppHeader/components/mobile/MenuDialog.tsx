@@ -29,7 +29,7 @@ import { NavigationGroupHeading } from './NavigationGroupHeading'
 import { ReleaseNote } from './ReleaseNote'
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
-const menu = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'shr-fixed shr-top-0 shr-left-0 shr-w-full shr-h-full shr-flex shr-flex-col shr-bg-white',
@@ -80,8 +80,25 @@ const Content: FC<{
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
     useContext(AppLauncherContext)
 
+  const classNames = useMemo(() => {
+    const { wrapper, header, content } = classNameGenerator()
+
+    return {
+      wrapper: wrapper(),
+      header: header(),
+      content: content(),
+    }
+  }, [])
+
   const translate = useTranslate()
-  const { wrapper, header, content } = menu()
+  const translated = useMemo(
+    () => ({
+      launcherListText: translate('Launcher/listText'),
+      latestReleaseNotes: translate('MobileHeader/Menu/latestReleaseNotes'),
+      closeMenu: translate('MobileHeader/Menu/closeMenu'),
+    }),
+    [translate],
+  )
 
   useEffect(() => {
     if (isOpen) {
@@ -101,18 +118,18 @@ const Content: FC<{
   ])
 
   return (
-    <Section role="dialog" aria-modal="true" className={wrapper()} ref={domRef}>
-      <div className={header()}>
+    <Section role="dialog" aria-modal="true" className={classNames.wrapper} ref={domRef}>
+      <div className={classNames.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
             <MenuSubHeading
-              title={translate('Launcher/listText')}
+              title={translated.launcherListText}
               onClickBack={() => setIsAppLauncherSelected(false)}
             />
           ) : isReleaseNoteSelected ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
-              title={translate('MobileHeader/Menu/latestReleaseNotes')}
+              title={translated.latestReleaseNotes}
               onClickBack={() => setIsReleaseNoteSelected(false)}
             />
           ) : selectedNavigationGroup ? (
@@ -126,7 +143,7 @@ const Content: FC<{
           )}
 
           <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
-            <FaXmarkIcon role="img" aria-label={translate('MobileHeader/Menu/closeMenu')} />
+            <FaXmarkIcon role="img" aria-label={translated.closeMenu} />
           </Button>
         </Cluster>
       </div>
@@ -134,7 +151,7 @@ const Content: FC<{
       {isAppLauncherSelected && features && features.length > 0 ? (
         <AppLauncher features={features} />
       ) : (
-        <div className={content()}>
+        <div className={classNames.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (
