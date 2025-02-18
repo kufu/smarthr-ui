@@ -158,39 +158,15 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
       <DropdownMenuButton
         className={classNames.dropdownMenuButton}
         label={
-          <Cluster as="span" align="center">
-            {accountImageUrl ? (
-              // eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text
-              <img src={accountImageUrl} className={classNames.accountImage} aria-hidden />
-            ) : (
-              <span className={classNames.placeholderImage}>
-                <FaUserIcon color="TEXT_GREY" />
-              </span>
-            )}
-
-            <Cluster align="center" as="span">
-              {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-              <Stack gap={0} className="-shr-my-1" as="span" align="flex-start">
-                {currentTenantName && (
-                  <Text size="XS" leading="NORMAL">
-                    {currentTenantName}
-                  </Text>
-                )}
-
-                {firstName && lastName ? (
-                  <Text size="XS" leading="NORMAL">
-                    {firstName} {lastName}
-                  </Text>
-                ) : (
-                  email && (
-                    <Text size="XS" leading="NORMAL">
-                      {email}
-                    </Text>
-                  )
-                )}
-              </Stack>
-            </Cluster>
-          </Cluster>
+          <DropdownMenuLabel
+            firstName={firstName}
+            lastName={lastName}
+            email={email}
+            accountImageUrl={accountImageUrl}
+            currentTenantName={currentTenantName}
+            accountImageClassName={classNames.accountImage}
+            placeHolderImageClassName={classNames.placeholderImage}
+          />
         }
       >
         <UserSummaryStack
@@ -221,6 +197,59 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
     </Dropdown>
   )
 }
+
+const DropdownMenuLabel = memo<
+  Pick<Props, 'firstName' | 'lastName' | 'email'> & {
+    accountImageUrl: string
+    currentTenantName: string
+    accountImageClassName: string
+    placeHolderImageClassName: string
+  }
+>(
+  ({
+    firstName,
+    lastName,
+    email,
+    accountImageUrl,
+    currentTenantName,
+    accountImageClassName,
+    placeHolderImageClassName,
+  }) => (
+    <Cluster as="span" align="center">
+      {accountImageUrl ? (
+        // eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text
+        <img src={accountImageUrl} className={accountImageClassName} aria-hidden />
+      ) : (
+        <span className={placeHolderImageClassName}>
+          <FaUserIcon color="TEXT_GREY" />
+        </span>
+      )}
+
+      <Cluster align="center" as="span">
+        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+        <Stack gap={0} className="-shr-my-1" as="span" align="flex-start">
+          {currentTenantName && (
+            <Text size="XS" leading="NORMAL">
+              {currentTenantName}
+            </Text>
+          )}
+
+          {firstName && lastName ? (
+            <Text size="XS" leading="NORMAL">
+              {firstName} {lastName}
+            </Text>
+          ) : (
+            email && (
+              <Text size="XS" leading="NORMAL">
+                {email}
+              </Text>
+            )
+          )}
+        </Stack>
+      </Cluster>
+    </Cluster>
+  ),
+)
 
 const UserSummaryStack = memo<
   Pick<Props, 'empCode' | 'firstName' | 'lastName' | 'email'> & {
