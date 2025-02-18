@@ -5,7 +5,6 @@ import { textColor } from '../../../../themes'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
-import { Stack } from '../../../Layout'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
@@ -82,7 +81,7 @@ const MemoizedDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
 
 const ContentBody = memo<
   Props & {
-    translated: { favorite: string; all: string }
+    translated: { favorite: string; all: string; checkIconAlt: string }
     className: string
     buttonClassName: string
   }
