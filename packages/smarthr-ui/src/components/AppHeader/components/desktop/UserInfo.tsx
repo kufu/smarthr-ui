@@ -148,7 +148,10 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
     [translate],
   )
 
-  const currentTenantName = tenants?.find((tenant) => tenant.id === currentTenantId)?.name
+  const currentTenantName = useMemo(
+    () => tenants?.find((tenant) => tenant.id === currentTenantId)?.name,
+    [tenants, currentTenantId],
+  )
 
   if (enableNew) {
     return (
