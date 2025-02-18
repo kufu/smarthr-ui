@@ -22,14 +22,20 @@ const classNameGenerator = tv({
 type Props = { navigation: Navigation; onClickNavigation: () => void }
 
 export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => {
-  const actualClassName = classNameGenerator()
+  const className = classNameGenerator()
 
   if ('elementAs' in navigation) {
-    return <NavigationCustomTag navigation={navigation} onClickNavigation={onClickNavigation} />
+    return (
+      <NavigationCustomTag
+        navigation={navigation}
+        onClickNavigation={onClickNavigation}
+        className={className}
+      />
+    )
   }
 
   if ('href' in navigation) {
-    return <NavigationLink {...navigation} className={actualClassName} />
+    return <NavigationLink {...navigation} className={className} />
   }
 
   if ('onClick' in navigation) {
@@ -37,7 +43,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
       <NavigationButton
         navigation={navigation}
         onClickNavigation={onClickNavigation}
-        className={actualClassName}
+        className={className}
       />
     )
   }
@@ -46,24 +52,28 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 }
 
 const NavigationCustomTag: FC<
-  Pick<Props, 'onClickNavigation'> & { navigation: NavigationCustomTag }
+  Pick<Props, 'onClickNavigation'> & { navigation: NavigationCustomTag; className: string }
 > = ({
-  navigation: { children, elementAs: Tag, current, className, ...rest },
+  navigation: { children, elementAs: Tag, current, className: navigationClassName, ...rest },
   onClickNavigation,
-}) => (
-  // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-  <Tag
-    {...rest}
-    onClick={onClickNavigation}
-    className={commonButton({
-      current,
-      boldWhenCurrent: true,
-      className: [actualClassName, className],
-    })}
-  >
-    <Translate>{children}</Translate>
-  </Tag>
-)
+}) => {
+  const actualClassName = useMemo(
+    () =>
+      commonButton({
+        current,
+        boldWhenCurrent: true,
+        className: [className, navigationClassName],
+      }),
+    [current, className, navigationClassName],
+  )
+
+  return (
+    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+    <Tag {...rest} onClick={onClickNavigation} className={actualClassName}>
+      <Translate>{children}</Translate>
+    </Tag>
+  )
+}
 
 const NavigationLink = memo<NavigationLink & { className: string }>(
   ({ href, current, children, className }) => (
