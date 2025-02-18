@@ -1,4 +1,11 @@
-import React, { Dispatch, FC, PropsWithChildren, ReactNode, useId } from 'react'
+import React, {
+  type Dispatch,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useId,
+} from 'react'
 
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -8,27 +15,31 @@ import { Section } from '../../../SectioningContent'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
-type Props = {
+type Props = PropsWithChildren<{
   isOpen: boolean
   setIsOpen: Dispatch<(isOpen: boolean) => boolean>
   title: ReactNode
-}
+}>
 
-export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
-  isOpen,
-  setIsOpen,
-  title,
-  children,
-}) => {
-  const translate = useTranslate()
+export const MenuAccordion: FC<Props> = ({ title, children, ...rest }) =>
+  title ? <ActualMenuAccordion {...rest} title={title} children={children} /> : children
+
+export const ActualMenuAccordion: FC<Props> = ({ isOpen, children, ...rest }) => {
   const id = useId()
-
-  if (!title) {
-    return children
-  }
 
   return (
     <Section>
+      <AccordionHeading {...rest} isOpen={isOpen} id={id} />
+      <div id={id}>{isOpen && <div className="shr-mt-0.5">{children}</div>}</div>
+    </Section>
+  )
+}
+
+const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
+  ({ isOpen, setIsOpen, title, id }) => {
+    const translate = useTranslate()
+
+    return (
       <Cluster justify="space-between" align="center">
         <Heading type="subSubBlockTitle">
           <Translate>{title}</Translate>
@@ -48,8 +59,6 @@ export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
           )}
         </Button>
       </Cluster>
-
-      <div id={id}>{isOpen && <div className="shr-mt-0.5">{children}</div>}</div>
-    </Section>
-  )
-}
+    )
+  },
+)
