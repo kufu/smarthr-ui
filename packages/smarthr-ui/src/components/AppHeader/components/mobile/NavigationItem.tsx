@@ -24,20 +24,18 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
     const { children, elementAs: Tag, current, ...rest } = navigation
 
     return (
-      <>
-        {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-        <Tag
-          {...rest}
-          onClick={onClickNavigation}
-          className={commonButton({
-            current,
-            boldWhenCurrent: true,
-            className: [navigationItemStyle, rest.className],
-          })}
-        >
-          <Translate>{children}</Translate>
-        </Tag>
-      </>
+      // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+      <Tag
+        {...rest}
+        onClick={onClickNavigation}
+        className={commonButton({
+          current,
+          boldWhenCurrent: true,
+          className: [navigationItemStyle, rest.className],
+        })}
+      >
+        <Translate>{children}</Translate>
+      </Tag>
     )
   }
 
