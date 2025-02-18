@@ -59,8 +59,7 @@ export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
           <Button variant="skeleton" size="s" square className={iconButton()}>
             <span className={iconButtonInner()}>
               <FaUserLargeIcon
-                role="img"
-                aria-label={translate('MobileHeader/UserInfo/account')}
+                alt={translate('MobileHeader/UserInfo/account')}
                 className="shr-fill-grey"
               />
             </span>
