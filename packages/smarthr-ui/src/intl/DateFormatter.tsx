@@ -4,6 +4,7 @@ import { useIntl } from './useIntl'
 
 type Props = {
   date: Date
+  options?: Intl.DateTimeFormatOptions & { jaFormat?: boolean }
 }
 
 export const DateFormatter = ({ date }: Props) => {
