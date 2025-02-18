@@ -48,13 +48,11 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
 
   return (
     <Section>
-      <div className={classNames.header}>
-        <Heading className={classNames.headerTitle}>Language</Heading>
-        <Button type="button" size="s" square onClick={onClickClose}>
-          <FaXmarkIcon alt="close" />
-        </Button>
-      </div>
-
+      <SelectorHeading
+        onClickClose={onClickClose}
+        wrapperClassName={classNames.header}
+        className={classNames.headerTitle}
+      />
       <div className={classNames.buttonWrapper}>
         {LOCALE_KEYS.map((localeKey) => (
           <LocaleButton
@@ -69,6 +67,17 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
     </Section>
   )
 }
+
+const SelectorHeading = memo<
+  Pick<Props, 'onClickClose'> & { wrapperClassName: string; className: string }
+>(({ onClickClose, wrapperClassName, className }) => (
+  <div className={wrapperClassName}>
+    <Heading className={className}>Language</Heading>
+    <Button type="button" size="s" square onClick={onClickClose}>
+      <FaXmarkIcon alt="close" />
+    </Button>
+  </div>
+))
 
 const LocaleButton = memo<{
   value: Locale
