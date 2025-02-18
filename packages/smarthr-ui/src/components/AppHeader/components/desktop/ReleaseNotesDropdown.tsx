@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -20,6 +20,8 @@ const wrapperClassNameGenerator = tv({
     },
   },
 })
+
+const BOX_SHADOW_STYLE = { boxShadow: 'none' }
 
 export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, loading, error }) => {
   const wrapperClassName = useMemo(() => wrapperClassNameGenerator(), [])
@@ -67,24 +69,13 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
                       target="_blank"
                       rel="noopener noreferrer"
                       className="shr-leading-normal [&&]:shr-underline"
-                      style={{ boxShadow: 'none' }}
+                      style={BOX_SHADOW_STYLE}
                     >
                       {title}
                     </TextLink>
                   </div>
                 ))}
-
-                <div className="shr-p-0.75 shr-text-right">
-                  <TextLink
-                    href={indexUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shr-leading-normal [&&]:shr-underline"
-                    style={{ boxShadow: 'none' }}
-                  >
-                    <Translate>{translated.seeAll}</Translate>
-                  </TextLink>
-                </div>
+                <SeeAllTextLink href={indexUrl}>{translated.seeAll}</SeeAllTextLink>
               </div>
             )}
           </div>
@@ -93,3 +84,17 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
     </div>
   )
 }
+
+const SeeAllTextLink = memo<PropsWithChildren<{ href: string }>>(({ href, children }) => (
+  <div className="shr-p-0.75 shr-text-right">
+    <TextLink
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="shr-leading-normal [&&]:shr-underline"
+      style={BOX_SHADOW_STYLE}
+    >
+      <Translate>{children}</Translate>
+    </TextLink>
+  </div>
+))
