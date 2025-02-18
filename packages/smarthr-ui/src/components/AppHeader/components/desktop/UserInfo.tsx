@@ -56,23 +56,19 @@ const userInfo = tv({
   ],
 })
 
-export const UserInfo: FC<
-  UserInfoProps & Pick<HeaderProps, 'desktopAdditionalContent' | 'tenants' | 'currentTenantId'>
-> = ({
+type Props = UserInfoProps &
+  Pick<HeaderProps, 'desktopAdditionalContent' | 'tenants' | 'currentTenantId'>
+
+export const UserInfo: FC<Props> = ({
   arbitraryDisplayName,
   email,
   empCode,
   firstName,
   lastName,
-  tenants,
-  currentTenantId,
   accountUrl,
-  accountImageUrl,
   desktopAdditionalContent,
-  enableNew,
+  ...rest
 }) => {
-  const translate = useTranslate()
-
   const displayName =
     arbitraryDisplayName ??
     buildDisplayName({
@@ -90,6 +86,34 @@ export const UserInfo: FC<
     return <span className="shr-text-white">{displayName}</span>
   }
 
+  return (
+    <ActualUserInfo
+      {...reset}
+      email={email}
+      empCode={empCode}
+      firstName={firstName}
+      lastName={lastName}
+      accountUrl={accountUrl}
+      desktopAdditionalContent={desktopAdditionalContent}
+      displayName={displayName}
+    />
+  )
+}
+
+export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayName: string }> = ({
+  email,
+  empCode,
+  firstName,
+  lastName,
+  tenants,
+  currentTenantId,
+  accountUrl,
+  accountImageUrl,
+  desktopAdditionalContent,
+  enableNew,
+  displayName,
+}) => {
+  const translate = useTranslate()
   const currentTenantName = tenants?.find((tenant) => tenant.id === currentTenantId)?.name
   const {
     userSummary,
