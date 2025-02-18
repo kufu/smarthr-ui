@@ -1,3 +1,5 @@
+import { type FC, memo } from 'react'
+
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
@@ -5,19 +7,17 @@ import { useTranslate } from '../../hooks/useTranslate'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
-import type { FC } from 'react'
-
 type Props = {
   helpPageUrl?: string | null
   schoolUrl?: string | null
 }
 
-export const Help: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
-  const translate = useTranslate()
+export const Help = memo<Props>(({ helpPageUrl, schoolUrl }) =>
+  helpPageUrl || schoolUrl ? <ActualHelp helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} /> : null,
+)
 
-  if (!helpPageUrl && !schoolUrl) {
-    return null
-  }
+const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
+  const translate = useTranslate()
 
   return (
     <Dropdown>
