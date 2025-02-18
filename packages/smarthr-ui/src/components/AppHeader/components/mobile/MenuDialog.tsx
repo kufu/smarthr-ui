@@ -52,9 +52,10 @@ type Props = PropsWithChildren<{
 }>
 
 export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
-  const [contentBuffer, setContentBuffer] = useState<ReactNode>(null)
   const domRef = useRef<HTMLSelectElement>(null)
 
+  // HINT: Contentをanimationで非表示にしたい
+  // アニメーションが終われば、CSSTransitionのchildrenはunmountされる
   return (
     <CSSTransition
       classNames="shr-sp-menu"
@@ -65,16 +66,7 @@ export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
     >
       <div className="shr-fixed shr-z-overlap-base">
         <FocusTrap>
-          {isOpen ? (
-            <Content
-              {...rest}
-              domRef={domRef}
-              isOpen={isOpen}
-              setContentBuffer={setContentBuffer}
-            />
-          ) : (
-            contentBuffer
-          )}
+          <Content {...rest} domRef={domRef} />
         </FocusTrap>
       </div>
     </CSSTransition>
@@ -82,11 +74,10 @@ export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
 }
 
 const Content: FC<
-  Props & {
+  Omit<Props, 'isOpen'> & {
     domRef: RefObject<HTMLSelectElement>
-    setContentBuffer: (node: ReactNode) => void
   }
-> = ({ domRef, children, isOpen, setIsOpen, tenantSelector, setContentBuffer }) => {
+> = ({ domRef, children, setIsOpen, tenantSelector }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
@@ -114,7 +105,7 @@ const Content: FC<
 
   const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
   const clearAppLauncher = useCallback(
-    () => () => setIsAppLauncherSelected(false),
+    () => setIsAppLauncherSelected(false),
     [setIsAppLauncherSelected],
   )
   const clearReleaseNote = useCallback(
@@ -126,7 +117,19 @@ const Content: FC<
     [setSelectedNavigationGroup],
   )
 
-  const renderedContent = (
+  // HINT: Contentをanimationで非表示にしたい
+  // アニメーションが終われば、CSSTransitionのchildrenはunmountされるため、
+  // unmount時に操作内容のclearを行う
+  useEffect(
+    () => () => {
+      clearReleaseNote()
+      clearAppLauncher()
+      clearNavigationGroup()
+    },
+    [clearAppLauncher, clearReleaseNote, clearNavigationGroup],
+  )
+
+  return (
     <Section role="dialog" aria-modal="true" className={classNames.wrapper} ref={domRef}>
       <div className={classNames.header}>
         <Cluster justify="space-between" align="center">
@@ -169,23 +172,4 @@ const Content: FC<
       )}
     </Section>
   )
-
-  useEffect(() => {
-    if (isOpen) {
-      setContentBuffer(renderedContent)
-    } else {
-      clearReleaseNote()
-      clearAppLauncher()
-      clearNavigationGroup()
-    }
-  }, [
-    isOpen,
-    renderedContent,
-    clearAppLauncher,
-    clearReleaseNote,
-    clearNavigationGroup,
-    setContentBuffer,
-  ])
-
-  return renderedContent
 }
