@@ -18,17 +18,20 @@ export const Help = memo<Props>(({ helpPageUrl, schoolUrl }) =>
 
 const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => (
   <Dropdown>
-    <DropdownTrigger>
-      <Button variant="skeleton" size="s" square className="[&&&]:shr-border-transparent">
-        <FaCircleQuestionIcon alt="ヘルプ" />
-      </Button>
-    </DropdownTrigger>
-
+    <MemoizedDropdownTrigger />
     <DropdownContent controllable>
       <ContentBody helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} />
     </DropdownContent>
   </Dropdown>
 )
+
+const MemoizedDropdownTrigger = memo(() => (
+  <DropdownTrigger>
+    <Button variant="skeleton" size="s" square className="[&&&]:shr-border-transparent">
+      <FaCircleQuestionIcon alt="ヘルプ" />
+    </Button>
+  </DropdownTrigger>
+))
 
 const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
   const translate = useTranslate()
