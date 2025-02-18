@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react'
+import React, { type FC, Fragment, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../../Text'
@@ -12,7 +12,7 @@ type Props = {
   onClickNavigation: () => void
 }
 
-const separator = tv({
+const separatorClassNameGenerator = tv({
   base: ['[&&]:shr-mx-0 [&&]:shr-my-0.5 [&&]:shr-border-b-shorthand'],
 })
 
@@ -28,15 +28,15 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
               {navigation.title}
             </Text>
 
-            {childNavigations.map((childNavigation) => (
+            {childNavigations.map((childNavigation, j) => (
               <NavigationItem
-                key={childNavigation.children.toString()}
+                key={`title-${i}-${j}`}
                 navigation={childNavigation}
                 onClickNavigation={onClickNavigation}
               />
             ))}
 
-            {i + 1 !== navigations.length && <hr className={separator()} />}
+            {i + 1 !== navigations.length && <Separator />}
           </Fragment>
         )
       }
@@ -46,9 +46,11 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
       return (
         <Fragment key={`children-${i}`}>
           <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
-          {isChildNavigationGroup(nextNavigation) && <hr className={separator()} />}
+          {isChildNavigationGroup(nextNavigation) && <Separator />}
         </Fragment>
       )
     })}
   </div>
 )
+
+const Separator = memo(() => <hr className={separatorClassNameGenerator()} />)
