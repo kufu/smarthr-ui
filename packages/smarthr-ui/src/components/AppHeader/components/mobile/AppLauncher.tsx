@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../../../Button'
@@ -107,16 +107,20 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         <AppLauncherFeatures features={features} page={page} />
       </div>
 
-      <div className={classNames.bottomArea}>
-        <Text size="XS">
-          <TextLink
-            href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
-            target="_blank"
-          >
-            <Translate>{translated.helpText}</Translate>
-          </TextLink>
-        </Text>
-      </div>
+      <BottomArea className={classNames.bottomArea}>{translated.helpText}</BottomArea>
     </div>
   )
 }
+
+const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <div className={className}>
+    <Text size="XS">
+      <TextLink
+        href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
+        target="_blank"
+      >
+        <Translate>{children}</Translate>
+      </TextLink>
+    </Text>
+  </div>
+))
