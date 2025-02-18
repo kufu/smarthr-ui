@@ -24,7 +24,7 @@ export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
   const id = useId()
 
   if (!title) {
-    return <div>{children}</div>
+    return children
   }
 
   return (
