@@ -1,11 +1,4 @@
-import React, {
-  type FC,
-  type MouseEvent,
-  type PropsWithChildren,
-  memo,
-  useCallback,
-  useMemo,
-} from 'react'
+import React, { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -37,7 +30,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => {
+export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) => {
   const classNames = useMemo(() => {
     const { trigger, contentBody, contentButton } = classNameGenerator()
 
@@ -74,7 +67,7 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
       </DropdownContent>
     </Dropdown>
   )
-}
+})
 
 const MemoizedDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => (
