@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react'
 import React from 'react'
 
-import { useOptions } from '../useOptions'
+import { useMultiOptions } from '../useOptions'
 
-describe('useOptions', () => {
+describe('useMultiOptions', () => {
   describe('options', () => {
     it('options が取得できること', () => {
       const initialProps = {
@@ -15,7 +15,7 @@ describe('useOptions', () => {
         selected: [{ label: 'label2', value: 'value2' }],
         creatable: false,
       }
-      const { result } = renderHook((props) => useOptions(props), { initialProps })
+      const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
       const options = result.current.options
 
       expect(options.length).toBe(3)
@@ -43,7 +43,7 @@ describe('useOptions', () => {
         creatable: false,
         inputValue: '2',
       }
-      const { result } = renderHook((props) => useOptions(props), { initialProps })
+      const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
       const options = result.current.options
 
       expect(options.length).toBe(1)
@@ -57,7 +57,7 @@ describe('useOptions', () => {
         creatable: true,
         inputValue: 'input_data',
       }
-      const { result, rerender } = renderHook((props) => useOptions(props), { initialProps })
+      const { result, rerender } = renderHook((props) => useMultiOptions(props), { initialProps })
 
       const options1 = result.current.options
       expect(options1.length).toBe(1)
@@ -96,7 +96,7 @@ describe('useOptions', () => {
           creatable: false,
           isItemSelected,
         }
-        renderHook((props) => useOptions(props), { initialProps })
+        renderHook((props) => useMultiOptions(props), { initialProps })
         expect(isItemSelected).toHaveBeenNthCalledWith(
           1,
           { label: 'label1', value: 'value1' },
@@ -132,7 +132,7 @@ describe('useOptions', () => {
           selected: [{ label: element, value: 'value3' }],
           creatable: false,
         }
-        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
         const options = result.current.options
 
         expect(options.length).toBe(3)
@@ -165,7 +165,7 @@ describe('useOptions', () => {
           creatable: false,
           inputValue: 'label3',
         }
-        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
         const options = result.current.options
 
         expect(options.length).toBe(1)
@@ -199,7 +199,7 @@ describe('useOptions', () => {
           selected: [{ label: labelElement3, value: 'value3' }],
           creatable: false,
         }
-        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
         const options = result.current.options
 
         expect(options.length).toBe(3)
@@ -227,14 +227,14 @@ describe('useOptions', () => {
           creatable: false,
           inputValue: 'label3',
         }
-        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
         const options = result.current.options
 
         expect(options.length).toBe(1)
         expect(options[0].item).toEqual({ label: labelElement3, value: 'value3' })
       })
 
-      it('isItemSelectedが渡されていなくてoptionのインスタンスが違うとき、selectedにならないこと', () => {
+      it('isItemSelectedが渡されていなくてvalueが同じかつlabelのインスタンスが違うとき、selectedになること', () => {
         const newLabelElement1 = (
           <div>
             label<span>1</span>
@@ -245,12 +245,12 @@ describe('useOptions', () => {
           selected: [{ label: newLabelElement1, value: 'value1' }],
           creatable: false,
         }
-        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
         const options = result.current.options
 
         expect(options.length).toBe(1)
         expect(options[0].item).toEqual({ label: labelElement1, value: 'value1' })
-        expect(options[0].selected).toBeFalsy()
+        expect(options[0].selected).toBeTruthy()
         expect(options[0].isNew).toBeFalsy()
       })
     })

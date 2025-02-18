@@ -17,15 +17,15 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
+import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { useListBox } from '../useListBox'
-import { useOptions } from '../useOptions'
+import { useSingleOptions } from '../useOptions'
 
-import type { DecoratorsType } from '../../../types'
 import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
@@ -154,7 +154,7 @@ const ActualSingleComboBox = <T,>(
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
-  const { options } = useOptions({
+  const { options } = useSingleOptions({
     items,
     selected: selectedItem,
     creatable,

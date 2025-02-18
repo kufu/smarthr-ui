@@ -4,9 +4,12 @@ import React, {
   type PropsWithChildren,
   type ReactNode,
   useCallback,
+  useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -14,8 +17,6 @@ import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
-
-import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -46,6 +47,7 @@ export type FormDialogContentInnerProps = BaseProps & {
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
+const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const formDialogContentInner = tv({
   extend: dialogContentInner,
@@ -63,11 +65,11 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   contentBgColor,
   contentPadding,
   actionText,
-  actionTheme = 'primary',
+  actionTheme,
   onSubmit,
   onClickClose,
   responseMessage,
-  actionDisabled = false,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   decorators,
@@ -82,49 +84,122 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     },
     [onSubmit, onClickClose],
   )
-  const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+  const calculatedResponseStatus = useResponseMessage(responseMessage)
+
+  const styles = useMemo(() => {
+    const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+
+    return {
+      form: form(),
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+      buttonArea: buttonArea(),
+      message: message(),
+    }
+  }, [])
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts, smarthr/a11y-heading-in-sectioning-content
-    <Stack gap={0} as={Section} className={wrapper()}>
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
+    <Section className={styles.wrapper}>
       <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
-      <form onSubmit={handleSubmitAction} className={form()}>
+      <form onSubmit={handleSubmitAction} className={styles.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
-        <Stack gap={0.5} className={actionArea()}>
+        <Stack gap={0.5} className={styles.actionArea}>
           <Cluster justify="space-between">
             {subActionArea}
-            <Cluster gap={{ row: 0.5, column: 1 }} className={buttonArea()}>
-              <Button
-                onClick={onClickClose}
-                disabled={closeDisabled || isRequestProcessing}
-                className="smarthr-ui-Dialog-closeButton"
-              >
-                {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-              </Button>
-              <Button
-                type="submit"
-                variant={actionTheme}
-                disabled={actionDisabled}
-                loading={isRequestProcessing}
-                className="smarthr-ui-Dialog-actionButton"
-              >
-                {actionText}
-              </Button>
-            </Cluster>
+            <ActionAreaCluster
+              onClickClose={onClickClose}
+              closeDisabled={closeDisabled}
+              actionDisabled={actionDisabled}
+              loading={calculatedResponseStatus.isProcessing}
+              actionTheme={actionTheme}
+              decorators={decorators}
+              actionText={actionText}
+              className={styles.buttonArea}
+            />
           </Cluster>
-          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-            <div className={message()}>
-              <ResponseMessage type={responseMessage.status} role="alert">
-                {responseMessage.text}
+          {calculatedResponseStatus.message && (
+            <div className={styles.message}>
+              <ResponseMessage type={calculatedResponseStatus.status} role="alert">
+                {calculatedResponseStatus.message}
               </ResponseMessage>
             </div>
           )}
         </Stack>
       </form>
-    </Stack>
+    </Section>
   )
 }
+
+const ActionAreaCluster = React.memo<
+  Pick<
+    FormDialogContentInnerProps,
+    | 'onClickClose'
+    | 'closeDisabled'
+    | 'actionDisabled'
+    | 'actionTheme'
+    | 'decorators'
+    | 'actionText'
+  > & { loading: boolean; className: string }
+>(
+  ({
+    onClickClose,
+    closeDisabled,
+    actionDisabled,
+    loading,
+    actionTheme,
+    decorators,
+    actionText,
+    className,
+  }) => (
+    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+      <CloseButton
+        onClick={onClickClose}
+        disabled={closeDisabled || loading}
+        decorators={decorators}
+      />
+      <ActionButton variant={actionTheme} disabled={actionDisabled} loading={loading}>
+        {actionText}
+      </ActionButton>
+    </Cluster>
+  ),
+)
+
+const ActionButton = React.memo<
+  PropsWithChildren<{
+    variant: FormDialogContentInnerProps['actionTheme']
+    disabled: FormDialogContentInnerProps['actionDisabled']
+    loading: boolean
+  }>
+>(({ variant = 'primary', disabled, loading, children }) => (
+  <Button
+    type="submit"
+    variant={variant}
+    disabled={disabled}
+    loading={loading}
+    className="smarthr-ui-Dialog-actionButton"
+  >
+    {children}
+  </Button>
+))
+
+const CloseButton = React.memo<
+  Pick<FormDialogContentInnerProps, 'decorators'> & {
+    onClick: FormDialogContentInnerProps['onClickClose']
+    disabled: boolean
+  }
+>(({ onClick, disabled, decorators }) => {
+  const children = useMemo(
+    () => decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
+    [decorators],
+  )
+
+  return (
+    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+      {children}
+    </Button>
+  )
+})

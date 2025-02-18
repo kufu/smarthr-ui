@@ -85,6 +85,29 @@ export const MaxLetters: StoryObj<typeof Textarea> = {
   },
 }
 
+export const Decorators: StoryObj<typeof Textarea> = {
+  name: 'decorators',
+  args: {
+    decorators: {
+      beforeMaxLettersCount: (org) => <>beforeMaxLettersCount({org})</>,
+      afterMaxLettersCount: (org) => <>afterMaxLettersCount({org})</>,
+      afterMaxLettersCountExceeded: (org) => <>afterMaxLettersCountExceeded({org})</>,
+      beforeScreenReaderMaxLettersDescription: (org) => (
+        <>beforeScreenReaderMaxLettersDescription({org})</>
+      ),
+      afterScreenReaderMaxLettersDescription: (org) => (
+        <>afterScreenReaderMaxLettersDescription({org})</>
+      ),
+    },
+  },
+  render: (args) => (
+    <>
+      <Textarea {...args} maxLetters={5} value="テキストエ" />
+      <Textarea {...args} maxLetters={5} value="テキストエリア" />
+    </>
+  ),
+}
+
 export const Placeholder: StoryObj<typeof Textarea> = {
   name: 'placeholder（非推奨）',
   args: {

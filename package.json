@@ -8,12 +8,12 @@
     "@commitlint/config-conventional": "^19.6.0",
     "eslint": "^9.17.0",
     "eslint-config-smarthr": "^8.0.0",
-    "eslint-plugin-storybook": "^0.11.2",
+    "eslint-plugin-storybook": "^0.11.3",
     "husky": "^9.1.7",
     "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "prettier-config-smarthr": "^1.0.1",
-    "prettier-plugin-tailwindcss": "^0.6.10",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "stylelint": "^16.12.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.2",
@@ -27,7 +27,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.3.0",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.26.5",
@@ -36,8 +36,7 @@
       "react": "^19.0.0",
       "react-dom": "^19.0.0",
       "micromatch@<4.0.8": ">=4.0.8",
-      "cross-spawn@<7.0.5": ">=7.0.5",
-      "tar@<6.2.1": ">=6.2.1",
+      "cross-spawn@<7.0.5": ">=7.0.6",
       "nanoid": "3.3.8"
     }
   }

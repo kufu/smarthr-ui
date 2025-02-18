@@ -1,4 +1,11 @@
-import React, { FC, PropsWithChildren, RefObject, useCallback, useEffect, useRef } from 'react'
+import React, {
+  PropsWithChildren,
+  RefObject,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 
@@ -6,42 +13,61 @@ type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
 }>
 
-export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
-  const ref = useRef<HTMLDivElement | null>(null)
+export type FocusTrapRef = {
+  focus: () => void
+}
+
+export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
+  const innerRef = useRef<HTMLDivElement | null>(null)
   const dummyFocusRef = useRef<HTMLDivElement>(null)
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key !== 'Tab' || ref.current === null) {
-      return
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      if (firstFocusTarget?.current) {
+        firstFocusTarget.current.focus()
+      } else {
+        dummyFocusRef.current?.focus()
+      }
+    },
+  }))
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || innerRef.current === null) {
+        return
+      }
+
+      const tabbables = tabbable(innerRef.current).filter((elm) => elm.tabIndex >= 0)
+
+      if (tabbables.length === 0) {
+        return
+      }
+
+      const firstTabbable = tabbables[0]
+      const lastTabbable = tabbables[tabbables.length - 1]
+      const currentFocused = tabbables.find((elm) => elm === e.target)
+
+      if (e.shiftKey) {
+        if (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current) {
+          e.preventDefault()
+          lastTabbable.focus()
+        }
+      } else if (currentFocused === lastTabbable) {
+        e.preventDefault()
+        firstTabbable.focus()
+      }
     }
-    const tabbables = tabbable(ref.current).filter((elm) => elm.tabIndex >= 0)
-    if (tabbables.length === 0) {
-      return
-    }
-    const firstTabbable = tabbables[0]
-    const lastTabbable = tabbables[tabbables.length - 1]
-    const currentFocused = Array.from(tabbables).find((elm) => elm === e.target)
-    if (
-      e.shiftKey &&
-      (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current)
-    ) {
-      lastTabbable.focus()
-      e.preventDefault()
-    } else if (!e.shiftKey && currentFocused === lastTabbable) {
-      firstTabbable.focus()
-      e.preventDefault()
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
     }
   }, [])
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
-
-  useEffect(() => {
     const triggerElement = document.activeElement
+
     if (firstFocusTarget?.current) {
       firstFocusTarget.current.focus()
     } else {
@@ -57,10 +83,10 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
   }, [firstFocusTarget])
 
   return (
-    <div ref={ref}>
+    <div ref={innerRef}>
       {/* dummy element for focus management. */}
       <div ref={dummyFocusRef} tabIndex={-1} />
       {children}
     </div>
   )
-}
+})

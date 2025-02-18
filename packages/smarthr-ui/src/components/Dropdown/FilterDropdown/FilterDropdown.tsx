@@ -4,6 +4,8 @@ import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorType, type DecoratorsType } from '../../../hooks/useDecorators'
+import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
 import { Button, BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -12,8 +14,6 @@ import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
-
-import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
 
 type Props = {
   isFiltered?: boolean
@@ -29,6 +29,8 @@ type Props = {
   responseMessage?: ResponseMessageType
   /** 引き金となるボタンの大きさ */
   triggerSize?: ButtonProps['size']
+  /** 引き金となるボタンをアイコンのみとするかどうか */
+  onlyIconTrigger?: boolean
 }
 type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
 
@@ -86,6 +88,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   decorators,
   responseMessage,
   triggerSize,
+  onlyIconTrigger = false,
   ...props
 }: Props) => {
   const texts = useMemo(() => {
@@ -110,28 +113,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
 
   const filteredIconAriaLabel = useMemo(() => innerText(texts.status), [texts.status])
 
-  const calcedResponseStatus: {
-    isRequestProcessing: boolean
-    visibleMessageType: 'error' | 'success' | null
-    visibleMessage: React.ReactNode
-  } = useMemo(() => {
-    const status = responseMessage?.status
-    const isRequestProcessing = status === 'processing'
-
-    if (status === 'success' || status === 'error') {
-      return {
-        isRequestProcessing,
-        visibleMessageType: status,
-        visibleMessage: responseMessage?.text,
-      }
-    }
-
-    return {
-      isRequestProcessing,
-      visibleMessageType: null,
-      visibleMessage: '',
-    }
-  }, [responseMessage])
+  const calcedResponseStatus = useResponseMessage(responseMessage)
 
   const styles = useMemo(() => {
     const {
@@ -175,25 +157,42 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     messageStyle,
   } = styles[isFiltered ? 'filtered' : 'unfiltered']
 
+  const { buttonSuffix, buttonContent } = useMemo(() => {
+    const FilterIcon = (
+      <span className={iconWrapperStyle}>
+        <FaFilterIcon alt={onlyIconTrigger ? texts.triggerButton : undefined} />
+
+        {isFiltered && (
+          <FaCircleCheckIcon aria-label={filteredIconAriaLabel} className={filteredIconStyle} />
+        )}
+      </span>
+    )
+
+    if (onlyIconTrigger) {
+      return {
+        buttonSuffix: undefined,
+        buttonContent: FilterIcon,
+      }
+    }
+
+    return {
+      buttonSuffix: FilterIcon,
+      buttonContent: texts.triggerButton,
+    }
+  }, [
+    isFiltered,
+    texts.triggerButton,
+    onlyIconTrigger,
+    filteredIconAriaLabel,
+    iconWrapperStyle,
+    filteredIconStyle,
+  ])
+
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger>
-        <Button
-          {...props}
-          suffix={
-            <span className={iconWrapperStyle}>
-              <FaFilterIcon />
-              {isFiltered && (
-                <FaCircleCheckIcon
-                  aria-label={filteredIconAriaLabel}
-                  className={filteredIconStyle}
-                />
-              )}
-            </span>
-          }
-          size={triggerSize}
-        >
-          {texts.triggerButton}
+      <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: texts.triggerButton }}>
+        <Button {...props} suffix={buttonSuffix} square={onlyIconTrigger} size={triggerSize}>
+          {buttonContent}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
@@ -208,7 +207,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                     size="s"
                     prefix={<FaRotateLeftIcon />}
                     onClick={onReset}
-                    disabled={calcedResponseStatus.isRequestProcessing}
+                    disabled={calcedResponseStatus.isProcessing}
                   >
                     {texts.resetButton}
                   </Button>
@@ -221,7 +220,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                 className={rightButtonAreaStyle}
               >
                 <DropdownCloser>
-                  <Button onClick={onCancel} disabled={calcedResponseStatus.isRequestProcessing}>
+                  <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
                     {texts.cancelButton}
                   </Button>
                 </DropdownCloser>
@@ -229,17 +228,17 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                   <Button
                     variant="primary"
                     onClick={onApply}
-                    loading={calcedResponseStatus.isRequestProcessing}
+                    loading={calcedResponseStatus.isProcessing}
                   >
                     {texts.applyButton}
                   </Button>
                 </DropdownCloser>
               </Cluster>
             </Cluster>
-            {calcedResponseStatus.visibleMessageType && (
+            {calcedResponseStatus.message && (
               <div className={messageStyle}>
-                <ResponseMessage type={calcedResponseStatus.visibleMessageType} role="alert">
-                  {calcedResponseStatus.visibleMessage}
+                <ResponseMessage type={calcedResponseStatus.status} role="alert">
+                  {calcedResponseStatus.message}
                 </ResponseMessage>
               </div>
             )}
