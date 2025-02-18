@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button } from '../../../Button'
@@ -238,20 +238,24 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
       </DropdownTrigger>
 
       <DropdownContent className={classNames.dropdownContent}>
-        {accountUrl && (
-          <CommonButton
-            elementAs="a"
-            href={accountUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            prefix={<FaGearIcon />}
-          >
-            <Translate>{translated.userSetting}</Translate>
-          </CommonButton>
-        )}
-
+        <AccountLink href={accountUrl}>{translated.userSetting}</AccountLink>
         {desktopAdditionalContent}
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const AccountLink = memo<PropsWithChildren<{ href: string }>>(
+  ({ href, children }) =>
+    accountUrl && (
+      <CommonButton
+        elementAs="a"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<FaGearIcon />}
+      >
+        <Translate>{children}</Translate>
+      </CommonButton>
+    ),
+)
