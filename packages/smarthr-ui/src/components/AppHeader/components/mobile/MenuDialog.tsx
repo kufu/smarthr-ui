@@ -145,7 +145,7 @@ const Content: FC<
               onClickBack={clearNavigationGroup}
             />
           ) : (
-            <div>{tenantSelector}</div>
+            tenantSelector
           )}
 
           <Button variant="secondary" size="s" onClick={dialogClose}>
