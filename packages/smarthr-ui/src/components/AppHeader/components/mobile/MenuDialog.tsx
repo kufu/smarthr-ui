@@ -4,6 +4,7 @@ import React, {
   PropsWithChildren,
   ReactNode,
   RefObject,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -44,13 +45,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const MenuDialog: FC<
-  PropsWithChildren<{
-    isOpen: boolean
-    setIsOpen: Dispatch<boolean>
-    tenantSelector: ReactNode
-  }>
-> = ({ children, isOpen, setIsOpen, tenantSelector }) => {
+type Props = PropsWithChildren<{
+  isOpen: boolean
+  setIsOpen: Dispatch<boolean>
+  tenantSelector: ReactNode
+}>
+
+export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
   const [contentBuffer, setContentBuffer] = useState<ReactNode>(null)
   const domRef = useRef<HTMLSelectElement>(null)
 
@@ -64,17 +65,28 @@ export const MenuDialog: FC<
     >
       <div className="shr-fixed shr-z-overlap-base">
         <FocusTrap>
-          {isOpen ? <Content domRef={domRef} setContentBuffer={setContentBuffer} /> : contentBuffer}
+          {isOpen ? (
+            <Content
+              {...rest}
+              domRef={domRef}
+              isOpen={isOpen}
+              setContentBuffer={setContentBuffer}
+            />
+          ) : (
+            contentBuffer
+          )}
         </FocusTrap>
       </div>
     </CSSTransition>
   )
 }
 
-const Content: FC<{
-  domRef: RefObject<HTMLSelectElement>
-  setContentBuffer: (node: ReactNode) => void
-}> = ({ domRef, setContentBuffer }) => {
+const Content: FC<
+  Props & {
+    domRef: RefObject<HTMLSelectElement>
+    setContentBuffer: (node: ReactNode) => void
+  }
+> = ({ domRef, children, isOpen, setIsOpen, tenantSelector, setContentBuffer }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
@@ -100,49 +112,40 @@ const Content: FC<{
     [translate],
   )
 
-  useEffect(() => {
-    if (isOpen) {
-      setContentBuffer(renderedContent)
-    } else {
-      setIsReleaseNoteSelected(false)
-      setIsAppLauncherSelected(false)
-      setSelectedNavigationGroup(null)
-    }
-  }, [
-    isOpen,
-    renderedContent,
-    setIsAppLauncherSelected,
-    setIsReleaseNoteSelected,
-    setSelectedNavigationGroup,
-    setContentBuffer,
-  ])
+  const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
+  const clearAppLauncher = useCallback(
+    () => () => setIsAppLauncherSelected(false),
+    [setIsAppLauncherSelected],
+  )
+  const clearReleaseNote = useCallback(
+    () => setIsReleaseNoteSelected(false),
+    [setIsReleaseNoteSelected],
+  )
+  const clearNavigationGroup = useCallback(
+    () => setSelectedNavigationGroup(null),
+    [setSelectedNavigationGroup],
+  )
 
-  return (
+  const renderedContent = (
     <Section role="dialog" aria-modal="true" className={classNames.wrapper} ref={domRef}>
       <div className={classNames.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
-            <MenuSubHeading
-              title={translated.launcherListText}
-              onClickBack={() => setIsAppLauncherSelected(false)}
-            />
+            <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
           ) : isReleaseNoteSelected ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading
-              title={translated.latestReleaseNotes}
-              onClickBack={() => setIsReleaseNoteSelected(false)}
-            />
+            <MenuSubHeading title={translated.latestReleaseNotes} onClickBack={clearReleaseNote} />
           ) : selectedNavigationGroup ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
               title={selectedNavigationGroup.children}
-              onClickBack={() => setSelectedNavigationGroup(null)}
+              onClickBack={clearNavigationGroup}
             />
           ) : (
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
+          <Button variant="secondary" size="s" onClick={dialogClose}>
             <FaXmarkIcon role="img" aria-label={translated.closeMenu} />
           </Button>
         </Cluster>
@@ -157,7 +160,7 @@ const Content: FC<{
           ) : selectedNavigationGroup ? (
             <Navigation
               navigations={selectedNavigationGroup.childNavigations}
-              onClickNavigation={() => setIsOpen(false)}
+              onClickNavigation={dialogClose}
             />
           ) : (
             children
@@ -166,4 +169,23 @@ const Content: FC<{
       )}
     </Section>
   )
+
+  useEffect(() => {
+    if (isOpen) {
+      setContentBuffer(renderedContent)
+    } else {
+      clearReleaseNote()
+      clearAppLauncher()
+      clearNavigationGroup()
+    }
+  }, [
+    isOpen,
+    renderedContent,
+    clearAppLauncher,
+    clearReleaseNote,
+    clearNavigationGroup,
+    setContentBuffer,
+  ])
+
+  return renderedContent
 }
