@@ -148,8 +148,8 @@ const Content: FC<
             tenantSelector
           )}
 
-          <Button variant="secondary" size="s" onClick={dialogClose}>
-            <FaXmarkIcon role="img" aria-label={translated.closeMenu} />
+          <Button size="s" onClick={dialogClose}>
+            <FaXmarkIcon alt={translated.closeMenu} />
           </Button>
         </Cluster>
       </div>
