@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { type ReactNode, memo } from 'react'
 
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -11,7 +11,7 @@ type Props = {
   onClickBack: () => void
 }
 
-export const MenuSubHeader: FC<Props> = ({ title, onClickBack }) => {
+export const MenuSubHeader = memo<Props>(({ title, onClickBack }) => {
   const translate = useTranslate()
 
   return (
@@ -26,4 +26,4 @@ export const MenuSubHeader: FC<Props> = ({ title, onClickBack }) => {
       </Heading>
     </>
   )
-}
+})
