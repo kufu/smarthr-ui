@@ -41,8 +41,6 @@ type Props = {
 export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) => {
   const [isOpen, setIsOpen] = useState(false)
 
-  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
-
   const { createPortal } = usePortal()
 
   const close = useCallback(() => setIsOpen(false), [])
@@ -79,38 +77,62 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
-          {features && features.length > 0 && (
-            <div className={className}>
-              <Button
-                variant="secondary"
-                wide
-                prefix={<FaToolboxIcon />}
-                suffix={
-                  <div className="shr-ms-auto">
-                    <FaAngleRightIcon />
-                  </div>
-                }
-                onClick={() => setIsAppLauncherSelected(true)}
-              >
-                <Translate>{translated.launcherListText}</Translate>
-              </Button>
-            </div>
-          )}
-
+          <FeatureButton className={className}>{translated.launcherListText}</FeatureButton>
           <NavigationAccordion appName={appName} menuClose={close} className={className} />
-
           {additionalContent && (
             <AdditionalContent title={translated.management} className={className}>
               {additionalContent}
             </AdditionalContent>
           )}
-
           <ReleaseNoteButton className={className}>{translated.releaseNote}</ReleaseNoteButton>
         </MenuDialog>,
       )}
     </>
   )
 }
+
+const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => {
+  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
+
+  return (
+    features &&
+    features.length > 0 && (
+      <ActualFeatureButton
+        setIsAppLauncherSelected={setIsAppLauncherSelected}
+        className={className}
+      >
+        {children}
+      </ActualFeatureButton>
+    )
+  )
+})
+
+const ActualFeatureButton: FC<
+  Pick<typeof AppLauncherContext, 'setIsAppLauncherSelected'> &
+    PropsWithChildren<{ className: string }>
+> = ({ setIsAppLauncherSelected, children, className }) => {
+  const onClick = useCallback(() => setIsAppLauncherSelected(true), [setIsAppLauncherSelected])
+
+  return (
+    <div className={className}>
+      <Button
+        variant="secondary"
+        wide
+        prefix={<FaToolboxIcon />}
+        suffix={<FeatureButtonSuffix />}
+        onClick={onClick}
+      >
+        <Translate>{children}</Translate>
+      </Button>
+    </div>
+  )
+}
+
+const FeatureButtonSuffix = memo(() => (
+  <div className="shr-ms-auto">
+    <FaAngleRightIcon />
+  </div>
+))
 
 const NavigationAccordion = memo<
   Pick<Props, 'appName'> & { className: string; menuClose: () => void }
