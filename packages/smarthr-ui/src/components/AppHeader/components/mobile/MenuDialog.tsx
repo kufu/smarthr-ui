@@ -78,7 +78,10 @@ export const MenuDialog: FC<
                 onClickBack={() => setIsReleaseNoteSelected(false)}
               />
             ) : selectedNavigationGroup ? (
-              <NavigationGroupHeading currentNavigationGroup={selectedNavigationGroup} />
+              <MenuSubHeading
+                title={selectedNavigationGroup.children}
+                onClickBack={() => setSelectedNavigationGroup(null)}
+              />
             ) : (
               <div>{tenantSelector}</div>
             )}

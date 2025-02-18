@@ -38,19 +38,19 @@ export type HeaderProps = ComponentProps<typeof Header> & {
 
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup
 
-type NavigationLink = {
+export type NavigationLink = {
   children: ReactElement | string
   href: string
   current?: boolean
 }
 
-type NavigationCustomTag = {
+export type NavigationCustomTag = {
   children: ReactElement | string
   elementAs: ComponentType<any>
   current?: boolean
 } & { [key: string]: any }
 
-type NavigationButton = {
+export type NavigationButton = {
   children: ReactElement | string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   current?: boolean
