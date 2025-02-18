@@ -88,7 +88,7 @@ const NavigationButton: FC<
       navigation.onClick(e)
       onClickNavigation()
     },
-    [navigation.onClick, onClickNavigation],
+    [navigation, onClickNavigation],
   )
 
   return (

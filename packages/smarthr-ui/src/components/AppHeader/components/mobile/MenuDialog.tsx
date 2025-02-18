@@ -63,7 +63,6 @@ export const MenuDialog: FC<
     const { wrapper, header, content } = menu()
 
     return (
-      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       <Section role="dialog" aria-modal="true" className={wrapper()} ref={domRef}>
         <div className={header()}>
           <Cluster justify="space-between" align="center">
@@ -73,11 +72,13 @@ export const MenuDialog: FC<
                 onClickBack={() => setIsAppLauncherSelected(false)}
               />
             ) : isReleaseNoteSelected ? (
+              // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
               <MenuSubHeading
                 title={translate('MobileHeader/Menu/latestReleaseNotes')}
                 onClickBack={() => setIsReleaseNoteSelected(false)}
               />
             ) : selectedNavigationGroup ? (
+              // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
               <MenuSubHeading
                 title={selectedNavigationGroup.children}
                 onClickBack={() => setSelectedNavigationGroup(null)}
@@ -120,6 +121,7 @@ export const MenuDialog: FC<
     setIsAppLauncherSelected,
     setIsOpen,
     setIsReleaseNoteSelected,
+    setSelectedNavigationGroup,
     tenantSelector,
   ])
 
