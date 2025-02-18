@@ -1,4 +1,14 @@
-import React, { type FC, type ReactNode, useContext, useEffect, useMemo, useState } from 'react'
+import React, {
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
@@ -34,7 +44,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const [isAdditionalContentOpen, setIsAdditionalContentOpen] = useState(true)
 
   const { navigations } = useContext(NavigationContext)
-  const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
 
   const { createPortal } = usePortal()
@@ -117,15 +126,39 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
             </div>
           )}
 
-          {releaseNote && (
-            <div className={className}>
-              <MenuButton onClick={() => setIsReleaseNoteSelected(true)}>
-                {translated.releaseNote}
-              </MenuButton>
-            </div>
-          )}
+          <ReleaseNoteButton className={className}>{translated.releaseNote}</ReleaseNoteButton>
         </MenuDialog>,
       )}
     </>
   )
 }
+
+const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => {
+    const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
+
+    return (
+      releaseNote && (
+        <ActualReleaseNoteButton
+          setIsReleaseNoteSelected={setIsReleaseNoteSelected}
+          className={className}
+        >
+          {children}
+        </ActualReleaseNoteButton>
+      )
+    )
+  },
+)
+
+const ActualReleaseNoteButton = memo<
+  Pick<typeof ReleaseNoteContext, 'setIsReleaseNoteSelected'> &
+    PropsWithChildren<{ className: string }>
+>(({ setIsReleaseNoteSelected, children, className }) => {
+  const onClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
+
+  return (
+    <div className={className}>
+      <MenuButton onClick={onClick}>{children}</MenuButton>
+    </div>
+  )
+})
