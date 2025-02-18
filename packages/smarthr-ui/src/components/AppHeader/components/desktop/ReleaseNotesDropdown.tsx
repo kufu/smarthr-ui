@@ -12,7 +12,7 @@ import { useTranslate } from '../../hooks/useTranslate'
 import { ReleaseNoteProps } from '../../types'
 import { Translate } from '../common/Translate'
 
-const wrapper = tv({
+const wrapperClassNameGenerator = tv({
   base: 'shr-w-[400px]',
   variants: {
     type: {
@@ -22,6 +22,8 @@ const wrapper = tv({
 })
 
 export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, loading, error }) => {
+  const wrapperClassName = useMemo(() => wrapperClassNameGenerator(), [])
+
   const translate = useTranslate()
 
   return (
@@ -49,7 +51,7 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
                 </Text>
               </div>
             ) : (
-              <div className={wrapper()}>
+              <div className={wrapperClassName}>
                 {links.slice(0, 5).map(({ title, url }, index) => (
                   <div key={index} className="shr-p-0.75 shr-border-b-shorthand shr-border-dashed">
                     <TextLink
