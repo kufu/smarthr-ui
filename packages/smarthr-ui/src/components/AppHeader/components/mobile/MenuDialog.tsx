@@ -3,6 +3,7 @@ import React, {
   FC,
   PropsWithChildren,
   ReactNode,
+  RefObject,
   useContext,
   useEffect,
   useMemo,
@@ -50,80 +51,37 @@ export const MenuDialog: FC<
     tenantSelector: ReactNode
   }>
 > = ({ children, isOpen, setIsOpen, tenantSelector }) => {
+  const [contentBuffer, setContentBuffer] = useState<ReactNode>(null)
+  const domRef = useRef<HTMLSelectElement>(null)
+
+  return (
+    <CSSTransition
+      classNames="shr-sp-menu"
+      in={isOpen}
+      timeout={300}
+      unmountOnExit
+      nodeRef={domRef}
+    >
+      <div className="shr-fixed shr-z-overlap-base">
+        <FocusTrap>
+          {isOpen ? <Content domRef={domRef} setContentBuffer={setContentBuffer} /> : contentBuffer}
+        </FocusTrap>
+      </div>
+    </CSSTransition>
+  )
+}
+
+const Content: FC<{
+  domRef: RefObject<HTMLSelectElement>
+  setContentBuffer: (node: ReactNode) => void
+}> = ({ domRef, setContentBuffer }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
     useContext(AppLauncherContext)
 
-  const [contentBuffer, setContentBuffer] = useState<ReactNode>(null)
   const translate = useTranslate()
-  const domRef = useRef<HTMLSelectElement>(null)
-
-  const renderedContent = useMemo(() => {
-    const { wrapper, header, content } = menu()
-
-    return (
-      <Section role="dialog" aria-modal="true" className={wrapper()} ref={domRef}>
-        <div className={header()}>
-          <Cluster justify="space-between" align="center">
-            {isAppLauncherSelected ? (
-              <MenuSubHeading
-                title={translate('Launcher/listText')}
-                onClickBack={() => setIsAppLauncherSelected(false)}
-              />
-            ) : isReleaseNoteSelected ? (
-              // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-              <MenuSubHeading
-                title={translate('MobileHeader/Menu/latestReleaseNotes')}
-                onClickBack={() => setIsReleaseNoteSelected(false)}
-              />
-            ) : selectedNavigationGroup ? (
-              // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-              <MenuSubHeading
-                title={selectedNavigationGroup.children}
-                onClickBack={() => setSelectedNavigationGroup(null)}
-              />
-            ) : (
-              <div>{tenantSelector}</div>
-            )}
-
-            <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
-              <FaXmarkIcon role="img" aria-label={translate('MobileHeader/Menu/closeMenu')} />
-            </Button>
-          </Cluster>
-        </div>
-
-        {isAppLauncherSelected && features && features.length > 0 ? (
-          <AppLauncher features={features} />
-        ) : (
-          <div className={content()}>
-            {isReleaseNoteSelected ? (
-              <ReleaseNote />
-            ) : selectedNavigationGroup ? (
-              <Navigation
-                navigations={selectedNavigationGroup.childNavigations}
-                onClickNavigation={() => setIsOpen(false)}
-              />
-            ) : (
-              children
-            )}
-          </div>
-        )}
-      </Section>
-    )
-  }, [
-    translate,
-    children,
-    features,
-    isAppLauncherSelected,
-    isReleaseNoteSelected,
-    selectedNavigationGroup,
-    setIsAppLauncherSelected,
-    setIsOpen,
-    setIsReleaseNoteSelected,
-    setSelectedNavigationGroup,
-    tenantSelector,
-  ])
+  const { wrapper, header, content } = menu()
 
   useEffect(() => {
     if (isOpen) {
@@ -139,19 +97,56 @@ export const MenuDialog: FC<
     setIsAppLauncherSelected,
     setIsReleaseNoteSelected,
     setSelectedNavigationGroup,
+    setContentBuffer,
   ])
 
   return (
-    <CSSTransition
-      classNames="shr-sp-menu"
-      in={isOpen}
-      timeout={300}
-      unmountOnExit
-      nodeRef={domRef}
-    >
-      <div className="shr-fixed shr-z-overlap-base">
-        <FocusTrap>{isOpen ? renderedContent : contentBuffer}</FocusTrap>
+    <Section role="dialog" aria-modal="true" className={wrapper()} ref={domRef}>
+      <div className={header()}>
+        <Cluster justify="space-between" align="center">
+          {isAppLauncherSelected ? (
+            <MenuSubHeading
+              title={translate('Launcher/listText')}
+              onClickBack={() => setIsAppLauncherSelected(false)}
+            />
+          ) : isReleaseNoteSelected ? (
+            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+            <MenuSubHeading
+              title={translate('MobileHeader/Menu/latestReleaseNotes')}
+              onClickBack={() => setIsReleaseNoteSelected(false)}
+            />
+          ) : selectedNavigationGroup ? (
+            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+            <MenuSubHeading
+              title={selectedNavigationGroup.children}
+              onClickBack={() => setSelectedNavigationGroup(null)}
+            />
+          ) : (
+            <div>{tenantSelector}</div>
+          )}
+
+          <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
+            <FaXmarkIcon role="img" aria-label={translate('MobileHeader/Menu/closeMenu')} />
+          </Button>
+        </Cluster>
       </div>
-    </CSSTransition>
+
+      {isAppLauncherSelected && features && features.length > 0 ? (
+        <AppLauncher features={features} />
+      ) : (
+        <div className={content()}>
+          {isReleaseNoteSelected ? (
+            <ReleaseNote />
+          ) : selectedNavigationGroup ? (
+            <Navigation
+              navigations={selectedNavigationGroup.childNavigations}
+              onClickNavigation={() => setIsOpen(false)}
+            />
+          ) : (
+            children
+          )}
+        </div>
+      )}
+    </Section>
   )
 }
