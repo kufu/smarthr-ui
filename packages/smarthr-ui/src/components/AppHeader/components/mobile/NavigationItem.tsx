@@ -9,17 +9,17 @@ import { Translate } from '../common/Translate'
 import { MenuButton } from './MenuButton'
 import { NavigationContext } from './NavigationContext'
 
-const navigationItem = tv({
+const classNameGenerator = tv({
   base: ['[&&]:shr-px-0.5'],
 })
 
 type Props = { navigation: Navigation; onClickNavigation: () => void }
 
 export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => {
-  const navigationItemStyle = navigationItem()
+  const actualClassName = classNameGenerator()
 
   if ('elementAs' in navigation) {
-    const { children, elementAs: Tag, current, ...rest } = navigation
+    const { children, elementAs: Tag, current, className, ...rest } = navigation
 
     return (
       // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
@@ -29,7 +29,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
         className={commonButton({
           current,
           boldWhenCurrent: true,
-          className: [navigationItemStyle, rest.className],
+          className: [actualClassName, className],
         })}
       >
         <Translate>{children}</Translate>
@@ -44,7 +44,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
         href={navigation.href}
         current={navigation.current}
         boldWhenCurrent
-        className={navigationItemStyle}
+        className={actualClassName}
       >
         <Translate>{navigation.children}</Translate>
       </CommonButton>
@@ -62,7 +62,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
         }}
         current={navigation.current}
         boldWhenCurrent
-        className={navigationItemStyle}
+        className={actualClassName}
       >
         <Translate>{navigation.children}</Translate>
       </CommonButton>
