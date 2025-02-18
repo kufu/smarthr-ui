@@ -63,17 +63,9 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
             ) : (
               <div className={wrapperClassName}>
                 {links.slice(0, 5).map(({ title, url }, index) => (
-                  <div key={index} className="shr-p-0.75 shr-border-b-shorthand shr-border-dashed">
-                    <TextLink
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shr-leading-normal [&&]:shr-underline"
-                      style={BOX_SHADOW_STYLE}
-                    >
-                      {title}
-                    </TextLink>
-                  </div>
+                  <ArticleLink key={index} href={url}>
+                    {title}
+                  </ArticleLink>
                 ))}
                 <SeeAllTextLink href={indexUrl}>{translated.seeAll}</SeeAllTextLink>
               </div>
@@ -84,6 +76,20 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
     </div>
   )
 }
+
+const ArticleLink = memo<PropsWithChildren<{ href: string }>>(({ href, children }) => (
+  <div className="shr-p-0.75 shr-border-b-shorthand shr-border-dashed">
+    <TextLink
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="shr-leading-normal [&&]:shr-underline"
+      style={BOX_SHADOW_STYLE}
+    >
+      {children}
+    </TextLink>
+  </div>
+))
 
 const SeeAllTextLink = memo<PropsWithChildren<{ href: string }>>(({ href, children }) => (
   <div className="shr-p-0.75 shr-text-right">
