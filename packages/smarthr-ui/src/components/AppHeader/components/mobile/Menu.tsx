@@ -111,7 +111,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           {releaseNote && (
             <div className={menuItemBlockStyle}>
               <MenuButton onClick={() => setIsReleaseNoteSelected(true)}>
-                <Translate>{translate('common/releaseNote')}</Translate>
+                {translate('common/releaseNote')}
               </MenuButton>
             </div>
           )}
