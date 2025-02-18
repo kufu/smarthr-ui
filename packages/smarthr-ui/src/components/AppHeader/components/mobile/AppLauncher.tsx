@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../../../Button'
@@ -35,7 +35,6 @@ const appLauncher = tv({
 })
 
 export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
-  const translate = useTranslate()
   const {
     features,
     page,
@@ -47,11 +46,23 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     changeSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const { wrapper, searchArea, headArea, scrollArea, bottomArea } = appLauncher()
+  const classNames = useMemo(() => {
+    const { wrapper, searchArea, headArea, scrollArea, bottomArea } = appLauncher()
+
+    return {
+      wrapper: wrapper(),
+      searchArea: searchArea(),
+      headArea: headArea(),
+      scrollArea: scrollArea(),
+      bottomArea: bottomArea(),
+    }
+  }, [])
+
+  const translate = useTranslate()
 
   return (
-    <div className={wrapper()}>
-      <div className={searchArea()}>
+    <div className={classNames.wrapper}>
+      <div className={classNames.searchArea}>
         <SearchInput
           name="search"
           title={translate('Launcher/searchInputTitle')}
@@ -76,7 +87,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         />
       </div>
 
-      <Cluster className={headArea()} justify="space-between" align="center">
+      <Cluster className={classNames.headArea} justify="space-between" align="center">
         {mode === 'search' ? (
           <Text size="S" weight="bold">
             <Translate>{translate('Launcher/searchResultText')}</Translate>
@@ -93,11 +104,11 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         )}
       </Cluster>
 
-      <div className={scrollArea()}>
+      <div className={classNames.scrollArea}>
         <AppLauncherFeatures features={features} page={page} />
       </div>
 
-      <div className={bottomArea()}>
+      <div className={classNames.bottomArea}>
         <Text size="XS">
           <TextLink
             href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
