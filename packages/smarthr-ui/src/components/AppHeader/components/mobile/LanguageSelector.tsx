@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, useCallback, useMemo } from 'react'
+import { type FC, type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -25,6 +25,8 @@ type Props = {
   locale: LocaleProps
   onClickClose: (isOpen: boolean) => void
 }
+
+const LOCALE_KEYS = Object.keys(localeMap)
 
 export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
   const classNames = useMemo(() => {
@@ -55,20 +57,34 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
       </div>
 
       <div className={classNames.buttonWrapper}>
-        {Object.keys(localeMap).map((localeKey) => (
-          <CommonButton
+        {LOCALE_KEYS.map((localeKey) => (
+          <LocaleButton
             key={localeKey}
-            elementAs="button"
-            type="button"
-            value={localeKey}
+            value={localeKey as Locale}
             onClick={onClickLocale}
-            prefix={localeKey === locale.selectedLocale && <FaCheckIcon color="MAIN" />}
+            selected={localeKey === locale.selectedLocale}
             className={classNames.button}
-          >
-            {localeMap[localeKey as Locale]}
-          </CommonButton>
+          />
         ))}
       </div>
     </Section>
   )
 }
+
+const LocaleButton = memo<{
+  value: Locale
+  selected: boolean
+  className: string
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ value, selected, className, onClick }) => (
+  <CommonButton
+    elementAs="button"
+    type="button"
+    value={value}
+    onClick={onClick}
+    prefix={selected && <FaCheckIcon color="MAIN" />}
+    className={className}
+  >
+    {localeMap[value]}
+  </CommonButton>
+))
