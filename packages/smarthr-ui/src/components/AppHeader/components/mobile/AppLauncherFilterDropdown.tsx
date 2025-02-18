@@ -42,10 +42,11 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
   }, [])
 
   const translate = useTranslate()
-  const translated = useMemo<Record<Launcher['page'], string>>(
+  const translated = useMemo(
     () => ({
       favorite: translate('Launcher/favoriteModeText'),
       all: translate('MobileHeader/Menu/allAppButton'),
+      checkIconAlt: translate('Launcher/sortDropdownSelected'),
     }),
     [translate],
   )
@@ -55,6 +56,11 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
       onSelectPage(e.currentTarget.value as Launcher['page'])
     },
     [onSelectPage],
+  )
+
+  const isFavorite = page === 'favorite'
+  const buttonPrefix = (
+    <FaCheckIcon color={textColor.main} alt={<Translate>{translated.checkIconAlt}</Translate>} />
   )
 
   return (
@@ -67,29 +73,24 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
 
       <DropdownContent>
         <div className={classNames.contentBody}>
-          {Object.entries(translated).map(([key, value], i) => {
-            const isSelected = key === page
-
-            return (
-              <Button
-                key={i}
-                value={key}
-                aria-selected={isSelected}
-                onClick={onClickButton}
-                className={classNames.contentButton}
-                prefix={
-                  isSelected && (
-                    <FaCheckIcon
-                      color={textColor.main}
-                      alt={<Translate>{translate('Launcher/sortDropdownSelected')}</Translate>}
-                    />
-                  )
-                }
-              >
-                <Translate>{value}</Translate>
-              </Button>
-            )
-          })}
+          <Button
+            value="favorite"
+            aria-selected={isFavorite}
+            onClick={onClickButton}
+            className={classNames.contentButton}
+            prefix={isFavorite && buttonPrefix}
+          >
+            <Translate>{translated.favorite}</Translate>
+          </Button>
+          <Button
+            value="all"
+            aria-selected={!isFavorite}
+            onClick={onClickButton}
+            className={classNames.contentButton}
+            prefix={!isFavorite && buttonPrefix}
+          >
+            <Translate>{translated.all}</Translate>
+          </Button>
         </div>
       </DropdownContent>
     </Dropdown>
