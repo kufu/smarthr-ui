@@ -99,7 +99,7 @@ const buildDropdownMenu = (
   <>
     {navigations.map((navigation, index) => {
       if ('elementAs' in navigation) {
-        const { elementAs: Component, current, ...rest } = navigation
+        const { elementAs: Component, current, className, ...rest } = navigation
         // TODO: DropdownMenuItemを作成し、elementAsを渡せるようにする
         return (
           <Component
