@@ -1,4 +1,4 @@
-import React, { type FC, useMemo, useRef } from 'react'
+import React, { type FC, type MouseEvent, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -49,6 +49,22 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
     'name/desc': translate('Launcher/sortDropdownOrderNameDesc'),
   }
 
+  const onClickOption = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      onSelectSortType(e.currentTarget.value as Launcher['sortType'])
+
+      // Dropdown がネストしており、この Dropdown のみ閉じて親の Dropdown は開いたままというのができない
+      // そのため、無理矢理クリックイベントを発生させて実現している
+      setTimeout(() => {
+        if (triggerRef.current) {
+          triggerRef.current.click()
+          triggerRef.current.focus()
+        }
+      }, 0)
+    },
+    [onSelectSortType],
+  )
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -68,6 +84,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
           {Object.entries(sortMap).map(([key, value], i) => (
             <Button
               key={i}
+              value={key}
               role="option"
               aria-selected={key === sortType}
               className={classNames.contentButton}
@@ -79,18 +96,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
                   />
                 )
               }
-              onClick={() => {
-                onSelectSortType(key as Launcher['sortType'])
-
-                // Dropdown がネストしており、この Dropdown のみ閉じて親の Dropdown は開いたままというのができない
-                // そのため、無理矢理クリックイベントを発生させて実現している
-                setTimeout(() => {
-                  if (triggerRef.current) {
-                    triggerRef.current.click()
-                    triggerRef.current.focus()
-                  }
-                }, 0)
-              }}
+              onClick={onClickOption}
             >
               <Translate>{value}</Translate>
             </Button>
