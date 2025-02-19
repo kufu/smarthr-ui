@@ -1,4 +1,5 @@
 'use client'
+
 import React, {
   ComponentPropsWithRef,
   ReactNode,
@@ -85,6 +86,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       hasFileList = true,
       onChange,
       disabled = false,
+      multiple,
       error,
       decorators,
       ...props
@@ -128,15 +130,30 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       [decorators],
     )
 
+    const updateInputValue = useCallback(
+      (newFiles: File[]) => {
+        if (!inputRef.current) {
+          return
+        }
+        const buff = new DataTransfer()
+        newFiles.forEach((file) => {
+          buff.items.add(file)
+        })
+
+        isUpdatingFilesDirectly.current = true
+        inputRef.current.files = buff.files
+        isUpdatingFilesDirectly.current = false
+      },
+      [inputRef],
+    )
+
     const updateFiles = useCallback(
       (newFiles: File[]) => {
-        if (onChange) {
-          onChange(newFiles)
-        }
-
+        onChange?.(newFiles)
+        updateInputValue(newFiles)
         setFiles(newFiles)
       },
-      [setFiles, onChange],
+      [setFiles, onChange, updateInputValue],
     )
 
     const handleChange = useCallback(
@@ -145,9 +162,16 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           return
         }
 
-        updateFiles(Array.from(e.target.files ?? []))
+        const newFiles = Array.from(e.target.files ?? [])
+
+        if (multiple) {
+          // multipleの場合、すでに選択済みのファイルと結合する
+          updateFiles([...files, ...newFiles])
+        } else {
+          updateFiles(newFiles)
+        }
       },
-      [isUpdatingFilesDirectly, updateFiles],
+      [files, isUpdatingFilesDirectly, updateFiles, multiple],
     )
 
     const handleDelete = useCallback(
@@ -160,18 +184,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         const newFiles = files.filter((_, i) => index !== i)
 
         updateFiles(newFiles)
-
-        const buff = new DataTransfer()
-
-        newFiles.forEach((file) => {
-          buff.items.add(file)
-        })
-
-        isUpdatingFilesDirectly.current = true
-        inputRef.current.files = buff.files
-        isUpdatingFilesDirectly.current = false
       },
-      [files, isUpdatingFilesDirectly, inputRef, updateFiles],
+      [files, inputRef, updateFiles],
     )
 
     return (
@@ -179,7 +193,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         {!disabled && hasFileList && files.length > 0 && (
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileListStyle}>
             {files.map((file, index) => (
-              <li key={index} className={fileItemStyle}>
+              <li key={`${file.name}-${index}`} className={fileItemStyle}>
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
                 <Button
                   variant="text"
@@ -195,8 +209,10 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           </BaseColumn>
         )}
         <span className={inputWrapperStyle}>
+          {}
           <input
             {...props}
+            multiple
             data-smarthr-ui-input="true"
             type="file"
             onChange={handleChange}
