@@ -52,22 +52,23 @@ export const CommonButton: FC<Props> = ({
     className,
   })
 
-  if (elementAs === 'a') {
-    return (
-      <a {...(props as AnchorProps)} className={commonButtonStyle}>
-        {prefix}
-        {props.children}
-      </a>
-    )
-  } else if (elementAs === 'button') {
-    return (
-      // eslint-disable-next-line smarthr/best-practice-for-button-element
-      <button {...(props as ButtonProps)} className={commonButtonStyle}>
-        {prefix}
-        {props.children}
-      </button>
-    )
-  } else {
-    throw new Error(elementAs satisfies never)
+  switch (elementAs) {
+    case 'a':
+      return (
+        <a {...(props as AnchorProps)} className={commonButtonStyle}>
+          {prefix}
+          {props.children}
+        </a>
+      )
+    case 'button':
+      return (
+        // eslint-disable-next-line smarthr/best-practice-for-button-element
+        <button {...(props as ButtonProps)} className={commonButtonStyle}>
+          {prefix}
+          {props.children}
+        </button>
+      )
   }
+
+  throw new Error(elementAs satisfies never)
 }
