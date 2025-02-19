@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -174,10 +174,9 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           <hr />
 
           <Section>
-            <Heading className={classNames.sideNavHeading} type="subSubBlockTitle">
+            <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
               {translated.listText}
-            </Heading>
-
+            </MemoizedSubSubBlockHeading>
             <SideNav
               className={classNames.selectedSideNav}
               size="s"
@@ -194,22 +193,15 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             />
           </Section>
 
-          <div className={classNames.help}>
-            <TextLink
-              href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
-              target="_blank"
-            >
-              {translated.helpText}
-            </TextLink>
-          </div>
+          <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
         </div>
 
         <main className={classNames.main}>
           <Section className={classNames.mainInner}>
             <Cluster className={classNames.contentHead} align="center" justify="space-between">
-              <Heading type="subSubBlockTitle">
+              <MemoizedSubSubBlockHeading>
                 {mode === 'search' ? translated.searchResultText : translated[page]}
-              </Heading>
+              </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (
                 <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
@@ -225,3 +217,22 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     </div>
   )
 }
+
+const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <div className={className}>
+    <TextLink
+      href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
+      target="_blank"
+    >
+      {children}
+    </TextLink>
+  </div>
+))
+
+const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
+  ({ children, className }) => (
+    <Heading type="subSubBlockTitle" className={className}>
+      {children}
+    </Heading>
+  ),
+)
