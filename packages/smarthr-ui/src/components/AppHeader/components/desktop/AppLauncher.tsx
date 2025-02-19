@@ -1,4 +1,11 @@
-import React, { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
+import React, {
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -217,15 +224,20 @@ const SideNavs = memo<
     [isAll, translated],
   )
 
+  const onClick = useCallback(
+    (_: any, id: string) => {
+      changePage(id as Launcher['page'])
+    },
+    [changePage],
+  )
+
   return (
     <div className={classNames.side}>
       <SideNav
         className={classNames.unselectedSideNav}
         size="s"
         items={unselectedItems}
-        onClick={(_, id) => {
-          changePage(id as Launcher['page'])
-        }}
+        onClick={onClick}
       />
 
       <hr />
@@ -238,9 +250,7 @@ const SideNavs = memo<
           className={classNames.selectedSideNav}
           size="s"
           items={selectedItems}
-          onClick={(_, id) => {
-            changePage(id as Launcher['page'])
-          }}
+          onClick={onClick}
         />
       </Section>
 
