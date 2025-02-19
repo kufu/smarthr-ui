@@ -1,4 +1,4 @@
-import React, { type FC, memo, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../../../Button'
@@ -59,7 +59,6 @@ const FeatureList: FC<Props> = ({ features, page }) => {
     }
   }, [])
 
-  const isDesktop = useMediaQuery(mediaQuery.desktop)
   const isFavorite = page === 'favorite'
 
   return (
@@ -69,17 +68,23 @@ const FeatureList: FC<Props> = ({ features, page }) => {
           <AnchorButton
             href={feature.url}
             target="_blank"
-            prefix={page === 'favorite' && <FaStarIcon />}
+            prefix={isFavorite && <FaStarIcon />}
             suffix={<FaArrowRightIcon />}
             variant="text"
             wide
             data-favorite={isFavorite}
             className={classNames.listItem}
           >
-            {isDesktop ? <LineClamp maxLines={2}>{feature.name}</LineClamp> : feature.name}
+            <FeatureName>{feature.name}</FeatureName>
           </AnchorButton>
         </li>
       ))}
     </ul>
   )
 }
+
+const FeatureName = memo<PropsWithChildren>(({ children }) => {
+  const isDesktop = useMediaQuery(mediaQuery.desktop)
+
+  return isDesktop ? <LineClamp maxLines={2}>{children}</LineClamp> : children
+})
