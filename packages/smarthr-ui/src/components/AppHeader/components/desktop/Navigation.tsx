@@ -104,8 +104,7 @@ const buildDropdownMenu = (
         return (
           <Component
             {...rest}
-            // key={navigation.children}
-            key={`${index}-${navigation.children.toString()}`}
+            key={index}
             aria-current={current}
             className={commonButton({
               current,
@@ -116,32 +115,17 @@ const buildDropdownMenu = (
       }
       if ('href' in navigation) {
         const { current, ...rest } = navigation
-        return (
-          <AnchorButton
-            {...rest}
-            aria-current={current && 'page'}
-            key={`${index}-${navigation.children.toString()}`}
-          />
-        )
+        return <AnchorButton {...rest} key={index} aria-current={current && 'page'} />
       }
       if ('title' in navigation) {
         return (
-          <DropdownMenuGroup
-            name={navigation.title}
-            key={`${index}-${navigation.title.toString()}`}
-          >
+          <DropdownMenuGroup key={index} name={navigation.title}>
             {buildDropdownMenu(navigation.childNavigations)}
           </DropdownMenuGroup>
         )
       }
       const { current, ...rest } = navigation
-      return (
-        <Button
-          {...rest}
-          aria-current={current && 'page'}
-          key={`${index}-${navigation.children.toString()}`}
-        />
-      )
+      return <Button {...rest} key={index} aria-current={current && 'page'} />
     })}
   </>
 )
