@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -21,7 +21,7 @@ import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo'
 
-const desktopHeader = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'max-[751px]:!shr-hidden',
     appsButton: [
@@ -51,7 +51,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
   ...props
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, appsButton } = desktopHeader()
+    const { wrapper, appsButton } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
@@ -86,15 +86,9 @@ export const DesktopHeader: FC<HeaderProps> = ({
             <>
               {features && features.length > 0 && (
                 <Dropdown>
-                  <DropdownTrigger>
-                    <Button
-                      prefix={enableNew ?? <FaToolboxIcon />}
-                      className={classNames.appsButton}
-                    >
-                      <Translate>{translated.appLauncherLabel}</Translate>
-                    </Button>
-                  </DropdownTrigger>
-
+                  <AppLauncherButton enableNew={enableNew} className={classNames.appsButton}>
+                    {translated.appLauncherLabel}
+                  </AppLauncherButton>
                   <DropdownContent controllable>
                     <AppLauncher features={features} />
                   </DropdownContent>
@@ -161,3 +155,13 @@ export const DesktopHeader: FC<HeaderProps> = ({
     </>
   )
 }
+
+const AppLauncherButton = memo<
+  Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string }>
+>(({ enableNew, children, className }) => (
+  <DropdownTrigger>
+    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className}>
+      <Translate>{children}</Translate>
+    </Button>
+  </DropdownTrigger>
+))
