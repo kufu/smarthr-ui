@@ -190,53 +190,64 @@ const SideNavs = memo<
       help: string
     }
   }
->(({ mode, page, changePage, translated, classNames }) => (
-  <div className={classNames.side}>
-    <SideNav
-      className={classNames.unselectedSideNav}
-      size="s"
-      items={[
-        {
-          id: 'favorite',
-          title: translated.favorite,
-          prefix: (
-            <FaStarIcon
-              color={mode !== 'search' && page === 'favorite' ? textColor.white : undefined}
-            />
-          ),
-          isSelected: mode !== 'search' && page === 'favorite',
-        },
-      ]}
-      onClick={(_, id) => {
-        changePage(id as Launcher['page'])
-      }}
-    />
+>(({ mode, page, changePage, translated, classNames }) => {
+  const isNotSearch = mode !== 'search'
+  const isFavorite = isNotSearch && page === 'favorite'
+  const isAll = isNotSearch && page === 'all'
 
-    <hr />
+  const unselectedItems = useMemo(
+    () => [
+      {
+        id: 'favorite',
+        title: translated.favorite,
+        prefix: <FaStarIcon color={isFavorite ? textColor.white : undefined} />,
+        isSelected: isFavorite,
+      },
+    ],
+    [isFavorite, translated],
+  )
+  const selectedItems = useMemo(
+    () => [
+      {
+        id: 'all',
+        title: translated.all,
+        isSelected: isAll,
+      },
+    ],
+    [isAll, translated],
+  )
 
-    <Section>
-      <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
-        {translated.listText}
-      </MemoizedSubSubBlockHeading>
+  return (
+    <div className={classNames.side}>
       <SideNav
-        className={classNames.selectedSideNav}
+        className={classNames.unselectedSideNav}
         size="s"
-        items={[
-          {
-            id: 'all',
-            title: translated.all,
-            isSelected: mode !== 'search' && page === 'all',
-          },
-        ]}
+        items={unselectedItems}
         onClick={(_, id) => {
           changePage(id as Launcher['page'])
         }}
       />
-    </Section>
 
-    <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
-  </div>
-))
+      <hr />
+
+      <Section>
+        <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
+          {translated.listText}
+        </MemoizedSubSubBlockHeading>
+        <SideNav
+          className={classNames.selectedSideNav}
+          size="s"
+          items={selectedItems}
+          onClick={(_, id) => {
+            changePage(id as Launcher['page'])
+          }}
+        />
+      </Section>
+
+      <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
+    </div>
+  )
+})
 
 const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
   <div className={className}>
