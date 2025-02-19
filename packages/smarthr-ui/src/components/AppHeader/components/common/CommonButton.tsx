@@ -1,7 +1,7 @@
 import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-export const commonButton = tv({
+export const commonButtonClassNameGenerator = tv({
   base: [
     '[&&]:shr-flex [&&]:shr-items-center [&&]:shr-w-full [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-box-border [&&]:shr-bg-transparent [&&]:shr-text-base [&&]:shr-text-black [&&]:shr-leading-normal [&&]:shr-no-underline [&&]:shr-rounded-m [&&]:shr-cursor-pointer [&&]:shr-border-none',
     '[&&]:hover:shr-bg-white-darken',
@@ -47,7 +47,7 @@ export const CommonButton: FC<Props> = ({
 }) => {
   const actualClassName = useMemo(
     () =>
-      commonButton({
+      commonButtonClassNameGenerator({
         prefix: !!prefix,
         current,
         boldWhenCurrent,
