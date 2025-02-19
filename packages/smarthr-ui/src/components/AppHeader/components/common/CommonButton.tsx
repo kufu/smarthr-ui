@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
+import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 export const commonButton = tv({
@@ -45,17 +45,21 @@ export const CommonButton: FC<Props> = ({
   className,
   ...props
 }) => {
-  const commonButtonStyle = commonButton({
-    prefix: Boolean(prefix),
-    current,
-    boldWhenCurrent,
-    className,
-  })
+  const actualClassName = useMemo(
+    () =>
+      commonButton({
+        prefix: !!prefix,
+        current,
+        boldWhenCurrent,
+        className,
+      }),
+    [current, prefix, boldWhenCurrent, className],
+  )
 
   switch (elementAs) {
     case 'a':
       return (
-        <a {...(props as AnchorProps)} className={commonButtonStyle}>
+        <a {...(props as AnchorProps)} className={actualClassName}>
           {prefix}
           {props.children}
         </a>
@@ -63,7 +67,7 @@ export const CommonButton: FC<Props> = ({
     case 'button':
       return (
         // eslint-disable-next-line smarthr/best-practice-for-button-element
-        <button {...(props as ButtonProps)} className={commonButtonStyle}>
+        <button {...(props as ButtonProps)} className={actualClassName}>
           {prefix}
           {props.children}
         </button>
