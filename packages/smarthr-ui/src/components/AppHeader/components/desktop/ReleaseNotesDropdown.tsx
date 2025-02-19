@@ -39,27 +39,13 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
   return (
     <div className="shr-border-l-shorthand shr-ms-0.5">
       <Dropdown>
-        <DropdownTrigger>
-          <Button
-            suffix={<FaCaretDownIcon />}
-            className="shr-border-none shr-font-normal shr-rounded-none [&[aria-expanded='true']>.smarthr-ui-Icon:last-child]:shr-rotate-180"
-          >
-            <Translate>{translated.releaseNote}</Translate>
-          </Button>
-        </DropdownTrigger>
-
+        <ReleaseNoteDropdownTrigger>{translated.releaseNote}</ReleaseNoteDropdownTrigger>
         <DropdownContent className="shr-mr-1.25" controllable>
           <div className="shr-w-[400px]">
             {loading ? (
-              <Center className="shr-py-3">
-                <Loader />
-              </Center>
+              <StyledLoader />
             ) : error || !links ? (
-              <div className="shr-p-0.75 shr-whitespace-pre-wrap">
-                <Text>
-                  <Translate>{translated.loadError}</Translate>
-                </Text>
-              </div>
+              <LoadErrorText>{translated.loadError}</LoadErrorText>
             ) : (
               <div className={wrapperClassName}>
                 {links.slice(0, 5).map(({ title, url }, index) => (
@@ -76,6 +62,31 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
     </div>
   )
 }
+
+const ReleaseNoteDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
+  <DropdownTrigger>
+    <Button
+      suffix={<FaCaretDownIcon />}
+      className="shr-border-none shr-font-normal shr-rounded-none [&[aria-expanded='true']>.smarthr-ui-Icon:last-child]:shr-rotate-180"
+    >
+      <Translate>{children}</Translate>
+    </Button>
+  </DropdownTrigger>
+))
+
+const StyledLoader = memo(() => (
+  <Center className="shr-py-3">
+    <Loader />
+  </Center>
+))
+
+const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
+  <div className="shr-p-0.75 shr-whitespace-pre-wrap">
+    <Text>
+      <Translate>{children}</Translate>
+    </Text>
+  </div>
+))
 
 const ArticleLink = memo<PropsWithChildren<{ href: string }>>(({ href, children }) => (
   <div className="shr-p-0.75 shr-border-b-shorthand shr-border-dashed">
