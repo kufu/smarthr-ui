@@ -1,4 +1,12 @@
-import React, { type FC, type MouseEvent, useCallback, useMemo, useRef } from 'react'
+import React, {
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  memo,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -43,9 +51,9 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
   }, [])
 
   const translate = useTranslate()
-  const sortMap: Record<Launcher['sortType'], string> = {}
   const translated = useMemo(
     () => ({
+      label: translate('Launcher/sortDropdownLabel'),
       selected: translate('Launcher/sortDropdownSelected'),
       default: translate('Launcher/sortDropdownOrderDefault'),
       asc: translate('Launcher/sortDropdownOrderNameAsc'),
@@ -53,6 +61,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
     }),
     [translate],
   )
+
   const options = useMemo(
     () => [
       ['default', translated.default],
@@ -88,34 +97,49 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
           suffix={<FaCaretDownIcon />}
           ref={triggerRef}
         >
-          <Translate>{translate('Launcher/sortDropdownLabel')}</Translate>
+          <Translate>{translated.label}</Translate>
         </Button>
       </DropdownTrigger>
 
       <DropdownContent controllable>
         <div role="listbox" className={classNames.contentBody}>
-          {options.map(([key, value], i) => (
-            <Button
+          {options.map(([value, children], i) => (
+            <OptionButton
               key={i}
-              value={key}
-              role="option"
-              aria-selected={key === sortType}
-              className={classNames.contentButton}
-              prefix={
-                key === sortType && (
-                  <FaCheckIcon
-                    color={textColor.main}
-                    alt={<Translate>{translated.selected}</Translate>}
-                  />
-                )
-              }
+              value={value}
+              selected={value === sortType}
+              selectedAlt={translated.selected}
               onClick={onClickOption}
+              className={classNames.contentButton}
             >
-              <Translate>{value}</Translate>
-            </Button>
+              {children}
+            </OptionButton>
           ))}
         </div>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const OptionButton = memo<
+  PropsWithChildren<{
+    value: string
+    selected: boolean
+    selectedAlt: string
+    onClick: (e: MouseEvent<HTMLButtonElement>) => void
+    className: string
+  }>
+>(({ value, selected, selectedAlt, onClick, children, className }) => (
+  <Button
+    value={value}
+    role="option"
+    aria-selected={selected}
+    className={className}
+    prefix={
+      selected && <FaCheckIcon color={textColor.main} alt={<Translate>{selectedAlt}</Translate>} />
+    }
+    onClick={onClick}
+  >
+    <Translate>{children}</Translate>
+  </Button>
+))
