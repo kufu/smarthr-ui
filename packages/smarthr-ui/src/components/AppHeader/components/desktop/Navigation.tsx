@@ -60,72 +60,60 @@ export const Navigation: FC<Props> = ({
   </AppNavi>
 )
 
-const buildNavigations = (
-  navigations: NavigationType[],
-): ComponentProps<typeof AppNavi>['children'] => (
-  <>
-    {navigations.map((navigation, index) => {
-      if ('elementAs' in navigation) {
-        const { elementAs, ...rest } = navigation
-        return (
-          <AppNaviCustomTag
-            {...rest}
-            key={`${index}-${navigation.children.toString()}`}
-            tag={navigation.elementAs}
-          />
-        )
-      }
-      if ('href' in navigation) {
-        return <AppNaviAnchor {...navigation} key={`${index}-${navigation.children.toString()}`} />
-      }
-      if ('childNavigations' in navigation) {
-        return (
-          <AppNaviDropdownMenuButton
-            label={navigation.children}
-            key={`${index}-${navigation.children.toString()}`}
-          >
-            {buildDropdownMenu(navigation.childNavigations)}
-          </AppNaviDropdownMenuButton>
-        )
-      }
-      return <AppNaviButton {...navigation} key={`${index}-${navigation.children.toString()}`} />
-    })}
-  </>
-)
+const buildNavigations = (navigations: NavigationType[]) =>
+  navigations.map((navigation, index) => {
+    if ('elementAs' in navigation) {
+      const { elementAs, ...rest } = navigation
 
-const buildDropdownMenu = (
-  navigations: Array<ChildNavigation | ChildNavigationGroup>,
-): ComponentProps<typeof AppNaviDropdownMenuButton>['children'] => (
-  <>
-    {navigations.map((navigation, index) => {
-      if ('elementAs' in navigation) {
-        const { elementAs: Component, current, className, ...rest } = navigation
-        // TODO: DropdownMenuItemを作成し、elementAsを渡せるようにする
-        return (
-          <Component
-            {...rest}
-            key={index}
-            aria-current={current}
-            className={commonButton({
-              current,
-              className,
-            })}
-          />
-        )
-      }
-      if ('href' in navigation) {
-        const { current, ...rest } = navigation
-        return <AnchorButton {...rest} key={index} aria-current={current && 'page'} />
-      }
-      if ('title' in navigation) {
-        return (
-          <DropdownMenuGroup key={index} name={navigation.title}>
-            {buildDropdownMenu(navigation.childNavigations)}
-          </DropdownMenuGroup>
-        )
-      }
+      return <AppNaviCustomTag {...rest} key={index} tag={navigation.elementAs} />
+    }
+    if ('href' in navigation) {
+      return <AppNaviAnchor {...navigation} key={index} />
+    }
+    if ('childNavigations' in navigation) {
+      return (
+        <AppNaviDropdownMenuButton key={index} label={navigation.children}>
+          {buildDropdownMenu(navigation.childNavigations)}
+        </AppNaviDropdownMenuButton>
+      )
+    }
+
+    return <AppNaviButton {...navigation} key={index} />
+  })
+
+const buildDropdownMenu = (navigations: Array<ChildNavigation | ChildNavigationGroup>) =>
+  navigations.map((navigation, index) => {
+    if ('elementAs' in navigation) {
+      const { elementAs: Component, current, className, ...rest } = navigation
+
+      // TODO: DropdownMenuItemを作成し、elementAsを渡せるようにする
+      return (
+        <Component
+          {...rest}
+          key={index}
+          aria-current={current}
+          className={commonButton({
+            current,
+            className,
+          })}
+        />
+      )
+    }
+    if ('href' in navigation) {
       const { current, ...rest } = navigation
-      return <Button {...rest} key={index} aria-current={current && 'page'} />
-    })}
-  </>
-)
+
+      return <AnchorButton {...rest} key={index} aria-current={current && 'page'} />
+    }
+
+    if ('title' in navigation) {
+      return (
+        <DropdownMenuGroup key={index} name={navigation.title}>
+          {buildDropdownMenu(navigation.childNavigations)}
+        </DropdownMenuGroup>
+      )
+    }
+
+    const { current, ...rest } = navigation
+
+    return <Button {...rest} key={index} aria-current={current && 'page'} />
+  })
