@@ -141,7 +141,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       <div className={classNames.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle}
+          title={translated.searchInputTitle as string}
           tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}

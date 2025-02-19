@@ -1,4 +1,4 @@
-import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button } from '../../../Button'
@@ -200,8 +200,8 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
 
 const DropdownMenuLabel = memo<
   Pick<Props, 'firstName' | 'lastName' | 'email'> & {
-    accountImageUrl: string
-    currentTenantName: string
+    accountImageUrl?: string
+    currentTenantName: ReactNode
     accountImageClassName: string
     placeHolderImageClassName: string
   }
@@ -215,7 +215,7 @@ const DropdownMenuLabel = memo<
     accountImageClassName,
     placeHolderImageClassName,
   }) => {
-    const body = []
+    const body: ReactNode[] = []
 
     if (currentTenantName) {
       body.push(currentTenantName)
@@ -252,7 +252,7 @@ const DropdownMenuLabel = memo<
 
 const UserSummaryStack = memo<
   Pick<Props, 'empCode' | 'firstName' | 'lastName' | 'email'> & {
-    currentTenantName: string
+    currentTenantName: ReactNode
     className: string
   }
 >(({ currentTenantName, empCode, firstName, lastName, email, className }) => (
@@ -276,7 +276,7 @@ const UserSummaryStack = memo<
   </Stack>
 ))
 
-const DropdownContentButton = memo<PropsWithChildren<{ href: string; className: string }>>(
+const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; className: string }>>(
   ({ href, children, className }) =>
     href && (
       <AnchorButton
@@ -301,7 +301,7 @@ const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>
   ),
 )
 
-const AccountLink = memo<PropsWithChildren<{ href: string }>>(
+const AccountLink = memo<PropsWithChildren<{ href?: string | null }>>(
   ({ href, children }) =>
     href && (
       <CommonButton

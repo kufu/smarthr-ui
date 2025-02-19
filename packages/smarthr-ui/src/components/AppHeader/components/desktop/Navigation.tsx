@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type FC, type ReactNode, memo, useMemo } from 'react'
+import React, { type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -49,7 +49,7 @@ export const Navigation: FC<Props> = ({
   enableNew,
 }) => {
   const className = useMemo(() => classNameGenerator(), [])
-  const buildedNavigations = useMemo(() => buildNavigations(navigations), [navigations])
+  const actualNavigations = useMemo(() => buildNavigations(navigations), [navigations])
 
   return (
     <AppNavi
@@ -64,7 +64,7 @@ export const Navigation: FC<Props> = ({
       data-with-releasenote={!!releaseNote}
       className={className}
     >
-      {buildedNavigations}
+      {actualNavigations}
     </AppNavi>
   )
 }
