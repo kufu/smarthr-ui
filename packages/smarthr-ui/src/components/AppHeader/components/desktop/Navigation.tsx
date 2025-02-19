@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -25,13 +25,12 @@ import type {
   ReleaseNoteProps,
 } from '../../types'
 
-const appNavi = tv({
-  base: ['shr-overflow-x-auto shr-min-w-[auto]', 'max-[751px]:!shr-hidden'],
-  variants: {
-    withReleaseNote: {
-      true: ['[&&]:shr-pe-0'],
-    },
-  },
+const classNameGenerator = tv({
+  base: [
+    'shr-overflow-x-auto shr-min-w-[auto]',
+    'max-[751px]:!shr-hidden',
+    'data-[with-releasenote="true"]:shr-pe-0',
+  ],
 })
 
 type Props = {
@@ -49,12 +48,12 @@ export const Navigation: FC<Props> = ({
   releaseNote,
   enableNew,
 }) => {
+  const className = useMemo(() => classNameGenerator(), [])
   const buildedNavigations = useMemo(() => buildNavigations(navigations), [navigations])
 
   return (
     <AppNavi
       label={enableNew ? undefined : appName}
-      className={appNavi({ withReleaseNote: !!releaseNote })}
       displayDropdownCaret
       additionalArea={
         <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
@@ -62,6 +61,8 @@ export const Navigation: FC<Props> = ({
           {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
         </Cluster>
       }
+      data-with-releasenote={!!releaseNote}
+      className={className}
     >
       {buildedNavigations}
     </AppNavi>
