@@ -11,15 +11,19 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import {
-  ChildNavigation,
-  ChildNavigationGroup,
-  Navigation as NavigationType,
-  ReleaseNoteProps,
-} from '../../types'
 import { commonButton } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
+
+import type {
+  ChildNavigation,
+  ChildNavigationGroup,
+  NavigationButton,
+  NavigationCustomTag,
+  NavigationLink,
+  Navigation as NavigationType,
+  ReleaseNoteProps,
+} from '../../types'
 
 const appNavi = tv({
   base: ['shr-overflow-x-auto shr-min-w-[auto]', 'max-[751px]:!shr-hidden'],
@@ -84,27 +88,11 @@ const buildNavigations = (navigations: NavigationType[]) =>
 const buildDropdownMenu = (navigations: Array<ChildNavigation | ChildNavigationGroup>) =>
   navigations.map((navigation, index) => {
     if ('elementAs' in navigation) {
-      const { elementAs: Component, current, className, ...rest } = navigation
-
-      // TODO: DropdownMenuItemを作成し、elementAsを渡せるようにする
-      return (
-        <Component
-          {...rest}
-          key={index}
-          aria-current={current}
-          className={commonButton({
-            current,
-            className,
-          })}
-        />
-      )
+      return <DropdownCustomTag {...navigation} key={index} />
     }
     if ('href' in navigation) {
-      const { current, ...rest } = navigation
-
-      return <AnchorButton {...rest} key={index} aria-current={current && 'page'} />
+      return <DropdownMenuAnchorButton {...navigation} key={index} />
     }
-
     if ('title' in navigation) {
       return (
         <DropdownMenuGroup key={index} name={navigation.title}>
@@ -113,7 +101,26 @@ const buildDropdownMenu = (navigations: Array<ChildNavigation | ChildNavigationG
       )
     }
 
-    const { current, ...rest } = navigation
-
-    return <Button {...rest} key={index} aria-current={current && 'page'} />
+    return <DropdownNavigationButton {...navigation} key={index} />
   })
+
+const DropdownCustomTag = memo<NavigationCustomTag>(
+  ({ elementAs: Component, current, className, ...rest }) => {
+    const actualClassName = useMemo(
+      () =>
+        commonButton({
+          current,
+          className,
+        }),
+      [current, className],
+    )
+
+    return <Component {...rest} aria-current={current} className={actualClassName} />
+  },
+)
+const DropdownMenuAnchorButton = memo<NavigationLink>(({ current, ...rest }) => (
+  <AnchorButton {...rest} aria-current={current && 'page'} />
+))
+const DropdownNavigationButton = memo<NavigationButton>(({ current, ...rest }) => (
+  <Button {...rest} aria-current={current && 'page'} />
+))
