@@ -111,18 +111,30 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   }, [])
 
   const translate = useTranslate()
-  const pageMap: Record<Launcher['page'], ReactNode> = {
-    favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
-    all: <Translate>{translate('Launcher/allModeText')}</Translate>,
-  }
+  const translated = useMemo<
+    Record<
+      Launcher['page'] | 'listText' | 'searchInputTitle' | 'helpText' | 'searchResultText',
+      ReactNode
+    >
+  >(
+    () => ({
+      favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
+      all: <Translate>{translate('Launcher/allModeText')}</Translate>,
+      listText: <Translate>{translate('Launcher/listText')}</Translate>,
+      searchInputTitle: translate('Launcher/searchInputTitle'),
+      helpText: <Translate>{translate('Launcher/helpText')}</Translate>,
+      searchResultText: <Translate>{translate('Launcher/searchResultText')}</Translate>,
+    }),
+    [translate],
+  )
 
   return (
     <div className={classNames.wrapper}>
       <div className={classNames.searchArea}>
         <SearchInput
           name="search"
-          title={translate('Launcher/searchInputTitle')}
-          tooltipMessage={<Translate>{translate('Launcher/searchInputTitle')}</Translate>}
+          title={translated.searchInputTitle}
+          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
           suffix={
@@ -151,7 +163,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             items={[
               {
                 id: 'favorite',
-                title: pageMap.favorite,
+                title: translated.favorite,
                 prefix: (
                   <FaStarIcon
                     color={mode !== 'search' && page === 'favorite' ? textColor.white : undefined}
@@ -169,7 +181,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
 
           <Section>
             <Heading className={classNames.sideNavHeading} type="subSubBlockTitle">
-              <Translate>{translate('Launcher/listText')}</Translate>
+              {translated.listText}
             </Heading>
 
             <SideNav
@@ -178,7 +190,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
               items={[
                 {
                   id: 'all',
-                  title: pageMap.all,
+                  title: translated.all,
                   isSelected: mode !== 'search' && page === 'all',
                 },
               ]}
@@ -193,7 +205,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
               href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
               target="_blank"
             >
-              <Translate>{translate('Launcher/helpText')}</Translate>
+              {translated.helpText}
             </TextLink>
           </div>
         </div>
@@ -202,11 +214,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           <Section className={classNames.mainInner}>
             <Cluster className={classNames.contentHead} align="center" justify="space-between">
               <Heading type="subSubBlockTitle">
-                {mode === 'search' ? (
-                  <Translate>{translate('Launcher/searchResultText')}</Translate>
-                ) : (
-                  pageMap[page]
-                )}
+                {mode === 'search' ? translated.searchResultText : translated[page]}
               </Heading>
 
               {(mode === 'search' || page === 'all') && (
