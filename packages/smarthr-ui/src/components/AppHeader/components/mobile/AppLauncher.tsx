@@ -43,7 +43,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     sortType,
     searchQuery,
     changePage,
-    onSelectSortType,
+    setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
