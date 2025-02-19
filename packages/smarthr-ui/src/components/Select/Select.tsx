@@ -1,15 +1,16 @@
 'use client'
 
 import React, {
-  ChangeEvent,
-  ComponentPropsWithoutRef,
-  ForwardedRef,
+  type ChangeEvent,
+  type ComponentPropsWithoutRef,
+  type ForwardedRef,
+  type PropsWithChildren,
   useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
@@ -36,14 +37,17 @@ type Props<T extends string> = {
   /** 空の選択肢を表示するかどうか */
   hasBlank?: boolean
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'blankLabel'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'select'>, keyof Props<string> | 'children'>
 
-const BLANK_LABEL = '選択してください'
+const DECORATOR_DEFAULT_TEXTS = {
+  blankLabel: '選択してください',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const select = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Select shr-relative shr-inline-block',
     selectEl: [
@@ -86,11 +90,11 @@ const ActualSelect = <T extends string>(
     options,
     onChange,
     onChangeValue,
-    error = false,
+    error,
     width,
-    hasBlank = false,
+    hasBlank,
     decorators,
-    size = 'default',
+    size,
     className,
     disabled,
     required,
@@ -117,23 +121,30 @@ const ActualSelect = <T extends string>(
     [onChange, onChangeValue, options],
   )
 
-  const { wrapperStyleProps, selectStyle, iconWrapStyle, blankOptGroupStyle } = useMemo(() => {
-    const { wrapper, selectEl, iconWrap, blankOptgroup } = select()
-    return {
-      wrapperStyleProps: {
-        className: wrapper({ className }),
-        style: {
-          width: typeof width === 'number' ? `${width}px` : width,
-        },
-      },
-      selectStyle: selectEl({ size }),
-      iconWrapStyle: iconWrap({ size }),
-      blankOptGroupStyle: blankOptgroup(),
+  const classNames = useMemo(() => {
+    const { wrapper, selectEl, iconWrap, blankOptgroup } = classNameGenerator()
+    const sizeProps = {
+      size: size || 'default',
     }
-  }, [className, size, width])
+
+    return {
+      wrapper: wrapper({ className }),
+      select: selectEl(sizeProps),
+      iconWrap: iconWrap(sizeProps),
+      blankOptGroup: blankOptgroup(),
+    }
+  }, [className, size])
+  const wrapperStyle = useMemo(
+    () => ({
+      width: typeof width === 'number' ? `${width}px` : width,
+    }),
+    [width],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
-    <span {...wrapperStyleProps}>
+    <span className={classNames.wrapper} style={wrapperStyle}>
       <select
         {...props}
         data-smarthr-ui-input="true"
@@ -148,26 +159,24 @@ const ActualSelect = <T extends string>(
         // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
         required={isIOS ? undefined : required}
         ref={ref}
-        className={selectStyle}
+        className={classNames.select}
       >
-        <BlankOption hasBlank={hasBlank} decorator={decorators?.blankLabel} />
+        <BlankOption hasBlank={hasBlank}>{decorated.blankLabel}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}
-        <NotOmittingLabelsInMobileSafari className={blankOptGroupStyle} />
+        <NotOmittingLabelsInMobileSafari className={classNames.blankOptGroup} />
       </select>
-      <StyledFaSortIcon className={iconWrapStyle} />
+      <StyledFaSortIcon className={classNames.iconWrap} />
     </span>
   )
 }
 
-const BlankOption = React.memo<{
-  hasBlank: boolean | undefined
-  decorator: DecoratorType | undefined
-}>(
-  ({ hasBlank, decorator }) =>
-    hasBlank && <option value="">{decorator?.(BLANK_LABEL) || BLANK_LABEL}</option>,
-)
+const BlankOption = React.memo<
+  PropsWithChildren<{
+    hasBlank: boolean | undefined
+  }>
+>(({ hasBlank, children }) => hasBlank && <option value="">{children}</option>)
 
 const Option = React.memo<Props<string>['options'][number]>((option) => {
   if ('value' in option) {
