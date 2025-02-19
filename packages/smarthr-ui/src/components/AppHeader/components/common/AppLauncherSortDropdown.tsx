@@ -17,7 +17,7 @@ import { useTranslate } from '../../hooks/useTranslate'
 import { Launcher } from '../../types'
 import { Translate } from '../common/Translate'
 
-const sortDropdown = tv({
+const classNameGenerator = tv({
   slots: {
     trigger: [
       'smarthr-ui-AppLauncher-SortDropdown-trigger',
@@ -41,7 +41,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const classNames = useMemo(() => {
-    const { trigger, contentBody, contentButton } = sortDropdown()
+    const { trigger, contentBody, contentButton } = classNameGenerator()
 
     return {
       trigger: trigger(),
@@ -89,18 +89,9 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
 
   return (
     <Dropdown>
-      <DropdownTrigger>
-        <Button
-          className={classNames.trigger}
-          size="s"
-          variant="text"
-          suffix={<FaCaretDownIcon />}
-          ref={triggerRef}
-        >
-          <Translate>{translated.label}</Translate>
-        </Button>
-      </DropdownTrigger>
-
+      <TriggerButton triggerRef={triggerRef} className={classNames.trigger}>
+        {translated.label}
+      </TriggerButton>
       <DropdownContent controllable>
         <div role="listbox" className={classNames.contentBody}>
           {options.map(([value, children], i) => (
@@ -120,6 +111,22 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
     </Dropdown>
   )
 }
+
+const TriggerButton = memo<
+  PropsWithChildren<{ triggerRef: RefObject<HTMLButtonElement>; className: string }>
+>(({ triggerRef, children, className }) => (
+  <DropdownTrigger>
+    <Button
+      ref={triggerRef}
+      size="s"
+      variant="text"
+      suffix={<FaCaretDownIcon />}
+      className={className}
+    >
+      <Translate>{children}</Translate>
+    </Button>
+  </DropdownTrigger>
+))
 
 const OptionButton = memo<
   PropsWithChildren<{
