@@ -167,8 +167,8 @@ importers:
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/test-runner':
-        specifier: ^0.21.1
-        version: 0.21.1(@swc/helpers@0.5.15)(@types/node@20.17.19)(storybook@8.4.7(prettier@3.4.2))(ts-node@10.9.2(@swc/core@1.10.16(@swc/helpers@0.5.15))(@types/node@20.17.19)(typescript@5.7.3))
+        specifier: ^0.21.2
+        version: 0.21.2(@swc/helpers@0.5.15)(@types/node@20.17.19)(storybook@8.4.7(prettier@3.4.2))(ts-node@10.9.2(@swc/core@1.10.16(@swc/helpers@0.5.15))(@types/node@20.17.19)(typescript@5.7.3))
       '@storybook/theming':
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))
@@ -2118,8 +2118,8 @@ packages:
     peerDependencies:
       storybook: ^8.4.7
 
-  '@storybook/test-runner@0.21.1':
-    resolution: {integrity: sha512-LoHdJpV3jbxsWgqxsMVVEUDgZM4COGowlGswUCKNtoYVeuHo3msjwCfpALR4C51BntMqMLyjT2ASUIi2Ju+ndw==}
+  '@storybook/test-runner@0.21.2':
+    resolution: {integrity: sha512-Sey5sAU1Z7W62aS1LLYBSOt7H63EHp6piMLFBru6qM0TEtFJI14hiWwOaCkLTg+RkmSqhy9A8uQ8/qwr8qssuA==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -9490,7 +9490,7 @@ snapshots:
       prettier: 3.4.2
       storybook: 8.4.7(prettier@3.4.2)
 
-  '@storybook/test-runner@0.21.1(@swc/helpers@0.5.15)(@types/node@20.17.19)(storybook@8.4.7(prettier@3.4.2))(ts-node@10.9.2(@swc/core@1.10.16(@swc/helpers@0.5.15))(@types/node@20.17.19)(typescript@5.7.3))':
+  '@storybook/test-runner@0.21.2(@swc/helpers@0.5.15)(@types/node@20.17.19)(storybook@8.4.7(prettier@3.4.2))(ts-node@10.9.2(@swc/core@1.10.16(@swc/helpers@0.5.15))(@types/node@20.17.19)(typescript@5.7.3))':
     dependencies:
       '@babel/core': 7.26.9
       '@babel/generator': 7.26.9
