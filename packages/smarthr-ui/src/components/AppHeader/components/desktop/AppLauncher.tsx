@@ -1,4 +1,4 @@
-import React, { type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -150,52 +150,13 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       </div>
 
       <div className={classNames.inner}>
-        <div className={classNames.side}>
-          <SideNav
-            className={classNames.unselectedSideNav}
-            size="s"
-            items={[
-              {
-                id: 'favorite',
-                title: translated.favorite,
-                prefix: (
-                  <FaStarIcon
-                    color={mode !== 'search' && page === 'favorite' ? textColor.white : undefined}
-                  />
-                ),
-                isSelected: mode !== 'search' && page === 'favorite',
-              },
-            ]}
-            onClick={(_, id) => {
-              changePage(id as Launcher['page'])
-            }}
-          />
-
-          <hr />
-
-          <Section>
-            <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
-              {translated.listText}
-            </MemoizedSubSubBlockHeading>
-            <SideNav
-              className={classNames.selectedSideNav}
-              size="s"
-              items={[
-                {
-                  id: 'all',
-                  title: translated.all,
-                  isSelected: mode !== 'search' && page === 'all',
-                },
-              ]}
-              onClick={(_, id) => {
-                changePage(id as Launcher['page'])
-              }}
-            />
-          </Section>
-
-          <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
-        </div>
-
+        <SideNavs
+          mode={mode}
+          page={page}
+          changePage={changePage}
+          translated={translated}
+          classNames={classNames}
+        />
         <main className={classNames.main}>
           <Section className={classNames.mainInner}>
             <Cluster className={classNames.contentHead} align="center" justify="space-between">
@@ -217,6 +178,65 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     </div>
   )
 }
+
+const SideNavs = memo<
+  Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
+    translated: { favorite: ReactNode; listText: ReactNode; all: ReactNode; helpText: ReactNode }
+    classNames: {
+      side: string
+      unselectedSideNav: string
+      sideNavHeading: string
+      selectedSideNav: string
+      help: string
+    }
+  }
+>(({ mode, page, changePage, translated, classNames }) => (
+  <div className={classNames.side}>
+    <SideNav
+      className={classNames.unselectedSideNav}
+      size="s"
+      items={[
+        {
+          id: 'favorite',
+          title: translated.favorite,
+          prefix: (
+            <FaStarIcon
+              color={mode !== 'search' && page === 'favorite' ? textColor.white : undefined}
+            />
+          ),
+          isSelected: mode !== 'search' && page === 'favorite',
+        },
+      ]}
+      onClick={(_, id) => {
+        changePage(id as Launcher['page'])
+      }}
+    />
+
+    <hr />
+
+    <Section>
+      <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
+        {translated.listText}
+      </MemoizedSubSubBlockHeading>
+      <SideNav
+        className={classNames.selectedSideNav}
+        size="s"
+        items={[
+          {
+            id: 'all',
+            title: translated.all,
+            isSelected: mode !== 'search' && page === 'all',
+          },
+        ]}
+        onClick={(_, id) => {
+          changePage(id as Launcher['page'])
+        }}
+      />
+    </Section>
+
+    <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
+  </div>
+))
 
 const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
   <div className={className}>
