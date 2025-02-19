@@ -1,4 +1,4 @@
-import React, { type FC, type MouseEvent, useMemo, useRef } from 'react'
+import React, { type FC, type MouseEvent, useCallback, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -43,16 +43,23 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
   }, [])
 
   const translate = useTranslate()
-  const sortMap: Record<Launcher['sortType'], string> = {
-    default: translate('Launcher/sortDropdownOrderDefault'),
-    'name/asc': translate('Launcher/sortDropdownOrderNameAsc'),
-    'name/desc': translate('Launcher/sortDropdownOrderNameDesc'),
-  }
+  const sortMap: Record<Launcher['sortType'], string> = {}
   const translated = useMemo(
     () => ({
       selected: translate('Launcher/sortDropdownSelected'),
+      default: translate('Launcher/sortDropdownOrderDefault'),
+      asc: translate('Launcher/sortDropdownOrderNameAsc'),
+      desc: translate('Launcher/sortDropdownOrderNameDesc'),
     }),
     [translate],
+  )
+  const options = useMemo(
+    () => [
+      ['default', translated.default],
+      ['name/asc', translated.asc],
+      ['name/desc', translated.desc],
+    ],
+    [translated],
   )
 
   const onClickOption = useCallback(
@@ -87,7 +94,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
 
       <DropdownContent controllable>
         <div role="listbox" className={classNames.contentBody}>
-          {Object.entries(sortMap).map(([key, value], i) => (
+          {options.map(([key, value], i) => (
             <Button
               key={i}
               value={key}
