@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, ReactNode } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -48,21 +48,25 @@ export const Navigation: FC<Props> = ({
   additionalContent,
   releaseNote,
   enableNew,
-}) => (
-  <AppNavi
-    label={enableNew ? undefined : appName}
-    className={appNavi({ withReleaseNote: !!releaseNote })}
-    displayDropdownCaret
-    additionalArea={
-      <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
-        {additionalContent}
-        {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
-      </Cluster>
-    }
-  >
-    {buildNavigations(navigations)}
-  </AppNavi>
-)
+}) => {
+  const buildedNavigations = useMemo(() => buildNavigations(navigations), [navigations])
+
+  return (
+    <AppNavi
+      label={enableNew ? undefined : appName}
+      className={appNavi({ withReleaseNote: !!releaseNote })}
+      displayDropdownCaret
+      additionalArea={
+        <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
+          {additionalContent}
+          {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
+        </Cluster>
+      }
+    >
+      {buildedNavigations}
+    </AppNavi>
+  )
+}
 
 const buildNavigations = (navigations: NavigationType[]) =>
   navigations.map((navigation, index) => {
