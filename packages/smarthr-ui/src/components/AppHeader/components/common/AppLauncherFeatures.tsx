@@ -1,4 +1,4 @@
-import React, { type FC, memo } from 'react'
+import React, { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../../../Button'
@@ -18,14 +18,8 @@ const classNameGenerator = tv({
     listItem: [
       'smarthr-ui-AppLauncher-listItem',
       'shr-grid shr-grid-cols-[1rem_1fr_1rem] shr-gap-0.75 shr-min-h-[2.5rem] shr-px-1 shr-py-0 shr-leading-tight shr-text-left shr-whitespace-normal',
+      'data-[favorite="false"]:shr-grid-cols-[1fr_1rem]',
     ],
-  },
-  variants: {
-    favorite: {
-      false: {
-        listItem: ['shr-grid-cols-[1fr_1rem]'],
-      },
-    },
   },
 })
 
@@ -51,23 +45,31 @@ const EmptyList = memo(() => {
 })
 
 const FeatureList: FC<Props> = ({ features, page }) => {
-  const { list, listItem } = classNameGenerator()
-  const translate = useTranslate()
+  const classNames = useMemo(() => {
+    const { list, listItem } = classNameGenerator()
+
+    return {
+      list: list(),
+      listItem: listItem(),
+    }
+  }, [])
 
   const isDesktop = useMediaQuery(mediaQuery.desktop)
+  const isFavorite = page === 'favorite'
 
   return (
-    <ul className={list()}>
+    <ul className={classNames.list}>
       {features.map((feature) => (
         <li key={feature.id}>
           <AnchorButton
-            className={listItem({ favorite: page === 'favorite' })}
-            variant="text"
             href={feature.url}
+            target="_blank"
             prefix={page === 'favorite' && <FaStarIcon />}
             suffix={<FaArrowRightIcon />}
+            variant="text"
             wide
-            target="_blank"
+            data-favorite={isFavorite}
+            className={classNames.listItem}
           >
             {isDesktop ? <LineClamp maxLines={2}>{feature.name}</LineClamp> : feature.name}
           </AnchorButton>
