@@ -2,6 +2,7 @@ import React, {
   type FC,
   type MouseEvent,
   type PropsWithChildren,
+  type RefObject,
   memo,
   useCallback,
   useMemo,

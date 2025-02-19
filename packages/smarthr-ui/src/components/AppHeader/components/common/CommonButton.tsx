@@ -1,4 +1,4 @@
-import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
+import React, { type ComponentPropsWithoutRef, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 export const commonButtonClassNameGenerator = tv({
@@ -37,42 +37,37 @@ type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & Bu
   boldWhenCurrent?: boolean
 }
 
-export const CommonButton: FC<Props> = ({
-  elementAs,
-  prefix,
-  current,
-  boldWhenCurrent,
-  className,
-  ...props
-}) => {
-  const actualClassName = useMemo(
-    () =>
-      commonButtonClassNameGenerator({
-        prefix: !!prefix,
-        current,
-        boldWhenCurrent,
-        className,
-      }),
-    [current, prefix, boldWhenCurrent, className],
-  )
+export const CommonButton = memo<Props>(
+  ({ elementAs, prefix, current, boldWhenCurrent, className, ...props }) => {
+    const actualClassName = useMemo(
+      () =>
+        commonButtonClassNameGenerator({
+          prefix: !!prefix,
+          current,
+          boldWhenCurrent,
+          className,
+        }),
+      [current, prefix, boldWhenCurrent, className],
+    )
 
-  switch (elementAs) {
-    case 'a':
-      return (
-        <a {...(props as AnchorProps)} className={actualClassName}>
-          {prefix}
-          {props.children}
-        </a>
-      )
-    case 'button':
-      return (
-        // eslint-disable-next-line smarthr/best-practice-for-button-element
-        <button {...(props as ButtonProps)} className={actualClassName}>
-          {prefix}
-          {props.children}
-        </button>
-      )
-  }
+    switch (elementAs) {
+      case 'a':
+        return (
+          <a {...(props as AnchorProps)} className={actualClassName}>
+            {prefix}
+            {props.children}
+          </a>
+        )
+      case 'button':
+        return (
+          // eslint-disable-next-line smarthr/best-practice-for-button-element
+          <button {...(props as ButtonProps)} className={actualClassName}>
+            {prefix}
+            {props.children}
+          </button>
+        )
+    }
 
-  throw new Error(elementAs satisfies never)
-}
+    throw new Error(elementAs satisfies never)
+  },
+)
