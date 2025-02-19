@@ -64,10 +64,11 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
       </DropdownTrigger>
 
       <DropdownContent controllable>
-        <div className={classNames.contentBody}>
+        <div role="listbox" className={classNames.contentBody}>
           {Object.entries(sortMap).map(([key, value], i) => (
             <Button
               key={i}
+              role="option"
               aria-selected={key === sortType}
               className={classNames.contentButton}
               prefix={
