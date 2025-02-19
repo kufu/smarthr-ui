@@ -64,27 +64,43 @@ const FeatureList: FC<Props> = ({ features, page }) => {
   return (
     <ul className={classNames.list}>
       {features.map((feature) => (
-        <li key={feature.id}>
-          <AnchorButton
-            href={feature.url}
-            target="_blank"
-            prefix={isFavorite && <FaStarIcon />}
-            suffix={<FaArrowRightIcon />}
-            variant="text"
-            wide
-            data-favorite={isFavorite}
-            className={classNames.listItem}
-          >
-            <FeatureName>{feature.name}</FeatureName>
-          </AnchorButton>
-        </li>
+        <FeatureListItem
+          key={feature.id}
+          href={feature.url}
+          isFavorite={isFavorite}
+          className={classNames.listItem}
+        >
+          {feature.name}
+        </FeatureListItem>
       ))}
     </ul>
   )
 }
 
-const FeatureName = memo<PropsWithChildren>(({ children }) => {
+const FeatureListItem = memo<{
+  href: Props['features'][number]['url']
+  children: Props['features'][number]['name']
+  className: string
+  isFavorite: boolean
+}>(({ href, children, isFavorite, className }) => (
+  <li>
+    <AnchorButton
+      href={href}
+      target="_blank"
+      prefix={isFavorite && <FaStarIcon />}
+      suffix={<FaArrowRightIcon />}
+      variant="text"
+      wide
+      data-favorite={isFavorite}
+      className={className}
+    >
+      <FeatureName>{children}</FeatureName>
+    </AnchorButton>
+  </li>
+))
+
+const FeatureName: FC<PropsWithChildren> = ({ children }) => {
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
   return isDesktop ? <LineClamp maxLines={2}>{children}</LineClamp> : children
-})
+}
