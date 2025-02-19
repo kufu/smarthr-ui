@@ -32,13 +32,18 @@ export const AppLauncherFeatures: FC<Props> = ({ features, page }) =>
   features.length === 0 ? <EmptyList /> : <FeatureList features={features} page={page} />
 
 const EmptyList = memo(() => {
-  const { empty } = classNameGenerator()
+  const className = useMemo(() => {
+    const { empty } = classNameGenerator()
+
+    return empty()
+  }, [])
   const translate = useTranslate()
+  const translated = useMemo(() => translate('Launcher/emptyText'), [translate])
 
   return (
-    <div className={empty()}>
+    <div className={className}>
       <Text size="S">
-        <Translate>{translate('Launcher/emptyText')}</Translate>
+        <Translate>{translated}</Translate>
       </Text>
     </div>
   )
