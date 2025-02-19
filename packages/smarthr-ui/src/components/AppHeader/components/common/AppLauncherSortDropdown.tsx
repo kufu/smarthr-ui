@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react'
+import React, { type FC, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -17,14 +17,10 @@ const sortDropdown = tv({
       '[&[aria-expanded="true"]>.smarthr-ui-Icon]:shr-rotate-180',
     ],
     contentBody: ['shr-px-0.25 shr-py-0.5', 'shr-flex-col shr-flex shr-items-stretch'],
-    contentButton: ['shr-border-none shr-justify-start shr-py-0.75 shr-font-normal shr-pl-2.5'],
-  },
-  variants: {
-    selected: {
-      true: {
-        contentButton: ['shr-pl-1'],
-      },
-    },
+    contentButton: [
+      'shr-border-none shr-justify-start shr-py-0.75 shr-font-normal shr-pl-2.5',
+      'aria-selected:shr-pl-1',
+    ],
   },
 })
 
@@ -34,10 +30,19 @@ type Props = {
 }
 
 export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType }) => {
-  const translate = useTranslate()
   const triggerRef = useRef<HTMLButtonElement>(null)
-  const { trigger, contentBody, contentButton } = sortDropdown()
 
+  const classNames = useMemo(() => {
+    const { trigger, contentBody, contentButton } = sortDropdown()
+
+    return {
+      trigger: trigger(),
+      contentBody: contentBody(),
+      contentButton: contentButton(),
+    }
+  }, [])
+
+  const translate = useTranslate()
   const sortMap: Record<Launcher['sortType'], string> = {
     default: translate('Launcher/sortDropdownOrderDefault'),
     'name/asc': translate('Launcher/sortDropdownOrderNameAsc'),
@@ -48,7 +53,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
     <Dropdown>
       <DropdownTrigger>
         <Button
-          className={trigger()}
+          className={classNames.trigger}
           size="s"
           variant="text"
           suffix={<FaCaretDownIcon />}
@@ -59,11 +64,12 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
       </DropdownTrigger>
 
       <DropdownContent controllable>
-        <div className={contentBody()}>
+        <div className={classNames.contentBody}>
           {Object.entries(sortMap).map(([key, value], i) => (
             <Button
               key={i}
-              className={contentButton({ selected: key === sortType })}
+              aria-selected={key === sortType}
+              className={classNames.contentButton}
               prefix={
                 key === sortType && (
                   <FaCheckIcon
