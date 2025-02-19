@@ -102,7 +102,7 @@ export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
 // hooks
 export { useTheme } from './hooks/useTheme'
 export { useDevice, DeviceProvider } from './hooks/useDevice'
-export { ResponseMessageType } from './hooks/useResponseMessage'
+export type { ResponseMessageType } from './hooks/useResponseMessage'
 
 // themes
 export { createTheme } from './themes/createTheme'
