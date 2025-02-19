@@ -12,9 +12,10 @@ export default {
   render: (args: any) => {
     const types = [
       'screenTitle',
+      'sectionTitle',
+      'subSectionTitle',
       'blockTitle',
       'subBlockTitle',
-      'sectionTitle',
       'subSubBlockTitle',
     ] as const
     const tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
