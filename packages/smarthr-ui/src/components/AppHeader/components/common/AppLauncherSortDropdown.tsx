@@ -48,6 +48,12 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
     'name/asc': translate('Launcher/sortDropdownOrderNameAsc'),
     'name/desc': translate('Launcher/sortDropdownOrderNameDesc'),
   }
+  const translated = useMemo(
+    () => ({
+      selected: translate('Launcher/sortDropdownSelected'),
+    }),
+    [translate],
+  )
 
   const onClickOption = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -92,7 +98,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
                 key === sortType && (
                   <FaCheckIcon
                     color={textColor.main}
-                    alt={<Translate>{translate('Launcher/sortDropdownSelected')}</Translate>}
+                    alt={<Translate>{translated.selected}</Translate>}
                   />
                 )
               }
