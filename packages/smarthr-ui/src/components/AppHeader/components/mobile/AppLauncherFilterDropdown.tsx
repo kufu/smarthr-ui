@@ -100,9 +100,10 @@ const ContentBody = memo<
   )
 
   return (
-    <div className={className}>
+    <div role="listbox" className={className}>
       <Button
         value="favorite"
+        role="option"
         aria-selected={isFavorite}
         onClick={onClickButton}
         className={buttonClassName}
@@ -112,6 +113,7 @@ const ContentBody = memo<
       </Button>
       <Button
         value="all"
+        role="option"
         aria-selected={!isFavorite}
         onClick={onClickButton}
         className={buttonClassName}
