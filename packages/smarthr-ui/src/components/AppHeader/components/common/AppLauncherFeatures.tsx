@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { type FC, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../../../Button'
@@ -11,7 +11,7 @@ import { Launcher } from '../../types'
 
 import { Translate } from './Translate'
 
-const appLauncherFeatures = tv({
+const classNameGenerator = tv({
   slots: {
     empty: ['shr-p-1 shr-text-center'],
     list: ['shr-list-none', '[&>li]:shr-px-0.5 [&>li]:shr-py-0.25'],
@@ -34,20 +34,27 @@ type Props = {
   page: Launcher['page']
 }
 
-export const AppLauncherFeatures: FC<Props> = ({ features, page }) => {
-  const isDesktop = useMediaQuery(mediaQuery.desktop)
-  const translate = useTranslate()
-  const { empty, list, listItem } = appLauncherFeatures()
+export const AppLauncherFeatures: FC<Props> = ({ features, page }) =>
+  features.length === 0 ? <EmptyList /> : <FeatureList features={features} page={page} />
 
-  if (features.length === 0) {
-    return (
-      <div className={empty()}>
-        <Text size="S">
-          <Translate>{translate('Launcher/emptyText')}</Translate>
-        </Text>
-      </div>
-    )
-  }
+const EmptyList = memo(() => {
+  const { empty } = classNameGenerator()
+  const translate = useTranslate()
+
+  return (
+    <div className={empty()}>
+      <Text size="S">
+        <Translate>{translate('Launcher/emptyText')}</Translate>
+      </Text>
+    </div>
+  )
+})
+
+const FeatureList: FC<Props> = ({ features, page }) => {
+  const { list, listItem } = classNameGenerator()
+  const translate = useTranslate()
+
+  const isDesktop = useMediaQuery(mediaQuery.desktop)
 
   return (
     <ul className={list()}>
