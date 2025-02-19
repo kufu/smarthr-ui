@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -68,7 +68,6 @@ const appLauncher = tv({
 })
 
 export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
-  const translate = useTranslate()
   const {
     features,
     page,
@@ -80,28 +79,46 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     changeSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const {
-    wrapper,
-    searchArea,
-    inner,
-    side,
-    sideNav,
-    sideNavHeading,
-    help,
-    main,
-    mainInner,
-    contentHead,
-    scrollArea,
-  } = appLauncher()
+  const classNames = useMemo(() => {
+    const {
+      wrapper,
+      searchArea,
+      inner,
+      side,
+      sideNav,
+      sideNavHeading,
+      help,
+      main,
+      mainInner,
+      contentHead,
+      scrollArea,
+    } = appLauncher()
 
+    return {
+      wrapper: wrapper(),
+      searchArea: searchArea(),
+      inner: inner(),
+      side: side(),
+      unselectedSideNav: sideNav({ selected: false }),
+      selectedSideNav: sideNav({ noIcon: true, selected: true }),
+      sideNavHeading: sideNavHeading(),
+      help: help(),
+      main: main(),
+      mainInner: mainInner(),
+      contentHead: contentHead(),
+      scrollArea: scrollArea(),
+    }
+  }, [])
+
+  const translate = useTranslate()
   const pageMap: Record<Launcher['page'], ReactNode> = {
     favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
     all: <Translate>{translate('Launcher/allModeText')}</Translate>,
   }
 
   return (
-    <div className={wrapper()}>
-      <div className={searchArea()}>
+    <div className={classNames.wrapper}>
+      <div className={classNames.searchArea}>
         <SearchInput
           name="search"
           title={translate('Launcher/searchInputTitle')}
@@ -126,10 +143,10 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         />
       </div>
 
-      <div className={inner()}>
-        <div className={side()}>
+      <div className={classNames.inner}>
+        <div className={classNames.side}>
           <SideNav
-            className={sideNav({ selected: false })}
+            className={classNames.unselectedSideNav}
             size="s"
             items={[
               {
@@ -151,12 +168,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           <hr />
 
           <Section>
-            <Heading className={sideNavHeading()} type="subSubBlockTitle">
+            <Heading className={classNames.sideNavHeading} type="subSubBlockTitle">
               <Translate>{translate('Launcher/listText')}</Translate>
             </Heading>
 
             <SideNav
-              className={sideNav({ noIcon: true, selected: true })}
+              className={classNames.selectedSideNav}
               size="s"
               items={[
                 {
@@ -171,7 +188,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             />
           </Section>
 
-          <div className={help()}>
+          <div className={classNames.help}>
             <TextLink
               href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
               target="_blank"
@@ -181,9 +198,9 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           </div>
         </div>
 
-        <main className={main()}>
-          <Section className={mainInner()}>
-            <Cluster className={contentHead()} align="center" justify="space-between">
+        <main className={classNames.main}>
+          <Section className={classNames.mainInner}>
+            <Cluster className={classNames.contentHead} align="center" justify="space-between">
               <Heading type="subSubBlockTitle">
                 {mode === 'search' ? (
                   <Translate>{translate('Launcher/searchResultText')}</Translate>
@@ -197,7 +214,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
               )}
             </Cluster>
 
-            <div className={scrollArea()}>
+            <div className={classNames.scrollArea}>
               <AppLauncherFeatures features={features} page={page} />
             </div>
           </Section>
