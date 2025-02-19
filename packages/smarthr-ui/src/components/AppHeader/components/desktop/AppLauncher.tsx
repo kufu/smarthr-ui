@@ -193,10 +193,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
               </Heading>
 
               {(mode === 'search' || page === 'all') && (
-                <AppLauncherSortDropdown
-                  sortType={sortType}
-                  onSelectSortType={(value) => setSortType(value)}
-                />
+                <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
               )}
             </Cluster>
 
