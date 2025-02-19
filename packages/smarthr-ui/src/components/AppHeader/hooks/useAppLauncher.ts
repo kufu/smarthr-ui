@@ -67,8 +67,6 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     searchQuery,
     changePage,
     setSortType,
-    // TODO: onChangeSearchQuery, onClickClearSearchQueryを使えば消せるかも
-    changeSearchQuery,
     onChangeSearchQuery,
     onClickClearSearchQuery,
   }
