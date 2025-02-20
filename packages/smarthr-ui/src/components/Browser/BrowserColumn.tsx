@@ -31,30 +31,32 @@ export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onC
   </div>
 )
 
-const ListItem = React.memo<
-  Pick<Props, 'value' | 'onChangeInput'> & {
-    itemValue: ItemNode['value']
-    itemLabel: ItemNode['label']
-    itemHasChildren: boolean
-    columnIndex: Props['index']
-    rowIndex: number
-  }
->(({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, onChangeInput }) => {
-  const selected = itemValue === value
-  const ariaOwns = selected && itemHasChildren ? getColumnId(columnIndex + 1) : undefined
-  const tabIndex = selected || (!value && columnIndex === 0 && rowIndex === 0) ? 0 : -1
+type ListItemProps = Pick<Props, 'value' | 'onChangeInput'> & {
+  itemValue: ItemNode['value']
+  itemLabel: ItemNode['label']
+  itemHasChildren: boolean
+  columnIndex: Props['index']
+  rowIndex: number
+}
 
-  return (
-    <li key={rowIndex} aria-owns={ariaOwns}>
-      <BrowserItem
-        selected={selected}
-        itemValue={itemValue}
-        itemLabel={itemLabel}
-        itemHasChildren={itemHasChildren}
-        columnIndex={columnIndex}
-        tabIndex={tabIndex}
-        onChangeInput={onChangeInput}
-      />
-    </li>
-  )
-})
+const ListItem = React.memo<ListItemProps>(
+  ({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, onChangeInput }) => {
+    const selected = itemValue === value
+    const ariaOwns = selected && itemHasChildren ? getColumnId(columnIndex + 1) : undefined
+    const tabIndex = selected || (!value && columnIndex === 0 && rowIndex === 0) ? 0 : -1
+
+    return (
+      <li key={rowIndex} aria-owns={ariaOwns}>
+        <BrowserItem
+          selected={selected}
+          itemValue={itemValue}
+          itemLabel={itemLabel}
+          itemHasChildren={itemHasChildren}
+          columnIndex={columnIndex}
+          tabIndex={tabIndex}
+          onChangeInput={onChangeInput}
+        />
+      </li>
+    )
+  },
+)
