@@ -140,9 +140,11 @@ const ItemCluster = memo<
 
   return (
     <Cluster as="ul" className={classNames.list}>
-      <li className={classNames.firstListItem}>
-        <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={1} double />
-      </li>
+      <DoubleIconItemButton
+        {...controllerAttrs.prev}
+        targetPage={1}
+        className={classNames.firstListItem}
+      />
       <li className={classNames.prevListItem}>
         <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
       </li>
@@ -154,9 +156,27 @@ const ItemCluster = memo<
       <li className={classNames.nextListItem}>
         <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
       </li>
-      <li className={classNames.lastListItem}>
-        <PaginationControllerItemButton {...controllerAttrs.next} targetPage={total} double />
-      </li>
+      <DoubleIconItemButton
+        {...controllerAttrs.next}
+        targetPage={total}
+        className={classNames.lastListItem}
+      />
     </Cluster>
   )
 })
+
+const DoubleIconItemButton = memo<{
+  disabled: boolean
+  direction: 'prev' | 'next'
+  targetPage: number
+  className: string
+}>(({ disabled, direction, targetPage, className }) => (
+  <li className={className}>
+    <PaginationControllerItemButton
+      disabled={disabled}
+      direction={direction}
+      targetPage={targetPage}
+      double
+    />
+  </li>
+))
