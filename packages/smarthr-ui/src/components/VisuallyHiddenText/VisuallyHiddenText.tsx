@@ -10,7 +10,7 @@ type Props<T extends React.ElementType> = PropsWithChildren<{
 }> &
   ComponentProps<T>
 
-export const VisuallyHiddenText = <T extends React.ElementType = 'span'>({
+const ActualVisuallyHiddenText = <T extends React.ElementType = 'span'>({
   as: Component = 'span',
   className,
   ...props
@@ -19,3 +19,5 @@ export const VisuallyHiddenText = <T extends React.ElementType = 'span'>({
 
   return <Component {...props} className={styles} />
 }
+
+export const VisuallyHiddenText = memo(ActualVisuallyHiddenText) as typeof ActualVisuallyHiddenText
