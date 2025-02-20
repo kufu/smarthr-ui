@@ -5,10 +5,9 @@ import { Button } from '../Button'
 type Props = {
   page: number
   currentPage: number
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
+export const PaginationItemButton: React.FC<Props> = ({ page, currentPage }) => {
   const attrs = useMemo(() => {
     const disabled = page === currentPage
     const result: {
@@ -30,7 +29,6 @@ export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onCli
   return (
     <Button
       {...attrs}
-      onClick={onClick}
       value={page}
       square
       size="s"

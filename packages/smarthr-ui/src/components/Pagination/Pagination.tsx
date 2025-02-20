@@ -48,6 +48,8 @@ type BaseProps = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 type Props = BaseProps & ElementProps
 
+const BUTTON_REGEX = /^button$/i
+
 export const Pagination: React.FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
 
@@ -98,54 +100,40 @@ const ActualPagination: React.FC<Props> = ({
   )
 
   const actualOnClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onClick(parseInt(e.currentTarget.value, 10))
+    (e: React.MouseEvent) => {
+      const button = e.nativeEvent.composedPath().find((elm) => BUTTON_REGEX.test(elm.tagName))
+
+      if (button) {
+        onClick(parseInt(button.value, 10))
+      }
     },
     [onClick],
   )
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Nav {...props} className={className.swrapper} aria-label="ページネーション">
-      <Reel>
+    <Nav {...props} className={classNames.wrapper} aria-label="ページネーション">
+      <Reel onClick={actualOnClick} role="presentation">
         <Cluster as="ul" className={classNames.list}>
           <li className={classNames.firstListItem}>
-            <PaginationControllerItemButton
-              {...controllerAttrs.prev}
-              onClick={actualOnClick}
-              targetPage={1}
-              double
-            />
+            <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={1} double />
           </li>
           <li className={classNames.prevListItem}>
-            <PaginationControllerItemButton
-              {...controllerAttrs.prev}
-              onClick={actualOnClick}
-              targetPage={current - 1}
-            />
+            <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
           </li>
           {pageNumbers.map((page) => (
             <li
               key={page}
               className={`smarthr-ui-Pagination-${page === current ? 'current' : 'page'}`}
             >
-              <PaginationItemButton page={page} currentPage={current} onClick={actualOnClick} />
+              <PaginationItemButton page={page} currentPage={current} />
             </li>
           ))}
           <li className={classNames.nextListItem}>
-            <PaginationControllerItemButton
-              {...controllerAttrs.next}
-              onClick={actualOnClick}
-              targetPage={current + 1}
-            />
+            <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
           </li>
           <li className={classNames.lastListItem}>
-            <PaginationControllerItemButton
-              {...controllerAttrs.next}
-              onClick={actualOnClick}
-              targetPage={total}
-              double
-            />
+            <PaginationControllerItemButton {...controllerAttrs.next} targetPage={total} double />
           </li>
         </Cluster>
       </Reel>
