@@ -4,12 +4,11 @@ import { Button } from '../Button'
 
 type Props = {
   page: number
-  currentPage: number
+  disabled: boolean
 }
 
-export const PaginationItemButton: React.FC<Props> = ({ page, currentPage }) => {
+export const PaginationItemButton: React.FC<Props> = ({ page, disabled }) => {
   const attrs = useMemo(() => {
-    const disabled = page === currentPage
     const result: {
       'aria-label': string
       disabled: boolean
@@ -24,7 +23,7 @@ export const PaginationItemButton: React.FC<Props> = ({ page, currentPage }) => 
     }
 
     return result
-  }, [currentPage, page])
+  }, [disabled, page])
 
   return (
     <Button

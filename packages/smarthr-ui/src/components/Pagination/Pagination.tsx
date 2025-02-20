@@ -78,11 +78,13 @@ const ActualPagination: React.FC<Props> = ({
   }, [className, withoutNumbers])
 
   const actualOnClick = useCallback(
-    (e: React.MouseEvent) => {
-      const button = e.nativeEvent.composedPath().find((elm) => BUTTON_REGEX.test(elm.tagName))
+    (e: React.MouseEvent<HTMLElement>) => {
+      const button = (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) =>
+        BUTTON_REGEX.test(elm.tagName),
+      )
 
       if (button) {
-        onClick(parseInt(button.value, 10))
+        onClick(parseInt((button as HTMLButtonElement).value, 10))
       }
     },
     [onClick],
@@ -106,7 +108,7 @@ const ActualPagination: React.FC<Props> = ({
 }
 
 const ItemCluster = memo<
-  Pick<Props, 'total' | 'current' | 'padding' | 'WithoutNumbers'> & {
+  Pick<Props, 'total' | 'current' | 'padding' | 'withoutNumbers'> & {
     classNames: {
       list: string
       firstListItem: string
@@ -115,13 +117,15 @@ const ItemCluster = memo<
       lastListItem: string
     }
   }
->(({ total, current, padding = 4, withoutNumbers, classNames }) => {
+>(({ total, current, padding, withoutNumbers, classNames }) => {
   const pageNumbers = useMemo(() => {
     if (withoutNumbers) {
       return []
     }
 
-    return range(Math.max(current - padding, 1), Math.min(current + padding, total) + 1)
+    const actualPadding = padding ?? 4
+
+    return range(Math.max(current - actualPadding, 1), Math.min(current + actualPadding, total) + 1)
   }, [current, total, padding, withoutNumbers])
 
   const controllerAttrs = useMemo(
@@ -149,9 +153,7 @@ const ItemCluster = memo<
         <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
       </li>
       {pageNumbers.map((page) => (
-        <li key={page} className={`smarthr-ui-Pagination-${page === current ? 'current' : 'page'}`}>
-          <PaginationItemButton page={page} currentPage={current} />
-        </li>
+        <NumberItemButton key={page} page={page} disabled={page === current} />
       ))}
       <li className={classNames.nextListItem}>
         <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
@@ -164,6 +166,12 @@ const ItemCluster = memo<
     </Cluster>
   )
 })
+
+const NumberItemButton = memo<{ page: number; disabled: boolean }>(({ page, disabled }) => (
+  <li className={`smarthr-ui-Pagination-${disabled ? 'current' : 'page'}`}>
+    <PaginationItemButton page={page} disabled={disabled} />
+  </li>
+))
 
 const DoubleIconItemButton = memo<{
   disabled: boolean
