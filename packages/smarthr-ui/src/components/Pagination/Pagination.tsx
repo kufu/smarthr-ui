@@ -8,7 +8,7 @@ import { Nav } from '../SectioningContent'
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
 import { PaginationItemButton } from './PaginationItemButton'
 
-const pagination = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Pagination shr-inline-block shr-max-w-full',
     list: 'shr-m-0.25 shr-list-none shr-ps-[unset]',
@@ -60,24 +60,18 @@ const ActualPagination: React.FC<Props> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const {
-    wrapperStyle,
-    listStyle,
-    firstListItemStyle,
-    prevListItemStyle,
-    nextListItemStyle,
-    lastListItemStyle,
-  } = useMemo(() => {
-    const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } = pagination()
+  const classNames = useMemo(() => {
+    const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } =
+      classNameGenerator()
     const itemArg = { withoutNumbers }
 
     return {
-      wrapperStyle: wrapper({ className }),
-      listStyle: list(),
-      firstListItemStyle: firstListItem(itemArg),
-      prevListItemStyle: prevListItem(itemArg),
-      nextListItemStyle: nextListItem(itemArg),
-      lastListItemStyle: lastListItem(itemArg),
+      wrapper: wrapper({ className }),
+      list: list(),
+      firstListItem: firstListItem(itemArg),
+      prevListItem: prevListItem(itemArg),
+      nextListItem: nextListItem(itemArg),
+      lastListItem: lastListItem(itemArg),
     }
   }, [className, withoutNumbers])
 
@@ -112,10 +106,10 @@ const ActualPagination: React.FC<Props> = ({
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Nav {...props} className={wrapperStyle} aria-label="ページネーション">
+    <Nav {...props} className={className.swrapper} aria-label="ページネーション">
       <Reel>
-        <Cluster as="ul" className={listStyle}>
-          <li className={firstListItemStyle}>
+        <Cluster as="ul" className={classNames.list}>
+          <li className={classNames.firstListItem}>
             <PaginationControllerItemButton
               {...controllerAttrs.prev}
               onClick={actualOnClick}
@@ -123,7 +117,7 @@ const ActualPagination: React.FC<Props> = ({
               double
             />
           </li>
-          <li className={prevListItemStyle}>
+          <li className={classNames.prevListItem}>
             <PaginationControllerItemButton
               {...controllerAttrs.prev}
               onClick={actualOnClick}
@@ -138,14 +132,14 @@ const ActualPagination: React.FC<Props> = ({
               <PaginationItemButton page={page} currentPage={current} onClick={actualOnClick} />
             </li>
           ))}
-          <li className={nextListItemStyle}>
+          <li className={classNames.nextListItem}>
             <PaginationControllerItemButton
               {...controllerAttrs.next}
               onClick={actualOnClick}
               targetPage={current + 1}
             />
           </li>
-          <li className={lastListItemStyle}>
+          <li className={classNames.lastListItem}>
             <PaginationControllerItemButton
               {...controllerAttrs.next}
               onClick={actualOnClick}
