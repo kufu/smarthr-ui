@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useCallback, useMemo } from 'react'
+import React, { type HTMLAttributes, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -57,15 +57,15 @@ const ActualPagination: React.FC<Props> = ({
   total,
   current,
   onClick,
-  padding = 4,
+  padding,
   className,
-  withoutNumbers = false,
+  withoutNumbers,
   ...props
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } =
       classNameGenerator()
-    const itemArg = { withoutNumbers }
+    const itemArg = { withoutNumbers: withoutNumbers || false }
 
     return {
       wrapper: wrapper({ className }),
@@ -77,6 +77,45 @@ const ActualPagination: React.FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent) => {
+      const button = e.nativeEvent.composedPath().find((elm) => BUTTON_REGEX.test(elm.tagName))
+
+      if (button) {
+        onClick(parseInt(button.value, 10))
+      }
+    },
+    [onClick],
+  )
+
+  return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Nav {...props} className={classNames.wrapper} aria-label="ページネーション">
+      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
+      <Reel onClick={actualOnClick} role="presentation">
+        <ItemCluster
+          total={total}
+          current={current}
+          padding={padding}
+          withoutNumbers={withoutNumbers}
+          classNames={classNames}
+        />
+      </Reel>
+    </Nav>
+  )
+}
+
+const ItemCluster = memo<
+  Pick<Props, 'total' | 'current' | 'padding' | 'WithoutNumbers'> & {
+    classNames: {
+      list: string
+      firstListItem: string
+      prevListItem: string
+      nextListItem: string
+      lastListItem: string
+    }
+  }
+>(({ total, current, padding = 4, withoutNumbers, classNames }) => {
   const pageNumbers = useMemo(() => {
     if (withoutNumbers) {
       return []
@@ -99,44 +138,25 @@ const ActualPagination: React.FC<Props> = ({
     [current, total],
   )
 
-  const actualOnClick = useCallback(
-    (e: React.MouseEvent) => {
-      const button = e.nativeEvent.composedPath().find((elm) => BUTTON_REGEX.test(elm.tagName))
-
-      if (button) {
-        onClick(parseInt(button.value, 10))
-      }
-    },
-    [onClick],
-  )
-
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Nav {...props} className={classNames.wrapper} aria-label="ページネーション">
-      <Reel onClick={actualOnClick} role="presentation">
-        <Cluster as="ul" className={classNames.list}>
-          <li className={classNames.firstListItem}>
-            <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={1} double />
-          </li>
-          <li className={classNames.prevListItem}>
-            <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
-          </li>
-          {pageNumbers.map((page) => (
-            <li
-              key={page}
-              className={`smarthr-ui-Pagination-${page === current ? 'current' : 'page'}`}
-            >
-              <PaginationItemButton page={page} currentPage={current} />
-            </li>
-          ))}
-          <li className={classNames.nextListItem}>
-            <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
-          </li>
-          <li className={classNames.lastListItem}>
-            <PaginationControllerItemButton {...controllerAttrs.next} targetPage={total} double />
-          </li>
-        </Cluster>
-      </Reel>
-    </Nav>
+    <Cluster as="ul" className={classNames.list}>
+      <li className={classNames.firstListItem}>
+        <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={1} double />
+      </li>
+      <li className={classNames.prevListItem}>
+        <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
+      </li>
+      {pageNumbers.map((page) => (
+        <li key={page} className={`smarthr-ui-Pagination-${page === current ? 'current' : 'page'}`}>
+          <PaginationItemButton page={page} currentPage={current} />
+        </li>
+      ))}
+      <li className={classNames.nextListItem}>
+        <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
+      </li>
+      <li className={classNames.lastListItem}>
+        <PaginationControllerItemButton {...controllerAttrs.next} targetPage={total} double />
+      </li>
+    </Cluster>
   )
-}
+})
