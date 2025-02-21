@@ -20,6 +20,7 @@ export default [
       ],
       'jsx-a11y/role-has-required-aria-props': 'error',
       'jsx-a11y/mouse-events-have-key-events': 'error',
+      'jsx-a11y/no-noninteractive-element-interactions': 'error',
       '@typescript-eslint/consistent-type-definitions': [
         'error',
         'type',
@@ -38,6 +39,7 @@ export default [
           checkType: 'allow-spread-attributes',
         }
       ],
+      'smarthr/a11y-prohibit-sectioning-content-in-form': 'error'
     },
   },
   {

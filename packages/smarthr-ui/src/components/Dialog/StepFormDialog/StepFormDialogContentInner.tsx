@@ -138,7 +138,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const calcedResponseStatus = useResponseMessage(responseMessage)
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
       <form onSubmit={handleSubmitAction}>
         <div className={classNames.wrapper}>
