@@ -8,9 +8,9 @@ const webpack = require('webpack')
 const compiler = webpack({
   mode: 'development',
   entry: path.resolve('src', 'index.ts'),
-  target: ['web', 'es2020'],
+  target: ['web', 'es2022'],
   devtool: 'nosources-source-map',
-  plugins: [new ECMAVersionValidatorPlugin({ ecmaVersion: 2020 })],
+  plugins: [new ECMAVersionValidatorPlugin({ ecmaVersion: 2022 })],
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },

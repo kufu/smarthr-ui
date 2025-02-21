@@ -3,10 +3,10 @@
   "compilerOptions": {
     "outDir": "./lib",
     "lib": [
-      "es2020",
+      "es2022",
       "dom"
     ],
-    "target": "es2020",
+    "target": "es2022",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -26,7 +26,7 @@
     "allowSyntheticDefaultImports": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
-    "paths": {},
+    "paths": {}
   },
   "exclude": [
     "node_modules"
