@@ -40,6 +40,7 @@ export default [
   {
     ignores: [
       '**/*.{mjs,js}',
+      '**/*.stories.tsx',
       'sandbox/',
       'storybook-static/',
       'packages/smarthr-ui/esm/',
