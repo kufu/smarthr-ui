@@ -1,9 +1,11 @@
 import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<VariantProps<typeof chip> & ComponentPropsWithoutRef<'span'>>
+type Props = PropsWithChildren<
+  VariantProps<typeof styleGenerator> & ComponentPropsWithoutRef<'span'>
+>
 
-const chip = tv({
+const styleGenerator = tv({
   base: [
     'smarthr-ui-Chip',
     'shr-border-shorthand shr-rounded-full shr-bg-white shr-text-black shr-leading-none',
@@ -23,6 +25,9 @@ const chip = tv({
 })
 
 export const Chip: FC<Props> = ({ size, disabled, className, ...props }) => {
-  const styles = useMemo(() => chip({ size, disabled, className }), [size, disabled, className])
+  const styles = useMemo(
+    () => styleGenerator({ size, disabled, className }),
+    [size, disabled, className],
+  )
   return <span {...props} className={styles} />
 }
