@@ -423,6 +423,7 @@ const Handler = React.memo<{
   className: string
   onArrowKeyDown: (e: React.KeyboardEvent) => void
 }>(({ onArrowKeyDown, ...rest }) => (
+  // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
   <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
     <FaGripIcon />
   </div>

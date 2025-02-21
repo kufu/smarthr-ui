@@ -18,6 +18,7 @@ export default [
           controlComponents: ['Input', 'InputWithTooltip'],
         },
       ],
+      'jsx-a11y/role-has-required-aria-props': 'error',
       '@typescript-eslint/consistent-type-definitions': [
         'error',
         'type',

@@ -84,6 +84,7 @@ const AddButton = <T,>({
       ref={activeRef}
       type="button"
       role="option"
+      aria-selected={false}
       id={option.id}
       data-active={!!activeRef}
       onClick={onClick}
