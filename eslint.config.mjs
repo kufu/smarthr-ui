@@ -19,6 +19,7 @@ export default [
         },
       ],
       'jsx-a11y/role-has-required-aria-props': 'error',
+      'jsx-a11y/mouse-events-have-key-events': 'error',
       '@typescript-eslint/consistent-type-definitions': [
         'error',
         'type',
