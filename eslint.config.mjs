@@ -22,6 +22,7 @@ export default [
         'error',
         'type',
       ],
+      'react-hooks/exhaustive-deps': 'error',
       'smarthr/require-barrel-import': 'off',
       'smarthr/a11y-anchor-has-href-attribute': [
         'error',

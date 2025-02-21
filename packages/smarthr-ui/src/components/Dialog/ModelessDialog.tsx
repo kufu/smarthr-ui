@@ -215,7 +215,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
         ? decorated.dialogHandlerAriaValuetext(defaultAriaValuetext, wrapperPosition) ||
           defaultAriaValuetext
         : undefined,
-    [defaultAriaValuetext, wrapperPosition, decorated.dialogHandlerAriaValuetext],
+    [defaultAriaValuetext, wrapperPosition, decorated],
   )
 
   const topStyle = centering.top !== undefined ? centering.top : top
