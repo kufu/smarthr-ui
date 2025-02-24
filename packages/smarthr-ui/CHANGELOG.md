@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [65.2.0](https://github.com/kufu/smarthr-ui/compare/v65.1.0...v65.2.0) (2025-02-18)
+
+
+### Features
+
+* StepFormDialogコンポーネントの作成 ([#5004](https://github.com/kufu/smarthr-ui/issues/5004)) ([918f08a](https://github.com/kufu/smarthr-ui/commit/918f08a5e249a0d2f860bd6cc395a9326cf76b4b))
+
+
+### Bug Fixes
+
+* **AppHeader:** elementAs, current, keyまわりのエラーを解消 ([#5355](https://github.com/kufu/smarthr-ui/issues/5355)) ([4e90ad0](https://github.com/kufu/smarthr-ui/commit/4e90ad05ae365333cf0073f423d50029f683f9a2))
+* StepFormDialogにuseResponseMessageを適用する ([#5388](https://github.com/kufu/smarthr-ui/issues/5388)) ([e02a233](https://github.com/kufu/smarthr-ui/commit/e02a233b20ac0ac5c2cba7a04510de4052d7a6ac))
+* **Textarea:** rows指定が正しく動かないのを修正 ([#5394](https://github.com/kufu/smarthr-ui/issues/5394)) ([272a3c9](https://github.com/kufu/smarthr-ui/commit/272a3c994eff90bbab15ae696f062555d5184d90))
+
 ## [65.1.0](https://github.com/kufu/smarthr-ui/compare/v65.0.1...v65.1.0) (2025-02-12)
 
 

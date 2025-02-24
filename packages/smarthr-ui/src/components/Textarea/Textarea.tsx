@@ -237,7 +237,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const handleInput = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
         // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = 0
+        e.target.rows = rows
 
         if (autoResize) {
           const currentRows = calculateIdealRows(e.target, maxRows)
@@ -248,7 +248,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
         onInput?.(e)
       },
-      [autoResize, maxRows, onInput],
+      [autoResize, maxRows, onInput, rows],
     )
 
     const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
