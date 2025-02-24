@@ -73,7 +73,7 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
   }, [current, status])
 
   return (
-    <li aria-current={current} className={classNames.wrapper}>
+    <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
       <SectioningFragment>
         <StepHeading
           status={status}

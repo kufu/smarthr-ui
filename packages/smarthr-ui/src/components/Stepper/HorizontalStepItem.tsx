@@ -91,7 +91,7 @@ export const HorizontalStepItem = React.memo<Props>(
     }, [current, isPrevStepCompleted, status])
 
     return (
-      <li aria-current={current} className={classNames.wrapper}>
+      <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
         <SectioningFragment>
           <div className={classNames.headingWrapper}>
             <div className={classNames.stepCounterWrapper}>
