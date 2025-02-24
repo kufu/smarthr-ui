@@ -47,7 +47,7 @@ export const StepCounter: FC<Props> = ({ status, current, stepNumber }) => {
       counter: counter(),
       statusIcon: statusIcon(),
     }
-  }, [status])
+  }, [status, current])
 
   return (
     <span className={classNames.wrapper}>
