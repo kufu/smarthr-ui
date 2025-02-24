@@ -1,14 +1,14 @@
 import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
-const optionsListWrapper = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Browser shr-flex shr-flex-row shr-flex-nowrap shr-min-h-[355px]',
   variants: {
     columnCount: {
@@ -31,100 +31,104 @@ type Props = {
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'notFoundTitle' | 'notFoundDescription'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const NOT_FOUND_TITLE = '該当する項目がありません。'
-const NOT_FOUND_DESCRIPTION = '別の条件を試してください。'
+const DECORATOR_DEFAULT_TEXTS = {
+  notFoundTitle: '該当する項目がありません。',
+  notFoundDescription: '別の条件を試してください。',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-export const Browser: FC<Props> = (props) => {
-  const { value, decorators, onSelectItem } = props
-
-  const decoratedTexts = useMemo(
-    () => ({
-      notFoundTitle: decorators?.notFoundTitle?.(NOT_FOUND_TITLE) ?? NOT_FOUND_TITLE,
-      notFoundDescription:
-        decorators?.notFoundDescription?.(NOT_FOUND_DESCRIPTION) ?? NOT_FOUND_DESCRIPTION,
-    }),
-    [decorators],
-  )
-
-  const rootNode = useMemo(() => RootNode.from({ children: props.items }), [props.items])
-
-  const selectedNode = useMemo(() => {
-    if (value) {
-      return rootNode.findByValue(value)
-    }
-    return
-  }, [rootNode, value])
-
+export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) => {
+  const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
+
+  const className = useMemo(
+    () => classNameGenerator({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
+    [columns.length],
+  )
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
+  const selectedNode = useMemo(
+    () => (value ? rootNode.findByValue(value) : undefined),
+    [value, rootNode],
+  )
 
   // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
   const handleKeyDown: KeyboardEventHandler = useCallback(
     (e) => {
-      if (e.key === 'ArrowUp' && selectedNode) {
-        const target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
-        if (target) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
+      if (!selectedNode) {
+        return
+      }
+
+      let target: ItemNode | undefined = undefined
+
+      switch (e.key) {
+        case 'ArrowUp': {
+          target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
+
+          break
+        }
+        case 'ArrowDown': {
+          target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
+
+          break
+        }
+        case 'ArrowLeft': {
+          const node = selectedNode.parent
+
+          if (node instanceof ItemNode) {
+            target = node
+          }
+
+          break
+        }
+        case 'ArrowRight':
+        case 'Enter':
+        case ' ': {
+          target = selectedNode.getFirstChild()
+
+          break
         }
       }
 
-      if (e.key === 'ArrowDown' && selectedNode) {
-        const target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
-        if (target) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
-        }
-      }
-
-      if (e.key === 'ArrowLeft') {
-        const target = selectedNode?.parent
-        if (target instanceof ItemNode) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
-        }
-      }
-
-      if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
-        const target = selectedNode?.getFirstChild()
-        if (target) {
-          e.preventDefault()
-          onSelectItem?.(target.value)
-          document.getElementById(getElementIdFromNode(target))?.focus()
-        }
+      if (target) {
+        e.preventDefault()
+        onSelectItem?.(target.value)
+        document.getElementById(getElementIdFromNode(target.value))?.focus()
       }
     },
     [selectedNode, onSelectItem],
   )
 
+  const onChangeInput = useMemo(
+    () =>
+      onSelectItem
+        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
+        : undefined,
+    [onSelectItem],
+  )
+
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
-    <div
-      className={optionsListWrapper({ columnCount: columns.length as 0 | 1 | 2 | 3 })}
-      onKeyDown={handleKeyDown}
-      role="application"
-    >
+    <div role="application" onKeyDown={handleKeyDown} className={className}>
       {columns.length > 0 ? (
-        columns.map((items, index) => (
+        columns.map((colItems, index) => (
           <BrowserColumn
             key={index}
-            items={items}
+            items={colItems}
             index={index}
             value={value}
-            onSelectItem={onSelectItem}
+            onChangeInput={onChangeInput}
           />
         ))
       ) : (
         <Text>
-          {decoratedTexts.notFoundTitle}
+          {decorated.notFoundTitle}
           <br />
-          {decoratedTexts.notFoundDescription}
+          {decorated.notFoundDescription}
         </Text>
       )}
     </div>
