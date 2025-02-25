@@ -170,13 +170,16 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
     })
 
     const Wrapper = useSectionWrapper(Component)
-
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={wrapperStyle}>
-          {styledChildren}
-        </Component>
-      </Wrapper>
+    const body = (
+      <Component {...props} ref={ref} className={wrapperStyle}>
+        {styledChildren}
+      </Component>
     )
+
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

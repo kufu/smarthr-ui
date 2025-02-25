@@ -93,11 +93,12 @@ export const Reel = forwardRef<HTMLDivElement, Props>(
     const styles = useMemo(() => reel({ gap, padding, className }), [className, gap, padding])
 
     const Wrapper = useSectionWrapper(Component)
+    const body = <Component {...props} ref={ref} className={styles} />
 
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={styles} />
-      </Wrapper>
-    )
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

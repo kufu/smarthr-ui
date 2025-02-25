@@ -63,11 +63,12 @@ export const Stack = forwardRef<HTMLDivElement, Props>(
     )
 
     const Wrapper = useSectionWrapper(Component)
+    const body = <Component {...props} ref={ref} className={styles} />
 
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={styles} />
-      </Wrapper>
-    )
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

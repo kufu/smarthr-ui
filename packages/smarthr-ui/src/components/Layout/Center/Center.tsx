@@ -71,11 +71,12 @@ export const Center = forwardRef<HTMLDivElement, Props & ElementProps>(
     )
 
     const Wrapper = useSectionWrapper(Component)
+    const body = <Component {...styleProps} {...props} ref={ref} />
 
-    return (
-      <Wrapper>
-        <Component {...styleProps} {...props} ref={ref} />
-      </Wrapper>
-    )
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

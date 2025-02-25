@@ -119,12 +119,13 @@ const ActualCluster = <T extends React.ElementType = 'div'>(
 
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
+  const body = <Component {...rest} ref={ref} className={styles} />
 
-  return (
-    <Wrapper>
-      <Component {...rest} ref={ref} className={styles} />
-    </Wrapper>
-  )
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
+
+  return body
 }
 
 export const Cluster = genericsForwardRef(ActualCluster)
