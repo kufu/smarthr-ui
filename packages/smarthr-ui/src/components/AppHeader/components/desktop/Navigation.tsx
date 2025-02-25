@@ -64,30 +64,31 @@ const buildNavigations = (
   navigations: NavigationType[],
 ): ComponentProps<typeof AppNavi>['children'] => (
   <>
-    {navigations.map((navigation) => {
+    {navigations.map((navigation, index) => {
       if ('elementAs' in navigation) {
+        const { elementAs, ...rest } = navigation
         return (
           <AppNaviCustomTag
-            {...navigation}
-            key={navigation.children.toString()}
+            {...rest}
+            key={`${index}-${navigation.children.toString()}`}
             tag={navigation.elementAs}
           />
         )
       }
       if ('href' in navigation) {
-        return <AppNaviAnchor {...navigation} key={navigation.children.toString()} />
+        return <AppNaviAnchor {...navigation} key={`${index}-${navigation.children.toString()}`} />
       }
       if ('childNavigations' in navigation) {
         return (
           <AppNaviDropdownMenuButton
             label={navigation.children}
-            key={navigation.children.toString()}
+            key={`${index}-${navigation.children.toString()}`}
           >
             {buildDropdownMenu(navigation.childNavigations)}
           </AppNaviDropdownMenuButton>
         )
       }
-      return <AppNaviButton {...navigation} key={navigation.children.toString()} />
+      return <AppNaviButton {...navigation} key={`${index}-${navigation.children.toString()}`} />
     })}
   </>
 )
@@ -96,43 +97,49 @@ const buildDropdownMenu = (
   navigations: Array<ChildNavigation | ChildNavigationGroup>,
 ): ComponentProps<typeof AppNaviDropdownMenuButton>['children'] => (
   <>
-    {navigations.map((navigation) => {
+    {navigations.map((navigation, index) => {
       if ('elementAs' in navigation) {
-        const Component = navigation.elementAs
+        const { elementAs: Component, current, className, ...rest } = navigation
         // TODO: DropdownMenuItemを作成し、elementAsを渡せるようにする
         return (
           <Component
-            {...navigation}
-            key={navigation.children}
-            aria-current={navigation.current}
+            {...rest}
+            // key={navigation.children}
+            key={`${index}-${navigation.children.toString()}`}
+            aria-current={current}
             className={commonButton({
-              current: navigation.current,
-              className: navigation.className,
+              current,
+              className,
             })}
           />
         )
       }
       if ('href' in navigation) {
+        const { current, ...rest } = navigation
         return (
           <AnchorButton
-            {...navigation}
-            aria-current={navigation.current && 'page'}
-            key={navigation.children.toString()}
+            {...rest}
+            aria-current={current && 'page'}
+            key={`${index}-${navigation.children.toString()}`}
           />
         )
       }
       if ('title' in navigation) {
         return (
-          <DropdownMenuGroup name={navigation.title} key={navigation.title.toString()}>
+          <DropdownMenuGroup
+            name={navigation.title}
+            key={`${index}-${navigation.title.toString()}`}
+          >
             {buildDropdownMenu(navigation.childNavigations)}
           </DropdownMenuGroup>
         )
       }
+      const { current, ...rest } = navigation
       return (
         <Button
-          {...navigation}
-          aria-current={navigation.current && 'page'}
-          key={navigation.children.toString()}
+          {...rest}
+          aria-current={current && 'page'}
+          key={`${index}-${navigation.children.toString()}`}
         />
       )
     })}
