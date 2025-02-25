@@ -215,7 +215,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
         ? decorated.dialogHandlerAriaValuetext(defaultAriaValuetext, wrapperPosition) ||
           defaultAriaValuetext
         : undefined,
-    [defaultAriaValuetext, wrapperPosition, decorated.dialogHandlerAriaValuetext],
+    [defaultAriaValuetext, wrapperPosition, decorated],
   )
 
   const topStyle = centering.top !== undefined ? centering.top : top
@@ -423,6 +423,7 @@ const Handler = React.memo<{
   className: string
   onArrowKeyDown: (e: React.KeyboardEvent) => void
 }>(({ onArrowKeyDown, ...rest }) => (
+  // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
   <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
     <FaGripIcon />
   </div>

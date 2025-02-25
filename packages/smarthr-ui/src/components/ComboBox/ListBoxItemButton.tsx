@@ -84,9 +84,11 @@ const AddButton = <T,>({
       ref={activeRef}
       type="button"
       role="option"
+      aria-selected={false}
       id={option.id}
       data-active={!!activeRef}
       onClick={onClick}
+      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
       onMouseOver={onMouseOver}
       className={className}
     >
@@ -125,6 +127,7 @@ const SelectButton = <T,>({
       aria-selected={option.selected}
       data-active={!!activeRef}
       onClick={handleSelect}
+      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
       onMouseOver={onMouseOver}
       className={className}
     >

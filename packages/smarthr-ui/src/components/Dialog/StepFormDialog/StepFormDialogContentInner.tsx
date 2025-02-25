@@ -135,10 +135,10 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
 
-  const calcedResponseStatus = useResponseMessage(responseMessage)
+  const responseStatus = useResponseMessage(responseMessage)
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
       <form onSubmit={handleSubmitAction}>
         <div className={classNames.wrapper}>
@@ -155,7 +155,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               {activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
-                  disabled={calcedResponseStatus.isProcessing}
+                  disabled={responseStatus.isProcessing}
                   className="smarthr-ui-Dialog-backButton"
                 >
                   {decorated.backButtonLabel}
@@ -164,7 +164,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 <Button
                   onClick={handleCloseAction}
-                  disabled={closeDisabled || calcedResponseStatus.isProcessing}
+                  disabled={closeDisabled || responseStatus.isProcessing}
                   className="smarthr-ui-Dialog-closeButton"
                 >
                   {decorated.closeButtonLabel}
@@ -173,17 +173,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   type="submit"
                   variant={actionTheme}
                   disabled={actionDisabled}
-                  loading={calcedResponseStatus.isProcessing}
+                  loading={responseStatus.isProcessing}
                   className="smarthr-ui-Dialog-actionButton"
                 >
                   {actionText}
                 </Button>
               </Cluster>
             </Cluster>
-            {calcedResponseStatus.message && (
+            {responseStatus.message && (
               <div className={classNames.message}>
-                <ResponseMessage type={calcedResponseStatus.status} role="alert">
-                  {calcedResponseStatus.message}
+                <ResponseMessage type={responseStatus.status} role="alert">
+                  {responseStatus.message}
                 </ResponseMessage>
               </div>
             )}

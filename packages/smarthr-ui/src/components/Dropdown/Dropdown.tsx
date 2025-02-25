@@ -99,13 +99,15 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
   }, [active])
 
   const onClickTrigger = useCallback((rect: Rect) => {
-    const newActive = !active
+    setActive((current) => {
+      const newActive = !current
 
-    setActive(newActive)
+      if (newActive) {
+        setTriggerRect(rect)
+      }
 
-    if (newActive) {
-      setTriggerRect(rect)
-    }
+      return newActive
+    })
   }, [])
 
   const onClickCloser = useCallback(() => {

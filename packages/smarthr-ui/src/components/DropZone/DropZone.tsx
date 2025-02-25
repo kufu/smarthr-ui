@@ -114,6 +114,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
     }, [])
 
     return (
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
         {children}
         <SelectButton decorators={decorators} onClick={onClickButton} />

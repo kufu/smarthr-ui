@@ -14,7 +14,7 @@ export type AppNaviCustomTagProps = PropsWithChildren<{
   current?: boolean
 }> & { [key: string]: any }
 
-const appNaviCustomTag = tv({
+const classNameGenerator = tv({
   extend: appNaviItemStyle,
   slots: {
     wrapper: 'smarthr-ui-AppNavi-customTag',
@@ -25,20 +25,21 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   children,
   tag: Tag,
   icon: Icon,
-  current = false,
+  current,
   ...props
 }) => {
-  const { wrapperStyle, iconStyle } = useMemo(() => {
-    const { wrapper, icon } = appNaviCustomTag({ active: current })
+  const classNames = useMemo(() => {
+    const { wrapper, icon } = classNameGenerator({ active: current })
+
     return {
-      wrapperStyle: wrapper(),
-      iconStyle: icon(),
+      wrapper: wrapper(),
+      icon: icon(),
     }
   }, [current])
 
   return (
-    <Tag {...props} aria-current={current ? 'page' : undefined} className={wrapperStyle}>
-      {Icon && <Icon className={iconStyle} />}
+    <Tag {...props} aria-current={current ? 'page' : undefined} className={classNames.wrapper}>
+      {Icon && <Icon className={classNames.icon} />}
       {children}
     </Tag>
   )

@@ -1,4 +1,4 @@
-import React, { type FC } from 'react'
+import React, { useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
@@ -8,7 +8,7 @@ import { StepCounter } from './StepCounter'
 
 import type { HorizontalStep } from './types'
 
-const horizontalStepItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'shr-group/stepItem',
@@ -70,35 +70,41 @@ type Props = HorizontalStep & {
   isPrevStepCompleted: boolean
 }
 
-export const HorizontalStepItem: FC<Props> = ({
-  stepNumber,
-  label,
-  status,
-  current,
-  isPrevStepCompleted,
-}) => {
-  const statusType = typeof status === 'object' ? status.type : status
-  const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
-    horizontalStepItem({
-      status: statusType,
-      current,
-      isPrevStepCompleted,
-    })
+export const HorizontalStepItem = React.memo<Props>(
+  ({ stepNumber, label, status, current, isPrevStepCompleted }) => {
+    const classNames = useMemo(() => {
+      const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
+        classNameGenerator({
+          status: typeof status === 'object' ? status.type : status,
+          current,
+          isPrevStepCompleted,
+        })
 
-  return (
-    <li aria-current={current} className={wrapper()}>
-      <SectioningFragment>
-        <div className={headingWrapper()}>
-          <div className={stepCounterWrapper()}>
-            <span className={beforeLine()} />
-            <StepCounter status={status} current={current} stepNumber={stepNumber} />
-            <span className={afterLine()} />
+      return {
+        wrapper: wrapper(),
+        headingWrapper: headingWrapper(),
+        stepCounterWrapper: stepCounterWrapper(),
+        beforeLine: beforeLine(),
+        afterLine: afterLine(),
+        heading: heading(),
+      }
+    }, [current, isPrevStepCompleted, status])
+
+    return (
+      <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
+        <SectioningFragment>
+          <div className={classNames.headingWrapper}>
+            <div className={classNames.stepCounterWrapper}>
+              <span className={classNames.beforeLine} />
+              <StepCounter status={status} current={current} stepNumber={stepNumber} />
+              <span className={classNames.afterLine} />
+            </div>
+            <Heading type="sectionTitle" className={classNames.heading}>
+              {label}
+            </Heading>
           </div>
-          <Heading type="sectionTitle" className={heading()}>
-            {label}
-          </Heading>
-        </div>
-      </SectioningFragment>
-    </li>
-  )
-}
+        </SectioningFragment>
+      </li>
+    )
+  },
+)

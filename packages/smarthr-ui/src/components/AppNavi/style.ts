@@ -18,7 +18,6 @@ export const appNaviItemStyle = tv({
         ],
         icon: 'shr-fill-black',
       },
-      false: {},
     },
   },
 })
