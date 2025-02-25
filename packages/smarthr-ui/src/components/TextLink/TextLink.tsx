@@ -1,11 +1,12 @@
 import React, {
-  ComponentPropsWithoutRef,
-  ElementType,
-  FC,
-  PropsWithoutRef,
-  ReactNode,
-  Ref,
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type FC,
+  type PropsWithoutRef,
+  type ReactNode,
+  type Ref,
   forwardRef,
+  memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -45,7 +46,7 @@ const { anchor, prefixWrapper, suffixWrapper } = textLink()
 const prefixWrapperClassName = prefixWrapper()
 const suffixWrapperClassName = suffixWrapper()
 
-export const TextLink: TextLinkComponent = forwardRef(
+const ActualTextLink: TextLinkComponent = forwardRef(
   <T extends ElementType = 'a'>(
     {
       elementAs,
@@ -116,3 +117,5 @@ export const TextLink: TextLinkComponent = forwardRef(
     )
   },
 )
+
+export const TextLink = memo(ActualTextLink) as typeof ActualTextLink

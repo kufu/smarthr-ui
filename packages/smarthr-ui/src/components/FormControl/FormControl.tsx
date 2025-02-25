@@ -17,7 +17,7 @@ import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
 import { Text, TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenText } from '../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
 
@@ -191,7 +191,9 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
       return {
         wrapperStyle: wrapper({ className }),
-        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+        labelStyle: label({
+          className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
+        }),
         errorListStyle: errorList(),
         errorIconStyle: errorIcon(),
         underTitleStackStyle: underTitleStack(),
