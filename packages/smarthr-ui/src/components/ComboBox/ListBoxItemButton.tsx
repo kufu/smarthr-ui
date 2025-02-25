@@ -1,4 +1,4 @@
-import React, { type RefObject, useCallback, useMemo } from 'react'
+import React, { type ReactNode, type RefObject, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaPlusCircleIcon } from '../Icon'
@@ -92,13 +92,15 @@ const AddButton = <T,>({
       onMouseOver={onMouseOver}
       className={className}
     >
-      <FaPlusCircleIcon
-        color="TEXT_LINK"
-        text={<Text color="TEXT_LINK">「{option.item.label}」を追加</Text>}
-      />
+      <MemoizedNewIconWithText label={option.item.label} />
     </button>
   )
 }
+
+const MemoizedNewIconWithText = React.memo<{ label: ReactNode }>(({ label }) => (
+  <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
+))
+
 const SelectButton = <T,>({
   activeRef,
   option,
