@@ -7,7 +7,7 @@ import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
 
 import type { Gap } from '../../types'
 
-export const base = tv({
+export const baseClassNameGenerator = tv({
   base: 'smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock: {
@@ -90,7 +90,7 @@ type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
 type Props = PropsWithChildren<
   Omit<
-    VariantProps<typeof base>,
+    VariantProps<typeof baseClassNameGenerator>,
     'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
   > & {
     /** 境界とコンテンツの間の余白 */
@@ -113,14 +113,14 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
     { padding, radius = 'm', overflow, layer = 1, as: Component = 'div', className, ...props },
     ref,
   ) => {
-    const styles = useMemo(() => {
+    const actualClassName = useMemo(() => {
       const paddingBlock = padding instanceof Object ? padding.block : padding
       const paddingInline = padding instanceof Object ? padding.inline : padding
 
       const overflowBlock = overflow instanceof Object ? overflow.y : overflow
       const overflowInline = overflow instanceof Object ? overflow.x : overflow
 
-      return base({
+      return baseClassNameGenerator({
         paddingBlock,
         paddingInline,
         radius,
@@ -132,8 +132,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
     }, [className, layer, overflow, padding, radius])
 
     const Wrapper = useSectionWrapper(Component)
-
-    const body = <Component {...props} ref={ref} className={styles} />
+    const body = <Component {...props} ref={ref} className={actualClassName} />
 
     if (Wrapper) {
       return <Wrapper>{body}</Wrapper>

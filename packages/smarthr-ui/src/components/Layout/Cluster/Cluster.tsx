@@ -9,7 +9,7 @@ import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 import type { Gap, SeparateGap } from '../../../types'
 import type { ComponentPropsWithoutRef, ForwardedRef, PropsWithChildren } from 'react'
 
-export const cluster = tv({
+export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
   variants: {
     inline: {
@@ -90,7 +90,7 @@ export const cluster = tv({
 })
 
 type Props<T extends React.ElementType> = PropsWithChildren<
-  Omit<VariantProps<typeof cluster>, 'rowGap' | 'columnGap'> & {
+  Omit<VariantProps<typeof clusterClassNameGenerator>, 'rowGap' | 'columnGap'> & {
     as?: T
     gap?: Gap | SeparateGap
   }
@@ -112,14 +112,22 @@ const ActualCluster = <T extends React.ElementType = 'div'>(
     }
   }, [gap])
 
-  const styles = useMemo(
-    () => cluster({ inline, rowGap: gaps.row, columnGap: gaps.column, align, justify, className }),
+  const actualClassName = useMemo(
+    () =>
+      clusterClassNameGenerator({
+        inline,
+        rowGap: gaps.row,
+        columnGap: gaps.column,
+        align,
+        justify,
+        className,
+      }),
     [inline, gaps.row, gaps.column, align, justify, className],
   )
 
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
-  const body = <Component {...rest} ref={ref} className={styles} />
+  const body = <Component {...rest} ref={ref} className={actualClassName} />
 
   if (Wrapper) {
     return <Wrapper>{body}</Wrapper>

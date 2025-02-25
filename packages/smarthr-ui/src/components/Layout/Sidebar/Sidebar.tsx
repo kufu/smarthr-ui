@@ -8,7 +8,7 @@ import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 import type { Gap, SeparateGap } from '../../../types'
 import type { CSSProperties, ComponentPropsWithRef, PropsWithChildren } from 'react'
 
-const sidebar = tv({
+const classNameGenerator = tv({
   base: ['shr-flex shr-flex-wrap', 'empty:shr-gap-0'],
   variants: {
     align: {
@@ -89,7 +89,7 @@ const sidebarItem = tv({
   },
 })
 
-type Props = Omit<VariantProps<typeof sidebar>, 'rowGap' | 'columnGap'> &
+type Props = Omit<VariantProps<typeof classNameGenerator>, 'rowGap' | 'columnGap'> &
   VariantProps<typeof sidebarItem> &
   PropsWithChildren<{
     as?: string | React.ComponentType<any>
@@ -125,8 +125,8 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       }
     }, [gap])
 
-    const wrapperStyle = useMemo(
-      () => sidebar({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
+    const actualClassName = useMemo(
+      () => classNameGenerator({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
       [align, gaps.row, gaps.column, className],
     )
     const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
@@ -171,7 +171,7 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
 
     const Wrapper = useSectionWrapper(Component)
     const body = (
-      <Component {...props} ref={ref} className={wrapperStyle}>
+      <Component {...props} ref={ref} className={actualClassName}>
         {styledChildren}
       </Component>
     )
