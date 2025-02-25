@@ -9,19 +9,23 @@ export default [
   ...storybook.configs['flat/recommended'],
   {
     rules: {
-      'jsx-a11y/anchor-is-valid': 'warn',
-      'jsx-a11y/click-events-have-key-events': 'warn',
-      'jsx-a11y/no-static-element-interactions': 'warn',
+      'jsx-a11y/anchor-is-valid': 'error',
+      'jsx-a11y/click-events-have-key-events': 'error',
+      'jsx-a11y/no-static-element-interactions': 'error',
       'jsx-a11y/label-has-associated-control': [
         'error',
         {
           controlComponents: ['Input', 'InputWithTooltip'],
         },
       ],
+      'jsx-a11y/role-has-required-aria-props': 'error',
+      'jsx-a11y/mouse-events-have-key-events': 'error',
+      'jsx-a11y/no-noninteractive-element-interactions': 'error',
       '@typescript-eslint/consistent-type-definitions': [
         'error',
         'type',
       ],
+      'react-hooks/exhaustive-deps': 'error',
       'smarthr/require-barrel-import': 'off',
       'smarthr/a11y-anchor-has-href-attribute': [
         'error',
@@ -35,11 +39,13 @@ export default [
           checkType: 'allow-spread-attributes',
         }
       ],
+      'smarthr/a11y-prohibit-sectioning-content-in-form': 'error'
     },
   },
   {
     ignores: [
       '**/*.{mjs,js}',
+      '**/*.stories.tsx',
       'sandbox/',
       'storybook-static/',
       'packages/smarthr-ui/esm/',
