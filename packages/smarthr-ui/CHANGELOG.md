@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [65.2.1](https://github.com/kufu/smarthr-ui/compare/v65.2.0...v65.2.1) (2025-02-25)
+
+## [65.2.0](https://github.com/kufu/smarthr-ui/compare/v65.1.0...v65.2.0) (2025-02-18)
+
+
+### Features
+
+* StepFormDialogコンポーネントの作成 ([#5004](https://github.com/kufu/smarthr-ui/issues/5004)) ([918f08a](https://github.com/kufu/smarthr-ui/commit/918f08a5e249a0d2f860bd6cc395a9326cf76b4b))
+
+
+### Bug Fixes
+
+* **AppHeader:** elementAs, current, keyまわりのエラーを解消 ([#5355](https://github.com/kufu/smarthr-ui/issues/5355)) ([4e90ad0](https://github.com/kufu/smarthr-ui/commit/4e90ad05ae365333cf0073f423d50029f683f9a2))
+* StepFormDialogにuseResponseMessageを適用する ([#5388](https://github.com/kufu/smarthr-ui/issues/5388)) ([e02a233](https://github.com/kufu/smarthr-ui/commit/e02a233b20ac0ac5c2cba7a04510de4052d7a6ac))
+* **Textarea:** rows指定が正しく動かないのを修正 ([#5394](https://github.com/kufu/smarthr-ui/issues/5394)) ([272a3c9](https://github.com/kufu/smarthr-ui/commit/272a3c994eff90bbab15ae696f062555d5184d90))
+
+## [65.1.0](https://github.com/kufu/smarthr-ui/compare/v65.0.1...v65.1.0) (2025-02-12)
+
+
+### Features
+
+* **DropdownTrigger:** Dropdown triggerでtooltipを表示できるようにする ([#5291](https://github.com/kufu/smarthr-ui/issues/5291)) ([6279377](https://github.com/kufu/smarthr-ui/commit/6279377f402d11579f55285be62f84cb3a71c184))
+
+
+### Bug Fixes
+
+* **ActionDialog,FormDialog:** スクロールできない問題を修正 ([#5367](https://github.com/kufu/smarthr-ui/issues/5367)) ([35b79ab](https://github.com/kufu/smarthr-ui/commit/35b79abfedb683516ec52a02c17af4e890aac096))
+* **MultiComboBox:** item.labelがReactNodeだった場合のitemの比較を内部の文字列によって行うように ([#5191](https://github.com/kufu/smarthr-ui/issues/5191)) ([547d2e5](https://github.com/kufu/smarthr-ui/commit/547d2e50640cb37ac55e4061b4024f30b211b951))
+
 ### [65.0.1](https://github.com/kufu/smarthr-ui/compare/v65.0.0...v65.0.1) (2025-02-04)
 
 
