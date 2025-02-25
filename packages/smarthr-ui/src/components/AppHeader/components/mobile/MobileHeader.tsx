@@ -12,6 +12,8 @@ import { ReleaseNoteContext } from './ReleaseNoteContext'
 import { TenantSelector } from './TenantSelector'
 import { UserInfo } from './UserInfo'
 
+const EMPTY_NAVIGATIONS: HeaderProps['navigations'] = []
+
 export const MobileHeader: FC<HeaderProps> = ({
   navigations,
   features,
@@ -49,7 +51,7 @@ export const MobileHeader: FC<HeaderProps> = ({
     >
       <NavigationContext.Provider
         value={{
-          navigations: navigations ?? [],
+          navigations: navigations ?? EMPTY_NAVIGATIONS,
           selectedNavigationGroup,
           setSelectedNavigationGroup,
         }}

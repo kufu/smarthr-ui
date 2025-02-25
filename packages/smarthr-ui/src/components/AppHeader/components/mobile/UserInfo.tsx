@@ -83,11 +83,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
         <DropdownTrigger>
           <Button variant="skeleton" size="s" square className={classNames.iconButton}>
             <span className={classNames.iconButtonInner}>
-              <FaUserLargeIcon
-                role="img"
-                aria-label={translated.account}
-                className="shr-fill-grey"
-              />
+              <FaUserLargeIcon alt={translated.account} className="shr-fill-grey" />
             </span>
           </Button>
         </DropdownTrigger>
