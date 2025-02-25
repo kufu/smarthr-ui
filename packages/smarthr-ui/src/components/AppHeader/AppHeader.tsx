@@ -13,12 +13,11 @@ export const AppHeader: FC<HeaderProps> = ({ locale, children, ...props }) => {
   //  wovn の言語切替カスタム UI の挿入対象となる DOM ("wovn-embedded-widget-anchor" クラスを持った div) が複数描画されていると、
   //  wovn のスクリプトの仕様上1つ目の DOM にしか UI が挿入されないため、やむを得ず children のみ React のレンダリングレベルでの出し分けをしています。
   const isDesktop = useMediaQuery(mediaQuery.desktop)
-  const isMobile = useMediaQuery(mediaQuery.mobile)
+  const Header = isDesktop ? DesktopHeader : MobileHeader
 
   return (
     <LocaleContextProvider locale={locale}>
-      <DesktopHeader {...props}>{isDesktop && children}</DesktopHeader>
-      <MobileHeader {...props}>{isMobile && children}</MobileHeader>
+      <Header {...props}>{children}</Header>
     </LocaleContextProvider>
   )
 }
