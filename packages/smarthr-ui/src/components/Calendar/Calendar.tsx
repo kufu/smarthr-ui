@@ -121,8 +121,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         next: currentMonth.add(1, 'month'),
         day: currentMonth,
         months: getMonthArray(currentMonth.toDate()),
-        yearMonthStr: `${currentMonth.year()}年${currentMonth.month() + 1}月`,
-        selectedStr: currentMonth.toString(),
+        yearMonthText: `${currentMonth.year()}年${currentMonth.month() + 1}月`,
+        selectedText: currentMonth.toString(),
       }),
       [currentMonth],
     )
@@ -144,7 +144,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       <div {...props} ref={ref} className={classNames.container}>
         <header className={classNames.header}>
           <YearMonthRender className={classNames.yearMonth}>
-            {calculatedCurrentMonth.yearMonthStr}
+            {calculatedCurrentMonth.yearMonthText}
           </YearMonthRender>
           <YearSelectButton
             aria-expanded={isSelectingYear}
@@ -175,7 +175,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             from={formattedFrom.date}
             to={formattedTo.date}
             onSelectDate={onSelectDate}
-            selectedDayStr={isValidValue ? calculatedCurrentMonth.selectedStr : ''}
+            selectedDayText={isValidValue ? calculatedCurrentMonth.selectedText : ''}
           />
         </div>
       </div>

@@ -19,7 +19,7 @@ type Props = {
   /** トリガのセレクトイベントを処理するハンドラ */
   onSelectDate: (e: MouseEvent, date: Date) => void
   /** 選択された日付 */
-  selectedDayStr: string
+  selectedDayText: string
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
@@ -46,7 +46,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   from,
   to,
   onSelectDate,
-  selectedDayStr,
+  selectedDayText,
   className,
   ...props
 }) => {
@@ -64,7 +64,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   }, [className])
 
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
-  const nowDateStr = dayjs().startOf('date').toString()
+  const nowDateText = dayjs().startOf('date').toString()
 
   return (
     <div className={classNames.wrapper}>
@@ -79,10 +79,10 @@ export const CalendarTable: FC<Props & ElementProps> = ({
                     key={dateIndex}
                     date={date}
                     currentDay={current.day}
-                    selectedDayStr={selectedDayStr}
+                    selectedDayText={selectedDayText}
                     from={from}
                     to={to}
-                    nowDateStr={nowDateStr}
+                    nowDateText={nowDateText}
                     onClick={onSelectDate}
                     classNames={classNames}
                   />
@@ -115,17 +115,17 @@ const NullTd = React.memo<{ className: string }>(({ className }) => <td classNam
 const SelectTdButton = React.memo<{
   date: number
   currentDay: DayJsType
-  selectedDayStr: string
+  selectedDayText: string
   from: Date
   to: Date
-  nowDateStr: string
+  nowDateText: string
   onClick: Props['onSelectDate']
   classNames: {
     td: string
     cellButton: string
     dateCell: string
   }
-}>(({ date, currentDay, selectedDayStr, from, to, nowDateStr, onClick, classNames }) => {
+}>(({ date, currentDay, selectedDayText, from, to, nowDateText, onClick, classNames }) => {
   const target = useMemo(() => {
     const day = currentDay.date(date)
 
@@ -136,10 +136,13 @@ const SelectTdButton = React.memo<{
   }, [currentDay, date])
   const disabled = useMemo(() => !isBetween(target.date, from, to), [target.date, from, to])
   const ariaPressed = useMemo(
-    () => target.day.isSame(selectedDayStr, 'date'),
-    [selectedDayStr, target.day],
+    () => target.day.isSame(selectedDayText, 'date'),
+    [selectedDayText, target.day],
   )
-  const dataIsToday = useMemo(() => target.day.isSame(nowDateStr, 'date'), [nowDateStr, target.day])
+  const dataIsToday = useMemo(
+    () => target.day.isSame(nowDateText, 'date'),
+    [nowDateText, target.day],
+  )
 
   const actualOnClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
