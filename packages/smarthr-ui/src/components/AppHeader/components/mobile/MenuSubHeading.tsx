@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { type ReactNode, memo, useMemo } from 'react'
 
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -11,19 +11,22 @@ type Props = {
   onClickBack: () => void
 }
 
-export const MenuSubHeader: FC<Props> = ({ title, onClickBack }) => {
+export const MenuSubHeading = memo<Props>(({ title, onClickBack }) => {
   const translate = useTranslate()
+  const backButtonAriaLabel = useMemo(
+    () => translate('MobileHeader/MenuSubHeading/back'),
+    [translate],
+  )
 
   return (
     <>
       <Button size="s" onClick={onClickBack}>
-        <FaArrowLeftIcon role="img" aria-label={translate('MobileHeader/MenuSubHeader/back')} />
+        <FaArrowLeftIcon alt={backButtonAriaLabel} />
       </Button>
 
-      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading type="blockTitle">
         <Translate>{title}</Translate>
       </Heading>
     </>
   )
-}
+})
