@@ -416,7 +416,7 @@ const ActualMultiComboBox = <T,>(
       suffixWrapper: suffixWrapper({ disabled }),
       suffixIcon: suffixIcon(),
     }
-  }, [isFocused, disabled, style, width, className])
+  }, [isFocused, disabled, className])
 
   const decoratedAriaLabel = useMemo(
     () => decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) || SELECTED_LIST_ARIA_LABEL,
