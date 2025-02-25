@@ -17,7 +17,7 @@ import {
   Navigation as NavigationType,
   ReleaseNoteProps,
 } from '../../types'
-import { commonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
@@ -107,7 +107,7 @@ const buildDropdownMenu = (
             // key={navigation.children}
             key={`${index}-${navigation.children.toString()}`}
             aria-current={current}
-            className={commonButton({
+            className={commonButtonClassNameGenerator({
               current,
               className,
             })}
