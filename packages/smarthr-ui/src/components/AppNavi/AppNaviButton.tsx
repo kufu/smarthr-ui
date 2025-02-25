@@ -15,7 +15,7 @@ export type AppNaviButtonProps = PropsWithChildren<{
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }>
 
-const appNaviButton = tv({
+const classNameGenerator = tv({
   extend: appNaviItemStyle,
   slots: {
     wrapper: 'smarthr-ui-AppNavi-button',
@@ -25,14 +25,15 @@ const appNaviButton = tv({
 export const AppNaviButton: FC<AppNaviButtonProps> = ({
   children,
   icon: Icon,
-  current = false,
+  current,
   onClick,
 }) => {
-  const { wrapperStyle, iconStyle } = useMemo(() => {
-    const { wrapper, icon } = appNaviButton({ active: current })
+  const classNames = useMemo(() => {
+    const { wrapper, icon } = classNameGenerator({ active: current })
+
     return {
-      wrapperStyle: wrapper(),
-      iconStyle: icon(),
+      wrapper: wrapper(),
+      icon: icon(),
     }
   }, [current])
 
@@ -40,9 +41,9 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
     <UnstyledButton
       aria-current={current ? 'page' : undefined}
       onClick={onClick}
-      className={wrapperStyle}
+      className={classNames.wrapper}
     >
-      {Icon && <Icon className={iconStyle} />}
+      {Icon && <Icon className={classNames.icon} />}
       {children}
     </UnstyledButton>
   )
