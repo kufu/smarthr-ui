@@ -11,7 +11,7 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import { commonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
@@ -76,6 +76,7 @@ const buildNavigations = (navigations: NavigationType[]) =>
 
       return <AppNaviCustomTag {...rest} key={index} tag={navigation.elementAs} />
     }
+
     if ('href' in navigation) {
       return <AppNaviAnchor {...navigation} key={index} />
     }

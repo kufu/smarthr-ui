@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../../../Button'
@@ -11,21 +11,15 @@ import { Launcher } from '../../types'
 
 import { Translate } from './Translate'
 
-const appLauncherFeatures = tv({
+const classNameGenerator = tv({
   slots: {
     empty: ['shr-p-1 shr-text-center'],
     list: ['shr-list-none', '[&>li]:shr-px-0.5 [&>li]:shr-py-0.25'],
     listItem: [
       'smarthr-ui-AppLauncher-listItem',
       'shr-grid shr-grid-cols-[1rem_1fr_1rem] shr-gap-0.75 shr-min-h-[2.5rem] shr-px-1 shr-py-0 shr-leading-tight shr-text-left shr-whitespace-normal',
+      'data-[favorite="false"]:shr-grid-cols-[1fr_1rem]',
     ],
-  },
-  variants: {
-    favorite: {
-      false: {
-        listItem: ['shr-grid-cols-[1fr_1rem]'],
-      },
-    },
   },
 })
 
@@ -34,38 +28,79 @@ type Props = {
   page: Launcher['page']
 }
 
-export const AppLauncherFeatures: FC<Props> = ({ features, page }) => {
-  const isDesktop = useMediaQuery(mediaQuery.desktop)
-  const translate = useTranslate()
-  const { empty, list, listItem } = appLauncherFeatures()
+export const AppLauncherFeatures: FC<Props> = ({ features, page }) =>
+  features.length === 0 ? <EmptyList /> : <FeatureList features={features} page={page} />
 
-  if (features.length === 0) {
-    return (
-      <div className={empty()}>
-        <Text size="S">
-          <Translate>{translate('Launcher/emptyText')}</Translate>
-        </Text>
-      </div>
-    )
-  }
+const EmptyList = memo(() => {
+  const className = useMemo(() => {
+    const { empty } = classNameGenerator()
+
+    return empty()
+  }, [])
+  const translate = useTranslate()
+  const translated = useMemo(() => translate('Launcher/emptyText'), [translate])
 
   return (
-    <ul className={list()}>
+    <div className={className}>
+      <Text size="S">
+        <Translate>{translated}</Translate>
+      </Text>
+    </div>
+  )
+})
+
+const FeatureList: FC<Props> = ({ features, page }) => {
+  const classNames = useMemo(() => {
+    const { list, listItem } = classNameGenerator()
+
+    return {
+      list: list(),
+      listItem: listItem(),
+    }
+  }, [])
+
+  const isFavorite = page === 'favorite'
+
+  return (
+    <ul className={classNames.list}>
       {features.map((feature) => (
-        <li key={feature.id}>
-          <AnchorButton
-            className={listItem({ favorite: page === 'favorite' })}
-            variant="text"
-            href={feature.url}
-            prefix={page === 'favorite' && <FaStarIcon />}
-            suffix={<FaArrowRightIcon />}
-            wide
-            target="_blank"
-          >
-            {isDesktop ? <LineClamp maxLines={2}>{feature.name}</LineClamp> : feature.name}
-          </AnchorButton>
-        </li>
+        <FeatureListItem
+          key={feature.id}
+          href={feature.url}
+          isFavorite={isFavorite}
+          className={classNames.listItem}
+        >
+          {feature.name}
+        </FeatureListItem>
       ))}
     </ul>
   )
+}
+
+const FeatureListItem = memo<{
+  href: Props['features'][number]['url']
+  children: Props['features'][number]['name']
+  className: string
+  isFavorite: boolean
+}>(({ href, children, isFavorite, className }) => (
+  <li>
+    <AnchorButton
+      href={href}
+      target="_blank"
+      prefix={isFavorite && <FaStarIcon />}
+      suffix={<FaArrowRightIcon />}
+      variant="text"
+      wide
+      data-favorite={isFavorite}
+      className={className}
+    >
+      <FeatureName>{children}</FeatureName>
+    </AnchorButton>
+  </li>
+))
+
+const FeatureName: FC<PropsWithChildren> = ({ children }) => {
+  const isDesktop = useMediaQuery(mediaQuery.desktop)
+
+  return isDesktop ? <LineClamp maxLines={2}>{children}</LineClamp> : children
 }

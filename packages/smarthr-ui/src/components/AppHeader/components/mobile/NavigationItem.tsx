@@ -9,7 +9,7 @@ import {
   type NavigationLink,
 } from '../../types'
 import { isChildNavigation } from '../../utils'
-import { CommonButton, commonButton } from '../common/CommonButton'
+import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
