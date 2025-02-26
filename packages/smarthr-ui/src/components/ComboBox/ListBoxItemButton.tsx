@@ -1,7 +1,7 @@
 import React, { type ReactNode, type RefObject, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { FaPlusCircleIcon } from '../Icon'
+import { FaCirclePlusIcon } from '../Icon'
 import { Text } from '../Text'
 
 import type { ComboBoxOption } from './types'
@@ -98,7 +98,7 @@ const AddButton = <T,>({
 }
 
 const MemoizedNewIconWithText = React.memo<{ label: ReactNode }>(({ label }) => (
-  <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
+  <FaCirclePlusIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
 ))
 
 const SelectButton = <T,>({
