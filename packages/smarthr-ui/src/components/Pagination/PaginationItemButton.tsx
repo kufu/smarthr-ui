@@ -4,13 +4,11 @@ import { Button } from '../Button'
 
 type Props = {
   page: number
-  currentPage: number
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  disabled: boolean
 }
 
-export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
+export const PaginationItemButton: React.FC<Props> = ({ page, disabled }) => {
   const attrs = useMemo(() => {
-    const disabled = page === currentPage
     const result: {
       'aria-label': string
       disabled: boolean
@@ -25,12 +23,11 @@ export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onCli
     }
 
     return result
-  }, [currentPage, page])
+  }, [disabled, page])
 
   return (
     <Button
       {...attrs}
-      onClick={onClick}
       value={page}
       square
       size="s"
