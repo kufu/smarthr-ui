@@ -2,7 +2,6 @@
 
 import React, {
   type ComponentProps,
-  type FC,
   type PropsWithChildren,
   memo,
   useContext,
