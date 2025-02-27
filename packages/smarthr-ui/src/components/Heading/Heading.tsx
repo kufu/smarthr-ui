@@ -69,14 +69,11 @@ export const Heading = memo<Props & ElementProps>(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
-    const actualProps = {
-      ...props,
-      ...STYLE_TYPE_MAP[type],
-      ...tagProps,
-      className: actualClassName,
-    }
+    const Component = visuallyHidden ? VisuallyHiddenText : Text
 
-    return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <Text {...actualProps} />
+    return (
+      <Component {...props} {...STYLE_TYPE_MAP[type]} {...tagProps} className={actualClassName} />
+    )
   },
 )
 
