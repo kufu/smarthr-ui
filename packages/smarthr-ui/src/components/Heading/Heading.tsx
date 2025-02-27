@@ -1,6 +1,13 @@
 'use client'
 
-import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } from 'react'
+import React, {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  memo,
+  useContext,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
@@ -54,30 +61,28 @@ const classNameGenerator = tv({
   },
 })
 
-export const Heading: FC<Props & ElementProps> = ({
-  tag,
-  type = 'sectionTitle',
-  className,
-  visuallyHidden,
-  ...props
-}) => {
-  const level = useContext(LevelContext)
-  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
-  const actualClassName = useMemo(
-    () => classNameGenerator({ visuallyHidden, className }),
-    [className, visuallyHidden],
-  )
-  const actualProps = {
-    ...props,
-    ...STYLE_TYPE_MAP[type],
-    ...tagProps,
-    className: actualClassName,
-  }
+export const Heading = memo<Props & ElementProps>(
+  ({ tag, type = 'sectionTitle', className, visuallyHidden, ...props }) => {
+    const level = useContext(LevelContext)
+    const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
+    const actualClassName = useMemo(
+      () => classNameGenerator({ visuallyHidden, className }),
+      [className, visuallyHidden],
+    )
+    const actualProps = {
+      ...props,
+      ...STYLE_TYPE_MAP[type],
+      ...tagProps,
+      className: actualClassName,
+    }
 
-  return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <Text {...actualProps} />
-}
+    return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <Text {...actualProps} />
+  },
+)
 
-export const PageHeading: FC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
-  type = 'screenTitle',
-  ...props
-}) => <Heading {...props} type={type} tag="h1" /> // eslint-disable-line smarthr/a11y-heading-in-sectioning-content
+export const PageHeading = memo<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>>(
+  ({ type = 'screenTitle', ...props }) => (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Heading {...props} type={type} tag="h1" />
+  ),
+)
