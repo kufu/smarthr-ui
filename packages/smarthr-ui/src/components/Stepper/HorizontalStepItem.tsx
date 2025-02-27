@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Heading } from '../Heading'
-import { SectioningFragment } from '../SectioningContent/SectioningContent'
+import { Text } from '../Text'
 
 import { StepCounter } from './StepCounter'
 
@@ -15,7 +14,7 @@ const classNameGenerator = tv({
       // 長いステップ名が来ても等幅にする
       'shr-flex-1',
     ],
-    headingWrapper: 'shr-flex shr-flex-col shr-items-center shr-gap-0.5',
+    labelWrapper: 'shr-flex shr-flex-col shr-items-center shr-gap-0.5',
     stepCounterWrapper: 'shr-self-stretch shr-flex shr-items-center',
     beforeLine: [
       'group-first/stepItem:shr-bg-transparent',
@@ -28,7 +27,7 @@ const classNameGenerator = tv({
       'shr-grow shr-h-[theme(borderWidth.2)] shr-bg-border',
       'forced-colors:shr-bg-[ButtonBorder]',
     ],
-    heading: 'shr-px-0.25 shr-text-sm shr-text-center',
+    label: 'shr-px-0.25 shr-text-sm shr-text-center',
   },
   variants: {
     status: {
@@ -39,7 +38,7 @@ const classNameGenerator = tv({
     },
     current: {
       true: {
-        heading: 'shr-font-bold',
+        label: 'shr-font-bold',
       },
       false: {},
     },
@@ -55,7 +54,7 @@ const classNameGenerator = tv({
       status: ['completed', 'closed'],
       current: false,
       className: {
-        heading: 'shr-text-grey',
+        label: 'shr-text-grey',
       },
     },
   ],
@@ -73,37 +72,41 @@ type Props = HorizontalStep & {
 export const HorizontalStepItem = React.memo<Props>(
   ({ stepNumber, label, status, current, isPrevStepCompleted }) => {
     const classNames = useMemo(() => {
-      const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
-        classNameGenerator({
-          status: typeof status === 'object' ? status.type : status,
-          current,
-          isPrevStepCompleted,
-        })
+      const {
+        wrapper,
+        labelWrapper,
+        stepCounterWrapper,
+        beforeLine,
+        afterLine,
+        label: labelText,
+      } = classNameGenerator({
+        status: typeof status === 'object' ? status.type : status,
+        current,
+        isPrevStepCompleted,
+      })
 
       return {
         wrapper: wrapper(),
-        headingWrapper: headingWrapper(),
+        labelWrapper: labelWrapper(),
         stepCounterWrapper: stepCounterWrapper(),
         beforeLine: beforeLine(),
         afterLine: afterLine(),
-        heading: heading(),
+        label: labelText(),
       }
     }, [current, isPrevStepCompleted, status])
 
     return (
       <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
-        <SectioningFragment>
-          <div className={classNames.headingWrapper}>
-            <div className={classNames.stepCounterWrapper}>
-              <span className={classNames.beforeLine} />
-              <StepCounter status={status} current={current} stepNumber={stepNumber} />
-              <span className={classNames.afterLine} />
-            </div>
-            <Heading type="sectionTitle" className={classNames.heading}>
-              {label}
-            </Heading>
+        <div className={classNames.labelWrapper}>
+          <div className={classNames.stepCounterWrapper}>
+            <span className={classNames.beforeLine} />
+            <StepCounter status={status} current={current} stepNumber={stepNumber} />
+            <span className={classNames.afterLine} />
           </div>
-        </SectioningFragment>
+          <Text styleType="sectionTitle" className={classNames.label}>
+            {label}
+          </Text>
+        </div>
       </li>
     )
   },
