@@ -42,7 +42,7 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   }
 }
 
-const heading = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',
   variants: {
     visuallyHidden: {
@@ -63,12 +63,15 @@ export const Heading: FC<Props & ElementProps> = ({
 }) => {
   const level = useContext(LevelContext)
   const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
-  const styles = useMemo(() => heading({ visuallyHidden, className }), [className, visuallyHidden])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ visuallyHidden, className }),
+    [className, visuallyHidden],
+  )
   const actualProps = {
     ...props,
     ...STYLE_TYPE_MAP[type],
     ...tagProps,
-    className: styles,
+    className: actualClassName,
   }
 
   return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <Text {...actualProps} />
