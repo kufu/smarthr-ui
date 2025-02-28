@@ -52,7 +52,7 @@
     "@types/styled-components": "^5.1.34",
     "autoprefixer": "^10.4.20",
     "axe-playwright": "^2.0.3",
-    "babel-loader": "^9.2.1",
+    "babel-loader": "^10.0.0",
     "babel-plugin-polyfill-corejs2": "^0.4.12",
     "babel-plugin-polyfill-regenerator": "^0.6.3",
     "chromatic": "^11.22.2",
