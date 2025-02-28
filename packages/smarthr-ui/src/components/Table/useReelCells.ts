@@ -8,7 +8,7 @@ export const useReelCells = () => {
     const currentRef = tableWrapperRef.current
 
     if (!currentRef) {
-      return () => undefined
+      return
     }
 
     const handleScroll = () => {
