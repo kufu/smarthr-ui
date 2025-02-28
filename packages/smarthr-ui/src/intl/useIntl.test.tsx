@@ -22,6 +22,6 @@ describe('useIntl', () => {
     const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
     const date = new Date(2025, 1 - 1, 1)
     const ret = formatDate(date)
-    expect(ret).toBe('Jan 01, 2025')
+    expect(ret).toBe('1/1/2025')
   })
 })

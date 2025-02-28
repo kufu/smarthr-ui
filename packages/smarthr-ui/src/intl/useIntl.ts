@@ -29,8 +29,8 @@ const DATE_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions | un
   ko: undefined,
   pt: undefined,
   vi: undefined,
-  zhCn: undefined,
-  zhTw: undefined,
+  'zh-cn': undefined,
+  'zh-tw': undefined,
 } as const
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
