@@ -5,9 +5,9 @@ import { Center } from '..'
 import { Gap as GapType } from '../../../../types'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
-import { center } from '../Center'
+import { centerClassNameGenerator } from '../Center'
 
-const centerPadding = Object.keys(center.variants.padding)
+const centerPadding = Object.keys(centerClassNameGenerator.variants.padding)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as GapType[]
