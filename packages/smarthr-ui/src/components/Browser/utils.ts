@@ -1,3 +1,1 @@
-import { ItemNode } from './models'
-
-export const getElementIdFromNode = (node: ItemNode) => `radio-${node.value}`
+export const getElementIdFromNode = (value: string) => `radio-${value}`

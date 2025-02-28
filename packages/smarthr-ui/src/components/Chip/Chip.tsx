@@ -24,5 +24,6 @@ const chip = tv({
 
 export const Chip: FC<Props> = ({ size, disabled, className, ...props }) => {
   const styles = useMemo(() => chip({ size, disabled, className }), [size, disabled, className])
+
   return <span {...props} className={styles} />
 }

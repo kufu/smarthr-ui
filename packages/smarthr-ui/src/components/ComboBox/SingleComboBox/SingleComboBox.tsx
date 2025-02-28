@@ -17,14 +17,14 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { useListBox } from '../useListBox'
-import { useOptions } from '../useOptions'
+import { useSingleOptions } from '../useOptions'
 
 import type { BaseProps, ComboBoxItem } from '../types'
 
@@ -62,19 +62,26 @@ type Props<T> = BaseProps<T> & {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
+  // HINT: useListBox内でnoResultText, loadingTextは実行される
   /**
    * コンポーネント内のテキストを変更する関数/
    */
-  decorators?: DecoratorsType<'noResultText'> & {
-    destroyButtonIconAlt?: (text: string) => string
-  }
+  decorators?: DecoratorsType<DecoratorKeyTypes | 'noResultText' | 'loadingText'>
 }
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
-const DESTROY_BUTTON_TEXT = '削除'
+const DECORATOR_DEFAULT_TEXTS = {
+  destroyButtonIconAlt: '削除',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const singleCombobox = tv({
+const NOOP = () => undefined
+
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
+
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-SingleComboBox shr-inline-block',
     input: 'smarthr-ui-SingleComboBox-input shr-w-full',
@@ -154,13 +161,14 @@ const ActualSingleComboBox = <T,>(
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
-  const { options } = useOptions({
+  const { options } = useSingleOptions({
     items,
     selected: selectedItem,
     creatable,
     inputValue,
     isFilteringDisabled: !isEditing,
   })
+
   const {
     renderListBox,
     activeOption,
@@ -174,13 +182,15 @@ const ActualSingleComboBox = <T,>(
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {
-        if (onSelect) onSelect(selected)
-        if (onChangeSelected) onChangeSelected(selected)
+        onSelect?.(selected)
+        onChangeSelected?.(selected)
+
         // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
         requestAnimationFrame(() => {
           setIsExpanded(false)
         })
+
         setIsEditing(false)
       },
       [onChangeSelected, onSelect],
@@ -191,9 +201,16 @@ const ActualSingleComboBox = <T,>(
     decorators,
   })
 
+  const selectDefaultItem = useMemo(
+    () => (onSelect && defaultItem ? () => onSelect(defaultItem) : NOOP),
+    [onSelect, defaultItem],
+  )
+
   const focus = useCallback(() => {
-    if (onFocus) onFocus()
+    onFocus?.()
+
     setIsFocused(true)
+
     if (!isFocused) {
       setIsExpanded(true)
     }
@@ -201,36 +218,38 @@ const ActualSingleComboBox = <T,>(
   const unfocus = useCallback(() => {
     if (!isFocused) return
 
-    if (onBlur) onBlur()
+    onBlur?.()
+
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
       setInputValue(innerText(defaultItem.label))
-      if (onSelect) onSelect(defaultItem)
+
+      selectDefaultItem()
     }
-  }, [isFocused, onBlur, selectedItem, defaultItem, onSelect])
+  }, [isFocused, onBlur, selectedItem, defaultItem, selectDefaultItem])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
 
       let isExecutedPreventDefault = false
 
-      if (onClearClick) {
-        onClearClick({
-          ...e,
-          preventDefault: () => {
-            e.preventDefault()
-            isExecutedPreventDefault = true
-          },
-        })
-      }
+      onClearClick?.({
+        ...e,
+        preventDefault: () => {
+          e.preventDefault()
+          isExecutedPreventDefault = true
+        },
+      })
 
       if (!isExecutedPreventDefault) {
-        if (onClear) onClear()
-        if (onChangeSelected) onChangeSelected(null)
+        onClear?.()
+        onChangeSelected?.(null)
+
         inputRef.current?.focus()
+
         setIsFocused(true)
         setIsExpanded(true)
       }
@@ -241,21 +260,23 @@ const ActualSingleComboBox = <T,>(
     (e: MouseEvent) => {
       if (disabled) {
         e.stopPropagation()
+
         return
       }
-      if (inputRef.current) {
-        inputRef.current.focus()
-      }
+
+      inputRef.current?.focus()
+
       if (!isExpanded) {
         setIsExpanded(true)
       }
     },
-    [disabled, inputRef, isExpanded, setIsExpanded],
+    [disabled, inputRef, isExpanded],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      if (onChange) onChange(e)
-      if (onChangeInput) onChangeInput(e)
+      onChange?.(e)
+      onChangeInput?.(e)
+
       if (!isEditing) setIsEditing(true)
 
       const { value } = e.currentTarget
@@ -263,25 +284,21 @@ const ActualSingleComboBox = <T,>(
       setInputValue(value)
 
       if (value === '') {
-        if (onClear) onClear()
-        if (onChangeSelected) onChangeSelected(null)
+        onClear?.()
+        onChangeSelected?.(null)
       }
     },
-    [isEditing, setIsEditing, setInputValue, onChange, onChangeInput, onClear, onChangeSelected],
+    [isEditing, onChange, onChangeInput, onClear, onChangeSelected],
   )
-  const handleFocus = useCallback(() => {
-    if (!isFocused) {
-      focus()
-    }
-  }, [isFocused, focus])
-  const onCompositionStart = useCallback(() => setIsComposing(true), [setIsComposing])
-  const onCompositionEnd = useCallback(() => setIsComposing(false), [setIsComposing])
+  const onCompositionStart = useCallback(() => setIsComposing(true), [])
+  const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (isComposing) {
         return
       }
-      if (['Escape', 'Esc'].includes(e.key)) {
+
+      if (ESCAPE_KEY_REGEX.test(e.key)) {
         if (isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
@@ -289,17 +306,19 @@ const ActualSingleComboBox = <T,>(
       } else if (e.key === 'Tab') {
         unfocus()
       } else {
-        if (['Down', 'ArrowDown', 'Up', 'ArrowUp'].includes(e.key)) {
+        if (ARROW_UP_DOWN_REGEX.test(e.key)) {
           e.preventDefault()
         }
+
         inputRef.current?.focus()
+
         if (!isExpanded) {
           setIsExpanded(true)
         }
       }
       handleListBoxKeyDown(e)
     },
-    [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
+    [isComposing, isExpanded, unfocus, handleListBoxKeyDown],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
@@ -308,7 +327,8 @@ const ActualSingleComboBox = <T,>(
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
-      if (onKeyPress) onKeyPress(e)
+
+      onKeyPress?.(e)
     },
     [onKeyPress],
   )
@@ -316,125 +336,101 @@ const ActualSingleComboBox = <T,>(
   const caretIconColor = useMemo(() => {
     if (isFocused) return textColor.black
     if (disabled) return textColor.disabled
+
     return textColor.grey
   }, [disabled, isFocused])
 
   useClick(
     [outerRef, listBoxRef, clearButtonRef],
-    useCallback(() => {
-      if (!isFocused && onSelect && !selectedItem && defaultItem) {
-        onSelect(defaultItem)
-      }
-    }, [isFocused, selectedItem, onSelect, defaultItem]),
-    useCallback(() => {
-      unfocus()
-    }, [unfocus]),
+    isFocused || selectedItem ? NOOP : selectDefaultItem,
+    unfocus,
   )
 
   useEffect(() => {
-    if (selectedItem) {
-      setInputValue(innerText(selectedItem.label))
-    } else {
-      setInputValue('')
-    }
+    setInputValue(selectedItem ? innerText(selectedItem.label) : '')
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
-    } else if (!selectedItem && defaultItem) {
-      if (onSelect) onSelect(defaultItem)
+    } else if (!selectedItem) {
+      selectDefaultItem()
     }
-  }, [isFocused, selectedItem, defaultItem, onSelect])
+  }, [isFocused, selectedItem, selectDefaultItem])
 
-  const needsClearButton = selectedItem !== null && !disabled
+  const wrapperStyle = useMemo(
+    () => ({
+      ...style,
+      width: typeof width === 'number' ? `${width}px` : width,
+    }),
+    [style, width],
+  )
 
-  const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
-    singleCombobox()
-  const {
-    wrapperStyleProps,
-    inputStyle,
-    caretDownLayoutStyle,
-    caretDownIconStyle,
-    clearButtonStyle,
-    clearButtonIconStyle,
-  } = useMemo(() => {
-    const wrapperWidth = typeof width === 'number' ? `${width}px` : width
+  const notSelected = selectedItem === null
+
+  const classNames = useMemo(() => {
+    const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
+      classNameGenerator()
+
     return {
-      wrapperStyleProps: {
-        style: {
-          ...style,
-          width: wrapperWidth,
-        },
-        className: wrapper({ disabled, className }),
-      },
-      inputStyle: input(),
-      caretDownLayoutStyle: caretDownLayout(),
-      caretDownIconStyle: caretDownIcon(),
-      clearButtonStyle: clearButton({ hidden: !needsClearButton }),
-      clearButtonIconStyle: clearButtonIcon(),
+      wrapper: wrapper({ disabled, className }),
+      input: input(),
+      caretDownLayout: caretDownLayout(),
+      caretDownIcon: caretDownIcon(),
+      clearButton: clearButton({ hidden: notSelected || disabled }),
+      clearButtonIcon: clearButtonIcon(),
     }
-  }, [
-    width,
-    style,
-    wrapper,
-    disabled,
-    className,
-    input,
-    caretDownLayout,
-    caretDownIcon,
-    clearButton,
-    needsClearButton,
-    clearButtonIcon,
-  ])
+  }, [notSelected, disabled, className])
+
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
-    <div {...wrapperStyleProps} ref={outerRef}>
+    <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
         {...rest}
-        data-smarthr-ui-input="true"
-        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
-        placeholder={placeholder}
+        ref={inputRef}
         type="text"
+        role="combobox"
         name={name}
         value={inputValue}
         disabled={disabled}
         required={required}
-        prefix={prefix}
-        error={error}
-        suffix={
-          <>
-            <UnstyledButton
-              onClick={onClickClear}
-              ref={clearButtonRef}
-              className={clearButtonStyle}
-            >
-              <FaCircleXmarkIcon
-                color="TEXT_BLACK"
-                alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
-                className={clearButtonIconStyle}
-              />
-            </UnstyledButton>
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
-            <span onClick={onClickInput} className={caretDownLayoutStyle}>
-              <FaCaretDownIcon color={caretIconColor} className={caretDownIconStyle} />
-            </span>
-          </>
-        }
-        onClick={onClickInput}
-        onChange={actualOnChangeInput}
-        onFocus={handleFocus}
-        onCompositionStart={onCompositionStart}
-        onCompositionEnd={onCompositionEnd}
-        onKeyDown={onKeyDownInput}
-        onKeyPress={handleKeyPress}
-        ref={inputRef}
         autoComplete={autoComplete ?? 'off'}
-        role="combobox"
         aria-haspopup="listbox"
         aria-controls={listBoxId}
         aria-expanded={isFocused}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
-        className={inputStyle}
+        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
+        placeholder={placeholder}
+        onClick={onClickInput}
+        onChange={actualOnChangeInput}
+        onFocus={isFocused ? undefined : focus}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
+        onKeyDown={onKeyDownInput}
+        onKeyPress={handleKeyPress}
+        error={error}
+        prefix={prefix}
+        suffix={
+          <>
+            <UnstyledButton
+              onClick={onClickClear}
+              ref={clearButtonRef}
+              className={classNames.clearButton}
+            >
+              <FaCircleXmarkIcon
+                color="TEXT_BLACK"
+                alt={decorated.destroyButtonIconAlt}
+                className={classNames.clearButtonIcon}
+              />
+            </UnstyledButton>
+            {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
+            <span onClick={onClickInput} role="presentation" className={classNames.caretDownLayout}>
+              <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
+            </span>
+          </>
+        }
+        className={classNames.input}
+        data-smarthr-ui-input="true"
       />
       {renderListBox()}
     </div>
