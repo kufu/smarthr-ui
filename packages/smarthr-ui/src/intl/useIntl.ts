@@ -13,7 +13,7 @@ type Messages = Record<keyof typeof locales.ja, string>
 
 type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescriptor, 'id'> & {
   id: T
-  defaultMessage: (typeof locales.ja)[T]
+  defaultText: (typeof locales.ja)[T]
 }
 
 const DATE_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions | undefined> = {
@@ -44,7 +44,8 @@ export const useIntl = () => {
       descriptor: MessageDescriptor<T>,
       values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
       opts?: IntlMessageFormatOptions,
-    ): string => intl.formatMessage(descriptor, values, opts),
+    ): string =>
+      intl.formatMessage({ ...descriptor, defaultMessage: descriptor.defaultText }, values, opts),
     [intl],
   )
 

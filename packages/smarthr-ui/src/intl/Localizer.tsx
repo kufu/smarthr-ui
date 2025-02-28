@@ -11,6 +11,16 @@ type Props<Id extends keyof Messages> = {
   values: ComponentProps<typeof ReactIntlFormattedMessage>['values']
 }
 
-export const Localizer = <ID extends keyof Messages>({ values, ...props }: Props<ID>) => (
-  <ReactIntlFormattedMessage {...props} values={{ break: <br />, ...values }} />
+export const Localizer = <ID extends keyof Messages>({
+  values,
+  id,
+  defaultText,
+  ...props
+}: Props<ID>) => (
+  <ReactIntlFormattedMessage
+    {...props}
+    id={id}
+    defaultMessage={defaultText}
+    values={{ break: <br />, ...values }}
+  />
 )
