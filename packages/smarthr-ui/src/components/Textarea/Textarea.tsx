@@ -101,10 +101,12 @@ const calculateIdealRows = (
   if (!element) {
     return 0
   }
+
   // 現在の入力値に応じた行数
   const currentInputValueRows = Math.floor(
     element.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
   )
+
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
@@ -251,42 +253,41 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       [autoResize, maxRows, onInput, rows],
     )
 
-    const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
+    const textareaStyle = useMemo(
+      () => ({ width: typeof width === 'number' ? `${width}px` : width }),
+      [width],
+    )
+    const countError = maxLetters && count > maxLetters
+    const classNames = useMemo(() => {
       const { textareaEl, counter, counterText } = textarea()
-      return {
-        textareaStyleProps: {
-          className: textareaEl({ className }),
-          style: { width: typeof width === 'number' ? `${width}px` : width },
-        },
-        counterStyle: counter(),
-        counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count < 0) }),
-      }
-    }, [className, count, maxLetters, width])
 
-    const hasInputError = useMemo(() => {
-      const isCharLengthExceeded = maxLetters && count > maxLetters
-      return error || isCharLengthExceeded || undefined
-    }, [error, maxLetters, count])
+      return {
+        textarea: textareaEl({ className }),
+        counter: counter(),
+        counterText: counterText({ error: !!countError }),
+      }
+    }, [countError, className])
 
     const body = (
       <textarea
         {...props}
-        {...textareaStyleProps}
         {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
         onChange={handleChange}
         ref={textareaRef}
-        aria-invalid={hasInputError || undefined}
+        aria-invalid={error || countError || undefined}
         rows={interimRows}
         onInput={handleInput}
+        className={classNames.textarea}
+        style={textareaStyle}
       />
     )
 
     return maxLetters ? (
       <span>
         {body}
-        <span className={counterStyle}>
-          <span className={counterTextStyle} id={actualMaxLettersId} aria-hidden={true}>
+        <span className={classNames.counter}>
+          <span className={classNames.counterText} id={actualMaxLettersId} aria-hidden={true}>
             {counterVisualMessage}
           </span>
         </span>
