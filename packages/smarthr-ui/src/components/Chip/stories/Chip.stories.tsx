@@ -39,6 +39,17 @@ export const Size: StoryObj<typeof Chip> = {
   ),
 }
 
+export const Type: StoryObj<typeof Chip> = {
+  name: 'type',
+  render: (args) => (
+    <Stack align="flex-start">
+      {['grey'].map((type) => (
+        <Chip {...args} type={type as any} key={String(type)} />
+      ))}
+    </Stack>
+  ),
+}
+
 export const Disabled: StoryObj<typeof Chip> = {
   name: 'disabled',
   args: {
