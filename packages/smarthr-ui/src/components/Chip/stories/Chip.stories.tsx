@@ -3,7 +3,7 @@ import React from 'react'
 import { UnstyledButton } from '../../Button'
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Chip, styleGenerator } from '../Chip'
+import { Chip, chipClassNameGenerator } from '../Chip'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -32,7 +32,7 @@ export const Size: StoryObj<typeof Chip> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(styleGenerator.variants.size)].map((size) => (
+      {[undefined, ...Object.keys(chipClassNameGenerator.variants.size)].map((size) => (
         <Chip {...args} size={size as any} key={String(size)} />
       ))}
     </Stack>
@@ -43,7 +43,7 @@ export const Type: StoryObj<typeof Chip> = {
   name: 'type',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(styleGenerator.variants.type)].map((type) => (
+      {[undefined, ...Object.keys(chipClassNameGenerator.variants.type)].map((type) => (
         <Chip {...args} type={type as any} key={String(type)} />
       ))}
     </Stack>
