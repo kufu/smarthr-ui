@@ -24,6 +24,7 @@ const styleGenerator = tv({
   },
   defaultVariants: {
     size: 's',
+    type: 'grey',
   },
 })
 
