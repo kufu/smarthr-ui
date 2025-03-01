@@ -14,6 +14,7 @@ const styleGenerator = tv({
   variants: {
     type: {
       grey: 'shr-border-grey-20',
+      blue: 'shr-border-main',
     },
     size: {
       s: 'shr-text-sm shr-px-0.5 shr-py-0.25',
