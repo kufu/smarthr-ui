@@ -13,7 +13,7 @@ const styleGenerator = tv({
   ],
   variants: {
     type: {
-      grey: 'shr-botder-grey-20',
+      grey: 'shr-border-grey-20',
     },
     size: {
       s: 'shr-text-sm shr-px-0.5 shr-py-0.25',
