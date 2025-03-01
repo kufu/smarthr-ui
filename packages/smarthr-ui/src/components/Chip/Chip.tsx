@@ -15,6 +15,8 @@ const styleGenerator = tv({
     type: {
       grey: 'shr-border-grey-20',
       blue: 'shr-border-main',
+      /* green がトークン化されたら置き換える */
+      green: 'shr-border-[#0f7f85]',
     },
     size: {
       s: 'shr-text-sm shr-px-0.5 shr-py-0.25',
