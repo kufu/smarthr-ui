@@ -1,7 +1,9 @@
 import React from 'react'
 
+import { UnstyledButton } from '../../Button'
+import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Chip } from '../Chip'
+import { Chip, classNameGenerator } from '../Chip'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -30,8 +32,19 @@ export const Size: StoryObj<typeof Chip> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, 's'].map((size) => (
+      {[undefined, ...Object.keys(classNameGenerator.variants.size)].map((size) => (
         <Chip {...args} size={size as any} key={String(size)} />
+      ))}
+    </Stack>
+  ),
+}
+
+export const Type: StoryObj<typeof Chip> = {
+  name: 'type',
+  render: (args) => (
+    <Stack align="flex-start">
+      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
+        <Chip {...args} type={type as any} key={String(type)} />
       ))}
     </Stack>
   ),
@@ -41,5 +54,31 @@ export const Disabled: StoryObj<typeof Chip> = {
   name: 'disabled',
   args: {
     disabled: true,
+  },
+}
+
+export const SuffixIcon: StoryObj<typeof Chip> = {
+  name: 'suffixIcon',
+  args: {
+    children: (
+      <span className="shr-inline-flex shr-gap-0.5 shr-items-center shr-mr-[-3px]">
+        ラベル
+        <FaCircleCheckIcon className="shr-align-bottom" />
+      </span>
+    ),
+  },
+}
+
+export const SuffixIconButton: StoryObj<typeof Chip> = {
+  name: 'suffixIconButton',
+  args: {
+    children: (
+      <span className="shr-inline-flex shr-gap-0.5 shr-items-center shr-mr-[-3px]">
+        ラベル
+        <UnstyledButton className="shr-rounded-full shr-leading-none" aria-label="削除する">
+          <FaCircleXmarkIcon className="shr-align-bottom" />
+        </UnstyledButton>
+      </span>
+    ),
   },
 }
