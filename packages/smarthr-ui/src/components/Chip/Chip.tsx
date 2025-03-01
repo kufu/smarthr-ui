@@ -5,7 +5,7 @@ type Props = PropsWithChildren<
   VariantProps<typeof styleGenerator> & ComponentPropsWithoutRef<'span'>
 >
 
-const styleGenerator = tv({
+export const styleGenerator = tv({
   base: [
     'smarthr-ui-Chip',
     'shr-border-shorthand shr-rounded-full shr-bg-white shr-text-black shr-leading-none',
