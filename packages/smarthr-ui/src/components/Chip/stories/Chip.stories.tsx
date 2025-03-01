@@ -46,8 +46,8 @@ export const Disabled: StoryObj<typeof Chip> = {
   },
 }
 
-export const SuffixIcon: StoryObj<typeof Chip> = {
-  name: 'suffixIcon',
+export const SuffixIconButton: StoryObj<typeof Chip> = {
+  name: 'suffixIconButton',
   args: {
     children: (
       <span className="shr-inline-flex shr-gap-1 shr-items-center shr-mr-[-3px]">
