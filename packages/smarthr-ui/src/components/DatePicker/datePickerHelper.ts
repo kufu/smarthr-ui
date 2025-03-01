@@ -9,19 +9,19 @@ export function parseJpnDateString(dateString: string): Date {
 
 const PORTAL_POSITION_MARGIN = 4
 
-export function getPortalPosition(inputRect: DOMRect, contentHeihgt: number) {
+export function getPortalPosition(inputRect: DOMRect, contentHeight: number) {
   const { innerHeight, pageYOffset } = window
   const left = pageXOffset + inputRect.left
 
   if (
     // has no space on bottom side
-    inputRect.bottom + contentHeihgt > innerHeight &&
+    inputRect.bottom + contentHeight > innerHeight &&
     // top side space bigger than bottom side
     inputRect.top > innerHeight - inputRect.bottom
   ) {
     // display on top side
     return {
-      top: pageYOffset + inputRect.top - contentHeihgt + PORTAL_POSITION_MARGIN,
+      top: pageYOffset + inputRect.top - contentHeight + PORTAL_POSITION_MARGIN,
       left,
     }
   }

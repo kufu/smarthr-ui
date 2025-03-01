@@ -1,7 +1,7 @@
-import React, { type RefObject, useCallback, useMemo } from 'react'
+import React, { type ReactNode, type RefObject, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { FaPlusCircleIcon } from '../Icon'
+import { FaCirclePlusIcon } from '../Icon'
 import { Text } from '../Text'
 
 import type { ComboBoxOption } from './types'
@@ -84,19 +84,23 @@ const AddButton = <T,>({
       ref={activeRef}
       type="button"
       role="option"
+      aria-selected={false}
       id={option.id}
       data-active={!!activeRef}
       onClick={onClick}
+      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
       onMouseOver={onMouseOver}
       className={className}
     >
-      <FaPlusCircleIcon
-        color="TEXT_LINK"
-        text={<Text color="TEXT_LINK">「{option.item.label}」を追加</Text>}
-      />
+      <MemoizedNewIconWithText label={option.item.label} />
     </button>
   )
 }
+
+const MemoizedNewIconWithText = React.memo<{ label: ReactNode }>(({ label }) => (
+  <FaCirclePlusIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
+))
+
 const SelectButton = <T,>({
   activeRef,
   option,
@@ -125,6 +129,7 @@ const SelectButton = <T,>({
       aria-selected={option.selected}
       data-active={!!activeRef}
       onClick={handleSelect}
+      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
       onMouseOver={onMouseOver}
       className={className}
     >
