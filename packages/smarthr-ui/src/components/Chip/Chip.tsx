@@ -24,14 +24,10 @@ const styleGenerator = tv({
   },
 })
 
-export const Chip: FC<Props> = ({ size, disabled, className, children, ...props }) => {
+export const Chip: FC<Props> = ({ size, disabled, className, ...props }) => {
   const styles = useMemo(
     () => styleGenerator({ size, disabled, className }),
     [size, disabled, className],
   )
-  return (
-    <span {...props} className={styles}>
-      {children}
-    </span>
-  )
+  return <span {...props} className={styles} />
 }
