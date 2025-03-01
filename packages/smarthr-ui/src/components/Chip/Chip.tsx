@@ -17,6 +17,8 @@ const styleGenerator = tv({
       blue: 'shr-border-main',
       /* green がトークン化されたら置き換える */
       green: 'shr-border-[#0f7f85]',
+      /* oragen がトークン化されたら置き換える */
+      orange: 'shr-border-[#ff8800]',
     },
     size: {
       s: 'shr-text-sm shr-px-0.5 shr-py-0.25',
