@@ -12,6 +12,9 @@ const styleGenerator = tv({
     'contrast-more:shr-border-high-contrast',
   ],
   variants: {
+    type: {
+      grey: 'shr-botder-grey-20',
+    },
     size: {
       s: 'shr-text-sm shr-px-0.5 shr-py-0.25',
     },
