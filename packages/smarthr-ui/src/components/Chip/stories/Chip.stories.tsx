@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { UnstyledButton } from '../../Button'
-import { FaCircleXmarkIcon } from '../../Icon'
+import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Chip } from '../Chip'
 
@@ -43,6 +43,18 @@ export const Disabled: StoryObj<typeof Chip> = {
   name: 'disabled',
   args: {
     disabled: true,
+  },
+}
+
+export const SuffixIcon: StoryObj<typeof Chip> = {
+  name: 'suffixIcon',
+  args: {
+    children: (
+      <span className="shr-inline-flex shr-gap-0.5 shr-items-center shr-mr-[-3px]">
+        ラベル
+        <FaCircleCheckIcon className="shr-align-bottom" />
+      </span>
+    ),
   },
 }
 
