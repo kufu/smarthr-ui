@@ -43,7 +43,7 @@ export const Type: StoryObj<typeof Chip> = {
   name: 'type',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, 'grey', 'blue', 'green', 'orange'].map((type) => (
+      {[undefined, 'grey', 'blue', 'green', 'orange', 'red'].map((type) => (
         <Chip {...args} type={type as any} key={String(type)} />
       ))}
     </Stack>
