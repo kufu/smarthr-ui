@@ -50,7 +50,7 @@ export const SuffixIconButton: StoryObj<typeof Chip> = {
   name: 'suffixIconButton',
   args: {
     children: (
-      <span className="shr-inline-flex shr-gap-1 shr-items-center shr-mr-[-3px]">
+      <span className="shr-inline-flex shr-gap-0.5 shr-items-center shr-mr-[-3px]">
         ラベル
         <UnstyledButton className="shr-rounded-full shr-leading-none">
           <FaCircleXmarkIcon className="shr-align-bottom" />
