@@ -38,7 +38,6 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
 
   return (
     <Dropdown>
-      {/* eslint-disable-next-line smarthr/a11y-trigger-has-button */}
       <DropdownTrigger>
         <button type="button" className={tenantDropdownTriggerButton()}>
           {tenantName}

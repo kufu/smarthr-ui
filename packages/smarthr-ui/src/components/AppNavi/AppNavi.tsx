@@ -1,6 +1,7 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Heading } from '../Heading'
 import { Nav } from '../SectioningContent'
 import { StatusLabel } from '../StatusLabel'
 
@@ -28,13 +29,13 @@ type Props = PropsWithChildren<{
   additionalArea?: ReactNode
 }>
 
-const appNavi = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppNavi',
       'shr-flex shr-min-w-max shr-items-center shr-bg-white shr-px-1.5 shr-shadow-layer-1',
     ],
-    statusLabel: ['smarthr-ui-AppNavi-label', 'shr-me-1 shr-shrink-0'],
+    statusLabelHeading: ['smarthr-ui-AppNavi-label', 'shr-me-1 shr-shrink-0 shr-leading-none'],
     buttonsEl: [
       'smarthr-ui-AppNavi-buttons',
       'shr-flex shr-items-stretch shr-gap-1 shr-self-stretch',
@@ -44,59 +45,58 @@ const appNavi = tv({
   },
 })
 
-const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = appNavi()
+const { wrapper, statusLabelHeading, buttonsEl, listItem, additionalAreaEl } = classNameGenerator()
+const classNames = {
+  statusLabelHeading: statusLabelHeading(),
+  buttonsEl: buttonsEl(),
+  listItem: listItem(),
+  additionalAreaEl: additionalAreaEl(),
+}
 
 export const AppNavi: FC<Props & ElementProps> = ({
   label,
   buttons,
   className,
   children,
-  displayDropdownCaret = false,
+  displayDropdownCaret,
   additionalArea,
-  ...props
-}) => (
-  // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-  <Nav {...props} className={wrapper({ className })}>
-    {label && <StatusLabel className={statusLabel()}>{label}</StatusLabel>}
+  ...rest
+}) => {
+  const wrapperClassName = useMemo(() => wrapper({ className }), [className])
 
-    <ul className={buttonsEl()}>
-      {buttons &&
-        buttons.map((button, i) => {
-          if ('tag' in button) {
-            return (
-              <li key={i} className={listItem()}>
+  return (
+    <Nav {...rest} className={wrapperClassName}>
+      <StatusLabelHeading>{label}</StatusLabelHeading>
+      <ul className={classNames.buttonsEl}>
+        {buttons &&
+          buttons.map((button, i) => (
+            <li key={i} className={classNames.listItem}>
+              {'tag' in button ? (
                 <AppNaviCustomTag {...button} />
-              </li>
-            )
-          }
-
-          if ('href' in button) {
-            return (
-              <li key={i} className={listItem()}>
+              ) : 'href' in button ? (
                 <AppNaviAnchor {...button} />
-              </li>
-            )
-          }
-
-          if ('dropdownContent' in button) {
-            return (
-              <li key={i} className={listItem()}>
+              ) : 'dropdownContent' in button ? (
                 <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
-              </li>
-            )
-          }
-
-          return (
-            <li key={i} className={listItem()}>
-              <AppNaviButton {...button} />
+              ) : (
+                <AppNaviButton {...button} />
+              )}
             </li>
-          )
-        })}
-      {renderButtons(children)}
-    </ul>
+          ))}
+        {renderButtons(children)}
+      </ul>
 
-    {additionalArea && <div className={additionalAreaEl()}>{additionalArea}</div>}
-  </Nav>
+      {additionalArea && <div className={classNames.additionalAreaEl}>{additionalArea}</div>}
+    </Nav>
+  )
+}
+
+const StatusLabelHeading = React.memo<PropsWithChildren>(
+  ({ children }) =>
+    children && (
+      <Heading className={classNames.statusLabelHeading}>
+        <StatusLabel>{children}</StatusLabel>
+      </Heading>
+    ),
 )
 
 const renderButtons = (children: ReactNode) =>
@@ -109,5 +109,5 @@ const renderButtons = (children: ReactNode) =>
       return renderButtons(child.props.children)
     }
 
-    return <li className={listItem()}>{child}</li>
+    return <li className={classNames.listItem}>{child}</li>
   })

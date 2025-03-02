@@ -81,8 +81,7 @@ export const useListBox = <T,>({
   decorators,
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
-    useActiveOption({ options })
+  const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -185,10 +184,10 @@ export const useListBox = <T,>({
 
       if (KEY_DOWN_REGEX.test(e.key)) {
         e.stopPropagation()
-        moveActivePositionDown()
+        moveActiveOptionIndex(activeOption, 1)
       } else if (KEY_UP_REGEX.test(e.key)) {
         e.stopPropagation()
-        moveActivePositionUp()
+        moveActiveOptionIndex(activeOption, -1)
       } else if (e.key === 'Enter') {
         if (activeOption === null) {
           return
@@ -205,7 +204,7 @@ export const useListBox = <T,>({
         setActiveOption(null)
       }
     },
-    [activeOption, moveActivePositionDown, moveActivePositionUp, onAdd, onSelect, setActiveOption],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
   )
 
   const { createPortal } = usePortal()

@@ -1,14 +1,9 @@
-import React, { type FC, type PropsWithChildren, type ReactNode } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuButton'
 
-type AppNaviDropdownMenuButtonProps = PropsWithChildren<{
-  /** 引き金となるボタンラベル */
-  label: ReactNode
-}>
-
-const dropdownMenuButton = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-AppNavi-dropdownMenuButton',
     [
@@ -32,20 +27,30 @@ const dropdownMenuButton = tv({
   ],
 })
 
-export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
-  label,
-  children,
-}) => (
-  <DropdownMenuButton
-    label={
-      <>
-        {label}
-        {/* has([aria-current="page"]) を書くために複製 */}
-        <span hidden>{children}</span>
-      </>
-    }
-    className={dropdownMenuButton()}
-  >
-    {children}
-  </DropdownMenuButton>
-)
+type Props = PropsWithChildren<{
+  /** 引き金となるボタンラベル */
+  label: ReactNode
+}>
+
+export const AppNaviDropdownMenuButton: FC<Props> = ({ label, children }) => {
+  const className = useMemo(() => classNameGenerator(), [])
+
+  return (
+    <DropdownMenuButton
+      label={
+        <>
+          {label}
+          <span hidden>
+            {
+              // has([aria-current="page"]) を書くために複製
+              children
+            }
+          </span>
+        </>
+      }
+      className={className}
+    >
+      {children}
+    </DropdownMenuButton>
+  )
+}

@@ -1,21 +1,20 @@
 'use client'
 
-import React, { ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
+import React, { ButtonHTMLAttributes, PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { usePortal } from '../../hooks/usePortal'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
 import { BaseProps } from './types'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
-const buttonStyle = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Button',
     loader: [
@@ -39,10 +38,13 @@ const buttonStyle = tv({
 })
 
 export type Props = {
-  decorators?: DecoratorsType<'loading'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const LOADING_TEXT = '処理中'
+const DECORATOR_DEFAULT_TEXTS = {
+  loading: '処理中',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & Props>(
   (
@@ -64,24 +66,34 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     },
     ref,
   ) => {
-    const { wrapper, loader: loaderSlot } = buttonStyle()
-    const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
-    const loaderStyle = useMemo(
-      () => loaderSlot({ isSecondary: variant === 'secondary' }),
-      [loaderSlot, variant],
-    )
-    const { createPortal } = usePortal()
+    const classNames = useMemo(() => {
+      const { wrapper, loader } = classNameGenerator()
 
-    const loader = <Loader size="s" className={loaderStyle} role="presentation" />
-    const actualPrefix = !loading && prefix
-    const actualSuffix = loading && !square ? loader : suffix
-    const disabledOnLoading = loading || disabled
-    const actualChildren = loading && square ? loader : children
+      return {
+        wrapper: wrapper({ className }),
+        loader: loader({ isSecondary: variant === 'secondary' }),
+      }
+    }, [variant, className])
 
-    const statusText = useMemo(() => {
-      const loadingText = decorators?.loading?.(LOADING_TEXT) ?? LOADING_TEXT
-      return loading ? loadingText : ''
-    }, [decorators, loading])
+    let actualPrefix = prefix
+    let actualSuffix = suffix
+    let disabledOnLoading = disabled
+    let actualChildren = children
+
+    if (loading) {
+      actualPrefix = undefined
+      disabledOnLoading = true
+
+      const loader = <Loader size="s" className={classNames.loader} role="presentation" />
+
+      if (square) {
+        actualChildren = loader
+      } else {
+        actualSuffix = loader
+      }
+    }
+
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const button = (
       <ButtonWrapper
@@ -91,18 +103,15 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         square={square}
         wide={wide}
         variant={variant}
-        className={wrapperStyle}
+        className={classNames.wrapper}
         buttonRef={ref}
         disabled={disabledOnLoading}
         $loading={loading}
+        prefix={actualPrefix}
+        suffix={actualSuffix}
       >
-        {
-          // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-          createPortal(<VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>)
-        }
-        <ButtonInner prefix={actualPrefix} suffix={actualSuffix} size={size}>
-          {actualChildren}
-        </ButtonInner>
+        <LoadingStatus loading={loading}>{decorated.loading}</LoadingStatus>
+        {actualChildren}
       </ButtonWrapper>
     )
 
@@ -115,3 +124,14 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
 )
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
+
+const LoadingStatus = React.memo<PropsWithChildren<{ loading: boolean }>>(
+  ({ loading, children }) => {
+    const { createPortal } = usePortal()
+
+    // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
+    return createPortal(
+      <VisuallyHiddenText role="status">{loading && children}</VisuallyHiddenText>,
+    )
+  },
+)

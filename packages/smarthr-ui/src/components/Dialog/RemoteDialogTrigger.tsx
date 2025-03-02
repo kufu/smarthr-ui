@@ -37,7 +37,7 @@ export const RemoteDialogTrigger: React.FC<
     () =>
       cloneElement(children as ReactElement, {
         onClick: actualOnClick,
-        'aria-haspopup': 'true',
+        'aria-haspopup': 'dialog',
         'aria-controls': targetId,
         variant,
         ...rest,

@@ -10,6 +10,7 @@ export class RootNode {
 
   constructor(children: ItemNode[]) {
     this.context = new NodeContext(this)
+
     for (const child of children) {
       this.append(child)
     }
@@ -38,10 +39,12 @@ export class RootNode {
   findByValue(value: string): ItemNode | undefined {
     for (const child of this.children) {
       const found = child.findByValue(value)
+
       if (found) {
         return found
       }
     }
+
     return
   }
 
@@ -55,6 +58,7 @@ export class RootNode {
     }
 
     const pivot = this.findByValue(value)
+
     if (!pivot) {
       return [this.children]
     }
