@@ -2,17 +2,17 @@ import React, { ComponentProps } from 'react'
 
 import { Gap } from '../../../types'
 import { Stack } from '../../Layout'
-import { Base, base } from '../Base'
+import { Base, classNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-const basePadding = Object.keys(base.variants.paddingBlock)
+const basePadding = Object.keys(classNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]
 const baseOverflow = [undefined, 'visible', 'hidden', 'clip', 'scroll', 'auto'] as const
-const baseLayer = Object.keys(base.variants.layer).map(Number) as Array<
+const baseLayer = Object.keys(classNameGenerator.variants.layer).map(Number) as Array<
   ComponentProps<typeof Base>['layer']
 >
 

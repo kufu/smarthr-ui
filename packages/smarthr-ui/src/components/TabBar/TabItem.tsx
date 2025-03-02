@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -6,7 +6,7 @@ import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 
-const tabItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-TabItem',
@@ -76,6 +76,7 @@ export const TabItem: FC<Props & ElementProps> = ({
 
   if (rest.disabled && disabledDetail) {
     const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+
     return (
       <Tooltip
         {...tabAttrs}
@@ -102,25 +103,39 @@ const TabButton: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const { wrapperStyle, labelStyle, suffixStyle } = useMemo(() => {
-    const { wrapper, label, suffixWrapper } = tabItem({ isTouchDevice })
+  const classNames = useMemo(() => {
+    const { wrapper, label, suffixWrapper } = classNameGenerator({ isTouchDevice })
+
     return {
-      wrapperStyle: wrapper({ className }),
-      labelStyle: label(),
-      suffixStyle: suffixWrapper(),
+      wrapper: wrapper({ className }),
+      label: label(),
+      suffixWrapper: suffixWrapper(),
     }
   }, [className])
+
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => onClick(e.currentTarget.value),
+    [onClick],
+  )
 
   return (
     <UnstyledButton
       {...rest}
       type="button"
+      value={id}
       id={id}
-      className={wrapperStyle}
-      onClick={() => onClick(id)}
+      className={classNames.wrapper}
+      onClick={actualOnClick}
     >
-      <span className={labelStyle}>{children}</span>
-      {suffix && <span className={suffixStyle}>{suffix}</span>}
+      <TabLabel className={classNames.label}>{children}</TabLabel>
+      <TabButtonSuffix className={classNames.suffixWrapper}>{suffix}</TabButtonSuffix>
     </UnstyledButton>
   )
 }
+
+const TabLabel = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <span className={className}>{children}</span>
+))
+const TabButtonSuffix = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => children && <span className={className}>{children}</span>,
+)
