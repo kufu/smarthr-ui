@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo } from 'react'
 
-import { pickerStyle } from './style'
+import { classNameGenerator } from './style'
 import { PickerProps } from './types'
 
 type Props = {
@@ -11,26 +11,27 @@ type Props = {
 /** @deprecated DatetimeLocalPicker は非推奨です。Input[type="datetime-local"] を使ってください。 */
 export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
-    const { wrapperStyle, innerStyle } = useMemo(() => {
-      const { wrapper, inner } = pickerStyle('DatetimeLocalPicker')
+    const classNames = useMemo(() => {
+      const { wrapper, inner } = classNameGenerator('DatetimeLocal')
+
       return {
-        wrapperStyle: wrapper({ className, disabled, readOnly }),
-        innerStyle: inner(),
+        wrapper: wrapper({ className }),
+        inner: inner(),
       }
-    }, [disabled, readOnly, className])
+    }, [className])
 
     return (
-      <span className={wrapperStyle}>
+      <span className={classNames.wrapper}>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
-          data-smarthr-ui-input="true"
           ref={ref}
           type="datetime-local"
           disabled={disabled}
           readOnly={readOnly}
           aria-invalid={error || undefined}
-          className={innerStyle}
+          className={classNames.inner}
+          data-smarthr-ui-input="true"
         />
       </span>
     )

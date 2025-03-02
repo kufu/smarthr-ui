@@ -7,7 +7,7 @@ import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
 
 import type { Gap } from '../../types'
 
-export const base = tv({
+export const classNameGenerator = tv({
   base: 'smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock: {
@@ -90,7 +90,7 @@ type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
 type Props = PropsWithChildren<
   Omit<
-    VariantProps<typeof base>,
+    VariantProps<typeof classNameGenerator>,
     'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
   > & {
     /** 境界とコンテンツの間の余白 */
@@ -109,33 +109,28 @@ type SeparatePadding = {
 export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
 
 export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
-  (
-    { padding, radius = 'm', overflow, layer = 1, as: Component = 'div', className, ...props },
-    ref,
-  ) => {
-    const styles = useMemo(() => {
-      const paddingBlock = padding instanceof Object ? padding.block : padding
-      const paddingInline = padding instanceof Object ? padding.inline : padding
+  ({ padding, radius, overflow, layer, as: Component = 'div', className, ...props }, ref) => {
+    const actualClassName = useMemo(() => {
+      const actualPadding =
+        padding instanceof Object ? padding : { block: padding, inline: padding }
+      const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
-      const overflowBlock = overflow instanceof Object ? overflow.y : overflow
-      const overflowInline = overflow instanceof Object ? overflow.x : overflow
-
-      return base({
-        paddingBlock,
-        paddingInline,
-        radius,
-        overflowBlock,
-        overflowInline,
-        layer,
+      return classNameGenerator({
+        paddingBlock: actualPadding.block,
+        paddingInline: actualPadding.inline,
+        radius: radius ?? 'm',
+        overflowBlock: actualOverflow.y,
+        overflowInline: actualOverflow.x,
+        layer: layer ?? 1,
         className,
       })
-    }, [className, layer, overflow, padding, radius])
+    }, [layer, overflow, padding, radius, className])
 
     const Wrapper = useSectionWrapper(Component)
 
     return (
       <Wrapper>
-        <Component {...props} ref={ref} className={styles} />
+        <Component {...props} ref={ref} className={actualClassName} />
       </Wrapper>
     )
   },

@@ -7,6 +7,7 @@ export const useTableHeadCellCount = <T extends HTMLElement>() => {
     if (node !== null) {
       const parentTable = node.closest('table')
       const cells = parentTable?.querySelectorAll('thead > tr:first-child > th')
+
       setCount(cells?.length || 0)
     }
   }, [])
