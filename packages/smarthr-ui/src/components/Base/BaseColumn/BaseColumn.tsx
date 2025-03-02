@@ -4,10 +4,10 @@ import { VariantProps, tv } from 'tailwind-variants'
 import { Base } from '../Base'
 
 type BaseProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'>
-type Props = VariantProps<typeof baseColumn>
+type Props = VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps | keyof Props>
 
-export const baseColumn = tv({
+export const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
   variants: {
     bgColor: {
@@ -37,6 +37,10 @@ export const BaseColumn: React.FC<BaseProps & Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const styles = useMemo(() => baseColumn({ bgColor, className }), [bgColor, className])
-  return <Base {...props} padding={padding} layer={0} className={styles} />
+  const actualClassName = useMemo(
+    () => classNameGenerator({ bgColor, className }),
+    [bgColor, className],
+  )
+
+  return <Base {...props} padding={padding} layer={0} className={actualClassName} />
 }

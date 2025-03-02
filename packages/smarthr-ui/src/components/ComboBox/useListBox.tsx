@@ -11,7 +11,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { spacing } from '../../themes'
@@ -33,7 +33,7 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  decorators?: DecoratorsType<'noResultText' | 'loadingText'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 type Rect = {
@@ -42,10 +42,16 @@ type Rect = {
   height?: number
 }
 
-const NO_RESULT_TEXT = '一致する選択肢がありません'
-const LOADING_TEXT = '処理中'
+const DECORATOR_DEFAULT_TEXTS = {
+  noResultText: '一致する選択肢がありません',
+  loadingText: '処理中',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const listbox = tv({
+const KEY_DOWN_REGEX = /^(Arrow)?Down$/
+const KEY_UP_REGEX = /^(Arrow)?Up/
+
+const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-absolute',
     dropdownList: [
@@ -75,8 +81,7 @@ export const useListBox = <T,>({
   decorators,
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
-    useActiveOption({ options })
+  const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -95,7 +100,6 @@ export const useListBox = <T,>({
 
   useEffect(() => {
     if (!triggerRef.current) {
-      setTriggerWidth(0)
       return
     }
 
@@ -149,22 +153,20 @@ export const useListBox = <T,>({
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
     if (
-      navigationType !== 'key' ||
-      activeOption === null ||
       !activeRef.current ||
-      !listBoxRef.current
+      !listBoxRef.current ||
+      activeOption === null ||
+      navigationType !== 'key'
     ) {
       return
     }
+
     const activeRect = activeRef.current.getBoundingClientRect()
     const containerRect = listBoxRef.current.getBoundingClientRect()
 
-    const isActiveTopOutside = activeRect.top < containerRect.top
-    const isActiveBottomOutside = activeRect.bottom > containerRect.bottom
-
-    if (isActiveTopOutside) {
+    if (activeRect.top < containerRect.top) {
       listBoxRef.current.scrollTop -= containerRect.top - activeRect.top
-    } else if (isActiveBottomOutside) {
+    } else if (activeRect.bottom > containerRect.bottom) {
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
   }, [activeOption, listBoxRef, navigationType])
@@ -180,27 +182,29 @@ export const useListBox = <T,>({
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
 
-      if (e.key === 'Down' || e.key === 'ArrowDown') {
+      if (KEY_DOWN_REGEX.test(e.key)) {
         e.stopPropagation()
-        moveActivePositionDown()
-      } else if (e.key === 'Up' || e.key === 'ArrowUp') {
+        moveActiveOptionIndex(activeOption, 1)
+      } else if (KEY_UP_REGEX.test(e.key)) {
         e.stopPropagation()
-        moveActivePositionUp()
+        moveActiveOptionIndex(activeOption, -1)
       } else if (e.key === 'Enter') {
         if (activeOption === null) {
           return
         }
+
         e.stopPropagation()
-        if (activeOption.isNew) {
-          if (onAdd) onAdd(activeOption.item.value)
-        } else {
+
+        if (!activeOption.isNew) {
           onSelect(activeOption.item)
+        } else if (onAdd) {
+          onAdd(activeOption.item.value)
         }
       } else {
         setActiveOption(null)
       }
     },
-    [activeOption, moveActivePositionDown, moveActivePositionUp, onAdd, onSelect, setActiveOption],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
   )
 
   const { createPortal } = usePortal()
@@ -213,14 +217,17 @@ export const useListBox = <T,>({
     ),
   })
 
-  const handleAdd = useCallback(
-    (option: ComboBoxOption<T>) => {
-      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        if (onAdd) onAdd(option.item.value)
-      })
-    },
+  const handleAdd = useMemo(
+    () =>
+      onAdd
+        ? (option: ComboBoxOption<T>) => {
+            // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+            requestAnimationFrame(() => {
+              onAdd(option.item.value)
+            })
+          }
+        : undefined,
     [onAdd],
   )
   const handleSelect = useCallback(
@@ -237,121 +244,103 @@ export const useListBox = <T,>({
     [setActiveOption],
   )
 
-  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
-  const {
-    wrapperStyleProps,
-    dropdownListStyleProps,
-    helpMessageStyle,
-    loaderWrapperStyle,
-    noItemsStyle,
-  } = useMemo(() => {
-    const { top, left, height } = listBoxRect
-    const dropdownListWidth = dropdownWidth || triggerWidth
-    return {
-      wrapperStyleProps: {
-        className: wrapper(),
-        style: {
-          top: `${top}px`,
-          left: `${left}px`,
-          width: `${triggerWidth}px`,
-        },
-      },
-      dropdownListStyleProps: {
-        className: dropdownList(),
-        style: {
-          width:
-            typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-          maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
-          height: height ? `${height}px` : undefined,
-        },
-      },
-      helpMessageStyle: helpMessage(),
-      loaderWrapperStyle: loaderWrapper(),
-      noItemsStyle: noItems(),
-    }
-  }, [
-    dropdownList,
-    dropdownWidth,
-    helpMessage,
-    listBoxRect,
-    triggerWidth,
-    loaderWrapper,
-    noItems,
-    wrapper,
-  ])
+  const wrapperStyle = useMemo(() => {
+    const { top, left } = listBoxRect
 
-  const statusText = useMemo(() => {
-    const loadingText = decorators?.loadingText?.(LOADING_TEXT) ?? LOADING_TEXT
-    return isExpanded && isLoading ? loadingText : ''
-  }, [decorators, isExpanded, isLoading])
+    return {
+      top: `${top}px`,
+      left: `${left}px`,
+      width: `${triggerWidth}px`,
+    }
+  }, [listBoxRect, triggerWidth])
+  const dropdownListStyle = useMemo(() => {
+    const { left, height } = listBoxRect
+    const dropdownListWidth = dropdownWidth || triggerWidth
+
+    return {
+      width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
+      maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
+      height: height ? `${height}px` : undefined,
+    }
+  }, [listBoxRect, triggerWidth, dropdownWidth])
+
+  const classNames = useMemo(() => {
+    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
+
+    return {
+      wrapper: wrapper(),
+      dropdownList: dropdownList(),
+      helpMessage: helpMessage(),
+      loaderWrapper: loaderWrapper(),
+      noItems: noItems(),
+    }
+  }, [])
+
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <>
-          <VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>
-
-          <div {...wrapperStyleProps}>
-            <div
-              {...dropdownListStyleProps}
-              id={listBoxId}
-              ref={listBoxRef}
-              role="listbox"
-              aria-hidden={!isExpanded}
-            >
-              {dropdownHelpMessage && (
-                <p className={helpMessageStyle}>
-                  <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-                </p>
-              )}
-              {!isExpanded ? null : isLoading ? (
-                <div className={loaderWrapperStyle}>
+        <div className={classNames.wrapper} style={wrapperStyle}>
+          {isExpanded && isLoading && (
+            <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
+          )}
+          <div
+            id={listBoxId}
+            ref={listBoxRef}
+            role="listbox"
+            aria-hidden={!isExpanded}
+            className={classNames.dropdownList}
+            style={dropdownListStyle}
+          >
+            {dropdownHelpMessage && (
+              <p className={classNames.helpMessage}>
+                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
+              </p>
+            )}
+            {isExpanded ? (
+              isLoading ? (
+                <div className={classNames.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
               ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={noItemsStyle}>
-                  {decorators?.noResultText
-                    ? decorators.noResultText(NO_RESULT_TEXT)
-                    : NO_RESULT_TEXT}
+                <p role="alert" aria-live="polite" className={classNames.noItems}>
+                  {decorated.noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
                   <ListBoxItemButton
                     key={option.id}
                     option={option}
-                    isActive={option.id === activeOption?.id}
                     onAdd={handleAdd}
                     onSelect={handleSelect}
                     onMouseOver={handleHoverOption}
-                    activeRef={activeRef}
+                    activeRef={option.id === activeOption?.id ? activeRef : undefined}
                   />
                 ))
-              )}
-              {renderIntersection()}
-            </div>
+              )
+            ) : null}
+            {renderIntersection()}
           </div>
-        </>,
+        </div>,
       ),
     [
-      createPortal,
-      wrapperStyleProps,
-      dropdownListStyleProps,
-      listBoxId,
-      isExpanded,
-      dropdownHelpMessage,
-      helpMessageStyle,
-      isLoading,
-      loaderWrapperStyle,
-      options.length,
-      noItemsStyle,
-      decorators,
-      partialOptions,
-      renderIntersection,
       activeOption?.id,
-      statusText,
+      renderIntersection,
+      partialOptions,
+      options.length,
+      isExpanded,
+      isLoading,
+      dropdownHelpMessage,
+      listBoxId,
+      decorated,
       handleAdd,
-      handleSelect,
       handleHoverOption,
+      handleSelect,
+      classNames,
+      dropdownListStyle,
+      wrapperStyle,
+      createPortal,
     ],
   )
 
