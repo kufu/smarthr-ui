@@ -29,7 +29,7 @@ describe('useActiveOption', () => {
   })
 
   it('options が変更されても activeOption が維持されること', () => {
-    act(() => result.current.moveActivePositionDown())
+    act(() => result.current.moveActiveOptionIndex(result.current.activeOption, 1))
     expect(result.current.activeOption).toEqual(initialProps.options[0])
     rerender({
       options: [
@@ -41,7 +41,7 @@ describe('useActiveOption', () => {
   })
 
   it('options から activeOption と一致する option が消えたとき、activeOption がリセットされること', () => {
-    act(() => result.current.moveActivePositionDown())
+    act(() => result.current.moveActiveOptionIndex(result.current.activeOption, 1))
     expect(result.current.activeOption).toEqual(initialProps.options[0])
     rerender({
       options: initialProps.options.slice(1),
@@ -54,15 +54,15 @@ describe('useActiveOption', () => {
     expect(result.current.activeOption).toEqual(initialProps.options[2])
   })
 
-  describe('moveActivePositionDown', () => {
+  describe('moveActiveOptionIndex(xxx, 1)', () => {
     it('activeOption が未設定のとき、最初に先頭のアイテムが選択されること', () => {
-      act(() => result.current.moveActivePositionDown())
+      act(() => result.current.moveActiveOptionIndex(result.current.activeOption, 1))
       expect(result.current.activeOption).toEqual(initialProps.options[0])
     })
 
     it('disabled な option が飛ばされること', () => {
       act(() => result.current.setActiveOption(initialProps.options[1]))
-      act(() => result.current.moveActivePositionDown())
+      act(() => result.current.moveActiveOptionIndex(result.current.activeOption, 1))
       expect(result.current.activeOption).toEqual(initialProps.options[3])
     })
 
@@ -70,23 +70,23 @@ describe('useActiveOption', () => {
       act(() =>
         result.current.setActiveOption(initialProps.options[initialProps.options.length - 1]),
       )
-      act(() => result.current.moveActivePositionDown())
+      act(() => result.current.moveActiveOptionIndex(result.current.activeOption, 1))
       expect(result.current.activeOption).toEqual(initialProps.options[0])
     })
   })
 
-  describe('moveActivePositionUp', () => {
+  describe('moveActiveOptionIndex(xxx,  - 1)', () => {
     it('activeOption を変更できること', () => {
       expect(result.current.activeOption).toBeNull()
 
-      act(() => result.current.moveActivePositionUp())
+      act(() => result.current.moveActiveOptionIndex(result.current.activeOption, -1))
       expect(result.current.activeOption).toEqual(initialProps.options[3])
 
-      act(() => result.current.moveActivePositionUp())
-      act(() => result.current.moveActivePositionUp())
+      act(() => result.current.moveActiveOptionIndex(result.current.activeOption, -1))
+      act(() => result.current.moveActiveOptionIndex(result.current.activeOption, -1))
       expect(result.current.activeOption).toEqual(initialProps.options[0])
 
-      act(() => result.current.moveActivePositionUp())
+      act(() => result.current.moveActiveOptionIndex(result.current.activeOption, -1))
       expect(result.current.activeOption).toEqual(initialProps.options[3])
     })
   })

@@ -6,7 +6,7 @@ import { Gap } from '../../../types'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
-import { baseColumn } from '../BaseColumn/BaseColumn'
+import { classNameGenerator as columnClassNameGenerator } from '../BaseColumn/BaseColumn'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -62,7 +62,7 @@ export const BgColor: StoryObj<typeof BaseColumn> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {Object.keys(baseColumn.variants.bgColor).map((bgColor) => (
+      {Object.keys(columnClassNameGenerator.variants.bgColor).map((bgColor) => (
         <BaseColumn {...args} bgColor={bgColor as any} key={bgColor}>
           {bgColor}
         </BaseColumn>

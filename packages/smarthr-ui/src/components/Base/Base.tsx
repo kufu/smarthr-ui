@@ -109,27 +109,22 @@ type SeparatePadding = {
 export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
 
 export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
-  (
-    { padding, radius = 'm', overflow, layer = 1, as: Component = 'div', className, ...props },
-    ref,
-  ) => {
+  ({ padding, radius, overflow, layer, as: Component = 'div', className, ...props }, ref) => {
     const actualClassName = useMemo(() => {
-      const paddingBlock = padding instanceof Object ? padding.block : padding
-      const paddingInline = padding instanceof Object ? padding.inline : padding
-
-      const overflowBlock = overflow instanceof Object ? overflow.y : overflow
-      const overflowInline = overflow instanceof Object ? overflow.x : overflow
+      const actualPadding =
+        padding instanceof Object ? padding : { block: padding, inline: padding }
+      const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
       return baseClassNameGenerator({
-        paddingBlock,
-        paddingInline,
-        radius,
-        overflowBlock,
-        overflowInline,
-        layer,
+        paddingBlock: actualPadding.block,
+        paddingInline: actualPadding.inline,
+        radius: radius ?? 'm',
+        overflowBlock: actualOverflow.y,
+        overflowInline: actualOverflow.x,
+        layer: layer ?? 1,
         className,
       })
-    }, [className, layer, overflow, padding, radius])
+    }, [layer, overflow, padding, radius, className])
 
     const Wrapper = useSectionWrapper(Component)
     const body = <Component {...props} ref={ref} className={actualClassName} />
