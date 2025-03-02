@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Stack } from '../../Layout'
-import { StatusLabel, statusLabel } from '../StatusLabel'
+import { StatusLabel, classNameGenerator } from '../StatusLabel'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -25,7 +25,7 @@ export const Type: StoryObj<typeof StatusLabel> = {
   name: 'type',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(statusLabel.variants.type)].map((type) => (
+      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
         <StatusLabel {...args} type={type as any} key={type} />
       ))}
     </Stack>
@@ -36,7 +36,7 @@ export const Bold: StoryObj<typeof StatusLabel> = {
   name: 'bold',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(statusLabel.variants.type)].map((type) => (
+      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
         <StatusLabel {...args} type={type as any} bold key={type} />
       ))}
     </Stack>
