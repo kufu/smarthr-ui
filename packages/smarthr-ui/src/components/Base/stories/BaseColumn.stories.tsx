@@ -4,13 +4,13 @@ import React, { ComponentProps } from 'react'
 import { backgroundColor } from '../../../themes'
 import { Gap } from '../../../types'
 import { Stack } from '../../Layout'
-import { base } from '../Base'
+import { classNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
-import { baseColumn } from '../BaseColumn/BaseColumn'
+import { classNameGenerator as columnClassNameGenerator } from '../BaseColumn/BaseColumn'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-const basePadding = Object.keys(base.variants.paddingBlock)
+const basePadding = Object.keys(classNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]
@@ -62,7 +62,7 @@ export const BgColor: StoryObj<typeof BaseColumn> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {Object.keys(baseColumn.variants.bgColor).map((bgColor) => (
+      {Object.keys(columnClassNameGenerator.variants.bgColor).map((bgColor) => (
         <BaseColumn {...args} bgColor={bgColor as any} key={bgColor}>
           {bgColor}
         </BaseColumn>
