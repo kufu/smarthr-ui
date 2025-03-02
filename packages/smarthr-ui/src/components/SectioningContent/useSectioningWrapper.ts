@@ -9,6 +9,7 @@ const sectioningContents = ['article', 'aside', 'nav', 'section']
 
 const isSectioningContent = (type: ComponentType) => {
   const type_ = isStyledComponent(type) ? type.target : type
+
   return typeof type_ === 'string' && sectioningContents.includes(type_)
 }
 
