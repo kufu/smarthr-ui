@@ -10,7 +10,6 @@ import {
 
 type Props = {
   targetPage: number
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
   direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
@@ -32,7 +31,6 @@ export const PaginationControllerItemButton: React.FC<Props> = ({
   disabled,
   double,
   targetPage,
-  onClick,
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
@@ -40,7 +38,6 @@ export const PaginationControllerItemButton: React.FC<Props> = ({
     <Button
       aria-label={alt}
       disabled={disabled}
-      onClick={onClick}
       value={targetPage}
       square
       size="s"
