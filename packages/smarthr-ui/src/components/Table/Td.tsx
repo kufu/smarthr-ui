@@ -26,7 +26,7 @@ export const Td = memo<Props & ElementProps>(
       const shadow = reelShadowClassNameGenerator({ direction: 'right' })
 
       return `${base} ${shadow}`
-    }, [align, className, contentWidth, fixed, nullable, style, vAlign])
+    }, [align, className, fixed, nullable, vAlign])
     const actualStyle = useMemo(() => {
       if (typeof contentWidth === 'object') {
         return {
