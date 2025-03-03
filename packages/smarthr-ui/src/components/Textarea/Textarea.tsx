@@ -1,9 +1,9 @@
 'use client'
 
 import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  ReactNode,
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type ReactNode,
   forwardRef,
   startTransition,
   useCallback,
@@ -68,7 +68,7 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const textarea = tv({
+const classNameGenerator = tv({
   slots: {
     textareaEl: [
       'smarthr-ui-Textarea-textarea',
@@ -205,7 +205,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
 
     const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      (e: ChangeEvent<HTMLTextAreaElement>) => {
         if (maxLetters) {
           const inputValue = e.currentTarget.value
           debouncedUpdateCount(inputValue)
@@ -259,7 +259,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
     const countError = maxLetters && count > maxLetters
     const classNames = useMemo(() => {
-      const { textareaEl, counter, counterText } = textarea()
+      const { textareaEl, counter, counterText } = classNameGenerator()
 
       return {
         textarea: textareaEl({ className }),
