@@ -116,10 +116,7 @@ export const TooltipPortal: FC<Props> = ({
     setRect(
       getTooltipRect({
         parentRect,
-        scrollOffset: {
-          top: scrollOffsetTop,
-          left: scrollOffsetLeft,
-        },
+        scrollOffset,
         tooltipSize: {
           width: offsetWidth,
           height: offsetHeight,
