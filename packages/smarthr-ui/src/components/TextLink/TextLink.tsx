@@ -34,7 +34,7 @@ type TextLinkComponent = <T extends ElementType = 'a'>(
   props: Props<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
-const textLink = tv({
+const classNameGenerator = tv({
   slots: {
     anchor:
       'shr-text-link shr-no-underline shr-shadow-underline forced-colors:shr-underline [&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
@@ -42,7 +42,7 @@ const textLink = tv({
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
   },
 })
-const { anchor, prefixWrapper, suffixWrapper } = textLink()
+const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
 const prefixWrapperClassName = prefixWrapper()
 const suffixWrapperClassName = suffixWrapper()
 
