@@ -23,13 +23,13 @@ export type Props = {
   onClose: () => void
   /** FlashMessage が表示されてから一定時間後に自動で閉じるかどうか */
   autoClose?: boolean
-} & VariantProps<typeof flashMessage>
+} & VariantProps<typeof classNameGenerator>
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
 const REMOVE_DELAY = 8000
 
-const flashMessage = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-FlashMessage',
@@ -79,23 +79,24 @@ export const FlashMessage: FC<Props & ElementProps> = ({
     }
   }, [autoClose, onClose, visible])
 
-  const { wrapperStyle, responseMessageStyle, closeButtonStyle } = useMemo(() => {
-    const { wrapper, responseMessage, closeButton } = flashMessage()
+  const classNames = useMemo(() => {
+    const { wrapper, responseMessage, closeButton } = classNameGenerator()
+
     return {
-      wrapperStyle: wrapper({ animation, className }),
-      responseMessageStyle: responseMessage(),
-      closeButtonStyle: closeButton(),
+      wrapper: wrapper({ animation, className }),
+      responseMessage: responseMessage(),
+      closeButton: closeButton(),
     }
   }, [animation, className])
 
   if (!visible) return null
 
   return (
-    <div {...rest} className={wrapperStyle} role={role}>
-      <ResponseMessage type={type} iconGap={0.5} className={responseMessageStyle}>
+    <div {...rest} role={role} className={classNames.wrapper}>
+      <ResponseMessage type={type} iconGap={0.5} className={classNames.responseMessage}>
         {text}
       </ResponseMessage>
-      <Button className={closeButtonStyle} onClick={onClose} size="s" square>
+      <Button onClick={onClose} size="s" square className={classNames.closeButton}>
         <FaXmarkIcon alt="閉じる" />
       </Button>
     </div>
