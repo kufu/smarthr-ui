@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
+import React, { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
@@ -24,12 +24,12 @@ type Props = {
   urlToShowAll?: string | null
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'triggerLabel'>
-} & VariantProps<typeof appLauncher>
+} & VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 const TRIGGER_LABEL = 'アプリ'
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     appsButton: [
       'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
@@ -60,7 +60,7 @@ const appLauncher = tv({
   },
 })
 
-export const AppLauncher: React.FC<Props & ElementProps> = ({
+export const AppLauncher: FC<Props & ElementProps> = ({
   apps,
   urlToShowAll,
   decorators,
@@ -84,8 +84,8 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
     return result
   }, [apps])
 
-  const styles = useMemo(() => {
-    const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher({
+  const classNames = useMemo(() => {
+    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator({
       enableNew,
     })
 
@@ -104,22 +104,22 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
       <MemoizedDropdownTrigger
         enableNew={enableNew}
         decorators={decorators}
-        className={styles.appsButton}
+        className={classNames.appsButton}
       />
       <DropdownContent controllable>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <Stack as="nav" gap={1.5} className={styles.contentWrapper}>
+        <Stack as="nav" gap={1.5} className={classNames.contentWrapper}>
           <Stack gap={1.5}>
             {calculatedApps.base && (
-              <Stack gap={0.5} className={styles.category} as="section">
+              <Stack gap={0.5} className={classNames.category} as="section">
                 <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
-                <Cluster as="ul" gap={1} className={styles.appList}>
+                <Cluster as="ul" gap={1} className={classNames.appList}>
                   {calculatedApps.base.items.map((item, index) => (
                     <LinkListItem
                       key={index}
                       href={item.url}
                       target={item.target}
-                      className={styles.link}
+                      className={classNames.link}
                     >
                       {item.label}
                     </LinkListItem>
@@ -129,15 +129,15 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
             )}
             <Cluster gap={1.5}>
               {calculatedApps.others.map(({ heading, items }, i) => (
-                <Stack key={i} gap={0.5} className={styles.category} as="section">
+                <Stack key={i} gap={0.5} className={classNames.category} as="section">
                   <Heading type="subSubBlockTitle">{heading}</Heading>
-                  <Stack gap={0.5} as="ul" className={styles.appList}>
+                  <Stack gap={0.5} as="ul" className={classNames.appList}>
                     {items.map((item, index) => (
                       <LinkListItem
                         key={index}
                         href={item.url}
                         target={item.target}
-                        className={styles.link}
+                        className={classNames.link}
                       >
                         {item.label}
                       </LinkListItem>
@@ -147,14 +147,14 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
               ))}
             </Cluster>
           </Stack>
-          <TextLinkToShowAll href={urlToShowAll} className={styles.footer} />
+          <TextLinkToShowAll href={urlToShowAll} className={classNames.footer} />
         </Stack>
       </DropdownContent>
     </Dropdown>
   )
 }
 
-const MemoizedDropdownTrigger = React.memo<
+const MemoizedDropdownTrigger = memo<
   Pick<Props, 'enableNew' | 'decorators'> & { className: string }
 >(({ enableNew, className, decorators }) => {
   const triggerLabel = useMemo(
@@ -175,7 +175,7 @@ const MemoizedDropdownTrigger = React.memo<
   )
 })
 
-const TextLinkToShowAll = React.memo<{ href: Props['urlToShowAll']; className: string }>(
+const TextLinkToShowAll = memo<{ href: Props['urlToShowAll']; className: string }>(
   ({ href, className }) =>
     href && (
       <div className={className}>
@@ -186,7 +186,7 @@ const TextLinkToShowAll = React.memo<{ href: Props['urlToShowAll']; className: s
     ),
 )
 
-const LinkListItem = React.memo<{
+const LinkListItem = memo<{
   href: AppItem['url']
   target: AppItem['target']
   children: AppItem['label']
