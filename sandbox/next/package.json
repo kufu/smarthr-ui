@@ -9,14 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "15.1.7",
+    "next": "15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "smarthr-ui": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
-    "@types/node": "^20.17.19",
+    "@types/node": "^20.17.22",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^19.0.4",
     "postcss": "^8.5.3",

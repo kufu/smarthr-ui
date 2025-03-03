@@ -18,7 +18,7 @@ export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
         wrapper: wrapper({ className }),
         inner: inner(),
       }
-    }, [disabled])
+    }, [className])
 
     return (
       <span className={classNames.wrapper}>

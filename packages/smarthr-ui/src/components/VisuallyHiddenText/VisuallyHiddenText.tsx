@@ -15,9 +15,12 @@ const ActualVisuallyHiddenText = <T extends React.ElementType = 'span'>({
   className,
   ...props
 }: Props<T>) => {
-  const styles = useMemo(() => visuallyHiddenTextClassNameGenerator({ className }), [className])
+  const actualClassName = useMemo(
+    () => visuallyHiddenTextClassNameGenerator({ className }),
+    [className],
+  )
 
-  return <Component {...props} className={styles} />
+  return <Component {...props} className={actualClassName} />
 }
 
 export const VisuallyHiddenText = memo(ActualVisuallyHiddenText) as typeof ActualVisuallyHiddenText

@@ -1,8 +1,8 @@
-import React, { type FC, type PropsWithChildren, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
-import { SectioningFragment } from '../SectioningContent/SectioningContent'
+import { Section } from '../SectioningContent/SectioningContent'
 
 import { StepCounter } from './StepCounter'
 
@@ -74,7 +74,7 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
 
   return (
     <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
-      <SectioningFragment>
+      <Section>
         <StepHeading
           status={status}
           current={current}
@@ -87,12 +87,12 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
         <div className={classNames.body}>
           <div className={classNames.inner}>{children}</div>
         </div>
-      </SectioningFragment>
+      </Section>
     </li>
   )
 }
 
-const StepHeading = React.memo<
+const StepHeading = memo<
   Pick<Props, 'status' | 'current' | 'stepNumber'> &
     PropsWithChildren<{ className: string; headingClassName: string }>
 >(({ status, current, stepNumber, children, className, headingClassName }) => (

@@ -115,7 +115,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
         padding instanceof Object ? padding : { block: padding, inline: padding }
       const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
-      return classNameGenerator({
+      return baseClassNameGenerator({
         paddingBlock: actualPadding.block,
         paddingInline: actualPadding.inline,
         radius: radius ?? 'm',
