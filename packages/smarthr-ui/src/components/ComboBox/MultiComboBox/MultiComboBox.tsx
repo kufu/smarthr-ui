@@ -1,9 +1,13 @@
 'use client'
 
 import React, {
+  type ChangeEvent,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
+  type KeyboardEvent,
+  type MouseEvent,
   type Ref,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -82,7 +86,7 @@ const ARROW_LEFT_KEY_REGEX = /^(Arrow)?Left$/
 const ARROW_RIGHT_KEY_REGEX = /^(Arrow)?Right/
 const ARROW_UP_AND_DOWN_KEY_REGEX = /^(Arrow)?(Up|Down)$/
 
-const multiCombobox = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-MultiComboBox',
@@ -339,7 +343,7 @@ const ActualMultiComboBox = <T,>(
   )
 
   const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
+    (e: MouseEvent<HTMLElement>) => {
       if (
         !disabled &&
         !isFocused &&
@@ -351,7 +355,7 @@ const ActualMultiComboBox = <T,>(
     [isFocused, disabled, focus],
   )
   const handleChangeInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       onChange?.(e)
       onChangeInput?.(e)
 
@@ -379,7 +383,7 @@ const ActualMultiComboBox = <T,>(
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
   const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
       onKeyPress?.(e)
     },
@@ -405,7 +409,7 @@ const ActualMultiComboBox = <T,>(
       placeholderEl,
       suffixWrapper,
       suffixIcon,
-    } = multiCombobox()
+    } = classNameGenerator()
 
     return {
       wrapper: wrapper({ focused: isFocused, disabled, className }),
@@ -499,7 +503,7 @@ const ActualMultiComboBox = <T,>(
 
 export const MultiComboBox = genericsForwardRef(ActualMultiComboBox)
 
-const MemoizedCaretDown = React.memo<{
+const MemoizedCaretDown = memo<{
   className: string
   iconStyle: string
   disabled: boolean
