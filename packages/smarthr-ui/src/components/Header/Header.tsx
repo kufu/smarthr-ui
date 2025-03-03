@@ -1,5 +1,12 @@
-import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, {
+  type ComponentProps,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
 import { Cluster } from '../Layout'
@@ -8,7 +15,7 @@ import { Text } from '../Text'
 
 import { AppLauncher, HeaderDropdownMenuButton } from '.'
 
-const header = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-Header', 'shr-bg-brand shr-px-1.25', 'max-md:shr-px-0.75'],
     logoLink: [
@@ -58,7 +65,7 @@ type Props = {
   onTenantSelect?: (id: string) => void
   /** @deprecated internal-ui から利用するので使わないでください。 */
   enableNew?: boolean
-} & VariantProps<typeof header>
+} & VariantProps<typeof classNameGenerator>
 
 type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
 
@@ -77,14 +84,14 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   children,
   className,
 }) => {
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const {
       wrapper,
       logoLink,
       tenantInfo: tenantInfoStyle,
       tenantNameText,
       actions,
-    } = header({ enableNew })
+    } = classNameGenerator({ enableNew })
 
     return {
       wrapper: wrapper({ className }),
@@ -96,9 +103,9 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   }, [enableNew, className])
 
   return (
-    <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={styles.wrapper}>
+    <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={classNames.wrapper}>
       <Cluster align="center" gap={COMMON_GAP}>
-        <Logo href={logoHref} enableNew={enableNew} className={styles.logoLink}>
+        <Logo href={logoHref} enableNew={enableNew} className={classNames.logoLink}>
           {logo}
         </Logo>
         {enableNew ? (
@@ -107,19 +114,19 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
           <TenantSwitcher
             currentTenantId={currentTenantId}
             tenants={tenants}
-            styles={styles}
+            classNames={classNames}
             onTenantSelect={onTenantSelect}
           />
         )}
       </Cluster>
-      <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={styles.actions}>
+      <Cluster align="center" justify="flex-end" gap={CHILDREN_GAP} className={classNames.actions}>
         {children}
       </Cluster>
     </Cluster>
   )
 }
 
-const Logo = React.memo<
+const Logo = memo<
   Pick<Props, 'enableNew'> & { children: Props['logo']; href: Props['logoHref']; className: string }
 >(({ children, href, enableNew, className }) => (
   <a href={href || '/'} className={className}>
@@ -127,7 +134,7 @@ const Logo = React.memo<
   </a>
 ))
 
-const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'enableNew'>>(
+const MemoizedAppLauncher = memo<Pick<Props, 'featureName' | 'apps' | 'enableNew'>>(
   ({ featureName, apps = [], enableNew }) => {
     const decorators = useMemo(() => {
       if (!featureName) {
@@ -141,11 +148,11 @@ const MemoizedAppLauncher = React.memo<Pick<Props, 'featureName' | 'apps' | 'ena
   },
 )
 
-const TenantSwitcher = React.memo<
+const TenantSwitcher = memo<
   Pick<Props, 'currentTenantId' | 'tenants' | 'onTenantSelect'> & {
-    styles: { tenantInfo: string; tenantNameText: string }
+    classNames: { tenantInfo: string; tenantNameText: string }
   }
->(({ currentTenantId, tenants, styles, onTenantSelect }) => {
+>(({ currentTenantId, tenants, classNames, onTenantSelect }) => {
   const currentTenantName = useMemo(() => {
     if (tenants && tenants.length >= 1) {
       const current = tenants.find(({ id }) => id === currentTenantId)
@@ -157,7 +164,7 @@ const TenantSwitcher = React.memo<
 
   return (
     currentTenantName && (
-      <div className={styles.tenantInfo}>
+      <div className={classNames.tenantInfo}>
         {tenants && tenants.length > 1 ? (
           <MultiTenantDropdownMenuButton
             label={currentTenantName}
@@ -165,7 +172,7 @@ const TenantSwitcher = React.memo<
             onTenantSelect={onTenantSelect}
           />
         ) : (
-          <Text color="TEXT_WHITE" className={styles.tenantNameText}>
+          <Text color="TEXT_WHITE" className={classNames.tenantNameText}>
             {currentTenantName}
           </Text>
         )}
@@ -174,7 +181,7 @@ const TenantSwitcher = React.memo<
   )
 })
 
-const MultiTenantDropdownMenuButton = React.memo<
+const MultiTenantDropdownMenuButton = memo<
   Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: ReactNode }
 >(({ label, tenants, onTenantSelect }) => {
   const onClick = useMemo(
