@@ -31,6 +31,14 @@ const classNameGenerator = tv({
   },
 })
 
+const INITIAL_RECT = {
+  top: 0,
+  left: 0,
+  $width: 0,
+  $height: 0,
+}
+const OUTER_MARGIN = 10
+
 export const TooltipPortal: FC<Props> = ({
   message,
   isVisible,
@@ -42,12 +50,7 @@ export const TooltipPortal: FC<Props> = ({
   fullscreenElement,
 }) => {
   const portalRef = useRef<HTMLDivElement>(null)
-  const [rect, setRect] = useState({
-    top: 0,
-    left: 0,
-    $width: 0,
-    $height: 0,
-  })
+  const [rect, setRect] = useState(INITIAL_RECT)
   const [actualHorizontal, setActualHorizontal] = useState<'left' | 'center' | 'right' | null>(
     horizontal === 'auto' ? null : horizontal,
   )
@@ -55,7 +58,6 @@ export const TooltipPortal: FC<Props> = ({
     vertical === 'auto' ? null : vertical,
   )
 
-  const outerMargin = 10
   useEffect(() => {
     if (!portalRef.current || !parentRect) {
       return
@@ -63,7 +65,7 @@ export const TooltipPortal: FC<Props> = ({
 
     if (vertical === 'auto') {
       let position: 'top' | 'bottom' = 'bottom'
-      const requiredHeight = portalRef.current.offsetHeight + outerMargin
+      const requiredHeight = portalRef.current.offsetHeight + OUTER_MARGIN
       const topSpace = parentRect.top
 
       if (topSpace <= requiredHeight) {
@@ -79,7 +81,7 @@ export const TooltipPortal: FC<Props> = ({
 
     if (horizontal === 'auto') {
       let position: 'left' | 'right' = 'left'
-      const requiredWidth = portalRef.current.offsetWidth + outerMargin
+      const requiredWidth = portalRef.current.offsetWidth + OUTER_MARGIN
       const rightSpace =
         window.innerWidth - (vertical === 'middle' ? parentRect.right : parentRect.left)
 
@@ -125,7 +127,7 @@ export const TooltipPortal: FC<Props> = ({
         vertical: actualVertical,
         horizontal: actualHorizontal,
         isIcon,
-        outerMargin,
+        outerMargin: OUTER_MARGIN,
       }),
     )
   }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
@@ -147,7 +149,7 @@ export const TooltipPortal: FC<Props> = ({
       height: rect.$height > 0 ? `${rect.$height}px` : undefined,
       maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
     }),
-    [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top],
+    [rect.$height, rect.$width, rect.left, rect.top, parentRect, isMultiLine],
   )
 
   return (
