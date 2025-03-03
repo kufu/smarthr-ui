@@ -61,41 +61,37 @@ export const TooltipPortal: FC<Props> = ({
       return
     }
 
-    const { offsetWidth, offsetHeight } = portalRef.current
-
     if (vertical === 'auto') {
-      const requiredHeight = offsetHeight + outerMargin
+      let position: 'top' | 'bottom' = 'bottom'
+      const requiredHeight = portalRef.current.offsetHeight + outerMargin
       const topSpace = parentRect.top
-      const bottomSpace = window.innerHeight - parentRect.bottom
 
-      setActualVertical(() => {
-        if (topSpace > requiredHeight) {
-          return 'bottom'
-        } else if (bottomSpace > requiredHeight || bottomSpace > topSpace) {
-          return 'top'
-        } else {
-          return 'bottom'
+      if (topSpace <= requiredHeight) {
+        const bottomSpace = window.innerHeight - parentRect.bottom
+
+        if (bottomSpace > requiredHeight || bottomSpace > topSpace) {
+          position = 'top'
         }
-      })
+      }
+
+      setActualVertical(position)
     }
 
     if (horizontal === 'auto') {
-      const requiredWidth = offsetWidth + outerMargin
-      const leftSpace = vertical === 'middle' ? parentRect.left : parentRect.right
+      let position: 'left' | 'right' = 'left'
+      const requiredWidth = portalRef.current.offsetWidth + outerMargin
       const rightSpace =
-        vertical === 'middle'
-          ? window.innerWidth - parentRect.right
-          : window.innerWidth - parentRect.left
+        window.innerWidth - (vertical === 'middle' ? parentRect.right : parentRect.left)
 
-      setActualHorizontal(() => {
-        if (rightSpace > requiredWidth) {
-          return 'left'
-        } else if (leftSpace > requiredWidth || leftSpace > rightSpace) {
-          return 'right'
-        } else {
-          return 'left'
+      if (rightSpace <= requiredWidth) {
+        const leftSpace = vertical === 'middle' ? parentRect.left : parentRect.right
+
+        if (leftSpace > requiredWidth || leftSpace > rightSpace) {
+          position = 'right'
         }
-      })
+      }
+
+      setActualHorizontal(position)
     }
   }, [horizontal, parentRect, vertical])
 
@@ -103,8 +99,16 @@ export const TooltipPortal: FC<Props> = ({
     if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
       return
     }
-    const scrollOffsetTop = fullscreenElement ? fullscreenElement.scrollTop : window.scrollY
-    const scrollOffsetLeft = fullscreenElement ? fullscreenElement.scrollLeft : window.scrollX
+
+    const scrollOffset = fullscreenElement
+      ? {
+          top: fullscreenElement.scrollTop,
+          left: fullscreenElement.scrollLeft,
+        }
+      : {
+          top: window.scrollY,
+          left: window.scrollX,
+        }
     const { offsetWidth, offsetHeight } = portalRef.current
 
     setRect(
