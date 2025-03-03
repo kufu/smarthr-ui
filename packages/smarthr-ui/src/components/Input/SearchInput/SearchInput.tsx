@@ -8,10 +8,13 @@ import { InputWithTooltip } from '../InputWithTooltip'
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
   tooltipMessage: React.ReactNode
-  decorators?: DecoratorsType<'iconAlt'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const ICON_ALT = '検索'
+const DECORATOR_DEFAULT_TEXTS = {
+  iconAlt: '検索',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({
   slots: {
@@ -30,7 +33,7 @@ const classNameGenerator = tv({
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ decorators, width, className, ...rest }, ref) => {
-    const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
     const labelStyle = useMemo(
       () => ({
         width: typeof width === 'number' ? `${width}px` : width,
@@ -52,7 +55,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
+          prefix={<FaMagnifyingGlassIcon alt={decorated.iconAlt} color="TEXT_GREY" />}
           className={classNames.input}
         />
       </label>
