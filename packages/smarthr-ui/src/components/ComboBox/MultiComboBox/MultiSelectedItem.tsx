@@ -1,12 +1,20 @@
-import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  PropsWithChildren,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
+import { Tooltip } from '../../Tooltip'
 import { ComboBoxItem } from '../types'
-
-import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }
@@ -14,12 +22,13 @@ export type Props<T> = {
   onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
-  decorators?: {
-    destroyButtonIconAlt?: (text: string) => string
-  }
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const DESTROY_BUTTON_TEXT = '削除'
+const DECORATOR_DEFAULT_TEXTS = {
+  destroyButtonIconAlt: '削除',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const multiSelectedItem = tv({
   slots: {
@@ -58,69 +67,123 @@ export function MultiSelectedItem<T>({
   buttonRef,
   decorators,
 }: Props<T>) {
-  const labelRef = useRef<HTMLDivElement>(null)
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
 
-  const actualOnDelete = useCallback(() => {
-    if (onDelete) {
-      onDelete(item)
+  const classNames = useMemo(() => {
+    const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
+
+    return {
+      wrapper: wrapper(),
+      itemLabel: itemLabel({ enableEllipsis }),
+      deleteButton: deleteButton({ disabled }),
+      deleteButtonIcon: deleteButtonIcon(),
     }
-  }, [item, onDelete])
+  }, [disabled, enableEllipsis])
+
+  const body = (
+    <Chip disabled={disabled} className={classNames.wrapper}>
+      <ItemLabel className={classNames.itemLabel} setNeedsTooltip={setNeedsTooltip}>
+        {item.label}
+      </ItemLabel>
+
+      {deletable && (
+        <DestroyButton
+          item={item}
+          onDelete={onDelete}
+          disabled={disabled}
+          buttonRef={buttonRef}
+          decorators={decorators}
+          className={classNames.deleteButton}
+          iconStyle={classNames.deleteButtonIcon}
+        />
+      )}
+    </Chip>
+  )
+
+  if (needsTooltip) {
+    return (
+      <Tooltip message={item.label} multiLine={true}>
+        {body}
+      </Tooltip>
+    )
+  }
+
+  return body
+}
+
+const ItemLabel = React.memo<
+  PropsWithChildren<{
+    enableEllipsis?: boolean
+    setNeedsTooltip: (flg: boolean) => void
+    className: string
+  }>
+>(({ children, enableEllipsis, setNeedsTooltip, className }) => {
+  const labelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const elem = labelRef.current
-    if (!elem || !enableEllipsis) {
-      return
-    }
-    if (elem.offsetWidth < elem.scrollWidth) {
-      setNeedsTooltip(true)
-    }
-  }, [enableEllipsis])
+    if (enableEllipsis && labelRef.current) {
+      const elem = labelRef.current
 
-  const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
-  const { wrapperStyle, itemLabelStyle, deleteButtonStyle, deleteButtonIconStyle } = useMemo(
-    () => ({
-      wrapperStyle: wrapper(),
-      itemLabelStyle: itemLabel({ enableEllipsis }),
-      deleteButtonStyle: deleteButton({ disabled }),
-      deleteButtonIconStyle: deleteButtonIcon(),
-    }),
-    [deleteButton, deleteButtonIcon, disabled, enableEllipsis, itemLabel, wrapper],
-  )
+      setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
+    }
+  }, [enableEllipsis, setNeedsTooltip])
 
   return (
-    <MultiSelectedItemTooltip needsTooltip={needsTooltip} text={item.label}>
-      <Chip disabled={disabled} className={wrapperStyle}>
-        <span className={itemLabelStyle} ref={labelRef}>
-          {item.label}
-        </span>
+    <span className={className} ref={labelRef}>
+      {children}
+    </span>
+  )
+})
 
-        {deletable && (
-          <UnstyledButton
-            className={deleteButtonStyle}
-            disabled={disabled}
-            onClick={actualOnDelete}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === 'Backspace' || e.key === ' ') {
-                e.stopPropagation()
+const typedMemo: <T>(c: T) => T = React.memo
+const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
-                // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
-                // このタイミングで明示的に削除処理を実行する
-                actualOnDelete()
-              }
-            }}
-            ref={buttonRef}
-            tabIndex={-1}
-          >
-            <FaTimesCircleIcon
-              color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-              alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
-              className={deleteButtonIconStyle}
-            />
-          </UnstyledButton>
-        )}
-      </Chip>
-    </MultiSelectedItemTooltip>
+const BaseDestroyButton = <T,>({
+  item,
+  onDelete,
+  disabled,
+  buttonRef,
+  decorators,
+  className,
+  iconStyle,
+}: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'buttonRef' | 'decorators'> & {
+  className: string
+  iconStyle: string
+}) => {
+  const onClick = useCallback(() => {
+    onDelete(item)
+  }, [item, onDelete])
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (EXEC_DESTROY_KEY.test(e.key)) {
+        e.stopPropagation()
+
+        // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+        // このタイミングで明示的に削除処理を実行する
+        onClick()
+      }
+    },
+    [onClick],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
+  return (
+    <UnstyledButton
+      disabled={disabled}
+      tabIndex={-1}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      ref={buttonRef}
+      className={className}
+    >
+      <FaTimesCircleIcon
+        color={disabled ? 'TEXT_DISABLED' : 'inherit'}
+        alt={decorated.destroyButtonIconAlt}
+        className={iconStyle}
+      />
+    </UnstyledButton>
   )
 }
+const DestroyButton = typedMemo(BaseDestroyButton)
