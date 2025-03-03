@@ -11,9 +11,9 @@ export type ResponseStatus =
       status: 'processing'
     }
 
-export const useResponseStatus = (responseMessage: ResponseStatus | undefined) => {
+export const useResponseStatus = (responseStatus: ResponseStatus | undefined) => {
   const calculated = useMemo(() => {
-    if (!responseMessage) {
+    if (!responseStatus) {
       return {
         isProcessing: false,
         status: undefined,
@@ -21,7 +21,7 @@ export const useResponseStatus = (responseMessage: ResponseStatus | undefined) =
       }
     }
 
-    if (responseMessage.status === 'processing') {
+    if (responseStatus.status === 'processing') {
       return {
         isProcessing: true,
         status: undefined,
@@ -33,10 +33,10 @@ export const useResponseStatus = (responseMessage: ResponseStatus | undefined) =
       isProcessing: false,
       // HINT: statusがprocessingではない === success or errorであることが確定する
       // success or error の場合、text属性も必ず存在する
-      status: responseMessage.status,
-      message: responseMessage.text,
+      status: responseStatus.status,
+      message: responseStatus.text,
     }
-  }, [responseMessage])
+  }, [responseStatus])
 
   return calculated
 }
