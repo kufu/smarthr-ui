@@ -37,7 +37,7 @@
     "@storybook/react-webpack5": "^8.6.3",
     "@storybook/source-loader": "^8.6.3",
     "@storybook/test": "^8.6.3",
-    "@storybook/test-runner": "^0.21.3",
+    "@storybook/test-runner": "^0.22.0",
     "@storybook/theming": "^8.6.3",
     "@swc/core": "^1.11.5",
     "@testing-library/jest-dom": "^6.6.3",

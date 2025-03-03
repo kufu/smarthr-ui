@@ -167,8 +167,8 @@ importers:
         specifier: ^8.6.3
         version: 8.6.3(storybook@8.6.3(prettier@3.5.3))
       '@storybook/test-runner':
-        specifier: ^0.21.3
-        version: 0.21.3(@swc/helpers@0.5.15)(@types/node@20.17.22)(storybook@8.6.3(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.5(@swc/helpers@0.5.15))(@types/node@20.17.22)(typescript@5.8.2))
+        specifier: ^0.22.0
+        version: 0.22.0(@swc/helpers@0.5.15)(@types/node@20.17.22)(storybook@8.6.3(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.5(@swc/helpers@0.5.15))(@types/node@20.17.22)(typescript@5.8.2))
       '@storybook/theming':
         specifier: ^8.6.3
         version: 8.6.3(storybook@8.6.3(prettier@3.5.3))
@@ -2121,12 +2121,12 @@ packages:
     peerDependencies:
       storybook: ^8.6.3
 
-  '@storybook/test-runner@0.21.3':
-    resolution: {integrity: sha512-tsorR0IVYElcaTZrT/ZrH/8YDw7c+wrLDN0e3qj1WdbqU8l2IU4+a32HLXaakzdDpuTn+d8xCk4VZMlzMrmToA==}
+  '@storybook/test-runner@0.22.0':
+    resolution: {integrity: sha512-fKY6MTE/bcvMaulKXy+z0fPmRXJx1REkYMOMcGn8zn6uffyBigGgaVf/sZ+AZfibwvjzg/StWhJ9HvAM8pc14g==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
-      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+      storybook: ^0.0.0-0 || ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0 || ^9.0.0-0
 
   '@storybook/test@8.6.3':
     resolution: {integrity: sha512-UimvhV/PmYoXCwIbGpkyqQfMhjdH2GaHJbV6BWr7M7BHA3kUS6zYJAm2V2CC5SYcmyj7FejLB4tgL7FmLXB6hA==}
@@ -9519,7 +9519,7 @@ snapshots:
       prettier: 3.5.3
       storybook: 8.6.3(prettier@3.5.3)
 
-  '@storybook/test-runner@0.21.3(@swc/helpers@0.5.15)(@types/node@20.17.22)(storybook@8.6.3(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.5(@swc/helpers@0.5.15))(@types/node@20.17.22)(typescript@5.8.2))':
+  '@storybook/test-runner@0.22.0(@swc/helpers@0.5.15)(@types/node@20.17.22)(storybook@8.6.3(prettier@3.5.3))(ts-node@10.9.2(@swc/core@1.11.5(@swc/helpers@0.5.15))(@types/node@20.17.22)(typescript@5.8.2))':
     dependencies:
       '@babel/core': 7.26.9
       '@babel/generator': 7.26.9
