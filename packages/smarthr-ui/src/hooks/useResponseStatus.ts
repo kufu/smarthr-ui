@@ -1,16 +1,17 @@
 import { ReactNode, useMemo } from 'react'
 
-export type ResponseMessageTypeWithoutProcessing = {
+export type ResponseStatusWithoutProcessing = {
   status: 'success' | 'error'
   text: ReactNode
 }
-export type ResponseMessageType =
-  | ResponseMessageTypeWithoutProcessing
+
+export type ResponseStatus =
+  | ResponseStatusWithoutProcessing
   | {
       status: 'processing'
     }
 
-export const useResponseMessage = (responseMessage: ResponseMessageType | undefined) => {
+export const useResponseStatus = (responseMessage: ResponseStatus | undefined) => {
   const calculated = useMemo(() => {
     if (!responseMessage) {
       return {
