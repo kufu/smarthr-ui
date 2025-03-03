@@ -1,8 +1,10 @@
 'use client'
 
 import React, {
-  FC,
-  PropsWithChildren,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -21,7 +23,7 @@ import { ResponseMessage } from '../ResponseMessage'
 
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
-  title: React.ReactNode
+  title: ReactNode
   /**
    * @deprecated titleTagは非推奨です
    */
@@ -33,14 +35,14 @@ type AbstractProps = PropsWithChildren<{
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
 }> &
-  VariantProps<typeof informationPanel>
+  VariantProps<typeof classNameGenerator>
 
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
 const OPEN_BUTTON_LABEL = '開く'
 const CLOSE_BUTTON_LABEL = '閉じる'
 
-export const informationPanel = tv({
+export const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: 'shr-p-1.5',
@@ -132,13 +134,13 @@ export const InformationPanel: FC<Props> = ({
     setActive(activeProps)
   }, [activeProps])
 
-  const styles = useMemo(() => {
-    const withActive = informationPanel({
+  const classNames = useMemo(() => {
+    const withActive = classNameGenerator({
       type,
       active: true,
       bold,
     })
-    const withInactive = informationPanel({
+    const withInactive = classNameGenerator({
       type,
       active: false,
       bold,
@@ -164,7 +166,7 @@ export const InformationPanel: FC<Props> = ({
     }
   }, [bold, type, className])
 
-  const currentStyles = styles[active ? 'active' : 'inactive']
+  const currentStyles = classNames[active ? 'active' : 'inactive']
 
   return (
     <Base {...props} overflow="hidden" as="section" className={currentStyles.wrapper}>
@@ -191,7 +193,7 @@ export const InformationPanel: FC<Props> = ({
   )
 }
 
-const MemoizedHeading = React.memo<
+const MemoizedHeading = memo<
   Pick<Props, 'type'> & {
     tag: Props['titleTag']
     id: string
@@ -206,7 +208,7 @@ const MemoizedHeading = React.memo<
   </Heading>
 ))
 
-const TogglableButton: React.FC<
+const TogglableButton: FC<
   Pick<Props, 'onClickTrigger' | 'decorators'> & {
     active: boolean
     setActive: (flg: boolean) => void
