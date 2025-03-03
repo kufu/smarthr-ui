@@ -1,12 +1,19 @@
 'use client'
 
-import React, { ReactElement, forwardRef, useMemo } from 'react'
+import React, {
+  CSSProperties,
+  ComponentPropsWithRef,
+  type ComponentType,
+  PropsWithChildren,
+  type ReactElement,
+  forwardRef,
+  useMemo,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type { CSSProperties, ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 const classNameGenerator = tv({
   base: ['shr-flex shr-flex-wrap', 'empty:shr-gap-0'],
@@ -70,7 +77,7 @@ const classNameGenerator = tv({
     } as { [key in Gap]: string },
   },
 })
-const sidebarItem = tv({
+const itemClassNameGenerator = tv({
   slots: {
     firstItem: '',
     lastItem: '',
@@ -90,9 +97,9 @@ const sidebarItem = tv({
 })
 
 type Props = Omit<VariantProps<typeof classNameGenerator>, 'rowGap' | 'columnGap'> &
-  VariantProps<typeof sidebarItem> &
+  VariantProps<typeof itemClassNameGenerator> &
   PropsWithChildren<{
-    as?: string | React.ComponentType<any>
+    as?: string | ComponentType<any>
     /** コンポーネントの `min-width` 値 */
     contentsMinWidth?: CSSProperties['minWidth']
     /** 各領域の間隔の指定（gap） */
@@ -129,23 +136,31 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       () => classNameGenerator({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
       [align, gaps.row, gaps.column, className],
     )
-    const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
-      const { firstItem, lastItem } = sidebarItem({ right })
+    const { lastItemStyleProps } = useMemo(() => {
+      const { firstItem, lastItem } = itemClassNameGenerator({ right })
+
+      return {
+        firstItem: firstItem(),
+        lastItem: lastItem(),
+      }
+    }, [right])
+    const styles = useMemo(() => {
       const styleProps = {
         minWidth: contentsMinWidth,
       }
 
-      return {
-        firstItemStyleProps: {
-          className: firstItem(),
-          style: right ? styleProps : undefined,
-        },
-        lastItemStyleProps: {
-          className: lastItem(),
-          style: right ? undefined : styleProps,
-        },
+      if (right) {
+        return {
+          firstItem: styleProps,
+          lastItem: undefined,
+        }
       }
-    }, [contentsMinWidth, right])
+
+      return {
+        firstItem: undefined,
+        lastItem: styleProps,
+      }
+    }, [right, contentsMinWidth])
 
     // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
     const maxChildrenIndex = React.Children.count(children) - 1
@@ -155,13 +170,13 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
 
         if (i === 0) {
           return React.cloneElement(child as ReactElement, {
-            className: `${firstItemStyleProps.className} ${childClassName}`,
-            style: { ...firstItemStyleProps.style, ...child.props.style },
+            className: `${classNames.firstItem} ${childClassName}`,
+            style: { ...styles.firstItem, ...child.props.style },
           })
         } else if (i === maxChildrenIndex) {
           return React.cloneElement(child as ReactElement, {
-            className: `${lastItemStyleProps.className} ${childClassName}`,
-            style: { ...lastItemStyleProps.style, ...child.props.style },
+            className: `${classNames.lastItem} ${childClassName}`,
+            style: { ...styles.lastItem, ...child.props.style },
           })
         }
       }

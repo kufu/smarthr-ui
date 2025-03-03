@@ -1,10 +1,10 @@
 'use client'
 
 import React, {
-  ComponentPropsWithRef,
-  FocusEvent,
-  ReactNode,
-  WheelEvent,
+  type ComponentPropsWithRef,
+  type FocusEvent,
+  type ReactNode,
+  type WheelEvent,
   forwardRef,
   useCallback,
   useEffect,
@@ -48,7 +48,7 @@ export const bgColors = {
   ACTION_BACKGROUND: 'action-background',
 } as const
 
-const wrapper = tv({
+const wrapperClassNameGenerator = tv({
   base: [
     'smarthr-ui-Input',
     'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
@@ -65,7 +65,7 @@ const wrapper = tv({
     },
   },
 })
-const inner = tv({
+const innerClassNameGenerator = tv({
   slots: {
     input: [
       'smarthr-ui-Input-input',
@@ -132,23 +132,23 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       }
     }, [autoFocus])
 
-    const wrapperStyleProps = useMemo(() => {
-      const wrapperStyle = wrapper({ disabled, readOnly, className })
+    const wrapperClassName = useMemo(
+      () => wrapperClassNameGenerator({ disabled, readOnly, className }),
+      [disabled, readOnly, className],
+    )
+    const wrapperStyle = useMemo(() => {
       const color = bgColor
         ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
         : undefined
 
       return {
-        className: wrapperStyle,
-        style: {
-          borderColor: color,
-          backgroundColor: color,
-          width: typeof width === 'number' ? `${width}px` : width,
-        },
+        borderColor: color,
+        backgroundColor: color,
+        width: typeof width === 'number' ? `${width}px` : width,
       }
-    }, [bgColor, className, disabled, readOnly, width])
-    const innerStyleProps = useMemo(() => {
-      const { input, affix } = inner()
+    }, [bgColor, width])
+    const innerClassNames = useMemo(() => {
+      const { input, affix } = innerClassNameGenerator()
 
       return {
         input: input(),
@@ -158,8 +158,13 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     }, [])
 
     return (
-      <span {...wrapperStyleProps} onClick={onClickFocus} role="presentation">
-        {prefix && <span className={innerStyleProps.prefix}>{prefix}</span>}
+      <span
+        onClick={onClickFocus}
+        role="presentation"
+        className={wrapperClassName}
+        style={wrapperStyle}
+      >
+        {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
         <input
           {...props}
           data-smarthr-ui-input="true"
@@ -170,9 +175,9 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
           readOnly={readOnly}
           ref={innerRef}
           aria-invalid={error || undefined}
-          className={innerStyleProps.input}
+          className={innerClassNames.input}
         />
-        {suffix && <span className={innerStyleProps.suffix}>{suffix}</span>}
+        {suffix && <span className={innerClassNames.suffix}>{suffix}</span>}
       </span>
     )
   },
