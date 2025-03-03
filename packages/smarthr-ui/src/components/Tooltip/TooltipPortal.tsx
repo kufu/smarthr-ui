@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import React, { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Balloon } from '../Balloon'
@@ -67,6 +67,7 @@ export const TooltipPortal: FC<Props> = ({
       const requiredHeight = offsetHeight + outerMargin
       const topSpace = parentRect.top
       const bottomSpace = window.innerHeight - parentRect.bottom
+
       setActualVertical(() => {
         if (topSpace > requiredHeight) {
           return 'bottom'
@@ -125,33 +126,40 @@ export const TooltipPortal: FC<Props> = ({
     )
   }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
 
-  const { containerStyleProps, balloonStyle, balloonTextStyle } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { container, balloon, balloonText } = classNameGenerator()
 
     return {
-      containerStyleProps: {
-        className: container(),
-        style: {
-          top: rect.top,
-          left: rect.left,
-          width: rect.$width > 0 ? `${rect.$width}px` : undefined,
-          height: rect.$height > 0 ? `${rect.$height}px` : undefined,
-          maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
-        },
-      },
-      balloonStyle: balloon({ isMultiLine }),
-      balloonTextStyle: balloonText(),
+      container: container(),
+      balloon: balloon({ isMultiLine }),
+      balloonText: balloonText(),
     }
-  }, [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top])
+  }, [isMultiLine])
+  const containerStyle = useMemo(
+    () => ({
+      top: rect.top,
+      left: rect.left,
+      width: rect.$width > 0 ? `${rect.$width}px` : undefined,
+      height: rect.$height > 0 ? `${rect.$height}px` : undefined,
+      maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
+    }),
+    [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top],
+  )
 
   return (
-    <div {...containerStyleProps} ref={portalRef} role="tooltip" aria-hidden={!isVisible}>
+    <div
+      ref={portalRef}
+      role="tooltip"
+      aria-hidden={!isVisible}
+      className={classNames.container}
+      style={containerStyle}
+    >
       <Balloon
         horizontal={actualHorizontal || 'left'}
         vertical={actualVertical || 'bottom'}
-        className={balloonStyle}
+        className={classNames.balloon}
       >
-        <div className={balloonTextStyle}>{message}</div>
+        <div className={classNames.balloonText}>{message}</div>
       </Balloon>
     </div>
   )
