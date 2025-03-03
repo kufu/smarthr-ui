@@ -1,5 +1,5 @@
 import React, {
-  PropsWithChildren,
+  type PropsWithChildren,
   forwardRef,
   useImperativeHandle,
   useMemo,
@@ -17,7 +17,7 @@ type Props = PropsWithChildren<{
   inputRect: DOMRect
 }>
 
-const portal = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none',
 })
 
@@ -38,9 +38,9 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }
     }
   }, [inputRect, isPortalRootMounted])
 
-  const style = useMemo(() => portal(), [])
+  const className = useMemo(() => classNameGenerator(), [])
 
-  const styleAttr = useMemo(
+  const style = useMemo(
     () => ({
       top: `${position.top}px`,
       left: `${position.left}px`,
@@ -48,5 +48,5 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }
     [position.left, position.top],
   )
 
-  return createPortal(<div {...props} ref={containerRef} className={style} style={styleAttr} />)
+  return createPortal(<div {...props} ref={containerRef} className={className} style={style} />)
 })
