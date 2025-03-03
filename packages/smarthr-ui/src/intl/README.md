@@ -13,7 +13,7 @@ import { useIntl } from 'smarthr-ui'
 
 const Component = () => {
   const { localize } = useIntl();
-  return <span>{intl.({ id: 'smarthr-ui/common/language', defaultText="日本語" })}</span>;
+  return <span>{localize({ id: 'smarthr-ui/common/language', defaultText="日本語" })}</span>;
 };
 ```
 
