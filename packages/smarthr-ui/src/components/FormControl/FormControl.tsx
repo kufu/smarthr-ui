@@ -3,8 +3,11 @@
 import React, {
   type ComponentProps,
   type ComponentPropsWithoutRef,
+  type ComponentType,
+  type FC,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -52,11 +55,11 @@ type Props = PropsWithChildren<{
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  as?: string | React.ComponentType<any>
+  as?: string | ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
 
-const formGroup = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-FormControl',
@@ -79,7 +82,7 @@ const formGroup = tv({
 // FormControltとの差をわかりやすくしている
 // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
 // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-const childrenWrapper = tv({
+const childrenWrapperClassNameGenerator = tv({
   variants: {
     innerMargin: {
       0: '',
@@ -126,7 +129,7 @@ const childrenWrapper = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: React.FC<Props & ElementProps> = ({
+export const ActualFormControl: FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
   subActionArea,
@@ -185,22 +188,21 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, underTitleStackStyle } =
-    useMemo(() => {
-      const { wrapper, label, errorList, errorIcon, underTitleStack } = formGroup()
+  const classNames = useMemo(() => {
+    const { wrapper, label, errorList, errorIcon, underTitleStack } = classNameGenerator()
 
-      return {
-        wrapperStyle: wrapper({ className }),
-        labelStyle: label({
-          className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
-        }),
-        errorListStyle: errorList(),
-        errorIconStyle: errorIcon(),
-        underTitleStackStyle: underTitleStack(),
-      }
-    }, [dangerouslyTitleHidden, className])
-  const childrenWrapperStyle = useMemo(
-    () => childrenWrapper({ innerMargin, isFieldset }),
+    return {
+      wrapper: wrapper({ className }),
+      label: label({
+        className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
+      }),
+      errorList: errorList(),
+      errorIcon: errorIcon(),
+      underTitleStack: underTitleStack(),
+    }
+  }, [dangerouslyTitleHidden, className])
+  const childrenWrapperClassName = useMemo(
+    () => childrenWrapperClassNameGenerator({ innerMargin, isFieldset }),
     [innerMargin, isFieldset],
   )
 
@@ -290,10 +292,9 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       <ErrorMessageList
         errorMessages={actualErrorMessages}
         managedHtmlFor={managedHtmlFor}
-        errorListStyle={errorListStyle}
-        errorIconStyle={errorIconStyle}
+        classNames={classNames}
       />
-      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
+      <div className={childrenWrapperClassName} ref={inputWrapperRef}>
         {children}
       </div>
       <SupplementaryMessageText
@@ -309,7 +310,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   if (dangerouslyTitleHidden) {
     body = (
       // eslint-disable-next-line smarthr/best-practice-for-layouts
-      <Stack gap={innerMargin} className={underTitleStackStyle}>
+      <Stack gap={innerMargin} className={classNames.underTitleStack}>
         {body}
       </Stack>
     )
@@ -321,13 +322,13 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       as={as}
       gap={innerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
-      className={wrapperStyle}
+      className={classNames.wrapper}
     >
       <TitleCluster
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        labelStyle={labelStyle}
+        className={classNames.label}
         dangerouslyTitleHidden={dangerouslyTitleHidden}
         titleType={titleType}
         title={title}
@@ -339,26 +340,26 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   )
 }
 
-const TitleCluster = React.memo<
+const TitleCluster = memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
     statusLabelList: StatusLabelProps[]
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
-    labelStyle: string
+    className: string
   }
 >(
   ({
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    labelStyle,
     dangerouslyTitleHidden,
     titleType,
     title,
     statusLabelList,
     subActionArea,
+    className,
   }) => {
     const body = (
       <>
@@ -425,7 +426,7 @@ const TitleCluster = React.memo<
             className="[&&&]:shr--mt-0"
           >
             {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-            <Cluster {...attrs.label} align="center" className={labelStyle}>
+            <Cluster {...attrs.label} align="center" className={className}>
               {body}
             </Cluster>
             {subActionArea && <div className="shr-grow">{subActionArea}</div>}
@@ -436,7 +437,7 @@ const TitleCluster = React.memo<
   },
 )
 
-const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
+const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
   ({ helpMessage, managedHtmlFor }) =>
     helpMessage ? (
       <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
@@ -445,7 +446,7 @@ const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHt
     ) : null,
 )
 
-const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
+const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
   ({ exampleMessage, managedHtmlFor }) =>
     exampleMessage ? (
       <Text
@@ -460,24 +461,23 @@ const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedH
     ) : null,
 )
 
-const ErrorMessageList = React.memo<{
+const ErrorMessageList = memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
-  errorListStyle: string
-  errorIconStyle: string
-}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) =>
+  classNames: { errorList: string; errorIcon: string }
+}>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
+    <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <FaCircleExclamationIcon text={message} className={errorIconStyle} />
+          <FaCircleExclamationIcon text={message} className={classNames.errorIcon} />
         </p>
       ))}
     </div>
   ) : null,
 )
 
-const SupplementaryMessageText = React.memo<
+const SupplementaryMessageText = memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
 >(({ supplementaryMessage, managedHtmlFor }) =>
   supplementaryMessage ? (
@@ -493,5 +493,4 @@ const SupplementaryMessageText = React.memo<
   ) : null,
 )
 
-export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
-  ActualFormControl
+export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl
