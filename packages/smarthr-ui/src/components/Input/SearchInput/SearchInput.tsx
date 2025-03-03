@@ -1,4 +1,4 @@
-import React, { ComponentProps, forwardRef, useMemo } from 'react'
+import React, { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
@@ -13,7 +13,7 @@ type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'p
 
 const ICON_ALT = '検索'
 
-const searchInput = tv({
+const classNameGenerator = tv({
   slots: {
     label: 'shr-inline-block',
     input: '',
@@ -31,21 +31,29 @@ const searchInput = tv({
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ decorators, width, className, ...rest }, ref) => {
     const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
-    const labelStyleAttr = useMemo(
+    const labelStyle = useMemo(
       () => ({
         width: typeof width === 'number' ? `${width}px` : width,
       }),
       [width],
     )
-    const { label, input } = searchInput({ existsWidth: !!labelStyleAttr.width })
+    const existsWidth = !!labelStyle.width
+    const classNames = useMemo(() => {
+      const { label, input } = classNameGenerator({ existsWidth })
+
+      return {
+        label: label({ className }),
+        input: input(),
+      }
+    }, [existsWidth, className])
 
     return (
-      <label className={label({ className })} style={labelStyleAttr}>
+      <label className={classNames.label} style={labelStyle}>
         <InputWithTooltip
           {...rest}
           ref={ref}
           prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
-          className={input()}
+          className={classNames.input}
         />
       </label>
     )
