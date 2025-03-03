@@ -58,10 +58,13 @@ type DropZoneProps = PropsWithChildren<{
   multiple?: boolean
   name?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'selectButtonLabel'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }>
 
-const SELECT_BUTTON_LABEL = 'ファイルを選択'
+const DECORATOR_DEFAULT_TEXTS = {
+  selectButtonLabel: 'ファイルを選択',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -150,14 +153,11 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 
 const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
   ({ onClick, decorators }) => {
-    const selectButtonLabel = useMemo(
-      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
-      [decorators],
-    )
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     return (
       <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
-        {selectButtonLabel}
+        {decorated.selectButtonLabel}
       </Button>
     )
   },
