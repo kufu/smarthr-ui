@@ -1,6 +1,6 @@
 import { tv } from 'tailwind-variants'
 
-export const sortDropdownStyle = tv({
+export const baseClassNameGenerator = tv({
   slots: {
     body: 'shr-p-1.5',
     select: 'shr-min-w-[16em]',

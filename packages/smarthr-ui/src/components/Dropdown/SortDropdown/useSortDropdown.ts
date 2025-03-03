@@ -11,7 +11,7 @@ import {
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import { SortDropdown } from './SortDropdown'
-import { sortDropdownStyle } from './style'
+import { baseClassNameGenerator } from './style'
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
@@ -114,7 +114,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   }, [])
 
   const classNames = useMemo(() => {
-    const { body, select, footer } = sortDropdownStyle()
+    const { body, select, footer } = baseClassNameGenerator()
 
     return {
       body: body(),

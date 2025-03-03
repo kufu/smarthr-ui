@@ -1,7 +1,14 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, ReactNode } from 'react'
-import { type FC, type MouseEventHandler } from 'react'
+import React, {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEventHandler,
+  type OptionHTMLAttributes,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+} from 'react'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
@@ -19,7 +26,7 @@ import { useSortDropdown } from './useSortDropdown'
 
 type SortFieldType = {
   value: string
-} & Omit<React.OptionHTMLAttributes<HTMLOptionElement>, 'value'>
+} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
 
 type ArgsOnApply = {
   field: string
@@ -120,7 +127,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
   )
 }
 
-const Footer = React.memo<
+const Footer = memo<
   Pick<Props, 'onCancel'> & {
     className: string
     cancelButtonLabel: ReactNode
@@ -133,7 +140,7 @@ const Footer = React.memo<
   </Cluster>
 ))
 
-const CancelButton = React.memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
+const CancelButton = memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
   ({ onClick, children }) => (
     <DropdownCloser>
       <Button onClick={onClick}>{children}</Button>
@@ -141,7 +148,7 @@ const CancelButton = React.memo<PropsWithChildren<{ onClick: Props['onCancel'] }
   ),
 )
 
-const ApplyButton = React.memo<PropsWithChildren>(({ children }) => (
+const ApplyButton = memo<PropsWithChildren>(({ children }) => (
   <DropdownCloser>
     <Button type="submit" variant="primary">
       {children}
