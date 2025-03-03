@@ -65,11 +65,11 @@ type BaseComponentProps = {
 }
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
-const icon = tv({
+const iconClassNameGenerator = tv({
   base: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
 })
 
-const wrapper = tv({
+const wrapperClassNameGenerator = tv({
   base: ['smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline'],
   variants: {
     gap: {
@@ -140,8 +140,8 @@ export const generateIcon = (SvgIcon: IconType) => {
         return undefined
       }, [ariaHidden, alt, ariaLabel, ariaLabelledby])
 
-      const iconStyle = useMemo(() => icon({ className }), [className])
-      const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
+      const iconClassName = useMemo(() => iconClassNameGenerator({ className }), [className])
+      const wrapperClassName = useMemo(() => wrapperClassNameGenerator({ gap: iconGap }), [iconGap])
 
       const replacedColor = useMemo(() => {
         if (color && existsColor(color)) {
@@ -169,7 +169,7 @@ export const generateIcon = (SvgIcon: IconType) => {
           width={iconSize}
           height={iconSize}
           color={replacedColor}
-          className={iconStyle}
+          className={iconClassName}
           role={role}
           aria-hidden={actualAriaHidden}
           aria-label={ariaLabel}
@@ -181,7 +181,7 @@ export const generateIcon = (SvgIcon: IconType) => {
 
       if (text) {
         return (
-          <span className={wrapperStyle}>
+          <span className={wrapperClassName}>
             {right && text}
             {visuallyHiddenAlt}
             {svgIcon}
