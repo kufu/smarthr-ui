@@ -37,13 +37,13 @@ type Props = PropsWithChildren<ComponentProps<'div'>> & {
   tooltip?: { message: ReactNode; show?: boolean }
 }
 
-const wrapper = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Dropdown shr-inline-block',
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
-  const styles = useMemo(() => wrapper({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
     if (!triggerElementRef.current) {
@@ -62,7 +62,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   let foundFirstElement = false
 
   return (
-    <div ref={triggerElementRef} className={styles}>
+    <div ref={triggerElementRef} className={actualClassName}>
       <ConditionalWrapper
         shouldWrapContent={tooltip?.show}
         wrapper={({ children: currentChildren }) => (
