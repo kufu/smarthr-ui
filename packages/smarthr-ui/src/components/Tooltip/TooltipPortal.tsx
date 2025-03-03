@@ -16,7 +16,7 @@ type Props = {
   fullscreenElement: Element | null
 }
 
-const tooltipPortal = tv({
+const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
     balloon: '',
@@ -60,6 +60,7 @@ export const TooltipPortal: FC<Props> = ({
     if (!portalRef.current || !parentRect) {
       return
     }
+
     const { offsetWidth, offsetHeight } = portalRef.current
 
     if (vertical === 'auto') {
@@ -84,6 +85,7 @@ export const TooltipPortal: FC<Props> = ({
         vertical === 'middle'
           ? window.innerWidth - parentRect.right
           : window.innerWidth - parentRect.left
+
       setActualHorizontal(() => {
         if (rightSpace > requiredWidth) {
           return 'left'
@@ -103,6 +105,7 @@ export const TooltipPortal: FC<Props> = ({
     const scrollOffsetTop = fullscreenElement ? fullscreenElement.scrollTop : window.scrollY
     const scrollOffsetLeft = fullscreenElement ? fullscreenElement.scrollLeft : window.scrollX
     const { offsetWidth, offsetHeight } = portalRef.current
+
     setRect(
       getTooltipRect({
         parentRect,
@@ -123,7 +126,8 @@ export const TooltipPortal: FC<Props> = ({
   }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
 
   const { containerStyleProps, balloonStyle, balloonTextStyle } = useMemo(() => {
-    const { container, balloon, balloonText } = tooltipPortal()
+    const { container, balloon, balloonText } = classNameGenerator()
+
     return {
       containerStyleProps: {
         className: container(),
