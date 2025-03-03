@@ -17,7 +17,7 @@ export type AppNaviDropdownProps = PropsWithChildren<{
   displayCaret?: boolean
 }>
 
-const appNaviDropdown = tv({
+const classNameGenerator = tv({
   extend: appNaviItemStyle,
   variants: {
     displayCaret: {
@@ -35,27 +35,27 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   children,
   dropdownContent,
   icon: Icon,
-  current = false,
+  current,
   displayCaret,
 }) => {
-  const { wrapperStyle, iconStyle } = useMemo(() => {
-    const { wrapper, icon } = appNaviDropdown({ active: current, displayCaret })
+  const classNames = useMemo(() => {
+    const { wrapper, icon } = classNameGenerator({ active: current, displayCaret })
+
     return {
-      wrapperStyle: wrapper(),
-      iconStyle: icon(),
+      wrapper: wrapper(),
+      icon: icon(),
     }
   }, [current, displayCaret])
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <UnstyledButton aria-current={current ? 'page' : undefined} className={wrapperStyle}>
-          {Icon && <Icon className={iconStyle} />}
+        <UnstyledButton aria-current={current ? 'page' : undefined} className={classNames.wrapper}>
+          {Icon && <Icon className={classNames.icon} />}
           {children}
           {displayCaret && <FaCaretDownIcon />}
         </UnstyledButton>
       </DropdownTrigger>
-
       <DropdownContent>{dropdownContent}</DropdownContent>
     </Dropdown>
   )

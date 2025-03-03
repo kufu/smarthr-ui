@@ -38,7 +38,6 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
 
   return (
     <Dropdown>
-      {}
       <DropdownTrigger>
         <button type="button" className={tenantDropdownTriggerButton()}>
           {tenantName}
