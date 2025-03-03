@@ -1,13 +1,13 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  ComponentPropsWithRef,
-  ComponentType,
-  FC,
-  FunctionComponentElement,
-  MouseEventHandler,
-  ReactNode,
+  type ComponentProps,
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type FC,
+  type FunctionComponentElement,
+  type MouseEventHandler,
+  type ReactNode,
   useEffect,
   useMemo,
 } from 'react'
@@ -50,7 +50,7 @@ type Props = {
   zIndex?: number
 }
 
-const bottomFixedArea = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-BottomFixedArea',
@@ -78,20 +78,22 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const { wrapperStyleProps, tertiaryButtonStyle } = useMemo(() => {
-    const { wrapper, tertiaryButton } = bottomFixedArea()
+  const classNames = useMemo(() => {
+    const { wrapper, tertiaryButton } = classNameGenerator()
+
     return {
-      wrapperStyleProps: { className: wrapper({ className }), style: { zIndex } },
-      tertiaryButtonStyle: tertiaryButton(),
+      wrapper: wrapper({ className }),
+      tertiaryButton: tertiaryButton(),
     }
-  }, [className, zIndex])
+  }, [className])
+  const style = useMemo(() => ({ zIndex }), [zIndex])
 
   useEffect(() => {
     validateElement(primaryButton, secondaryButton)
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base {...props} {...wrapperStyleProps}>
+    <Base {...props} className={classNames.wrapper} style={style}>
       <Stack>
         {description && <p className="smarthr-ui-BottomFixedArea-description">{description}</p>}
         <Stack gap={0.25}>
@@ -114,7 +116,7 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
                     variant="text"
                     prefix={Icon && <Icon />}
                     onClick={onClick}
-                    className={tertiaryButtonStyle}
+                    className={classNames.tertiaryButton}
                   >
                     {text}
                   </Button>
