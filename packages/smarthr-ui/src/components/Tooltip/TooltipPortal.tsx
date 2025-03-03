@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import React, { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Balloon } from '../Balloon'
@@ -16,7 +16,7 @@ type Props = {
   fullscreenElement: Element | null
 }
 
-const tooltipPortal = tv({
+const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
     balloon: '',
@@ -30,6 +30,8 @@ const tooltipPortal = tv({
     },
   },
 })
+
+const OUTER_MARGIN = 10
 
 export const TooltipPortal: FC<Props> = ({
   message,
@@ -55,17 +57,18 @@ export const TooltipPortal: FC<Props> = ({
     vertical === 'auto' ? null : vertical,
   )
 
-  const outerMargin = 10
   useEffect(() => {
     if (!portalRef.current || !parentRect) {
       return
     }
+
     const { offsetWidth, offsetHeight } = portalRef.current
 
     if (vertical === 'auto') {
-      const requiredHeight = offsetHeight + outerMargin
+      const requiredHeight = offsetHeight + OUTER_MARGIN
       const topSpace = parentRect.top
       const bottomSpace = window.innerHeight - parentRect.bottom
+
       setActualVertical(() => {
         if (topSpace > requiredHeight) {
           return 'bottom'
@@ -78,12 +81,13 @@ export const TooltipPortal: FC<Props> = ({
     }
 
     if (horizontal === 'auto') {
-      const requiredWidth = offsetWidth + outerMargin
+      const requiredWidth = offsetWidth + OUTER_MARGIN
       const leftSpace = vertical === 'middle' ? parentRect.left : parentRect.right
       const rightSpace =
         vertical === 'middle'
           ? window.innerWidth - parentRect.right
           : window.innerWidth - parentRect.left
+
       setActualHorizontal(() => {
         if (rightSpace > requiredWidth) {
           return 'left'
@@ -100,9 +104,11 @@ export const TooltipPortal: FC<Props> = ({
     if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
       return
     }
+
     const scrollOffsetTop = fullscreenElement ? fullscreenElement.scrollTop : window.scrollY
     const scrollOffsetLeft = fullscreenElement ? fullscreenElement.scrollLeft : window.scrollX
     const { offsetWidth, offsetHeight } = portalRef.current
+
     setRect(
       getTooltipRect({
         parentRect,
@@ -117,37 +123,45 @@ export const TooltipPortal: FC<Props> = ({
         vertical: actualVertical,
         horizontal: actualHorizontal,
         isIcon,
-        outerMargin,
+        outerMargin: OUTER_MARGIN,
       }),
     )
   }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
 
-  const { containerStyleProps, balloonStyle, balloonTextStyle } = useMemo(() => {
-    const { container, balloon, balloonText } = tooltipPortal()
+  const classNames = useMemo(() => {
+    const { container, balloon, balloonText } = classNameGenerator()
+
     return {
-      containerStyleProps: {
-        className: container(),
-        style: {
-          top: rect.top,
-          left: rect.left,
-          width: rect.$width > 0 ? `${rect.$width}px` : undefined,
-          height: rect.$height > 0 ? `${rect.$height}px` : undefined,
-          maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
-        },
-      },
-      balloonStyle: balloon({ isMultiLine }),
-      balloonTextStyle: balloonText(),
+      container: container(),
+      balloon: balloon({ isMultiLine }),
+      balloonText: balloonText(),
     }
-  }, [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top])
+  }, [isMultiLine])
+  const style = useMemo(
+    () => ({
+      top: rect.top,
+      left: rect.left,
+      width: rect.$width > 0 ? `${rect.$width}px` : undefined,
+      height: rect.$height > 0 ? `${rect.$height}px` : undefined,
+      maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
+    }),
+    [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top],
+  )
 
   return (
-    <div {...containerStyleProps} ref={portalRef} role="tooltip" aria-hidden={!isVisible}>
+    <div
+      ref={portalRef}
+      role="tooltip"
+      aria-hidden={!isVisible}
+      className={classNames.container}
+      style={style}
+    >
       <Balloon
         horizontal={actualHorizontal || 'left'}
         vertical={actualVertical || 'bottom'}
-        className={balloonStyle}
+        className={classNames.balloon}
       >
-        <div className={balloonTextStyle}>{message}</div>
+        <div className={classNames.balloonText}>{message}</div>
       </Balloon>
     </div>
   )
