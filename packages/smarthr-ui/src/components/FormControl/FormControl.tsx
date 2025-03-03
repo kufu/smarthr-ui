@@ -112,12 +112,12 @@ const childrenWrapper = tv({
   },
   compoundVariants: [
     {
-      innerMargin: 0.5,
+      innerMargin: undefined,
       isFieldset: true,
       className: '[:not([hidden])_~_&&&]:shr-mt-1',
     },
     {
-      innerMargin: 0.5,
+      innerMargin: undefined,
       isFieldset: false,
       className: '[:not([hidden])_~_&&&]:shr-mt-0.5',
     },
@@ -133,7 +133,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   dangerouslyTitleHidden = false,
   htmlFor,
   labelId,
-  innerMargin = 0.5,
+  innerMargin,
   statusLabelProps,
   helpMessage,
   exampleMessage,
@@ -184,6 +184,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
+
+  const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
 
   const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, underTitleStackStyle } =
     useMemo(() => {
@@ -309,7 +311,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   if (dangerouslyTitleHidden) {
     body = (
       // eslint-disable-next-line smarthr/best-practice-for-layouts
-      <Stack gap={innerMargin} className={underTitleStackStyle}>
+      <Stack gap={actualInnerMargin} className={underTitleStackStyle}>
         {body}
       </Stack>
     )
@@ -319,7 +321,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     <Stack
       {...props}
       as={as}
-      gap={innerMargin}
+      gap={actualInnerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={wrapperStyle}
     >
