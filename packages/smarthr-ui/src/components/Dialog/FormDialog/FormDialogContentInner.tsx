@@ -17,7 +17,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogInnerClassNameGenerator } from '../dialogInnerStyle'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -55,7 +55,7 @@ export type FormDialogContentInnerProps = BaseProps & {
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const classNameGenerator = tv({
-  extend: dialogContentInner,
+  extend: dialogInnerClassNameGenerator,
   slots: {
     form: 'shr-contents',
   },

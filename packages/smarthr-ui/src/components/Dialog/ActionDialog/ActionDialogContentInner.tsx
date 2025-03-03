@@ -10,7 +10,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogInnerClassNameGenerator } from '../dialogInnerStyle'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -64,7 +64,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   const calcedResponseStatus = useResponseMessage(responseMessage)
 
   const styles = useMemo(() => {
-    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+    const { wrapper, actionArea, buttonArea, message } = dialogInnerClassNameGenerator()
 
     return {
       wrapper: wrapper(),

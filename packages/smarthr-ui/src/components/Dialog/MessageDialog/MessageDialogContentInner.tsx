@@ -6,7 +6,7 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, Props as DialogHeaderProps } from '../DialogHeader'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogInnerClassNameGenerator } from '../dialogInnerStyle'
 
 export type BaseProps = DialogHeaderProps &
   DialogBodyProps & {
@@ -34,7 +34,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   decorators,
 }) => {
   const styles = useMemo(() => {
-    const { wrapper, actionArea } = dialogContentInner()
+    const { wrapper, actionArea } = dialogInnerClassNameGenerator()
 
     return {
       wrapper: wrapper(),
