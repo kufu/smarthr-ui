@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
+import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseMessageTypeWithoutProcessing } from '../../hooks/useResponseMessage'
@@ -8,7 +8,7 @@ import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-const floatArea = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
   variants: {
     bottom: {
@@ -70,11 +70,14 @@ export const FloatArea: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const styleAttr = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
-  const actualClassName = useMemo(() => floatArea({ bottom, className }), [bottom, className])
+  const style = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ bottom, className }),
+    [bottom, className],
+  )
 
   return (
-    <Base {...rest} style={styleAttr} layer={3} padding={1} className={actualClassName}>
+    <Base {...rest} style={style} layer={3} padding={1} className={actualClassName}>
       <Cluster gap={1}>
         {tertiaryButton}
         <div className="shr-ms-auto">
