@@ -16,7 +16,7 @@ import { FaCaretDownIcon } from '../../../Icon'
 import { Text } from '../../../Text'
 import { CommonButton } from '../common/CommonButton'
 
-const tenantDropdownTriggerButton = tv({
+const classNameGenerator = tv({
   base: [
     'shr-border-none shr-bg-white shr-text-start shr-text-sm shr-rounded-s shr-px-0.5 shr-py-0.25 shr-cursor-pointer',
     'hover:shr-bg-white-darken',
@@ -110,7 +110,7 @@ const TenantDropdown: FC<
 }
 
 const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => {
-  const actualClassName = useMemo(() => tenantDropdownTriggerButton(), [])
+  const actualClassName = useMemo(() => classNameGenerator(), [])
 
   return (
     <DropdownTrigger>
