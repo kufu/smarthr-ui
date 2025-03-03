@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 import { UnstyledButton } from '../Button'
 import { ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './style'
+import { itemClassNamgeGenerator } from './style'
 
 export type AppNaviButtonProps = PropsWithChildren<{
   /** 表示するアイコンタイプ */
@@ -16,7 +16,7 @@ export type AppNaviButtonProps = PropsWithChildren<{
 }>
 
 const classNameGenerator = tv({
-  extend: appNaviItemStyle,
+  extend: itemClassNamgeGenerator,
   slots: {
     wrapper: 'smarthr-ui-AppNavi-button',
   },

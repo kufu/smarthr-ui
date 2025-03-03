@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './style'
+import { itemClassNamgeGenerator } from './style'
 
 export type AppNaviCustomTagProps = PropsWithChildren<{
   /** このボタンのカスタムタグ */
@@ -15,7 +15,7 @@ export type AppNaviCustomTagProps = PropsWithChildren<{
 }> & { [key: string]: any }
 
 const classNameGenerator = tv({
-  extend: appNaviItemStyle,
+  extend: itemClassNamgeGenerator,
   slots: {
     wrapper: 'smarthr-ui-AppNavi-customTag',
   },

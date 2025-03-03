@@ -1,6 +1,6 @@
 import { tv } from 'tailwind-variants'
 
-export const appNaviItemStyle = tv({
+export const itemClassNamgeGenerator = tv({
   slots: {
     wrapper: [
       'shr-box-border shr-inline-flex shr-cursor-pointer shr-items-center shr-gap-0.5 shr-whitespace-nowrap shr-px-0.5 shr-py-0.75 shr-text-base shr-font-bold shr-leading-none shr-no-underline shr-text-grey',
