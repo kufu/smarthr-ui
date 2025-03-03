@@ -118,6 +118,18 @@
   },
   "main": "lib/index.js",
   "module": "esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types/index.d.ts",
+      "import": "./esm/types/index.js",
+      "require": "./lib/types/index.js"
+    }
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
