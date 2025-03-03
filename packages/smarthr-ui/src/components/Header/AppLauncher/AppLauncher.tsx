@@ -1,7 +1,7 @@
 import React, { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -23,11 +23,14 @@ type Props = {
   apps: Category[]
   urlToShowAll?: string | null
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'triggerLabel'>
+  decorators?: DecoratorsType<DECORATOR_DEFAULT_TEXTS>
 } & VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-const TRIGGER_LABEL = 'アプリ'
+const DECORATOR_DEFAULT_TEXTS = {
+  triggerLabel: 'アプリ',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({
   slots: {
@@ -157,10 +160,7 @@ export const AppLauncher: FC<Props & ElementProps> = ({
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'enableNew' | 'decorators'> & { className: string }
 >(({ enableNew, className, decorators }) => {
-  const triggerLabel = useMemo(
-    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
-    [decorators],
-  )
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
     <DropdownTrigger>
@@ -169,7 +169,7 @@ const MemoizedDropdownTrigger = memo<
         suffix={enableNew ? <FaCaretDownIcon /> : undefined}
         className={className}
       >
-        {triggerLabel}
+        {decorated.triggerLabel}
       </Button>
     </DropdownTrigger>
   )
