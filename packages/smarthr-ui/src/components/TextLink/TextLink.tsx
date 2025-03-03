@@ -65,8 +65,9 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     const Anchor = elementAs || 'a'
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
-        return <FaUpRightFromSquareIcon aria-label="別タブで開く" />
+        return <FaUpRightFromSquareIcon alt="別タブで開く" />
       }
+
       return suffix
     }, [suffix, target])
     const actualHref = useMemo(() => {
@@ -91,13 +92,15 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         return undefined
       }
 
+      if (href) {
+        return onClick
+      }
+
       return (e: React.MouseEvent) => {
-        if (!href) {
-          e.preventDefault()
-        }
+        e.preventDefault()
         onClick(e)
       }
-    }, [href, onClick])
+    }, [onClick, href])
 
     return (
       <Anchor
