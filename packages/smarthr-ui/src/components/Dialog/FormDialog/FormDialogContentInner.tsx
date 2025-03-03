@@ -9,7 +9,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
-import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -43,7 +43,7 @@ export type BaseProps = PropsWithChildren<
 
 export type FormDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
-  responseMessage?: ResponseMessageType
+  responseStatus?: ResponseStatus
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
@@ -68,7 +68,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   actionTheme,
   onSubmit,
   onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   subActionArea,
@@ -85,7 +85,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     [onSubmit, onClickClose],
   )
 
-  const calculatedResponseStatus = useResponseMessage(responseMessage)
+  const calculatedResponseStatus = useResponseStatus(responseStatus)
 
   const styles = useMemo(() => {
     const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()

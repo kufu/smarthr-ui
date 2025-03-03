@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
-import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -50,7 +50,7 @@ export type BaseProps = PropsWithChildren<
 export type StepFormDialogContentInnerProps = BaseProps & {
   firstStep: StepItem
   onClickClose: () => void
-  responseMessage?: ResponseMessageType
+  responseStatus?: ResponseStatus
   stepLength: number
   onClickBack?: () => void
 }
@@ -80,7 +80,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   firstStep,
   onSubmit,
   onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   decorators,
@@ -135,7 +135,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
 
-  const calcedResponseStatus = useResponseMessage(responseMessage)
+  const calcedResponseStatus = useResponseStatus(responseStatus)
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
