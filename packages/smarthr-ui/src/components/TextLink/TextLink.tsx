@@ -34,7 +34,7 @@ type TextLinkComponent = <T extends ElementType = 'a'>(
   props: Props<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
-const textLink = tv({
+const classNameGenerator = tv({
   slots: {
     anchor:
       'shr-text-link shr-no-underline shr-shadow-underline forced-colors:shr-underline [&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
@@ -42,7 +42,7 @@ const textLink = tv({
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
   },
 })
-const { anchor, prefixWrapper, suffixWrapper } = textLink()
+const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
 const prefixWrapperClassName = prefixWrapper()
 const suffixWrapperClassName = suffixWrapper()
 
@@ -62,7 +62,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
-    const Component = elementAs || 'a'
+    const Anchor = elementAs || 'a'
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
         return <FaUpRightFromSquareIcon aria-label="別タブで開く" />
@@ -100,8 +100,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     }, [href, onClick])
 
     return (
-      // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-      <Component
+      <Anchor
         {...others}
         ref={ref}
         href={actualHref}
@@ -113,7 +112,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
         {children}
         {actualSuffix && <span className={suffixWrapperClassName}>{actualSuffix}</span>}
-      </Component>
+      </Anchor>
     )
   },
 )
