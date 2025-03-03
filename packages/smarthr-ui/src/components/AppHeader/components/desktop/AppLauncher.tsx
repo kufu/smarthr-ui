@@ -28,7 +28,7 @@ type Props = {
   features: Array<Launcher['feature']>
 }
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppLauncher',
@@ -100,7 +100,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       mainInner,
       contentHead,
       scrollArea,
-    } = appLauncher()
+    } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
