@@ -30,7 +30,7 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const multiSelectedItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper:
       'smarthr-ui-MultiComboBox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
@@ -71,7 +71,7 @@ export function MultiSelectedItem<T>({
   const { deletable = true } = item
 
   const classNames = useMemo(() => {
-    const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
+    const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
