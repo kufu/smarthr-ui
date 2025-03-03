@@ -4,6 +4,7 @@ import React, {
   type ComponentProps,
   type FC,
   type PropsWithChildren,
+  memo,
   useContext,
   useMemo,
 } from 'react'
@@ -40,8 +41,19 @@ export const DropdownCloser: FC<Props> = ({ children, className }) => {
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <div role="presentation" onClick={onClickCloser} className={actualClassName} style={style}>
+    <ActualDropdownCloser onClick={onClickCloser} className={actualClassName} style={style}>
       {children}
-    </div>
+    </ActualDropdownCloser>
   )
 }
+
+const ActualDropdownCloser =
+  memo <
+  PropsWithChildren<{ className: string; style: { [key: string]: string }; onClick: () => void }>(
+    ({ className, style, onClick, children }) => (
+      // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+      <div role="presentation" onClick={onClick} className={className} style={style}>
+        {children}
+      </div>
+    ),
+  )
