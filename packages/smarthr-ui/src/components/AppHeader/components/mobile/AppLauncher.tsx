@@ -44,7 +44,8 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     searchQuery,
     changePage,
     setSortType,
-    changeSearchQuery,
+    onChangeSearchQuery,
+    onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
 
   const { wrapper, searchArea, headArea, scrollArea, bottomArea } = appLauncher()
@@ -60,19 +61,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           value={searchQuery}
           suffix={
             mode === 'search' && (
-              <UnstyledButton
-                onClick={() => {
-                  // 別のキューにしないとドロップダウンが閉じてしまう
-                  setTimeout(() => {
-                    changeSearchQuery('')
-                  }, 0)
-                }}
-              >
+              <UnstyledButton onClick={onClickClearSearchQuery}>
                 <FaCircleXmarkIcon />
               </UnstyledButton>
             )
           }
-          onChange={(e) => changeSearchQuery(e.target.value)}
+          onChange={onChangeSearchQuery}
         />
       </div>
 
@@ -82,14 +76,11 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             <Translate>{translate('Launcher/searchResultText')}</Translate>
           </Text>
         ) : (
-          <AppLauncherFilterDropdown page={page} onSelectPage={(p) => changePage(p)} />
+          <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
         )}
 
         {(mode === 'search' || page === 'all') && (
-          <AppLauncherSortDropdown
-            sortType={sortType}
-            onSelectSortType={(value) => setSortType(value)}
-          />
+          <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
         )}
       </Cluster>
 
