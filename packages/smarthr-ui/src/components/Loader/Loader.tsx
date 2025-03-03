@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode } from 'react'
+import React, { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -15,7 +15,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentProps<'span'>, keyof Props>
 
-const loaderStyle = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-Loader', 'shr-inline-block shr-overflow-hidden'],
     spinner: [
@@ -120,7 +120,7 @@ const loaderStyle = tv({
   },
 })
 
-export const Loader = React.memo<Props & ElementProps>(
+export const Loader = memo<Props & ElementProps>(
   ({
     size = 'm',
     alt = '処理中',
@@ -130,34 +130,38 @@ export const Loader = React.memo<Props & ElementProps>(
     className,
     ...props
   }) => {
-    const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
-      type,
-      size,
-    })
+    const classNames = useMemo(() => {
+      const { wrapper, spinner, line, cog, cogInner, textSlot } = classNameGenerator({
+        type,
+        size,
+      })
 
-    const wrapperStyle = wrapper({ className })
-    const spinnerStyle = spinner()
-    const cogStyle = cog()
-    const cogInnerLeftStyle = cogInner({ position: 'left' })
-    const cogInnerRightStyle = cogInner({ position: 'right' })
-    const textStyle = textSlot()
+      return {
+        wrapper: wrapper({ className }),
+        spinner: spinner(),
+        cog: cog(),
+        cogInnerLeft: cogInner({ position: 'left' }),
+        cogInnerRight: cogInner({ position: 'right' }),
+        textSlot: textSlot(),
+      }
+    }, [type, size, className])
 
     return (
-      <span {...props} className={wrapperStyle} role={role}>
-        <span className={spinnerStyle}>
+      <span {...props} className={classNames.wrapper} role={role}>
+        <span className={classNames.spinner}>
           {[...Array(4)].map((_, index) => (
             <span className={line({ lineNum: (index + 1) as 1 | 2 | 3 | 4 })} key={index}>
-              <span className={cogStyle}>
-                <span className={cogInnerLeftStyle} />
+              <span className={classNames.cog}>
+                <span className={classNames.cogInnerLeft} />
               </span>
-              <span className={cogStyle}>
-                <span className={cogInnerRightStyle} />
+              <span className={classNames.cog}>
+                <span className={classNames.cogInnerRight} />
               </span>
             </span>
           ))}
           <VisuallyHiddenText>{alt}</VisuallyHiddenText>
         </span>
-        {text && <span className={textStyle}>{text}</span>}
+        {text && <span className={classNames.textSlot}>{text}</span>}
       </span>
     )
   },
