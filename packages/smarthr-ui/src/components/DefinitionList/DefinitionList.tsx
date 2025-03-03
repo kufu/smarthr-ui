@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
+import React, { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
@@ -19,7 +19,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'dl'>, keyof Props>
 
-const definitionList = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-DefinitionList shr-my-[initial]',
 })
 
@@ -30,10 +30,10 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   children,
   className,
 }) => {
-  const styles = useMemo(() => definitionList({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Cluster as="dl" gap={1.5} className={styles}>
+    <Cluster as="dl" gap={1.5} className={actualClassName}>
       {items &&
         items.map((item, index) => (
           <DefinitionListItem
