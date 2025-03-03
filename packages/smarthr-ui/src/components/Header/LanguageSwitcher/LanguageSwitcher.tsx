@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -24,15 +24,19 @@ export type Props = {
   locale?: string
   defaultLocale?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'triggerLabel' | 'checkIconAlt'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   /** 言語切替UIで言語を選択した時に発火するコールバック関数 */
   onLanguageSelect?: (code: string) => void
 } & VariantProps<typeof classNameGenerator>
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-const TRIGGER_LABEL = 'Language'
-const CHECK_ICON_ALT = '選択中'
+const DECORATOR_DEFAULT_TEXTS = {
+  triggerLabel: 'Language',
+  checkIconAlt: '選択中',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
 
@@ -83,19 +87,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
   ...rest
 }) => {
   const locales = useMemo(() => Object.entries(localeMap), [localeMap])
-  const decoratedTexts = useMemo(() => {
-    if (!decorators) {
-      return {
-        triggerLabel: TRIGGER_LABEL,
-        checkIconAlt: CHECK_ICON_ALT,
-      }
-    }
-
-    return {
-      triggerLabel: decorators.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
-      checkIconAlt: decorators.checkIconAlt?.(CHECK_ICON_ALT) || CHECK_ICON_ALT,
-    }
-  }, [decorators])
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const currentLang = useMemo(
     () => locale || defaultLocale || Object.keys(localeMap)[0],
     [locale, defaultLocale, localeMap],
@@ -147,7 +139,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
         narrow={narrow}
         invert={invert}
         className={classNames.switchButton}
-        label={decoratedTexts.triggerLabel}
+        label={decorated.triggerLabel}
       />
       <DropdownContent onKeyDown={handleKeyDown} role="presentation">
         <ul className={classNames.languageItemsList}>
@@ -157,7 +149,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
               code={code}
               current={currentLang === code}
               handleLanguageSelect={handleLanguageSelect}
-              iconAlt={decoratedTexts.checkIconAlt}
+              iconAlt={decorated.checkIconAlt}
               classNames={classNames}
             >
               {label}
