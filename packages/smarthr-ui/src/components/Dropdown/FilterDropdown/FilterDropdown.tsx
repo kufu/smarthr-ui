@@ -49,7 +49,7 @@ const ON_SUBMIT = (e: React.FormEvent) => {
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
 
-const filterDropdown = tv({
+const classNameGenerator = tv({
   slots: {
     iconWrapper: [
       'shr-relative shr-leading-none',
@@ -115,7 +115,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
 
   const calcedResponseStatus = useResponseMessage(responseMessage)
 
-  const styles = useMemo(() => {
+  const classNamesMapper = useMemo(() => {
     const {
       iconWrapper,
       filteredIcon,
@@ -124,46 +124,41 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
       resetButtonArea,
       rightButtonArea,
       message,
-    } = filterDropdown()
+    } = classNameGenerator()
 
     const commonStyles = {
-      filteredIconStyle: filteredIcon(),
-      innerStyle: inner(),
-      actionAreaStyle: actionArea(),
-      resetButtonAreaStyle: resetButtonArea(),
-      rightButtonAreaStyle: rightButtonArea(),
-      messageStyle: message(),
+      filteredIcon: filteredIcon(),
+      inner: inner(),
+      actionArea: actionArea(),
+      resetButtonArea: resetButtonArea(),
+      rightButtonArea: rightButtonArea(),
+      message: message(),
     }
 
     return {
       filtered: {
         ...commonStyles,
-        iconWrapperStyle: iconWrapper({ filtered: true, triggerSize }),
+        iconWrapper: iconWrapper({ filtered: true, triggerSize }),
       },
       unfiltered: {
         ...commonStyles,
-        iconWrapperStyle: iconWrapper({ filtered: false, triggerSize }),
+        iconWrapper: iconWrapper({ filtered: false, triggerSize }),
       },
     }
   }, [triggerSize])
 
-  const {
-    iconWrapperStyle,
-    filteredIconStyle,
-    innerStyle,
-    actionAreaStyle,
-    resetButtonAreaStyle,
-    rightButtonAreaStyle,
-    messageStyle,
-  } = styles[isFiltered ? 'filtered' : 'unfiltered']
+  const classNames = classNamesMapper[isFiltered ? 'filtered' : 'unfiltered']
 
   const { buttonSuffix, buttonContent } = useMemo(() => {
     const FilterIcon = (
-      <span className={iconWrapperStyle}>
+      <span className={classNames.iconWrapper}>
         <FaFilterIcon alt={onlyIconTrigger ? texts.triggerButton : undefined} />
 
         {isFiltered && (
-          <FaCircleCheckIcon aria-label={filteredIconAriaLabel} className={filteredIconStyle} />
+          <FaCircleCheckIcon
+            aria-label={filteredIconAriaLabel}
+            className={classNames.filteredIcon}
+          />
         )}
       </span>
     )
@@ -184,8 +179,8 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     texts.triggerButton,
     onlyIconTrigger,
     filteredIconAriaLabel,
-    iconWrapperStyle,
-    filteredIconStyle,
+    classNames.iconWrapper,
+    classNames.filteredIcon,
   ])
 
   return (
@@ -197,11 +192,11 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={ON_SUBMIT}>
-          <div className={innerStyle}>{children}</div>
-          <Stack gap={0.5} className={actionAreaStyle}>
+          <div className={classNames.inner}>{children}</div>
+          <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster gap={1} align="center" justify="space-between">
               {onReset && (
-                <div className={resetButtonAreaStyle}>
+                <div className={classNames.resetButtonArea}>
                   <Button
                     variant="text"
                     size="s"
@@ -217,7 +212,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
               <Cluster
                 gap={CONTROL_CLUSTER_GAP}
                 justify="flex-end"
-                className={rightButtonAreaStyle}
+                className={classNames.rightButtonArea}
               >
                 <DropdownCloser>
                   <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
@@ -236,7 +231,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
               </Cluster>
             </Cluster>
             {calcedResponseStatus.message && (
-              <div className={messageStyle}>
+              <div className={classNames.message}>
                 <ResponseMessage type={calcedResponseStatus.status} role="alert">
                   {calcedResponseStatus.message}
                 </ResponseMessage>
