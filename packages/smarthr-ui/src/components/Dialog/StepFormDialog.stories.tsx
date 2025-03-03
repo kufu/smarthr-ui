@@ -36,7 +36,7 @@ export default {
   },
 }
 
-const radioButtonListWrapper = tv({
+const classNameGenerator = tv({
   base: 'shr-list-none',
 })
 
@@ -102,7 +102,7 @@ export const Default: StoryFn = () => {
       >
         <StepFormDialogItem {...stepOrder[0]}>
           <Fieldset title="fruits" innerMargin={0.5}>
-            <Cluster className={radioButtonListWrapper()} as="ul">
+            <Cluster className={classNameGenerator()} as="ul">
               <li>
                 <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
                   Apple
