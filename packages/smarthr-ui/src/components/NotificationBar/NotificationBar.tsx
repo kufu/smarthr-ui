@@ -166,6 +166,8 @@ const ICON_MAPPER = {
   },
 } as const
 
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync)$/
+
 export const NotificationBar: FC<ActualProps> = ({
   type,
   bold,
@@ -184,7 +186,7 @@ export const NotificationBar: FC<ActualProps> = ({
       return role
     }
 
-    return type.match(/^(info|sync)$/) ? 'status' : 'alert'
+    return ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert'
   }, [role, type])
   const { WrapBase, baseProps } = useMemo(
     () =>
