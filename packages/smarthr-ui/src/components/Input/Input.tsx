@@ -1,10 +1,10 @@
 'use client'
 
 import React, {
-  ComponentPropsWithRef,
-  FocusEvent,
-  ReactNode,
-  WheelEvent,
+  type ComponentPropsWithRef,
+  type FocusEvent,
+  type ReactNode,
+  type WheelEvent,
   forwardRef,
   useCallback,
   useEffect,
@@ -48,7 +48,7 @@ export const bgColors = {
   ACTION_BACKGROUND: 'action-background',
 } as const
 
-const wrapper = tv({
+const wrapperClassNameGenerator = tv({
   base: [
     'smarthr-ui-Input',
     'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
@@ -65,7 +65,7 @@ const wrapper = tv({
     },
   },
 })
-const inner = tv({
+const innerClassNameGenerator = tv({
   slots: {
     input: [
       'smarthr-ui-Input-input',
@@ -133,7 +133,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     }, [autoFocus])
 
     const wrapperStyleProps = useMemo(() => {
-      const wrapperStyle = wrapper({ disabled, readOnly, className })
+      const wrapperStyle = wrapperClassNameGenerator({ disabled, readOnly, className })
       const color = bgColor
         ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
         : undefined
@@ -148,7 +148,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       }
     }, [bgColor, className, disabled, readOnly, width])
     const innerStyleProps = useMemo(() => {
-      const { input, affix } = inner()
+      const { input, affix } = innerClassNameGenerator()
 
       return {
         input: input(),
