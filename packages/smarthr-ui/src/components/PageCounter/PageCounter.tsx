@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, useMemo } from 'react'
+import React, { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
@@ -19,9 +19,9 @@ const executeDecorator = (defaultText: string, decorator: DecoratorType | undefi
 const RANGE_SEPARATOR = '–'
 const RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT = 'から'
 
-const pageCounter = tv({ base: 'shr-text-base' })
+const classNameGenerator = tv({ base: 'shr-text-base' })
 
-export const PageCounter: React.FC<Props & ElementProps> = ({
+export const PageCounter: FC<Props & ElementProps> = ({
   start,
   end,
   total,
@@ -29,6 +29,7 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
   const rangeSeparatorDecorators = useMemo(() => {
     if (!decorators) {
       return {
@@ -48,7 +49,7 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
   }, [decorators])
 
   return (
-    <Cluster {...props} gap={0.25} inline align="baseline" className={pageCounter({ className })}>
+    <Cluster {...props} gap={0.25} inline align="baseline" className={actualClassName}>
       <BoldNumber>{start}</BoldNumber>
       <RangeSeparator decorators={rangeSeparatorDecorators} />
       <BoldNumber>{end}</BoldNumber>
@@ -57,13 +58,13 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
   )
 }
 
-const BoldNumber = React.memo<{ children: number }>(({ children }) => (
+const BoldNumber = memo<{ children: number }>(({ children }) => (
   <Text weight="bold" as="b">
     {children.toLocaleString()}
   </Text>
 ))
 
-const Total = React.memo<{ children: number | undefined }>(
+const Total = memo<{ children: number | undefined }>(
   ({ children = 0 }) =>
     children > 0 && (
       <>
