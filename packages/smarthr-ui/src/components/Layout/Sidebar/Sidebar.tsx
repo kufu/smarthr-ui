@@ -139,21 +139,29 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       () => classNameGenerator({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
       [align, gaps.row, gaps.column, className],
     )
-    const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
+    const classNames = useMemo(() => {
       const { firstItem, lastItem } = itemClassNameGenerator({ right })
+
+      return {
+        firstItem: firstItem(),
+        lastItem: lastItem(),
+      }
+    }, [right])
+    const styles = useMemo(() => {
       const styleProps = {
         minWidth: contentsMinWidth,
       }
 
+      if (right) {
+        return {
+          firstItem: styleProps,
+          lastItem: undefined,
+        }
+      }
+
       return {
-        firstItemStyleProps: {
-          className: firstItem(),
-          style: right ? styleProps : undefined,
-        },
-        lastItemStyleProps: {
-          className: lastItem(),
-          style: right ? undefined : styleProps,
-        },
+        firstItem: undefined,
+        lastItem: styleProps,
       }
     }, [contentsMinWidth, right])
 
@@ -165,13 +173,13 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
 
         if (i === 0) {
           return cloneElement(child as ReactElement, {
-            className: `${firstItemStyleProps.className} ${childClassName}`,
-            style: { ...firstItemStyleProps.style, ...child.props.style },
+            className: `${classNames.firstItem} ${childClassName}`,
+            style: { ...styles.firstItem, ...child.props.style },
           })
         } else if (i === maxChildrenIndex) {
           return cloneElement(child as ReactElement, {
-            className: `${lastItemStyleProps.className} ${childClassName}`,
-            style: { ...lastItemStyleProps.style, ...child.props.style },
+            className: `${classNames.lastItem} ${childClassName}`,
+            style: { ...styles.lastItem, ...child.props.style },
           })
         }
       }
