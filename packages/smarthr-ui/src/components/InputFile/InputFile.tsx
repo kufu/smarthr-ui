@@ -137,11 +137,9 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        if (isUpdatingFilesDirectly.current) {
-          return
+        if (!isUpdatingFilesDirectly.current) {
+          updateFiles(Array.from(e.target.files ?? []))
         }
-
-        updateFiles(Array.from(e.target.files ?? []))
       },
       [isUpdatingFilesDirectly, updateFiles],
     )
