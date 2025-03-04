@@ -1,0 +1,8 @@
+export { locale as ja } from './ja'
+export { locale as 'en-us' } from './en_us'
+export { locale as ko } from './ko_kr'
+export { locale as pt } from './pt_br'
+export { locale as vi } from './vi_vn'
+export { locale as 'zh-cn' } from './zh_hans_cn'
+export { locale as 'zh-tw' } from './zh_hant_tw'
+export { locale as 'id-id' } from './id_id'

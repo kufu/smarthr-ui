@@ -8,13 +8,13 @@ import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 import type { Gap } from '../../../types'
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
-type Props = VariantProps<typeof reel> &
+type Props = VariantProps<typeof classNameGenerator> &
   PropsWithChildren<{
     as?: string | React.ComponentType<any>
   }> &
   ComponentPropsWithRef<'div'>
 
-const reel = tv({
+const classNameGenerator = tv({
   base: [
     'shr-flex shr-overflow-x-auto shr-overflow-y-hidden',
     '[&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto',
@@ -90,14 +90,18 @@ const reel = tv({
 
 export const Reel = forwardRef<HTMLDivElement, Props>(
   ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...props }, ref) => {
-    const styles = useMemo(() => reel({ gap, padding, className }), [className, gap, padding])
+    const actualClassName = useMemo(
+      () => classNameGenerator({ gap, padding, className }),
+      [className, gap, padding],
+    )
 
     const Wrapper = useSectionWrapper(Component)
+    const body = <Component {...props} ref={ref} className={actualClassName} />
 
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={styles} />
-      </Wrapper>
-    )
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

@@ -10,9 +10,9 @@ import {
   WarningIcon,
 } from '../Icon'
 
-type Props = PropsWithChildren<VariantProps<typeof responseMessage>> & Omit<IconProps, 'text'>
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> & Omit<IconProps, 'text'>
 
-const responseMessage = tv({
+const classNameGenerator = tv({
   base: '',
   variants: {
     type: {
@@ -34,8 +34,8 @@ const ICON_MAPPER = {
 } as const
 
 export const ResponseMessage: React.FC<Props> = ({ type = 'info', children, ...other }) => {
-  const styles = useMemo(() => responseMessage({ type }), [type])
+  const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
 
-  return <Icon {...other} text={children} className={styles} />
+  return <Icon {...other} text={children} className={className} />
 }

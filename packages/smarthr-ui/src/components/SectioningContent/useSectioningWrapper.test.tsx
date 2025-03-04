@@ -24,18 +24,18 @@ describe('useSectionWrapper', () => {
     })
   })
 
-  it('sectioningContents に含まれない要素の場合、Fragment が返ること', () => {
+  it('sectioningContents に含まれない要素の場合、null が返ること', () => {
     notSectioningContents.forEach((type) => {
       const { result } = renderHook(() => useSectionWrapper(type))
-      expect(result.current).toBe(React.Fragment)
+      expect(result.current).toBe(null)
     })
   })
 
-  it('sectioningContents に含まれない要素が StyledComponent の場合、Fragment が返ること', () => {
+  it('sectioningContents に含まれない要素が StyledComponent の場合、null が返ること', () => {
     notSectioningContents.forEach((type) => {
       const component = styled[type]``
       const { result } = renderHook(() => useSectionWrapper(component))
-      expect(result.current).toBe(React.Fragment)
+      expect(result.current).toBe(null)
     })
   })
 })

@@ -118,5 +118,8 @@ export { defaultLeading } from './themes/createLeading'
 export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 
+// localization
+export { IntlProvider, useIntl, DateFormatter } from './intl'
+
 // constants
 export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
