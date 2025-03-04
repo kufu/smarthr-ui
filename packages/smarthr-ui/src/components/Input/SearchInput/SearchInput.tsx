@@ -1,4 +1,4 @@
-import React, { ComponentProps, forwardRef, useMemo } from 'react'
+import React, { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
@@ -7,13 +7,13 @@ import { InputWithTooltip } from '../InputWithTooltip'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
-  tooltipMessage: React.ReactNode
+  tooltipMessage: ReactNode
   decorators?: DecoratorsType<'iconAlt'>
 }
 
 const ICON_ALT = '検索'
 
-const searchInput = tv({
+const classNameGenerator = tv({
   slots: {
     label: 'shr-inline-block',
     input: '',
@@ -37,7 +37,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
       }),
       [width],
     )
-    const { label, input } = searchInput({ existsWidth: !!labelStyleAttr.width })
+    const { label, input } = classNameGenerator({ existsWidth: !!labelStyleAttr.width })
 
     return (
       <label className={label({ className })} style={labelStyleAttr}>
