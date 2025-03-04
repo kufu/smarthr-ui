@@ -1,8 +1,11 @@
 'use client'
 import React, {
-  ComponentPropsWithRef,
-  ReactNode,
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type MouseEvent,
+  type ReactNode,
   forwardRef,
+  memo,
   useCallback,
   useId,
   useImperativeHandle,
@@ -18,7 +21,7 @@ import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
-const inputFile = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InputFile shr-block',
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
@@ -60,7 +63,7 @@ const inputFile = tv({
   },
 })
 
-export type Props = VariantProps<typeof inputFile> & {
+export type Props = VariantProps<typeof classNameGenerator> & {
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
@@ -102,7 +105,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       inputStyle,
       prefixStyle,
     } = useMemo(() => {
-      const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
+      const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
 
       return {
         wrapperStyle: wrapper({ className }),
@@ -140,7 +143,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
+      (e: ChangeEvent<HTMLInputElement>) => {
         if (isUpdatingFilesDirectly.current) {
           return
         }
@@ -151,7 +154,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const handleDelete = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
+      (e: MouseEvent<HTMLButtonElement>) => {
         if (!inputRef.current) {
           return
         }
@@ -214,13 +217,13 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   },
 )
 
-const StyledFaFolderOpenIcon = React.memo<{ className: string }>(({ className }) => (
+const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
     <FaFolderOpenIcon />
   </span>
 ))
 
-const LabelRender = React.memo<{ id: string; label: ReactNode }>(({ id, label }) => (
+const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }) => (
   <span id={id} aria-hidden="true">
     {label}
   </span>
