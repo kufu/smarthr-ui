@@ -1,4 +1,13 @@
-import React, { ComponentProps, ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
+import React, {
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
@@ -14,7 +23,7 @@ import {
 } from '../Icon'
 import { Cluster } from '../Layout'
 
-export const notificationBar = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper:
       'smarthr-ui-NotificationBar shr-flex shr-items-baseline shr-justify-between shr-gap-0.5 shr-p-0.75',
@@ -124,12 +133,12 @@ export const notificationBar = tv({
   ],
 })
 
-type StyleVariants = VariantProps<typeof notificationBar>
+type StyleVariants = VariantProps<typeof classNameGenerator>
 type Props = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** メッセージ */
-      message: React.ReactNode
+      message: ReactNode
       /** 閉じるボタン押下時に発火させる関数 */
       onClose?: () => void
       /** role 属性 */
@@ -157,7 +166,7 @@ const ICON_MAPPER = {
   },
 } as const
 
-export const NotificationBar: React.FC<ActualProps> = ({
+export const NotificationBar: FC<ActualProps> = ({
   type,
   bold,
   animate,
@@ -188,7 +197,7 @@ export const NotificationBar: React.FC<ActualProps> = ({
             },
           }
         : {
-            WrapBase: React.Fragment,
+            WrapBase: Fragment,
             baseProps: {},
           },
     [base, layer],
@@ -201,7 +210,7 @@ export const NotificationBar: React.FC<ActualProps> = ({
     actionAreaStyle,
     closeButtonStyle,
   } = useMemo(() => {
-    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
+    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
       bold: !!bold,
       base: base || 'none',
@@ -240,7 +249,7 @@ export const NotificationBar: React.FC<ActualProps> = ({
   )
 }
 
-const MessageArea = React.memo<
+const MessageArea = memo<
   Pick<ActualProps, 'message' | 'bold' | 'type'> & { messageAreaStyle: string; iconStyle: string }
 >(({ message, bold, type, messageAreaStyle, iconStyle }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
@@ -252,7 +261,7 @@ const MessageArea = React.memo<
   )
 })
 
-const CloseButton = React.memo<Pick<ActualProps, 'onClose'> & { className: string }>(
+const CloseButton = memo<Pick<ActualProps, 'onClose'> & { className: string }>(
   ({ onClose, className }) =>
     onClose && (
       <Button variant="text" size="s" onClick={onClose} className={className}>
