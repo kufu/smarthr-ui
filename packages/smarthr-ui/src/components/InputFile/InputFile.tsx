@@ -97,23 +97,16 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
 
-    const {
-      wrapperStyle,
-      inputWrapperStyle,
-      fileListStyle,
-      fileItemStyle,
-      inputStyle,
-      prefixStyle,
-    } = useMemo(() => {
+    const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
 
       return {
-        wrapperStyle: wrapper({ className }),
-        inputWrapperStyle: inputWrapper({ size, disabled }),
-        fileListStyle: fileList(),
-        fileItemStyle: fileItem(),
-        inputStyle: input(),
-        prefixStyle: prefix(),
+        wrapper: wrapper({ className }),
+        inputWrapper: inputWrapper({ size, disabled }),
+        fileList: fileList(),
+        fileItem: fileItem(),
+        input: input(),
+        prefix: prefix(),
       }
     }, [disabled, size, className])
 
@@ -178,11 +171,11 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     return (
-      <Stack align="flex-start" className={wrapperStyle}>
+      <Stack align="flex-start" className={classNames.wrapper}>
         {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileListStyle}>
+          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
-              <li key={index} className={fileItemStyle}>
+              <li key={index} className={classNames.fileItem}>
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
                 <Button
                   variant="text"
@@ -197,19 +190,19 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
             ))}
           </BaseColumn>
         )}
-        <span className={inputWrapperStyle}>
+        <span className={classNames.inputWrapper}>
           <input
             {...props}
-            data-smarthr-ui-input="true"
-            type="file"
-            onChange={handleChange}
-            disabled={disabled}
-            className={inputStyle}
             ref={inputRef}
+            type="file"
+            disabled={disabled}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
+            onChange={handleChange}
+            className={classNames.input}
+            data-smarthr-ui-input="true"
           />
-          <StyledFaFolderOpenIcon className={prefixStyle} />
+          <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
       </Stack>
