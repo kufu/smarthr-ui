@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode } from 'react'
+import React, { type ComponentProps, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -15,7 +15,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentProps<'span'>, keyof Props>
 
-const loaderStyle = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-Loader', 'shr-inline-block shr-overflow-hidden'],
     spinner: [
@@ -120,7 +120,7 @@ const loaderStyle = tv({
   },
 })
 
-export const Loader = React.memo<Props & ElementProps>(
+export const Loader = memo<Props & ElementProps>(
   ({
     size = 'm',
     alt = '処理中',
@@ -130,7 +130,7 @@ export const Loader = React.memo<Props & ElementProps>(
     className,
     ...props
   }) => {
-    const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
+    const { wrapper, spinner, line, cog, cogInner, textSlot } = classNameGenerator({
       type,
       size,
     })
