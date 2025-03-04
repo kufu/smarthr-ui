@@ -15,7 +15,7 @@ import React, {
 } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
@@ -71,12 +71,15 @@ export type Props = VariantProps<typeof classNameGenerator> & {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** コンポーネント内のテキストを変更する関数 */
-  decorators?: DecoratorsType<'destroy'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   error?: boolean
 }
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+const DECORATOR_DEFAULT_TEXTS = {
+  destroy: '削除',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const DESTROY_BUTTON_TEXT = '削除'
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
@@ -119,10 +122,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       () => inputRef.current,
     )
 
-    const destroyButtonText = useMemo(
-      () => decorators?.destroy?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
-      [decorators],
-    )
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const updateFiles = useMemo(
       () =>
@@ -182,7 +182,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
                   onClick={handleDelete}
                   className="smarthr-ui-InputFile-deleteButton"
                 >
-                  {destroyButtonText}
+                  {decorated.destroy}
                 </Button>
               </li>
             ))}
