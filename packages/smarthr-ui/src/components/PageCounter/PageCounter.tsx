@@ -1,4 +1,4 @@
-import React, { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
+import React, { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
@@ -21,33 +21,28 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({ base: 'shr-text-base' })
 
-export const PageCounter: FC<Props & ElementProps> = ({
-  start,
-  end,
-  total,
-  decorators,
-  className,
-  ...props
-}) => {
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
-  const rangeSeparatorDecorators = useMemo(
-    () => ({
-      text: () => decorated.rangeSeparator,
-      visuallyHiddenText: () => decorated.rangeSeparatorVisuallyHiddenText,
-    }),
-    [decorated],
-  )
+export const PageCounter = memo<Props & ElementProps>(
+  ({ start, end, total, decorators, className, ...props }) => {
+    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+    const rangeSeparatorDecorators = useMemo(
+      () => ({
+        text: () => decorated.rangeSeparator,
+        visuallyHiddenText: () => decorated.rangeSeparatorVisuallyHiddenText,
+      }),
+      [decorated],
+    )
 
-  return (
-    <Cluster {...props} gap={0.25} inline align="baseline" className={actualClassName}>
-      <BoldNumber>{start}</BoldNumber>
-      <RangeSeparator decorators={rangeSeparatorDecorators} />
-      <BoldNumber>{end}</BoldNumber>
-      <Total>{total}</Total>
-    </Cluster>
-  )
-}
+    return (
+      <Cluster {...props} gap={0.25} inline align="baseline" className={actualClassName}>
+        <BoldNumber>{start}</BoldNumber>
+        <RangeSeparator decorators={rangeSeparatorDecorators} />
+        <BoldNumber>{end}</BoldNumber>
+        <Total>{total}</Total>
+      </Cluster>
+    )
+  },
+)
 
 const BoldNumber = memo<{ children: number }>(({ children }) => (
   <Text weight="bold" as="b">
