@@ -1,12 +1,22 @@
 'use client'
 
-import React, { ReactElement, forwardRef, useMemo } from 'react'
+import React, {
+  type CSSProperties,
+  Children,
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type PropsWithChildren,
+  type ReactElement,
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  useMemo,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type { CSSProperties, ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 const classNameGenerator = tv({
   base: ['shr-flex shr-flex-wrap', 'empty:shr-gap-0'],
@@ -70,7 +80,7 @@ const classNameGenerator = tv({
     } as { [key in Gap]: string },
   },
 })
-const sidebarItem = tv({
+const itemClassNameGenerator = tv({
   slots: {
     firstItem: '',
     lastItem: '',
@@ -90,9 +100,9 @@ const sidebarItem = tv({
 })
 
 type Props = Omit<VariantProps<typeof classNameGenerator>, 'rowGap' | 'columnGap'> &
-  VariantProps<typeof sidebarItem> &
+  VariantProps<typeof itemClassNameGenerator> &
   PropsWithChildren<{
-    as?: string | React.ComponentType<any>
+    as?: string | ComponentType<any>
     /** コンポーネントの `min-width` 値 */
     contentsMinWidth?: CSSProperties['minWidth']
     /** 各領域の間隔の指定（gap） */
@@ -130,7 +140,7 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       [align, gaps.row, gaps.column, className],
     )
     const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
-      const { firstItem, lastItem } = sidebarItem({ right })
+      const { firstItem, lastItem } = itemClassNameGenerator({ right })
       const styleProps = {
         minWidth: contentsMinWidth,
       }
@@ -148,18 +158,18 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
     }, [contentsMinWidth, right])
 
     // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
-    const maxChildrenIndex = React.Children.count(children) - 1
-    const styledChildren = React.Children.map(children, (child, i) => {
-      if (React.isValidElement(child)) {
+    const maxChildrenIndex = Children.count(children) - 1
+    const styledChildren = Children.map(children, (child, i) => {
+      if (isValidElement(child)) {
         const childClassName = child.props.className ?? ''
 
         if (i === 0) {
-          return React.cloneElement(child as ReactElement, {
+          return cloneElement(child as ReactElement, {
             className: `${firstItemStyleProps.className} ${childClassName}`,
             style: { ...firstItemStyleProps.style, ...child.props.style },
           })
         } else if (i === maxChildrenIndex) {
-          return React.cloneElement(child as ReactElement, {
+          return cloneElement(child as ReactElement, {
             className: `${lastItemStyleProps.className} ${childClassName}`,
             style: { ...lastItemStyleProps.style, ...child.props.style },
           })
