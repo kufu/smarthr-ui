@@ -39,12 +39,12 @@ export const Size: StoryObj<typeof Chip> = {
   ),
 }
 
-export const Type: StoryObj<typeof Chip> = {
-  name: 'type',
+export const Color: StoryObj<typeof Chip> = {
+  name: 'color',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
-        <Chip {...args} type={type as any} key={String(type)} />
+      {[undefined, ...Object.keys(classNameGenerator.variants.color)].map((color) => (
+        <Chip {...args} color={color as any} key={String(color)} />
       ))}
     </Stack>
   ),

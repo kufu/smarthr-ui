@@ -12,7 +12,7 @@ export const classNameGenerator = tv({
     'contrast-more:shr-border-high-contrast',
   ],
   variants: {
-    type: {
+    color: {
       grey: 'shr-border-grey-20',
       blue: 'shr-border-main',
       /* green がトークン化されたら置き換える */
@@ -30,14 +30,14 @@ export const classNameGenerator = tv({
   },
   defaultVariants: {
     size: 's',
-    type: 'grey',
+    color: 'grey',
   },
 })
 
-export const Chip: FC<Props> = ({ size, type, disabled, className, ...props }) => {
+export const Chip: FC<Props> = ({ size, color, disabled, className, ...props }) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ size, type, disabled, className }),
-    [size, type, disabled, className],
+    () => classNameGenerator({ size, color, disabled, className }),
+    [size, color, disabled, className],
   )
   return <span {...props} className={actualClassName} />
 }
