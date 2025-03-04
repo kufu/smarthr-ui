@@ -204,14 +204,7 @@ export const NotificationBar: FC<ActualProps> = ({
           },
     [base, layer],
   )
-  const {
-    wrapperStyle,
-    innerStyle,
-    messageAreaStyle,
-    iconStyle,
-    actionAreaStyle,
-    closeButtonStyle,
-  } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
       bold: !!bold,
@@ -219,46 +212,42 @@ export const NotificationBar: FC<ActualProps> = ({
     })
 
     return {
-      wrapperStyle: wrapper({ animate, className }),
-      innerStyle: inner(),
-      messageAreaStyle: messageArea(),
-      iconStyle: icon(),
-      actionAreaStyle: actionArea(),
-      closeButtonStyle: closeButton(),
+      wrapper: wrapper({ animate, className }),
+      inner: inner(),
+      messageArea: messageArea(),
+      icon: icon(),
+      actionArea: actionArea(),
+      closeButton: closeButton(),
     }
-  }, [animate, base, bold, className, type])
+  }, [animate, base, bold, type, className])
 
   return (
     <WrapBase {...baseProps}>
-      <div {...props} className={wrapperStyle} role={actualRole}>
-        <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
-          <MessageArea
-            message={message}
-            bold={bold}
-            type={type}
-            messageAreaStyle={messageAreaStyle}
-            iconStyle={iconStyle}
-          />
+      <div {...props} className={classNames.wrapper} role={actualRole}>
+        <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
+          <MessageArea message={message} bold={bold} type={type} classNames={classNames} />
           {children && (
-            <Cluster align="center" justify="flex-end" className={actionAreaStyle}>
+            <Cluster align="center" justify="flex-end" className={classNames.actionArea}>
               {children}
             </Cluster>
           )}
         </Cluster>
-        <CloseButton onClose={onClose} className={closeButtonStyle} />
+        <CloseButton onClose={onClose} className={classNames.closeButton} />
       </div>
     </WrapBase>
   )
 }
 
 const MessageArea = memo<
-  Pick<ActualProps, 'message' | 'bold' | 'type'> & { messageAreaStyle: string; iconStyle: string }
->(({ message, bold, type, messageAreaStyle, iconStyle }) => {
+  Pick<ActualProps, 'message' | 'bold' | 'type'> & {
+    classNames: { messageArea: string; icon: string }
+  }
+>(({ message, bold, type, classNames }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
-    <div className={messageAreaStyle}>
-      <Icon text={message} iconGap={0.5} className={iconStyle} />
+    <div className={classNames.messageArea}>
+      <Icon text={message} iconGap={0.5} className={classNames.icon} />
     </div>
   )
 })
