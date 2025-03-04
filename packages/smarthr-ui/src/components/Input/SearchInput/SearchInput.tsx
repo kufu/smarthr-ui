@@ -1,17 +1,20 @@
 import React, { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
   tooltipMessage: ReactNode
-  decorators?: DecoratorsType<'iconAlt'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const ICON_ALT = '検索'
+const DECORATOR_DEFAULT_TEXTS = {
+  iconAlt: '検索',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({
   slots: {
@@ -30,7 +33,6 @@ const classNameGenerator = tv({
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ decorators, width, className, ...rest }, ref) => {
-    const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
     const labelStyle = useMemo(
       () => ({
         width: typeof width === 'number' ? `${width}px` : width,
@@ -46,12 +48,14 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [labelStyle.width, className])
 
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
     return (
       <label className={classNames.label} style={labelStyle}>
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
+          prefix={<FaMagnifyingGlassIcon alt={decorated.iconAlt} color="TEXT_GREY" />}
           className={classNames.input}
         />
       </label>
