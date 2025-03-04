@@ -31,21 +31,28 @@ const classNameGenerator = tv({
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ decorators, width, className, ...rest }, ref) => {
     const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
-    const labelStyleAttr = useMemo(
+    const labelStyle = useMemo(
       () => ({
         width: typeof width === 'number' ? `${width}px` : width,
       }),
       [width],
     )
-    const { label, input } = classNameGenerator({ existsWidth: !!labelStyleAttr.width })
+    const classNames = useMemo(() => {
+      const { label, input } = classNameGenerator({ existsWidth: !!labelStyle.width })
+
+      return {
+        label: label({ className }),
+        input: input(),
+      }
+    }, [labelStyle.width, className])
 
     return (
-      <label className={label({ className })} style={labelStyleAttr}>
+      <label className={classNames.label} style={labelStyle}>
         <InputWithTooltip
           {...rest}
           ref={ref}
           prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
-          className={input()}
+          className={classNames.input}
         />
       </label>
     )
