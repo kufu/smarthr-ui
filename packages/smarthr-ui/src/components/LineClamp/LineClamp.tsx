@@ -87,28 +87,27 @@ export const LineClamp: FC<Props & ElementProps> = ({
     setTooltipVisible(isMultiLineOverflow)
   }, [maxLines, children])
 
-  const { baseStyle, clampedLineStyle, shadowElementWrapperStyle, shadowElementStyle } =
-    useMemo(() => {
-      const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
-        maxLines,
-      })
+  const classNames = useMemo(() => {
+    const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
+      maxLines,
+    })
 
-      return {
-        baseStyle: base({ className }),
-        clampedLineStyle: clampedLine(),
-        shadowElementWrapperStyle: shadowElementWrapper(),
-        shadowElementStyle: shadowElement(),
-      }
-    }, [maxLines, className])
+    return {
+      base: base({ className }),
+      clampedLine: clampedLine(),
+      shadowElementWrapper: shadowElementWrapper(),
+      shadowElement: shadowElement(),
+    }
+  }, [maxLines, className])
 
   const actualLineClamp = (
-    <span {...props} className={baseStyle}>
-      <span ref={ref} className={clampedLineStyle}>
+    <span {...props} className={classNames.base}>
+      <span ref={ref} className={classNames.clampedLine}>
         {children}
       </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
-      <span aria-hidden className={shadowElementWrapperStyle}>
-        <span className={shadowElementStyle} ref={shadowRef}>
+      <span aria-hidden className={classNames.shadowElementWrapper}>
+        <span className={classNames.shadowElement} ref={shadowRef}>
           {children}
         </span>
       </span>
