@@ -1,9 +1,9 @@
 'use client'
 
 import React, {
-  ComponentPropsWithRef,
-  FC,
-  PropsWithChildren,
+  type ComponentPropsWithRef,
+  type FC,
+  type PropsWithChildren,
   useEffect,
   useMemo,
   useRef,
@@ -13,10 +13,10 @@ import { VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type Props = PropsWithChildren<VariantProps<typeof lineClamp>>
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
 type ElementProps = Omit<ComponentPropsWithRef<'span'>, keyof Props>
 
-const lineClamp = tv({
+const classNameGenerator = tv({
   slots: {
     base: 'smarthr-ui-LineClamp shr-relative',
     clampedLine: 'shr-w-full',
@@ -89,7 +89,9 @@ export const LineClamp: FC<Props & ElementProps> = ({
 
   const { baseStyle, clampedLineStyle, shadowElementWrapperStyle, shadowElementStyle } =
     useMemo(() => {
-      const { base, clampedLine, shadowElementWrapper, shadowElement } = lineClamp({ maxLines })
+      const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
+        maxLines,
+      })
 
       return {
         baseStyle: base({ className }),
@@ -101,7 +103,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
 
   const actualLineClamp = (
     <span {...props} className={baseStyle}>
-      <span className={clampedLineStyle} ref={ref}>
+      <span ref={ref} className={clampedLineStyle}>
         {children}
       </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
