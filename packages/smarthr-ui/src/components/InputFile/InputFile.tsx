@@ -124,15 +124,15 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       [decorators],
     )
 
-    const updateFiles = useCallback(
-      (newFiles: File[]) => {
-        if (onChange) {
-          onChange(newFiles)
-        }
-
-        setFiles(newFiles)
-      },
-      [setFiles, onChange],
+    const updateFiles = useMemo(
+      () =>
+        onChange
+          ? (newFiles: File[]) => {
+              onChange(newFiles)
+              setFiles(newFiles)
+            }
+          : setFiles,
+      [onChange],
     )
 
     const handleChange = useCallback(
