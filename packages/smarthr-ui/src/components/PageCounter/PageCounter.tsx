@@ -1,7 +1,7 @@
 import React, { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Cluster } from '../Layout'
 import { RangeSeparator, Text } from '../Text'
 
@@ -9,15 +9,15 @@ type Props = {
   start: number
   end: number
   total?: number
-  decorators?: DecoratorsType<'rangeSeparator' | 'rangeSeparatorVisuallyHiddenText'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
-  decorator?.(defaultText) || defaultText
-
-const RANGE_SEPARATOR = '–'
-const RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT = 'から'
+const DECORATOR_DEFAULT_TEXTS = {
+  rangeSeparator: '–',
+  rangeSeparatorVisuallyHiddenText: 'から',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({ base: 'shr-text-base' })
 
@@ -30,23 +30,14 @@ export const PageCounter: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
-  const rangeSeparatorDecorators = useMemo(() => {
-    if (!decorators) {
-      return {
-        text: () => RANGE_SEPARATOR,
-        visuallyHiddenText: () => RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT,
-      }
-    }
-
-    return {
-      text: () => executeDecorator(RANGE_SEPARATOR, decorators.rangeSeparator),
-      visuallyHiddenText: () =>
-        executeDecorator(
-          RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT,
-          decorators.rangeSeparatorVisuallyHiddenText,
-        ),
-    }
-  }, [decorators])
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const rangeSeparatorDecorators = useMemo(
+    () => ({
+      text: () => decorated.rangeSeparator,
+      visuallyHiddenText: () => decorated.rangeSeparatorVisuallyHiddenText,
+    }),
+    [decorated],
+  )
 
   return (
     <Cluster {...props} gap={0.25} inline align="baseline" className={actualClassName}>
