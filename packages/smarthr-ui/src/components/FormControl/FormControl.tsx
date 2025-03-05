@@ -190,20 +190,19 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
   const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, underTitleStackStyle } =
-    useMemo(() => {
-      const { wrapper, label, errorList, errorIcon, underTitleStack } = classNameGenerator()
+  const classNames = useMemo(() => {
+    const { wrapper, label, errorList, errorIcon, underTitleStack } = classNameGenerator()
 
-      return {
-        wrapperStyle: wrapper({ className }),
-        labelStyle: label({
-          className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
-        }),
-        errorListStyle: errorList(),
-        errorIconStyle: errorIcon(),
-        underTitleStackStyle: underTitleStack(),
-      }
-    }, [dangerouslyTitleHidden, className])
+    return {
+      wrapper: wrapper({ className }),
+      label: label({
+        className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
+      }),
+      errorList: errorList(),
+      errorIcon: errorIcon(),
+      underTitleStack: underTitleStack(),
+    }
+  }, [dangerouslyTitleHidden, className])
   const childrenWrapperClassName = useMemo(
     () => childrenWrapperClassNameGenerator({ innerMargin, isFieldset }),
     [innerMargin, isFieldset],
@@ -295,8 +294,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       <ErrorMessageList
         errorMessages={actualErrorMessages}
         managedHtmlFor={managedHtmlFor}
-        errorListStyle={errorListStyle}
-        errorIconStyle={errorIconStyle}
+        classNames={classNames}
       />
       <div className={childrenWrapperClassName} ref={inputWrapperRef}>
         {children}
@@ -314,7 +312,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   if (dangerouslyTitleHidden) {
     body = (
       // eslint-disable-next-line smarthr/best-practice-for-layouts
-      <Stack gap={actualInnerMargin} className={underTitleStackStyle}>
+      <Stack gap={actualInnerMargin} className={classNames.underTitleStack}>
         {body}
       </Stack>
     )
@@ -326,18 +324,18 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       as={as}
       gap={actualInnerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
-      className={wrapperStyle}
+      className={classNames.wrapper}
     >
       <TitleCluster
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        labelStyle={labelStyle}
         dangerouslyTitleHidden={dangerouslyTitleHidden}
         titleType={titleType}
         title={title}
         statusLabelList={statusLabelList}
         subActionArea={subActionArea}
+        className={classNames.label}
       />
       {body}
     </Stack>
@@ -351,19 +349,19 @@ const TitleCluster = memo<
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
-    labelStyle: string
+    className: string
   }
 >(
   ({
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    labelStyle,
     dangerouslyTitleHidden,
     titleType,
     title,
     statusLabelList,
     subActionArea,
+    className,
   }) => {
     const body = (
       <>
@@ -430,7 +428,7 @@ const TitleCluster = memo<
             className="[&&&]:shr--mt-0"
           >
             {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-            <Cluster {...attrs.label} align="center" className={labelStyle}>
+            <Cluster {...attrs.label} align="center" className={className}>
               {body}
             </Cluster>
             {subActionArea && <div className="shr-grow">{subActionArea}</div>}
@@ -468,14 +466,16 @@ const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor
 const ErrorMessageList = memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
-  errorListStyle: string
-  errorIconStyle: string
-}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) =>
+  classNames: {
+    errorList: string
+    errorIcon: string
+  }
+}>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
+    <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <FaCircleExclamationIcon text={message} className={errorIconStyle} />
+          <FaCircleExclamationIcon text={message} className={classNames.errorIcon} />
         </p>
       ))}
     </div>
