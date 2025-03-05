@@ -1,6 +1,15 @@
 'use client'
 
-import React, { HTMLAttributes, ReactNode, useCallback, useMemo } from 'react'
+import React, {
+  type FC,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
@@ -20,7 +29,7 @@ export type Props = {
   decorators?: DecoratorsType<'triggerLabel' | 'checkIconAlt'>
   /** 言語切替UIで言語を選択した時に発火するコールバック関数 */
   onLanguageSelect?: (code: string) => void
-} & VariantProps<typeof appLauncher>
+} & VariantProps<typeof classNameGenerator>
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
@@ -29,7 +38,7 @@ const CHECK_ICON_ALT = '選択中'
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     switchButton: [
       'shr-border-none shr-font-normal shr-text-white shr-transition-transform shr-duration-100 shr-bg-transparent shr-px-0.25',
@@ -64,7 +73,7 @@ const appLauncher = tv({
   },
 })
 
-export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
+export const LanguageSwitcher: FC<Props & ElementProps> = ({
   narrow,
   enableNew,
   invert = enableNew,
@@ -94,7 +103,7 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
     [locale, defaultLocale, localeMap],
   )
   const styles = useMemo(() => {
-    const { languageButton, languageItemsList, languageItem, switchButton } = appLauncher()
+    const { languageButton, languageItemsList, languageItem, switchButton } = classNameGenerator()
 
     return {
       languageButton: languageButton(),
@@ -107,14 +116,14 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   const handleLanguageSelect = useMemo(
     () =>
       onLanguageSelect
-        ? (e: React.MouseEvent<HTMLButtonElement>) => {
+        ? (e: MouseEvent<HTMLButtonElement>) => {
             onLanguageSelect(e.currentTarget.value)
           }
         : undefined,
     [onLanguageSelect],
   )
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
     if (!ARROW_KEY_REGEX.test(e.key)) {
       return
     }
@@ -163,14 +172,14 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   )
 }
 
-const LanguageListItemButton = React.memo<{
+const LanguageListItemButton = memo<{
   code: string
   children: string
   className: string
   buttonStyle: string
   current: boolean
   iconAlt: ReactNode
-  handleLanguageSelect?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  handleLanguageSelect?: (e: MouseEvent<HTMLButtonElement>) => void
 }>(({ code, children, buttonStyle, className, current, iconAlt, handleLanguageSelect }) => (
   <li key={code} className={className} aria-current={current} lang={code}>
     <Button
@@ -185,7 +194,7 @@ const LanguageListItemButton = React.memo<{
   </li>
 ))
 
-const MemoizedDropdownTrigger = React.memo<
+const MemoizedDropdownTrigger = memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: ReactNode }
 >(({ narrow, invert, className, label }) => (
   <DropdownTrigger>
