@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React, { ComponentProps, useState } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
 import { CheckBox } from '../CheckBox'
@@ -35,10 +34,6 @@ export default {
     withTheming: true,
   },
 }
-
-const radioButtonListWrapper = tv({
-  base: 'shr-list-none',
-})
 
 export const Default: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
@@ -102,7 +97,7 @@ export const Default: StoryFn = () => {
       >
         <StepFormDialogItem {...stepOrder[0]}>
           <Fieldset title="fruits" innerMargin={0.5}>
-            <Cluster className={radioButtonListWrapper()} as="ul">
+            <Cluster className="shr-list-none" as="ul">
               <li>
                 <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
                   Apple
