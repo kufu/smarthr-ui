@@ -1,12 +1,14 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  FC,
-  MouseEvent,
-  PropsWithChildren,
-  ReactNode,
-  RefObject,
+  type ComponentProps,
+  type FC,
+  type KeyboardEvent,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  type RefObject,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -15,11 +17,11 @@ import React, {
   useState,
 } from 'react'
 import Draggable from 'react-draggable'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../hooks/useDecorators'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { Base, BaseElementProps } from '../Base'
+import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripIcon, FaXmarkIcon } from '../Icon'
 
@@ -89,7 +91,7 @@ const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
 const DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT = (def: string, _data: DOMRect | undefined) => def
 
-const modelessDialog = tv({
+const classNameGenerator = tv({
   slots: {
     overlap: 'shr-inset-[unset]',
     wrapper: 'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
@@ -120,7 +122,9 @@ const modelessDialog = tv({
   },
 })
 
-export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof modelessDialog>> = ({
+export const ModelessDialog: FC<
+  Props & BaseElementProps & VariantProps<typeof classNameGenerator>
+> = ({
   header,
   children,
   contentBgColor,
@@ -156,7 +160,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     footerStyle,
   } = useMemo(() => {
     const { overlap, wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
-      modelessDialog()
+      classNameGenerator()
 
     return {
       overlapStyle: overlap({ className }),
@@ -222,7 +226,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   const leftStyle = centering.left !== undefined ? centering.left : left
 
   const handleArrowKey = useCallback(
-    (e: React.KeyboardEvent) => {
+    (e: KeyboardEvent) => {
       if (!isOpen || document.activeElement !== e.currentTarget) {
         return
       }
@@ -417,11 +421,11 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   )
 }
 
-const Handler = React.memo<{
+const Handler = memo<{
   'aria-label': string
   'aria-valuetext': string | undefined
   className: string
-  onArrowKeyDown: (e: React.KeyboardEvent) => void
+  onArrowKeyDown: (e: KeyboardEvent) => void
 }>(({ onArrowKeyDown, ...rest }) => (
   // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
   <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
@@ -429,7 +433,7 @@ const Handler = React.memo<{
   </div>
 ))
 
-const CloseButton = React.memo<{
+const CloseButton = memo<{
   className: string
   iconAlt: ReactNode
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
