@@ -3,6 +3,7 @@ import React, {
   type ElementType,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -45,23 +46,24 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
     }
   }, [className])
 
-  const TitleComponent = titleElementAs ?? 'p'
   const ListComponent = listElementAs ?? 'ul'
 
   return (
     <li className={classNames.wrapper}>
-      <TitleComponent>
-        <Text
-          color="TEXT_BLACK"
-          leading="TIGHT"
-          size="S"
-          weight="bold"
-          className={classNames.groupTitle}
-        >
-          {title}
-        </Text>
-      </TitleComponent>
+      <GroupTitle titleElementAs={titleElementAs} className={classNames.groupTitle}>
+        {title}
+      </GroupTitle>
       <ListComponent className={classNames.list}>{children}</ListComponent>
     </li>
   )
 }
+
+const GroupTitle = memo<
+  Required<Pick<Props, 'titleElementAs'>> & PropsWithChildren<{ className: string }>
+>(({ titleElementAs: Component = 'p', children, className }) => (
+  <Component>
+    <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={className}>
+      {children}
+    </Text>
+  </Component>
+))
