@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
@@ -38,16 +38,20 @@ export type BaseProps = PropsWithChildren<
       /** ダイアログフッターの左端操作領域 */
       subActionArea?: ReactNode
       /** コンポーネント内の文言を変更するための関数を設定 */
-      decorators?: DecoratorsType<'closeButtonLabel'>
+      decorators?: DecoratorsType<DecoratorKeyTypes>
     }
 >
+
+const DECORATOR_DEFAULT_TEXTS = {
+  closeButtonLabel: 'キャンセル',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export type FormDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
   responseMessage?: ResponseMessageType
 }
 
-const CLOSE_BUTTON_LABEL = 'キャンセル'
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const classNameGenerator = tv({
@@ -100,6 +104,8 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     }
   }, [])
 
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={classNames.wrapper}>
@@ -117,8 +123,8 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
               actionDisabled={actionDisabled}
               loading={calculatedResponseStatus.isProcessing}
               actionTheme={actionTheme}
-              decorators={decorators}
               actionText={actionText}
+              closeButtonLabel={decorated.closeButtonLabel}
               className={classNames.buttonArea}
             />
           </Cluster>
@@ -138,13 +144,8 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 const ActionAreaCluster = memo<
   Pick<
     FormDialogContentInnerProps,
-    | 'onClickClose'
-    | 'closeDisabled'
-    | 'actionDisabled'
-    | 'actionTheme'
-    | 'decorators'
-    | 'actionText'
-  > & { loading: boolean; className: string }
+    'onClickClose' | 'closeDisabled' | 'actionDisabled' | 'actionTheme' | 'actionText'
+  > & { loading: boolean; className: string; closeButtonLabel: ReactNode }
 >(
   ({
     onClickClose,
@@ -152,16 +153,14 @@ const ActionAreaCluster = memo<
     actionDisabled,
     loading,
     actionTheme,
-    decorators,
     actionText,
+    closeButtonLabel,
     className,
   }) => (
     <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
-      <CloseButton
-        onClick={onClickClose}
-        disabled={closeDisabled || loading}
-        decorators={decorators}
-      />
+      <CloseButton onClick={onClickClose} disabled={closeDisabled || loading}>
+        {closeButtonLabel}
+      </CloseButton>
       <ActionButton variant={actionTheme} disabled={actionDisabled} loading={loading}>
         {actionText}
       </ActionButton>
@@ -188,19 +187,12 @@ const ActionButton = memo<
 ))
 
 const CloseButton = memo<
-  Pick<FormDialogContentInnerProps, 'decorators'> & {
+  PropsWithChildren<{
     onClick: FormDialogContentInnerProps['onClickClose']
     disabled: boolean
-  }
->(({ onClick, disabled, decorators }) => {
-  const children = useMemo(
-    () => decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
-    [decorators],
-  )
-
-  return (
-    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {children}
-    </Button>
-  )
-})
+  }>
+>(({ onClick, disabled, children }) => (
+  <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+    {children}
+  </Button>
+))
