@@ -103,7 +103,13 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const locales = useMemo(() => Object.entries(localeMap), [localeMap])
+  const { locales, defaultCurrentLang } = useMemo(
+    () => ({
+      locales: Object.entries(localeMap),
+      defaultCurrentLang: Object.keys(localeMap)[0],
+    }),
+    [localeMap],
+  )
   const decoratedTexts = useMemo(() => {
     if (!decorators) {
       return {
@@ -117,10 +123,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
       checkIconAlt: decorators.checkIconAlt?.(CHECK_ICON_ALT) || CHECK_ICON_ALT,
     }
   }, [decorators])
-  const currentLang = useMemo(
-    () => locale || defaultLocale || Object.keys(localeMap)[0],
-    [locale, defaultLocale, localeMap],
-  )
+  const currentLang = locale || defaultLocale || defaultCurrentLang
   const classNames = useMemo(() => {
     const { languageButton, languageItemsList, languageItem, switchButton } = classNameGenerator()
 
@@ -150,7 +153,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
         className={classNames.switchButton}
         label={decoratedTexts.triggerLabel}
       />
-      <DropdownContent onKeyDown={ON_KEY_DOWN_CONTENT} role="presentation">
+      <DropdownContent role="presentation" onKeyDown={ON_KEY_DOWN_CONTENT}>
         <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
