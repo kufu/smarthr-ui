@@ -150,28 +150,20 @@ export const ModelessDialog: FC<
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
   const { createPortal } = useDialogPortal(portalParent, id)
 
-  const {
-    overlapStyle,
-    wrapperStyle,
-    headerStyle,
-    titleStyle,
-    dialogHandlerStyle,
-    closeButtonLayoutStyle,
-    footerStyle,
-  } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { overlap, wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
       classNameGenerator()
 
     return {
-      overlapStyle: overlap({ className }),
-      wrapperStyle: wrapper({ resizable }),
-      headerStyle: headerEl(),
-      titleStyle: title(),
-      dialogHandlerStyle: dialogHandler(),
-      closeButtonLayoutStyle: closeButtonLayout(),
-      footerStyle: footerEl(),
+      overlap: overlap({ className }),
+      wrapper: wrapper({ resizable }),
+      header: headerEl(),
+      title: title(),
+      dialogHandler: dialogHandler(),
+      closeButtonLayout: closeButtonLayout(),
+      footer: footerEl(),
     }
-  }, [className, resizable])
+  }, [resizable, className])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
@@ -363,7 +355,7 @@ export const ModelessDialog: FC<
   }, [])
 
   return createPortal(
-    <DialogOverlap isOpen={isOpen} className={overlapStyle}>
+    <DialogOverlap isOpen={isOpen} className={classNames.overlap}>
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={onDragStart}
@@ -387,23 +379,23 @@ export const ModelessDialog: FC<
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
-          className={wrapperStyle}
+          className={classNames.wrapper}
         >
           {/* dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
-          <div className={headerStyle}>
+          <div className={classNames.header}>
             <Handler
               aria-label={decorated.dialogHandlerAriaLabel}
               aria-valuetext={dialogHandlerAriaValuetext}
               onArrowKeyDown={handleArrowKey}
-              className={dialogHandlerStyle}
+              className={classNames.dialogHandler}
             />
-            <div id={labelId} className={titleStyle}>
+            <div id={labelId} className={classNames.title}>
               {header}
             </div>
             <CloseButton
               onClick={actualOnClickClose}
-              className={closeButtonLayoutStyle}
+              className={classNames.closeButtonLayout}
               iconAlt={decorated.closeButtonIconAlt}
             />
           </div>
@@ -414,7 +406,7 @@ export const ModelessDialog: FC<
           >
             {children}
           </DialogBody>
-          {footer && <div className={footerStyle}>{footer}</div>}
+          {footer && <div className={classNames.footer}>{footer}</div>}
         </Base>
       </Draggable>
     </DialogOverlap>,
