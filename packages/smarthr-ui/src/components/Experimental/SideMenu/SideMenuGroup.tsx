@@ -1,8 +1,8 @@
 import React, {
-  ComponentPropsWithoutRef,
-  ElementType,
-  PropsWithChildren,
-  ReactNode,
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type PropsWithChildren,
+  type ReactNode,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -20,7 +20,7 @@ type Props<TitleElement extends ElementType = 'p'> = PropsWithChildren<{
 }> &
   ComponentPropsWithoutRef<TitleElement>
 
-const sideMenuGroup = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-mt-1'],
     list: 'shr-list-none',
@@ -35,12 +35,13 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
   children,
   className,
 }: Props<TitleElement>) => {
-  const { wrapperStyle, listStyle, groupTitleStyle } = useMemo(() => {
-    const { wrapper, list, groupTitle } = sideMenuGroup()
+  const classNames = useMemo(() => {
+    const { wrapper, list, groupTitle } = classNameGenerator()
+
     return {
-      wrapperStyle: wrapper({ className }),
-      listStyle: list(),
-      groupTitleStyle: groupTitle(),
+      wrapper: wrapper({ className }),
+      list: list(),
+      groupTitle: groupTitle(),
     }
   }, [className])
 
@@ -48,13 +49,19 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
   const ListComponent = listElementAs ?? 'ul'
 
   return (
-    <li className={wrapperStyle}>
+    <li className={classNames.wrapper}>
       <TitleComponent>
-        <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={groupTitleStyle}>
+        <Text
+          color="TEXT_BLACK"
+          leading="TIGHT"
+          size="S"
+          weight="bold"
+          className={classNames.groupTitle}
+        >
           {title}
         </Text>
       </TitleComponent>
-      <ListComponent className={listStyle}>{children}</ListComponent>
+      <ListComponent className={classNames.list}>{children}</ListComponent>
     </li>
   )
 }
