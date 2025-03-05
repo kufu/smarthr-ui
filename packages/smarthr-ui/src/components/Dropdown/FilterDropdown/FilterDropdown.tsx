@@ -30,9 +30,7 @@ type Props = {
   onOpen?: () => void
   onClose?: () => void
   children: ReactNode
-  decorators?: DecoratorsType<
-    'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
-  >
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   responseMessage?: ResponseMessageType
   /** 引き金となるボタンの大きさ */
   triggerSize?: ButtonProps['size']
@@ -41,20 +39,20 @@ type Props = {
 }
 type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
 
-const STATUS_FILTERED_TEXT = '適用中'
-const TRIGGER_BUTTON_TEXT = '絞り込み'
-const APPLY_BUTTON_TEXT = '適用'
-const CANCEL_BUTTON_TEXT = 'キャンセル'
-const RESET_BUTTON_TEXT = '絞り込み条件を解除'
+const DECORATOR_DEFAULT_TEXTS = {
+  status: '適用中',
+  triggerButton: '絞り込み',
+  applyButton: '適用',
+  cancelButton: 'キャンセル',
+  resetButton: '絞り込み条件を解除',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
 const ON_SUBMIT = (e: FormEvent) => {
   e.preventDefault()
 }
-
-const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
-  decorator?.(defaultText) || defaultText
 
 const classNameGenerator = tv({
   slots: {
@@ -98,30 +96,9 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   onlyIconTrigger = false,
   ...props
 }: Props) => {
-  const texts = useMemo(() => {
-    if (!decorators) {
-      return {
-        status: STATUS_FILTERED_TEXT,
-        triggerButton: TRIGGER_BUTTON_TEXT,
-        applyButton: APPLY_BUTTON_TEXT,
-        cancelButton: CANCEL_BUTTON_TEXT,
-        resetButton: RESET_BUTTON_TEXT,
-      }
-    }
-
-    return {
-      status: executeDecorator(STATUS_FILTERED_TEXT, decorators.status),
-      triggerButton: executeDecorator(TRIGGER_BUTTON_TEXT, decorators.triggerButton),
-      applyButton: executeDecorator(APPLY_BUTTON_TEXT, decorators.applyButton),
-      cancelButton: executeDecorator(CANCEL_BUTTON_TEXT, decorators.cancelButton),
-      resetButton: executeDecorator(RESET_BUTTON_TEXT, decorators.resetButton),
-    }
-  }, [decorators])
-
-  const filteredIconAriaLabel = useMemo(() => innerText(texts.status), [texts.status])
-
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const filteredIconAriaLabel = useMemo(() => innerText(decorated.status), [decorated.status])
   const calcedResponseStatus = useResponseMessage(responseMessage)
-
   const classNamesMapper = useMemo(() => {
     const {
       iconWrapper,
@@ -159,7 +136,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   const { buttonSuffix, buttonContent } = useMemo(() => {
     const FilterIcon = (
       <span className={classNames.iconWrapper}>
-        <FaFilterIcon alt={onlyIconTrigger ? texts.triggerButton : undefined} />
+        <FaFilterIcon alt={onlyIconTrigger ? decorated.triggerButton : undefined} />
 
         {isFiltered && (
           <FaCircleCheckIcon
@@ -179,13 +156,13 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
 
     return {
       buttonSuffix: FilterIcon,
-      buttonContent: texts.triggerButton,
+      buttonContent: decorated.triggerButton,
     }
-  }, [isFiltered, texts.triggerButton, onlyIconTrigger, filteredIconAriaLabel, classNames])
+  }, [isFiltered, decorated.triggerButton, onlyIconTrigger, filteredIconAriaLabel, classNames])
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: texts.triggerButton }}>
+      <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: decorated.triggerButton }}>
         <Button {...props} suffix={buttonSuffix} square={onlyIconTrigger} size={triggerSize}>
           {buttonContent}
         </Button>
@@ -204,7 +181,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                     onClick={onReset}
                     disabled={calcedResponseStatus.isProcessing}
                   >
-                    {texts.resetButton}
+                    {decorated.resetButton}
                   </Button>
                 </div>
               )}
@@ -216,7 +193,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
               >
                 <DropdownCloser>
                   <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
-                    {texts.cancelButton}
+                    {decorated.cancelButton}
                   </Button>
                 </DropdownCloser>
                 <DropdownCloser>
@@ -225,7 +202,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                     onClick={onApply}
                     loading={calcedResponseStatus.isProcessing}
                   >
-                    {texts.applyButton}
+                    {decorated.applyButton}
                   </Button>
                 </DropdownCloser>
               </Cluster>
