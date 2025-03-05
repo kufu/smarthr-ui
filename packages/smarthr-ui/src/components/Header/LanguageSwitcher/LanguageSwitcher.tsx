@@ -102,7 +102,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
     () => locale || defaultLocale || Object.keys(localeMap)[0],
     [locale, defaultLocale, localeMap],
   )
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { languageButton, languageItemsList, languageItem, switchButton } = classNameGenerator()
 
     return {
@@ -123,7 +123,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
     [onLanguageSelect],
   )
 
-  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDownContent = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
     if (!ARROW_KEY_REGEX.test(e.key)) {
       return
     }
@@ -148,17 +148,17 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
       <MemoizedDropdownTrigger
         narrow={narrow}
         invert={invert}
-        className={styles.switchButton}
+        className={classNames.switchButton}
         label={decoratedTexts.triggerLabel}
       />
-      <DropdownContent onKeyDown={handleKeyDown} role="presentation">
-        <ul className={styles.languageItemsList}>
+      <DropdownContent onKeyDown={onKeyDownContent} role="presentation">
+        <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
               key={code}
               code={code}
-              className={styles.languageItem}
-              buttonStyle={styles.languageButton}
+              className={classNames.languageItem}
+              buttonStyle={classNames.languageButton}
               current={currentLang === code}
               handleLanguageSelect={handleLanguageSelect}
               iconAlt={decoratedTexts.checkIconAlt}
