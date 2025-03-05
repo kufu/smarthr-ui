@@ -50,20 +50,20 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
 
   return (
     <li className={classNames.wrapper}>
-      <GroupTitle titleElementAs={titleElementAs} className={classNames.groupTitle}>
+      <GroupTitleText titleElementAs={titleElementAs} className={classNames.groupTitle}>
         {title}
-      </GroupTitle>
+      </GroupTitleText>
       <ListComponent className={classNames.list}>{children}</ListComponent>
     </li>
   )
 }
 
-const GroupTitle = memo<
-  Required<Pick<Props, 'titleElementAs'>> & PropsWithChildren<{ className: string }>
->(({ titleElementAs: Component = 'p', children, className }) => (
-  <Component>
-    <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={className}>
-      {children}
-    </Text>
-  </Component>
-))
+const GroupTitleText = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
+  ({ titleElementAs: Component = 'p', children, className }) => (
+    <Component>
+      <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={className}>
+        {children}
+      </Text>
+    </Component>
+  ),
+)
