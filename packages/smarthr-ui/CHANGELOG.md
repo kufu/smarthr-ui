@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [65.3.0](https://github.com/kufu/smarthr-ui/compare/v65.2.1...v65.3.0) (2025-03-04)
+
+
+### Features
+
+* Chipコンポーネントでボーダー色を受け取れるようにする ([#5295](https://github.com/kufu/smarthr-ui/issues/5295)) ([ad5498b](https://github.com/kufu/smarthr-ui/commit/ad5498b729eb2200f10554e7bddad62239cc38b4))
+* 多言語化対応の基盤を作成 ([#5220](https://github.com/kufu/smarthr-ui/issues/5220)) ([ab7bd7e](https://github.com/kufu/smarthr-ui/commit/ab7bd7e5b307225446b345f96d02738e38e46933))
+
+
+### Bug Fixes
+
+* **Fieldset:** innerMarginとして0.5を受け取れるように修正 ([#5421](https://github.com/kufu/smarthr-ui/issues/5421)) ([d8b6b69](https://github.com/kufu/smarthr-ui/commit/d8b6b6900cce50a8ebe938ac826edb076cd4b85f))
+
 ### [65.2.1](https://github.com/kufu/smarthr-ui/compare/v65.2.0...v65.2.1) (2025-02-25)
 
 ## [65.2.0](https://github.com/kufu/smarthr-ui/compare/v65.1.0...v65.2.0) (2025-02-18)
