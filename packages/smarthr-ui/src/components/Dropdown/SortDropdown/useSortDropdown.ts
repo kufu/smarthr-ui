@@ -1,7 +1,7 @@
 import {
-  ChangeEventHandler,
-  ComponentProps,
-  FormEventHandler,
+  type ChangeEventHandler,
+  type ComponentProps,
+  type FormEventHandler,
   useCallback,
   useEffect,
   useMemo,
@@ -13,7 +13,7 @@ import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import { SortDropdown } from './SortDropdown'
 
-const sortDropdownStyle = tv({
+const classNameGenerator = tv({
   slots: {
     body: 'shr-p-1.5',
     select: 'shr-min-w-[16em]',
@@ -122,7 +122,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   }, [])
 
   const classNames = useMemo(() => {
-    const { body, select, footer } = sortDropdownStyle()
+    const { body, select, footer } = classNameGenerator()
 
     return {
       body: body(),
