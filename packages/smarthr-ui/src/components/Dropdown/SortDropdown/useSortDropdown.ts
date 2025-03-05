@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useDecorators } from '../../../hooks/useDecorators'
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import { SortDropdown } from './SortDropdown'
@@ -23,35 +24,18 @@ const classNameGenerator = tv({
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
-const SORT_FIELD_LABEL = '並べ替え項目'
-const SORT_ORDER_LABEL = '並び順'
-const ASC_LABEL = '昇順'
-const DESC_LABEL = '降順'
-const APPLY_BUTTON_TEXT = '適用'
-const CANCEL_BUTTON_TEXT = 'キャンセル'
+const DECORATOR_DEFAULT_TEXTS = {
+  sortFieldLabel: '並べ替え項目',
+  sortOrderLabel: '並び順',
+  ascLabel: '昇順',
+  descLabel: '降順',
+  applyButtonLabel: '適用',
+  cancelButtonLabel: 'キャンセル',
+} as const
+export type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators }: Props) => {
-  const decoratedTexts = useMemo(() => {
-    if (!decorators) {
-      return {
-        sortField: SORT_FIELD_LABEL,
-        sortOrder: SORT_ORDER_LABEL,
-        asc: ASC_LABEL,
-        desc: DESC_LABEL,
-        applyButton: APPLY_BUTTON_TEXT,
-        cancelButton: CANCEL_BUTTON_TEXT,
-      }
-    }
-
-    return {
-      sortFieldLabel: decorators.sortFieldLabel?.(SORT_FIELD_LABEL) || SORT_FIELD_LABEL,
-      sortOrderLabel: decorators.sortOrderLabel?.(SORT_ORDER_LABEL) || SORT_ORDER_LABEL,
-      ascLabel: decorators.ascLabel?.(ASC_LABEL) || ASC_LABEL,
-      descLabel: decorators.descLabel?.(DESC_LABEL) || DESC_LABEL,
-      applyButtonLabel: decorators.applyButtonLabel?.(APPLY_BUTTON_TEXT) || APPLY_BUTTON_TEXT,
-      cancelButtonLabel: decorators.cancelButtonLabel?.(CANCEL_BUTTON_TEXT) || CANCEL_BUTTON_TEXT,
-    }
-  }, [decorators])
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   // 外向きの値
   const [selectedLabel, setSelectedLabel] = useState<string>()
@@ -75,10 +59,10 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
 
   // 外向きな値で構成
   const triggerLabel = useMemo(() => {
-    const sortLabel = checkedOrder === 'asc' ? decoratedTexts.asc : decoratedTexts.desc
+    const sortLabel = checkedOrder === 'asc' ? decorated.ascLabel : decorated.descLabel
 
     return `${selectedLabel}（${sortLabel}）`
-  }, [decoratedTexts.asc, decoratedTexts.desc, selectedLabel, checkedOrder])
+  }, [decorated.ascLabel, decorated.descLabel, selectedLabel, checkedOrder])
 
   const SortIcon = useMemo(
     () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
@@ -134,8 +118,8 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   return {
     onChangeSortOrderRadio,
     labels: {
-      trigger: triggerLabel,
-      ...decoratedTexts,
+      triggerLabel,
+      ...decorated,
     },
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
