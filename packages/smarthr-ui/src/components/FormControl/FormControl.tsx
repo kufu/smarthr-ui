@@ -215,12 +215,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
     const inputWrapper = inputWrapperRef?.current
 
-    if (!inputWrapper) {
-      return
-    }
-
-    // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-    if (document.getElementById(managedHtmlFor)) {
+    if (
+      !inputWrapper ||
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      document.getElementById(managedHtmlFor)
+    ) {
       return
     }
 
@@ -260,6 +259,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
     if (input) {
       const attribute = input.getAttribute(attrName)
+
       input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
     }
   }, [describedbyIds])
