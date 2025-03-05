@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 
 import { Launcher } from '../types'
 
@@ -46,7 +46,30 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     [mode],
   )
 
-  return { features, page, mode, sortType, searchQuery, changePage, setSortType, changeSearchQuery }
+  const onChangeSearchQuery = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => changeSearchQuery(e.currentTarget.value),
+    [changeSearchQuery],
+  )
+  const onClickClearSearchQuery = useCallback(() => {
+    // HINT: 別のスレッドにしないとドロップダウンが閉じてしまう
+    requestAnimationFrame(() => {
+      changeSearchQuery('')
+    })
+  }, [changeSearchQuery])
+
+  return {
+    features,
+    page,
+    mode,
+    sortType,
+    searchQuery,
+    changePage,
+    setSortType,
+    // TODO: onChangeSearchQuery, onClickClearSearchQueryを使えば消せるかも
+    changeSearchQuery,
+    onChangeSearchQuery,
+    onClickClearSearchQuery,
+  }
 }
 
 const sortFeatures = (
