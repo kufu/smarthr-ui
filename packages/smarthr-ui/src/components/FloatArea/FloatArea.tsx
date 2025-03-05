@@ -1,14 +1,15 @@
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
+import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseMessageTypeWithoutProcessing } from '../../hooks/useResponseMessage'
-import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import { Gap } from '../../types'
+import { type AbstractSize, type CharRelativeSize } from '../../themes/createSpacing'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-const floatArea = tv({
+import type { Gap } from '../../types'
+
+const classNameGenerator = tv({
   base: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
   variants: {
     bottom: {
@@ -41,13 +42,7 @@ const floatArea = tv({
   },
 })
 
-type StyleProps = {
-  /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
-  bottom?: CharRelativeSize | AbstractSize
-  /** コンポーネントの `z-index` 値 */
-  zIndex?: number
-}
-type Props = StyleProps & {
+type Props = {
   /** 表示する `Button` または `AnchorButton` コンポーネント */
   primaryButton: ReactNode
   /** 表示する `Button` または `AnchorButton` コンポーネント */
@@ -56,6 +51,10 @@ type Props = StyleProps & {
   tertiaryButton?: ReactNode
   /** 操作に対するフィードバックメッセージ */
   responseMessage?: ResponseMessageTypeWithoutProcessing
+  /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
+  bottom?: CharRelativeSize | AbstractSize
+  /** コンポーネントの `z-index` 値 */
+  zIndex?: number
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -70,11 +69,14 @@ export const FloatArea: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const styleAttr = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
-  const actualClassName = useMemo(() => floatArea({ bottom, className }), [bottom, className])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ bottom, className }),
+    [bottom, className],
+  )
+  const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
-    <Base {...rest} style={styleAttr} layer={3} padding={1} className={actualClassName}>
+    <Base {...rest} layer={3} padding={1} className={actualClassName} style={actualStyle}>
       <Cluster gap={1}>
         {tertiaryButton}
         <div className="shr-ms-auto">
