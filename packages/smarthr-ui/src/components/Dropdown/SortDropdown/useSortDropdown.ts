@@ -7,11 +7,19 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import { SortDropdown } from './SortDropdown'
-import { sortDropdownStyle } from './style'
+
+const sortDropdownStyle = tv({
+  slots: {
+    body: 'shr-p-1.5',
+    select: 'shr-min-w-[16em]',
+    footer: 'shr-border-t-shorthand shr-px-1.5 shr-py-1',
+  },
+})
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
