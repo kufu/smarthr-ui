@@ -3,8 +3,11 @@
 import React, {
   type ComponentProps,
   type ComponentPropsWithoutRef,
+  type ComponentType,
+  type FC,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -16,7 +19,7 @@ import { tv } from 'tailwind-variants'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
-import { Text, TextProps } from '../Text'
+import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
@@ -52,11 +55,11 @@ type Props = PropsWithChildren<{
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  as?: string | React.ComponentType<any>
+  as?: string | ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
 
-const formGroup = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-FormControl',
@@ -79,7 +82,7 @@ const formGroup = tv({
 // FormControltとの差をわかりやすくしている
 // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
 // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-const childrenWrapper = tv({
+const childrenWrapperClassNameGenerator = tv({
   variants: {
     innerMargin: {
       0: '',
@@ -126,7 +129,7 @@ const childrenWrapper = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: React.FC<Props & ElementProps> = ({
+export const ActualFormControl: FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
   subActionArea,
@@ -189,7 +192,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
   const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, underTitleStackStyle } =
     useMemo(() => {
-      const { wrapper, label, errorList, errorIcon, underTitleStack } = formGroup()
+      const { wrapper, label, errorList, errorIcon, underTitleStack } = classNameGenerator()
 
       return {
         wrapperStyle: wrapper({ className }),
@@ -201,8 +204,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         underTitleStackStyle: underTitleStack(),
       }
     }, [dangerouslyTitleHidden, className])
-  const childrenWrapperStyle = useMemo(
-    () => childrenWrapper({ innerMargin, isFieldset }),
+  const childrenWrapperClassName = useMemo(
+    () => childrenWrapperClassNameGenerator({ innerMargin, isFieldset }),
     [innerMargin, isFieldset],
   )
 
@@ -295,7 +298,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         errorListStyle={errorListStyle}
         errorIconStyle={errorIconStyle}
       />
-      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
+      <div className={childrenWrapperClassName} ref={inputWrapperRef}>
         {children}
       </div>
       <SupplementaryMessageText
@@ -341,7 +344,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   )
 }
 
-const TitleCluster = React.memo<
+const TitleCluster = memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
     statusLabelList: StatusLabelProps[]
@@ -438,7 +441,7 @@ const TitleCluster = React.memo<
   },
 )
 
-const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
+const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
   ({ helpMessage, managedHtmlFor }) =>
     helpMessage ? (
       <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
@@ -447,7 +450,7 @@ const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHt
     ) : null,
 )
 
-const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
+const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
   ({ exampleMessage, managedHtmlFor }) =>
     exampleMessage ? (
       <Text
@@ -462,7 +465,7 @@ const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedH
     ) : null,
 )
 
-const ErrorMessageList = React.memo<{
+const ErrorMessageList = memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
   errorListStyle: string
@@ -479,7 +482,7 @@ const ErrorMessageList = React.memo<{
   ) : null,
 )
 
-const SupplementaryMessageText = React.memo<
+const SupplementaryMessageText = memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
 >(({ supplementaryMessage, managedHtmlFor }) =>
   supplementaryMessage ? (
@@ -495,5 +498,4 @@ const SupplementaryMessageText = React.memo<
   ) : null,
 )
 
-export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
-  ActualFormControl
+export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl
