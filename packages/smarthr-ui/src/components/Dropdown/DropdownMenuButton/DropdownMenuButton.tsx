@@ -70,6 +70,8 @@ const classNameGenerator = tv({
   },
 })
 
+const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
+
 export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
   children,
@@ -83,15 +85,14 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
   useKeyboardNavigation(containerRef)
 
-  const classNames = useMemo(() => {
-    const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
-
-    return {
+  const classNames = useMemo(
+    () => ({
       triggerWrapper: triggerWrapper({ className }),
       triggerButton: triggerButton(),
       actionList: actionList(),
-    }
-  }, [className])
+    }),
+    [className],
+  )
 
   return (
     <Dropdown>
