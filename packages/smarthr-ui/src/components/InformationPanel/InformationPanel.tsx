@@ -13,7 +13,7 @@ import React, {
 } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
@@ -33,14 +33,17 @@ type AbstractProps = PropsWithChildren<{
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }> &
   VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+const DECORATOR_DEFAULT_TEXTS = {
+  openButtonLabel: '開く',
+  closeButtonLabel: '閉じる',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const OPEN_BUTTON_LABEL = '開く'
-const CLOSE_BUTTON_LABEL = '閉じる'
+type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
 export const classNameGenerator = tv({
   slots: {
@@ -224,19 +227,7 @@ const TogglableButton: FC<
     }
   }, [active, onClickTrigger, setActive])
 
-  const decoratedTexts = useMemo(() => {
-    if (!decorators) {
-      return {
-        active: CLOSE_BUTTON_LABEL,
-        inactive: OPEN_BUTTON_LABEL,
-      }
-    }
-
-    return {
-      active: decorators.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
-      inactive: decorators.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL,
-    }
-  }, [decorators])
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
     <Button
@@ -247,7 +238,7 @@ const TogglableButton: FC<
       aria-controls={contentId}
       className={className}
     >
-      {decoratedTexts[active ? 'active' : 'inactive']}
+      {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
     </Button>
   )
 }
