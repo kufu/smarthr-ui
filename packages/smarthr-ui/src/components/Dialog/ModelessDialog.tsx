@@ -307,23 +307,30 @@ export const ModelessDialog: FC<
     }
   }, [isOpen])
 
-  const actualOnClickClose = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      lastFocusElementRef.current?.focus()
-      onClickClose?.(e)
-    },
-    [onClickClose],
+  const focusOutsideDialog = useCallback(() => {
+    lastFocusElementRef.current?.focus()
+  }, [])
+
+  const actualOnClickClose = useMemo(
+    () =>
+      onClickClose
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            focusOutsideDialog()
+            onClickClose(e)
+          }
+        : focusOutsideDialog,
+    [onClickClose, focusOutsideDialog],
   )
 
   const actualOnPressEscape = useMemo(
     () =>
       onPressEscape
         ? () => {
-            lastFocusElementRef.current?.focus()
+            focusOutsideDialog()
             onPressEscape()
           }
         : undefined,
-    [onPressEscape],
+    [onPressEscape, focusOutsideDialog],
   )
 
   useHandleEscape(
