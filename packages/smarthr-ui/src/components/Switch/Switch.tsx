@@ -1,7 +1,7 @@
 import React, {
-  InputHTMLAttributes,
-  PropsWithChildren,
-  ReactNode,
+  type InputHTMLAttributes,
+  type PropsWithChildren,
+  type ReactNode,
   forwardRef,
   memo,
   useId,
@@ -14,7 +14,7 @@ import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-const switchStyle = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       // Switch 本体
@@ -66,7 +66,7 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
     const inputId = id || defaultId
 
     const classNames = useMemo(() => {
-      const { wrapper, input, icon, iconWrapper } = switchStyle()
+      const { wrapper, input, icon, iconWrapper } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),

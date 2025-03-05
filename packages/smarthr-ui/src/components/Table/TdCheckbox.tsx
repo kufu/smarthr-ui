@@ -1,4 +1,4 @@
-import React, { ComponentProps, PropsWithChildren, forwardRef, useMemo } from 'react'
+import React, { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
@@ -12,7 +12,7 @@ type Props = PropsWithChildren<{
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign'>
 
-const tdCheckbox = tv({
+const classNameGenerator = tv({
   slots: {
     inner: [
       'shr-flex shr-justify-center shr-py-0.75 shr-px-1',
@@ -26,7 +26,7 @@ const tdCheckbox = tv({
 export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
   ({ vAlign, children, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
-      const { wrapper, inner, checkbox } = tdCheckbox()
+      const { wrapper, inner, checkbox } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),
