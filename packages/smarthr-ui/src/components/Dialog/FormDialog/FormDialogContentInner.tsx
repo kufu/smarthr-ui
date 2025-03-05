@@ -16,7 +16,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { innerClassNameGenerator } from '../innerClassNameGenerator'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -50,7 +50,7 @@ const CLOSE_BUTTON_LABEL = 'キャンセル'
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const formDialogContentInner = tv({
-  extend: dialogContentInner,
+  extend: innerClassNameGenerator,
   slots: {
     form: 'shr-contents',
   },

@@ -16,7 +16,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { innerClassNameGenerator } from '../innerClassNameGenerator'
 
 import { StepFormDialogContext, StepItem } from './StepFormDialogProvider'
 
@@ -122,7 +122,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   }, [firstStep, stepQueue, onClickBack, setCurrentStep])
 
   const classNames = useMemo(() => {
-    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+    const { wrapper, actionArea, buttonArea, message } = innerClassNameGenerator()
 
     return {
       wrapper: wrapper(),
