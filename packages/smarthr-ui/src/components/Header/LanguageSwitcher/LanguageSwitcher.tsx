@@ -7,7 +7,6 @@ import React, {
   type MouseEvent,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
 } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
@@ -37,6 +36,26 @@ const TRIGGER_LABEL = 'Language'
 const CHECK_ICON_ALT = '選択中'
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
+
+const ON_KEY_DOWN_CONTENT = (e: KeyboardEvent<HTMLDivElement>) => {
+  if (!ARROW_KEY_REGEX.test(e.key)) {
+    return
+  }
+
+  e.preventDefault()
+
+  const buttons = tabbable(e.currentTarget)
+  const i = buttons.indexOf(e.target as HTMLElement)
+  let buttonAt = 0
+
+  if (ARROW_UPS_REGEX.test(e.key)) {
+    buttonAt = i - 1
+  } else if (i + 1 === buttons.length) {
+    buttonAt = i + 1
+  }
+
+  buttons.at(buttonAt)?.focus()
+}
 
 const classNameGenerator = tv({
   slots: {
@@ -123,26 +142,6 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
     [onLanguageSelect],
   )
 
-  const onKeyDownContent = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
-    if (!ARROW_KEY_REGEX.test(e.key)) {
-      return
-    }
-
-    e.preventDefault()
-
-    const buttons = tabbable(e.currentTarget)
-    const i = buttons.indexOf(e.target as HTMLElement)
-    let buttonAt = 0
-
-    if (ARROW_UPS_REGEX.test(e.key)) {
-      buttonAt = i - 1
-    } else if (i + 1 === buttons.length) {
-      buttonAt = i + 1
-    }
-
-    buttons.at(buttonAt)?.focus()
-  }, [])
-
   return (
     <Dropdown {...rest}>
       <MemoizedDropdownTrigger
@@ -151,7 +150,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
         className={classNames.switchButton}
         label={decoratedTexts.triggerLabel}
       />
-      <DropdownContent onKeyDown={onKeyDownContent} role="presentation">
+      <DropdownContent onKeyDown={ON_KEY_DOWN_CONTENT} role="presentation">
         <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
