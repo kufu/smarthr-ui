@@ -219,23 +219,20 @@ const TogglableButton: FC<
     className: string
   }
 > = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
-  const handleClickTrigger = useCallback(() => {
-    if (onClickTrigger) {
-      onClickTrigger(active)
-    } else {
-      setActive(!active)
-    }
-  }, [active, onClickTrigger, setActive])
-
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
+  const onClick = useMemo(
+    () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
+    [active, onClickTrigger, setActive],
+  )
 
   return (
     <Button
-      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-      size="s"
-      onClick={handleClickTrigger}
       aria-expanded={active}
       aria-controls={contentId}
+      onClick={onClick}
+      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+      size="s"
       className={className}
     >
       {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
