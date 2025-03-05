@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type FC, useMemo } from 'react'
+import React, { type ComponentProps, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { TextLink } from '../TextLink'
@@ -21,11 +21,11 @@ const classNameGenerator = tv({
   },
 })
 
-export const HeaderLink: FC<Props> = ({ enableNew, className, ...props }) => {
+export const HeaderLink = memo<Props>(({ enableNew, className, ...props }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ enableNew, className }),
     [enableNew, className],
   )
 
   return <TextLink {...props} target="_blank" suffix={null} className={actualClassName} />
-}
+})
