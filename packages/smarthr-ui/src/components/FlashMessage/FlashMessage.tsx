@@ -1,7 +1,13 @@
 'use client'
 
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useEffect, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type ReactNode,
+  useEffect,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
 import { FaXmarkIcon } from '../Icon'
@@ -23,13 +29,13 @@ export type Props = {
   onClose: () => void
   /** FlashMessage が表示されてから一定時間後に自動で閉じるかどうか */
   autoClose?: boolean
-} & VariantProps<typeof flashMessage>
+} & VariantProps<typeof classNameGenerator>
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
 const REMOVE_DELAY = 8000
 
-const flashMessage = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-FlashMessage',
@@ -72,6 +78,7 @@ export const FlashMessage: FC<Props & ElementProps> = ({
     if (!visible || !autoClose) {
       return
     }
+
     const timerId = setTimeout(onClose, REMOVE_DELAY)
 
     return () => {
@@ -79,23 +86,24 @@ export const FlashMessage: FC<Props & ElementProps> = ({
     }
   }, [autoClose, onClose, visible])
 
-  const { wrapperStyle, responseMessageStyle, closeButtonStyle } = useMemo(() => {
-    const { wrapper, responseMessage, closeButton } = flashMessage()
+  const classNames = useMemo(() => {
+    const { wrapper, responseMessage, closeButton } = classNameGenerator()
+
     return {
-      wrapperStyle: wrapper({ animation, className }),
-      responseMessageStyle: responseMessage(),
-      closeButtonStyle: closeButton(),
+      wrapper: wrapper({ animation, className }),
+      responseMessage: responseMessage(),
+      closeButton: closeButton(),
     }
   }, [animation, className])
 
   if (!visible) return null
 
   return (
-    <div {...rest} className={wrapperStyle} role={role}>
-      <ResponseMessage type={type} iconGap={0.5} className={responseMessageStyle}>
+    <div {...rest} className={classNames.wrapper} role={role}>
+      <ResponseMessage type={type} iconGap={0.5} className={classNames.responseMessage}>
         {text}
       </ResponseMessage>
-      <Button className={closeButtonStyle} onClick={onClose} size="s" square>
+      <Button className={classNames.closeButton} onClick={onClose} size="s" square>
         <FaXmarkIcon alt="閉じる" />
       </Button>
     </div>
