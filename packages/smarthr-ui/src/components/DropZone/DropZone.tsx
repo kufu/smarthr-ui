@@ -15,7 +15,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
@@ -58,10 +58,12 @@ type DropZoneProps = PropsWithChildren<{
   multiple?: boolean
   name?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'selectButtonLabel'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }>
-
-const SELECT_BUTTON_LABEL = 'ファイルを選択'
+const DECORATOR_DEFAULT_TEXTS = {
+  selectButtonLabel: 'ファイルを選択',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -81,6 +83,8 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
         input: input(),
       }
     }, [filesDraggedOver])
+
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
@@ -132,7 +136,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
         className={classNames.wrapper}
       >
         {children}
-        <SelectButton decorators={decorators} onClick={onClickButton} />
+        <SelectButton onClick={onClickButton}>{decorated.selectButtonLabel}</SelectButton>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...props}
@@ -148,17 +152,8 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
   },
 )
 
-const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
-  ({ onClick, decorators }) => {
-    const selectButtonLabel = useMemo(
-      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
-      [decorators],
-    )
-
-    return (
-      <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
-        {selectButtonLabel}
-      </Button>
-    )
-  },
-)
+const SelectButton = memo<PropsWithChildren<{ onClick: () => void }>>(({ onClick, children }) => (
+  <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
+    {children}
+  </Button>
+))
