@@ -134,7 +134,7 @@ export const InformationPanel: FC<Props> = ({
     setActive(activeProps)
   }, [activeProps])
 
-  const styles = useMemo(() => {
+  const classNamesMapper = useMemo(() => {
     const withActive = classNameGenerator({
       type,
       active: true,
@@ -166,13 +166,13 @@ export const InformationPanel: FC<Props> = ({
     }
   }, [bold, type, className])
 
-  const currentStyles = styles[active ? 'active' : 'inactive']
+  const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...props} overflow="hidden" as="section" className={currentStyles.wrapper}>
-      <Cluster align="center" justify="space-between" className={currentStyles.header}>
+    <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
+      <Cluster align="center" justify="space-between" className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <MemoizedHeading tag={titleTag} id={titleId} className={currentStyles.heading} type={type}>
+        <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
           {title}
         </MemoizedHeading>
         {togglable && (
@@ -181,12 +181,12 @@ export const InformationPanel: FC<Props> = ({
             onClickTrigger={onClickTrigger}
             setActive={setActive}
             contentId={contentId}
-            className={currentStyles.togglableButton}
+            className={classNames.togglableButton}
             decorators={decorators}
           />
         )}
       </Cluster>
-      <div id={contentId} aria-hidden={!active} className={currentStyles.content}>
+      <div id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </div>
     </Base>
