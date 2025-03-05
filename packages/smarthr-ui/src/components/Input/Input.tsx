@@ -2,7 +2,6 @@
 
 import React, {
   type ComponentPropsWithRef,
-  type FocusEvent,
   type ReactNode,
   type WheelEvent,
   forwardRef,
@@ -103,22 +102,6 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       () => innerRef.current,
     )
 
-    const handleFocus = useMemo(() => {
-      if (!onFocus) {
-        return undefined
-      }
-
-      return (e: FocusEvent<HTMLInputElement>) => onFocus(e)
-    }, [onFocus])
-
-    const handleBlur = useMemo(() => {
-      if (!onBlur) {
-        return undefined
-      }
-
-      return (e: FocusEvent<HTMLInputElement>) => onBlur(e)
-    }, [onBlur])
-
     const handleWheel = useMemo(
       () => (props.type === 'number' ? disableWheel : undefined),
       [props.type],
@@ -169,8 +152,8 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
         <input
           {...props}
           data-smarthr-ui-input="true"
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={onFocus}
+          onBlur={onBlur}
           onWheel={handleWheel}
           disabled={disabled}
           readOnly={readOnly}
