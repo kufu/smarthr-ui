@@ -1,11 +1,12 @@
 'use client'
 
 import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  DragEvent,
-  PropsWithChildren,
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type DragEvent,
+  type PropsWithChildren,
   forwardRef,
+  memo,
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -18,7 +19,7 @@ import { type DecoratorsType } from '../../hooks/useDecorators'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
-const dropZone = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-DropZone',
@@ -71,7 +72,16 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
   ({ children, onSelectFiles, multiple = true, decorators, ...props }, ref) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-    const { wrapper, input } = useMemo(() => dropZone({ filesDraggedOver }), [filesDraggedOver])
+
+    const classNames = useMemo(() => {
+      const { wrapper, input } = classNameGenerator({ filesDraggedOver })
+
+      return {
+        wrapper: wrapper(),
+        input: input(),
+      }
+    }, [filesDraggedOver])
+
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => fileRef.current,
@@ -115,25 +125,30 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-      <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
+      <div
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        className={classNames.wrapper}
+      >
         {children}
         <SelectButton decorators={decorators} onClick={onClickButton} />
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...props}
-          data-smarthr-ui-input="true"
           ref={fileRef}
           type="file"
           multiple={multiple}
           onChange={onChange}
-          className={input()}
+          className={classNames.input}
+          data-smarthr-ui-input="true"
         />
       </div>
     )
   },
 )
 
-const SelectButton = React.memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
+const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
   ({ onClick, decorators }) => {
     const selectButtonLabel = useMemo(
       () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
