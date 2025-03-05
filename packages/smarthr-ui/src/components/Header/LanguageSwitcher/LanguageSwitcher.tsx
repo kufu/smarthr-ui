@@ -132,7 +132,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
     }
   }, [enableNew, invert])
 
-  const handleLanguageSelect = useMemo(
+  const onClickLanguageSelect = useMemo(
     () =>
       onLanguageSelect
         ? (e: MouseEvent<HTMLButtonElement>) => {
@@ -159,7 +159,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
               className={classNames.languageItem}
               buttonStyle={classNames.languageButton}
               current={currentLang === code}
-              handleLanguageSelect={handleLanguageSelect}
+              onClick={onClickLanguageSelect}
               iconAlt={decoratedTexts.checkIconAlt}
             >
               {label}
@@ -178,12 +178,12 @@ const LanguageListItemButton = memo<{
   buttonStyle: string
   current: boolean
   iconAlt: ReactNode
-  handleLanguageSelect?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, iconAlt, handleLanguageSelect }) => (
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ code, children, buttonStyle, className, current, iconAlt, onClick }) => (
   <li key={code} className={className} aria-current={current} lang={code}>
     <Button
       value={code}
-      onClick={handleLanguageSelect}
+      onClick={onClick}
       wide
       prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
       className={buttonStyle}
