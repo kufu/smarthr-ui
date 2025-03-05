@@ -101,11 +101,11 @@ const ActualFlashMessage: FC<Omit<ActualProps, 'visible'>> = ({
   }, [animation, className])
 
   return (
-    <div {...rest} className={classNames.wrapper} role={role}>
+    <div {...rest} role={role} className={classNames.wrapper}>
       <ResponseMessage type={type} iconGap={0.5} className={classNames.responseMessage}>
         {text}
       </ResponseMessage>
-      <Button className={classNames.closeButton} onClick={onClose} size="s" square>
+      <Button onClick={onClose} size="s" square className={classNames.closeButton}>
         <FaXmarkIcon alt="閉じる" />
       </Button>
     </div>
