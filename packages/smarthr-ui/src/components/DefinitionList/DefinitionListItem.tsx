@@ -3,6 +3,7 @@ import React, {
   type FC,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -71,12 +72,20 @@ export const DefinitionListItem: FC<Props & ElementProps> = ({
 
   return (
     <Stack gap={0.25} className={classNames.wrapper} style={style}>
-      <Text as="dt" leading="TIGHT" styleType={termStyleType} className={classNames.term}>
+      <DefinitionTerm styleType={termStyleType} className={classNames.term}>
         {term}
-      </Text>
+      </DefinitionTerm>
       <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.description}>
         {children ?? description}
       </Text>
     </Stack>
   )
 }
+
+const DefinitionTerm = memo<
+  PropsWithChildren<{ styleType: Required<Props>['termStyleType']; className: string }>
+>(({ styleType, className, children }) => (
+  <Text as="dt" leading="TIGHT" styleType={styleType} className={className}>
+    {children}
+  </Text>
+))
