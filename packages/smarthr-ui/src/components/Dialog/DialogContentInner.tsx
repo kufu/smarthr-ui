@@ -96,13 +96,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   const style = useMemo(() => {
     const actualWidth = typeof width === 'number' ? `${width}px` : width
 
-    if (!actualWidth) {
-      return undefined
-    }
-
-    return {
-      width: actualWidth,
-    }
+    return actualWidth ? { width: actualWidth } : undefined
   }, [width])
 
   const innerRef = useRef<HTMLDivElement>(null)
