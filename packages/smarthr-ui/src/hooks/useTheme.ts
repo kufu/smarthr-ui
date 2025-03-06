@@ -5,7 +5,4 @@ import { CreatedTheme } from '../themes/createTheme'
 
 export type Theme = CreatedTheme
 
-export const useTheme = () => {
-  const theme = useContext(ThemeContext)
-  return theme
-}
+export const useTheme = () => useContext(ThemeContext)
