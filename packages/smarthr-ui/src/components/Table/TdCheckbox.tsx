@@ -37,6 +37,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
 
     return (
       // Td に必要な属性やイベントは不要
+      // contentWidth={0} で td をテーブルの計算上最小幅にする
       <Td contentWidth={0} vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
           <CheckBox {...rest} ref={ref} className={classNames.checkbox} />
