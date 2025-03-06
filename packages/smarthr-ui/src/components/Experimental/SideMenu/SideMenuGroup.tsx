@@ -8,9 +8,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Text } from '../../Text'
+import { Heading } from '../../Heading'
+import { Section } from '../../SectioningContent'
 
-type Props<TitleElement extends ElementType = 'p'> = PropsWithChildren<{
+type Props<TitleElement extends ElementType> = PropsWithChildren<{
   title: ReactNode
   titleElementAs?: TitleElement
 
@@ -25,11 +26,11 @@ const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-mt-1'],
     list: 'shr-list-none',
-    groupTitle: 'shr-block shr-px-1 shr-py-0.5',
+    groupTitle: 'shr-px-1 shr-py-0.5 shr-text-sm',
   },
 })
 
-export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
+export const SideMenuGroup = <TitleElement extends ElementType = 'span'>({
   title,
   titleElementAs,
   listElementAs,
@@ -50,20 +51,20 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
 
   return (
     <li className={classNames.wrapper}>
-      <GroupTitle titleElementAs={titleElementAs} className={classNames.groupTitle}>
-        {title}
-      </GroupTitle>
-      <ListComponent className={classNames.list}>{children}</ListComponent>
+      <Section>
+        <GroupHeading titleElementAs={titleElementAs} className={classNames.groupTitle}>
+          {title}
+        </GroupHeading>
+        <ListComponent className={classNames.list}>{children}</ListComponent>
+      </Section>
     </li>
   )
 }
 
-const GroupTitle = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
-  ({ titleElementAs: Wrapper = 'p', children, className }) => (
-    <Wrapper>
-      <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={className}>
-        {children}
-      </Text>
-    </Wrapper>
+const GroupHeading = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
+  ({ titleElementAs: Inner, children, className }) => (
+    <Heading type="blockTitle" className={className}>
+      {Inner ? <Inner>{children}</Inner> : children}
+    </Heading>
   ),
 )
