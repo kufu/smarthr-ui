@@ -1,4 +1,10 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { spacing } from '../../themes'
@@ -15,7 +21,7 @@ type DefinitionListItemProps = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof DefinitionListItemProps>
 
-const definitionListItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-DefinitionListItem shr-border-b-shorthand shr-min-w-[12em] shr-grow shr-border-dotted',
@@ -44,7 +50,8 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   className,
 }) => {
   const { wrapperStyleProps, termStyle, descriptionStyle } = useMemo(() => {
-    const { wrapper, termEl, descriptionEl } = definitionListItem()
+    const { wrapper, termEl, descriptionEl } = classNameGenerator()
+
     return {
       wrapperStyleProps: {
         className: wrapper({ fullWidth, className }),
