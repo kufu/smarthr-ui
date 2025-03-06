@@ -50,15 +50,15 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
 
   return (
     <li className={classNames.wrapper}>
-      <GroupTitleText titleElementAs={titleElementAs} className={classNames.groupTitle}>
+      <GroupTitle titleElementAs={titleElementAs} className={classNames.groupTitle}>
         {title}
-      </GroupTitleText>
+      </GroupTitle>
       <ListComponent className={classNames.list}>{children}</ListComponent>
     </li>
   )
 }
 
-const GroupTitleText = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
+const GroupTitle = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
   ({ titleElementAs: Wrapper = 'p', children, className }) => (
     <Wrapper>
       <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={className}>
