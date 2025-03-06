@@ -21,13 +21,15 @@ const classNameGenerator = tv({
   base: 'smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none',
 })
 
+const initialPosition = {
+  top: 0,
+  left: 0,
+}
+
 export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }, ref) => {
   const { isPortalRootMounted, createPortal } = usePortal()
 
-  const [position, setPosition] = useState({
-    top: 0,
-    left: 0,
-  })
+  const [position, setPosition] = useState(initialPosition)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
