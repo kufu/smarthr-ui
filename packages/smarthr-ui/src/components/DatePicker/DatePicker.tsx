@@ -2,9 +2,13 @@
 
 import dayjs from 'dayjs'
 import React, {
-  ComponentPropsWithRef,
-  ReactNode,
+  type ComponentProps,
+  type ComponentPropsWithRef,
+  type FocusEventHandler,
+  type KeyboardEvent,
+  type ReactNode,
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -66,7 +70,7 @@ type InputAttributes = Omit<ComponentPropsWithRef<'input'>, OmitInputAttributes>
 
 export const DEFAULT_FROM = new Date(1900, 0, 1)
 
-const datePicker = tv({
+const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-DatePicker shr-inline-block',
     inputSuffixLayout: 'shr-box-border shr-h-full shr-py-0.5',
@@ -103,14 +107,15 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     },
     ref,
   ) => {
-    const containerStyleAttr = useMemo(
+    const containerStyle = useMemo(
       () => ({
         width: typeof width === 'number' ? `${width}px` : width,
       }),
       [width],
     )
-    const styles = useMemo(() => {
-      const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } = datePicker()
+    const classNames = useMemo(() => {
+      const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } =
+        classNameGenerator()
 
       return {
         container: container({ className }),
@@ -232,7 +237,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     useOuterClick([inputWrapperRef, calendarPortalRef], closeCalendar)
 
     const handleKeyDown = useCallback(
-      (e: KeyboardEvent) => {
+      (e: KeyboardEvent<HTMLInputElement>) => {
         if (!inputRef.current || !calendarPortalRef.current || e.key !== 'Tab') {
           return
         }
@@ -278,14 +283,14 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [isInputFocused, closeCalendar],
     )
 
-    const baseHandleBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
+    const baseHandleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
       (e) => {
         setIsInputFocused(false)
         updateDate(e.target.value ? stringToDate(e.target.value) : null)
       },
       [stringToDate, updateDate],
     )
-    const handleBlur = useMemo<React.FocusEventHandler<HTMLInputElement>>(
+    const handleBlur = useMemo<FocusEventHandler<HTMLInputElement>>(
       () =>
         onBlur
           ? (e) => {
@@ -306,7 +311,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     }, [isInputFocused, isCalendarShown, disabled])
 
     const onDelegateKeyDown = useCallback(
-      (e: React.KeyboardEvent) => {
+      (e: KeyboardEvent<HTMLInputElement>) => {
         if (ESCAPE_KEY_REGEX.test(e.key)) {
           e.stopPropagation()
           // delay hiding calendar because calendar will be displayed when input is focused
@@ -318,7 +323,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [closeCalendar],
     )
     const onKeyPressInput = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
+      (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
           ;(isCalendarShown ? openCalendar : closeCalendar)()
           updateDate(stringToDate(e.currentTarget.value))
@@ -346,8 +351,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         onClick={!isCalendarShown && !disabled ? openCalendar : undefined}
         onKeyDown={isCalendarShown ? onDelegateKeyDown : undefined}
         role="presentation"
-        className={styles.container}
-        style={containerStyleAttr}
+        className={classNames.container}
+        style={containerStyle}
       >
         <div ref={inputWrapperRef}>
           <Input
@@ -363,7 +368,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
               <InputSuffixIcon
                 alternativeFormat={showAlternative ? alternativeFormat : null}
                 caretIconColor={caretIconColor}
-                styles={styles}
+                classNames={classNames}
               />
             }
             disabled={disabled}
@@ -391,14 +396,14 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
   },
 )
 
-const InputSuffixIcon = React.memo<{
-  styles: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
+const InputSuffixIcon = memo<{
+  classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
   alternativeFormat: null | ReactNode
-  caretIconColor: React.ComponentProps<typeof FaCalendarAltIcon>['color']
-}>(({ styles, alternativeFormat, caretIconColor }) => (
-  <span className={styles.inputSuffixLayout}>
-    <span className={styles.inputSuffixWrapper}>
-      {alternativeFormat && <span className={styles.inputSuffixText}>{alternativeFormat}</span>}
+  caretIconColor: ComponentProps<typeof FaCalendarAltIcon>['color']
+}>(({ classNames, alternativeFormat, caretIconColor }) => (
+  <span className={classNames.inputSuffixLayout}>
+    <span className={classNames.inputSuffixWrapper}>
+      {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
       <FaCalendarAltIcon color={caretIconColor} />
     </span>
   </span>
