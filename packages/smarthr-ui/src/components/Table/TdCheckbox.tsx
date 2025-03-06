@@ -18,7 +18,7 @@ const classNameGenerator = tv({
       'shr-flex shr-justify-center shr-py-0.75 shr-px-1',
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
-    wrapper: 'shr-p-0 shr-w-[theme(fontSize.base)]',
+    wrapper: 'shr-p-0',
     checkbox: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
   },
 })
@@ -37,7 +37,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
 
     return (
       // Td に必要な属性やイベントは不要
-      <Td vAlign={vAlign} className={classNames.wrapper}>
+      <Td contentWidth={0} vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
           <CheckBox {...rest} ref={ref} className={classNames.checkbox} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
