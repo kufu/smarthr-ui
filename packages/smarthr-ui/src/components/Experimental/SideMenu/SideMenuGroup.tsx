@@ -60,10 +60,10 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
 
 const GroupTitleText = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
   ({ titleElementAs: Wrapper = 'p', children, className }) => (
-    <Component>
+    <Wrapper>
       <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={className}>
         {children}
       </Text>
-    </Component>
+    </Wrapper>
   ),
 )
