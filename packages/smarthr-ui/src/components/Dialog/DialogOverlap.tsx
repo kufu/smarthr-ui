@@ -4,6 +4,7 @@ import React, {
   type PropsWithChildren,
   type ReactNode,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -18,7 +19,7 @@ type Props = PropsWithChildren<
   } & ComponentProps<'div'>
 >
 
-const dialogOverlap = tv({
+const classNameGenerator = tv({
   base: [
     'shr-fixed shr-inset-0 shr-z-overlap-base',
     '[&.shr-dialog-transition-enter]:shr-opacity-0',
@@ -37,9 +38,10 @@ const dialogOverlap = tv({
 })
 
 export const DialogOverlap: FC<Props> = ({ isOpen, className, children }) => {
-  const styles = dialogOverlap({ className })
   const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
+
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
     if (isOpen) {
@@ -49,13 +51,13 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children }) => {
 
   return (
     <CSSTransition
-      classNames="shr-dialog-transition"
+      nodeRef={nodeRef}
       in={isOpen}
       timeout={300}
       unmountOnExit
-      nodeRef={nodeRef}
+      classNames="shr-dialog-transition"
     >
-      <Center verticalCentering ref={nodeRef} className={styles}>
+      <Center ref={nodeRef} verticalCentering className={actualClassName}>
         {isOpen ? children : childrenBuffer}
       </Center>
     </CSSTransition>
