@@ -41,7 +41,7 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
 
-const ON_KEY_DOWN_CONTENT = (e: KeyboardEvent<HTMLDivElement>) => {
+const onKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
   }
@@ -145,7 +145,7 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
         className={classNames.switchButton}
         label={decorated.triggerLabel}
       />
-      <DropdownContent role="presentation" onKeyDown={ON_KEY_DOWN_CONTENT}>
+      <DropdownContent role="presentation" onKeyDown={onKeyDownContent}>
         <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
