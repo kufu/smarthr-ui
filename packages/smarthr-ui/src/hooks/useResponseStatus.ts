@@ -1,18 +1,19 @@
 import { ReactNode, useMemo } from 'react'
 
-export type ResponseMessageTypeWithoutProcessing = {
+export type ResponseStatusWithoutProcessing = {
   status: 'success' | 'error'
   text: ReactNode
 }
-export type ResponseMessageType =
-  | ResponseMessageTypeWithoutProcessing
+
+export type ResponseStatus =
+  | ResponseStatusWithoutProcessing
   | {
       status: 'processing'
     }
 
-export const useResponseMessage = (responseMessage: ResponseMessageType | undefined) => {
+export const useResponseStatus = (responseStatus: ResponseStatus | undefined) => {
   const calculated = useMemo(() => {
-    if (!responseMessage) {
+    if (!responseStatus) {
       return {
         isProcessing: false,
         status: undefined,
@@ -20,7 +21,7 @@ export const useResponseMessage = (responseMessage: ResponseMessageType | undefi
       }
     }
 
-    if (responseMessage.status === 'processing') {
+    if (responseStatus.status === 'processing') {
       return {
         isProcessing: true,
         status: undefined,
@@ -32,10 +33,10 @@ export const useResponseMessage = (responseMessage: ResponseMessageType | undefi
       isProcessing: false,
       // HINT: statusがprocessingではない === success or errorであることが確定する
       // success or error の場合、text属性も必ず存在する
-      status: responseMessage.status,
-      message: responseMessage.text,
+      status: responseStatus.status,
+      message: responseStatus.text,
     }
-  }, [responseMessage])
+  }, [responseStatus])
 
   return calculated
 }

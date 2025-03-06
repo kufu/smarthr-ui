@@ -30,7 +30,7 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
   onClickClose,
   onClickBack,
   onPressEscape = onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled = false,
   closeDisabled,
   className,
@@ -100,7 +100,7 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
           onClickClose={handleClickClose}
           onSubmit={handleSubmitAction}
           onClickBack={handleBackSteps}
-          responseMessage={responseMessage}
+          responseStatus={responseStatus}
           decorators={decorators}
         >
           {children}

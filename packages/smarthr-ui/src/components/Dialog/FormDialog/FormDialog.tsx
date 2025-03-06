@@ -23,7 +23,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   onSubmit,
   onClickClose,
   onPressEscape = onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   subActionArea,
@@ -73,7 +73,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
         subActionArea={subActionArea}
         onClickClose={handleClickClose}
         onSubmit={handleSubmitAction}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         decorators={decorators}
       >
         {children}

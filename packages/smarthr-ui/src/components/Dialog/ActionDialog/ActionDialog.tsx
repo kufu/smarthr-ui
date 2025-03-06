@@ -23,7 +23,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   onClickAction,
   onClickClose,
   onPressEscape = onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   subActionArea,
@@ -69,7 +69,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
         onClickClose={handleClickClose}
         onClickAction={handleClickAction}
         subActionArea={subActionArea}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         decorators={decorators}
       >
         {children}
