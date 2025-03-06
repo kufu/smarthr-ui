@@ -11,7 +11,7 @@ import { spacing } from '../../themes'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
-type DefinitionListItemProps = PropsWithChildren<{
+type Props = PropsWithChildren<{
   term: ReactNode
   termStyleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
   /** @deprecated DefinitionList で items を使う時の props です。children を使ってください。 */
@@ -19,7 +19,7 @@ type DefinitionListItemProps = PropsWithChildren<{
   fullWidth?: boolean
   maxColumns?: number
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof DefinitionListItemProps>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
 const classNameGenerator = tv({
   slots: {
@@ -40,7 +40,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
+export const DefinitionListItem: FC<Props & ElementProps> = ({
   maxColumns,
   fullWidth,
   term,
@@ -49,31 +49,32 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   children,
   className,
 }) => {
-  const { wrapperStyleProps, termStyle, descriptionStyle } = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, termEl, descriptionEl } = classNameGenerator()
 
     return {
-      wrapperStyleProps: {
-        className: wrapper({ fullWidth, className }),
-        style: {
-          flexBasis:
-            // fullWidth の方が強い
-            !fullWidth && maxColumns
-              ? `calc((100% - ${spacing[1.5]} * ${maxColumns - 1}) / ${maxColumns})`
-              : undefined,
-        },
-      },
-      termStyle: termEl(),
-      descriptionStyle: descriptionEl(),
+      wrapper: wrapper({ fullWidth, className }),
+      term: termEl(),
+      description: descriptionEl(),
     }
-  }, [className, fullWidth, maxColumns])
+  }, [className, fullWidth])
+  const style = useMemo(
+    () => ({
+      flexBasis:
+        // fullWidth の方が強い
+        !fullWidth && maxColumns
+          ? `calc((100% - ${spacing[1.5]} * ${maxColumns - 1}) / ${maxColumns})`
+          : undefined,
+    }),
+    [fullWidth, maxColumns],
+  )
 
   return (
-    <Stack {...wrapperStyleProps} gap={0.25}>
-      <Text as="dt" leading="TIGHT" styleType={termStyleType} className={termStyle}>
+    <Stack gap={0.25} className={classNames.wrapper} style={style}>
+      <Text as="dt" leading="TIGHT" styleType={termStyleType} className={classNames.term}>
         {term}
       </Text>
-      <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={descriptionStyle}>
+      <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.description}>
         {children ?? description}
       </Text>
     </Stack>
