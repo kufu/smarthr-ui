@@ -260,12 +260,24 @@ const ActualMultiComboBox = <T,>(
     onFocus?.()
     setIsFocused(true)
   }, [onFocus])
-  const blur = useCallback(() => {
-    if (!isFocused) return
+  const blur = useMemo(() => {
+    if (!isFocused) {
+      return NOOP
+    }
 
-    onBlur?.()
-    setIsFocused(false)
-    resetDeletionButtonFocus()
+    const baseAction = () => {
+      setIsFocused(false)
+      resetDeletionButtonFocus()
+    }
+
+    if (onBlur) {
+      return () => {
+        onBlur()
+        baseAction()
+      }
+    }
+
+    return baseAction
   }, [isFocused, onBlur, resetDeletionButtonFocus])
 
   useOuterClick([outerRef, listBoxRef], blur)
