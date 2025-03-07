@@ -256,9 +256,19 @@ const ActualMultiComboBox = <T,>(
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
-  const focus = useCallback(() => {
-    onFocus?.()
-    setIsFocused(true)
+  const focus = useMemo(() => {
+    const baseAction = () => {
+      setIsFocused(true)
+    }
+
+    if (onFocus) {
+      return () => {
+        onFocus()
+        baseAction()
+      }
+    }
+
+    return baseAction
   }, [onFocus])
   const blur = useMemo(() => {
     if (!isFocused) {
