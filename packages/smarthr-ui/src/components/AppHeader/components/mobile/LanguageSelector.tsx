@@ -5,9 +5,12 @@ import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { Locale, localeMap } from '../../multilingualization'
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { LocaleProps } from '../../types'
 import { CommonButton } from '../common/CommonButton'
+
+type Locale = 'ja' | 'en-us' | 'id-id' | 'pt' | 'vi' | 'ko' | 'zh-cn' | 'zh-tw'
 
 const languageSelector = tv({
   slots: {
@@ -27,6 +30,7 @@ type Props = {
 
 export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
   const { header, headerTitle, buttonWrapper, button } = languageSelector()
+  const { localize } = useIntl()
 
   const onClickButton = (selectedLocale: Locale) => {
     locale.onSelectLocale(selectedLocale)
@@ -35,7 +39,9 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
   return (
     <Section>
       <div className={header()}>
-        <Heading className={headerTitle()}>Language</Heading>
+        <Heading className={headerTitle()}>
+          <Localizer id="smarthr-ui/AppHeader/language" defaultText="日本語" values={{}} />
+        </Heading>
 
         <Button
           type="button"
@@ -45,12 +51,27 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
             onClickClose(false)
           }}
         >
-          <FaXmarkIcon role="img" aria-label="close" />
+          <FaXmarkIcon
+            role="img"
+            aria-label={localize({
+              id: 'smarthr-ui/AppHeader/closeMenu',
+              defaultText: 'メニューを閉じる',
+            })}
+          />
         </Button>
       </div>
 
       <div className={buttonWrapper()}>
-        {Object.keys(localeMap).map((localeKey) => (
+        {Object.entries({
+          ja: '日本語',
+          'id-id': 'Bahasa Indonesia',
+          'en-us': 'English',
+          pt: 'Português',
+          vi: 'Tiếng Việt',
+          ko: '한국어',
+          'zh-cn': '简体中文',
+          'zh-tw': '繁體中文',
+        }).map(([localeKey, label]) => (
           <CommonButton
             key={localeKey}
             elementAs="button"
@@ -59,7 +80,7 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
             onClick={() => onClickButton(localeKey as Locale)}
             prefix={localeKey === locale.selectedLocale && <FaCheckIcon color="MAIN" />}
           >
-            {localeMap[localeKey as Locale]}
+            {label}
           </CommonButton>
         ))}
       </div>

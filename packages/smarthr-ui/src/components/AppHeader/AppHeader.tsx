@@ -4,7 +4,6 @@ import React, { FC } from 'react'
 
 import { DesktopHeader } from './components/desktop/DesktopHeader'
 import { MobileHeader } from './components/mobile/MobileHeader'
-import { LocaleContextProvider } from './hooks/useLocale'
 import { mediaQuery, useMediaQuery } from './hooks/useMediaQuery'
 import { HeaderProps } from './types'
 
@@ -16,9 +15,13 @@ export const AppHeader: FC<HeaderProps> = ({ locale, children, ...props }) => {
   const isMobile = useMediaQuery(mediaQuery.mobile)
 
   return (
-    <LocaleContextProvider locale={locale}>
-      <DesktopHeader {...props}>{isDesktop && children}</DesktopHeader>
-      <MobileHeader {...props}>{isMobile && children}</MobileHeader>
-    </LocaleContextProvider>
+    <>
+      <DesktopHeader {...props} locale={locale}>
+        {isDesktop && children}
+      </DesktopHeader>
+      <MobileHeader {...props} locale={locale}>
+        {isMobile && children}
+      </MobileHeader>
+    </>
   )
 }

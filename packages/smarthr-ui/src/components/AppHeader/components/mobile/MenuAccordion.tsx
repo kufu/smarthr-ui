@@ -5,8 +5,7 @@ import { Heading } from '../../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
-import { useTranslate } from '../../hooks/useTranslate'
-import { Translate } from '../common/Translate'
+import { useIntl } from '../../../..'
 
 type Props = {
   isOpen: boolean
@@ -20,7 +19,7 @@ export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
   title,
   children,
 }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const id = useId()
 
   if (!title) {
@@ -30,9 +29,7 @@ export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
   return (
     <Section>
       <Cluster justify="space-between" align="center">
-        <Heading type="subSubBlockTitle">
-          <Translate>{title}</Translate>
-        </Heading>
+        <Heading type="subSubBlockTitle">{title}</Heading>
 
         <Button
           size="s"
@@ -42,9 +39,15 @@ export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
           onClick={() => setIsOpen((prev) => !prev)}
         >
           {isOpen ? (
-            <FaCaretUpIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/close')} />
+            <FaCaretUpIcon
+              role="img"
+              aria-label={localize({ id: 'smarthr-ui/AppHeader/menuClose', defaultText: '閉じる' })}
+            />
           ) : (
-            <FaCaretDownIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/open')} />
+            <FaCaretDownIcon
+              role="img"
+              aria-label={localize({ id: 'smarthr-ui/AppHeader/menuOpen', defaultText: '開く' })}
+            />
           )}
         </Button>
       </Cluster>

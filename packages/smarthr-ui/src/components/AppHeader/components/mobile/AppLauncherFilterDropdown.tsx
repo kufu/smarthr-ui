@@ -6,9 +6,9 @@ import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
-import { useTranslate } from '../../hooks/useTranslate'
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { Launcher } from '../../types'
-import { Translate } from '../common/Translate'
 
 type Props = {
   page: Launcher['page']
@@ -35,18 +35,21 @@ const filterDropdown = tv({
 })
 
 export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const { trigger, stack, contentButton } = filterDropdown()
   const filterMap: Record<Launcher['page'], string> = {
-    favorite: translate('Launcher/favoriteModeText'),
-    all: translate('MobileHeader/Menu/allAppButton'),
+    favorite: localize({
+      id: 'smarthr-ui/AppHeader/favoriteModeText',
+      defaultText: 'よく使うアプリ',
+    }),
+    all: localize({ id: 'smarthr-ui/AppHeader/allAppButton', defaultText: 'すべてのアプリ' }),
   }
 
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button className={trigger()} size="s" suffix={<FaCaretDownIcon />}>
-          <Translate>{filterMap[page]}</Translate>
+          {filterMap[page]}
         </Button>
       </DropdownTrigger>
 
@@ -64,7 +67,13 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
                   isSelected && (
                     <FaCheckIcon
                       color={textColor.main}
-                      alt={<Translate>{translate('Launcher/sortDropdownSelected')}</Translate>}
+                      alt={
+                        <Localizer
+                          id="smarthr-ui/AppHeader/sortDropdownSelected"
+                          defaultText="選択中"
+                          values={{}}
+                        />
+                      }
                     />
                   )
                 }
@@ -72,7 +81,7 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
                   onSelectPage(key as Launcher['page'])
                 }}
               >
-                <Translate>{value}</Translate>
+                {value}
               </Button>
             )
           })}
