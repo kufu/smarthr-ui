@@ -367,13 +367,16 @@ const ActualMultiComboBox = <T,>(
     },
     [onChange, onChangeInput, setInputValueIfUncontrolled],
   )
-  const handleFocusInput = useCallback(() => {
-    resetDeletionButtonFocus()
-
-    if (!isFocused) {
-      focus()
-    }
-  }, [isFocused, focus, resetDeletionButtonFocus])
+  const handleFocusInput = useMemo(
+    () =>
+      isFocused
+        ? resetDeletionButtonFocus
+        : () => {
+            resetDeletionButtonFocus()
+            focus()
+          },
+    [isFocused, focus, resetDeletionButtonFocus],
+  )
   const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
   const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
