@@ -286,50 +286,49 @@ const ActualMultiComboBox = <T,>(
     }
   }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
-      if (isComposing) {
-        return
-      }
+  const handleKeyDown = useMemo(
+    () =>
+      isComposing
+        ? undefined
+        : (e: KeyboardEvent<HTMLDivElement>) => {
+            if (ESCAPE_KEY_REGEX.test(e.key)) {
+              e.stopPropagation()
+              blur()
+            } else if (e.key === 'Tab') {
+              if (isFocused) {
+                // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+                inputRef.current?.focus()
+              }
 
-      if (ESCAPE_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        blur()
-      } else if (e.key === 'Tab') {
-        if (isFocused) {
-          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-          inputRef.current?.focus()
-        }
+              blur()
+            } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
+              e.stopPropagation()
+              focusPrevDeletionButton()
+            } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
+              e.stopPropagation()
+              focusNextDeletionButton()
+            } else if (
+              e.key === 'Backspace' &&
+              !inputValue &&
+              selectedItems.length > 0 &&
+              selectedItems[selectedItems.length - 1].deletable !== false
+            ) {
+              e.preventDefault()
+              e.stopPropagation()
 
-        blur()
-      } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusPrevDeletionButton()
-      } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusNextDeletionButton()
-      } else if (
-        e.key === 'Backspace' &&
-        !inputValue &&
-        selectedItems.length > 0 &&
-        selectedItems[selectedItems.length - 1].deletable !== false
-      ) {
-        e.preventDefault()
-        e.stopPropagation()
+              const lastItem = selectedItems[selectedItems.length - 1]
 
-        const lastItem = selectedItems[selectedItems.length - 1]
+              handleDelete(lastItem)
+              setHighlighted(true)
+              setInputValueIfUncontrolled(innerText(lastItem.label))
+            } else {
+              e.stopPropagation()
+              inputRef.current?.focus()
+              resetDeletionButtonFocus()
+            }
 
-        handleDelete(lastItem)
-        setHighlighted(true)
-        setInputValueIfUncontrolled(innerText(lastItem.label))
-      } else {
-        e.stopPropagation()
-        inputRef.current?.focus()
-        resetDeletionButtonFocus()
-      }
-
-      handleListBoxKeyDown(e)
-    },
+            handleListBoxKeyDown(e)
+          },
     [
       blur,
       focusNextDeletionButton,
