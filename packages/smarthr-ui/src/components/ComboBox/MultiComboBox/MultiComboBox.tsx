@@ -358,15 +358,21 @@ const ActualMultiComboBox = <T,>(
     },
     [isFocused, disabled, focus],
   )
-  const handleChangeInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      onChange?.(e)
-      onChangeInput?.(e)
-
+  const handleChangeInput = useMemo(() => {
+    const handlers = [onChange, onChangeInput].filter((h) => !!h)
+    const onSetValue = (e: ChangeEvent<HTMLInputElement>) => {
       setInputValueIfUncontrolled(e.currentTarget.value)
-    },
-    [onChange, onChangeInput, setInputValueIfUncontrolled],
-  )
+    }
+
+    if (handlers.length === 0) {
+      return onSetValue
+    }
+
+    return (e: ChangeEvent<HTMLInputElement>) => {
+      handlers.forEach((h) => h(e))
+      onSetValue(e)
+    }
+  }, [onChange, onChangeInput, setInputValueIfUncontrolled])
   const handleFocusInput = useMemo(
     () =>
       isFocused
