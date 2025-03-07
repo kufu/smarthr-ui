@@ -195,19 +195,32 @@ const ActualMultiComboBox = <T,>(
     isItemSelected,
   })
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
-  const handleDelete = useCallback(
-    (item: ComboBoxItem<T>) => {
+  const handleDelete = useMemo(() => {
+    const handlers: Array<(item: ComboBoxItem<T>) => void> = []
+
+    if (onDelete) {
+      handlers.push((item: ComboBoxItem<T>) => onDelete(item))
+    }
+    if (onChangeSelected) {
+      handlers.push((item: ComboBoxItem<T>) =>
+        onChangeSelected(
+          selectedItems.filter((selected) => !areComboBoxItemsEqual(selected, item)),
+        ),
+      )
+    }
+
+    if (handlers.length === 0) {
+      return NOOP
+    }
+
+    return (item: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        onDelete?.(item)
-        onChangeSelected?.(
-          selectedItems.filter((selected) => !areComboBoxItemsEqual(selected, item)),
-        )
+        handlers.forEach((h) => h(item))
       })
-    },
-    [selectedItems, onChangeSelected, onDelete],
-  )
+    }
+  }, [selectedItems, onChangeSelected, onDelete])
   const handleSelect = useCallback(
     (selected: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
