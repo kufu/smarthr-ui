@@ -7,7 +7,9 @@ import React, {
   type FC,
   type FunctionComponentElement,
   type MouseEventHandler,
+  type PropsWithChildren,
   type ReactNode,
+  memo,
   useEffect,
   useMemo,
 } from 'react'
@@ -95,7 +97,7 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
   return (
     <Base {...props} className={classNames.wrapper} style={style}>
       <Stack>
-        {description && <p className="smarthr-ui-BottomFixedArea-description">{description}</p>}
+        <Description>{description}</Description>
         <Stack gap={0.25}>
           {(secondaryButton || primaryButton) && (
             <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 1 }}>
@@ -109,13 +111,12 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
           )}
           {tertiaryLinks && tertiaryLinks.length > 0 && (
             <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 0 }}>
-              {tertiaryLinks.map(({ text, icon: Icon, onClick, ...tertiaryProps }, index) => (
+              {tertiaryLinks.map(({ text, icon: Icon, ...tertiaryRest }, index) => (
                 <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
                   <Button
-                    {...tertiaryProps}
+                    {...tertiaryRest}
                     variant="text"
                     prefix={Icon && <Icon />}
-                    onClick={onClick}
                     className={classNames.tertiaryButton}
                   >
                     {text}
@@ -129,3 +130,8 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
     </Base>
   )
 }
+
+const Description = memo<PropsWithChildren>(
+  ({ children }) =>
+    children && <p className="smarthr-ui-BottomFixedArea-description">{children}</p>,
+)
