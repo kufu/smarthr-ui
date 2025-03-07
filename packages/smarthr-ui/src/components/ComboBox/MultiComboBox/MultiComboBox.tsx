@@ -80,6 +80,12 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 const NOOP = () => undefined
 
+const preventDefaultWithPressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === 'Enter') {
+    e.preventDefault()
+  }
+}
+
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_LEFT_KEY_REGEX = /^(Arrow)?Left$/
 const ARROW_RIGHT_KEY_REGEX = /^(Arrow)?Right/
@@ -380,11 +386,14 @@ const ActualMultiComboBox = <T,>(
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const handleKeyPress = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') e.preventDefault()
-      onKeyPress?.(e)
-    },
+  const handleKeyPress = useMemo(
+    () =>
+      onKeyPress
+        ? (e: KeyboardEvent<HTMLInputElement>) => {
+            preventDefaultWithPressEnter()
+            onKeyPress(e)
+          }
+        : preventDefaultWithPressEnter,
     [onKeyPress],
   )
 
