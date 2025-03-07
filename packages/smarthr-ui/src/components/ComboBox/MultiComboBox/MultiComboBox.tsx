@@ -195,7 +195,7 @@ const ActualMultiComboBox = <T,>(
     isItemSelected,
   })
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
-  const handleDelete = useMemo(() => {
+  const actualOnDelete = useMemo(() => {
     const handlers: Array<(item: ComboBoxItem<T>) => void> = []
 
     if (onDelete) {
@@ -221,7 +221,7 @@ const ActualMultiComboBox = <T,>(
       })
     }
   }, [selectedItems, onChangeSelected, onDelete])
-  const handleSelect = useCallback(
+  const actualOnSelect = useCallback(
     (selected: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
@@ -234,25 +234,19 @@ const ActualMultiComboBox = <T,>(
           onSelect?.(selected)
           onChangeSelected?.(selectedItems.concat(selected))
         } else if (matchedSelectedItem.deletable !== false) {
-          handleDelete(selected)
+          actualOnDelete(selected)
         }
       })
     },
-    [selectedItems, handleDelete, onChangeSelected, onSelect],
+    [selectedItems, actualOnDelete, onChangeSelected, onSelect],
   )
 
-  const {
-    renderListBox,
-    activeOption,
-    handleKeyDown: handleListBoxKeyDown,
-    listBoxId,
-    listBoxRef,
-  } = useListBox({
+  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListBox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
     onAdd,
-    onSelect: handleSelect,
+    onSelect: actualOnSelect,
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
@@ -321,7 +315,7 @@ const ActualMultiComboBox = <T,>(
     }
   }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
 
-  const handleKeyDown = useMemo(
+  const onKeyDown = useMemo(
     () =>
       isComposing
         ? undefined
@@ -353,7 +347,7 @@ const ActualMultiComboBox = <T,>(
 
               const lastItem = selectedItems[selectedItems.length - 1]
 
-              handleDelete(lastItem)
+              actualOnDelete(lastItem)
               setHighlighted(true)
               setInputValueIfUncontrolled(innerText(lastItem.label))
             } else {
@@ -362,25 +356,25 @@ const ActualMultiComboBox = <T,>(
               resetDeletionButtonFocus()
             }
 
-            handleListBoxKeyDown(e)
+            onKeyDownListBox(e)
           },
     [
       blur,
       focusNextDeletionButton,
       focusPrevDeletionButton,
-      handleListBoxKeyDown,
+      onKeyDownListBox,
       inputRef,
       isComposing,
       isFocused,
       resetDeletionButtonFocus,
-      handleDelete,
+      actualOnDelete,
       inputValue,
       selectedItems,
       setInputValueIfUncontrolled,
     ],
   )
 
-  const handleClick = useMemo(
+  const onClick = useMemo(
     () =>
       disabled || isFocused
         ? undefined
@@ -391,7 +385,7 @@ const ActualMultiComboBox = <T,>(
           },
     [isFocused, disabled, focus],
   )
-  const handleChangeInput = useMemo(() => {
+  const actualOnChangeInput = useMemo(() => {
     const handlers = [onChange, onChangeInput].filter((h) => !!h)
     const onSetValue = (e: ChangeEvent<HTMLInputElement>) => {
       setInputValueIfUncontrolled(e.currentTarget.value)
@@ -406,7 +400,7 @@ const ActualMultiComboBox = <T,>(
       onSetValue(e)
     }
   }, [onChange, onChangeInput, setInputValueIfUncontrolled])
-  const handleFocusInput = useMemo(
+  const onFocusInput = useMemo(
     () =>
       isFocused
         ? resetDeletionButtonFocus
@@ -416,9 +410,9 @@ const ActualMultiComboBox = <T,>(
           },
     [isFocused, focus, resetDeletionButtonFocus],
   )
-  const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
-  const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
-  const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+  const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
+  const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
+  const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (ARROW_UP_AND_DOWN_KEY_REGEX.test(e.key)) {
       // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
       e.preventDefault()
@@ -428,7 +422,7 @@ const ActualMultiComboBox = <T,>(
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const handleKeyPress = useMemo(
+  const actualOnKeyPress = useMemo(
     () =>
       onKeyPress
         ? (e: KeyboardEvent<HTMLInputElement>) => {
@@ -482,9 +476,9 @@ const ActualMultiComboBox = <T,>(
     <div
       ref={outerRef}
       role="group"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onKeyPress={handleKeyPress}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      onKeyPress={actualOnKeyPress}
       className={classNames.wrapper}
       style={wrapperStyle}
     >
@@ -495,7 +489,7 @@ const ActualMultiComboBox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                onDelete={handleDelete}
+                onDelete={actualOnDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
                 decorators={decorators}
@@ -514,11 +508,11 @@ const ActualMultiComboBox = <T,>(
             disabled={disabled}
             required={required && selectedItems.length === 0}
             ref={inputRef}
-            onChange={handleChangeInput}
-            onFocus={handleFocusInput}
-            onCompositionStart={handleCompositionStartInput}
-            onCompositionEnd={handleCompositionEndInput}
-            onKeyDown={handleInputKeyDown}
+            onChange={actualOnChangeInput}
+            onFocus={onFocusInput}
+            onCompositionStart={onCompositionStartInput}
+            onCompositionEnd={onCompositionEndInput}
+            onKeyDown={onKeyDownInput}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
             role="combobox"
