@@ -5,7 +5,6 @@ import React, {
   type ComponentProps,
   type ComponentPropsWithRef,
   type FocusEventHandler,
-  type KeyboardEvent,
   type ReactNode,
   forwardRef,
   memo,
@@ -237,7 +236,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     useOuterClick([inputWrapperRef, calendarPortalRef], closeCalendar)
 
     const handleKeyDown = useCallback(
-      (e: KeyboardEvent<HTMLInputElement>) => {
+      (e: KeyboardEvent) => {
         if (!inputRef.current || !calendarPortalRef.current || e.key !== 'Tab') {
           return
         }
@@ -311,7 +310,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     }, [isInputFocused, isCalendarShown, disabled])
 
     const onDelegateKeyDown = useCallback(
-      (e: KeyboardEvent<HTMLInputElement>) => {
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (ESCAPE_KEY_REGEX.test(e.key)) {
           e.stopPropagation()
           // delay hiding calendar because calendar will be displayed when input is focused
@@ -323,7 +322,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [closeCalendar],
     )
     const onKeyPressInput = useCallback(
-      (e: KeyboardEvent<HTMLInputElement>) => {
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
           ;(isCalendarShown ? openCalendar : closeCalendar)()
           updateDate(stringToDate(e.currentTarget.value))
