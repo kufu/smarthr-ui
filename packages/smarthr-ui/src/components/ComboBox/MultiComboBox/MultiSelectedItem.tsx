@@ -1,6 +1,8 @@
 import React, {
-  PropsWithChildren,
-  RefObject,
+  type KeyboardEvent,
+  type PropsWithChildren,
+  type RefObject,
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -30,7 +32,7 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const multiSelectedItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper:
       'smarthr-ui-MultiComboBox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
@@ -71,7 +73,7 @@ export function MultiSelectedItem<T>({
   const { deletable = true } = item
 
   const classNames = useMemo(() => {
-    const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
+    const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
@@ -112,7 +114,7 @@ export function MultiSelectedItem<T>({
   return body
 }
 
-const ItemLabel = React.memo<
+const ItemLabel = memo<
   PropsWithChildren<{
     enableEllipsis?: boolean
     setNeedsTooltip: (flg: boolean) => void
@@ -136,7 +138,7 @@ const ItemLabel = React.memo<
   )
 })
 
-const typedMemo: <T>(c: T) => T = React.memo
+const typedMemo: <T>(c: T) => T = memo
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
 const BaseDestroyButton = <T,>({
@@ -155,7 +157,7 @@ const BaseDestroyButton = <T,>({
     onDelete(item)
   }, [item, onDelete])
   const onKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    (e: KeyboardEvent<HTMLButtonElement>) => {
       if (EXEC_DESTROY_KEY.test(e.key)) {
         e.stopPropagation()
 
