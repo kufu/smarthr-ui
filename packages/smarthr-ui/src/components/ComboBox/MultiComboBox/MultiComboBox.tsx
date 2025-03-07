@@ -346,16 +346,15 @@ const ActualMultiComboBox = <T,>(
     ],
   )
 
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      if (
-        !disabled &&
-        !isFocused &&
-        !(e.target as HTMLElement).closest('.smarthr-ui-MultiComboBox-deleteButton')
-      ) {
-        focus()
-      }
-    },
+  const handleClick = useMemo(
+    () =>
+      disabled || isFocused
+        ? undefined
+        : (e: MouseEvent<HTMLElement>) => {
+            if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiComboBox-deleteButton')) {
+              focus()
+            }
+          },
     [isFocused, disabled, focus],
   )
   const handleChangeInput = useMemo(() => {
