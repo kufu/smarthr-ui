@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 import { ElementRef, ElementRefProps } from '../../types'
 import { ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './style'
+import { itemClassNameGenerator } from './itemClassNameGenerator'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
@@ -37,7 +37,7 @@ type AppNaviAnchorComponent = <T extends ElementType = 'a'>(
 ) => ReturnType<FC>
 
 const classNameGenerator = tv({
-  extend: appNaviItemStyle,
+  extend: itemClassNameGenerator,
   slots: {
     wrapper: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
   },
