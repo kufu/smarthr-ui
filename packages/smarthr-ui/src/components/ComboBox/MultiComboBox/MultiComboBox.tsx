@@ -432,7 +432,7 @@ const ActualMultiComboBox = <T,>(
     () =>
       onKeyPress
         ? (e: KeyboardEvent<HTMLInputElement>) => {
-            preventDefaultWithPressEnter()
+            preventDefaultWithPressEnter(e)
             onKeyPress(e)
           }
         : preventDefaultWithPressEnter,
