@@ -169,13 +169,7 @@ const ActualSingleComboBox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const {
-    renderListBox,
-    activeOption,
-    handleKeyDown: handleListBoxKeyDown,
-    listBoxId,
-    listBoxRef,
-  } = useListBox<T>({
+  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListBox<T>({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -316,9 +310,9 @@ const ActualSingleComboBox = <T,>(
           setIsExpanded(true)
         }
       }
-      handleListBoxKeyDown(e)
+      onKeyDownListBox(e)
     },
-    [isComposing, isExpanded, unfocus, handleListBoxKeyDown],
+    [isComposing, isExpanded, unfocus, onKeyDownListBox],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
