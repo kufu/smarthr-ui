@@ -5,8 +5,8 @@ import { useHandleEscape } from '../../../../hooks/useHandleEscape'
 import { usePortal } from '../../../../hooks/usePortal'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
-import { Translate } from '../common/Translate'
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { MenuAccordion } from './MenuAccordion'
@@ -37,7 +37,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const { createPortal } = usePortal()
 
   useEffect(() => {
@@ -57,7 +57,13 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   return (
     <>
       <Button variant="secondary" size="s" onClick={() => setIsOpen(true)} aria-haspopup="true">
-        <FaBarsIcon role="img" aria-label={translate('MobileHeader/Menu/openMenu')} />
+        <FaBarsIcon
+          role="img"
+          aria-label={localize({
+            id: 'smarthr-ui/AppHeader/openMenu',
+            defaultText: 'メニューを開く',
+          })}
+        />
       </Button>
 
       {createPortal(
@@ -75,7 +81,11 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
                 }
                 onClick={() => setIsAppLauncherSelected(true)}
               >
-                <Translate>{translate('Launcher/listText')}</Translate>
+                <Localizer
+                  id="smarthr-ui/AppHeader/listText"
+                  defaultText="アプリ一覧"
+                  values={{}}
+                />
               </Button>
             </div>
           )}
@@ -101,7 +111,10 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
               <MenuAccordion
                 isOpen={isAdditionalContentOpen}
                 setIsOpen={setIsAdditionalContentOpen}
-                title={translate('MobileHeader/Menu/managementMenu')}
+                title={localize({
+                  id: 'smarthr-ui/AppHeader/managementMenu',
+                  defaultText: '管理メニュー',
+                })}
               >
                 {additionalContent}
               </MenuAccordion>
@@ -111,7 +124,11 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           {releaseNote && (
             <div className={menuItemBlockStyle}>
               <MenuButton onClick={() => setIsReleaseNoteSelected(true)}>
-                <Translate>{translate('common/releaseNote')}</Translate>
+                <Localizer
+                  id="smarthr-ui/AppHeader/releaseNote"
+                  defaultText="リリースノート"
+                  values={{}}
+                />
               </MenuButton>
             </div>
           )}

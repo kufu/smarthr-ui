@@ -11,11 +11,8 @@ import {
   FaToolboxIcon,
 } from '../../../Icon'
 import { Cluster } from '../../../Layout'
-import { useLocale } from '../../hooks/useLocale'
-import { useTranslate } from '../../hooks/useTranslate'
-import { localeMap } from '../../multilingualization'
+import { Localizer } from '../../../../intl/Localizer'
 import { HeaderProps } from '../../types'
-import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
@@ -62,9 +59,6 @@ export const DesktopHeader: FC<HeaderProps> = ({
   features,
   ...props
 }) => {
-  const translate = useTranslate()
-  const { locale } = useLocale()
-
   const { wrapper, appsButton } = desktopHeader()
 
   return (
@@ -84,9 +78,11 @@ export const DesktopHeader: FC<HeaderProps> = ({
                 <Dropdown>
                   <DropdownTrigger>
                     <Button prefix={enableNew ?? <FaToolboxIcon />} className={appsButton()}>
-                      <Translate>
-                        {translate('DesktopHeader/DesktopHeader/appLauncherLabel')}
-                      </Translate>
+                      <Localizer
+                        id="smarthr-ui/AppHeader/appLauncherLabel"
+                        defaultText="アプリ"
+                        values={{}}
+                      />
                     </Button>
                   </DropdownTrigger>
 
@@ -102,7 +98,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
                   prefix={<FaGraduationCapIcon />}
                   className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
                 >
-                  <Translate>{translate('common/school')}</Translate>
+                  <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" values={{}} />
                 </HeaderLink>
               )}
             </>
@@ -117,15 +113,24 @@ export const DesktopHeader: FC<HeaderProps> = ({
               }
               enableNew={enableNew}
             >
-              <Translate>{translate('common/help')}</Translate>
+              <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" values={{}} />
             </HeaderLink>
           )}
 
-          {locale && (
+          {props.locale && (
             <LanguageSwitcher
-              localeMap={localeMap}
-              locale={locale.selectedLocale}
-              onLanguageSelect={locale.onSelectLocale as (locale: string) => void}
+              localeMap={{
+                ja: '日本語',
+                'id-id': 'Bahasa Indonesia',
+                'en-us': 'English',
+                pt: 'Português',
+                vi: 'Tiếng Việt',
+                ko: '한国語',
+                'zh-cn': '简体中文',
+                'zh-tw': '繁體中文',
+              }}
+              locale={props.locale.selectedLocale}
+              onLanguageSelect={props.locale.onSelectLocale as (locale: string) => void}
               enableNew={enableNew}
             />
           )}

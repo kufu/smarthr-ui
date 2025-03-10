@@ -3,9 +3,8 @@ import React, { FC } from 'react'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
+import { Localizer } from '../../../../intl/Localizer'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 type Props = {
   helpPageUrl?: string | null
@@ -13,8 +12,6 @@ type Props = {
 }
 
 export const Help: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
-  const translate = useTranslate()
-
   if (!helpPageUrl && !schoolUrl) {
     return null
   }
@@ -37,7 +34,7 @@ export const Help: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
               rel="noopener noreferrer"
               prefix={<FaCircleQuestionIcon />}
             >
-              <Translate>{translate('common/help')}</Translate>
+              <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" values={{}} />
             </CommonButton>
           )}
 
@@ -49,7 +46,7 @@ export const Help: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
               rel="noopener noreferrer"
               prefix={<FaGraduationCapIcon />}
             >
-              <Translate>{translate('common/school')}</Translate>
+              <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" values={{}} />
             </CommonButton>
           )}
         </div>

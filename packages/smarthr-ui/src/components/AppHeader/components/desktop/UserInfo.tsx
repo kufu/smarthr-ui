@@ -6,11 +6,10 @@ import { Dropdown, DropdownContent, DropdownMenuButton, DropdownTrigger } from '
 import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
-import { useTranslate } from '../../hooks/useTranslate'
+import { Localizer } from '../../../../intl/Localizer'
 import { HeaderProps, UserInfoProps } from '../../types'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 // HeaderDropdownMenuButton と同じスタイルを適用
 const userInfo = tv({
@@ -71,8 +70,6 @@ export const UserInfo: FC<
   desktopAdditionalContent,
   enableNew,
 }) => {
-  const translate = useTranslate()
-
   const displayName =
     arbitraryDisplayName ??
     buildDisplayName({
@@ -170,7 +167,7 @@ export const UserInfo: FC<
             prefix={<FaGearIcon />}
             className={dropdownContentButton()}
           >
-            <Translate>{translate('common/userSetting')}</Translate>
+            <Localizer id="smarthr-ui/AppHeader/userSetting" defaultText="個人設定" values={{}} />
           </AnchorButton>
         )}
 
@@ -183,7 +180,7 @@ export const UserInfo: FC<
     <Dropdown>
       <DropdownTrigger>
         <Button variant="text" suffix={<FaCaretDownIcon />} className={button()}>
-          <Translate>{displayName}</Translate>
+          {displayName}
         </Button>
       </DropdownTrigger>
 
@@ -198,7 +195,7 @@ export const UserInfo: FC<
               rel="noopener noreferrer"
               prefix={<FaGearIcon />}
             >
-              <Translate>{translate('common/userSetting')}</Translate>
+              <Localizer id="smarthr-ui/AppHeader/userSetting" defaultText="個人設定" values={{}} />
             </CommonButton>
           )}
 

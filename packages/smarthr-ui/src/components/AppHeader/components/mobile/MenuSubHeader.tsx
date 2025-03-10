@@ -3,8 +3,7 @@ import React, { FC, ReactNode } from 'react'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaArrowLeftIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
-import { Translate } from '../common/Translate'
+import { useIntl } from '../../../..'
 
 type Props = {
   title: ReactNode
@@ -12,18 +11,19 @@ type Props = {
 }
 
 export const MenuSubHeader: FC<Props> = ({ title, onClickBack }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
 
   return (
     <>
       <Button size="s" onClick={onClickBack}>
-        <FaArrowLeftIcon role="img" aria-label={translate('MobileHeader/MenuSubHeader/back')} />
+        <FaArrowLeftIcon
+          role="img"
+          aria-label={localize({ id: 'smarthr-ui/AppHeader/back', defaultText: '戻る' })}
+        />
       </Button>
 
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-      <Heading type="blockTitle">
-        <Translate>{title}</Translate>
-      </Heading>
+      <Heading type="blockTitle">{title}</Heading>
     </>
   )
 }

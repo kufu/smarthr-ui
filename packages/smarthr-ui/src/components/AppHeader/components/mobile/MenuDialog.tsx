@@ -17,7 +17,7 @@ import { FocusTrap } from '../../../Dialog/FocusTrap'
 import { FaXmarkIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
-import { useTranslate } from '../../hooks/useTranslate'
+import { useIntl } from '../../../..'
 
 import { AppLauncher } from './AppLauncher'
 import { AppLauncherContext } from './AppLauncherContext'
@@ -56,7 +56,7 @@ export const MenuDialog: FC<
     useContext(AppLauncherContext)
 
   const [contentBuffer, setContentBuffer] = useState<ReactNode>(null)
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const domRef = useRef<HTMLSelectElement>(null)
 
   const renderedContent = useMemo(() => {
@@ -69,12 +69,15 @@ export const MenuDialog: FC<
           <Cluster justify="space-between" align="center">
             {isAppLauncherSelected ? (
               <MenuSubHeader
-                title={translate('Launcher/listText')}
+                title={localize({ id: 'smarthr-ui/AppHeader/listText', defaultText: 'アプリ一覧' })}
                 onClickBack={() => setIsAppLauncherSelected(false)}
               />
             ) : isReleaseNoteSelected ? (
               <MenuSubHeader
-                title={translate('MobileHeader/Menu/latestReleaseNotes')}
+                title={localize({
+                  id: 'smarthr-ui/AppHeader/latestReleaseNotes',
+                  defaultText: '最新のリリースノート',
+                })}
                 onClickBack={() => setIsReleaseNoteSelected(false)}
               />
             ) : selectedNavigationGroup ? (
@@ -84,7 +87,13 @@ export const MenuDialog: FC<
             )}
 
             <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
-              <FaXmarkIcon role="img" aria-label={translate('MobileHeader/Menu/closeMenu')} />
+              <FaXmarkIcon
+                role="img"
+                aria-label={localize({
+                  id: 'smarthr-ui/AppHeader/closeMenu',
+                  defaultText: 'メニューを閉じる',
+                })}
+              />
             </Button>
           </Cluster>
         </div>
@@ -108,7 +117,7 @@ export const MenuDialog: FC<
       </Section>
     )
   }, [
-    translate,
+    localize,
     children,
     features,
     isAppLauncherSelected,

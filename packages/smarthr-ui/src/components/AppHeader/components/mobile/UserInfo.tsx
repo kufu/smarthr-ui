@@ -5,12 +5,11 @@ import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
-import { useLocale } from '../../hooks/useLocale'
-import { useTranslate } from '../../hooks/useTranslate'
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { HeaderProps, UserInfoProps } from '../../types'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import { LanguageSelector } from './LanguageSelector'
 
@@ -32,10 +31,10 @@ export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
   firstName,
   lastName,
   accountUrl,
+  locale,
 }) => {
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
-  const { locale } = useLocale()
-  const translate = useTranslate()
+  const { localize } = useIntl()
 
   const displayName =
     arbitraryDisplayName ??
@@ -60,7 +59,10 @@ export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
             <span className={iconButtonInner()}>
               <FaUserLargeIcon
                 role="img"
-                aria-label={translate('MobileHeader/UserInfo/account')}
+                aria-label={localize({
+                  id: 'smarthr-ui/AppHeader/account',
+                  defaultText: 'アカウント',
+                })}
                 className="shr-fill-grey"
               />
             </span>
@@ -93,7 +95,11 @@ export const UserInfo: FC<UserInfoProps & Pick<HeaderProps, 'locale'>> = ({
                   rel="noopener noreferrer"
                   prefix={<FaGearIcon />}
                 >
-                  <Translate>{translate('common/userSetting')}</Translate>
+                  <Localizer
+                    id="smarthr-ui/AppHeader/userSetting"
+                    defaultText="個人設定"
+                    values={{}}
+                  />
                 </CommonButton>
               )}
             </div>
