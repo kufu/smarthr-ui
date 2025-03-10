@@ -1,0 +1,1 @@
+export { SmartHRAILogo } from './SmartHRAILogo'
