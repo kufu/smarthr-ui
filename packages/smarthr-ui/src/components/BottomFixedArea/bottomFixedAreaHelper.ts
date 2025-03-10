@@ -1,6 +1,6 @@
-import { Primary, Secondary } from './BottomFixedArea'
+import { ButtonType } from './BottomFixedArea'
 
-export const validateElement = (primary?: Primary, secondary?: Secondary) => {
+export const validateElement = (primary?: ButtonType, secondary?: ButtonType) => {
   if (primary) {
     const { displayName } = primary.type
 

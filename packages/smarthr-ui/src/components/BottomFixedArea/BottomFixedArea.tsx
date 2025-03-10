@@ -22,11 +22,7 @@ import { Cluster, Stack } from '../Layout'
 
 import { validateElement } from './bottomFixedAreaHelper'
 
-export type Primary =
-  | FunctionComponentElement<ComponentProps<typeof Button>>
-  | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
-
-export type Secondary =
+export type ButtonType =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
 
@@ -36,9 +32,9 @@ type Props = {
   /** この領域の説明 */
   description?: ReactNode
   /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
-  primaryButton?: Primary
+  primaryButton?: ButtonType
   /** 表示する `Button` または `AnchorButton` （`variant="secondary"` である必要がある）*/
-  secondaryButton?: Secondary
+  secondaryButton?: ButtonType
   /** 表示する tertialy link のプロパティの配列 */
   tertiaryLinks?: Array<
     ComponentPropsWithRef<'button'> & {
