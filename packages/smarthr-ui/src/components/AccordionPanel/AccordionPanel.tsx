@@ -79,7 +79,6 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      {}
       <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )

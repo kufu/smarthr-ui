@@ -173,12 +173,12 @@ const dummyText = (
 export const Form_Dialog: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [value, setValue] = React.useState('Apple')
-  const [responseMessage, setResponseMessage] =
-    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
+  const [responseStatus, setResponseStatus] =
+    useState<ComponentProps<typeof ActionDialog>['responseStatus']>()
   const openedFocusRef = useRef<HTMLInputElement>(null)
   const onClickClose = () => {
     setOpenedDialog(null)
-    setResponseMessage(undefined)
+    setResponseStatus(undefined)
   }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
@@ -203,11 +203,11 @@ export const Form_Dialog: StoryFn = () => {
         onSubmit={(closeDialog, e) => {
           action('executed')()
           console.log('event', e)
-          setResponseMessage(undefined)
+          setResponseStatus(undefined)
           closeDialog()
         }}
         onClickClose={onClickClose}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         id="dialog-form"
         data-test="form-dialog-content"
         width="40em"
@@ -237,7 +237,7 @@ export const Form_Dialog: StoryFn = () => {
             <p>切り替えボタン：</p>
             <Button
               onClick={() =>
-                setResponseMessage({
+                setResponseStatus({
                   status: 'success',
                   text: '保存しました。',
                 })
@@ -247,7 +247,7 @@ export const Form_Dialog: StoryFn = () => {
             </Button>
             <Button
               onClick={() =>
-                setResponseMessage({
+                setResponseStatus({
                   status: 'error',
                   text: '何らかのエラーが発生しました。',
                 })
@@ -257,7 +257,7 @@ export const Form_Dialog: StoryFn = () => {
             </Button>
             <Button
               onClick={() =>
-                setResponseMessage({
+                setResponseStatus({
                   status: 'processing',
                 })
               }

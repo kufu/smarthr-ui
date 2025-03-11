@@ -1,4 +1,13 @@
-import React, { ComponentProps, ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
+import React, {
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
@@ -14,7 +23,7 @@ import {
 } from '../Icon'
 import { Cluster } from '../Layout'
 
-export const notificationBar = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper:
       'smarthr-ui-NotificationBar shr-flex shr-items-baseline shr-justify-between shr-gap-0.5 shr-p-0.75',
@@ -124,12 +133,12 @@ export const notificationBar = tv({
   ],
 })
 
-type StyleVariants = VariantProps<typeof notificationBar>
+type StyleVariants = VariantProps<typeof classNameGenerator>
 type Props = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** メッセージ */
-      message: React.ReactNode
+      message: ReactNode
       /** 閉じるボタン押下時に発火させる関数 */
       onClose?: () => void
       /** role 属性 */
@@ -157,7 +166,9 @@ const ICON_MAPPER = {
   },
 } as const
 
-export const NotificationBar: React.FC<ActualProps> = ({
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync)$/
+
+export const NotificationBar: FC<ActualProps> = ({
   type,
   bold,
   animate,
@@ -175,7 +186,7 @@ export const NotificationBar: React.FC<ActualProps> = ({
       return role
     }
 
-    return type.match(/^(info|sync)$/) ? 'status' : 'alert'
+    return ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert'
   }, [role, type])
   const { WrapBase, baseProps } = useMemo(
     () =>
@@ -188,71 +199,60 @@ export const NotificationBar: React.FC<ActualProps> = ({
             },
           }
         : {
-            WrapBase: React.Fragment,
+            WrapBase: Fragment,
             baseProps: {},
           },
     [base, layer],
   )
-  const {
-    wrapperStyle,
-    innerStyle,
-    messageAreaStyle,
-    iconStyle,
-    actionAreaStyle,
-    closeButtonStyle,
-  } = useMemo(() => {
-    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
+  const classNames = useMemo(() => {
+    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
       bold: !!bold,
       base: base || 'none',
     })
 
     return {
-      wrapperStyle: wrapper({ animate, className }),
-      innerStyle: inner(),
-      messageAreaStyle: messageArea(),
-      iconStyle: icon(),
-      actionAreaStyle: actionArea(),
-      closeButtonStyle: closeButton(),
+      wrapper: wrapper({ animate, className }),
+      inner: inner(),
+      messageArea: messageArea(),
+      icon: icon(),
+      actionArea: actionArea(),
+      closeButton: closeButton(),
     }
-  }, [animate, base, bold, className, type])
+  }, [animate, base, bold, type, className])
 
   return (
     <WrapBase {...baseProps}>
-      <div {...props} className={wrapperStyle} role={actualRole}>
-        <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
-          <MessageArea
-            message={message}
-            bold={bold}
-            type={type}
-            messageAreaStyle={messageAreaStyle}
-            iconStyle={iconStyle}
-          />
+      <div {...props} className={classNames.wrapper} role={actualRole}>
+        <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
+          <MessageArea message={message} bold={bold} type={type} classNames={classNames} />
           {children && (
-            <Cluster align="center" justify="flex-end" className={actionAreaStyle}>
+            <Cluster align="center" justify="flex-end" className={classNames.actionArea}>
               {children}
             </Cluster>
           )}
         </Cluster>
-        <CloseButton onClose={onClose} className={closeButtonStyle} />
+        <CloseButton onClose={onClose} className={classNames.closeButton} />
       </div>
     </WrapBase>
   )
 }
 
-const MessageArea = React.memo<
-  Pick<ActualProps, 'message' | 'bold' | 'type'> & { messageAreaStyle: string; iconStyle: string }
->(({ message, bold, type, messageAreaStyle, iconStyle }) => {
+const MessageArea = memo<
+  Pick<ActualProps, 'message' | 'bold' | 'type'> & {
+    classNames: { messageArea: string; icon: string }
+  }
+>(({ message, bold, type, classNames }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
-    <div className={messageAreaStyle}>
-      <Icon text={message} iconGap={0.5} className={iconStyle} />
+    <div className={classNames.messageArea}>
+      <Icon text={message} iconGap={0.5} className={classNames.icon} />
     </div>
   )
 })
 
-const CloseButton = React.memo<Pick<ActualProps, 'onClose'> & { className: string }>(
+const CloseButton = memo<Pick<ActualProps, 'onClose'> & { className: string }>(
   ({ onClose, className }) =>
     onClose && (
       <Button variant="text" size="s" onClick={onClose} className={className}>

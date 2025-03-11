@@ -1,7 +1,7 @@
 import React, { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
+import { RadioButton } from '../RadioButton'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
@@ -10,6 +10,7 @@ type Props = PropsWithChildren<{
   /** 値を特定するための行 id */
   'aria-labelledby': string
 }> &
+  ComponentProps<typeof RadioButton> &
   Pick<ComponentProps<typeof Td>, 'vAlign'>
 
 const classNameGenerator = tv({
@@ -19,19 +20,19 @@ const classNameGenerator = tv({
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
     wrapper: 'shr-p-0',
-    checkbox: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
+    radio: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
   },
 })
 
-export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
+export const TdRadioButton = forwardRef<HTMLInputElement, Props>(
   ({ vAlign, children, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
-      const { wrapper, inner, checkbox } = classNameGenerator()
+      const { wrapper, inner, radio } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),
         inner: inner(),
-        checkbox: checkbox(),
+        radio: radio(),
       }
     }, [className])
 
@@ -40,7 +41,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
       // contentWidth={0} で td をテーブルの計算上最小幅にする
       <Td contentWidth={0} vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
-          <CheckBox {...rest} ref={ref} className={classNames.checkbox} />
+          <RadioButton {...rest} ref={ref} className={classNames.radio} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>
       </Td>

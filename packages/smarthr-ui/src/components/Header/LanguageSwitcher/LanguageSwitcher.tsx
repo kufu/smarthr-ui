@@ -1,9 +1,17 @@
 'use client'
 
-import React, { HTMLAttributes, ReactNode, useCallback, useMemo } from 'react'
+import React, {
+  type FC,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -17,19 +25,43 @@ export type Props = {
   locale?: string
   defaultLocale?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'triggerLabel' | 'checkIconAlt'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   /** 言語切替UIで言語を選択した時に発火するコールバック関数 */
   onLanguageSelect?: (code: string) => void
-} & VariantProps<typeof appLauncher>
+} & VariantProps<typeof classNameGenerator>
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-const TRIGGER_LABEL = 'Language'
-const CHECK_ICON_ALT = '選択中'
+const DECORATOR_DEFAULT_TEXTS = {
+  triggerLabel: 'Language',
+  checkIconAlt: '選択中',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
 
-const appLauncher = tv({
+const onKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
+  if (!ARROW_KEY_REGEX.test(e.key)) {
+    return
+  }
+
+  e.preventDefault()
+
+  const buttons = tabbable(e.currentTarget)
+  const i = buttons.indexOf(e.target as HTMLElement)
+  let buttonAt = 0
+
+  if (ARROW_UPS_REGEX.test(e.key)) {
+    buttonAt = i - 1
+  } else if (i + 1 === buttons.length) {
+    buttonAt = i + 1
+  }
+
+  buttons.at(buttonAt)?.focus()
+}
+
+const classNameGenerator = tv({
   slots: {
     switchButton: [
       'shr-border-none shr-font-normal shr-text-white shr-transition-transform shr-duration-100 shr-bg-transparent shr-px-0.25',
@@ -64,7 +96,7 @@ const appLauncher = tv({
   },
 })
 
-export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
+export const LanguageSwitcher: FC<Props & ElementProps> = ({
   narrow,
   enableNew,
   invert = enableNew,
@@ -75,26 +107,17 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const locales = useMemo(() => Object.entries(localeMap), [localeMap])
-  const decoratedTexts = useMemo(() => {
-    if (!decorators) {
-      return {
-        triggerLabel: TRIGGER_LABEL,
-        checkIconAlt: CHECK_ICON_ALT,
-      }
-    }
-
-    return {
-      triggerLabel: decorators.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
-      checkIconAlt: decorators.checkIconAlt?.(CHECK_ICON_ALT) || CHECK_ICON_ALT,
-    }
-  }, [decorators])
-  const currentLang = useMemo(
-    () => locale || defaultLocale || Object.keys(localeMap)[0],
-    [locale, defaultLocale, localeMap],
+  const { locales, defaultCurrentLang } = useMemo(
+    () => ({
+      locales: Object.entries(localeMap),
+      defaultCurrentLang: Object.keys(localeMap)[0],
+    }),
+    [localeMap],
   )
-  const styles = useMemo(() => {
-    const { languageButton, languageItemsList, languageItem, switchButton } = appLauncher()
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const currentLang = locale || defaultLocale || defaultCurrentLang
+  const classNames = useMemo(() => {
+    const { languageButton, languageItemsList, languageItem, switchButton } = classNameGenerator()
 
     return {
       languageButton: languageButton(),
@@ -104,55 +127,35 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
     }
   }, [enableNew, invert])
 
-  const handleLanguageSelect = useMemo(
+  const onClickLanguageSelect = useMemo(
     () =>
       onLanguageSelect
-        ? (e: React.MouseEvent<HTMLButtonElement>) => {
+        ? (e: MouseEvent<HTMLButtonElement>) => {
             onLanguageSelect(e.currentTarget.value)
           }
         : undefined,
     [onLanguageSelect],
   )
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!ARROW_KEY_REGEX.test(e.key)) {
-      return
-    }
-
-    e.preventDefault()
-
-    const buttons = tabbable(e.currentTarget)
-    const i = buttons.indexOf(e.target as HTMLElement)
-    let buttonAt = 0
-
-    if (ARROW_UPS_REGEX.test(e.key)) {
-      buttonAt = i - 1
-    } else if (i + 1 === buttons.length) {
-      buttonAt = i + 1
-    }
-
-    buttons.at(buttonAt)?.focus()
-  }, [])
-
   return (
     <Dropdown {...rest}>
       <MemoizedDropdownTrigger
         narrow={narrow}
         invert={invert}
-        className={styles.switchButton}
-        label={decoratedTexts.triggerLabel}
+        className={classNames.switchButton}
+        label={decorated.triggerLabel}
       />
-      <DropdownContent onKeyDown={handleKeyDown} role="presentation">
-        <ul className={styles.languageItemsList}>
+      <DropdownContent role="presentation" onKeyDown={onKeyDownContent}>
+        <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
               key={code}
               code={code}
-              className={styles.languageItem}
-              buttonStyle={styles.languageButton}
+              className={classNames.languageItem}
+              buttonStyle={classNames.languageButton}
               current={currentLang === code}
-              handleLanguageSelect={handleLanguageSelect}
-              iconAlt={decoratedTexts.checkIconAlt}
+              onClick={onClickLanguageSelect}
+              iconAlt={decorated.checkIconAlt}
             >
               {label}
             </LanguageListItemButton>
@@ -163,19 +166,19 @@ export const LanguageSwitcher: React.FC<Props & ElementProps> = ({
   )
 }
 
-const LanguageListItemButton = React.memo<{
+const LanguageListItemButton = memo<{
   code: string
   children: string
   className: string
   buttonStyle: string
   current: boolean
   iconAlt: ReactNode
-  handleLanguageSelect?: (e: React.MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, iconAlt, handleLanguageSelect }) => (
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ code, children, buttonStyle, className, current, iconAlt, onClick }) => (
   <li key={code} className={className} aria-current={current} lang={code}>
     <Button
       value={code}
-      onClick={handleLanguageSelect}
+      onClick={onClick}
       wide
       prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
       className={buttonStyle}
@@ -185,7 +188,7 @@ const LanguageListItemButton = React.memo<{
   </li>
 ))
 
-const MemoizedDropdownTrigger = React.memo<
+const MemoizedDropdownTrigger = memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: ReactNode }
 >(({ narrow, invert, className, label }) => (
   <DropdownTrigger>
