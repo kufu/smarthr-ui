@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [66.0.0](https://github.com/kufu/smarthr-ui/compare/v65.3.0...v66.0.0) (2025-03-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 (#5399)
+
+### Features
+
+* **AppNaviDropdownMenuButton:** 選択中の項目が視覚的にも伝わるように装飾を追加 ([#5193](https://github.com/kufu/smarthr-ui/issues/5193)) ([0ff8392](https://github.com/kufu/smarthr-ui/commit/0ff839237b3c533f58a53e88616e5d233de4e6e8))
+* TdRadioButton を追加 ([#5439](https://github.com/kufu/smarthr-ui/issues/5439)) ([6a9ca59](https://github.com/kufu/smarthr-ui/commit/6a9ca5922a8359dc47ac4c969d3eefc797d9026f))
+
+
+### Bug Fixes
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 ([#5399](https://github.com/kufu/smarthr-ui/issues/5399)) ([fe21e25](https://github.com/kufu/smarthr-ui/commit/fe21e25ba42b405e48ee5a85e0af556efdec6bfa))
+
 ## [65.3.0](https://github.com/kufu/smarthr-ui/compare/v65.2.1...v65.3.0) (2025-03-04)
 
 
