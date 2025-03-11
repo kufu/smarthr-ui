@@ -139,7 +139,8 @@
     "./esm/*": {
       "types": "./lib/*.d.ts",
       "import": "./esm/*.js"
-    }
+    },
+    "./smarthr-ui.css": "./smarthr-ui.css"
   },
   "publishConfig": {
     "access": "public",
