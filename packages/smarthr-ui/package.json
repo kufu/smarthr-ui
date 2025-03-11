@@ -121,6 +121,27 @@
   },
   "main": "lib/index.js",
   "module": "esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types/index.d.ts",
+      "import": "./esm/types/index.js",
+      "require": "./lib/types/index.js"
+    },
+    "./lib/*": {
+      "types": "./lib/*.d.ts",
+      "require": "./lib/*.js"
+    },
+    "./esm/*": {
+      "types": "./lib/*.d.ts",
+      "import": "./esm/*.js"
+    },
+    "./smarthr-ui.css": "./smarthr-ui.css"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
