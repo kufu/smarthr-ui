@@ -10,13 +10,11 @@ import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
 
-defaultConfig.twMerge = true
 defaultConfig.twMergeConfig = {
-  prefix: 'shr-',
   classGroups: {
     boxShadow: [
       {
-        shadow: [
+        'shr-shadow': [
           'layer-0',
           'layer-1',
           'layer-2',
@@ -30,25 +28,26 @@ defaultConfig.twMergeConfig = {
       },
     ],
     'border-shorthand': [
-      'border-shorthand',
-      'border-t-shorthand',
-      'border-r-shorthand',
-      'border-b-shorthand',
-      'border-l-shorthand',
+      { 'shr-border': ['shorthand', 't-shorthand', 'r-shorthand', 'b-shorthand', 'l-shorthand'] },
     ],
     'font-size': [
       {
-        text: ['2xs', 'xs', 'sm', 'base', 'lg', 'xl', '2xl', 'inherit'],
+        'shr-text': ['2xs', 'xs', 'sm', 'base', 'lg', 'xl', '2xl', 'inherit'],
+      },
+    ],
+    textColor: [
+      {
+        'shr-text': ['main', 'black', 'white', 'disabled'],
       },
     ],
     lineHeight: [
       {
-        leading: ['none', 'tight', 'normal', 'loose'],
+        'shr-leading': ['none', 'tight', 'normal', 'loose'],
       },
     ],
     zIndex: [
       {
-        z: [
+        'shr-z': [
           'auto',
           '0',
           '1',
@@ -60,7 +59,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-    focus: ['focus-indicator', 'focus-indicator--inner'],
+    focus: [{ 'shr-focus': ['focus-indicator', 'focus-indicator--inner'] }],
   },
 }
 
