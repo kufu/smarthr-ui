@@ -78,7 +78,6 @@ export const informationPanel = tv({
       type: ['success', 'warning', 'error'],
       bold: true,
       className: {
-        header: 'shr-text-white',
         heading: '[&_.smarthr-ui-Icon]:shr-fill-white',
       },
     },
@@ -87,16 +86,18 @@ export const informationPanel = tv({
       bold: true,
       className: {
         header: 'shr-bg-main',
+        heading: 'shr-text-white',
       },
     },
     {
       type: 'warning',
       bold: true,
       className: {
-        header: 'shr-bg-warning-yellow shr-text-black',
+        header: 'shr-bg-warning-yellow',
         heading: [
           '[&_.smarthr-ui-WarningIcon-wrapper]:shr-fill-black',
           '[&_.smarthr-ui-WarningIcon-mark]:shr-fill-warning-yellow',
+          'shr-text-black',
         ],
       },
     },
@@ -105,6 +106,7 @@ export const informationPanel = tv({
       bold: true,
       className: {
         header: 'shr-bg-danger',
+        heading: 'shr-text-white',
       },
     },
   ],

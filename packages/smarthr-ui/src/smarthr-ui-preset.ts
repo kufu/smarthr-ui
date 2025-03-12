@@ -10,6 +10,7 @@ import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
 
+defaultConfig.twMerge = true
 defaultConfig.twMergeConfig = {
   prefix: 'shr-',
   classGroups: {
