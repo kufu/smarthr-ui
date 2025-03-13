@@ -1,12 +1,19 @@
 'use client'
 
-import React, { ComponentProps, FC, PropsWithChildren, RefObject, useMemo, useRef } from 'react'
+import React, {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type RefObject,
+  useMemo,
+  useRef,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 
 import { DialogOverlap } from './DialogOverlap'
-import { FocusTrap, FocusTrapRef } from './FocusTrap'
+import { FocusTrap, type FocusTrapRef } from './FocusTrap'
 import { useBodyScrollLock } from './useBodyScrollLock'
 
 export type DialogContentInnerProps = PropsWithChildren<{

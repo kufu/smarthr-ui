@@ -1,7 +1,7 @@
 'use client'
 import React, {
-  ComponentPropsWithRef,
-  ReactNode,
+  type ComponentPropsWithRef,
+  type ReactNode,
   forwardRef,
   useCallback,
   useId,
@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../hooks/useDecorators'
 import { BaseColumn } from '../Base'

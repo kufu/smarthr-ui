@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { genericsForwardRef } from '../../../libs/util'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'

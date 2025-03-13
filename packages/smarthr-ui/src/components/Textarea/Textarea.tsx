@@ -1,9 +1,9 @@
 'use client'
 
 import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  ReactNode,
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type ReactNode,
   forwardRef,
   startTransition,
   useCallback,

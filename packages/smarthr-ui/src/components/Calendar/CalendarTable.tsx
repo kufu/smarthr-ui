@@ -1,5 +1,11 @@
 import dayjs from 'dayjs'
-import React, { ComponentPropsWithoutRef, FC, MouseEvent, useCallback, useMemo } from 'react'
+import React, {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type MouseEvent,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'

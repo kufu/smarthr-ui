@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { type FC, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaUpRightFromSquareIcon } from '../../../Icon'

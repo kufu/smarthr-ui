@@ -1,7 +1,7 @@
-import React, { ComponentProps } from 'react'
+import React, { type ComponentProps } from 'react'
 import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 
-import { ja } from './locales'
+import { type ja } from './locales'
 
 type Messages = Record<keyof typeof ja, string>
 

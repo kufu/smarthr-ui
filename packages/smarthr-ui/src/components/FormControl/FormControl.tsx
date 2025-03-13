@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
-import { Text, TextProps } from '../Text'
+import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'

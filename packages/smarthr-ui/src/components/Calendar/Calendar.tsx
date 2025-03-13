@@ -2,9 +2,9 @@
 
 import dayjs from 'dayjs'
 import React, {
-  ComponentProps,
-  MouseEvent,
-  PropsWithChildren,
+  type ComponentProps,
+  type MouseEvent,
+  type PropsWithChildren,
   forwardRef,
   useCallback,
   useEffect,

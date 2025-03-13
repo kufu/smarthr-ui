@@ -1,13 +1,13 @@
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
+import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import { Gap } from '../../types'
+import { type AbstractSize, type CharRelativeSize } from '../../themes/createSpacing'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
+import type { Gap } from '../../types'
 
 const floatArea = tv({
   base: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
