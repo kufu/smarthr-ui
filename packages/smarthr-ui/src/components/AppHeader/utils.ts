@@ -1,4 +1,4 @@
-import { type ChildNavigation, type ChildNavigationGroup, type Navigation } from './types'
+import type { ChildNavigation, ChildNavigationGroup, Navigation } from './types'
 
 export const buildDisplayName = ({
   email,

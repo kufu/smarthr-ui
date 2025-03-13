@@ -11,15 +11,16 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import {
-  type ChildNavigation,
-  type ChildNavigationGroup,
-  type Navigation as NavigationType,
-  type ReleaseNoteProps,
-} from '../../types'
 import { commonButton } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
+
+import type {
+  ChildNavigation,
+  ChildNavigationGroup,
+  Navigation as NavigationType,
+  ReleaseNoteProps,
+} from '../../types'
 
 const appNavi = tv({
   base: ['shr-overflow-x-auto shr-min-w-[auto]', 'max-[751px]:!shr-hidden'],

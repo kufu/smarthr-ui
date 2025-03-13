@@ -8,8 +8,9 @@ import React, {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { type Gap } from '../../../types'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
+import type { Gap } from '../../../types'
 
 const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',

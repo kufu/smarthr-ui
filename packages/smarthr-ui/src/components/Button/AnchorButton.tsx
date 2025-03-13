@@ -10,11 +10,11 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ElementRef, type ElementRefProps } from '../../types'
-
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
-import { type BaseProps } from './types'
+
+import type { BaseProps } from './types'
+import type { ElementRef, ElementRefProps } from '../../types'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,

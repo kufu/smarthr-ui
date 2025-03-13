@@ -7,9 +7,10 @@ import { LineClamp } from '../../../LineClamp'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
 import { useTranslate } from '../../hooks/useTranslate'
-import { type Launcher } from '../../types'
 
 import { Translate } from './Translate'
+
+import type { Launcher } from '../../types'
 
 const appLauncherFeatures = tv({
   slots: {

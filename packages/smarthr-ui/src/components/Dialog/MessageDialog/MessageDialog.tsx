@@ -3,13 +3,14 @@
 import React, { type ComponentProps, useCallback, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { type DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
 import {
   MessageDialogContentInner,
   type MessageDialogContentInnerProps,
 } from './MessageDialogContentInner'
+
+import type { DialogProps } from '../types'
 
 type Props = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>

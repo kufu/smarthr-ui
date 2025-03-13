@@ -20,9 +20,10 @@ import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ListBoxItemButton } from './ListBoxItemButton'
-import { type ComboBoxItem, type ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
+
+import type { ComboBoxItem, ComboBoxOption } from './types'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>

@@ -15,7 +15,8 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
-import { type BaseProps } from './types'
+
+import type { BaseProps } from './types'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 

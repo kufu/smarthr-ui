@@ -2,10 +2,11 @@ import React, { type ComponentProps, useCallback, useContext, useId } from 'reac
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
-import { type UncontrolledDialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
 import { type BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
+
+import type { UncontrolledDialogProps } from '../types'
 
 type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>

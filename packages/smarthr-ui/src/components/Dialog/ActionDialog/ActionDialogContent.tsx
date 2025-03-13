@@ -4,10 +4,11 @@ import React, { type HTMLAttributes, useCallback, useContext, useId } from 'reac
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
-import { type UncontrolledDialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
 import { ActionDialogContentInner, type BaseProps } from './ActionDialogContentInner'
+
+import type { UncontrolledDialogProps } from '../types'
 
 type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>

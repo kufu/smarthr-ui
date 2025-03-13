@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type Variant } from './types'
+import type { Variant } from './types'
 
 type BaseProps = PropsWithChildren<{
   size: 'default' | 's'

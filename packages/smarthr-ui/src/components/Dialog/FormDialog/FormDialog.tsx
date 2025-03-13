@@ -3,10 +3,11 @@
 import React, { type ComponentProps, type FormEvent, useCallback, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { type DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
 import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
+
+import type { DialogProps } from '../types'
 
 type Props = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>

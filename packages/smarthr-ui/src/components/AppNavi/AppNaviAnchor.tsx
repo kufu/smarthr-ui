@@ -11,10 +11,11 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ElementRef, type ElementRefProps } from '../../types'
 import { type ComponentProps as IconProps } from '../Icon'
 
 import { appNaviItemStyle } from './style'
+
+import type { ElementRef, ElementRefProps } from '../../types'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,

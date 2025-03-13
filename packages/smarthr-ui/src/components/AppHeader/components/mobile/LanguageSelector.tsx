@@ -6,8 +6,9 @@ import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
 import { type Locale, localeMap } from '../../multilingualization'
-import { type LocaleProps } from '../../types'
 import { CommonButton } from '../common/CommonButton'
+
+import type { LocaleProps } from '../../types'
 
 const languageSelector = tv({
   slots: {

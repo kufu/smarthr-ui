@@ -1,13 +1,14 @@
 import React, { type FC, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type Navigation } from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
 import { NavigationContext } from './NavigationContext'
+
+import type { Navigation } from '../../types'
 
 const navigationItem = tv({
   base: ['[&&]:shr-px-0.5'],

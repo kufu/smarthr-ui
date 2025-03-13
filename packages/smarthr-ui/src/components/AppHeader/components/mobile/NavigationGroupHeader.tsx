@@ -1,9 +1,9 @@
 import React, { type FC, useContext } from 'react'
 
-import { type NavigationGroup } from '../../types'
-
 import { MenuSubHeader } from './MenuSubHeader'
 import { NavigationContext } from './NavigationContext'
+
+import type { NavigationGroup } from '../../types'
 
 export const NavigationGroupHeader: FC<{
   currentNavigationGroup: NavigationGroup

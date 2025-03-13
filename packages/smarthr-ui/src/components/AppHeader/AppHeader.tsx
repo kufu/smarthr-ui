@@ -6,7 +6,8 @@ import { DesktopHeader } from './components/desktop/DesktopHeader'
 import { MobileHeader } from './components/mobile/MobileHeader'
 import { LocaleContextProvider } from './hooks/useLocale'
 import { mediaQuery, useMediaQuery } from './hooks/useMediaQuery'
-import { type HeaderProps } from './types'
+
+import type { HeaderProps } from './types'
 
 export const AppHeader: FC<HeaderProps> = ({ locale, children, ...props }) => {
   // NOTE: ヘッダーの出し分けは CSS によって行われているので、useMediaQuery による children の出し分けは本来不要ですが、

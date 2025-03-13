@@ -7,8 +7,9 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { useTranslate } from '../../hooks/useTranslate'
-import { type Launcher } from '../../types'
 import { Translate } from '../common/Translate'
+
+import type { Launcher } from '../../types'
 
 type Props = {
   page: Launcher['page']

@@ -2,10 +2,11 @@ import React, { type FC, Fragment } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../../Text'
-import { type NavigationGroup, type Navigation as NavigationType } from '../../types'
 import { isChildNavigationGroup } from '../../utils'
 
 import { NavigationItem } from './NavigationItem'
+
+import type { NavigationGroup, Navigation as NavigationType } from '../../types'
 
 type Props = {
   navigations: NavigationType[] | NavigationGroup['childNavigations']

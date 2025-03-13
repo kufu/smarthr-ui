@@ -12,10 +12,11 @@ import { SideNav } from '../../../SideNav'
 import { TextLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
-import { type Launcher } from '../../types'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
+
+import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>

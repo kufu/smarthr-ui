@@ -2,7 +2,6 @@ import React, { type ComponentProps, type FormEvent, useCallback, useId, useRef 
 
 import { DialogContentInner } from '../DialogContentInner'
 import { type FocusTrapRef } from '../FocusTrap'
-import { type DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
 import {
@@ -10,6 +9,8 @@ import {
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
+
+import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 
 type Props = Omit<StepFormDialogContentInnerProps, 'titleId' | 'activeStep'> & DialogProps
 

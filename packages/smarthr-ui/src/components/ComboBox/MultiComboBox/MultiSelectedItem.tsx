@@ -14,7 +14,8 @@ import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
-import { type ComboBoxItem } from '../types'
+
+import type { ComboBoxItem } from '../types'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }

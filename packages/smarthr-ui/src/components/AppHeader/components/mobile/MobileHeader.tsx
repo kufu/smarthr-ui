@@ -2,7 +2,6 @@ import React, { type FC, useState } from 'react'
 
 import { Header } from '../../../Header'
 import { useLocale } from '../../hooks/useLocale'
-import { type HeaderProps, type NavigationGroup } from '../../types'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { Help } from './Help'
@@ -11,6 +10,8 @@ import { NavigationContext } from './NavigationContext'
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 import { TenantSelector } from './TenantSelector'
 import { UserInfo } from './UserInfo'
+
+import type { HeaderProps, NavigationGroup } from '../../types'
 
 export const MobileHeader: FC<HeaderProps> = ({
   navigations,
