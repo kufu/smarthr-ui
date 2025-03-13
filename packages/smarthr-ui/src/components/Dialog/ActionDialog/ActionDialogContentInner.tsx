@@ -3,7 +3,7 @@
 import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
 import { type DecoratorsType } from '../../../hooks/useDecorators'
-import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -37,7 +37,7 @@ export type BaseProps = PropsWithChildren<
 
 export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
-  responseMessage?: ResponseMessageType
+  responseStatus?: ResponseStatus
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
@@ -55,13 +55,13 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   actionTheme,
   onClickAction,
   onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   subActionArea,
   decorators,
 }) => {
-  const calcedResponseStatus = useResponseMessage(responseMessage)
+  const calcedResponseStatus = useResponseStatus(responseStatus)
 
   const styles = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()

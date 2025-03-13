@@ -1,13 +1,18 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, {
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
 
 import type { Gap } from '../../types'
 
-export const classNameGenerator = tv({
+export const baseClassNameGenerator = tv({
   base: 'smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock: {
@@ -90,7 +95,7 @@ type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
 type Props = PropsWithChildren<
   Omit<
-    VariantProps<typeof classNameGenerator>,
+    VariantProps<typeof baseClassNameGenerator>,
     'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
   > & {
     /** 境界とコンテンツの間の余白 */
@@ -115,7 +120,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
         padding instanceof Object ? padding : { block: padding, inline: padding }
       const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
-      return classNameGenerator({
+      return baseClassNameGenerator({
         paddingBlock: actualPadding.block,
         paddingInline: actualPadding.inline,
         radius: radius ?? 'm',
@@ -127,11 +132,12 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
     }, [layer, overflow, padding, radius, className])
 
     const Wrapper = useSectionWrapper(Component)
+    const body = <Component {...props} ref={ref} className={actualClassName} />
 
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={actualClassName} />
-      </Wrapper>
-    )
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

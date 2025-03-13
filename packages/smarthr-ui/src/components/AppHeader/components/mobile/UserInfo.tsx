@@ -7,12 +7,13 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
 import { useLocale } from '../../hooks/useLocale'
 import { useTranslate } from '../../hooks/useTranslate'
-import { HeaderProps, UserInfoProps } from '../../types'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { LanguageSelector } from './LanguageSelector'
+
+import type { HeaderProps, UserInfoProps } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
