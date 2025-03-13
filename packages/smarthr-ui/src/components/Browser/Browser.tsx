@@ -1,11 +1,11 @@
-import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
+import React, { type FC, type KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'
-import { ItemNode, ItemNodeLike, RootNode } from './models'
+import { ItemNode, type ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const classNameGenerator = tv({

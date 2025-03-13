@@ -1,13 +1,13 @@
-import React, { ComponentProps, FormEvent, useCallback, useId, useRef } from 'react'
+import React, { type ComponentProps, type FormEvent, useCallback, useId, useRef } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { FocusTrapRef } from '../FocusTrap'
-import { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
+import { type FocusTrapRef } from '../FocusTrap'
+import { type DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
 import {
   StepFormDialogContentInner,
-  StepFormDialogContentInnerProps,
+  type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
 

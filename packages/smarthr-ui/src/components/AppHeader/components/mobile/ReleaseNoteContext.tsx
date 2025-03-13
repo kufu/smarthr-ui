@@ -1,6 +1,9 @@
-import React, { Dispatch, createContext } from 'react'
+import { type Dispatch } from 'react'
+import { createContext } from 'react'
 
-import { HeaderProps } from '../../types'
+import { type HeaderProps } from '../../types'
+
+import type React from 'react'
 
 export const ReleaseNoteContext = createContext<{
   releaseNote: HeaderProps['releaseNote']

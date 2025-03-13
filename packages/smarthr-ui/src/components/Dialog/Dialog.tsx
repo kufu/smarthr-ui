@@ -1,9 +1,9 @@
 'use client'
 
-import React, { ComponentProps } from 'react'
+import React, { type ComponentProps } from 'react'
 
 import { DialogContentInner } from './DialogContentInner'
-import { DialogProps, DirectChildren } from './types'
+import { type DialogProps, type DirectChildren } from './types'
 import { useDialogPortal } from './useDialogPortal'
 
 type Props = DialogProps & DirectChildren

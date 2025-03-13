@@ -1,6 +1,9 @@
-import React, { Dispatch, createContext } from 'react'
+import { type Dispatch } from 'react'
+import { createContext } from 'react'
 
-import { Navigation, NavigationGroup } from '../../types'
+import { type Navigation, type NavigationGroup } from '../../types'
+
+import type React from 'react'
 
 export const NavigationContext = createContext({
   navigations: [] as Navigation[],

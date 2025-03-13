@@ -1,7 +1,7 @@
 import React, { forwardRef, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
-import { PickerProps } from './types'
+import { type PickerProps } from './types'
 
 type Props = {
   /** フォームにエラーがあるかどうか */

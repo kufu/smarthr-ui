@@ -1,4 +1,4 @@
-import React, { ComponentProps, type PropsWithChildren, type ReactNode, useMemo } from 'react'
+import React, { type ComponentProps, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'

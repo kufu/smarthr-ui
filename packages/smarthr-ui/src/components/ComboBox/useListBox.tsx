@@ -1,7 +1,7 @@
 import React, {
-  KeyboardEvent,
-  ReactNode,
-  RefObject,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
   useCallback,
   useEffect,
   useId,
@@ -20,7 +20,7 @@ import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ListBoxItemButton } from './ListBoxItemButton'
-import { ComboBoxItem, ComboBoxOption } from './types'
+import { type ComboBoxItem, type ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 

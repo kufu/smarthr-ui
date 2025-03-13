@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../../../Button'
@@ -7,7 +7,7 @@ import { LineClamp } from '../../../LineClamp'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
 import { useTranslate } from '../../hooks/useTranslate'
-import { Launcher } from '../../types'
+import { type Launcher } from '../../types'
 
 import { Translate } from './Translate'
 

@@ -1,6 +1,6 @@
 import React, {
-  PropsWithChildren,
-  RefObject,
+  type PropsWithChildren,
+  type RefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -14,7 +14,7 @@ import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
-import { ComboBoxItem } from '../types'
+import { type ComboBoxItem } from '../types'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }

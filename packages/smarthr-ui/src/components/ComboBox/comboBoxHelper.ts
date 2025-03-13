@@ -1,6 +1,6 @@
 import innerText from 'react-innertext'
 
-import { ComboBoxItem } from './types'
+import { type ComboBoxItem } from './types'
 
 export function convertMatchableString(original: string) {
   return (

@@ -1,8 +1,8 @@
-import React, { FC, useState } from 'react'
+import React, { type FC, useState } from 'react'
 
 import { Header } from '../../../Header'
 import { useLocale } from '../../hooks/useLocale'
-import { HeaderProps, NavigationGroup } from '../../types'
+import { type HeaderProps, type NavigationGroup } from '../../types'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { Help } from './Help'

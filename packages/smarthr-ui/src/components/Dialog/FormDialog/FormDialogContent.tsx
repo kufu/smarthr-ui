@@ -1,13 +1,13 @@
 'use client'
 
-import React, { FormEvent, HTMLAttributes, useCallback, useContext, useId } from 'react'
+import React, { type FormEvent, type HTMLAttributes, useCallback, useContext, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
-import { UncontrolledDialogProps } from '../types'
+import { type UncontrolledDialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { BaseProps, FormDialogContentInner } from './FormDialogContentInner'
+import { type BaseProps, FormDialogContentInner } from './FormDialogContentInner'
 
 type Props = BaseProps & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>

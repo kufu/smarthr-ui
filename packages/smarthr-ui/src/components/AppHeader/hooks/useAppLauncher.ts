@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { Launcher } from '../types'
+import { type Launcher } from '../types'
 
 export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
   const [page, setPage] = useState<Launcher['page']>('favorite')

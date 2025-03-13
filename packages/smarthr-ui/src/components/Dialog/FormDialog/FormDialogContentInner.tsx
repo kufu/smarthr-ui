@@ -14,7 +14,7 @@ import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
-import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 

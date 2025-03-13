@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react'
+import React, { type FC, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -7,7 +7,7 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { useTranslate } from '../../hooks/useTranslate'
-import { Launcher } from '../../types'
+import { type Launcher } from '../../types'
 import { Translate } from '../common/Translate'
 
 const sortDropdown = tv({

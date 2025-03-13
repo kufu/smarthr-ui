@@ -1,4 +1,4 @@
-import { Locale } from './types'
+import { type Locale } from './types'
 
 export type Messages = {
   'common/school': string

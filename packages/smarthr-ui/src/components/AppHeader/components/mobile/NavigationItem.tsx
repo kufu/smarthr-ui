@@ -1,7 +1,7 @@
-import React, { FC, useContext } from 'react'
+import React, { type FC, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Navigation } from '../../types'
+import { type Navigation } from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'

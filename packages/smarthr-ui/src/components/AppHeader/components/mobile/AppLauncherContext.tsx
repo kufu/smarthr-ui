@@ -1,6 +1,9 @@
-import React, { Dispatch, createContext } from 'react'
+import { type Dispatch } from 'react'
+import { createContext } from 'react'
 
-import { Launcher } from '../../types'
+import { type Launcher } from '../../types'
+
+import type React from 'react'
 
 export const AppLauncherContext = createContext<{
   features: Array<Launcher['feature']> | null | undefined

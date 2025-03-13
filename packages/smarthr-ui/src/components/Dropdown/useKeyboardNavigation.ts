@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useContext, useEffect } from 'react'
+import { type RefObject, useCallback, useContext, useEffect } from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 

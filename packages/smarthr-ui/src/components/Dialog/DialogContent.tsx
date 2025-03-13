@@ -4,7 +4,7 @@ import React, { createContext, useContext } from 'react'
 
 import { DialogContentInner } from './DialogContentInner'
 import { DialogContext } from './DialogWrapper'
-import { DirectChildren, UncontrolledDialogProps } from './types'
+import { type DirectChildren, type UncontrolledDialogProps } from './types'
 import { useDialogPortal } from './useDialogPortal'
 
 type DialogContentContextType = {

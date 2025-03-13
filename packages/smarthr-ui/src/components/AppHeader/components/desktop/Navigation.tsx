@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, ReactNode } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -12,10 +12,10 @@ import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
 import {
-  ChildNavigation,
-  ChildNavigationGroup,
-  Navigation as NavigationType,
-  ReleaseNoteProps,
+  type ChildNavigation,
+  type ChildNavigationGroup,
+  type Navigation as NavigationType,
+  type ReleaseNoteProps,
 } from '../../types'
 import { commonButton } from '../common/CommonButton'
 

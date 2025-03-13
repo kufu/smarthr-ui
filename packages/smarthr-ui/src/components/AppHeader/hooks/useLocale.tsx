@@ -1,6 +1,6 @@
-import React, { FC, ReactNode, createContext, useContext } from 'react'
+import React, { type FC, type ReactNode, createContext, useContext } from 'react'
 
-import { HeaderProps } from '../types'
+import { type HeaderProps } from '../types'
 
 const LocaleContext = createContext<{ locale: HeaderProps['locale'] }>({
   locale: null,

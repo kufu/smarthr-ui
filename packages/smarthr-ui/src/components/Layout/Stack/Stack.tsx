@@ -1,9 +1,14 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, {
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
-import { Gap } from '../../../types'
+import { type Gap } from '../../../types'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 const classNameGenerator = tv({

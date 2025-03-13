@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, useEffect, useMemo, useRef } from 'react'
+import React, { type ComponentProps, type FC, useEffect, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'

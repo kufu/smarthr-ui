@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
 
 import { areComboBoxItemsEqual, convertMatchableString } from './comboBoxHelper'
-import { ComboBoxItem, ComboBoxOption } from './types'
+import { type ComboBoxItem, type ComboBoxOption } from './types'
 
 const defaultIsItemSelected = <T>(
   targetItem: ComboBoxItem<T>,

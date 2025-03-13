@@ -1,12 +1,15 @@
 'use client'
 
-import React, { ComponentProps, useCallback, useId } from 'react'
+import React, { type ComponentProps, useCallback, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { DialogProps } from '../types'
+import { type DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
+import {
+  ActionDialogContentInner,
+  type ActionDialogContentInnerProps,
+} from './ActionDialogContentInner'
 
 type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
