@@ -1,9 +1,9 @@
-import React, { memo, useCallback, useContext } from 'react'
-
-import { NavigationGroup } from '../../types'
+import React, { type FC, memo, useCallback, useContext } from 'react'
 
 import { MenuSubHeader } from './MenuSubHeader'
 import { NavigationContext } from './NavigationContext'
+
+import type { NavigationGroup } from '../../types'
 
 export const NavigationGroupHeader = memo<{
   title: NavigationGroup['children']

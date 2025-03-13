@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, useCallback, useLayoutEffect, useRef } from 'react'
+import { type ReactNode, type RefObject, useCallback, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, id?: string) {
