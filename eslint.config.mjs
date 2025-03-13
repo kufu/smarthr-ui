@@ -39,7 +39,8 @@ export default [
           checkType: 'allow-spread-attributes',
         }
       ],
-      'smarthr/a11y-prohibit-sectioning-content-in-form': 'error'
+      'smarthr/a11y-prohibit-sectioning-content-in-form': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error'
     },
   },
   {
