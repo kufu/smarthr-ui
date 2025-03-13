@@ -10,7 +10,7 @@ const classNameGenerator = tv({
     // StatusIcon の位置基準となる wrapper
     wrapper: 'shr-relative',
     counter:
-      'shr-inline-flex shr-items-center shr-justify-center shr-rounded-full shr-border-shorthand shr-bg-white shr-tabular-nums shr-w-[2em] shr-h-[2em]',
+      'shr-inline-flex shr-items-center shr-justify-center shr-rounded-full shr-tabular-nums shr-w-[2em] shr-h-[2em]',
     statusIcon: 'shr-absolute -shr-top-0.25 shr-left-1.5',
   },
   variants: {
@@ -25,7 +25,9 @@ const classNameGenerator = tv({
           'forced-colors:shr-bg-[Mark] forced-colors:shr-border-[Mark]',
         ],
       },
-      false: {},
+      false: {
+        counter: ['shr-bg-white', 'shr-border-shorthand'],
+      },
     },
   },
 })

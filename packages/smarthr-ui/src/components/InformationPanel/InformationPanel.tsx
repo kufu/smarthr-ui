@@ -82,8 +82,7 @@ export const classNameGenerator = tv({
       type: ['success', 'warning', 'error'],
       bold: true,
       className: {
-        header: 'shr-text-white',
-        heading: '[&_.smarthr-ui-Icon]:shr-fill-white',
+        heading: '[&_.smarthr-ui-Icon]:shr-fill-white shr-text-white',
       },
     },
     {
@@ -97,10 +96,11 @@ export const classNameGenerator = tv({
       type: 'warning',
       bold: true,
       className: {
-        header: 'shr-bg-warning-yellow shr-text-black',
+        header: 'shr-bg-warning-yellow',
         heading: [
           '[&_.smarthr-ui-WarningIcon-wrapper]:shr-fill-black',
           '[&_.smarthr-ui-WarningIcon-mark]:shr-fill-warning-yellow',
+          'shr-text-black',
         ],
       },
     },
