@@ -1,6 +1,7 @@
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
+  'smarthr-ui/common/language': 'Bahasa Indonesia',
   'smarthr-ui/AppHeader/language': 'Bahasa Indonesia',
   'smarthr-ui/AppHeader/school': 'Sekolah',
   'smarthr-ui/AppHeader/help': 'Bantuan',
