@@ -1,8 +1,8 @@
-import React, { ComponentProps, FC } from 'react'
+import React, { type ComponentProps, type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
-import { Header } from '../../../Header'
+import { type Header } from '../../../Header'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Text } from '../../../Text'
 import { CommonButton } from '../common/CommonButton'

@@ -9,16 +9,16 @@ import React, {
 } from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
-import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
-import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import { StepFormDialogContext, StepItem } from './StepFormDialogProvider'
+import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -50,7 +50,7 @@ export type BaseProps = PropsWithChildren<
 export type StepFormDialogContentInnerProps = BaseProps & {
   firstStep: StepItem
   onClickClose: () => void
-  responseMessage?: ResponseMessageType
+  responseStatus?: ResponseStatus
   stepLength: number
   onClickBack?: () => void
 }
@@ -80,7 +80,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   firstStep,
   onSubmit,
   onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   decorators,
@@ -135,7 +135,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
 
-  const responseStatus = useResponseMessage(responseMessage)
+  const calcedResponseStatus = useResponseStatus(responseStatus)
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
@@ -155,7 +155,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               {activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
-                  disabled={responseStatus.isProcessing}
+                  disabled={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-backButton"
                 >
                   {decorated.backButtonLabel}
@@ -164,7 +164,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 <Button
                   onClick={handleCloseAction}
-                  disabled={closeDisabled || responseStatus.isProcessing}
+                  disabled={closeDisabled || calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-closeButton"
                 >
                   {decorated.closeButtonLabel}
@@ -173,17 +173,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   type="submit"
                   variant={actionTheme}
                   disabled={actionDisabled}
-                  loading={responseStatus.isProcessing}
+                  loading={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-actionButton"
                 >
                   {actionText}
                 </Button>
               </Cluster>
             </Cluster>
-            {responseStatus.message && (
+            {calcedResponseStatus.message && (
               <div className={classNames.message}>
-                <ResponseMessage type={responseStatus.status} role="alert">
-                  {responseStatus.message}
+                <ResponseMessage type={calcedResponseStatus.status} role="alert">
+                  {calcedResponseStatus.message}
                 </ResponseMessage>
               </div>
             )}

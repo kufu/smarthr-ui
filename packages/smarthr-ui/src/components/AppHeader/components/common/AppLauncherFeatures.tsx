@@ -1,13 +1,14 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../../intl/Localizer'
 import { AnchorButton } from '../../../Button'
 import { FaArrowRightIcon, FaStarIcon } from '../../../Icon'
 import { LineClamp } from '../../../LineClamp'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
-import { Localizer } from '../../../../intl/Localizer'
-import { Launcher } from '../../types'
+
+import type { Launcher } from '../../types'
 
 const appLauncherFeatures = tv({
   slots: {

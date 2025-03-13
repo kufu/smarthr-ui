@@ -1,11 +1,11 @@
-import React, { FC, useContext } from 'react'
+import React, { type FC, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../../intl/Localizer'
 import { FaUpRightFromSquareIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
-import { Localizer } from '../../../../intl/Localizer'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
@@ -59,6 +59,7 @@ export const ReleaseNote: FC = () => {
       )}
 
       <div className={indexLinkWrapper()}>
+        {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
         <a
           href={releaseNote.indexUrl}
           target="_blank"

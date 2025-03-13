@@ -1,9 +1,9 @@
-import React, { FC, ReactNode } from 'react'
+import React, { type FC, type ReactNode } from 'react'
 
+import { useIntl } from '../../../..'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaArrowLeftIcon } from '../../../Icon'
-import { useIntl } from '../../../..'
 
 type Props = {
   title: ReactNode

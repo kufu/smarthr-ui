@@ -1,14 +1,15 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { useIntl } from '../../../..'
-import { Localizer } from '../../../../intl/Localizer'
-import { LocaleProps } from '../../types'
 import { CommonButton } from '../common/CommonButton'
+
+import type { LocaleProps } from '../../types'
 
 type Locale = 'ja' | 'en-us' | 'id-id' | 'pt' | 'vi' | 'ko' | 'zh-cn' | 'zh-tw'
 

@@ -1,6 +1,8 @@
-import React, { FC, ReactNode } from 'react'
+import React, { type FC, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { textColor } from '../../../../themes'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -11,11 +13,10 @@ import { Section } from '../../../SectioningContent'
 import { SideNav } from '../../../SideNav'
 import { TextLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
-import { useIntl } from '../../../..'
-import { Localizer } from '../../../../intl/Localizer'
-import { Launcher } from '../../types'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
+
+import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>
@@ -189,6 +190,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           </Section>
 
           <div className={help()}>
+            {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
             <TextLink
               href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
               target="_blank"

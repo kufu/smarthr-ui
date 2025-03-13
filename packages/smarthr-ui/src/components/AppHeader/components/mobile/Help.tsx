@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 
+import { Localizer } from '../../../../intl/Localizer'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
-import { Localizer } from '../../../../intl/Localizer'
 import { CommonButton } from '../common/CommonButton'
 
 type Props = {

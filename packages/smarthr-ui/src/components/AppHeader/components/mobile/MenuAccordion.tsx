@@ -1,11 +1,11 @@
-import React, { Dispatch, FC, PropsWithChildren, ReactNode, useId } from 'react'
+import React, { type Dispatch, type FC, type PropsWithChildren, type ReactNode, useId } from 'react'
 
+import { useIntl } from '../../../..'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
-import { useIntl } from '../../../..'
 
 type Props = {
   isOpen: boolean

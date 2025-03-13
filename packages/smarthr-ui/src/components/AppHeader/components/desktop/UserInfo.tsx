@@ -1,15 +1,16 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../../intl/Localizer'
 import { AnchorButton, Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownMenuButton, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
-import { Localizer } from '../../../../intl/Localizer'
-import { HeaderProps, UserInfoProps } from '../../types'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
+
+import type { HeaderProps, UserInfoProps } from '../../types'
 
 // HeaderDropdownMenuButton と同じスタイルを適用
 const userInfo = tv({
@@ -160,6 +161,7 @@ export const UserInfo: FC<
         </Stack>
 
         {accountUrl && (
+          // eslint-disable-next-line smarthr/a11y-clickable-element-has-text
           <AnchorButton
             href={accountUrl}
             target="_blank"

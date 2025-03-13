@@ -1,12 +1,12 @@
-import React, { FC, ReactNode, useContext, useEffect, useState } from 'react'
+import React, { type FC, type ReactNode, useContext, useEffect, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
 import { usePortal } from '../../../../hooks/usePortal'
+import { Localizer } from '../../../../intl/Localizer'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
-import { useIntl } from '../../../..'
-import { Localizer } from '../../../../intl/Localizer'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { MenuAccordion } from './MenuAccordion'
@@ -70,6 +70,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
           {features && features.length > 0 && (
             <div className={menuItemBlockStyle}>
+              {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
               <Button
                 variant="secondary"
                 wide

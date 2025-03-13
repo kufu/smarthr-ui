@@ -1,8 +1,8 @@
 import React, {
-  Dispatch,
-  FC,
-  PropsWithChildren,
-  ReactNode,
+  type Dispatch,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
   useContext,
   useEffect,
   useMemo,
@@ -12,12 +12,12 @@ import React, {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog/FocusTrap'
 import { FaXmarkIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
-import { useIntl } from '../../../..'
 
 import { AppLauncher } from './AppLauncher'
 import { AppLauncherContext } from './AppLauncherContext'

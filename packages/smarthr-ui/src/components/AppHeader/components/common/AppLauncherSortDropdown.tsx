@@ -1,14 +1,15 @@
-import React, { FC, useRef } from 'react'
+import React, { type FC, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { textColor } from '../../../../themes'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
-import { useIntl } from '../../../..'
-import { Localizer } from '../../../../intl/Localizer'
-import { Launcher } from '../../types'
+
+import type { Launcher } from '../../types'
 
 const sortDropdown = tv({
   slots: {
@@ -56,7 +57,9 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
 
   return (
     <Dropdown>
+      {/* eslint-disable-next-line smarthr/a11y-trigger-has-button */}
       <DropdownTrigger>
+        {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
         <Button
           className={trigger()}
           size="s"

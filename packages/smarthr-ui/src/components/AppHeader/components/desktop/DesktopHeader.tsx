@@ -1,6 +1,7 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../../intl/Localizer'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'
@@ -11,12 +12,12 @@ import {
   FaToolboxIcon,
 } from '../../../Icon'
 import { Cluster } from '../../../Layout'
-import { Localizer } from '../../../../intl/Localizer'
-import { HeaderProps } from '../../types'
 
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo'
+
+import type { HeaderProps } from '../../types'
 
 const desktopHeader = tv({
   slots: {
@@ -76,7 +77,9 @@ export const DesktopHeader: FC<HeaderProps> = ({
             <>
               {features && features.length > 0 && (
                 <Dropdown>
+                  {/* eslint-disable-next-line smarthr/a11y-trigger-has-button */}
                   <DropdownTrigger>
+                    {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
                     <Button prefix={enableNew ?? <FaToolboxIcon />} className={appsButton()}>
                       <Localizer
                         id="smarthr-ui/AppHeader/appLauncherLabel"
@@ -93,6 +96,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
               )}
 
               {schoolUrl && (
+                // eslint-disable-next-line smarthr/a11y-clickable-element-has-text
                 <HeaderLink
                   href={schoolUrl}
                   prefix={<FaGraduationCapIcon />}
@@ -105,6 +109,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
           )}
 
           {helpPageUrl && (
+            // eslint-disable-next-line smarthr/a11y-clickable-element-has-text
             <HeaderLink
               href={helpPageUrl}
               prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}

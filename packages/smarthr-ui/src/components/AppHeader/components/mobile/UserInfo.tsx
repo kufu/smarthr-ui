@@ -1,17 +1,18 @@
-import React, { FC, useState } from 'react'
+import React, { type FC, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
-import { useIntl } from '../../../..'
-import { Localizer } from '../../../../intl/Localizer'
-import { HeaderProps, UserInfoProps } from '../../types'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 
 import { LanguageSelector } from './LanguageSelector'
+
+import type { HeaderProps, UserInfoProps } from '../../types'
 
 const userInfo = tv({
   slots: {

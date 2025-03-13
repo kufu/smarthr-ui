@@ -1,14 +1,15 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { textColor } from '../../../../themes'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
-import { useIntl } from '../../../..'
-import { Localizer } from '../../../../intl/Localizer'
-import { Launcher } from '../../types'
+
+import type { Launcher } from '../../types'
 
 type Props = {
   page: Launcher['page']
