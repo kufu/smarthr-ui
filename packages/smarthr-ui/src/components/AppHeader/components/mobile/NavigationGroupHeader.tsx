@@ -1,4 +1,4 @@
-import React, { type FC, memo, useCallback, useContext } from 'react'
+import React, { memo, useCallback, useContext } from 'react'
 
 import { MenuSubHeader } from './MenuSubHeader'
 import { NavigationContext } from './NavigationContext'
