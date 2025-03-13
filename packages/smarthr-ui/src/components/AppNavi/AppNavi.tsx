@@ -1,14 +1,20 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
 import { Nav } from '../SectioningContent'
 import { StatusLabel } from '../StatusLabel'
 
-import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
-import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
-import { AppNaviCustomTag, AppNaviCustomTagProps } from './AppNaviCustomTag'
-import { AppNaviDropdown, AppNaviDropdownProps } from './AppNaviDropdown'
+import { AppNaviAnchor, type AppNaviAnchorProps } from './AppNaviAnchor'
+import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
+import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
+import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 

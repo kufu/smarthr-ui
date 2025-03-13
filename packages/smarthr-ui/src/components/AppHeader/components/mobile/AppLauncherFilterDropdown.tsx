@@ -6,8 +6,9 @@ import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
 import { useTranslate } from '../../hooks/useTranslate'
-import { Launcher } from '../../types'
 import { Translate } from '../common/Translate'
+
+import type { Launcher } from '../../types'
 
 type Props = {
   page: Launcher['page']

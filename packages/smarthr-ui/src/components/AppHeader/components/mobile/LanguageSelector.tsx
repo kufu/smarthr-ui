@@ -5,9 +5,10 @@ import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { Locale, localeMap } from '../../multilingualization'
-import { LocaleProps } from '../../types'
+import { type Locale, localeMap } from '../../multilingualization'
 import { CommonButton } from '../common/CommonButton'
+
+import type { LocaleProps } from '../../types'
 
 const classNameGenerator = tv({
   slots: {

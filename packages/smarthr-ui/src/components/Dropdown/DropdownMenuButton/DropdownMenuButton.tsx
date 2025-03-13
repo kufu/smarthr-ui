@@ -13,8 +13,8 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
-import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
-import { RemoteDialogTrigger } from '../../Dialog'
+import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
+import { type RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 
 import useKeyboardNavigation from './useKeyboardNavigation'
@@ -58,7 +58,7 @@ export const dropdownMenuButton = tv({
       ],
     ],
     actionListItemButton: [
-      'shr-justify-start shr-border-none shr-py-0.5 shr-font-normal',
+      'shr-justify-start shr-rounded-none shr-border-none shr-py-0.5 shr-font-normal',
       'focus-visible:shr-focus-indicator--inner',
     ],
   },

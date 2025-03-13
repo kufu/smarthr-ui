@@ -1,12 +1,16 @@
 'use client'
 
-import React, { ComponentProps, useCallback, useId } from 'react'
+import React, { type ComponentProps, useCallback, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
+import {
+  ActionDialogContentInner,
+  type ActionDialogContentInnerProps,
+} from './ActionDialogContentInner'
+
+import type { DialogProps } from '../types'
 
 type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
@@ -23,7 +27,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   onClickAction,
   onClickClose,
   onPressEscape = onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   subActionArea,
@@ -69,7 +73,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
         onClickClose={handleClickClose}
         onClickAction={handleClickAction}
         subActionArea={subActionArea}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         decorators={decorators}
       >
         {children}

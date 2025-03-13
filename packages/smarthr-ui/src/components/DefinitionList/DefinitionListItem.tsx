@@ -1,4 +1,10 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { spacing } from '../../themes'

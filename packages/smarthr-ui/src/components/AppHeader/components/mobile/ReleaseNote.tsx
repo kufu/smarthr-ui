@@ -6,7 +6,7 @@ import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { useTranslate } from '../../hooks/useTranslate'
-import { HeaderProps } from '../../types'
+import { type HeaderProps, type HeaderProps } from '../../types'
 import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'

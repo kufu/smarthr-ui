@@ -1,4 +1,4 @@
-import { Locale } from './types'
+import type { Locale } from './types'
 
 export type Messages = {
   'common/school': string
@@ -14,7 +14,7 @@ export type Messages = {
   'MobileHeader/Menu/allAppButton': string
   'MobileHeader/Menu/managementMenu': string
   'MobileHeader/Menu/latestReleaseNotes': string
-  'MobileHeader/MenuSubHeader/back': string
+  'MobileHeader/MenuSubHeading/back': string
   'MobileHeader/MenuAccordion/open': string
   'MobileHeader/MenuAccordion/close': string
   'Launcher/searchInputTitle': string
@@ -47,7 +47,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': 'すべてのアプリ',
     'MobileHeader/Menu/managementMenu': '管理メニュー',
     'MobileHeader/Menu/latestReleaseNotes': '最新のリリースノート',
-    'MobileHeader/MenuSubHeader/back': '戻る',
+    'MobileHeader/MenuSubHeading/back': '戻る',
     'MobileHeader/MenuAccordion/open': '開く',
     'MobileHeader/MenuAccordion/close': '閉じる',
     'Launcher/searchInputTitle': 'アプリ名を入力してください。',
@@ -77,7 +77,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': 'Semua aplikasi',
     'MobileHeader/Menu/managementMenu': 'Menu pengelolaan',
     'MobileHeader/Menu/latestReleaseNotes': 'Release Note terkini',
-    'MobileHeader/MenuSubHeader/back': 'Kembali',
+    'MobileHeader/MenuSubHeading/back': 'Kembali',
     'MobileHeader/MenuAccordion/open': 'Buka',
     'MobileHeader/MenuAccordion/close': 'Tutup',
     'Launcher/searchInputTitle': 'Masukkan nama aplikasi.',
@@ -107,7 +107,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': 'All apps',
     'MobileHeader/Menu/managementMenu': 'Admin Menu',
     'MobileHeader/Menu/latestReleaseNotes': 'Latest release notes',
-    'MobileHeader/MenuSubHeader/back': 'Back',
+    'MobileHeader/MenuSubHeading/back': 'Back',
     'MobileHeader/MenuAccordion/open': 'Expand',
     'MobileHeader/MenuAccordion/close': 'Collapse',
     'Launcher/searchInputTitle': 'Input the name of the App',
@@ -138,7 +138,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': 'Todos os Apps',
     'MobileHeader/Menu/managementMenu': 'Menu de administração',
     'MobileHeader/Menu/latestReleaseNotes': 'Notas de versão mais recentes',
-    'MobileHeader/MenuSubHeader/back': 'Voltar',
+    'MobileHeader/MenuSubHeading/back': 'Voltar',
     'MobileHeader/MenuAccordion/open': 'Abrir',
     'MobileHeader/MenuAccordion/close': 'Fechar',
     'Launcher/searchInputTitle': 'Insira o nome do app.',
@@ -168,7 +168,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': 'Tất cả Tính năng',
     'MobileHeader/Menu/managementMenu': 'Menu Quản lý',
     'MobileHeader/Menu/latestReleaseNotes': 'Ghi chú phát hành mới nhất',
-    'MobileHeader/MenuSubHeader/back': 'Quay lại',
+    'MobileHeader/MenuSubHeading/back': 'Quay lại',
     'MobileHeader/MenuAccordion/open': 'Mở',
     'MobileHeader/MenuAccordion/close': 'Đóng',
     'Launcher/searchInputTitle': 'Nhập tên tính năng.',
@@ -199,7 +199,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': '모든 앱',
     'MobileHeader/Menu/managementMenu': '관리메뉴',
     'MobileHeader/Menu/latestReleaseNotes': '최신 리리스 노트',
-    'MobileHeader/MenuSubHeader/back': '돌아가기',
+    'MobileHeader/MenuSubHeading/back': '돌아가기',
     'MobileHeader/MenuAccordion/open': '열기',
     'MobileHeader/MenuAccordion/close': '닫기',
     'Launcher/searchInputTitle': '앱의 이름을 입력해 주세요.',
@@ -229,7 +229,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': '所有功能',
     'MobileHeader/Menu/managementMenu': '管理菜单',
     'MobileHeader/Menu/latestReleaseNotes': '最新版本说明',
-    'MobileHeader/MenuSubHeader/back': '返回',
+    'MobileHeader/MenuSubHeading/back': '返回',
     'MobileHeader/MenuAccordion/open': '展开',
     'MobileHeader/MenuAccordion/close': '关闭',
     'Launcher/searchInputTitle': '请输入功能名称。',
@@ -259,7 +259,7 @@ export const translation = {
     'MobileHeader/Menu/allAppButton': '所有功能',
     'MobileHeader/Menu/managementMenu': '管理選單',
     'MobileHeader/Menu/latestReleaseNotes': '最新版本說明',
-    'MobileHeader/MenuSubHeader/back': '返回以功能名稱遞減',
+    'MobileHeader/MenuSubHeading/back': '返回以功能名稱遞減',
     'MobileHeader/MenuAccordion/open': '展開',
     'MobileHeader/MenuAccordion/close': '關閉',
     'Launcher/searchInputTitle': '請輸入功能名稱。',

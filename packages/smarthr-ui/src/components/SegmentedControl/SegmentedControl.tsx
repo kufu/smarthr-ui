@@ -1,9 +1,9 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  FC,
-  ReactNode,
+  type ComponentProps,
+  type FC,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,

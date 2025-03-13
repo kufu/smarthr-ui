@@ -1,8 +1,8 @@
 import React, {
-  ComponentPropsWithoutRef,
-  ElementType,
-  PropsWithChildren,
-  ReactNode,
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type PropsWithChildren,
+  type ReactNode,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Stack } from '../../Layout'
-import { Chip } from '../Chip'
+import { Chip, classNameGenerator } from '../Chip'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -30,8 +30,19 @@ export const Size: StoryObj<typeof Chip> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, 's'].map((size) => (
+      {[undefined, ...Object.keys(classNameGenerator.variants.size)].map((size) => (
         <Chip {...args} size={size as any} key={String(size)} />
+      ))}
+    </Stack>
+  ),
+}
+
+export const Color: StoryObj<typeof Chip> = {
+  name: 'color',
+  render: (args) => (
+    <Stack align="flex-start">
+      {[undefined, ...Object.keys(classNameGenerator.variants.color)].map((color) => (
+        <Chip {...args} color={color as any} key={String(color)} />
       ))}
     </Stack>
   ),

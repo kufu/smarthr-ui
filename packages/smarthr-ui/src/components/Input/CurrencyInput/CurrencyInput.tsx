@@ -1,7 +1,7 @@
 'use client'
 
 import React, {
-  FocusEvent,
+  type FocusEvent,
   forwardRef,
   useCallback,
   useEffect,

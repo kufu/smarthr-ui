@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 
 export type DecoratorsType<T extends string> = {
   [K in T]?: DecoratorType

@@ -2,8 +2,8 @@
 
 import dayjs from 'dayjs'
 import React, {
-  ComponentPropsWithRef,
-  ReactNode,
+  type ComponentPropsWithRef,
+  type ReactNode,
   forwardRef,
   useCallback,
   useEffect,

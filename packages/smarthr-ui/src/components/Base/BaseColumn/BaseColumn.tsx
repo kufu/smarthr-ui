@@ -1,5 +1,5 @@
-import React, { ComponentProps, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, { type ComponentProps, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 

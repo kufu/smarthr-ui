@@ -1,6 +1,12 @@
-import { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
+import {
+  type ComponentProps,
+  type ComponentType,
+  type MouseEvent,
+  type ReactElement,
+  type ReactNode,
+} from 'react'
 
-import { Header } from '../Header'
+import { type Header } from '../Header'
 
 type Locale = 'ja' | 'en-us' | 'id-id' | 'pt' | 'vi' | 'ko' | 'zh-cn' | 'zh-tw'
 
@@ -38,19 +44,19 @@ export type HeaderProps = ComponentProps<typeof Header> & {
 
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup
 
-type NavigationLink = {
+export type NavigationLink = {
   children: ReactElement | string
   href: string
   current?: boolean
 }
 
-type NavigationCustomTag = {
+export type NavigationCustomTag = {
   children: ReactElement | string
   elementAs: ComponentType<any>
   current?: boolean
 } & { [key: string]: any }
 
-type NavigationButton = {
+export type NavigationButton = {
   children: ReactElement | string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   current?: boolean

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -9,8 +9,9 @@ import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
 import { useTranslate } from '../../hooks/useTranslate'
-import { ReleaseNoteProps } from '../../types'
 import { Translate } from '../common/Translate'
+
+import type { ReleaseNoteProps } from '../../types'
 
 const wrapper = tv({
   base: 'shr-w-[400px]',
