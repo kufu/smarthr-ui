@@ -1,12 +1,18 @@
 'use client'
 
-import React, { ReactElement, forwardRef, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, {
+  type CSSProperties,
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
+  type ReactElement,
+  forwardRef,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type { CSSProperties, ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 const classNameGenerator = tv({
   base: ['shr-flex shr-flex-wrap', 'empty:shr-gap-0'],

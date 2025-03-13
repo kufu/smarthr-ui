@@ -1,12 +1,13 @@
-import React, { ComponentProps, useMemo } from 'react'
-import { IconType } from 'react-icons'
+import React, { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { colors, fontSize, textColor } from '../../themes'
-import { FontSizes } from '../../themes/createFontSize'
-import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import { Gap } from '../../types'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import type { FontSizes } from '../../themes/createFontSize'
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { Gap } from '../../types'
+import type { IconType } from 'react-icons'
 
 /**
  * literal union type に補完を効かせるためのハック
@@ -55,9 +56,9 @@ type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
 
 type BaseComponentProps = {
   /**アイコンの説明テキスト*/
-  alt?: React.ReactNode
+  alt?: ReactNode
   /** アイコンと並べるテキスト */
-  text?: React.ReactNode
+  text?: ReactNode
   /** アイコンと並べるテキストとの溝 */
   iconGap?: CharRelativeSize | AbstractSize
   /** `true` のとき、アイコンを右側に表示する */
@@ -65,11 +66,11 @@ type BaseComponentProps = {
 }
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
-const icon = tv({
+const iconClassNameGenerator = tv({
   base: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
 })
 
-const wrapper = tv({
+const wrapperClassNameGenerator = tv({
   base: ['smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline'],
   variants: {
     gap: {
@@ -112,7 +113,7 @@ const wrapper = tv({
 })
 
 export const generateIcon = (SvgIcon: IconType) => {
-  const Icon = React.memo<Props>(
+  const Icon = memo<Props>(
     ({
       color,
       className,
@@ -140,8 +141,8 @@ export const generateIcon = (SvgIcon: IconType) => {
         return undefined
       }, [ariaHidden, alt, ariaLabel, ariaLabelledby])
 
-      const iconStyle = useMemo(() => icon({ className }), [className])
-      const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
+      const iconClassName = useMemo(() => iconClassNameGenerator({ className }), [className])
+      const wrapperClassName = useMemo(() => wrapperClassNameGenerator({ gap: iconGap }), [iconGap])
 
       const replacedColor = useMemo(() => {
         if (color && existsColor(color)) {
@@ -169,7 +170,7 @@ export const generateIcon = (SvgIcon: IconType) => {
           width={iconSize}
           height={iconSize}
           color={replacedColor}
-          className={iconStyle}
+          className={iconClassName}
           role={role}
           aria-hidden={actualAriaHidden}
           aria-label={ariaLabel}
@@ -181,7 +182,7 @@ export const generateIcon = (SvgIcon: IconType) => {
 
       if (text) {
         return (
-          <span className={wrapperStyle}>
+          <span className={wrapperClassName}>
             {right && text}
             {visuallyHiddenAlt}
             {svgIcon}

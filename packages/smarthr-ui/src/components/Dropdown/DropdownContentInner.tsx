@@ -1,7 +1,7 @@
 import React, {
-  ComponentProps,
-  FC,
-  PropsWithChildren,
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
   createContext,
   useEffect,
   useMemo,
@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 import { spacing } from '../../themes'
 
 import { DropdownCloser } from './DropdownCloser'
-import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
+import { type ContentBoxStyle, type Rect, getContentBoxStyle } from './dropdownHelper'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
 const contentInner = tv({

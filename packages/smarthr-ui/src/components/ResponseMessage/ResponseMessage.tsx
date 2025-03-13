@@ -1,5 +1,5 @@
-import React, { PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, { type PropsWithChildren, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import {
   FaCircleCheckIcon,

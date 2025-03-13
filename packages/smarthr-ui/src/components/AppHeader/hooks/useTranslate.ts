@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { translate } from '../multilingualization'
-import { Messages } from '../multilingualization/messages'
+import { type Messages } from '../multilingualization/messages'
 
 import { useLocale } from './useLocale'
 

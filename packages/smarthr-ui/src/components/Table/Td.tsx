@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, memo, useMemo } from 'react'
+import React, { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './useReelShadow'

@@ -1,4 +1,4 @@
-import { ChildNavigation, ChildNavigationGroup, Navigation } from './types'
+import type { ChildNavigation, ChildNavigationGroup, Navigation } from './types'
 
 export const buildDisplayName = ({
   email,
@@ -13,13 +13,9 @@ export const buildDisplayName = ({
 }) => {
   if (firstName && lastName) {
     return `${lastName} ${firstName}${empCode ? `（${empCode}）` : ''}`
-  } else if (empCode) {
-    return empCode
-  } else if (email) {
-    return email
   }
 
-  return ''
+  return empCode || email || ''
 }
 
 export const isChildNavigation = (

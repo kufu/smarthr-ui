@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect } from 'react'
+import { type RefObject, useCallback, useEffect } from 'react'
 
 export function useOuterClick(
   targets: Array<RefObject<HTMLElement>>,

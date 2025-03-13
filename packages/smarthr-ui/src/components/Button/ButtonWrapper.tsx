@@ -1,15 +1,15 @@
 import React, {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  ElementType,
-  ForwardedRef,
-  PropsWithChildren,
-  ReactNode,
+  type AnchorHTMLAttributes,
+  type ButtonHTMLAttributes,
+  type ElementType,
+  type ForwardedRef,
+  type PropsWithChildren,
+  type ReactNode,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Variant } from './types'
+import type { Variant } from './types'
 
 type BaseProps = PropsWithChildren<{
   size: 'default' | 's'

@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode } from 'react'
+import React, { type ComponentProps, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'

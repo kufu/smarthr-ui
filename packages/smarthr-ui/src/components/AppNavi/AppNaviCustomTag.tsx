@@ -1,7 +1,7 @@
-import React, { ComponentType, FC, PropsWithChildren, useMemo } from 'react'
+import React, { type ComponentType, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { ComponentProps as IconProps } from '../Icon'
+import { type ComponentProps as IconProps } from '../Icon'
 
 import { appNaviItemStyle } from './style'
 

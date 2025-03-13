@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, useMemo } from 'react'
+import React, { type ComponentPropsWithRef, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useReelCells } from './useReelCells'

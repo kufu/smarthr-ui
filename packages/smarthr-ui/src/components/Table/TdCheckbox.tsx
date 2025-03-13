@@ -1,7 +1,7 @@
 import React, { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
+import { CheckBox, type Props as CheckBoxProps } from '../CheckBox'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'

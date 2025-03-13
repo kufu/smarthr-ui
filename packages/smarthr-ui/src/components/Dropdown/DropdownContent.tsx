@@ -1,9 +1,12 @@
 'use client'
 
-import React, { PropsWithChildren, useContext } from 'react'
+import React, { type PropsWithChildren, useContext } from 'react'
 
 import { DropdownContext } from './Dropdown'
-import { DropdownContentInner, ElementProps as InnerElementProps } from './DropdownContentInner'
+import {
+  DropdownContentInner,
+  type ElementProps as InnerElementProps,
+} from './DropdownContentInner'
 
 export const DropdownContentContext = React.createContext<{
   onClickCloser: () => void

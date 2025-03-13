@@ -1,4 +1,4 @@
-import { AbstractSize, CharRelativeSize } from '../themes/createSpacing'
+import type { AbstractSize, CharRelativeSize } from '../themes/createSpacing'
 
 export type Gap = CharRelativeSize | AbstractSize
 export type SeparateGap = {

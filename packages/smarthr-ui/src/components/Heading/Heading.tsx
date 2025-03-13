@@ -10,7 +10,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
-import { STYLE_TYPE_MAP, Text, TextProps } from '../Text'
+import { STYLE_TYPE_MAP, Text, type TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{

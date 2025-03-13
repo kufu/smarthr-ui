@@ -1,26 +1,30 @@
-import { BorderProperty, CreatedBorderTheme, createBorder } from './createBorder'
-import { BreakpointProperty, CreatedBreakpointTheme, createBreakpoint } from './createBreakpoint'
-import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
-import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
-import { CreatedFrameTheme, FrameProperty, createFrame } from './createFrame'
+import { type BorderProperty, type CreatedBorderTheme, createBorder } from './createBorder'
 import {
-  CreatedInteractionTheme,
-  InteractionProperty,
+  type BreakpointProperty,
+  type CreatedBreakpointTheme,
+  createBreakpoint,
+} from './createBreakpoint'
+import { type ColorProperty, type CreatedColorTheme, createColor } from './createColor'
+import { type CreatedFontSizeTheme, type FontSizeProperty, createFontSize } from './createFontSize'
+import { type CreatedFrameTheme, type FrameProperty, createFrame } from './createFrame'
+import {
+  type CreatedInteractionTheme,
+  type InteractionProperty,
   createInteraction,
 } from './createInteraction'
-import { CreatedLeading, LeadingProperty, createLeading } from './createLeading'
-import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPalette'
-import { CreatedRadiusTheme, RadiusProperty, createRadius } from './createRadius'
-import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
-import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
+import { type CreatedLeading, type LeadingProperty, createLeading } from './createLeading'
+import { type CreatedPaletteTheme, type PaletteProperty, createPalette } from './createPalette'
+import { type CreatedRadiusTheme, type RadiusProperty, createRadius } from './createRadius'
+import { type CreatedShadowTheme, type ShadowProperty, createShadow } from './createShadow'
+import { type CreatedSizeTheme, type SizeProperty, createSize } from './createSize'
 import {
-  CreatedSpacingByCharTheme,
-  CreatedSpacingTheme,
-  SpacingProperty,
+  type CreatedSpacingByCharTheme,
+  type CreatedSpacingTheme,
+  type SpacingProperty,
   createSpacing,
   createSpacingByChar,
 } from './createSpacing'
-import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
+import { type CreatedZindexTheme, type ZIndexProperty, createZIndex } from './createZIndex'
 
 type ThemeProperty = {
   /**

@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useRef, useState } from 'react'
+import React, { type ReactNode, createContext, useRef, useState } from 'react'
 
 export type StepItem = {
   /** StepのID */

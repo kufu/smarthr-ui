@@ -1,7 +1,9 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { isStyledComponent } from 'styled-components'
 
 import { SectioningFragment } from './SectioningContent'
+
+import type React from 'react'
 
 type ComponentType = string | React.ComponentType<any>
 

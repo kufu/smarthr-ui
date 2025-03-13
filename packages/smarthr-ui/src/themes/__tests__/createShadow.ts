@@ -1,4 +1,4 @@
-import { FlattenSimpleInterpolation, css } from 'styled-components'
+import { type FlattenSimpleInterpolation, css } from 'styled-components'
 
 import { createShadow } from '../createShadow'
 

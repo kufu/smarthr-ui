@@ -1,5 +1,5 @@
 import React, { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 type Props = {
   /** コンポーネントのタイトル */

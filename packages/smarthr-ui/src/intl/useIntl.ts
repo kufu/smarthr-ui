@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import {
-  PrimitiveType,
-  MessageDescriptor as ReactIntlMessageDescriptor,
+  type PrimitiveType,
+  type MessageDescriptor as ReactIntlMessageDescriptor,
   useIntl as useReactIntl,
 } from 'react-intl'
 
