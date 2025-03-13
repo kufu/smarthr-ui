@@ -1,5 +1,5 @@
 import React, { type PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap } from '../../types'
 

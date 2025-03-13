@@ -1,10 +1,10 @@
 'use client'
 
 import React, {
-  FC,
-  MutableRefObject,
-  PropsWithChildren,
-  ReactNode,
+  type FC,
+  type MutableRefObject,
+  type PropsWithChildren,
+  type ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -17,7 +17,7 @@ import React, {
 
 import { usePortal } from '../../hooks/usePortal'
 
-import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
+import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
 type Props = {
   onOpen?: () => void

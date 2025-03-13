@@ -1,4 +1,4 @@
-import React, { type ReactNode, memo, useMemo } from 'react'
+import React, { type FC, type ReactNode, memo, useMemo } from 'react'
 
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'

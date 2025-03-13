@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [66.0.0](https://github.com/kufu/smarthr-ui/compare/v65.3.0...v66.0.0) (2025-03-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 (#5399)
+
+### Features
+
+* **AppNaviDropdownMenuButton:** 選択中の項目が視覚的にも伝わるように装飾を追加 ([#5193](https://github.com/kufu/smarthr-ui/issues/5193)) ([0ff8392](https://github.com/kufu/smarthr-ui/commit/0ff839237b3c533f58a53e88616e5d233de4e6e8))
+* TdRadioButton を追加 ([#5439](https://github.com/kufu/smarthr-ui/issues/5439)) ([6a9ca59](https://github.com/kufu/smarthr-ui/commit/6a9ca5922a8359dc47ac4c969d3eefc797d9026f))
+
+
+### Bug Fixes
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 ([#5399](https://github.com/kufu/smarthr-ui/issues/5399)) ([fe21e25](https://github.com/kufu/smarthr-ui/commit/fe21e25ba42b405e48ee5a85e0af556efdec6bfa))
+
+## [65.3.0](https://github.com/kufu/smarthr-ui/compare/v65.2.1...v65.3.0) (2025-03-04)
+
+
+### Features
+
+* Chipコンポーネントでボーダー色を受け取れるようにする ([#5295](https://github.com/kufu/smarthr-ui/issues/5295)) ([ad5498b](https://github.com/kufu/smarthr-ui/commit/ad5498b729eb2200f10554e7bddad62239cc38b4))
+* 多言語化対応の基盤を作成 ([#5220](https://github.com/kufu/smarthr-ui/issues/5220)) ([ab7bd7e](https://github.com/kufu/smarthr-ui/commit/ab7bd7e5b307225446b345f96d02738e38e46933))
+
+
+### Bug Fixes
+
+* **Fieldset:** innerMarginとして0.5を受け取れるように修正 ([#5421](https://github.com/kufu/smarthr-ui/issues/5421)) ([d8b6b69](https://github.com/kufu/smarthr-ui/commit/d8b6b6900cce50a8ebe938ac826edb076cd4b85f))
+
 ### [65.2.1](https://github.com/kufu/smarthr-ui/compare/v65.2.0...v65.2.1) (2025-02-25)
 
 ## [65.2.0](https://github.com/kufu/smarthr-ui/compare/v65.1.0...v65.2.0) (2025-02-18)

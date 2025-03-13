@@ -1,12 +1,12 @@
 'use client'
 
-import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorType, type DecoratorsType } from '../../../hooks/useDecorators'
-import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
-import { Button, BaseProps as ButtonProps } from '../../Button'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
+import { Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -26,7 +26,7 @@ type Props = {
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
-  responseMessage?: ResponseMessageType
+  responseStatus?: ResponseStatus
   /** 引き金となるボタンの大きさ */
   triggerSize?: ButtonProps['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
@@ -86,7 +86,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   onClose,
   children,
   decorators,
-  responseMessage,
+  responseStatus,
   triggerSize,
   onlyIconTrigger = false,
   ...props
@@ -113,7 +113,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
 
   const filteredIconAriaLabel = useMemo(() => innerText(texts.status), [texts.status])
 
-  const calcedResponseStatus = useResponseMessage(responseMessage)
+  const calcedResponseStatus = useResponseStatus(responseStatus)
 
   const styles = useMemo(() => {
     const {

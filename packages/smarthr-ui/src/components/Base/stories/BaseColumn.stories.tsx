@@ -4,13 +4,13 @@ import React, { ComponentProps } from 'react'
 import { backgroundColor } from '../../../themes'
 import { Gap } from '../../../types'
 import { Stack } from '../../Layout'
-import { classNameGenerator } from '../Base'
+import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
 import { classNameGenerator as columnClassNameGenerator } from '../BaseColumn/BaseColumn'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-const basePadding = Object.keys(classNameGenerator.variants.paddingBlock)
+const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]

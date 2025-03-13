@@ -1,9 +1,9 @@
-import React, { FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, { type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
-import { FaCaretDownIcon, ComponentProps as IconProps } from '../Icon'
+import { FaCaretDownIcon, type ComponentProps as IconProps } from '../Icon'
 
 import { appNaviItemStyle } from './style'
 

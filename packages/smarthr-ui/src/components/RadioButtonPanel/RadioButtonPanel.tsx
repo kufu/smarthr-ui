@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentProps, useCallback, useMemo, useRef } from 'react'
+import React, { type ComponentProps, useCallback, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'

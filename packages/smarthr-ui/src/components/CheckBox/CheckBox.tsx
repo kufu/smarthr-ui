@@ -1,8 +1,8 @@
 'use client'
 
 import React, {
-  ComponentPropsWithRef,
-  PropsWithChildren,
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
   forwardRef,
   useEffect,
   useId,

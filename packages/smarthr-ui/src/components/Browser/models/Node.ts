@@ -1,4 +1,4 @@
-import { ItemNode } from './ItemNode'
-import { RootNode } from './RootNode'
+import { type ItemNode } from './ItemNode'
+import { type RootNode } from './RootNode'
 
 export type Node = ItemNode | RootNode

@@ -1,7 +1,7 @@
-import React, { ComponentProps, ComponentPropsWithoutRef, FC, useMemo } from 'react'
+import React, { type ComponentProps, type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { SideNavItemButton, SideNavSizeType } from './SideNavItemButton'
+import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
 
 type SideNavItemButtonProps = Omit<ComponentProps<typeof SideNavItemButton>, 'size' | 'onClick'>
 

@@ -1,19 +1,20 @@
 import React, { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import {
-  type Navigation,
-  type NavigationButton,
-  type NavigationCustomTag,
-  type NavigationGroup,
-  type NavigationLink,
-} from '../../types'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
 import { NavigationContext } from './NavigationContext'
+
+import type {
+  Navigation,
+  NavigationButton,
+  NavigationCustomTag,
+  NavigationGroup,
+  NavigationLink,
+} from '../../types'
 
 const classNameGenerator = tv({
   base: ['[&&]:shr-px-0.5'],

@@ -1,4 +1,11 @@
-import React, { ComponentProps, FC, PropsWithChildren, memo, useCallback, useMemo } from 'react'
+import React, {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'

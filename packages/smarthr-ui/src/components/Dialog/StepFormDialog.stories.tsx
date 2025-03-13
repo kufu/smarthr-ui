@@ -43,8 +43,8 @@ const radioButtonListWrapper = tv({
 export const Default: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [value, setValue] = React.useState('Apple')
-  const [responseMessage, setResponseMessage] =
-    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
+  const [responseStatus, setResponseStatus] =
+    useState<ComponentProps<typeof ActionDialog>['responseStatus']>()
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const stepOrder = [
     { id: 'a', stepNumber: 1 },
@@ -73,7 +73,7 @@ export const Default: StoryFn = () => {
         firstStep={stepOrder[0]}
         onSubmit={(closeDialog, e, currentStep) => {
           action('onSubmit')()
-          setResponseMessage(undefined)
+          setResponseStatus(undefined)
           if (currentStep.id === stepOrder[2].id) {
             closeDialog()
           }
@@ -89,13 +89,13 @@ export const Default: StoryFn = () => {
         onClickClose={() => {
           action('closed')()
           setOpenedDialog(null)
-          setResponseMessage(undefined)
+          setResponseStatus(undefined)
         }}
         onClickBack={() => {
           action('back')()
         }}
         stepLength={3}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         id="dialog-form"
         data-test="form-dialog-content"
         width="40em"

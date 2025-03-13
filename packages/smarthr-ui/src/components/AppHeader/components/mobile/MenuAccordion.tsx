@@ -24,7 +24,13 @@ type Props = PropsWithChildren<{
 }>
 
 export const MenuAccordion: FC<Props> = ({ title, children, ...rest }) =>
-  title ? <ActualMenuAccordion {...rest} title={title} children={children} /> : children
+  title ? (
+    <ActualMenuAccordion {...rest} title={title}>
+      {children}
+    </ActualMenuAccordion>
+  ) : (
+    children
+  )
 
 export const ActualMenuAccordion: FC<Props> = ({ isOpen, children, ...rest }) => {
   const id = useId()
