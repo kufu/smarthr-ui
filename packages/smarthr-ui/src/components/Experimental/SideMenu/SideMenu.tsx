@@ -7,6 +7,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../../Base'
+import { Nav } from '../../SectioningContent'
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-SideMenu shr-list-none shr-py-0.5',
@@ -24,5 +25,10 @@ type Props = PropsWithChildren<
 export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  return <Base {...rest} as={elementAs} className={actualClassName} />
+  return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Nav>
+      <Base {...rest} as={elementAs} className={actualClassName} />
+    </Nav>
+  )
 }
