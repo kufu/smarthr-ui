@@ -1,12 +1,11 @@
 import React, { type FC, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../../intl/Localizer'
 import { FaUpRightFromSquareIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
-import { useTranslate } from '../../hooks/useTranslate'
-import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
@@ -23,7 +22,6 @@ const releaseNoteStyle = tv({
 })
 
 export const ReleaseNote: FC = () => {
-  const translate = useTranslate()
   const { releaseNote } = useContext(ReleaseNoteContext)
 
   if (!releaseNote) {
@@ -40,7 +38,12 @@ export const ReleaseNote: FC = () => {
         </Center>
       ) : releaseNote.error ? (
         <Text>
-          <Translate>{translate('common/releaseNotesLoadError')}</Translate>
+          <Localizer
+            id="smarthr-ui/AppHeader/releaseNotesLoadError"
+            defaultText="リリースノートの読み込みに失敗しました。
+時間をおいて、やり直してください。"
+            values={{}}
+          />
         </Text>
       ) : (
         <Stack>
@@ -56,13 +59,18 @@ export const ReleaseNote: FC = () => {
       )}
 
       <div className={indexLinkWrapper()}>
+        {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
         <a
           href={releaseNote.indexUrl}
           target="_blank"
           rel="noopener noreferrer"
           className={indexLinkAnchor()}
         >
-          <Translate>{translate('common/seeAllReleaseNotes')}</Translate>
+          <Localizer
+            id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+            defaultText="すべてのリリースノートを見る"
+            values={{}}
+          />
           <FaUpRightFromSquareIcon className={icon()} />
         </a>
       </div>

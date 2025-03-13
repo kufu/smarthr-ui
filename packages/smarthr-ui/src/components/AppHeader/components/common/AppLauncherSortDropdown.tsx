@@ -1,13 +1,13 @@
 import React, { type FC, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { textColor } from '../../../../themes'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
-import { useTranslate } from '../../hooks/useTranslate'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -36,19 +36,30 @@ type Props = {
 }
 
 export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const triggerRef = useRef<HTMLButtonElement>(null)
   const { trigger, stack, contentButton } = sortDropdown()
 
   const sortMap: Record<Launcher['sortType'], string> = {
-    default: translate('Launcher/sortDropdownOrderDefault'),
-    'name/asc': translate('Launcher/sortDropdownOrderNameAsc'),
-    'name/desc': translate('Launcher/sortDropdownOrderNameDesc'),
+    default: localize({
+      id: 'smarthr-ui/AppHeader/sortDropdownOrderDefault',
+      defaultText: 'デフォルト',
+    }),
+    'name/asc': localize({
+      id: 'smarthr-ui/AppHeader/sortDropdownOrderNameAsc',
+      defaultText: 'アプリ名の昇順',
+    }),
+    'name/desc': localize({
+      id: 'smarthr-ui/AppHeader/sortDropdownOrderNameDesc',
+      defaultText: 'アプリ名の降順',
+    }),
   }
 
   return (
     <Dropdown>
+      {/* eslint-disable-next-line smarthr/a11y-trigger-has-button */}
       <DropdownTrigger>
+        {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
         <Button
           className={trigger()}
           size="s"
@@ -56,7 +67,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
           suffix={<FaCaretDownIcon />}
           ref={triggerRef}
         >
-          <Translate>{translate('Launcher/sortDropdownLabel')}</Translate>
+          <Localizer id="smarthr-ui/AppHeader/sortDropdownLabel" defaultText="表示順" values={{}} />
         </Button>
       </DropdownTrigger>
 
@@ -71,7 +82,13 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
                 key === sortType && (
                   <FaCheckIcon
                     color={textColor.main}
-                    alt={<Translate>{translate('Launcher/sortDropdownSelected')}</Translate>}
+                    alt={
+                      <Localizer
+                        id="smarthr-ui/AppHeader/sortDropdownSelected"
+                        defaultText="選択中"
+                        values={{}}
+                      />
+                    }
                   />
                 )
               }
@@ -88,7 +105,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
                 }, 0)
               }}
             >
-              <Translate>{value}</Translate>
+              {value}
             </Button>
           ))}
         </Stack>

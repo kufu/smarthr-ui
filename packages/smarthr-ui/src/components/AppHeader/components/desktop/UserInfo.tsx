@@ -1,15 +1,14 @@
 import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../../intl/Localizer'
 import { AnchorButton, Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownMenuButton, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
-import { useTranslate } from '../../hooks/useTranslate'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import type { HeaderProps, UserInfoProps } from '../../types'
 
@@ -72,8 +71,6 @@ export const UserInfo: FC<
   desktopAdditionalContent,
   enableNew,
 }) => {
-  const translate = useTranslate()
-
   const displayName =
     arbitraryDisplayName ??
     buildDisplayName({
@@ -164,6 +161,7 @@ export const UserInfo: FC<
         </Stack>
 
         {accountUrl && (
+          // eslint-disable-next-line smarthr/a11y-clickable-element-has-text
           <AnchorButton
             href={accountUrl}
             target="_blank"
@@ -171,7 +169,7 @@ export const UserInfo: FC<
             prefix={<FaGearIcon />}
             className={dropdownContentButton()}
           >
-            <Translate>{translate('common/userSetting')}</Translate>
+            <Localizer id="smarthr-ui/AppHeader/userSetting" defaultText="個人設定" values={{}} />
           </AnchorButton>
         )}
 
@@ -184,7 +182,7 @@ export const UserInfo: FC<
     <Dropdown>
       <DropdownTrigger>
         <Button variant="text" suffix={<FaCaretDownIcon />} className={button()}>
-          <Translate>{displayName}</Translate>
+          {displayName}
         </Button>
       </DropdownTrigger>
 
@@ -199,7 +197,7 @@ export const UserInfo: FC<
               rel="noopener noreferrer"
               prefix={<FaGearIcon />}
             >
-              <Translate>{translate('common/userSetting')}</Translate>
+              <Localizer id="smarthr-ui/AppHeader/userSetting" defaultText="個人設定" values={{}} />
             </CommonButton>
           )}
 

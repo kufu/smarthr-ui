@@ -3,7 +3,6 @@ import { tv } from 'tailwind-variants'
 
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
 import { NavigationContext } from './NavigationContext'
@@ -36,7 +35,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
             className: [navigationItemStyle, rest.className],
           })}
         >
-          <Translate>{children}</Translate>
+          {children}
         </Tag>
       </>
     )
@@ -51,7 +50,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
         boldWhenCurrent
         className={navigationItemStyle}
       >
-        <Translate>{navigation.children}</Translate>
+        {navigation.children}
       </CommonButton>
     )
   }
@@ -69,7 +68,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
         boldWhenCurrent
         className={navigationItemStyle}
       >
-        <Translate>{navigation.children}</Translate>
+        {navigation.children}
       </CommonButton>
     )
   }
@@ -88,7 +87,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
       onClick={() => setSelectedNavigationGroup(navigation)}
       isCurrent={navigation.current || childrenHasCurrent}
     >
-      <Translate>{navigation.children}</Translate>
+      {navigation.children}
     </MenuButton>
   )
 }

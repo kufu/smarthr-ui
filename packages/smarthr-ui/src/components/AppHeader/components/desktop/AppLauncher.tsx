@@ -1,6 +1,8 @@
 import React, { type FC, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../..'
+import { Localizer } from '../../../../intl/Localizer'
 import { textColor } from '../../../../themes'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -11,10 +13,8 @@ import { Section } from '../../../SectioningContent'
 import { SideNav } from '../../../SideNav'
 import { TextLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
-import { useTranslate } from '../../hooks/useTranslate'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -69,7 +69,7 @@ const appLauncher = tv({
 })
 
 export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const {
     features,
     page,
@@ -96,8 +96,16 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   } = appLauncher()
 
   const pageMap: Record<Launcher['page'], ReactNode> = {
-    favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
-    all: <Translate>{translate('Launcher/allModeText')}</Translate>,
+    favorite: (
+      <Localizer
+        id="smarthr-ui/AppHeader/favoriteModeText"
+        defaultText="よく使うアプリ"
+        values={{}}
+      />
+    ),
+    all: (
+      <Localizer id="smarthr-ui/AppHeader/allModeText" defaultText="すべてのアプリ" values={{}} />
+    ),
   }
 
   return (
@@ -105,8 +113,17 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       <div className={searchArea()}>
         <SearchInput
           name="search"
-          title={translate('Launcher/searchInputTitle')}
-          tooltipMessage={<Translate>{translate('Launcher/searchInputTitle')}</Translate>}
+          title={localize({
+            id: 'smarthr-ui/AppHeader/searchInputTitle',
+            defaultText: 'アプリ名を入力してください。',
+          })}
+          tooltipMessage={
+            <Localizer
+              id="smarthr-ui/AppHeader/searchInputTitle"
+              defaultText="アプリ名を入力してください。"
+              values={{}}
+            />
+          }
           width="100%"
           value={searchQuery}
           suffix={
@@ -153,7 +170,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
 
           <Section>
             <Heading className={sideNavHeading()} type="subSubBlockTitle">
-              <Translate>{translate('Launcher/listText')}</Translate>
+              <Localizer id="smarthr-ui/AppHeader/listText" defaultText="アプリ一覧" values={{}} />
             </Heading>
 
             <SideNav
@@ -173,11 +190,16 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           </Section>
 
           <div className={help()}>
+            {/* eslint-disable-next-line smarthr/a11y-clickable-element-has-text */}
             <TextLink
               href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
               target="_blank"
             >
-              <Translate>{translate('Launcher/helpText')}</Translate>
+              <Localizer
+                id="smarthr-ui/AppHeader/helpText"
+                defaultText="よく使うアプリとは"
+                values={{}}
+              />
             </TextLink>
           </div>
         </div>
@@ -187,7 +209,11 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             <Cluster className={contentHead()} align="center" justify="space-between">
               <Heading type="subSubBlockTitle">
                 {mode === 'search' ? (
-                  <Translate>{translate('Launcher/searchResultText')}</Translate>
+                  <Localizer
+                    id="smarthr-ui/AppHeader/searchResultText"
+                    defaultText="検索結果"
+                    values={{}}
+                  />
                 ) : (
                   pageMap[page]
                 )}

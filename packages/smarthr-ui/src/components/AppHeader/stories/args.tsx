@@ -38,10 +38,6 @@ export const args: ComponentProps<typeof AppHeader> = {
   onTenantSelect: action('テナント選択'),
   schoolUrl: 'https://example.com',
   helpPageUrl: 'https://example.com',
-  locale: {
-    selectedLocale: 'ja',
-    onSelectLocale: action('locale'),
-  },
   userInfo: {
     email: 'smarthr@example.com',
     empCode: '001',
