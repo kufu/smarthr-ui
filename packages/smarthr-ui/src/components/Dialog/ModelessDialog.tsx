@@ -23,7 +23,9 @@ import { type DecoratorsType } from '../../hooks/useDecorators'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
+import { Heading } from '../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../Icon'
+import { Section } from '../SectioningContent'
 
 import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
@@ -383,30 +385,32 @@ export const ModelessDialog: FC<
         >
           {/* dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
-          <div className={classNames.header}>
-            <Handler
-              aria-label={decorated.dialogHandlerAriaLabel}
-              aria-valuetext={dialogHandlerAriaValuetext}
-              onArrowKeyDown={handleArrowKey}
-              className={classNames.dialogHandler}
-            />
-            <div id={labelId} className={classNames.title}>
-              {header}
+          <Section>
+            <div className={classNames.header}>
+              <Handler
+                aria-label={decorated.dialogHandlerAriaLabel}
+                aria-valuetext={dialogHandlerAriaValuetext}
+                onArrowKeyDown={handleArrowKey}
+                className={classNames.dialogHandler}
+              />
+              <div id={labelId} className={classNames.title}>
+                <Heading>{header}</Heading>
+              </div>
+              <CloseButton
+                onClick={actualOnClickClose}
+                className={classNames.closeButtonLayout}
+                iconAlt={decorated.closeButtonIconAlt}
+              />
             </div>
-            <CloseButton
-              onClick={actualOnClickClose}
-              className={classNames.closeButtonLayout}
-              iconAlt={decorated.closeButtonIconAlt}
-            />
-          </div>
-          <DialogBody
-            contentBgColor={contentBgColor}
-            contentPadding={contentPadding}
-            className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
-          >
-            {children}
-          </DialogBody>
-          {footer && <div className={classNams.footer}>{footer}</div>}
+            <DialogBody
+              contentBgColor={contentBgColor}
+              contentPadding={contentPadding}
+              className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+            >
+              {children}
+            </DialogBody>
+            {footer && <div className={classNames.footer}>{footer}</div>}
+          </Section>
         </Base>
       </Draggable>
     </DialogOverlap>,
