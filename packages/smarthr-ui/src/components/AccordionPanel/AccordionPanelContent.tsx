@@ -1,9 +1,9 @@
 'use client'
 
 import React, {
-  ComponentPropsWithoutRef,
-  FC,
-  PropsWithChildren,
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
   useContext,
   useMemo,
   useRef,

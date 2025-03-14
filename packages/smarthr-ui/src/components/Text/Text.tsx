@@ -1,5 +1,5 @@
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, { type ComponentProps, type PropsWithChildren, memo, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 type StyleType =
   | 'screenTitle'
@@ -8,7 +8,7 @@ type StyleType =
   | 'subBlockTitle'
   | 'subSubBlockTitle'
 
-export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof text> } = {
+export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
   screenTitle: {
     size: 'XL',
     leading: 'TIGHT',
@@ -44,7 +44,7 @@ const UNDEFINED_STYLE_VALUES = {
   color: undefined,
 }
 
-const text = tv({
+const classNameGenerator = tv({
   variants: {
     size: {
       XXS: 'shr-text-2xs',
@@ -87,7 +87,9 @@ const text = tv({
 })
 
 // VariantProps を使うとコメントが書けない〜🥹
-export type TextProps<T extends React.ElementType = 'span'> = VariantProps<typeof text> & {
+export type TextProps<T extends React.ElementType = 'span'> = VariantProps<
+  typeof classNameGenerator
+> & {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
   as?: T
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
@@ -96,7 +98,7 @@ export type TextProps<T extends React.ElementType = 'span'> = VariantProps<typeo
   styleType?: StyleType
 }
 
-export const Text = <T extends React.ElementType = 'span'>({
+const ActualText = <T extends React.ElementType = 'span'>({
   emphasis,
   styleType,
   weight = emphasis ? 'bold' : undefined,
@@ -109,12 +111,12 @@ export const Text = <T extends React.ElementType = 'span'>({
   className,
   ...props
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const styles = useMemo(() => {
+  const actualClassName = useMemo(() => {
     const styleTypeValues = styleType
       ? STYLE_TYPE_MAP[styleType as StyleType]
       : UNDEFINED_STYLE_VALUES
 
-    return text({
+    return classNameGenerator({
       size: size || styleTypeValues.size,
       weight: weight || styleTypeValues.weight,
       color: color || styleTypeValues.color,
@@ -125,5 +127,7 @@ export const Text = <T extends React.ElementType = 'span'>({
     })
   }, [size, weight, italic, color, leading, whiteSpace, className, styleType])
 
-  return <Component {...props} className={styles} />
+  return <Component {...props} className={actualClassName} />
 }
+
+export const Text = memo(ActualText) as typeof ActualText

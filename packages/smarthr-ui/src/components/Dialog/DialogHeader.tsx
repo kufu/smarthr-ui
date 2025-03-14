@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Heading, HeadingTagTypes } from '../Heading'
+import { Heading, type HeadingTagTypes } from '../Heading'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
