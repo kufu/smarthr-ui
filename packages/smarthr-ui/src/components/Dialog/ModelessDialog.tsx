@@ -33,9 +33,9 @@ import { useDialogPortal } from './useDialogPortal'
 
 type Props = PropsWithChildren<{
   /**
-   * ダイアログのヘッダ部分の内容
+   * ダイアログのタイトルの内容
    */
-  header: ReactNode
+  title: ReactNode
   /**
    * ダイアログのフッタ部分の内容
    */
@@ -103,7 +103,7 @@ const classNameGenerator = tv({
       'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
       'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
     ],
-    title: [
+    titleEl: [
       'shr-my-1 shr-me-1',
       /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
       '[.smarthr-ui-ModelessDialog-handle:focus-visible_+_&]:shr-relative',
@@ -127,7 +127,7 @@ const classNameGenerator = tv({
 export const ModelessDialog: FC<
   Props & BaseElementProps & VariantProps<typeof classNameGenerator>
 > = ({
-  header,
+  title,
   children,
   contentBgColor,
   contentPadding,
@@ -153,14 +153,14 @@ export const ModelessDialog: FC<
   const { createPortal } = useDialogPortal(portalParent, id)
 
   const classNames = useMemo(() => {
-    const { overlap, wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
+    const { overlap, wrapper, headerEl, titleEl, dialogHandler, closeButtonLayout, footerEl } =
       classNameGenerator()
 
     return {
       overlap: overlap({ className }),
       wrapper: wrapper({ resizable }),
       header: headerEl(),
-      title: title(),
+      title: titleEl(),
       dialogHandler: dialogHandler(),
       closeButtonLayout: closeButtonLayout(),
       footer: footerEl(),
@@ -394,7 +394,7 @@ export const ModelessDialog: FC<
                 className={classNames.dialogHandler}
               />
               <div id={labelId} className={classNames.title}>
-                <Heading>{header}</Heading>
+                <Heading>{title}</Heading>
               </div>
               <CloseButton
                 onClick={actualOnClickClose}
