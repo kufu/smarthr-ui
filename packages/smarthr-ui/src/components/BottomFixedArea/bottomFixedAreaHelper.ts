@@ -1,4 +1,4 @@
-import { Primary, Secondary } from './BottomFixedArea'
+import { type Primary, type Secondary } from './BottomFixedArea'
 
 export const validateElement = (primary?: Primary, secondary?: Secondary) => {
   if (primary) {

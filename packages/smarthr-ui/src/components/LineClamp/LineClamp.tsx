@@ -1,15 +1,15 @@
 'use client'
 
 import React, {
-  ComponentPropsWithRef,
-  FC,
-  PropsWithChildren,
+  type ComponentPropsWithRef,
+  type FC,
+  type PropsWithChildren,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 

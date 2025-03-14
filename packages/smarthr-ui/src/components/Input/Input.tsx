@@ -1,10 +1,10 @@
 'use client'
 
 import React, {
-  ComponentPropsWithRef,
-  FocusEvent,
-  ReactNode,
-  WheelEvent,
+  type ComponentPropsWithRef,
+  type FocusEvent,
+  type ReactNode,
+  type WheelEvent,
   forwardRef,
   useCallback,
   useEffect,

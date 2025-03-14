@@ -1,12 +1,12 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  FC,
-  MouseEvent,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
   useContext,
   useEffect,
   useMemo,

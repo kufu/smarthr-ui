@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, ReactNode } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -11,15 +11,16 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import {
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
+
+import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
+
+import type {
   ChildNavigation,
   ChildNavigationGroup,
   Navigation as NavigationType,
   ReleaseNoteProps,
 } from '../../types'
-import { commonButtonClassNameGenerator } from '../common/CommonButton'
-
-import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
 const appNavi = tv({
   base: ['shr-overflow-x-auto shr-min-w-[auto]', 'max-[751px]:!shr-hidden'],
