@@ -4,17 +4,23 @@ import { type VariantProps, tv } from 'tailwind-variants'
 type StyleType =
   | 'screenTitle'
   | 'sectionTitle'
+  | 'subSectionTitle'
   | 'blockTitle'
   | 'subBlockTitle'
   | 'subSubBlockTitle'
 
 export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
   screenTitle: {
-    size: 'XL',
+    size: 'XXL',
     leading: 'TIGHT',
     weight: 'normal',
   },
   sectionTitle: {
+    size: 'XL',
+    leading: 'TIGHT',
+    weight: 'normal',
+  },
+  subSectionTitle: {
     size: 'L',
     leading: 'TIGHT',
     weight: 'normal',
