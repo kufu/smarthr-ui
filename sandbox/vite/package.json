@@ -10,13 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-router/node": "^7.3.0",
+    "@react-router/serve": "^7.3.0",
+    "isbot": "^5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.3.0",
+    "react-router": "^7.3.0",
     "smarthr-ui": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@react-router/dev": "^7.3.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

@@ -1,16 +1,7 @@
 import { Link } from 'react-router'
 import { Button, TextLink, FaArrowRightIcon, FaAddressCardIcon } from 'smarthr-ui'
 
-export const About = () => (
-  <main>
-    <h1>About Page</h1>
-    <TextLink elementAs={Link} to="/">
-      Back to Home
-    </TextLink>
-  </main>
-)
-
-export const App = () =>  (
+const Index = () =>  (
   <main>
     <Button variant="primary">こんにちは</Button>
     <ol>
@@ -27,3 +18,5 @@ export const App = () =>  (
     </ol>
   </main>
 )
+
+export default Index
