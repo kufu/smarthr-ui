@@ -1,7 +1,7 @@
-import { FlattenSimpleInterpolation, css } from 'styled-components'
+import { type FlattenSimpleInterpolation, css } from 'styled-components'
 
 import { merge } from '../../libs/lodash'
-import { ColorProperty, defaultColor } from '../createColor'
+import { type ColorProperty, defaultColor } from '../createColor'
 
 import { defaultShadow } from './defaultShadow'
 

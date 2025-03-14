@@ -1,10 +1,16 @@
 'use client'
 
-import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } from 'react'
+import React, {
+  type ComponentProps,
+  type PropsWithChildren,
+  memo,
+  useContext,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
-import { STYLE_TYPE_MAP, Text, TextProps } from '../Text'
+import { STYLE_TYPE_MAP, Text, type TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{
@@ -42,7 +48,7 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   }
 }
 
-const heading = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',
   variants: {
     visuallyHidden: {
@@ -54,27 +60,25 @@ const heading = tv({
   },
 })
 
-export const Heading: FC<Props & ElementProps> = ({
-  tag,
-  type = 'sectionTitle',
-  className,
-  visuallyHidden,
-  ...props
-}) => {
-  const level = useContext(LevelContext)
-  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
-  const styles = useMemo(() => heading({ visuallyHidden, className }), [className, visuallyHidden])
-  const actualProps = {
-    ...props,
-    ...STYLE_TYPE_MAP[type],
-    ...tagProps,
-    className: styles,
-  }
+export const Heading = memo<Props & ElementProps>(
+  ({ tag, type = 'sectionTitle', className, visuallyHidden, ...props }) => {
+    const level = useContext(LevelContext)
+    const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
+    const actualClassName = useMemo(
+      () => classNameGenerator({ visuallyHidden, className }),
+      [className, visuallyHidden],
+    )
+    const Component = visuallyHidden ? VisuallyHiddenText : Text
 
-  return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <Text {...actualProps} />
-}
+    return (
+      <Component {...props} {...STYLE_TYPE_MAP[type]} {...tagProps} className={actualClassName} />
+    )
+  },
+)
 
-export const PageHeading: FC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
-  type = 'screenTitle',
-  ...props
-}) => <Heading {...props} type={type} tag="h1" /> // eslint-disable-line smarthr/a11y-heading-in-sectioning-content
+export const PageHeading = memo<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>>(
+  ({ type = 'screenTitle', ...props }) => (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Heading {...props} type={type} tag="h1" />
+  ),
+)

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { PropsWithChildren, createContext, useCallback, useState } from 'react'
+import React, { type PropsWithChildren, createContext, useCallback, useState } from 'react'
 
 type DialogContextType = {
   onClickTrigger: () => void

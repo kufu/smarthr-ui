@@ -7,10 +7,11 @@ import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { useTranslate } from '../../hooks/useTranslate'
-import { HeaderProps, UserInfoProps } from '../../types'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
+
+import type { HeaderProps, UserInfoProps } from '../../types'
 
 // HeaderDropdownMenuButton と同じスタイルを適用
 const classNameGenerator = tv({
