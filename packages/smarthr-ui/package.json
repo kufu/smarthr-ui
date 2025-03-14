@@ -135,10 +135,12 @@
     },
     "./lib/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js"
+      "require": "./lib/*.js",
+      "import": "./esm/*.js"
     },
     "./esm/*": {
       "types": "./lib/*.d.ts",
+      "require": "./lib/*.js",
       "import": "./esm/*.js"
     },
     "./smarthr-ui.css": "./smarthr-ui.css"
