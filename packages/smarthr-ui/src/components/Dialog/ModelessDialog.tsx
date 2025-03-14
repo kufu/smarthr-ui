@@ -216,8 +216,8 @@ export const ModelessDialog: FC<
     [defaultAriaValuetext, wrapperPosition, decorated],
   )
 
-  const topStyle = centering.top !== undefined ? centering.top : top
-  const leftStyle = centering.left !== undefined ? centering.left : left
+  const topStyle = centering.top ?? top
+  const leftStyle = centering.left ?? left
 
   const handleArrowKey = useCallback(
     (e: KeyboardEvent) => {
