@@ -12,6 +12,7 @@ import { Transition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
 import { getIsInclude } from '../../libs/map'
+import { visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
@@ -32,7 +33,13 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
   const { expandedItems } = useContext(AccordionPanelContext)
   const isInclude = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+  const classNames = useMemo(
+    () => ({
+      base: classNameGenerator({ className }),
+      visallyHidden: visuallyHiddenTextClassNameGenerator(),
+    }),
+    [className],
+  )
 
   return (
     <Transition in={isInclude} timeout={150} nodeRef={wrapperRef}>
@@ -43,7 +50,9 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
           id={`${name}-content`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
-          className={`${actualClassName} ${status}`}
+          // HINT: flexなどで囲まれると、非表示だが内容分高さが出てしまい、スクロール領域が不自然に伸びてしまう現象が起きる場合がある
+          // 非表示の場合、visually hiddenを適用することで、内容としては残しつつ、高さを0にすることで回避する
+          className={`${classNames.base} ${status} ${isInclude ? '' : classNames.visallyHidden}`}
         />
       )}
     </Transition>
