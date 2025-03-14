@@ -387,11 +387,10 @@ export const ModelessDialog: FC<
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
-          className={classNames.wrapper}
         >
           {/* dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
-          <Section>
+          <Section className={classNames.wrapper}>
             <div className={classNames.header}>
               <Handler
                 aria-label={decorated.dialogHandlerAriaLabel}
