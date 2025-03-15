@@ -13,12 +13,7 @@ describe('ModelessDialog', () => {
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>ModelessDialog</Button>
-        <ModelessDialog
-          isOpen={isOpen}
-          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-          header={<Heading tag="h2">座標指定表示</Heading>}
-          onClickClose={() => setIsOpen(false)}
-        >
+        <ModelessDialog isOpen={isOpen} title="座標指定表示" onClickClose={() => setIsOpen(false)}>
           <p>ダイアログの中身</p>
         </ModelessDialog>
       </>

@@ -44,8 +44,7 @@ export const Modeless_Dialog: StoryFn = () => {
         </Button>
         <ModelessDialog
           isOpen={isOpen1}
-          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-          header={<Heading tag="h2">モードレスダイアログ（中央表示）</Heading>}
+          title="モードレスダイアログ（中央表示）"
           footer={<ModelessFooter>フッタ</ModelessFooter>}
           onClickClose={() => setIsOpen1(false)}
           onPressEscape={() => setIsOpen1(false)}
@@ -107,8 +106,7 @@ export const Modeless_Dialog: StoryFn = () => {
         </Button>
         <ModelessDialog
           isOpen={isOpen2}
-          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-          header={<Heading tag="h2">座標指定表示</Heading>}
+          title="座標指定表示"
           onClickClose={() => setIsOpen2(false)}
           onPressEscape={() => setIsOpen2(false)}
           bottom={100}
@@ -129,8 +127,7 @@ export const Modeless_Dialog: StoryFn = () => {
 export const RegOpenedModeless: StoryFn = () => (
   <ModelessDialog
     isOpen
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    header={<Heading tag="h2">モードレスダイアログ</Heading>}
+    title="モードレスダイアログ"
     footer={<ModelessFooter>フッタ</ModelessFooter>}
     height={500}
     width={600}
