@@ -2,7 +2,7 @@ import React, { type FC, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isChildNavigation } from '../../utils'
-import { CommonButton, commonButton } from '../common/CommonButton'
+import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
@@ -30,7 +30,7 @@ export const NavigationItem: FC<{ navigation: Navigation; onClickNavigation: () 
         <Tag
           {...rest}
           onClick={onClickNavigation}
-          className={commonButton({
+          className={commonButtonClassNameGenerator({
             current,
             boldWhenCurrent: true,
             className: [navigationItemStyle, rest.className],
