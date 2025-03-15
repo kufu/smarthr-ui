@@ -1,3 +1,5 @@
+'use client'
+
 import React, { type ComponentProps, type FormEvent, useCallback, useId, useRef } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
