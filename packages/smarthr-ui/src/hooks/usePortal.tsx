@@ -25,7 +25,15 @@ export function usePortal() {
   const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
-  const parentSeqs = parent.seqs.concat(currentSeq)
+
+  const calculatedSeqs = useMemo(() => {
+    const parentSeqs = parent.seqs.concat(currentSeq)
+
+    return {
+      parentSeqs,
+      portalChildOf: parentSeqs.join(','),
+    }
+  }, [currentSeq, parent.seqs])
 
   useEnhancedEffect(() => {
     // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
@@ -36,29 +44,29 @@ export function usePortal() {
     if (!portalRoot) {
       return
     }
-    portalRoot.dataset.portalChildOf = parentSeqs.join(',')
+
+    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
     document.body.appendChild(portalRoot)
+
     return () => {
       document.body.removeChild(portalRoot)
     }
-    // spread parentSeqs array for deps
-  }, [portalRoot, ...parentSeqs])
+  }, [portalRoot, calculatedSeqs.portalChildOf])
 
   const isChildPortal = useCallback(
-    (element: HTMLElement | null) => _isChildPortal(element, currentSeq),
+    (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
     [currentSeq],
   )
 
   const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
     ({ children }) => {
       const value: ParentContextValue = {
-        seqs: parentSeqs,
+        seqs: calculatedSeqs.parentSeqs,
       }
+
       return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
     },
-    // spread parentSeqs array for deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [...parentSeqs],
+    [calculatedSeqs.parentSeqs],
   )
 
   const wrappedCreatePortal = useCallback(
@@ -66,6 +74,7 @@ export function usePortal() {
       if (portalRoot === null) {
         return null
       }
+
       return createPortal(children, portalRoot)
     },
     [portalRoot],
@@ -82,12 +91,15 @@ export function usePortal() {
   }
 }
 
-function _isChildPortal(
-  element: HTMLElement | SVGElement | null,
-  parentPortalSeq: number,
-): boolean {
+function _isChildPortal(element: HTMLElement | SVGElement | null, seqRegex: RegExp): boolean {
   if (!element) return false
-  const childOf = element.dataset?.portalChildOf || ''
-  const includesSeq = childOf.split(',').includes(String(parentPortalSeq))
-  return includesSeq || _isChildPortal(element.parentElement, parentPortalSeq)
+
+  let includesSeq = false
+  const childOf = element.dataset?.portalChildOf
+
+  if (childOf) {
+    includesSeq = seqRegex.test(childOf)
+  }
+
+  return includesSeq || _isChildPortal(element.parentElement, seqRegex)
 }
