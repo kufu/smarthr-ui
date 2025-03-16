@@ -3,8 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
-import { Step } from './types'
-
+import type { Step } from './types'
 import type { ComponentProps, FC } from 'react'
 
 const classNameGenerator = tv({

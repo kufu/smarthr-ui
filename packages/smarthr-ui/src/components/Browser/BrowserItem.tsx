@@ -1,11 +1,11 @@
-import React, { KeyboardEventHandler, useMemo } from 'react'
+import React, { type KeyboardEventHandler, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-import { ItemNode } from './models'
+import { type ItemNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const classNameGenerator = tv({

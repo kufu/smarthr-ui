@@ -1,5 +1,5 @@
 import React, { type ComponentProps, type PropsWithChildren, memo, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 type StyleType =
   | 'screenTitle'

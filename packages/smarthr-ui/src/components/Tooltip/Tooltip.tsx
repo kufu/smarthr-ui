@@ -1,11 +1,11 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  FC,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
   memo,
   useCallback,
   useId,
@@ -19,7 +19,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
-import { Balloon } from '../Balloon'
+import { type Balloon } from '../Balloon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { TooltipPortal } from './TooltipPortal'

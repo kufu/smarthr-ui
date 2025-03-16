@@ -1,12 +1,12 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  FC,
-  MouseEvent,
-  PropsWithChildren,
-  ReactNode,
-  RefObject,
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  type RefObject,
   useCallback,
   useEffect,
   useId,
@@ -15,11 +15,11 @@ import React, {
   useState,
 } from 'react'
 import Draggable from 'react-draggable'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType } from '../../hooks/useDecorators'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { Base, BaseElementProps } from '../Base'
+import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripIcon, FaXmarkIcon } from '../Icon'
 

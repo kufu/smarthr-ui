@@ -1,7 +1,7 @@
 import {
-  ChangeEventHandler,
-  ComponentProps,
-  FormEventHandler,
+  type ChangeEventHandler,
+  type ComponentProps,
+  type FormEventHandler,
   useCallback,
   useEffect,
   useMemo,
@@ -10,7 +10,7 @@ import {
 
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
-import { SortDropdown } from './SortDropdown'
+import { type SortDropdown } from './SortDropdown'
 import { sortDropdownStyle } from './style'
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>

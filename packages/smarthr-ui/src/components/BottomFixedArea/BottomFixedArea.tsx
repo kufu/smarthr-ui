@@ -1,21 +1,21 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  ComponentPropsWithRef,
-  ComponentType,
-  FC,
-  FunctionComponentElement,
-  MouseEventHandler,
-  ReactNode,
+  type ComponentProps,
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type FC,
+  type FunctionComponentElement,
+  type MouseEventHandler,
+  type ReactNode,
   useEffect,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
-import { AnchorButton, Button } from '../Button'
-import { ComponentProps as IconProps } from '../Icon'
+import { type AnchorButton, Button } from '../Button'
+import { type ComponentProps as IconProps } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 
 import { validateElement } from './bottomFixedAreaHelper'

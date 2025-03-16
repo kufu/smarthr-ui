@@ -1,10 +1,10 @@
 'use client'
 
 import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  DragEvent,
-  PropsWithChildren,
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type DragEvent,
+  type PropsWithChildren,
   forwardRef,
   useCallback,
   useImperativeHandle,
