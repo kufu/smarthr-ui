@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 

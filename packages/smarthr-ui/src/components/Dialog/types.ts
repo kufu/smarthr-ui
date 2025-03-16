@@ -1,6 +1,6 @@
-import { RefObject } from 'react'
+import { type RefObject } from 'react'
 
-import { DialogContentInnerProps } from './DialogContentInner'
+import { type DialogContentInnerProps } from './DialogContentInner'
 
 type CommonProps = Pick<
   DialogContentInnerProps,

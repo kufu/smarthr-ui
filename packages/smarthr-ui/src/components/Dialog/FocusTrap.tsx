@@ -1,6 +1,6 @@
 import React, {
-  PropsWithChildren,
-  RefObject,
+  type PropsWithChildren,
+  type RefObject,
   forwardRef,
   useEffect,
   useImperativeHandle,

@@ -1,4 +1,4 @@
-import React, { ComponentProps, forwardRef, useMemo } from 'react'
+import React, { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'

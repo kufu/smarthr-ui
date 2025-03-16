@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { BaseColumn } from '../Base'
