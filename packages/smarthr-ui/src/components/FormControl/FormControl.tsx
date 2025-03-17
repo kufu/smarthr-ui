@@ -3,9 +3,12 @@
 import React, {
   type ComponentProps,
   type ComponentPropsWithoutRef,
+  type ComponentType,
+  type FC,
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -59,7 +62,7 @@ type Props = PropsWithChildren<{
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  as?: string | React.ComponentType<any>
+  as?: string | ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
 
@@ -133,7 +136,7 @@ const childrenWrapper = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: React.FC<Props & ElementProps> = ({
+export const ActualFormControl: FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
   subActionArea,
@@ -344,7 +347,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   )
 }
 
-const StatusLabelCluster = React.memo<Pick<Props, 'statusLabels' | 'statusLabelProps'>>(
+const StatusLabelCluster = memo<Pick<Props, 'statusLabels' | 'statusLabelProps'>>(
   ({ statusLabels, statusLabelProps }) => {
     const labels = useMemo(() => {
       if (statusLabels) {
@@ -369,7 +372,7 @@ const StatusLabelCluster = React.memo<Pick<Props, 'statusLabels' | 'statusLabelP
   },
 )
 
-const TitleCluster = React.memo<
+const TitleCluster = memo<
   Pick<
     Props,
     'dangerouslyTitleHidden' | 'title' | 'subActionArea' | 'statusLabels' | 'statusLabelProps'
@@ -463,7 +466,7 @@ const TitleCluster = React.memo<
   },
 )
 
-const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
+const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
   ({ helpMessage, managedHtmlFor }) =>
     helpMessage ? (
       <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
@@ -472,7 +475,7 @@ const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHt
     ) : null,
 )
 
-const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
+const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
   ({ exampleMessage, managedHtmlFor }) =>
     exampleMessage ? (
       <Text
@@ -487,7 +490,7 @@ const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedH
     ) : null,
 )
 
-const ErrorMessageList = React.memo<{
+const ErrorMessageList = memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
   errorListStyle: string
@@ -504,7 +507,7 @@ const ErrorMessageList = React.memo<{
   ) : null,
 )
 
-const SupplementaryMessageText = React.memo<
+const SupplementaryMessageText = memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
 >(({ supplementaryMessage, managedHtmlFor }) =>
   supplementaryMessage ? (
@@ -520,5 +523,4 @@ const SupplementaryMessageText = React.memo<
   ) : null,
 )
 
-export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
-  ActualFormControl
+export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl
