@@ -8,7 +8,6 @@ export default function MessageDialogContentPage() {
       <RSCChecker actualComponent={MessageDialogContent} />
       <MessageDialogContent
         title="title"
-        titleId="titleId"
         contentBgColor="white"
         description="description"
       />

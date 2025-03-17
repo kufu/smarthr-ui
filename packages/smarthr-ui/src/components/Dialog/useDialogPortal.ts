@@ -1,3 +1,5 @@
+'use client'
+
 import { type ReactNode, type RefObject, useCallback, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 

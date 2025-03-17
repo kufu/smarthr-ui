@@ -1,3 +1,5 @@
+'use client'
+
 import React, { type ReactNode, createContext, useRef, useState } from 'react'
 
 export type StepItem = {
