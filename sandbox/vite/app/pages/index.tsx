@@ -4,6 +4,7 @@ import * as SHRUI from 'smarthr-ui'
 
 const Index = () =>  (
   <main>
+    <SHRUI.Balloon horizontal="left" vertical="top"><p>hello</p></SHRUI.Balloon>l
     <SHRUI.Tooltip message="hello">
       <div style={{width: '400px', height: '400px'}}>Tooltip</div>
     </SHRUI.Tooltip>

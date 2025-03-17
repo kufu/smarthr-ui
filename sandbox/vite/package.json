@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . && tsc --noEmit --excludeDirectories .react-router",
     "preview": "vite preview"
   },
   "dependencies": {
