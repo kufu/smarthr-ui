@@ -182,6 +182,20 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
 
+  const actualStatusLabels = useMemo(() => {
+    if (statusLabels) {
+      return Array.isArray(statusLabels) ? statusLabels : [statusLabels]
+    }
+
+    if (!statusLabelProps) {
+      return []
+    }
+
+    const labelProps = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
+
+    return labelProps.map((prop, index) => <StatusLabel {...prop} key={index} />)
+  }, [statusLabels, statusLabelProps])
+
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -328,8 +342,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         dangerouslyTitleHidden={dangerouslyTitleHidden}
         titleType={titleType}
         title={title}
-        statusLabels={statusLabels}
-        statusLabelProps={statusLabelProps}
+        statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
       />
       {body}
@@ -337,41 +350,14 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   )
 }
 
-const StatusLabelCluster = memo<Pick<Props, 'statusLabels' | 'statusLabelProps'>>(
-  ({ statusLabels, statusLabelProps }) => {
-    const labels = useMemo(() => {
-      if (statusLabels) {
-        return Array.isArray(statusLabels) ? statusLabels : [statusLabels]
-      }
-
-      if (!statusLabelProps) {
-        return []
-      }
-
-      const props = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-
-      return props.map((prop, index) => <StatusLabel {...prop} key={index} />)
-    }, [statusLabels, statusLabelProps])
-
-    return labels.length === 0 ? null : (
-      // eslint-disable-next-line smarthr/best-practice-for-layouts
-      <Cluster gap={0.25} as="span">
-        {labels}
-      </Cluster>
-    )
-  },
-)
-
 const TitleCluster = memo<
-  Pick<
-    Props,
-    'dangerouslyTitleHidden' | 'title' | 'subActionArea' | 'statusLabels' | 'statusLabelProps'
-  > & {
+  Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
     labelClassName: string
+    statusLabels: StatusLabelType[]
   }
 >(
   ({
@@ -384,12 +370,11 @@ const TitleCluster = memo<
     title,
     subActionArea,
     statusLabels,
-    statusLabelProps,
   }) => {
     const body = (
       <>
         <Text styleType={titleType}>{title}</Text>
-        <StatusLabelCluster statusLabels={statusLabels} statusLabelProps={statusLabelProps} />
+        <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
 
@@ -454,6 +439,15 @@ const TitleCluster = memo<
       </>
     )
   },
+)
+
+const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
+  statusLabels.length === 0 ? null : (
+    // eslint-disable-next-line smarthr/best-practice-for-layouts
+    <Cluster gap={0.25} as="span">
+      {statusLabels}
+    </Cluster>
+  ),
 )
 
 const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(

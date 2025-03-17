@@ -10,10 +10,10 @@ import { InputFile } from '../../InputFile'
 import { Cluster, Stack } from '../../Layout'
 import { MonthPicker, TimePicker } from '../../Picker'
 import { Select } from '../../Select'
+import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
-import { StatusLabel } from '../../StatusLabel'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
