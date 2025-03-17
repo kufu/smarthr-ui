@@ -15,6 +15,7 @@ import { Center } from '../Layout'
 type Props = PropsWithChildren<
   {
     isOpen: boolean
+    as?: ComponentProps<typeof Center>['as']
   } & ComponentProps<'div'>
 >
 
@@ -36,7 +37,7 @@ const dialogOverlap = tv({
   ],
 })
 
-export const DialogOverlap: FC<Props> = ({ isOpen, className, children }) => {
+export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
   const styles = dialogOverlap({ className })
   const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
@@ -55,7 +56,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children }) => {
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <Center verticalCentering ref={nodeRef} className={styles}>
+      <Center verticalCentering ref={nodeRef} className={styles} as={as}>
         {isOpen ? children : childrenBuffer}
       </Center>
     </CSSTransition>

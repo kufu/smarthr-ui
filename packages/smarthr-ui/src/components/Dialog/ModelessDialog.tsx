@@ -25,7 +25,6 @@ import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../Icon'
-import { Section } from '../SectioningContent'
 
 import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
@@ -363,7 +362,7 @@ export const ModelessDialog: FC<
   }, [])
 
   return createPortal(
-    <DialogOverlap isOpen={isOpen} className={classNames.overlap}>
+    <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={onDragStart}
@@ -387,35 +386,35 @@ export const ModelessDialog: FC<
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
+          className={classNames.wrapper}
         >
           {/* dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
-          <Section className={classNames.wrapper}>
-            <div className={classNames.header}>
-              <Handler
-                aria-label={decorated.dialogHandlerAriaLabel}
-                aria-valuetext={dialogHandlerAriaValuetext}
-                onArrowKeyDown={handleArrowKey}
-                className={classNames.dialogHandler}
-              />
-              <div id={labelId} className={classNames.title}>
-                <Heading>{title}</Heading>
-              </div>
-              <CloseButton
-                onClick={actualOnClickClose}
-                className={classNames.closeButtonLayout}
-                iconAlt={decorated.closeButtonIconAlt}
-              />
+          <div className={classNames.header}>
+            <Handler
+              aria-label={decorated.dialogHandlerAriaLabel}
+              aria-valuetext={dialogHandlerAriaValuetext}
+              onArrowKeyDown={handleArrowKey}
+              className={classNames.dialogHandler}
+            />
+            <div id={labelId} className={classNames.title}>
+              {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+              <Heading>{title}</Heading>
             </div>
-            <DialogBody
-              contentBgColor={contentBgColor}
-              contentPadding={contentPadding}
-              className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
-            >
-              {children}
-            </DialogBody>
-            {footer && <div className={classNames.footer}>{footer}</div>}
-          </Section>
+            <CloseButton
+              onClick={actualOnClickClose}
+              className={classNames.closeButtonLayout}
+              iconAlt={decorated.closeButtonIconAlt}
+            />
+          </div>
+          <DialogBody
+            contentBgColor={contentBgColor}
+            contentPadding={contentPadding}
+            className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+          >
+            {children}
+          </DialogBody>
+          {footer && <div className={classNames.footer}>{footer}</div>}
         </Base>
       </Draggable>
     </DialogOverlap>,
