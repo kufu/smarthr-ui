@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, ReactNode } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -11,15 +11,16 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import {
+import { commonButton } from '../common/CommonButton'
+
+import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
+
+import type {
   ChildNavigation,
   ChildNavigationGroup,
   Navigation as NavigationType,
   ReleaseNoteProps,
 } from '../../types'
-import { commonButton } from '../common/CommonButton'
-
-import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
 const appNavi = tv({
   base: ['shr-overflow-x-auto shr-min-w-[auto]', 'max-[751px]:!shr-hidden'],
@@ -104,9 +105,8 @@ const buildDropdownMenu = (
         return (
           <Component
             {...rest}
-            // key={navigation.children}
             key={`${index}-${navigation.children.toString()}`}
-            aria-current={current}
+            aria-current={current && 'page'}
             className={commonButton({
               current,
               className,

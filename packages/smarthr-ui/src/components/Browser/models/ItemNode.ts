@@ -1,4 +1,4 @@
-import { Node } from './Node'
+import { type Node } from './Node'
 import { NodeContext } from './NodeContext'
 
 const NODE_MAX_DEPTH = 3

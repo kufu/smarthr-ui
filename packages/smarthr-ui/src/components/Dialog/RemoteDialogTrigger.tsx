@@ -1,10 +1,13 @@
 'use client'
 
-import React, { ReactElement, cloneElement, useCallback, useMemo } from 'react'
+import { type ReactElement } from 'react'
+import { cloneElement, useCallback, useMemo } from 'react'
 
-import { Button } from '../Button'
+import { type Button } from '../Button'
 
 import { TRIGGER_EVENT } from './useRemoteTrigger'
+
+import type React from 'react'
 
 const onClickRemoteDialogTrigger = (e: React.MouseEvent<HTMLElement>) => {
   document.dispatchEvent(

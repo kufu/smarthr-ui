@@ -42,13 +42,13 @@ export const Disabled: StoryObj<typeof FilterDropdown> = {
   },
 }
 
-export const ResponseMessage: StoryObj<typeof FilterDropdown> = {
-  name: 'responseMessage',
+export const ResponseStatus: StoryObj<typeof FilterDropdown> = {
+  name: 'responseStatus',
   render: (args) => (
     <Stack>
-      <FilterDropdown {...args} responseMessage={{ status: 'success', text: '成功' }} />
-      <FilterDropdown {...args} responseMessage={{ status: 'error', text: '失敗' }} />
-      <FilterDropdown {...args} responseMessage={{ status: 'processing' }} />
+      <FilterDropdown {...args} responseStatus={{ status: 'success', text: '成功' }} />
+      <FilterDropdown {...args} responseStatus={{ status: 'error', text: '失敗' }} />
+      <FilterDropdown {...args} responseStatus={{ status: 'processing' }} />
     </Stack>
   ),
   args: {
