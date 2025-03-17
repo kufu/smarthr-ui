@@ -34,7 +34,9 @@ export const RangeSeparator: React.FC<Props> = ({ decorators }) => {
   return (
     <>
       <span aria-hidden="true">{decorated.text}</span>
-      <VisuallyHiddenText>{decorated.visuallyHiddenText}</VisuallyHiddenText>
+      <VisuallyHiddenText className="shr-select-none">
+        {decorated.visuallyHiddenText}
+      </VisuallyHiddenText>
     </>
   )
 }
