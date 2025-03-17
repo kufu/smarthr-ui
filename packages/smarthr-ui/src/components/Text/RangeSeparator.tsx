@@ -1,35 +1,20 @@
 import React, { useMemo } from 'react'
 
-import { type DecoratorType, type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type Props = {
-  decorators?: DecoratorsType<'text' | 'visuallyHiddenText'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const DEFAULT_TEXT = '〜'
-const DEFAULT_VISUALLY_HIDDEN_TEXT = 'から'
-
-const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
-  decorator?.(defaultText) || defaultText
+const DECORATOR_DEFAULT_TEXTS = {
+  text: '〜',
+  visuallyHiddenText: 'から',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 export const RangeSeparator: React.FC<Props> = ({ decorators }) => {
-  const decorated = useMemo(() => {
-    if (!decorators) {
-      return {
-        text: DEFAULT_TEXT,
-        visuallyHiddenText: DEFAULT_VISUALLY_HIDDEN_TEXT,
-      }
-    }
-
-    return {
-      text: executeDecorator(DEFAULT_TEXT, decorators.text),
-      visuallyHiddenText: executeDecorator(
-        DEFAULT_VISUALLY_HIDDEN_TEXT,
-        decorators.visuallyHiddenText,
-      ),
-    }
-  }, [decorators])
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
     <>
