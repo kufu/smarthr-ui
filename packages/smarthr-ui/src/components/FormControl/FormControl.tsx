@@ -264,17 +264,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   }, [describedbyIds])
 
   useEffect(() => {
-    if (!autoBindErrorInput) {
+    if (!autoBindErrorInput || !inputWrapperRef?.current) {
       return
     }
 
-    const inputWrapper = inputWrapperRef?.current
-
-    if (!inputWrapper) {
-      return
-    }
-
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (input) {
       const attrName = 'aria-invalid'
