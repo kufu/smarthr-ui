@@ -1,8 +1,8 @@
 import React, {
-  Dispatch,
-  FC,
-  PropsWithChildren,
-  ReactNode,
+  type Dispatch,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
   useContext,
   useEffect,
   useMemo,

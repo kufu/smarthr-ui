@@ -1,6 +1,11 @@
 'use client'
 
-import React, { ButtonHTMLAttributes, PropsWithChildren, forwardRef, useMemo } from 'react'
+import React, {
+  type ButtonHTMLAttributes,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
@@ -10,7 +15,8 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
-import { BaseProps } from './types'
+
+import type { BaseProps } from './types'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 

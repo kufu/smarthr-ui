@@ -1,9 +1,9 @@
-import React, { ComponentType, FC, PropsWithChildren, useMemo } from 'react'
+import React, { type ComponentType, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { ComponentProps as IconProps } from '../Icon'
+import { type ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './style'
+import { itemClassNameGenerator } from './itemClassNameGenerator'
 
 export type AppNaviCustomTagProps = PropsWithChildren<{
   /** このボタンのカスタムタグ */
@@ -15,7 +15,7 @@ export type AppNaviCustomTagProps = PropsWithChildren<{
 }> & { [key: string]: any }
 
 const classNameGenerator = tv({
-  extend: appNaviItemStyle,
+  extend: itemClassNameGenerator,
   slots: {
     wrapper: 'smarthr-ui-AppNavi-customTag',
   },

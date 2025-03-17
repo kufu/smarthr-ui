@@ -1,9 +1,12 @@
 'use client'
 
 import React, {
+  type ChangeEvent,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
+  type MouseEvent,
   type Ref,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -77,12 +80,18 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 const NOOP = () => undefined
 
+const preventDefaultWithPressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === 'Enter') {
+    e.preventDefault()
+  }
+}
+
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_LEFT_KEY_REGEX = /^(Arrow)?Left$/
 const ARROW_RIGHT_KEY_REGEX = /^(Arrow)?Right/
 const ARROW_UP_AND_DOWN_KEY_REGEX = /^(Arrow)?(Up|Down)$/
 
-const multiCombobox = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-MultiComboBox',
@@ -186,20 +195,33 @@ const ActualMultiComboBox = <T,>(
     isItemSelected,
   })
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
-  const handleDelete = useCallback(
-    (item: ComboBoxItem<T>) => {
+  const actualOnDelete = useMemo(() => {
+    const handlers: Array<(item: ComboBoxItem<T>) => void> = []
+
+    if (onDelete) {
+      handlers.push((item: ComboBoxItem<T>) => onDelete(item))
+    }
+    if (onChangeSelected) {
+      handlers.push((item: ComboBoxItem<T>) =>
+        onChangeSelected(
+          selectedItems.filter((selected) => !areComboBoxItemsEqual(selected, item)),
+        ),
+      )
+    }
+
+    if (handlers.length === 0) {
+      return NOOP
+    }
+
+    return (item: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        onDelete?.(item)
-        onChangeSelected?.(
-          selectedItems.filter((selected) => !areComboBoxItemsEqual(selected, item)),
-        )
+        handlers.forEach((h) => h(item))
       })
-    },
-    [selectedItems, onChangeSelected, onDelete],
-  )
-  const handleSelect = useCallback(
+    }
+  }, [selectedItems, onChangeSelected, onDelete])
+  const actualOnSelect = useCallback(
     (selected: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
@@ -212,25 +234,19 @@ const ActualMultiComboBox = <T,>(
           onSelect?.(selected)
           onChangeSelected?.(selectedItems.concat(selected))
         } else if (matchedSelectedItem.deletable !== false) {
-          handleDelete(selected)
+          actualOnDelete(selected)
         }
       })
     },
-    [selectedItems, handleDelete, onChangeSelected, onSelect],
+    [selectedItems, actualOnDelete, onChangeSelected, onSelect],
   )
 
-  const {
-    renderListBox,
-    activeOption,
-    handleKeyDown: handleListBoxKeyDown,
-    listBoxId,
-    listBoxRef,
-  } = useListBox({
+  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListBox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
     onAdd,
-    onSelect: handleSelect,
+    onSelect: actualOnSelect,
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
@@ -247,16 +263,38 @@ const ActualMultiComboBox = <T,>(
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
-  const focus = useCallback(() => {
-    onFocus?.()
-    setIsFocused(true)
-  }, [onFocus])
-  const blur = useCallback(() => {
-    if (!isFocused) return
+  const focus = useMemo(() => {
+    const baseAction = () => {
+      setIsFocused(true)
+    }
 
-    onBlur?.()
-    setIsFocused(false)
-    resetDeletionButtonFocus()
+    if (onFocus) {
+      return () => {
+        onFocus()
+        baseAction()
+      }
+    }
+
+    return baseAction
+  }, [onFocus])
+  const blur = useMemo(() => {
+    if (!isFocused) {
+      return NOOP
+    }
+
+    const baseAction = () => {
+      setIsFocused(false)
+      resetDeletionButtonFocus()
+    }
+
+    if (onBlur) {
+      return () => {
+        onBlur()
+        baseAction()
+      }
+    }
+
+    return baseAction
   }, [isFocused, onBlur, resetDeletionButtonFocus])
 
   useOuterClick([outerRef, listBoxRef], blur)
@@ -277,97 +315,104 @@ const ActualMultiComboBox = <T,>(
     }
   }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
-      if (isComposing) {
-        return
-      }
+  const onKeyDown = useMemo(
+    () =>
+      isComposing
+        ? undefined
+        : (e: KeyboardEvent<HTMLDivElement>) => {
+            if (ESCAPE_KEY_REGEX.test(e.key)) {
+              e.stopPropagation()
+              blur()
+            } else if (e.key === 'Tab') {
+              if (isFocused) {
+                // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+                inputRef.current?.focus()
+              }
 
-      if (ESCAPE_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        blur()
-      } else if (e.key === 'Tab') {
-        if (isFocused) {
-          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-          inputRef.current?.focus()
-        }
+              blur()
+            } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
+              e.stopPropagation()
+              focusPrevDeletionButton()
+            } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
+              e.stopPropagation()
+              focusNextDeletionButton()
+            } else if (
+              e.key === 'Backspace' &&
+              !inputValue &&
+              selectedItems.length > 0 &&
+              selectedItems[selectedItems.length - 1].deletable !== false
+            ) {
+              e.preventDefault()
+              e.stopPropagation()
 
-        blur()
-      } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusPrevDeletionButton()
-      } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusNextDeletionButton()
-      } else if (
-        e.key === 'Backspace' &&
-        !inputValue &&
-        selectedItems.length > 0 &&
-        selectedItems[selectedItems.length - 1].deletable !== false
-      ) {
-        e.preventDefault()
-        e.stopPropagation()
+              const lastItem = selectedItems[selectedItems.length - 1]
 
-        const lastItem = selectedItems[selectedItems.length - 1]
+              actualOnDelete(lastItem)
+              setHighlighted(true)
+              setInputValueIfUncontrolled(innerText(lastItem.label))
+            } else {
+              e.stopPropagation()
+              inputRef.current?.focus()
+              resetDeletionButtonFocus()
+            }
 
-        handleDelete(lastItem)
-        setHighlighted(true)
-        setInputValueIfUncontrolled(innerText(lastItem.label))
-      } else {
-        e.stopPropagation()
-        inputRef.current?.focus()
-        resetDeletionButtonFocus()
-      }
-
-      handleListBoxKeyDown(e)
-    },
+            onKeyDownListBox(e)
+          },
     [
       blur,
       focusNextDeletionButton,
       focusPrevDeletionButton,
-      handleListBoxKeyDown,
+      onKeyDownListBox,
       inputRef,
       isComposing,
       isFocused,
       resetDeletionButtonFocus,
-      handleDelete,
+      actualOnDelete,
       inputValue,
       selectedItems,
       setInputValueIfUncontrolled,
     ],
   )
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      if (
-        !disabled &&
-        !isFocused &&
-        !(e.target as HTMLElement).closest('.smarthr-ui-MultiComboBox-deleteButton')
-      ) {
-        focus()
-      }
-    },
+  const onClick = useMemo(
+    () =>
+      disabled || isFocused
+        ? undefined
+        : (e: MouseEvent<HTMLElement>) => {
+            if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiComboBox-deleteButton')) {
+              focus()
+            }
+          },
     [isFocused, disabled, focus],
   )
-  const handleChangeInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange?.(e)
-      onChangeInput?.(e)
-
+  const actualOnChangeInput = useMemo(() => {
+    const handlers = [onChange, onChangeInput].filter((h) => !!h)
+    const onSetValue = (e: ChangeEvent<HTMLInputElement>) => {
       setInputValueIfUncontrolled(e.currentTarget.value)
-    },
-    [onChange, onChangeInput, setInputValueIfUncontrolled],
-  )
-  const handleFocusInput = useCallback(() => {
-    resetDeletionButtonFocus()
-
-    if (!isFocused) {
-      focus()
     }
-  }, [isFocused, focus, resetDeletionButtonFocus])
-  const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
-  const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
-  const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+
+    if (handlers.length === 0) {
+      return onSetValue
+    }
+
+    return (e: ChangeEvent<HTMLInputElement>) => {
+      handlers.forEach((h) => h(e))
+      onSetValue(e)
+    }
+  }, [onChange, onChangeInput, setInputValueIfUncontrolled])
+  const onFocusInput = useMemo(
+    () =>
+      isFocused
+        ? resetDeletionButtonFocus
+        : () => {
+            resetDeletionButtonFocus()
+            focus()
+          },
+    [isFocused, focus, resetDeletionButtonFocus],
+  )
+  const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
+  const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
+  const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (ARROW_UP_AND_DOWN_KEY_REGEX.test(e.key)) {
       // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
       e.preventDefault()
@@ -377,11 +422,14 @@ const ActualMultiComboBox = <T,>(
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') e.preventDefault()
-      onKeyPress?.(e)
-    },
+  const actualOnKeyPress = useMemo(
+    () =>
+      onKeyPress
+        ? (e: KeyboardEvent<HTMLInputElement>) => {
+            preventDefaultWithPressEnter(e)
+            onKeyPress(e)
+          }
+        : preventDefaultWithPressEnter,
     [onKeyPress],
   )
 
@@ -404,7 +452,7 @@ const ActualMultiComboBox = <T,>(
       placeholderEl,
       suffixWrapper,
       suffixIcon,
-    } = multiCombobox()
+    } = classNameGenerator()
 
     return {
       wrapper: wrapper({ focused: isFocused, disabled, className }),
@@ -428,9 +476,9 @@ const ActualMultiComboBox = <T,>(
     <div
       ref={outerRef}
       role="group"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onKeyPress={handleKeyPress}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      onKeyPress={actualOnKeyPress}
       className={classNames.wrapper}
       style={wrapperStyle}
     >
@@ -441,7 +489,7 @@ const ActualMultiComboBox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                onDelete={handleDelete}
+                onDelete={actualOnDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
                 decorators={decorators}
@@ -460,11 +508,11 @@ const ActualMultiComboBox = <T,>(
             disabled={disabled}
             required={required && selectedItems.length === 0}
             ref={inputRef}
-            onChange={handleChangeInput}
-            onFocus={handleFocusInput}
-            onCompositionStart={handleCompositionStartInput}
-            onCompositionEnd={handleCompositionEndInput}
-            onKeyDown={handleInputKeyDown}
+            onChange={actualOnChangeInput}
+            onFocus={onFocusInput}
+            onCompositionStart={onCompositionStartInput}
+            onCompositionEnd={onCompositionEndInput}
+            onKeyDown={onKeyDownInput}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
             role="combobox"
@@ -498,7 +546,7 @@ const ActualMultiComboBox = <T,>(
 
 export const MultiComboBox = genericsForwardRef(ActualMultiComboBox)
 
-const MemoizedCaretDown = React.memo<{
+const MemoizedCaretDown = memo<{
   className: string
   iconStyle: string
   disabled: boolean

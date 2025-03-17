@@ -1,8 +1,8 @@
 'use client'
 
 import React, {
-  ComponentProps,
-  PropsWithChildren,
+  type ComponentProps,
+  type PropsWithChildren,
   useCallback,
   useEffect,
   useMemo,
@@ -79,7 +79,6 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      {}
       <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )

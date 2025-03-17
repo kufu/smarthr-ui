@@ -4,8 +4,8 @@ import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
-import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
-import { DialogHeader, Props as DialogHeaderProps } from '../DialogHeader'
+import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 export type BaseProps = DialogHeaderProps &
