@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { ComboBoxOption } from './types'
+import type { ComboBoxOption } from './types'
 
 export function useActiveOption<T>({ options }: { options: Array<ComboBoxOption<T>> }) {
   const [activeOption, setActiveOption] = useState<ComboBoxOption<T> | null>(null)

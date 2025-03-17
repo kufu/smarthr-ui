@@ -1,6 +1,12 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useId, useMemo } from 'react'
+import React, {
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
+  forwardRef,
+  useId,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isIOS } from '../../libs/ua'

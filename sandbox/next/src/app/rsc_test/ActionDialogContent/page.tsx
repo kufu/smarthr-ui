@@ -8,7 +8,6 @@ export default function ActionDialogContentPage() {
       <RSCChecker actualComponent={ActionDialogContent} />
       <ActionDialogContent
         title="title"
-        titleId="titleId"
         contentBgColor="white"
         actionText="actionText"
         onClickAction={() => {}}

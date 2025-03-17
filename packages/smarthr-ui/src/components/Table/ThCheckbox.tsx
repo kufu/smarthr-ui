@@ -1,9 +1,9 @@
-import React, { ComponentProps, forwardRef, useMemo } from 'react'
+import React, { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Balloon } from '../Balloon'
-import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
+import { CheckBox, type Props as CheckBoxProps } from '../CheckBox'
 
 import { Th } from './Th'
 

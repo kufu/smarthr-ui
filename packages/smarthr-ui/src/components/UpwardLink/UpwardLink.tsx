@@ -1,5 +1,5 @@
 import React, { type ComponentProps, memo, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaArrowLeftIcon } from '../Icon'
 import { TextLink } from '../TextLink'

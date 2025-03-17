@@ -1,5 +1,5 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import React, { type ComponentPropsWithoutRef, type PropsWithChildren, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 

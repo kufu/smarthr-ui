@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FC, PropsWithChildren } from 'react'
+import React, { type FC, type PropsWithChildren } from 'react'
 import { IntlProvider as ReactIntlProvider } from 'react-intl'
 
 import * as locales from './locales'
