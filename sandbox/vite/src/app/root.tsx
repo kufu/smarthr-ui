@@ -18,7 +18,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
