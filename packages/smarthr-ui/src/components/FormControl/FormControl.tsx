@@ -241,15 +241,16 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       }
     }
   }, [managedHtmlFor, isFieldset, managedLabelId])
+
   useEffect(() => {
-    if (!describedbyIds) {
+    if (!describedbyIds || !inputWrapperRef?.current) {
       return
     }
 
+    const inputWrapper = inputWrapperRef.current
     const attrName = 'aria-describedby'
-    const inputWrapper = inputWrapperRef?.current
 
-    if (!inputWrapper || inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
+    if (inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
       return
     }
 
@@ -257,9 +258,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
     if (input) {
       const attribute = input.getAttribute(attrName)
+
       input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
     }
   }, [describedbyIds])
+
   useEffect(() => {
     if (!autoBindErrorInput) {
       return
