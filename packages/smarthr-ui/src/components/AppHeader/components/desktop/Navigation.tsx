@@ -105,9 +105,8 @@ const buildDropdownMenu = (
         return (
           <Component
             {...rest}
-            // key={navigation.children}
             key={`${index}-${navigation.children.toString()}`}
-            aria-current={current}
+            aria-current={current && 'page'}
             className={commonButton({
               current,
               className,
