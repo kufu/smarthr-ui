@@ -205,28 +205,23 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       underTitleStack: underTitleStack(),
     }
   }, [dangerouslyTitleHidden, className])
+
   const childrenWrapperStyle = useMemo(
     () => childrenWrapper({ innerMargin, isFieldset }),
     [innerMargin, isFieldset],
   )
 
   useEffect(() => {
-    if (isFieldset) {
+    if (
+      isFieldset ||
+      !inputWrapperRef?.current ||
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      document.getElementById(managedHtmlFor)
+    ) {
       return
     }
 
-    const inputWrapper = inputWrapperRef?.current
-
-    if (!inputWrapper) {
-      return
-    }
-
-    // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-    if (document.getElementById(managedHtmlFor)) {
-      return
-    }
-
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!input) {
       return
