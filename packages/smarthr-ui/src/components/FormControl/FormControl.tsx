@@ -3,6 +3,7 @@
 import React, {
   type ComponentProps,
   type ComponentPropsWithoutRef,
+  type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
   useEffect,
@@ -22,6 +23,7 @@ import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../Vis
 import type { Gap } from '../../types'
 
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
+type StatusLabelType = FunctionComponentElement<StatusLabelProps>
 
 type Props = PropsWithChildren<{
   /** グループのタイトル名 */
@@ -39,7 +41,12 @@ type Props = PropsWithChildren<{
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
   /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
+  /**
+   * @deprecated statusLabelProps属性は非推奨です。statusLabelsを使ってください。
+   */
   statusLabelProps?: StatusLabelProps | StatusLabelProps[]
+  /** タイトルの隣に表示する `StatusLabel` の配列 */
+  statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
   /** タイトルの下に表示する入力例 */
@@ -134,6 +141,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   htmlFor,
   labelId,
   innerMargin,
+  statusLabels,
   statusLabelProps,
   helpMessage,
   exampleMessage,
@@ -170,13 +178,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
-  const statusLabelList = useMemo(() => {
-    if (!statusLabelProps) {
-      return []
-    }
 
-    return Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-  }, [statusLabelProps])
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -333,7 +335,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         dangerouslyTitleHidden={dangerouslyTitleHidden}
         titleType={titleType}
         title={title}
-        statusLabelList={statusLabelList}
+        statusLabels={statusLabels}
+        statusLabelProps={statusLabelProps}
         subActionArea={subActionArea}
       />
       {body}
@@ -341,10 +344,37 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   )
 }
 
+const StatusLabelCluster = React.memo<Pick<Props, 'statusLabels' | 'statusLabelProps'>>(
+  ({ statusLabels, statusLabelProps }) => {
+    const labels = useMemo(() => {
+      if (statusLabels) {
+        return Array.isArray(statusLabels) ? statusLabels : [statusLabels]
+      }
+
+      if (!statusLabelProps) {
+        return []
+      }
+
+      const props = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
+
+      return props.map((prop, index) => <StatusLabel {...prop} key={index} />)
+    }, [statusLabels, statusLabelProps])
+
+    return labels.length === 0 ? null : (
+      // eslint-disable-next-line smarthr/best-practice-for-layouts
+      <Cluster gap={0.25} as="span">
+        {labels}
+      </Cluster>
+    )
+  },
+)
+
 const TitleCluster = React.memo<
-  Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
+  Pick<
+    Props,
+    'dangerouslyTitleHidden' | 'title' | 'subActionArea' | 'statusLabels' | 'statusLabelProps'
+  > & {
     titleType: TextProps['styleType']
-    statusLabelList: StatusLabelProps[]
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
@@ -359,19 +389,14 @@ const TitleCluster = React.memo<
     dangerouslyTitleHidden,
     titleType,
     title,
-    statusLabelList,
     subActionArea,
+    statusLabels,
+    statusLabelProps,
   }) => {
     const body = (
       <>
         <Text styleType={titleType}>{title}</Text>
-        {statusLabelList.length > 0 && (
-          <Cluster gap={0.25} as="span">
-            {statusLabelList.map((prop, index) => (
-              <StatusLabel {...prop} key={index} />
-            ))}
-          </Cluster>
-        )}
+        <StatusLabelCluster statusLabels={statusLabels} statusLabelProps={statusLabelProps} />
       </>
     )
 
