@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import React, { FC, PropsWithChildren } from 'react'
+import React, { type FC, type PropsWithChildren } from 'react'
 import { IntlProvider } from 'react-intl'
 
 import { useIntl } from './useIntl'
