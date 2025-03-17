@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { memo } from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -13,7 +13,7 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-export const RangeSeparator: React.FC<Props> = ({ decorators }) => {
+export const RangeSeparator = memo<Props>(({ decorators }) => {
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
@@ -24,4 +24,4 @@ export const RangeSeparator: React.FC<Props> = ({ decorators }) => {
       </VisuallyHiddenText>
     </>
   )
-}
+})
