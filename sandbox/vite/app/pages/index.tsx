@@ -1,8 +1,12 @@
 import { Link } from 'react-router'
 import { Button, TextLink, FaArrowRightIcon, FaAddressCardIcon } from 'smarthr-ui'
+import * as SHRUI from 'smarthr-ui'
 
 const Index = () =>  (
   <main>
+    <SHRUI.Tooltip message="hello">
+      <div style={{width: '400px', height: '400px'}}>Tooltip</div>
+    </SHRUI.Tooltip>
     <Button variant="primary">こんにちは</Button>
     <ol>
       <li>
