@@ -1,1 +1,0 @@
-import{a as t,T as s}from"./TextLink-Lxirm9SJ.js";import{n as o,v as e}from"./chunk-K6CSEXPM-bzFzsjht.js";const n=()=>o.jsxs("main",{children:[o.jsx("h1",{children:"About Page"}),o.jsx(s,{elementAs:e,to:"/",children:"Back to Home"})]}),r=t(n);export{r as default};
