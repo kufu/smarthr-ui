@@ -49,7 +49,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
-export const dropdownMenuButton = tv({
+const classNameGenerator = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
     triggerButton:
@@ -71,7 +71,7 @@ export const dropdownMenuButton = tv({
   },
 })
 
-const { triggerWrapper, triggerButton, actionList, actionListItemButton } = dropdownMenuButton()
+const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
 
 export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
@@ -86,7 +86,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
   useKeyboardNavigation(containerRef)
 
-  const styles = useMemo(
+  const classNames = useMemo(
     () => ({
       triggerWrapper: triggerWrapper({ className }),
       triggerButton: triggerButton(),
@@ -103,11 +103,11 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         onlyIconTrigger={onlyIconTrigger}
         triggerIcon={triggerIcon}
         triggerSize={triggerSize}
-        wrapperStyle={styles.triggerWrapper}
-        buttonStyle={styles.triggerButton}
+        wrapperStyle={classNames.triggerWrapper}
+        buttonStyle={classNames.triggerButton}
       />
       <DropdownContent>
-        <menu ref={containerRef} className={styles.actionList}>
+        <menu ref={containerRef} className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
@@ -172,11 +172,13 @@ export const renderButtonList = (children: Actions) =>
         return item
     }
 
-    const actualElement = cloneElement(item as ReactElement, {
-      variant: 'text',
-      wide: true,
-      className: actionListItemButton({ className: item.props.className }),
-    })
-
-    return <li>{actualElement}</li>
+    return (
+      <li>
+        {cloneElement(item as ReactElement, {
+          variant: 'text',
+          wide: true,
+          className: actionListItemButton({ className: item.props.className }),
+        })}
+      </li>
+    )
   })

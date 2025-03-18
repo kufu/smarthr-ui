@@ -21,7 +21,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import { useSortDropdown } from './useSortDropdown'
+import { type DecoratorKeyTypes, useSortDropdown } from './useSortDropdown'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
 
@@ -44,14 +44,7 @@ type Props = {
   onApply: (args: ArgsOnApply) => void
   /** キャンセル時に発火するイベント */
   onCancel?: MouseEventHandler<HTMLButtonElement>
-  decorators?: DecoratorsType<
-    | 'sortFieldLabel'
-    | 'sortOrderLabel'
-    | 'ascLabel'
-    | 'descLabel'
-    | 'applyButtonLabel'
-    | 'cancelButtonLabel'
-  >
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
@@ -81,13 +74,13 @@ export const SortDropdown: FC<Props & ElementProps> = ({
     <Dropdown>
       <DropdownTrigger>
         <Button {...props} suffix={<SortIcon />}>
-          {labels.trigger}
+          {labels.triggerLabel}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={handleApply}>
           <Stack className={classNames.body}>
-            <FormControl title={labels.sortField}>
+            <FormControl title={labels.sortFieldLabel}>
               <Select
                 name="sortFields"
                 options={innerFields}
@@ -95,7 +88,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                 className={classNames.select}
               />
             </FormControl>
-            <Fieldset title={labels.sortOrder} innerMargin={0.5}>
+            <Fieldset title={labels.sortOrderLabel} innerMargin={0.5}>
               <Cluster gap={1.25}>
                 <RadioButton
                   name="sortOrder"
@@ -103,7 +96,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                   checked={innerCheckedOrder === 'asc'}
                   onChange={onChangeSortOrderRadio}
                 >
-                  {labels.asc}
+                  {labels.ascLabel}
                 </RadioButton>
                 <RadioButton
                   name="sortOrder"
@@ -111,15 +104,15 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                   checked={innerCheckedOrder === 'desc'}
                   onChange={onChangeSortOrderRadio}
                 >
-                  {labels.desc}
+                  {labels.descLabel}
                 </RadioButton>
               </Cluster>
             </Fieldset>
           </Stack>
           <Footer
             onCancel={onCancel}
-            cancelButtonLabel={labels.cancelButton}
-            applyButtonLabel={labels.applyButton}
+            cancelButtonLabel={labels.cancelButtonLabel}
+            applyButtonLabel={labels.applyButtonLabel}
             className={classNames.footer}
           />
         </form>

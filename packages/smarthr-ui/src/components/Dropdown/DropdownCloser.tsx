@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants'
 import { DropdownContentContext } from './DropdownContent'
 import { DropdownContentInnerContext } from './DropdownContentInner'
 
-const closer = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Dropdown-closer',
   variants: {
     controllable: {
@@ -21,8 +21,11 @@ export const DropdownCloser: FC<Props> = ({ children, className }) => {
   const { onClickCloser, controllable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
-  const closerStyle = useMemo(() => closer({ controllable, className }), [controllable, className])
-  const styleProps = useMemo(
+  const actualClassName = useMemo(
+    () => classNameGenerator({ controllable, className }),
+    [controllable, className],
+  )
+  const style = useMemo(
     () => ({
       maxHeight: controllable ? undefined : maxHeight,
     }),
@@ -31,7 +34,7 @@ export const DropdownCloser: FC<Props> = ({ children, className }) => {
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <div style={styleProps} className={closerStyle} onClick={onClickCloser} role="presentation">
+    <div role="presentation" onClick={onClickCloser} className={actualClassName} style={style}>
       {children}
     </div>
   )

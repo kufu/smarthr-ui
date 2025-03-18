@@ -17,7 +17,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'li'>, keyof Props>
 
-const dropdownMenuGroup = tv({
+const classNameGenerator = tv({
   slots: {
     group: [
       'smarthr-ui-DropdownMenuGroup',
@@ -37,20 +37,20 @@ const dropdownMenuGroup = tv({
     groupName: 'shr-px-1 shr-py-0.5',
   },
 })
-const { group, groupName } = dropdownMenuGroup()
 
 export const DropdownMenuGroup: FC<Props & ElementProps> = ({ name, children, className }) => {
-  const styles = useMemo(
-    () => ({
+  const classNames = useMemo(() => {
+    const { group, groupName } = classNameGenerator()
+
+    return {
       group: group({ className }),
       groupName: groupName(),
-    }),
-    [className],
-  )
+    }
+  }, [className])
 
   return (
-    <li className={styles.group}>
-      <NameText className={styles.groupName}>{name}</NameText>
+    <li className={classNames.group}>
+      <NameText className={classNames.groupName}>{name}</NameText>
       <ul>{renderButtonList(children)}</ul>
     </li>
   )
