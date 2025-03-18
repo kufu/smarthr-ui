@@ -17,10 +17,11 @@ import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 import { type AnchorButton, Button } from '../Button'
-import { type ComponentProps as IconProps } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 
 import { validateElement } from './helper'
+
+import type { ComponentProps as IconProps } from '../Icon'
 
 export type ButtonType =
   | FunctionComponentElement<ComponentProps<typeof Button>>

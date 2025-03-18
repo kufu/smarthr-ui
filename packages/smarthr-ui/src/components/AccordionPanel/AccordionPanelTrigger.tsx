@@ -14,7 +14,6 @@ import { getIsInclude, mapToKeyArray } from '../../libs/map'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
-import { type TextProps } from '../Text'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
@@ -25,6 +24,8 @@ import {
   focusPreviousSibling,
   getNewExpandedItems,
 } from './accordionPanelHelper'
+
+import type { TextProps } from '../Text'
 
 type Props = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */

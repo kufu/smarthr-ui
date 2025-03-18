@@ -1,9 +1,9 @@
 import React, { type ComponentType, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ComponentProps as IconProps } from '../Icon'
-
 import { itemClassNameGenerator } from './itemClassNameGenerator'
+
+import type { ComponentProps as IconProps } from '../Icon'
 
 export type AppNaviCustomTagProps = PropsWithChildren<{
   /** このボタンのカスタムタグ */
