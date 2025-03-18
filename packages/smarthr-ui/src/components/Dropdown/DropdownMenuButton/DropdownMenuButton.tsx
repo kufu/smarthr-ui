@@ -20,10 +20,11 @@ import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
-import { type RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 
 import useKeyboardNavigation from './useKeyboardNavigation'
+
+import type { RemoteDialogTrigger } from '../../Dialog'
 
 type Actions = ActionItem | ActionItem[]
 

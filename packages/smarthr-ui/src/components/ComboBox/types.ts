@@ -1,5 +1,4 @@
-import { type ChangeEvent, type ReactNode } from 'react'
-
+import type { ChangeEvent, ReactNode } from 'react'
 import type React from 'react'
 
 export type ComboBoxItem<T> = {

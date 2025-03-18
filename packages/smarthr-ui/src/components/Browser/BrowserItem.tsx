@@ -5,8 +5,9 @@ import { FaAngleRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-import { type ItemNode } from './models'
 import { getElementIdFromNode } from './utils'
+
+import type { ItemNode } from './models'
 
 const classNameGenerator = tv({
   base: [

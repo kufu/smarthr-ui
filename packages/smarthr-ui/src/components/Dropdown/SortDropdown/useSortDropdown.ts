@@ -12,7 +12,7 @@ import { tv } from 'tailwind-variants'
 import { useDecorators } from '../../../hooks/useDecorators'
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
-import { type SortDropdown } from './SortDropdown'
+import type { SortDropdown } from './SortDropdown'
 
 const classNameGenerator = tv({
   slots: {
