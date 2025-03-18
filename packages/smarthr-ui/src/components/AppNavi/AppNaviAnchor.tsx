@@ -1,20 +1,20 @@
 import React, {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  ElementType,
-  FC,
-  PropsWithoutRef,
-  ReactElement,
-  Ref,
+  type ComponentPropsWithoutRef,
+  type ComponentType,
+  type ElementType,
+  type FC,
+  type PropsWithoutRef,
+  type ReactElement,
+  type Ref,
   forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { ElementRef, ElementRefProps } from '../../types'
-import { ComponentProps as IconProps } from '../Icon'
+import { itemClassNameGenerator } from './itemClassNameGenerator'
 
-import { appNaviItemStyle } from './style'
+import type { ElementRef, ElementRefProps } from '../../types'
+import type { ComponentProps as IconProps } from '../Icon'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
@@ -37,7 +37,7 @@ type AppNaviAnchorComponent = <T extends ElementType = 'a'>(
 ) => ReturnType<FC>
 
 const classNameGenerator = tv({
-  extend: appNaviItemStyle,
+  extend: itemClassNameGenerator,
   slots: {
     wrapper: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
   },

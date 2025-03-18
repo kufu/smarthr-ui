@@ -13,11 +13,12 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
-import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
-import { RemoteDialogTrigger } from '../../Dialog'
+import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 
 import useKeyboardNavigation from './useKeyboardNavigation'
+
+import type { RemoteDialogTrigger } from '../../Dialog'
 
 type Actions = ActionItem | ActionItem[]
 

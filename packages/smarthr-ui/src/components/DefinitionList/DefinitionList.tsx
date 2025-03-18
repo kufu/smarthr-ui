@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
+import React, { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'

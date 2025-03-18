@@ -1,9 +1,9 @@
 'use client'
 
 import React, {
-  ComponentPropsWithoutRef,
-  FC,
-  PropsWithChildren,
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
   useCallback,
   useContext,
   useMemo,
@@ -11,10 +11,9 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
-import { Heading, HeadingTagTypes } from '../Heading'
+import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
-import { TextProps } from '../Text'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
@@ -25,6 +24,8 @@ import {
   focusPreviousSibling,
   getNewExpandedItems,
 } from './accordionPanelHelper'
+
+import type { TextProps } from '../Text'
 
 type Props = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */

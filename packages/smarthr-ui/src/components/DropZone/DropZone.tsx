@@ -1,10 +1,10 @@
 'use client'
 
 import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  DragEvent,
-  PropsWithChildren,
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type DragEvent,
+  type PropsWithChildren,
   forwardRef,
   useCallback,
   useImperativeHandle,
@@ -14,9 +14,10 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
+
+import type { DecoratorsType } from '../../hooks/useDecorators'
 
 const dropZone = tv({
   slots: {

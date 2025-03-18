@@ -1,7 +1,7 @@
 import React, {
-  KeyboardEvent,
-  ReactNode,
-  RefObject,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
   useCallback,
   useEffect,
   useId,
@@ -20,9 +20,10 @@ import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ListBoxItemButton } from './ListBoxItemButton'
-import { ComboBoxItem, ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
+
+import type { ComboBoxItem, ComboBoxOption } from './types'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
@@ -178,7 +179,7 @@ export const useListBox = <T,>({
     }
   }, [calculateRect, isExpanded, options])
 
-  const handleKeyDown = useCallback(
+  const onKeyDownListBox = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
 
@@ -347,7 +348,7 @@ export const useListBox = <T,>({
   return {
     renderListBox,
     activeOption,
-    handleKeyDown,
+    onKeyDownListBox,
     listBoxId,
     listBoxRef,
   }

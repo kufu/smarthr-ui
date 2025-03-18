@@ -1,5 +1,5 @@
-import { Messages, translation } from './messages'
-import { DEFAULT_LOCALE, Locale } from './types'
+import { type Messages, translation } from './messages'
+import { DEFAULT_LOCALE, type Locale } from './types'
 
 export const translate = <ID extends keyof Messages>(id: ID, locale?: Locale | null) =>
   translation[locale ?? DEFAULT_LOCALE][

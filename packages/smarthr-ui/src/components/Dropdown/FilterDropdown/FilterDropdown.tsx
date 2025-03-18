@@ -1,12 +1,11 @@
 'use client'
 
-import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
+import React, { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorType, type DecoratorsType } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { Button, BaseProps as ButtonProps } from '../../Button'
+import { Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -14,6 +13,8 @@ import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
+
+import type { DecoratorType, DecoratorsType } from '../../../hooks/useDecorators'
 
 type Props = {
   isFiltered?: boolean

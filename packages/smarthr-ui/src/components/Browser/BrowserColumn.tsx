@@ -1,7 +1,8 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 
 import { BrowserItem } from './BrowserItem'
-import { ItemNode } from './models'
+
+import type { ItemNode } from './models'
 
 const getColumnId = (column: number) => `column-${column}`
 

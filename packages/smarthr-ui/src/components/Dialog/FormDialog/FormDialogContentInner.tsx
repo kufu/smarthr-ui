@@ -8,15 +8,16 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
-import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
+
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
