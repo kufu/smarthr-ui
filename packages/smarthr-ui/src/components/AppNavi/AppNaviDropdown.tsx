@@ -5,7 +5,7 @@ import { UnstyledButton } from '../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { FaCaretDownIcon, type ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './style'
+import { itemClassNameGenerator } from './itemClassNameGenerator'
 
 export type AppNaviDropdownProps = PropsWithChildren<{
   /** ドロップダウンのコンテンツ */
@@ -18,7 +18,7 @@ export type AppNaviDropdownProps = PropsWithChildren<{
 }>
 
 const classNameGenerator = tv({
-  extend: appNaviItemStyle,
+  extend: itemClassNameGenerator,
   variants: {
     displayCaret: {
       true: {

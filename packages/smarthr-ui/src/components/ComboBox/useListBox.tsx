@@ -179,7 +179,7 @@ export const useListBox = <T,>({
     }
   }, [calculateRect, isExpanded, options])
 
-  const handleKeyDown = useCallback(
+  const onKeyDownListBox = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
 
@@ -348,7 +348,7 @@ export const useListBox = <T,>({
   return {
     renderListBox,
     activeOption,
-    handleKeyDown,
+    onKeyDownListBox,
     listBoxId,
     listBoxRef,
   }
