@@ -1,11 +1,16 @@
 'use client'
 
-import React, {
+import {
+  type BaseSyntheticEvent,
   type ComponentProps,
   type FC,
+  type FocusEvent,
+  type PointerEvent,
   type PropsWithChildren,
   type ReactElement,
   type ReactNode,
+  type TouchEvent,
+  cloneElement,
   memo,
   useCallback,
   useId,
@@ -103,7 +108,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   }, [fullscreenElement])
 
   const toShowAction = useCallback(
-    (e: React.BaseSyntheticEvent) => {
+    (e: BaseSyntheticEvent) => {
       // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
       if (!ref.current?.contains(e.target)) {
         return
@@ -130,7 +135,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const actualOnPointerEnter = useMemo(
     () =>
       onPointerEnter
-        ? (e: React.PointerEvent<HTMLSpanElement>) => {
+        ? (e: PointerEvent<HTMLSpanElement>) => {
             onPointerEnter(e)
             toShowAction(e)
           }
@@ -140,7 +145,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const actualOnTouchStart = useMemo(
     () =>
       onTouchStart
-        ? (e: React.TouchEvent<HTMLSpanElement>) => {
+        ? (e: TouchEvent<HTMLSpanElement>) => {
             onTouchStart(e)
             toShowAction(e)
           }
@@ -150,7 +155,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const actualOnFocus = useMemo(
     () =>
       onFocus
-        ? (e: React.FocusEvent<HTMLSpanElement>) => {
+        ? (e: FocusEvent<HTMLSpanElement>) => {
             onFocus(e)
             toShowAction(e)
           }
@@ -162,7 +167,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const actualOnPointerLeave = useMemo(
     () =>
       onPointerLeave
-        ? (e: React.PointerEvent<HTMLSpanElement>) => {
+        ? (e: PointerEvent<HTMLSpanElement>) => {
             onPointerLeave(e)
             toCloseAction()
           }
@@ -172,7 +177,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const actualOnTouchEnd = useMemo(
     () =>
       onTouchEnd
-        ? (e: React.TouchEvent<HTMLSpanElement>) => {
+        ? (e: TouchEvent<HTMLSpanElement>) => {
             onTouchEnd(e)
             toCloseAction()
           }
@@ -182,7 +187,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const actualOnBlur = useMemo(
     () =>
       onBlur
-        ? (e: React.FocusEvent<HTMLSpanElement>) => {
+        ? (e: FocusEvent<HTMLSpanElement>) => {
             onBlur(e)
             toCloseAction()
           }
@@ -199,7 +204,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const childrenWithProps = useMemo(
     () =>
       isInnerTarget
-        ? React.cloneElement(children as ReactElement, { 'aria-describedby': messageId })
+        ? cloneElement(children as ReactElement, { 'aria-describedby': messageId })
         : children,
     [children, isInnerTarget, messageId],
   )

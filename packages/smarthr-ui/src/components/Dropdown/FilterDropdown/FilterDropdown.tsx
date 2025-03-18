@@ -1,6 +1,13 @@
 'use client'
 
-import React, { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type FormEvent,
+  type MouseEventHandler,
+  type ReactNode,
+  useMemo,
+} from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
@@ -18,9 +25,9 @@ import type { DecoratorType, DecoratorsType } from '../../../hooks/useDecorators
 
 type Props = {
   isFiltered?: boolean
-  onApply: React.MouseEventHandler<HTMLButtonElement>
-  onCancel?: React.MouseEventHandler<HTMLButtonElement>
-  onReset?: React.MouseEventHandler<HTMLButtonElement>
+  onApply: MouseEventHandler<HTMLButtonElement>
+  onCancel?: MouseEventHandler<HTMLButtonElement>
+  onReset?: MouseEventHandler<HTMLButtonElement>
   onOpen?: () => void
   onClose?: () => void
   children: ReactNode
@@ -41,9 +48,9 @@ const APPLY_BUTTON_TEXT = '適用'
 const CANCEL_BUTTON_TEXT = 'キャンセル'
 const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 
-const CONTROL_CLUSTER_GAP: React.ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
+const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
-const ON_SUBMIT = (e: React.FormEvent) => {
+const ON_SUBMIT = (e: FormEvent) => {
   e.preventDefault()
 }
 

@@ -1,5 +1,6 @@
-import React, {
+import {
   type ComponentPropsWithoutRef,
+  type FC,
   type PropsWithChildren,
   type ReactNode,
   memo,
@@ -30,7 +31,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
+export const SpreadsheetTable: FC<Props & ElementProps> = ({
   data,
   className,
   children,

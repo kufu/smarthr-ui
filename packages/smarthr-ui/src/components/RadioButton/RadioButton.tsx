@@ -1,9 +1,10 @@
 'use client'
 
-import React, {
+import {
   type ComponentPropsWithRef,
   type PropsWithChildren,
   forwardRef,
+  memo,
   useId,
   useMemo,
 } from 'react'
@@ -92,11 +93,11 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
   },
 )
 
-const AriaHiddenBox = React.memo<{ className: string }>(({ className }) => (
+const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const LabeledChildren = React.memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
+const LabeledChildren = memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
   ({ htmlFor, className, children }) =>
     children && (
       <label htmlFor={htmlFor} className={className}>

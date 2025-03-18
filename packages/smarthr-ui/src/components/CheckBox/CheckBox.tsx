@@ -1,9 +1,10 @@
 'use client'
 
-import React, {
+import {
   type ComponentPropsWithRef,
   type PropsWithChildren,
   forwardRef,
+  memo,
   useEffect,
   useId,
   useImperativeHandle,
@@ -124,19 +125,23 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
   },
 )
 
-const AriaHiddenBox = React.memo<{ className: string }>(({ className }) => (
+const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const CheckIconArea = React.memo<
-  Pick<Props, 'mixed'> & { className: string; iconClassName: string }
->(({ mixed, className, iconClassName }) => (
-  <span className={className}>
-    {mixed ? <FaMinusIcon className={iconClassName} /> : <FaCheckIcon className={iconClassName} />}
-  </span>
-))
+const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClassName: string }>(
+  ({ mixed, className, iconClassName }) => (
+    <span className={className}>
+      {mixed ? (
+        <FaMinusIcon className={iconClassName} />
+      ) : (
+        <FaCheckIcon className={iconClassName} />
+      )}
+    </span>
+  ),
+)
 
-const LabeledChildren = React.memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
+const LabeledChildren = memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
   ({ children, htmlFor, className }) =>
     children && (
       <label htmlFor={htmlFor} className={className}>

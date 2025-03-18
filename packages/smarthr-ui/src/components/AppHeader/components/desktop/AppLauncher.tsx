@@ -1,4 +1,3 @@
-import React, { type FC, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -17,6 +16,7 @@ import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
+import type { FC, ReactNode } from 'react'
 
 type Props = {
   features: Array<Launcher['feature']>

@@ -1,4 +1,13 @@
-import React, { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import {
+  Children,
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type ReactElement,
+  cloneElement,
+  isValidElement,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
@@ -43,11 +52,11 @@ export const DefinitionList: FC<Props & ElementProps> = ({
             termStyleType={termStyleType}
           />
         ))}
-      {React.Children.map(
+      {Children.map(
         children,
         (child) =>
-          React.isValidElement(child) &&
-          React.cloneElement(child as React.ReactElement, {
+          isValidElement(child) &&
+          cloneElement(child as ReactElement, {
             maxColumns,
             termStyleType,
           }),

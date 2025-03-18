@@ -1,12 +1,15 @@
 'use client'
 
-import React, {
+import {
+  Children,
   type ComponentProps,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
   type ReactElement,
   type ReactNode,
+  cloneElement,
+  isValidElement,
   useContext,
   useEffect,
   useMemo,
@@ -80,14 +83,14 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
         {/* 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する */}
         {includeDisabledTrigger(children)
           ? children
-          : React.Children.map(children, (child) => {
-              if (foundFirstElement || !React.isValidElement(child)) {
+          : Children.map(children, (child) => {
+              if (foundFirstElement || !isValidElement(child)) {
                 return child
               }
 
               foundFirstElement = true
 
-              return React.cloneElement(child as ReactElement, {
+              return cloneElement(child as ReactElement, {
                 onClick: (e: MouseEvent) => {
                   onClickTrigger(e.currentTarget.getBoundingClientRect())
 

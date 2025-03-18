@@ -1,11 +1,12 @@
 'use client'
 
-import React, {
+import {
   type ChangeEvent,
   type ComponentPropsWithRef,
   type DragEvent,
   type PropsWithChildren,
   forwardRef,
+  memo,
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -134,7 +135,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
   },
 )
 
-const SelectButton = React.memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
+const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
   ({ onClick, decorators }) => {
     const selectButtonLabel = useMemo(
       () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,

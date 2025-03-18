@@ -1,11 +1,9 @@
-import { useMemo } from 'react'
+import { type ComponentType, useMemo } from 'react'
 import { isStyledComponent } from 'styled-components'
 
 import { SectioningFragment } from './SectioningContent'
 
-import type React from 'react'
-
-type ComponentType = string | React.ComponentType<any>
+type ComponentType = string | ComponentType<any>
 
 const SECTIONING_CONTENTS_REGEX = /^(article|aside|nav|section)$/
 

@@ -1,6 +1,7 @@
 'use client'
 
-import React, {
+import {
+  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
@@ -26,7 +27,7 @@ const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
   ),
 )
 
-type Props = Omit<React.ComponentProps<typeof SectioningContent>, 'as'>
+type Props = Omit<ComponentProps<typeof SectioningContent>, 'as'>
 
 export const Section: FC<Props> = SectioningContent
 export const Article: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (

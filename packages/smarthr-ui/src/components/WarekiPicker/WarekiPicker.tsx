@@ -1,6 +1,6 @@
-import React, { type ComponentProps } from 'react'
-
 import { DatePicker } from '../DatePicker'
+
+import type { ComponentProps, FC } from 'react'
 
 type Props = Omit<ComponentProps<typeof DatePicker>, 'showAlternative'>
 
@@ -9,7 +9,6 @@ const handleShowWareki = (date: Date | null) =>
     dateStyle: 'long',
   })
 
-export const WarekiPicker: React.FC<Props> = (props) => (
-  // eslint-disable-next-line smarthr/a11y-input-in-form-control
+export const WarekiPicker: FC<Props> = (props) => (
   <DatePicker {...props} showAlternative={handleShowWareki} />
 )

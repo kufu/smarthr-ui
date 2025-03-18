@@ -1,10 +1,12 @@
 'use client'
 
-import React, {
+import {
   type ChangeEvent,
   type ComponentPropsWithoutRef,
   type ForwardedRef,
+  type OptionHTMLAttributes,
   type PropsWithChildren,
+  memo,
   useCallback,
   useMemo,
 } from 'react'
@@ -17,11 +19,11 @@ import { FaSortIcon } from '../Icon'
 
 type Option<T extends string> = {
   value: T
-} & Omit<React.OptionHTMLAttributes<HTMLOptionElement>, 'value'>
+} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
 type Optgroup<T extends string> = {
   label: string
   options: Array<Option<T>>
-} & React.OptgroupHTMLAttributes<HTMLOptGroupElement>
+} & OptgroupHTMLAttributes<HTMLOptGroupElement>
 
 type Props<T extends string> = {
   /** 選択肢のデータの配列 */
@@ -172,13 +174,13 @@ const ActualSelect = <T extends string>(
   )
 }
 
-const BlankOption = React.memo<
+const BlankOption = memo<
   PropsWithChildren<{
     hasBlank: boolean | undefined
   }>
 >(({ hasBlank, children }) => hasBlank && <option value="">{children}</option>)
 
-const Option = React.memo<Props<string>['options'][number]>((option) => {
+const Option = memo<Props<string>['options'][number]>((option) => {
   if ('value' in option) {
     return <option {...option}>{option.label}</option>
   }
@@ -197,11 +199,11 @@ const Option = React.memo<Props<string>['options'][number]>((option) => {
 })
 
 // Support for not omitting labels in Mobile Safari
-const NotOmittingLabelsInMobileSafari = React.memo<{ className: string }>(
+const NotOmittingLabelsInMobileSafari = memo<{ className: string }>(
   ({ className }) => isMobileSafari && <optgroup className={className} />,
 )
 
-const StyledFaSortIcon = React.memo<{ className: string }>(({ className }) => (
+const StyledFaSortIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
     <FaSortIcon />
   </span>

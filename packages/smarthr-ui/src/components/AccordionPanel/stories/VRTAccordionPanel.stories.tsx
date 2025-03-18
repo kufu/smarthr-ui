@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Stack } from '../../Layout'
 import { AccordionPanel } from '../AccordionPanel'
 import { AccordionPanelContent } from '../AccordionPanelContent'
