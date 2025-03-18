@@ -6,6 +6,7 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useId,

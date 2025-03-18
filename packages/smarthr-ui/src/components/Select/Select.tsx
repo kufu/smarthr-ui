@@ -4,6 +4,7 @@ import {
   type ChangeEvent,
   type ComponentPropsWithoutRef,
   type ForwardedRef,
+  type OptgroupHTMLAttributes,
   type OptionHTMLAttributes,
   type PropsWithChildren,
   memo,

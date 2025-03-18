@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react'
-import React from 'react'
+
+import { useState } from 'react'
 
 import { Base, BaseColumn } from '../Base'
 import { DefinitionList } from '../DefinitionList'
@@ -103,7 +104,7 @@ const vSteps: VerticalStep[] = [
 ]
 
 export const _Default: StoryFn = () => {
-  const [activeIndex, setActiveIndex] = React.useState(0)
+  const [activeIndex, setActiveIndex] = useState(0)
   return (
     <Stack gap={1.25}>
       <FormControl title="現在地（0始まり）">

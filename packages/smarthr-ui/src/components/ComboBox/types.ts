@@ -1,4 +1,4 @@
-import type { ChangeEvent, ReactNode, ReactNode } from 'react'
+import type { ChangeEvent, ReactNode } from 'react'
 
 export type ComboBoxItem<T> = {
   value: string
