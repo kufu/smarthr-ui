@@ -7,7 +7,9 @@ import React, {
   type FC,
   type FunctionComponentElement,
   type MouseEventHandler,
+  type PropsWithChildren,
   type ReactNode,
+  memo,
   useEffect,
   useMemo,
 } from 'react'
@@ -15,16 +17,13 @@ import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 import { type AnchorButton, Button } from '../Button'
-import { type ComponentProps as IconProps } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 
-import { validateElement } from './bottomFixedAreaHelper'
+import { validateElement } from './helper'
 
-export type Primary =
-  | FunctionComponentElement<ComponentProps<typeof Button>>
-  | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
+import type { ComponentProps as IconProps } from '../Icon'
 
-export type Secondary =
+export type ButtonType =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
 
@@ -34,9 +33,9 @@ type Props = {
   /** この領域の説明 */
   description?: ReactNode
   /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
-  primaryButton?: Primary
+  primaryButton?: ButtonType
   /** 表示する `Button` または `AnchorButton` （`variant="secondary"` である必要がある）*/
-  secondaryButton?: Secondary
+  secondaryButton?: ButtonType
   /** 表示する tertialy link のプロパティの配列 */
   tertiaryLinks?: Array<
     ComponentPropsWithRef<'button'> & {
@@ -50,7 +49,7 @@ type Props = {
   zIndex?: number
 }
 
-const bottomFixedArea = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-BottomFixedArea',
@@ -78,22 +77,24 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const { wrapperStyleProps, tertiaryButtonStyle } = useMemo(() => {
-    const { wrapper, tertiaryButton } = bottomFixedArea()
+  const classNames = useMemo(() => {
+    const { wrapper, tertiaryButton } = classNameGenerator()
+
     return {
-      wrapperStyleProps: { className: wrapper({ className }), style: { zIndex } },
-      tertiaryButtonStyle: tertiaryButton(),
+      wrapper: wrapper({ className }),
+      tertiaryButton: tertiaryButton(),
     }
-  }, [className, zIndex])
+  }, [className])
+  const style = useMemo(() => ({ zIndex }), [zIndex])
 
   useEffect(() => {
     validateElement(primaryButton, secondaryButton)
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base {...props} {...wrapperStyleProps}>
+    <Base {...props} className={classNames.wrapper} style={style}>
       <Stack>
-        {description && <p className="smarthr-ui-BottomFixedArea-description">{description}</p>}
+        <Description>{description}</Description>
         <Stack gap={0.25}>
           {(secondaryButton || primaryButton) && (
             <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 1 }}>
@@ -107,14 +108,13 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
           )}
           {tertiaryLinks && tertiaryLinks.length > 0 && (
             <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 0 }}>
-              {tertiaryLinks.map(({ text, icon: Icon, onClick, ...tertiaryProps }, index) => (
+              {tertiaryLinks.map(({ text, icon: Icon, ...tertiaryRest }, index) => (
                 <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
                   <Button
-                    {...tertiaryProps}
+                    {...tertiaryRest}
                     variant="text"
                     prefix={Icon && <Icon />}
-                    onClick={onClick}
-                    className={tertiaryButtonStyle}
+                    className={classNames.tertiaryButton}
                   >
                     {text}
                   </Button>
@@ -127,3 +127,8 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
     </Base>
   )
 }
+
+const Description = memo<PropsWithChildren>(
+  ({ children }) =>
+    children && <p className="smarthr-ui-BottomFixedArea-description">{children}</p>,
+)
