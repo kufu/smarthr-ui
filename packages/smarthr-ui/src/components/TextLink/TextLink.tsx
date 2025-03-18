@@ -11,8 +11,9 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ElementRef, type ElementRefProps } from '../../types'
 import { FaUpRightFromSquareIcon } from '../Icon'
+
+import type { ElementRef, ElementRefProps } from '../../types'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
