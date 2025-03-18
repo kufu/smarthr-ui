@@ -1,12 +1,13 @@
 import React, { type FC, useMemo } from 'react'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
+
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 export type BaseProps = DialogHeaderProps &
   DialogBodyProps & {

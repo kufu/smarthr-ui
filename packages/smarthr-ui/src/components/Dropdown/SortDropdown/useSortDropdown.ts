@@ -10,8 +10,9 @@ import {
 
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
-import { type SortDropdown } from './SortDropdown'
 import { sortDropdownStyle } from './style'
+
+import type { SortDropdown } from './SortDropdown'
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 

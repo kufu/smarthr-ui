@@ -46,6 +46,7 @@ export default [
           fixStyle: 'inline-type-imports',
         }
       ],
+      '@typescript-eslint/no-import-type-side-effects': 'error',
     },
   },
   {

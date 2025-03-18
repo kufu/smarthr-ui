@@ -17,7 +17,6 @@ import React, {
 import Draggable from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
@@ -26,6 +25,8 @@ import { FaGripIcon, FaXmarkIcon } from '../Icon'
 import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
 import { useDialogPortal } from './useDialogPortal'
+
+import type { DecoratorsType } from '../../hooks/useDecorators'
 
 type Props = PropsWithChildren<{
   /**

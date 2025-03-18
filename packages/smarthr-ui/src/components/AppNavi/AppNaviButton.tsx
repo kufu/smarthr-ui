@@ -2,9 +2,10 @@ import React, { type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
-import { type ComponentProps as IconProps } from '../Icon'
 
 import { itemClassNameGenerator } from './itemClassNameGenerator'
+
+import type { ComponentProps as IconProps } from '../Icon'
 
 export type AppNaviButtonProps = PropsWithChildren<{
   /** 表示するアイコンタイプ */

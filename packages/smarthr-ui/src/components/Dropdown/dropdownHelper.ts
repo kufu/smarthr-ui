@@ -1,6 +1,6 @@
-import { type RefObject } from 'react'
-
 import { tabbable } from '../../libs/tabbable'
+
+import type { RefObject } from 'react'
 
 export type Rect = {
   top: number

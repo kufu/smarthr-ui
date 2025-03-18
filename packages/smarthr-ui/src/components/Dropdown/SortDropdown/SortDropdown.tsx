@@ -8,7 +8,6 @@ import React, {
   type ReactNode,
 } from 'react'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Fieldset } from '../../Fieldset'
 import { FormControl } from '../../FormControl'
@@ -21,6 +20,8 @@ import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 import { useSortDropdown } from './useSortDropdown'
+
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 type SortFieldType = {
   value: string
