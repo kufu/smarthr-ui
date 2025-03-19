@@ -1,4 +1,4 @@
-import React, { type FC, type KeyboardEventHandler, useCallback, useMemo } from 'react'
+import { type ChangeEvent, type FC, type KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
@@ -106,7 +106,7 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
   const onChangeInput = useMemo(
     () =>
       onSelectItem
-        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
+        ? (e: ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
         : undefined,
     [onSelectItem],
   )

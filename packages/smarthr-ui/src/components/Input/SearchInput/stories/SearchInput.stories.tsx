@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Stack } from '../../../Layout'
 import InputStory from '../../stories/Input.stories'
 import { SearchInput } from '../SearchInput'

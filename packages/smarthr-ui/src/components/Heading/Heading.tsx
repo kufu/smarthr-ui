@@ -1,12 +1,6 @@
 'use client'
 
-import React, {
-  type ComponentProps,
-  type PropsWithChildren,
-  memo,
-  useContext,
-  useMemo,
-} from 'react'
+import { type ComponentProps, type PropsWithChildren, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'

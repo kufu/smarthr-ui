@@ -1,4 +1,4 @@
-import React, { type FC, useContext } from 'react'
+import { type FC, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isChildNavigation } from '../../utils'

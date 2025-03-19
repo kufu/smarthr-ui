@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Stack } from '../../Layout'
 import { DefinitionList } from '../DefinitionList'
 import { DefinitionListItem } from '../DefinitionListItem'

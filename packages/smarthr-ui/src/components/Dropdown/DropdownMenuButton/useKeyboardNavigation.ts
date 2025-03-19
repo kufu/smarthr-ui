@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { type RefObject, useCallback, useEffect } from 'react'
 
 const matchesDisabledState = (element: Element): boolean =>
   element.matches(':disabled') || element.getAttribute('aria-disabled') === 'true'
@@ -67,7 +67,7 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
   }
 }
 
-const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
+const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!containerRef.current || !document.activeElement) {

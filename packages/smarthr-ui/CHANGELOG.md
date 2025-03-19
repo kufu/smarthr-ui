@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [66.1.0](https://github.com/kufu/smarthr-ui/compare/v66.0.0...v66.1.0) (2025-03-18)
+
+
+### Features
+
+* FormControl, Fieldset コンポーネントに直接StatusLabelコンポーネントを渡せる属性、statusLabelsを追加する ([#5465](https://github.com/kufu/smarthr-ui/issues/5465)) ([324ac76](https://github.com/kufu/smarthr-ui/commit/324ac7619871e2d99867ac9960b980340bf82ba9))
+
+
+### Bug Fixes
+
+* AccordionPanelが特定の状況でスクロール領域を不自然に伸ばしてしまう場合がある問題を修正する ([#5461](https://github.com/kufu/smarthr-ui/issues/5461)) ([75a0426](https://github.com/kufu/smarthr-ui/commit/75a0426cca29018396d830120ab29f85bd6c6db8))
+* **AppHeader:** Navigationのaria-currentがpageにならない修正漏れを改修 ([#5466](https://github.com/kufu/smarthr-ui/issues/5466)) ([ae1de53](https://github.com/kufu/smarthr-ui/commit/ae1de538c00c536902585d256c02aa5726136336))
+* libディレクトリをexportできるように修正 ([#5456](https://github.com/kufu/smarthr-ui/issues/5456)) ([1c94624](https://github.com/kufu/smarthr-ui/commit/1c9462425518d2628061279ea737d3cdd610e342))
+* package.jsonをexportsに含める ([#5462](https://github.com/kufu/smarthr-ui/issues/5462)) ([57744d0](https://github.com/kufu/smarthr-ui/commit/57744d0cb3fc964538954af5cb83c4dc834227cc))
+* **StepFormDialog, useDialogPortal, SectioningContent:** RSC対応 ([#5457](https://github.com/kufu/smarthr-ui/issues/5457)) ([2ad3fb3](https://github.com/kufu/smarthr-ui/commit/2ad3fb366da1772cc98f634533c9affdc5168d96))
+
 ## [66.0.0](https://github.com/kufu/smarthr-ui/compare/v65.3.0...v66.0.0) (2025-03-11)
 
 

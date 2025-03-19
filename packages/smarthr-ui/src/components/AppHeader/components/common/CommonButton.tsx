@@ -1,4 +1,4 @@
-import React, { type ComponentPropsWithoutRef, type ReactNode, memo, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 export const commonButtonClassNameGenerator = tv({

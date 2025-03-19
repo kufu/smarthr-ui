@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { AccordionPanel } from '../AccordionPanel'
 import { AccordionPanelContent } from '../AccordionPanelContent'
 import { AccordionPanelItem } from '../AccordionPanelItem'

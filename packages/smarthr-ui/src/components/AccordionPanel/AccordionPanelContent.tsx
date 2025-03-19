@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type ComponentPropsWithoutRef,
   type FC,
   type PropsWithChildren,
