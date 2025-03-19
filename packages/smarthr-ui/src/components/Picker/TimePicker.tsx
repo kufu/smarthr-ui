@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 

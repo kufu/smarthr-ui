@@ -1,12 +1,14 @@
 'use client'
 
-import React, {
+import {
   type ComponentProps,
   type FC,
+  type KeyboardEvent,
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   type RefObject,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -223,7 +225,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   const leftStyle = centering.left !== undefined ? centering.left : left
 
   const handleArrowKey = useCallback(
-    (e: React.KeyboardEvent) => {
+    (e: KeyboardEvent) => {
       if (!isOpen || document.activeElement !== e.currentTarget) {
         return
       }
@@ -418,11 +420,11 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   )
 }
 
-const Handler = React.memo<{
+const Handler = memo<{
   'aria-label': string
   'aria-valuetext': string | undefined
   className: string
-  onArrowKeyDown: (e: React.KeyboardEvent) => void
+  onArrowKeyDown: (e: KeyboardEvent) => void
 }>(({ onArrowKeyDown, ...rest }) => (
   // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
   <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
@@ -430,7 +432,7 @@ const Handler = React.memo<{
   </div>
 ))
 
-const CloseButton = React.memo<{
+const CloseButton = memo<{
   className: string
   iconAlt: ReactNode
   onClick: (e: MouseEvent<HTMLButtonElement>) => void

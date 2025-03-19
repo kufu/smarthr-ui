@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
+import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { RadioButton } from '../RadioButton'

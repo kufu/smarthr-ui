@@ -1,4 +1,4 @@
-import React, { type FC, useContext } from 'react'
+import { type FC, useContext } from 'react'
 
 import { MenuSubHeader } from './MenuSubHeader'
 import { NavigationContext } from './NavigationContext'

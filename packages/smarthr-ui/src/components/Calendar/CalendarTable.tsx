@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
-import React, {
+import {
   type ComponentPropsWithoutRef,
   type FC,
   type MouseEvent,
+  memo,
   useCallback,
   useMemo,
 } from 'react'
@@ -104,7 +105,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   )
 }
 
-const MemoizedThead = React.memo<{ thStyle: string }>(({ thStyle }) => (
+const MemoizedThead = memo<{ thStyle: string }>(({ thStyle }) => (
   <thead>
     <tr>
       {daysInWeek.map((day) => (
@@ -116,9 +117,9 @@ const MemoizedThead = React.memo<{ thStyle: string }>(({ thStyle }) => (
   </thead>
 ))
 
-const NullTd = React.memo<{ className: string }>(({ className }) => <td className={className} />)
+const NullTd = memo<{ className: string }>(({ className }) => <td className={className} />)
 
-const SelectTdButton = React.memo<{
+const SelectTdButton = memo<{
   date: number
   currentDay: DayJsType
   selectedDayText: string
@@ -151,7 +152,7 @@ const SelectTdButton = React.memo<{
   )
 
   const actualOnClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       onClick(e, target.date)
     },
     [onClick, target.date],
@@ -173,6 +174,6 @@ const SelectTdButton = React.memo<{
   )
 })
 
-const SelectButtonTdDateCell = React.memo<{ children: number; className: string }>(
+const SelectButtonTdDateCell = memo<{ children: number; className: string }>(
   ({ children, className }) => <span className={className}>{children}</span>,
 )

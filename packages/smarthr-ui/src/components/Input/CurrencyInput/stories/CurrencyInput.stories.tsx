@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { FaMoneyCheckDollarIcon } from '../../../Icon'
 import { CurrencyInput } from '../CurrencyInput'
 

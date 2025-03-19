@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'

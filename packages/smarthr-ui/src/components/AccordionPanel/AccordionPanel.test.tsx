@@ -1,6 +1,5 @@
 import { userEvent } from '@storybook/test'
 import { render, screen } from '@testing-library/react'
-import React from 'react'
 import { config } from 'react-transition-group'
 
 import { Fieldset } from '../Fieldset'

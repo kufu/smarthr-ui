@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -14,7 +14,7 @@ const DEFAULT_VISUALLY_HIDDEN_TEXT = 'から'
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
 
-export const RangeSeparator: React.FC<Props> = ({ decorators }) => {
+export const RangeSeparator: FC<Props> = ({ decorators }) => {
   const decorated = useMemo(() => {
     if (!decorators) {
       return {

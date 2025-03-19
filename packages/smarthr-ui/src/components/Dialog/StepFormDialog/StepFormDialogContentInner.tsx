@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type FC,
   type FormEvent,
   type PropsWithChildren,

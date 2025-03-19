@@ -1,5 +1,4 @@
 import { userEvent, within } from '@storybook/test'
-import React from 'react'
 
 import { Cluster } from '../../../Layout'
 import { SortDropdown } from '../SortDropdown'

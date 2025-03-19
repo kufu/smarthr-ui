@@ -1,4 +1,4 @@
-import React, {
+import {
   type KeyboardEvent,
   type PropsWithChildren,
   type RefObject,

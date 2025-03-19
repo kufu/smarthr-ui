@@ -1,6 +1,6 @@
 /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { render } from '@testing-library/react'
-import React from 'react'
+import { createRef } from 'react'
 
 import { Heading, PageHeading } from '../Heading'
 
@@ -123,7 +123,7 @@ describe('SectioningContent', () => {
   })
 
   it('SectioningContent には ref を渡すことができる', async () => {
-    const ref = React.createRef<HTMLDivElement>()
+    const ref = createRef<HTMLDivElement>()
     render(
       <Section ref={ref}>
         <Heading>heading</Heading>

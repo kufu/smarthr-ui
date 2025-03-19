@@ -1,4 +1,4 @@
-import React, { type FC, useState } from 'react'
+import { type FC, useState } from 'react'
 
 import { Header } from '../../../Header'
 import { useLocale } from '../../hooks/useLocale'

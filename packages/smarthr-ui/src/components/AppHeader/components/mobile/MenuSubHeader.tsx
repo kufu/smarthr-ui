@@ -1,10 +1,10 @@
-import React, { type FC, type ReactNode } from 'react'
-
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaArrowLeftIcon } from '../../../Icon'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
+
+import type { FC, ReactNode } from 'react'
 
 type Props = {
   title: ReactNode

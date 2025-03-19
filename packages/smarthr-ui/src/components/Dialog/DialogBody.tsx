@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap } from '../../types'
@@ -79,12 +79,7 @@ const dialogBody = tv({
   },
 })
 
-export const DialogBody: React.FC<Props> = ({
-  contentBgColor,
-  contentPadding,
-  className,
-  ...rest
-}) => {
+export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
   const actualPaddings = useMemo(() => {
     const initialized = contentPadding === undefined ? 1.5 : contentPadding
 

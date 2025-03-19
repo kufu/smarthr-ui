@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { Gap } from '../../../types'
 import { Stack } from '../../Layout'

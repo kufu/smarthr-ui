@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
@@ -109,7 +109,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   )
 }
 
-const ActionAreaCluster = React.memo<
+const ActionAreaCluster = memo<
   Pick<
     ActionDialogContentInnerProps,
     | 'onClickClose'
@@ -156,7 +156,7 @@ const ActionAreaCluster = React.memo<
   },
 )
 
-const ActionButton = React.memo<
+const ActionButton = memo<
   PropsWithChildren<{
     variant: ActionDialogContentInnerProps['actionTheme']
     disabled: ActionDialogContentInnerProps['actionDisabled']
@@ -176,7 +176,7 @@ const ActionButton = React.memo<
   </Button>
 ))
 
-const CloseButton = React.memo<
+const CloseButton = memo<
   Pick<ActionDialogContentInnerProps, 'decorators'> & {
     onClick: ActionDialogContentInnerProps['onClickClose']
     disabled: boolean

@@ -1,4 +1,3 @@
-import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -21,6 +20,7 @@ import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo'
 
 import type { HeaderProps } from '../../types'
+import type { FC } from 'react'
 
 const desktopHeader = tv({
   slots: {

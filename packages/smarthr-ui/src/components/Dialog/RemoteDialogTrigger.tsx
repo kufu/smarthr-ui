@@ -1,14 +1,20 @@
 'use client'
 
-import { cloneElement, useCallback, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type ReactElement,
+  cloneElement,
+  useCallback,
+  useMemo,
+} from 'react'
 
 import { TRIGGER_EVENT } from './useRemoteTrigger'
 
 import type { Button } from '../Button'
-import type { ReactElement } from 'react'
-import type React from 'react'
 
-const onClickRemoteDialogTrigger = (e: React.MouseEvent<HTMLElement>) => {
+const onClickRemoteDialogTrigger = (e: MouseEvent<HTMLElement>) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
       detail: { id: e.currentTarget.getAttribute('aria-controls') as string },
@@ -16,15 +22,15 @@ const onClickRemoteDialogTrigger = (e: React.MouseEvent<HTMLElement>) => {
   )
 }
 
-export const RemoteDialogTrigger: React.FC<
-  Pick<React.ComponentProps<typeof Button>, 'variant'> & {
+export const RemoteDialogTrigger: FC<
+  Pick<ComponentProps<typeof Button>, 'variant'> & {
     targetId: string
     onClick?: (open: () => void) => void
     children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls' | 'variant'>
   }
 > = ({ targetId, children, onClick, variant, ...rest }) => {
   const actualOnClick = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
+    (e: MouseEvent<HTMLElement>) => {
       if (onClick) {
         return onClick(() => {
           onClickRemoteDialogTrigger(e)

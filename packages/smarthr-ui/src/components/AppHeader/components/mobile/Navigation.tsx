@@ -1,4 +1,4 @@
-import React, { type FC, Fragment } from 'react'
+import { type FC, Fragment } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../../Text'

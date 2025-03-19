@@ -1,4 +1,4 @@
-import React, { type FC, useMemo } from 'react'
+import { type FC, type ReactNode, memo, useMemo } from 'react'
 
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
@@ -12,7 +12,7 @@ import type { DecoratorsType } from '../../../hooks/useDecorators'
 export type BaseProps = DialogHeaderProps &
   DialogBodyProps & {
     /** ダイアログの説明 */
-    description: React.ReactNode
+    description: ReactNode
     /** コンポーネント内の文言を変更するための関数を設定 */
     decorators?: DecoratorsType<'closeButtonLabel'>
   }
@@ -59,7 +59,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   )
 }
 
-const FooterCluster = React.memo<
+const FooterCluster = memo<
   Pick<MessageDialogContentInnerProps, 'onClickClose' | 'decorators'> & { className: string }
 >(({ onClickClose, decorators, className }) => {
   const children = useMemo(

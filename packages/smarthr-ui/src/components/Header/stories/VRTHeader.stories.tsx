@@ -1,5 +1,4 @@
 import { userEvent, within } from '@storybook/test'
-import React from 'react'
 
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { Stack } from '../../Layout'

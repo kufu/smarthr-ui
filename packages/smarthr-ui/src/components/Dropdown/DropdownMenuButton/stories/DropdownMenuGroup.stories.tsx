@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Button } from '../../../Button'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'

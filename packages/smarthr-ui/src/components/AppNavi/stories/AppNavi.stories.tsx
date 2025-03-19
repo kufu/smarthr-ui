@@ -1,4 +1,4 @@
-import React from 'react'
+import { ReactNode, FC } from 'react'
 
 import { AnchorButton, Button } from '../../Button'
 import { DropdownMenuGroup } from '../../Dropdown'
@@ -13,9 +13,9 @@ import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react'
 
-const Link: React.FC<{
+const Link: FC<{
   to: string
-  children: React.ReactNode
+  children: ReactNode
   disabled?: boolean
   className?: string
 }> = ({ to, children, disabled = false, className = '', ...props }) => (

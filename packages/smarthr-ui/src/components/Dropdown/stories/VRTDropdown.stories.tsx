@@ -1,5 +1,4 @@
 import { userEvent, within } from '@storybook/test'
-import React from 'react'
 
 import { Button } from '../../Button'
 import { Dropdown } from '../Dropdown'

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type PropsWithChildren, useContext } from 'react'
+import { type FC, type PropsWithChildren, createContext, useContext } from 'react'
 
 import { DropdownContext } from './Dropdown'
 import {
@@ -8,7 +8,7 @@ import {
   type ElementProps as InnerElementProps,
 } from './DropdownContentInner'
 
-export const DropdownContentContext = React.createContext<{
+export const DropdownContentContext = createContext<{
   onClickCloser: () => void
   controllable: boolean
 }>({
@@ -28,10 +28,7 @@ type Props = PropsWithChildren<{
 
 type ElementProps = Omit<InnerElementProps, keyof Props>
 
-export const DropdownContent: React.FC<Props & ElementProps> = ({
-  controllable = false,
-  ...props
-}) => {
+export const DropdownContent: FC<Props & ElementProps> = ({ controllable = false, ...props }) => {
   const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
 
   return (

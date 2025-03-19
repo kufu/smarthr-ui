@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { RadioButtonPanel } from '../RadioButtonPanel'
 
 import type { Meta, StoryObj } from '@storybook/react'

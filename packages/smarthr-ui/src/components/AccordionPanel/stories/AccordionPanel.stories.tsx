@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { Stack } from '../../Layout'
 import { AccordionPanel } from '../AccordionPanel'

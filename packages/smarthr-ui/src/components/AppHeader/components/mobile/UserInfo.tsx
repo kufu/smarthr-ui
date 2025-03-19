@@ -1,4 +1,4 @@
-import React, { type FC, memo, useCallback, useMemo, useState } from 'react'
+import { type FC, memo, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type ComponentPropsWithRef, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Td } from './Td'
@@ -74,7 +74,7 @@ const tdClassNameGenerator = tv({
   },
 })
 
-export const EmptyTableBody: React.FC<Props & ElementProps> = ({ children, padding, ...props }) => {
+export const EmptyTableBody: FC<Props & ElementProps> = ({ children, padding, ...props }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
   const tdClassName = useMemo(() => {

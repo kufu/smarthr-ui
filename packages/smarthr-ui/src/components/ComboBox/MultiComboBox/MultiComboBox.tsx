@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type ChangeEvent,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,

@@ -1,7 +1,7 @@
-import React, { type FC, type PropsWithChildren } from 'react'
-
 import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
+
+import type { FC, PropsWithChildren } from 'react'
 
 type Props = {
   onClick: () => void

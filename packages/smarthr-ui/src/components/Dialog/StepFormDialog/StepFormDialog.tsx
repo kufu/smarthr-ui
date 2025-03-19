@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type ComponentProps, type FormEvent, useCallback, useId, useRef } from 'react'
+import { type ComponentProps, type FC, type FormEvent, useCallback, useId, useRef } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -18,7 +18,7 @@ type Props = Omit<StepFormDialogContentInnerProps, 'titleId' | 'activeStep'> & D
 
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const StepFormDialog: React.FC<Props & ElementProps> = ({
+export const StepFormDialog: FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,

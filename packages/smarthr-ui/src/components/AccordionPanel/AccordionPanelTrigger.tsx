@@ -1,9 +1,12 @@
 'use client'
 
-import React, {
+import {
   type ComponentPropsWithoutRef,
   type FC,
+  type KeyboardEventHandler,
+  type MouseEvent,
   type PropsWithChildren,
+  memo,
   useCallback,
   useContext,
   useMemo,
@@ -93,15 +96,14 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   const actualOnClickTrigger = useMemo(
     () =>
       onClickTrigger
-        ? (e: React.MouseEvent<HTMLButtonElement>) =>
-            onClickTrigger(e.currentTarget.value, !isExpanded)
+        ? (e: MouseEvent<HTMLButtonElement>) => onClickTrigger(e.currentTarget.value, !isExpanded)
         : undefined,
     [isExpanded, onClickTrigger],
   )
   const actualOnClickProps = useMemo(
     () =>
       onClickProps
-        ? (e: React.MouseEvent<HTMLButtonElement>) => {
+        ? (e: MouseEvent<HTMLButtonElement>) => {
             const newExpandedItems = getNewExpandedItems(
               expandedItems,
               e.currentTarget.value,
@@ -116,7 +118,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   const handleClick = useMemo(() => {
     if (actualOnClickTrigger) {
       if (actualOnClickProps) {
-        return (e: React.MouseEvent<HTMLButtonElement>) => {
+        return (e: MouseEvent<HTMLButtonElement>) => {
           actualOnClickTrigger(e)
           actualOnClickProps(e)
         }
@@ -130,7 +132,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     return undefined
   }, [actualOnClickProps, actualOnClickTrigger])
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLButtonElement> = useCallback(
+  const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
     (e): void => {
       if (!parentRef?.current) {
         return
@@ -189,7 +191,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   )
 }
 
-const MemoizedTitle = React.memo<
+const MemoizedTitle = memo<
   PropsWithChildren<{
     iconPosition: undefined | 'left' | 'right'
     classNames: { leftIcon: string; rightIcon: string; title: string }

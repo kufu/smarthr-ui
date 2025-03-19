@@ -1,7 +1,8 @@
 'use client'
 
-import React, {
+import {
   type ComponentPropsWithRef,
+  type ComponentType,
   type PropsWithChildren,
   forwardRef,
   useMemo,
@@ -57,7 +58,7 @@ const classNameGenerator = tv({
 
 type Props = VariantProps<typeof classNameGenerator> &
   PropsWithChildren<{
-    as?: string | React.ComponentType<any>
+    as?: string | ComponentType<any>
   }> &
   ComponentPropsWithRef<'div'>
 

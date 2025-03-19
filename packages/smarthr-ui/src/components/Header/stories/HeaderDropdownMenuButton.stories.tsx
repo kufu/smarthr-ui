@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Button } from '../../Button'
 import { Header } from '../Header'
 import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
