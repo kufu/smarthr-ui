@@ -1,10 +1,11 @@
 'use client'
 
-import React, {
+import {
   type ComponentProps,
   type FC,
   type PropsWithChildren,
   type RefObject,
+  memo,
   useMemo,
   useRef,
 } from 'react'
@@ -134,7 +135,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   )
 }
 
-const Overlay = React.memo<
+const Overlay = memo<
   Pick<DialogContentInnerProps, 'onClickOverlay' | 'isOpen'> & { className: string }
 >(({ onClickOverlay, isOpen, className }) => {
   const handleClickOverlay = useMemo(

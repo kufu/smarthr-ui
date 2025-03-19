@@ -1,4 +1,3 @@
-import React, { type ComponentProps, type FC, type ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -21,6 +20,7 @@ import type {
   Navigation as NavigationType,
   ReleaseNoteProps,
 } from '../../types'
+import type { ComponentProps, FC, ReactNode } from 'react'
 
 const appNavi = tv({
   base: ['shr-overflow-x-auto shr-min-w-[auto]', 'max-[751px]:!shr-hidden'],
@@ -105,9 +105,8 @@ const buildDropdownMenu = (
         return (
           <Component
             {...rest}
-            // key={navigation.children}
             key={`${index}-${navigation.children.toString()}`}
-            aria-current={current}
+            aria-current={current && 'page'}
             className={commonButton({
               current,
               className,

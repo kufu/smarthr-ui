@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef } from 'react'
+import { ComponentPropsWithoutRef } from 'react'
 
 import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'

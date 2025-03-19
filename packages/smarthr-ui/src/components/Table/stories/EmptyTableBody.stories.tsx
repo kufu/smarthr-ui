@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Stack } from '../../Layout'
 import { EmptyTableBody } from '../EmptyTableBody'
 import { Table } from '../Table'

@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, memo } from 'react'
+import { type PropsWithChildren, memo } from 'react'
 
 import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'

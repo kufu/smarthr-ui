@@ -1,9 +1,8 @@
-import React from 'react'
-
 import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
+import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Fieldset } from '../Fieldset'
 
@@ -128,10 +127,10 @@ export const InnerMargin: StoryObj<typeof Fieldset> = {
   },
 }
 
-export const StatusLabelProps: StoryObj<typeof Fieldset> = {
-  name: 'statusLabelProps',
+export const StatusLabels: StoryObj<typeof Fieldset> = {
+  name: 'statusLabels',
   args: {
-    statusLabelProps: { type: 'grey', children: '任意' },
+    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
   },
 }
 

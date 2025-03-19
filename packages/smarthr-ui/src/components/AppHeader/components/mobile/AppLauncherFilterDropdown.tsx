@@ -1,4 +1,3 @@
-import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -10,6 +9,7 @@ import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
+import type { FC } from 'react'
 
 type Props = {
   page: Launcher['page']

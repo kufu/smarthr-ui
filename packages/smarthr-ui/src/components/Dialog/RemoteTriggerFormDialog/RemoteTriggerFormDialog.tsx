@@ -1,14 +1,14 @@
 'use client'
 
-import React from 'react'
-
 import { FormDialog } from '../FormDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
-type Props = Omit<React.ComponentProps<typeof FormDialog>, 'isOpen' | 'onClickClose' | 'id'> &
+import type { ComponentProps, FC } from 'react'
+
+type Props = Omit<ComponentProps<typeof FormDialog>, 'isOpen' | 'onClickClose' | 'id'> &
   Parameters<typeof useRemoteTrigger>[0]
 
-export const RemoteTriggerFormDialog: React.FC<Props> = ({
+export const RemoteTriggerFormDialog: FC<Props> = ({
   id,
   onClickClose,
   onToggle,

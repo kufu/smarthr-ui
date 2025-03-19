@@ -1,7 +1,6 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
 import { useArgs } from '@storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
-import React from 'react'
 
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'

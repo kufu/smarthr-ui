@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Button } from '../../Button'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'

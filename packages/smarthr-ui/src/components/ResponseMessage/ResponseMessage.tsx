@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import {
@@ -33,7 +33,7 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: React.FC<Props> = ({ type = 'info', children, ...other }) => {
+export const ResponseMessage: FC<Props> = ({ type = 'info', children, ...other }) => {
   const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
 

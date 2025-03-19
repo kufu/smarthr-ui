@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Cluster } from '../../Layout'
 import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'

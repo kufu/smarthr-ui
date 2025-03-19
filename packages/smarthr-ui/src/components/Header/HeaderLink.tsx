@@ -1,4 +1,4 @@
-import React, { type ComponentProps, memo, useMemo } from 'react'
+import { type ComponentProps, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { TextLink } from '../TextLink'

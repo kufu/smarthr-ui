@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconBase } from 'react-icons'
 
 import { generateIcon } from './generateIcon'

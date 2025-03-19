@@ -16,7 +16,7 @@
       "vitest/globals",
       "@testing-library/jest-dom"
     ],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,

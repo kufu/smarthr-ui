@@ -1,4 +1,3 @@
-import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button } from '../../../Button'
@@ -12,6 +11,7 @@ import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import type { HeaderProps, UserInfoProps } from '../../types'
+import type { FC } from 'react'
 
 // HeaderDropdownMenuButton と同じスタイルを適用
 const userInfo = tv({

@@ -1,10 +1,13 @@
 'use client'
 
 import dayjs from 'dayjs'
-import React, {
+import {
+  type ComponentProps,
   type ComponentPropsWithRef,
+  type FocusEventHandler,
   type ReactNode,
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -278,14 +281,14 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [isInputFocused, closeCalendar],
     )
 
-    const baseHandleBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
+    const baseHandleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
       (e) => {
         setIsInputFocused(false)
         updateDate(e.target.value ? stringToDate(e.target.value) : null)
       },
       [stringToDate, updateDate],
     )
-    const handleBlur = useMemo<React.FocusEventHandler<HTMLInputElement>>(
+    const handleBlur = useMemo<FocusEventHandler<HTMLInputElement>>(
       () =>
         onBlur
           ? (e) => {
@@ -391,10 +394,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
   },
 )
 
-const InputSuffixIcon = React.memo<{
+const InputSuffixIcon = memo<{
   styles: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
   alternativeFormat: null | ReactNode
-  caretIconColor: React.ComponentProps<typeof FaCalendarAltIcon>['color']
+  caretIconColor: ComponentProps<typeof FaCalendarAltIcon>['color']
 }>(({ styles, alternativeFormat, caretIconColor }) => (
   <span className={styles.inputSuffixLayout}>
     <span className={styles.inputSuffixWrapper}>

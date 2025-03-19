@@ -1,4 +1,4 @@
-import React, {
+import {
   type FC,
   type PropsWithChildren,
   type ReactNode,

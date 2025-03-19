@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'

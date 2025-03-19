@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdRadioButton } from '../TdRadioButton'

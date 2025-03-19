@@ -1,5 +1,5 @@
 import { background } from '@storybook/theming'
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { backgroundColor } from '../../../themes'
 import { Gap } from '../../../types'

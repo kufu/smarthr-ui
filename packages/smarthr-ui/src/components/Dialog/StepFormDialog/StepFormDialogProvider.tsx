@@ -1,4 +1,13 @@
-import React, { type ReactNode, createContext, useRef, useState } from 'react'
+'use client'
+
+import {
+  type FC,
+  type MutableRefObject,
+  type ReactNode,
+  createContext,
+  useRef,
+  useState,
+} from 'react'
 
 export type StepItem = {
   /** StepのID */
@@ -8,7 +17,7 @@ export type StepItem = {
 }
 
 type StepFormDialogContextType = {
-  stepQueue: React.MutableRefObject<StepItem[]>
+  stepQueue: MutableRefObject<StepItem[]>
   currentStep: StepItem
   setCurrentStep: (step: StepItem) => void
 }
@@ -22,7 +31,7 @@ type Props = {
   children: ReactNode
   firstStep: StepItem
 }
-export const StepFormDialogProvider: React.FC<Props> = ({ children, firstStep }) => {
+export const StepFormDialogProvider: FC<Props> = ({ children, firstStep }) => {
   const [currentStep, setCurrentStep] = useState<StepItem>(firstStep)
   const stepQueue = useRef<StepItem[]>([])
 

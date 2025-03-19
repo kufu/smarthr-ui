@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions'
-import React from 'react'
 
 import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'

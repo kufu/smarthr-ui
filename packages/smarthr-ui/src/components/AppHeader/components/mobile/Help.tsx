@@ -1,11 +1,11 @@
-import React, { type FC } from 'react'
-
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
 import { useTranslate } from '../../hooks/useTranslate'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
+
+import type { FC } from 'react'
 
 type Props = {
   helpPageUrl?: string | null

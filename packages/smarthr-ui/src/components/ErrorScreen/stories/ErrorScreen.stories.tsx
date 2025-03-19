@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { ResponseMessage } from '../../ResponseMessage'
 import { SmartHRLogo } from '../../SmartHRLogo'
 import { ErrorScreen } from '../ErrorScreen'

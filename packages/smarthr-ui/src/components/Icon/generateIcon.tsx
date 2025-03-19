@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
+import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { colors, fontSize, textColor } from '../../themes'

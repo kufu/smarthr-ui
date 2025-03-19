@@ -1,5 +1,4 @@
 import { fireEvent, within } from '@storybook/test'
-import React from 'react'
 
 import { Cluster, Stack } from '../../Layout'
 import { Badge } from '../Badge'
