@@ -216,8 +216,17 @@ export const ModelessDialog: FC<
     [defaultAriaValuetext, wrapperPosition, decorated],
   )
 
-  const topStyle = centering.top ?? top
-  const leftStyle = centering.left ?? left
+  const positionStyle = useMemo(
+    () => ({
+      top: centering.top ?? top,
+      left: centering.left ?? left,
+      right,
+      bottom,
+      width,
+      height,
+    }),
+    [centering, top, left, right, bottom, width, height],
+  )
 
   const handleArrowKey = useCallback(
     (e: KeyboardEvent) => {
@@ -368,20 +377,13 @@ export const ModelessDialog: FC<
       >
         <Base
           {...props}
-          radius="m"
-          layer={3}
-          style={{
-            top: topStyle,
-            left: leftStyle,
-            right,
-            bottom,
-            width,
-            height,
-          }}
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
+          radius="m"
+          layer={3}
           className={classNames.wrapper}
+          style={positionStyle}
         >
           {/* dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
