@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react'
-import React from 'react'
 
 import { useMultiOptions } from '../useOptions'
 

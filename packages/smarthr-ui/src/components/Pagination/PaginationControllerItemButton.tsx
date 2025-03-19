@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Button } from '../Button'
 import {
   FaAngleDoubleLeftIcon,
@@ -7,6 +5,8 @@ import {
   FaChevronLeftIcon,
   FaChevronRightIcon,
 } from '../Icon'
+
+import type { FC } from 'react'
 
 type Props = {
   targetPage: number
@@ -26,7 +26,7 @@ const ICON_MAPPER = {
   },
 }
 
-export const PaginationControllerItemButton: React.FC<Props> = ({
+export const PaginationControllerItemButton: FC<Props> = ({
   direction,
   disabled,
   double,

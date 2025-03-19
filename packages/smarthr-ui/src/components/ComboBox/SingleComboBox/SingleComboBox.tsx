@@ -1,8 +1,9 @@
 'use client'
 
-import React, {
+import {
   type ChangeEvent,
   type ComponentPropsWithoutRef,
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type Ref,
@@ -287,7 +288,7 @@ const ActualSingleComboBox = <T,>(
   const onCompositionStart = useCallback(() => setIsComposing(true), [])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (e: KeyboardEvent<HTMLInputElement>) => {
       if (isComposing) {
         return
       }
@@ -319,7 +320,7 @@ const ActualSingleComboBox = <T,>(
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
   const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
 
       onKeyPress?.(e)

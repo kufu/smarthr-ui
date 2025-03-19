@@ -1,4 +1,4 @@
-import React, { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button } from '../../../Button'

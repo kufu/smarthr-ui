@@ -1,7 +1,7 @@
-import React, { type ComponentProps } from 'react'
-
 import { ActualFormControl } from '../FormControl/FormControl'
 
-export const Fieldset: React.FC<
+import type { ComponentProps, FC } from 'react'
+
+export const Fieldset: FC<
   Omit<ComponentProps<typeof ActualFormControl>, 'as' | 'htmlFor' | 'labelId'>
 > = (props) => <ActualFormControl {...props} as="fieldset" />

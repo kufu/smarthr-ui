@@ -1,4 +1,4 @@
-import React, { type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
+import { type ComponentType, type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -11,7 +11,7 @@ export type AppNaviDropdownProps = PropsWithChildren<{
   /** ドロップダウンのコンテンツ */
   dropdownContent: ReactNode
   /** 表示するアイコンタイプ */
-  icon?: React.ComponentType<IconProps>
+  icon?: ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
   displayCaret?: boolean

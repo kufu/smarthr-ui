@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 
 import { Button } from '../Button'
 
@@ -7,7 +7,7 @@ type Props = {
   disabled: boolean
 }
 
-export const PaginationItemButton: React.FC<Props> = ({ page, disabled }) => {
+export const PaginationItemButton: FC<Props> = ({ page, disabled }) => {
   const attrs = useMemo(() => {
     const result: {
       'aria-label': string

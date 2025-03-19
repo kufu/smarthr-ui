@@ -1,4 +1,3 @@
-import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../../../Button'
@@ -16,6 +15,7 @@ import { Translate } from '../common/Translate'
 import { AppLauncherFilterDropdown } from './AppLauncherFilterDropdown'
 
 import type { Launcher } from '../../types'
+import type { FC } from 'react'
 
 type Props = {
   features: Array<Launcher['feature']>

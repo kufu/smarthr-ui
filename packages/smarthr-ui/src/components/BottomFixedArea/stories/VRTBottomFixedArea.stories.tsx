@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { BottomFixedArea } from '../BottomFixedArea'
 
 import {

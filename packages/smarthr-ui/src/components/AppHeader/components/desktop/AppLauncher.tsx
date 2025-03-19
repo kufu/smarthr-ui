@@ -1,11 +1,4 @@
-import React, {
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'

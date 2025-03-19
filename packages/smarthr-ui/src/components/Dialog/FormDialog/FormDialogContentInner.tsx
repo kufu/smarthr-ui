@@ -1,8 +1,9 @@
-import React, {
+import {
   type FC,
   type FormEvent,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useCallback,
   useMemo,
 } from 'react'
@@ -135,7 +136,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   )
 }
 
-const ActionAreaCluster = React.memo<
+const ActionAreaCluster = memo<
   Pick<
     FormDialogContentInnerProps,
     | 'onClickClose'
@@ -169,7 +170,7 @@ const ActionAreaCluster = React.memo<
   ),
 )
 
-const ActionButton = React.memo<
+const ActionButton = memo<
   PropsWithChildren<{
     variant: FormDialogContentInnerProps['actionTheme']
     disabled: FormDialogContentInnerProps['actionDisabled']
@@ -187,7 +188,7 @@ const ActionButton = React.memo<
   </Button>
 ))
 
-const CloseButton = React.memo<
+const CloseButton = memo<
   Pick<FormDialogContentInnerProps, 'decorators'> & {
     onClick: FormDialogContentInnerProps['onClickClose']
     disabled: boolean

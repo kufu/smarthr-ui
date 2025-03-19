@@ -1,12 +1,10 @@
-import React, { useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { PageHeading } from '../Heading'
 import { Center, Stack } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
-
-import type { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
 
 type Props = {
   /** ロゴ */

@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import React, { ComponentProps, useState } from 'react'
+import { ChangeEvent, ComponentProps, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
@@ -42,10 +42,10 @@ const radioButtonListWrapper = tv({
 
 export const Default: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
-  const [value, setValue] = React.useState('Apple')
+  const [value, setValue] = useState('Apple')
   const [responseStatus, setResponseStatus] =
     useState<ComponentProps<typeof ActionDialog>['responseStatus']>()
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const stepOrder = [
     { id: 'a', stepNumber: 1 },
     {
