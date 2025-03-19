@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type ComponentPropsWithRef,
   type ReactNode,
   type WheelEvent,

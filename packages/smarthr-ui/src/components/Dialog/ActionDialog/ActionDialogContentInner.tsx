@@ -1,8 +1,7 @@
 'use client'
 
-import React, { type FC, type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
@@ -11,6 +10,8 @@ import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
+
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -108,7 +109,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   )
 }
 
-const ActionAreaCluster = React.memo<
+const ActionAreaCluster = memo<
   Pick<
     ActionDialogContentInnerProps,
     | 'onClickClose'
@@ -155,7 +156,7 @@ const ActionAreaCluster = React.memo<
   },
 )
 
-const ActionButton = React.memo<
+const ActionButton = memo<
   PropsWithChildren<{
     variant: ActionDialogContentInnerProps['actionTheme']
     disabled: ActionDialogContentInnerProps['actionDisabled']
@@ -175,7 +176,7 @@ const ActionButton = React.memo<
   </Button>
 ))
 
-const CloseButton = React.memo<
+const CloseButton = memo<
   Pick<ActionDialogContentInnerProps, 'decorators'> & {
     onClick: ActionDialogContentInnerProps['onClickClose']
     disabled: boolean

@@ -1,8 +1,9 @@
 'use client'
 
-import React, {
+import {
   type ChangeEvent,
   type ComponentPropsWithoutRef,
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type Ref,
@@ -169,13 +170,7 @@ const ActualSingleComboBox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const {
-    renderListBox,
-    activeOption,
-    handleKeyDown: handleListBoxKeyDown,
-    listBoxId,
-    listBoxRef,
-  } = useListBox<T>({
+  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListBox<T>({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -293,7 +288,7 @@ const ActualSingleComboBox = <T,>(
   const onCompositionStart = useCallback(() => setIsComposing(true), [])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (e: KeyboardEvent<HTMLInputElement>) => {
       if (isComposing) {
         return
       }
@@ -316,16 +311,16 @@ const ActualSingleComboBox = <T,>(
           setIsExpanded(true)
         }
       }
-      handleListBoxKeyDown(e)
+      onKeyDownListBox(e)
     },
-    [isComposing, isExpanded, unfocus, handleListBoxKeyDown],
+    [isComposing, isExpanded, unfocus, onKeyDownListBox],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
   const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
 
       onKeyPress?.(e)

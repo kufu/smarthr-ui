@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'

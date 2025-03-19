@@ -1,4 +1,4 @@
-import React, {
+import {
   type ComponentProps,
   type FC,
   type PropsWithChildren,

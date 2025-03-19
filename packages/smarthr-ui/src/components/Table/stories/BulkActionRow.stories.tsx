@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 

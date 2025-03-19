@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
-import React, { type ComponentProps, type FC, type PropsWithChildren } from 'react'
 
-import { type AppHeader } from '../AppHeader'
+import type { AppHeader } from '../AppHeader'
+import type { ComponentProps, FC, PropsWithChildren } from 'react'
 
 const CustomLink: FC<PropsWithChildren<{ to: string; className?: string }>> = (props) => (
   <a {...props} href={props.to} className={props.className ?? ''}>

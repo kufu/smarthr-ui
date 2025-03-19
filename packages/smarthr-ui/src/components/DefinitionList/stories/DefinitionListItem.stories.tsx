@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { DefinitionList } from '../DefinitionList'
 import { DefinitionListItem } from '../DefinitionListItem'
 

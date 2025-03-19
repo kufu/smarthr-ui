@@ -1,7 +1,8 @@
-import React, {
+import {
   type ComponentPropsWithoutRef,
   type ElementType,
   type FC,
+  type MouseEvent,
   type PropsWithoutRef,
   type ReactNode,
   type Ref,
@@ -11,8 +12,9 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ElementRef, type ElementRefProps } from '../../types'
 import { FaUpRightFromSquareIcon } from '../Icon'
+
+import type { ElementRef, ElementRefProps } from '../../types'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
@@ -21,7 +23,7 @@ type ElementProps<T extends ElementType> = Omit<
 
 type Props<T extends ElementType> = {
   /** リンクをクリックした時に発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent) => void
+  onClick?: (e: MouseEvent) => void
   /** テキストの前に表示するアイコン */
   prefix?: ReactNode
   /** テキストの後ろに表示するアイコン */
@@ -96,7 +98,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         return onClick
       }
 
-      return (e: React.MouseEvent) => {
+      return (e: MouseEvent) => {
         e.preventDefault()
         onClick(e)
       }

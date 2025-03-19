@@ -1,13 +1,13 @@
 import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import React, { useState } from 'react'
+import { type FC, useState } from 'react'
 
 import { Button } from '../../Button'
 
 import { ActionDialog } from './ActionDialog'
 
 describe('ActionDialog', () => {
-  const DialogTemplate: React.FC = () => {
+  const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>

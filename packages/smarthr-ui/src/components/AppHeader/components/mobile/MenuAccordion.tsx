@@ -1,4 +1,4 @@
-import React, { type Dispatch, type FC, type PropsWithChildren, type ReactNode, useId } from 'react'
+import { type Dispatch, type FC, type PropsWithChildren, type ReactNode, useId } from 'react'
 
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
