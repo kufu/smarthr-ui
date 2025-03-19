@@ -1,4 +1,4 @@
-import React, {
+import {
   type ComponentProps,
   type FC,
   type MouseEvent,
@@ -11,10 +11,11 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
-import { type Header } from '../../../Header'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Text } from '../../../Text'
 import { CommonButton } from '../common/CommonButton'
+
+import type { Header } from '../../../Header'
 
 const tenantDropdownTriggerButton = tv({
   base: [

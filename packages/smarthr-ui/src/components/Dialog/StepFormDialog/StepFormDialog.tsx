@@ -1,9 +1,8 @@
 'use client'
 
-import React, { type ComponentProps, type FormEvent, useCallback, useId, useRef } from 'react'
+import { type ComponentProps, type FC, type FormEvent, useCallback, useId, useRef } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { type FocusTrapRef } from '../FocusTrap'
 import { useDialogPortal } from '../useDialogPortal'
 
 import {
@@ -12,13 +11,14 @@ import {
 } from './StepFormDialogContentInner'
 import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
 
+import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 
 type Props = Omit<StepFormDialogContentInnerProps, 'titleId' | 'activeStep'> & DialogProps
 
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const StepFormDialog: React.FC<Props & ElementProps> = ({
+export const StepFormDialog: FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,

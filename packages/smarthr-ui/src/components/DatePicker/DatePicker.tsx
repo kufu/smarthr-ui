@@ -1,7 +1,7 @@
 'use client'
 
 import dayjs from 'dayjs'
-import React, {
+import {
   type ComponentProps,
   type ComponentPropsWithRef,
   type FocusEventHandler,

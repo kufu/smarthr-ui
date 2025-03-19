@@ -1,6 +1,5 @@
 import { userEvent, within } from '@storybook/test'
 import dayjs from 'dayjs'
-import React from 'react'
 
 import { Cluster } from '../../Layout'
 import { Calendar } from '../Calendar'

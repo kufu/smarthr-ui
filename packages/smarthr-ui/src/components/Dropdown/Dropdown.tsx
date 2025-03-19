@@ -1,11 +1,12 @@
 'use client'
 
-import React, {
+import {
   type FC,
   type MutableRefObject,
   type PropsWithChildren,
   type ReactNode,
   createContext,
+  createRef,
   useCallback,
   useContext,
   useEffect,
@@ -40,7 +41,7 @@ const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
-  triggerElementRef: React.createRef(),
+  triggerElementRef: createRef(),
   rootTriggerRef: null,
   onClickTrigger: () => {
     /* noop */

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { backgroundColor } from '../../../themes'
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { HeaderLink } from '../HeaderLink'

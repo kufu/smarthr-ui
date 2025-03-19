@@ -1,11 +1,12 @@
 'use client'
 
 import dayjs from 'dayjs'
-import React, {
+import {
   type ComponentProps,
   type MouseEvent,
   type PropsWithChildren,
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -128,14 +129,14 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     )
 
     const onSelectYear = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
+      (e: MouseEvent<HTMLButtonElement>) => {
         setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
         setIsSelectingYear(false)
       },
       [currentMonth],
     )
 
-    const onClickSelectYear = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const onClickSelectYear = useCallback((e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
       setIsSelectingYear((current) => !current)
     }, [])
@@ -183,14 +184,14 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
   },
 )
 
-const YearMonthRender = React.memo<PropsWithChildren<{ className: string }>>(
+const YearMonthRender = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => <div className={className}>{children}</div>,
 )
 
-const YearSelectButton = React.memo<{
+const YearSelectButton = memo<{
   'aria-expanded': boolean
   'aria-controls': string
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
 }>((rest) => (
   <Button {...rest} size="s" square>
@@ -198,7 +199,7 @@ const YearSelectButton = React.memo<{
   </Button>
 ))
 
-const MonthDirectionCluster = React.memo<{
+const MonthDirectionCluster = memo<{
   isSelectingYear: boolean
   directionMonth: {
     prev: DayJsType

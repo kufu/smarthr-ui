@@ -1,15 +1,15 @@
-import React, { type ComponentType, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentType, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ComponentProps as IconProps } from '../Icon'
-
 import { itemClassNameGenerator } from './itemClassNameGenerator'
+
+import type { ComponentProps as IconProps } from '../Icon'
 
 export type AppNaviCustomTagProps = PropsWithChildren<{
   /** このボタンのカスタムタグ */
   tag: ComponentType<any>
   /** 表示するアイコンタイプ */
-  icon?: React.ComponentType<IconProps>
+  icon?: ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
 }> & { [key: string]: any }

@@ -1,4 +1,4 @@
-import React, {
+import {
   type ComponentPropsWithoutRef,
   type ComponentType,
   type ElementType,
@@ -11,11 +11,10 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ComponentProps as IconProps } from '../Icon'
-
 import { itemClassNameGenerator } from './itemClassNameGenerator'
 
 import type { ElementRef, ElementRefProps } from '../../types'
+import type { ComponentProps as IconProps } from '../Icon'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,

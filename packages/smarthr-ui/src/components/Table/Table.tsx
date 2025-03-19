@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
