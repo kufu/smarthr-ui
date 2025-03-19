@@ -1,5 +1,4 @@
 import { Heading } from '@storybook/blocks'
-import React from 'react'
 
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'

@@ -1,4 +1,10 @@
-import React, { type ComponentPropsWithoutRef, type PropsWithChildren, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  memo,
+  useMemo,
+} from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
@@ -92,7 +98,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const Badge = React.memo<BadgeProps>(({ count, showZero, ...rest }) => {
+export const Badge = memo<BadgeProps>(({ count, showZero, ...rest }) => {
   // ドット表示の場合、数値表示は無いため、早期returnする
   if (rest.dot) {
     return <ActualBadge {...rest} />
@@ -108,7 +114,7 @@ export const Badge = React.memo<BadgeProps>(({ count, showZero, ...rest }) => {
   return <ActualBadge {...rest} count={actualCount} />
 })
 
-const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
+const ActualBadge: FC<Omit<BadgeProps, 'showZero'>> = ({
   count,
   overflowCount,
   type,
@@ -144,9 +150,9 @@ const ActualBadge: React.FC<Omit<BadgeProps, 'showZero'>> = ({
   )
 }
 
-const Dot = React.memo<{ className: string }>(({ className }) => <span className={className} />)
+const Dot = memo<{ className: string }>(({ className }) => <span className={className} />)
 
-const CountText = React.memo<Pick<BadgeProps, 'count' | 'overflowCount'> & { className: string }>(
+const CountText = memo<Pick<BadgeProps, 'count' | 'overflowCount'> & { className: string }>(
   ({ count, overflowCount = 99, className }) =>
     count !== undefined && (
       <Text size="XS" className={className}>

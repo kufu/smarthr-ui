@@ -1,5 +1,4 @@
-import React from 'react'
-
+import { Fragment } from 'react'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
@@ -21,7 +20,7 @@ export default {
     <Stack>
       {[undefined, true].map((fixed) =>
         [undefined, 'both'].map((borderType) => {
-          const Wrapper = fixed ? TableReel : React.Fragment
+          const Wrapper = fixed ? TableReel : Fragment
           const wrapperProps = fixed ? { className: 'shr-w-[50vw]' } : {}
           return (
             <Wrapper {...wrapperProps} key={String(fixed)}>

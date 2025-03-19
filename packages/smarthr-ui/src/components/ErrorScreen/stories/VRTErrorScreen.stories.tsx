@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { ErrorScreen } from '../ErrorScreen'
 
 import type { Meta, StoryObj } from '@storybook/react'

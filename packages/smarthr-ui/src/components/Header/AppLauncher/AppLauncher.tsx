@@ -1,4 +1,4 @@
-import React, { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
+import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'

@@ -7,6 +7,14 @@ module.exports = {
    * @see https://jestjs.io/docs/configuration
    */
 
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react-jsx',
+      },
+    },
+  },
+
   testPathIgnorePatterns: [
     /**
      * subocomponents で使われれているコンポーネントは export defaults を持たず、

@@ -1,4 +1,4 @@
-import React, { type MouseEvent, memo, useCallback, useMemo } from 'react'
+import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'

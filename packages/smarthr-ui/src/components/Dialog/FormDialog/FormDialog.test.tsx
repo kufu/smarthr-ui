@@ -1,6 +1,6 @@
 import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import React, { useRef, useState } from 'react'
+import { type FC, useRef, useState } from 'react'
 
 import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
@@ -10,7 +10,7 @@ import { Text } from '../../Text'
 import { FormDialog } from './FormDialog'
 
 describe('FormDialog', () => {
-  const DialogTemplate: React.FC = () => {
+  const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>
@@ -52,7 +52,7 @@ describe('FormDialog', () => {
     expect(screen.getByRole('button', { name: 'FormDialog' })).toHaveFocus()
   })
 
-  const DialogTemplateWithFocusTrap: React.FC = () => {
+  const DialogTemplateWithFocusTrap: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const openedFocusRef = useRef<HTMLInputElement>(null)
     return (

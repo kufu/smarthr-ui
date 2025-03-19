@@ -1,4 +1,4 @@
-import React, { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 type Props = {

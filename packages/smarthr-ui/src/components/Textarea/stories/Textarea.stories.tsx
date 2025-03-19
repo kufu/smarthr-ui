@@ -1,5 +1,4 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import React from 'react'
 
 import { Stack } from '../../Layout'
 import { Textarea } from '../Textarea'

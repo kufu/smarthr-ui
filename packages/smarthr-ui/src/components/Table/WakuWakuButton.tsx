@@ -1,12 +1,12 @@
-import React from 'react'
-
 import { Button } from '../Button'
 
+import type { ComponentProps, FC } from 'react'
+
 type Props = Omit<
-  React.ComponentProps<typeof Button>,
+  ComponentProps<typeof Button>,
   'variant' | 'size' | 'prefix' | 'suffix' | 'disabledDetail' | 'wide' | 'square' | 'loading'
 >
 
-export const WakuWakuButton: React.FC<Props> = (props) => (
+export const WakuWakuButton: FC<Props> = (props) => (
   <Button {...props} variant="text" size="s" className="shr-text-link-darken" />
 )

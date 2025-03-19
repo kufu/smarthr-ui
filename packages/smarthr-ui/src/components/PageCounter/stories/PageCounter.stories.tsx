@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { PageCounter } from '../PageCounter'
 
 import type { Meta, StoryObj } from '@storybook/react'

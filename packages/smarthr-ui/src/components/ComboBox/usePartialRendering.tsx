@@ -1,4 +1,4 @@
-import React, { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
 const RETURN_NULL = () => null

@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/react'
-import React from 'react'
 
 import { Cluster } from '..'
 import { Gap as GapType } from '../../../../types'

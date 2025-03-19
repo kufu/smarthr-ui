@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import React, { ComponentProps, useRef, useState } from 'react'
+import { ComponentProps, useRef, useState } from 'react'
 
 import { Button } from '../Button'
 import { Cluster, Stack } from '../Layout'

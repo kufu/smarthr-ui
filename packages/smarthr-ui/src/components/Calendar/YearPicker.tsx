@@ -1,7 +1,9 @@
-import React, {
+import {
   type ComponentProps,
   type FC,
+  type MouseEvent,
   type RefObject,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -18,7 +20,7 @@ type AbstractProps = {
   /** 選択可能な終了年 */
   toYear: number
   /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectYear: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
   /** 表示フラグ */
   isDisplayed: boolean
   /** HTMLのid属性 */
@@ -107,14 +109,14 @@ const ActualYearPicker: FC<ActualProps> = ({
   )
 }
 
-const YearButton = React.memo<{
+const YearButton = memo<{
   year: number
   thisYear: number
   selected: boolean
   focusingRef: RefObject<HTMLButtonElement>
   className: string
   childrenStyle: string
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
   const isThisYear = thisYear === year
 

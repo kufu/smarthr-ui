@@ -1,4 +1,4 @@
-import React, { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
+import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'

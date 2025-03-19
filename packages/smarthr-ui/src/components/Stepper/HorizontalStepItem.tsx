@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
@@ -69,7 +69,7 @@ type Props = HorizontalStep & {
   isPrevStepCompleted: boolean
 }
 
-export const HorizontalStepItem = React.memo<Props>(
+export const HorizontalStepItem = memo<Props>(
   ({ stepNumber, label, status, current, isPrevStepCompleted }) => {
     const classNames = useMemo(() => {
       const {

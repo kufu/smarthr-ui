@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Chip } from '../../Chip'
 import { Text } from '../../Text'
 import { Table } from '../Table'

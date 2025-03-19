@@ -1,5 +1,4 @@
 import { fireEvent, userEvent, within } from '@storybook/test'
-import React from 'react'
 
 import { FaChartAreaIcon, FaChartBarIcon, FaChartLineIcon } from '../../Icon'
 import { Stack } from '../../Layout'

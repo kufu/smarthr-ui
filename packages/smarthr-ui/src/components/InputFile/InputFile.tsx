@@ -1,8 +1,12 @@
 'use client'
-import React, {
+
+import {
+  type ChangeEvent,
   type ComponentPropsWithRef,
+  type MouseEvent,
   type ReactNode,
   forwardRef,
+  memo,
   useCallback,
   useId,
   useImperativeHandle,
@@ -12,13 +16,13 @@ import React, {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
-const inputFile = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InputFile shr-block',
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
@@ -60,7 +64,7 @@ const inputFile = tv({
   },
 })
 
-export type Props = VariantProps<typeof inputFile> & {
+export type Props = VariantProps<typeof classNameGenerator> & {
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
@@ -68,12 +72,15 @@ export type Props = VariantProps<typeof inputFile> & {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** コンポーネント内のテキストを変更する関数 */
-  decorators?: DecoratorsType<'destroy'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   error?: boolean
 }
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+const DECORATOR_DEFAULT_TEXTS = {
+  destroy: '削除',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const DESTROY_BUTTON_TEXT = '削除'
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
@@ -94,23 +101,16 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
 
-    const {
-      wrapperStyle,
-      inputWrapperStyle,
-      fileListStyle,
-      fileItemStyle,
-      inputStyle,
-      prefixStyle,
-    } = useMemo(() => {
-      const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
+    const classNames = useMemo(() => {
+      const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
 
       return {
-        wrapperStyle: wrapper({ className }),
-        inputWrapperStyle: inputWrapper({ size, disabled }),
-        fileListStyle: fileList(),
-        fileItemStyle: fileItem(),
-        inputStyle: input(),
-        prefixStyle: prefix(),
+        wrapper: wrapper({ className }),
+        inputWrapper: inputWrapper({ size, disabled }),
+        fileList: fileList(),
+        fileItem: fileItem(),
+        input: input(),
+        prefix: prefix(),
       }
     }, [disabled, size, className])
 
@@ -123,35 +123,30 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       () => inputRef.current,
     )
 
-    const destroyButtonText = useMemo(
-      () => decorators?.destroy?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
-      [decorators],
-    )
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
-    const updateFiles = useCallback(
-      (newFiles: File[]) => {
-        if (onChange) {
-          onChange(newFiles)
-        }
-
-        setFiles(newFiles)
-      },
-      [setFiles, onChange],
+    const updateFiles = useMemo(
+      () =>
+        onChange
+          ? (newFiles: File[]) => {
+              onChange(newFiles)
+              setFiles(newFiles)
+            }
+          : setFiles,
+      [onChange],
     )
 
     const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isUpdatingFilesDirectly.current) {
-          return
+      (e: ChangeEvent<HTMLInputElement>) => {
+        if (!isUpdatingFilesDirectly.current) {
+          updateFiles(Array.from(e.target.files ?? []))
         }
-
-        updateFiles(Array.from(e.target.files ?? []))
       },
       [isUpdatingFilesDirectly, updateFiles],
     )
 
     const handleDelete = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
+      (e: MouseEvent<HTMLButtonElement>) => {
         if (!inputRef.current) {
           return
         }
@@ -175,11 +170,11 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     return (
-      <Stack align="flex-start" className={wrapperStyle}>
+      <Stack align="flex-start" className={classNames.wrapper}>
         {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={fileListStyle}>
+          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
-              <li key={index} className={fileItemStyle}>
+              <li key={index} className={classNames.fileItem}>
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
                 <Button
                   variant="text"
@@ -188,25 +183,25 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
                   onClick={handleDelete}
                   className="smarthr-ui-InputFile-deleteButton"
                 >
-                  {destroyButtonText}
+                  {decorated.destroy}
                 </Button>
               </li>
             ))}
           </BaseColumn>
         )}
-        <span className={inputWrapperStyle}>
+        <span className={classNames.inputWrapper}>
           <input
             {...props}
-            data-smarthr-ui-input="true"
-            type="file"
-            onChange={handleChange}
-            disabled={disabled}
-            className={inputStyle}
             ref={inputRef}
+            type="file"
+            disabled={disabled}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
+            onChange={handleChange}
+            className={classNames.input}
+            data-smarthr-ui-input="true"
           />
-          <StyledFaFolderOpenIcon className={prefixStyle} />
+          <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
       </Stack>
@@ -214,13 +209,13 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   },
 )
 
-const StyledFaFolderOpenIcon = React.memo<{ className: string }>(({ className }) => (
+const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
     <FaFolderOpenIcon />
   </span>
 ))
 
-const LabelRender = React.memo<{ id: string; label: ReactNode }>(({ id, label }) => (
+const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }) => (
   <span id={id} aria-hidden="true">
     {label}
   </span>

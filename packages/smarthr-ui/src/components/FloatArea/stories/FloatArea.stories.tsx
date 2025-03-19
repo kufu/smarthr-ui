@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { ResponseStatusWithoutProcessing } from '../../../types'
 import { Base } from '../../Base'
 import { Button } from '../../Button'

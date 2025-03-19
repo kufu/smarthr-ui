@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'

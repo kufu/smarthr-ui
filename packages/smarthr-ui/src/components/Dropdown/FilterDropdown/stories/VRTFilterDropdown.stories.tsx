@@ -1,5 +1,5 @@
 import { userEvent, within } from '@storybook/test'
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { Cluster } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'

@@ -1,8 +1,8 @@
-import React from 'react'
-
 import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
+
+import { ReactNode, FC } from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -11,9 +11,9 @@ const _iconOptions = {
   あり: FaGearIcon,
 }
 
-const Link: React.FC<{
+const Link: FC<{
   to: string
-  children: React.ReactNode
+  children: ReactNode
   disabled?: boolean
   className?: string
 }> = ({ to, children, disabled = false, className = '', ...props }) => (

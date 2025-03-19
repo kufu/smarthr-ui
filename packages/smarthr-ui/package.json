@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "66.0.0",
+  "version": "66.1.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.3.0",
@@ -135,13 +135,16 @@
     },
     "./lib/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js"
+      "require": "./lib/*.js",
+      "import": "./esm/*.js"
     },
     "./esm/*": {
       "types": "./lib/*.d.ts",
+      "require": "./lib/*.js",
       "import": "./esm/*.js"
     },
-    "./smarthr-ui.css": "./smarthr-ui.css"
+    "./smarthr-ui.css": "./smarthr-ui.css",
+    "./package.json": "./package.json"
   },
   "publishConfig": {
     "access": "public",

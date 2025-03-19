@@ -1,8 +1,9 @@
-import React, {
+import {
   type AnchorHTMLAttributes,
   type ButtonHTMLAttributes,
   type ElementType,
   type ForwardedRef,
+  type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   useMemo,
@@ -35,7 +36,7 @@ type Props =
   | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
   | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
 
-const EVENT_CANCELLER = (e: React.MouseEvent<HTMLButtonElement>) => {
+const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }

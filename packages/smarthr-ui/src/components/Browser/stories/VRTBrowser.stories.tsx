@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Browser } from '../Browser'
 
 import type { Meta, StoryObj } from '@storybook/react'

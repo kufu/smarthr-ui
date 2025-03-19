@@ -1,6 +1,6 @@
 import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { Button } from '../Button'
 import { Heading } from '../Heading'

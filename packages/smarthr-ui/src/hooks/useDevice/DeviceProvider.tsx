@@ -1,5 +1,6 @@
 'use client'
-import React, { type FC, type ReactNode, useSyncExternalStore } from 'react'
+
+import { type FC, type ReactNode, useSyncExternalStore } from 'react'
 
 import { defaultBreakpoint } from '../../themes/createBreakpoint'
 

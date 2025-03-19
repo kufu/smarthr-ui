@@ -1,12 +1,12 @@
-import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type AbstractSize, type CharRelativeSize } from '../../themes/createSpacing'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import type { Gap } from '../../types'
 
 const floatArea = tv({

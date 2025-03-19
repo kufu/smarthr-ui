@@ -1,6 +1,6 @@
 import { userEvent } from '@storybook/test'
 import { render, screen } from '@testing-library/react'
-import React, { type ComponentProps, act } from 'react'
+import { type ComponentProps, act } from 'react'
 
 import { FormControl } from '../../FormControl'
 
