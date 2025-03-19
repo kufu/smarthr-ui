@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading, type HeadingTagTypes } from '../Heading'
@@ -7,9 +7,9 @@ import { Text } from '../Text'
 
 export type Props = {
   /** ダイアログタイトル */
-  title: React.ReactNode
+  title: ReactNode
   /** ダイアログサブタイトル */
-  subtitle?: React.ReactNode
+  subtitle?: ReactNode
   /**
    * ダイアログヘッダーの HTML タグ
    * @deprecated SectioningContent(Article, Aside, Nav, Section)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
@@ -25,7 +25,7 @@ const dialogHeader = tv({
   ],
 })
 
-export const DialogHeader = React.memo<Props>(({ title, subtitle, titleTag, titleId }) => {
+export const DialogHeader = memo<Props>(({ title, subtitle, titleTag, titleId }) => {
   const style = useMemo(() => dialogHeader(), [])
 
   return (

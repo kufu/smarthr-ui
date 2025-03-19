@@ -1,4 +1,4 @@
-import React, { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from 'react'
+import { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isChildNavigation } from '../../utils'

@@ -1,12 +1,13 @@
-import React, { type KeyboardEventHandler, useMemo } from 'react'
+import { type ChangeEvent, type FC, type KeyboardEventHandler, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-import { type ItemNode } from './models'
 import { getElementIdFromNode } from './utils'
+
+import type { ItemNode } from './models'
 
 const classNameGenerator = tv({
   base: [
@@ -24,7 +25,7 @@ type Props = {
   itemHasChildren: boolean
   tabIndex: 0 | -1
   columnIndex: number
-  onChangeInput?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const KEYDOWN_REGEX = /^((Arrow(Right|Left|Up|Down))|Enter| )$/
@@ -34,7 +35,7 @@ const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
   }
 }
 
-export const BrowserItem: React.FC<Props> = ({
+export const BrowserItem: FC<Props> = ({
   selected,
   itemValue,
   itemLabel,
@@ -69,11 +70,9 @@ export const BrowserItem: React.FC<Props> = ({
   )
 }
 
-const BodyCluster = React.memo<{ label: string; hasChildren: boolean }>(
-  ({ label, hasChildren }) => (
-    <Cluster align="center" justify="space-between" as="span">
-      <Text>{label}</Text>
-      {hasChildren && <FaAngleRightIcon />}
-    </Cluster>
-  ),
-)
+const BodyCluster = memo<{ label: string; hasChildren: boolean }>(({ label, hasChildren }) => (
+  <Cluster align="center" justify="space-between" as="span">
+    <Text>{label}</Text>
+    {hasChildren && <FaAngleRightIcon />}
+  </Cluster>
+))

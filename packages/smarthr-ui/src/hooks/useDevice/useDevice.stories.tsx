@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react/*'
-import React from 'react'
+import { FC } from 'react'
 
 import { DeviceProvider } from './DeviceProvider'
 import { useDevice } from './useDevice'
@@ -8,7 +8,7 @@ export default {
   title: 'Hooks/useDevice',
   component: useDevice,
   decorators: [
-    (Story: React.FC) => (
+    (Story: FC) => (
       <DeviceProvider>
         <Story />
       </DeviceProvider>

@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import React from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import { backgroundColor } from '../../../themes'
@@ -24,7 +24,7 @@ export default {
 }
 
 export const All: StoryFn = () => {
-  const [currentTab, setCurrentTab] = React.useState(0)
+  const [currentTab, setCurrentTab] = useState(0)
 
   return (
     <Stack as="article" gap="M" style={{ padding: '20px' }}>

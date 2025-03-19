@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { HorizontalStepItem } from './HorizontalStepItem'
@@ -9,7 +9,6 @@ import type {
   Step,
   VerticalStepper as VStepperProps,
 } from './types'
-import type { FC } from 'react'
 
 type Props = HStepperProps | VStepperProps
 

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type ComponentPropsWithRef, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useReelCells } from './useReelCells'
@@ -15,7 +15,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ className, ...props }) => {
+export const TableReel: FC<PropsWithChildren & ElementProps> = ({ className, ...props }) => {
   const { showShadow, tableWrapperRef } = useReelCells()
 
   const classNames = useMemo(() => {

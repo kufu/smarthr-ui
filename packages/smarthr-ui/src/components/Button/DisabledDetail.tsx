@@ -1,14 +1,14 @@
-import React, { type FC, useMemo } from 'react'
+import { type FC, type FunctionComponent, type JSX, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 
 type Props = {
-  button: React.JSX.Element
+  button: JSX.Element
   disabledDetail: {
-    icon?: React.FunctionComponent
-    message: React.ReactNode
+    icon?: FunctionComponent
+    message: ReactNode
   }
 }
 
@@ -49,9 +49,9 @@ export const DisabledDetail: FC<Props> = ({ button, disabledDetail }) => {
   )
 }
 
-const TooltipIcon = React.memo<{
-  icon?: React.FunctionComponent
-  message: React.ReactNode
+const TooltipIcon = memo<{
+  icon?: FunctionComponent
+  message: ReactNode
   className: string
 }>(({ icon, message, className }) => {
   const DisabledDetailIcon = icon ?? FaCircleInfoIcon
