@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import { type FC, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaUpRightFromSquareIcon } from '../../../Icon'
@@ -10,7 +10,9 @@ import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
-const releaseNoteStyle = tv({
+import type { HeaderProps } from '../../types'
+
+const classNameGenerator = tv({
   slots: {
     anchor: ['shr-text-base shr-text-link [&&]:shr-underline', '[&&]:hover:shr-no-underline'],
     icon: ['shr-ms-0.5'],
@@ -22,48 +24,72 @@ const releaseNoteStyle = tv({
   },
 })
 
-export const ReleaseNote: FC = () => {
-  const translate = useTranslate()
+export const ReleaseNote = memo(() => {
   const { releaseNote } = useContext(ReleaseNoteContext)
 
-  if (!releaseNote) {
-    return null
-  }
+  return releaseNote ? <ActualReleaseNote data={releaseNote} /> : null
+})
 
-  const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = releaseNoteStyle()
+const ActualReleaseNote: FC<{
+  data: Exclude<Required<HeaderProps>['releaseNote'], null>
+}> = ({ data }) => {
+  const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      error: translate('common/releaseNotesLoadError'),
+      seeAll: translate('common/seeAllReleaseNotes'),
+    }),
+    [translate],
+  )
+
+  const classNames = useMemo(() => {
+    const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = classNameGenerator()
+
+    return {
+      anchor: anchor(),
+      icon: icon(),
+      indexLinkWrapper: indexLinkWrapper(),
+      indexLinkAnchor: indexLinkAnchor(),
+    }
+  }, [])
 
   return (
     <div>
-      {releaseNote.loading ? (
+      {data.loading ? (
         <Center>
           <Loader />
         </Center>
-      ) : releaseNote.error ? (
+      ) : data.error ? (
         <Text>
-          <Translate>{translate('common/releaseNotesLoadError')}</Translate>
+          <Translate>{translated.error}</Translate>
         </Text>
       ) : (
         <Stack>
-          {releaseNote.links.slice(0, 5).map((link) => (
+          {data.links.slice(0, 5).map((link) => (
             <div key={link.url}>
-              <a href={link.url} target="_blank" rel="noopener noreferrer" className={anchor()}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={classNames.anchor}
+              >
                 {link.title}
-                <FaUpRightFromSquareIcon className={icon()} />
+                <FaUpRightFromSquareIcon className={classNames.icon} />
               </a>
             </div>
           ))}
         </Stack>
       )}
 
-      <div className={indexLinkWrapper()}>
+      <div className={classNames.indexLinkWrapper}>
         <a
-          href={releaseNote.indexUrl}
+          href={data.indexUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={indexLinkAnchor()}
+          className={classNames.indexLinkAnchor}
         >
-          <Translate>{translate('common/seeAllReleaseNotes')}</Translate>
-          <FaUpRightFromSquareIcon className={icon()} />
+          <Translate>{translated.seeAll}</Translate>
+          <FaUpRightFromSquareIcon className={classNames.icon} />
         </a>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext, useEffect, useState } from 'react'
+import { type FC, type ReactNode, useContext, useEffect, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'

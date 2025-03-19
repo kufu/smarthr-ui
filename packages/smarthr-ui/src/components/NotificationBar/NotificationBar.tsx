@@ -1,5 +1,14 @@
-import React, { ComponentProps, ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
@@ -14,7 +23,7 @@ import {
 } from '../Icon'
 import { Cluster } from '../Layout'
 
-export const notificationBar = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper:
       'smarthr-ui-NotificationBar shr-flex shr-items-baseline shr-justify-between shr-gap-0.5 shr-p-0.75',
@@ -124,12 +133,12 @@ export const notificationBar = tv({
   ],
 })
 
-type StyleVariants = VariantProps<typeof notificationBar>
+type StyleVariants = VariantProps<typeof classNameGenerator>
 type Props = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** メッセージ */
-      message: React.ReactNode
+      message: ReactNode
       /** 閉じるボタン押下時に発火させる関数 */
       onClose?: () => void
       /** role 属性 */
@@ -138,95 +147,116 @@ type Props = PropsWithChildren<
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
+type ActualProps = Props & ElementProps & BaseProps
 
-export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
+const ABSTRACT_ICON_MAPPER = {
+  info: FaCircleInfoIcon,
+  success: FaCircleCheckIcon,
+  error: FaCircleExclamationIcon,
+  sync: FaRotateIcon,
+}
+const ICON_MAPPER = {
+  normal: {
+    ...ABSTRACT_ICON_MAPPER,
+    warning: WarningIcon,
+  },
+  bold: {
+    ...ABSTRACT_ICON_MAPPER,
+    warning: FaTriangleExclamationIcon,
+  },
+} as const
+
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync)$/
+
+export const NotificationBar: FC<ActualProps> = ({
   type,
-  bold = false,
+  bold,
   animate,
   message,
   onClose,
   children,
-  role = type.match(/^(info|sync)$/) ? 'status' : 'alert',
-  base = 'none',
+  role,
+  base,
   layer,
   className,
   ...props
 }) => {
-  const Icon = useMemo(() => {
-    switch (type) {
-      case 'info':
-        return FaCircleInfoIcon
-      case 'success': {
-        return FaCircleCheckIcon
-      }
-      case 'warning': {
-        return bold ? FaTriangleExclamationIcon : WarningIcon
-      }
-      case 'error': {
-        return FaCircleExclamationIcon
-      }
-      case 'sync': {
-        return FaRotateIcon
-      }
+  const actualRole = useMemo(() => {
+    if (role) {
+      return role
     }
-  }, [type, bold])
 
-  const { baseComponent: WrapBase = React.Fragment, baseProps = {} } = useMemo(
+    return ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert'
+  }, [role, type])
+  const { WrapBase, baseProps } = useMemo(
     () =>
       base === 'base'
         ? {
-            baseComponent: Base,
+            WrapBase: Base,
             baseProps: {
               layer,
               overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
             },
           }
-        : {},
+        : {
+            WrapBase: Fragment,
+            baseProps: {},
+          },
     [base, layer],
   )
-
-  const {
-    wrapperStyle,
-    innerStyle,
-    messageAreaStyle,
-    iconStyle,
-    actionAreaStyle,
-    closeButtonStyle,
-  } = useMemo(() => {
-    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
+  const classNames = useMemo(() => {
+    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
-      bold,
-      base,
+      bold: !!bold,
+      base: base || 'none',
     })
+
     return {
-      wrapperStyle: wrapper({ animate, className }),
-      innerStyle: inner(),
-      messageAreaStyle: messageArea(),
-      iconStyle: icon(),
-      actionAreaStyle: actionArea(),
-      closeButtonStyle: closeButton(),
+      wrapper: wrapper({ animate, className }),
+      inner: inner(),
+      messageArea: messageArea(),
+      icon: icon(),
+      actionArea: actionArea(),
+      closeButton: closeButton(),
     }
-  }, [animate, base, bold, className, type])
+  }, [animate, base, bold, type, className])
 
   return (
     <WrapBase {...baseProps}>
-      <div {...props} className={wrapperStyle} role={role}>
-        <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
-          <div className={messageAreaStyle}>
-            <Icon text={message} iconGap={0.5} className={iconStyle} />
-          </div>
+      <div {...props} className={classNames.wrapper} role={actualRole}>
+        <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
+          <MessageArea message={message} bold={bold} type={type} classNames={classNames} />
           {children && (
-            <Cluster align="center" justify="flex-end" className={actionAreaStyle}>
+            <Cluster align="center" justify="flex-end" className={classNames.actionArea}>
               {children}
             </Cluster>
           )}
         </Cluster>
-        {onClose && (
-          <Button variant="text" size="s" onClick={onClose} className={closeButtonStyle}>
-            <FaXmarkIcon alt="閉じる" />
-          </Button>
-        )}
+        <CloseButton onClose={onClose} className={classNames.closeButton} />
       </div>
     </WrapBase>
   )
 }
+
+const MessageArea = memo<
+  Pick<ActualProps, 'message' | 'bold' | 'type'> & {
+    classNames: { messageArea: string; icon: string }
+  }
+>(({ message, bold, type, classNames }) => {
+  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
+
+  return (
+    <div className={classNames.messageArea}>
+      <Icon text={message} iconGap={0.5} className={classNames.icon} />
+    </div>
+  )
+})
+
+const CloseButton = memo<Pick<ActualProps, 'onClose'> & { className: string }>(
+  ({ onClose, className }) =>
+    onClose && (
+      <Button variant="text" size="s" onClick={onClose} className={className}>
+        <FaXmarkIcon alt="閉じる" />
+      </Button>
+    ),
+)

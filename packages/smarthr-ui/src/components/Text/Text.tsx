@@ -1,5 +1,5 @@
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentProps, type ElementType, type PropsWithChildren, memo, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 type StyleType =
   | 'screenTitle'
@@ -8,7 +8,7 @@ type StyleType =
   | 'subBlockTitle'
   | 'subSubBlockTitle'
 
-export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof text> } = {
+export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
   screenTitle: {
     size: 'XL',
     leading: 'TIGHT',
@@ -37,8 +37,14 @@ export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof text> } =
     color: 'TEXT_GREY',
   },
 }
+const UNDEFINED_STYLE_VALUES = {
+  size: undefined,
+  leading: undefined,
+  weight: undefined,
+  color: undefined,
+}
 
-const text = tv({
+const classNameGenerator = tv({
   variants: {
     size: {
       XXS: 'shr-text-2xs',
@@ -81,7 +87,7 @@ const text = tv({
 })
 
 // VariantProps を使うとコメントが書けない〜🥹
-export type TextProps<T extends React.ElementType = 'span'> = VariantProps<typeof text> & {
+export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
   as?: T
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
@@ -90,29 +96,36 @@ export type TextProps<T extends React.ElementType = 'span'> = VariantProps<typeo
   styleType?: StyleType
 }
 
-export const Text = <T extends React.ElementType = 'span'>({
+const ActualText = <T extends ElementType = 'span'>({
   emphasis,
   styleType,
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
+  size,
+  italic,
+  color,
+  leading,
+  whiteSpace,
+  className,
   ...props
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const { size, italic, color, leading, whiteSpace, className, ...others } = props
-  const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType as StyleType] : null
+  const actualClassName = useMemo(() => {
+    const styleTypeValues = styleType
+      ? STYLE_TYPE_MAP[styleType as StyleType]
+      : UNDEFINED_STYLE_VALUES
 
-  const styles = useMemo(
-    () =>
-      text({
-        size: size || styleTypeValues?.size,
-        weight: weight || styleTypeValues?.weight,
-        color: color || styleTypeValues?.color,
-        italic,
-        leading: leading || styleTypeValues?.leading,
-        whiteSpace,
-        className,
-      }),
-    [size, weight, italic, color, leading, whiteSpace, className, styleTypeValues],
-  )
+    return classNameGenerator({
+      size: size || styleTypeValues.size,
+      weight: weight || styleTypeValues.weight,
+      color: color || styleTypeValues.color,
+      leading: leading || styleTypeValues.leading,
+      italic,
+      whiteSpace,
+      className,
+    })
+  }, [size, weight, italic, color, leading, whiteSpace, className, styleType])
 
-  return <Component {...others} className={styles} />
+  return <Component {...props} className={actualClassName} />
 }
+
+export const Text = memo(ActualText) as typeof ActualText

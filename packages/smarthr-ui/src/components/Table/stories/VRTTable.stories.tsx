@@ -1,5 +1,4 @@
-import React from 'react'
-
+import { Fragment } from 'react'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
@@ -8,6 +7,7 @@ import { Table } from '../Table'
 import { TableReel } from '../TableReel'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
+import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
@@ -20,7 +20,7 @@ export default {
     <Stack>
       {[undefined, true].map((fixed) =>
         [undefined, 'both'].map((borderType) => {
-          const Wrapper = fixed ? TableReel : React.Fragment
+          const Wrapper = fixed ? TableReel : Fragment
           const wrapperProps = fixed ? { className: 'shr-w-[50vw]' } : {}
           return (
             <Wrapper {...wrapperProps} key={String(fixed)}>
@@ -53,6 +53,29 @@ export default {
                         checked={i % 2 === 0}
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name="tbody_checkbox"
+                      />
+                      {[...Array(10)].map((__, j) => (
+                        <Td
+                          align={j === 2 ? 'right' : undefined}
+                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
+                          key={j}
+                        >
+                          <Text whiteSpace="nowrap">
+                            表データ{i + 1}-{j + 1}
+                          </Text>
+                        </Td>
+                      ))}
+                      <Td fixed={fixed}>
+                        <Button size="s">操作</Button>
+                      </Td>
+                    </tr>
+                  ))}
+                  {[...Array(10)].map((_, i) => (
+                    <tr key={i}>
+                      <TdRadioButton
+                        checked={i === 0}
+                        aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
+                        name={`tbody_radio--${fixed}--${borderType}`}
                       />
                       {[...Array(10)].map((__, j) => (
                         <Td

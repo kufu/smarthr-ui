@@ -1,56 +1,49 @@
-import React from 'react'
-
 import { Button } from '../Button'
 import {
   FaAngleDoubleLeftIcon,
   FaAngleDoubleRightIcon,
   FaChevronLeftIcon,
   FaChevronRightIcon,
-  ComponentProps as IconProps,
 } from '../Icon'
+
+import type { FC } from 'react'
 
 type Props = {
   targetPage: number
-  onClick: (pageNumber: number) => void
   direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
 }
 
-const getIconProps = (
-  direction: 'prev' | 'next',
-  double: boolean,
-): {
-  Icon: React.ComponentType<IconProps>
-  alt: '最初へ' | '前へ' | '次へ' | '最後へ'
-} =>
-  direction === 'prev'
-    ? double
-      ? { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' }
-      : { Icon: FaChevronLeftIcon, alt: '前へ' }
-    : double
-      ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
-      : { Icon: FaChevronRightIcon, alt: '次へ' }
+const ICON_MAPPER = {
+  prev: {
+    single: { Icon: FaChevronLeftIcon, alt: '前へ' },
+    double: { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' },
+  },
+  next: {
+    single: { Icon: FaChevronRightIcon, alt: '次へ' },
+    double: { Icon: FaAngleDoubleRightIcon, alt: '最後へ' },
+  },
+}
 
-export const PaginationControllerItemButton: React.FC<Props> = ({
+export const PaginationControllerItemButton: FC<Props> = ({
   direction,
   disabled,
-  double = false,
+  double,
   targetPage,
-  onClick,
 }) => {
-  const { Icon, ...iconProps } = getIconProps(direction, double)
+  const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
   return (
     <Button
+      aria-label={alt}
+      disabled={disabled}
+      value={targetPage}
       square
       size="s"
       className="shr-rounded-s"
-      onClick={() => onClick(targetPage)}
-      disabled={disabled}
-      aria-label={iconProps.alt}
     >
-      <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={iconProps.alt} />
+      <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
     </Button>
   )
 }

@@ -1,5 +1,5 @@
-import React, { PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import {
   FaCircleCheckIcon,
@@ -10,9 +10,9 @@ import {
   WarningIcon,
 } from '../Icon'
 
-type Props = PropsWithChildren<VariantProps<typeof responseMessage>> & Omit<IconProps, 'text'>
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> & Omit<IconProps, 'text'>
 
-const responseMessage = tv({
+const classNameGenerator = tv({
   base: '',
   variants: {
     type: {
@@ -25,22 +25,17 @@ const responseMessage = tv({
   },
 })
 
-export const ResponseMessage: React.FC<Props> = ({ type = 'info', children, ...other }) => {
-  const styles = useMemo(() => responseMessage({ type }), [type])
-  const Icon = useMemo(() => {
-    switch (type) {
-      case 'info':
-        return FaCircleInfoIcon
-      case 'success':
-        return FaCircleCheckIcon
-      case 'warning':
-        return WarningIcon
-      case 'error':
-        return FaCircleExclamationIcon
-      case 'sync':
-        return FaRotateIcon
-    }
-  }, [type])
+const ICON_MAPPER = {
+  info: FaCircleInfoIcon,
+  success: FaCircleCheckIcon,
+  warning: WarningIcon,
+  error: FaCircleExclamationIcon,
+  sync: FaRotateIcon,
+} as const
 
-  return <Icon {...other} text={children} className={styles} />
+export const ResponseMessage: FC<Props> = ({ type = 'info', children, ...other }) => {
+  const className = useMemo(() => classNameGenerator({ type }), [type])
+  const Icon = ICON_MAPPER[type]
+
+  return <Icon {...other} text={children} className={className} />
 }

@@ -1,11 +1,13 @@
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import { Gap, ResponseMessageType } from '../../types'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
+
+import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { Gap } from '../../types'
 
 const floatArea = tv({
   base: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
@@ -54,7 +56,7 @@ type Props = StyleProps & {
   /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
   /** 操作に対するフィードバックメッセージ */
-  responseMessage?: ResponseMessageType
+  responseStatus?: ResponseStatusWithoutProcessing
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -62,36 +64,24 @@ export const FloatArea: FC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
-  responseMessage,
+  responseStatus,
   bottom,
   zIndex,
   style,
   className,
   ...rest
 }) => {
-  const styleProps = useMemo(
-    () => ({
-      style: { ...style, zIndex },
-    }),
-    [style, zIndex],
-  )
+  const styleAttr = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
+  const actualClassName = useMemo(() => floatArea({ bottom, className }), [bottom, className])
 
   return (
-    <Base
-      {...styleProps}
-      {...rest}
-      className={floatArea({ bottom, className })}
-      layer={3}
-      padding={1}
-    >
+    <Base {...rest} style={styleAttr} layer={3} padding={1} className={actualClassName}>
       <Cluster gap={1}>
         {tertiaryButton}
         <div className="shr-ms-auto">
           <Cluster gap={1} align="center">
-            {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-              <ResponseMessage type={responseMessage.status}>
-                {responseMessage.text}
-              </ResponseMessage>
+            {responseStatus && (
+              <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
             )}
             <Cluster gap={1}>
               {secondaryButton}

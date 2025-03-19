@@ -1,9 +1,10 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  FC,
-  ReactNode,
+import {
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -41,7 +42,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-const segmentedControl = tv({
+const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-SegmentedControl shr-inline-flex',
     buttonGroup: '-shr-space-x-px',
@@ -49,11 +50,6 @@ const segmentedControl = tv({
       'smarthr-ui-SegmentedControl-button',
       'shr-m-0',
       'shr-rounded-none',
-      'aria-checked:shr-border-main',
-      'aria-checked:shr-bg-main',
-      'aria-checked:shr-text-white',
-      'aria-checked:hover:shr-border-main/50',
-      'aria-checked:hover:shr-bg-main/50',
       'focus-visible:shr-focus-indicator',
       'first:shr-rounded-tl-m',
       'first:shr-rounded-bl-m',
@@ -74,21 +70,21 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { containerStyle, buttonGroupStyle, buttonStyle } = useMemo(() => {
-    const { container, buttonGroup, button } = segmentedControl()
+  const classNames = useMemo(() => {
+    const { container, buttonGroup, button } = classNameGenerator()
 
     return {
-      containerStyle: container({ className }),
-      buttonGroupStyle: buttonGroup(),
-      buttonStyle: button(),
+      container: container({ className }),
+      buttonGroup: buttonGroup(),
+      button: button(),
     }
   }, [className])
 
   const onFocus = useCallback(() => setIsFocused(true), [])
   const onBlur = useCallback(() => setIsFocused(false), [])
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!isFocused || !containerRef.current || !document.activeElement) {
         return
       }
@@ -135,27 +131,24 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
           break
         }
       }
-    },
-    [isFocused],
-  )
+    }
 
-  useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [handleKeyDown])
+  }, [isFocused])
 
   const excludesSelected = useMemo(
     () => !value || options.every((option) => option.value !== value),
-    [options, value],
+    [value, options],
   )
 
   const actualOnClickOption = useMemo(
     () =>
       onClickOption
-        ? (e: React.MouseEvent<HTMLButtonElement>) => onClickOption(e.currentTarget.value)
+        ? (e: MouseEvent<HTMLButtonElement>) => onClickOption(e.currentTarget.value)
         : undefined,
     [onClickOption],
   )
@@ -163,13 +156,13 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   return (
     <div
       {...props}
-      className={containerStyle}
+      className={classNames.container}
       onFocus={onFocus}
       onBlur={onBlur}
       ref={containerRef}
       role="toolbar"
     >
-      <div role="radiogroup" className={buttonGroupStyle}>
+      <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => (
           <SegmentedControlButton
             key={option.value}
@@ -181,7 +174,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
             value={value}
             isFocused={isFocused}
             excludesSelected={excludesSelected}
-            buttonStyle={buttonStyle}
+            buttonClassName={classNames.button}
           />
         ))}
       </div>
@@ -191,12 +184,12 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 
 const SegmentedControlButton: FC<
   Pick<Props, 'size' | 'isSquare' | 'value'> & {
-    onClick: undefined | ((e: React.MouseEvent<HTMLButtonElement>) => void)
+    onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
     option: Props['options'][number]
     index: number
     isFocused: boolean
     excludesSelected: boolean
-    buttonStyle: string
+    buttonClassName: string
   }
 > = ({
   onClick,
@@ -207,7 +200,7 @@ const SegmentedControlButton: FC<
   index,
   isFocused,
   excludesSelected,
-  buttonStyle,
+  buttonClassName,
 }) => {
   const checked = value === option.value
   const tabIndex = useMemo(() => {
@@ -226,6 +219,7 @@ const SegmentedControlButton: FC<
     <Button
       role="radio"
       aria-label={option.ariaLabel}
+      variant={checked ? 'primary' : 'secondary'}
       aria-checked={checked && !!value}
       disabled={option.disabled}
       tabIndex={tabIndex}
@@ -233,7 +227,7 @@ const SegmentedControlButton: FC<
       onClick={onClick}
       size={size}
       square={isSquare}
-      className={buttonStyle}
+      className={buttonClassName}
     >
       {option.content}
     </Button>

@@ -1,23 +1,30 @@
 'use client'
 
-import React, {
+import {
+  Children,
   type ComponentProps,
   type ComponentPropsWithRef,
   type ComponentType,
   type FC,
+  Fragment,
   type ReactElement,
   type ReactNode,
+  cloneElement,
+  isValidElement,
+  memo,
   useMemo,
+  useRef,
 } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
-import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
-import { RemoteDialogTrigger } from '../../Dialog'
+import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 
 import useKeyboardNavigation from './useKeyboardNavigation'
+
+import type { RemoteDialogTrigger } from '../../Dialog'
 
 type Actions = ActionItem | ActionItem[]
 
@@ -42,7 +49,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
-export const dropdownMenuButton = tv({
+const classNameGenerator = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
     triggerButton:
@@ -58,55 +65,49 @@ export const dropdownMenuButton = tv({
       ],
     ],
     actionListItemButton: [
-      'shr-justify-start shr-border-none shr-py-0.5 shr-font-normal',
+      'shr-justify-start shr-rounded-none shr-border-none shr-py-0.5 shr-font-normal',
       'focus-visible:shr-focus-indicator--inner',
     ],
   },
 })
 
-const { triggerWrapper, triggerButton, actionList, actionListItemButton } = dropdownMenuButton()
+const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
 
 export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
   children,
   triggerSize,
-  onlyIconTrigger = false,
-  triggerIcon: TriggerIcon,
+  onlyIconTrigger,
+  triggerIcon,
   className,
-  ...props
+  ...rest
 }) => {
-  const containerRef = React.useRef<HTMLUListElement>(null)
-
-  const triggerLabel = useMemo(() => {
-    const Icon = TriggerIcon || FaEllipsisIcon
-    return onlyIconTrigger ? (
-      <Icon alt={typeof label === 'string' ? label : innerText(label)} />
-    ) : (
-      label
-    )
-  }, [label, TriggerIcon, onlyIconTrigger])
-  const triggerSuffix = useMemo(
-    () => (onlyIconTrigger ? undefined : <FaCaretDownIcon alt="候補を開く" />),
-    [onlyIconTrigger],
-  )
+  const containerRef = useRef<HTMLUListElement>(null)
 
   useKeyboardNavigation(containerRef)
 
+  const classNames = useMemo(
+    () => ({
+      triggerWrapper: triggerWrapper({ className }),
+      triggerButton: triggerButton(),
+      actionList: actionList(),
+    }),
+    [className],
+  )
+
   return (
     <Dropdown>
-      <DropdownTrigger className={triggerWrapper({ className })}>
-        <Button
-          {...props}
-          suffix={triggerSuffix}
-          size={triggerSize}
-          square={onlyIconTrigger}
-          className={triggerButton()}
-        >
-          {triggerLabel}
-        </Button>
-      </DropdownTrigger>
+      <MemoizedTriggerButton
+        {...rest}
+        label={label}
+        onlyIconTrigger={onlyIconTrigger}
+        triggerIcon={triggerIcon}
+        triggerSize={triggerSize}
+        wrapperStyle={classNames.triggerWrapper}
+        buttonStyle={classNames.triggerButton}
+      />
       <DropdownContent>
-        <menu ref={containerRef} className={actionList()}>
+        <menu ref={containerRef} className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
@@ -114,22 +115,70 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   )
 }
 
+const MemoizedTriggerButton = memo<
+  Pick<Props, 'onlyIconTrigger' | 'triggerSize' | 'label' | 'triggerIcon'> &
+    ElementProps & { wrapperStyle: string; buttonStyle: string }
+>(({ onlyIconTrigger, triggerSize, label, triggerIcon, wrapperStyle, buttonStyle, ...rest }) => {
+  const tooltip = useMemo(
+    () => ({ show: onlyIconTrigger, message: label }),
+    [label, onlyIconTrigger],
+  )
+
+  return (
+    <DropdownTrigger className={wrapperStyle} tooltip={tooltip}>
+      <Button
+        {...rest}
+        suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
+        size={triggerSize}
+        square={onlyIconTrigger}
+        className={buttonStyle}
+      >
+        <TriggerLabelText
+          label={label}
+          onlyIconTrigger={onlyIconTrigger}
+          triggerIcon={triggerIcon}
+        />
+      </Button>
+    </DropdownTrigger>
+  )
+})
+
+const TriggerLabelText = memo<Pick<Props, 'label' | 'onlyIconTrigger' | 'triggerIcon'>>(
+  ({ label, onlyIconTrigger, triggerIcon }) => {
+    if (!onlyIconTrigger) {
+      return label
+    }
+
+    const Icon = triggerIcon || FaEllipsisIcon
+
+    return <Icon alt={typeof label === 'string' ? label : innerText(label)} />
+  },
+)
+
+const ButtonSuffixIcon = memo<Pick<Props, 'onlyIconTrigger'>>(
+  ({ onlyIconTrigger }) => !onlyIconTrigger && <FaCaretDownIcon alt="候補を開く" />,
+)
+
 export const renderButtonList = (children: Actions) =>
-  React.Children.map(children, (item): ReactNode => {
-    if (!(item && React.isValidElement(item))) return null
-    if (item.type === React.Fragment) {
-      return renderButtonList(item.props.children)
+  Children.map(children, (item): ReactNode => {
+    if (!item || !isValidElement(item)) {
+      return null
     }
 
-    if (item.type === DropdownMenuGroup) {
-      return item
+    switch (item.type) {
+      case Fragment:
+        return renderButtonList(item.props.children)
+      case DropdownMenuGroup:
+        return item
     }
 
-    const actualElement = React.cloneElement(item as ReactElement, {
-      variant: 'text',
-      wide: true,
-      className: actionListItemButton({ className: item.props.className }),
-    })
-
-    return <li>{actualElement}</li>
+    return (
+      <li>
+        {cloneElement(item as ReactElement, {
+          variant: 'text',
+          wide: true,
+          className: actionListItemButton({ className: item.props.className }),
+        })}
+      </li>
+    )
   })

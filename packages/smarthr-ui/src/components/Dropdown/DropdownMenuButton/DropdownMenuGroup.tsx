@@ -1,4 +1,11 @@
-import React, { ComponentProps, type PropsWithChildren, type ReactNode } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
@@ -10,7 +17,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'li'>, keyof Props>
 
-const dropdownMenuGroup = tv({
+const classNameGenerator = tv({
   slots: {
     group: [
       'smarthr-ui-DropdownMenuGroup',
@@ -30,19 +37,30 @@ const dropdownMenuGroup = tv({
     groupName: 'shr-px-1 shr-py-0.5',
   },
 })
-const { group, groupName } = dropdownMenuGroup()
 
-export const DropdownMenuGroup: React.FC<Props & ElementProps> = ({
-  name,
-  children,
-  className,
-}) => (
-  <li className={group({ className })}>
-    {name && (
-      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={groupName()}>
-        {name}
+export const DropdownMenuGroup: FC<Props & ElementProps> = ({ name, children, className }) => {
+  const classNames = useMemo(() => {
+    const { group, groupName } = classNameGenerator()
+
+    return {
+      group: group({ className }),
+      groupName: groupName(),
+    }
+  }, [className])
+
+  return (
+    <li className={classNames.group}>
+      <NameText className={classNames.groupName}>{name}</NameText>
+      <ul>{renderButtonList(children)}</ul>
+    </li>
+  )
+}
+
+const NameText = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) =>
+    children && (
+      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className}>
+        {children}
       </Text>
-    )}
-    <ul>{renderButtonList(children)}</ul>
-  </li>
+    ),
 )

@@ -1,9 +1,15 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  memo,
+  useMemo,
+} from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 
-export const statusLabel = tv({
+export const classNameGenerator = tv({
   base: [
     'smarthr-ui-StatusLabel',
     'shr-box-content shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25 shr-border-shorthand shr-border-current shr-bg-white shr-px-0.5 shr-py-0.25 shr-whitespace-nowrap shr-text-sm shr-font-bold shr-min-w-[3.5em] shr-min-h-em',
@@ -56,44 +62,40 @@ export const statusLabel = tv({
   ],
 })
 
-type Props = VariantProps<typeof statusLabel>
-type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof Props>
+type BaseProps = VariantProps<typeof classNameGenerator>
+type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+type Props = PropsWithChildren<BaseProps & ElementProps>
 
-export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
-  type = 'grey',
-  bold = false,
-  className,
-  children,
-  ...props
-}) => {
-  const Icon = useMemo(() => {
-    switch (true) {
-      case type === 'warning' && bold: {
-        return FaTriangleExclamationIcon
-      }
-      case type === 'error' && bold: {
-        return FaCircleExclamationIcon
-      }
-      default: {
-        return React.Fragment
-      }
+export const StatusLabel = memo<Props>(
+  ({ type = 'grey', bold = false, className, children, ...props }) => {
+    const actualClassName = useMemo(
+      () =>
+        classNameGenerator({
+          className,
+          type,
+          bold,
+        }),
+      [type, bold, className],
+    )
+
+    return (
+      <span {...props} className={actualClassName}>
+        <Icon type={type} bold={bold} />
+        {children}
+      </span>
+    )
+  },
+)
+
+const Icon: FC<Pick<Props, 'type' | 'bold'>> = ({ type, bold }) => {
+  if (bold) {
+    switch (type) {
+      case 'warning':
+        return <FaTriangleExclamationIcon />
+      case 'error':
+        return <FaCircleExclamationIcon />
     }
-  }, [type, bold])
+  }
 
-  const wrapperStyle = useMemo(
-    () =>
-      statusLabel({
-        className,
-        type,
-        bold,
-      }),
-    [className, type, bold],
-  )
-
-  return (
-    <span {...props} className={wrapperStyle}>
-      <Icon />
-      {children}
-    </span>
-  )
+  return null
 }

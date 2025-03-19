@@ -1,25 +1,28 @@
-import React, {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  ElementType,
-  ForwardedRef,
-  ReactNode,
+import {
+  type AnchorHTMLAttributes,
+  type ButtonHTMLAttributes,
+  type ElementType,
+  type ForwardedRef,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Variant } from './types'
+import type { Variant } from './types'
 
-type BaseProps = {
+type BaseProps = PropsWithChildren<{
   size: 'default' | 's'
   square: boolean
   wide: boolean
   variant: Variant
   $loading?: boolean
   className: string
-  children: ReactNode
   elementAs?: ElementType
-}
+  prefix?: ReactNode
+  suffix?: ReactNode
+}>
 
 type ButtonProps = BaseProps & {
   isAnchor?: never
@@ -33,17 +36,25 @@ type Props =
   | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
   | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
 
+const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 export function ButtonWrapper({
   variant,
   size,
   square,
   wide = false,
   $loading,
+  prefix,
+  suffix,
+  children,
   className,
-  ...props
+  ...rest
 }: Props) {
-  const { buttonStyle, anchorStyle } = useMemo(() => {
-    const { default: defaultButton, anchor } = button({
+  const wrapperClassName = useMemo(() => {
+    const generate = wrapperClassNameGenerator({
       variant,
       size,
       square,
@@ -51,42 +62,48 @@ export function ButtonWrapper({
       wide,
     })
 
-    return {
-      buttonStyle: defaultButton({ className }),
-      anchorStyle: anchor({ className }),
-    }
-  }, [$loading, className, size, square, variant, wide])
+    const wrapper = rest.isAnchor ? generate.anchor : generate.button
 
-  if (props.isAnchor) {
-    const { anchorRef, elementAs, isAnchor: _, ...others } = props
+    return wrapper({ className })
+  }, [$loading, size, square, variant, wide, className, rest.isAnchor])
+  const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
+
+  // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
+  // 自動型づけできなくなってしまう
+  if (rest.isAnchor) {
+    const { anchorRef, elementAs, isAnchor: _, ...others } = rest
     const Component = elementAs || 'a'
 
-    return <Component {...others} className={anchorStyle} ref={anchorRef} />
+    return (
+      <Component {...others} className={wrapperClassName} ref={anchorRef}>
+        {prefix}
+        <span className={innerClassName}>{children}</span>
+        {suffix}
+      </Component>
+    )
   } else {
-    const { buttonRef, disabled, onClick, ...others } = props
+    const { buttonRef, disabled, onClick, ...others } = rest
+
     return (
       // eslint-disable-next-line smarthr/best-practice-for-button-element
       <button
         {...others}
         aria-disabled={disabled}
-        className={buttonStyle}
+        className={wrapperClassName}
         ref={buttonRef}
-        onClick={
-          disabled
-            ? (e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }
-            : onClick
-        }
-      />
+        onClick={disabled ? EVENT_CANCELLER : onClick}
+      >
+        {prefix}
+        <span className={innerClassName}>{children}</span>
+        {suffix}
+      </button>
     )
   }
 }
 
-const button = tv({
+const wrapperClassNameGenerator = tv({
   slots: {
-    default: [
+    button: [
       'aria-disabled:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       'aria-disabled:shr-bg-clip-padding',
@@ -127,7 +144,7 @@ const button = tv({
   },
   compoundSlots: [
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       className: [
         'shr-box-border',
         'shr-cursor-pointer',
@@ -154,7 +171,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 's',
       className: [
         'shr-p-0.5',
@@ -164,34 +181,34 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 'default',
       className: ['shr-text-base'],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 'default',
       square: false,
       className: 'shr-px-1 shr-py-0.75',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       size: 'default',
       square: true,
       className: 'shr-p-0.75',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       loading: true,
       className: 'shr-flex-row-reverse',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       wide: true,
       className: 'shr-w-full',
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'primary',
       className: [
         'shr-border-main',
@@ -204,7 +221,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'primary',
       className: [
         'aria-disabled:shr-border-main/50',
@@ -222,7 +239,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'secondary',
       className: [
         'shr-border-default',
@@ -237,7 +254,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'secondary',
       className: [
         'aria-disabled:shr-border-disabled',
@@ -255,7 +272,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'danger',
       className: [
         'shr-border-danger',
@@ -268,7 +285,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'danger',
       className: [
         'aria-disabled:shr-border-danger/50',
@@ -286,7 +303,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'skeleton',
       className: [
         'shr-border-white',
@@ -301,7 +318,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'skeleton',
       className: [
         'aria-disabled:shr-border-white/50',
@@ -319,7 +336,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default', 'anchor'],
+      slots: ['button', 'anchor'],
       variant: 'text',
       className: [
         'shr-border-transparent',
@@ -330,7 +347,7 @@ const button = tv({
       ],
     },
     {
-      slots: ['default'],
+      slots: ['button'],
       variant: 'text',
       className: [
         'aria-disabled:shr-border-transparent',
@@ -348,4 +365,20 @@ const button = tv({
       ],
     },
   ],
+})
+
+const innerClassNameGenerator = tv({
+  base: [
+    /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+    'shr-min-w-0',
+  ],
+  variants: {
+    size: {
+      default: '',
+      s: [
+        /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
+        'shr-leading-[0]',
+      ],
+    },
+  },
 })

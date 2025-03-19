@@ -1,20 +1,28 @@
 'use client'
 
-import React, { FC, PropsWithChildren, useCallback, useEffect, useId, useState } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
-import { Base, BaseElementProps } from '../Base'
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
-import { Heading, HeadingTagTypes } from '../Heading'
+import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-import type { DecoratorsType } from '../../types'
-
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
-  title: React.ReactNode
+  title: ReactNode
   /**
    * @deprecated titleTagは非推奨です
    */
@@ -24,14 +32,19 @@ type Props = PropsWithChildren<{
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }> &
-  VariantProps<typeof informationPanel>
+  VariantProps<typeof classNameGenerator>
 
-const OPEN_BUTTON_LABEL = '開く'
-const CLOSE_BUTTON_LABEL = '閉じる'
+const DECORATOR_DEFAULT_TEXTS = {
+  openButtonLabel: '開く',
+  closeButtonLabel: '閉じる',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-export const informationPanel = tv({
+type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+
+export const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: 'shr-p-1.5',
@@ -101,11 +114,11 @@ export const informationPanel = tv({
   ],
 })
 
-export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> = ({
+export const InformationPanel: FC<Props> = ({
   title,
   titleTag,
   type = 'info',
-  togglable = false,
+  togglable,
   active: activeProps = true,
   bold,
   className,
@@ -115,54 +128,113 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
   ...props
 }) => {
   const [active, setActive] = useState(activeProps)
-  const titleId = useId()
-  const contentId = useId()
-
-  const handleClickTrigger = useCallback(() => {
-    if (onClickTrigger) {
-      onClickTrigger(active)
-    } else {
-      setActive(!active)
-    }
-  }, [active, onClickTrigger])
+  const id = useId()
+  const titleId = `${id}-title`
+  const contentId = `${id}-content`
 
   useEffect(() => {
     setActive(activeProps)
   }, [activeProps])
 
-  const { wrapper, header, heading, togglableButton, content } = informationPanel({
-    type,
-    active,
-    bold,
-  })
+  const classNamesMapper = useMemo(() => {
+    const withActive = classNameGenerator({
+      type,
+      active: true,
+      bold,
+    })
+    const withInactive = classNameGenerator({
+      type,
+      active: false,
+      bold,
+    })
+
+    const wrapperProps = { className }
+
+    return {
+      active: {
+        wrapper: withActive.wrapper(wrapperProps),
+        header: withActive.header(),
+        heading: withActive.heading(),
+        togglableButton: withActive.togglableButton(),
+        content: withActive.content(),
+      },
+      inactive: {
+        wrapper: withInactive.wrapper(wrapperProps),
+        header: withInactive.header(),
+        heading: withInactive.heading(),
+        togglableButton: withInactive.togglableButton(),
+        content: withInactive.content(),
+      },
+    }
+  }, [bold, type, className])
+
+  const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...props} overflow="hidden" as="section" className={wrapper({ className })}>
-      <Cluster align="center" justify="space-between" className={header()}>
+    <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
+      <Cluster align="center" justify="space-between" className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <Heading type="blockTitle" tag={titleTag} id={titleId} className={heading()}>
-          <ResponseMessage type={type} iconGap={0.5}>
-            {title}
-          </ResponseMessage>
-        </Heading>
+        <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
+          {title}
+        </MemoizedHeading>
         {togglable && (
-          <Button
-            suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-            size="s"
-            onClick={handleClickTrigger}
-            aria-expanded={togglable ? active : undefined}
-            aria-controls={contentId}
-            className={togglableButton()}
-          >
-            {active
-              ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-              : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
-          </Button>
+          <TogglableButton
+            active={active}
+            onClickTrigger={onClickTrigger}
+            setActive={setActive}
+            contentId={contentId}
+            className={classNames.togglableButton}
+            decorators={decorators}
+          />
         )}
       </Cluster>
-      <div id={contentId} aria-hidden={!active} className={content()}>
+      <div id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </div>
     </Base>
+  )
+}
+
+const MemoizedHeading = memo<
+  Pick<Props, 'type'> & {
+    tag: Props['titleTag']
+    id: string
+    className: string
+    children: Props['title']
+  }
+>(({ type, children, ...rest }) => (
+  <Heading {...rest} type="blockTitle">
+    <ResponseMessage type={type} iconGap={0.5}>
+      {children}
+    </ResponseMessage>
+  </Heading>
+))
+
+const TogglableButton: FC<
+  Pick<Props, 'onClickTrigger' | 'decorators'> & {
+    active: boolean
+    setActive: (flg: boolean) => void
+    contentId: string
+    className: string
+  }
+> = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
+  const onClick = useMemo(
+    () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
+    [active, onClickTrigger, setActive],
+  )
+
+  return (
+    <Button
+      aria-expanded={active}
+      aria-controls={contentId}
+      onClick={onClick}
+      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+      size="s"
+      className={className}
+    >
+      {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
+    </Button>
   )
 }

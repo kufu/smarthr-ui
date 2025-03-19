@@ -1,5 +1,11 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  memo,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
@@ -11,13 +17,13 @@ type BaseProps = PropsWithChildren<{
   /** 0値を表示するかどうか */
   showZero?: boolean
   /** 色の種類 */
-  type?: VariantProps<typeof badge>['color']
+  type?: VariantProps<typeof classNameGenerator>['color']
   /** ドット表示するかどうか */
   dot?: boolean
 }>
 type BadgeProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps> & BaseProps
 
-const badge = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Badge shr-relative shr-inline-flex',
     pill: ['shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums'],
@@ -92,42 +98,65 @@ const badge = tv({
   ],
 })
 
-export const Badge: React.FC<BadgeProps> = ({
-  count,
-  overflowCount = 99,
-  showZero = false,
-  type = 'blue',
-  dot = false,
-  children,
-  className,
-  ...props
-}) => {
+export const Badge = memo<BadgeProps>(({ count, showZero, ...rest }) => {
+  // ドット表示の場合、数値表示は無いため、早期returnする
+  if (rest.dot) {
+    return <ActualBadge {...rest} />
+  }
+
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
 
-  const { wrapperStyle, pillStyle, dotStyle } = useMemo(() => {
-    const { wrapper, pill, dotElement } = badge({ color: type, withChildren: !!children })
-    return {
-      wrapperStyle: wrapper({ className }),
-      pillStyle: pill(),
-      dotStyle: dotElement(),
-    }
-  }, [children, className, type])
+  // 0値を表示するでもない場合は何も表示しない
+  if (actualCount === undefined && !rest.children) {
+    return null
+  }
 
-  // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
-  if (!dot && !children && actualCount === undefined) return null
+  return <ActualBadge {...rest} count={actualCount} />
+})
+
+const ActualBadge: FC<Omit<BadgeProps, 'showZero'>> = ({
+  count,
+  overflowCount,
+  type,
+  dot,
+  children,
+  className,
+  ...rest
+}) => {
+  // HINT: boolean化することでmemoが有効になる可能性を高くする
+  const withChildren = !!children
+  const classNames = useMemo(() => {
+    const { wrapper, pill, dotElement } = classNameGenerator({
+      color: type || 'blue',
+      withChildren,
+    })
+
+    return {
+      wrapper: wrapper({ className }),
+      pill: pill(),
+      dot: dotElement(),
+    }
+  }, [withChildren, type, className])
 
   return (
-    <span {...props} className={wrapperStyle}>
+    <span {...rest} className={classNames.wrapper}>
       {children}
       {dot ? (
-        <span className={dotStyle} />
+        <Dot className={classNames.dot} />
       ) : (
-        actualCount !== undefined && (
-          <Text size="XS" className={pillStyle}>
-            {actualCount > overflowCount ? `${overflowCount}+` : actualCount}
-          </Text>
-        )
+        <CountText count={count} overflowCount={overflowCount} className={classNames.pill} />
       )}
     </span>
   )
 }
+
+const Dot = memo<{ className: string }>(({ className }) => <span className={className} />)
+
+const CountText = memo<Pick<BadgeProps, 'count' | 'overflowCount'> & { className: string }>(
+  ({ count, overflowCount = 99, className }) =>
+    count !== undefined && (
+      <Text size="XS" className={className}>
+        {count > overflowCount ? `${overflowCount}+` : count}
+      </Text>
+    ),
+)

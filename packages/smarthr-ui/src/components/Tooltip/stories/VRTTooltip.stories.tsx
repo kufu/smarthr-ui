@@ -1,5 +1,4 @@
 import { fireEvent, userEvent, within } from '@storybook/test'
-import React from 'react'
 
 import { FaCircleQuestionIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'

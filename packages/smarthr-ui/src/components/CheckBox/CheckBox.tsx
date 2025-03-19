@@ -1,11 +1,10 @@
 'use client'
 
-import React, {
-  ChangeEventHandler,
-  ComponentPropsWithRef,
-  PropsWithChildren,
+import {
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
   forwardRef,
-  useCallback,
+  memo,
   useEffect,
   useId,
   useImperativeHandle,
@@ -25,7 +24,7 @@ export type Props = PropsWithChildren<
   }
 >
 
-const checkbox = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-CheckBox shr-inline-flex shr-items-baseline',
     box: [
@@ -59,48 +58,29 @@ const checkbox = tv({
       'shr-relative shr-box-border shr-inline-block shr-h-[theme(fontSize.base)] shr-w-[theme(fontSize.base)] shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     label: [
       'smarthr-ui-CheckBox-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
+      '[[data-disabled=true]>&]:shr-pointer-events-none [[data-disabled=true]>&]:shr-cursor-not-allowed [[data-disabled=true]>&]:shr-text-disabled',
     ],
-  },
-  variants: {
-    disabled: {
-      true: {
-        label: 'shr-pointer-events-none shr-cursor-not-allowed shr-text-disabled',
-      },
-    },
   },
 })
 
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed = false, error, onChange, className, children, ...props }, ref) => {
-    const {
-      wrapperStyle,
-      innerWrapperStyle,
-      boxStyle,
-      inputStyle,
-      iconWrapStyle,
-      iconStyle,
-      labelStyle,
-    } = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = checkbox()
-      return {
-        wrapperStyle: wrapper({ className }),
-        innerWrapperStyle: innerWrapper(),
-        boxStyle: box(),
-        inputStyle: input(),
-        iconWrapStyle: iconWrap(),
-        iconStyle: icon(),
-        labelStyle: label({ disabled: props.disabled }),
-      }
-    }, [className, props.disabled])
+  ({ checked, mixed, error, className, children, disabled, ...props }, ref) => {
+    const classNames = useMemo(() => {
+      const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
-    const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-      (e) => {
-        if (onChange) onChange(e)
-      },
-      [onChange],
-    )
+      return {
+        wrapper: wrapper({ className }),
+        innerWrapper: innerWrapper(),
+        box: box(),
+        input: input(),
+        iconWrap: iconWrap(),
+        icon: icon(),
+        label: label(),
+      }
+    }, [className])
 
     const inputRef = useRef<HTMLInputElement>(null)
+
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => inputRef.current,
@@ -116,31 +96,56 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     const checkBoxId = props.id || defaultId
 
     return (
-      <span className={wrapperStyle}>
-        <span className={innerWrapperStyle}>
+      <span data-disabled={disabled} className={classNames.wrapper}>
+        <span className={classNames.innerWrapper}>
           <input
             {...props}
-            data-smarthr-ui-input="true"
+            ref={inputRef}
             type="checkbox"
             id={checkBoxId}
             checked={checked}
-            onChange={handleChange}
-            className={inputStyle}
-            ref={inputRef}
+            disabled={disabled}
             aria-invalid={error || undefined}
+            className={classNames.input}
+            data-smarthr-ui-input="true"
           />
-          <span className={boxStyle} aria-hidden="true" />
-          <span className={iconWrapStyle}>
-            {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
-          </span>
+          <AriaHiddenBox className={classNames.box} />
+          <CheckIconArea
+            mixed={mixed}
+            className={classNames.iconWrap}
+            iconClassName={classNames.icon}
+          />
         </span>
 
-        {children && (
-          <label className={labelStyle} htmlFor={checkBoxId}>
-            {children}
-          </label>
-        )}
+        <LabeledChildren htmlFor={checkBoxId} className={classNames.label}>
+          {children}
+        </LabeledChildren>
       </span>
     )
   },
+)
+
+const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
+  <span className={className} aria-hidden="true" />
+))
+
+const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClassName: string }>(
+  ({ mixed, className, iconClassName }) => (
+    <span className={className}>
+      {mixed ? (
+        <FaMinusIcon className={iconClassName} />
+      ) : (
+        <FaCheckIcon className={iconClassName} />
+      )}
+    </span>
+  ),
+)
+
+const LabeledChildren = memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
+  ({ children, htmlFor, className }) =>
+    children && (
+      <label htmlFor={htmlFor} className={className}>
+        {children}
+      </label>
+    ),
 )

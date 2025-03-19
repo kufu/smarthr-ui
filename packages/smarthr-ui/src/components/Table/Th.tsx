@@ -1,10 +1,9 @@
-import React, {
-  AriaAttributes,
-  ComponentProps,
-  ComponentPropsWithoutRef,
-  FC,
-  PropsWithChildren,
-  ReactNode,
+import {
+  type AriaAttributes,
+  type ComponentPropsWithoutRef,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
   useMemo,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
@@ -13,7 +12,7 @@ import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { reelShadowStyle } from './useReelShadow'
+import { reelShadowClassNameGenerator } from './useReelShadow'
 
 import type { CellContentWidth } from './type'
 
@@ -29,7 +28,7 @@ export type Props = PropsWithChildren<
       sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
     }
     contentWidth?: CellContentWidth
-  } & VariantProps<typeof thWrapper>
+  } & VariantProps<typeof classNameGenerator>
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
 
@@ -39,7 +38,7 @@ const SORT_DIRECTION_LABEL = {
   none: '並び替えなし',
 }
 
-const thWrapper = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Th',
     'shr-border-solid shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
@@ -87,67 +86,68 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
   return contentWidth
 }
 
-export const Th: FC<Props & ElementProps> = ({
-  children,
-  sort,
-  onSort,
-  decorators,
-  align,
-  vAlign,
-  fixed = false,
-  contentWidth,
-  className,
-  style,
-  ...props
-}) => {
-  const styleProps = useMemo(() => {
-    const thWrapperStyle = thWrapper({ className, align, vAlign, fixed })
-    const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
-    return {
-      className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
-      style: {
+type ActualProps = Props & ElementProps
+
+export const Th = memo<Props & ElementProps>(
+  ({
+    children,
+    sort,
+    onSort,
+    decorators,
+    align,
+    vAlign,
+    fixed = false,
+    contentWidth,
+    className,
+    style,
+    ...props
+  }) => {
+    const actualClassName = useMemo(() => {
+      const base = classNameGenerator({ className, align, vAlign, fixed })
+
+      if (!fixed) {
+        return base
+      }
+
+      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: 'right' })
+
+      return `${base} ${shadow}`
+    }, [align, className, fixed, vAlign])
+    const actualStyle = useMemo(
+      () => ({
         ...style,
         width: convertContentWidth(contentWidth),
-      },
-    }
-  }, [align, className, contentWidth, fixed, style, vAlign])
+      }),
+      [style, contentWidth],
+    )
 
-  const sortLabel = useMemo(
-    () =>
-      sort &&
-      (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
-        SORT_DIRECTION_LABEL[sort]),
-    [decorators, sort],
-  )
-  const ariaSortProps = useMemo<
-    | {
-        'aria-sort': AriaAttributes['aria-sort']
-      }
-    | undefined
-  >(
-    () =>
-      sort && {
-        'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
-      },
-    [sort],
-  )
+    const sortLabel = useMemo(
+      () =>
+        sort &&
+        (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
+          SORT_DIRECTION_LABEL[sort]),
+      [decorators, sort],
+    )
+    const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
+      () => (sort ? (sort === 'none' ? 'none' : `${sort}ending`) : undefined),
+      [sort],
+    )
 
-  return (
-    <th {...ariaSortProps} {...props} {...styleProps}>
-      {sort ? (
-        <SortButton align={align} onClick={onSort}>
-          {children}
-          <SortIcon sort={sort} />
-          <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
-        </SortButton>
-      ) : (
-        children
-      )}
-    </th>
-  )
-}
+    return (
+      <th {...props} aria-sort={ariaSort} className={actualClassName} style={actualStyle}>
+        {sort ? (
+          <MemoizedSortButton align={align} onSort={onSort} sortLabel={sortLabel}>
+            {children}
+          </MemoizedSortButton>
+        ) : (
+          children
+        )}
+      </th>
+    )
+  },
+)
 
-const sortButton = tv({
+const sortButtonClassNameGenerator = tv({
   base: '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold shr-items-center shr-justify-between',
   variants: {
     align: {
@@ -157,52 +157,56 @@ const sortButton = tv({
   },
 })
 
-const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'>> = ({
-  align,
-  ...props
-}) => {
-  const sortButtonStyle = useMemo(() => sortButton({ align }), [align])
-  return <UnstyledButton {...props} className={sortButtonStyle} />
-}
+const MemoizedSortButton = memo<
+  Pick<ActualProps, 'align' | 'onSort'> &
+    PropsWithChildren<{
+      sortLabel: ReactNode
+    }>
+>(({ align, onSort, sortLabel, children }) => {
+  const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
-const sortIcon = tv({
+  return (
+    <UnstyledButton onClick={onSort} className={className}>
+      {children}
+      <SortIcon />
+      <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
+    </UnstyledButton>
+  )
+})
+
+const sortIconClassNameGenerator = tv({
   slots: {
     wrapper: 'shr-inline-flex shr-flex-col',
-    upIcon: 'shr-text-base',
-    downIcon: '-shr-mt-em shr-text-base',
-  },
-  variants: {
-    sort: {
-      asc: {
-        upIcon: 'shr-text-black',
-        downIcon: 'shr-text-disabled',
-      },
-      desc: {
-        upIcon: 'shr-text-disabled',
-        downIcon: 'shr-text-black',
-      },
-      none: {
-        upIcon: 'shr-text-disabled',
-        downIcon: 'shr-text-disabled',
-      },
-    },
+    upIcon: [
+      'shr-text-base',
+      '[[aria-sort="none"]_&]:shr-text-disabled',
+      '[[aria-sort="ascending"]_&]:shr-text-black',
+      '[[aria-sort="descending"]_&]:shr-text-disabled',
+    ],
+    downIcon: [
+      '-shr-mt-em shr-text-base',
+      '[[aria-sort="none"]_&]:shr-text-disabled',
+      '[[aria-sort="ascending"]_&]:shr-text-disabled',
+      '[[aria-sort="descending"]_&]:shr-text-black',
+    ],
   },
 })
 
-const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => {
-  const { wrapperStyle, upIconStyle, downIconStyle } = useMemo(() => {
-    const sortIconStyle = sortIcon()
+const SortIcon = memo(() => {
+  const classNames = useMemo(() => {
+    const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
+
     return {
-      wrapperStyle: sortIconStyle.wrapper(),
-      upIconStyle: sortIconStyle.upIcon({ sort }),
-      downIconStyle: sortIconStyle.downIcon({ sort }),
+      wrapper: wrapper(),
+      upIcon: upIcon(),
+      downIcon: downIcon(),
     }
-  }, [sort])
+  }, [])
 
   return (
-    <span className={wrapperStyle}>
-      <FaSortUpIcon className={upIconStyle} />
-      <FaSortDownIcon className={downIconStyle} />
+    <span className={classNames.wrapper}>
+      <FaSortUpIcon className={classNames.upIcon} />
+      <FaSortDownIcon className={classNames.downIcon} />
     </span>
   )
-}
+})

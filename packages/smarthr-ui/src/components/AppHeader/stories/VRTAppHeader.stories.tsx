@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryObj } from '@storybook/react/*'
 import { within } from '@storybook/test'
-import React from 'react'
 
 import { AppHeader } from '../AppHeader'
 import { Locale } from '../multilingualization'
@@ -149,14 +148,14 @@ export const VRTSetting: Story = {
 export const VRTNavigationDropdown: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: 'ドロップダウン' }).click()
+    canvas.getByRole('button', { name: 'ドロップダウン 候補を開く' }).click()
   },
 }
 
 export const VRTNavigationDropdownGroup: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: 'グループ' }).click()
+    canvas.getByRole('button', { name: 'グループ 候補を開く' }).click()
   },
 }
 

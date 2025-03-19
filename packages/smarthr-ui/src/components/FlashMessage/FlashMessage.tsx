@@ -1,7 +1,7 @@
 'use client'
 
-import React, { ComponentPropsWithoutRef, FC, ReactNode, useEffect, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useEffect, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
 import { FaXmarkIcon } from '../Icon'

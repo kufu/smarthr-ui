@@ -1,11 +1,11 @@
 'use client'
 
-import React, {
-  ComponentPropsWithRef,
-  FocusEvent,
-  ReactNode,
-  WheelEvent,
+import {
+  type ComponentPropsWithRef,
+  type ReactNode,
+  type WheelEvent,
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -47,7 +47,7 @@ export const bgColors = {
   ACTION_BACKGROUND: 'action-background',
 } as const
 
-const wrapper = tv({
+const wrapperClassNameGenerator = tv({
   base: [
     'smarthr-ui-Input',
     'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
@@ -64,7 +64,7 @@ const wrapper = tv({
     },
   },
 })
-const inner = tv({
+const innerClassNameGenerator = tv({
   slots: {
     input: [
       'smarthr-ui-Input-input',
@@ -102,26 +102,12 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       () => innerRef.current,
     )
 
-    const handleFocus = useMemo(() => {
-      if (!onFocus) {
-        return undefined
-      }
-
-      return (e: FocusEvent<HTMLInputElement>) => onFocus(e)
-    }, [onFocus])
-
-    const handleBlur = useMemo(() => {
-      if (!onBlur) {
-        return undefined
-      }
-
-      return (e: FocusEvent<HTMLInputElement>) => onBlur(e)
-    }, [onBlur])
-
     const handleWheel = useMemo(
       () => (props.type === 'number' ? disableWheel : undefined),
       [props.type],
     )
+
+    const onClickFocus = useCallback(() => innerRef.current?.focus(), [])
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
@@ -129,42 +115,53 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       }
     }, [autoFocus])
 
-    const wrapperStyleProps = useMemo(() => {
-      const wrapperStyle = wrapper({ disabled, readOnly, className })
+    const wrapperClassName = useMemo(
+      () => wrapperClassNameGenerator({ disabled, readOnly, className }),
+      [disabled, readOnly, className],
+    )
+    const wrapperStyle = useMemo(() => {
       const color = bgColor
         ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
         : undefined
+
       return {
-        className: wrapperStyle,
-        style: {
-          borderColor: color,
-          backgroundColor: color,
-          width: typeof width === 'number' ? `${width}px` : width,
-        },
+        borderColor: color,
+        backgroundColor: color,
+        width: typeof width === 'number' ? `${width}px` : width,
       }
-    }, [bgColor, className, disabled, readOnly, width])
-    const { input, affix } = inner()
+    }, [bgColor, width])
+
+    const innerClassNames = useMemo(() => {
+      const { input, affix } = innerClassNameGenerator()
+
+      return {
+        input: input(),
+        prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
+        suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
+      }
+    }, [])
 
     return (
-      <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()} role="presentation">
-        {prefix && (
-          <span className={affix({ className: 'smarthr-ui-Input-prefix' })}>{prefix}</span>
-        )}
+      <span
+        role="presentation"
+        onClick={onClickFocus}
+        className={wrapperClassName}
+        style={wrapperStyle}
+      >
+        {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
         <input
           {...props}
           data-smarthr-ui-input="true"
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={onFocus}
+          onBlur={onBlur}
           onWheel={handleWheel}
           disabled={disabled}
           readOnly={readOnly}
           ref={innerRef}
           aria-invalid={error || undefined}
-          className={input()}
+          className={innerClassNames.input}
         />
-        {suffix && (
-          <span className={affix({ className: 'smarthr-ui-Input-suffix' })}>{suffix}</span>
-        )}
+        {suffix && <span className={innerClassNames.suffix}>{suffix}</span>}
       </span>
     )
   },

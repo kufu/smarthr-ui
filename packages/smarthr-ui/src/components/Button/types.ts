@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import type { FunctionComponent, PropsWithChildren, ReactNode } from 'react'
 
 export type BaseProps = PropsWithChildren<{
   /**
@@ -9,19 +9,19 @@ export type BaseProps = PropsWithChildren<{
    * 無効な理由
    */
   disabledDetail?: {
-    icon?: React.FunctionComponent
-    message: React.ReactNode
+    icon?: FunctionComponent
+    message: ReactNode
   }
   /**
    * ボタン内の先頭に表示する内容。
    * 通常は、アイコンを表示するために用いる。
    */
-  prefix?: React.ReactNode
+  prefix?: ReactNode
   /**
    * ボタン内の末尾に表示する内容。
    * 通常は、アイコンを表示するために用いる。
    */
-  suffix?: React.ReactNode
+  suffix?: ReactNode
   /**
    * `true` のとき、ボタンを正方形にする。
    */

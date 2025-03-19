@@ -1,20 +1,19 @@
-import React, { ComponentProps, useMemo } from 'react'
-import { IconType } from 'react-icons'
+import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { colors, fontSize, textColor } from '../../themes'
-import { FontSizes } from '../../themes/createFontSize'
-import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import { Gap } from '../../types'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import type { FontSizes } from '../../themes/createFontSize'
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { Gap } from '../../types'
+import type { IconType } from 'react-icons'
 
 /**
  * literal union type に補完を効かせるためのハック
  * https://github.com/microsoft/TypeScript/issues/29729
  */
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
-
-export const generateIcon = (svg: IconType) => createIcon(svg)
 
 export const colorSet = {
   TEXT_BLACK: 'black',
@@ -57,9 +56,9 @@ type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
 
 type BaseComponentProps = {
   /**アイコンの説明テキスト*/
-  alt?: React.ReactNode
+  alt?: ReactNode
   /** アイコンと並べるテキスト */
-  text?: React.ReactNode
+  text?: ReactNode
   /** アイコンと並べるテキストとの溝 */
   iconGap?: CharRelativeSize | AbstractSize
   /** `true` のとき、アイコンを右側に表示する */
@@ -67,11 +66,11 @@ type BaseComponentProps = {
 }
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
-const icon = tv({
+const iconClassNameGenerator = tv({
   base: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
 })
 
-const wrapper = tv({
+const wrapperClassNameGenerator = tv({
   base: ['smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline'],
   variants: {
     gap: {
@@ -113,79 +112,93 @@ const wrapper = tv({
   },
 })
 
-export const createIcon = (SvgIcon: IconType) => {
-  const Icon: React.FC<Props> = ({
-    color,
-    className,
-    role = 'img',
-    alt,
-    'aria-hidden': ariaHidden,
-    focusable = false,
-    text,
-    iconGap = 0.25,
-    right = false,
-    size,
-    ...props
-  }) => {
-    const hasLabelByAria =
-      props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
-    const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
-
-    const iconStyle = useMemo(() => icon({ className }), [className])
-    const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
-
-    const replacedColor = useMemo(() => {
-      if (color && existsColor(color)) {
-        const colorName = colorSet[color]
-
-        if (colorName in textColor) {
-          return textColor[colorName as keyof typeof textColor]
+export const generateIcon = (SvgIcon: IconType) => {
+  const Icon = memo<Props>(
+    ({
+      color,
+      className,
+      role = 'img',
+      alt,
+      'aria-hidden': ariaHidden,
+      'aria-label': ariaLabel,
+      'aria-labelledby': ariaLabelledby,
+      focusable = false,
+      text,
+      iconGap = 0.25,
+      right,
+      size,
+      ...props
+    }) => {
+      const actualAriaHidden = useMemo(() => {
+        if (ariaHidden !== undefined) {
+          return ariaHidden
         }
 
-        return colors[colorName as keyof typeof colors]
+        if (alt !== undefined || (ariaLabel === undefined && ariaLabelledby === undefined)) {
+          return true
+        }
+
+        return undefined
+      }, [ariaHidden, alt, ariaLabel, ariaLabelledby])
+
+      const iconClassName = useMemo(() => iconClassNameGenerator({ className }), [className])
+      const wrapperClassName = useMemo(() => wrapperClassNameGenerator({ gap: iconGap }), [iconGap])
+
+      const replacedColor = useMemo(() => {
+        if (color && existsColor(color)) {
+          const colorName = colorSet[color]
+
+          if (colorName in textColor) {
+            return textColor[colorName as keyof typeof textColor]
+          }
+
+          return colors[colorName as keyof typeof colors]
+        }
+
+        return color
+      }, [color])
+
+      const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
+      const svgIcon = (
+        <SvgIcon
+          {...props}
+          stroke="currentColor"
+          fill="currentColor"
+          strokeWidth="0"
+          // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
+          size={iconSize}
+          width={iconSize}
+          height={iconSize}
+          color={replacedColor}
+          className={iconClassName}
+          role={role}
+          aria-hidden={actualAriaHidden}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledby}
+          focusable={focusable}
+        />
+      )
+      const visuallyHiddenAlt = alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>
+
+      if (text) {
+        return (
+          <span className={wrapperClassName}>
+            {right && text}
+            {visuallyHiddenAlt}
+            {svgIcon}
+            {!right && text}
+          </span>
+        )
       }
 
-      return color
-    }, [color])
-
-    const existsText = !!text
-    const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
-    const svgIcon = (
-      <SvgIcon
-        {...props}
-        stroke="currentColor"
-        fill="currentColor"
-        strokeWidth="0"
-        // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
-        size={iconSize}
-        width={iconSize}
-        height={iconSize}
-        color={replacedColor}
-        className={iconStyle}
-        role={role}
-        aria-hidden={isAriaHidden || alt !== undefined || undefined}
-        focusable={focusable}
-      />
-    )
-
-    if (existsText) {
       return (
-        <span className={wrapperStyle}>
-          {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
-          {right && text}
+        <>
+          {visuallyHiddenAlt}
           {svgIcon}
-          {!right && text}
-        </span>
+        </>
       )
-    }
-
-    return (
-      <>
-        {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
-        {svgIcon}
-      </>
-    )
-  }
+    },
+  )
 
   Icon.displayName = SvgIcon.name
 

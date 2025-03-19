@@ -1,11 +1,12 @@
 'use client'
 
-import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  DragEvent,
-  PropsWithChildren,
+import {
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type DragEvent,
+  type PropsWithChildren,
   forwardRef,
+  memo,
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -17,7 +18,7 @@ import { tv } from 'tailwind-variants'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
-import type { DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../hooks/useDecorators'
 
 const dropZone = tv({
   slots: {
@@ -78,16 +79,12 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       () => fileRef.current,
     )
 
-    const selectButtonLabel = useMemo(
-      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
-      [decorators],
-    )
-
     const onDrop = useCallback(
       (e: DragEvent<HTMLElement>) => {
         overrideEventDefault(e)
         setFilesDraggedOver(false)
         onSelectFiles(e, e.dataTransfer.files)
+
         if (fileRef.current) {
           fileRef.current.files = e.dataTransfer.files
         }
@@ -114,16 +111,15 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       [onSelectFiles],
     )
 
-    const onClickButton = () => {
+    const onClickButton = useCallback(() => {
       fileRef.current!.click()
-    }
+    }, [])
 
     return (
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
         {children}
-        <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
-          {selectButtonLabel}
-        </Button>
+        <SelectButton decorators={decorators} onClick={onClickButton} />
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...props}
@@ -135,6 +131,21 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
           className={input()}
         />
       </div>
+    )
+  },
+)
+
+const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
+  ({ onClick, decorators }) => {
+    const selectButtonLabel = useMemo(
+      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
+      [decorators],
+    )
+
+    return (
+      <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
+        {selectButtonLabel}
+      </Button>
     )
   },
 )

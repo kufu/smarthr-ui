@@ -1,8 +1,7 @@
 import { action } from '@storybook/addon-actions'
-import React from 'react'
 
 import { Stack } from '../../Layout'
-import { InformationPanel, informationPanel } from '../InformationPanel'
+import { InformationPanel, classNameGenerator } from '../InformationPanel'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -27,7 +26,7 @@ export const Type: StoryObj<typeof InformationPanel> = {
   name: 'type',
   render: (args) => (
     <Stack>
-      {Object.keys(informationPanel.variants.type).map((type) => (
+      {Object.keys(classNameGenerator.variants.type).map((type) => (
         <InformationPanel {...args} type={type as any} key={type} />
       ))}
     </Stack>

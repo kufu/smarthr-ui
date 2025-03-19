@@ -1,8 +1,9 @@
 'use client'
 
-import React, {
-  ComponentPropsWithRef,
-  ReactNode,
+import {
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type ReactNode,
   forwardRef,
   startTransition,
   useCallback,
@@ -15,12 +16,11 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { debounce } from '../../libs/debounce'
 import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */
@@ -38,13 +38,7 @@ type Props = {
   /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
   maxLetters?: number
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<
-    | 'beforeMaxLettersCount'
-    | 'afterMaxLettersCount'
-    | 'afterMaxLettersCountExceeded'
-    | 'beforeScreenReaderMaxLettersDescription'
-    | 'afterScreenReaderMaxLettersDescription'
-  >
+  decorators?: DecoratorsType<DecoratorKeyTypes>
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -65,14 +59,16 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-const TEXT_BEFORE_MAXLETTERS_COUNT = 'あと'
-const TEXT_AFTER_MAXLETTERS_COUNT = '文字'
-const TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED = 'オーバー'
+const DECORATOR_DEFAULT_TEXTS = {
+  beforeMaxLettersCount: 'あと',
+  afterMaxLettersCount: '文字',
+  afterMaxLettersCountExceeded: 'オーバー',
+  beforeScreenReaderMaxLettersDescription: '最大',
+  afterScreenReaderMaxLettersDescription: '文字入力できます',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION = '最大'
-const SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION = '文字入力できます'
-
-const textarea = tv({
+const classNameGenerator = tv({
   slots: {
     textareaEl: [
       'smarthr-ui-Textarea-textarea',
@@ -97,6 +93,22 @@ const textarea = tv({
     error: false,
   },
 })
+
+const calculateIdealRows = (
+  element?: HTMLTextAreaElement | null,
+  maxRows: number = Number.MAX_SAFE_INTEGER,
+): number => {
+  if (!element) {
+    return 0
+  }
+
+  // 現在の入力値に応じた行数
+  const currentInputValueRows = Math.floor(
+    element.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
+  )
+
+  return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
+}
 
 export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
   (
@@ -126,34 +138,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const {
-      afterMaxLettersCount,
-      beforeMaxLettersCount,
-      maxLettersCountExceeded,
-      beforeScreenReaderMaxLettersDescription,
-      afterScreenReaderMaxLettersDescription,
-    } = useMemo(
-      () => ({
-        beforeMaxLettersCount:
-          decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
-          TEXT_BEFORE_MAXLETTERS_COUNT,
-        afterMaxLettersCount:
-          decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
-          TEXT_AFTER_MAXLETTERS_COUNT,
-        maxLettersCountExceeded:
-          decorators?.afterMaxLettersCountExceeded?.(TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED) ||
-          TEXT_AFTER_MAXLETTERS_COUNT_EXCEEDED,
-        beforeScreenReaderMaxLettersDescription:
-          decorators?.beforeScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_BEFORE_MAXLETTERS_DESCRIPTION,
-        afterScreenReaderMaxLettersDescription:
-          decorators?.afterScreenReaderMaxLettersDescription?.(
-            SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
-          ) || SCREEN_READER_AFTER_MAXLETTERS_DESCRIPTION,
-      }),
-      [decorators],
-    )
+    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const getCounterMessage = useCallback(
       (counterValue: number) => {
@@ -164,8 +149,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
           return (
             <>
               {counterValue - maxLetters}
-              {afterMaxLettersCount}
-              {maxLettersCountExceeded}
+              {decorated.afterMaxLettersCount}
+              {decorated.afterMaxLettersCountExceeded}
             </>
           )
         }
@@ -173,13 +158,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         // あと{count}文字
         return (
           <>
-            {beforeMaxLettersCount}
+            {decorated.beforeMaxLettersCount}
             {maxLetters - counterValue}
-            {afterMaxLettersCount}
+            {decorated.afterMaxLettersCount}
           </>
         )
       },
-      [maxLetters, maxLettersCountExceeded, afterMaxLettersCount, beforeMaxLettersCount],
+      [
+        maxLetters,
+        decorated.afterMaxLettersCountExceeded,
+        decorated.afterMaxLettersCount,
+        decorated.beforeMaxLettersCount,
+      ],
     )
 
     const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
@@ -189,125 +179,123 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       () => textareaRef.current,
     )
 
+    const debouncedUpdateCount = useMemo(
+      () =>
+        maxLetters
+          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+              startTransition(() => {
+                setCount(getStringLength(e.currentTarget.value))
+              })
+            }, 200)
+          : undefined,
+      [maxLetters],
+    )
+
+    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
+    const debouncedUpdateSrCounterMessage = useMemo(
+      () =>
+        maxLetters
+          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+              startTransition(() => {
+                const counterText = getCounterMessage(getStringLength(e.currentTarget.value))
+
+                if (counterText) {
+                  setSrCounterMessage(counterText)
+                }
+              })
+            }, 1000)
+          : undefined,
+      [maxLetters, getCounterMessage],
+    )
+
+    const handleChange = useMemo(() => {
+      const callbacks = [debouncedUpdateCount, debouncedUpdateSrCounterMessage, onChange].filter(
+        (c) => !!c,
+      )
+
+      if (callbacks.length === 0) {
+        return undefined
+      }
+
+      return (e: ChangeEvent<HTMLTextAreaElement>) => {
+        callbacks.forEach((c) => c(e))
+      }
+    }, [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage])
+
+    // autoFocus時に、フォーカスを当てる
     useEffect(() => {
       if (autoFocus && textareaRef && textareaRef.current) {
         textareaRef.current.focus()
       }
     }, [autoFocus])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedUpdateCount = useCallback(
-      debounce((value: string) => {
-        startTransition(() => {
-          setCount(getStringLength(value))
-        })
-      }, 200),
-      [],
-    )
-
-    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedUpdateSrCounterMessage = useCallback(
-      debounce((value: string) => {
-        startTransition(() => {
-          const counterText = getCounterMessage(getStringLength(value))
-
-          if (counterText) {
-            setSrCounterMessage(counterText)
-          }
-        })
-      }, 1000),
-      [getCounterMessage],
-    )
-
-    const handleChange = useCallback(
-      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (onChange) {
-          onChange(event)
-        }
-
-        if (maxLetters) {
-          const inputValue = event.currentTarget.value
-          debouncedUpdateCount(inputValue)
-          debouncedUpdateSrCounterMessage(inputValue)
-        }
-      },
-      [debouncedUpdateCount, maxLetters, onChange, debouncedUpdateSrCounterMessage],
-    )
+    // autoResize時に、初期値での高さを指定
+    useEffect(() => {
+      if (autoResize && textareaRef.current) {
+        setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
+      }
+    }, [setInterimRows, maxRows, autoResize])
 
     const handleInput = useCallback(
-      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (!autoResize) {
-          return onInput && onInput(e)
-        }
-
-        const previousRows = e.target.rows
-        // 消したことを検知できないので必ず初期化
+      (e: ChangeEvent<HTMLTextAreaElement>) => {
+        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
         e.target.rows = rows
 
-        const currentRows = Math.floor(
-          e.target.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
-        )
-
-        if (previousRows === currentRows) {
+        if (autoResize) {
+          const currentRows = calculateIdealRows(e.target, maxRows)
+          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
           e.target.rows = currentRows
-        } else if (maxRows < currentRows) {
-          // 最大まで達したとき高さが潰れないように代入
-          e.target.rows = maxRows
+          setInterimRows(currentRows)
         }
 
-        setInterimRows(currentRows < maxRows ? currentRows : maxRows)
-
-        if (onInput) {
-          onInput(e)
-        }
+        onInput?.(e)
       },
       [autoResize, maxRows, onInput, rows],
     )
-    const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
-      const { textareaEl, counter, counterText } = textarea()
-      return {
-        textareaStyleProps: {
-          className: textareaEl({ className }),
-          style: { width: typeof width === 'number' ? `${width}px` : width },
-        },
-        counterStyle: counter(),
-        counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count < 0) }),
-      }
-    }, [className, count, maxLetters, width])
 
-    const hasInputError = useMemo(() => {
-      const isCharLengthExceeded = maxLetters && count > maxLetters
-      return error || isCharLengthExceeded || undefined
-    }, [error, maxLetters, count])
+    const textareaStyle = useMemo(
+      () => ({ width: typeof width === 'number' ? `${width}px` : width }),
+      [width],
+    )
+    const countError = maxLetters && count > maxLetters
+    const classNames = useMemo(() => {
+      const { textareaEl, counter, counterText } = classNameGenerator()
+
+      return {
+        textarea: textareaEl({ className }),
+        counter: counter(),
+        counterText: counterText({ error: !!countError }),
+      }
+    }, [countError, className])
 
     const body = (
       <textarea
         {...props}
-        {...textareaStyleProps}
         {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
         onChange={handleChange}
         ref={textareaRef}
-        aria-invalid={hasInputError || undefined}
+        aria-invalid={error || countError || undefined}
         rows={interimRows}
         onInput={handleInput}
+        className={classNames.textarea}
+        style={textareaStyle}
       />
     )
 
     return maxLetters ? (
       <span>
         {body}
-        <span className={counterStyle}>
-          <span className={counterTextStyle} id={actualMaxLettersId} aria-hidden={true}>
+        <span className={classNames.counter}>
+          <span className={classNames.counterText} id={actualMaxLettersId} aria-hidden={true}>
             {counterVisualMessage}
           </span>
         </span>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
-          {beforeScreenReaderMaxLettersDescription}
+          {decorated.beforeScreenReaderMaxLettersDescription}
           {maxLetters}
-          {afterScreenReaderMaxLettersDescription}
+          {decorated.afterScreenReaderMaxLettersDescription}
         </VisuallyHiddenText>
       </span>
     ) : (

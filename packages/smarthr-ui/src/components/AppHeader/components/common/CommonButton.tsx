@@ -1,5 +1,6 @@
-import React, { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
+
+import type { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
 
 export const commonButton = tv({
   base: [

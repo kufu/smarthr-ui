@@ -2,6 +2,113 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [66.1.0](https://github.com/kufu/smarthr-ui/compare/v66.0.0...v66.1.0) (2025-03-18)
+
+
+### Features
+
+* FormControl, Fieldset コンポーネントに直接StatusLabelコンポーネントを渡せる属性、statusLabelsを追加する ([#5465](https://github.com/kufu/smarthr-ui/issues/5465)) ([324ac76](https://github.com/kufu/smarthr-ui/commit/324ac7619871e2d99867ac9960b980340bf82ba9))
+
+
+### Bug Fixes
+
+* AccordionPanelが特定の状況でスクロール領域を不自然に伸ばしてしまう場合がある問題を修正する ([#5461](https://github.com/kufu/smarthr-ui/issues/5461)) ([75a0426](https://github.com/kufu/smarthr-ui/commit/75a0426cca29018396d830120ab29f85bd6c6db8))
+* **AppHeader:** Navigationのaria-currentがpageにならない修正漏れを改修 ([#5466](https://github.com/kufu/smarthr-ui/issues/5466)) ([ae1de53](https://github.com/kufu/smarthr-ui/commit/ae1de538c00c536902585d256c02aa5726136336))
+* libディレクトリをexportできるように修正 ([#5456](https://github.com/kufu/smarthr-ui/issues/5456)) ([1c94624](https://github.com/kufu/smarthr-ui/commit/1c9462425518d2628061279ea737d3cdd610e342))
+* package.jsonをexportsに含める ([#5462](https://github.com/kufu/smarthr-ui/issues/5462)) ([57744d0](https://github.com/kufu/smarthr-ui/commit/57744d0cb3fc964538954af5cb83c4dc834227cc))
+* **StepFormDialog, useDialogPortal, SectioningContent:** RSC対応 ([#5457](https://github.com/kufu/smarthr-ui/issues/5457)) ([2ad3fb3](https://github.com/kufu/smarthr-ui/commit/2ad3fb366da1772cc98f634533c9affdc5168d96))
+
+## [66.0.0](https://github.com/kufu/smarthr-ui/compare/v65.3.0...v66.0.0) (2025-03-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 (#5399)
+
+### Features
+
+* **AppNaviDropdownMenuButton:** 選択中の項目が視覚的にも伝わるように装飾を追加 ([#5193](https://github.com/kufu/smarthr-ui/issues/5193)) ([0ff8392](https://github.com/kufu/smarthr-ui/commit/0ff839237b3c533f58a53e88616e5d233de4e6e8))
+* TdRadioButton を追加 ([#5439](https://github.com/kufu/smarthr-ui/issues/5439)) ([6a9ca59](https://github.com/kufu/smarthr-ui/commit/6a9ca5922a8359dc47ac4c969d3eefc797d9026f))
+
+
+### Bug Fixes
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 ([#5399](https://github.com/kufu/smarthr-ui/issues/5399)) ([fe21e25](https://github.com/kufu/smarthr-ui/commit/fe21e25ba42b405e48ee5a85e0af556efdec6bfa))
+
+## [65.3.0](https://github.com/kufu/smarthr-ui/compare/v65.2.1...v65.3.0) (2025-03-04)
+
+
+### Features
+
+* Chipコンポーネントでボーダー色を受け取れるようにする ([#5295](https://github.com/kufu/smarthr-ui/issues/5295)) ([ad5498b](https://github.com/kufu/smarthr-ui/commit/ad5498b729eb2200f10554e7bddad62239cc38b4))
+* 多言語化対応の基盤を作成 ([#5220](https://github.com/kufu/smarthr-ui/issues/5220)) ([ab7bd7e](https://github.com/kufu/smarthr-ui/commit/ab7bd7e5b307225446b345f96d02738e38e46933))
+
+
+### Bug Fixes
+
+* **Fieldset:** innerMarginとして0.5を受け取れるように修正 ([#5421](https://github.com/kufu/smarthr-ui/issues/5421)) ([d8b6b69](https://github.com/kufu/smarthr-ui/commit/d8b6b6900cce50a8ebe938ac826edb076cd4b85f))
+
+### [65.2.1](https://github.com/kufu/smarthr-ui/compare/v65.2.0...v65.2.1) (2025-02-25)
+
+## [65.2.0](https://github.com/kufu/smarthr-ui/compare/v65.1.0...v65.2.0) (2025-02-18)
+
+
+### Features
+
+* StepFormDialogコンポーネントの作成 ([#5004](https://github.com/kufu/smarthr-ui/issues/5004)) ([918f08a](https://github.com/kufu/smarthr-ui/commit/918f08a5e249a0d2f860bd6cc395a9326cf76b4b))
+
+
+### Bug Fixes
+
+* **AppHeader:** elementAs, current, keyまわりのエラーを解消 ([#5355](https://github.com/kufu/smarthr-ui/issues/5355)) ([4e90ad0](https://github.com/kufu/smarthr-ui/commit/4e90ad05ae365333cf0073f423d50029f683f9a2))
+* StepFormDialogにuseResponseMessageを適用する ([#5388](https://github.com/kufu/smarthr-ui/issues/5388)) ([e02a233](https://github.com/kufu/smarthr-ui/commit/e02a233b20ac0ac5c2cba7a04510de4052d7a6ac))
+* **Textarea:** rows指定が正しく動かないのを修正 ([#5394](https://github.com/kufu/smarthr-ui/issues/5394)) ([272a3c9](https://github.com/kufu/smarthr-ui/commit/272a3c994eff90bbab15ae696f062555d5184d90))
+
+## [65.1.0](https://github.com/kufu/smarthr-ui/compare/v65.0.1...v65.1.0) (2025-02-12)
+
+
+### Features
+
+* **DropdownTrigger:** Dropdown triggerでtooltipを表示できるようにする ([#5291](https://github.com/kufu/smarthr-ui/issues/5291)) ([6279377](https://github.com/kufu/smarthr-ui/commit/6279377f402d11579f55285be62f84cb3a71c184))
+
+
+### Bug Fixes
+
+* **ActionDialog,FormDialog:** スクロールできない問題を修正 ([#5367](https://github.com/kufu/smarthr-ui/issues/5367)) ([35b79ab](https://github.com/kufu/smarthr-ui/commit/35b79abfedb683516ec52a02c17af4e890aac096))
+* **MultiComboBox:** item.labelがReactNodeだった場合のitemの比較を内部の文字列によって行うように ([#5191](https://github.com/kufu/smarthr-ui/issues/5191)) ([547d2e5](https://github.com/kufu/smarthr-ui/commit/547d2e50640cb37ac55e4061b4024f30b211b951))
+
+### [65.0.1](https://github.com/kufu/smarthr-ui/compare/v65.0.0...v65.0.1) (2025-02-04)
+
+
+### Bug Fixes
+
+* aria-describedbyがinputに紐づいている場合もFormControlのaria-describedbyを設定する ([#5344](https://github.com/kufu/smarthr-ui/issues/5344)) ([3c636f1](https://github.com/kufu/smarthr-ui/commit/3c636f109f9a93ba3e02663442a065d749473e2f))
+* SegmentedControl内の選択済み項目でButton[variant=primary]を利用する ([#5310](https://github.com/kufu/smarthr-ui/issues/5310)) ([d286b90](https://github.com/kufu/smarthr-ui/commit/d286b9061bb232c23560b5700b6c8a1960ea1053))
+
+## [65.0.0](https://github.com/kufu/smarthr-ui/compare/v64.0.1...v65.0.0) (2025-01-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* FloatAreaのresponseMessage属性の型を実装に合わせて調整する (#5299)
+
+### Bug Fixes
+
+* **AppHeader:** AppNaviを使うように修正 ([#5296](https://github.com/kufu/smarthr-ui/issues/5296)) ([f71c333](https://github.com/kufu/smarthr-ui/commit/f71c333bbd7a133e652408cafc25bdcc2a2355da))
+* **Button:** テキストのラベルが存在しない場合に自動的にsquareにする ([#5294](https://github.com/kufu/smarthr-ui/issues/5294)) ([b92fb8a](https://github.com/kufu/smarthr-ui/commit/b92fb8aaeb2ce7deee51415e05a1b77c068fe4ef))
+* FloatAreaのresponseMessage属性の型を実装に合わせて調整する ([#5299](https://github.com/kufu/smarthr-ui/issues/5299)) ([0fd3afa](https://github.com/kufu/smarthr-ui/commit/0fd3afaf17f22e4b8bc7eb270a92d02780519896))
+* FormControl、FieldsetでdangerouslyTitleHiddenを指定した場合、多くのtest用ライブラリで用意されているメソッドで対象にできなくなってしまう問題に対応したい ([#5339](https://github.com/kufu/smarthr-ui/issues/5339)) ([09fedd9](https://github.com/kufu/smarthr-ui/commit/09fedd96dac1dce378c44aa3e4a254ac3b7fddf0))
+* **Textarea:** autoResize時にvalue, defaultValueの初期値でも高さを反映するように修正 ([#5330](https://github.com/kufu/smarthr-ui/issues/5330)) ([8d09ffa](https://github.com/kufu/smarthr-ui/commit/8d09ffaf3674d90bfaf1cd30cbedbaf0f6eeb573))
+
+### [64.0.1](https://github.com/kufu/smarthr-ui/compare/v64.0.0...v64.0.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* AccordionPanelのkeydownイベントリスナーをTriggerに移動 ([#5215](https://github.com/kufu/smarthr-ui/issues/5215)) ([b139a6f](https://github.com/kufu/smarthr-ui/commit/b139a6f74a4b34d7ca7ee85622f44be2a009afbb))
+* FieldsetコンポーネントにdangerouslyTitleHiddenを設定した場合、余計な余白が出力されてしまう問題を修正 ([#5305](https://github.com/kufu/smarthr-ui/issues/5305)) ([df19c82](https://github.com/kufu/smarthr-ui/commit/df19c829536515958ea87788b63af6246c7372cb))
+* **Tooltip:** マークアップをpタグからdivタグに変更 ([#5275](https://github.com/kufu/smarthr-ui/issues/5275)) ([3557460](https://github.com/kufu/smarthr-ui/commit/35574602a37c180c04feffe1bb47fa63f2d46173))
+
 ## [64.0.0](https://github.com/kufu/smarthr-ui/compare/v63.0.0...v64.0.0) (2025-01-14)
 
 

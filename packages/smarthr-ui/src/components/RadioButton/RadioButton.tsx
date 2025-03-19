@@ -1,11 +1,10 @@
 'use client'
 
-import React, {
-  ChangeEventHandler,
-  ComponentPropsWithRef,
-  PropsWithChildren,
+import {
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
   forwardRef,
-  useCallback,
+  memo,
   useId,
   useMemo,
 } from 'react'
@@ -15,10 +14,14 @@ import { isIOS } from '../../libs/ua'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 
-const radioButton = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-RadioButton shr-inline-flex shr-items-baseline',
-    label: 'smarthr-ui-RadioButton-label shr-ms-0.5 shr-text-base shr-leading-tight',
+    label: [
+      'smarthr-ui-RadioButton-label shr-ms-0.5 shr-text-base shr-leading-tight',
+      'shr-cursor-pointer',
+      '[[data-disabled="true"]>&]:shr-cursor-[revert] [[data-disabled="true"]>&]:shr-text-disabled',
+    ],
     innerWrapper:
       'shr-relative shr-inline-block shr-h-em shr-w-em shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     box: [
@@ -32,6 +35,7 @@ const radioButton = tv({
       'peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border peer-disabled:peer-checked:before:shr-bg-white-darken',
       'peer-focus-visible:shr-focus-indicator',
+      'peer-[:not(:disabled)]:peer-hover:shr-shadow-input-hover',
     ],
     input: [
       'smarthr-ui-RadioButton-radioButton shr-peer',
@@ -41,52 +45,33 @@ const radioButton = tv({
       'forced-colors:shr-static forced-colors:shr-opacity-100',
     ],
   },
-  variants: {
-    disabled: {
-      true: {
-        label: 'shr-cursor-[revert] shr-text-disabled',
-      },
-      false: {
-        label: 'shr-cursor-pointer',
-        box: 'peer-hover:shr-shadow-input-hover',
-      },
-    },
-  },
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
   ({ onChange, children, className, required, ...props }, ref) => {
-    const { wrapperStyle, innerWrapperStyle, boxStyle, inputStyle, labelStyle } = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, label } = radioButton()
-      return {
-        wrapperStyle: wrapper({ className }),
-        innerWrapperStyle: innerWrapper(),
-        boxStyle: box({ disabled: !!props.disabled }),
-        inputStyle: input(),
-        labelStyle: label({ disabled: !!props.disabled }),
-      }
-    }, [className, props.disabled])
+    const classNames = useMemo(() => {
+      const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
-    const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-      (e) => {
-        if (onChange) onChange(e)
-      },
-      [onChange],
-    )
+      return {
+        wrapper: wrapper({ className }),
+        innerWrapper: innerWrapper(),
+        box: box(),
+        input: input(),
+        label: label(),
+      }
+    }, [className])
 
     const defaultId = useId()
     const radioButtonId = props.id || defaultId
 
     return (
-      <span className={wrapperStyle}>
-        <span className={innerWrapperStyle}>
+      <span data-disabled={props.disabled} className={classNames.wrapper}>
+        <span className={classNames.innerWrapper}>
           <input
             {...props}
-            data-smarthr-ui-input="true"
+            ref={ref}
             type="radio"
             id={radioButtonId}
-            onChange={handleChange}
-            className={inputStyle}
             // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
             //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
             //    - エラーメッセージが表示されない
@@ -94,17 +79,29 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
             // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
             required={isIOS ? undefined : required}
-            ref={ref}
+            onChange={onChange}
+            className={classNames.input}
+            data-smarthr-ui-input="true"
           />
-          <span className={boxStyle} aria-hidden="true" />
+          <AriaHiddenBox className={classNames.box} />
         </span>
-
-        {children && (
-          <label htmlFor={radioButtonId} className={labelStyle}>
-            {children}
-          </label>
-        )}
+        <LabeledChildren htmlFor={radioButtonId} className={classNames.label}>
+          {children}
+        </LabeledChildren>
       </span>
     )
   },
+)
+
+const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
+  <span className={className} aria-hidden="true" />
+))
+
+const LabeledChildren = memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
+  ({ htmlFor, className, children }) =>
+    children && (
+      <label htmlFor={htmlFor} className={className}>
+        {children}
+      </label>
+    ),
 )

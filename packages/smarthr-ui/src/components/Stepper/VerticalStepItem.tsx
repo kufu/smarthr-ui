@@ -1,14 +1,14 @@
-import React, { type FC } from 'react'
+import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
-import { SectioningFragment } from '../SectioningContent/SectioningContent'
+import { Section } from '../SectioningContent/SectioningContent'
 
 import { StepCounter } from './StepCounter'
 
 import type { VerticalStep } from './types'
 
-const verticalStepItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-group/stepItem',
     headingWrapper: 'shr-flex shr-items-center shr-gap-1',
@@ -51,31 +51,55 @@ const verticalStepItem = tv({
 
 type Props = VerticalStep & {
   /** ステップ数 */
-  stepNumber?: number
+  stepNumber: number
   /** 現在地かどうか */
   current: boolean
 }
 
 export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
-  const statusType = typeof status === 'object' ? status.type : status
-  const { wrapper, headingWrapper, heading, body, inner } = verticalStepItem({
-    status: statusType,
-    current,
-  })
+  const classNames = useMemo(() => {
+    const { wrapper, headingWrapper, heading, body, inner } = classNameGenerator({
+      status: typeof status === 'object' ? status.type : status,
+      current,
+    })
+
+    return {
+      wrapper: wrapper(),
+      headingWrapper: headingWrapper(),
+      heading: heading(),
+      body: body(),
+      inner: inner(),
+    }
+  }, [current, status])
 
   return (
-    <li aria-current={current} className={wrapper()}>
-      <SectioningFragment>
-        <div className={headingWrapper()}>
-          <StepCounter status={status} current={current} stepNumber={stepNumber} />
-          <Heading type="sectionTitle" className={heading()}>
-            {label}
-          </Heading>
+    <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
+      <Section>
+        <StepHeading
+          status={status}
+          current={current}
+          stepNumber={stepNumber}
+          className={classNames.headingWrapper}
+          headingClassName={classNames.heading}
+        >
+          {label}
+        </StepHeading>
+        <div className={classNames.body}>
+          <div className={classNames.inner}>{children}</div>
         </div>
-        <div className={body()}>
-          <div className={inner()}>{children}</div>
-        </div>
-      </SectioningFragment>
+      </Section>
     </li>
   )
 }
+
+const StepHeading = memo<
+  Pick<Props, 'status' | 'current' | 'stepNumber'> &
+    PropsWithChildren<{ className: string; headingClassName: string }>
+>(({ status, current, stepNumber, children, className, headingClassName }) => (
+  <div className={className}>
+    <StepCounter status={status} current={current} stepNumber={stepNumber} />
+    <Heading type="sectionTitle" className={headingClassName}>
+      {children}
+    </Heading>
+  </div>
+))

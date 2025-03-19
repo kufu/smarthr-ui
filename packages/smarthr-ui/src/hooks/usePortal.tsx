@@ -1,6 +1,6 @@
-import React, {
-  FC,
-  ReactNode,
+import {
+  type FC,
+  type ReactNode,
   createContext,
   useCallback,
   useContext,

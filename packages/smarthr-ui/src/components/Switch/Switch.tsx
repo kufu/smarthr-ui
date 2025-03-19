@@ -1,4 +1,12 @@
-import React, { InputHTMLAttributes, ReactNode, forwardRef, useId, useMemo } from 'react'
+import {
+  type InputHTMLAttributes,
+  type PropsWithChildren,
+  type ReactNode,
+  forwardRef,
+  memo,
+  useId,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon } from '../Icon'
@@ -6,7 +14,7 @@ import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-const switchStyle = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       // Switch 本体
@@ -57,38 +65,54 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
     const defaultId = useId()
     const inputId = id || defaultId
 
-    const { wrapperStyle, inputStyle, iconStyle, iconWrapperStyle } = useMemo(() => {
-      const { wrapper, input, icon, iconWrapper } = switchStyle()
+    const classNames = useMemo(() => {
+      const { wrapper, input, icon, iconWrapper } = classNameGenerator()
 
       return {
-        wrapperStyle: wrapper({ className }),
-        inputStyle: input(),
-        iconStyle: icon(),
-        iconWrapperStyle: iconWrapper(),
+        wrapper: wrapper({ className }),
+        input: input(),
+        icon: icon(),
+        iconWrapper: iconWrapper(),
       }
     }, [className])
 
-    const ActualLabelComponent = dangerouslyLabelHidden ? VisuallyHiddenText : Text
-
     return (
       <Cluster align="center">
-        <ActualLabelComponent as="label" htmlFor={inputId}>
+        <MemoizedLabel htmlFor={inputId} dangerouslyLabelHidden={dangerouslyLabelHidden}>
           {children}
-        </ActualLabelComponent>
-        <span className={wrapperStyle}>
+        </MemoizedLabel>
+        <span className={classNames.wrapper}>
           <input
             {...props}
             type="checkbox"
             role="switch"
             id={inputId}
-            className={inputStyle}
+            className={classNames.input}
             ref={ref}
           />
-          <span className={iconWrapperStyle}>
-            <FaCheckIcon className={iconStyle} size="XXS" />
-          </span>
+          <MemoizedSuffixIcon className={classNames.iconWrapper} iconClassName={classNames.icon} />
         </span>
       </Cluster>
     )
   },
+)
+
+const MemoizedLabel = memo<
+  Pick<Props, 'dangerouslyLabelHidden'> & PropsWithChildren<{ htmlFor: string }>
+>(({ dangerouslyLabelHidden, htmlFor, children }) => {
+  const Component = dangerouslyLabelHidden ? VisuallyHiddenText : Text
+
+  return (
+    <Component as="label" htmlFor={htmlFor}>
+      {children}
+    </Component>
+  )
+})
+
+const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
+  ({ className, iconClassName }) => (
+    <span className={className}>
+      <FaCheckIcon className={iconClassName} size="XXS" />
+    </span>
+  ),
 )

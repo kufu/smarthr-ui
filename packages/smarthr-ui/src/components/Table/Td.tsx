@@ -1,12 +1,12 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { reelShadowStyle } from './useReelShadow'
+import { reelShadowClassNameGenerator } from './useReelShadow'
 
 import type { CellContentWidth } from './type'
 
 export type Props = PropsWithChildren<
-  VariantProps<typeof td> & {
+  VariantProps<typeof classNameGenerator> & {
     contentWidth?:
       | CellContentWidth
       | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
@@ -14,32 +14,40 @@ export type Props = PropsWithChildren<
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
-export const Td: FC<Props & ElementProps> = ({
-  align,
-  vAlign,
-  nullable,
-  fixed = false,
-  contentWidth,
-  className,
-  style,
-  ...props
-}) => {
-  const styleProps = useMemo(() => {
-    const tdStyles = td({ align, vAlign, nullable, fixed, className })
-    const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
-    return {
-      className: `${tdStyles} ${reelShadowStyles}`.trim(),
-      style: {
+export const Td = memo<Props & ElementProps>(
+  ({ align, vAlign, nullable, fixed = false, contentWidth, className, style, ...props }) => {
+    const actualClassName = useMemo(() => {
+      const base = classNameGenerator({ align, vAlign, nullable, fixed, className })
+
+      if (!fixed) {
+        return base
+      }
+
+      const shadow = reelShadowClassNameGenerator({ direction: 'right' })
+
+      return `${base} ${shadow}`
+    }, [align, className, fixed, nullable, vAlign])
+    const actualStyle = useMemo(() => {
+      if (typeof contentWidth === 'object') {
+        return {
+          ...style,
+          width: convertContentWidth(contentWidth.base),
+          minWidth: convertContentWidth(contentWidth.min),
+          maxWidth: convertContentWidth(contentWidth.max),
+        }
+      }
+
+      return {
         ...style,
-        ...getWidthStyle(contentWidth),
-      },
-    }
-  }, [align, className, contentWidth, fixed, nullable, style, vAlign])
+        width: convertContentWidth(contentWidth),
+      }
+    }, [style, contentWidth])
 
-  return <td {...props} {...styleProps} />
-}
+    return <td {...props} className={actualClassName} style={actualStyle} />
+  },
+)
 
-const td = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Td',
     'shr-border-solid shr-border-0 shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black shr-h-[calc(1em_*_theme(lineHeight.normal))]',
@@ -84,18 +92,4 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
   }
 
   return contentWidth
-}
-
-const getWidthStyle = (contentWidth: Props['contentWidth']) => {
-  if (typeof contentWidth === 'object') {
-    return {
-      width: convertContentWidth(contentWidth.base),
-      minWidth: convertContentWidth(contentWidth.min),
-      maxWidth: convertContentWidth(contentWidth.max),
-    }
-  }
-
-  return {
-    width: convertContentWidth(contentWidth),
-  }
 }

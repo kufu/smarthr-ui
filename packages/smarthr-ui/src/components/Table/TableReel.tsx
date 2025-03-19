@@ -1,34 +1,35 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useReelCells } from './useReelCells'
-import { reelShadowStyle } from './useReelShadow'
+import { reelShadowClassNameGenerator } from './useReelShadow'
 
 type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
 
-const tableReel = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-TableReel', 'shr-relative'],
     inner: ['smarthr-ui-TableReel-inner', 'shr-relative shr-overflow-auto'],
   },
 })
 
-export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ className, ...props }) => {
+export const TableReel: FC<PropsWithChildren & ElementProps> = ({ className, ...props }) => {
   const { showShadow, tableWrapperRef } = useReelCells()
 
-  const { wrapperStyle, innerStyle } = useMemo(() => {
-    const { wrapper, inner } = tableReel()
+  const classNames = useMemo(() => {
+    const { wrapper, inner } = classNameGenerator()
+
     return {
-      wrapperStyle: reelShadowStyle({ showShadow, className: wrapper({ className }) }),
-      innerStyle: inner(),
+      wrapper: reelShadowClassNameGenerator({ showShadow, className: wrapper({ className }) }),
+      inner: inner(),
     }
   }, [className, showShadow])
 
   return (
-    <div className={wrapperStyle}>
-      <div {...props} ref={tableWrapperRef} className={innerStyle} />
+    <div className={classNames.wrapper}>
+      <div {...props} ref={tableWrapperRef} className={classNames.inner} />
     </div>
   )
 }

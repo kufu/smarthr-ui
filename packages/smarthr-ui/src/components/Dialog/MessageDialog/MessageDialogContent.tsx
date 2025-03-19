@@ -1,16 +1,17 @@
-import React, { ComponentProps, useCallback, useContext, useId } from 'react'
+import { type ComponentProps, type FC, useCallback, useContext, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
-import { UncontrolledDialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
+import { type BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
+
+import type { UncontrolledDialogProps } from '../types'
 
 type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const MessageDialogContent: React.FC<Props & ElementProps> = ({
+export const MessageDialogContent: FC<Props & ElementProps> = ({
   title,
   description,
   portalParent,
@@ -24,10 +25,9 @@ export const MessageDialogContent: React.FC<Props & ElementProps> = ({
   const { createPortal } = useDialogPortal(portalParent)
 
   const handleClickClose = useCallback(() => {
-    if (!active) {
-      return
+    if (active) {
+      onClickClose()
     }
-    onClickClose()
   }, [active, onClickClose])
   const titleId = useId()
 

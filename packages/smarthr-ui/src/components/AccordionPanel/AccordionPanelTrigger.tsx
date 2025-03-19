@@ -1,9 +1,12 @@
 'use client'
 
-import React, {
-  ComponentPropsWithoutRef,
-  FC,
-  PropsWithChildren,
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type KeyboardEventHandler,
+  type MouseEvent,
+  type PropsWithChildren,
+  memo,
   useCallback,
   useContext,
   useMemo,
@@ -11,14 +14,21 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
-import { Heading, HeadingTagTypes } from '../Heading'
+import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
-import { TextProps } from '../Text'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
-import { getNewExpandedItems } from './accordionPanelHelper'
+import {
+  focusFirstSibling,
+  focusLastSibling,
+  focusNextSibling,
+  focusPreviousSibling,
+  getNewExpandedItems,
+} from './accordionPanelHelper'
+
+import type { TextProps } from '../Text'
 
 type Props = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
@@ -30,7 +40,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
 
-const accordionPanelTrigger = tv({
+const classNameGenerator = tv({
   slots: {
     title: 'shr-grow shr-leading-tight',
     button: [
@@ -60,54 +70,136 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   headingTag,
   ...props
 }) => {
-  const { titleStyle, buttonStyle, leftIconStyle, rightIconStyle } = useMemo(() => {
-    const { title, button, leftIcon, rightIcon } = accordionPanelTrigger()
+  const classNames = useMemo(() => {
+    const { title, button, leftIcon, rightIcon } = classNameGenerator()
+
     return {
-      titleStyle: title(),
-      buttonStyle: button({ className }),
-      leftIconStyle: leftIcon(),
-      rightIconStyle: rightIcon(),
+      title: title(),
+      button: button({ className }),
+      leftIcon: leftIcon(),
+      rightIcon: rightIcon(),
     }
   }, [className])
+
   const { name } = useContext(AccordionPanelItemContext)
-  const { iconPosition, expandedItems, onClickTrigger, onClickProps, expandableMultiply } =
-    useContext(AccordionPanelContext)
+  const {
+    iconPosition,
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+    expandableMultiply,
+    parentRef,
+  } = useContext(AccordionPanelContext)
 
-  const isExpanded = getIsInclude(expandedItems, name)
+  const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
-  const handleClick = useCallback(() => {
-    if (onClickTrigger) onClickTrigger(name, !isExpanded)
+  const actualOnClickTrigger = useMemo(
+    () =>
+      onClickTrigger
+        ? (e: MouseEvent<HTMLButtonElement>) => onClickTrigger(e.currentTarget.value, !isExpanded)
+        : undefined,
+    [isExpanded, onClickTrigger],
+  )
+  const actualOnClickProps = useMemo(
+    () =>
+      onClickProps
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            const newExpandedItems = getNewExpandedItems(
+              expandedItems,
+              e.currentTarget.value,
+              !isExpanded,
+              expandableMultiply,
+            )
+            onClickProps(mapToKeyArray(newExpandedItems))
+          }
+        : undefined,
+    [isExpanded, expandedItems, expandableMultiply, onClickProps],
+  )
+  const handleClick = useMemo(() => {
+    if (actualOnClickTrigger) {
+      if (actualOnClickProps) {
+        return (e: MouseEvent<HTMLButtonElement>) => {
+          actualOnClickTrigger(e)
+          actualOnClickProps(e)
+        }
+      }
 
-    if (onClickProps) {
-      const newExpandedItems = getNewExpandedItems(
-        expandedItems,
-        name,
-        !isExpanded,
-        expandableMultiply,
-      )
-      onClickProps(mapToKeyArray(newExpandedItems))
+      return actualOnClickTrigger
+    } else if (actualOnClickProps) {
+      return actualOnClickProps
     }
-  }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
+
+    return undefined
+  }, [actualOnClickProps, actualOnClickTrigger])
+
+  const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
+    (e): void => {
+      if (!parentRef?.current) {
+        return
+      }
+
+      const item = e.target as HTMLElement
+
+      switch (e.key) {
+        case 'Home': {
+          e.preventDefault()
+          focusFirstSibling(parentRef.current)
+          break
+        }
+        case 'End': {
+          e.preventDefault()
+          focusLastSibling(parentRef.current)
+          break
+        }
+        case 'ArrowLeft':
+        case 'ArrowUp': {
+          e.preventDefault()
+          focusPreviousSibling(item, parentRef.current)
+          break
+        }
+        case 'ArrowRight':
+        case 'ArrowDown': {
+          e.preventDefault()
+          focusNextSibling(item, parentRef.current)
+          break
+        }
+      }
+    },
+    [parentRef],
+  )
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={headingTag} type={headingType}>
       <button
         {...props}
+        type="button"
+        value={name}
         id={`${name}-trigger`}
         aria-expanded={isExpanded}
         aria-controls={`${name}-content`}
         onClick={handleClick}
-        className={buttonStyle}
+        onKeyDown={handleKeyDown}
+        className={classNames.button}
         data-component="AccordionHeaderButton"
-        type="button"
       >
-        <Cluster className="shr-flex-nowrap" align="center" as="span">
-          {iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
-          <span className={titleStyle}>{children}</span>
-          {iconPosition === 'right' && <FaCaretDownIcon className={rightIconStyle} />}
-        </Cluster>
+        <MemoizedTitle iconPosition={iconPosition} classNames={classNames}>
+          {children}
+        </MemoizedTitle>
       </button>
     </Heading>
   )
 }
+
+const MemoizedTitle = memo<
+  PropsWithChildren<{
+    iconPosition: undefined | 'left' | 'right'
+    classNames: { leftIcon: string; rightIcon: string; title: string }
+  }>
+>(({ classNames, iconPosition, children }) => (
+  <Cluster className="shr-flex-nowrap" align="center" as="span">
+    {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
+    <span className={classNames.title}>{children}</span>
+    {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
+  </Cluster>
+))

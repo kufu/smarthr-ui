@@ -1,8 +1,11 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  PropsWithChildren,
+import {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type RefObject,
+  createContext,
   useCallback,
   useEffect,
   useMemo,
@@ -13,14 +16,7 @@ import { tv } from 'tailwind-variants'
 
 import { flatArrayToMap } from '../../libs/map'
 
-import {
-  focusFirstSibling,
-  focusLastSibling,
-  focusNextSibling,
-  focusPreviousSibling,
-  getNewExpandedItems,
-  keycodes,
-} from './accordionPanelHelper'
+import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = PropsWithChildren<{
   /** アイコンの左右位置 */
@@ -34,11 +30,11 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const AccordionPanelContext = React.createContext<{
+export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
   expandableMultiply: boolean
-  parentRef: React.RefObject<HTMLDivElement> | null
+  parentRef: RefObject<HTMLDivElement> | null
   onClickTrigger?: (itemName: string, isExpanded: boolean) => void
   onClickProps?: (expandedItems: string[]) => void
 }>({
@@ -48,11 +44,11 @@ export const AccordionPanelContext = React.createContext<{
   parentRef: null,
 })
 
-const accordionWrapper = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-AccordionPanel',
 })
 
-export const AccordionPanel: React.FC<Props & ElementProps> = ({
+export const AccordionPanel: FC<Props & ElementProps> = ({
   iconPosition = 'left',
   expandableMultiply = true,
   defaultExpanded = [],
@@ -62,7 +58,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
-  const styles = useMemo(() => accordionWrapper({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -70,40 +66,6 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
     },
     [expandableMultiply, expandedItems],
   )
-
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>): void => {
-    if (!parentRef?.current) {
-      return
-    }
-
-    const keyCode = event.keyCode
-    const item = event.target as HTMLElement
-
-    switch (keyCode) {
-      case keycodes.HOME: {
-        event.preventDefault()
-        focusFirstSibling(parentRef.current)
-        break
-      }
-      case keycodes.END: {
-        event.preventDefault()
-        focusLastSibling(parentRef.current)
-        break
-      }
-      case keycodes.LEFT:
-      case keycodes.UP: {
-        event.preventDefault()
-        focusPreviousSibling(item, parentRef.current)
-        break
-      }
-      case keycodes.RIGHT:
-      case keycodes.DOWN: {
-        event.preventDefault()
-        focusNextSibling(item, parentRef.current)
-        break
-      }
-    }
-  }
 
   useEffect(() => {
     if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
@@ -120,14 +82,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-      <div
-        {...props}
-        className={styles}
-        ref={parentRef}
-        onKeyDown={handleKeyPress}
-        role="presentation"
-      />
+      <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )
 }

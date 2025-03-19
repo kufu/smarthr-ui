@@ -1,5 +1,6 @@
-import { Node } from './Node'
 import { NodeContext } from './NodeContext'
+
+import type { Node } from './Node'
 
 const NODE_MAX_DEPTH = 3
 
@@ -18,6 +19,7 @@ export class ItemNode {
     this.value = value
     this.label = label
     this.context = new NodeContext(this)
+
     for (const child of children) {
       this.append(child)
     }
@@ -43,6 +45,7 @@ export class ItemNode {
     if (this.#getDepth() >= NODE_MAX_DEPTH) {
       throw new Error(`Cannot append to a node deeper than ${NODE_MAX_DEPTH}`)
     }
+
     this.context.append(that.context)
   }
 
@@ -50,10 +53,13 @@ export class ItemNode {
     if (!this.parent) {
       return
     }
+
     const index = this.#getIndex()
+
     if (index === -1) {
       return
     }
+
     return this.parent.children[index + 1]
   }
 
@@ -61,10 +67,13 @@ export class ItemNode {
     if (!this.parent) {
       return
     }
+
     const index = this.#getIndex()
+
     if (index === -1) {
       return
     }
+
     return this.parent.children[index - 1]
   }
 
@@ -80,6 +89,7 @@ export class ItemNode {
     const ancestors: ItemNode[] = []
 
     let current: Node | undefined = this.parent
+
     while (current instanceof ItemNode) {
       ancestors.unshift(current)
       current = current.parent
@@ -92,6 +102,7 @@ export class ItemNode {
     if (!this.parent) {
       return []
     }
+
     return this.parent.children
   }
 
@@ -99,8 +110,10 @@ export class ItemNode {
     if (this.value === value) {
       return this
     }
+
     for (const child of this.children) {
       const found = child.findByValue(value)
+
       if (found) {
         return found
       }
@@ -112,6 +125,7 @@ export class ItemNode {
     if (!this.parent) {
       return -1
     }
+
     return this.parent.children.indexOf(this)
   }
 

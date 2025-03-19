@@ -1,41 +1,77 @@
-import React, { type FC, type PropsWithChildren, type ReactNode } from 'react'
+import {
+  Children,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
+  cloneElement,
+  isValidElement,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
+import { DropdownMenuGroup } from '../Dropdown'
 import { DropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuButton'
 
-type AppNaviDropdownMenuButtonProps = PropsWithChildren<{
+type Props = PropsWithChildren<{
   /** 引き金となるボタンラベル */
   label: ReactNode
 }>
 
-const dropdownMenuButton = tv({
-  base: [
-    'smarthr-ui-AppNavi-dropdownMenuButton',
-    [
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-border-none',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.5',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-text-grey',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-rounded-none',
+const classNameGenerator = tv({
+  slots: {
+    trigger: [
+      'smarthr-ui-AppNavi-dropdownMenuButton',
+      [
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-border-none',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.5',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-text-grey',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-rounded-none',
+      ],
+      [
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-relative',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-text-black',
+      ],
+      [
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-content-[""]',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-absolute',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bottom-0',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-inset-x-0',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-h-0.25',
+        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bg-main',
+      ],
     ],
-    [
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-relative',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:shr-text-black',
+    actionItem: [
+      'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
+      // aria-current-page より詳細度を確実に上げる
+      '[&&]:hover:shr-bg-head-darken',
     ],
-    [
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-content-[""]',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-absolute',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bottom-0',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-inset-x-0',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-h-0.25',
-      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current=page])]:after:shr-bg-main',
-    ],
-  ],
+  },
 })
+const { trigger, actionItem } = classNameGenerator()
 
-export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
-  label,
-  children,
-}) => (
+const renderItemList = (children: ReactNode) =>
+  Children.map(children, (item): ReactNode => {
+    if (!isValidElement(item)) {
+      return null
+    }
+
+    if (item.type === Fragment) {
+      return renderItemList(item.props.children)
+    }
+
+    if (item.type === DropdownMenuGroup) {
+      return (
+        <DropdownMenuGroup {...item.props}>{renderItemList(item.props.children)}</DropdownMenuGroup>
+      )
+    }
+
+    return cloneElement(item as ReactElement, {
+      className: actionItem({ className: item.props.className }),
+    })
+  })
+
+export const AppNaviDropdownMenuButton: FC<Props> = ({ label, children }) => (
   <DropdownMenuButton
     label={
       <>
@@ -44,8 +80,8 @@ export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
         <span hidden>{children}</span>
       </>
     }
-    className={dropdownMenuButton()}
+    className={trigger()}
   >
-    {children}
+    {renderItemList(children)}
   </DropdownMenuButton>
 )

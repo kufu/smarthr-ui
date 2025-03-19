@@ -1,5 +1,4 @@
 import { userEvent, within } from '@storybook/test'
-import React from 'react'
 
 import { Button } from '../../Button'
 import { FaArrowsRotateIcon } from '../../Icon'
@@ -9,7 +8,7 @@ import { AppNavi } from '../AppNavi'
 
 import { Template } from './AppNavi.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 
 export default {
   title: 'Navigation（ナビゲーション）/AppNavi/VRT',

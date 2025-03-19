@@ -1,5 +1,5 @@
-import React, { type PropsWithChildren } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap } from '../../types'
 
@@ -79,15 +79,22 @@ const dialogBody = tv({
   },
 })
 
-export const DialogBody: React.FC<Props> = ({
-  contentBgColor,
-  contentPadding = 1.5,
-  className,
-  ...rest
-}) => {
-  const paddingBlock = contentPadding instanceof Object ? contentPadding.block : contentPadding
-  const paddingInline = contentPadding instanceof Object ? contentPadding.inline : contentPadding
+export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
+  const actualPaddings = useMemo(() => {
+    const initialized = contentPadding === undefined ? 1.5 : contentPadding
 
-  const style = dialogBody({ contentBgColor, paddingBlock, paddingInline, className })
+    return initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
+  }, [contentPadding])
+  const style = useMemo(
+    () =>
+      dialogBody({
+        contentBgColor,
+        paddingBlock: actualPaddings.block,
+        paddingInline: actualPaddings.inline,
+        className,
+      }),
+    [actualPaddings.block, actualPaddings.inline, contentBgColor, className],
+  )
+
   return <div {...rest} className={style} />
 }

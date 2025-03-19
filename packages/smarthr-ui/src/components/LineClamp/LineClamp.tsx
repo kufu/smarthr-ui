@@ -1,22 +1,22 @@
 'use client'
 
-import React, {
-  ComponentPropsWithRef,
-  FC,
-  PropsWithChildren,
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type PropsWithChildren,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type Props = PropsWithChildren<VariantProps<typeof lineClamp>>
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
 type ElementProps = Omit<ComponentPropsWithRef<'span'>, keyof Props>
 
-const lineClamp = tv({
+const classNameGenerator = tv({
   slots: {
     base: 'smarthr-ui-LineClamp shr-relative',
     clampedLine: 'shr-w-full',
@@ -64,49 +64,50 @@ export const LineClamp: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
+  if (maxLines < 1 || maxLines > 6) {
+    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+  }
+
   const [isTooltipVisible, setTooltipVisible] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const shadowRef = useRef<HTMLSpanElement>(null)
 
-  const isMultiLineOverflow = () => {
+  useEffect(() => {
     const el = ref.current
     const shadowEl = shadowRef.current
 
     // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-    return el && shadowEl
-      ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
-      : false
-  }
+    const isMultiLineOverflow =
+      el && shadowEl
+        ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
+        : false
 
-  useEffect(() => {
-    setTooltipVisible(isMultiLineOverflow())
+    setTooltipVisible(isMultiLineOverflow)
   }, [maxLines, children])
 
-  if (maxLines < 1) {
-    throw new Error('"maxLines" cannot be less than 0.')
-  }
+  const classNames = useMemo(() => {
+    const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
+      maxLines,
+    })
 
-  const { baseStyle, clampedLineStyle, shadowElementWrapperStyle, shadowElementStyle } =
-    useMemo(() => {
-      const { base, clampedLine, shadowElementWrapper, shadowElement } = lineClamp({ maxLines })
-      return {
-        baseStyle: base({ className }),
-        clampedLineStyle: clampedLine(),
-        shadowElementWrapperStyle: shadowElementWrapper(),
-        shadowElementStyle: shadowElement(),
-      }
-    }, [maxLines, className])
+    return {
+      base: base({ className }),
+      clampedLine: clampedLine(),
+      shadowElementWrapper: shadowElementWrapper(),
+      shadowElement: shadowElement(),
+    }
+  }, [maxLines, className])
 
-  const ActualLineClamp = () => (
-    <span {...props} className={baseStyle}>
-      <span className={clampedLineStyle} ref={ref}>
+  const actualLineClamp = (
+    <span {...props} className={classNames.base}>
+      <span ref={ref} className={classNames.clampedLine}>
         {children}
       </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
-      <span aria-hidden className={shadowElementWrapperStyle}>
-        <span className={shadowElementStyle} ref={shadowRef}>
+      <span aria-hidden className={classNames.shadowElementWrapper}>
+        <span className={classNames.shadowElement} ref={shadowRef}>
           {children}
         </span>
       </span>
@@ -115,9 +116,9 @@ export const LineClamp: FC<Props & ElementProps> = ({
 
   return isTooltipVisible ? (
     <Tooltip message={children} multiLine vertical="auto">
-      <ActualLineClamp />
+      {actualLineClamp}
     </Tooltip>
   ) : (
-    <ActualLineClamp />
+    actualLineClamp
   )
 }

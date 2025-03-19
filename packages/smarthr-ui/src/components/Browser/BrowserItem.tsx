@@ -1,76 +1,78 @@
-import React, { FC, KeyboardEventHandler } from 'react'
+import { type ChangeEvent, type FC, type KeyboardEventHandler, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-import { ItemNode } from './models'
 import { getElementIdFromNode } from './utils'
 
-const radioWrapperStyle = tv({
-  base: 'shr-block shr-px-1 shr-py-0.5 shr-rounded-m focus-within:shr-shadow-outline',
-  variants: {
-    selected: {
-      parent: 'shr-bg-white-darken',
-      last: 'shr-bg-main shr-text-white forced-colors:shr-bg-[Highlight]',
-      none: 'hover:shr-bg-white-darken',
-    },
-  },
-  defaultVariants: {
-    selected: 'none',
-  },
+import type { ItemNode } from './models'
+
+const classNameGenerator = tv({
+  base: [
+    'shr-block shr-px-1 shr-py-0.5 shr-rounded-m focus-within:shr-shadow-outline',
+    '[&[data-selected="true"][data-type="parent"]]:shr-bg-white-darken',
+    '[&[data-selected="true"][data-type="last"]]:shr-bg-main [&[data-selected="true"][data-type="last"]]:shr-text-white [&[data-selected="true"][data-type="last"]]:forced-colors:shr-bg-[Highlight]',
+    '[&[data-selected="false"]]:hover:shr-bg-white-darken',
+  ],
 })
 
 type Props = {
   selected: boolean
-  item: ItemNode
+  itemValue: ItemNode['value']
+  itemLabel: ItemNode['label']
+  itemHasChildren: boolean
   tabIndex: 0 | -1
   columnIndex: number
-  onSelectItem?: (id: string) => void
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export const BrowserItem: FC<Props> = (props) => {
-  const { selected, item, tabIndex, columnIndex, onSelectItem } = props
-
-  const inputId = getElementIdFromNode(item)
-  const hasChildren = item.children.length > 0
-
-  const handleKeyDown: KeyboardEventHandler = (e) => {
-    if (
-      e.key === 'ArrowRight' ||
-      e.key === 'ArrowLeft' ||
-      e.key === 'ArrowUp' ||
-      e.key === 'ArrowDown' ||
-      e.key === 'Enter' ||
-      e.key === ' '
-    ) {
-      e.preventDefault()
-    }
+const KEYDOWN_REGEX = /^((Arrow(Right|Left|Up|Down))|Enter| )$/
+const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
+  if (KEYDOWN_REGEX.test(e.key)) {
+    e.preventDefault()
   }
+}
+
+export const BrowserItem: FC<Props> = ({
+  selected,
+  itemValue,
+  itemLabel,
+  itemHasChildren,
+  tabIndex,
+  columnIndex,
+  onChangeInput,
+}) => {
+  const inputId = useMemo(() => getElementIdFromNode(itemValue), [itemValue])
+  const className = useMemo(() => classNameGenerator(), [])
 
   return (
     <label
       htmlFor={inputId}
-      className={radioWrapperStyle({
-        selected: selected ? (hasChildren ? 'parent' : 'last') : 'none',
-      })}
+      data-selected={selected}
+      data-type={itemHasChildren ? 'parent' : 'last'}
+      className={className}
     >
       <input
         className="shr-sr-only"
         type="radio"
         id={inputId}
         name={`column-${columnIndex}`}
-        value={item.value}
+        value={itemValue}
         tabIndex={tabIndex}
-        onKeyDown={handleKeyDown}
-        onChange={() => onSelectItem?.(item.value)}
+        onKeyDown={HANDLE_KEYDOWN}
+        onChange={onChangeInput}
         checked={selected}
       />
-      <Cluster align="center" justify="space-between">
-        <Text>{item.label}</Text>
-        {hasChildren && <FaAngleRightIcon />}
-      </Cluster>
+      <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
     </label>
   )
 }
+
+const BodyCluster = memo<{ label: string; hasChildren: boolean }>(({ label, hasChildren }) => (
+  <Cluster align="center" justify="space-between" as="span">
+    <Text>{label}</Text>
+    {hasChildren && <FaAngleRightIcon />}
+  </Cluster>
+))

@@ -1,9 +1,9 @@
-import React, { ComponentProps, useMemo } from 'react'
+import { type ComponentProps, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownMenuButton } from '../Dropdown'
 
-const headerDropdownMenuButton = tv({
+const classNameGenerator = tv({
   base: [
     '[&>.smarthr-ui-DropdownMenuButton-trigger]:shr-border-transparent [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-bg-transparent [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.25 [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-font-normal [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-text-white',
     // ボタンの余白分だけ微調整
@@ -11,14 +11,11 @@ const headerDropdownMenuButton = tv({
   ],
 })
 
-export const HeaderDropdownMenuButton: React.FC<ComponentProps<typeof DropdownMenuButton>> = ({
+export const HeaderDropdownMenuButton: FC<ComponentProps<typeof DropdownMenuButton>> = ({
   className,
   ...rest
 }) => {
-  const headerDropdownMenuButtonStyle = useMemo(
-    () => headerDropdownMenuButton({ className }),
-    [className],
-  )
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  return <DropdownMenuButton {...rest} className={headerDropdownMenuButtonStyle} />
+  return <DropdownMenuButton {...rest} className={actualClassName} />
 }

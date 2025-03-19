@@ -1,10 +1,14 @@
 'use client'
 
-import React, {
+import {
   type ComponentProps,
   type ComponentPropsWithoutRef,
+  type ComponentType,
+  type FC,
+  type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -16,12 +20,13 @@ import { tv } from 'tailwind-variants'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
-import { Text, TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenText } from '../VisuallyHiddenText'
+import { Text, type TextProps } from '../Text'
+import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
 
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
+type StatusLabelType = FunctionComponentElement<StatusLabelProps>
 
 type Props = PropsWithChildren<{
   /** グループのタイトル名 */
@@ -39,7 +44,12 @@ type Props = PropsWithChildren<{
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
   /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
+  /**
+   * @deprecated statusLabelProps属性は非推奨です。statusLabelsを使ってください。
+   */
   statusLabelProps?: StatusLabelProps | StatusLabelProps[]
+  /** タイトルの隣に表示する `StatusLabel` の配列 */
+  statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
   /** タイトルの下に表示する入力例 */
@@ -52,11 +62,11 @@ type Props = PropsWithChildren<{
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  as?: string | React.ComponentType<any>
+  as?: string | ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
 
-const formGroup = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-FormControl',
@@ -71,34 +81,39 @@ const formGroup = tv({
     label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
+    underTitleStack: ['[&&&]:shr-mt-0'],
   },
 })
 
+// TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
+// FormControltとの差をわかりやすくしている
+// 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
+// https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
 const childrenWrapper = tv({
   variants: {
     innerMargin: {
-      0: '[&&&]:shr-mt-0',
-      0.25: '[&&&]:shr-mt-0.25',
-      0.5: '[&&&]:shr-mt-0.5',
-      0.75: '[&&&]:shr-mt-0.75',
-      1: '[&&&]:shr-mt-1',
-      1.25: '[&&&]:shr-mt-1.25',
-      1.5: '[&&&]:shr-mt-1.5',
-      2: '[&&&]:shr-mt-2',
-      2.5: '[&&&]:shr-mt-2.5',
-      3: '[&&&]:shr-mt-3',
-      3.5: '[&&&]:shr-mt-3.5',
-      4: '[&&&]:shr-mt-4',
-      8: '[&&&]:shr-mt-8',
-      X3S: '[&&&]:shr-mt-0.25',
-      XXS: '[&&&]:shr-mt-0.5',
-      XS: '[&&&]:shr-mt-1',
-      S: '[&&&]:shr-mt-1.5',
-      M: '[&&&]:shr-mt-2',
-      L: '[&&&]:shr-mt-2.5',
-      XL: '[&&&]:shr-mt-3',
-      XXL: '[&&&]:shr-mt-3.5',
-      X3L: '[&&&]:shr-mt-4',
+      0: '',
+      0.25: '',
+      0.5: '',
+      0.75: '',
+      1: '',
+      1.25: '',
+      1.5: '',
+      2: '',
+      2.5: '',
+      3: '',
+      3.5: '',
+      4: '',
+      8: '',
+      X3S: '',
+      XXS: '',
+      XS: '',
+      S: '',
+      M: '',
+      L: '',
+      XL: '',
+      XXL: '',
+      X3L: '',
     } as { [key in Gap]: string },
     isFieldset: {
       true: '',
@@ -121,7 +136,7 @@ const childrenWrapper = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: React.FC<Props & ElementProps> = ({
+export const ActualFormControl: FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
   subActionArea,
@@ -129,6 +144,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   htmlFor,
   labelId,
   innerMargin,
+  statusLabels,
   statusLabelProps,
   helpMessage,
   exampleMessage,
@@ -165,13 +181,21 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
-  const statusLabelList = useMemo(() => {
+
+  const actualStatusLabels = useMemo(() => {
+    if (statusLabels) {
+      return Array.isArray(statusLabels) ? statusLabels : [statusLabels]
+    }
+
     if (!statusLabelProps) {
       return []
     }
 
-    return Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-  }, [statusLabelProps])
+    const labelProps = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
+
+    return labelProps.map((prop, index) => <StatusLabel {...prop} key={index} />)
+  }, [statusLabels, statusLabelProps])
+
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -180,36 +204,38 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
-    useMemo(() => {
-      const { wrapper, label, errorList, errorIcon } = formGroup()
+  const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
 
-      return {
-        wrapperStyle: wrapper({ className }),
-        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-        errorListStyle: errorList(),
-        errorIconStyle: errorIcon(),
-        childrenWrapperStyle: childrenWrapper({ innerMargin, isFieldset }),
-      }
-    }, [className, dangerouslyTitleHidden, innerMargin, isFieldset])
+  const classNames = useMemo(() => {
+    const { wrapper, label, errorList, errorIcon, underTitleStack } = classNameGenerator()
+
+    return {
+      wrapper: wrapper({ className }),
+      label: label({
+        className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
+      }),
+      errorList: errorList(),
+      errorIcon: errorIcon(),
+      underTitleStack: underTitleStack(),
+    }
+  }, [dangerouslyTitleHidden, className])
+
+  const childrenWrapperStyle = useMemo(
+    () => childrenWrapper({ innerMargin, isFieldset }),
+    [innerMargin, isFieldset],
+  )
 
   useEffect(() => {
-    if (isFieldset) {
+    if (
+      isFieldset ||
+      !inputWrapperRef?.current ||
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      document.getElementById(managedHtmlFor)
+    ) {
       return
     }
 
-    const inputWrapper = inputWrapperRef?.current
-
-    if (!inputWrapper) {
-      return
-    }
-
-    // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-    if (document.getElementById(managedHtmlFor)) {
-      return
-    }
-
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!input) {
       return
@@ -229,36 +255,34 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       }
     }
   }, [managedHtmlFor, isFieldset, managedLabelId])
+
   useEffect(() => {
-    if (!describedbyIds) {
+    if (!describedbyIds || !inputWrapperRef?.current) {
       return
     }
 
+    const inputWrapper = inputWrapperRef.current
     const attrName = 'aria-describedby'
-    const inputWrapper = inputWrapperRef?.current
 
-    if (!inputWrapper || inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
+    if (inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
       return
     }
 
     const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-    if (input && !input.getAttribute(attrName)) {
-      input.setAttribute(attrName, describedbyIds)
+    if (input) {
+      const attribute = input.getAttribute(attrName)
+
+      input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
     }
   }, [describedbyIds])
+
   useEffect(() => {
-    if (!autoBindErrorInput) {
+    if (!autoBindErrorInput || !inputWrapperRef?.current) {
       return
     }
 
-    const inputWrapper = inputWrapperRef?.current
-
-    if (!inputWrapper) {
-      return
-    }
-
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (input) {
       const attrName = 'aria-invalid'
@@ -271,32 +295,14 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
 
-  return (
-    <Stack
-      {...props}
-      as={as}
-      gap={innerMargin ?? 0.5}
-      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
-      className={wrapperStyle}
-    >
-      <TitleCluster
-        isFieldset={isFieldset}
-        managedHtmlFor={managedHtmlFor}
-        managedLabelId={managedLabelId}
-        labelStyle={labelStyle}
-        dangerouslyTitleHidden={dangerouslyTitleHidden}
-        titleType={titleType}
-        title={title}
-        statusLabelList={statusLabelList}
-        subActionArea={subActionArea}
-      />
+  let body = (
+    <>
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
       <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
       <ErrorMessageList
         errorMessages={actualErrorMessages}
         managedHtmlFor={managedHtmlFor}
-        errorListStyle={errorListStyle}
-        errorIconStyle={errorIconStyle}
+        classNames={classNames}
       />
       <div className={childrenWrapperStyle} ref={inputWrapperRef}>
         {children}
@@ -305,73 +311,146 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         supplementaryMessage={supplementaryMessage}
         managedHtmlFor={managedHtmlFor}
       />
+    </>
+  )
+
+  // HINT: dangerouslyTitleHiddenの場合、body以下の余白の計算を簡略化するため
+  // Stackをネストし、そのStackに対してmargin-top: 0を指定する
+  // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
+  if (dangerouslyTitleHidden) {
+    body = (
+      // eslint-disable-next-line smarthr/best-practice-for-layouts
+      <Stack gap={actualInnerMargin} className={classNames.underTitleStack}>
+        {body}
+      </Stack>
+    )
+  }
+
+  return (
+    <Stack
+      {...props}
+      as={as}
+      gap={actualInnerMargin}
+      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
+      className={classNames.wrapper}
+    >
+      <TitleCluster
+        isFieldset={isFieldset}
+        managedHtmlFor={managedHtmlFor}
+        managedLabelId={managedLabelId}
+        labelClassName={classNames.label}
+        dangerouslyTitleHidden={dangerouslyTitleHidden}
+        titleType={titleType}
+        title={title}
+        statusLabels={actualStatusLabels}
+        subActionArea={subActionArea}
+      />
+      {body}
     </Stack>
   )
 }
 
-const TitleCluster = React.memo<
+const TitleCluster = memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
-    statusLabelList: StatusLabelProps[]
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
-    labelStyle: string
+    labelClassName: string
+    statusLabels: StatusLabelType[]
   }
 >(
   ({
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    labelStyle,
+    labelClassName,
     dangerouslyTitleHidden,
     titleType,
     title,
-    statusLabelList,
     subActionArea,
+    statusLabels,
   }) => {
     const body = (
       <>
         <Text styleType={titleType}>{title}</Text>
-        {statusLabelList.length > 0 && (
-          <Cluster gap={0.25} as="span">
-            {statusLabelList.map((prop, index) => (
-              <StatusLabel {...prop} key={index} />
-            ))}
-          </Cluster>
-        )}
+        <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
-    const labelAttrs = isFieldset
-      ? { 'aria-hidden': 'true' }
-      : {
+
+    const attrs = useMemo(() => {
+      if (dangerouslyTitleHidden) {
+        return {
+          label: null,
+          visuallyHidden: isFieldset
+            ? {
+                as: 'legend',
+              }
+            : {
+                as: 'label',
+                htmlFor: managedHtmlFor,
+                id: managedLabelId,
+              },
+        }
+      }
+
+      if (isFieldset) {
+        return {
+          label: { 'aria-hidden': 'true' } as const,
+          visuallyHidden: { as: 'legend' },
+        }
+      }
+
+      return {
+        label: {
+          as: 'label' as const,
           htmlFor: managedHtmlFor,
           id: managedLabelId,
-          as: 'label' as React.ComponentProps<typeof Cluster>['as'],
-        }
+        },
+        visuallyHidden: null,
+      }
+    }, [managedLabelId, managedHtmlFor, dangerouslyTitleHidden, isFieldset])
 
     return (
       <>
-        {isFieldset && <VisuallyHiddenText as="legend">{innerText(body)}</VisuallyHiddenText>}
-        <Cluster
-          justify="space-between"
-          // HINT: legendが存在する場合、Stackの余白が狂ってしまう&常にこのClusterはUI上先頭になるため、margin-topを0固定する
-          className="[&&&]:shr-mt-0"
-          // HINT: dangerouslyTitleHiddenの場合、Stackの余白計算を正常にするためのhidden
-          hidden={dangerouslyTitleHidden || undefined}
-        >
-          {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-          <Cluster {...labelAttrs} align="center" className={labelStyle}>
-            {body}
+        {attrs.visuallyHidden && (
+          <VisuallyHiddenText {...attrs.visuallyHidden}>
+            {
+              // HINT: innerTextでは正しく文字が取得できない場合がある
+              // 安全策としてinnerTextが空を取得してきたらbody自体を埋めこみます
+              innerText(body) || body
+            }
+          </VisuallyHiddenText>
+        )}
+        {attrs.label && (
+          <Cluster
+            justify="space-between"
+            // HINT: UI上、常にトップの要素になるため、Stackの計算が狂わないよう、
+            // 常にmargin-topを0にする
+            className="[&&&]:shr--mt-0"
+          >
+            {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+            <Cluster {...attrs.label} align="center" className={labelClassName}>
+              {body}
+            </Cluster>
+            {subActionArea && <div className="shr-grow">{subActionArea}</div>}
           </Cluster>
-          {subActionArea && <div className="shr-grow">{subActionArea}</div>}
-        </Cluster>
+        )}
       </>
     )
   },
 )
 
-const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
+const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
+  statusLabels.length === 0 ? null : (
+    // eslint-disable-next-line smarthr/best-practice-for-layouts
+    <Cluster gap={0.25} as="span">
+      {statusLabels}
+    </Cluster>
+  ),
+)
+
+const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
   ({ helpMessage, managedHtmlFor }) =>
     helpMessage ? (
       <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
@@ -380,7 +459,7 @@ const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHt
     ) : null,
 )
 
-const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
+const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
   ({ exampleMessage, managedHtmlFor }) =>
     exampleMessage ? (
       <Text
@@ -395,24 +474,26 @@ const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedH
     ) : null,
 )
 
-const ErrorMessageList = React.memo<{
+const ErrorMessageList = memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
-  errorListStyle: string
-  errorIconStyle: string
-}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) =>
+  classNames: {
+    errorList: string
+    errorIcon: string
+  }
+}>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
+    <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <FaCircleExclamationIcon text={message} className={errorIconStyle} />
+          <FaCircleExclamationIcon text={message} className={classNames.errorIcon} />
         </p>
       ))}
     </div>
   ) : null,
 )
 
-const SupplementaryMessageText = React.memo<
+const SupplementaryMessageText = memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
 >(({ supplementaryMessage, managedHtmlFor }) =>
   supplementaryMessage ? (
@@ -428,5 +509,4 @@ const SupplementaryMessageText = React.memo<
   ) : null,
 )
 
-export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
-  ActualFormControl
+export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl

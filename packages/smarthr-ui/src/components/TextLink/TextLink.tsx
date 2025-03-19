@@ -1,17 +1,20 @@
-import React, {
-  ComponentPropsWithoutRef,
-  ElementType,
-  FC,
-  PropsWithoutRef,
-  ReactNode,
-  Ref,
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type FC,
+  type MouseEvent,
+  type PropsWithoutRef,
+  type ReactNode,
+  type Ref,
   forwardRef,
+  memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { ElementRef, ElementRefProps } from '../../types'
 import { FaUpRightFromSquareIcon } from '../Icon'
+
+import type { ElementRef, ElementRefProps } from '../../types'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
@@ -20,7 +23,7 @@ type ElementProps<T extends ElementType> = Omit<
 
 type Props<T extends ElementType> = {
   /** リンクをクリックした時に発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent) => void
+  onClick?: (e: MouseEvent) => void
   /** テキストの前に表示するアイコン */
   prefix?: ReactNode
   /** テキストの後ろに表示するアイコン */
@@ -33,7 +36,7 @@ type TextLinkComponent = <T extends ElementType = 'a'>(
   props: Props<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
-const textLink = tv({
+const classNameGenerator = tv({
   slots: {
     anchor:
       'shr-text-link shr-no-underline shr-shadow-underline forced-colors:shr-underline [&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
@@ -41,11 +44,11 @@ const textLink = tv({
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
   },
 })
-const { anchor, prefixWrapper, suffixWrapper } = textLink()
+const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
 const prefixWrapperClassName = prefixWrapper()
 const suffixWrapperClassName = suffixWrapper()
 
-export const TextLink: TextLinkComponent = forwardRef(
+const ActualTextLink: TextLinkComponent = forwardRef(
   <T extends ElementType = 'a'>(
     {
       elementAs,
@@ -61,11 +64,12 @@ export const TextLink: TextLinkComponent = forwardRef(
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
-    const Component = elementAs || 'a'
+    const Anchor = elementAs || 'a'
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
-        return <FaUpRightFromSquareIcon aria-label="別タブで開く" />
+        return <FaUpRightFromSquareIcon alt="別タブで開く" />
       }
+
       return suffix
     }, [suffix, target])
     const actualHref = useMemo(() => {
@@ -90,17 +94,18 @@ export const TextLink: TextLinkComponent = forwardRef(
         return undefined
       }
 
-      return (e: React.MouseEvent) => {
-        if (!href) {
-          e.preventDefault()
-        }
+      if (href) {
+        return onClick
+      }
+
+      return (e: MouseEvent) => {
+        e.preventDefault()
         onClick(e)
       }
-    }, [href, onClick])
+    }, [onClick, href])
 
     return (
-      // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-      <Component
+      <Anchor
         {...others}
         ref={ref}
         href={actualHref}
@@ -112,7 +117,9 @@ export const TextLink: TextLinkComponent = forwardRef(
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
         {children}
         {actualSuffix && <span className={suffixWrapperClassName}>{actualSuffix}</span>}
-      </Component>
+      </Anchor>
     )
   },
 )
+
+export const TextLink = memo(ActualTextLink) as typeof ActualTextLink
