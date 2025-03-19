@@ -1,4 +1,4 @@
-import React, { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap } from '../../types'

@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { AccordionPanel } from '../AccordionPanel'
 import { AccordionPanelContent } from '../AccordionPanelContent'

@@ -1,5 +1,5 @@
 import { within } from '@storybook/test'
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
 import { Stack } from '../../Layout'

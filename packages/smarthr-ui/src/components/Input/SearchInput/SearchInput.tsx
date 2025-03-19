@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
+import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'

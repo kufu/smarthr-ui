@@ -1,4 +1,3 @@
-import React, { type FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../../../Button'
@@ -11,6 +10,7 @@ import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from './Translate'
 
 import type { Launcher } from '../../types'
+import type { FC } from 'react'
 
 const appLauncherFeatures = tv({
   slots: {

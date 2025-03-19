@@ -1,4 +1,4 @@
-import React, { type ReactNode, memo, useMemo } from 'react'
+import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading, type HeadingTagTypes } from '../Heading'

@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type ChangeEvent,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
@@ -18,7 +18,6 @@ import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
@@ -30,6 +29,7 @@ import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 import type { BaseProps, ComboBoxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
