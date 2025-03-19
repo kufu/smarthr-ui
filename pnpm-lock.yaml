@@ -13,7 +13,7 @@ overrides:
   micromatch@<4.0.8: '>=4.0.8'
   cross-spawn@<7.0.5: '>=7.0.6'
   nanoid: 3.3.11
-  esbuild@<=0.24.2: '>=0.25.0'
+  esbuild@<=0.24.2: '>=0.25.1'
   axios@<1.8.2: '>=1.8.3'
   '@babel/runtime@<7.26.10': '>=7.26.10'
   '@babel/helpers@<7.26.10': '>=7.26.10'
@@ -3612,7 +3612,7 @@ packages:
   esbuild-register@3.5.0:
     resolution: {integrity: sha512-+4G/XmakeBAsvJuDugJvtyF1x+XJT4FMocynNpxrvEBViirpfUn2PgNpCHedfWhF4WokNsO/OvMKrmJOIJsI5A==}
     peerDependencies:
-      esbuild: '>=0.25.0'
+      esbuild: '>=0.25.1'
 
   esbuild@0.25.1:
     resolution: {integrity: sha512-BGO5LtrGC7vxnqucAe/rmvKdJllfGaYWdyABvyMoXQlfYMb2bbRuReWR5tEGE//4LcNJj9XrkovTqNYRFZHAMQ==}
