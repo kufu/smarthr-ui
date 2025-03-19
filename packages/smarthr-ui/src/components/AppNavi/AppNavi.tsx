@@ -1,8 +1,12 @@
-import React, {
+import {
+  Children,
   type ComponentPropsWithoutRef,
   type FC,
+  Fragment,
   type PropsWithChildren,
   type ReactNode,
+  isValidElement,
+  memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -96,7 +100,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
   )
 }
 
-const StatusLabelHeading = React.memo<PropsWithChildren>(
+const StatusLabelHeading = memo<PropsWithChildren>(
   ({ children }) =>
     children && (
       <Heading className={classNames.statusLabelHeading}>
@@ -106,12 +110,12 @@ const StatusLabelHeading = React.memo<PropsWithChildren>(
 )
 
 const renderButtons = (children: ReactNode) =>
-  React.Children.map(children, (child): ReactNode => {
-    if (!(child && React.isValidElement(child))) {
+  Children.map(children, (child): ReactNode => {
+    if (!(child && isValidElement(child))) {
       return null
     }
 
-    if (child.type === React.Fragment) {
+    if (child.type === Fragment) {
       return renderButtons(child.props.children)
     }
 

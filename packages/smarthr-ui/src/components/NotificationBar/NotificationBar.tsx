@@ -1,4 +1,4 @@
-import React, {
+import {
   type ComponentProps,
   type ComponentPropsWithoutRef,
   type FC,

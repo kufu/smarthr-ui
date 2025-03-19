@@ -1,11 +1,6 @@
 'use client'
 
-import React, {
-  type ButtonHTMLAttributes,
-  type PropsWithChildren,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type ButtonHTMLAttributes, type PropsWithChildren, forwardRef, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
@@ -131,13 +126,9 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
 
-const LoadingStatus = React.memo<PropsWithChildren<{ loading: boolean }>>(
-  ({ loading, children }) => {
-    const { createPortal } = usePortal()
+const LoadingStatus = memo<PropsWithChildren<{ loading: boolean }>>(({ loading, children }) => {
+  const { createPortal } = usePortal()
 
-    // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-    return createPortal(
-      <VisuallyHiddenText role="status">{loading && children}</VisuallyHiddenText>,
-    )
-  },
-)
+  // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
+  return createPortal(<VisuallyHiddenText role="status">{loading && children}</VisuallyHiddenText>)
+})

@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
