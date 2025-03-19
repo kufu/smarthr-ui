@@ -1,4 +1,4 @@
-import React, { type FC, type ReactNode, createContext, useContext } from 'react'
+import { type FC, type ReactNode, createContext, useContext } from 'react'
 
 import type { HeaderProps } from '../types'
 

@@ -1,4 +1,4 @@
-import React, { type ComponentProps, useCallback, useContext, useId } from 'react'
+import { type ComponentProps, type FC, useCallback, useContext, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
@@ -11,7 +11,7 @@ import type { UncontrolledDialogProps } from '../types'
 type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const MessageDialogContent: React.FC<Props & ElementProps> = ({
+export const MessageDialogContent: FC<Props & ElementProps> = ({
   title,
   description,
   portalParent,

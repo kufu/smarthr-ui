@@ -1,4 +1,4 @@
-import React, { type HTMLAttributes, memo, useCallback, useMemo } from 'react'
+import { type FC, type HTMLAttributes, type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -50,10 +50,10 @@ type Props = BaseProps & ElementProps
 
 const BUTTON_REGEX = /^button$/i
 
-export const Pagination: React.FC<Props> = (props) =>
+export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
 
-const ActualPagination: React.FC<Props> = ({
+const ActualPagination: FC<Props> = ({
   total,
   current,
   onClick,
@@ -78,7 +78,7 @@ const ActualPagination: React.FC<Props> = ({
   }, [className, withoutNumbers])
 
   const actualOnClick = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
+    (e: MouseEvent<HTMLElement>) => {
       const button = (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) =>
         BUTTON_REGEX.test(elm.tagName),
       )

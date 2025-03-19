@@ -1,4 +1,4 @@
-import React, {
+import {
   type InputHTMLAttributes,
   type PropsWithChildren,
   type ReactNode,

@@ -1,10 +1,10 @@
 'use client'
 
-import React, { type PropsWithChildren, useContext } from 'react'
+import { type FC, type PropsWithChildren, useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 
-export const DialogTrigger: React.FC<PropsWithChildren> = (props) => {
+export const DialogTrigger: FC<PropsWithChildren> = (props) => {
   const { onClickTrigger } = useContext(DialogContext)
 
   return (

@@ -1,4 +1,4 @@
-import React, {
+import {
   type AriaAttributes,
   type ComponentPropsWithoutRef,
   type PropsWithChildren,

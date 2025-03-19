@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { FaCircleQuestionIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'

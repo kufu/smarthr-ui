@@ -1,4 +1,4 @@
-import React, { type ComponentProps, useMemo } from 'react'
+import { type ComponentProps, type FC, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
@@ -31,7 +31,7 @@ export const classNameGenerator = tv({
   },
 })
 
-export const BaseColumn: React.FC<BaseProps & Props & ElementProps> = ({
+export const BaseColumn: FC<BaseProps & Props & ElementProps> = ({
   bgColor,
   padding = 1,
   className,

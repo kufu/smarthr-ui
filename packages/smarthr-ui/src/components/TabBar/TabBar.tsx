@@ -1,9 +1,4 @@
-import React, {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'

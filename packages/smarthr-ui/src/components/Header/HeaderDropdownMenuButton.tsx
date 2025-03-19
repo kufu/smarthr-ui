@@ -1,4 +1,4 @@
-import React, { type ComponentProps, type FC, useMemo } from 'react'
+import { type ComponentProps, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownMenuButton } from '../Dropdown'

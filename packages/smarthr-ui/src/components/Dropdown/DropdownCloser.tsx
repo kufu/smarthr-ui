@@ -1,12 +1,6 @@
 'use client'
 
-import React, {
-  type ComponentProps,
-  type FC,
-  type PropsWithChildren,
-  useContext,
-  useMemo,
-} from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownContentContext } from './DropdownContent'

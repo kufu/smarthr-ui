@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 
 import { Stack } from '../../Layout'
 import { Loader } from '../Loader'

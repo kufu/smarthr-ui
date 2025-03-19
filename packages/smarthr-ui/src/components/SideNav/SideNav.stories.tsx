@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import React from 'react'
 import styled from 'styled-components'
 
 import { Heading } from '../Heading'

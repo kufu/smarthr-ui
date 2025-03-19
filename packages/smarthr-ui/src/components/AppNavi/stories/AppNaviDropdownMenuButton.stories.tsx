@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { backgroundColor } from '../../../themes'
 import { AnchorButton, Button } from '../../Button'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'

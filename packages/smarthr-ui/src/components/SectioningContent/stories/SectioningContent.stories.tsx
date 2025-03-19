@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Heading } from '../../Heading'
 import { Stack } from '../../Layout'
 import { Article, Aside, Nav, Section } from '../SectioningContent'
