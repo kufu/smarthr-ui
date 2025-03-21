@@ -10,7 +10,7 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import { commonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
@@ -106,8 +106,8 @@ const buildDropdownMenu = (
           <Component
             {...rest}
             key={`${index}-${navigation.children.toString()}`}
-            aria-current={current && 'page'}
-            className={commonButton({
+            aria-current={current}
+            className={commonButtonClassNameGenerator({
               current,
               className,
             })}
