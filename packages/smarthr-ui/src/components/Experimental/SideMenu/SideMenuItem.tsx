@@ -18,7 +18,7 @@ type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
 type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
   Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
 
-const sideMenuItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-SideMenu-item',
@@ -55,20 +55,21 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
   ...rest
 }: Props<AsElement>) => {
   const Component = elementAs ?? 'a'
-  const { wrapperStyle, contentStyle, iconWrapperStyle } = useMemo(() => {
-    const { wrapper, content, iconWrapper } = sideMenuItem()
+  const classNames = useMemo(() => {
+    const { wrapper, content, iconWrapper } = classNameGenerator()
+
     return {
-      wrapperStyle: wrapper({ current, className }),
-      contentStyle: content({ current }),
-      iconWrapperStyle: iconWrapper(),
+      wrapper: wrapper({ current, className }),
+      content: content({ current }),
+      iconWrapper: iconWrapper(),
     }
   }, [className, current])
 
   return (
-    <li className={wrapperStyle}>
+    <li className={classNames.wrapper}>
       <Component {...rest}>
-        <Text size="M" leading="TIGHT" className={contentStyle}>
-          {prefix && <span className={iconWrapperStyle}>{prefix}</span>}
+        <Text size="M" leading="TIGHT" className={classNames.content}>
+          {prefix && <span className={classNames.iconWrapper}>{prefix}</span>}
           <Text weight={current ? 'bold' : undefined}>{children}</Text>
         </Text>
       </Component>
