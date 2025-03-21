@@ -297,7 +297,8 @@ const ActualMultiComboBox = <T,>(
     return baseAction
   }, [isFocused, onBlur, resetDeletionButtonFocus])
 
-  useOuterClick([outerRef, listBoxRef], blur)
+  const outerClickRef = useMemo(() => [outerRef, listBoxRef], [outerRef, listBoxRef])
+  useOuterClick(outerClickRef, blur)
 
   useEffect(() => {
     if (highlighted) {

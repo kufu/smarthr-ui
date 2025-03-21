@@ -336,7 +336,7 @@ const ActualSingleComboBox = <T,>(
   }, [disabled, isFocused])
 
   useClick(
-    [outerRef, listBoxRef, clearButtonRef],
+    useMemo(() => [outerRef, listBoxRef, clearButtonRef], [outerRef, listBoxRef, clearButtonRef]),
     isFocused || selectedItem ? NOOP : selectDefaultItem,
     unfocus,
   )
