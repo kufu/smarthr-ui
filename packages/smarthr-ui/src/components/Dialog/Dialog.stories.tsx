@@ -636,7 +636,7 @@ export const Body以外のPortalParent: StoryFn = () => {
       <ModelessDialog
         isOpen={isOpen === 'modeless'}
         // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-        header={<Heading tag="h2">ModelessDialog</Heading>}
+        title="ModelessDialog"
         onClickClose={onClickClose}
         onPressEscape={onClickClose}
         id="portal-modeless"
