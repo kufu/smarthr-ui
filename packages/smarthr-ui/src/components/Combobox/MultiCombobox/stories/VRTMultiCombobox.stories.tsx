@@ -4,13 +4,13 @@ import { userEvent, within } from '@storybook/test'
 import { useState } from 'react'
 
 import { Stack } from '../../../Layout'
-import { ComboBoxItem } from '../../types'
-import { MultiComboBox } from '../MultiComboBox'
+import { ComboboxItem } from '../../types'
+import { MultiCombobox } from '../MultiCombobox'
 
-import { defaultItems } from './MultiComboBox.stories'
+import { defaultItems } from './MultiCombobox.stories'
 
 /*
- * pict multiComboBox.pict
+ * pict multiCombobox.pict
  * disabled        error   width   selectedItems
  * false   true    なし    なし
  * false   false   あり    複数
@@ -20,7 +20,7 @@ import { defaultItems } from './MultiComboBox.stories'
  * true    false   あり    なし
  */
 
-const _cases: Array<Omit<Parameters<typeof MultiComboBox>[0], 'items'>> = [
+const _cases: Array<Omit<Parameters<typeof MultiCombobox>[0], 'items'>> = [
   { disabled: false, error: true, width: undefined, selectedItems: [] },
   {
     disabled: false,
@@ -71,17 +71,17 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 }
 
 export default {
-  title: 'Forms（フォーム）/MultiComboBox/VRT',
-  component: MultiComboBox,
+  title: 'Forms（フォーム）/MultiCombobox/VRT',
+  component: MultiCombobox,
   render: (args) => {
     const items = Object.values(defaultItems)
-    const [selectedItems, setSelectedItems] = useState<Array<ComboBoxItem<unknown>>>([])
+    const [selectedItems, setSelectedItems] = useState<Array<ComboboxItem<unknown>>>([])
     return (
       <Stack align="flex-start" gap={2} className="shr-h-screen">
         {_cases.map((props, i) => (
-          <MultiComboBox {...args} {...props} items={items} key={i} />
+          <MultiCombobox {...args} {...props} items={items} key={i} />
         ))}
-        <MultiComboBox
+        <MultiCombobox
           {...args}
           name="default"
           items={items}
@@ -98,11 +98,11 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs', 'skip-test-runner'],
-} as Meta<typeof MultiComboBox>
+} as Meta<typeof MultiCombobox>
 
-export const VRT: StoryObj<typeof MultiComboBox> = {}
+export const VRT: StoryObj<typeof MultiCombobox> = {}
 
-export const VRTForcedColors: StoryObj<typeof MultiComboBox> = {
+export const VRTForcedColors: StoryObj<typeof MultiCombobox> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

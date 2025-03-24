@@ -96,7 +96,7 @@ const CLIENT_COMPONENTS: string[] = [
   'LanguageSwitcher', // イベントハンドラを含むため
   'LineClamp',      // ツールチップ開閉管理のためのuseState
   'ModelessDialog', // ダイアログ描画のためのcreatePortal
-  'MultiComboBox',  // プルダウン表示のためのcreatePortalなど
+  'MultiCombobox',  // プルダウン表示のためのcreatePortalなど
   'Nav',            // 見出しレベルの自動生成のため
   'PageHeading',    // 見出しレベルの自動生成のため
   'RadioButton',    // イベントハンドラを含むため
@@ -108,7 +108,7 @@ const CLIENT_COMPONENTS: string[] = [
   'Section',        // 見出しレベルの自動生成のため
   'Select',         // イベントハンドラを含むため
   'Sidebar',        // 見出しレベルの自動生成のため
-  'SingleComboBox', // プルダウン表示のためのcreatePortalなど
+  'SingleCombobox', // プルダウン表示のためのcreatePortalなど
   'Stack',          // 見出しレベルの自動生成のため
   'TableReel',      // scroll監視のためのuseEffect
   'Tooltip',        // 開閉状態の管理

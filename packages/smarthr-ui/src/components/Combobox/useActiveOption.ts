@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import type { ComboBoxOption } from './types'
+import type { ComboboxOption } from './types'
 
-export function useActiveOption<T>({ options }: { options: Array<ComboBoxOption<T>> }) {
-  const [activeOption, setActiveOption] = useState<ComboBoxOption<T> | null>(null)
+export function useActiveOption<T>({ options }: { options: Array<ComboboxOption<T>> }) {
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
@@ -17,7 +17,7 @@ export function useActiveOption<T>({ options }: { options: Array<ComboBoxOption<
   }, [options])
 
   const moveActiveOptionIndex = useCallback(
-    (currentActive: ComboBoxOption<T> | null, delta: -1 | 1) => {
+    (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
       if (options.every((option) => option.item.disabled)) {
         return
       }

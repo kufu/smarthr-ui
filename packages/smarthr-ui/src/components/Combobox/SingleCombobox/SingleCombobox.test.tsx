@@ -4,9 +4,9 @@ import { type ComponentProps, act } from 'react'
 
 import { FormControl } from '../../FormControl'
 
-import { SingleComboBox } from './SingleComboBox'
+import { SingleCombobox } from './SingleCombobox'
 
-describe('SingleComboBox', () => {
+describe('SingleCombobox', () => {
   beforeEach(() => {
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
       cb(0)
@@ -18,10 +18,10 @@ describe('SingleComboBox', () => {
   const listbox = () => screen.queryByRole('listbox')
   const clearButton = () => screen.getByRole('button', { name: '削除' })
 
-  const template = (args: Partial<ComponentProps<typeof SingleComboBox>>) => (
+  const template = (args: Partial<ComponentProps<typeof SingleCombobox>>) => (
     <form>
       <FormControl title="コンボボックス">
-        <SingleComboBox
+        <SingleCombobox
           name="default"
           items={[
             { label: 'option 1', value: 'value-1' },
@@ -146,7 +146,7 @@ describe('SingleComboBox', () => {
     render(
       <form onSubmit={onSubmit}>
         <FormControl title="コンボボックス">
-          <SingleComboBox
+          <SingleCombobox
             name="default"
             items={[
               { label: 'option 1', value: 'value-1' },

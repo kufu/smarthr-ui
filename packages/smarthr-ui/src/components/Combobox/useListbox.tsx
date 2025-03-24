@@ -19,18 +19,18 @@ import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { ListBoxItemButton } from './ListBoxItemButton'
+import { ItemButton } from './ItemButton'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 
-import type { ComboBoxItem, ComboBoxOption } from './types'
+import type { ComboboxItem, ComboboxOption } from './types'
 
 type Props<T> = {
-  options: Array<ComboBoxOption<T>>
+  options: Array<ComboboxOption<T>>
   dropdownHelpMessage?: ReactNode
   dropdownWidth?: string | number
   onAdd?: (label: string) => void
-  onSelect: (item: ComboBoxItem<T>) => void
+  onSelect: (item: ComboboxItem<T>) => void
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
@@ -56,7 +56,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-absolute',
     dropdownList: [
-      'smarthr-ui-ComboBox-dropdownList',
+      'smarthr-ui-Combobox-dropdownList',
       'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
       /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
       = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
@@ -66,11 +66,11 @@ const classNameGenerator = tv({
     helpMessage:
       'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
     loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
-    noItems: 'smarthr-ui-ComboBox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
+    noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
   },
 })
 
-export const useListBox = <T,>({
+export const useListbox = <T,>({
   options,
   dropdownHelpMessage,
   dropdownWidth,
@@ -221,8 +221,8 @@ export const useListBox = <T,>({
   const handleAdd = useMemo(
     () =>
       onAdd
-        ? (option: ComboBoxOption<T>) => {
-            // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        ? (option: ComboboxOption<T>) => {
+            // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
             // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
             requestAnimationFrame(() => {
               onAdd(option.item.value)
@@ -232,13 +232,13 @@ export const useListBox = <T,>({
     [onAdd],
   )
   const handleSelect = useCallback(
-    (option: ComboBoxOption<T>) => {
+    (option: ComboboxOption<T>) => {
       onSelect(option.item)
     },
     [onSelect],
   )
   const handleHoverOption = useCallback(
-    (option: ComboBoxOption<T>) => {
+    (option: ComboboxOption<T>) => {
       setNavigationType('pointer')
       setActiveOption(option)
     },
@@ -310,7 +310,7 @@ export const useListBox = <T,>({
                 </p>
               ) : (
                 partialOptions.map((option) => (
-                  <ListBoxItemButton
+                  <ItemButton
                     key={option.id}
                     option={option}
                     onAdd={handleAdd}

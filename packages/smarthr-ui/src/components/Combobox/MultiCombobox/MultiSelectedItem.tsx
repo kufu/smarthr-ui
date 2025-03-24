@@ -17,12 +17,12 @@ import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 
-import type { ComboBoxItem } from '../types'
+import type { ComboboxItem } from '../types'
 
 export type Props<T> = {
-  item: ComboBoxItem<T> & { deletable?: boolean }
+  item: ComboboxItem<T> & { deletable?: boolean }
   disabled: boolean
-  onDelete: (item: ComboBoxItem<T>) => void
+  onDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
   decorators?: DecoratorsType<DecoratorKeyTypes>
@@ -36,10 +36,10 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 const classNameGenerator = tv({
   slots: {
     wrapper:
-      'smarthr-ui-MultiComboBox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
-    itemLabel: 'smarthr-ui-MultiComboBox-selectedItemLabel',
+      'smarthr-ui-MultiCombobox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
+    itemLabel: 'smarthr-ui-MultiCombobox-selectedItemLabel',
     deleteButton: [
-      'smarthr-ui-MultiComboBox-deleteButton',
+      'smarthr-ui-MultiCombobox-deleteButton',
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
       'focus-visible:shr-shadow-[unset]',

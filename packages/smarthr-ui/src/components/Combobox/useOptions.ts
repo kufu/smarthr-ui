@@ -1,17 +1,17 @@
 import { useCallback, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
 
-import { areComboBoxItemsEqual, convertMatchableString } from './comboBoxHelper'
+import { areItemsEqual, convertMatchableString } from './helper'
 
-import type { ComboBoxItem, ComboBoxOption } from './types'
+import type { ComboboxItem, ComboboxOption } from './types'
 
 const defaultIsItemSelected = <T>(
-  targetItem: ComboBoxItem<T>,
-  selectedItems: Array<ComboBoxItem<T>>,
-) => selectedItems.some((item) => areComboBoxItemsEqual(item, targetItem))
+  targetItem: ComboboxItem<T>,
+  selectedItems: Array<ComboboxItem<T>>,
+) => selectedItems.some((item) => areItemsEqual(item, targetItem))
 
 type BaseUseOptionsProps<T> = {
-  items: Array<ComboBoxItem<T>>
+  items: Array<ComboboxItem<T>>
   creatable: boolean
   inputValue?: string
   isFilteringDisabled?: boolean
@@ -21,10 +21,10 @@ export const useSingleOptions = <T>({
   selected,
   ...rest
 }: BaseUseOptionsProps<T> & {
-  selected: ComboBoxItem<T> | null
+  selected: ComboboxItem<T> | null
 }) => {
   const isSelected = useCallback(
-    (item: ComboBoxItem<T>) => selected !== null && areComboBoxItemsEqual(selected, item),
+    (item: ComboboxItem<T>) => selected !== null && areItemsEqual(selected, item),
     [selected],
   )
 
@@ -36,11 +36,11 @@ export const useMultiOptions = <T>({
   isItemSelected = defaultIsItemSelected,
   ...rest
 }: BaseUseOptionsProps<T> & {
-  selected: Array<ComboBoxItem<T>>
-  isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
+  selected: Array<ComboboxItem<T>>
+  isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }) => {
   const isSelected = useCallback(
-    (item: ComboBoxItem<T>) => isItemSelected(item, selected),
+    (item: ComboboxItem<T>) => isItemSelected(item, selected),
     [selected, isItemSelected],
   )
 
@@ -49,12 +49,12 @@ export const useMultiOptions = <T>({
 
 function useOptions<T>(
   { items, creatable, inputValue = '', isFilteringDisabled = false }: BaseUseOptionsProps<T>,
-  isSelected: (item: ComboBoxItem<T>) => boolean,
+  isSelected: (item: ComboboxItem<T>) => boolean,
 ) {
   const newItemId = useId()
   const optionIdPrefix = useId()
 
-  const existedOptions: Array<ComboBoxOption<T>> = useMemo(
+  const existedOptions: Array<ComboboxOption<T>> = useMemo(
     () =>
       items.map((item, i) => ({
         id: `${optionIdPrefix}-${i}`,
@@ -64,7 +64,7 @@ function useOptions<T>(
       })),
     [isSelected, items, optionIdPrefix],
   )
-  const addingOption: ComboBoxOption<T> | null = useMemo(
+  const addingOption: ComboboxOption<T> | null = useMemo(
     () =>
       creatable && inputValue && items.every((item) => item.label !== inputValue)
         ? {
@@ -77,7 +77,7 @@ function useOptions<T>(
     [inputValue, items, creatable, newItemId],
   )
 
-  const allOptions: Array<ComboBoxOption<T>> = useMemo(
+  const allOptions: Array<ComboboxOption<T>> = useMemo(
     () => (addingOption ? [addingOption, ...existedOptions] : existedOptions),
     [existedOptions, addingOption],
   )

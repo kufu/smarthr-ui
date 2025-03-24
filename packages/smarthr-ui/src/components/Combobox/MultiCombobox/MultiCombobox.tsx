@@ -22,21 +22,21 @@ import { useOuterClick } from '../../../hooks/useOuterClick'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { FaCaretDownIcon } from '../../Icon'
-import { areComboBoxItemsEqual } from '../comboBoxHelper'
+import { areItemsEqual } from '../helper'
 import { useFocusControl } from '../useFocusControl'
-import { useListBox } from '../useListBox'
+import { useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
-import type { BaseProps, ComboBoxItem } from '../types'
+import type { BaseProps, ComboboxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
   /**
    * 選択されているアイテムのリスト
    */
-  selectedItems: Array<ComboBoxItem<T> & { deletable?: boolean }>
+  selectedItems: Array<ComboboxItem<T> & { deletable?: boolean }>
   /**
    * 選択されているアイテムのラベルを省略表示するかどうか
    */
@@ -49,11 +49,11 @@ type Props<T> = BaseProps<T> & {
   /**
    * 選択されているアイテムの削除ボタンがクリックされた時に発火するコールバック関数
    */
-  onDelete?: (item: ComboBoxItem<T>) => void
+  onDelete?: (item: ComboboxItem<T>) => void
   /**
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
-  onChangeSelected?: (selectedItems: Array<ComboBoxItem<T>>) => void
+  onChangeSelected?: (selectedItems: Array<ComboboxItem<T>>) => void
   /**
    * コンポーネントがフォーカスされたときに発火するコールバック関数
    */
@@ -72,7 +72,7 @@ type Props<T> = BaseProps<T> & {
   /**
    * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
    */
-  isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
+  isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
@@ -94,21 +94,21 @@ const ARROW_UP_AND_DOWN_KEY_REGEX = /^(Arrow)?(Up|Down)$/
 const classNameGenerator = tv({
   slots: {
     wrapper: [
-      'smarthr-ui-MultiComboBox',
+      'smarthr-ui-MultiCombobox',
       'shr-box-border shr-inline-flex shr-min-w-[15em] shr-rounded-m shr-border shr-border-solid shr-px-0.5 shr-py-0.25 shr-align-bottom',
       'contrast-more:shr-border-high-contrast',
       'has-[[aria-invalid]]:shr-border-danger',
     ],
     inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
     selectedList:
-      'smarthr-ui-MultiComboBox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
+      'smarthr-ui-MultiCombobox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
     inputWrapper: 'shr-flex shr-flex-1 shr-items-center',
     input: [
-      'smarthr-ui-MultiComboBox-input',
+      'smarthr-ui-MultiCombobox-input',
       'shr-w-full shr-min-w-[5em] shr-border-none shr-text-base shr-text-black shr-outline-none shr-outline-0',
       'disabled:shr-hidden',
     ],
-    placeholderEl: 'smarthr-ui-MultiComboBox-placeholder shr-my-0 shr-self-center',
+    placeholderEl: 'smarthr-ui-MultiCombobox-placeholder shr-my-0 shr-self-center',
     suffixWrapper: [
       'shr-relative -shr-me-0.5 shr-ms-0.5 shr-p-0.5',
       'before:shr-absolute before:shr-inset-x-0 before:shr-inset-y-0.25 before:shr-w-0 before:shr-border-0 before:shr-border-l before:shr-border-solid before:shr-border-default before:shr-content-[""]',
@@ -146,7 +146,7 @@ const classNameGenerator = tv({
   ],
 })
 
-const ActualMultiComboBox = <T,>(
+const ActualMultiCombobox = <T,>(
   {
     items,
     selectedItems,
@@ -196,16 +196,14 @@ const ActualMultiComboBox = <T,>(
   })
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const actualOnDelete = useMemo(() => {
-    const handlers: Array<(item: ComboBoxItem<T>) => void> = []
+    const handlers: Array<(item: ComboboxItem<T>) => void> = []
 
     if (onDelete) {
-      handlers.push((item: ComboBoxItem<T>) => onDelete(item))
+      handlers.push((item: ComboboxItem<T>) => onDelete(item))
     }
     if (onChangeSelected) {
-      handlers.push((item: ComboBoxItem<T>) =>
-        onChangeSelected(
-          selectedItems.filter((selected) => !areComboBoxItemsEqual(selected, item)),
-        ),
+      handlers.push((item: ComboboxItem<T>) =>
+        onChangeSelected(selectedItems.filter((selected) => !areItemsEqual(selected, item))),
       )
     }
 
@@ -213,8 +211,8 @@ const ActualMultiComboBox = <T,>(
       return NOOP
     }
 
-    return (item: ComboBoxItem<T>) => {
-      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+    return (item: ComboboxItem<T>) => {
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
         handlers.forEach((h) => h(item))
@@ -222,13 +220,11 @@ const ActualMultiComboBox = <T,>(
     }
   }, [selectedItems, onChangeSelected, onDelete])
   const actualOnSelect = useCallback(
-    (selected: ComboBoxItem<T>) => {
-      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+    (selected: ComboboxItem<T>) => {
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = selectedItems.find((item) =>
-          areComboBoxItemsEqual(item, selected),
-        )
+        const matchedSelectedItem = selectedItems.find((item) => areItemsEqual(item, selected))
 
         if (matchedSelectedItem === undefined) {
           onSelect?.(selected)
@@ -241,7 +237,7 @@ const ActualMultiComboBox = <T,>(
     [selectedItems, actualOnDelete, onChangeSelected, onSelect],
   )
 
-  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListBox({
+  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -379,7 +375,7 @@ const ActualMultiComboBox = <T,>(
       disabled || isFocused
         ? undefined
         : (e: MouseEvent<HTMLElement>) => {
-            if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiComboBox-deleteButton')) {
+            if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
               focus()
             }
           },
@@ -544,7 +540,7 @@ const ActualMultiComboBox = <T,>(
   )
 }
 
-export const MultiComboBox = genericsForwardRef(ActualMultiComboBox)
+export const MultiCombobox = genericsForwardRef(ActualMultiCombobox)
 
 const MemoizedCaretDown = memo<{
   className: string

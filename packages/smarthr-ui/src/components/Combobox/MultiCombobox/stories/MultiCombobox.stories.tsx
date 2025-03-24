@@ -4,7 +4,7 @@ import { Meta, StoryObj } from '@storybook/react'
 
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
-import { MultiComboBox } from '../MultiComboBox'
+import { MultiCombobox } from '../MultiCombobox'
 
 export const defaultItems = {
   'option 1': {
@@ -52,12 +52,12 @@ export const defaultItems = {
 }
 
 export default {
-  title: 'Forms（フォーム）/MultiComboBox',
-  component: MultiComboBox,
+  title: 'Forms（フォーム）/MultiCombobox',
+  component: MultiCombobox,
   render: (args) => {
     const [_, setArgs] = useArgs()
     return (
-      <MultiComboBox
+      <MultiCombobox
         {...args}
         onDelete={(item) =>
           setArgs({
@@ -94,32 +94,32 @@ export default {
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['defaultItems'],
-} as Meta<typeof MultiComboBox<{ option: string }>>
+} as Meta<typeof MultiCombobox<{ option: string }>>
 
-export const Playground: StoryObj<typeof MultiComboBox> = {}
+export const Playground: StoryObj<typeof MultiCombobox> = {}
 
-export const SelectedItems: StoryObj<typeof MultiComboBox> = {
+export const SelectedItems: StoryObj<typeof MultiCombobox> = {
   name: 'selectedItems',
   args: {
     selectedItems: [defaultItems['option 1'], defaultItems['option 4']],
   },
 }
 
-export const Disabled: StoryObj<typeof MultiComboBox> = {
+export const Disabled: StoryObj<typeof MultiCombobox> = {
   name: 'disabled',
   args: {
     disabled: true,
   },
 }
 
-export const Error: StoryObj<typeof MultiComboBox> = {
+export const Error: StoryObj<typeof MultiCombobox> = {
   name: 'error',
   args: {
     error: true,
   },
 }
 
-export const Creatable: StoryObj<typeof MultiComboBox> = {
+export const Creatable: StoryObj<typeof MultiCombobox> = {
   name: 'creatable',
   args: {
     creatable: true,
@@ -127,28 +127,28 @@ export const Creatable: StoryObj<typeof MultiComboBox> = {
   },
 }
 
-export const IsLoading: StoryObj<typeof MultiComboBox> = {
+export const IsLoading: StoryObj<typeof MultiCombobox> = {
   name: 'isLoading',
   args: {
     isLoading: true,
   },
 }
 
-export const Width: StoryObj<typeof MultiComboBox> = {
+export const Width: StoryObj<typeof MultiCombobox> = {
   name: 'width',
   args: {
     width: '20rem',
   },
 }
 
-export const DropdownHelpMessage: StoryObj<typeof MultiComboBox> = {
+export const DropdownHelpMessage: StoryObj<typeof MultiCombobox> = {
   name: 'dropdownHelpMessage',
   args: {
     dropdownHelpMessage: 'ヘルプメッセージ',
   },
 }
 
-export const DropdownWidth: StoryObj<typeof MultiComboBox> = {
+export const DropdownWidth: StoryObj<typeof MultiCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',

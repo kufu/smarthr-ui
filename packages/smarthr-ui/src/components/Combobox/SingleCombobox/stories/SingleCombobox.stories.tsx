@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
-import { SingleComboBox } from '../SingleComboBox'
+import { SingleCombobox } from '../SingleCombobox'
 
 export const defaultItems = {
   'option 1': {
@@ -70,12 +70,12 @@ export const defaultItems = {
 export const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
 
 export default {
-  title: 'Forms（フォーム）/SingleComboBox',
-  component: SingleComboBox,
+  title: 'Forms（フォーム）/SingleCombobox',
+  component: SingleCombobox,
   render: (args) => {
     const [, setArgs] = useArgs()
     return (
-      <SingleComboBox
+      <SingleCombobox
         {...args}
         onClearClick={() => setArgs({ selectedItem: null })}
         onSelect={(item) => setArgs({ selectedItem: item.data?.option })}
@@ -116,23 +116,23 @@ export default {
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['defaultItems', 'prefixes'],
-} as Meta<typeof SingleComboBox<{ option: string }>>
+} as Meta<typeof SingleCombobox<{ option: string }>>
 
-export const Playground: StoryObj<typeof SingleComboBox> = {}
+export const Playground: StoryObj<typeof SingleCombobox> = {}
 
-export const SelectedItem: StoryObj<typeof SingleComboBox> = {
+export const SelectedItem: StoryObj<typeof SingleCombobox> = {
   name: 'selectedItem',
   args: {
     selectedItem: defaultItems['option 2'],
   },
 }
 
-export const DefaultItem: StoryObj<typeof SingleComboBox> = {
+export const DefaultItem: StoryObj<typeof SingleCombobox> = {
   name: 'defaultItem',
   render: (args) => {
     const [selectItem, setSelectItem] = useState(args.defaultItem)
     return (
-      <SingleComboBox
+      <SingleCombobox
         {...args}
         selectedItem={selectItem ?? null}
         onSelect={(item) => setSelectItem(item)}
@@ -144,31 +144,31 @@ export const DefaultItem: StoryObj<typeof SingleComboBox> = {
   },
 }
 
-export const Prefix: StoryObj<typeof SingleComboBox> = {
+export const Prefix: StoryObj<typeof SingleCombobox> = {
   name: 'prefix',
   render: (args) => (
     <Stack gap={1}>
-      <SingleComboBox {...args} prefix={prefixes['なし']} />
-      <SingleComboBox {...args} prefix={prefixes['あり']} />
+      <SingleCombobox {...args} prefix={prefixes['なし']} />
+      <SingleCombobox {...args} prefix={prefixes['あり']} />
     </Stack>
   ),
 }
 
-export const Disabled: StoryObj<typeof SingleComboBox> = {
+export const Disabled: StoryObj<typeof SingleCombobox> = {
   name: 'disabled',
   args: {
     disabled: true,
   },
 }
 
-export const Error: StoryObj<typeof SingleComboBox> = {
+export const Error: StoryObj<typeof SingleCombobox> = {
   name: 'error',
   args: {
     error: true,
   },
 }
 
-export const Creatable: StoryObj<typeof SingleComboBox> = {
+export const Creatable: StoryObj<typeof SingleCombobox> = {
   name: 'creatable',
   args: {
     creatable: true,
@@ -176,28 +176,28 @@ export const Creatable: StoryObj<typeof SingleComboBox> = {
   },
 }
 
-export const IsLoading: StoryObj<typeof SingleComboBox> = {
+export const IsLoading: StoryObj<typeof SingleCombobox> = {
   name: 'isLoading',
   args: {
     isLoading: true,
   },
 }
 
-export const Width: StoryObj<typeof SingleComboBox> = {
+export const Width: StoryObj<typeof SingleCombobox> = {
   name: 'width',
   args: {
     width: '20rem',
   },
 }
 
-export const DropdownHelpMessage: StoryObj<typeof SingleComboBox> = {
+export const DropdownHelpMessage: StoryObj<typeof SingleCombobox> = {
   name: 'dropdownHelpMessage',
   args: {
     dropdownHelpMessage: 'ヘルプメッセージ',
   },
 }
 
-export const DropdownWidth: StoryObj<typeof SingleComboBox> = {
+export const DropdownWidth: StoryObj<typeof SingleCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',

@@ -4,9 +4,9 @@ import { type ComponentProps, act } from 'react'
 
 import { FormControl } from '../../FormControl'
 
-import { MultiComboBox } from './MultiComboBox'
+import { MultiCombobox } from './MultiCombobox'
 
-describe('SingleComboBox', () => {
+describe('SingleCombobox', () => {
   beforeEach(() => {
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
       cb(0)
@@ -18,10 +18,10 @@ describe('SingleComboBox', () => {
   const listbox = () => screen.queryByRole('listbox')
   const deleteButtons = () => screen.getAllByRole('button', { name: '削除' })
 
-  const template = (args: Partial<ComponentProps<typeof MultiComboBox>>) => (
+  const template = (args: Partial<ComponentProps<typeof MultiCombobox>>) => (
     <form>
       <FormControl title="コンボボックス">
-        <MultiComboBox
+        <MultiCombobox
           name="default"
           items={[
             { label: 'option 1', value: 'value-1' },

@@ -24,20 +24,20 @@ import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
-import { useListBox } from '../useListBox'
+import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { BaseProps, ComboBoxItem } from '../types'
+import type { BaseProps, ComboboxItem } from '../types'
 
 type Props<T> = BaseProps<T> & {
   /**
    * 選択されているアイテム
    */
-  selectedItem: ComboBoxItem<T> | null
+  selectedItem: ComboboxItem<T> | null
   /**
    * デフォルトで選択されるアイテム
    */
-  defaultItem?: ComboBoxItem<T>
+  defaultItem?: ComboboxItem<T>
   /**
    * コンポーネント内の先頭に表示する内容
    */
@@ -54,7 +54,7 @@ type Props<T> = BaseProps<T> & {
   /**
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
-  onChangeSelected?: (selectedItem: ComboBoxItem<T> | null) => void
+  onChangeSelected?: (selectedItem: ComboboxItem<T> | null) => void
   /**
    * コンポーネントがフォーカスされたときに発火するコールバック関数
    */
@@ -63,7 +63,7 @@ type Props<T> = BaseProps<T> & {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
-  // HINT: useListBox内でnoResultText, loadingTextは実行される
+  // HINT: useListbox内でnoResultText, loadingTextは実行される
   /**
    * コンポーネント内のテキストを変更する関数/
    */
@@ -84,8 +84,8 @@ const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: 'smarthr-ui-SingleComboBox shr-inline-block',
-    input: 'smarthr-ui-SingleComboBox-input shr-w-full',
+    wrapper: 'smarthr-ui-SingleCombobox shr-inline-block',
+    input: 'smarthr-ui-SingleCombobox-input shr-w-full',
     caretDownLayout: [
       'shr-relative -shr-me-0.5 shr-p-0.5',
       'before:shr-border-0',
@@ -93,7 +93,7 @@ const classNameGenerator = tv({
     ],
     caretDownIcon: 'shr-block',
     clearButton: [
-      'smarthr-ui-SingleComboBox-clearButton',
+      'smarthr-ui-SingleCombobox-clearButton',
       'shr-group/clearButton',
       'shr-me-0.5',
       'focus-visible:shr-shadow-none',
@@ -117,7 +117,7 @@ const classNameGenerator = tv({
   },
 })
 
-const ActualSingleComboBox = <T,>(
+const ActualSingleCombobox = <T,>(
   {
     items,
     selectedItem,
@@ -170,17 +170,17 @@ const ActualSingleComboBox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListBox<T>({
+  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>({
     options,
     dropdownHelpMessage,
     dropdownWidth,
     onAdd,
     onSelect: useCallback(
-      (selected: ComboBoxItem<T>) => {
+      (selected: ComboboxItem<T>) => {
         onSelect?.(selected)
         onChangeSelected?.(selected)
 
-        // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
         requestAnimationFrame(() => {
           setIsExpanded(false)
@@ -432,4 +432,4 @@ const ActualSingleComboBox = <T,>(
   )
 }
 
-export const SingleComboBox = genericsForwardRef(ActualSingleComboBox)
+export const SingleCombobox = genericsForwardRef(ActualSingleCombobox)

@@ -1,6 +1,6 @@
 import innerText from 'react-innertext'
 
-import type { ComboBoxItem } from './types'
+import type { ComboboxItem } from './types'
 
 export function convertMatchableString(original: string) {
   return (
@@ -18,6 +18,6 @@ export function convertMatchableString(original: string) {
   )
 }
 
-export function areComboBoxItemsEqual<T>(a: ComboBoxItem<T>, b: ComboBoxItem<T>) {
+export function areItemsEqual<T>(a: ComboboxItem<T>, b: ComboboxItem<T>) {
   return a.value === b.value && innerText(a.label) === innerText(b.label)
 }

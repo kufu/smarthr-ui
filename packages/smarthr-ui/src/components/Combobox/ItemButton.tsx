@@ -4,13 +4,13 @@ import { tv } from 'tailwind-variants'
 import { FaCirclePlusIcon } from '../Icon'
 import { Text } from '../Text'
 
-import type { ComboBoxOption } from './types'
+import type { ComboboxOption } from './types'
 
 type Props<T> = {
-  option: ComboBoxOption<T>
-  onAdd?: (option: ComboBoxOption<T>) => void
-  onSelect: (option: ComboBoxOption<T>) => void
-  onMouseOver: (option: ComboBoxOption<T>) => void
+  option: ComboboxOption<T>
+  onAdd?: (option: ComboboxOption<T>) => void
+  onSelect: (option: ComboboxOption<T>) => void
+  onMouseOver: (option: ComboboxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement> | undefined
 }
 
@@ -24,13 +24,13 @@ const classNameGenerator = tv({
   ],
   variants: {
     new: {
-      true: 'smarthr-ui-ComboBox-addButton shr-flex shr-items-center',
-      false: 'smarthr-ui-ComboBox-selectButton',
+      true: 'smarthr-ui-Combobox-addButton shr-flex shr-items-center',
+      false: 'smarthr-ui-Combobox-selectButton',
     },
   },
 })
 
-const ListBoxItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
+const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
   const handleMouseOver = useCallback(() => {
     onMouseOver(option)
   }, [onMouseOver, option])
@@ -48,8 +48,8 @@ const ListBoxItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef
   )
 }
 const typedMemo: <T>(c: T) => T = memo
-const Memoized = typedMemo(ListBoxItemButton)
-export { Memoized as ListBoxItemButton }
+const Memoized = typedMemo(ItemButton)
+export { Memoized as ItemButton }
 
 type ButtonType<T> = Pick<Props<T>, 'option' | 'activeRef'> & {
   onMouseOver: () => void

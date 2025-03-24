@@ -1,24 +1,24 @@
 import type { ChangeEvent, ReactNode } from 'react'
 
-export type ComboBoxItem<T> = {
+export type ComboboxItem<T> = {
   value: string
   label: ReactNode
   disabled?: boolean
   data?: T
 }
 
-export type ComboBoxOption<T> = {
+export type ComboboxOption<T> = {
   id: string
   selected: boolean
   isNew: boolean
-  item: ComboBoxItem<T>
+  item: ComboboxItem<T>
 }
 
 export type BaseProps<T> = {
   /**
    * 選択可能なアイテムのリスト
    */
-  items: Array<ComboBoxItem<T>>
+  items: Array<ComboboxItem<T>>
   /**
    * input 要素の `name` 属性の値
    */
@@ -74,7 +74,7 @@ export type BaseProps<T> = {
   /**
    * アイテムが選択された時に発火するコールバック関数
    */
-  onSelect?: (item: ComboBoxItem<T>) => void
+  onSelect?: (item: ComboboxItem<T>) => void
   /**
    * input 要素の `value` が変わった時に発火するコールバック関数
    * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
