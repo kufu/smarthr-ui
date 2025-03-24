@@ -104,6 +104,7 @@ import {
   FaGear,
   FaGears,
   FaGlobe,
+  FaGoogleDrive,
   FaGraduationCap,
   FaGrip,
   FaGripLines,
@@ -303,6 +304,7 @@ export const FaGaugeIcon = /*#__PURE__*/ generateIcon(FaGauge)
 export const FaGearIcon = /*#__PURE__*/ generateIcon(FaGear)
 export const FaGearsIcon = /*#__PURE__*/ generateIcon(FaGears)
 export const FaGlobeIcon = /*#__PURE__*/ generateIcon(FaGlobe)
+export const FaGoogleDriveIcon = /*#__PURE__*/ generateIcon(FaGoogleDrive)
 export const FaGraduationCapIcon = /*#__PURE__*/ generateIcon(FaGraduationCap)
 export const FaGripIcon = /*#__PURE__*/ generateIcon(FaGrip)
 export const FaGripLinesIcon = /*#__PURE__*/ generateIcon(FaGripLines)
