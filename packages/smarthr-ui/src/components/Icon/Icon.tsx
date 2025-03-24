@@ -131,6 +131,7 @@ import {
   FaMagnifyingGlassMinus,
   FaMagnifyingGlassPlus,
   FaMessage,
+  FaMicrosoft,
   FaMinus,
   FaMoneyCheckDollar,
   FaPaintbrush,
@@ -331,6 +332,7 @@ export const FaMagnifyingGlassIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlas
 export const FaMagnifyingGlassMinusIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlassMinus)
 export const FaMagnifyingGlassPlusIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlassPlus)
 export const FaMessageIcon = /*#__PURE__*/ generateIcon(FaMessage)
+export const FaMicrosoftIcon = /*#__PURE__*/ generateIcon(FaMicrosoft)
 export const FaMinusIcon = /*#__PURE__*/ generateIcon(FaMinus)
 export const FaMoneyCheckDollarIcon = /*#__PURE__*/ generateIcon(FaMoneyCheckDollar)
 export const FaPaintbrushIcon = /*#__PURE__*/ generateIcon(FaPaintbrush)
