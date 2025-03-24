@@ -26,7 +26,7 @@ export type Props = PropsWithChildren<
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: 'smarthr-ui-CheckBox shr-inline-flex shr-items-baseline',
+    wrapper: 'smarthr-ui-Checkbox shr-inline-flex shr-items-baseline',
     box: [
       'shr-border-shorthand shr-pointer-events-none shr-absolute shr-box-border shr-h-full shr-w-full shr-rounded-s shr-bg-white',
       'contrast-more:shr-border-high-contrast',
@@ -43,7 +43,7 @@ const classNameGenerator = tv({
       'peer-[[aria-invalid]]:shr-border-danger',
     ],
     input: [
-      'smarthr-ui-CheckBox-checkBox shr-peer shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0 disabled:shr-pointer-events-none',
+      'smarthr-ui-Checkbox-checkbox shr-peer shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0 disabled:shr-pointer-events-none',
       /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
       'forced-colors:shr-static forced-colors:shr-opacity-100',
     ],
@@ -57,13 +57,13 @@ const classNameGenerator = tv({
     innerWrapper:
       'shr-relative shr-box-border shr-inline-block shr-h-[theme(fontSize.base)] shr-w-[theme(fontSize.base)] shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     label: [
-      'smarthr-ui-CheckBox-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
+      'smarthr-ui-Checkbox-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
       '[[data-disabled=true]>&]:shr-pointer-events-none [[data-disabled=true]>&]:shr-cursor-not-allowed [[data-disabled=true]>&]:shr-text-disabled',
     ],
   },
 })
 
-export const CheckBox = forwardRef<HTMLInputElement, Props>(
+export const Checkbox = forwardRef<HTMLInputElement, Props>(
   ({ checked, mixed, error, className, children, disabled, ...props }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()

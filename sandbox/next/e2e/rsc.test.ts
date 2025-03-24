@@ -72,7 +72,7 @@ const CLIENT_COMPONENTS: string[] = [
   'Button',         // live region を使うためのcreatePortal
   'BottomFixedArea', // children のバリデーションのための useEffect
   'BulkActionRow',  // 件数計算のためのuseStateなど
-  'CheckBox',       // indeterminate 状態管理のためのuseRef
+  'Checkbox',       // indeterminate 状態管理のためのuseRef
   'Center',         // 見出しレベルの自動生成のため
   'Cluster',        // 見出しレベルの自動生成のため
   'CurrencyInput',  // フォーマット変換のためのuseEffect

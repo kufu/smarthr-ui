@@ -2,7 +2,7 @@ import { Heading } from '@storybook/blocks'
 
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
-import { CheckBox } from '../CheckBox'
+import { Checkbox } from '../Checkbox'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -17,7 +17,7 @@ const Template = (
       error.map((isError) =>
         disabled.map((isDisabled) =>
           checked.map((isChecked) => (
-            <CheckBox
+            <Checkbox
               key={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
               name={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
               mixed={isMixed}
@@ -33,12 +33,12 @@ const Template = (
 )
 
 export default {
-  title: 'Forms（フォーム）/CheckBox/VRT',
+  title: 'Forms（フォーム）/Checkbox/VRT',
   parameters: {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} as Meta<typeof CheckBox>
+} as Meta<typeof Checkbox>
 
 export const VRT = {
   render: () => (
@@ -59,8 +59,8 @@ export const VRT = {
   ),
   parameters: {
     pseudo: {
-      hover: ['#vrt-hover .smarthr-ui-CheckBox-checkBox'],
-      focusVisible: ['#vrt-focus-visible .smarthr-ui-CheckBox-checkBox'],
+      hover: ['#vrt-hover .smarthr-ui-Checkbox-checkbox'],
+      focusVisible: ['#vrt-focus-visible .smarthr-ui-Checkbox-checkbox'],
     },
   },
 }
