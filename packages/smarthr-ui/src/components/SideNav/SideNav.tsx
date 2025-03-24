@@ -3,11 +3,16 @@ import { tv } from 'tailwind-variants'
 
 import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
 
-type SideNavItemButtonProps = Omit<ComponentProps<typeof SideNavItemButton>, 'size' | 'onClick'>
+export type SideNavItemButtonProps = Omit<
+  ComponentProps<typeof SideNavItemButton>,
+  'size' | 'onClick'
+>
 
 type Props = {
-  /** 各アイテムのデータの配列 */
-  items: SideNavItemButtonProps[]
+  /** 各アイテムのデータの配列
+   * @deprecated SideNavItemButton を使ってください
+   */
+  items?: SideNavItemButtonProps[]
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
@@ -26,6 +31,7 @@ export const SideNav: FC<Props & ElementProps> = ({
   size = 'default',
   onClick,
   className,
+  children,
   ...props
 }) => {
   const actualOnClick = useMemo(
@@ -40,17 +46,33 @@ export const SideNav: FC<Props & ElementProps> = ({
 
   return (
     <ul {...props} className={actualClassName}>
-      {items.map((item) => (
-        <SideNavItemButton
-          key={item.id}
-          id={item.id}
-          title={item.title}
-          prefix={item.prefix}
-          isSelected={item.isSelected}
-          size={size}
-          onClick={actualOnClick}
-        />
-      ))}
+      {items &&
+        items.map((item) => (
+          <SideNavItemButton
+            id={item.id}
+            title={item.title}
+            prefix={item.prefix}
+            isSelected={item.isSelected}
+            size={size}
+            key={item.id}
+            onClick={onClick}
+          />
+        ))}
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          const childProps = child.props as ComponentPropsWithoutRef<typeof SideNavItemButton>
+
+          return React.cloneElement(
+            child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
+            {
+              // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
+              size,
+              ...(childProps.onClick ? {} : { onClick }),
+            },
+          )
+        }
+        return child
+      })}
     </ul>
   )
 }
