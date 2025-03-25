@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type FC,
   type HTMLAttributes,
   type KeyboardEvent,

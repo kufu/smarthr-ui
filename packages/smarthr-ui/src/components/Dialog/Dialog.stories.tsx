@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import React, { ComponentProps, useRef, useState } from 'react'
+import { ChangeEvent, ComponentProps, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
@@ -62,7 +62,7 @@ export const Default: StoryFn = () => {
   const [value, setValue] = useState('Apple')
   const [date, setDate] = useState<Date | null>(null)
   const onClickClose = () => setOpened(null)
-  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const onChangeValue = (e: ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const inputRef = useRef<HTMLInputElement>(null)
 
   return (
@@ -172,7 +172,7 @@ const dummyText = (
 
 export const Form_Dialog: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
-  const [value, setValue] = React.useState('Apple')
+  const [value, setValue] = useState('Apple')
   const [responseStatus, setResponseStatus] =
     useState<ComponentProps<typeof ActionDialog>['responseStatus']>()
   const openedFocusRef = useRef<HTMLInputElement>(null)
@@ -180,7 +180,7 @@ export const Form_Dialog: StoryFn = () => {
     setOpenedDialog(null)
     setResponseStatus(undefined)
   }
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
   return (
     <Cluster>
@@ -636,7 +636,7 @@ export const Body以外のPortalParent: StoryFn = () => {
       <ModelessDialog
         isOpen={isOpen === 'modeless'}
         // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-        header={<Heading tag="h2">ModelessDialog</Heading>}
+        title="ModelessDialog"
         onClickClose={onClickClose}
         onPressEscape={onClickClose}
         id="portal-modeless"

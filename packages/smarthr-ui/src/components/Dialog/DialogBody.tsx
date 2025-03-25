@@ -1,16 +1,16 @@
-import React, { type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap } from '../../types'
 
 export type Props = PropsWithChildren<
-  Pick<VariantProps<typeof dialogBody>, 'contentBgColor'> & {
+  Pick<VariantProps<typeof classNameGenerator>, 'contentBgColor'> & {
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
     className?: string | undefined
   }
 >
 
-const dialogBody = tv({
+const classNameGenerator = tv({
   base: ['smarthr-ui-Dialog-body', 'shr-overflow-auto shr-flex-auto'],
   variants: {
     paddingBlock: {
@@ -79,20 +79,15 @@ const dialogBody = tv({
   },
 })
 
-export const DialogBody: React.FC<Props> = ({
-  contentBgColor,
-  contentPadding,
-  className,
-  ...rest
-}) => {
+export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
   const actualPaddings = useMemo(() => {
     const initialized = contentPadding === undefined ? 1.5 : contentPadding
 
     return initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
   }, [contentPadding])
-  const style = useMemo(
+  const actualClassName = useMemo(
     () =>
-      dialogBody({
+      classNameGenerator({
         contentBgColor,
         paddingBlock: actualPaddings.block,
         paddingInline: actualPaddings.inline,
@@ -101,5 +96,5 @@ export const DialogBody: React.FC<Props> = ({
     [actualPaddings.block, actualPaddings.inline, contentBgColor, className],
   )
 
-  return <div {...rest} className={style} />
+  return <div {...rest} className={actualClassName} />
 }

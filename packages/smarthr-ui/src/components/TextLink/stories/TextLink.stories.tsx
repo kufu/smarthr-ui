@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import React, { ComponentPropsWithoutRef } from 'react'
+import { ComponentPropsWithoutRef } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
 import { UpwardLink } from '../../UpwardLink'

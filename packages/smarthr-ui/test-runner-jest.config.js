@@ -7,6 +7,14 @@ module.exports = {
    * @see https://jestjs.io/docs/configuration
    */
 
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react-jsx',
+      },
+    },
+  },
+
   testPathIgnorePatterns: [
     /**
      * subocomponents で使われれているコンポーネントは export defaults を持たず、
@@ -28,8 +36,8 @@ module.exports = {
      */
     'RadioButton.stories.tsx',
     'InputFile.stories.tsx',
-    'CheckBox.stories.tsx',
-    'ComboBox.stories.tsx',
+    'Checkbox.stories.tsx',
+    'Combobox.stories.tsx',
     'FieldSet.stories.tsx',
     'Switch.stories.tsx',
     'FormControl.stories.tsx', // DatePicker を含むために除外

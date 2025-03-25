@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryObj } from '@storybook/react/*'
 import { within } from '@storybook/test'
-import React from 'react'
 
 import { AppHeader } from '../AppHeader'
 import { Locale } from '../multilingualization'

@@ -1,8 +1,6 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
 /* eslint-disable smarthr/a11y-input-has-name-attribute */
-import React from 'react'
-
-import { MultiComboBox, SingleComboBox } from '../../ComboBox'
+import { MultiCombobox, SingleCombobox } from '../../Combobox'
 import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
 import { CurrencyInput, Input } from '../../Input'
@@ -25,8 +23,8 @@ const _childrenOptions = {
   '<CurrencyInput />': <CurrencyInput />,
   '<Textarea />': <Textarea />,
   '<Select />': <Select options={[]} hasBlank />,
-  '<SingleCombobox />': <SingleComboBox items={[]} selectedItem={null} />,
-  '<MultiCombobox />': <MultiComboBox items={[]} selectedItems={[]} />,
+  '<SingleCombobox />': <SingleCombobox items={[]} selectedItem={null} />,
+  '<MultiCombobox />': <MultiCombobox items={[]} selectedItems={[]} />,
   '<InputFile />': <InputFile label="ファイルを選択" />,
   '<DropZone />': <DropZone onSelectFiles={() => null} />,
 }
