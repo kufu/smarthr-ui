@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [67.0.0](https://github.com/kufu/smarthr-ui/compare/v66.1.0...v67.0.0) (2025-03-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* CheckBox, ComboBox を Checkbox, Combobox にリネームする SHRUI-1210 (#5481)
+* ModelessDialogの見出し部分がHeadingかつ、自動レベル計算されるように修正する SHRUI-961 (#5459)
+
+### Features
+
+* add FaGoogleDrive and FaMicrosoft icon ([#5483](https://github.com/kufu/smarthr-ui/issues/5483)) ([50e9a98](https://github.com/kufu/smarthr-ui/commit/50e9a988f8f1aa5f28d0ead2168c7b1a13e026db))
+
+
+### Bug Fixes
+
+* CheckBox, ComboBox を Checkbox, Combobox にリネームする SHRUI-1210 ([#5481](https://github.com/kufu/smarthr-ui/issues/5481)) ([671e4bb](https://github.com/kufu/smarthr-ui/commit/671e4bb7a9cff0876ac52ade4af20208d088d1fa))
+* ModelessDialogの見出し部分がHeadingかつ、自動レベル計算されるように修正する SHRUI-961 ([#5459](https://github.com/kufu/smarthr-ui/issues/5459)) ([b95e7c7](https://github.com/kufu/smarthr-ui/commit/b95e7c7bc51030efd936cb9037b1a5e6e5de922c))
+
 ## [66.1.0](https://github.com/kufu/smarthr-ui/compare/v66.0.0...v66.1.0) (2025-03-18)
 
 
