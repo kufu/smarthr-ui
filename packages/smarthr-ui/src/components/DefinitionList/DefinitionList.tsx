@@ -1,4 +1,13 @@
-import React, { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import {
+  Children,
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type ReactElement,
+  cloneElement,
+  isValidElement,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
@@ -6,6 +15,9 @@ import { Cluster } from '../Layout'
 import { DefinitionListItem } from './DefinitionListItem'
 
 type ItemType = ComponentProps<typeof DefinitionListItem>
+
+// TODO: maxColumns, termStyleTypeはDefinitionListItemに引きつかず、
+// DefinitionListにdata属性として設定することでDefinitionListItemから参照できるようにするほうが良いかも？
 
 type Props = PropsWithChildren<{
   /** 定義リストのアイテムの配列
@@ -19,7 +31,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'dl'>, keyof Props>
 
-const definitionList = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-DefinitionList shr-my-[initial]',
 })
 
@@ -30,10 +42,10 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   children,
   className,
 }) => {
-  const styles = useMemo(() => definitionList({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Cluster as="dl" gap={1.5} className={styles}>
+    <Cluster as="dl" gap={1.5} className={actualClassName}>
       {items &&
         items.map((item, index) => (
           <DefinitionListItem
@@ -43,11 +55,11 @@ export const DefinitionList: FC<Props & ElementProps> = ({
             termStyleType={termStyleType}
           />
         ))}
-      {React.Children.map(
+      {Children.map(
         children,
         (child) =>
-          React.isValidElement(child) &&
-          React.cloneElement(child as React.ReactElement, {
+          isValidElement(child) &&
+          cloneElement(child as ReactElement, {
             maxColumns,
             termStyleType,
           }),

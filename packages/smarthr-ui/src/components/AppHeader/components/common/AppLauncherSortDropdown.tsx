@@ -1,4 +1,4 @@
-import React, { type FC, useRef } from 'react'
+import { type FC, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'

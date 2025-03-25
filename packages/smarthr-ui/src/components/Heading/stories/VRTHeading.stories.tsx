@@ -1,5 +1,4 @@
 /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
-import React from 'react'
 
 import { Stack } from '../../Layout'
 import { Heading, PageHeading } from '../Heading'

@@ -1,12 +1,6 @@
 'use client'
 
-import React, {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type ReactNode,
-  useEffect,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useEffect, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Button } from '../Button'

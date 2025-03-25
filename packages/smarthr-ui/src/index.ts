@@ -1,6 +1,6 @@
 // components
 export { Balloon } from './components/Balloon'
-export { CheckBox } from './components/CheckBox'
+export { Checkbox } from './components/Checkbox'
 export * from './components/Chip'
 export {
   Dropdown,
@@ -71,7 +71,7 @@ export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
 export { FormControl } from './components/FormControl'
 export { Fieldset } from './components/Fieldset'
-export { MultiComboBox, SingleComboBox } from './components/ComboBox'
+export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav } from './components/SideNav'
 export { Text, RangeSeparator } from './components/Text'
 export { LineClamp } from './components/LineClamp'

@@ -1,14 +1,15 @@
-import React, { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentType, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
-import { type ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './style'
+import { itemClassNameGenerator } from './itemClassNameGenerator'
+
+import type { ComponentProps as IconProps } from '../Icon'
 
 export type AppNaviButtonProps = PropsWithChildren<{
   /** 表示するアイコンタイプ */
-  icon?: React.ComponentType<IconProps>
+  icon?: ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
   /** クリックイベントのハンドラ */
@@ -16,7 +17,7 @@ export type AppNaviButtonProps = PropsWithChildren<{
 }>
 
 const classNameGenerator = tv({
-  extend: appNaviItemStyle,
+  extend: itemClassNameGenerator,
   slots: {
     wrapper: 'smarthr-ui-AppNavi-button',
   },

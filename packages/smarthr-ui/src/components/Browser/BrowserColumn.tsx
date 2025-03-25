@@ -1,7 +1,8 @@
-import React, { type FC } from 'react'
+import { type ChangeEvent, type FC, memo } from 'react'
 
 import { BrowserItem } from './BrowserItem'
-import { type ItemNode } from './models'
+
+import type { ItemNode } from './models'
 
 const getColumnId = (column: number) => `column-${column}`
 
@@ -9,7 +10,7 @@ type Props = {
   value?: string
   items: ItemNode[]
   index: number
-  onChangeInput?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onChangeInput }) => (
@@ -39,7 +40,7 @@ type ListItemProps = Pick<Props, 'value' | 'onChangeInput'> & {
   rowIndex: number
 }
 
-const ListItem = React.memo<ListItemProps>(
+const ListItem = memo<ListItemProps>(
   ({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, onChangeInput }) => {
     const selected = itemValue === value
     const ariaOwns = selected && itemHasChildren ? getColumnId(columnIndex + 1) : undefined

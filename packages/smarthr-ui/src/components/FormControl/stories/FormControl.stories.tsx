@@ -1,8 +1,6 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
 /* eslint-disable smarthr/a11y-input-has-name-attribute */
-import React from 'react'
-
-import { MultiComboBox, SingleComboBox } from '../../ComboBox'
+import { MultiCombobox, SingleCombobox } from '../../Combobox'
 import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
 import { CurrencyInput, Input } from '../../Input'
@@ -10,6 +8,7 @@ import { InputFile } from '../../InputFile'
 import { Cluster, Stack } from '../../Layout'
 import { MonthPicker, TimePicker } from '../../Picker'
 import { Select } from '../../Select'
+import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
@@ -24,8 +23,8 @@ const _childrenOptions = {
   '<CurrencyInput />': <CurrencyInput />,
   '<Textarea />': <Textarea />,
   '<Select />': <Select options={[]} hasBlank />,
-  '<SingleCombobox />': <SingleComboBox items={[]} selectedItem={null} />,
-  '<MultiCombobox />': <MultiComboBox items={[]} selectedItems={[]} />,
+  '<SingleCombobox />': <SingleCombobox items={[]} selectedItem={null} />,
+  '<MultiCombobox />': <MultiCombobox items={[]} selectedItems={[]} />,
   '<InputFile />': <InputFile label="ファイルを選択" />,
   '<DropZone />': <DropZone onSelectFiles={() => null} />,
 }
@@ -138,10 +137,10 @@ export const InnerMargin: StoryObj<typeof FormControl> = {
   },
 }
 
-export const StatusLabelProps: StoryObj<typeof FormControl> = {
-  name: 'statusLabelProps',
+export const StatusLabels: StoryObj<typeof FormControl> = {
+  name: 'statusLabels',
   args: {
-    statusLabelProps: { type: 'grey', children: '任意' },
+    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
   },
 }
 

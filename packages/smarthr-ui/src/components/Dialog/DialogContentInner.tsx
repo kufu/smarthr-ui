@@ -1,10 +1,11 @@
 'use client'
 
-import React, {
+import {
   type ComponentProps,
   type FC,
   type PropsWithChildren,
   type RefObject,
+  memo,
   useMemo,
   useRef,
 } from 'react'
@@ -57,7 +58,7 @@ export type DialogContentInnerProps = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
-const dialogContentInner = tv({
+const classNameGenerator = tv({
   slots: {
     layout: ['smarthr-ui-Dialog-wrapper', 'shr-max-w-[calc(100dvw-theme(spacing.1))]'],
     inner: [
@@ -83,25 +84,19 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   focusTrapRef,
   ...rest
 }) => {
-  const { layoutStyle, innerStyle, backgroundStyle } = useMemo(() => {
-    const { layout, inner, background } = dialogContentInner()
+  const classNames = useMemo(() => {
+    const { layout, inner, background } = classNameGenerator()
 
     return {
-      layoutStyle: layout(),
-      innerStyle: inner({ className }),
-      backgroundStyle: background(),
+      layout: layout(),
+      inner: inner({ className }),
+      background: background(),
     }
   }, [className])
-  const styleAttr = useMemo(() => {
+  const style = useMemo(() => {
     const actualWidth = typeof width === 'number' ? `${width}px` : width
 
-    if (!actualWidth) {
-      return undefined
-    }
-
-    return {
-      width: actualWidth,
-    }
+    return actualWidth ? { width: actualWidth } : undefined
   }, [width])
 
   const innerRef = useRef<HTMLDivElement>(null)
@@ -114,8 +109,12 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
 
   return (
     <DialogOverlap isOpen={isOpen}>
-      <div id={id} className={layoutStyle} style={styleAttr}>
-        <Overlay isOpen={isOpen} onClickOverlay={onClickOverlay} className={backgroundStyle} />
+      <div id={id} className={classNames.layout} style={style}>
+        <Overlay
+          isOpen={isOpen}
+          onClickOverlay={onClickOverlay}
+          className={classNames.background}
+        />
         <div
           {...rest}
           ref={innerRef}
@@ -123,7 +122,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
-          className={innerStyle}
+          className={classNames.inner}
         >
           <FocusTrap firstFocusTarget={firstFocusTarget} ref={focusTrapRef}>
             {children}
@@ -134,7 +133,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   )
 }
 
-const Overlay = React.memo<
+const Overlay = memo<
   Pick<DialogContentInnerProps, 'onClickOverlay' | 'isOpen'> & { className: string }
 >(({ onClickOverlay, isOpen, className }) => {
   const handleClickOverlay = useMemo(
