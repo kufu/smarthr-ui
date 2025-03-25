@@ -3,6 +3,7 @@ import {
   type ElementType,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -20,7 +21,7 @@ type Props<TitleElement extends ElementType = 'p'> = PropsWithChildren<{
 }> &
   ComponentPropsWithoutRef<TitleElement>
 
-const sideMenuGroup = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-mt-1'],
     list: 'shr-list-none',
@@ -35,26 +36,34 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
   children,
   className,
 }: Props<TitleElement>) => {
-  const { wrapperStyle, listStyle, groupTitleStyle } = useMemo(() => {
-    const { wrapper, list, groupTitle } = sideMenuGroup()
+  const classNames = useMemo(() => {
+    const { wrapper, list, groupTitle } = classNameGenerator()
+
     return {
-      wrapperStyle: wrapper({ className }),
-      listStyle: list(),
-      groupTitleStyle: groupTitle(),
+      wrapper: wrapper({ className }),
+      list: list(),
+      groupTitle: groupTitle(),
     }
   }, [className])
 
-  const TitleComponent = titleElementAs ?? 'p'
   const ListComponent = listElementAs ?? 'ul'
 
   return (
-    <li className={wrapperStyle}>
-      <TitleComponent>
-        <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={groupTitleStyle}>
-          {title}
-        </Text>
-      </TitleComponent>
-      <ListComponent className={listStyle}>{children}</ListComponent>
+    <li className={classNames.wrapper}>
+      <GroupTitle titleElementAs={titleElementAs} className={classNames.groupTitle}>
+        {title}
+      </GroupTitle>
+      <ListComponent className={classNames.list}>{children}</ListComponent>
     </li>
   )
 }
+
+const GroupTitle = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
+  ({ titleElementAs: Wrapper = 'p', children, className }) => (
+    <Wrapper>
+      <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={className}>
+        {children}
+      </Text>
+    </Wrapper>
+  ),
+)
