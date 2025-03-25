@@ -4,7 +4,7 @@ import { ChangeEvent, ComponentProps, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
-import { CheckBox } from '../CheckBox'
+import { Checkbox } from '../Checkbox'
 import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
 import { Input } from '../Input'
@@ -130,19 +130,19 @@ export const Default: StoryFn = () => {
           <Fieldset title="fruits" innerMargin={0.5}>
             <ul>
               <li>
-                <CheckBox name="1">CheckBox</CheckBox>
+                <Checkbox name="1">Checkbox</Checkbox>
               </li>
 
               <li>
-                <CheckBox name="error" error>
-                  CheckBox / error
-                </CheckBox>
+                <Checkbox name="error" error>
+                  Checkbox / error
+                </Checkbox>
               </li>
 
               <li>
-                <CheckBox name="disabled" disabled>
-                  CheckBox / disabled
-                </CheckBox>
+                <Checkbox name="disabled" disabled>
+                  Checkbox / disabled
+                </Checkbox>
               </li>
             </ul>
           </Fieldset>
