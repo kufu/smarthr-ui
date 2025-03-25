@@ -1,8 +1,8 @@
-import React, {
-  AriaAttributes,
-  ComponentPropsWithoutRef,
-  PropsWithChildren,
-  ReactNode,
+import {
+  type AriaAttributes,
+  type ComponentPropsWithoutRef,
+  type PropsWithChildren,
+  type ReactNode,
   memo,
   useMemo,
 } from 'react'

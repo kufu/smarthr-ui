@@ -1,12 +1,12 @@
-import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ResponseMessageTypeWithoutProcessing } from '../../hooks/useResponseMessage'
-import { type AbstractSize, type CharRelativeSize } from '../../themes/createSpacing'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
+import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import type { Gap } from '../../types'
 
 const classNameGenerator = tv({
@@ -50,7 +50,7 @@ type Props = {
   /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
   /** 操作に対するフィードバックメッセージ */
-  responseMessage?: ResponseMessageTypeWithoutProcessing
+  responseStatus?: ResponseStatusWithoutProcessing
   /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
   bottom?: CharRelativeSize | AbstractSize
   /** コンポーネントの `z-index` 値 */
@@ -62,7 +62,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
-  responseMessage,
+  responseStatus,
   bottom,
   zIndex,
   style,
@@ -81,10 +81,8 @@ export const FloatArea: FC<Props & ElementProps> = ({
         {tertiaryButton}
         <div className="shr-ms-auto">
           <Cluster gap={1} align="center">
-            {responseMessage && (
-              <ResponseMessage type={responseMessage.status}>
-                {responseMessage.text}
-              </ResponseMessage>
+            {responseStatus && (
+              <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
             )}
             <Cluster gap={1}>
               {secondaryButton}

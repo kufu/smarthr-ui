@@ -1,4 +1,4 @@
-import React from 'react'
+import { ReactNode, FC } from 'react'
 
 import { AnchorButton, Button } from '../../Button'
 import { DropdownMenuGroup } from '../../Dropdown'
@@ -13,9 +13,9 @@ import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react'
 
-const Link: React.FC<{
+const Link: FC<{
   to: string
-  children: React.ReactNode
+  children: ReactNode
   disabled?: boolean
   className?: string
 }> = ({ to, children, disabled = false, className = '', ...props }) => (
@@ -26,13 +26,13 @@ const Link: React.FC<{
 
 export const Template: StoryFn<typeof AppNavi> = (args) => (
   <AppNavi {...args}>
-    <AppNaviButton current>ボタン</AppNaviButton>
+    <AppNaviButton>ボタン</AppNaviButton>
     <AppNaviAnchor href="/">アンカーボタン</AppNaviAnchor>
     <AppNaviDropdownMenuButton label="ドロップダウンボタン">
       <Button>ボタン</Button>
       <AnchorButton href="#">アンカーボタン</AnchorButton>
       <DropdownMenuGroup name="グループ">
-        <Button>権限</Button>
+        <Button aria-current="page">権限</Button>
         <AnchorButton href="#">その他</AnchorButton>
       </DropdownMenuGroup>
     </AppNaviDropdownMenuButton>

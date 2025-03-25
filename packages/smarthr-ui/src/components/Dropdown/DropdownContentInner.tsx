@@ -1,7 +1,7 @@
-import React, {
-  ComponentProps,
-  FC,
-  PropsWithChildren,
+import {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
   createContext,
   useEffect,
   useMemo,
@@ -13,10 +13,10 @@ import { tv } from 'tailwind-variants'
 import { spacing } from '../../themes'
 
 import { DropdownCloser } from './DropdownCloser'
-import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
+import { type ContentBoxStyle, type Rect, getContentBoxStyle } from './dropdownHelper'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
-const contentInner = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3 shr-overflow-y-auto',
   variants: {
     isActive: {
@@ -56,12 +56,12 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  const contentInnerStyle = useMemo(
-    () => contentInner({ isActive, className }),
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isActive, className }),
     [isActive, className],
   )
 
-  const wrapperStyleProps = useMemo(() => {
+  const style = useMemo(() => {
     const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
     const rightMargin =
       contentBox.right === undefined ? spacing[0.5] : `max(${contentBox.right}, 0px)`
@@ -113,9 +113,9 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   useKeyboardNavigation(wrapperRef, focusTargetRef)
 
   return (
-    <div {...props} style={wrapperStyleProps} className={contentInnerStyle} ref={wrapperRef}>
+    <div {...props} ref={wrapperRef} className={actualClassName} style={style}>
       {/* dummy element for focus management. */}
-      <div tabIndex={-1} ref={focusTargetRef} />
+      <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
         <div style={controllableWrapperStyleProps}>{children}</div>
       ) : (

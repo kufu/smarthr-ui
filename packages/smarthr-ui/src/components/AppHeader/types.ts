@@ -1,6 +1,5 @@
-import { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
-
-import { Header } from '../Header'
+import type { Header } from '../Header'
+import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
 
 type Locale = 'ja' | 'en-us' | 'id-id' | 'pt' | 'vi' | 'ko' | 'zh-cn' | 'zh-tw'
 

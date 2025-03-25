@@ -1,14 +1,24 @@
 import dayjs from 'dayjs'
-import React, { ComponentPropsWithoutRef, FC, MouseEvent, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type MouseEvent,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 
-import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
+import { daysInWeek, isBetween } from './calendarHelper'
 
 type Props = {
   /** 現在の日付 */
-  current: Date
+  current: {
+    day: DayJsType
+    months: Array<Array<number | null>>
+  }
   /** 選択可能な開始日 */
   from: Date
   /** 選択可能な終了日 */
@@ -16,11 +26,13 @@ type Props = {
   /** トリガのセレクトイベントを処理するハンドラ */
   onSelectDate: (e: MouseEvent, date: Date) => void
   /** 選択された日付 */
-  selected?: Date | null
+  selectedDayText: string
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
-const calendarTable = tv({
+type DayJsType = ReturnType<typeof dayjs>
+
+const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-px-0.75 shr-pb-1 shr-pt-0.25',
     table: 'smarthr-ui-CalendarTable shr-border-spacing-0 shr-text-base shr-text-black',
@@ -28,20 +40,11 @@ const calendarTable = tv({
     td: 'smarthr-ui-CalendarTable-dataCell shr-p-0 shr-align-middle',
     cellButton:
       'shr-group shr-flex shr-items-center shr-justify-center shr-px-0.5 shr-py-0.25 disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
-    dateCell:
+    dateCell: [
       'shr-box-border shr-flex shr-h-[1.75rem] shr-w-[1.75rem] shr-items-center shr-justify-center shr-rounded-[50%] shr-leading-[0] group-[:not(:disabled)]:group-hover:shr-bg-base-grey group-[:not(:disabled)]:group-hover:shr-text-black',
-  },
-  variants: {
-    isToday: {
-      true: {
-        dateCell: 'shr-border-shorthand contrast-more:shr-border-high-contrast',
-      },
-    },
-    isSelected: {
-      true: {
-        dateCell: '[&&&&]:shr-bg-main [&&&&]:shr-text-white',
-      },
-    },
+      '[[aria-pressed="true"]>&&&]:shr-bg-main [[aria-pressed="true"]>&&&]:shr-text-white',
+      '[[data-is-today="true"]>&&&]:shr-border-shorthand [[aria-pressed="true"]>&&&]:contrast-more:shr-border-high-contrast',
+    ],
   },
 })
 
@@ -50,75 +53,50 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   from,
   to,
   onSelectDate,
-  selected,
+  selectedDayText,
   className,
   ...props
 }) => {
-  const { wrapper, table, th, td, cellButton, dateCell } = calendarTable()
-  const { wrapperStyle, tableStyle, thStyle, tdStyle, cellButtonStyle } = useMemo(
-    () => ({
-      wrapperStyle: wrapper({ className }),
-      tableStyle: table(),
-      thStyle: th(),
-      tdStyle: td(),
-      cellButtonStyle: cellButton(),
-    }),
-    [cellButton, className, table, td, th, wrapper],
-  )
-  const currentDay = dayjs(current)
-  const selectedDay = selected ? dayjs(selected) : null
+  const classNames = useMemo(() => {
+    const { wrapper, table, th, td, cellButton, dateCell } = classNameGenerator()
 
-  const now = dayjs().startOf('date')
-  const fromDay = dayjs(from)
-  const toDay = dayjs(to)
+    return {
+      wrapper: wrapper({ className }),
+      table: table(),
+      th: th(),
+      td: td(),
+      cellButton: cellButton(),
+      dateCell: dateCell(),
+    }
+  }, [className])
 
-  const array = getMonthArray(currentDay.toDate())
+  // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
+  const nowDateText = dayjs().startOf('date').toString()
+
   return (
-    <div className={wrapperStyle}>
-      <table {...props} className={tableStyle}>
-        <thead>
-          <tr>
-            {daysInWeek.map((day, i) => (
-              <th key={i} className={thStyle}>
-                {day}
-              </th>
-            ))}
-          </tr>
-        </thead>
+    <div className={classNames.wrapper}>
+      <table {...props} className={classNames.table}>
+        <MemoizedThead thStyle={classNames.th} />
         <tbody>
-          {array.map((week, weekIndex) => (
+          {current.months.map((week, weekIndex) => (
             <tr key={weekIndex}>
-              {week.map((date, dateIndex) => {
-                const isOutRange =
-                  !date ||
-                  !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
-                const isSelectedDate =
-                  !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
-                return (
-                  <td key={dateIndex} className={tdStyle}>
-                    {date && (
-                      <UnstyledButton
-                        disabled={isOutRange}
-                        onClick={(e) =>
-                          !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
-                        }
-                        aria-pressed={isSelectedDate}
-                        type="button"
-                        className={cellButtonStyle}
-                      >
-                        <span
-                          className={dateCell({
-                            isToday: currentDay.date(date).isSame(now, 'date'),
-                            isSelected: isSelectedDate,
-                          })}
-                        >
-                          {date}
-                        </span>
-                      </UnstyledButton>
-                    )}
-                  </td>
-                )
-              })}
+              {week.map((date, dateIndex) =>
+                date ? (
+                  <SelectTdButton
+                    key={dateIndex}
+                    date={date}
+                    currentDay={current.day}
+                    selectedDayText={selectedDayText}
+                    from={from}
+                    to={to}
+                    nowDateText={nowDateText}
+                    onClick={onSelectDate}
+                    classNames={classNames}
+                  />
+                ) : (
+                  <NullTd key={dateIndex} className={classNames.td} />
+                ),
+              )}
             </tr>
           ))}
         </tbody>
@@ -126,3 +104,76 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     </div>
   )
 }
+
+const MemoizedThead = memo<{ thStyle: string }>(({ thStyle }) => (
+  <thead>
+    <tr>
+      {daysInWeek.map((day) => (
+        <th key={day} className={thStyle}>
+          {day}
+        </th>
+      ))}
+    </tr>
+  </thead>
+))
+
+const NullTd = memo<{ className: string }>(({ className }) => <td className={className} />)
+
+const SelectTdButton = memo<{
+  date: number
+  currentDay: DayJsType
+  selectedDayText: string
+  from: Date
+  to: Date
+  nowDateText: string
+  onClick: Props['onSelectDate']
+  classNames: {
+    td: string
+    cellButton: string
+    dateCell: string
+  }
+}>(({ date, currentDay, selectedDayText, from, to, nowDateText, onClick, classNames }) => {
+  const target = useMemo(() => {
+    const day = currentDay.date(date)
+
+    return {
+      day,
+      date: day.toDate(),
+    }
+  }, [currentDay, date])
+  const disabled = useMemo(() => !isBetween(target.date, from, to), [target.date, from, to])
+  const ariaPressed = useMemo(
+    () => target.day.isSame(selectedDayText, 'date'),
+    [selectedDayText, target.day],
+  )
+  const dataIsToday = useMemo(
+    () => target.day.isSame(nowDateText, 'date'),
+    [nowDateText, target.day],
+  )
+
+  const actualOnClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      onClick(e, target.date)
+    },
+    [onClick, target.date],
+  )
+
+  return (
+    <td className={classNames.td}>
+      <UnstyledButton
+        type="button"
+        disabled={disabled}
+        aria-pressed={ariaPressed}
+        onClick={actualOnClick}
+        className={classNames.cellButton}
+        data-is-today={dataIsToday}
+      >
+        <SelectButtonTdDateCell className={classNames.dateCell}>{date}</SelectButtonTdDateCell>
+      </UnstyledButton>
+    </td>
+  )
+})
+
+const SelectButtonTdDateCell = memo<{ children: number; className: string }>(
+  ({ children, className }) => <span className={className}>{children}</span>,
+)

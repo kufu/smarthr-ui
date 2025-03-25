@@ -1,14 +1,24 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import {
+  Children,
+  type ComponentPropsWithoutRef,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  type ReactNode,
+  isValidElement,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
 import { Nav } from '../SectioningContent'
 import { StatusLabel } from '../StatusLabel'
 
-import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
-import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
-import { AppNaviCustomTag, AppNaviCustomTagProps } from './AppNaviCustomTag'
-import { AppNaviDropdown, AppNaviDropdownProps } from './AppNaviDropdown'
+import { AppNaviAnchor, type AppNaviAnchorProps } from './AppNaviAnchor'
+import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
+import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
+import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -90,7 +100,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
   )
 }
 
-const StatusLabelHeading = React.memo<PropsWithChildren>(
+const StatusLabelHeading = memo<PropsWithChildren>(
   ({ children }) =>
     children && (
       <Heading className={classNames.statusLabelHeading}>
@@ -100,12 +110,12 @@ const StatusLabelHeading = React.memo<PropsWithChildren>(
 )
 
 const renderButtons = (children: ReactNode) =>
-  React.Children.map(children, (child): ReactNode => {
-    if (!(child && React.isValidElement(child))) {
+  Children.map(children, (child): ReactNode => {
+    if (!(child && isValidElement(child))) {
       return null
     }
 
-    if (child.type === React.Fragment) {
+    if (child.type === Fragment) {
       return renderButtons(child.props.children)
     }
 

@@ -1,5 +1,5 @@
-import React, { type ComponentProps, type PropsWithChildren, memo, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentProps, type ElementType, type PropsWithChildren, memo, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 type StyleType =
   | 'screenTitle'
@@ -87,9 +87,7 @@ const classNameGenerator = tv({
 })
 
 // VariantProps を使うとコメントが書けない〜🥹
-export type TextProps<T extends React.ElementType = 'span'> = VariantProps<
-  typeof classNameGenerator
-> & {
+export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
   as?: T
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
@@ -98,7 +96,7 @@ export type TextProps<T extends React.ElementType = 'span'> = VariantProps<
   styleType?: StyleType
 }
 
-const ActualText = <T extends React.ElementType = 'span'>({
+const ActualText = <T extends ElementType = 'span'>({
   emphasis,
   styleType,
   weight = emphasis ? 'bold' : undefined,

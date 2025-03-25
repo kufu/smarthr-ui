@@ -1,4 +1,4 @@
-import React, { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { PageHeading } from '../Heading'

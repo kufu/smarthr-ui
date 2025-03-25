@@ -1,4 +1,13 @@
-import React, { ComponentProps, FC, PropsWithChildren, memo, useCallback, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -44,7 +53,7 @@ type Props = PropsWithChildren<{
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
-  suffix?: React.ReactNode
+  suffix?: ReactNode
   /** `true` のとき、タブが選択状態のスタイルになる */
   selected?: boolean
   /** `true` のとき、タブを無効状態にしてクリック不能にする */
@@ -53,8 +62,8 @@ type Props = PropsWithChildren<{
    * 無効な理由
    */
   disabledDetail?: {
-    icon?: React.ReactNode
-    message: React.ReactNode
+    icon?: ReactNode
+    message: ReactNode
   }
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
@@ -114,7 +123,7 @@ const TabButton: FC<Props & ElementProps> = ({
   }, [className])
 
   const actualOnClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => onClick(e.currentTarget.value),
+    (e: MouseEvent<HTMLButtonElement>) => onClick(e.currentTarget.value),
     [onClick],
   )
 

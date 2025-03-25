@@ -1,6 +1,6 @@
 import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import React, { useRef, useState } from 'react'
+import { type FC, useRef, useState } from 'react'
 
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
@@ -13,7 +13,7 @@ import { RadioButton } from '../RadioButton'
 import { Dialog } from './Dialog'
 
 describe('Dialog', () => {
-  const DialogTemplate: React.FC = () => {
+  const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <>
@@ -111,7 +111,7 @@ describe('Dialog', () => {
     expect(screen.getByRole('textbox', { name: 'dialog_datepicker' })).toHaveFocus()
   })
 
-  const DialogTemplateWithFocusTrap: React.FC = () => {
+  const DialogTemplateWithFocusTrap: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const inputRef = useRef<HTMLInputElement>(null)
     return (

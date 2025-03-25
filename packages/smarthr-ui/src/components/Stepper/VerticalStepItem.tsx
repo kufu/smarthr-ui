@@ -1,4 +1,4 @@
-import React, { type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'

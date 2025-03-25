@@ -1,10 +1,11 @@
 'use client'
 
-import React, {
+import {
   type ComponentProps,
   type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
+  type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
   memo,
@@ -25,6 +26,7 @@ import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../Vis
 import type { Gap } from '../../types'
 
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
+type StatusLabelType = FunctionComponentElement<StatusLabelProps>
 
 type Props = PropsWithChildren<{
   /** グループのタイトル名 */
@@ -42,7 +44,12 @@ type Props = PropsWithChildren<{
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
   /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
+  /**
+   * @deprecated statusLabelProps属性は非推奨です。statusLabelsを使ってください。
+   */
   statusLabelProps?: StatusLabelProps | StatusLabelProps[]
+  /** タイトルの隣に表示する `StatusLabel` の配列 */
+  statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
   /** タイトルの下に表示する入力例 */
@@ -139,6 +146,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   htmlFor,
   labelId,
   innerMargin,
+  statusLabels,
   statusLabelProps,
   helpMessage,
   exampleMessage,
@@ -175,13 +183,21 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
-  const statusLabelList = useMemo(() => {
+
+  const actualStatusLabels = useMemo(() => {
+    if (statusLabels) {
+      return Array.isArray(statusLabels) ? statusLabels : [statusLabels]
+    }
+
     if (!statusLabelProps) {
       return []
     }
 
-    return Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-  }, [statusLabelProps])
+    const labelProps = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
+
+    return labelProps.map((prop, index) => <StatusLabel {...prop} key={index} />)
+  }, [statusLabels, statusLabelProps])
+
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -209,21 +225,16 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   }, [innerMargin, isFieldset, dangerouslyTitleHidden, className])
 
   useEffect(() => {
-    if (isFieldset) {
-      return
-    }
-
-    const inputWrapper = inputWrapperRef?.current
-
     if (
-      !inputWrapper ||
+      isFieldset ||
+      !inputWrapperRef?.current ||
       // HINT: 対象idを持つ要素が既に存在する場合、何もしない
       document.getElementById(managedHtmlFor)
     ) {
       return
     }
 
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!input) {
       return
@@ -243,15 +254,16 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       }
     }
   }, [managedHtmlFor, isFieldset, managedLabelId])
+
   useEffect(() => {
-    if (!describedbyIds) {
+    if (!describedbyIds || !inputWrapperRef?.current) {
       return
     }
 
+    const inputWrapper = inputWrapperRef.current
     const attrName = 'aria-describedby'
-    const inputWrapper = inputWrapperRef?.current
 
-    if (!inputWrapper || inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
+    if (inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
       return
     }
 
@@ -263,18 +275,13 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
     }
   }, [describedbyIds])
+
   useEffect(() => {
-    if (!autoBindErrorInput) {
+    if (!autoBindErrorInput || !inputWrapperRef?.current) {
       return
     }
 
-    const inputWrapper = inputWrapperRef?.current
-
-    if (!inputWrapper) {
-      return
-    }
-
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (input) {
       const attrName = 'aria-invalid'
@@ -333,9 +340,9 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         dangerouslyTitleHidden={dangerouslyTitleHidden}
         titleType={titleType}
         title={title}
-        statusLabelList={statusLabelList}
+        statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
-        className={classNames.label}
+        labelClassName={classNames.label}
       />
       {body}
     </Stack>
@@ -345,11 +352,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 const TitleCluster = memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
-    statusLabelList: StatusLabelProps[]
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
-    className: string
+    labelClassName: string
+    statusLabels: StatusLabelType[]
   }
 >(
   ({
@@ -359,20 +366,14 @@ const TitleCluster = memo<
     dangerouslyTitleHidden,
     titleType,
     title,
-    statusLabelList,
     subActionArea,
-    className,
+    labelClassName,
+    statusLabels,
   }) => {
     const body = (
       <>
         <Text styleType={titleType}>{title}</Text>
-        {statusLabelList.length > 0 && (
-          <Cluster gap={0.25} as="span">
-            {statusLabelList.map((prop, index) => (
-              <StatusLabel {...prop} key={index} />
-            ))}
-          </Cluster>
-        )}
+        <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
 
@@ -428,7 +429,7 @@ const TitleCluster = memo<
             className="[&&&]:shr--mt-0"
           >
             {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-            <Cluster {...attrs.label} align="center" className={className}>
+            <Cluster {...attrs.label} align="center" className={labelClassName}>
               {body}
             </Cluster>
             {subActionArea && <div className="shr-grow">{subActionArea}</div>}
@@ -437,6 +438,15 @@ const TitleCluster = memo<
       </>
     )
   },
+)
+
+const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
+  statusLabels.length === 0 ? null : (
+    // eslint-disable-next-line smarthr/best-practice-for-layouts
+    <Cluster gap={0.25} as="span">
+      {statusLabels}
+    </Cluster>
+  ),
 )
 
 const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(

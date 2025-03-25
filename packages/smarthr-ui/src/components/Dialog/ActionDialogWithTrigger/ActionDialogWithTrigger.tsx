@@ -1,13 +1,22 @@
 'use client'
 
-import React, { ReactElement, cloneElement, useCallback, useId, useMemo, useState } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type ReactElement,
+  cloneElement,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
 
 import { ActionDialog } from '../ActionDialog'
 
 type ToggleModalActionType = () => void
 
-export const ActionDialogWithTrigger: React.FC<
-  Omit<React.ComponentProps<typeof ActionDialog>, 'isOpen' | 'onClickClose' | 'onPressEscape'> & {
+export const ActionDialogWithTrigger: FC<
+  Omit<ComponentProps<typeof ActionDialog>, 'isOpen' | 'onClickClose' | 'onPressEscape'> & {
     trigger: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
     onClickTrigger?: (open: ToggleModalActionType) => void
     onClickClose?: (close: ToggleModalActionType) => void

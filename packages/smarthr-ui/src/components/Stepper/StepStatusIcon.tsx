@@ -1,11 +1,9 @@
-import React, { useMemo } from 'react'
+import { type ComponentProps, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
-import { Step } from './types'
-
-import type { ComponentProps, FC } from 'react'
+import type { Step } from './types'
 
 const classNameGenerator = tv({
   base: [

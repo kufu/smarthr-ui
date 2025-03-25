@@ -1,7 +1,6 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
 import { userEvent, within } from '@storybook/test'
 import dayjs from 'dayjs'
-import React from 'react'
 
 import { DatePicker } from '../DatePicker'
 
