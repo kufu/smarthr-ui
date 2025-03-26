@@ -64,6 +64,9 @@ type Props = AbstractProps & ElementProps
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i
 
+const getTargetDelegateElement = (e: MouseEvent<HTMLElement>, regex: RegExp) =>
+  (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) => regex.test(elm.tagName))
+
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
 
@@ -97,12 +100,9 @@ const ActualPagination: FC<Props> = ({
       return undefined
     }
 
-    const getTargetElement = (e: MouseEvent<HTMLElement>, regex: RegExp) =>
-      (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) => regex.test(elm.tagName))
-
     if (hrefTemplate) {
       return (e: MouseEvent<HTMLElement>) => {
-        const anchor = getTargetElement(e, ANCHOR_REGEX)
+        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
         if (!anchor) {
           return
@@ -117,7 +117,7 @@ const ActualPagination: FC<Props> = ({
     }
 
     return (e: MouseEvent<HTMLElement>) => {
-      const button = getTargetElement(e, BUTTON_REGEX)
+      const button = getTargetDelegateElement(e, BUTTON_REGEX)
 
       if (button) {
         onClick(parseInt((button as HTMLButtonElement).value, 10), e)

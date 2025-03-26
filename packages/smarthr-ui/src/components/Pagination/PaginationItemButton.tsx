@@ -1,6 +1,15 @@
 import { type ComponentProps, type FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button } from '../Button'
+
+const classNameGenerator = tv({
+  base: [
+    'shr-rounded-s',
+    'aria-current-page:[&&&]:shr-cursor-default aria-current-page:[&&&]:shr-bg-main aria-current-page:[&&&]:shr-text-white',
+    'aria-current-page:[&&&]:shr-border-solid aria-current-page:[&&&]:shr-border-main',
+  ],
+})
 
 type Props = {
   page: number
@@ -9,6 +18,7 @@ type Props = {
 }
 
 export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate }) => {
+  const className = useMemo(() => classNameGenerator(), [])
   const { Component, attrs } = useMemo(() => {
     const common = {
       'aria-label': `${page}ページ目`,
@@ -36,12 +46,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate }
   }, [disabled, page, hrefTemplate])
 
   return (
-    <Component
-      {...attrs}
-      square
-      size="s"
-      className="shr-rounded-s aria-current-page:[&&&]:shr-cursor-default aria-current-page:[&&&]:shr-border-solid aria-current-page:[&&&]:shr-border-main aria-current-page:[&&&]:shr-bg-main aria-current-page:[&&&]:shr-text-white"
-    >
+    <Component {...attrs} square size="s" className={className}>
       {page}
     </Component>
   )
