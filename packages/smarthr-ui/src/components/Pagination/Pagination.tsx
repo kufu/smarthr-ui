@@ -33,7 +33,7 @@ const classNameGenerator = tv({
   },
 })
 
-type CommonBaseProps = {
+type CommonProps = {
   /** 全ページ数 */
   total: number
   /** 現在のページ */
