@@ -33,7 +33,7 @@ const classNameGenerator = tv({
   },
 })
 
-type CommonBaseProps = {
+type CommonProps = {
   /** 全ページ数 */
   total: number
   /** 現在のページ */
@@ -44,22 +44,22 @@ type CommonBaseProps = {
   withoutNumbers?: boolean
 }
 
-type ButtonProps = CommonBaseProps & {
+type ButtonProps = CommonProps & {
   /** ボタンを押下したときに発火するコールバック関数 */
   onClick: (pageNumber: number, e: MouseEvent<HTMLElement>) => void
   /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
   hrefTemplate?: undefined
 }
-type AnchorProps = CommonBaseProps & {
+type AnchorProps = CommonProps & {
   /** リンクを押下したときに発火するコールバック関数 */
   onClick?: (href: string, e: MouseEvent<HTMLElement>) => void
   /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
   hrefTemplate: (pageNumber: number) => string
 }
 
-type BaseProps = ButtonProps | AnchorProps
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
-type Props = BaseProps & ElementProps
+type AbstractProps = ButtonProps | AnchorProps
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i
