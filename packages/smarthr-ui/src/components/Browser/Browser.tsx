@@ -1,11 +1,11 @@
-import React, { FC, KeyboardEventHandler, useCallback, useMemo } from 'react'
+import { type ChangeEvent, type FC, type KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'
-import { ItemNode, ItemNodeLike, RootNode } from './models'
+import { ItemNode, type ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const classNameGenerator = tv({
@@ -106,7 +106,7 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
   const onChangeInput = useMemo(
     () =>
       onSelectItem
-        ? (e: React.ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
+        ? (e: ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
         : undefined,
     [onSelectItem],
   )

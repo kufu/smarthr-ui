@@ -1,15 +1,17 @@
-import React, {
-  ComponentPropsWithoutRef,
-  ElementType,
-  PropsWithChildren,
-  ReactNode,
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Text } from '../../Text'
+import { Heading } from '../../Heading'
+import { Section } from '../../SectioningContent'
 
-type Props<TitleElement extends ElementType = 'p'> = PropsWithChildren<{
+type Props<TitleElement extends ElementType> = PropsWithChildren<{
   title: ReactNode
   titleElementAs?: TitleElement
 
@@ -20,41 +22,49 @@ type Props<TitleElement extends ElementType = 'p'> = PropsWithChildren<{
 }> &
   ComponentPropsWithoutRef<TitleElement>
 
-const sideMenuGroup = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-mt-1'],
     list: 'shr-list-none',
-    groupTitle: 'shr-block shr-px-1 shr-py-0.5',
+    groupTitle: 'shr-px-1 shr-py-0.5 shr-text-sm',
   },
 })
 
-export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
+export const SideMenuGroup = <TitleElement extends ElementType = 'span'>({
   title,
   titleElementAs,
   listElementAs,
   children,
   className,
 }: Props<TitleElement>) => {
-  const { wrapperStyle, listStyle, groupTitleStyle } = useMemo(() => {
-    const { wrapper, list, groupTitle } = sideMenuGroup()
+  const classNames = useMemo(() => {
+    const { wrapper, list, groupTitle } = classNameGenerator()
+
     return {
-      wrapperStyle: wrapper({ className }),
-      listStyle: list(),
-      groupTitleStyle: groupTitle(),
+      wrapper: wrapper({ className }),
+      list: list(),
+      groupTitle: groupTitle(),
     }
   }, [className])
 
-  const TitleComponent = titleElementAs ?? 'p'
   const ListComponent = listElementAs ?? 'ul'
 
   return (
-    <li className={wrapperStyle}>
-      <TitleComponent>
-        <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={groupTitleStyle}>
+    <li className={classNames.wrapper}>
+      <Section>
+        <GroupHeading titleElementAs={titleElementAs} className={classNames.groupTitle}>
           {title}
-        </Text>
-      </TitleComponent>
-      <ListComponent className={listStyle}>{children}</ListComponent>
+        </GroupHeading>
+        <ListComponent className={classNames.list}>{children}</ListComponent>
+      </Section>
     </li>
   )
 }
+
+const GroupHeading = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
+  ({ titleElementAs: Inner, children, className }) => (
+    <Heading type="blockTitle" className={className}>
+      {Inner ? <Inner>{children}</Inner> : children}
+    </Heading>
+  ),
+)

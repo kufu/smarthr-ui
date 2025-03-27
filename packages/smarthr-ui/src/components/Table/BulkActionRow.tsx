@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ComponentPropsWithRef, FC, PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTableHeadCellCount } from './useTableHeadCellCount'

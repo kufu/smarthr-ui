@@ -1,4 +1,3 @@
-import React, { FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../../../Button'
@@ -9,12 +8,14 @@ import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
-import { Launcher } from '../../types'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
 
 import { AppLauncherFilterDropdown } from './AppLauncherFilterDropdown'
+
+import type { Launcher } from '../../types'
+import type { FC } from 'react'
 
 type Props = {
   features: Array<Launcher['feature']>

@@ -1,6 +1,4 @@
-import React from 'react'
-
-import { ResponseMessageType } from '../../../types'
+import { ResponseStatusWithoutProcessing } from '../../../types'
 import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
@@ -22,7 +20,7 @@ const _tertiaryButtonOptions = {
   あり: <Button>ターシャリーボタン</Button>,
 }
 
-const _responseMessageOptions: { [key: string]: ResponseMessageType | undefined } = {
+const _responseStatusOptions: { [key: string]: ResponseStatusWithoutProcessing | undefined } = {
   なし: undefined,
   success: { status: 'success', text: '成功メッセージです。' },
   error: { status: 'error', text: '失敗メッセージです。' },
@@ -48,10 +46,10 @@ export default {
       options: Object.keys(_tertiaryButtonOptions),
       mapping: _tertiaryButtonOptions,
     },
-    responseMessage: {
+    responseStatus: {
       control: 'radio',
-      options: Object.keys(_responseMessageOptions),
-      mapping: _responseMessageOptions,
+      options: Object.keys(_responseStatusOptions),
+      mapping: _responseStatusOptions,
     },
   },
   args: {
@@ -89,10 +87,10 @@ export const TertiaryButton: StoryObj<typeof FloatArea> = {
   },
 }
 
-export const ResponseMessage: StoryObj<typeof FloatArea> = {
-  name: 'responseMessage',
+export const ResponseStatus: StoryObj<typeof FloatArea> = {
+  name: 'responseStatus',
   args: {
-    responseMessage: _responseMessageOptions.success,
+    responseStatus: _responseStatusOptions.success,
   },
 }
 

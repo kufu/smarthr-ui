@@ -1,7 +1,8 @@
 'use client'
 
-import React, {
-  FocusEvent,
+import {
+  type ComponentProps,
+  type FocusEvent,
   forwardRef,
   useCallback,
   useEffect,
@@ -14,7 +15,7 @@ import { Input } from '../Input'
 
 import { formatCurrency } from './currencyInputHelper'
 
-type Props = Omit<React.ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
+type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
   /** 通貨の値 */
   value?: string
   /** デフォルトで表示する通貨の値 */

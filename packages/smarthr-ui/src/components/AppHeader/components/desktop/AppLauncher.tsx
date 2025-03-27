@@ -1,4 +1,3 @@
-import React, { FC, ReactNode } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -12,10 +11,12 @@ import { SideNav } from '../../../SideNav'
 import { TextLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
-import { Launcher } from '../../types'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
+
+import type { Launcher } from '../../types'
+import type { FC, ReactNode } from 'react'
 
 type Props = {
   features: Array<Launcher['feature']>

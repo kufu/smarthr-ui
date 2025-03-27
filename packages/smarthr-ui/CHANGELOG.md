@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [67.0.0](https://github.com/kufu/smarthr-ui/compare/v66.1.0...v67.0.0) (2025-03-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* CheckBox, ComboBox を Checkbox, Combobox にリネームする SHRUI-1210 (#5481)
+* ModelessDialogの見出し部分がHeadingかつ、自動レベル計算されるように修正する SHRUI-961 (#5459)
+
+### Features
+
+* add FaGoogleDrive and FaMicrosoft icon ([#5483](https://github.com/kufu/smarthr-ui/issues/5483)) ([50e9a98](https://github.com/kufu/smarthr-ui/commit/50e9a988f8f1aa5f28d0ead2168c7b1a13e026db))
+
+
+### Bug Fixes
+
+* CheckBox, ComboBox を Checkbox, Combobox にリネームする SHRUI-1210 ([#5481](https://github.com/kufu/smarthr-ui/issues/5481)) ([671e4bb](https://github.com/kufu/smarthr-ui/commit/671e4bb7a9cff0876ac52ade4af20208d088d1fa))
+* ModelessDialogの見出し部分がHeadingかつ、自動レベル計算されるように修正する SHRUI-961 ([#5459](https://github.com/kufu/smarthr-ui/issues/5459)) ([b95e7c7](https://github.com/kufu/smarthr-ui/commit/b95e7c7bc51030efd936cb9037b1a5e6e5de922c))
+
+## [66.1.0](https://github.com/kufu/smarthr-ui/compare/v66.0.0...v66.1.0) (2025-03-18)
+
+
+### Features
+
+* FormControl, Fieldset コンポーネントに直接StatusLabelコンポーネントを渡せる属性、statusLabelsを追加する ([#5465](https://github.com/kufu/smarthr-ui/issues/5465)) ([324ac76](https://github.com/kufu/smarthr-ui/commit/324ac7619871e2d99867ac9960b980340bf82ba9))
+
+
+### Bug Fixes
+
+* AccordionPanelが特定の状況でスクロール領域を不自然に伸ばしてしまう場合がある問題を修正する ([#5461](https://github.com/kufu/smarthr-ui/issues/5461)) ([75a0426](https://github.com/kufu/smarthr-ui/commit/75a0426cca29018396d830120ab29f85bd6c6db8))
+* **AppHeader:** Navigationのaria-currentがpageにならない修正漏れを改修 ([#5466](https://github.com/kufu/smarthr-ui/issues/5466)) ([ae1de53](https://github.com/kufu/smarthr-ui/commit/ae1de538c00c536902585d256c02aa5726136336))
+* libディレクトリをexportできるように修正 ([#5456](https://github.com/kufu/smarthr-ui/issues/5456)) ([1c94624](https://github.com/kufu/smarthr-ui/commit/1c9462425518d2628061279ea737d3cdd610e342))
+* package.jsonをexportsに含める ([#5462](https://github.com/kufu/smarthr-ui/issues/5462)) ([57744d0](https://github.com/kufu/smarthr-ui/commit/57744d0cb3fc964538954af5cb83c4dc834227cc))
+* **StepFormDialog, useDialogPortal, SectioningContent:** RSC対応 ([#5457](https://github.com/kufu/smarthr-ui/issues/5457)) ([2ad3fb3](https://github.com/kufu/smarthr-ui/commit/2ad3fb366da1772cc98f634533c9affdc5168d96))
+
+## [66.0.0](https://github.com/kufu/smarthr-ui/compare/v65.3.0...v66.0.0) (2025-03-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 (#5399)
+
+### Features
+
+* **AppNaviDropdownMenuButton:** 選択中の項目が視覚的にも伝わるように装飾を追加 ([#5193](https://github.com/kufu/smarthr-ui/issues/5193)) ([0ff8392](https://github.com/kufu/smarthr-ui/commit/0ff839237b3c533f58a53e88616e5d233de4e6e8))
+* TdRadioButton を追加 ([#5439](https://github.com/kufu/smarthr-ui/issues/5439)) ([6a9ca59](https://github.com/kufu/smarthr-ui/commit/6a9ca5922a8359dc47ac4c969d3eefc797d9026f))
+
+
+### Bug Fixes
+
+* responseMessage → responseStatus propsに、ResponseMessageType → ResponseStatusに名称変更 ([#5399](https://github.com/kufu/smarthr-ui/issues/5399)) ([fe21e25](https://github.com/kufu/smarthr-ui/commit/fe21e25ba42b405e48ee5a85e0af556efdec6bfa))
+
 ## [65.3.0](https://github.com/kufu/smarthr-ui/compare/v65.2.1...v65.3.0) (2025-03-04)
 
 

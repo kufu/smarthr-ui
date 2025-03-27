@@ -1,12 +1,17 @@
 'use client'
 
-import React, { forwardRef, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap } from '../../../types'
-import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 type Props = PropsWithChildren<{
   /** コンテンツの最小高さ */
@@ -17,7 +22,7 @@ type Props = PropsWithChildren<{
   padding?: Gap
   /** 天地中央揃えも有効化するかどうか */
   verticalCentering?: boolean
-  as?: string | React.ComponentType<any>
+  as?: string | ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
 

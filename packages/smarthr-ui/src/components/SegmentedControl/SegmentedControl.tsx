@@ -1,9 +1,10 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  FC,
-  ReactNode,
+import {
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -147,7 +148,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   const actualOnClickOption = useMemo(
     () =>
       onClickOption
-        ? (e: React.MouseEvent<HTMLButtonElement>) => onClickOption(e.currentTarget.value)
+        ? (e: MouseEvent<HTMLButtonElement>) => onClickOption(e.currentTarget.value)
         : undefined,
     [onClickOption],
   )
@@ -183,7 +184,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 
 const SegmentedControlButton: FC<
   Pick<Props, 'size' | 'isSquare' | 'value'> & {
-    onClick: undefined | ((e: React.MouseEvent<HTMLButtonElement>) => void)
+    onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
     option: Props['options'][number]
     index: number
     isFocused: boolean

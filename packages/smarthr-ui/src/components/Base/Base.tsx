@@ -1,7 +1,13 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
 
@@ -97,7 +103,7 @@ type Props = PropsWithChildren<
     padding?: Gap | SeparatePadding
     /** コンテンツが要素内に収まらない場合の処理方法 */
     overflow?: Overflow | { x: Overflow; y: Overflow }
-    as?: string | React.ComponentType<any>
+    as?: string | ComponentType<any>
   }
 >
 

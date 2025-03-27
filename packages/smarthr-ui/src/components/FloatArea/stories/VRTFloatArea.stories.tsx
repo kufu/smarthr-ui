@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
@@ -23,7 +21,7 @@ export default {
         primaryButton={<Button variant="primary">保存</Button>}
         secondaryButton={<Button>キャンセル</Button>}
         tertiaryButton={<Button>プレビュー</Button>}
-        responseMessage={{ status: 'error', text: '入力に誤りがあります。' }}
+        responseStatus={{ status: 'error', text: '入力に誤りがあります。' }}
       />
     </Stack>
   ),

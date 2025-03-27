@@ -1,11 +1,12 @@
 'use client'
 
-import React, {
-  FC,
-  MutableRefObject,
-  PropsWithChildren,
-  ReactNode,
+import {
+  type FC,
+  type MutableRefObject,
+  type PropsWithChildren,
+  type ReactNode,
   createContext,
+  createRef,
   useCallback,
   useContext,
   useEffect,
@@ -17,7 +18,7 @@ import React, {
 
 import { usePortal } from '../../hooks/usePortal'
 
-import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
+import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
 type Props = {
   onOpen?: () => void
@@ -40,7 +41,7 @@ const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
-  triggerElementRef: React.createRef(),
+  triggerElementRef: createRef(),
   rootTriggerRef: null,
   onClickTrigger: () => {
     /* noop */

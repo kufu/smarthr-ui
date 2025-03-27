@@ -1,21 +1,24 @@
-import React, { ComponentProps, FormEvent, useCallback, useId, useRef } from 'react'
+'use client'
+
+import { type ComponentProps, type FC, type FormEvent, useCallback, useId, useRef } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { FocusTrapRef } from '../FocusTrap'
-import { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
 import {
   StepFormDialogContentInner,
-  StepFormDialogContentInnerProps,
+  type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
+
+import type { FocusTrapRef } from '../FocusTrap'
+import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 
 type Props = Omit<StepFormDialogContentInnerProps, 'titleId' | 'activeStep'> & DialogProps
 
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const StepFormDialog: React.FC<Props & ElementProps> = ({
+export const StepFormDialog: FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,
@@ -30,7 +33,7 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
   onClickClose,
   onClickBack,
   onPressEscape = onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled = false,
   closeDisabled,
   className,
@@ -100,7 +103,7 @@ export const StepFormDialog: React.FC<Props & ElementProps> = ({
           onClickClose={handleClickClose}
           onSubmit={handleSubmitAction}
           onClickBack={handleBackSteps}
-          responseMessage={responseMessage}
+          responseStatus={responseStatus}
           decorators={decorators}
         >
           {children}

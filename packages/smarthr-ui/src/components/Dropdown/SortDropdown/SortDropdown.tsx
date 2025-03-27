@@ -1,9 +1,15 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, ReactNode } from 'react'
-import { type FC, type MouseEventHandler } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEventHandler,
+  type OptionHTMLAttributes,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+} from 'react'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
 import { Button } from '../../Button'
 import { Fieldset } from '../../Fieldset'
 import { FormControl } from '../../FormControl'
@@ -15,11 +21,13 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import { useSortDropdown } from './useSortDropdown'
+import { type DecoratorKeyTypes, useSortDropdown } from './useSortDropdown'
+
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 type SortFieldType = {
   value: string
-} & Omit<React.OptionHTMLAttributes<HTMLOptionElement>, 'value'>
+} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
 
 type ArgsOnApply = {
   field: string
@@ -36,14 +44,7 @@ type Props = {
   onApply: (args: ArgsOnApply) => void
   /** キャンセル時に発火するイベント */
   onCancel?: MouseEventHandler<HTMLButtonElement>
-  decorators?: DecoratorsType<
-    | 'sortFieldLabel'
-    | 'sortOrderLabel'
-    | 'ascLabel'
-    | 'descLabel'
-    | 'applyButtonLabel'
-    | 'cancelButtonLabel'
-  >
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
@@ -73,13 +74,13 @@ export const SortDropdown: FC<Props & ElementProps> = ({
     <Dropdown>
       <DropdownTrigger>
         <Button {...props} suffix={<SortIcon />}>
-          {labels.trigger}
+          {labels.triggerLabel}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={handleApply}>
           <Stack className={classNames.body}>
-            <FormControl title={labels.sortField}>
+            <FormControl title={labels.sortFieldLabel}>
               <Select
                 name="sortFields"
                 options={innerFields}
@@ -87,7 +88,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                 className={classNames.select}
               />
             </FormControl>
-            <Fieldset title={labels.sortOrder} innerMargin={0.5}>
+            <Fieldset title={labels.sortOrderLabel} innerMargin={0.5}>
               <Cluster gap={1.25}>
                 <RadioButton
                   name="sortOrder"
@@ -95,7 +96,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                   checked={innerCheckedOrder === 'asc'}
                   onChange={onChangeSortOrderRadio}
                 >
-                  {labels.asc}
+                  {labels.ascLabel}
                 </RadioButton>
                 <RadioButton
                   name="sortOrder"
@@ -103,15 +104,15 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                   checked={innerCheckedOrder === 'desc'}
                   onChange={onChangeSortOrderRadio}
                 >
-                  {labels.desc}
+                  {labels.descLabel}
                 </RadioButton>
               </Cluster>
             </Fieldset>
           </Stack>
           <Footer
             onCancel={onCancel}
-            cancelButtonLabel={labels.cancelButton}
-            applyButtonLabel={labels.applyButton}
+            cancelButtonLabel={labels.cancelButtonLabel}
+            applyButtonLabel={labels.applyButtonLabel}
             className={classNames.footer}
           />
         </form>
@@ -120,7 +121,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
   )
 }
 
-const Footer = React.memo<
+const Footer = memo<
   Pick<Props, 'onCancel'> & {
     className: string
     cancelButtonLabel: ReactNode
@@ -133,7 +134,7 @@ const Footer = React.memo<
   </Cluster>
 ))
 
-const CancelButton = React.memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
+const CancelButton = memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
   ({ onClick, children }) => (
     <DropdownCloser>
       <Button onClick={onClick}>{children}</Button>
@@ -141,7 +142,7 @@ const CancelButton = React.memo<PropsWithChildren<{ onClick: Props['onCancel'] }
   ),
 )
 
-const ApplyButton = React.memo<PropsWithChildren>(({ children }) => (
+const ApplyButton = memo<PropsWithChildren>(({ children }) => (
   <DropdownCloser>
     <Button type="submit" variant="primary">
       {children}

@@ -1,10 +1,17 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
-import { Gap } from '../../../types'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
+import type { Gap } from '../../../types'
 
 const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',
@@ -51,7 +58,7 @@ const classNameGenerator = tv({
 
 type Props = VariantProps<typeof classNameGenerator> &
   PropsWithChildren<{
-    as?: string | React.ComponentType<any>
+    as?: string | ComponentType<any>
   }> &
   ComponentPropsWithRef<'div'>
 

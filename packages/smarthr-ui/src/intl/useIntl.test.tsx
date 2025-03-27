@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react'
-import React, { FC, PropsWithChildren } from 'react'
 import { IntlProvider } from 'react-intl'
 
 import { useIntl } from './useIntl'
+
+import type { FC, PropsWithChildren } from 'react'
 
 describe('useIntl', () => {
   it('returns date in correct ja format', async () => {

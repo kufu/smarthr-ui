@@ -1,4 +1,3 @@
-import React, { FC } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -14,12 +13,14 @@ import { Cluster } from '../../../Layout'
 import { useLocale } from '../../hooks/useLocale'
 import { useTranslate } from '../../hooks/useTranslate'
 import { localeMap } from '../../multilingualization'
-import { HeaderProps } from '../../types'
 import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo'
+
+import type { HeaderProps } from '../../types'
+import type { FC } from 'react'
 
 const desktopHeader = tv({
   slots: {

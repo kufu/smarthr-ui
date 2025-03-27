@@ -1,7 +1,7 @@
-import React, { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
+import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
+import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
@@ -23,7 +23,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
+export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckboxProps, keyof Props> & Props>(
   ({ vAlign, children, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner, checkbox } = classNameGenerator()
@@ -40,7 +40,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
       // contentWidth={0} で td をテーブルの計算上最小幅にする
       <Td contentWidth={0} vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
-          <CheckBox {...rest} ref={ref} className={classNames.checkbox} />
+          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>
       </Td>

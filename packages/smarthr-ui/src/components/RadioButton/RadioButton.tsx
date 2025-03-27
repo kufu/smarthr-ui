@@ -1,6 +1,13 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useId, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type PropsWithChildren,
+  forwardRef,
+  memo,
+  useId,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isIOS } from '../../libs/ua'
@@ -86,11 +93,11 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
   },
 )
 
-const AriaHiddenBox = React.memo<{ className: string }>(({ className }) => (
+const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const LabeledChildren = React.memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
+const LabeledChildren = memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
   ({ htmlFor, className, children }) =>
     children && (
       <label htmlFor={htmlFor} className={className}>

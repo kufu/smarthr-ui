@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Cluster, Stack } from '../../Layout'
 import { Fieldset } from '../Fieldset'
 

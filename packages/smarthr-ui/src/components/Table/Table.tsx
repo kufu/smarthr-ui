@@ -1,5 +1,5 @@
-import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
 type ElementProps = Omit<ComponentProps<'table'>, keyof Props>

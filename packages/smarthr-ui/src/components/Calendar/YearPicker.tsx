@@ -1,9 +1,18 @@
-import React, { ComponentProps, FC, useEffect, useMemo, useRef } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type RefObject,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 
-type Props = {
+type AbstractProps = {
   /** 選択された年 */
   selectedYear?: number
   /** 選択可能な開始年 */
@@ -11,97 +20,116 @@ type Props = {
   /** 選択可能な終了年 */
   toYear: number
   /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectYear: (year: number) => void
+  onSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
   /** 表示フラグ */
   isDisplayed: boolean
   /** HTMLのid属性 */
   id: string
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
+type ActualProps = Omit<Props, 'isDisplayed'>
 
-const yearPicker = tv({
+const classNameGenerator = tv({
   slots: {
     overlay: 'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white',
     container:
       'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-overflow-y-auto shr-px-0.25 shr-py-0.5',
     yearButton:
       'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none',
-    yearWrapper:
+    yearWrapper: [
       'shr-box-border shr-inline-block shr-rounded-full shr-px-0.75 shr-py-0.5 shr-text-base shr-leading-none group-hover:shr-bg-base-grey group-hover:shr-text-black',
-  },
-  variants: {
-    isDisplayed: {
-      false: {
-        overlay: 'shr-hidden',
-      },
-    },
-    isThisYear: {
-      true: {
-        yearWrapper: 'shr-border-shorthand',
-      },
-    },
-    isSelected: {
-      true: {
-        yearWrapper: 'shr-bg-main shr-text-white',
-      },
-    },
+      '[[data-this-year="true"]>&]:shr-border-shorthand',
+      '[[aria-pressed="true"]>&]:shr-bg-main [[aria-pressed="true"]>&]:shr-text-white',
+    ],
   },
 })
 
-export const YearPicker: FC<Props & ElementProps> = ({
+export const YearPicker: FC<Props & ElementProps> = ({ isDisplayed, ...rest }) =>
+  isDisplayed ? <ActualYearPicker {...rest} /> : null
+
+const ActualYearPicker: FC<ActualProps> = ({
   selectedYear,
   fromYear,
   toYear,
   onSelectYear,
-  isDisplayed,
   id,
   ...props
 }) => {
-  const { overlay, container, yearButton, yearWrapper } = yearPicker()
-  const { overlayStyle, containerStyle, yearButtonStyle } = useMemo(
-    () => ({
-      overlayStyle: overlay({ isDisplayed }),
-      containerStyle: container(),
-      yearButtonStyle: yearButton(),
-    }),
-    [container, isDisplayed, overlay, yearButton],
-  )
+  const classNames = useMemo(() => {
+    const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
+
+    return {
+      overlay: overlay(),
+      container: container(),
+      yearButton: yearButton(),
+      yearWrapper: yearWrapper(),
+    }
+  }, [])
   const focusingRef = useRef<HTMLButtonElement>(null)
 
-  const thisYear = new Date().getFullYear()
-  const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
-  const yearArray = Array(numOfYear)
-    .fill(null)
-    .map((_, i) => fromYear + i)
+  const thisYear = useMemo(() => new Date().getFullYear(), [])
+  const yearArray = useMemo(() => {
+    const length = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
+    const result: number[] = []
+
+    for (let i = 0; i < length; i++) {
+      result[i] = fromYear + i
+    }
+
+    return result
+  }, [toYear, fromYear])
 
   useEffect(() => {
-    if (focusingRef.current && isDisplayed) {
+    if (focusingRef.current) {
+      // HINT: 現在の年に一度focusを当てることでtab移動をしやすくする
+      // focusを当てたままでは違和感があるため、blurで解除している
       focusingRef.current.focus()
       focusingRef.current.blur()
     }
-  }, [isDisplayed])
+  }, [])
 
   return (
-    <div {...props} id={id} className={overlayStyle}>
-      <div className={containerStyle}>
-        {yearArray.map((year) => {
-          const isThisYear = thisYear === year
-          const isSelectedYear = selectedYear === year
-          return (
-            <UnstyledButton
-              key={year}
-              onClick={() => onSelectYear(year)}
-              aria-pressed={isSelectedYear}
-              ref={isThisYear ? focusingRef : null}
-              className={yearButtonStyle}
-            >
-              <span className={yearWrapper({ isThisYear, isSelected: isSelectedYear })}>
-                {year}
-              </span>
-            </UnstyledButton>
-          )
-        })}
+    <div {...props} id={id} className={classNames.overlay}>
+      <div className={classNames.container}>
+        {yearArray.map((year) => (
+          <YearButton
+            key={year}
+            year={year}
+            thisYear={thisYear}
+            selected={selectedYear === year}
+            focusingRef={focusingRef}
+            className={classNames.yearButton}
+            childrenStyle={classNames.yearWrapper}
+            onClick={onSelectYear}
+          />
+        ))}
       </div>
     </div>
   )
 }
+
+const YearButton = memo<{
+  year: number
+  thisYear: number
+  selected: boolean
+  focusingRef: RefObject<HTMLButtonElement>
+  className: string
+  childrenStyle: string
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
+  const isThisYear = thisYear === year
+
+  return (
+    <UnstyledButton
+      ref={isThisYear ? focusingRef : null}
+      value={year}
+      aria-pressed={selected}
+      onClick={onClick}
+      className={className}
+      data-this-year={isThisYear}
+    >
+      <span className={childrenStyle}>{year}</span>
+    </UnstyledButton>
+  )
+})

@@ -1,11 +1,12 @@
 'use client'
 
-import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  DragEvent,
-  PropsWithChildren,
+import {
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type DragEvent,
+  type PropsWithChildren,
   forwardRef,
+  memo,
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -14,9 +15,10 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../hooks/useDecorators'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
+
+import type { DecoratorsType } from '../../hooks/useDecorators'
 
 const dropZone = tv({
   slots: {
@@ -133,7 +135,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
   },
 )
 
-const SelectButton = React.memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
+const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
   ({ onClick, decorators }) => {
     const selectButtonLabel = useMemo(
       () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,

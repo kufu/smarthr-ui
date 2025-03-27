@@ -1,10 +1,10 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import React, { ComponentProps, useState } from 'react'
+import { ChangeEvent, ComponentProps, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
-import { CheckBox } from '../CheckBox'
+import { Checkbox } from '../Checkbox'
 import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
 import { Input } from '../Input'
@@ -42,10 +42,10 @@ const radioButtonListWrapper = tv({
 
 export const Default: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
-  const [value, setValue] = React.useState('Apple')
-  const [responseMessage, setResponseMessage] =
-    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const [value, setValue] = useState('Apple')
+  const [responseStatus, setResponseStatus] =
+    useState<ComponentProps<typeof ActionDialog>['responseStatus']>()
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const stepOrder = [
     { id: 'a', stepNumber: 1 },
     {
@@ -73,7 +73,7 @@ export const Default: StoryFn = () => {
         firstStep={stepOrder[0]}
         onSubmit={(closeDialog, e, currentStep) => {
           action('onSubmit')()
-          setResponseMessage(undefined)
+          setResponseStatus(undefined)
           if (currentStep.id === stepOrder[2].id) {
             closeDialog()
           }
@@ -89,13 +89,13 @@ export const Default: StoryFn = () => {
         onClickClose={() => {
           action('closed')()
           setOpenedDialog(null)
-          setResponseMessage(undefined)
+          setResponseStatus(undefined)
         }}
         onClickBack={() => {
           action('back')()
         }}
         stepLength={3}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         id="dialog-form"
         data-test="form-dialog-content"
         width="40em"
@@ -130,19 +130,19 @@ export const Default: StoryFn = () => {
           <Fieldset title="fruits" innerMargin={0.5}>
             <ul>
               <li>
-                <CheckBox name="1">CheckBox</CheckBox>
+                <Checkbox name="1">Checkbox</Checkbox>
               </li>
 
               <li>
-                <CheckBox name="error" error>
-                  CheckBox / error
-                </CheckBox>
+                <Checkbox name="error" error>
+                  Checkbox / error
+                </Checkbox>
               </li>
 
               <li>
-                <CheckBox name="disabled" disabled>
-                  CheckBox / disabled
-                </CheckBox>
+                <Checkbox name="disabled" disabled>
+                  Checkbox / disabled
+                </Checkbox>
               </li>
             </ul>
           </Fieldset>

@@ -1,12 +1,10 @@
-import React, { useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { PageHeading } from '../Heading'
 import { Center, Stack } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
-
-import type { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
 
 type Props = {
   /** ロゴ */
@@ -30,30 +28,29 @@ type Props = {
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-const errorScreen = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-ErrorScreen shr-bg-background',
 })
 
 export const ErrorScreen: FC<Props & ElementProps> = ({
-  logo = <SmartHRLogo fill="brand" className="shr-p-0.75" />,
+  logo,
   title,
   links,
   children,
   className,
   ...props
 }) => {
-  const styles = useMemo(() => errorScreen({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Center {...props} minHeight="100vh" verticalCentering className={styles}>
+    <Center {...props} minHeight="100vh" verticalCentering className={actualClassName}>
       <Stack gap={1.5} align="center" className="[&&&]:shr-my-auto">
-        <div className="smarthr-ui-ErrorScreen-logo">{logo}</div>
-
+        <div className="smarthr-ui-ErrorScreen-logo">
+          {logo || <SmartHRLogo fill="brand" className="shr-p-0.75" />}
+        </div>
         <Stack align="center">
           {title && <PageHeading className="smarthr-ui-ErrorScreen-title">{title}</PageHeading>}
-
           {children && <div className="smarthr-ui-ErrorScreen-content">{children}</div>}
-
           {links?.length && (
             <Stack
               as="ul"
@@ -64,8 +61,8 @@ export const ErrorScreen: FC<Props & ElementProps> = ({
               {links.map((link, index) => (
                 <li key={index}>
                   <TextLink
-                    {...(link.target ? { target: link.target } : {})}
                     href={link.url}
+                    target={link.target}
                     className="smarthr-ui-ErrorScreen-link"
                   >
                     {link.label}

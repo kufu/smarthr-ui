@@ -104,6 +104,7 @@ import {
   FaGear,
   FaGears,
   FaGlobe,
+  FaGoogleDrive,
   FaGraduationCap,
   FaGrip,
   FaGripLines,
@@ -130,6 +131,7 @@ import {
   FaMagnifyingGlassMinus,
   FaMagnifyingGlassPlus,
   FaMessage,
+  FaMicrosoft,
   FaMinus,
   FaMoneyCheckDollar,
   FaPaintbrush,
@@ -303,6 +305,7 @@ export const FaGaugeIcon = /*#__PURE__*/ generateIcon(FaGauge)
 export const FaGearIcon = /*#__PURE__*/ generateIcon(FaGear)
 export const FaGearsIcon = /*#__PURE__*/ generateIcon(FaGears)
 export const FaGlobeIcon = /*#__PURE__*/ generateIcon(FaGlobe)
+export const FaGoogleDriveIcon = /*#__PURE__*/ generateIcon(FaGoogleDrive)
 export const FaGraduationCapIcon = /*#__PURE__*/ generateIcon(FaGraduationCap)
 export const FaGripIcon = /*#__PURE__*/ generateIcon(FaGrip)
 export const FaGripLinesIcon = /*#__PURE__*/ generateIcon(FaGripLines)
@@ -329,6 +332,7 @@ export const FaMagnifyingGlassIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlas
 export const FaMagnifyingGlassMinusIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlassMinus)
 export const FaMagnifyingGlassPlusIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlassPlus)
 export const FaMessageIcon = /*#__PURE__*/ generateIcon(FaMessage)
+export const FaMicrosoftIcon = /*#__PURE__*/ generateIcon(FaMicrosoft)
 export const FaMinusIcon = /*#__PURE__*/ generateIcon(FaMinus)
 export const FaMoneyCheckDollarIcon = /*#__PURE__*/ generateIcon(FaMoneyCheckDollar)
 export const FaPaintbrushIcon = /*#__PURE__*/ generateIcon(FaPaintbrush)
