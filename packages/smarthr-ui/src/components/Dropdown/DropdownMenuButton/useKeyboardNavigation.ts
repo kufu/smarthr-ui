@@ -75,8 +75,8 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
 }
 
 const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!containerRef.current || !document.activeElement) {
         return
       }
@@ -96,17 +96,14 @@ const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
         e.preventDefault()
         moveFocus(containerRef.current, direction)
       }
-    },
-    [containerRef],
-  )
+    }
 
-  useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [handleKeyDown])
+  }, [containerRef])
 }
 
 export default useKeyboardNavigation
