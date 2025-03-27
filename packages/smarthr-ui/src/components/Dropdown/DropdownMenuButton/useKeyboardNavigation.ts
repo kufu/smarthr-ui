@@ -38,6 +38,13 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
         }
       }
 
+      // HINT: disabled理由のtooltipなどが存在する場合があるため、focus対象にする
+      const tooltip = item.querySelector('.smarthr-ui-Tooltip[tabindex="0"]')
+
+      if (tooltip) {
+        acc.tabbableItems.push(tooltip)
+      }
+
       return acc
     },
     {
@@ -74,10 +81,20 @@ const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
         return
       }
 
-      if (KEY_UP_REGEX.test(e.key)) {
-        moveFocus(containerRef.current, -1)
+      let direction = 0
+
+      // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
+      if (e.key === 'Tab') {
+        direction = e.shiftKey ? -1 : 1
+      } else if (KEY_UP_REGEX.test(e.key)) {
+        direction = -1
       } else if (KEY_DOWN_REGEX.test(e.key)) {
-        moveFocus(containerRef.current, 1)
+        direction = 1
+      }
+
+      if (direction !== 0) {
+        e.preventDefault()
+        moveFocus(containerRef.current, direction)
       }
     },
     [containerRef],
