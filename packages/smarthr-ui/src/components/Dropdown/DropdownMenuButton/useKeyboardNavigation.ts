@@ -15,44 +15,34 @@ const KEY_UP_REGEX = /^(Arrow)?(Up|Left)$/
 const KEY_DOWN_REGEX = /^(Arrow)?(Down|Right)$/
 
 const moveFocus = (element: Element, direction: 1 | -1) => {
-  const { hoveredItem, tabbableItems, focusedIndex } = Array.from(
-    element.querySelectorAll('li > *'),
-  ).reduce(
-    (
-      acc: {
-        hoveredItem: Element | null
-        tabbableItems: Element[]
-        focusedIndex: number
-      },
-      item,
-    ) => {
-      if (item.matches(':hover') && acc.hoveredItem === null) {
-        acc.hoveredItem = item
+  let hoveredItem: Element | null = null
+  const tabbableItems: Element[] = []
+  let focusedIndex: number = -1
+
+  Array.from(element.querySelectorAll('li > *')).forEach((item) => {
+    if (hoveredItem === null && item.matches(':hover')) {
+      hoveredItem = item
+    }
+
+    if (!isElementDisabled(item)) {
+      tabbableItems.push(item)
+
+      if (document.activeElement === item) {
+        focusedIndex = tabbableItems.length - 1
       }
+    }
 
-      if (!isElementDisabled(item)) {
-        acc.tabbableItems.push(item)
+    // HINT: disabled理由のtooltipなどが存在する場合があるため、focus対象にする
+    const tooltip = item.querySelector('.smarthr-ui-Tooltip[tabindex="0"]')
 
-        if (document.activeElement === item) {
-          acc.focusedIndex = acc.tabbableItems.length - 1
-        }
+    if (tooltip) {
+      tabbableItems.push(tooltip)
+
+      if (document.activeElement === tooltip) {
+        focusedIndex = tabbableItems.length - 1
       }
-
-      // HINT: disabled理由のtooltipなどが存在する場合があるため、focus対象にする
-      const tooltip = item.querySelector('.smarthr-ui-Tooltip[tabindex="0"]')
-
-      if (tooltip) {
-        acc.tabbableItems.push(tooltip)
-      }
-
-      return acc
-    },
-    {
-      hoveredItem: null,
-      tabbableItems: [],
-      focusedIndex: -1,
-    },
-  )
+    }
+  })
 
   let nextIndex = 0
 
