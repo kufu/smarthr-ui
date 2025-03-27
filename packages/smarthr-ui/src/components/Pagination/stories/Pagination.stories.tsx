@@ -53,3 +53,14 @@ export const OnClick: StoryObj<typeof Pagination> = {
     onClick: action('click'),
   },
 }
+
+export const HrefTemplate: StoryObj<typeof Pagination> = {
+  name: 'hrefTemplate',
+  args: {
+    hrefTemplate: (page) => `https://example.com/?page=${page}`,
+    onClick: (page, e) => {
+      e.preventDefault()
+      console.log(page, e)
+    },
+  },
+}

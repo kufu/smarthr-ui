@@ -1,4 +1,6 @@
-import { Button } from '../Button'
+import { type ComponentProps, type FC, useMemo } from 'react'
+
+import { AnchorButton, Button } from '../Button'
 import {
   FaAngleDoubleLeftIcon,
   FaAngleDoubleRightIcon,
@@ -6,13 +8,12 @@ import {
   FaChevronRightIcon,
 } from '../Icon'
 
-import type { FC } from 'react'
-
 type Props = {
   targetPage: number
   direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
+  hrefTemplate?: (pageNumber: number) => string
 }
 
 const ICON_MAPPER = {
@@ -31,19 +32,32 @@ export const PaginationControllerItemButton: FC<Props> = ({
   disabled,
   double,
   targetPage,
+  hrefTemplate,
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
+  const { Component, attrs } = useMemo(() => {
+    if (hrefTemplate) {
+      return {
+        Component: AnchorButton,
+        attrs: {
+          href: disabled ? undefined : hrefTemplate(targetPage),
+        } as ComponentProps<typeof AnchorButton>,
+      }
+    }
+
+    return {
+      Component: Button,
+      attrs: {
+        disabled,
+        value: targetPage,
+      } as ComponentProps<typeof Button>,
+    }
+  }, [targetPage, disabled, hrefTemplate])
+
   return (
-    <Button
-      aria-label={alt}
-      disabled={disabled}
-      value={targetPage}
-      square
-      size="s"
-      className="shr-rounded-s"
-    >
+    <Component {...attrs} square size="s" className="shr-rounded-s">
       <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
-    </Button>
+    </Component>
   )
 }
