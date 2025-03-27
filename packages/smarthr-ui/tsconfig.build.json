@@ -8,6 +8,9 @@
     "src/**/__tests__"
   ],
   "compilerOptions": {
+    "target": "es2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
     // stories.tsx で発生する下記のエラーを避けるため、tsconfig.json ではなくこちらで `"declaration": true` を指定
     // https://github.com/microsoft/TypeScript/issues/47663#issuecomment-1519138189
     "declaration": true,
