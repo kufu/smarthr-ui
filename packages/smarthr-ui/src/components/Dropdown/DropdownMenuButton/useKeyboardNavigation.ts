@@ -1,4 +1,4 @@
-import { type RefObject, useCallback, useEffect } from 'react'
+import { type RefObject, useEffect } from 'react'
 
 const matchesDisabledState = (element: Element): boolean =>
   element.matches(':disabled') || element.getAttribute('aria-disabled') === 'true'
@@ -19,28 +19,28 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
   const tabbableItems: Element[] = []
   let focusedIndex: number = -1
 
+  const pushTabbaleItem = (item: Element) => {
+    tabbableItems.push(item)
+
+    if (document.activeElement === item) {
+      focusedIndex = tabbableItems.length - 1
+    }
+  }
+
   Array.from(element.querySelectorAll('li > *')).forEach((item) => {
     if (hoveredItem === null && item.matches(':hover')) {
       hoveredItem = item
     }
 
     if (!isElementDisabled(item)) {
-      tabbableItems.push(item)
-
-      if (document.activeElement === item) {
-        focusedIndex = tabbableItems.length - 1
-      }
+      pushTabbaleItem(item)
     }
 
     // HINT: disabled理由のtooltipなどが存在する場合があるため、focus対象にする
     const tooltip = item.querySelector('.smarthr-ui-Tooltip[tabindex="0"]')
 
     if (tooltip) {
-      tabbableItems.push(tooltip)
-
-      if (document.activeElement === tooltip) {
-        focusedIndex = tabbableItems.length - 1
-      }
+      pushTabbaleItem(tooltip)
     }
   })
 
@@ -71,7 +71,7 @@ const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
         return
       }
 
-      let direction = 0
+      let direction: -1 | 0 | 1 = 0
 
       // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
       if (e.key === 'Tab') {
