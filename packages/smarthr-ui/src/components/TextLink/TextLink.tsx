@@ -10,7 +10,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaUpRightFromSquareIcon } from '../Icon'
 
@@ -21,7 +21,7 @@ type ElementProps<T extends ElementType> = Omit<
   (keyof Props<T> & ElementRefProps<T>) | 'color'
 >
 
-type Props<T extends ElementType> = {
+type Props<T extends ElementType> = VariantProps<typeof classNameGenerator> & {
   /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: MouseEvent) => void
   /** テキストの前に表示するアイコン */
@@ -43,6 +43,34 @@ const classNameGenerator = tv({
     prefixWrapper: 'shr-me-0.25 shr-align-middle',
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
   },
+  variants: {
+    size: {
+      XXS: {
+        anchor: 'shr-text-2xs',
+      },
+      XS: {
+        anchor: 'shr-text-xs',
+      },
+      S: {
+        anchor: 'shr-text-sm',
+      },
+      M: {
+        anchor: 'shr-text-base',
+      },
+      L: {
+        anchor: 'shr-text-lg',
+      },
+      XL: {
+        anchor: 'shr-text-xl',
+      },
+      XXL: {
+        anchor: 'shr-text-2xl',
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'M',
+  },
 })
 const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
 const prefixWrapperClassName = prefixWrapper()
@@ -60,6 +88,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       prefix,
       suffix,
       className,
+      size,
       ...others
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
@@ -87,7 +116,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
       [rel, target],
     )
-    const anchorClassName = useMemo(() => anchor({ className }), [className])
+    const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
 
     const actualOnClick = useMemo(() => {
       if (!onClick) {
