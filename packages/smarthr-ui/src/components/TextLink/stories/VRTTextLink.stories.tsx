@@ -20,12 +20,43 @@ import type { Meta, StoryObj } from '@storybook/react'
 const _cases: Array<
   Pick<ComponentProps<typeof TextLink>, 'href' | 'prefix' | 'suffix' | 'target'>
 > = [
-  { href: '#', prefix: undefined, suffix: undefined, target: '_blank' },
-  { href: '#', prefix: undefined, suffix: <FaUpRightFromSquareIcon />, target: undefined },
-  { href: undefined, prefix: <FaCircleQuestionIcon />, suffix: undefined, target: undefined },
-  { href: '#', prefix: <FaCircleQuestionIcon />, suffix: undefined, target: undefined },
-  { href: undefined, prefix: undefined, suffix: undefined, target: '_blank' },
-  { href: undefined, prefix: undefined, suffix: <FaUpRightFromSquareIcon />, target: undefined },
+  { href: '#', prefix: undefined, suffix: undefined, target: '_blank', size: undefined },
+  {
+    href: '#',
+    prefix: undefined,
+    suffix: <FaUpRightFromSquareIcon />,
+    target: undefined,
+    size: undefined,
+  },
+  {
+    href: undefined,
+    prefix: <FaCircleQuestionIcon />,
+    suffix: undefined,
+    target: undefined,
+    size: undefined,
+  },
+  {
+    href: '#',
+    prefix: <FaCircleQuestionIcon />,
+    suffix: undefined,
+    target: undefined,
+    size: undefined,
+  },
+  { href: undefined, prefix: undefined, suffix: undefined, target: '_blank', size: undefined },
+  {
+    href: undefined,
+    prefix: undefined,
+    suffix: <FaUpRightFromSquareIcon />,
+    target: undefined,
+    size: undefined,
+  },
+  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XXL' },
+  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XL' },
+  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'L' },
+  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'M' },
+  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'S' },
+  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XS' },
+  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XXS' },
 ]
 
 export default {
