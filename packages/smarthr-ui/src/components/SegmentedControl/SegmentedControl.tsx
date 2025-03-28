@@ -35,8 +35,8 @@ type Props = {
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
   size?: 'default' | 's'
-  /** コンポーネントに適用するクラス名 */
-  className?: string
+  /** 各ボタンを正方形にするかどうか */
+  isSquare?: boolean
 }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
@@ -69,6 +69,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   value,
   onClickOption,
   size = 'default',
+  isSquare,
   className,
   ...props
 }) => {
@@ -186,7 +187,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 }
 
 const SegmentedControlButton: FC<
-  Pick<Props, 'size' | 'value'> & {
+  Pick<Props, 'size' | 'isSquare' | 'value'> & {
     onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
     option: Props['options'][number]
     index: number
@@ -194,7 +195,7 @@ const SegmentedControlButton: FC<
     excludesSelected: boolean
     className: string
   }
-> = ({ onClick, size, value, option, index, isFocused, excludesSelected, className }) => {
+> = ({ onClick, size, value, option, index, isFocused, excludesSelected, isSquare, className }) => {
   const checked = value === option.value
   const tabIndex = useMemo(() => {
     if (isFocused) {
@@ -219,6 +220,7 @@ const SegmentedControlButton: FC<
       value={option.value}
       onClick={onClick}
       size={size}
+      square={isSquare}
       className={className}
     >
       {option.content}
