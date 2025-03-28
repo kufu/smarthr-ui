@@ -25,23 +25,23 @@ const iconOptions = (disabled: boolean): Option[] => [
 export default {
   title: 'Buttons（ボタン）/SegmentedControl/VRT',
   /* ペアワイズ法による網羅 */
-  // options.content options.disabled        value   size    isSquare
-  // icon            true                    null    default true
-  // text            false                   null    s       false
-  // text            true                    3       s       true
-  // text            false                   1       default false
-  // icon            false                   3       default false
-  // icon            true                    1       s       false
-  // icon            false                   1       s       true
+  // options.content options.disabled        value   size
+  // icon            true                    null    default
+  // text            false                   null    s
+  // text            true                    3       s
+  // text            false                   1       default
+  // icon            false                   3       default
+  // icon            true                    1       s
+  // icon            false                   1       s
   render: (args: any) => (
     <Stack>
-      <SegmentedControl options={iconOptions(true)} value={null} size="default" isSquare={true} />
-      <SegmentedControl options={textOptions(false)} value={null} size="s" isSquare={false} />
-      <SegmentedControl options={textOptions(true)} value="3" size="s" isSquare={true} />
-      <SegmentedControl options={textOptions(false)} value="1" size="default" isSquare={false} />
-      <SegmentedControl options={iconOptions(false)} value="3" size="default" isSquare={false} />
-      <SegmentedControl options={iconOptions(true)} value="1" size="s" isSquare={false} />
-      <SegmentedControl options={iconOptions(false)} value="1" size="s" isSquare={true} />
+      <SegmentedControl options={iconOptions(true)} value={null} size="default" />
+      <SegmentedControl options={textOptions(false)} value={null} size="s" />
+      <SegmentedControl options={textOptions(true)} value="3" size="s" />
+      <SegmentedControl options={textOptions(false)} value="1" size="default" />
+      <SegmentedControl options={iconOptions(false)} value="3" size="default" />
+      <SegmentedControl options={iconOptions(true)} value="1" size="s" />
+      <SegmentedControl options={iconOptions(false)} value="1" size="s" />
     </Stack>
   ),
   parameters: {

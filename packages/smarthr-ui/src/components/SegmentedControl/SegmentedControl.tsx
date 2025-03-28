@@ -35,10 +35,8 @@ type Props = {
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
   size?: 'default' | 's'
-  /** 各ボタンを正方形にするかどうか。アイコンボタンを使用する場合に指定します。 */
+  /** 各ボタンを正方形にするかどうか */
   isSquare?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
@@ -48,14 +46,21 @@ const classNameGenerator = tv({
     buttonGroup: '-shr-space-x-px',
     button: [
       'smarthr-ui-SegmentedControl-button',
-      'shr-m-0',
-      'shr-rounded-none',
+      'shr-m-0 shr-rounded-none',
       'focus-visible:shr-focus-indicator',
-      'first:shr-rounded-tl-m',
-      'first:shr-rounded-bl-m',
-      'last:shr-rounded-tr-m',
-      'last:shr-rounded-br-m',
+      'first:shr-rounded-tl-m first:shr-rounded-bl-m',
+      'last:shr-rounded-tr-m last:shr-rounded-br-m',
     ],
+  },
+  variants: {
+    size: {
+      default: {
+        button: '[&:has(>_span_>_.smarthr-ui-Icon:only-child)]:shr-p-0.75',
+      },
+      s: {
+        button: 'shr-p-0.5',
+      },
+    },
   },
 })
 
@@ -64,8 +69,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   value,
   onClickOption,
   size = 'default',
-  isSquare = false,
-  className = '',
+  isSquare,
+  className,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false)
@@ -76,9 +81,9 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     return {
       container: container({ className }),
       buttonGroup: buttonGroup(),
-      button: button(),
+      button: button({ size }),
     }
-  }, [className])
+  }, [className, size])
 
   const onFocus = useCallback(() => setIsFocused(true), [])
   const onBlur = useCallback(() => setIsFocused(false), [])
@@ -170,11 +175,10 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
             index={index}
             onClick={actualOnClickOption}
             size={size}
-            isSquare={isSquare}
             value={value}
             isFocused={isFocused}
             excludesSelected={excludesSelected}
-            buttonClassName={classNames.button}
+            className={classNames.button}
           />
         ))}
       </div>
@@ -189,19 +193,9 @@ const SegmentedControlButton: FC<
     index: number
     isFocused: boolean
     excludesSelected: boolean
-    buttonClassName: string
+    className: string
   }
-> = ({
-  onClick,
-  size,
-  isSquare,
-  value,
-  option,
-  index,
-  isFocused,
-  excludesSelected,
-  buttonClassName,
-}) => {
+> = ({ onClick, size, value, option, index, isFocused, excludesSelected, isSquare, className }) => {
   const checked = value === option.value
   const tabIndex = useMemo(() => {
     if (isFocused) {
@@ -227,7 +221,7 @@ const SegmentedControlButton: FC<
       onClick={onClick}
       size={size}
       square={isSquare}
-      className={buttonClassName}
+      className={className}
     >
       {option.content}
     </Button>
