@@ -1,15 +1,8 @@
 import { type RefObject, useEffect } from 'react'
 
-const matchesDisabledState = (element: Element): boolean =>
-  element.matches(':disabled') || element.getAttribute('aria-disabled') === 'true'
-
-const isElementDisabled = (element: Element): boolean => {
-  if (matchesDisabledState(element)) {
-    return true
-  }
-
-  return Array.from(element.querySelectorAll('*')).some(matchesDisabledState)
-}
+const DISABLED_SELECTOR = ':disabled,[aria-disabled="true"]'
+const isElementEnabled = (element: Element): boolean =>
+  !element.matches(DISABLED_SELECTOR) && !element.querySelector(DISABLED_SELECTOR)
 
 const KEY_UP_REGEX = /^(Arrow)?(Up|Left)$/
 const KEY_DOWN_REGEX = /^(Arrow)?(Down|Right)$/
@@ -32,7 +25,7 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
       hoveredItem = item
     }
 
-    if (!isElementDisabled(item)) {
+    if (isElementEnabled(item)) {
       pushTabbaleItem(item)
     }
 
@@ -75,6 +68,8 @@ const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
 
       // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
       if (e.key === 'Tab') {
+        // HINT: tbのデフォルトの挙動の場合のみ、preventDefaultが必要
+        e.preventDefault()
         direction = e.shiftKey ? -1 : 1
       } else if (KEY_UP_REGEX.test(e.key)) {
         direction = -1
@@ -83,15 +78,16 @@ const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
       }
 
       if (direction !== 0) {
-        e.preventDefault()
         moveFocus(containerRef.current, direction)
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown)
+    const eventKey = 'keydown'
+
+    document.addEventListener(eventKey, handleKeyDown)
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener(eventKey, handleKeyDown)
     }
   }, [containerRef])
 }
