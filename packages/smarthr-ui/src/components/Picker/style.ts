@@ -17,8 +17,9 @@ export const classNameGenerator = (componentType: string) =>
         'has-[[readonly]]:shr-border-[theme(backgroundColor.background)] has-[[readonly]]:shr-bg-background',
       ],
       inner: [
-        'shr-border-none shr-text-base shr-h-[theme(fontSize.base)] shr-tabular-nums',
-        'shr-bg-transparent shr-text-black shr-outline-none shr-outline-0 shr-p-[unset] shr-py-0.75 shr-min-w-[5em]',
+        'shr-border-none shr-outline-none shr-outline-0 shr-bg-transparent shr-text-black',
+        'shr-text-base shr-h-[theme(fontSize.base)] shr-tabular-nums',
+        'shr-p-[unset] shr-py-0.75 shr-min-w-[5em]',
         'disabled:shr-text-disabled',
       ],
     },
