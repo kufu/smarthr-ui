@@ -1,6 +1,7 @@
 import {
   type KeyboardEvent,
   type PropsWithChildren,
+  type ReactNode,
   type RefObject,
   memo,
   useCallback,
@@ -11,7 +12,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
@@ -25,13 +25,13 @@ export type Props<T> = {
   onDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
-  decorators?: DecoratorsType<DecoratorKeyTypes>
+  decorators?: {
+    destroyButtonIconAltSuffix?: (suffix: string, itemLabel: ReactNode) => ReactNode
+  }
 }
 
-const DECORATOR_DEFAULT_TEXTS = {
-  destroyButtonIconAlt: '削除',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+const defaultDestroyButtonIconAltSuffixDecorator = (suffix: ReactNode, itemLabel: ReactNode) =>
+  `${itemLabel}${suffix}`
 
 const classNameGenerator = tv({
   slots: {
@@ -170,7 +170,14 @@ const BaseDestroyButton = <T,>({
     [onClick],
   )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const decorated = useMemo(
+    () => ({
+      destroyButtonIconAltSuffix: (
+        decorators?.destroyButtonIconAltSuffix || defaultDestroyButtonIconAltSuffixDecorator
+      )('を削除', item.label),
+    }),
+    [decorators, item.label],
+  )
 
   return (
     <UnstyledButton
@@ -183,7 +190,7 @@ const BaseDestroyButton = <T,>({
     >
       <FaTimesCircleIcon
         color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-        alt={decorated.destroyButtonIconAlt}
+        alt={decorated.destroyButtonIconAltSuffix}
         className={iconStyle}
       />
     </UnstyledButton>
