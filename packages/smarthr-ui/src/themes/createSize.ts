@@ -80,12 +80,12 @@ export const defaultSize: CreatedSizeTheme = {
 }
 
 export const createSize = (userSize: SizeProperty = {}) => {
-  const space = userSize.space || {}
-  const XXS = space.defaultRem || defaultSpaceSize
+  const fontSize = userSize.htmlFontSize || defaultHtmlFontSize
+  const spaceSize = userSize.space?.defaultRem || defaultSpaceSize
   const created: CreatedSizeTheme = merge(
     {
-      pxToRem: (value: number) => pxToRem(value)(userSize.htmlFontSize || defaultHtmlFontSize),
-      space: getSpace(XXS),
+      pxToRem: (value: number) => pxToRem(value)(fontSize),
+      space: getSpace(spaceSize),
       font: { ...defaultFontSize },
       mediaQuery: { ...defaultMediaQuery },
     },
