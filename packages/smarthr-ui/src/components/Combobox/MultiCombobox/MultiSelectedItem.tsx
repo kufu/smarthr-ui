@@ -1,21 +1,23 @@
 import {
   type KeyboardEvent,
   type PropsWithChildren,
-  type ReactNode,
   type RefObject,
   memo,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import type { ComboboxItem } from '../types'
 
@@ -25,13 +27,13 @@ export type Props<T> = {
   onDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
-  decorators?: {
-    destroyButtonIconAltSuffix?: (suffix: string, itemLabel: ReactNode) => ReactNode
-  }
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const defaultDestroyButtonIconAltSuffixDecorator = (suffix: ReactNode, itemLabel: ReactNode) =>
-  `${itemLabel}${suffix}`
+const DECORATOR_DEFAULT_TEXTS = {
+  destroyButtonIconAltSuffix: 'を削除',
+} as const
+type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({
   slots: {
@@ -72,6 +74,9 @@ export function MultiSelectedItem<T>({
 }: Props<T>) {
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
+  const idPrefix = useId()
+  const labelId = `${idPrefix}-item-label`
+  const destroySuffixTextId = `${idPrefix}-item-destroy-button-suffix`
 
   const classNames = useMemo(() => {
     const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
@@ -86,12 +91,14 @@ export function MultiSelectedItem<T>({
 
   const body = (
     <Chip disabled={disabled} className={classNames.wrapper}>
-      <ItemLabel className={classNames.itemLabel} setNeedsTooltip={setNeedsTooltip}>
+      <ItemLabel id={labelId} className={classNames.itemLabel} setNeedsTooltip={setNeedsTooltip}>
         {item.label}
       </ItemLabel>
 
       {deletable && (
         <DestroyButton
+          labelId={labelId}
+          suffixTextId={destroySuffixTextId}
           item={item}
           onDelete={onDelete}
           disabled={disabled}
@@ -117,11 +124,12 @@ export function MultiSelectedItem<T>({
 
 const ItemLabel = memo<
   PropsWithChildren<{
+    id: string
     enableEllipsis?: boolean
     setNeedsTooltip: (flg: boolean) => void
     className: string
   }>
->(({ children, enableEllipsis, setNeedsTooltip, className }) => {
+>(({ children, id, enableEllipsis, setNeedsTooltip, className }) => {
   const labelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -133,7 +141,7 @@ const ItemLabel = memo<
   }, [enableEllipsis, setNeedsTooltip])
 
   return (
-    <span className={className} ref={labelRef}>
+    <span ref={labelRef} id={id} className={className}>
       {children}
     </span>
   )
@@ -143,6 +151,8 @@ const typedMemo: <T>(c: T) => T = memo
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
 const BaseDestroyButton = <T,>({
+  labelId,
+  suffixTextId,
   item,
   onDelete,
   disabled,
@@ -151,6 +161,8 @@ const BaseDestroyButton = <T,>({
   className,
   iconStyle,
 }: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'buttonRef' | 'decorators'> & {
+  labelId: string
+  suffixTextId: string
   className: string
   iconStyle: string
 }) => {
@@ -170,29 +182,22 @@ const BaseDestroyButton = <T,>({
     [onClick],
   )
 
-  const decorated = useMemo(
-    () => ({
-      destroyButtonIconAltSuffix: (
-        decorators?.destroyButtonIconAltSuffix || defaultDestroyButtonIconAltSuffixDecorator
-      )('を削除', item.label),
-    }),
-    [decorators, item.label],
-  )
+  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
   return (
     <UnstyledButton
+      ref={buttonRef}
       disabled={disabled}
       tabIndex={-1}
+      aria-labelledby={`${labelId} ${suffixTextId}`}
       onClick={onClick}
       onKeyDown={onKeyDown}
-      ref={buttonRef}
       className={className}
     >
-      <FaTimesCircleIcon
-        color={disabled ? 'TEXT_DISABLED' : 'inherit'}
-        alt={decorated.destroyButtonIconAltSuffix}
-        className={iconStyle}
-      />
+      <VisuallyHiddenText id={suffixTextId}>
+        {decorated.destroyButtonIconAltSuffix}
+      </VisuallyHiddenText>
+      <FaTimesCircleIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
     </UnstyledButton>
   )
 }
