@@ -2,7 +2,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within } from '@storybook/test'
 
-import { Stack } from '../../../Layout'
+import { Stack, Cluster } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 
 import { defaultItems, prefixes } from './SingleCombobox.stories'
@@ -124,9 +124,11 @@ export default {
   component: SingleCombobox,
   render: (args) => (
     <Stack align="flex-start" gap={2} className="shr-h-screen">
-      {_cases.map((props, i) => (
-        <SingleCombobox {...args} {...props} items={Object.values(defaultItems)} key={i} />
-      ))}
+      <Cluster>
+        {_cases.map((props, i) => (
+          <SingleCombobox {...args} {...props} items={Object.values(defaultItems)} key={i} />
+        ))}
+      </Cluster>
       <SingleCombobox
         {...args}
         name="default"
