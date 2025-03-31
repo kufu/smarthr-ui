@@ -20,14 +20,23 @@ import { defaultItems, prefixes } from './SingleCombobox.stories'
 const _cases: Array<Omit<Parameters<typeof SingleCombobox>[0], 'items'>> = [
   {
     disabled: false,
+    readOnly: false,
     error: false,
     width: undefined,
     prefix: undefined,
     selectedItem: defaultItems['option 1'],
   },
-  { disabled: false, error: true, width: '15em', prefix: prefixes['あり'], selectedItem: null },
+  {
+    disabled: false,
+    readOnly: false,
+    error: true,
+    width: '15em',
+    prefix: prefixes['あり'],
+    selectedItem: null,
+  },
   {
     disabled: true,
+    readOnly: false,
     error: true,
     width: '15em',
     prefix: undefined,
@@ -36,10 +45,60 @@ const _cases: Array<Omit<Parameters<typeof SingleCombobox>[0], 'items'>> = [
         'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）'
       ],
   },
-  { disabled: true, error: false, width: '15em', prefix: prefixes['あり'], selectedItem: null },
-  { disabled: true, error: true, width: undefined, prefix: undefined, selectedItem: null },
   {
     disabled: true,
+    readOnly: false,
+    error: false,
+    width: '15em',
+    prefix: prefixes['あり'],
+    selectedItem: null,
+  },
+  {
+    disabled: true,
+    readOnly: false,
+    error: true,
+    width: undefined,
+    prefix: undefined,
+    selectedItem: null,
+  },
+  {
+    disabled: true,
+    readOnly: false,
+    error: false,
+    width: undefined,
+    prefix: prefixes['あり'],
+    selectedItem: defaultItems['アイテムのラベルがReactNodeの場合'],
+  },
+  {
+    disabled: false,
+    readOnly: true,
+    error: true,
+    width: '15em',
+    prefix: undefined,
+    selectedItem:
+      defaultItems[
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）'
+      ],
+  },
+  {
+    disabled: false,
+    readOnly: true,
+    error: false,
+    width: '15em',
+    prefix: prefixes['あり'],
+    selectedItem: null,
+  },
+  {
+    disabled: false,
+    readOnly: true,
+    error: true,
+    width: undefined,
+    prefix: undefined,
+    selectedItem: null,
+  },
+  {
+    disabled: false,
+    readOnly: true,
     error: false,
     width: undefined,
     prefix: prefixes['あり'],

@@ -161,6 +161,13 @@ export const Disabled: StoryObj<typeof SingleCombobox> = {
   },
 }
 
+export const ReadOnly: StoryObj<typeof SingleCombobox> = {
+  name: 'readOnly',
+  args: {
+    readOnly: true,
+  },
+}
+
 export const Error: StoryObj<typeof SingleCombobox> = {
   name: 'error',
   args: {
