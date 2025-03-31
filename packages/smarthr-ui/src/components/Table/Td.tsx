@@ -15,7 +15,7 @@ export type Props = PropsWithChildren<
 type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
 export const Td = memo<Props & ElementProps>(
-  ({ align, vAlign, nullable, fixed = false, contentWidth, className, style, ...props }) => {
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...props }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ align, vAlign, nullable, fixed, className })
 
@@ -23,7 +23,7 @@ export const Td = memo<Props & ElementProps>(
         return base
       }
 
-      const shadow = reelShadowClassNameGenerator({ direction: 'right' })
+      const shadow = reelShadowClassNameGenerator({ direction: fixed })
 
       return `${base} ${shadow}`
     }, [align, className, fixed, nullable, vAlign])
@@ -73,9 +73,15 @@ const classNameGenerator = tv({
       true: "empty:after:shr-content-['-----']",
     },
     fixed: {
-      true: [
-        'fixedElement',
-        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:shr-bg-white [&.fixed]:after:shr-opacity-100',
+      left: [
+        /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
+        '[&.fixed]:shr-sticky [&.fixed]:after:shr-opacity-100 [&.fixed]:shr-bg-white',
+        'fixedLeft [&.fixed]:shr-left-0',
+      ],
+      right: [
+        /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
+        '[&.fixed]:shr-sticky [&.fixed]:after:shr-opacity-100 [&.fixed]:shr-bg-white',
+        'fixedRight [&.fixed]:shr-right-0',
       ],
     },
   },
