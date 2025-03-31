@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "@types/node": "^20.17.27",
+    "@types/node": "^20.17.28",
     "@types/react": "^18.3.20",
     "@types/react-dom": "^19.0.4",
     "postcss": "^8.5.3",
