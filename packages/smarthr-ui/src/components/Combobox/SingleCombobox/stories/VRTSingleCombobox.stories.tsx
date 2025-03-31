@@ -109,12 +109,14 @@ const _cases: Array<Omit<Parameters<typeof SingleCombobox>[0], 'items'>> = [
 const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const canvas = within(canvasElement)
   const textboxes = await canvas.findAllByRole('combobox')
-  await textboxes[textboxes.length - 1].focus()
+
+  await textboxes[textboxes.length - 1].click()
+
   const body = canvasElement.ownerDocument.body
   const option = await within(body).findByText('option 1')
   await userEvent.hover(option)
-  const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
-  await userEvent.click(helpMessage[0]) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
 }
 
 export default {
