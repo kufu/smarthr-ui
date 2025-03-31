@@ -45,7 +45,7 @@ const appLauncher = tv({
       '[&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-shrink-0 [&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-align-bottom',
     ],
     sideNavHeading: ['shr-py-0.75 shr-px-1 shr-text-xs shr-text-black'],
-    help: ['smarthr-ui-AppLauncher-help', 'shr-mt-auto shr-px-1'],
+    help: ['smarthr-ui-AppLauncher-help', 'shr-mt-auto shr-px-1 shr-text-xs'],
     main: ['smarthr-ui-AppLauncher-main', 'shr-grid shr-min-h-0'],
     mainInner: ['shr-grid shr-grid-rows-[auto_1fr] shr-min-h-0'],
     contentHead: [
@@ -176,7 +176,6 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             <TextLink
               href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
               target="_blank"
-              size="XS"
             >
               <Translate>{translate('Launcher/helpText')}</Translate>
             </TextLink>

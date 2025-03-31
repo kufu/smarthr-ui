@@ -45,31 +45,13 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      XXS: {
-        anchor: 'shr-text-2xs',
-      },
-      XS: {
-        anchor: 'shr-text-xs',
-      },
       S: {
         anchor: 'shr-text-sm',
       },
       M: {
         anchor: 'shr-text-base',
       },
-      L: {
-        anchor: 'shr-text-lg',
-      },
-      XL: {
-        anchor: 'shr-text-xl',
-      },
-      XXL: {
-        anchor: 'shr-text-2xl',
-      },
     },
-  },
-  defaultVariants: {
-    size: 'M',
   },
 })
 const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()

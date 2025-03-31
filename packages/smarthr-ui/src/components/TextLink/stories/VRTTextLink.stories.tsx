@@ -9,54 +9,59 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 /**
  * $ pict text-link.pict
- * href    prefix  suffix  targetBlank
- * あり    なし    なし    あり
- * あり    なし    あり    なし
- * なし    あり    なし    なし
- * あり    あり    なし    なし
- * なし    なし    なし    あり
- * なし    なし    あり    なし
+ * href	size	prefix	suffix	targetBlank
+ * undefined	'S'	Icon	undefined	undefined
+ * '#'	undefined	undefined	Icon	undefined
+ * '#'	'M'	Icon	undefined	undefined
+ * undefined	undefined	Icon	undefined	undefined
+ * '#'	'S'	undefined	undefined	_blank
+ * undefined	undefined	undefined	undefined	_blank
+ * undefined	'S'	undefined	Icon	undefined
+ * undefined	'M'	undefined	Icon	undefined
+ * undefined	'M'	undefined	undefined	_blank
  */
 const _cases: Array<
   Pick<ComponentProps<typeof TextLink>, 'href' | 'prefix' | 'suffix' | 'target'>
 > = [
-  { href: '#', prefix: undefined, suffix: undefined, target: '_blank', size: undefined },
-  {
-    href: '#',
-    prefix: undefined,
-    suffix: <FaUpRightFromSquareIcon />,
-    target: undefined,
-    size: undefined,
-  },
   {
     href: undefined,
+    size: 'S',
     prefix: <FaCircleQuestionIcon />,
     suffix: undefined,
     target: undefined,
-    size: undefined,
   },
   {
     href: '#',
-    prefix: <FaCircleQuestionIcon />,
-    suffix: undefined,
-    target: undefined,
     size: undefined,
-  },
-  { href: undefined, prefix: undefined, suffix: undefined, target: '_blank', size: undefined },
-  {
-    href: undefined,
     prefix: undefined,
     suffix: <FaUpRightFromSquareIcon />,
     target: undefined,
-    size: undefined,
   },
-  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XXL' },
-  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XL' },
-  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'L' },
-  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'M' },
-  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'S' },
-  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XS' },
-  { href: '#', prefix: undefined, suffix: undefined, target: undefined, size: 'XXS' },
+  { href: '#', size: 'M', prefix: <FaCircleQuestionIcon />, suffix: undefined, target: undefined },
+  {
+    href: undefined,
+    size: undefined,
+    prefix: <FaCircleQuestionIcon />,
+    suffix: undefined,
+    target: undefined,
+  },
+  { href: '#', size: 'S', prefix: undefined, suffix: undefined, target: '_blank' },
+  { href: undefined, size: undefined, prefix: undefined, suffix: undefined, target: '_blank' },
+  {
+    href: undefined,
+    size: 'S',
+    prefix: undefined,
+    suffix: <FaUpRightFromSquareIcon />,
+    target: undefined,
+  },
+  {
+    href: undefined,
+    size: 'M',
+    prefix: undefined,
+    suffix: <FaUpRightFromSquareIcon />,
+    target: undefined,
+  },
+  { href: undefined, size: 'M', prefix: undefined, suffix: undefined, target: '_blank' },
 ]
 
 export default {
