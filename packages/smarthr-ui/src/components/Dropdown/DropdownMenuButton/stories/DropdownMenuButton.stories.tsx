@@ -24,6 +24,9 @@ export default {
       <RemoteDialogTrigger targetId="remoteDialog" onClick={action('open-remote-dialog')}>
         <Button>操作3</Button>
       </RemoteDialogTrigger>
+      <Button onClick={action('action4')} disabled={true} disabledDetail={{ message: 'disabled.' }}>
+        操作4
+      </Button>
     </DropdownMenuButton>
   ),
   argTypes: {
