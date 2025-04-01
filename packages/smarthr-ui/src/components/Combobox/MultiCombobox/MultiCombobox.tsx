@@ -2,6 +2,7 @@
 
 import {
   type ChangeEvent,
+  type ComponentProps,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
   type MouseEvent,
@@ -65,10 +66,10 @@ type Props<T> = BaseProps<T> & {
   /**
    * コンポーネント内のテキストを変更する関数/
    */
-  decorators?: DecoratorsType<'noResultText'> & {
-    destroyButtonIconAlt?: (text: string) => string
-    selectedListAriaLabel?: (text: string) => string
-  }
+  decorators?: DecoratorsType<'noResultText'> &
+    Exclude<ComponentProps<typeof MultiSelectedItem>['decorators'], undefined> & {
+      selectedListAriaLabel?: (text: string) => string
+    }
   /**
    * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
    */
