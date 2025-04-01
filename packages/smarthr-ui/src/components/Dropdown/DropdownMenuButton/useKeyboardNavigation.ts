@@ -20,7 +20,7 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
     }
   }
 
-  Array.from(element.querySelectorAll('li > *')).forEach((item) => {
+  element.querySelectorAll('li > *').forEach((item) => {
     if (hoveredItem === null && item.matches(':hover')) {
       hoveredItem = item
     }
