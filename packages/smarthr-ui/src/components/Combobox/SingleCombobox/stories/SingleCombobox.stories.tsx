@@ -2,6 +2,7 @@
 import { useArgs } from '@storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
+import { backgroundColor } from '../../../../themes'
 
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
@@ -88,6 +89,9 @@ export default {
   },
   argTypes: {
     items: { control: 'object' },
+    readOnly: {
+      control: { type: 'boolean' },
+    },
     selectedItem: {
       control: { type: 'select' },
       options: Object.keys(defaultItems),
@@ -165,6 +169,9 @@ export const ReadOnly: StoryObj<typeof SingleCombobox> = {
   name: 'readOnly',
   args: {
     readOnly: true,
+  },
+  parameters: {
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }
 

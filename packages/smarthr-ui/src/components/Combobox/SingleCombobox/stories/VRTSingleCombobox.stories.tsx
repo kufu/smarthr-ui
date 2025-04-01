@@ -1,6 +1,7 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
 import { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within } from '@storybook/test'
+import { backgroundColor } from '../../../../themes'
 
 import { Stack, Cluster } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
@@ -146,11 +147,16 @@ export default {
   tags: ['!autodocs', 'skip-test-runner'],
 } as Meta<typeof SingleCombobox>
 
-export const VRT: StoryObj<typeof SingleCombobox> = {}
+export const VRT: StoryObj<typeof SingleCombobox> = {
+  parameters: {
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
+  },
+}
 
 export const VRTForcedColors: StoryObj<typeof SingleCombobox> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }
