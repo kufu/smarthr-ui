@@ -12,22 +12,19 @@ export const useReelCells = () => {
     }
 
     const handleScroll = () => {
-      const stickyCells = currentRef.querySelectorAll('.fixedElement')
+      const stickyCells = currentRef.querySelectorAll('.fixedLeft,.fixedRight')
 
       if (!stickyCells) {
         return
       }
 
-      const scrollLeft = currentRef.scrollLeft
-      const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
-      const shouldFix = maxScrollLeft > 0 && scrollLeft < maxScrollLeft
-      const settableShowShadow = shouldFix
-        ? scrollLeft > 0
-        : maxScrollLeft !== 0 || scrollLeft !== 0
+      const leftFix = currentRef.scrollLeft > 0
+      const rightFix = currentRef.scrollLeft < currentRef.scrollWidth - currentRef.clientWidth - 1
 
       stickyCells.forEach((cell) => {
-        cell.classList.toggle('fixed', shouldFix)
-        setShowShadow(settableShowShadow)
+        setShowShadow(
+          cell.classList.toggle('fixed', cell.matches('.fixedLeft') ? leftFix : rightFix),
+        )
       })
     }
 
@@ -42,7 +39,7 @@ export const useReelCells = () => {
       currentRef.removeEventListener('scroll', handleScroll)
       observer.unobserve(currentRef)
     }
-  }, [tableWrapperRef, setShowShadow])
+  }, [])
 
   return { tableWrapperRef, showShadow }
 }
