@@ -16,7 +16,7 @@ describe('SingleCombobox', () => {
 
   const combobox = () => screen.getByRole('combobox', { name: 'コンボボックス' })
   const listbox = () => screen.queryByRole('listbox')
-  const deleteButtons = () => screen.getAllByRole('button', { name: '削除' })
+  const deleteButtons = () => screen.getAllByRole('button', { name: /を削除$/ })
 
   const template = (args: Partial<ComponentProps<typeof MultiCombobox>>) => (
     <form>
