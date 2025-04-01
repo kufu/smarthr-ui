@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
+const TR_SELECTOR = 'table tr'
+const FIXED_LEFT_SELECTOR = '.fixedLeft'
+const FIXED_RIGHT_SELECTOR = '.fixedRight'
+
+const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR}  ${FIXED_RIGHT_SELECTOR}`
+
 export const useReelCells = () => {
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const [showShadow, setShowShadow] = useState(false)
@@ -11,25 +17,25 @@ export const useReelCells = () => {
       return
     }
 
-    const cellCleans: Array<() => void> = []
+    let cellCleans: Array<() => void> = []
+    const allClean = () => {
+      cellCleans.forEach((clean) => clean())
+      cellCleans = []
+    }
 
     const handleScroll = () => {
-      const leftCells = currentRef.querySelectorAll<HTMLElement>('.fixedLeft')
-      const tempRightCells = currentRef.querySelectorAll<HTMLElement>('.fixedRight')
-
-      if (!leftCells && !tempRightCells) {
+      if (!currentRef.querySelector(HAS_FIXED_SELECTOR)) {
         return
       }
 
-      const rightCells = Array.from(tempRightCells).reverse()
-
       let isVisible = false
-
       const commonAction = (
         cells: HTMLElement[] | NodeListOf<HTMLElement>,
         direction: 'left' | 'right',
         visible: boolean,
       ) => {
+        allClean()
+
         const action = () => {
           let position = 0
 
@@ -37,7 +43,7 @@ export const useReelCells = () => {
             if (cell.classList.toggle('fixed', visible)) {
               isVisible = true
               cell.style[direction] = `${position}px`
-              cell.style.zIndex = index.toString()
+              cell.style.zIndex = (index + 1).toString()
 
               position += cell.offsetWidth
             }
@@ -45,7 +51,6 @@ export const useReelCells = () => {
         }
 
         action()
-
         const observer = new ResizeObserver(action)
 
         cells.forEach((cell) => {
@@ -59,17 +64,24 @@ export const useReelCells = () => {
         })
       }
 
-      if (leftCells.length > 0) {
-        commonAction(leftCells, 'left' as const, currentRef.scrollLeft > 0)
-      }
+      currentRef.querySelectorAll<HTMLElement>(TR_SELECTOR).forEach((tr) => {
+        const leftCells = tr.querySelectorAll<HTMLElement>(FIXED_LEFT_SELECTOR)
+        const rightCells = Array.from(
+          tr.querySelectorAll<HTMLElement>(FIXED_RIGHT_SELECTOR),
+        ).reverse()
 
-      if (rightCells.length > 0) {
-        commonAction(
-          rightCells,
-          'right' as const,
-          currentRef.scrollLeft < currentRef.scrollWidth - currentRef.clientWidth - 1,
-        )
-      }
+        if (leftCells.length > 0) {
+          commonAction(leftCells, 'left' as const, currentRef.scrollLeft > 0)
+        }
+
+        if (rightCells.length > 0) {
+          commonAction(
+            rightCells,
+            'right' as const,
+            currentRef.scrollLeft < currentRef.scrollWidth - currentRef.clientWidth - 1,
+          )
+        }
+      })
 
       setShowShadow(isVisible)
     }
@@ -84,7 +96,7 @@ export const useReelCells = () => {
     return () => {
       currentRef.removeEventListener('scroll', handleScroll)
       observer.unobserve(currentRef)
-      cellCleans.forEach((action) => action())
+      allClean()
     }
   }, [])
 
