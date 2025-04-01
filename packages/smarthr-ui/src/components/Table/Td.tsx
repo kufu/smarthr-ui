@@ -76,12 +76,12 @@ const classNameGenerator = tv({
       left: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
         '[&.fixed]:shr-sticky [&.fixed]:after:shr-opacity-100 [&.fixed]:shr-bg-white',
-        'fixedLeft [&.fixed]:shr-left-0',
+        'fixedLeft',
       ],
       right: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
         '[&.fixed]:shr-sticky [&.fixed]:after:shr-opacity-100 [&.fixed]:shr-bg-white',
-        'fixedRight [&.fixed]:shr-right-0',
+        'fixedRight',
       ],
     },
   },
