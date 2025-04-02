@@ -4,7 +4,7 @@ const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '.fixedLeft'
 const FIXED_RIGHT_SELECTOR = '.fixedRight'
 
-const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR}  ${FIXED_RIGHT_SELECTOR}`
+const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
 export const useReelCells = () => {
   const tableWrapperRef = useRef<HTMLDivElement>(null)
