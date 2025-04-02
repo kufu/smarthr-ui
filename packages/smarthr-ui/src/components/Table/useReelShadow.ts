@@ -12,7 +12,7 @@ export const reelShadowClassNameGenerator = tv({
       false: 'after:shr-opacity-0',
     },
     direction: {
-      left: 'after:shr-left-0 after:shr-bg-gradient-to-r',
+      left: 'after:shr-left-full after:shr-bg-gradient-to-r',
       right: 'after:shr-right-full after:shr-bg-gradient-to-l',
     },
   },
