@@ -123,13 +123,15 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       const color = bgColor
         ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
         : undefined
+      const maxWidth = typeof width === 'number' ? `${width}px` : width
 
       return {
         borderColor: color,
         backgroundColor: color,
-        width: typeof width === 'number' ? `${width}px` : width,
+        maxWidth,
+        width: maxWidth ? '100%' : undefined,
       }
-    }, [bgColor, width])
+    }, [width, bgColor])
 
     const innerClassNames = useMemo(() => {
       const { input, affix } = innerClassNameGenerator()

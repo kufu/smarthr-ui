@@ -64,10 +64,15 @@ const classNameGenerator = tv({
       bottom: 'shr-align-bottom',
     },
     fixed: {
-      true: [
+      left: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
-        'fixedElement',
-        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:after:shr-opacity-100',
+        '[&.fixed]:shr-sticky [&.fixed]:after:shr-opacity-100',
+        'fixedLeft [&.fixed]:shr-left-0',
+      ],
+      right: [
+        /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
+        '[&.fixed]:shr-sticky [&.fixed]:after:shr-opacity-100',
+        'fixedRight [&.fixed]:shr-right-0',
       ],
     },
   },
@@ -96,7 +101,7 @@ export const Th = memo<Props & ElementProps>(
     decorators,
     align,
     vAlign,
-    fixed = false,
+    fixed,
     contentWidth,
     className,
     style,
@@ -109,7 +114,7 @@ export const Th = memo<Props & ElementProps>(
         return base
       }
 
-      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: 'right' })
+      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: fixed })
 
       return `${base} ${shadow}`
     }, [align, className, fixed, vAlign])
