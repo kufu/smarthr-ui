@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [68.0.0](https://github.com/kufu/smarthr-ui/compare/v67.0.0...v68.0.0) (2025-04-01)
 
-
 ### ⚠ BREAKING CHANGES
 
 * Tableのカラム固定を左右で行えるようにする SHRUI-1005 (#5507)
@@ -14,10 +13,12 @@ All notable changes to this project will be documented in this file. See [standa
 * MultiComboboxの選択済みアイテムの削除ボタンのaltを詳細化 SHRUI-1191 ([#5504](https://github.com/kufu/smarthr-ui/issues/5504)) ([b974c14](https://github.com/kufu/smarthr-ui/commit/b974c146c646c3146c442dd423bb86a6244f9510))
 * Inputコンポーネントのwidth属性をwidth & maxWidthに変更 SHRUI-693 ([#5501](https://github.com/kufu/smarthr-ui/issues/5501)) ([43bc032](https://github.com/kufu/smarthr-ui/commit/43bc032ef011a638cf4d611535012870a813001a))
 * RequiredLabelを作成 SHRUI-1230 ([#5497](https://github.com/kufu/smarthr-ui/issues/5497)) ([48467c2](https://github.com/kufu/smarthr-ui/commit/48467c22afb2402f6be2160dded4291aee03bd2b))
+* **SmartHRAILogo**: SmartHRAILogoを追加 ([#5444](https://github.com/kufu/smarthr-ui/pull/5444)) ([68b6c5e](https://github.com/kufu/smarthr-ui/commit/68b6c5e30646dfcb82d247209f56d0bc46d03439))
 
 ### Bug Fixes
 
 * DropdownMenuButtonのtab,arrow-keyの挙動を揃える SHRUI-727 ([#5495](https://github.com/kufu/smarthr-ui/issues/5495)) ([02739e6](https://github.com/kufu/smarthr-ui/commit/02739e62556277c4fa204a2468e93ba0f72b1d5b))
+* **SegmentedControl**: isSquare を指定しなくても使えるように修正 ([#5478](https://github.com/kufu/smarthr-ui/pull/5478))([0a71107](https://github.com/kufu/smarthr-ui/commit/0a71107c270ddb2138e7f111f2e7b909d6e1fb36))
 
 ## [67.0.0](https://github.com/kufu/smarthr-ui/compare/v66.1.0...v67.0.0) (2025-03-25)
 
