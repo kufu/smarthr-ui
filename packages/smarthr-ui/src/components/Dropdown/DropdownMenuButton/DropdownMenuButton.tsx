@@ -103,8 +103,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         onlyIconTrigger={onlyIconTrigger}
         triggerIcon={triggerIcon}
         triggerSize={triggerSize}
-        wrapperStyle={classNames.triggerWrapper}
-        buttonStyle={classNames.triggerButton}
+        classNames={classNames}
       />
       <DropdownContent>
         <menu ref={containerRef} className={classNames.actionList}>
@@ -117,21 +116,26 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
 const MemoizedTriggerButton = memo<
   Pick<Props, 'onlyIconTrigger' | 'triggerSize' | 'label' | 'triggerIcon'> &
-    ElementProps & { wrapperStyle: string; buttonStyle: string }
->(({ onlyIconTrigger, triggerSize, label, triggerIcon, wrapperStyle, buttonStyle, ...rest }) => {
+    ElementProps & {
+      classNames: {
+        triggerWrapper: string
+        triggerButton: string
+      }
+    }
+>(({ onlyIconTrigger, triggerSize, label, triggerIcon, classNames, ...rest }) => {
   const tooltip = useMemo(
     () => ({ show: onlyIconTrigger, message: label }),
     [label, onlyIconTrigger],
   )
 
   return (
-    <DropdownTrigger className={wrapperStyle} tooltip={tooltip}>
+    <DropdownTrigger className={classNames.triggerWrapper} tooltip={tooltip}>
       <Button
         {...rest}
         suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
         size={triggerSize}
         square={onlyIconTrigger}
-        className={buttonStyle}
+        className={classNames.triggerButton}
       >
         <TriggerLabelText
           label={label}
