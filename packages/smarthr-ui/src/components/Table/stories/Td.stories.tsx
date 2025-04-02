@@ -87,11 +87,17 @@ export const Fixed: StoryObj<typeof Td> = {
             <Td {...args} fixed="left">
               <Text whiteSpace="nowrap">fixed: left</Text>
             </Td>
+            <Td {...args} fixed="left">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Td>
             {[...Array(20)].map((_, i) => (
               <Td {...args} key={i}>
                 <Text whiteSpace="nowrap">表データ{i + 1}</Text>
               </Td>
             ))}
+            <Td {...args} fixed="right">
+              <Text whiteSpace="nowrap">fixed: right</Text>
+            </Td>
             <Td {...args} fixed="right">
               <Text whiteSpace="nowrap">fixed: right</Text>
             </Td>
