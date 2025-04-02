@@ -12,8 +12,10 @@ import {
   cloneElement,
   isValidElement,
   memo,
+  useCallback,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
@@ -123,18 +125,28 @@ const MemoizedTriggerButton = memo<
       }
     }
 >(({ onlyIconTrigger, triggerSize, label, triggerIcon, classNames, ...rest }) => {
+  // HINT: ドロップダウンを初期レンダリングで開くことはないため、falseで良い
+  const [expanded, setExpanded] = useState(false)
+
   const tooltip = useMemo(
     () => ({ show: onlyIconTrigger, message: label }),
     [label, onlyIconTrigger],
   )
 
+  const onClick = useCallback(() => {
+    setExpanded((current) => !current)
+  }, [])
+
   return (
     <DropdownTrigger className={classNames.triggerWrapper} tooltip={tooltip}>
       <Button
         {...rest}
-        suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
+        suffix={
+          !onlyIconTrigger && <FaCaretDownIcon alt={`候補を${expanded ? '閉じる' : '開く'}`} />
+        }
         size={triggerSize}
         square={onlyIconTrigger}
+        onClick={onClick}
         className={classNames.triggerButton}
       >
         <TriggerLabelText
@@ -157,10 +169,6 @@ const TriggerLabelText = memo<Pick<Props, 'label' | 'onlyIconTrigger' | 'trigger
 
     return <Icon alt={typeof label === 'string' ? label : innerText(label)} />
   },
-)
-
-const ButtonSuffixIcon = memo<Pick<Props, 'onlyIconTrigger'>>(
-  ({ onlyIconTrigger }) => !onlyIconTrigger && <FaCaretDownIcon alt="候補を開く" />,
 )
 
 export const renderButtonList = (children: Actions) =>
