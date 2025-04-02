@@ -61,6 +61,12 @@ All notable changes to this project will be documented in this file. See [standa
 * package.jsonをexportsに含める ([#5462](https://github.com/kufu/smarthr-ui/issues/5462)) ([57744d0](https://github.com/kufu/smarthr-ui/commit/57744d0cb3fc964538954af5cb83c4dc834227cc))
 * **StepFormDialog, useDialogPortal, SectioningContent:** RSC対応 ([#5457](https://github.com/kufu/smarthr-ui/issues/5457)) ([2ad3fb3](https://github.com/kufu/smarthr-ui/commit/2ad3fb366da1772cc98f634533c9affdc5168d96))
 
+## [66.1.1](https://github.com/kufu/smarthr-ui/compare/v66.1.0...v66.1.1) (2025-04-02)
+
+### Bug Fixes
+
+* TextareaのmaxLettersを指定した場合の処理がエラーになるバグを修正する ([#5513](https://github.com/kufu/smarthr-ui/issues/5513)) ([e8c00f636956d26e9fc9d28d1175e2f84202c2b2](https://github.com/kufu/smarthr-ui/pull/5513/commits/e8c00f636956d26e9fc9d28d1175e2f84202c2b2))
+
 ## [66.0.0](https://github.com/kufu/smarthr-ui/compare/v65.3.0...v66.0.0) (2025-03-11)
 
 
