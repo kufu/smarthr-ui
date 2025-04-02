@@ -57,20 +57,12 @@ export const SideNavItemButton: FC<Props & ElementProps> = ({
   onClick,
   children,
 }) => {
-  const handleClick = useMemo(
-    () =>
-      onClick
-        ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)
-        : undefined,
-    [onClick],
-  )
-
   const classNames = useMemo(() => {
     const { wrapper, button, buttonInner } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
-      button: button({ size }),
+      button: button({ size: size ?? 'default' }),
       buttonInner: buttonInner(),
     }
   }, [size])

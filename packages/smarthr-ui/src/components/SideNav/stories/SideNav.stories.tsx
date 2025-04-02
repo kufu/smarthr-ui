@@ -1,11 +1,10 @@
 /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { action } from '@storybook/addon-actions'
-import React from 'react'
 
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { SideNav, SideNavItemButtonProps } from '../SideNav'
-import { SideNavItemButton, SideNavSizeType } from '../SideNavItemButton'
+import { SideNav, type SideNavItemButtonProps } from '../SideNav'
+import { SideNavItemButton, type SideNavSizeType } from '../SideNavItemButton'
 
 import type { Meta, StoryObj } from '@storybook/react'
 

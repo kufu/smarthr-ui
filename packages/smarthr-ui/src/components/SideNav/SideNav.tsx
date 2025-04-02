@@ -1,4 +1,5 @@
 import { type ComponentProps, type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
+import { Children, cloneElement } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
@@ -19,6 +20,8 @@ type Props = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
+  /** 子要素 */
+  children?: React.ReactNode
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
 
@@ -44,35 +47,40 @@ export const SideNav: FC<Props & ElementProps> = ({
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
+  const clonedChildren = useMemo(() => {
+    if (!children) return null
+    return Children.map(children, (child) => {
+      if (
+        child &&
+        typeof child === 'object' &&
+        'type' in child &&
+        child.type === SideNavItemButton
+      ) {
+        return cloneElement(child as React.ReactElement, {
+          // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
+          size,
+          onClick: actualOnClick,
+        })
+      }
+      return child
+    })
+  }, [children, size, actualOnClick])
+
   return (
     <ul {...props} className={actualClassName}>
-      {items &&
-        items.map((item) => (
-          <SideNavItemButton
-            id={item.id}
-            title={item.title}
-            prefix={item.prefix}
-            isSelected={item.isSelected}
-            size={size}
-            key={item.id}
-            onClick={onClick}
-          />
-        ))}
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          const childProps = child.props as ComponentPropsWithoutRef<typeof SideNavItemButton>
-
-          return React.cloneElement(
-            child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
-            {
-              // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
-              size,
-              ...(childProps.onClick ? {} : { onClick }),
-            },
-          )
-        }
-        return child
-      })}
+      {items
+        ? items.map((item) => (
+            <SideNavItemButton
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              prefix={item.prefix}
+              isSelected={item.isSelected}
+              size={size}
+              onClick={actualOnClick}
+            />
+          ))
+        : clonedChildren}
     </ul>
   )
 }

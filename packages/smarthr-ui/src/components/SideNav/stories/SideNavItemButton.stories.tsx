@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions'
-import React from 'react'
 
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
@@ -75,8 +74,8 @@ export const Size: StoryObj<typeof SideNavItemButton> = {
 export const OnClick: StoryObj<typeof SideNavItemButton> = {
   name: 'onClick',
   args: {
-    onClick: (_, id) => {
-      action('clicked')(id)
+    onClick: (e) => {
+      action('clicked')(e.currentTarget.value)
     },
   },
 }
