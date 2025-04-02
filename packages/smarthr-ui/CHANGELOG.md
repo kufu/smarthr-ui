@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [68.0.1](https://github.com/kufu/smarthr-ui/compare/v68.0.0...v68.0.1) (2025-04-02)
+
+
+### Bug Fixes
+
+* TextareaのmaxLettersを指定した場合の処理がエラーになるバグを修正する ([#5513](https://github.com/kufu/smarthr-ui/issues/5513)) ([83f12a6](https://github.com/kufu/smarthr-ui/commit/83f12a6442730ee6478023a6f95fb75cbb7536bf))
+
 ## [68.0.0](https://github.com/kufu/smarthr-ui/compare/v67.0.0...v68.0.0) (2025-04-01)
 
 ### ⚠ BREAKING CHANGES
