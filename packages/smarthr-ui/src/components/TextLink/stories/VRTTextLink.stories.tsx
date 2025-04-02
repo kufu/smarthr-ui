@@ -9,16 +9,16 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 /**
  * $ pict text-link.pict
- * href	size	prefix	suffix	targetBlank
- * undefined	'S'	Icon	undefined	undefined
- * '#'	undefined	undefined	Icon	undefined
- * '#'	'M'	Icon	undefined	undefined
- * undefined	undefined	Icon	undefined	undefined
- * '#'	'S'	undefined	undefined	_blank
- * undefined	undefined	undefined	undefined	_blank
- * undefined	'S'	undefined	Icon	undefined
- * undefined	'M'	undefined	Icon	undefined
- * undefined	'M'	undefined	undefined	_blank
+ * href      size      prefix    suffix    targetBlank
+ * undefined 'S'       Icon      undefined undefined
+ * '#'       undefined undefined Icon      undefined
+ * '#'       'M'       Icon      undefined undefined
+ * undefined undefined Icon      undefined undefined
+ * '#'       'S'       undefined undefined _blank
+ * undefined undefined undefined undefined _blank
+ * undefined 'S'       undefined Icon      undefined
+ * undefined 'M'       undefined Icon      undefined
+ * undefined 'M'       undefined undefined _blank
  */
 const _cases: Array<
   Pick<ComponentProps<typeof TextLink>, 'href' | 'prefix' | 'suffix' | 'target'>
