@@ -184,7 +184,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         maxLetters
           ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
               startTransition(() => {
-                setCount(getStringLength(e.currentTarget.value))
+                setCount(getStringLength(e.target.value))
               })
             }, 200)
           : undefined,
@@ -197,7 +197,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         maxLetters
           ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
               startTransition(() => {
-                const counterText = getCounterMessage(getStringLength(e.currentTarget.value))
+                const counterText = getCounterMessage(getStringLength(e.target.value))
 
                 if (counterText) {
                   setSrCounterMessage(counterText)
