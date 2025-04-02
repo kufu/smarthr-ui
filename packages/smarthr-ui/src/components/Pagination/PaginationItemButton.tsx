@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, useMemo } from 'react'
+import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton, Button } from '../Button'
@@ -15,9 +15,10 @@ type Props = {
   page: number
   disabled: boolean
   hrefTemplate?: (pageNumber: number) => string
+  linkAs?: ElementType
 }
 
-export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate }) => {
+export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, linkAs }) => {
   const className = useMemo(() => classNameGenerator(), [])
   const { Component, attrs } = useMemo(() => {
     const common = {
@@ -31,6 +32,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate }
         attrs: {
           ...common,
           href: disabled ? undefined : hrefTemplate(page),
+          elementAs: linkAs,
         } as ComponentProps<typeof AnchorButton>,
       }
     }
@@ -43,7 +45,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate }
         value: page,
       } as ComponentProps<typeof Button>,
     }
-  }, [disabled, page, hrefTemplate])
+  }, [disabled, page, hrefTemplate, linkAs])
 
   return (
     <Component {...attrs} square size="s" className={className}>

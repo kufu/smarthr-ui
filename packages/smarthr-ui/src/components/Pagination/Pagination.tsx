@@ -1,4 +1,11 @@
-import { type FC, type HTMLAttributes, type MouseEvent, memo, useMemo } from 'react'
+import {
+  type ElementType,
+  type FC,
+  type HTMLAttributes,
+  type MouseEvent,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -49,12 +56,16 @@ type ButtonProps = CommonProps & {
   onClick: (pageNumber: number, e: MouseEvent<HTMLElement>) => void
   /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
   hrefTemplate?: undefined
+  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  linkAs?: undefined
 }
 type AnchorProps = CommonProps & {
   /** リンクを押下したときに発火するコールバック関数 */
   onClick?: (href: string, e: MouseEvent<HTMLElement>) => void
   /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
   hrefTemplate: (pageNumber: number) => string
+  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  linkAs?: ElementType
 }
 
 type AbstractProps = ButtonProps | AnchorProps
@@ -78,6 +89,7 @@ const ActualPagination: FC<Props> = ({
   className,
   withoutNumbers,
   hrefTemplate,
+  linkAs,
   ...props
 }) => {
   const classNames = useMemo(() => {
@@ -137,6 +149,7 @@ const ActualPagination: FC<Props> = ({
           withoutNumbers={withoutNumbers}
           hrefTemplate={hrefTemplate}
           classNames={classNames}
+          linkAs={linkAs}
         />
       </Reel>
     </Nav>
@@ -144,7 +157,7 @@ const ActualPagination: FC<Props> = ({
 }
 
 const ItemCluster = memo<
-  Pick<Props, 'total' | 'current' | 'padding' | 'withoutNumbers' | 'hrefTemplate'> & {
+  Pick<Props, 'total' | 'current' | 'padding' | 'withoutNumbers' | 'hrefTemplate' | 'linkAs'> & {
     classNames: {
       list: string
       firstListItem: string
@@ -153,7 +166,7 @@ const ItemCluster = memo<
       lastListItem: string
     }
   }
->(({ total, current, padding, withoutNumbers, hrefTemplate, classNames }) => {
+>(({ total, current, padding, withoutNumbers, hrefTemplate, classNames, linkAs }) => {
   const pageNumbers = useMemo(() => {
     if (withoutNumbers) {
       return []
@@ -170,14 +183,16 @@ const ItemCluster = memo<
         disabled: current === 1,
         direction: 'prev' as const,
         hrefTemplate,
+        linkAs,
       },
       next: {
         disabled: current === total,
         direction: 'next' as const,
         hrefTemplate,
+        linkAs,
       },
     }),
-    [current, total, hrefTemplate],
+    [current, total, hrefTemplate, linkAs],
   )
 
   return (
@@ -196,6 +211,7 @@ const ItemCluster = memo<
           page={page}
           disabled={page === current}
           hrefTemplate={hrefTemplate}
+          linkAs={linkAs}
         />
       ))}
       <li className={classNames.nextListItem}>
@@ -210,16 +226,16 @@ const ItemCluster = memo<
   )
 })
 
-const NumberItemButton = memo<Pick<Props, 'hrefTemplate'> & { page: number; disabled: boolean }>(
-  ({ page, disabled, hrefTemplate }) => (
-    <li className={`smarthr-ui-Pagination-${disabled ? 'current' : 'page'}`}>
-      <PaginationItemButton page={page} disabled={disabled} hrefTemplate={hrefTemplate} />
-    </li>
-  ),
-)
+const NumberItemButton = memo<
+  Pick<Props, 'hrefTemplate' | 'linkAs'> & { page: number; disabled: boolean }
+>(({ disabled, ...rest }) => (
+  <li className={`smarthr-ui-Pagination-${disabled ? 'current' : 'page'}`}>
+    <PaginationItemButton {...rest} disabled={disabled} />
+  </li>
+))
 
 const DoubleIconItemButton = memo<
-  Pick<Props, 'hrefTemplate'> & {
+  Pick<Props, 'hrefTemplate' | 'linkAs'> & {
     disabled: boolean
     direction: 'prev' | 'next'
     targetPage: number

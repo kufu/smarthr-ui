@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, useMemo } from 'react'
+import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
 
 import { AnchorButton, Button } from '../Button'
 import {
@@ -14,6 +14,7 @@ type Props = {
   disabled: boolean
   double?: boolean
   hrefTemplate?: (pageNumber: number) => string
+  linkAs?: ElementType
 }
 
 const ICON_MAPPER = {
@@ -33,6 +34,7 @@ export const PaginationControllerItemButton: FC<Props> = ({
   double,
   targetPage,
   hrefTemplate,
+  linkAs,
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
@@ -42,6 +44,7 @@ export const PaginationControllerItemButton: FC<Props> = ({
         Component: AnchorButton,
         attrs: {
           href: disabled ? undefined : hrefTemplate(targetPage),
+          elementAs: linkAs,
         } as ComponentProps<typeof AnchorButton>,
       }
     }
@@ -53,7 +56,7 @@ export const PaginationControllerItemButton: FC<Props> = ({
         value: targetPage,
       } as ComponentProps<typeof Button>,
     }
-  }, [targetPage, disabled, hrefTemplate])
+  }, [targetPage, disabled, hrefTemplate, linkAs])
 
   return (
     <Component {...attrs} square size="s" className="shr-rounded-s">
