@@ -12,10 +12,11 @@ import { Text } from '../../Text'
 
 import { renderButtonList } from './DropdownMenuButton'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   name?: ReactNode
 }>
-type ElementProps = Omit<ComponentProps<'li'>, keyof Props>
+type ElementProps = Omit<ComponentProps<'li'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 const classNameGenerator = tv({
   slots: {
@@ -38,7 +39,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DropdownMenuGroup: FC<Props & ElementProps> = ({ name, children, className }) => {
+export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
   const classNames = useMemo(() => {
     const { group, groupName } = classNameGenerator()
 
@@ -50,17 +51,22 @@ export const DropdownMenuGroup: FC<Props & ElementProps> = ({ name, children, cl
 
   return (
     <li className={classNames.group}>
-      <NameText className={classNames.groupName}>{name}</NameText>
-      <ul>{renderButtonList(children)}</ul>
+      {name ? (
+        <dl>
+          <NameDefinitionTerm className={classNames.groupName}>{name}</NameDefinitionTerm>
+          {renderButtonList(children, 'dd')}
+        </dl>
+      ) : (
+        <ul>{renderButtonList(children)}</ul>
+      )}
     </li>
   )
 }
 
-const NameText = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) =>
-    children && (
-      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className}>
-        {children}
-      </Text>
-    ),
+const NameDefinitionTerm = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => (
+    <Text size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className} as="dt">
+      {children}
+    </Text>
+  ),
 )

@@ -159,7 +159,7 @@ const ButtonSuffixIcon = memo<Pick<Props, 'onlyIconTrigger'>>(
   ({ onlyIconTrigger }) => !onlyIconTrigger && <FaCaretDownIcon alt="候補を開く" />,
 )
 
-export const renderButtonList = (children: Actions) =>
+export const renderButtonList = (children: Actions, Component: 'li' | 'dd' = 'li') =>
   Children.map(children, (item): ReactNode => {
     if (!item || !isValidElement(item)) {
       return null
@@ -173,12 +173,12 @@ export const renderButtonList = (children: Actions) =>
     }
 
     return (
-      <li>
+      <Component>
         {cloneElement(item as ReactElement, {
           variant: 'text',
           wide: true,
           className: actionListItemButton({ className: item.props.className }),
         })}
-      </li>
+      </Component>
     )
   })
