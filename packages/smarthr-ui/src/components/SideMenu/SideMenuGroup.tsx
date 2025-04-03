@@ -8,8 +8,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Heading } from '../../Heading'
-import { Section } from '../../SectioningContent'
+import { Heading } from '../Heading'
+import { Section } from '../SectioningContent'
 
 type Props<TitleElement extends ElementType> = PropsWithChildren<{
   title: ReactNode
