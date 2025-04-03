@@ -31,8 +31,17 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
         Component: AnchorButton,
         attrs: {
           ...common,
-          href: disabled ? undefined : hrefTemplate(page),
-          elementAs: linkAs,
+          // HINT: elementAsにnext/linkを設定した場合、hrefがundefinedでは
+          // エラーになってしまうため、undefinedで指定されていない状態にする
+          ...(disabled
+            ? {
+                href: undefined,
+                elementAs: undefined,
+              }
+            : {
+                href: hrefTemplate(page),
+                elementAs: linkAs,
+              }),
         } as ComponentProps<typeof AnchorButton>,
       }
     }
