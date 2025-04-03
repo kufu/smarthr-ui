@@ -1,153 +1,116 @@
 import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { spacing } from '../../themes'
 import { Balloon } from '../Balloon'
-
-import { getTooltipRect } from './tooltipHelper'
 
 type Props = {
   message: ReactNode
   isVisible: boolean
   parentRect: DOMRect | null
   isIcon?: boolean
-  isMultiLine?: boolean
-  horizontal: 'left' | 'center' | 'right' | 'auto'
-  vertical: 'top' | 'middle' | 'bottom' | 'auto'
-  fullscreenElement: Element | null
 }
 
 const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
-    balloon: '',
+    balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
     balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
-  },
-  variants: {
-    isMultiLine: {
-      true: {
-        balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
-      },
-    },
   },
 })
 
-const INITIAL_RECT = {
-  top: 0,
-  left: 0,
-  $width: 0,
-  $height: 0,
-}
 const OUTER_MARGIN = 10
 
-export const TooltipPortal: FC<Props> = ({
-  message,
-  isVisible,
-  parentRect,
-  isIcon = false,
-  isMultiLine = false,
-  horizontal,
-  vertical,
-  fullscreenElement,
-}) => {
+type ContentBoxStyle = {
+  top: string
+  left?: string
+  right?: string
+  maxHeight: string
+}
+const INITIAL_CONTENT_BOX: ContentBoxStyle = { top: 'auto', maxHeight: '' }
+
+export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIcon }) => {
   const portalRef = useRef<HTMLDivElement>(null)
-  const [rect, setRect] = useState(INITIAL_RECT)
-  const [actualHorizontal, setActualHorizontal] = useState<'left' | 'center' | 'right' | null>(
-    horizontal === 'auto' ? null : horizontal,
-  )
-  const [actualVertical, setActualVertical] = useState<'top' | 'middle' | 'bottom' | null>(
-    vertical === 'auto' ? null : vertical,
-  )
+  const [contentBox, setContentBox] = useState<ContentBoxStyle>(INITIAL_CONTENT_BOX)
+  const [actualHorizontal, setActualHorizontal] = useState<'left' | 'center' | 'right'>('center')
+  const [actualVertical, setActualVertical] = useState<'top' | 'middle' | 'bottom'>('bottom')
 
   useEffect(() => {
     if (!portalRef.current || !parentRect) {
       return
     }
 
-    if (vertical === 'auto') {
-      let position: 'top' | 'bottom' = 'bottom'
-      const requiredHeight = portalRef.current.offsetHeight + OUTER_MARGIN
-      const topSpace = parentRect.top
+    const box: ContentBoxStyle = { ...INITIAL_CONTENT_BOX }
 
-      if (topSpace <= requiredHeight) {
-        const bottomSpace = window.innerHeight - parentRect.bottom
+    if (parentRect.top - portalRef.current.offsetHeight >= 0) {
+      // トリガの上側の領域に収まる場合
+      box.top = `${scrollY + parentRect.top - portalRef.current.offsetHeight - 5}px`
+      setActualVertical('bottom')
+    } else if (parentRect.bottom + portalRef.current.offsetHeight <= innerHeight) {
+      // トリガの下側の領域に収まる場合
+      box.top = `${scrollY + parentRect.bottom + 5}px`
+      setActualVertical('top')
+    } else {
+      const triggerHeight = parentRect.bottom - parentRect.top
 
-        if (bottomSpace > requiredHeight || bottomSpace > topSpace) {
-          position = 'top'
-        }
+      if (parentRect.top + triggerHeight / 2 >= innerHeight / 2) {
+        // 上側の領域のほうが広い場合
+        box.top = `${scrollY + OUTER_MARGIN - 5}px`
+        box.maxHeight = `${parentRect.top - OUTER_MARGIN}px`
+        setActualVertical('bottom')
+      } else {
+        // 下側の領域のほうが広い場合
+        box.top = `${scrollY + parentRect.bottom + 5}px`
+        box.maxHeight = `${innerHeight - parentRect.bottom - OUTER_MARGIN}px`
+        setActualVertical('top')
       }
-
-      setActualVertical(position)
     }
 
-    if (horizontal === 'auto') {
-      let position: 'left' | 'right' = 'left'
-      const requiredWidth = portalRef.current.offsetWidth + OUTER_MARGIN
-      const rightSpace =
-        window.innerWidth - (vertical === 'middle' ? parentRect.right : parentRect.left)
+    const triggerAlignCenter = parentRect.left + parentRect.width / 2
+    const portalHalfWidth = portalRef.current.offsetWidth / 2
 
-      if (rightSpace <= requiredWidth) {
-        const leftSpace = vertical === 'middle' ? parentRect.left : parentRect.right
-
-        if (leftSpace > requiredWidth || leftSpace > rightSpace) {
-          position = 'right'
-        }
-      }
-
-      setActualHorizontal(position)
-    }
-  }, [horizontal, parentRect, vertical])
-
-  useEffect(() => {
-    if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
-      return
+    // トリガを中心に左右に十分な余白がある場合
+    if (
+      triggerAlignCenter - portalHalfWidth > 5 &&
+      triggerAlignCenter + portalHalfWidth < document.body.clientWidth - 5
+    ) {
+      box.left = `${triggerAlignCenter - portalHalfWidth}px`
+      setActualHorizontal('center')
+    } else if (triggerAlignCenter <= document.body.clientWidth / 2) {
+      // トリガが画面左寄りの場合
+      box.left = `${scrollX + parentRect.left - 5}px`
+      setActualHorizontal('left')
+    } else {
+      // トリガが画面右寄りの場合
+      box.right = `${document.body.clientWidth - parentRect.right - scrollX - 5}px`
+      setActualHorizontal('right')
     }
 
-    const scrollOffset = fullscreenElement
-      ? {
-          top: fullscreenElement.scrollTop,
-          left: fullscreenElement.scrollLeft,
-        }
-      : {
-          top: window.scrollY,
-          left: window.scrollX,
-        }
-    const { offsetWidth, offsetHeight } = portalRef.current
-
-    setRect(
-      getTooltipRect({
-        parentRect,
-        scrollOffset,
-        tooltipSize: {
-          width: offsetWidth,
-          height: offsetHeight,
-        },
-        vertical: actualVertical,
-        horizontal: actualHorizontal,
-        isIcon,
-        outerMargin: OUTER_MARGIN,
-      }),
-    )
-  }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
+    setContentBox(box)
+  }, [parentRect])
 
   const classNames = useMemo(() => {
     const { container, balloon, balloonText } = classNameGenerator()
 
     return {
       container: container(),
-      balloon: balloon({ isMultiLine }),
+      balloon: balloon(),
       balloonText: balloonText(),
     }
-  }, [isMultiLine])
-  const containerStyle = useMemo(
-    () => ({
-      top: rect.top,
-      left: rect.left,
-      width: rect.$width > 0 ? `${rect.$width}px` : undefined,
-      height: rect.$height > 0 ? `${rect.$height}px` : undefined,
-      maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
-    }),
-    [rect.$height, rect.$width, rect.left, rect.top, parentRect, isMultiLine],
-  )
+  }, [])
+  const style = useMemo(() => {
+    const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
+    const rightMargin =
+      contentBox.right === undefined ? spacing[0.5] : `max(${contentBox.right}, 0px)`
+
+    return {
+      insetBlockStart: contentBox.top,
+      insetInlineStart: contentBox.left || undefined,
+      insetInlineEnd: contentBox.right || undefined,
+      maxWidth: `calc(100% - ${leftMargin} - ${rightMargin})`,
+      maxHeight: contentBox.maxHeight || undefined,
+    }
+  }, [contentBox])
 
   return (
     <div
@@ -155,11 +118,12 @@ export const TooltipPortal: FC<Props> = ({
       role="tooltip"
       aria-hidden={!isVisible}
       className={classNames.container}
-      style={containerStyle}
+      style={style}
     >
       <Balloon
-        horizontal={actualHorizontal || 'left'}
-        vertical={actualVertical || 'bottom'}
+        horizontal={actualHorizontal}
+        vertical={actualVertical}
+        triggerIcon={isIcon}
         className={classNames.balloon}
       >
         <div className={classNames.balloonText}>{message}</div>
