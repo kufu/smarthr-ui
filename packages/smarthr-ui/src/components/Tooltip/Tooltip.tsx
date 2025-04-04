@@ -28,8 +28,6 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { TooltipPortal } from './TooltipPortal'
 
-import type { Balloon } from '../Balloon'
-
 const subscribeFullscreenChange = (callback: () => void) => {
   window.addEventListener('fullscreenchange', callback)
 
@@ -45,14 +43,8 @@ type Props = PropsWithChildren<{
   message: ReactNode
   /** ツールチップを表示する対象のタイプ。アイコンの場合は `icon` を指定する */
   triggerType?: 'icon' | 'text'
-  /** ツールチップ内を複数行で表示する場合に `true` を指定する */
-  multiLine?: boolean
   /** `true` のとき、ツールチップを表示する対象が省略されている場合のみツールチップ表示を有効にする */
   ellipsisOnly?: boolean
-  /** 水平方向の位置 */
-  horizontal?: ComponentProps<typeof Balloon>['horizontal'] | 'auto'
-  /** 垂直方向の位置 */
-  vertical?: ComponentProps<typeof Balloon>['vertical'] | 'auto'
   /** ツールチップを表示する対象の tabIndex 値 */
   tabIndex?: number
   /** ツールチップを内包要素に紐付けるかどうか */
@@ -77,10 +69,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   message,
   children,
   triggerType,
-  multiLine,
   ellipsisOnly,
-  horizontal = 'left',
-  vertical = 'bottom',
   tabIndex = 0,
   ariaDescribedbyTarget = 'wrapper',
   className,
@@ -231,10 +220,6 @@ export const Tooltip: FC<Props & ElementProps> = ({
             isVisible={isVisible}
             parentRect={rect}
             isIcon={isIcon}
-            isMultiLine={multiLine}
-            horizontal={horizontal}
-            vertical={vertical}
-            fullscreenElement={fullscreenElement}
           />,
           portalRoot,
         )}

@@ -112,11 +112,7 @@ export function MultiSelectedItem<T>({
   )
 
   if (needsTooltip) {
-    return (
-      <Tooltip message={item.label} multiLine={true}>
-        {body}
-      </Tooltip>
-    )
+    return <Tooltip message={item.label}>{body}</Tooltip>
   }
 
   return body

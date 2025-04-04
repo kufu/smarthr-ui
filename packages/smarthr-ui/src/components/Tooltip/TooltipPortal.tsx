@@ -1,153 +1,66 @@
 import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { spacing } from '../../themes'
 import { Balloon } from '../Balloon'
-
-import { getTooltipRect } from './tooltipHelper'
 
 type Props = {
   message: ReactNode
   isVisible: boolean
   parentRect: DOMRect | null
   isIcon?: boolean
-  isMultiLine?: boolean
-  horizontal: 'left' | 'center' | 'right' | 'auto'
-  vertical: 'top' | 'middle' | 'bottom' | 'auto'
-  fullscreenElement: Element | null
 }
 
 const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
-    balloon: '',
+    balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
     balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
-  },
-  variants: {
-    isMultiLine: {
-      true: {
-        balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
-      },
-    },
   },
 })
 
-const INITIAL_RECT = {
-  top: 0,
-  left: 0,
-  $width: 0,
-  $height: 0,
-}
 const OUTER_MARGIN = 10
+const SPACING = 5
 
-export const TooltipPortal: FC<Props> = ({
-  message,
-  isVisible,
-  parentRect,
-  isIcon = false,
-  isMultiLine = false,
-  horizontal,
-  vertical,
-  fullscreenElement,
-}) => {
+type HorizontalType = 'left' | 'center' | 'right'
+type VerticalType = 'top' | 'middle' | 'bottom'
+
+export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIcon }) => {
   const portalRef = useRef<HTMLDivElement>(null)
-  const [rect, setRect] = useState(INITIAL_RECT)
-  const [actualHorizontal, setActualHorizontal] = useState<'left' | 'center' | 'right' | null>(
-    horizontal === 'auto' ? null : horizontal,
-  )
-  const [actualVertical, setActualVertical] = useState<'top' | 'middle' | 'bottom' | null>(
-    vertical === 'auto' ? null : vertical,
-  )
+  const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
+  const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
+  const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
   useEffect(() => {
     if (!portalRef.current || !parentRect) {
       return
     }
 
-    if (vertical === 'auto') {
-      let position: 'top' | 'bottom' = 'bottom'
-      const requiredHeight = portalRef.current.offsetHeight + OUTER_MARGIN
-      const topSpace = parentRect.top
+    const portal = portalRef.current
 
-      if (topSpace <= requiredHeight) {
-        const bottomSpace = window.innerHeight - parentRect.bottom
+    const vertical = calculateVertical(portal.offsetHeight, parentRect)
+    const horizontal = calculateHorizontal(portal.offsetWidth, parentRect)
 
-        if (bottomSpace > requiredHeight || bottomSpace > topSpace) {
-          position = 'top'
-        }
-      }
-
-      setActualVertical(position)
-    }
-
-    if (horizontal === 'auto') {
-      let position: 'left' | 'right' = 'left'
-      const requiredWidth = portalRef.current.offsetWidth + OUTER_MARGIN
-      const rightSpace =
-        window.innerWidth - (vertical === 'middle' ? parentRect.right : parentRect.left)
-
-      if (rightSpace <= requiredWidth) {
-        const leftSpace = vertical === 'middle' ? parentRect.left : parentRect.right
-
-        if (leftSpace > requiredWidth || leftSpace > rightSpace) {
-          position = 'right'
-        }
-      }
-
-      setActualHorizontal(position)
-    }
-  }, [horizontal, parentRect, vertical])
-
-  useEffect(() => {
-    if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
-      return
-    }
-
-    const scrollOffset = fullscreenElement
-      ? {
-          top: fullscreenElement.scrollTop,
-          left: fullscreenElement.scrollLeft,
-        }
-      : {
-          top: window.scrollY,
-          left: window.scrollX,
-        }
-    const { offsetWidth, offsetHeight } = portalRef.current
-
-    setRect(
-      getTooltipRect({
-        parentRect,
-        scrollOffset,
-        tooltipSize: {
-          width: offsetWidth,
-          height: offsetHeight,
-        },
-        vertical: actualVertical,
-        horizontal: actualHorizontal,
-        isIcon,
-        outerMargin: OUTER_MARGIN,
-      }),
-    )
-  }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
+    setStyle({
+      insetBlockStart: vertical.insetBlockStart,
+      insetInlineStart: horizontal.insetInlineStart,
+      insetInlineEnd: horizontal.insetInlineEnd,
+      maxWidth: horizontal.maxWidth,
+      maxHeight: vertical.maxHeight,
+    })
+    setActualVertical(vertical.alignment)
+    setActualHorizontal(horizontal.alignment)
+  }, [parentRect])
 
   const classNames = useMemo(() => {
     const { container, balloon, balloonText } = classNameGenerator()
 
     return {
       container: container(),
-      balloon: balloon({ isMultiLine }),
+      balloon: balloon(),
       balloonText: balloonText(),
     }
-  }, [isMultiLine])
-  const containerStyle = useMemo(
-    () => ({
-      top: rect.top,
-      left: rect.left,
-      width: rect.$width > 0 ? `${rect.$width}px` : undefined,
-      height: rect.$height > 0 ? `${rect.$height}px` : undefined,
-      maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
-    }),
-    [rect.$height, rect.$width, rect.left, rect.top, parentRect, isMultiLine],
-  )
+  }, [])
 
   return (
     <div
@@ -155,15 +68,108 @@ export const TooltipPortal: FC<Props> = ({
       role="tooltip"
       aria-hidden={!isVisible}
       className={classNames.container}
-      style={containerStyle}
+      style={style}
     >
       <Balloon
-        horizontal={actualHorizontal || 'left'}
-        vertical={actualVertical || 'bottom'}
+        horizontal={actualHorizontal}
+        vertical={actualVertical}
+        triggerIcon={isIcon}
         className={classNames.balloon}
       >
         <div className={classNames.balloonText}>{message}</div>
       </Balloon>
     </div>
   )
+}
+
+const calculateVertical = (
+  portalHeight: number,
+  parentRect: DOMRect,
+): { insetBlockStart: string; maxHeight: string | undefined; alignment: VerticalType } => {
+  // トリガの上側の領域に収まる場合
+  if (parentRect.top - portalHeight >= 0) {
+    return {
+      insetBlockStart: `${scrollY + parentRect.top - portalHeight - SPACING}px`,
+      maxHeight: undefined,
+      alignment: 'bottom',
+    }
+  }
+
+  // トリガの下側の領域に収まる場合
+  if (parentRect.bottom + portalHeight <= innerHeight) {
+    return {
+      insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+      maxHeight: undefined,
+      alignment: 'top',
+    }
+  }
+
+  const triggerHeight = parentRect.bottom - parentRect.top
+
+  // 上側の領域のほうが広い場合
+  if (parentRect.top + triggerHeight / 2 >= innerHeight / 2) {
+    return {
+      insetBlockStart: `${scrollY + OUTER_MARGIN - SPACING}px`,
+      maxHeight: `${parentRect.top - OUTER_MARGIN}px`,
+      alignment: 'bottom',
+    }
+  }
+
+  // 下側の領域のほうが広い場合
+  return {
+    insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+    maxHeight: `${innerHeight - parentRect.bottom - OUTER_MARGIN}px`,
+    alignment: 'top',
+  }
+}
+
+type ReturnCalculateHorizontalType = {
+  insetInlineStart: string | undefined
+  insetInlineEnd: string | undefined
+  maxWidth: string
+  alignment: HorizontalType
+}
+const calculateHorizontal = (
+  portalWidth: number,
+  parentRect: DOMRect,
+): ReturnCalculateHorizontalType => {
+  const triggerAlignCenter = parentRect.left + parentRect.width / 2
+  const portalHalfWidth = portalWidth / 2
+
+  // トリガを中心に左右に十分な余白がある場合
+  if (
+    triggerAlignCenter - portalHalfWidth > SPACING &&
+    triggerAlignCenter + portalHalfWidth < document.body.clientWidth - SPACING
+  ) {
+    const insetInlineStart = `${triggerAlignCenter - portalHalfWidth}px`
+
+    return {
+      insetInlineStart,
+      insetInlineEnd: undefined,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      alignment: 'center',
+    }
+  }
+
+  // トリガが画面左寄りの場合
+  if (triggerAlignCenter <= document.body.clientWidth / 2) {
+    const insetInlineStart = `${scrollX + parentRect.left - SPACING}px`
+
+    return {
+      insetInlineStart,
+      insetInlineEnd: undefined,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      alignment: 'left',
+    }
+  }
+
+  // トリガが画面右寄りの場合
+  const insetInlineEnd = `${document.body.clientWidth - parentRect.right - scrollX - SPACING}px`
+
+  return {
+    insetInlineStart: undefined,
+    insetInlineEnd,
+    maxWidth: `calc(100% - ${spacing[0.5]} - max(${insetInlineEnd}, 0px))`,
+    alignment: 'right',
+  }
 }
