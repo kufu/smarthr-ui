@@ -4,7 +4,6 @@ import { FaCircleQuestionIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'
 
-import { TriggerType } from './Tooltip.stories'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
