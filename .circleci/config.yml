@@ -157,7 +157,7 @@ workflows:
       - chromatic-deployment:
           filters:
             tags:
-              only: /^$/
+              only: /^v.*/
             branches:
               ignore:
                 - master
