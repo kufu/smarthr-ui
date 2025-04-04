@@ -8,6 +8,7 @@ import {
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
+  cloneElement,
   memo,
   useEffect,
   useMemo,
@@ -186,7 +187,12 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
   const actualStatusLabels = useMemo(() => {
     if (statusLabels) {
-      return Array.isArray(statusLabels) ? statusLabels : [statusLabels]
+      return (Array.isArray(statusLabels) ? statusLabels : [statusLabels]).map(
+        (statusLabel, index) =>
+          cloneElement(statusLabel, {
+            key: index,
+          }),
+      )
     }
 
     if (!statusLabelProps) {
