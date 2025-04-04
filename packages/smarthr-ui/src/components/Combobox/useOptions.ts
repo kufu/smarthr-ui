@@ -12,7 +12,7 @@ const defaultIsItemSelected = <T>(
 
 type BaseUseOptionsProps<T> = {
   items: Array<ComboboxItem<T>>
-  creatable: boolean
+  creatable?: boolean
   inputValue?: string
   isFilteringDisabled?: boolean
 }
