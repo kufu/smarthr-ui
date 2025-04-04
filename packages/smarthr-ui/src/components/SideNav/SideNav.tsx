@@ -46,7 +46,7 @@ export const SideNav: FC<Props & ElementProps> = ({
           id={item.id}
           title={item.title}
           prefix={item.prefix}
-          isSelected={item.isSelected}
+          current={item.current}
           size={size}
           onClick={actualOnClick}
         />

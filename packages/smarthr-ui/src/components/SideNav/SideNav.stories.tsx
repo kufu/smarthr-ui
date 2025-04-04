@@ -23,27 +23,27 @@ const SideNavItems = [
   {
     id: 'id-1',
     title: ' one!',
-    isSelected: true,
+    current: true,
   },
   {
     id: 'id-2',
     title: 'two!',
-    isSelected: false,
+    current: false,
   },
   {
     id: 'id-3',
     title: 'three!',
-    isSelected: false,
+    current: false,
   },
   {
     id: 'id-4',
     title: 'four!',
-    isSelected: false,
+    current: false,
   },
   {
     id: 'id-5',
     title: 'five!',
-    isSelected: false,
+    current: false,
   },
 ]
 
@@ -51,13 +51,13 @@ const SideNavPrefixItems = [
   {
     id: 'id-1',
     title: 'todo 1',
-    isSelected: true,
+    current: true,
     prefix: <Label>done</Label>,
   },
   {
     id: 'id-2',
     title: 'todo 2',
-    isSelected: false,
+    current: false,
     prefix: (
       <Label type="blue" bold>
         must
@@ -67,7 +67,7 @@ const SideNavPrefixItems = [
   {
     id: 'id-3',
     title: 'todo 3',
-    isSelected: false,
+    current: false,
     prefix: (
       <Label type="blue" bold>
         must
@@ -77,7 +77,7 @@ const SideNavPrefixItems = [
   {
     id: 'id-4',
     title: 'todo 4',
-    isSelected: false,
+    current: false,
     prefix: (
       <Label type="blue" bold>
         must
@@ -87,7 +87,7 @@ const SideNavPrefixItems = [
   {
     id: 'id-5',
     title: 'todo 5',
-    isSelected: false,
+    current: false,
     prefix: (
       <Label type="blue" bold>
         must
