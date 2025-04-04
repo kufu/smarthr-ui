@@ -1,9 +1,9 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../../Base'
-import { Heading } from '../../Heading'
-import { Nav } from '../../SectioningContent'
+import { Base } from '../Base'
+import { Heading } from '../Heading'
+import { Nav } from '../SectioningContent'
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-SideMenu shr-list-none shr-py-0.5',

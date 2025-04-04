@@ -1,11 +1,11 @@
 import { StoryFn } from '@storybook/react'
 
-import { FaGearIcon } from '../../Icon'
+import { FaGearIcon } from '../Icon'
 
 import { SideMenu, SideMenuGroup, SideMenuItem } from '.'
 
 export default {
-  title: 'Experimental（実験的）/SideMenu',
+  title: 'Navigation（ナビゲーション）/SideMenu',
   component: SideMenu,
 }
 

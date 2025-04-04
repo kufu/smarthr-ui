@@ -7,7 +7,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Text } from '../../Text'
+import { Text } from '../Text'
 
 type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
   elementAs?: AsElement
