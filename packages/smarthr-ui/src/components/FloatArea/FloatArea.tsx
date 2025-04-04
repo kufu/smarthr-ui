@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
-import { Cluster } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
@@ -77,20 +77,18 @@ export const FloatArea: FC<Props & ElementProps> = ({
 
   return (
     <Base {...rest} layer={3} padding={1} className={actualClassName} style={actualStyle}>
-      <Cluster gap={1}>
-        {tertiaryButton}
-        <div className="shr-ms-auto">
-          <Cluster gap={1} align="center">
-            {responseStatus && (
-              <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
-            )}
-            <Cluster gap={1}>
-              {secondaryButton}
-              {primaryButton}
-            </Cluster>
+      <Stack gap={0.5} align="end">
+        <Cluster gap={1} className="shr-w-full">
+          {tertiaryButton}
+          <Cluster gap={1} className="shr-ms-auto">
+            {secondaryButton}
+            {primaryButton}
           </Cluster>
-        </div>
-      </Cluster>
+        </Cluster>
+        {responseStatus && (
+          <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
+        )}
+      </Stack>
     </Base>
   )
 }
