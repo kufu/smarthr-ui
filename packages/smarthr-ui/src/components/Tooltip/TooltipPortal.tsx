@@ -20,73 +20,36 @@ const classNameGenerator = tv({
 })
 
 const OUTER_MARGIN = 10
+const SPACING = 5
 
-type ContentBoxStyle = {
-  top: string
-  left?: string
-  right?: string
-  maxHeight: string
-}
-const INITIAL_CONTENT_BOX: ContentBoxStyle = { top: 'auto', maxHeight: '' }
+type HorizontalType = 'left' | 'center' | 'right'
+type VerticalType = 'top' | 'middle' | 'bottom'
 
 export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIcon }) => {
   const portalRef = useRef<HTMLDivElement>(null)
-  const [contentBox, setContentBox] = useState<ContentBoxStyle>(INITIAL_CONTENT_BOX)
-  const [actualHorizontal, setActualHorizontal] = useState<'left' | 'center' | 'right'>('center')
-  const [actualVertical, setActualVertical] = useState<'top' | 'middle' | 'bottom'>('bottom')
+  const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
+  const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
+  const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
   useEffect(() => {
     if (!portalRef.current || !parentRect) {
       return
     }
 
-    const box: ContentBoxStyle = { ...INITIAL_CONTENT_BOX }
+    const portal = portalRef.current
 
-    if (parentRect.top - portalRef.current.offsetHeight >= 0) {
-      // トリガの上側の領域に収まる場合
-      box.top = `${scrollY + parentRect.top - portalRef.current.offsetHeight - 5}px`
-      setActualVertical('bottom')
-    } else if (parentRect.bottom + portalRef.current.offsetHeight <= innerHeight) {
-      // トリガの下側の領域に収まる場合
-      box.top = `${scrollY + parentRect.bottom + 5}px`
-      setActualVertical('top')
-    } else {
-      const triggerHeight = parentRect.bottom - parentRect.top
+    const vertical = calculateVertical(portal.offsetHeight, parentRect)
+    const horizontal = calculateHorizontal(portal.offsetWidth, parentRect)
 
-      if (parentRect.top + triggerHeight / 2 >= innerHeight / 2) {
-        // 上側の領域のほうが広い場合
-        box.top = `${scrollY + OUTER_MARGIN - 5}px`
-        box.maxHeight = `${parentRect.top - OUTER_MARGIN}px`
-        setActualVertical('bottom')
-      } else {
-        // 下側の領域のほうが広い場合
-        box.top = `${scrollY + parentRect.bottom + 5}px`
-        box.maxHeight = `${innerHeight - parentRect.bottom - OUTER_MARGIN}px`
-        setActualVertical('top')
-      }
-    }
-
-    const triggerAlignCenter = parentRect.left + parentRect.width / 2
-    const portalHalfWidth = portalRef.current.offsetWidth / 2
-
-    // トリガを中心に左右に十分な余白がある場合
-    if (
-      triggerAlignCenter - portalHalfWidth > 5 &&
-      triggerAlignCenter + portalHalfWidth < document.body.clientWidth - 5
-    ) {
-      box.left = `${triggerAlignCenter - portalHalfWidth}px`
-      setActualHorizontal('center')
-    } else if (triggerAlignCenter <= document.body.clientWidth / 2) {
-      // トリガが画面左寄りの場合
-      box.left = `${scrollX + parentRect.left - 5}px`
-      setActualHorizontal('left')
-    } else {
-      // トリガが画面右寄りの場合
-      box.right = `${document.body.clientWidth - parentRect.right - scrollX - 5}px`
-      setActualHorizontal('right')
-    }
-
-    setContentBox(box)
+    setStyle({
+      insetBlockStart: vertical.insetBlockStart,
+      insetInlineStart: horizontal.insetInlineStart,
+      insetInlineEnd: horizontal.insetInlineEnd,
+      maxWidth: horizontal.maxWidth,
+      maxHeight: vertical.maxHeight,
+    })
+    setActualVertical(vertical.alignment)
+    setActualHorizontal(horizontal.alignment)
   }, [parentRect])
 
   const classNames = useMemo(() => {
@@ -98,19 +61,6 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
       balloonText: balloonText(),
     }
   }, [])
-  const style = useMemo(() => {
-    const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
-    const rightMargin =
-      contentBox.right === undefined ? spacing[0.5] : `max(${contentBox.right}, 0px)`
-
-    return {
-      insetBlockStart: contentBox.top,
-      insetInlineStart: contentBox.left || undefined,
-      insetInlineEnd: contentBox.right || undefined,
-      maxWidth: `calc(100% - ${leftMargin} - ${rightMargin})`,
-      maxHeight: contentBox.maxHeight || undefined,
-    }
-  }, [contentBox])
 
   return (
     <div
@@ -130,4 +80,96 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
       </Balloon>
     </div>
   )
+}
+
+const calculateVertical = (
+  portalHeight: number,
+  parentRect: DOMRect,
+): { insetBlockStart: string; maxHeight: string | undefined; alignment: VerticalType } => {
+  // トリガの上側の領域に収まる場合
+  if (parentRect.top - portalHeight >= 0) {
+    return {
+      insetBlockStart: `${scrollY + parentRect.top - portalHeight - SPACING}px`,
+      maxHeight: undefined,
+      alignment: 'bottom',
+    }
+  }
+
+  // トリガの下側の領域に収まる場合
+  if (parentRect.bottom + portalHeight <= innerHeight) {
+    return {
+      insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+      maxHeight: undefined,
+      alignment: 'top',
+    }
+  }
+
+  const triggerHeight = parentRect.bottom - parentRect.top
+
+  // 上側の領域のほうが広い場合
+  if (parentRect.top + triggerHeight / 2 >= innerHeight / 2) {
+    return {
+      insetBlockStart: `${scrollY + OUTER_MARGIN - SPACING}px`,
+      maxHeight: `${parentRect.top - OUTER_MARGIN}px`,
+      alignment: 'bottom',
+    }
+  }
+
+  // 下側の領域のほうが広い場合
+  return {
+    insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+    maxHeight: `${innerHeight - parentRect.bottom - OUTER_MARGIN}px`,
+    alignment: 'top',
+  }
+}
+
+type ReturnCalculateHorizontalType = {
+  insetInlineStart: string | undefined
+  insetInlineEnd: string | undefined
+  maxWidth: string
+  alignment: HorizontalType
+}
+const calculateHorizontal = (
+  portalWidth: number,
+  parentRect: DOMRect,
+): ReturnCalculateHorizontalType => {
+  const triggerAlignCenter = parentRect.left + parentRect.width / 2
+  const portalHalfWidth = portalWidth / 2
+
+  // トリガを中心に左右に十分な余白がある場合
+  if (
+    triggerAlignCenter - portalHalfWidth > SPACING &&
+    triggerAlignCenter + portalHalfWidth < document.body.clientWidth - SPACING
+  ) {
+    const insetInlineStart = `${triggerAlignCenter - portalHalfWidth}px`
+
+    return {
+      insetInlineStart,
+      insetInlineEnd: undefined,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      alignment: 'center',
+    }
+  }
+
+  // トリガが画面左寄りの場合
+  if (triggerAlignCenter <= document.body.clientWidth / 2) {
+    const insetInlineStart = `${scrollX + parentRect.left - SPACING}px`
+
+    return {
+      insetInlineStart,
+      insetInlineEnd: undefined,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      alignment: 'left',
+    }
+  }
+
+  // トリガが画面右寄りの場合
+  const insetInlineEnd = `${document.body.clientWidth - parentRect.right - scrollX - SPACING}px`
+
+  return {
+    insetInlineStart: undefined,
+    insetInlineEnd,
+    maxWidth: `calc(100% - ${spacing[0.5]} - max(${insetInlineEnd}, 0px))`,
+    alignment: 'right',
+  }
 }
