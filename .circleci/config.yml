@@ -156,6 +156,8 @@ workflows:
           context: smarthr-dockerhub
       - chromatic-deployment:
           filters:
+            tags:
+              only: /^$/
             branches:
               ignore:
                 - master
