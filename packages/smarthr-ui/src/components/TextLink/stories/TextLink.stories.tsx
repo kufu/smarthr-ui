@@ -4,6 +4,7 @@ import { ComponentPropsWithoutRef } from 'react'
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
 import { UpwardLink } from '../../UpwardLink'
 import { TextLink } from '../TextLink'
+import { Table, Th } from '../../Table'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -110,4 +111,19 @@ export const ElementAs: StoryObj<typeof TextLink> = {
     to: '#',
     children: 'next/link などを想定したリンク',
   },
+}
+
+export const InTh: StoryObj<typeof TextLink> = {
+  name: 'in Th Component',
+  render: (args) => (
+    <Table>
+      <thead>
+        <tr>
+          <Th>
+            <TextLink {...args} />
+          </Th>
+        </tr>
+      </thead>
+    </Table>
+  ),
 }
