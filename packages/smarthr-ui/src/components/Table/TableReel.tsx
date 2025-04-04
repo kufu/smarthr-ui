@@ -3,8 +3,8 @@
 import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { reelShadowClassNameGenerator } from './reelShadowStyle'
 import { useReelCells } from './useReelCells'
-import { reelShadowClassNameGenerator } from './useReelShadow'
 
 type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
 
