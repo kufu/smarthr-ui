@@ -7,6 +7,8 @@ import type { CellContentWidth } from './type'
 
 export type Props = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
+    /** 横スクロール時、カラムを左右いずれかに固定 */
+    fixed?: 'left' | 'right'
     contentWidth?:
       | CellContentWidth
       | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }

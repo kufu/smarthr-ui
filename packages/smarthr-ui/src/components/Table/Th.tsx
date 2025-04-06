@@ -23,6 +23,8 @@ export type Props = PropsWithChildren<
     sort?: sortTypes
     /** 並び替えをクリックした時に発火するコールバック関数 */
     onSort?: () => void
+    /** 横スクロール時、カラムを左右いずれかに固定 */
+    fixed?: 'left' | 'right'
     /** 文言を変更するための関数 */
     decorators?: {
       sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
