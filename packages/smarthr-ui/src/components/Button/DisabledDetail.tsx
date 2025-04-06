@@ -57,13 +57,7 @@ const TooltipIcon = memo<{
   const DisabledDetailIcon = icon ?? FaCircleInfoIcon
 
   return (
-    <Tooltip
-      message={message}
-      triggerType="icon"
-      horizontal="auto"
-      vertical="auto"
-      className={className}
-    >
+    <Tooltip message={message} triggerType="icon" className={className}>
       <DisabledDetailIcon />
     </Tooltip>
   )
