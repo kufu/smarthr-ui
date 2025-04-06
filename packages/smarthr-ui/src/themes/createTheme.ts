@@ -6,7 +6,6 @@ import {
 } from './createBreakpoint'
 import { type ColorProperty, type CreatedColorTheme, createColor } from './createColor'
 import { type CreatedFontSizeTheme, type FontSizeProperty, createFontSize } from './createFontSize'
-import { type CreatedFrameTheme, type FrameProperty, createFrame } from './createFrame'
 import {
   type CreatedInteractionTheme,
   type InteractionProperty,
@@ -40,10 +39,6 @@ type ThemeProperty = {
   leading?: LeadingProperty
   spacing?: SpacingProperty
   breakpoint?: BreakpointProperty
-  /**
-   * @deprecated The frame property will be deprecated, please use border or radius property instead
-   */
-  frame?: FrameProperty
   border?: BorderProperty
   radius?: RadiusProperty
   interaction?: InteractionProperty
@@ -67,10 +62,6 @@ export type CreatedTheme = {
   spacingByChar: CreatedSpacingByCharTheme
   space: CreatedSpacingByCharTheme
   breakpoint: CreatedBreakpointTheme
-  /**
-   * @deprecated The frame property will be deprecated, please use border or radius property instead
-   */
-  frame: CreatedFrameTheme
   border: CreatedBorderTheme
   radius: CreatedRadiusTheme
   interaction: CreatedInteractionTheme
@@ -93,7 +84,6 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
     space: spacingByChar,
     leading: createLeading(getLeadingProperty(theme)),
     breakpoint: createBreakpoint(getBreakpointProperty(theme)),
-    frame: createFrame(getFrameProperty(theme), paletteProperty),
     border: createBorder(getBorderProperty(theme), colorProperty),
     radius: createRadius(getRadiusProperty(theme)),
     interaction: createInteraction(theme.interaction),
@@ -158,29 +148,13 @@ function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
     ...theme.breakpoint,
   }
 }
-function getFrameProperty(theme: ThemeProperty): FrameProperty {
-  return {
-    border: {
-      lineWidth: theme.border?.lineWidth || theme.frame?.border?.lineWidth,
-      lineStyle: theme.border?.lineStyle || theme.frame?.border?.lineStyle,
-      default: theme.border?.shorthand || theme.frame?.border?.default,
-      radius: {
-        ...theme.frame?.border?.radius,
-        ...theme.radius,
-      },
-    },
-  }
-}
 function getBorderProperty(theme: ThemeProperty): BorderProperty {
   return {
-    lineWidth: theme.border?.lineWidth || theme.frame?.border?.lineWidth,
-    lineStyle: theme.border?.lineStyle || theme.frame?.border?.lineStyle,
-    shorthand: theme.border?.shorthand || theme.frame?.border?.default,
+    lineWidth: theme.border?.lineWidth,
+    lineStyle: theme.border?.lineStyle,
+    shorthand: theme.border?.shorthand,
   }
 }
 function getRadiusProperty(theme: ThemeProperty): RadiusProperty {
-  return {
-    ...theme.frame?.border?.radius,
-    ...theme.radius,
-  }
+  return theme.radius || {}
 }

@@ -46,9 +46,6 @@ describe('createTheme', () => {
     expect(actual.palette.SCRIM).toBe('#015')
     expect(actual.palette.OVERLAY).toBe('#016')
     expect(actual.palette.OUTLINE).toBe('#017')
-    expect(actual.frame.border.default).toBe(
-      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #005`,
-    )
   })
 
   it('returns theme reflecting "color" settings', () => {
@@ -237,28 +234,6 @@ describe('createTheme', () => {
     expect(actual.breakpoint.TABLET).toBe(22)
   })
 
-  it('returns theme reflecting "frame" settings', () => {
-    const actual = createTheme({
-      frame: {
-        border: {
-          lineWidth: 'dummy_width_2',
-          lineStyle: 'dummy_style_2',
-          default: 'dummy_default_2',
-          radius: {
-            s: 'dummy_s_2',
-            m: 'dummy_m_2',
-          },
-        },
-      },
-    })
-
-    expect(actual.frame.border.lineWidth).toBe('dummy_width_2')
-    expect(actual.frame.border.lineStyle).toBe('dummy_style_2')
-    expect(actual.frame.border.default).toBe('dummy_default_2')
-    expect(actual.frame.border.radius.s).toBe('dummy_s_2')
-    expect(actual.frame.border.radius.m).toBe('dummy_m_2')
-  })
-
   it('returns theme reflecting "border" settings', () => {
     const actual = createTheme({
       border: {
@@ -294,9 +269,6 @@ describe('createTheme', () => {
     })
     expect(actual.palette.TEXT_BLACK).toBe('#001')
     expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.frame.border.default).toBe(
-      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #999`,
-    )
     expect(actual.color.TEXT_BLACK).toBe('#001')
     expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
     expect(actual.border.shorthand).toBe(
@@ -314,9 +286,6 @@ describe('createTheme', () => {
 
     expect(actual.palette.TEXT_GREY).toBe('#002')
     expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.frame.border.default).toBe(
-      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #998`,
-    )
     expect(actual.color.TEXT_GREY).toBe('#002')
     expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
     expect(actual.border.shorthand).toBe(
@@ -345,9 +314,6 @@ describe('createTheme', () => {
     expect(actual.palette.TEXT_DISABLED).toBe('#003')
     expect(actual.palette.TEXT_LINK).toBe('#888')
     expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.frame.border.default).toBe(
-      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #996`,
-    )
     expect(actual.color.TEXT_BLACK).toBe('#001')
     expect(actual.color.TEXT_GREY).toBe('#999')
     expect(actual.color.TEXT_DISABLED).toBe('#003')
@@ -458,92 +424,6 @@ describe('createTheme', () => {
     expect(actual.size.mediaQuery.TABLET).toBe(2000)
     expect(actual.breakpoint.SP).toBe(1000)
     expect(actual.breakpoint.TABLET).toBe(2000)
-  })
-
-  it('returns theme reflecting "frame" settings to "border" and "radius"', () => {
-    const actual = createTheme({
-      frame: {
-        border: {
-          lineWidth: 'dummy_width',
-          default: 'dummy_default',
-          radius: {
-            s: 'dummy_s',
-          },
-        },
-      },
-    })
-
-    expect(actual.frame.border.lineWidth).toBe('dummy_width')
-    expect(actual.frame.border.default).toBe('dummy_default')
-    expect(actual.frame.border.lineStyle).toBe(defaultBorder.lineStyle)
-    expect(actual.border.lineWidth).toBe('dummy_width')
-    expect(actual.border.shorthand).toBe('dummy_default')
-    expect(actual.border.lineStyle).toBe(defaultBorder.lineStyle)
-
-    expect(actual.frame.border.radius.s).toBe('dummy_s')
-    expect(actual.frame.border.radius.m).toBe(defaultRadius.m)
-    expect(actual.radius.s).toBe('dummy_s')
-    expect(actual.radius.m).toBe(defaultRadius.m)
-  })
-
-  it('returns theme reflecting "border" settings to "frame.border"', () => {
-    const actual = createTheme({
-      border: {
-        lineWidth: 'dummy_width',
-        shorthand: 'dummy_shorthand',
-      },
-    })
-
-    expect(actual.frame.border.lineWidth).toBe('dummy_width')
-    expect(actual.frame.border.default).toBe('dummy_shorthand')
-    expect(actual.frame.border.lineStyle).toBe(defaultBorder.lineStyle)
-    expect(actual.border.lineWidth).toBe('dummy_width')
-    expect(actual.border.shorthand).toBe('dummy_shorthand')
-    expect(actual.border.lineStyle).toBe(defaultBorder.lineStyle)
-  })
-
-  it('returns theme reflecting "radius" settings to "frame.border.radius"', () => {
-    const actual = createTheme({
-      radius: {
-        s: 'dummy_s',
-      },
-    })
-
-    expect(actual.frame.border.radius.s).toBe('dummy_s')
-    expect(actual.frame.border.radius.m).toBe(defaultRadius.m)
-    expect(actual.radius.s).toBe('dummy_s')
-    expect(actual.radius.m).toBe(defaultRadius.m)
-  })
-
-  it('returns theme prioritizing "border" and "radius" settings over "frame" when given frame, border and radius settings', () => {
-    const actual = createTheme({
-      frame: {
-        border: {
-          lineWidth: 'dummy_width',
-          default: 'dummy_default',
-          radius: {
-            s: 'dummy_s',
-            m: 'dummy_m',
-          },
-        },
-      },
-      border: {
-        shorthand: 'dummy_shorthand',
-      },
-      radius: {
-        m: 'dummy_radius_m',
-      },
-    })
-
-    expect(actual.frame.border.lineWidth).toBe('dummy_width')
-    expect(actual.frame.border.default).toBe('dummy_shorthand')
-    expect(actual.border.lineWidth).toBe('dummy_width')
-    expect(actual.border.shorthand).toBe('dummy_shorthand')
-
-    expect(actual.frame.border.radius.s).toBe('dummy_s')
-    expect(actual.frame.border.radius.m).toBe('dummy_radius_m')
-    expect(actual.radius.s).toBe('dummy_s')
-    expect(actual.radius.m).toBe('dummy_radius_m')
   })
 
   it('returns theme "space" is the same as "spacingByChar"', () => {
