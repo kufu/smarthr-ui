@@ -90,8 +90,6 @@ export const TabItem: FC<Props & ElementProps> = ({
       <Tooltip
         {...tabAttrs}
         message={disabledDetail.message}
-        horizontal="center"
-        vertical="auto"
         ariaDescribedbyTarget="inner"
         aria-disabled={rest.disabled}
         className="focus-visible:shr-focus-indicator--inner"
