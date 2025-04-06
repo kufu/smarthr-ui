@@ -67,18 +67,6 @@ const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
 
 const defaultMediaQuery = { SP: 599, TABLET: 959 }
 
-const defaultSpace = getSpace(defaultSpaceSize)
-
-/**
- * @deprecated The defaultSize will be deprecated, please use defaultFontSize, defaultSpacing or defaultBreakPoint instead
- */
-export const defaultSize: CreatedSizeTheme = {
-  pxToRem: (value: number) => pxToRem(value)(defaultHtmlFontSize),
-  font: defaultFontSize,
-  space: defaultSpace,
-  mediaQuery: defaultMediaQuery,
-}
-
 export const createSize = (userSize: SizeProperty = {}) => {
   const fontSize = userSize.htmlFontSize || defaultHtmlFontSize
   const spaceSize = userSize.space?.defaultRem || defaultSpaceSize

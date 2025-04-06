@@ -6,14 +6,6 @@ import { type ColorProperty, defaultColor } from '../createColor'
 import { defaultShadow } from './defaultShadow'
 
 export type ShadowProperty = {
-  /**
-   * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
-   */
-  BASE?: string
-  /**
-   * @deprecated The DIALOG property will be deprecated, please use LAYER0~4 property instead
-   */
-  DIALOG?: string
   LAYER0?: string
   LAYER1?: string
   LAYER2?: string
@@ -25,14 +17,6 @@ export type ShadowProperty = {
 }
 
 export type CreatedShadowTheme = {
-  /**
-   * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
-   */
-  BASE: string
-  /**
-   * @deprecated The DIALOG property will be deprecated, please use LAYER0~4 property instead
-   */
-  DIALOG: string
   LAYER0?: string
   LAYER1?: string
   LAYER2?: string
