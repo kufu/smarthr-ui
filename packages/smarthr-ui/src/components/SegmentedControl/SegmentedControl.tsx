@@ -8,7 +8,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -196,7 +195,15 @@ const SegmentedControlButton: FC<
     className: string
   }
 > = ({ onClick, size, value, option, index, isFocused, excludesSelected, isSquare, className }) => {
-  const checked = value === option.value
+  const attrs = useMemo(() => {
+    const checked = value === option.value
+
+    return {
+      checked,
+      ariaChecked: checked && !!value,
+      variant: checked ? 'primary' : 'secondary',
+    }
+  }, [value, option.value])
   const tabIndex = useMemo(() => {
     if (isFocused) {
       return -1
@@ -206,19 +213,19 @@ const SegmentedControlButton: FC<
       return index === 0 ? 0 : -1
     }
 
-    return checked ? 0 : -1
-  }, [excludesSelected, isFocused, checked, index])
+    return attrs.checked ? 0 : -1
+  }, [excludesSelected, isFocused, attrs.checked, index])
 
   return (
     <Button
-      role="radio"
-      aria-label={option.ariaLabel}
-      variant={checked ? 'primary' : 'secondary'}
-      aria-checked={checked && !!value}
+      value={option.value}
       disabled={option.disabled}
       tabIndex={tabIndex}
-      value={option.value}
+      role="radio"
+      aria-label={option.ariaLabel}
+      aria-checked={attrs.ariaChecked}
       onClick={onClick}
+      variant={attrs.variant}
       size={size}
       square={isSquare}
       className={className}
