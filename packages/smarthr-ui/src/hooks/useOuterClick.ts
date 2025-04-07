@@ -1,31 +1,30 @@
-import { type RefObject, useCallback, useEffect } from 'react'
+import { type RefObject, useEffect } from 'react'
 
 export function useOuterClick(
   targets: Array<RefObject<HTMLElement>>,
   callback: (e: MouseEvent) => void,
 ) {
-  const handleOuterClick = useCallback(
-    (e: MouseEvent) => {
-      if (targets.some((target) => isEventIncludedParent(e, target.current))) {
-        return
-      }
-      callback(e)
-    },
-    // spread targets to compare deps one by one
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [...targets, callback],
-  )
-
   useEffect(() => {
+    const handleOuterClick = (e: MouseEvent) => {
+      if (targets.every((target) => isEventExcludedParent(e, target.current))) {
+        callback(e)
+      }
+    }
+
     window.addEventListener('click', handleOuterClick)
+
     return () => {
       window.removeEventListener('click', handleOuterClick)
     }
-  }, [handleOuterClick])
+  }, [callback, targets])
 }
 
-function isEventIncludedParent(e: MouseEvent, parent: Element | null): boolean {
+function isEventExcludedParent(e: MouseEvent, parent: Element | null): boolean {
+  if (!parent) return false
+
   const path = e.composedPath()
-  if (path.length === 0 || !parent) return false
-  return path.includes(parent)
+
+  if (path.length === 0) return false
+
+  return !path.includes(parent)
 }

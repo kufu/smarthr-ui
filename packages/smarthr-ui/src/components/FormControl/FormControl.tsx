@@ -82,54 +82,56 @@ const classNameGenerator = tv({
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
     underTitleStack: ['[&&&]:shr-mt-0'],
+    childrenWrapper: [],
   },
-})
-
-// TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
-// FormControltとの差をわかりやすくしている
-// 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
-// https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-const childrenWrapper = tv({
   variants: {
     innerMargin: {
-      0: '',
-      0.25: '',
-      0.5: '',
-      0.75: '',
-      1: '',
-      1.25: '',
-      1.5: '',
-      2: '',
-      2.5: '',
-      3: '',
-      3.5: '',
-      4: '',
-      8: '',
-      X3S: '',
-      XXS: '',
-      XS: '',
-      S: '',
-      M: '',
-      L: '',
-      XL: '',
-      XXL: '',
-      X3L: '',
+      0: {},
+      0.25: {},
+      0.5: {},
+      0.75: {},
+      1: {},
+      1.25: {},
+      1.5: {},
+      2: {},
+      2.5: {},
+      3: {},
+      3.5: {},
+      4: {},
+      8: {},
+      X3S: {},
+      XXS: {},
+      XS: {},
+      S: {},
+      M: {},
+      L: {},
+      XL: {},
+      XXL: {},
+      X3L: {},
     } as { [key in Gap]: string },
     isFieldset: {
-      true: '',
-      false: '',
+      true: {},
+      false: {},
     },
   },
   compoundVariants: [
+    // TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
+    // FormControltとの差をわかりやすくしている
+    // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
+    // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
     {
       innerMargin: undefined,
       isFieldset: true,
-      className: '[:not([hidden])_~_&&&]:shr-mt-1',
+      class: {
+        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-1',
+      },
     },
     {
       innerMargin: undefined,
       isFieldset: false,
-      className: '[:not([hidden])_~_&&&]:shr-mt-0.5',
+      class: {
+        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
+      },
     },
   ],
 })
@@ -207,7 +209,8 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
 
   const classNames = useMemo(() => {
-    const { wrapper, label, errorList, errorIcon, underTitleStack } = classNameGenerator()
+    const { wrapper, label, errorList, errorIcon, underTitleStack, childrenWrapper } =
+      classNameGenerator({ innerMargin, isFieldset })
 
     return {
       wrapper: wrapper({ className }),
@@ -217,13 +220,9 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       errorList: errorList(),
       errorIcon: errorIcon(),
       underTitleStack: underTitleStack(),
+      childrenWrapper: childrenWrapper(),
     }
-  }, [dangerouslyTitleHidden, className])
-
-  const childrenWrapperStyle = useMemo(
-    () => childrenWrapper({ innerMargin, isFieldset }),
-    [innerMargin, isFieldset],
-  )
+  }, [innerMargin, isFieldset, dangerouslyTitleHidden, className])
 
   useEffect(() => {
     if (
@@ -304,7 +303,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         managedHtmlFor={managedHtmlFor}
         classNames={classNames}
       />
-      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
+      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
         {children}
       </div>
       <SupplementaryMessageText
@@ -338,12 +337,12 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        labelClassName={classNames.label}
         dangerouslyTitleHidden={dangerouslyTitleHidden}
         titleType={titleType}
         title={title}
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
+        labelClassName={classNames.label}
       />
       {body}
     </Stack>
@@ -364,11 +363,11 @@ const TitleCluster = memo<
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    labelClassName,
     dangerouslyTitleHidden,
     titleType,
     title,
     subActionArea,
+    labelClassName,
     statusLabels,
   }) => {
     const body = (

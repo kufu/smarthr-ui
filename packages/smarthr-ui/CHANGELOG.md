@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [68.0.1](https://github.com/kufu/smarthr-ui/compare/v68.0.0...v68.0.1) (2025-04-02)
+
+
+### Bug Fixes
+
+* TextareaのmaxLettersを指定した場合の処理がエラーになるバグを修正する ([#5513](https://github.com/kufu/smarthr-ui/issues/5513)) ([83f12a6](https://github.com/kufu/smarthr-ui/commit/83f12a6442730ee6478023a6f95fb75cbb7536bf))
+
+## [68.0.0](https://github.com/kufu/smarthr-ui/compare/v67.0.0...v68.0.0) (2025-04-01)
+
+### ⚠ BREAKING CHANGES
+
+* Tableのカラム固定を左右で行えるようにする SHRUI-1005 (#5507)
+
+### Features
+
+* MultiComboboxの選択済みアイテムの削除ボタンのaltを詳細化 SHRUI-1191 ([#5504](https://github.com/kufu/smarthr-ui/issues/5504)) ([b974c14](https://github.com/kufu/smarthr-ui/commit/b974c146c646c3146c442dd423bb86a6244f9510))
+* Inputコンポーネントのwidth属性をwidth & maxWidthに変更 SHRUI-693 ([#5501](https://github.com/kufu/smarthr-ui/issues/5501)) ([43bc032](https://github.com/kufu/smarthr-ui/commit/43bc032ef011a638cf4d611535012870a813001a))
+* RequiredLabelを作成 SHRUI-1230 ([#5497](https://github.com/kufu/smarthr-ui/issues/5497)) ([48467c2](https://github.com/kufu/smarthr-ui/commit/48467c22afb2402f6be2160dded4291aee03bd2b))
+* **SmartHRAILogo**: SmartHRAILogoを追加 ([#5444](https://github.com/kufu/smarthr-ui/pull/5444)) ([68b6c5e](https://github.com/kufu/smarthr-ui/commit/68b6c5e30646dfcb82d247209f56d0bc46d03439))
+
+### Bug Fixes
+
+* DropdownMenuButtonのtab,arrow-keyの挙動を揃える SHRUI-727 ([#5495](https://github.com/kufu/smarthr-ui/issues/5495)) ([02739e6](https://github.com/kufu/smarthr-ui/commit/02739e62556277c4fa204a2468e93ba0f72b1d5b))
+* **SegmentedControl**: isSquare を指定しなくても使えるように修正 ([#5478](https://github.com/kufu/smarthr-ui/pull/5478))([0a71107](https://github.com/kufu/smarthr-ui/commit/0a71107c270ddb2138e7f111f2e7b909d6e1fb36))
+
+## [67.0.0](https://github.com/kufu/smarthr-ui/compare/v66.1.0...v67.0.0) (2025-03-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* CheckBox, ComboBox を Checkbox, Combobox にリネームする SHRUI-1210 (#5481)
+* ModelessDialogの見出し部分がHeadingかつ、自動レベル計算されるように修正する SHRUI-961 (#5459)
+
+### Features
+
+* add FaGoogleDrive and FaMicrosoft icon ([#5483](https://github.com/kufu/smarthr-ui/issues/5483)) ([50e9a98](https://github.com/kufu/smarthr-ui/commit/50e9a988f8f1aa5f28d0ead2168c7b1a13e026db))
+
+
+### Bug Fixes
+
+* CheckBox, ComboBox を Checkbox, Combobox にリネームする SHRUI-1210 ([#5481](https://github.com/kufu/smarthr-ui/issues/5481)) ([671e4bb](https://github.com/kufu/smarthr-ui/commit/671e4bb7a9cff0876ac52ade4af20208d088d1fa))
+* ModelessDialogの見出し部分がHeadingかつ、自動レベル計算されるように修正する SHRUI-961 ([#5459](https://github.com/kufu/smarthr-ui/issues/5459)) ([b95e7c7](https://github.com/kufu/smarthr-ui/commit/b95e7c7bc51030efd936cb9037b1a5e6e5de922c))
+
 ## [66.1.0](https://github.com/kufu/smarthr-ui/compare/v66.0.0...v66.1.0) (2025-03-18)
 
 
@@ -17,6 +60,12 @@ All notable changes to this project will be documented in this file. See [standa
 * libディレクトリをexportできるように修正 ([#5456](https://github.com/kufu/smarthr-ui/issues/5456)) ([1c94624](https://github.com/kufu/smarthr-ui/commit/1c9462425518d2628061279ea737d3cdd610e342))
 * package.jsonをexportsに含める ([#5462](https://github.com/kufu/smarthr-ui/issues/5462)) ([57744d0](https://github.com/kufu/smarthr-ui/commit/57744d0cb3fc964538954af5cb83c4dc834227cc))
 * **StepFormDialog, useDialogPortal, SectioningContent:** RSC対応 ([#5457](https://github.com/kufu/smarthr-ui/issues/5457)) ([2ad3fb3](https://github.com/kufu/smarthr-ui/commit/2ad3fb366da1772cc98f634533c9affdc5168d96))
+
+## [66.1.1](https://github.com/kufu/smarthr-ui/compare/v66.1.0...v66.1.1) (2025-04-02)
+
+### Bug Fixes
+
+* TextareaのmaxLettersを指定した場合の処理がエラーになるバグを修正する ([#5513](https://github.com/kufu/smarthr-ui/issues/5513)) ([e8c00f636956d26e9fc9d28d1175e2f84202c2b2](https://github.com/kufu/smarthr-ui/pull/5513/commits/e8c00f636956d26e9fc9d28d1175e2f84202c2b2))
 
 ## [66.0.0](https://github.com/kufu/smarthr-ui/compare/v65.3.0...v66.0.0) (2025-03-11)
 

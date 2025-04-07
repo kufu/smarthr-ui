@@ -18,7 +18,7 @@ export default {
   title: 'Data Display（データ表示）/Table/VRT',
   render: (args) => (
     <Stack>
-      {[undefined, true].map((fixed) =>
+      {[undefined, 'left', 'right'].map((fixed) =>
         [undefined, 'both'].map((borderType) => {
           const Wrapper = fixed ? TableReel : Fragment
           const wrapperProps = fixed ? { className: 'shr-w-[50vw]' } : {}
@@ -27,6 +27,7 @@ export default {
               <Table {...args} borderType={borderType as any}>
                 <thead>
                   <tr>
+                    {fixed === 'left' && <Th fixed={fixed}>操作</Th>}
                     <ThCheckbox name="thead_checkbox" mixed checked />
                     {[...Array(10)].map((_, i) => (
                       <Th
@@ -37,7 +38,7 @@ export default {
                         表頭{i + 1}
                       </Th>
                     ))}
-                    <Th fixed={fixed}>操作</Th>
+                    {fixed === 'right' && <Th fixed={fixed}>操作</Th>}
                   </tr>
                   <BulkActionRow>
                     <Cluster inline align="center" className="shr-sticky shr-left-1">
@@ -49,6 +50,11 @@ export default {
                 <tbody>
                   {[...Array(10)].map((_, i) => (
                     <tr key={i}>
+                      {fixed === 'left' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
                       <TdCheckbox
                         checked={i % 2 === 0}
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
@@ -65,13 +71,20 @@ export default {
                           </Text>
                         </Td>
                       ))}
-                      <Td fixed={fixed}>
-                        <Button size="s">操作</Button>
-                      </Td>
+                      {fixed === 'right' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
                     </tr>
                   ))}
                   {[...Array(10)].map((_, i) => (
                     <tr key={i}>
+                      {fixed === 'left' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
                       <TdRadioButton
                         checked={i === 0}
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
@@ -88,9 +101,11 @@ export default {
                           </Text>
                         </Td>
                       ))}
-                      <Td fixed={fixed}>
-                        <Button size="s">操作</Button>
-                      </Td>
+                      {fixed === 'right' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

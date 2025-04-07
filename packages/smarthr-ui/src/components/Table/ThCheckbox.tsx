@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Balloon } from '../Balloon'
-import { CheckBox, type Props as CheckBoxProps } from '../CheckBox'
+import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 
 import { Th } from './Th'
 
@@ -38,7 +38,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
+export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
   ({ vAlign, decorators, className, ...others }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner, balloon, checkbox } = classNameGenerator()
@@ -65,7 +65,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
             <span className="shr-p-0.5 shr-block">{decorated.checkAllInvisibleLabel}</span>
           </Balloon>
-          <CheckBox {...others} ref={ref} className={classNames.checkbox} />
+          <Checkbox {...others} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>
     )
