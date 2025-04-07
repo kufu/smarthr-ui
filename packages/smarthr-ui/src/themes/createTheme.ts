@@ -83,22 +83,11 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
 }
 
 function getColorProperty(theme: ThemeProperty): ColorProperty {
-  return {
-    ...theme.color,
-  }
+  return theme.color || {}
 }
 function getSizeProperty(theme: ThemeProperty): SizeProperty {
   return {
-    space: {
-      defaultRem: theme.size?.space?.defaultRem,
-      XXS: theme.size?.space?.XXS,
-      XS: theme.size?.space?.XS,
-      S: theme.size?.space?.S,
-      M: theme.size?.space?.M,
-      L: theme.size?.space?.L,
-      XL: theme.size?.space?.XL,
-      XXL: theme.size?.space?.XXL,
-    },
+    space: theme.size?.space || {},
     mediaQuery: {
       ...theme.size?.mediaQuery,
       ...theme.breakpoint,

@@ -1,6 +1,5 @@
 import { merge } from '../libs/lodash'
 
-const defaultHtmlFontSize = 16
 const defaultSpaceSize = 8
 
 export type SizeProperty = {
