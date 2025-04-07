@@ -19,9 +19,5 @@ export const defaultLeading: CreatedLeading = {
   RELAXED: 1.75,
 }
 
-export const createLeading = (userLeading: LeadingProperty = {}): CreatedLeading => {
-  const { ...userTokens } = userLeading
-
-  // FIXME defaultLeadingが上書きされてしまうため修正する
-  return merge(defaultLeading, userTokens)
-}
+export const createLeading = (userLeading: LeadingProperty = {}): CreatedLeading =>
+  merge({ ...defaultLeading }, userLeading)
