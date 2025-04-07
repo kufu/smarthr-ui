@@ -21,7 +21,7 @@ export type CreatedInteractionTheme = {
   }
 }
 
-export const defaultInteraction = {
+export const defaultInteraction: CreatedInteractionTheme = {
   hover: {
     feedbackOpacity: '.7',
     animationDuration: hoverAnimationDuration,

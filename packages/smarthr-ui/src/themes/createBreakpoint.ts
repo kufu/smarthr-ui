@@ -10,7 +10,7 @@ export type CreatedBreakpointTheme = {
   TABLET: number
 }
 
-export const defaultBreakpoint = { SP: 599, TABLET: 959 }
+export const defaultBreakpoint: CreatedBreakpointTheme = { SP: 599, TABLET: 959 }
 
 export const createBreakpoint = (userBreakpoint?: BreakpointProperty): CreatedBreakpointTheme => {
   if (!userBreakpoint) {
