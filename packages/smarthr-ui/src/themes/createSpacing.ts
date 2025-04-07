@@ -45,12 +45,15 @@ const getSpacing = (baseSize: number) => {
 
 const getSpacingByChar = (baseSize: number) => {
   const charSize = baseSize * 2
-  return primitiveTokens
-    .map((size) => {
-      const value = !size ? '0' : `${charSize * size}px`
-      return { [size]: value }
-    })
-    .reduce((a, c) => Object.assign(a, c), {})
+  return (
+    primitiveTokens
+      // TODO map & reduce を reduceのみでチェックするようにする
+      .map((size) => {
+        const value = !size ? '0' : `${charSize * size}px`
+        return { [size]: value }
+      })
+      .reduce((a, c) => Object.assign(a, c), {})
+  )
 }
 
 export const createSpacing = (userBaseSize: number = defaultBaseSize) => getSpacing(userBaseSize)

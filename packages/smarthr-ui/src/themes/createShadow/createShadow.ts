@@ -36,9 +36,13 @@ const createFocusIndicatorStyles = (outline: string) => css`
   box-shadow: ${outline};
 `
 
-export const createShadow = (userShadow: ShadowProperty = {}, userColor: ColorProperty = {}) => {
+export const createShadow = (
+  userShadow: ShadowProperty = {},
+  userColor: ColorProperty = {},
+): CreatedShadowTheme => {
   const outline = createOutline(userColor.OUTLINE || defaultColor.OUTLINE)
-  const created: CreatedShadowTheme = merge(
+
+  return merge(
     {
       ...defaultShadow,
       OUTLINE: outline,
@@ -46,5 +50,4 @@ export const createShadow = (userShadow: ShadowProperty = {}, userColor: ColorPr
     },
     userShadow,
   )
-  return created
 }

@@ -69,8 +69,8 @@ export const defaultPalette = {
   BRAND: '#00c4cc',
 }
 
-export const createPalette = (userPalette: PaletteProperty = {}) => {
-  const created: CreatedPaletteTheme = merge(
+export const createPalette = (userPalette: PaletteProperty = {}): CreatedPaletteTheme =>
+  merge(
     {
       hoverColor: (value: string): string => darken(0.05, value),
       disableColor: (value: string): string => rgba(value, 0.5),
@@ -80,5 +80,3 @@ export const createPalette = (userPalette: PaletteProperty = {}) => {
     userPalette,
     !userPalette.OUTLINE && userPalette.MAIN ? { OUTLINE: userPalette.MAIN } : null,
   )
-  return created
-}

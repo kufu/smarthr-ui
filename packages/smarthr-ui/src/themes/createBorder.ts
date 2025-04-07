@@ -27,15 +27,17 @@ export const defaultBorder: CreatedBorderTheme = {
   highContrast: `${defaultLineWidth} ${defaultLineStyle} ${highContrastBorderColor}`,
 }
 
-export const createBorder = (userBorder: BorderProperty = {}, userColor: ColorProperty = {}) => {
+export const createBorder = (
+  userBorder: BorderProperty = {},
+  userColor: ColorProperty = {},
+): CreatedBorderTheme => {
   const color = userColor.BORDER || defaultColor.BORDER
-  const created: CreatedBorderTheme = merge(
+
+  return merge(
     {
       ...defaultBorder,
       shorthand: `${defaultLineWidth} ${defaultLineStyle} ${color}`,
     },
     userBorder,
   )
-
-  return created
 }

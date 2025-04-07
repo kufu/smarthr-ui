@@ -27,12 +27,10 @@ export const defaultZIndex = {
   FLASH_MESSAGE: 11000,
 }
 
-export const createZIndex = (userZIndex: ZIndexProperty = {}) => {
-  const created: CreatedZindexTheme = merge(
+export const createZIndex = (userZIndex: ZIndexProperty = {}): CreatedZindexTheme =>
+  merge(
     {
       ...defaultZIndex,
     },
     userZIndex,
   )
-  return created
-}

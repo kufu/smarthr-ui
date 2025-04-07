@@ -71,9 +71,10 @@ export const defaultFontSize: CreatedFontSizeTheme = {
   ...getSizes(defaultScaleFactor),
 }
 
-export const createFontSize = (userFontSize: FontSizeProperty = {}) => {
+export const createFontSize = (userFontSize: FontSizeProperty = {}): CreatedFontSizeTheme => {
   const { htmlFontSize, scaleFactor, ...userTokens } = userFontSize
-  const created: CreatedFontSizeTheme = merge(
+
+  return merge(
     {
       ...defaultFontSize,
       pxToRem: pxToRem(htmlFontSize || defaultHtmlFontSize),
@@ -81,6 +82,4 @@ export const createFontSize = (userFontSize: FontSizeProperty = {}) => {
     scaleFactor ? getSizes(scaleFactor) : {},
     userTokens,
   )
-
-  return created
 }

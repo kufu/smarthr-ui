@@ -74,6 +74,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
   const colorProperty = getColorProperty(theme)
   const baseSize = getSpacingProperty(theme).baseSize
   const spacingByChar = createSpacingByChar(baseSize)
+
   return {
     palette: createPalette(paletteProperty),
     color: createColor(colorProperty),
@@ -136,11 +137,11 @@ function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
     ...theme.fontSize,
   }
 }
-const getLeadingProperty = (theme: ThemeProperty): LeadingProperty => ({ ...theme.leading })
+function getLeadingProperty(theme: ThemeProperty): LeadingProperty {
+  return theme.leading || {}
+}
 function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
-  return {
-    baseSize: theme.spacing?.baseSize,
-  }
+  return theme.spacing || {}
 }
 function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
   return {
@@ -149,11 +150,7 @@ function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
   }
 }
 function getBorderProperty(theme: ThemeProperty): BorderProperty {
-  return {
-    lineWidth: theme.border?.lineWidth,
-    lineStyle: theme.border?.lineStyle,
-    shorthand: theme.border?.shorthand,
-  }
+  return theme.border || {}
 }
 function getRadiusProperty(theme: ThemeProperty): RadiusProperty {
   return theme.radius || {}
