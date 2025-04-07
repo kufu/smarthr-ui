@@ -45,14 +45,14 @@ const getSpacing = (baseSize: number) => {
 
 const getSpacingByChar = (baseSize: number) => {
   const charSize = baseSize * 2
-  return (
-    primitiveTokens
-      // TODO map & reduce を reduceのみでチェックするようにする
-      .map((size) => {
-        const value = !size ? '0' : `${charSize * size}px`
-        return { [size]: value }
-      })
-      .reduce((a, c) => Object.assign(a, c), {})
+
+  return primitiveTokens.reduce(
+    (prev, size) => {
+      prev[size] = size ? `${charSize * size}px` : '0'
+
+      return prev
+    },
+    {} as { [key: string]: string },
   )
 }
 
