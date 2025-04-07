@@ -1,4 +1,10 @@
-import { type ComponentProps, type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  useMemo,
+} from 'react'
 import { Children, cloneElement } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -9,7 +15,7 @@ export type SideNavItemButtonProps = Omit<
   'size' | 'onClick'
 >
 
-type Props = {
+type Props = PropsWithChildren<{
   /** 各アイテムのデータの配列
    * @deprecated SideNavItemButton を使ってください
    */
@@ -20,9 +26,7 @@ type Props = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
-  /** 子要素 */
-  children?: React.ReactNode
-}
+}>
 type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
 
 const classNameGenerator = tv({
@@ -47,25 +51,6 @@ export const SideNav: FC<Props & ElementProps> = ({
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  const clonedChildren = useMemo(() => {
-    if (!children) return null
-    return Children.map(children, (child) => {
-      if (
-        child &&
-        typeof child === 'object' &&
-        'type' in child &&
-        child.type === SideNavItemButton
-      ) {
-        return cloneElement(child as React.ReactElement, {
-          // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
-          size,
-          onClick: actualOnClick,
-        })
-      }
-      return child
-    })
-  }, [children, size, actualOnClick])
-
   return (
     <ul {...props} className={actualClassName}>
       {items
@@ -80,7 +65,23 @@ export const SideNav: FC<Props & ElementProps> = ({
               onClick={actualOnClick}
             />
           ))
-        : clonedChildren}
+        : children &&
+          Children.map(children, (child) => {
+            if (
+              child &&
+              typeof child === 'object' &&
+              'type' in child &&
+              child.type === SideNavItemButton
+            ) {
+              return cloneElement(child as React.ReactElement, {
+                // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
+                size,
+                onClick: actualOnClick,
+              })
+            }
+
+            return child
+          })}
     </ul>
   )
 }
