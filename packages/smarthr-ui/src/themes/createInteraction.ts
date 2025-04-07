@@ -31,11 +31,16 @@ export const defaultInteraction = {
 }
 
 export const createInteraction = (
-  userInteraction: InteractionProperty = {},
-): CreatedInteractionTheme =>
-  merge(
+  userInteraction?: InteractionProperty,
+): CreatedInteractionTheme => {
+  if (!userInteraction) {
+    return defaultInteraction
+  }
+
+  return merge(
     {
       ...defaultInteraction,
     },
     userInteraction,
   )
+}

@@ -41,7 +41,11 @@ const getSizes = (scaleFactor: number) => ({
 
 export const defaultFontSize: CreatedFontSizeTheme = getSizes(defaultScaleFactor)
 
-export const createFontSize = (userFontSize: FontSizeProperty = {}): CreatedFontSizeTheme => {
+export const createFontSize = (userFontSize?: FontSizeProperty): CreatedFontSizeTheme => {
+  if (!userFontSize) {
+    return defaultFontSize
+  }
+
   const { scaleFactor, ...userTokens } = userFontSize
 
   return merge(

@@ -19,5 +19,10 @@ export const defaultLeading: CreatedLeading = {
   RELAXED: 1.75,
 }
 
-export const createLeading = (userLeading: LeadingProperty = {}): CreatedLeading =>
-  merge({ ...defaultLeading }, userLeading)
+export const createLeading = (userLeading?: LeadingProperty): CreatedLeading => {
+  if (!userLeading) {
+    return defaultLeading
+  }
+
+  return merge({ ...defaultLeading }, userLeading)
+}

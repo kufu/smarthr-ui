@@ -37,17 +37,19 @@ const createFocusIndicatorStyles = (outline: string) => css`
 `
 
 export const createShadow = (
-  userShadow: ShadowProperty = {},
-  userColor: ColorProperty = {},
+  userShadow?: ShadowProperty,
+  userColor?: ColorProperty,
 ): CreatedShadowTheme => {
-  const outline = createOutline(userColor.OUTLINE || defaultColor.OUTLINE)
+  const outline = createOutline(userColor?.OUTLINE || defaultColor.OUTLINE)
+  const shadows = {
+    ...defaultShadow,
+    OUTLINE: outline,
+    focusIndicatorStyles: createFocusIndicatorStyles(outline),
+  }
 
-  return merge(
-    {
-      ...defaultShadow,
-      OUTLINE: outline,
-      focusIndicatorStyles: createFocusIndicatorStyles(outline),
-    },
-    userShadow,
-  )
+  if (!userShadow) {
+    return shadows
+  }
+
+  return merge(shadows, userShadow)
 }

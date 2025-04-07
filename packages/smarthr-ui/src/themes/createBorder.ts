@@ -28,16 +28,18 @@ export const defaultBorder: CreatedBorderTheme = {
 }
 
 export const createBorder = (
-  userBorder: BorderProperty = {},
-  userColor: ColorProperty = {},
+  userBorder?: BorderProperty,
+  userColor?: ColorProperty,
 ): CreatedBorderTheme => {
-  const color = userColor.BORDER || defaultColor.BORDER
+  const color = userColor?.BORDER || defaultColor.BORDER
+  const borders = {
+    ...defaultBorder,
+    shorthand: `${defaultLineWidth} ${defaultLineStyle} ${color}`,
+  }
 
-  return merge(
-    {
-      ...defaultBorder,
-      shorthand: `${defaultLineWidth} ${defaultLineStyle} ${color}`,
-    },
-    userBorder,
-  )
+  if (!userBorder) {
+    return borders
+  }
+
+  return merge(borders, userBorder)
 }

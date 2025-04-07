@@ -12,5 +12,10 @@ export type CreatedBreakpointTheme = {
 
 export const defaultBreakpoint = { SP: 599, TABLET: 959 }
 
-export const createBreakpoint = (userBreakpoint: BreakpointProperty = {}): CreatedBreakpointTheme =>
-  merge({ ...defaultBreakpoint }, userBreakpoint)
+export const createBreakpoint = (userBreakpoint?: BreakpointProperty): CreatedBreakpointTheme => {
+  if (!userBreakpoint) {
+    return defaultBreakpoint
+  }
+
+  return merge({ ...defaultBreakpoint }, userBreakpoint)
+}
