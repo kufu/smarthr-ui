@@ -369,7 +369,7 @@ const wrapperClassNameGenerator = tv({
 
 const innerClassNameGenerator = tv({
   base: [
-    'smarthr-ui-Button-Body',
+    'smarthr-ui-Button-body',
     /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
     'shr-min-w-0',
   ],
