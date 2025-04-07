@@ -193,7 +193,7 @@ const MemoizedDropdownTrigger = memo<
 >(({ narrow, invert, className, label }) => (
   <DropdownTrigger>
     {narrow ? (
-      <Button square suffix={<FaCaretDownIcon />} className={className}>
+      <Button suffix={<FaCaretDownIcon />} className={className}>
         {invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />}
       </Button>
     ) : (
