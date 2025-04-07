@@ -7,47 +7,6 @@ import { defaultRadius } from '../createRadius'
 import { createTheme } from '../createTheme'
 
 describe('createTheme', () => {
-  it('returns theme reflecting "palette" settings', () => {
-    const actual = createTheme({
-      palette: {
-        TEXT_BLACK: '#001',
-        TEXT_GREY: '#002',
-        TEXT_DISABLED: '#003',
-        TEXT_LINK: '#004',
-        BORDER: '#005',
-        ACTION_BACKGROUND: '#006',
-        BACKGROUND: '#007',
-        COLUMN: '#008',
-        OVER_BACKGROUND: '#009',
-        HEAD: '#010',
-        BASE_GREY: '#011',
-        MAIN: '#012',
-        DANGER: '#013',
-        WARNING: '#014',
-        SCRIM: '#015',
-        OVERLAY: '#016',
-        OUTLINE: '#017',
-      },
-    })
-    expect(actual.palette.TEXT_BLACK).toBe('#001')
-    expect(actual.palette.TEXT_GREY).toBe('#002')
-    expect(actual.palette.TEXT_DISABLED).toBe('#003')
-    expect(actual.palette.TEXT_LINK).toBe('#004')
-    expect(actual.palette.BORDER).toBe('#005')
-    expect(actual.palette.ACTION_BACKGROUND).toBe('#006')
-    expect(actual.palette.BACKGROUND).toBe('#007')
-    expect(actual.palette.COLUMN).toBe('#008')
-    expect(actual.palette.OVER_BACKGROUND).toBe('#009')
-    expect(actual.palette.HEAD).toBe('#010')
-    expect(actual.palette.BASE_GREY).toBe('#011')
-    expect(actual.palette.MAIN).toBe('#012')
-    expect(actual.palette.DANGER).toBe('#013')
-    expect(actual.palette.WARNING).toBe('#014')
-    expect(actual.palette.SCRIM).toBe('#015')
-    expect(actual.palette.OVERLAY).toBe('#016')
-    expect(actual.palette.OUTLINE).toBe('#017')
-  })
-
   it('returns theme reflecting "color" settings', () => {
     const actual = createTheme({
       color: {
@@ -258,70 +217,6 @@ describe('createTheme', () => {
 
     expect(actual.radius.s).toBe('dummy_s_4')
     expect(actual.radius.m).toBe('dummy_m_4')
-  })
-
-  it('returns theme that reflects "palette" settings to "color"', () => {
-    const actual = createTheme({
-      palette: {
-        TEXT_BLACK: '#001',
-        BORDER: '#999',
-      },
-    })
-    expect(actual.palette.TEXT_BLACK).toBe('#001')
-    expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.color.TEXT_BLACK).toBe('#001')
-    expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.border.shorthand).toBe(
-      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #999`,
-    )
-  })
-
-  it('returns theme reflecting "color" settings to "palette"', () => {
-    const actual = createTheme({
-      color: {
-        TEXT_GREY: '#002',
-        BORDER: '#998',
-      },
-    })
-
-    expect(actual.palette.TEXT_GREY).toBe('#002')
-    expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.color.TEXT_GREY).toBe('#002')
-    expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.border.shorthand).toBe(
-      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #998`,
-    )
-  })
-
-  it('returns theme prioritizing "color" settings over "palette" when given palette and color settings', () => {
-    const actual = createTheme({
-      palette: {
-        TEXT_BLACK: '#001',
-        TEXT_GREY: '#002',
-        TEXT_DISABLED: '#003',
-        TEXT_LINK: '#004',
-        BORDER: '#997',
-      },
-      color: {
-        TEXT_GREY: '#999',
-        TEXT_LINK: '#888',
-        BORDER: '#996',
-      },
-    })
-
-    expect(actual.palette.TEXT_BLACK).toBe('#001')
-    expect(actual.palette.TEXT_GREY).toBe('#999')
-    expect(actual.palette.TEXT_DISABLED).toBe('#003')
-    expect(actual.palette.TEXT_LINK).toBe('#888')
-    expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.color.TEXT_BLACK).toBe('#001')
-    expect(actual.color.TEXT_GREY).toBe('#999')
-    expect(actual.color.TEXT_DISABLED).toBe('#003')
-    expect(actual.color.TEXT_LINK).toBe('#888')
-    expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
-    expect(actual.border.shorthand).toBe(
-      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #996`,
-    )
   })
 
   it('returns theme reflecting "size" settings to "fontSize", "spacing" and "breakpoint"', () => {

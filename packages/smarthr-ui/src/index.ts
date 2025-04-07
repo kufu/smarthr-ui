@@ -108,7 +108,6 @@ export { useDevice, DeviceProvider } from './hooks/useDevice'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
-export { defaultPalette } from './themes/createPalette'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
 export { defaultBorder } from './themes/createBorder'

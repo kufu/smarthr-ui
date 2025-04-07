@@ -12,7 +12,6 @@ import {
   createInteraction,
 } from './createInteraction'
 import { type CreatedLeading, type LeadingProperty, createLeading } from './createLeading'
-import { type CreatedPaletteTheme, type PaletteProperty, createPalette } from './createPalette'
 import { type CreatedRadiusTheme, type RadiusProperty, createRadius } from './createRadius'
 import { type CreatedShadowTheme, type ShadowProperty, createShadow } from './createShadow'
 import { type CreatedSizeTheme, type SizeProperty, createSize } from './createSize'
@@ -26,10 +25,6 @@ import {
 import { type CreatedZindexTheme, type ZIndexProperty, createZIndex } from './createZIndex'
 
 type ThemeProperty = {
-  /**
-   * @deprecated The palette property will be deprecated, please use color property instead
-   */
-  palette?: PaletteProperty
   color?: ColorProperty
   /**
    * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
@@ -47,10 +42,6 @@ type ThemeProperty = {
 }
 
 export type CreatedTheme = {
-  /**
-   * @deprecated The palette property will be deprecated, please use color property instead
-   */
-  palette: CreatedPaletteTheme
   color: CreatedColorTheme
   /**
    * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
@@ -70,13 +61,11 @@ export type CreatedTheme = {
 }
 
 export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
-  const paletteProperty = getPaletteProperty(theme)
   const colorProperty = getColorProperty(theme)
   const baseSize = getSpacingProperty(theme).baseSize
   const spacingByChar = createSpacingByChar(baseSize)
 
   return {
-    palette: createPalette(paletteProperty),
     color: createColor(colorProperty),
     size: createSize(getSizeProperty(theme)),
     fontSize: createFontSize(getFontSizeProperty(theme)),
@@ -93,15 +82,8 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
   }
 }
 
-function getPaletteProperty(theme: ThemeProperty): PaletteProperty {
-  return {
-    ...theme.palette,
-    ...theme.color,
-  }
-}
 function getColorProperty(theme: ThemeProperty): ColorProperty {
   return {
-    ...theme.palette,
     ...theme.color,
   }
 }
