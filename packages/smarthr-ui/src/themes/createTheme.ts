@@ -52,44 +52,22 @@ export type CreatedTheme = {
 }
 
 export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
-  const colorProperty = getColorProperty(theme)
-  const baseSize = getSpacingProperty(theme).baseSize
+  const colorProperty = theme.color
+  const baseSize = theme.spacing?.baseSize
   const spacingByChar = createSpacingByChar(baseSize)
 
   return {
     color: createColor(colorProperty),
-    fontSize: createFontSize(getFontSizeProperty(theme)),
+    fontSize: createFontSize(theme.fontSize),
     spacing: createSpacing(baseSize),
     spacingByChar,
     space: spacingByChar,
-    leading: createLeading(getLeadingProperty(theme)),
-    breakpoint: createBreakpoint(getBreakpointProperty(theme)),
-    border: createBorder(getBorderProperty(theme), colorProperty),
-    radius: createRadius(getRadiusProperty(theme)),
+    leading: createLeading(theme.leading),
+    breakpoint: createBreakpoint(theme.breakpoint),
+    border: createBorder(theme.border, colorProperty),
+    radius: createRadius(theme.radius),
     interaction: createInteraction(theme.interaction),
     shadow: createShadow(theme.shadow, colorProperty),
     zIndex: createZIndex(theme.zIndex),
   }
-}
-
-function getColorProperty(theme: ThemeProperty): ColorProperty {
-  return theme.color || {}
-}
-function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
-  return theme.fontSize || {}
-}
-function getLeadingProperty(theme: ThemeProperty): LeadingProperty {
-  return theme.leading || {}
-}
-function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
-  return theme.spacing || {}
-}
-function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
-  return theme.breakpoint || {}
-}
-function getBorderProperty(theme: ThemeProperty): BorderProperty {
-  return theme.border || {}
-}
-function getRadiusProperty(theme: ThemeProperty): RadiusProperty {
-  return theme.radius || {}
 }
