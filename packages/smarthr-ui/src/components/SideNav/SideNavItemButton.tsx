@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, memo, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -9,8 +9,10 @@ export type SideNavSizeType = 'default' | 's'
 type Props = {
   /** アイテムの識別子 */
   id: string
-  /** アイテムのタイトル */
-  title: ReactNode
+  /** アイテムのタイトル
+   * @deprecated SideNav で items を使う時の props です。children を使ってください。
+   */
+  title?: ReactNode
   /** タイトルのプレフィックスの内容。通常、StatusLabel の配置に用います。 */
   prefix?: ReactNode
   /** 選択されているアイテムかどうか */
@@ -20,6 +22,8 @@ type Props = {
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
+
+type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof Props>
 
 const classNameGenerator = tv({
   slots: {
@@ -44,13 +48,21 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, size, onClick }) => {
+export const SideNavItemButton: FC<Props & ElementProps> = ({
+  id,
+  title,
+  prefix,
+  isSelected,
+  size,
+  onClick,
+  children,
+}) => {
   const classNames = useMemo(() => {
     const { wrapper, button, buttonInner } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
-      button: button({ size }),
+      button: button({ size: size ?? 'default' }),
       buttonInner: buttonInner(),
     }
   }, [size])
@@ -58,7 +70,11 @@ export const SideNavItemButton: FC<Props> = ({ id, title, prefix, isSelected, si
   return (
     <li data-selected={!!isSelected} className={classNames.wrapper}>
       <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
-        <ButtonBodyCluster prefix={prefix} title={title} titleClassName={classNames.buttonInner} />
+        <ButtonBodyCluster
+          prefix={prefix}
+          title={children ?? title}
+          titleClassName={classNames.buttonInner}
+        />
       </UnstyledButton>
     </li>
   )

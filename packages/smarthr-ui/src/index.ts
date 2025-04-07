@@ -73,7 +73,7 @@ export { SegmentedControl, SegmentedControlOption } from './components/Segmented
 export { FormControl } from './components/FormControl'
 export { Fieldset } from './components/Fieldset'
 export { MultiCombobox, SingleCombobox } from './components/Combobox'
-export { SideNav } from './components/SideNav'
+export { SideNav, SideNavItemButton } from './components/SideNav'
 export { Text, RangeSeparator } from './components/Text'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
