@@ -95,6 +95,18 @@ export const TargetBlank: StoryObj<typeof TextLink> = {
   },
 }
 
+export const Size: StoryObj<typeof TextLink> = {
+  name: 'size',
+  render: (args) =>
+    ([undefined, 'M', 'S'] as const).map((size) => (
+      <p>
+        <TextLink {...args} size={size}>
+          {size || 'size未指定'}
+        </TextLink>
+      </p>
+    )),
+}
+
 export const OnClick: StoryObj<typeof TextLink> = {
   name: 'onClick',
   args: {
