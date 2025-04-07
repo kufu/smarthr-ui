@@ -55,52 +55,6 @@ describe('createTheme', () => {
     )
   })
 
-  it('returns theme reflecting "size" settings', () => {
-    const actual1 = createTheme({
-      size: {
-        space: {
-          XXS: 11,
-          XS: 12,
-          S: 13,
-          M: 14,
-          L: 15,
-          XL: 16,
-          XXL: 17,
-        },
-        mediaQuery: {
-          SP: 22,
-          TABLET: 23,
-        },
-      },
-    })
-
-    expect(actual1.size.space.XXS).toBe(11)
-    expect(actual1.size.space.XS).toBe(12)
-    expect(actual1.size.space.S).toBe(13)
-    expect(actual1.size.space.M).toBe(14)
-    expect(actual1.size.space.L).toBe(15)
-    expect(actual1.size.space.XL).toBe(16)
-    expect(actual1.size.space.XXL).toBe(17)
-    expect(actual1.size.mediaQuery.SP).toBe(22)
-    expect(actual1.size.mediaQuery.TABLET).toBe(23)
-
-    const actual2 = createTheme({
-      size: {
-        space: {
-          defaultRem: 13,
-        },
-      },
-    })
-
-    expect(actual2.size.space.XXS).toBe(13)
-    expect(actual2.size.space.XS).toBe(13 * 2)
-    expect(actual2.size.space.S).toBe(13 * 3)
-    expect(actual2.size.space.M).toBe(13 * 4)
-    expect(actual2.size.space.L).toBe(13 * 5)
-    expect(actual2.size.space.XL).toBe(13 * 6)
-    expect(actual2.size.space.XXL).toBe(13 * 7)
-  })
-
   it('returns theme reflecting "spacing" settings', () => {
     const actual1 = createTheme({
       spacing: { baseSize: 20 },
@@ -115,19 +69,6 @@ describe('createTheme', () => {
     expect(actual1.spacing.XL).toBe('120px')
     expect(actual1.spacing.XXL).toBe('140px')
     expect(actual1.spacing.X3L).toBe('160px')
-  })
-
-  it('default settings, createSpace and createSpacing are set the same', () => {
-    const actual = createTheme()
-    const toPx = (size: number) => `${size}px`
-
-    expect(actual.spacing.XXS).toBe(toPx(actual.size.space.XXS))
-    expect(actual.spacing.XS).toBe(toPx(actual.size.space.XS))
-    expect(actual.spacing.S).toBe(toPx(actual.size.space.S))
-    expect(actual.spacing.M).toBe(toPx(actual.size.space.M))
-    expect(actual.spacing.L).toBe(toPx(actual.size.space.L))
-    expect(actual.spacing.XL).toBe(toPx(actual.size.space.XL))
-    expect(actual.spacing.XXL).toBe(toPx(actual.size.space.XXL))
   })
 
   it('returns theme reflecting "fontSize" settings', () => {
@@ -195,66 +136,6 @@ describe('createTheme', () => {
 
     expect(actual.radius.s).toBe('dummy_s_4')
     expect(actual.radius.m).toBe('dummy_m_4')
-  })
-
-  it('returns theme reflecting "size" settings to "fontSize", "spacing" and "breakpoint"', () => {
-    const actual = createTheme({
-      size: {
-        space: {
-          defaultRem: 10,
-          XXS: 11,
-        },
-        mediaQuery: {
-          SP: 1000,
-        },
-      },
-    })
-
-    expect(actual.size.space.XXS).toBe(11)
-    expect(actual.size.space.XS).toBe(10 * 2)
-    expect(actual.size.space.S).toBe(10 * 3)
-
-    // size does not affect spacing
-    expect(actual.spacing.XXS).not.toBe(11)
-    expect(actual.spacing.XS).not.toBe(10 * 2)
-    expect(actual.spacing.S).not.toBe(10 * 3)
-
-    expect(actual.size.mediaQuery.SP).toBe(1000)
-    expect(actual.size.mediaQuery.TABLET).toBe(defaultBreakpoint.TABLET)
-    expect(actual.breakpoint.SP).toBe(1000)
-    expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
-  })
-
-  it('returns theme reflecting "breakpoint" settings to "size.mediaQuery"', () => {
-    const actual = createTheme({
-      breakpoint: {
-        SP: 40,
-      },
-    })
-
-    expect(actual.size.mediaQuery.SP).toBe(40)
-    expect(actual.size.mediaQuery.TABLET).toBe(defaultBreakpoint.TABLET)
-    expect(actual.breakpoint.SP).toBe(40)
-    expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
-  })
-
-  it('returns theme prioritizing "fontSize" and "breakpoint" settings over "size" when given size, fontSize and breakpoint settings', () => {
-    const actual = createTheme({
-      size: {
-        mediaQuery: {
-          SP: 1000,
-          TABLET: 1001,
-        },
-      },
-      breakpoint: {
-        TABLET: 2000,
-      },
-    })
-
-    expect(actual.size.mediaQuery.SP).toBe(1000)
-    expect(actual.size.mediaQuery.TABLET).toBe(2000)
-    expect(actual.breakpoint.SP).toBe(1000)
-    expect(actual.breakpoint.TABLET).toBe(2000)
   })
 
   it('returns theme "space" is the same as "spacingByChar"', () => {

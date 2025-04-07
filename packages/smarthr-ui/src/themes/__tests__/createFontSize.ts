@@ -1,5 +1,4 @@
 import { createFontSize } from '../createFontSize'
-import { createSize } from '../createSize'
 
 describe('createFontSize', () => {
   it('returns default font size when no arguments given', () => {

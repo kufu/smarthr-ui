@@ -14,7 +14,6 @@ import {
 import { type CreatedLeading, type LeadingProperty, createLeading } from './createLeading'
 import { type CreatedRadiusTheme, type RadiusProperty, createRadius } from './createRadius'
 import { type CreatedShadowTheme, type ShadowProperty, createShadow } from './createShadow'
-import { type CreatedSizeTheme, type SizeProperty, createSize } from './createSize'
 import {
   type CreatedSpacingByCharTheme,
   type CreatedSpacingTheme,
@@ -26,10 +25,6 @@ import { type CreatedZindexTheme, type ZIndexProperty, createZIndex } from './cr
 
 type ThemeProperty = {
   color?: ColorProperty
-  /**
-   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
-   */
-  size?: SizeProperty
   fontSize?: FontSizeProperty
   leading?: LeadingProperty
   spacing?: SpacingProperty
@@ -43,10 +38,6 @@ type ThemeProperty = {
 
 export type CreatedTheme = {
   color: CreatedColorTheme
-  /**
-   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
-   */
-  size: CreatedSizeTheme
   fontSize: CreatedFontSizeTheme
   leading: CreatedLeading
   spacing: CreatedSpacingTheme
@@ -67,7 +58,6 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
 
   return {
     color: createColor(colorProperty),
-    size: createSize(getSizeProperty(theme)),
     fontSize: createFontSize(getFontSizeProperty(theme)),
     spacing: createSpacing(baseSize),
     spacingByChar,
@@ -85,15 +75,6 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
 function getColorProperty(theme: ThemeProperty): ColorProperty {
   return theme.color || {}
 }
-function getSizeProperty(theme: ThemeProperty): SizeProperty {
-  return {
-    space: theme.size?.space || {},
-    mediaQuery: {
-      ...theme.size?.mediaQuery,
-      ...theme.breakpoint,
-    },
-  }
-}
 function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
   return theme.fontSize || {}
 }
@@ -104,10 +85,7 @@ function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
   return theme.spacing || {}
 }
 function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
-  return {
-    ...theme.size?.mediaQuery,
-    ...theme.breakpoint,
-  }
+  return theme.breakpoint || {}
 }
 function getBorderProperty(theme: ThemeProperty): BorderProperty {
   return theme.border || {}
