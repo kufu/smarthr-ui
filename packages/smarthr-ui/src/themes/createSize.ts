@@ -4,7 +4,6 @@ const defaultHtmlFontSize = 16
 const defaultSpaceSize = 8
 
 export type SizeProperty = {
-  htmlFontSize?: number
   space?: {
     defaultRem?: number
     XXS?: number
@@ -22,7 +21,6 @@ export type SizeProperty = {
 }
 
 export type CreatedSizeTheme = {
-  pxToRem: (value: number) => string
   space: {
     XXS: number
     XS: number
@@ -38,8 +36,6 @@ export type CreatedSizeTheme = {
   }
 }
 
-const pxToRem = (value: number) => (font: number) => `${value / font}rem`
-
 const getSpace = (size: number) => ({
   XXS: size,
   XS: size * 2,
@@ -53,12 +49,10 @@ const getSpace = (size: number) => ({
 const defaultMediaQuery = { SP: 599, TABLET: 959 }
 
 export const createSize = (userSize: SizeProperty = {}): CreatedSizeTheme => {
-  const fontSize = userSize.htmlFontSize || defaultHtmlFontSize
   const spaceSize = userSize.space?.defaultRem || defaultSpaceSize
 
   return merge(
     {
-      pxToRem: (value: number) => pxToRem(value)(fontSize),
       space: getSpace(spaceSize),
       mediaQuery: { ...defaultMediaQuery },
     },

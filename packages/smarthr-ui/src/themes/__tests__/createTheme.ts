@@ -58,7 +58,6 @@ describe('createTheme', () => {
   it('returns theme reflecting "size" settings', () => {
     const actual1 = createTheme({
       size: {
-        htmlFontSize: 10,
         space: {
           XXS: 11,
           XS: 12,
@@ -75,7 +74,6 @@ describe('createTheme', () => {
       },
     })
 
-    expect(actual1.size.pxToRem(400)).toBe(`${400 / 10}rem`)
     expect(actual1.size.space.XXS).toBe(11)
     expect(actual1.size.space.XS).toBe(12)
     expect(actual1.size.space.S).toBe(13)
@@ -135,12 +133,10 @@ describe('createTheme', () => {
   it('returns theme reflecting "fontSize" settings', () => {
     const actual = createTheme({
       fontSize: {
-        htmlFontSize: 11,
         scaleFactor: 8,
       },
     })
 
-    expect(actual.fontSize.pxToRem(55)).toBe(`${55 / 11}rem`)
     expect(actual.fontSize.XXS).toBe(`${8 / 11}rem`)
     expect(actual.fontSize.XS).toBe(`${8 / 10}rem`)
     expect(actual.fontSize.S).toBe(`${8 / 9}rem`)
@@ -204,7 +200,6 @@ describe('createTheme', () => {
   it('returns theme reflecting "size" settings to "fontSize", "spacing" and "breakpoint"', () => {
     const actual = createTheme({
       size: {
-        htmlFontSize: 2,
         space: {
           defaultRem: 10,
           XXS: 11,
@@ -214,9 +209,6 @@ describe('createTheme', () => {
         },
       },
     })
-
-    expect(actual.size.pxToRem(400)).toBe(`${400 / 2}rem`)
-    expect(actual.fontSize.pxToRem(400)).toBe(`${400 / 2}rem`)
 
     expect(actual.size.space.XXS).toBe(11)
     expect(actual.size.space.XS).toBe(10 * 2)
@@ -249,23 +241,15 @@ describe('createTheme', () => {
   it('returns theme prioritizing "fontSize" and "breakpoint" settings over "size" when given size, fontSize and breakpoint settings', () => {
     const actual = createTheme({
       size: {
-        htmlFontSize: 2,
         mediaQuery: {
           SP: 1000,
           TABLET: 1001,
         },
       },
-      fontSize: {
-        htmlFontSize: 8,
-        TALL: 200,
-      },
       breakpoint: {
         TABLET: 2000,
       },
     })
-
-    expect(actual.size.pxToRem(400)).toBe(`${400 / 8}rem`)
-    expect(actual.fontSize.pxToRem(400)).toBe(`${400 / 8}rem`)
 
     expect(actual.size.mediaQuery.SP).toBe(1000)
     expect(actual.size.mediaQuery.TABLET).toBe(2000)

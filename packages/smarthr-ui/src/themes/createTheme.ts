@@ -89,7 +89,6 @@ function getColorProperty(theme: ThemeProperty): ColorProperty {
 }
 function getSizeProperty(theme: ThemeProperty): SizeProperty {
   return {
-    htmlFontSize: theme.fontSize?.htmlFontSize || theme.size?.htmlFontSize,
     space: {
       defaultRem: theme.size?.space?.defaultRem,
       XXS: theme.size?.space?.XXS,
@@ -107,10 +106,7 @@ function getSizeProperty(theme: ThemeProperty): SizeProperty {
   }
 }
 function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
-  return {
-    htmlFontSize: theme.size?.htmlFontSize,
-    ...theme.fontSize,
-  }
+  return theme.fontSize || {}
 }
 function getLeadingProperty(theme: ThemeProperty): LeadingProperty {
   return theme.leading || {}

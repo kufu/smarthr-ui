@@ -2,13 +2,6 @@ import { createFontSize } from '../createFontSize'
 import { createSize } from '../createSize'
 
 describe('createFontSize', () => {
-  it('returns same font size theme with createSize', () => {
-    const actual = createFontSize()
-    const expected = createSize()
-
-    expect(actual.pxToRem(29)).toBe(expected.pxToRem(29))
-  })
-
   it('returns default font size when no arguments given', () => {
     const actual = createFontSize()
 
@@ -19,14 +12,6 @@ describe('createFontSize', () => {
     expect(actual.L).toBe(`${6 / 5}rem`)
     expect(actual.XL).toBe(`${6 / 4}rem`)
     expect(actual.XXL).toBe(`${6 / 3}rem`)
-  })
-
-  it('returns customized font size theme when give user font size', () => {
-    const actual = createFontSize({
-      htmlFontSize: 15,
-    })
-
-    expect(actual.pxToRem(41)).toBe(`${41 / 15}rem`)
   })
 
   it('returns customized size theme when gives baseSize', () => {
