@@ -15,13 +15,6 @@ export type SizeProperty = {
     XL?: number
     XXL?: number
   }
-  // respect for Starbucks...
-  font?: {
-    SHORT?: number
-    TALL?: number
-    GRANDE?: number
-    VENTI?: number
-  }
   mediaQuery?: {
     SP?: number
     TABLET?: number
@@ -38,12 +31,6 @@ export type CreatedSizeTheme = {
     L: number
     XL: number
     XXL: number
-  }
-  font: {
-    SHORT: number
-    TALL: number
-    GRANDE: number
-    VENTI: number
   }
   mediaQuery: {
     SP: number
@@ -63,8 +50,6 @@ const getSpace = (size: number) => ({
   XXL: size * 7,
 })
 
-const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
-
 const defaultMediaQuery = { SP: 599, TABLET: 959 }
 
 export const createSize = (userSize: SizeProperty = {}): CreatedSizeTheme => {
@@ -75,7 +60,6 @@ export const createSize = (userSize: SizeProperty = {}): CreatedSizeTheme => {
     {
       pxToRem: (value: number) => pxToRem(value)(fontSize),
       space: getSpace(spaceSize),
-      font: { ...defaultFontSize },
       mediaQuery: { ...defaultMediaQuery },
     },
     userSize,

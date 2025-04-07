@@ -100,12 +100,6 @@ function getSizeProperty(theme: ThemeProperty): SizeProperty {
       XL: theme.size?.space?.XL,
       XXL: theme.size?.space?.XXL,
     },
-    font: {
-      SHORT: theme.fontSize?.SHORT || theme.size?.font?.SHORT,
-      TALL: theme.fontSize?.TALL || theme.size?.font?.TALL,
-      GRANDE: theme.fontSize?.GRANDE || theme.size?.font?.GRANDE,
-      VENTI: theme.fontSize?.VENTI || theme.size?.font?.VENTI,
-    },
     mediaQuery: {
       ...theme.size?.mediaQuery,
       ...theme.breakpoint,
@@ -115,7 +109,6 @@ function getSizeProperty(theme: ThemeProperty): SizeProperty {
 function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
   return {
     htmlFontSize: theme.size?.htmlFontSize,
-    ...theme.size?.font,
     ...theme.fontSize,
   }
 }

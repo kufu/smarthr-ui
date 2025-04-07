@@ -68,12 +68,6 @@ describe('createTheme', () => {
           XL: 16,
           XXL: 17,
         },
-        font: {
-          SHORT: 18,
-          TALL: 19,
-          GRANDE: 20,
-          VENTI: 21,
-        },
         mediaQuery: {
           SP: 22,
           TABLET: 23,
@@ -89,10 +83,6 @@ describe('createTheme', () => {
     expect(actual1.size.space.L).toBe(15)
     expect(actual1.size.space.XL).toBe(16)
     expect(actual1.size.space.XXL).toBe(17)
-    expect(actual1.size.font.SHORT).toBe(18)
-    expect(actual1.size.font.TALL).toBe(19)
-    expect(actual1.size.font.GRANDE).toBe(20)
-    expect(actual1.size.font.VENTI).toBe(21)
     expect(actual1.size.mediaQuery.SP).toBe(22)
     expect(actual1.size.mediaQuery.TABLET).toBe(23)
 
@@ -146,19 +136,11 @@ describe('createTheme', () => {
     const actual = createTheme({
       fontSize: {
         htmlFontSize: 11,
-        SHORT: 12,
-        TALL: 13,
-        GRANDE: 14,
-        VENTI: 15,
         scaleFactor: 8,
       },
     })
 
     expect(actual.fontSize.pxToRem(55)).toBe(`${55 / 11}rem`)
-    expect(actual.fontSize.SHORT).toBe(12)
-    expect(actual.fontSize.TALL).toBe(13)
-    expect(actual.fontSize.GRANDE).toBe(14)
-    expect(actual.fontSize.VENTI).toBe(15)
     expect(actual.fontSize.XXS).toBe(`${8 / 11}rem`)
     expect(actual.fontSize.XS).toBe(`${8 / 10}rem`)
     expect(actual.fontSize.S).toBe(`${8 / 9}rem`)
@@ -227,9 +209,6 @@ describe('createTheme', () => {
           defaultRem: 10,
           XXS: 11,
         },
-        font: {
-          SHORT: 100,
-        },
         mediaQuery: {
           SP: 1000,
         },
@@ -248,28 +227,10 @@ describe('createTheme', () => {
     expect(actual.spacing.XS).not.toBe(10 * 2)
     expect(actual.spacing.S).not.toBe(10 * 3)
 
-    expect(actual.size.font.SHORT).toBe(100)
-    expect(actual.size.font.TALL).toBe(defaultFontSize.TALL)
-    expect(actual.fontSize.SHORT).toBe(100)
-    expect(actual.fontSize.TALL).toBe(defaultFontSize.TALL)
-
     expect(actual.size.mediaQuery.SP).toBe(1000)
     expect(actual.size.mediaQuery.TABLET).toBe(defaultBreakpoint.TABLET)
     expect(actual.breakpoint.SP).toBe(1000)
     expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
-  })
-
-  it('returns theme reflecting "fontSize" settings to "size.fontSize"', () => {
-    const actual = createTheme({
-      fontSize: {
-        SHORT: 30,
-      },
-    })
-
-    expect(actual.size.font.SHORT).toBe(30)
-    expect(actual.size.font.TALL).toBe(defaultFontSize.TALL)
-    expect(actual.fontSize.SHORT).toBe(30)
-    expect(actual.fontSize.TALL).toBe(defaultFontSize.TALL)
   })
 
   it('returns theme reflecting "breakpoint" settings to "size.mediaQuery"', () => {
@@ -289,10 +250,6 @@ describe('createTheme', () => {
     const actual = createTheme({
       size: {
         htmlFontSize: 2,
-        font: {
-          SHORT: 100,
-          TALL: 101,
-        },
         mediaQuery: {
           SP: 1000,
           TABLET: 1001,
@@ -309,11 +266,6 @@ describe('createTheme', () => {
 
     expect(actual.size.pxToRem(400)).toBe(`${400 / 8}rem`)
     expect(actual.fontSize.pxToRem(400)).toBe(`${400 / 8}rem`)
-
-    expect(actual.size.font.SHORT).toBe(100)
-    expect(actual.size.font.TALL).toBe(200)
-    expect(actual.fontSize.SHORT).toBe(100)
-    expect(actual.fontSize.TALL).toBe(200)
 
     expect(actual.size.mediaQuery.SP).toBe(1000)
     expect(actual.size.mediaQuery.TABLET).toBe(2000)
