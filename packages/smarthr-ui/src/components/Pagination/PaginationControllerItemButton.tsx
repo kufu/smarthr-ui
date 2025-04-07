@@ -1,4 +1,6 @@
-import { Button } from '../Button'
+import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
+
+import { AnchorButton, Button } from '../Button'
 import {
   FaAngleDoubleLeftIcon,
   FaAngleDoubleRightIcon,
@@ -6,13 +8,13 @@ import {
   FaChevronRightIcon,
 } from '../Icon'
 
-import type { FC } from 'react'
-
 type Props = {
   targetPage: number
   direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
+  hrefTemplate?: (pageNumber: number) => string
+  linkAs?: ElementType
 }
 
 const ICON_MAPPER = {
@@ -31,19 +33,41 @@ export const PaginationControllerItemButton: FC<Props> = ({
   disabled,
   double,
   targetPage,
+  hrefTemplate,
+  linkAs,
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
+  const { Component, attrs } = useMemo(() => {
+    if (hrefTemplate) {
+      return {
+        Component: AnchorButton,
+        // HINT: elementAsにnext/linkを設定した場合、hrefがundefinedでは
+        // エラーになってしまうため、undefinedで指定されていない状態にする
+        attrs: (disabled
+          ? {
+              href: undefined,
+              elementAs: undefined,
+            }
+          : {
+              href: hrefTemplate(targetPage),
+              elementAs: linkAs,
+            }) as ComponentProps<typeof AnchorButton>,
+      }
+    }
+
+    return {
+      Component: Button,
+      attrs: {
+        disabled,
+        value: targetPage,
+      } as ComponentProps<typeof Button>,
+    }
+  }, [targetPage, disabled, hrefTemplate, linkAs])
+
   return (
-    <Button
-      aria-label={alt}
-      disabled={disabled}
-      value={targetPage}
-      square
-      size="s"
-      className="shr-rounded-s"
-    >
+    <Component {...attrs} square size="s" className="shr-rounded-s">
       <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
-    </Button>
+    </Component>
   )
 }
