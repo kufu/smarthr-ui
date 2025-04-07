@@ -12,10 +12,9 @@ import {
   cloneElement,
   isValidElement,
   memo,
-  useCallback,
+  useContext,
   useMemo,
   useRef,
-  useState,
 } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
@@ -23,6 +22,7 @@ import { tv } from 'tailwind-variants'
 import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
+import { DropdownContext } from '../Dropdown'
 
 import useKeyboardNavigation from './useKeyboardNavigation'
 
@@ -125,28 +125,20 @@ const MemoizedTriggerButton = memo<
       }
     }
 >(({ onlyIconTrigger, triggerSize, label, triggerIcon, classNames, ...rest }) => {
-  // HINT: ドロップダウンを初期レンダリングで開くことはないため、falseで良い
-  const [expanded, setExpanded] = useState(false)
+  const { active } = useContext(DropdownContext)
 
   const tooltip = useMemo(
     () => ({ show: onlyIconTrigger, message: label }),
     [label, onlyIconTrigger],
   )
 
-  const onClick = useCallback(() => {
-    setExpanded((current) => !current)
-  }, [])
-
   return (
     <DropdownTrigger className={classNames.triggerWrapper} tooltip={tooltip}>
       <Button
         {...rest}
-        suffix={
-          !onlyIconTrigger && <FaCaretDownIcon alt={`候補を${expanded ? '閉じる' : '開く'}`} />
-        }
+        suffix={!onlyIconTrigger && <FaCaretDownIcon alt={`候補を${active ? '閉じる' : '開く'}`} />}
         size={triggerSize}
         square={onlyIconTrigger}
-        onClick={onClick}
         className={classNames.triggerButton}
       >
         <TriggerLabelText
