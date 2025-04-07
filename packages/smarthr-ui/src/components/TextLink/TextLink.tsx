@@ -39,7 +39,8 @@ type TextLinkComponent = <T extends ElementType = 'a'>(
 const classNameGenerator = tv({
   slots: {
     anchor: [
-      'shr-text-link shr-no-underline shr-shadow-underline forced-colors:shr-underline',
+      'shr-text-link shr-no-underline shr-shadow-underline',
+      'forced-colors:shr-underline',
       '[&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
       '[.smarthr-ui-Th_&]:shr-text-link-darken',
     ],
