@@ -77,8 +77,8 @@ export const FloatArea: FC<Props & ElementProps> = ({
 
   return (
     <Base {...rest} layer={3} padding={1} className={actualClassName} style={actualStyle}>
-      <Stack gap={0.5} align="end">
-        <Cluster gap={1} className="shr-w-full">
+      <Stack gap={0.5}>
+        <Cluster>
           {tertiaryButton}
           <Cluster gap={1} className="shr-ms-auto">
             {secondaryButton}
@@ -86,7 +86,9 @@ export const FloatArea: FC<Props & ElementProps> = ({
           </Cluster>
         </Cluster>
         {responseStatus && (
-          <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
+          <p className="shr-ms-auto">
+            <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
+          </p>
         )}
       </Stack>
     </Base>
