@@ -5,10 +5,10 @@ import {
   type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
+  Fragment,
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
-  cloneElement,
   memo,
   useEffect,
   useMemo,
@@ -188,10 +188,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   const actualStatusLabels = useMemo(() => {
     if (statusLabels) {
       return (Array.isArray(statusLabels) ? statusLabels : [statusLabels]).map(
-        (statusLabel, index) =>
-          cloneElement(statusLabel, {
-            key: index,
-          }),
+        (statusLabel, index) => <Fragment key={index}>{statusLabel}</Fragment>,
       )
     }
 
