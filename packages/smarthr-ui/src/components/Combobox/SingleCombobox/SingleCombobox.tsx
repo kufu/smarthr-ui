@@ -123,12 +123,13 @@ const ActualSingleCombobox = <T,>(
     selectedItem,
     defaultItem,
     name,
-    disabled = false,
-    required = false,
+    disabled,
+    readOnly,
+    required,
     prefix,
-    error = false,
-    creatable = false,
-    placeholder = '',
+    error,
+    creatable,
+    placeholder,
     autoComplete,
     dropdownHelpMessage,
     isLoading,
@@ -253,7 +254,7 @@ const ActualSingleCombobox = <T,>(
   )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
-      if (disabled) {
+      if (disabled || readOnly) {
         e.stopPropagation()
 
         return
@@ -265,7 +266,7 @@ const ActualSingleCombobox = <T,>(
         setIsExpanded(true)
       }
     },
-    [disabled, inputRef, isExpanded],
+    [disabled, readOnly, inputRef, isExpanded],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -330,10 +331,10 @@ const ActualSingleCombobox = <T,>(
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return textColor.black
-    if (disabled) return textColor.disabled
+    if (disabled || readOnly) return textColor.disabled
 
     return textColor.grey
-  }, [disabled, isFocused])
+  }, [disabled, readOnly, isFocused])
 
   useClick(
     useMemo(() => [outerRef, listBoxRef, clearButtonRef], [outerRef, listBoxRef, clearButtonRef]),
@@ -370,10 +371,10 @@ const ActualSingleCombobox = <T,>(
       input: input(),
       caretDownLayout: caretDownLayout(),
       caretDownIcon: caretDownIcon(),
-      clearButton: clearButton({ hidden: notSelected || disabled }),
+      clearButton: clearButton({ hidden: notSelected || disabled || readOnly }),
       clearButtonIcon: clearButtonIcon(),
     }
-  }, [notSelected, disabled, className])
+  }, [notSelected, disabled, readOnly, className])
 
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
@@ -387,6 +388,7 @@ const ActualSingleCombobox = <T,>(
         name={name}
         value={inputValue}
         disabled={disabled}
+        readOnly={readOnly}
         required={required}
         autoComplete={autoComplete ?? 'off'}
         aria-haspopup="listbox"
@@ -427,7 +429,7 @@ const ActualSingleCombobox = <T,>(
         className={classNames.input}
         data-smarthr-ui-input="true"
       />
-      {renderListBox()}
+      {!readOnly && renderListBox()}
     </div>
   )
 }

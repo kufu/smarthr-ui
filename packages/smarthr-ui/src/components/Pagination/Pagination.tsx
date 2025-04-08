@@ -1,4 +1,11 @@
-import { type FC, type HTMLAttributes, type MouseEvent, memo, useCallback, useMemo } from 'react'
+import {
+  type ElementType,
+  type FC,
+  type HTMLAttributes,
+  type MouseEvent,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -33,22 +40,43 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = {
+type CommonProps = {
   /** 全ページ数 */
   total: number
   /** 現在のページ */
   current: number
-  /** ボタンを押下したときに発火するコールバック関数 */
-  onClick: (pageNumber: number) => void
   /** 現在のページの前後に表示するページ番号のボタンの数 */
   padding?: number
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
-type Props = BaseProps & ElementProps
+
+type ButtonProps = CommonProps & {
+  /** ボタンを押下したときに発火するコールバック関数 */
+  onClick: (pageNumber: number, e: MouseEvent<HTMLElement>) => void
+  /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
+  hrefTemplate?: undefined
+  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  linkAs?: undefined
+}
+type AnchorProps = CommonProps & {
+  /** リンクを押下したときに発火するコールバック関数 */
+  onClick?: (href: string, e: MouseEvent<HTMLElement>) => void
+  /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
+  hrefTemplate: (pageNumber: number) => string
+  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  linkAs?: ElementType
+}
+
+type AbstractProps = ButtonProps | AnchorProps
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 const BUTTON_REGEX = /^button$/i
+const ANCHOR_REGEX = /^a/i
+
+const getTargetDelegateElement = (e: MouseEvent<HTMLElement>, regex: RegExp) =>
+  (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) => regex.test(elm.tagName))
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
@@ -60,6 +88,8 @@ const ActualPagination: FC<Props> = ({
   padding,
   className,
   withoutNumbers,
+  hrefTemplate,
+  linkAs,
   ...props
 }) => {
   const classNames = useMemo(() => {
@@ -77,18 +107,35 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      const button = (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) =>
-        BUTTON_REGEX.test(elm.tagName),
-      )
+  const actualOnClick = useMemo(() => {
+    if (!onClick) {
+      return undefined
+    }
+
+    if (hrefTemplate) {
+      return (e: MouseEvent<HTMLElement>) => {
+        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
+
+        if (!anchor) {
+          return
+        }
+
+        const href = (anchor as HTMLAnchorElement).href
+
+        if (href) {
+          onClick(href, e)
+        }
+      }
+    }
+
+    return (e: MouseEvent<HTMLElement>) => {
+      const button = getTargetDelegateElement(e, BUTTON_REGEX)
 
       if (button) {
-        onClick(parseInt((button as HTMLButtonElement).value, 10))
+        onClick(parseInt((button as HTMLButtonElement).value, 10), e)
       }
-    },
-    [onClick],
-  )
+    }
+  }, [onClick, hrefTemplate])
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
@@ -100,7 +147,9 @@ const ActualPagination: FC<Props> = ({
           current={current}
           padding={padding}
           withoutNumbers={withoutNumbers}
+          hrefTemplate={hrefTemplate}
           classNames={classNames}
+          linkAs={linkAs}
         />
       </Reel>
     </Nav>
@@ -108,7 +157,7 @@ const ActualPagination: FC<Props> = ({
 }
 
 const ItemCluster = memo<
-  Pick<Props, 'total' | 'current' | 'padding' | 'withoutNumbers'> & {
+  Pick<Props, 'total' | 'current' | 'padding' | 'withoutNumbers' | 'hrefTemplate' | 'linkAs'> & {
     classNames: {
       list: string
       firstListItem: string
@@ -117,7 +166,7 @@ const ItemCluster = memo<
       lastListItem: string
     }
   }
->(({ total, current, padding, withoutNumbers, classNames }) => {
+>(({ total, current, padding, withoutNumbers, hrefTemplate, classNames, linkAs }) => {
   const pageNumbers = useMemo(() => {
     if (withoutNumbers) {
       return []
@@ -133,13 +182,17 @@ const ItemCluster = memo<
       prev: {
         disabled: current === 1,
         direction: 'prev' as const,
+        hrefTemplate,
+        linkAs,
       },
       next: {
         disabled: current === total,
         direction: 'next' as const,
+        hrefTemplate,
+        linkAs,
       },
     }),
-    [current, total],
+    [current, total, hrefTemplate, linkAs],
   )
 
   return (
@@ -153,7 +206,13 @@ const ItemCluster = memo<
         <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
       </li>
       {pageNumbers.map((page) => (
-        <NumberItemButton key={page} page={page} disabled={page === current} />
+        <NumberItemButton
+          key={page}
+          page={page}
+          disabled={page === current}
+          hrefTemplate={hrefTemplate}
+          linkAs={linkAs}
+        />
       ))}
       <li className={classNames.nextListItem}>
         <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
@@ -167,24 +226,23 @@ const ItemCluster = memo<
   )
 })
 
-const NumberItemButton = memo<{ page: number; disabled: boolean }>(({ page, disabled }) => (
+const NumberItemButton = memo<
+  Pick<Props, 'hrefTemplate' | 'linkAs'> & { page: number; disabled: boolean }
+>(({ disabled, ...rest }) => (
   <li className={`smarthr-ui-Pagination-${disabled ? 'current' : 'page'}`}>
-    <PaginationItemButton page={page} disabled={disabled} />
+    <PaginationItemButton {...rest} disabled={disabled} />
   </li>
 ))
 
-const DoubleIconItemButton = memo<{
-  disabled: boolean
-  direction: 'prev' | 'next'
-  targetPage: number
-  className: string
-}>(({ disabled, direction, targetPage, className }) => (
+const DoubleIconItemButton = memo<
+  Pick<Props, 'hrefTemplate' | 'linkAs'> & {
+    disabled: boolean
+    direction: 'prev' | 'next'
+    targetPage: number
+    className: string
+  }
+>(({ className, ...rest }) => (
   <li className={className}>
-    <PaginationControllerItemButton
-      disabled={disabled}
-      direction={direction}
-      targetPage={targetPage}
-      double
-    />
+    <PaginationControllerItemButton {...rest} double />
   </li>
 ))

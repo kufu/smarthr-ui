@@ -1,20 +1,32 @@
-import { type ComponentProps, type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  useMemo,
+} from 'react'
+import { Children, cloneElement } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
 
-type SideNavItemButtonProps = Omit<ComponentProps<typeof SideNavItemButton>, 'size' | 'onClick'>
+export type SideNavItemButtonProps = Omit<
+  ComponentProps<typeof SideNavItemButton>,
+  'size' | 'onClick'
+>
 
-type Props = {
-  /** 各アイテムのデータの配列 */
-  items: SideNavItemButtonProps[]
+type Props = PropsWithChildren<{
+  /** 各アイテムのデータの配列
+   * @deprecated SideNavItemButton を使ってください
+   */
+  items?: SideNavItemButtonProps[]
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
-}
+}>
 type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
 
 const classNameGenerator = tv({
@@ -26,6 +38,7 @@ export const SideNav: FC<Props & ElementProps> = ({
   size = 'default',
   onClick,
   className,
+  children,
   ...props
 }) => {
   const actualOnClick = useMemo(
@@ -40,17 +53,35 @@ export const SideNav: FC<Props & ElementProps> = ({
 
   return (
     <ul {...props} className={actualClassName}>
-      {items.map((item) => (
-        <SideNavItemButton
-          key={item.id}
-          id={item.id}
-          title={item.title}
-          prefix={item.prefix}
-          isSelected={item.isSelected}
-          size={size}
-          onClick={actualOnClick}
-        />
-      ))}
+      {items
+        ? items.map((item) => (
+            <SideNavItemButton
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              prefix={item.prefix}
+              isSelected={item.isSelected}
+              size={size}
+              onClick={actualOnClick}
+            />
+          ))
+        : children &&
+          Children.map(children, (child) => {
+            if (
+              child &&
+              typeof child === 'object' &&
+              'type' in child &&
+              child.type === SideNavItemButton
+            ) {
+              return cloneElement(child as React.ReactElement, {
+                // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
+                size,
+                onClick: actualOnClick,
+              })
+            }
+
+            return child
+          })}
     </ul>
   )
 }

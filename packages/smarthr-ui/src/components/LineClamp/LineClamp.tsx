@@ -115,9 +115,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
   )
 
   return isTooltipVisible ? (
-    <Tooltip message={children} multiLine vertical="auto">
-      {actualLineClamp}
-    </Tooltip>
+    <Tooltip message={children}>{actualLineClamp}</Tooltip>
   ) : (
     actualLineClamp
   )
