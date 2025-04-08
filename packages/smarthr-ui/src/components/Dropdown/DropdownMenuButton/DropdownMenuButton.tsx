@@ -53,7 +53,7 @@ const classNameGenerator = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
     triggerButton:
-      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]>.smarthr-ui-Icon:last-child]:shr-rotate-180',
+      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
     actionList: [
       'smarthr-ui-DropdownMenuButton-panel',
       'shr-list-none shr-py-0.5',
@@ -130,7 +130,6 @@ const MemoizedTriggerButton = memo<
         {...rest}
         suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
         size={triggerSize}
-        square={onlyIconTrigger}
         className={buttonStyle}
       >
         <TriggerLabelText

@@ -68,7 +68,7 @@ const classNameGenerator = tv({
       'hover:shr-border-transparent hover:shr-bg-transparent',
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
       'forced-colors:shr-border-shorthand',
-      '[&>svg]:aria-expanded:shr-rotate-180',
+      '[&_.smarthr-ui-Icon]:aria-expanded:shr-rotate-180',
     ],
     languageItemsList: ['shr-p-0.5'],
     languageItem: ['shr-flex shr-items-center'],

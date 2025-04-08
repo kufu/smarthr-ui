@@ -52,7 +52,6 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     {
       type = 'button',
       size = 'default',
-      square = false,
       prefix,
       suffix,
       wide = false,
@@ -76,43 +75,28 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
       }
     }, [variant, className])
 
-    let actualPrefix = prefix
-    let actualSuffix = suffix
-    let disabledOnLoading = disabled
-    let actualChildren = children
-
-    if (loading) {
-      actualPrefix = undefined
-      disabledOnLoading = true
-
-      const loader = <Loader size="s" className={classNames.loader} role="presentation" />
-
-      if (square) {
-        actualChildren = loader
-      } else {
-        actualSuffix = loader
-      }
-    }
-
     const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const button = (
       <ButtonWrapper
         {...props}
+        buttonRef={ref}
         type={type}
         size={size}
-        square={square}
         wide={wide}
         variant={variant}
         className={classNames.wrapper}
-        buttonRef={ref}
-        disabled={disabledOnLoading}
-        $loading={loading}
-        prefix={actualPrefix}
-        suffix={actualSuffix}
+        loader={
+          loading ? (
+            <Loader size="s" className={classNames.loader} role="presentation" />
+          ) : undefined
+        }
+        prefix={prefix}
+        suffix={suffix}
+        disabled={disabled}
       >
         <LoadingStatus loading={loading}>{decorated.loading}</LoadingStatus>
-        {actualChildren}
+        {children}
       </ButtonWrapper>
     )
 

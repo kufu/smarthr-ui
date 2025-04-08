@@ -56,11 +56,8 @@ const ON_SUBMIT = (e: FormEvent) => {
 
 const classNameGenerator = tv({
   slots: {
-    iconWrapper: [
-      'shr-relative shr-leading-none',
-      '[&_>_[role="img"]_+_[role="img"]]:shr-absolute [&_>_[role="img"]_+_[role="img"]]:shr-bottom-[2px] [&_>_[role="img"]_+_[role="img"]]:shr-right-[-4px]',
-    ],
-    filteredIcon: 'shr-h-[0.5em] shr-w-[0.5em]',
+    iconWrapper: ['smarthr-ui-Icon-extended', 'shr-relative shr-leading-none'],
+    filteredIcon: 'shr-h-[0.5em] shr-w-[0.5em] shr-absolute shr-bottom-[2px] shr-right-[-4px]',
     inner: 'shr-p-1.5',
     actionArea: 'shr-sticky shr-bottom-0 shr-border-t-shorthand shr-bg-white shr-px-1.5 shr-py-1',
     resetButtonArea: '-shr-ms-0.5',
@@ -164,7 +161,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: decorated.triggerButton }}>
-        <Button {...props} suffix={buttonSuffix} square={onlyIconTrigger} size={triggerSize}>
+        <Button {...props} suffix={buttonSuffix} size={triggerSize}>
           {buttonContent}
         </Button>
       </DropdownTrigger>

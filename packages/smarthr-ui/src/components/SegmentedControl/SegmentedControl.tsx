@@ -62,13 +62,6 @@ const classNameGenerator = tv({
   },
 })
 
-// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButton
-const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', 'svg', 'img'].reduce(
-  (prev, selector, index) =>
-    `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
-  '',
-)
-
 export const SegmentedControl: FC<Props & ElementProps> = ({
   options,
   value,
@@ -200,9 +193,6 @@ const SegmentedControlButton: FC<
     className: string
   }
 > = ({ onClick, size, value, option, index, isFocused, excludesSelected, className }) => {
-  const ref = useRef<HTMLButtonElement>(null)
-  const [square, setSquare] = useState(false)
-
   const attrs = useMemo(() => {
     const checked = value === option.value
 
@@ -224,13 +214,8 @@ const SegmentedControlButton: FC<
     return attrs.checked ? 0 : -1
   }, [excludesSelected, isFocused, attrs.checked, index])
 
-  useEffect(() => {
-    setSquare(!!ref.current?.querySelector(ICON_BUTTON_SELECTOR))
-  }, [option.content])
-
   return (
     <Button
-      ref={ref}
       value={option.value}
       disabled={option.disabled}
       tabIndex={tabIndex}
@@ -240,7 +225,6 @@ const SegmentedControlButton: FC<
       onClick={onClick}
       variant={attrs.variant}
       size={size}
-      square={square}
       className={className}
     >
       {option.content}

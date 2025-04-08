@@ -172,6 +172,7 @@ export default {
       tight: '1.25',
       normal: '1.5',
       loose: '1.75',
+      zero: '0',
     },
     maxWidth: {
       none: 'none',
