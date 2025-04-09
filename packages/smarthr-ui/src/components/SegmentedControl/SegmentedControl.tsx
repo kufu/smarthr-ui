@@ -62,7 +62,7 @@ const classNameGenerator = tv({
   },
 })
 
-// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButton
+// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
 const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', 'svg', 'img'].reduce(
   (prev, selector, index) =>
     `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
@@ -225,6 +225,7 @@ const SegmentedControlButton: FC<
   }, [excludesSelected, isFocused, attrs.checked, index])
 
   useEffect(() => {
+    // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButton
     setSquare(!!ref.current?.querySelector(ICON_BUTTON_SELECTOR))
   }, [option.content])
 
