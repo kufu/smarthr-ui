@@ -5,6 +5,7 @@ import {
   type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
+  Fragment,
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
@@ -186,7 +187,9 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
   const actualStatusLabels = useMemo(() => {
     if (statusLabels) {
-      return Array.isArray(statusLabels) ? statusLabels : [statusLabels]
+      return (Array.isArray(statusLabels) ? statusLabels : [statusLabels]).map(
+        (statusLabel, index) => <Fragment key={index}>{statusLabel}</Fragment>,
+      )
     }
 
     if (!statusLabelProps) {
