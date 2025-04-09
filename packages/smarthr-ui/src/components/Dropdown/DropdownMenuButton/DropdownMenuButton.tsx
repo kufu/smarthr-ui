@@ -107,7 +107,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         buttonStyle={classNames.triggerButton}
       />
       <DropdownContent>
-        <menu ref={containerRef} className={classNames.actionList}>
+        <menu ref={containerRef} role="menu" className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
@@ -159,7 +159,7 @@ const ButtonSuffixIcon = memo<Pick<Props, 'onlyIconTrigger'>>(
   ({ onlyIconTrigger }) => !onlyIconTrigger && <FaCaretDownIcon alt="候補を開く" />,
 )
 
-export const renderButtonList = (children: Actions, Component: 'li' | 'dd' = 'li') =>
+export const renderButtonList = (children: Actions) =>
   Children.map(children, (item): ReactNode => {
     if (!item || !isValidElement(item)) {
       return null
@@ -173,12 +173,12 @@ export const renderButtonList = (children: Actions, Component: 'li' | 'dd' = 'li
     }
 
     return (
-      <Component>
+      <li role="menuitem">
         {cloneElement(item as ReactElement, {
           variant: 'text',
           wide: true,
           className: actionListItemButton({ className: item.props.className }),
         })}
-      </Component>
+      </li>
     )
   })

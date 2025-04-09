@@ -4,6 +4,7 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
+  useId,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -36,36 +37,56 @@ const classNameGenerator = tv({
       ],
     ],
     groupName: 'shr-px-1 shr-py-0.5',
+    subMenu: 'shr-list-none',
   },
 })
 
 export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
+  const subMenuId = useId()
   const classNames = useMemo(() => {
-    const { group, groupName } = classNameGenerator()
+    const { group, groupName, subMenu } = classNameGenerator()
 
     return {
       group: group({ className }),
       groupName: groupName(),
+      subMenu: subMenu(),
     }
   }, [className])
 
+  const subMenu = (
+    <menu role="menu" aria-labelledby={subMenuId} className={classNames.subMenu}>
+      {renderButtonList(children)}
+    </menu>
+  )
+
   return (
-    <li className={classNames.group}>
+    <li role="presentation" className={classNames.group}>
       {name ? (
-        <dl>
-          <NameDefinitionTerm className={classNames.groupName}>{name}</NameDefinitionTerm>
-          {renderButtonList(children, 'dd')}
-        </dl>
+        <>
+          <NameText id={subMenuId} className={classNames.groupName}>
+            {name}
+          </NameText>
+          {subMenu}
+        </>
       ) : (
-        <ul>{renderButtonList(children)}</ul>
+        subMenu
       )}
     </li>
   )
 }
 
-const NameDefinitionTerm = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) => (
-    <Text size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className} as="dt">
+const NameText = memo<PropsWithChildren<{ id: string; className: string }>>(
+  ({ id, children, className }) => (
+    <Text
+      size="S"
+      id={id}
+      aria-hidden={true}
+      weight="bold"
+      color="TEXT_GREY"
+      leading="NONE"
+      className={className}
+      as="div"
+    >
       {children}
     </Text>
   ),
