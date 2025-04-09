@@ -87,7 +87,7 @@ export {
 export { PageCounter } from './components/PageCounter'
 export { Article, Aside, Nav, Section } from './components/SectioningContent'
 export { VisuallyHiddenText } from './components/VisuallyHiddenText'
-export { SideMenu } from './components/SideMenu'
+export * from './components/SideMenu'
 export * from './components/SpreadsheetTable'
 export * from './components/ResponseMessage'
 export * from './components/Badge'
