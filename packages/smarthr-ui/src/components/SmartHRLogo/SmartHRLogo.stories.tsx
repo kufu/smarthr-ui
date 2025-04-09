@@ -1,5 +1,4 @@
 import { StoryFn } from '@storybook/react'
-import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Cluster } from '../Layout'

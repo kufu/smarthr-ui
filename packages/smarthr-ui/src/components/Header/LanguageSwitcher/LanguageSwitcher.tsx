@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type FC,
   type HTMLAttributes,
   type KeyboardEvent,
@@ -9,7 +9,7 @@ import React, {
   memo,
   useMemo,
 } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { tabbable } from '../../../libs/tabbable'

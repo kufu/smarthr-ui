@@ -1,5 +1,4 @@
 import { StoryFn } from '@storybook/react'
-import React from 'react'
 import styled from 'styled-components'
 
 import { Balloon } from './Balloon'
@@ -21,6 +20,15 @@ export const All: StoryFn = () => (
       <Balloon horizontal="right" vertical="top">
         <Txt>top right</Txt>
       </Balloon>
+      <Balloon horizontal="left" vertical="top" triggerIcon={true}>
+        <Txt>top left</Txt>
+      </Balloon>
+      <Balloon horizontal="center" vertical="top" triggerIcon={true}>
+        <Txt>top center</Txt>
+      </Balloon>
+      <Balloon horizontal="right" vertical="top" triggerIcon={true}>
+        <Txt>top right</Txt>
+      </Balloon>
     </li>
     <li>
       <Balloon horizontal="left" vertical="bottom">
@@ -30,6 +38,15 @@ export const All: StoryFn = () => (
         <Txt>bottom center</Txt>
       </Balloon>
       <Balloon horizontal="right" vertical="bottom">
+        <Txt>bottom right</Txt>
+      </Balloon>
+      <Balloon horizontal="left" vertical="bottom" triggerIcon={true}>
+        <Txt>bottom left</Txt>
+      </Balloon>
+      <Balloon horizontal="center" vertical="bottom" triggerIcon={true}>
+        <Txt>bottom center</Txt>
+      </Balloon>
+      <Balloon horizontal="right" vertical="bottom" triggerIcon={true}>
         <Txt>bottom right</Txt>
       </Balloon>
     </li>

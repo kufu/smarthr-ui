@@ -1,13 +1,18 @@
 'use client'
 
-import React, { useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type ForwardedRef,
+  type PropsWithChildren,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { genericsForwardRef } from '../../../libs/util'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type { ComponentPropsWithoutRef, ForwardedRef, PropsWithChildren } from 'react'
 
 export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -89,7 +94,7 @@ export const clusterClassNameGenerator = tv({
   },
 })
 
-type Props<T extends React.ElementType> = PropsWithChildren<
+type Props<T extends ElementType> = PropsWithChildren<
   Omit<VariantProps<typeof clusterClassNameGenerator>, 'rowGap' | 'columnGap'> & {
     as?: T
     gap?: Gap | SeparateGap
@@ -97,7 +102,7 @@ type Props<T extends React.ElementType> = PropsWithChildren<
 > &
   ComponentPropsWithoutRef<T>
 
-const ActualCluster = <T extends React.ElementType = 'div'>(
+const ActualCluster = <T extends ElementType = 'div'>(
   { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {

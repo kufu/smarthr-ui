@@ -1,4 +1,4 @@
-import { Node } from './Node'
+import type { Node } from './Node'
 
 export class NodeContext<T extends Node = Node, TChild extends Node = Node> {
   #parent?: NodeContext

@@ -1,18 +1,19 @@
 'use client'
 
-import React, { HTMLAttributes, useCallback, useContext, useId } from 'react'
+import { type FC, type HTMLAttributes, useCallback, useContext, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
-import { UncontrolledDialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
+import { ActionDialogContentInner, type BaseProps } from './ActionDialogContentInner'
+
+import type { UncontrolledDialogProps } from '../types'
 
 type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const ActionDialogContent: React.FC<Props & ElementProps> = ({
+export const ActionDialogContent: FC<Props & ElementProps> = ({
   children,
   title,
   contentBgColor,

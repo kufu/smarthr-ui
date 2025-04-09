@@ -1,5 +1,5 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
 // 1pxほど大きめに描画してbody部分と被るようにしています。
@@ -67,6 +67,9 @@ const classNameGenerator = tv({
         'after:-shr-translate-y-[5px]',
       ],
     },
+    triggerIcon: {
+      true: '',
+    },
   },
   compoundVariants: [
     {
@@ -76,8 +79,20 @@ const classNameGenerator = tv({
     },
     {
       vertical: ['top', 'bottom'],
+      horizontal: 'left',
+      triggerIcon: true,
+      className: ['before:shr-left-0.5', 'after:shr-left-0.5'],
+    },
+    {
+      vertical: ['top', 'bottom'],
       horizontal: 'right',
       className: ['before:shr-right-1.5', 'after:shr-right-1.5'],
+    },
+    {
+      vertical: ['top', 'bottom'],
+      horizontal: 'right',
+      triggerIcon: true,
+      className: ['before:shr-right-0.5', 'after:shr-right-0.5'],
     },
     {
       vertical: 'middle',
@@ -119,11 +134,11 @@ type Props = PropsWithChildren<
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-export const Balloon = React.memo<Props & ElementProps>(
-  ({ horizontal, vertical, className, as: Component = 'div', ...props }) => {
+export const Balloon = memo<Props & ElementProps>(
+  ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...props }) => {
     const actualClassName = useMemo(
-      () => classNameGenerator({ horizontal, vertical, className }),
-      [horizontal, vertical, className],
+      () => classNameGenerator({ horizontal, vertical, triggerIcon, className }),
+      [horizontal, vertical, className, triggerIcon],
     )
 
     return <Component {...props} className={actualClassName} />

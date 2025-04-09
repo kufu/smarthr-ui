@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
@@ -10,12 +10,12 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
-import { Base, BaseElementProps } from '../Base'
+import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
-import { Heading, HeadingTagTypes } from '../Heading'
+import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'

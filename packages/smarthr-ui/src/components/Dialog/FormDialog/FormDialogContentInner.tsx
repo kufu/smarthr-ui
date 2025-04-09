@@ -1,22 +1,24 @@
-import React, {
+import {
   type FC,
   type FormEvent,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType } from '../../../hooks/useDecorators'
-import { type ResponseMessageType, useResponseMessage } from '../../../hooks/useResponseMessage'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
-import { DialogBody, Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
+
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 export type BaseProps = PropsWithChildren<
   DialogHeaderProps &
@@ -43,7 +45,7 @@ export type BaseProps = PropsWithChildren<
 
 export type FormDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
-  responseMessage?: ResponseMessageType
+  responseStatus?: ResponseStatus
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
@@ -68,7 +70,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   actionTheme,
   onSubmit,
   onClickClose,
-  responseMessage,
+  responseStatus,
   actionDisabled,
   closeDisabled,
   subActionArea,
@@ -85,7 +87,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     [onSubmit, onClickClose],
   )
 
-  const calculatedResponseStatus = useResponseMessage(responseMessage)
+  const calculatedResponseStatus = useResponseStatus(responseStatus)
 
   const styles = useMemo(() => {
     const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
@@ -134,7 +136,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   )
 }
 
-const ActionAreaCluster = React.memo<
+const ActionAreaCluster = memo<
   Pick<
     FormDialogContentInnerProps,
     | 'onClickClose'
@@ -168,7 +170,7 @@ const ActionAreaCluster = React.memo<
   ),
 )
 
-const ActionButton = React.memo<
+const ActionButton = memo<
   PropsWithChildren<{
     variant: FormDialogContentInnerProps['actionTheme']
     disabled: FormDialogContentInnerProps['actionDisabled']
@@ -186,7 +188,7 @@ const ActionButton = React.memo<
   </Button>
 ))
 
-const CloseButton = React.memo<
+const CloseButton = memo<
   Pick<FormDialogContentInnerProps, 'decorators'> & {
     onClick: FormDialogContentInnerProps['onClickClose']
     disabled: boolean

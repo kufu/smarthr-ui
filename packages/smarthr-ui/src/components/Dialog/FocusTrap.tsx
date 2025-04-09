@@ -1,6 +1,6 @@
-import React, {
-  PropsWithChildren,
-  RefObject,
+import {
+  type PropsWithChildren,
+  type RefObject,
   forwardRef,
   useEffect,
   useImperativeHandle,

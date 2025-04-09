@@ -1,15 +1,16 @@
-import React, {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  ElementType,
-  ForwardedRef,
-  PropsWithChildren,
-  ReactNode,
+import {
+  type AnchorHTMLAttributes,
+  type ButtonHTMLAttributes,
+  type ElementType,
+  type ForwardedRef,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Variant } from './types'
+import type { Variant } from './types'
 
 type BaseProps = PropsWithChildren<{
   size: 'default' | 's'
@@ -35,7 +36,7 @@ type Props =
   | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
   | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
 
-const EVENT_CANCELLER = (e: React.MouseEvent<HTMLButtonElement>) => {
+const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }

@@ -1,4 +1,13 @@
-import React, { type FC, type PropsWithChildren, ReactElement, type ReactNode } from 'react'
+import {
+  Children,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
+  cloneElement,
+  isValidElement,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownMenuGroup } from '../Dropdown'
@@ -42,12 +51,12 @@ const classNameGenerator = tv({
 const { trigger, actionItem } = classNameGenerator()
 
 const renderItemList = (children: ReactNode) =>
-  React.Children.map(children, (item): ReactNode => {
-    if (!React.isValidElement(item)) {
+  Children.map(children, (item): ReactNode => {
+    if (!isValidElement(item)) {
       return null
     }
 
-    if (item.type === React.Fragment) {
+    if (item.type === Fragment) {
       return renderItemList(item.props.children)
     }
 
@@ -57,7 +66,7 @@ const renderItemList = (children: ReactNode) =>
       )
     }
 
-    return React.cloneElement(item as ReactElement, {
+    return cloneElement(item as ReactElement, {
       className: actionItem({ className: item.props.className }),
     })
   })

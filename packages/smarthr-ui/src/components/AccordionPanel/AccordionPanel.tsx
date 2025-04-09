@@ -1,8 +1,11 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  PropsWithChildren,
+import {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type RefObject,
+  createContext,
   useCallback,
   useEffect,
   useMemo,
@@ -27,11 +30,11 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const AccordionPanelContext = React.createContext<{
+export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
   expandableMultiply: boolean
-  parentRef: React.RefObject<HTMLDivElement> | null
+  parentRef: RefObject<HTMLDivElement> | null
   onClickTrigger?: (itemName: string, isExpanded: boolean) => void
   onClickProps?: (expandedItems: string[]) => void
 }>({
@@ -45,7 +48,7 @@ const classNameGenerator = tv({
   base: 'smarthr-ui-AccordionPanel',
 })
 
-export const AccordionPanel: React.FC<Props & ElementProps> = ({
+export const AccordionPanel: FC<Props & ElementProps> = ({
   iconPosition = 'left',
   expandableMultiply = true,
   defaultExpanded = [],
@@ -79,7 +82,6 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      {}
       <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )

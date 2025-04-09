@@ -1,15 +1,26 @@
-import React from 'react'
-
 import { FaCircleQuestionIcon } from '../../Icon'
-import { Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
 const _messages = {
   'テキスト（sting）': 'メッセージ',
+  '複数行（string）':
+    'メッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージメッセージ',
   '複数行（ReactNode）': (
     <>
+      複数行
+      <br />
+      メッセージ
+      <br />
+      複数行
+      <br />
+      メッセージ
+      <br />
+      複数行
+      <br />
+      メッセージ
+      <br />
       複数行
       <br />
       メッセージ
@@ -20,7 +31,28 @@ const _messages = {
 export default {
   title: 'Data Display（データ表示）/Tooltip',
   component: Tooltip,
-  render: (args) => <Tooltip {...args} />,
+  render: (args) => (
+    <div className="shr-w-full shr-relative" style={{ height: '250px' }}>
+      <div className="shr-absolute shr-top-0 shr-left-0">
+        <Tooltip {...args} />
+      </div>
+      <div className="shr-absolute shr-top-0 shr-right-0">
+        <Tooltip {...args} />
+      </div>
+      <div className="shr-absolute shr-top-0 shr-right-0">
+        <Tooltip {...args} />
+      </div>
+      <div className="shr-absolute" style={{ top: '40%', left: '40%' }}>
+        <Tooltip {...args} />
+      </div>
+      <div className="shr-absolute shr-bottom-0 shr-left-0">
+        <Tooltip {...args} />
+      </div>
+      <div className="shr-absolute shr-bottom-0 shr-right-0">
+        <Tooltip {...args} />
+      </div>
+    </div>
+  ),
   argTypes: {
     message: {
       control: 'radio',
@@ -49,7 +81,6 @@ export const Message: StoryObj<typeof Tooltip> = {
   },
 }
 
-// なにこれ? いるの?
 export const TriggerType: StoryObj<typeof Tooltip> = {
   name: 'triggerType',
   args: {
@@ -58,16 +89,6 @@ export const TriggerType: StoryObj<typeof Tooltip> = {
   },
 }
 
-// これなんで必要なの?
-export const Multiline: StoryObj<typeof Tooltip> = {
-  name: 'multiLine',
-  args: {
-    multiLine: true,
-    message: _messages['複数行（ReactNode）'],
-  },
-}
-
-// これテキストの場合はデフォルトでいいんじゃないの?
 export const EllipsisOnly: StoryObj<typeof Tooltip> = {
   name: 'ellipsisOnly',
   render: (args) => (
@@ -83,32 +104,6 @@ export const EllipsisOnly: StoryObj<typeof Tooltip> = {
     message: '省略されるメッセージ',
     ellipsisOnly: true,
   },
-}
-
-export const Horizontal: StoryObj<typeof Tooltip> = {
-  name: 'horizontal',
-  render: (args) => (
-    <Stack align="flex-start">
-      {[undefined, 'center', 'left', 'right', 'auto'].map((horizontal) => (
-        <Tooltip {...args} horizontal={horizontal as any} key={horizontal}>
-          horizontal: {horizontal}
-        </Tooltip>
-      ))}
-    </Stack>
-  ),
-}
-
-export const Vertical: StoryObj<typeof Tooltip> = {
-  name: 'vertical',
-  render: (args) => (
-    <Stack align="flex-start">
-      {[undefined, 'top', 'bottom', 'middle', 'auto'].map((vertical) => (
-        <Tooltip {...args} vertical={vertical as any} key={vertical}>
-          vertical: {vertical}
-        </Tooltip>
-      ))}
-    </Stack>
-  ),
 }
 
 export const TabIndex: StoryObj<typeof Tooltip> = {

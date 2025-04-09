@@ -1,12 +1,15 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  FC,
-  MouseEvent,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
+import {
+  Children,
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
+  cloneElement,
+  isValidElement,
   useContext,
   useEffect,
   useMemo,
@@ -37,13 +40,13 @@ type Props = PropsWithChildren<ComponentProps<'div'>> & {
   tooltip?: { message: ReactNode; show?: boolean }
 }
 
-const wrapper = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Dropdown shr-inline-block',
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
-  const styles = useMemo(() => wrapper({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
     if (!triggerElementRef.current) {
@@ -62,17 +65,11 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   let foundFirstElement = false
 
   return (
-    <div ref={triggerElementRef} className={styles}>
+    <div ref={triggerElementRef} className={actualClassName}>
       <ConditionalWrapper
         shouldWrapContent={tooltip?.show}
         wrapper={({ children: currentChildren }) => (
-          <Tooltip
-            message={tooltip?.message}
-            horizontal="auto"
-            vertical="auto"
-            triggerType="icon"
-            tabIndex={-1}
-          >
+          <Tooltip message={tooltip?.message} triggerType="icon" tabIndex={-1}>
             {currentChildren}
           </Tooltip>
         )}
@@ -80,14 +77,14 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
         {/* 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する */}
         {includeDisabledTrigger(children)
           ? children
-          : React.Children.map(children, (child) => {
-              if (foundFirstElement || !React.isValidElement(child)) {
+          : Children.map(children, (child) => {
+              if (foundFirstElement || !isValidElement(child)) {
                 return child
               }
 
               foundFirstElement = true
 
-              return React.cloneElement(child as ReactElement, {
+              return cloneElement(child as ReactElement, {
                 onClick: (e: MouseEvent) => {
                   onClickTrigger(e.currentTarget.getBoundingClientRect())
 

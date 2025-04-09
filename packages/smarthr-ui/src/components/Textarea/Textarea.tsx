@@ -1,9 +1,9 @@
 'use client'
 
-import React, {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  ReactNode,
+import {
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type ReactNode,
   forwardRef,
   startTransition,
   useCallback,
@@ -68,7 +68,7 @@ const DECORATOR_DEFAULT_TEXTS = {
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
-const textarea = tv({
+const classNameGenerator = tv({
   slots: {
     textareaEl: [
       'smarthr-ui-Textarea-textarea',
@@ -179,43 +179,48 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       () => textareaRef.current,
     )
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedUpdateCount = useCallback(
-      debounce((value: string) => {
-        startTransition(() => {
-          setCount(getStringLength(value))
-        })
-      }, 200),
-      [],
+    const debouncedUpdateCount = useMemo(
+      () =>
+        maxLetters
+          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+              startTransition(() => {
+                setCount(getStringLength(e.target.value))
+              })
+            }, 200)
+          : undefined,
+      [maxLetters],
     )
 
     // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedUpdateSrCounterMessage = useCallback(
-      debounce((value: string) => {
-        startTransition(() => {
-          const counterText = getCounterMessage(getStringLength(value))
+    const debouncedUpdateSrCounterMessage = useMemo(
+      () =>
+        maxLetters
+          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+              startTransition(() => {
+                const counterText = getCounterMessage(getStringLength(e.target.value))
 
-          if (counterText) {
-            setSrCounterMessage(counterText)
-          }
-        })
-      }, 1000),
-      [getCounterMessage],
+                if (counterText) {
+                  setSrCounterMessage(counterText)
+                }
+              })
+            }, 1000)
+          : undefined,
+      [maxLetters, getCounterMessage],
     )
 
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (maxLetters) {
-          const inputValue = e.currentTarget.value
-          debouncedUpdateCount(inputValue)
-          debouncedUpdateSrCounterMessage(inputValue)
-        }
+    const handleChange = useMemo(() => {
+      const callbacks = [debouncedUpdateCount, debouncedUpdateSrCounterMessage, onChange].filter(
+        (c) => !!c,
+      )
 
-        onChange?.(e)
-      },
-      [debouncedUpdateCount, maxLetters, onChange, debouncedUpdateSrCounterMessage],
-    )
+      if (callbacks.length === 0) {
+        return undefined
+      }
+
+      return (e: ChangeEvent<HTMLTextAreaElement>) => {
+        callbacks.forEach((c) => c(e))
+      }
+    }, [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage])
 
     // autoFocus時に、フォーカスを当てる
     useEffect(() => {
@@ -226,14 +231,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     // autoResize時に、初期値での高さを指定
     useEffect(() => {
-      if (!autoResize) {
-        return
+      if (autoResize && textareaRef.current) {
+        setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
       }
-      if (!textareaRef.current) {
-        return
-      }
-
-      setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
     }, [setInterimRows, maxRows, autoResize])
 
     const handleInput = useCallback(
@@ -259,7 +259,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
     const countError = maxLetters && count > maxLetters
     const classNames = useMemo(() => {
-      const { textareaEl, counter, counterText } = textarea()
+      const { textareaEl, counter, counterText } = classNameGenerator()
 
       return {
         textarea: textareaEl({ className }),

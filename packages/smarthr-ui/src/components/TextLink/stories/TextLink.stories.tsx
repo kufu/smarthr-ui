@@ -1,9 +1,10 @@
 import { action } from '@storybook/addon-actions'
-import React, { ComponentPropsWithoutRef } from 'react'
+import { ComponentPropsWithoutRef } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
 import { UpwardLink } from '../../UpwardLink'
 import { TextLink } from '../TextLink'
+import { Table, Th } from '../../Table'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -94,6 +95,18 @@ export const TargetBlank: StoryObj<typeof TextLink> = {
   },
 }
 
+export const Size: StoryObj<typeof TextLink> = {
+  name: 'size',
+  render: (args) =>
+    ([undefined, 'M', 'S'] as const).map((size) => (
+      <p>
+        <TextLink {...args} size={size}>
+          {size || 'size未指定'}
+        </TextLink>
+      </p>
+    )),
+}
+
 export const OnClick: StoryObj<typeof TextLink> = {
   name: 'onClick',
   args: {
@@ -110,4 +123,19 @@ export const ElementAs: StoryObj<typeof TextLink> = {
     to: '#',
     children: 'next/link などを想定したリンク',
   },
+}
+
+export const InTh: StoryObj<typeof TextLink> = {
+  name: 'in Th Component',
+  render: (args) => (
+    <Table>
+      <thead>
+        <tr>
+          <Th>
+            <TextLink {...args} />
+          </Th>
+        </tr>
+      </thead>
+    </Table>
+  ),
 }

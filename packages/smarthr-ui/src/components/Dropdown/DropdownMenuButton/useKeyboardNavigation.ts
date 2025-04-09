@@ -1,51 +1,41 @@
-import { useCallback, useEffect } from 'react'
+import { type RefObject, useEffect } from 'react'
 
-const matchesDisabledState = (element: Element): boolean =>
-  element.matches(':disabled') || element.getAttribute('aria-disabled') === 'true'
-
-const isElementDisabled = (element: Element): boolean => {
-  if (matchesDisabledState(element)) {
-    return true
-  }
-
-  return Array.from(element.querySelectorAll('*')).some(matchesDisabledState)
-}
+const DISABLED_SELECTOR = ':disabled,[aria-disabled="true"]'
+const isElementEnabled = (element: Element): boolean =>
+  !element.matches(DISABLED_SELECTOR) && !element.querySelector(DISABLED_SELECTOR)
 
 const KEY_UP_REGEX = /^(Arrow)?(Up|Left)$/
 const KEY_DOWN_REGEX = /^(Arrow)?(Down|Right)$/
 
 const moveFocus = (element: Element, direction: 1 | -1) => {
-  const { hoveredItem, tabbableItems, focusedIndex } = Array.from(
-    element.querySelectorAll('li > *'),
-  ).reduce(
-    (
-      acc: {
-        hoveredItem: Element | null
-        tabbableItems: Element[]
-        focusedIndex: number
-      },
-      item,
-    ) => {
-      if (item.matches(':hover') && acc.hoveredItem === null) {
-        acc.hoveredItem = item
-      }
+  let hoveredItem: Element | null = null
+  const tabbableItems: Element[] = []
+  let focusedIndex: number = -1
 
-      if (!isElementDisabled(item)) {
-        acc.tabbableItems.push(item)
+  const pushTabbaleItem = (item: Element) => {
+    tabbableItems.push(item)
 
-        if (document.activeElement === item) {
-          acc.focusedIndex = acc.tabbableItems.length - 1
-        }
-      }
+    if (document.activeElement === item) {
+      focusedIndex = tabbableItems.length - 1
+    }
+  }
 
-      return acc
-    },
-    {
-      hoveredItem: null,
-      tabbableItems: [],
-      focusedIndex: -1,
-    },
-  )
+  element.querySelectorAll('li > *').forEach((item) => {
+    if (hoveredItem === null && item.matches(':hover')) {
+      hoveredItem = item
+    }
+
+    if (isElementEnabled(item)) {
+      pushTabbaleItem(item)
+    }
+
+    // HINT: disabled理由のtooltipなどが存在する場合があるため、focus対象にする
+    const tooltip = item.querySelector('.smarthr-ui-Tooltip[tabindex="0"]')
+
+    if (tooltip) {
+      pushTabbaleItem(tooltip)
+    }
+  })
 
   let nextIndex = 0
 
@@ -67,29 +57,39 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
   }
 }
 
-const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!containerRef.current || !document.activeElement) {
         return
       }
 
-      if (KEY_UP_REGEX.test(e.key)) {
-        moveFocus(containerRef.current, -1)
-      } else if (KEY_DOWN_REGEX.test(e.key)) {
-        moveFocus(containerRef.current, 1)
-      }
-    },
-    [containerRef],
-  )
+      let direction: -1 | 0 | 1 = 0
 
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown)
+      // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
+      if (e.key === 'Tab') {
+        // HINT: tbのデフォルトの挙動の場合のみ、preventDefaultが必要
+        e.preventDefault()
+        direction = e.shiftKey ? -1 : 1
+      } else if (KEY_UP_REGEX.test(e.key)) {
+        direction = -1
+      } else if (KEY_DOWN_REGEX.test(e.key)) {
+        direction = 1
+      }
+
+      if (direction !== 0) {
+        moveFocus(containerRef.current, direction)
+      }
+    }
+
+    const eventKey = 'keydown'
+
+    document.addEventListener(eventKey, handleKeyDown)
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener(eventKey, handleKeyDown)
     }
-  }, [handleKeyDown])
+  }, [containerRef])
 }
 
 export default useKeyboardNavigation

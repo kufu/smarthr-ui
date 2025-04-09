@@ -1,16 +1,10 @@
 'use client'
 
-import React, {
-  type ComponentProps,
-  type PropsWithChildren,
-  memo,
-  useContext,
-  useMemo,
-} from 'react'
+import { type ComponentProps, type PropsWithChildren, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
-import { STYLE_TYPE_MAP, Text, TextProps } from '../Text'
+import { STYLE_TYPE_MAP, Text, type TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{

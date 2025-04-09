@@ -1,11 +1,12 @@
 'use client'
 
-import React, { createContext, useContext } from 'react'
+import { type FC, createContext, useContext } from 'react'
 
 import { DialogContentInner } from './DialogContentInner'
 import { DialogContext } from './DialogWrapper'
-import { DirectChildren, UncontrolledDialogProps } from './types'
 import { useDialogPortal } from './useDialogPortal'
+
+import type { DirectChildren, UncontrolledDialogProps } from './types'
 
 type DialogContentContextType = {
   onClickClose: () => void
@@ -19,7 +20,7 @@ export const DialogContentContext = createContext<DialogContentContextType>({
 
 type Props = UncontrolledDialogProps & DirectChildren
 
-export const DialogContent: React.FC<Props> = ({ portalParent, ...props }) => {
+export const DialogContent: FC<Props> = ({ portalParent, ...props }) => {
   const { onClickClose, active } = useContext(DialogContext)
   const { createPortal } = useDialogPortal(portalParent)
 

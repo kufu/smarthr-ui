@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import React, { act } from 'react'
+import { act } from 'react'
 
 import { Calendar } from './Calendar'
 

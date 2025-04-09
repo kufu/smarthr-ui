@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import React, { ComponentProps, useRef, useState } from 'react'
+import { ComponentProps, useRef, useState } from 'react'
 
 import { Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
@@ -37,12 +37,12 @@ export default {
 
 export const Action_Dialog: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
-  const [responseMessage, setResponseMessage] =
-    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
+  const [responseStatus, setResponseStatus] =
+    useState<ComponentProps<typeof ActionDialog>['responseStatus']>()
   const openedFocusRef = useRef<HTMLInputElement>(null)
   const onClickClose = () => {
     setOpenedDialog(null)
-    setResponseMessage(undefined)
+    setResponseStatus(undefined)
   }
 
   return (
@@ -65,11 +65,11 @@ export const Action_Dialog: StoryFn = () => {
         decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
         onClickAction={(closeDialog) => {
           action('executed')()
-          setResponseMessage(undefined)
+          setResponseStatus(undefined)
           closeDialog()
         }}
         onClickClose={onClickClose}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         id="dialog-action"
         data-test="dialog-content"
         width="40em"
@@ -80,7 +80,7 @@ export const Action_Dialog: StoryFn = () => {
           <Cluster>
             <Button
               onClick={() =>
-                setResponseMessage({
+                setResponseStatus({
                   status: 'success',
                   text: '保存しました。',
                 })
@@ -90,7 +90,7 @@ export const Action_Dialog: StoryFn = () => {
             </Button>
             <Button
               onClick={() =>
-                setResponseMessage({
+                setResponseStatus({
                   status: 'error',
                   text: '何らかのエラーが発生しました。',
                 })
@@ -100,7 +100,7 @@ export const Action_Dialog: StoryFn = () => {
             </Button>
             <Button
               onClick={() =>
-                setResponseMessage({
+                setResponseStatus({
                   status: 'processing',
                 })
               }
