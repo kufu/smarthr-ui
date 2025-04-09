@@ -45,7 +45,7 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.stopPropagation()
 }
 
-// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButton
+// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
 const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', '.smarthr-ui-Icon-extended', 'svg', 'img'].reduce(
   (prev, selector, index) =>
     `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
@@ -64,10 +64,14 @@ export function ButtonWrapper({
   ...rest
 }: Props) {
   const innerRef = useRef<HTMLElement>(null)
+  // HINT: squareは
+  //  null: Buttonのレンダリング前
+  //  boolean: レンダリング後
   const [square, setSquare] = useState<null | boolean>(null)
 
   useEffect(() => {
     if (innerRef.current) {
+      // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonの場合true
       setSquare(!!innerRef.current.querySelector(ICON_BUTTON_SELECTOR))
     }
   }, [children])
@@ -98,11 +102,8 @@ export function ButtonWrapper({
     actualPrefix = undefined
     const loader = <Loader size="s" className={classNames.loader} role="presentation" />
 
-    // HINT: squareは
-    //  null: 計算前
-    //  boolean: 計算後
-    // のため、switchで判定する
-    // falsyな場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
+    // HINT: squareは null | boolean のため、switchで判定する
+    // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
     switch (square) {
       case true:
         actualChildren = loader
@@ -131,11 +132,7 @@ export function ButtonWrapper({
   } else {
     const { buttonRef, disabled, onClick, ...others } = rest
 
-    let disabledOnLoading = disabled
-
-    if ($loading) {
-      disabledOnLoading = true
-    }
+    const disabledOnLoading = $loading || disabled
 
     return (
       // eslint-disable-next-line smarthr/best-practice-for-button-element

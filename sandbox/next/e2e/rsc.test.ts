@@ -34,6 +34,7 @@ const SERVER_COMPONENTS = [
   'RangeSeparator',
   'ResponseMessage',
   'SearchInput',
+  'SideMenu',
   'SideNav',
   'SmartHRLogo',
   'SpreadsheetTable',
