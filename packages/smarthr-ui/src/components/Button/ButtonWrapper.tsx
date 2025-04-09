@@ -13,13 +13,15 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Loader } from '../Loader'
+
 import type { Variant } from './types'
 
 type BaseProps = PropsWithChildren<{
   size: 'default' | 's'
   wide: boolean
   variant: Variant
-  loader?: ReactNode
+  $loading?: boolean
   className: string
   elementAs?: ElementType
   prefix?: ReactNode
@@ -54,7 +56,7 @@ export function ButtonWrapper({
   variant,
   size,
   wide = false,
-  loader,
+  $loading,
   prefix,
   suffix,
   children,
@@ -70,27 +72,31 @@ export function ButtonWrapper({
     }
   }, [children])
 
-  const wrapperClassName = useMemo(() => {
+  const classNames = useMemo(() => {
     const generate = wrapperClassNameGenerator({
       variant,
       size,
       square: !!square,
-      loading: !!loader,
+      loading: !!$loading,
       wide,
     })
 
     const wrapper = rest.isAnchor ? generate.anchor : generate.button
 
-    return wrapper({ className })
-  }, [loader, size, square, variant, wide, className, rest.isAnchor])
+    return {
+      wrapper: wrapper({ className }),
+      loader: generate.loader(),
+    }
+  }, [$loading, size, square, variant, wide, className, rest.isAnchor])
   const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
 
   let actualPrefix = prefix
   let actualSuffix = suffix
   let actualChildren = children
 
-  if (loader) {
+  if ($loading) {
     actualPrefix = undefined
+    const loader = <Loader size="s" className={classNames.loader} role="presentation" />
 
     // HINT: squareは
     //  null: 計算前
@@ -114,7 +120,7 @@ export function ButtonWrapper({
     const Component = elementAs || 'a'
 
     return (
-      <Component {...others} className={wrapperClassName} ref={anchorRef}>
+      <Component {...others} className={classNames.wrapper} ref={anchorRef}>
         {actualPrefix}
         <span ref={innerRef} className={innerClassName}>
           {actualChildren}
@@ -127,7 +133,7 @@ export function ButtonWrapper({
 
     let disabledOnLoading = disabled
 
-    if (loader) {
+    if ($loading) {
       disabledOnLoading = true
     }
 
@@ -136,7 +142,7 @@ export function ButtonWrapper({
       <button
         {...others}
         aria-disabled={disabledOnLoading}
-        className={wrapperClassName}
+        className={classNames.wrapper}
         onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
       >
         {actualPrefix}
@@ -167,14 +173,40 @@ const wrapperClassNameGenerator = tv({
       '[&_.smarthr-ui-Icon]:forced-colors:shr-fill-[LinkText]',
       '[&:not([href])_.smarthr-ui-Icon]:forced-colors:shr-fill-[CanvasText]',
     ],
+    loader: [
+      'shr-align-bottom',
+      '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
+    ],
   },
   variants: {
     variant: {
-      primary: {},
-      secondary: {},
-      danger: {},
-      skeleton: {},
-      text: {},
+      primary: {
+        loader: [
+          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+        ],
+      },
+      secondary: {
+        loader: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
+      },
+      danger: {
+        loader: [
+          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+        ],
+      },
+      skeleton: {
+        loader: [
+          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+        ],
+      },
+      text: {
+        loader: [
+          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+        ],
+      },
     },
     size: {
       default: {},
