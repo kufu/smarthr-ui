@@ -1,6 +1,6 @@
 import { type RefObject, useEffect } from 'react'
 
-const TABBALE_SELECTOR = 'li button,li a,li [tabindex]:not([tabindex="-1"])'
+const TABBABLE_SELECTOR = 'li button,li a,li [tabindex]:not([tabindex="-1"])'
 const DISABLED_SELECTOR = ':disabled,[aria-disabled="true"]'
 const isElementEnabled = (element: Element): boolean =>
   !element.matches(DISABLED_SELECTOR) && !element.querySelector(DISABLED_SELECTOR)
@@ -21,7 +21,7 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
     }
   }
 
-  element.querySelectorAll(TABBALE_SELECTOR).forEach((item) => {
+  element.querySelectorAll(TABBABLE_SELECTOR).forEach((item) => {
     if (hoveredItem === null && item.matches(':hover')) {
       hoveredItem = item
     }

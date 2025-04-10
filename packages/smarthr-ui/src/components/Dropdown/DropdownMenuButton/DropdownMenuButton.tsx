@@ -18,7 +18,7 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
+import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 
@@ -106,7 +106,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         wrapperStyle={classNames.triggerWrapper}
         buttonStyle={classNames.triggerButton}
       />
-      <DropdownContent>
+      <DropdownContent controllable={true}>
         <menu ref={containerRef} className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
@@ -174,11 +174,13 @@ export const renderButtonList = (children: Actions) =>
 
     return (
       <li>
-        {cloneElement(item as ReactElement, {
-          variant: 'text',
-          wide: true,
-          className: actionListItemButton({ className: item.props.className }),
-        })}
+        <DropdownCloser>
+          {cloneElement(item as ReactElement, {
+            variant: 'text',
+            wide: true,
+            className: actionListItemButton({ className: item.props.className }),
+          })}
+        </DropdownCloser>
       </li>
     )
   })
