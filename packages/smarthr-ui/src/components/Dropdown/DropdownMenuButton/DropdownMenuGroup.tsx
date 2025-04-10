@@ -59,7 +59,15 @@ export const DropdownMenuGroup: FC<Props & ElementProps> = ({ name, children, cl
 const NameText = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) =>
     children && (
-      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className}>
+      <Text
+        tabIndex={0}
+        as="p"
+        size="S"
+        weight="bold"
+        color="TEXT_GREY"
+        leading="NONE"
+        className={className}
+      >
         {children}
       </Text>
     ),

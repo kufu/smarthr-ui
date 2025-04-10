@@ -1,5 +1,6 @@
 import { type RefObject, useEffect } from 'react'
 
+const TABBALE_SELECTOR = 'li button,li a,li [tabindex]:not([tabindex="-1"])'
 const DISABLED_SELECTOR = ':disabled,[aria-disabled="true"]'
 const isElementEnabled = (element: Element): boolean =>
   !element.matches(DISABLED_SELECTOR) && !element.querySelector(DISABLED_SELECTOR)
@@ -20,20 +21,13 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
     }
   }
 
-  element.querySelectorAll('li > *').forEach((item) => {
+  element.querySelectorAll(TABBALE_SELECTOR).forEach((item) => {
     if (hoveredItem === null && item.matches(':hover')) {
       hoveredItem = item
     }
 
     if (isElementEnabled(item)) {
       pushTabbaleItem(item)
-    }
-
-    // HINT: disabled理由のtooltipなどが存在する場合があるため、focus対象にする
-    const tooltip = item.querySelector('.smarthr-ui-Tooltip[tabindex="0"]')
-
-    if (tooltip) {
-      pushTabbaleItem(tooltip)
     }
   })
 
