@@ -79,13 +79,12 @@ const classNameGenerator = tv({
       'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
       'aria-[invalid]:shr-border-danger',
     ],
-    counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
-    counterText: 'shr-text-black',
+    counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black',
   },
   variants: {
     error: {
       true: {
-        counterText: 'shr-text-danger',
+        counter: 'shr-text-danger',
       },
     },
   },
@@ -259,12 +258,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
     const countError = maxLetters && count > maxLetters
     const classNames = useMemo(() => {
-      const { textareaEl, counter, counterText } = classNameGenerator()
+      const { textareaEl, counter } = classNameGenerator()
 
       return {
         textarea: textareaEl({ className }),
-        counter: counter(),
-        counterText: counterText({ error: !!countError }),
+        counter: counter({ error: !!countError }),
       }
     }, [countError, className])
 
@@ -286,17 +284,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     return maxLetters ? (
       <span>
         {body}
-        <span className={classNames.counter}>
-          <span className={classNames.counterText} id={actualMaxLettersId} aria-hidden={true}>
-            {counterVisualMessage}
-          </span>
-        </span>
-        <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <VisuallyHiddenText id={maxLettersNoticeId}>
           {decorated.beforeScreenReaderMaxLettersDescription}
           {maxLetters}
           {decorated.afterScreenReaderMaxLettersDescription}
         </VisuallyHiddenText>
+        <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
+        <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>
+          {counterVisualMessage}
+        </span>
       </span>
     ) : (
       body

@@ -138,6 +138,7 @@ export function ButtonWrapper({
       // eslint-disable-next-line smarthr/best-practice-for-button-element
       <button
         {...others}
+        ref={buttonRef}
         aria-disabled={disabledOnLoading}
         className={classNames.wrapper}
         onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
@@ -177,33 +178,11 @@ const wrapperClassNameGenerator = tv({
   },
   variants: {
     variant: {
-      primary: {
-        loader: [
-          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
-          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
-        ],
-      },
-      secondary: {
-        loader: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
-      },
-      danger: {
-        loader: [
-          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
-          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
-        ],
-      },
-      skeleton: {
-        loader: [
-          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
-          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
-        ],
-      },
-      text: {
-        loader: [
-          '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
-          '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
-        ],
-      },
+      primary: {},
+      secondary: {},
+      danger: {},
+      skeleton: {},
+      text: {},
     },
     size: {
       default: {},
@@ -440,6 +419,19 @@ const wrapperClassNameGenerator = tv({
         '[&:not([href])]:shr-bg-transparent',
         '[&:not([href])]:shr-text-disabled',
       ],
+    },
+    {
+      slots: ['loader'],
+      variant: ['primary', 'danger', 'skeleton', 'text'],
+      className: [
+        '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+        '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+      ],
+    },
+    {
+      slots: ['loader'],
+      variant: 'secondary',
+      className: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
     },
   ],
 })
