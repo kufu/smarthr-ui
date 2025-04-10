@@ -1,24 +1,33 @@
 import { Stack } from '../../Layout'
-
 import { ResponseMessage, classNameGenerator } from '../ResponseMessage'
-
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Text（テキスト）/ResponseMessage',
   component: ResponseMessage,
   render: (args) => <ResponseMessage {...args} />,
+  argTypes: {
+    alt: { control: 'text' },
+    type: {
+      control: 'select',
+      options: Object.keys(classNameGenerator.variants.type),
+    },
+    color: { table: { disable: true } },
+  },
   args: {
     children: 'レスポンスメッセージ',
+    type: 'info',
+    size: 'M',
+    alt: '',
+    right: false,
+    iconGap: 0.25,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof ResponseMessage>
 
-export const Playground: StoryObj<typeof ResponseMessage> = {
-  args: {},
-}
+export const Playground: StoryObj<typeof ResponseMessage> = {}
 
 export const Type: StoryObj<typeof ResponseMessage> = {
   name: 'type',
@@ -32,7 +41,7 @@ export const Type: StoryObj<typeof ResponseMessage> = {
 }
 
 export const Size: StoryObj<typeof ResponseMessage> = {
-  name: 'size',
+  name: 'size（非推奨）',
   render: (args) => (
     <Stack align="flex-start">
       <ResponseMessage {...args} size="XXS" />
@@ -50,7 +59,6 @@ export const Right: StoryObj<typeof ResponseMessage> = {
   name: 'right',
   render: (args) => (
     <Stack align="flex-start">
-      <ResponseMessage {...args} />
       <ResponseMessage {...args} right />
     </Stack>
   ),
@@ -62,8 +70,6 @@ export const IconGap: StoryObj<typeof ResponseMessage> = {
     <Stack align="flex-start">
       <ResponseMessage {...args} iconGap={0.25} />
       <ResponseMessage {...args} iconGap={0.5} />
-      <ResponseMessage {...args} iconGap={1} />
-      <ResponseMessage {...args} iconGap={2} />
     </Stack>
   ),
 }
