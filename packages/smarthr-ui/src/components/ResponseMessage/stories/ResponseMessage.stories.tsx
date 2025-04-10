@@ -57,11 +57,7 @@ export const Size: StoryObj<typeof ResponseMessage> = {
 
 export const Right: StoryObj<typeof ResponseMessage> = {
   name: 'right',
-  render: (args) => (
-    <Stack align="flex-start">
-      <ResponseMessage {...args} right />
-    </Stack>
-  ),
+  render: (args) => <ResponseMessage {...args} right />,
 }
 
 export const IconGap: StoryObj<typeof ResponseMessage> = {
