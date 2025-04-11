@@ -21,7 +21,10 @@ export const defaultRadius: CreatedRadiusTheme = {
   full: '10000px',
 }
 
-export const createRadius = (userRadius: RadiusProperty = {}) => {
-  const created: CreatedRadiusTheme = merge({ ...defaultRadius }, userRadius)
-  return created
+export const createRadius = (userRadius?: RadiusProperty): CreatedRadiusTheme => {
+  if (!userRadius) {
+    return defaultRadius
+  }
+
+  return merge({ ...defaultRadius }, userRadius)
 }

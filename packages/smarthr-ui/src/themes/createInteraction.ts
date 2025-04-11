@@ -21,7 +21,7 @@ export type CreatedInteractionTheme = {
   }
 }
 
-export const defaultInteraction = {
+export const defaultInteraction: CreatedInteractionTheme = {
   hover: {
     feedbackOpacity: '.7',
     animationDuration: hoverAnimationDuration,
@@ -30,13 +30,17 @@ export const defaultInteraction = {
   },
 }
 
-export const createInteraction = (userInteraction: InteractionProperty = {}) => {
-  const created: CreatedInteractionTheme = merge(
+export const createInteraction = (
+  userInteraction?: InteractionProperty,
+): CreatedInteractionTheme => {
+  if (!userInteraction) {
+    return defaultInteraction
+  }
+
+  return merge(
     {
       ...defaultInteraction,
     },
     userInteraction,
   )
-
-  return created
 }

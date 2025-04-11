@@ -72,15 +72,20 @@ export type CreatedColorTheme = Palette & {
   disableColor: (value: string) => string
 }
 
-export const createColor = (userColor: ColorProperty = {}) => {
-  const created: CreatedColorTheme = merge(
-    {
-      hoverColor: (value: string): string => darken(0.05, value),
-      disableColor: (value: string): string => rgba(value, 0.5),
-      ...defaultColor,
-    },
+export const createColor = (userColor?: ColorProperty): CreatedColorTheme => {
+  const colors = {
+    hoverColor: (value: string): string => darken(0.05, value),
+    disableColor: (value: string): string => rgba(value, 0.5),
+    ...defaultColor,
+  }
+
+  if (!userColor) {
+    return colors
+  }
+
+  return merge(
+    colors,
     userColor,
     !userColor.OUTLINE && userColor.MAIN ? { OUTLINE: transparentize(0.5, userColor.MAIN) } : null,
   )
-  return created
 }
