@@ -1,9 +1,23 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  useMemo,
+} from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> & ComponentPropsWithoutRef<'span'>
->
+import { Cluster } from '../Layout'
+
+type AbstractProps = PropsWithChildren<{
+  prefix?: ReactNode
+  suffix?: ReactNode
+}>
+type Props = AbstractProps &
+  Omit<
+    VariantProps<typeof classNameGenerator> & ComponentPropsWithoutRef<'span'>,
+    keyof AbstractProps
+  >
 
 export const classNameGenerator = tv({
   base: [
@@ -34,10 +48,41 @@ export const classNameGenerator = tv({
   },
 })
 
-export const Chip: FC<Props> = ({ size, color, disabled, className, ...props }) => {
+export const Chip: FC<Props> = ({
+  size,
+  color,
+  disabled,
+  prefix,
+  suffix,
+  children,
+  className,
+  ...props
+}) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ size, color, disabled, className }),
     [size, color, disabled, className],
   )
-  return <span {...props} className={actualClassName} />
+
+  if (prefix || suffix) {
+    return (
+      <Cluster
+        {...props}
+        gap={0.25}
+        align="center"
+        inline={true}
+        className={actualClassName}
+        as="span"
+      >
+        {prefix}
+        {children}
+        {suffix}
+      </Cluster>
+    )
+  }
+
+  return (
+    <span {...props} className={actualClassName}>
+      {children}
+    </span>
+  )
 }

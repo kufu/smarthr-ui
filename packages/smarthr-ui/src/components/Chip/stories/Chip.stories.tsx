@@ -2,6 +2,7 @@ import { Stack } from '../../Layout'
 import { Chip, classNameGenerator } from '../Chip'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { FaCheckIcon, FaCircleXmarkIcon } from '../../Icon'
 
 export default {
   title: 'Data Display（データ表示）/Chip',
@@ -50,5 +51,19 @@ export const Disabled: StoryObj<typeof Chip> = {
   name: 'disabled',
   args: {
     disabled: true,
+  },
+}
+
+export const Prefix: StoryObj<typeof Chip> = {
+  name: 'prefix',
+  args: {
+    prefix: <FaCheckIcon />,
+  },
+}
+
+export const Suffix: StoryObj<typeof Chip> = {
+  name: 'suffix',
+  args: {
+    suffix: <FaCircleXmarkIcon />,
   },
 }

@@ -90,24 +90,28 @@ export function MultiSelectedItem<T>({
   }, [disabled, enableEllipsis])
 
   const body = (
-    <Chip disabled={disabled} className={classNames.wrapper}>
+    <Chip
+      disabled={disabled}
+      className={classNames.wrapper}
+      suffix={
+        deletable && (
+          <DestroyButton
+            labelId={labelId}
+            suffixTextId={destroySuffixTextId}
+            item={item}
+            onDelete={onDelete}
+            disabled={disabled}
+            buttonRef={buttonRef}
+            decorators={decorators}
+            className={classNames.deleteButton}
+            iconStyle={classNames.deleteButtonIcon}
+          />
+        )
+      }
+    >
       <ItemLabel id={labelId} className={classNames.itemLabel} setNeedsTooltip={setNeedsTooltip}>
         {item.label}
       </ItemLabel>
-
-      {deletable && (
-        <DestroyButton
-          labelId={labelId}
-          suffixTextId={destroySuffixTextId}
-          item={item}
-          onDelete={onDelete}
-          disabled={disabled}
-          buttonRef={buttonRef}
-          decorators={decorators}
-          className={classNames.deleteButton}
-          iconStyle={classNames.deleteButtonIcon}
-        />
-      )}
     </Chip>
   )
 
