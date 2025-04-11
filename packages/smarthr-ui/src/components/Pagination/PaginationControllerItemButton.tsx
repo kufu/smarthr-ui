@@ -66,7 +66,7 @@ export const PaginationControllerItemButton: FC<Props> = ({
   }, [targetPage, disabled, hrefTemplate, linkAs])
 
   return (
-    <Component {...attrs} square size="s" className="shr-rounded-s">
+    <Component {...attrs} square size="s" className="shr-rounded-s" aria-label={alt}>
       <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
     </Component>
   )
