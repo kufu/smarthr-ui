@@ -15,8 +15,12 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableReel: FC<PropsWithChildren & ElementProps> = ({ className, ...props }) => {
-  const { showShadow, tableWrapperRef } = useReelCells()
+export const TableReel: FC<PropsWithChildren & ElementProps> = ({
+  className,
+  children,
+  ...props
+}) => {
+  const { showShadow, tableWrapperRef } = useReelCells(children)
 
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator()
@@ -29,7 +33,9 @@ export const TableReel: FC<PropsWithChildren & ElementProps> = ({ className, ...
 
   return (
     <div className={classNames.wrapper}>
-      <div {...props} ref={tableWrapperRef} className={classNames.inner} />
+      <div {...props} ref={tableWrapperRef} className={classNames.inner}>
+        {children}
+      </div>
     </div>
   )
 }
