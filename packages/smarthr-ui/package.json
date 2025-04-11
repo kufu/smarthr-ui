@@ -60,6 +60,7 @@
     "chromatic": "^11.28.0",
     "css-loader": "^7.1.2",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
+    "esbuild": "^0.25.2",
     "fs-extra": "^11.3.0",
     "glob": "11.0.1",
     "http-server": "^14.1.1",
@@ -85,6 +86,7 @@
     "style-loader": "^4.0.0",
     "styled-components": "^5.3.11",
     "ts-loader": "^9.5.2",
+    "tsx": "^4.19.3",
     "ttypescript": "^1.5.15",
     "typescript-plugin-styled-components": "^3.0.0",
     "vitest": "^3.1.1",
@@ -94,6 +96,7 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
+    "react-draggable": "^4.4.6",
     "react-intl": "^7.0.4",
     "styled-components": "^5.0.1"
   },
@@ -157,7 +160,7 @@
   "scripts": {
     "build": "run-p build:*",
     "build:lib": "tsc -p tsconfig.build.json",
-    "build:esm": "tsc -p tsconfig.esm.build.json",
+    "build:esm": "tsx scripts/build-esm.ts",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet",
     "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",

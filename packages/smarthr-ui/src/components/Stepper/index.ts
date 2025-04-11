@@ -1,2 +1,2 @@
 export { Stepper } from './Stepper'
-export { HorizontalStep, VerticalStep } from './types'
+export type { HorizontalStep, VerticalStep } from './types'

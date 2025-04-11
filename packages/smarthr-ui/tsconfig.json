@@ -26,7 +26,8 @@
     "allowSyntheticDefaultImports": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
-    "paths": {}
+    "paths": {},
+    "isolatedModules": true
   },
   "exclude": [
     "node_modules"
