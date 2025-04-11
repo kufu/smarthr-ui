@@ -15,7 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
+import { BottomPanel } from '../BottomPanel'
 import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
 
@@ -51,13 +51,7 @@ type Props = {
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: [
-      'smarthr-ui-BottomFixedArea',
-      'shr-fixed shr-bottom-0 shr-z-fixed-menu shr-box-border shr-w-full shr-rounded-none shr-p-1.5 shr-text-center',
-      // Layer 3 だが、上方向への指定のためベタ書き： https://smarthr.design/products/design-tokens/shadow/
-      '[box-shadow:_0_-4px_8px_2px_rgba(0,_0,_0,_0.24)]',
-      '[&_ul]:shr-list-none',
-    ],
+    wrapper: ['smarthr-ui-BottomFixedArea', 'shr-text-center', '[&_ul]:shr-list-none'],
     tertiaryButton: [
       'smarthr-ui-BottomFixedArea-tertiaryLink',
       '-shr-mb-0.5 shr-font-normal shr-text-main',
@@ -73,7 +67,6 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryLinks,
-  zIndex,
   className,
   ...props
 }) => {
@@ -85,14 +78,13 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
       tertiaryButton: tertiaryButton(),
     }
   }, [className])
-  const style = useMemo(() => ({ zIndex }), [zIndex])
 
   useEffect(() => {
     validateElement(primaryButton, secondaryButton)
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base {...props} className={classNames.wrapper} style={style}>
+    <BottomPanel {...props} className={classNames.wrapper}>
       <Stack>
         <Description>{description}</Description>
         <Stack gap={0.25}>
@@ -124,7 +116,7 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
           )}
         </Stack>
       </Stack>
-    </Base>
+    </BottomPanel>
   )
 }
 
