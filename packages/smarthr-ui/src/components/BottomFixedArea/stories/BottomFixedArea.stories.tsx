@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { Button } from '../../Button'
 import { FaThumbtackIcon } from '../../Icon'
 import { BottomFixedArea } from '../BottomFixedArea'
+import { BottomPanel } from '../../BottomPanel'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
