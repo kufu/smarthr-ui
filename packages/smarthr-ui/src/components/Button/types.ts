@@ -23,10 +23,6 @@ export type BaseProps = PropsWithChildren<{
    */
   suffix?: ReactNode
   /**
-   * `true` のとき、ボタンを正方形にする。
-   */
-  square?: boolean
-  /**
    * `true` のとき、ボタンの `width` を 100% にする。
    */
   wide?: boolean

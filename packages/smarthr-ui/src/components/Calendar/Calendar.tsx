@@ -194,7 +194,7 @@ const YearSelectButton = memo<{
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
 }>((rest) => (
-  <Button {...rest} size="s" square>
+  <Button {...rest} size="s">
     <FaCaretDownIcon alt="年を選択する" />
   </Button>
 ))
@@ -219,7 +219,6 @@ const MonthDirectionCluster = memo<{
         disabled={isSelectingYear || prev.isBefore(from, 'month')}
         onClick={onClickMonthPrev}
         size="s"
-        square
         className="smarthr-ui-Calendar-monthButtonPrev"
       >
         <FaChevronLeftIcon alt="前の月へ" />
@@ -228,7 +227,6 @@ const MonthDirectionCluster = memo<{
         disabled={isSelectingYear || next.isAfter(to, 'month')}
         onClick={onClickMonthNext}
         size="s"
-        square
         className="smarthr-ui-Calendar-monthButtonNext"
       >
         <FaChevronRightIcon alt="次の月へ" />

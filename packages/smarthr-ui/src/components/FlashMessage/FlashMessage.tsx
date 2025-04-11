@@ -99,7 +99,7 @@ const ActualFlashMessage: FC<Omit<ActualProps, 'visible'>> = ({
       <ResponseMessage type={type} iconGap={0.5} className={classNames.responseMessage}>
         {text}
       </ResponseMessage>
-      <Button onClick={onClose} size="s" square className={classNames.closeButton}>
+      <Button onClick={onClose} size="s" className={classNames.closeButton}>
         <FaXmarkIcon alt="閉じる" />
       </Button>
     </div>

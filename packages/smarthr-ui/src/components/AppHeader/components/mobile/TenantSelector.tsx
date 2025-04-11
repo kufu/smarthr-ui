@@ -21,7 +21,7 @@ const tenantDropdownTriggerButton = tv({
   base: [
     'shr-border-none shr-bg-white shr-text-start shr-text-sm shr-rounded-s shr-px-0.5 shr-py-0.25 shr-cursor-pointer',
     'hover:shr-bg-white-darken',
-    '[&[aria-expanded="true"]>.smarthr-ui-Icon:last-child]:shr-rotate-180',
+    '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
   ],
 })
 

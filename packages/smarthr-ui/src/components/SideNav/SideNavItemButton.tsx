@@ -33,7 +33,11 @@ const classNameGenerator = tv({
       'data-[selected=true]:after:shr-absolute data-[selected=true]:after:-shr-right-0.25 data-[selected=true]:after:shr-top-1/2 data-[selected=true]:after:-shr-translate-y-1/2 data-[selected=true]:after:shr-translate-x-0 data-[selected=true]:after:shr-border-b-4 data-[selected=true]:after:shr-border-l-4 data-[selected=true]:after:shr-border-r-0 data-[selected=true]:after:shr-border-t-4 data-[selected=true]:after:shr-border-solid data-[selected=true]:after:shr-border-b-transparent data-[selected=true]:after:shr-border-l-main data-[selected=true]:after:shr-border-r-transparent data-[selected=true]:after:shr-border-t-transparent data-[selected=true]:after:shr-content-[""]',
       'data-[selected=false]:hover:shr-bg-column-darken',
     ],
-    button: ['shr-w-full shr-leading-none [&]:shr-box-border', 'focus-visible:shr-focus-indicator'],
+    button: [
+      'shr-w-full shr-leading-none [&]:shr-box-border',
+      'focus-visible:shr-focus-indicator',
+      'shr-inline-flex shr-items-center',
+    ],
     buttonInner: 'smarthr-ui-SideNav-itemTitle',
   },
   variants: {

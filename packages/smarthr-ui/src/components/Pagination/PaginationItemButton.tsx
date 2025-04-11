@@ -57,7 +57,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
   }, [disabled, page, hrefTemplate, linkAs])
 
   return (
-    <Component {...attrs} square size="s" className={className}>
+    <Component {...attrs} size="s" className={className}>
       {page}
     </Component>
   )

@@ -31,7 +31,7 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
         <DropdownTrigger>
           <Button
             suffix={<FaCaretDownIcon />}
-            className="shr-border-none shr-font-normal shr-rounded-none [&[aria-expanded='true']>.smarthr-ui-Icon:last-child]:shr-rotate-180"
+            className="shr-border-none shr-font-normal shr-rounded-none [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
           >
             <Translate>{translate('common/releaseNote')}</Translate>
           </Button>

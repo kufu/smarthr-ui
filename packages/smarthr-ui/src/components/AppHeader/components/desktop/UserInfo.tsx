@@ -31,7 +31,7 @@ const userInfo = tv({
     button: [
       '[&&]:shr-border-transparent [&&]:shr-font-normal [&&]:last-of-type:-shr-me-0.25',
       '[&&]:focus-visible:shr-bg-transparent',
-      "[&[aria-expanded='true']>.smarthr-ui-Icon:last-child]:shr-rotate-180",
+      "[&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180",
     ],
     dropdownContent: '[&&]:shr-whitespace-pre [&&]:shr-p-0.5',
     accountImage: '',
