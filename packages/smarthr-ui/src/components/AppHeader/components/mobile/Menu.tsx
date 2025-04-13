@@ -203,9 +203,7 @@ const ActualReleaseNoteButton = memo<
 
   return (
     <div className={className}>
-      <MenuButton onClick={onClick}>
-        <Translate>{children}</Translate>
-      </MenuButton>
+      <MenuButton onClick={onClick}>{children}</MenuButton>
     </div>
   )
 })

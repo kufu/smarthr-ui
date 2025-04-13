@@ -1,5 +1,6 @@
 import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
+import { Translate } from '../common/Translate'
 
 import type { FC, PropsWithChildren } from 'react'
 
@@ -17,7 +18,7 @@ export const MenuButton: FC<PropsWithChildren<Props>> = ({ children, onClick, is
     boldWhenCurrent
     className="[&&]:shr-px-0.5 [&&]:shr-justify-between"
   >
-    {children}
+    <Translate>{children}</Translate>
     <FaAngleRightIcon color="TEXT_BLACK" />
   </CommonButton>
 )
