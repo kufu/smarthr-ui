@@ -60,6 +60,10 @@ export const MenuDialog: FC<
   const domRef = useRef<HTMLSelectElement>(null)
 
   const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
+  const clearNavigationGroup = useCallback(
+    () => setSelectedNavigationGroup(null),
+    [setSelectedNavigationGroup],
+  )
 
   const renderedContent = useMemo(() => {
     const { wrapper, header, content } = menu()
@@ -80,7 +84,10 @@ export const MenuDialog: FC<
                 onClickBack={() => setIsReleaseNoteSelected(false)}
               />
             ) : selectedNavigationGroup ? (
-              <NavigationGroupHeader title={selectedNavigationGroup.children} />
+              <MenuSubHeading
+                title={selectedNavigationGroup.children}
+                onClickBack={clearNavigationGroup}
+              />
             ) : (
               <div>{tenantSelector}</div>
             )}
@@ -117,9 +124,10 @@ export const MenuDialog: FC<
     isReleaseNoteSelected,
     selectedNavigationGroup,
     setIsAppLauncherSelected,
-    setIsReleaseNoteSelected,
     tenantSelector,
     dialogClose,
+    setIsReleaseNoteSelected,
+    clearNavigationGroup,
   ])
 
   useEffect(() => {
@@ -128,14 +136,14 @@ export const MenuDialog: FC<
     } else {
       setIsReleaseNoteSelected(false)
       setIsAppLauncherSelected(false)
-      setSelectedNavigationGroup(null)
+      clearNavigationGroup()
     }
   }, [
     isOpen,
     renderedContent,
     setIsAppLauncherSelected,
     setIsReleaseNoteSelected,
-    setSelectedNavigationGroup,
+    clearNavigationGroup,
   ])
 
   return (
