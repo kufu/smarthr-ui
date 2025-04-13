@@ -45,7 +45,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const close = useCallback(() => setIsOpen(false), [])
 
   const [isNavigationOpen, setIsNavigationOpen] = useState(true)
-  const [isAdditionalContentOpen, setIsAdditionalContentOpen] = useState(true)
 
   const { navigations } = useContext(NavigationContext)
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
@@ -119,21 +118,31 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           )}
 
           {additionalContent && (
-            <div className={className}>
-              <MenuAccordion
-                isOpen={isAdditionalContentOpen}
-                setIsOpen={setIsAdditionalContentOpen}
-                title={translated.management}
-              >
-                {additionalContent}
-              </MenuAccordion>
-            </div>
+            <AdditionalContent title={translated.management} className={className}>
+              {additionalContent}
+            </AdditionalContent>
           )}
 
           <ReleaseNoteButton className={className}>{translated.releaseNote}</ReleaseNoteButton>
         </MenuDialog>,
       )}
     </>
+  )
+}
+
+const AdditionalContent: FC<PropsWithChildren<{ title: ReactNode; className: string }>> = ({
+  title,
+  children,
+  className,
+}) => {
+  const [isOpen, setIsOpen] = useState(true)
+
+  return (
+    <div className={className}>
+      <MenuAccordion isOpen={isOpen} setIsOpen={setIsOpen} title={title}>
+        {children}
+      </MenuAccordion>
+    </div>
   )
 }
 
