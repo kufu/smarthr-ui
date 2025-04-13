@@ -84,7 +84,7 @@ export const MenuDialog: FC<
             )}
 
             <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
-              <FaXmarkIcon role="img" aria-label={translate('MobileHeader/Menu/closeMenu')} />
+              <FaXmarkIcon alt={translate('MobileHeader/Menu/closeMenu')} />
             </Button>
           </Cluster>
         </div>

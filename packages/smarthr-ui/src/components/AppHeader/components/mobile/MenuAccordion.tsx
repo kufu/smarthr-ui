@@ -42,9 +42,9 @@ export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
           onClick={() => setIsOpen((prev) => !prev)}
         >
           {isOpen ? (
-            <FaCaretUpIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/close')} />
+            <FaCaretUpIcon alt={translate('MobileHeader/MenuAccordion/close')} />
           ) : (
-            <FaCaretDownIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/open')} />
+            <FaCaretDownIcon alt={translate('MobileHeader/MenuAccordion/open')} />
           )}
         </Button>
       </Cluster>

@@ -57,7 +57,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   return (
     <>
       <Button variant="secondary" size="s" onClick={() => setIsOpen(true)} aria-haspopup="true">
-        <FaBarsIcon role="img" aria-label={translate('MobileHeader/Menu/openMenu')} />
+        <FaBarsIcon alt={translate('MobileHeader/Menu/openMenu')} />
       </Button>
 
       {createPortal(

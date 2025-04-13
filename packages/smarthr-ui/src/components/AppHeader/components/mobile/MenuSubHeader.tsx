@@ -17,7 +17,7 @@ export const MenuSubHeader: FC<Props> = ({ title, onClickBack }) => {
   return (
     <>
       <Button size="s" onClick={onClickBack}>
-        <FaArrowLeftIcon role="img" aria-label={translate('MobileHeader/MenuSubHeader/back')} />
+        <FaArrowLeftIcon alt={translate('MobileHeader/MenuSubHeader/back')} />
       </Button>
 
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
