@@ -59,6 +59,8 @@ export const MenuDialog: FC<
   const translate = useTranslate()
   const domRef = useRef<HTMLSelectElement>(null)
 
+  const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
+
   const renderedContent = useMemo(() => {
     const { wrapper, header, content } = menu()
 
@@ -83,7 +85,7 @@ export const MenuDialog: FC<
               <div>{tenantSelector}</div>
             )}
 
-            <Button variant="secondary" size="s" onClick={() => setIsOpen(false)}>
+            <Button variant="secondary" size="s" onClick={dialogClose}>
               <FaXmarkIcon alt={translate('MobileHeader/Menu/closeMenu')} />
             </Button>
           </Cluster>
@@ -98,7 +100,7 @@ export const MenuDialog: FC<
             ) : selectedNavigationGroup ? (
               <Navigation
                 navigations={selectedNavigationGroup.childNavigations}
-                onClickNavigation={() => setIsOpen(false)}
+                onClickNavigation={dialogClose}
               />
             ) : (
               children
@@ -115,9 +117,9 @@ export const MenuDialog: FC<
     isReleaseNoteSelected,
     selectedNavigationGroup,
     setIsAppLauncherSelected,
-    setIsOpen,
     setIsReleaseNoteSelected,
     tenantSelector,
+    dialogClose,
   ])
 
   useEffect(() => {
