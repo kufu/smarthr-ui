@@ -77,27 +77,9 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
       <Button variant="secondary" size="s" onClick={open} aria-haspopup="true">
         <FaBarsIcon alt={translated.open} />
       </Button>
-
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
-          {features && features.length > 0 && (
-            <div className={className}>
-              <Button
-                variant="secondary"
-                wide
-                prefix={<FaToolboxIcon />}
-                suffix={
-                  <div className="shr-ms-auto">
-                    <FaAngleRightIcon />
-                  </div>
-                }
-                onClick={() => setIsAppLauncherSelected(true)}
-              >
-                <Translate>{translated.launcherListText}</Translate>
-              </Button>
-            </div>
-          )}
-
+          <FeatureButton className={className}>{translated.launcherListText}</FeatureButton>
           <NavigationAccordion appName={appName} menuClose={close} className={className} />
           {additionalContent && (
             <AdditionalContent title={translated.management} className={className}>
@@ -108,6 +90,42 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         </MenuDialog>,
       )}
     </>
+  )
+}
+
+const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => {
+  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
+
+  return (
+    features &&
+    features.length > 0 && (
+      <ActualFeatureButton
+        setIsAppLauncherSelected={setIsAppLauncherSelected}
+        className={className}
+      >
+        {children}
+      </ActualFeatureButton>
+    )
+  )
+})
+
+const ActualFeatureButton: FC<
+  PropsWithChildren<{ className: string; setIsAppLauncherSelected: (selected: boolean) => void }>
+> = ({ setIsAppLauncherSelected, children, className }) => {
+  const onClick = useCallback(() => setIsAppLauncherSelected(true), [setIsAppLauncherSelected])
+
+  return (
+    <div className={className}>
+      <Button
+        variant="secondary"
+        wide
+        prefix={<FaToolboxIcon />}
+        suffix={<FaAngleRightIcon className="shr-ms-auto" />}
+        onClick={onClick}
+      >
+        <Translate>{children}</Translate>
+      </Button>
+    </div>
   )
 }
 
