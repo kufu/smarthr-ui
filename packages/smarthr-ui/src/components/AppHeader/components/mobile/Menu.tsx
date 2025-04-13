@@ -44,8 +44,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
-
   const { createPortal } = usePortal()
 
   useEffect(() => {
