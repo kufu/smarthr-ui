@@ -1,4 +1,12 @@
-import { type FC, type ReactNode, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  type FC,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
@@ -30,6 +38,10 @@ type Props = {
 
 export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) => {
   const [isOpen, setIsOpen] = useState(false)
+
+  const open = useCallback(() => setIsOpen(true), [])
+  const close = useCallback(() => setIsOpen(false), [])
+
   const [isNavigationOpen, setIsNavigationOpen] = useState(true)
   const [isAdditionalContentOpen, setIsAdditionalContentOpen] = useState(true)
 
@@ -50,13 +62,13 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
     }
   }, [isOpen])
 
-  useHandleEscape(() => setIsOpen(false))
+  useHandleEscape(close)
 
   const className = useMemo(() => classNameGenerator(), [])
 
   return (
     <>
-      <Button variant="secondary" size="s" onClick={() => setIsOpen(true)} aria-haspopup="true">
+      <Button variant="secondary" size="s" onClick={open} aria-haspopup="true">
         <FaBarsIcon alt={translate('MobileHeader/Menu/openMenu')} />
       </Button>
 
@@ -87,12 +99,12 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
                 setIsOpen={setIsNavigationOpen}
                 title={appName}
               >
-                <Navigation navigations={navigations} onClickNavigation={() => setIsOpen(false)} />
+                <Navigation navigations={navigations} onClickNavigation={close} />
               </MenuAccordion>
             </div>
           ) : (
             <div className={className}>
-              <Navigation navigations={navigations} onClickNavigation={() => setIsOpen(false)} />
+              <Navigation navigations={navigations} onClickNavigation={close} />
             </div>
           )}
 
