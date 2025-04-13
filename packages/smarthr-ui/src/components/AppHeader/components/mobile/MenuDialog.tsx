@@ -82,6 +82,14 @@ export const Content: FC<
     useContext(AppLauncherContext)
 
   const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      launcherListText: translate('Launcher/listText'),
+      latestReleaseNotes: translate('MobileHeader/Menu/latestReleaseNotes'),
+      closeMenu: translate('MobileHeader/Menu/closeMenu'),
+    }),
+    [translate],
+  )
 
   const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
   const clearAppLauncher = useCallback(
@@ -116,13 +124,10 @@ export const Content: FC<
       <div className={header()}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
-            <MenuSubHeading title={translate('Launcher/listText')} onClickBack={clearAppLauncher} />
+            <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
           ) : isReleaseNoteSelected ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading
-              title={translate('MobileHeader/Menu/latestReleaseNotes')}
-              onClickBack={clearReleaseNote}
-            />
+            <MenuSubHeading title={translated.latestReleaseNotes} onClickBack={clearReleaseNote} />
           ) : selectedNavigationGroup ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
@@ -134,7 +139,7 @@ export const Content: FC<
           )}
 
           <Button variant="secondary" size="s" onClick={dialogClose}>
-            <FaXmarkIcon alt={translate('MobileHeader/Menu/closeMenu')} />
+            <FaXmarkIcon alt={translated.closeMenu} />
           </Button>
         </Cluster>
       </div>
