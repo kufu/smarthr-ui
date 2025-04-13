@@ -3,6 +3,7 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -60,6 +61,14 @@ export const MenuDialog: FC<
   const domRef = useRef<HTMLSelectElement>(null)
 
   const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
+  const clearAppLauncher = useCallback(
+    () => setIsAppLauncherSelected(false),
+    [setIsAppLauncherSelected],
+  )
+  const clearReleaseNote = useCallback(
+    () => setIsReleaseNoteSelected(false),
+    [setIsReleaseNoteSelected],
+  )
   const clearNavigationGroup = useCallback(
     () => setSelectedNavigationGroup(null),
     [setSelectedNavigationGroup],
@@ -69,21 +78,22 @@ export const MenuDialog: FC<
     const { wrapper, header, content } = menu()
 
     return (
-      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       <Section role="dialog" aria-modal="true" className={wrapper()} ref={domRef}>
         <div className={header()}>
           <Cluster justify="space-between" align="center">
             {isAppLauncherSelected ? (
               <MenuSubHeading
                 title={translate('Launcher/listText')}
-                onClickBack={() => setIsAppLauncherSelected(false)}
+                onClickBack={clearAppLauncher}
               />
             ) : isReleaseNoteSelected ? (
+              // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
               <MenuSubHeading
                 title={translate('MobileHeader/Menu/latestReleaseNotes')}
-                onClickBack={() => setIsReleaseNoteSelected(false)}
+                onClickBack={clearReleaseNote}
               />
             ) : selectedNavigationGroup ? (
+              // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
               <MenuSubHeading
                 title={selectedNavigationGroup.children}
                 onClickBack={clearNavigationGroup}
@@ -123,10 +133,10 @@ export const MenuDialog: FC<
     isAppLauncherSelected,
     isReleaseNoteSelected,
     selectedNavigationGroup,
-    setIsAppLauncherSelected,
+    clearAppLauncher,
     tenantSelector,
     dialogClose,
-    setIsReleaseNoteSelected,
+    clearReleaseNote,
     clearNavigationGroup,
   ])
 
@@ -134,17 +144,11 @@ export const MenuDialog: FC<
     if (isOpen) {
       setContentBuffer(renderedContent)
     } else {
-      setIsReleaseNoteSelected(false)
-      setIsAppLauncherSelected(false)
+      clearReleaseNote()
+      clearAppLauncher()
       clearNavigationGroup()
     }
-  }, [
-    isOpen,
-    renderedContent,
-    setIsAppLauncherSelected,
-    setIsReleaseNoteSelected,
-    clearNavigationGroup,
-  ])
+  }, [isOpen, renderedContent, clearAppLauncher, clearReleaseNote, clearNavigationGroup])
 
   return (
     <CSSTransition
