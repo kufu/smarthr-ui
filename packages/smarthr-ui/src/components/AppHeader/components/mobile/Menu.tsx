@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useContext, useEffect, useState } from 'react'
+import { type FC, type ReactNode, useContext, useEffect, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
@@ -16,7 +16,7 @@ import { Navigation } from './Navigation'
 import { NavigationContext } from './NavigationContext'
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
-const menuItemBlock = tv({
+const classNameGenerator = tv({
   base: ['shr-border-t-shorthand shr-py-1', 'first:shr-border-t-0 first:shr-pt-0'],
 })
 
@@ -52,7 +52,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   useHandleEscape(() => setIsOpen(false))
 
-  const menuItemBlockStyle = menuItemBlock()
+  const className = useMemo(() => classNameGenerator(), [])
 
   return (
     <>
@@ -63,7 +63,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
           {features && features.length > 0 && (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <Button
                 variant="secondary"
                 wide
@@ -81,7 +81,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           )}
 
           {navigations.length > 0 && appName ? (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <MenuAccordion
                 isOpen={isNavigationOpen}
                 setIsOpen={setIsNavigationOpen}
@@ -91,13 +91,13 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
               </MenuAccordion>
             </div>
           ) : (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <Navigation navigations={navigations} onClickNavigation={() => setIsOpen(false)} />
             </div>
           )}
 
           {additionalContent && (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <MenuAccordion
                 isOpen={isAdditionalContentOpen}
                 setIsOpen={setIsAdditionalContentOpen}
@@ -109,7 +109,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           )}
 
           {releaseNote && (
-            <div className={menuItemBlockStyle}>
+            <div className={className}>
               <MenuButton onClick={() => setIsReleaseNoteSelected(true)}>
                 <Translate>{translate('common/releaseNote')}</Translate>
               </MenuButton>
