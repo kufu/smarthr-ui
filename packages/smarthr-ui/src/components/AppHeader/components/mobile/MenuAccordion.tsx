@@ -8,24 +8,24 @@ import { Section } from '../../../SectioningContent'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
-type Props = {
+type Props = PropsWithChildren<{
   isOpen: boolean
   setIsOpen: Dispatch<(isOpen: boolean) => boolean>
   title: ReactNode
-}
+}>
 
-export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
-  isOpen,
-  setIsOpen,
-  title,
-  children,
-}) => {
+export const MenuAccordion: FC<Props> = ({ title, children, ...rest }) =>
+  title ? (
+    <ActualMenuAccordion {...rest} title={title}>
+      {children}
+    </ActualMenuAccordion>
+  ) : (
+    children
+  )
+
+const ActualMenuAccordion: FC<Props> = ({ isOpen, setIsOpen, title, children }) => {
   const translate = useTranslate()
   const id = useId()
-
-  if (!title) {
-    return <div>{children}</div>
-  }
 
   return (
     <Section>
