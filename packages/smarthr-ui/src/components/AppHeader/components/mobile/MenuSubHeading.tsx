@@ -11,13 +11,13 @@ type Props = {
   onClickBack: () => void
 }
 
-export const MenuSubHeader: FC<Props> = ({ title, onClickBack }) => {
+export const MenuSubHeading: FC<Props> = ({ title, onClickBack }) => {
   const translate = useTranslate()
 
   return (
     <>
       <Button size="s" onClick={onClickBack}>
-        <FaArrowLeftIcon alt={translate('MobileHeader/MenuSubHeader/back')} />
+        <FaArrowLeftIcon alt={translate('MobileHeader/MenuSubHeading/back')} />
       </Button>
 
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}

@@ -21,7 +21,7 @@ import { useTranslate } from '../../hooks/useTranslate'
 
 import { AppLauncher } from './AppLauncher'
 import { AppLauncherContext } from './AppLauncherContext'
-import { MenuSubHeader } from './MenuSubHeader'
+import { MenuSubHeading } from './MenuSubHeading'
 import { Navigation } from './Navigation'
 import { NavigationContext } from './NavigationContext'
 import { NavigationGroupHeader } from './NavigationGroupHeader'
@@ -68,12 +68,12 @@ export const MenuDialog: FC<
         <div className={header()}>
           <Cluster justify="space-between" align="center">
             {isAppLauncherSelected ? (
-              <MenuSubHeader
+              <MenuSubHeading
                 title={translate('Launcher/listText')}
                 onClickBack={() => setIsAppLauncherSelected(false)}
               />
             ) : isReleaseNoteSelected ? (
-              <MenuSubHeader
+              <MenuSubHeading
                 title={translate('MobileHeader/Menu/latestReleaseNotes')}
                 onClickBack={() => setIsReleaseNoteSelected(false)}
               />

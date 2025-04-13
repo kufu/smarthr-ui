@@ -1,6 +1,6 @@
 import { memo, useCallback, useContext } from 'react'
 
-import { MenuSubHeader } from './MenuSubHeader'
+import { MenuSubHeading } from './MenuSubHeading'
 import { NavigationContext } from './NavigationContext'
 
 import type { NavigationGroup } from '../../types'
@@ -14,5 +14,5 @@ export const NavigationGroupHeader = memo<{
     [setSelectedNavigationGroup],
   )
 
-  return <MenuSubHeader title={title} onClickBack={onClickBack} />
+  return <MenuSubHeading title={title} onClickBack={onClickBack} />
 })
