@@ -49,7 +49,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
 
-  const translate = useTranslate()
   const { createPortal } = usePortal()
 
   useEffect(() => {
@@ -65,11 +64,21 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   useHandleEscape(close)
 
   const className = useMemo(() => classNameGenerator(), [])
+  const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      open: translate('MobileHeader/Menu/openMenu'),
+      launcherListText: translate('Launcher/listText'),
+      management: translate('MobileHeader/Menu/managementMenu'),
+      releaseNote: translate('common/releaseNote'),
+    }),
+    [translate],
+  )
 
   return (
     <>
       <Button variant="secondary" size="s" onClick={open} aria-haspopup="true">
-        <FaBarsIcon alt={translate('MobileHeader/Menu/openMenu')} />
+        <FaBarsIcon alt={translated.open} />
       </Button>
 
       {createPortal(
@@ -87,7 +96,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
                 }
                 onClick={() => setIsAppLauncherSelected(true)}
               >
-                <Translate>{translate('Launcher/listText')}</Translate>
+                <Translate>{translated.launcherListText}</Translate>
               </Button>
             </div>
           )}
@@ -113,7 +122,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
               <MenuAccordion
                 isOpen={isAdditionalContentOpen}
                 setIsOpen={setIsAdditionalContentOpen}
-                title={translate('MobileHeader/Menu/managementMenu')}
+                title={translated.management}
               >
                 {additionalContent}
               </MenuAccordion>
@@ -123,7 +132,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           {releaseNote && (
             <div className={className}>
               <MenuButton onClick={() => setIsReleaseNoteSelected(true)}>
-                <Translate>{translate('common/releaseNote')}</Translate>
+                <Translate>{translated.releaseNote}</Translate>
               </MenuButton>
             </div>
           )}
