@@ -1,6 +1,8 @@
 import {
   type FC,
+  type PropsWithChildren,
   type ReactNode,
+  memo,
   useCallback,
   useContext,
   useEffect,
@@ -46,7 +48,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const [isAdditionalContentOpen, setIsAdditionalContentOpen] = useState(true)
 
   const { navigations } = useContext(NavigationContext)
-  const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
 
   const { createPortal } = usePortal()
@@ -129,15 +130,40 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
             </div>
           )}
 
-          {releaseNote && (
-            <div className={className}>
-              <MenuButton onClick={() => setIsReleaseNoteSelected(true)}>
-                <Translate>{translated.releaseNote}</Translate>
-              </MenuButton>
-            </div>
-          )}
+          <ReleaseNoteButton className={className}>{translated.releaseNote}</ReleaseNoteButton>
         </MenuDialog>,
       )}
     </>
   )
 }
+
+const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => {
+    const { releaseNote, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
+
+    return (
+      releaseNote && (
+        <ActualReleaseNoteButton
+          setIsReleaseNoteSelected={setIsReleaseNoteSelected}
+          className={className}
+        >
+          {children}
+        </ActualReleaseNoteButton>
+      )
+    )
+  },
+)
+
+const ActualReleaseNoteButton = memo<
+  PropsWithChildren<{ className: string; setIsReleaseNoteSelected: (selected: boolean) => void }>
+>(({ setIsReleaseNoteSelected, children, className }) => {
+  const onClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
+
+  return (
+    <div className={className}>
+      <MenuButton onClick={onClick}>
+        <Translate>{children}</Translate>
+      </MenuButton>
+    </div>
+  )
+})
