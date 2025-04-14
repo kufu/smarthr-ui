@@ -12,7 +12,7 @@ import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { reelShadowClassNameGenerator } from './useReelShadow'
+import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
@@ -23,6 +23,8 @@ export type Props = PropsWithChildren<
     sort?: sortTypes
     /** 並び替えをクリックした時に発火するコールバック関数 */
     onSort?: () => void
+    /** 横スクロール時、カラムを左右いずれかに固定 */
+    fixed?: 'left' | 'right'
     /** 文言を変更するための関数 */
     decorators?: {
       sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
@@ -63,13 +65,6 @@ const classNameGenerator = tv({
       baseline: 'shr-align-baseline',
       bottom: 'shr-align-bottom',
     },
-    fixed: {
-      true: [
-        /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
-        'fixedElement',
-        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:after:shr-opacity-100',
-      ],
-    },
   },
   defaultVariants: {
     align: 'left',
@@ -96,20 +91,20 @@ export const Th = memo<Props & ElementProps>(
     decorators,
     align,
     vAlign,
-    fixed = false,
+    fixed,
     contentWidth,
     className,
     style,
     ...props
   }) => {
     const actualClassName = useMemo(() => {
-      const base = classNameGenerator({ className, align, vAlign, fixed })
+      const base = classNameGenerator({ className, align, vAlign })
 
       if (!fixed) {
         return base
       }
 
-      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: 'right' })
+      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: fixed })
 
       return `${base} ${shadow}`
     }, [align, className, fixed, vAlign])
@@ -134,7 +129,13 @@ export const Th = memo<Props & ElementProps>(
     )
 
     return (
-      <th {...props} aria-sort={ariaSort} className={actualClassName} style={actualStyle}>
+      <th
+        {...props}
+        aria-sort={ariaSort}
+        data-fixed={fixed}
+        className={actualClassName}
+        style={actualStyle}
+      >
         {sort ? (
           <MemoizedSortButton align={align} onSort={onSort} sortLabel={sortLabel}>
             {children}

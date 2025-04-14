@@ -6,42 +6,42 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "eslint": "^9.17.0",
-    "eslint-config-smarthr": "^9.0.1",
-    "eslint-plugin-storybook": "^0.11.6",
+    "eslint": "^9.24.0",
+    "eslint-config-smarthr": "^9.1.0",
+    "eslint-plugin-storybook": "^0.12.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
+    "lint-staged": "^15.5.1",
     "prettier": "^3.5.3",
     "prettier-config-smarthr": "^1.0.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "stylelint": "^16.15.0",
+    "stylelint": "^16.18.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.2",
-    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard": "^38.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "ui": "pnpm -F smarthr-ui",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@10.6.4",
+  "packageManager": "pnpm@10.8.0",
   "pnpm": {
     "overrides": {
-      "@babel/helper-compilation-targets": "^7.26.5",
-      "@types/react": "^18.3.18",
+      "@babel/helper-compilation-targets": "^7.27.0",
+      "@types/react": "^18.3.20",
       "minimist": "1.2.8",
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0",
+      "react": "^19.1.0",
+      "react-dom": "^19.1.0",
       "micromatch@<4.0.8": ">=4.0.8",
       "cross-spawn@<7.0.5": ">=7.0.6",
-      "nanoid": "3.3.10",
-      "esbuild@<=0.24.2": ">=0.25.0",
-      "axios@<1.8.2": ">=1.8.3",
-      "@babel/runtime@<7.26.10": ">=7.26.10",
-      "@babel/helpers@<7.26.10": ">=7.26.10"
+      "nanoid": "3.3.11",
+      "esbuild@<=0.24.2": ">=0.25.2",
+      "axios@<1.8.2": ">=1.8.4",
+      "@babel/runtime@<7.26.10": ">=7.27.0",
+      "@babel/helpers@<7.26.10": ">=7.27.0"
     }
   }
 }

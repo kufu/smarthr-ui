@@ -35,10 +35,6 @@ type Props = {
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
   size?: 'default' | 's'
-  /** 各ボタンを正方形にするかどうか。アイコンボタンを使用する場合に指定します。 */
-  isSquare?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
@@ -48,24 +44,37 @@ const classNameGenerator = tv({
     buttonGroup: '-shr-space-x-px',
     button: [
       'smarthr-ui-SegmentedControl-button',
-      'shr-m-0',
-      'shr-rounded-none',
+      'shr-m-0 shr-rounded-none',
       'focus-visible:shr-focus-indicator',
-      'first:shr-rounded-tl-m',
-      'first:shr-rounded-bl-m',
-      'last:shr-rounded-tr-m',
-      'last:shr-rounded-br-m',
+      'first:shr-rounded-tl-m first:shr-rounded-bl-m',
+      'last:shr-rounded-tr-m last:shr-rounded-br-m',
     ],
   },
+  variants: {
+    size: {
+      default: {
+        button: '[&:has(>_span_>_.smarthr-ui-Icon:only-child)]:shr-p-0.75',
+      },
+      s: {
+        button: 'shr-p-0.5',
+      },
+    },
+  },
 })
+
+// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
+const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', 'svg', 'img'].reduce(
+  (prev, selector, index) =>
+    `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
+  '',
+)
 
 export const SegmentedControl: FC<Props & ElementProps> = ({
   options,
   value,
   onClickOption,
   size = 'default',
-  isSquare = false,
-  className = '',
+  className,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false)
@@ -76,9 +85,9 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     return {
       container: container({ className }),
       buttonGroup: buttonGroup(),
-      button: button(),
+      button: button({ size }),
     }
-  }, [className])
+  }, [className, size])
 
   const onFocus = useCallback(() => setIsFocused(true), [])
   const onBlur = useCallback(() => setIsFocused(false), [])
@@ -170,11 +179,10 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
             index={index}
             onClick={actualOnClickOption}
             size={size}
-            isSquare={isSquare}
             value={value}
             isFocused={isFocused}
             excludesSelected={excludesSelected}
-            buttonClassName={classNames.button}
+            className={classNames.button}
           />
         ))}
       </div>
@@ -183,26 +191,27 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 }
 
 const SegmentedControlButton: FC<
-  Pick<Props, 'size' | 'isSquare' | 'value'> & {
+  Pick<Props, 'size' | 'value'> & {
     onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
     option: Props['options'][number]
     index: number
     isFocused: boolean
     excludesSelected: boolean
-    buttonClassName: string
+    className: string
   }
-> = ({
-  onClick,
-  size,
-  isSquare,
-  value,
-  option,
-  index,
-  isFocused,
-  excludesSelected,
-  buttonClassName,
-}) => {
-  const checked = value === option.value
+> = ({ onClick, size, value, option, index, isFocused, excludesSelected, className }) => {
+  const ref = useRef<HTMLButtonElement>(null)
+  const [square, setSquare] = useState(false)
+
+  const attrs = useMemo(() => {
+    const checked = value === option.value
+
+    return {
+      checked,
+      ariaChecked: checked && !!value,
+      variant: checked ? 'primary' : 'secondary',
+    } as const
+  }, [value, option.value])
   const tabIndex = useMemo(() => {
     if (isFocused) {
       return -1
@@ -212,22 +221,28 @@ const SegmentedControlButton: FC<
       return index === 0 ? 0 : -1
     }
 
-    return checked ? 0 : -1
-  }, [excludesSelected, isFocused, checked, index])
+    return attrs.checked ? 0 : -1
+  }, [excludesSelected, isFocused, attrs.checked, index])
+
+  useEffect(() => {
+    // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButton
+    setSquare(!!ref.current?.querySelector(ICON_BUTTON_SELECTOR))
+  }, [option.content])
 
   return (
     <Button
-      role="radio"
-      aria-label={option.ariaLabel}
-      variant={checked ? 'primary' : 'secondary'}
-      aria-checked={checked && !!value}
+      ref={ref}
+      value={option.value}
       disabled={option.disabled}
       tabIndex={tabIndex}
-      value={option.value}
+      role="radio"
+      aria-label={option.ariaLabel}
+      aria-checked={attrs.ariaChecked}
       onClick={onClick}
+      variant={attrs.variant}
       size={size}
-      square={isSquare}
-      className={buttonClassName}
+      square={square}
+      className={className}
     >
       {option.content}
     </Button>
