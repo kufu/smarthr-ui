@@ -15,12 +15,6 @@ export default {
   ),
   args: {
     label: 'ボタン',
-    onOpen: () => {
-      console.log('open')
-    },
-    onClose: () => {
-      console.log('close')
-    },
   },
   parameters: {
     backgrounds: {
