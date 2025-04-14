@@ -17,36 +17,35 @@ type Props = PropsWithChildren<{
   inputRect: DOMRect
 }>
 
-const portal = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none',
 })
 
+const initialPosition = {
+  top: '0px',
+  left: '0px',
+}
+
 export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }, ref) => {
   const { isPortalRootMounted, createPortal } = usePortal()
-
-  const [position, setPosition] = useState({
-    top: 0,
-    left: 0,
-  })
   const containerRef = useRef<HTMLDivElement>(null)
 
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
 
+  const [style, setStyle] = useState(initialPosition)
+
   useEnhancedEffect(() => {
     if (containerRef.current) {
-      setPosition(getPortalPosition(inputRect, containerRef.current.offsetHeight))
+      const position = getPortalPosition(inputRect, containerRef.current.offsetHeight)
+
+      setStyle({
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+      })
     }
   }, [inputRect, isPortalRootMounted])
 
-  const style = useMemo(() => portal(), [])
+  const className = useMemo(() => classNameGenerator(), [])
 
-  const styleAttr = useMemo(
-    () => ({
-      top: `${position.top}px`,
-      left: `${position.left}px`,
-    }),
-    [position.left, position.top],
-  )
-
-  return createPortal(<div {...props} ref={containerRef} className={style} style={styleAttr} />)
+  return createPortal(<div {...props} ref={containerRef} className={className} style={style} />)
 })

@@ -69,13 +69,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
       <ConditionalWrapper
         shouldWrapContent={tooltip?.show}
         wrapper={({ children: currentChildren }) => (
-          <Tooltip
-            message={tooltip?.message}
-            horizontal="auto"
-            vertical="auto"
-            triggerType="icon"
-            tabIndex={-1}
-          >
+          <Tooltip message={tooltip?.message} triggerType="icon" tabIndex={-1}>
             {currentChildren}
           </Tooltip>
         )}

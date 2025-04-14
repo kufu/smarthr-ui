@@ -1,10 +1,8 @@
-import { fireEvent, userEvent, within } from '@storybook/test'
+import { userEvent } from '@storybook/test'
 
 import { FaCircleQuestionIcon } from '../../Icon'
-import { Cluster, Stack } from '../../Layout'
+import { Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'
-
-import { TriggerType } from './Tooltip.stories'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -12,20 +10,6 @@ export default {
   title: 'Data Display（データ表示）/Tooltip/VRT',
   render: (args) => (
     <Stack gap={8} align="flex-start" className="shr-p-4">
-      <Cluster gap={4}>
-        {[undefined, 'center', 'left', 'right', 'auto'].map((horizontal) => (
-          <Tooltip {...args} horizontal={horizontal as any} key={horizontal}>
-            horizontal: {horizontal}
-          </Tooltip>
-        ))}
-      </Cluster>
-      <Cluster gap={4}>
-        {[undefined, 'top', 'bottom', 'middle', 'auto'].map((vertical) => (
-          <Tooltip {...args} vertical={vertical as any} key={vertical}>
-            vertical: {vertical}
-          </Tooltip>
-        ))}
-      </Cluster>
       <Tooltip {...args} triggerType="icon">
         <FaCircleQuestionIcon alt="ツールチップ" />
       </Tooltip>

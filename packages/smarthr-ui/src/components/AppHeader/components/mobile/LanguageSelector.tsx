@@ -46,7 +46,7 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
             onClickClose(false)
           }}
         >
-          <FaXmarkIcon role="img" aria-label="close" />
+          <FaXmarkIcon alt="close" />
         </Button>
       </div>
 

@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { action } from '@storybook/addon-actions'
 
 import { Stack } from '../../Layout'
@@ -51,5 +52,38 @@ export const OnClick: StoryObj<typeof Pagination> = {
   name: 'onClick',
   args: {
     onClick: action('click'),
+  },
+}
+
+export const HrefTemplate: StoryObj<typeof Pagination> = {
+  name: 'hrefTemplate',
+  args: {
+    hrefTemplate: (page: number) => `https://example.com/?page=${page}`,
+    onClick: (href: string, e: MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+      action('click')(href, e)
+    },
+  },
+}
+
+const CustomLink = ({
+  href,
+  children,
+  ...props
+}: { href: string; children: ReactNode } & HTMLAttributes<HTMLElement>) => (
+  <a href={href} style={{ textDecoration: 'underline' }} {...props}>
+    {children}
+  </a>
+)
+
+export const LinkAs: StoryObj<typeof Pagination> = {
+  name: 'linkAs',
+  args: {
+    hrefTemplate: (page: number) => `https://example.com/?page=${page}`,
+    onClick: (href: string, e: MouseEvent<HTMLElement>) => {
+      e.preventDefault()
+      action('click')(href, e)
+    },
+    linkAs: CustomLink,
   },
 }

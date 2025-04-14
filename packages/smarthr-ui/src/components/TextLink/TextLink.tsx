@@ -10,7 +10,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaUpRightFromSquareIcon } from '../Icon'
 
@@ -21,7 +21,7 @@ type ElementProps<T extends ElementType> = Omit<
   (keyof Props<T> & ElementRefProps<T>) | 'color'
 >
 
-type Props<T extends ElementType> = {
+type Props<T extends ElementType> = VariantProps<typeof classNameGenerator> & {
   /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: MouseEvent) => void
   /** テキストの前に表示するアイコン */
@@ -38,10 +38,24 @@ type TextLinkComponent = <T extends ElementType = 'a'>(
 
 const classNameGenerator = tv({
   slots: {
-    anchor:
-      'shr-text-link shr-no-underline shr-shadow-underline forced-colors:shr-underline [&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
+    anchor: [
+      'shr-text-link shr-no-underline shr-shadow-underline',
+      'forced-colors:shr-underline',
+      '[&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
+      '[.smarthr-ui-Th_&]:shr-text-link-darken',
+    ],
     prefixWrapper: 'shr-me-0.25 shr-align-middle',
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
+  },
+  variants: {
+    size: {
+      S: {
+        anchor: 'shr-text-sm',
+      },
+      M: {
+        anchor: 'shr-text-base',
+      },
+    },
   },
 })
 const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
@@ -60,6 +74,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       prefix,
       suffix,
       className,
+      size,
       ...others
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
@@ -87,7 +102,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
       [rel, target],
     )
-    const anchorClassName = useMemo(() => anchor({ className }), [className])
+    const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
 
     const actualOnClick = useMemo(() => {
       if (!onClick) {
