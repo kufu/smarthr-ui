@@ -130,7 +130,7 @@ const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ naviga
 
   return (
     <MenuButton onClick={onClick} isCurrent={isCurrent}>
-      <Translate>{navigation.children}</Translate>
+      {navigation.children}
     </MenuButton>
   )
 }
