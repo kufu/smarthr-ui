@@ -48,6 +48,10 @@ type Props = {
   onlyIconTrigger?: boolean
   /** 引き金となるアイコンを差し替えたい場合（onlyIconTrigger=true の場合のみ有効） */
   triggerIcon?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
+  /** ドロップダウンメニューが開かれた際のイベント */
+  onOpen?: () => void
+  /** ドロップダウンメニューが閉じられた際のイベント */
+  onClose?: () => void
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
@@ -81,6 +85,8 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   triggerSize,
   onlyIconTrigger,
   triggerIcon,
+  onOpen,
+  onClose,
   className,
   ...rest
 }) => {
@@ -98,7 +104,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   )
 
   return (
-    <Dropdown>
+    <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
         {...rest}
         label={label}
