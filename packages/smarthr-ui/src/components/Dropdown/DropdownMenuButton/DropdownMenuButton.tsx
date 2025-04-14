@@ -108,7 +108,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         classNames={classNames}
       />
       <DropdownContent>
-        <menu ref={containerRef} className={classNames.actionList}>
+        <menu ref={containerRef} role="menu" className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
@@ -177,7 +177,7 @@ export const renderButtonList = (children: Actions) =>
     }
 
     return (
-      <li>
+      <li role="menuitem">
         {cloneElement(item as ReactElement, {
           variant: 'text',
           wide: true,
