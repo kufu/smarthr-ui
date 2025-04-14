@@ -125,7 +125,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
 
       {locale && (
         <Dialog isOpen={languageDialogOpen} onClickOverlay={dialogClose} width={246}>
-          <LanguageSelector locale={locale} onClickClose={setLanguageDialogOpen} />
+          <LanguageSelector locale={locale} onClickClose={dialogClose} />
         </Dialog>
       )}
     </>
