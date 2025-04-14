@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react'
+import { type FC, type MouseEvent, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -43,13 +43,14 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
   }, [])
 
   const translate = useTranslate()
-  const translated = useMemo<Record<Launcher['page'], string>>(
-    () => ({
-      favorite: translate('Launcher/favoriteModeText'),
-      all: translate('MobileHeader/Menu/allAppButton'),
-    }),
-    [translate],
-  )
+  const translated = useMemo<Record<Launcher['page'], string>>(() => ({
+    favorite: translate('Launcher/favoriteModeText'),
+    all: translate('MobileHeader/Menu/allAppButton'),
+  }), [translate])
+
+  const onClickButton = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    onSelectPage(e.currentTarget.value as Launcher['page'])
+  }, [onSelectPage])
 
   return (
     <Dropdown>
@@ -60,7 +61,6 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
       </DropdownTrigger>
 
       <DropdownContent>
-        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
         <Stack className={classNames.stack} gap={0} align="stretch">
           {Object.entries(translated).map(([key, value], i) => {
             const isSelected = key === page
@@ -68,10 +68,9 @@ export const AppLauncherFilterDropdown: FC<Props> = ({ page, onSelectPage }) => 
             return (
               <Button
                 key={i}
+                value={key}
                 aria-selected={isSelected}
-                onClick={() => {
-                  onSelectPage(key as Launcher['page'])
-                }}
+                onClick={onClickButton}
                 className={classNames.contentButton}
                 prefix={
                   isSelected && (
