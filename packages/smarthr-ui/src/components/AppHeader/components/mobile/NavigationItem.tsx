@@ -57,7 +57,7 @@ const NavigationCustomTag = memo<
 >(({ children, elementAs: Tag, current, className, onClickNavigation, ...rest }) => {
   const actualClassName = useMemo(
     () =>
-      commonButton({
+      commonButtonClassNameGenerator({
         current,
         boldWhenCurrent: true,
         className,
