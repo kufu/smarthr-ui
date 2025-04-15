@@ -1,5 +1,8 @@
 import typescript from '@rollup/plugin-typescript';
 import preserveDirectives from "rollup-plugin-preserve-directives";
+import renameNodeModules from "rollup-plugin-rename-node-modules";
+import commonjs from '@rollup/plugin-commonjs';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { globSync } from 'glob';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +17,7 @@ const entryPoints = globSync('src/**/*.{ts,tsx}', {
     '**/*.stories.{ts,tsx}',
     '**/*.test.{ts,tsx}',
     '**/__tests__/*.{ts,tsx}',
+    '**/themes/tailwind/*.{ts,tsx}',
   ],
 })
 
@@ -32,13 +36,18 @@ export default {
     sourcemap: true,
     dir: 'esm',
     preserveModules: true,
+    preserveModulesRoot: 'src',
   },
   external: peerDependencies,
+  preserveSymlinks: false,
   plugins: [
     typescript({
       tsconfig: './tsconfig.esm.build.json',
       noEmit: true,
     }),
     preserveDirectives(),
+    commonjs(),
+    nodeResolve(),
+    renameNodeModules("vendor")
   ],
 }
