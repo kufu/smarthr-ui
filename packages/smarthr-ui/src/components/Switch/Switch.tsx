@@ -43,7 +43,7 @@ const classNameGenerator = tv({
       'supports-[not_selector(:has(+_*))]:shr-static supports-[not_selector(:has(+_*))]:shr-appearance-auto supports-[not_selector(:has(+_*))]:shr-opacity-100 supports-[not_selector(:has(+_*))]:shr-outline-[revert]',
     ],
     iconWrapper: [
-      'smarthr-ui-Switch-icon-wrapper',
+      'smarthr-ui-Switch-iconWrapper',
       'shr-pointer-events-none shr-absolute shr-hidden shr-size-[theme(fontSize.base)] shr-items-center shr-justify-center',
       '[:checked~&]:shr-flex',
     ],
