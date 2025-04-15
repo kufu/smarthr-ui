@@ -4,7 +4,6 @@ import test, { expect } from '@playwright/test'
  * サーバーコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
 const SERVER_COMPONENTS = [
-  'AnchorButton',
   'AppLauncher',
   'AppNavi',
   'AppNaviAnchor',
@@ -16,9 +15,9 @@ const SERVER_COMPONENTS = [
   'Balloon',
   'BaseColumn',
   'Chip',
+  'DatetimeLocalPicker',
   'DefinitionList',
   'DefinitionListItem',
-  'DatetimeLocalPicker',
   'ErrorScreen',
   'Fieldset',
   'FloatArea',
@@ -66,34 +65,35 @@ const CLIENT_COMPONENTS: string[] = [
   'AccordionPanelContent', // 開いているパネル名を共有するためのuseContext
   'AccordionPanelItem',    // 開いているパネル名を共有するためのuseContext
   'AccordionPanelTrigger', // 開いているパネル名を共有するためのuseContext
+  'AnchorButton',   // アイコンのみの場合のstyle調整のためのquerySelector
   'AppHeader',      // ドロップダウンやダイアログを表示するためのuseStateなど
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため
   'Base',           // 見出しレベルの自動生成のため
-  'Button',         // live region を使うためのcreatePortal
   'BottomFixedArea', // children のバリデーションのための useEffect
   'BulkActionRow',  // 件数計算のためのuseStateなど
-  'Checkbox',       // indeterminate 状態管理のためのuseRef
+  'Button',         // アイコンのみの場合のstyle調整のためのquerySelector & live region を使うためのcreatePortal
   'Center',         // 見出しレベルの自動生成のため
+  'Checkbox',       // indeterminate 状態管理のためのuseRef
   'Cluster',        // 見出しレベルの自動生成のため
   'CurrencyInput',  // フォーマット変換のためのuseEffect
   'DatePicker',     // カレンダー表示のためのcreatePortal
   'Dialog',         // ダイアログ描画のためのcreatePortal
-  'DialogContent',  // ダイアログ描画のためのcreatePortal
   'DialogCloser',   // ダイアログ開閉状態管理のためのuseContext
+  'DialogContent',  // ダイアログ描画のためのcreatePortal
   'DialogTrigger',  // ダイアログ開閉状態管理のためのuseContext
   'DialogWrapper',  // ダイアログ開閉状態管理のためのuseState
   'Dropdown',        // 開閉状態管理のためのuseStateなど
   'DropdownCloser',  // 開閉状態管理のためのuseContext
   'DropdownContent', // 開閉状態管理のためのuseContext
-  'DropdownTrigger', // 開閉状態管理のためのuseContext
   'DropdownMenuButton', // キーボード操作のためのuseRef
+  'DropdownTrigger', // 開閉状態管理のためのuseContext
   'EmptyTableBody', // テーブルヘッダーのカウントのためのuseRef
   'FormControl',    // Input要素への自動紐づけのためのuseRefなど
   'Heading',        // 見出しレベルの自動生成のため
+  'InformationPanel', // 開閉状態の管理のためのuseState
   'Input',          // オートフォーカスのためのuseRefなど
   'InputFile',      // ファイル選択のためのuseStateなど
-  'InformationPanel', // 開閉状態の管理のためのuseState
   'LanguageSwitcher', // イベントハンドラを含むため
   'LineClamp',      // ツールチップ開閉管理のためのuseState
   'ModelessDialog', // ダイアログ描画のためのcreatePortal
@@ -105,15 +105,15 @@ const CLIENT_COMPONENTS: string[] = [
   'Reel',                       // 見出しレベルの自動生成のため
   'RemoteDialogTrigger',        // children を clone するため
   'RemoteTriggerMessageDialog', // ダイアログ開閉管理のためのuseState
-  'SegmentedControl', // フォーカス管理のためのuseRefなど
   'Section',        // 見出しレベルの自動生成のため
+  'SegmentedControl', // フォーカス管理のためのuseRefなど
   'Select',         // イベントハンドラを含むため
   'Sidebar',        // 見出しレベルの自動生成のため
   'SingleCombobox', // プルダウン表示のためのcreatePortalなど
   'Stack',          // 見出しレベルの自動生成のため
   'TableReel',      // scroll監視のためのuseEffect
-  'Tooltip',        // 開閉状態の管理
   'Textarea',       // オートフォーカスや文字数カウントのための状態管理
+  'Tooltip',        // 開閉状態の管理
 ]
 
 /**

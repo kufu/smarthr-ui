@@ -13,7 +13,6 @@ export default {
     size: 'default',
     children: 'ボタン',
     variant: 'secondary',
-    square: false,
     wide: false,
     loading: false,
   },
@@ -98,14 +97,6 @@ export const DisabledDetail: StoryObj<typeof AnchorButton> = {
   args: {
     href: undefined,
     disabledDetail: { message: 'ボタンが無効な理由' },
-  },
-}
-
-export const Square: StoryObj<typeof AnchorButton> = {
-  name: 'square',
-  args: {
-    square: true,
-    children: <FaCirclePlusIcon alt="ボタン" />,
   },
 }
 

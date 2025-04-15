@@ -4,7 +4,7 @@ import type { ComponentProps, FC } from 'react'
 
 type Props = Omit<
   ComponentProps<typeof Button>,
-  'variant' | 'size' | 'prefix' | 'suffix' | 'disabledDetail' | 'wide' | 'square' | 'loading'
+  'variant' | 'size' | 'prefix' | 'suffix' | 'disabledDetail' | 'wide' | 'loading'
 >
 
 export const WakuWakuButton: FC<Props> = (props) => (

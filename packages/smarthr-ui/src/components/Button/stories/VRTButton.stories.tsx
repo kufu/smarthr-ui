@@ -11,17 +11,17 @@ type Variant = ComponentProps<typeof Button>['variant']
 
 /**
  * $ pict button.pixt.txt /e:button-seeds.pict.txt
- * size    disabled disabledDetail  loading prefix suffix square  wide
- * default false    なし             false   あり    なし    false   false
- * default false    なし             false   なし    なし    true    false
- * s       false    なし             false   なし    あり    false   true
- * s       true     なし             false   あり    なし    false   true
- * default false    なし             true    なし    あり    false   true
- * default true     あり             false   なし    なし    true    false
- * s       false    なし             true    なし    なし    true    false
- * s       false    なし             true    あり    なし    false   false
- * s       true     あり             false   なし    あり    false   false
- * default true     あり             false   あり    なし    false   false
+ * size    disabled disabledDetail  loading prefix suffix wide
+ * default false    なし            false   あり   なし   false
+ * default false    なし            false   なし   なし   false
+ * s       false    なし            false   なし   あり   true
+ * s       true     なし            false   あり   なし   true
+ * default false    なし            true    なし   あり   true
+ * default true     あり            false   なし   なし   false
+ * s       false    なし            true    なし   なし   false
+ * s       false    なし            true    あり   なし   false
+ * s       true     あり            false   なし   あり   false
+ * default true     あり            false   あり   なし   false
  */
 const Template: StoryFn = (args) => (
   <Stack {...args}>
@@ -31,7 +31,7 @@ const Template: StoryFn = (args) => (
           <Button variant={variant} prefix={<FaCirclePlusIcon />}>
             ボタン
           </Button>
-          <Button variant={variant} square>
+          <Button variant={variant}>
             <FaCirclePlusIcon alt="ボタン" />
           </Button>
           <Button variant={variant} size="s" suffix={<FaCaretDownIcon />} wide>
@@ -43,15 +43,10 @@ const Template: StoryFn = (args) => (
           <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
             ボタン
           </Button>
-          <Button
-            variant={variant}
-            disabled
-            disabledDetail={{ message: 'ボタンが無効な理由' }}
-            square
-          >
+          <Button variant={variant} disabled disabledDetail={{ message: 'ボタンが無効な理由' }}>
             <FaCirclePlusIcon alt="ボタン" />
           </Button>
-          <Button variant={variant} size="s" loading square>
+          <Button variant={variant} size="s" loading>
             <FaCirclePlusIcon alt="ボタン" />
           </Button>
           <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />}>
