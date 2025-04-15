@@ -48,3 +48,10 @@ export const As: StoryObj<typeof RadioButtonPanel> = {
     as: 'span',
   },
 }
+
+export const Description: StoryObj<typeof RadioButtonPanel> = {
+  name: 'description',
+  args: {
+    description: '説明のテキストです。',
+  },
+}
