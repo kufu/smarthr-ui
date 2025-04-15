@@ -43,6 +43,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
 const classNameGenerator = tv({
   slots: {
     title: 'shr-grow shr-leading-tight',
+    titleWrapper: 'shr-flex-nowrap',
     button: [
       'smarthr-ui-AccordionPanel-trigger',
       'shr-group shr-bg-transparent shr-border-none shr-appearance-none shr-w-full shr-px-1 shr-py-0.75 shr-cursor-pointer shr-text-inherit shr-text-color-inherit shr-text-left',
@@ -71,10 +72,11 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const classNames = useMemo(() => {
-    const { title, button, leftIcon, rightIcon } = classNameGenerator()
+    const { title, titleWrapper, button, leftIcon, rightIcon } = classNameGenerator()
 
     return {
       title: title(),
+      titleWrapper: titleWrapper(),
       button: button({ className }),
       leftIcon: leftIcon(),
       rightIcon: rightIcon(),
@@ -194,10 +196,10 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
 const MemoizedTitle = memo<
   PropsWithChildren<{
     iconPosition: undefined | 'left' | 'right'
-    classNames: { leftIcon: string; rightIcon: string; title: string }
+    classNames: { leftIcon: string; rightIcon: string; title: string; titleWrapper: string }
   }>
 >(({ classNames, iconPosition, children }) => (
-  <Cluster className="shr-flex-nowrap" align="center" as="span">
+  <Cluster className={classNames.titleWrapper} align="center" as="span">
     {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
     <span className={classNames.title}>{children}</span>
     {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}

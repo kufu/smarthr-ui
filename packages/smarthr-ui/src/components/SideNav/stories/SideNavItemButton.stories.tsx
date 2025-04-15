@@ -17,7 +17,7 @@ export default {
   argTypes: {
     id: { control: 'text' },
     children: { control: 'text' },
-    isSelected: { control: 'boolean' },
+    current: { control: 'boolean' },
     size: {
       description: 'SideNavItemButton に指定せず、SideNav に指定してください。',
     },
@@ -54,7 +54,7 @@ export const Prefix: StoryObj<typeof SideNavItemButton> = {
 export const Selected: StoryObj<typeof SideNavItemButton> = {
   name: 'selected',
   args: {
-    isSelected: true,
+    current: true,
   },
 }
 

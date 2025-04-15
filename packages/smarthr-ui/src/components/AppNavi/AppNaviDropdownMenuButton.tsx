@@ -16,6 +16,8 @@ import { DropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuB
 type Props = PropsWithChildren<{
   /** 引き金となるボタンラベル */
   label: ReactNode
+  onOpen?: () => void
+  onClose?: () => void
 }>
 
 const classNameGenerator = tv({
@@ -71,7 +73,7 @@ const renderItemList = (children: ReactNode) =>
     })
   })
 
-export const AppNaviDropdownMenuButton: FC<Props> = ({ label, children }) => (
+export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, children }) => (
   <DropdownMenuButton
     label={
       <>
@@ -80,6 +82,8 @@ export const AppNaviDropdownMenuButton: FC<Props> = ({ label, children }) => (
         <span hidden>{children}</span>
       </>
     }
+    onOpen={onOpen}
+    onClose={onClose}
     className={trigger()}
   >
     {renderItemList(children)}
