@@ -22,7 +22,7 @@ export const Help: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button variant="skeleton" size="s" square className="[&&&]:shr-border-transparent">
+        <Button variant="skeleton" size="s" className="[&&&]:shr-border-transparent">
           <FaCircleQuestionIcon alt="ヘルプ" />
         </Button>
       </DropdownTrigger>

@@ -37,11 +37,9 @@ export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
     <Section>
       <div className={header()}>
         <Heading className={headerTitle()}>Language</Heading>
-
         <Button
           type="button"
           size="s"
-          square
           onClick={() => {
             onClickClose(false)
           }}
