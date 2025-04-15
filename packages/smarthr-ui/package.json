@@ -102,7 +102,6 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "react-draggable": "^4.4.6",
     "react-intl": "^7.0.4",
     "styled-components": "^5.0.1"
   },
