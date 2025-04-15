@@ -10,24 +10,24 @@
     "eslint-config-smarthr": "^9.1.0",
     "eslint-plugin-storybook": "^0.12.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.0",
+    "lint-staged": "^15.5.1",
     "prettier": "^3.5.3",
     "prettier-config-smarthr": "^1.0.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "stylelint": "^16.18.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.2",
-    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard": "^38.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "ui": "pnpm -F smarthr-ui",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@10.8.0",
+  "packageManager": "pnpm@10.8.1",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.27.0",
