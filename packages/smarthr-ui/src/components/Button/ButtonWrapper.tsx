@@ -46,6 +46,7 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
 }
 
 // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
+// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', '.smarthr-ui-Icon-extended', 'svg', 'img'].reduce(
   (prev, selector, index) =>
     `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
@@ -77,7 +78,7 @@ export function ButtonWrapper({
   }, [children])
 
   const classNames = useMemo(() => {
-    const generate = wrapperClassNameGenerator({
+    const { button, anchor, loader } = wrapperClassNameGenerator({
       variant,
       size,
       square: !!square,
@@ -85,11 +86,11 @@ export function ButtonWrapper({
       wide,
     })
 
-    const wrapper = rest.isAnchor ? generate.anchor : generate.button
+    const wrapper = rest.isAnchor ? anchor : button
 
     return {
       wrapper: wrapper({ className }),
-      loader: generate.loader(),
+      loader: loader(),
     }
   }, [$loading, size, square, variant, wide, className, rest.isAnchor])
   const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])

@@ -66,6 +66,9 @@ type BaseComponentProps = {
 }
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
+// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
+// altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
+
 const classNameGenerator = tv({
   slots: {
     icon: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',

@@ -50,7 +50,7 @@ const classNameGenerator = tv({
     icon: [
       'shr-fill-white',
       'forced-colors:shr-fill-[ButtonText]',
-      'forced-colors:[:disabled~.smarthr-ui-Switch-icon-wrapper_&]:shr-fill-[GrayText]',
+      'forced-colors:[:disabled~.smarthr-ui-Switch-iconWrapper_&]:shr-fill-[GrayText]',
     ],
   },
 })
