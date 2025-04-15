@@ -37,7 +37,7 @@ const desktopHeader = tv({
       true: {
         appsButton: [
           'shr-px-0.5 shr-font-bold shr-text-black',
-          '[&_>_svg]:aria-expanded:shr-rotate-180',
+          '[&_.smarthr-ui-Icon]:aria-expanded:shr-rotate-180',
           'hover:shr-bg-white-darken',
           'focus-visible:shr-bg-white-darken',
         ],

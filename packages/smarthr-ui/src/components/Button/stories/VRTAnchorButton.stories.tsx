@@ -12,17 +12,17 @@ type Variant = ComponentProps<typeof Button>['variant']
 
 /**
  * $ pict anchor-button.txt
- * size    disabled disabledDetail prefix suffix square wide
- * default true     あり            なし    なし    false  false
- * s       false    なし            なし    あり    false  true
- * s       true     なし            なし    あり    false  false
- * default false    なし            なし    なし    true   false
- * default true     なし            なし    あり    false  true
- * s       true     なし            あり    なし    false  true
- * s       true     あり            なし    あり    false  false
- * default true     あり            あり    なし    false  false
- * s       true     あり            なし    なし    true   false
- * s       false    なし            あり    なし    false  false
+ * size    disabled disabledDetail prefix suffix wide
+ * default true     あり           なし   なし   false
+ * s       false    なし           なし   あり   true
+ * s       true     なし           なし   あり   false
+ * default false    なし           なし   なし   false
+ * default true     なし           なし   あり   true
+ * s       true     なし           あり   なし   true
+ * s       true     あり           なし   あり   false
+ * default true     あり           あり   なし   false
+ * s       true     あり           なし   なし   false
+ * s       false    なし           あり   なし   false
  */
 const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
@@ -31,7 +31,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: { message: 'ボタンが無効な理由' },
     prefix: undefined,
     suffix: undefined,
-    square: false,
     wide: false,
   },
   {
@@ -40,7 +39,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: undefined,
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
-    square: false,
     wide: true,
   },
   {
@@ -49,7 +47,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: undefined,
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
-    square: false,
     wide: false,
   },
   {
@@ -58,7 +55,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: undefined,
     prefix: undefined,
     suffix: undefined,
-    square: true,
     wide: false,
   },
   {
@@ -67,7 +63,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: undefined,
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
-    square: false,
     wide: true,
   },
   {
@@ -76,7 +71,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: undefined,
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
-    square: false,
     wide: true,
   },
   {
@@ -85,7 +79,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: { message: 'ボタンが無効な理由' },
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
-    square: false,
     wide: false,
   },
   {
@@ -94,7 +87,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: { message: 'ボタンが無効な理由' },
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
-    square: false,
     wide: false,
   },
   {
@@ -103,7 +95,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: { message: 'ボタンが無効な理由' },
     prefix: undefined,
     suffix: undefined,
-    square: true,
     wide: false,
   },
   {
@@ -112,7 +103,6 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     disabledDetail: undefined,
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
-    square: false,
     wide: false,
   },
 ]

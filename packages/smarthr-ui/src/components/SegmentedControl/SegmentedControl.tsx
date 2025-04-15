@@ -35,8 +35,6 @@ type Props = {
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
   size?: 'default' | 's'
-  /** 各ボタンを正方形にするかどうか */
-  isSquare?: boolean
 }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
@@ -69,7 +67,6 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   value,
   onClickOption,
   size = 'default',
-  isSquare,
   className,
   ...props
 }) => {
@@ -187,7 +184,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 }
 
 const SegmentedControlButton: FC<
-  Pick<Props, 'size' | 'isSquare' | 'value'> & {
+  Pick<Props, 'size' | 'value'> & {
     onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
     option: Props['options'][number]
     index: number
@@ -195,8 +192,16 @@ const SegmentedControlButton: FC<
     excludesSelected: boolean
     className: string
   }
-> = ({ onClick, size, value, option, index, isFocused, excludesSelected, isSquare, className }) => {
-  const checked = value === option.value
+> = ({ onClick, size, value, option, index, isFocused, excludesSelected, className }) => {
+  const attrs = useMemo(() => {
+    const checked = value === option.value
+
+    return {
+      checked,
+      ariaChecked: checked && !!value,
+      variant: checked ? 'primary' : 'secondary',
+    } as const
+  }, [value, option.value])
   const tabIndex = useMemo(() => {
     if (isFocused) {
       return -1
@@ -206,21 +211,20 @@ const SegmentedControlButton: FC<
       return index === 0 ? 0 : -1
     }
 
-    return checked ? 0 : -1
-  }, [excludesSelected, isFocused, checked, index])
+    return attrs.checked ? 0 : -1
+  }, [excludesSelected, isFocused, attrs.checked, index])
 
   return (
     <Button
-      role="radio"
-      aria-label={option.ariaLabel}
-      variant={checked ? 'primary' : 'secondary'}
-      aria-checked={checked && !!value}
+      value={option.value}
       disabled={option.disabled}
       tabIndex={tabIndex}
-      value={option.value}
+      role="radio"
+      aria-label={option.ariaLabel}
+      aria-checked={attrs.ariaChecked}
       onClick={onClick}
+      variant={attrs.variant}
       size={size}
-      square={isSquare}
       className={className}
     >
       {option.content}

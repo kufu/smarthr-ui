@@ -177,15 +177,17 @@ const MemoizedSortButton = memo<
 
 const sortIconClassNameGenerator = tv({
   slots: {
-    wrapper: 'shr-inline-flex shr-flex-col',
+    wrapper: 'smarthr-ui-Icon-extended shr-relative shr-w-1 shr-h-1',
     upIcon: [
+      'shr-absolute shr-top-0 shr-left-0',
       'shr-text-base',
       '[[aria-sort="none"]_&]:shr-text-disabled',
       '[[aria-sort="ascending"]_&]:shr-text-black',
       '[[aria-sort="descending"]_&]:shr-text-disabled',
     ],
     downIcon: [
-      '-shr-mt-em shr-text-base',
+      'shr-absolute shr-top-0 shr-left-0',
+      'shr-text-base',
       '[[aria-sort="none"]_&]:shr-text-disabled',
       '[[aria-sort="ascending"]_&]:shr-text-disabled',
       '[[aria-sort="descending"]_&]:shr-text-black',

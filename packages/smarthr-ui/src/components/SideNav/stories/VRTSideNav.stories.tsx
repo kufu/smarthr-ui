@@ -28,7 +28,7 @@ export default {
                 <SideNavItemButton
                   key={item.id}
                   id={item.id}
-                  isSelected={item.isSelected}
+                  current={item.current}
                   prefix={item.prefix}
                 >
                   {item.children}
