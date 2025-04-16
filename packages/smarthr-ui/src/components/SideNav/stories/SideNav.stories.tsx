@@ -12,17 +12,17 @@ export const _sideNavItems: SideNavItemButtonProps[] = [
   {
     id: 'id-1',
     children: 'サイドナビ1',
-    isSelected: true,
+    current: true,
   },
   {
     id: 'id-2',
     children: 'サイドナビ2',
-    isSelected: false,
+    current: false,
   },
   {
     id: 'id-3',
     children: 'サイドナビ3',
-    isSelected: false,
+    current: false,
     prefix: <StatusLabel>ラベル</StatusLabel>,
   },
 ]
@@ -42,12 +42,7 @@ export default {
     ) : (
       <SideNav {...props}>
         {_sideNavItems.map((item) => (
-          <SideNavItemButton
-            key={item.id}
-            id={item.id}
-            isSelected={item.isSelected}
-            prefix={item.prefix}
-          >
+          <SideNavItemButton key={item.id} id={item.id} current={item.current} prefix={item.prefix}>
             {item.children}
           </SideNavItemButton>
         ))}
@@ -76,19 +71,19 @@ export const Items: StoryObj<typeof SideNav> = {
       {
         id: 'id-1',
         title: 'サイドナビ1',
-        isSelected: false,
+        current: false,
       },
 
       {
         id: 'id-2',
         title: 'サイドナビ2',
-        isSelected: true,
+        current: true,
       },
 
       {
         id: 'id-3',
         title: 'サイドナビ3',
-        isSelected: false,
+        current: false,
         prefix: <StatusLabel>ラベル</StatusLabel>,
       },
     ],
@@ -105,7 +100,7 @@ export const Size: StoryObj<typeof SideNav> = {
             <SideNavItemButton
               key={item.id + i}
               id={item.id + i}
-              isSelected={item.isSelected}
+              current={item.current}
               prefix={item.prefix}
             >
               {item.children}

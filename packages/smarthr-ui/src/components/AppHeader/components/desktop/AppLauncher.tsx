@@ -202,7 +202,7 @@ const SideNavs = memo<
         id: 'favorite',
         title: translated.favorite,
         prefix: <FaStarIcon color={isFavorite ? textColor.white : undefined} />,
-        isSelected: isFavorite,
+        current: isFavorite,
       },
     ],
     [isFavorite, translated],
@@ -212,7 +212,7 @@ const SideNavs = memo<
       {
         id: 'all',
         title: translated.all,
-        isSelected: isAll,
+        current: isAll,
       },
     ],
     [isAll, translated],

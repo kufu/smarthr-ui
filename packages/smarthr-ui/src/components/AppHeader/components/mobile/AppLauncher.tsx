@@ -1,3 +1,4 @@
+import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../../../Button'
@@ -15,13 +16,12 @@ import { Translate } from '../common/Translate'
 import { AppLauncherFilterDropdown } from './AppLauncherFilterDropdown'
 
 import type { Launcher } from '../../types'
-import type { FC } from 'react'
 
 type Props = {
   features: Array<Launcher['feature']>
 }
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-AppLauncher', 'shr-flex shr-flex-col shr-h-full'],
     searchArea: [
@@ -36,7 +36,6 @@ const appLauncher = tv({
 })
 
 export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
-  const translate = useTranslate()
   const {
     features,
     page,
@@ -49,33 +48,45 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const { wrapper, searchArea, headArea, scrollArea, bottomArea } = appLauncher()
+  const classNames = useMemo(() => {
+    const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
+
+    return {
+      wrapper: wrapper(),
+      searchArea: searchArea(),
+      headArea: headArea(),
+      scrollArea: scrollArea(),
+      bottomArea: bottomArea(),
+    }
+  }, [])
+
+  const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      searchInputTitle: translate('Launcher/searchInputTitle'),
+      searchResultText: translate('Launcher/searchResultText'),
+      helpText: translate('Launcher/helpText'),
+    }),
+    [translate],
+  )
 
   return (
-    <div className={wrapper()}>
-      <div className={searchArea()}>
+    <div className={classNames.wrapper}>
+      <div className={classNames.searchArea}>
         <SearchInput
           name="search"
-          title={translate('Launcher/searchInputTitle')}
-          tooltipMessage={<Translate>{translate('Launcher/searchInputTitle')}</Translate>}
+          title={translated.searchInputTitle}
+          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
-          suffix={
-            mode === 'search' && (
-              <UnstyledButton onClick={onClickClearSearchQuery}>
-                <FaCircleXmarkIcon />
-              </UnstyledButton>
-            )
-          }
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
           onChange={onChangeSearchQuery}
         />
       </div>
 
-      <Cluster className={headArea()} justify="space-between" align="center">
+      <Cluster className={classNames.headArea} justify="space-between" align="center">
         {mode === 'search' ? (
-          <Text size="S" weight="bold">
-            <Translate>{translate('Launcher/searchResultText')}</Translate>
-          </Text>
+          <SearchResultText>{translated.searchResultText}</SearchResultText>
         ) : (
           <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
         )}
@@ -85,20 +96,36 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         )}
       </Cluster>
 
-      <div className={scrollArea()}>
+      <div className={classNames.scrollArea}>
         <AppLauncherFeatures features={features} page={page} />
       </div>
 
-      <div className={bottomArea()}>
-        <Text size="XS">
-          <TextLink
-            href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
-            target="_blank"
-          >
-            <Translate>{translate('Launcher/helpText')}</Translate>
-          </TextLink>
-        </Text>
-      </div>
+      <BottomArea className={classNames.bottomArea}>{translated.helpText}</BottomArea>
     </div>
   )
 }
+
+const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
+  <UnstyledButton onClick={onClick}>
+    <FaCircleXmarkIcon />
+  </UnstyledButton>
+))
+
+const SearchResultText = memo<PropsWithChildren>(({ children }) => (
+  <Text size="S" weight="bold">
+    <Translate>{children}</Translate>
+  </Text>
+))
+
+const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <div className={className}>
+    <Text size="XS">
+      <TextLink
+        href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
+        target="_blank"
+      >
+        <Translate>{children}</Translate>
+      </TextLink>
+    </Text>
+  </div>
+))
