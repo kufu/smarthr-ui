@@ -15,7 +15,7 @@
     "react-innertext": "^1.1.5",
     "react-transition-group": "^4.4.5",
     "tailwind-variants": "^0.3.1",
-    "tailwindcss": "3.4.14",
+    "tailwindcss": "3.4.17",
     "typescript-eslint": "^8.30.1"
   },
   "devDependencies": {
@@ -63,7 +63,6 @@
     "chromatic": "^11.28.0",
     "css-loader": "^7.1.2",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
-    "esbuild": "^0.25.2",
     "fs-extra": "^11.3.0",
     "glob": "11.0.1",
     "http-server": "^14.1.1",
@@ -92,7 +91,6 @@
     "style-loader": "^4.0.0",
     "styled-components": "^5.3.11",
     "ts-loader": "^9.5.2",
-    "tsx": "^4.19.3",
     "ttypescript": "^1.5.15",
     "typescript-plugin-styled-components": "^3.0.0",
     "vitest": "^3.1.1",
@@ -165,8 +163,7 @@
   "scripts": {
     "build": "run-p build:*",
     "build:lib": "tsc -p tsconfig.build.json",
-    "_build:esm": "tsx scripts/build-esm.ts",
-    "build:esm": "rollup --config rollup.config.js",
+    "build:esm": "rollup --config rollup.esm.config.js",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet",
     "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",
