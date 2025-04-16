@@ -12,6 +12,10 @@ const peerDependencies = packageJson.peerDependencies
   ? Object.keys(packageJson.peerDependencies)
   : []
 
+const dependencies = packageJson.dependencies
+  ? Object.keys(packageJson.dependencies)
+  : []
+
 const entryPoints = globSync('src/**/*.{ts,tsx}', {
   ignore: [
     '**/*.stories.{ts,tsx}',
@@ -38,7 +42,10 @@ export default {
     preserveModules: true,
     preserveModulesRoot: 'src',
   },
-  external: peerDependencies,
+  external: [
+    'react/jsx-runtime',
+    ...peerDependencies,
+  ],
   preserveSymlinks: false,
   plugins: [
     typescript({
