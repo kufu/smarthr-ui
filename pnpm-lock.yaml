@@ -110,7 +110,7 @@ importers:
         specifier: ^0.3.1
         version: 0.3.1(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.11.20)(@types/node@20.17.30)(typescript@5.8.3)))
       tailwindcss:
-        specifier: 3.4.17
+        specifier: ^3.4.17
         version: 3.4.17(ts-node@10.9.2(@swc/core@1.11.20)(@types/node@20.17.30)(typescript@5.8.3))
       typescript-eslint:
         specifier: ^8.30.1
