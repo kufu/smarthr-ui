@@ -12,10 +12,6 @@ const peerDependencies = packageJson.peerDependencies
   ? Object.keys(packageJson.peerDependencies)
   : []
 
-const dependencies = packageJson.dependencies
-  ? Object.keys(packageJson.dependencies)
-  : []
-
 const entryPoints = globSync('src/**/*.{ts,tsx}', {
   ignore: [
     '**/*.stories.{ts,tsx}',
@@ -24,11 +20,13 @@ const entryPoints = globSync('src/**/*.{ts,tsx}', {
   ],
 })
 
+/** @type {import('rollup').RollupOptions} */
 export default {
 	input: Object.fromEntries(
 		entryPoints.map(file => [
 			path.relative(
 				'src',
+        // 拡張子を除去し書き出し時に正しいファイルめになるようにしている
 				file.slice(0, file.length - path.extname(file).length)
 			),
 			fileURLToPath(new URL(file, import.meta.url))
@@ -42,9 +40,11 @@ export default {
     preserveModulesRoot: 'src',
   },
   external: [
+    // peerDependenciesにreactが入っているが、jsx-runtimeは明示的に指定しないとbundleされてしまうのでベタ書きしている
     'react/jsx-runtime',
     ...peerDependencies,
   ],
+  // pnpm起因での問題がおきないようにしている
   preserveSymlinks: false,
   plugins: [
     typescript({
@@ -54,6 +54,7 @@ export default {
     preserveDirectives(),
     commonjs(),
     nodeResolve(),
+    // node_modulesのままだとimportできないケースがあったので、vendorにrenameしている
     renameNodeModules("vendor")
   ],
 }
