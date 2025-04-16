@@ -20,7 +20,7 @@ const classNameGenerator = tv({
     trigger: [
       'smarthr-ui-AppLauncher-SortDropdown-trigger',
       'shr-gap-0.25 shr-text-grey',
-      '[&[aria-expanded="true"]>.smarthr-ui-Icon]:shr-rotate-180',
+      '[&[aria-expanded="true"]_.smarthr-ui-Icon]:shr-rotate-180',
     ],
     contentBody: ['shr-px-0.25 shr-py-0.5 shr-flex shr-flex-col shr-items-stretch'],
     contentButton: [

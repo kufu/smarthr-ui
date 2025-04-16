@@ -135,7 +135,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
                     color={mode !== 'search' && page === 'favorite' ? textColor.white : undefined}
                   />
                 ),
-                isSelected: mode !== 'search' && page === 'favorite',
+                current: mode !== 'search' && page === 'favorite',
               },
             ]}
             onClick={(_, id) => {
@@ -157,7 +157,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
                 {
                   id: 'all',
                   title: pageMap.all,
-                  isSelected: mode !== 'search' && page === 'all',
+                  current: mode !== 'search' && page === 'all',
                 },
               ]}
               onClick={(_, id) => {

@@ -74,7 +74,7 @@ const SelectorHeading = memo<
 >(({ onClickClose, wrapperClassName, className }) => (
   <div className={wrapperClassName}>
     <Heading className={className}>Language</Heading>
-    <Button type="button" size="s" square onClick={onClickClose}>
+    <Button type="button" size="s" onClick={onClickClose}>
       <FaXmarkIcon alt="close" />
     </Button>
   </div>
