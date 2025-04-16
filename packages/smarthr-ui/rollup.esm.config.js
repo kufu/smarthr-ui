@@ -21,7 +21,6 @@ const entryPoints = globSync('src/**/*.{ts,tsx}', {
     '**/*.stories.{ts,tsx}',
     '**/*.test.{ts,tsx}',
     '**/__tests__/*.{ts,tsx}',
-    '**/themes/tailwind/*.{ts,tsx}',
   ],
 })
 
