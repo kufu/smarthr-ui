@@ -14,10 +14,11 @@ import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 import { RadioButton } from '../RadioButton'
+import { Text } from '../Text'
 
 type Props = ComponentProps<typeof RadioButton> & {
   as?: string | ComponentType<any>
-  description?: ReactNode
+  label: string
 }
 
 const NONE_ROLE_TAG_REGEX = /^(div|span)$/
@@ -48,17 +49,18 @@ export const RadioButtonPanel: FC<Props> = ({
   onClick,
   as,
   className,
-  description,
+  children,
+  label,
   'aria-describedby': ariaDescribedbyProp,
   ...props
 }) => {
   const classNames = useMemo(() => {
     const { base, description: descriptionStyle } = classNameGenerator({
       className,
-      hasDescription: !!description,
+      hasDescription: !!children,
     })
     return { base: base(), description: descriptionStyle() }
-  }, [className, description])
+  }, [className, children])
   const role = useMemo(
     () => (typeof as === 'string' && NONE_ROLE_TAG_REGEX.test(as) ? 'presentation' : undefined),
     [as],
@@ -72,17 +74,19 @@ export const RadioButtonPanel: FC<Props> = ({
 
   const descriptionId = useId()
   const ariaDescribedby = useMemo(
-    () => [description && descriptionId, ariaDescribedbyProp].filter(Boolean).join(' '),
-    [description, descriptionId, ariaDescribedbyProp],
+    () => [children && descriptionId, ariaDescribedbyProp].filter(Boolean).join(' '),
+    [children, descriptionId, ariaDescribedbyProp],
   )
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={classNames.base}>
-      <RadioButton {...props} ref={innerRef} aria-describedby={ariaDescribedby} />
-      {description && (
+      <RadioButton {...props} ref={innerRef} aria-describedby={ariaDescribedby}>
+        <Text weight="bold">{label}</Text>
+      </RadioButton>
+      {children && (
         <span id={descriptionId} className={classNames.description}>
-          {description}
+          {children}
         </span>
       )}
     </Base>

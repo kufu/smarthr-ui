@@ -17,7 +17,7 @@ export default {
     },
   },
   args: {
-    children: 'ラジオボタンパネル',
+    label: 'ラジオボタンパネル',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -52,6 +52,6 @@ export const As: StoryObj<typeof RadioButtonPanel> = {
 export const Description: StoryObj<typeof RadioButtonPanel> = {
   name: 'description',
   args: {
-    description: '説明のテキストです。',
+    children: '説明のテキストです。',
   },
 }
