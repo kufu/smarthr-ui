@@ -11,7 +11,7 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import { commonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
@@ -74,7 +74,7 @@ const buildNavigations = (navigations: NavigationType[]) =>
     if ('elementAs' in navigation) {
       const { elementAs, ...rest } = navigation
 
-      return <AppNaviCustomTag {...rest} key={index} tag={navigation.elementAs} />
+      return <AppNaviCustomTag {...rest} key={index} tag={elementAs} />
     }
     if ('href' in navigation) {
       return <AppNaviAnchor {...navigation} key={index} />
@@ -113,7 +113,7 @@ const DropdownCustomTag = memo<NavigationCustomTag>(
   ({ elementAs: Component, current, className, ...rest }) => {
     const actualClassName = useMemo(
       () =>
-        commonButton({
+        commonButtonClassNameGenerator({
           current,
           className,
         }),

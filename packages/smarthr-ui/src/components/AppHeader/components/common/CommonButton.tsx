@@ -1,8 +1,7 @@
+import { type ComponentPropsWithoutRef, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import type { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
-
-export const commonButton = tv({
+export const commonButtonClassNameGenerator = tv({
   base: [
     '[&&]:shr-flex [&&]:shr-items-center [&&]:shr-w-full [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-box-border [&&]:shr-bg-transparent [&&]:shr-text-base [&&]:shr-text-black [&&]:shr-leading-normal [&&]:shr-no-underline [&&]:shr-rounded-m [&&]:shr-cursor-pointer [&&]:shr-border-none',
     '[&&]:hover:shr-bg-white-darken',
@@ -38,37 +37,37 @@ type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & Bu
   boldWhenCurrent?: boolean
 }
 
-export const CommonButton: FC<Props> = ({
-  elementAs,
-  prefix,
-  current,
-  boldWhenCurrent,
-  className,
-  ...props
-}) => {
-  const commonButtonStyle = commonButton({
-    prefix: Boolean(prefix),
-    current,
-    boldWhenCurrent,
-    className,
-  })
+export const CommonButton = memo<Props>(
+  ({ elementAs, prefix, current, boldWhenCurrent, className, ...props }) => {
+    const actualClassName = useMemo(
+      () =>
+        commonButtonClassNameGenerator({
+          prefix: !!prefix,
+          current,
+          boldWhenCurrent,
+          className,
+        }),
+      [current, prefix, boldWhenCurrent, className],
+    )
 
-  if (elementAs === 'a') {
-    return (
-      <a {...(props as AnchorProps)} className={commonButtonStyle}>
-        {prefix}
-        {props.children}
-      </a>
-    )
-  } else if (elementAs === 'button') {
-    return (
-      // eslint-disable-next-line smarthr/best-practice-for-button-element
-      <button {...(props as ButtonProps)} className={commonButtonStyle}>
-        {prefix}
-        {props.children}
-      </button>
-    )
-  } else {
+    switch (elementAs) {
+      case 'a':
+        return (
+          <a {...(props as AnchorProps)} className={actualClassName}>
+            {prefix}
+            {props.children}
+          </a>
+        )
+      case 'button':
+        return (
+          // eslint-disable-next-line smarthr/best-practice-for-button-element
+          <button {...(props as ButtonProps)} className={actualClassName}>
+            {prefix}
+            {props.children}
+          </button>
+        )
+    }
+
     throw new Error(elementAs satisfies never)
-  }
-}
+  },
+)
