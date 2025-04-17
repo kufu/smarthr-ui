@@ -25,7 +25,7 @@ export default {
     </Stack>
   ),
   args: {
-    children: 'ラジオボタンパネル',
+    label: 'ラジオボタンパネル',
   },
   parameters: {
     chromatic: { disableSnapshot: false },
