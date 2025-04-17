@@ -2,7 +2,7 @@ import { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from
 import { tv } from 'tailwind-variants'
 
 import { isChildNavigation } from '../../utils'
-import { CommonButton, commonButton } from '../common/CommonButton'
+import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
@@ -57,7 +57,7 @@ const NavigationCustomTag = memo<
 >(({ children, elementAs: Tag, current, className, onClickNavigation, ...rest }) => {
   const actualClassName = useMemo(
     () =>
-      commonButton({
+      commonButtonClassNameGenerator({
         current,
         boldWhenCurrent: true,
         className,
