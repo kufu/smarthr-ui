@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [70.0.0](https://github.com/kufu/smarthr-ui/compare/v69.0.0...v70.0.0) (2025-04-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Buttonからsquare属性を削除 SHRUI-1179 (#5534)
+* SideNavのisSelectedをcurrentにrename SHRUI-1212 (#5519)
+* SegmentedControllのisSquareオプションを削除 SHRUI-1179 (#5533)
+
+### Features
+
+* AppNaviDropdownMenuButton コンポーネントに onOpen/onClose オプションを追加する ([#5550](https://github.com/kufu/smarthr-ui/issues/5550)) ([9d9ad5b](https://github.com/kufu/smarthr-ui/commit/9d9ad5b4e21165a158cca9e1c13175cc00f952f0))
+* Buttonからsquare属性を削除 SHRUI-1179 ([#5534](https://github.com/kufu/smarthr-ui/issues/5534)) ([7fd193e](https://github.com/kufu/smarthr-ui/commit/7fd193ee98eb0d4dbf24058c8fcace96d67071ca))
+* SegmentedControllのisSquareオプションを削除 SHRUI-1179 ([#5533](https://github.com/kufu/smarthr-ui/issues/5533)) ([91154b2](https://github.com/kufu/smarthr-ui/commit/91154b295d823700ac1dc5a6a749717be0bd2d16))
+
+
+### Bug Fixes
+
+* DropdownMenuGroupを利用した場合、キーボード移動がうまく行えない問題を修正する ([#5542](https://github.com/kufu/smarthr-ui/issues/5542)) ([dc2bf6c](https://github.com/kufu/smarthr-ui/commit/dc2bf6ce0b458b623711a6a688bb8487c3bef855))
+* FormControle, FieldsetのstatusLabels propsを指定するとキーが付与されていないwarnが出る問題の修正 ([#5528](https://github.com/kufu/smarthr-ui/issues/5528)) ([dcf3c6c](https://github.com/kufu/smarthr-ui/commit/dcf3c6ce544a2940057140ad1d30705740f86e1e))
+* SideNavのisSelectedをcurrentにrename SHRUI-1212 ([#5519](https://github.com/kufu/smarthr-ui/issues/5519)) ([d1b87e5](https://github.com/kufu/smarthr-ui/commit/d1b87e548f78940b142ddde73bdfe71ad74670ef))
+* v69 から SideMenuGroup, SideMenuItem が export されなくなってしまったので export する ([#5541](https://github.com/kufu/smarthr-ui/issues/5541)) ([b8b14e9](https://github.com/kufu/smarthr-ui/commit/b8b14e9a336f486f154baaac123127ca27ca5ac1))
+
 ## [69.0.0](https://github.com/kufu/smarthr-ui/compare/v68.0.1...v69.0.0) (2025-04-08)
 
 

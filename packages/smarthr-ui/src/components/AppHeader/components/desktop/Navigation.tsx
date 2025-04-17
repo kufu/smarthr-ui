@@ -1,3 +1,4 @@
+import { type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
@@ -17,18 +18,19 @@ import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 import type {
   ChildNavigation,
   ChildNavigationGroup,
+  NavigationButton,
+  NavigationCustomTag,
+  NavigationLink,
   Navigation as NavigationType,
   ReleaseNoteProps,
 } from '../../types'
-import type { ComponentProps, FC, ReactNode } from 'react'
 
-const appNavi = tv({
-  base: ['shr-overflow-x-auto shr-min-w-[auto]', 'max-[751px]:!shr-hidden'],
-  variants: {
-    withReleaseNote: {
-      true: ['[&&]:shr-pe-0'],
-    },
-  },
+const classNameGenerator = tv({
+  base: [
+    'shr-overflow-x-auto shr-min-w-[auto]',
+    'max-[751px]:!shr-hidden',
+    'data-[with-releasenote="true"]:shr-pe-0',
+  ],
 })
 
 type Props = {
@@ -45,103 +47,85 @@ export const Navigation: FC<Props> = ({
   additionalContent,
   releaseNote,
   enableNew,
-}) => (
-  <AppNavi
-    label={enableNew ? undefined : appName}
-    className={appNavi({ withReleaseNote: !!releaseNote })}
-    displayDropdownCaret
-    additionalArea={
-      <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
-        {additionalContent}
-        {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
-      </Cluster>
+}) => {
+  const className = useMemo(() => classNameGenerator(), [])
+  const actualNavigations = useMemo(() => buildNavigations(navigations), [navigations])
+
+  return (
+    <AppNavi
+      label={enableNew ? undefined : appName}
+      displayDropdownCaret
+      additionalArea={
+        <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
+          {additionalContent}
+          {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
+        </Cluster>
+      }
+      data-with-releasenote={!!releaseNote}
+      className={className}
+    >
+      {actualNavigations}
+    </AppNavi>
+  )
+}
+
+const buildNavigations = (navigations: NavigationType[]) =>
+  navigations.map((navigation, index) => {
+    if ('elementAs' in navigation) {
+      const { elementAs, ...rest } = navigation
+
+      return <AppNaviCustomTag {...rest} key={index} tag={elementAs} />
     }
-  >
-    {buildNavigations(navigations)}
-  </AppNavi>
-)
-
-const buildNavigations = (
-  navigations: NavigationType[],
-): ComponentProps<typeof AppNavi>['children'] => (
-  <>
-    {navigations.map((navigation, index) => {
-      if ('elementAs' in navigation) {
-        const { elementAs, ...rest } = navigation
-        return (
-          <AppNaviCustomTag
-            {...rest}
-            key={`${index}-${navigation.children.toString()}`}
-            tag={navigation.elementAs}
-          />
-        )
-      }
-      if ('href' in navigation) {
-        return <AppNaviAnchor {...navigation} key={`${index}-${navigation.children.toString()}`} />
-      }
-      if ('childNavigations' in navigation) {
-        return (
-          <AppNaviDropdownMenuButton
-            label={navigation.children}
-            key={`${index}-${navigation.children.toString()}`}
-          >
-            {buildDropdownMenu(navigation.childNavigations)}
-          </AppNaviDropdownMenuButton>
-        )
-      }
-      return <AppNaviButton {...navigation} key={`${index}-${navigation.children.toString()}`} />
-    })}
-  </>
-)
-
-const buildDropdownMenu = (
-  navigations: Array<ChildNavigation | ChildNavigationGroup>,
-): ComponentProps<typeof AppNaviDropdownMenuButton>['children'] => (
-  <>
-    {navigations.map((navigation, index) => {
-      if ('elementAs' in navigation) {
-        const { elementAs: Component, current, className, ...rest } = navigation
-        // TODO: DropdownMenuItemを作成し、elementAsを渡せるようにする
-        return (
-          <Component
-            {...rest}
-            key={`${index}-${navigation.children.toString()}`}
-            aria-current={current}
-            className={commonButtonClassNameGenerator({
-              current,
-              className,
-            })}
-          />
-        )
-      }
-      if ('href' in navigation) {
-        const { current, ...rest } = navigation
-        return (
-          <AnchorButton
-            {...rest}
-            aria-current={current && 'page'}
-            key={`${index}-${navigation.children.toString()}`}
-          />
-        )
-      }
-      if ('title' in navigation) {
-        return (
-          <DropdownMenuGroup
-            name={navigation.title}
-            key={`${index}-${navigation.title.toString()}`}
-          >
-            {buildDropdownMenu(navigation.childNavigations)}
-          </DropdownMenuGroup>
-        )
-      }
-      const { current, ...rest } = navigation
+    if ('href' in navigation) {
+      return <AppNaviAnchor {...navigation} key={index} />
+    }
+    if ('childNavigations' in navigation) {
       return (
-        <Button
-          {...rest}
-          aria-current={current && 'page'}
-          key={`${index}-${navigation.children.toString()}`}
-        />
+        <AppNaviDropdownMenuButton key={index} label={navigation.children}>
+          {buildDropdownMenu(navigation.childNavigations)}
+        </AppNaviDropdownMenuButton>
       )
-    })}
-  </>
+    }
+
+    return <AppNaviButton {...navigation} key={index} />
+  })
+
+const buildDropdownMenu = (navigations: Array<ChildNavigation | ChildNavigationGroup>) =>
+  navigations.map((navigation, index) => {
+    if ('elementAs' in navigation) {
+      return <DropdownCustomTag {...navigation} key={index} />
+    }
+    if ('href' in navigation) {
+      return <DropdownMenuAnchorButton {...navigation} key={index} />
+    }
+    if ('title' in navigation) {
+      return (
+        <DropdownMenuGroup key={index} name={navigation.title}>
+          {buildDropdownMenu(navigation.childNavigations)}
+        </DropdownMenuGroup>
+      )
+    }
+
+    return <DropdownNavigationButton {...navigation} key={index} />
+  })
+
+const DropdownCustomTag = memo<NavigationCustomTag>(
+  ({ elementAs: Component, current, className, ...rest }) => {
+    const actualClassName = useMemo(
+      () =>
+        commonButtonClassNameGenerator({
+          current,
+          className,
+        }),
+      [current, className],
+    )
+
+    return <Component {...rest} aria-current={current} className={actualClassName} />
+  },
 )
+const DropdownMenuAnchorButton = memo<NavigationLink>(({ current, ...rest }) => (
+  <AnchorButton {...rest} aria-current={current && 'page'} />
+))
+const DropdownNavigationButton = memo<NavigationButton>(({ current, ...rest }) => (
+  <Button {...rest} aria-current={current && 'page'} />
+))
