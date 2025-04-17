@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [70.0.1](https://github.com/kufu/smarthr-ui/compare/v70.0.0...v70.0.1) (2025-04-17)
+
+
+### Bug Fixes
+
+* ESM形式でimportできるように修正 ([#5557](https://github.com/kufu/smarthr-ui/issues/5557)) ([e90265e](https://github.com/kufu/smarthr-ui/commit/e90265e51309d3e144e0d305249f5d46caf21214))
+
 ## [70.0.0](https://github.com/kufu/smarthr-ui/compare/v69.0.0...v70.0.0) (2025-04-15)
 
 
