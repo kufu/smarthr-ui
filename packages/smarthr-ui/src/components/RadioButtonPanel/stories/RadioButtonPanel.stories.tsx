@@ -15,6 +15,9 @@ export default {
       options: Object.keys(_asOptions),
       mapping: _asOptions,
     },
+    children: {
+      control: 'text',
+    },
   },
   args: {
     label: 'ラジオボタンパネル',
