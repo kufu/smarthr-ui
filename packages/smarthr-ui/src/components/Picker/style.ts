@@ -23,9 +23,7 @@ export const classNameGenerator = (componentType: keyof typeof MIN_WIDTH) =>
         'has-[[readonly]]:shr-border-[theme(backgroundColor.background)] has-[[readonly]]:shr-bg-background',
       ],
       inner: [
-        'shr-bg-transparent shr-border-none shr-outline-none shr-outline-0',
-        'shr-p-[unset] shr-py-0.75 shr-h-[theme(fontSize.base)]',
-        'shr-text-base shr-text-black shr-tabular-nums',
+        'shr-border-none shr-text-base shr-bg-transparent shr-text-black shr-outline-none shr-outline-0 shr-p-[unset] shr-py-0.75 shr-h-[theme(fontSize.base)] shr-tabular-nums',
         'disabled:shr-text-disabled',
         `shr-min-w-[${MIN_WIDTH[componentType]}]`,
       ],
