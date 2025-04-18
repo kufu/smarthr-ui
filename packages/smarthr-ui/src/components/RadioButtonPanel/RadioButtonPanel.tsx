@@ -40,7 +40,6 @@ const classNameGenerator = tv({
   variants: {
     hasDescription: {
       true: 'shr-flex shr-flex-col',
-      false: '',
     },
   },
 })
@@ -51,7 +50,7 @@ export const RadioButtonPanel: FC<Props> = ({
   className,
   children,
   label,
-  'aria-describedby': ariaDescribedbyProp,
+  'aria-describedby': ariaDescribedby,
   ...props
 }) => {
   const classNames = useMemo(() => {
@@ -73,16 +72,22 @@ export const RadioButtonPanel: FC<Props> = ({
   }, [])
 
   const descriptionId = useId()
-  const ariaDescribedby = useMemo(
-    () => [children && descriptionId, ariaDescribedbyProp].filter(Boolean).join(' '),
-    [children, descriptionId, ariaDescribedbyProp],
+  const actualAriaDescribedby = useMemo(
+    () =>
+      [children && descriptionId, ariaDescribedby].reduce((acc: string, str) => {
+        if (!str) {
+          return acc
+        }
+        return `${acc} ${str}`
+      }, ''),
+    [children, descriptionId, ariaDescribedby],
   )
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={classNames.base}>
-      <RadioButton {...props} ref={innerRef} aria-describedby={ariaDescribedby}>
-        <Text weight="bold">{label}</Text>
+      <RadioButton {...props} ref={innerRef} aria-describedby={actualAriaDescribedby}>
+        <Text styleType="blockTitle">{label}</Text>
       </RadioButton>
       {children && (
         <span id={descriptionId} className={classNames.description}>
