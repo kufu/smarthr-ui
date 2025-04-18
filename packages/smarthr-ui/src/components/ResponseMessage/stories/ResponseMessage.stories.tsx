@@ -12,6 +12,7 @@ export default {
       control: 'select',
       options: Object.keys(classNameGenerator.variants.type),
     },
+    size: { name: 'size（非推奨）' },
     color: { table: { disable: true } },
   },
   args: {
