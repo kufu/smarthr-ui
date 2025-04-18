@@ -1,3 +1,4 @@
+import { StatusLabel } from '../../StatusLabel'
 import { RadioButtonPanel } from '../RadioButtonPanel'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -56,5 +57,12 @@ export const Description: StoryObj<typeof RadioButtonPanel> = {
   name: 'description',
   args: {
     children: '説明のテキストです。',
+  },
+}
+
+export const LabelSuffix: StoryObj<typeof RadioButtonPanel> = {
+  name: 'labelSuffix',
+  args: {
+    labelSuffix: <StatusLabel>ステータスラベル</StatusLabel>,
   },
 }

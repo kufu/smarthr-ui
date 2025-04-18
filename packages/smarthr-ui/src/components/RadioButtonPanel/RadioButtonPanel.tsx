@@ -13,12 +13,14 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
+import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 
 type Props = ComponentProps<typeof RadioButton> & {
   as?: string | ComponentType<any>
   label: ReactNode
+  labelSuffix?: ReactNode
 }
 
 const NONE_ROLE_TAG_REGEX = /^(div|span)$/
@@ -50,6 +52,7 @@ export const RadioButtonPanel: FC<Props> = ({
   className,
   children,
   label,
+  labelSuffix,
   'aria-describedby': ariaDescribedby,
   ...props
 }) => {
@@ -87,7 +90,10 @@ export const RadioButtonPanel: FC<Props> = ({
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={classNames.base}>
       <RadioButton {...props} ref={innerRef} aria-describedby={actualAriaDescribedby}>
-        <Text styleType="blockTitle">{label}</Text>
+        <Cluster as="span">
+          {children ? <Text styleType="blockTitle">{label}</Text> : label}
+          {labelSuffix}
+        </Cluster>
       </RadioButton>
       {children && (
         <span id={descriptionId} className={classNames.description}>
