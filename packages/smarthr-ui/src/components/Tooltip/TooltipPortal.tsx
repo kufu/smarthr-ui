@@ -38,18 +38,27 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
 
     const portal = portalRef.current
 
-    const vertical = calculateVertical(portal.offsetHeight, parentRect)
-    const horizontal = calculateHorizontal(portal.offsetWidth, parentRect)
+    const action = () => {
+      const vertical = calculateVertical(portal.offsetHeight, parentRect)
+      const horizontal = calculateHorizontal(portal.offsetWidth, parentRect)
 
-    setStyle({
-      insetBlockStart: vertical.insetBlockStart,
-      insetInlineStart: horizontal.insetInlineStart,
-      insetInlineEnd: horizontal.insetInlineEnd,
-      maxWidth: horizontal.maxWidth,
-      maxHeight: vertical.maxHeight,
-    })
-    setActualVertical(vertical.alignment)
-    setActualHorizontal(horizontal.alignment)
+      setStyle({
+        insetBlockStart: vertical.insetBlockStart,
+        insetInlineStart: horizontal.insetInlineStart,
+        insetInlineEnd: horizontal.insetInlineEnd,
+        maxWidth: horizontal.maxWidth,
+        maxHeight: vertical.maxHeight,
+      })
+      setActualVertical(vertical.alignment)
+      setActualHorizontal(horizontal.alignment)
+    }
+
+    action()
+    window.addEventListener('resize', action)
+
+    return () => {
+      window.removeEventListener('resize', action)
+    }
   }, [parentRect])
 
   const classNames = useMemo(() => {
