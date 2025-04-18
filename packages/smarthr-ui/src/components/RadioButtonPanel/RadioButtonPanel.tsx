@@ -27,7 +27,7 @@ const classNameGenerator = tv({
     base: [
       'smarthr-ui-RadioButtonPanel',
       'shr-border-shorthand shr-list-none shr-shadow-none',
-      // なぜか :has が動作しないので重ねて書いている
+      // FIX: なぜか storybook 上で :has が動作しないので重ねて書いている
       'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
       '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
       '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
