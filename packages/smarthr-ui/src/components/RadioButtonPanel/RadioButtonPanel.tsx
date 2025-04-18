@@ -4,6 +4,7 @@ import {
   type ComponentProps,
   type ComponentType,
   type FC,
+  type ReactNode,
   useCallback,
   useId,
   useMemo,
@@ -17,7 +18,7 @@ import { Text } from '../Text'
 
 type Props = ComponentProps<typeof RadioButton> & {
   as?: string | ComponentType<any>
-  label: string
+  label: ReactNode
 }
 
 const NONE_ROLE_TAG_REGEX = /^(div|span)$/
