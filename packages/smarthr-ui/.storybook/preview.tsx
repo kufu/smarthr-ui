@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { Title, Subtitle, Description, Primary, Stories, Controls } from '@storybook/blocks'
 import ReactGA from 'react-ga4'
@@ -10,6 +10,8 @@ import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
 import '../src/styles/index.css'
 import { backgroundColor } from '../src/themes'
+import { IntlProvider } from '../src'
+import * as locales from '../src/intl/locales'
 
 const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 
@@ -84,7 +86,29 @@ const preview: Preview = {
       values: [{ name: 'light', value: backgroundColor.background }],
     },
   },
+  globalTypes: {
+    locale: {
+      description: 'Locale',
+      defaultValue: 'ja',
+      toolbar: {
+        icon: 'globe',
+        dynamicTitle: true,
+        items: Object.entries(locales).map(([locale, values]) => ({
+          value: locale,
+          title: values['smarthr-ui/common/language'],
+        })),
+      },
+    },
+  },
   decorators: [
+    (Story, context) => {
+      const locale = context.globals?.locale
+      return (
+        <IntlProvider locale={locale}>
+          <Story />
+        </IntlProvider>
+      )
+    },
     (Story, context) => {
       const theme = createTheme()
       const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
