@@ -57,7 +57,8 @@ export default {
     nodeResolve(),
     // node_modulesのままだとimportできないケースがあったので、vendorにrenameしている
     renameNodeModules("vendor"),
-    // reactの影響でprocess is not definedになってしまうので、import.meta.envに置き換えている
+    // reactの影響でprocess is not definedになってしまうので、"production"に置き換えている
+    // import.meta.env等に置き換えるほうが本当は好ましいが、あまり良い方法がない
     replace({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
