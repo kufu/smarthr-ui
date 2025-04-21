@@ -167,6 +167,7 @@ const SelectTdButton = memo<{
         onClick={actualOnClick}
         className={classNames.cellButton}
         data-is-today={dataIsToday}
+        style={{ backgroundColor: '#333' }}
       >
         <SelectButtonTdDateCell className={classNames.dateCell}>{date}</SelectButtonTdDateCell>
       </UnstyledButton>
