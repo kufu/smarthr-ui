@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import preserveDirectives from "rollup-plugin-preserve-directives";
 import renameNodeModules from "rollup-plugin-rename-node-modules";
+import replace from '@rollup/plugin-replace';
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { globSync } from 'glob';
@@ -26,7 +27,7 @@ export default {
 		entryPoints.map(file => [
 			path.relative(
 				'src',
-        // 拡張子を除去し書き出し時に正しいファイルめになるようにしている
+        // 拡張子を除去し書き出し時に正しいファイル名になるようにしている
 				file.slice(0, file.length - path.extname(file).length)
 			),
 			fileURLToPath(new URL(file, import.meta.url))
@@ -55,6 +56,10 @@ export default {
     commonjs(),
     nodeResolve(),
     // node_modulesのままだとimportできないケースがあったので、vendorにrenameしている
-    renameNodeModules("vendor")
+    renameNodeModules("vendor"),
+    // reactの影響でprocess is not definedになってしまうので、import.meta.envに置き換えている
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
   ],
 }
