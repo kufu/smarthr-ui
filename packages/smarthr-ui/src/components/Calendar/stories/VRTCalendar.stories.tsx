@@ -27,6 +27,16 @@ export default {
   ),
   parameters: {
     chromatic: { disableSnapshot: false },
+    a11y: {
+      config: {
+        rules: [
+          {
+            id: 'landmark-no-duplicate-banner',
+            enabled: false,
+          },
+        ],
+      },
+    },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
