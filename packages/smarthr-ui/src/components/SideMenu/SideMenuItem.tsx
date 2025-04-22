@@ -7,7 +7,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Text } from '../../Text'
+import { Text } from '../Text'
 
 type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
   elementAs?: AsElement
@@ -50,11 +50,20 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
   elementAs,
   current,
   prefix,
+  href,
   children,
   className,
   ...rest
 }: Props<AsElement>) => {
   const Component = elementAs ?? 'a'
+  const ariaCurrent = useMemo(() => {
+    if (!current || !href) {
+      return undefined
+    }
+
+    return href[0] === '#' ? true : 'page'
+  }, [current, href])
+
   const classNames = useMemo(() => {
     const { wrapper, content, iconWrapper } = classNameGenerator()
 
@@ -63,11 +72,11 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
       content: content({ current }),
       iconWrapper: iconWrapper(),
     }
-  }, [className, current])
+  }, [current, className])
 
   return (
     <li className={classNames.wrapper}>
-      <Component {...rest}>
+      <Component {...rest} href={href} aria-current={ariaCurrent}>
         <Text size="M" leading="TIGHT" className={classNames.content}>
           {prefix && <span className={classNames.iconWrapper}>{prefix}</span>}
           <Text weight={current ? 'bold' : undefined}>{children}</Text>

@@ -6,15 +6,19 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
+  useEffect,
   useMemo,
+  useRef,
+  useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
+
+import { Loader } from '../Loader'
 
 import type { Variant } from './types'
 
 type BaseProps = PropsWithChildren<{
   size: 'default' | 's'
-  square: boolean
   wide: boolean
   variant: Variant
   $loading?: boolean
@@ -41,10 +45,17 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.stopPropagation()
 }
 
+// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
+// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
+const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', '.smarthr-ui-Icon-extended', 'svg', 'img'].reduce(
+  (prev, selector, index) =>
+    `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
+  '',
+)
+
 export function ButtonWrapper({
   variant,
   size,
-  square,
   wide = false,
   $loading,
   prefix,
@@ -53,20 +64,56 @@ export function ButtonWrapper({
   className,
   ...rest
 }: Props) {
-  const wrapperClassName = useMemo(() => {
-    const generate = wrapperClassNameGenerator({
+  const innerRef = useRef<HTMLElement>(null)
+  // HINT: squareは
+  //  null: Buttonのレンダリング前
+  //  boolean: レンダリング後
+  const [square, setSquare] = useState<null | boolean>(null)
+
+  useEffect(() => {
+    if (innerRef.current) {
+      // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonの場合true
+      setSquare(!!innerRef.current.querySelector(ICON_BUTTON_SELECTOR))
+    }
+  }, [children])
+
+  const classNames = useMemo(() => {
+    const { button, anchor, loader } = wrapperClassNameGenerator({
       variant,
       size,
-      square,
-      loading: $loading,
+      square: !!square,
+      loading: !!$loading,
       wide,
     })
 
-    const wrapper = rest.isAnchor ? generate.anchor : generate.button
+    const wrapper = rest.isAnchor ? anchor : button
 
-    return wrapper({ className })
+    return {
+      wrapper: wrapper({ className }),
+      loader: loader(),
+    }
   }, [$loading, size, square, variant, wide, className, rest.isAnchor])
   const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
+
+  let actualPrefix = prefix
+  let actualSuffix = suffix
+  let actualChildren = children
+
+  if ($loading) {
+    actualPrefix = undefined
+    const loader = <Loader size="s" className={classNames.loader} role="presentation" />
+
+    // HINT: squareは null | boolean のため、switchで判定する
+    // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
+    switch (square) {
+      case true:
+        actualChildren = loader
+        break
+      case false:
+        actualSuffix = loader
+        break
+    }
+  }
 
   // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
   // 自動型づけできなくなってしまう
@@ -75,27 +122,33 @@ export function ButtonWrapper({
     const Component = elementAs || 'a'
 
     return (
-      <Component {...others} className={wrapperClassName} ref={anchorRef}>
-        {prefix}
-        <span className={innerClassName}>{children}</span>
-        {suffix}
+      <Component {...others} className={classNames.wrapper} ref={anchorRef}>
+        {actualPrefix}
+        <span ref={innerRef} className={innerClassName}>
+          {actualChildren}
+        </span>
+        {actualSuffix}
       </Component>
     )
   } else {
     const { buttonRef, disabled, onClick, ...others } = rest
 
+    const disabledOnLoading = $loading || disabled
+
     return (
       // eslint-disable-next-line smarthr/best-practice-for-button-element
       <button
         {...others}
-        aria-disabled={disabled}
-        className={wrapperClassName}
         ref={buttonRef}
-        onClick={disabled ? EVENT_CANCELLER : onClick}
+        aria-disabled={disabledOnLoading}
+        className={classNames.wrapper}
+        onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
       >
-        {prefix}
-        <span className={innerClassName}>{children}</span>
-        {suffix}
+        {actualPrefix}
+        <span ref={innerRef} className={innerClassName}>
+          {actualChildren}
+        </span>
+        {actualSuffix}
       </button>
     )
   }
@@ -118,6 +171,10 @@ const wrapperClassNameGenerator = tv({
       '[&:not([href])]:shr-bg-clip-padding',
       '[&_.smarthr-ui-Icon]:forced-colors:shr-fill-[LinkText]',
       '[&:not([href])_.smarthr-ui-Icon]:forced-colors:shr-fill-[CanvasText]',
+    ],
+    loader: [
+      'shr-align-bottom',
+      '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
     ],
   },
   variants: {
@@ -364,11 +421,25 @@ const wrapperClassNameGenerator = tv({
         '[&:not([href])]:shr-text-disabled',
       ],
     },
+    {
+      slots: ['loader'],
+      variant: ['primary', 'danger', 'skeleton', 'text'],
+      className: [
+        '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+        '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+      ],
+    },
+    {
+      slots: ['loader'],
+      variant: 'secondary',
+      className: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
+    },
   ],
 })
 
 const innerClassNameGenerator = tv({
   base: [
+    'smarthr-ui-Button-body',
     /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
     'shr-min-w-0',
   ],

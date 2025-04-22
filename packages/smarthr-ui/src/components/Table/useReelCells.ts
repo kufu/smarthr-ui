@@ -1,8 +1,8 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 
 const TR_SELECTOR = 'table tr'
-const FIXED_LEFT_SELECTOR = '.fixedLeft'
-const FIXED_RIGHT_SELECTOR = '.fixedRight'
+const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
+const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 

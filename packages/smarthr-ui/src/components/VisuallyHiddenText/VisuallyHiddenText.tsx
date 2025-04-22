@@ -2,7 +2,7 @@ import { type ComponentProps, type ElementType, type PropsWithChildren, memo, us
 import { tv } from 'tailwind-variants'
 
 export const visuallyHiddenTextClassNameGenerator = tv({
-  base: 'shr-absolute -shr-top-px shr-left-0 shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap shr-border-0 shr-p-0 [clip-path:inset(100%)] [clip:rect(0_0_0_0)]',
+  base: 'shr-absolute shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap shr-border-0 shr-p-0 [clip-path:inset(100%)] [clip:rect(0_0_0_0)]',
 })
 
 type Props<T extends ElementType> = PropsWithChildren<{

@@ -12,15 +12,17 @@ import {
   cloneElement,
   isValidElement,
   memo,
+  useContext,
   useMemo,
   useRef,
 } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { Dropdown, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
+import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
+import { DropdownContext } from '../Dropdown'
 
 import useKeyboardNavigation from './useKeyboardNavigation'
 
@@ -46,6 +48,10 @@ type Props = {
   onlyIconTrigger?: boolean
   /** 引き金となるアイコンを差し替えたい場合（onlyIconTrigger=true の場合のみ有効） */
   triggerIcon?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
+  /** ドロップダウンメニューが開かれた際のイベント */
+  onOpen?: () => void
+  /** ドロップダウンメニューが閉じられた際のイベント */
+  onClose?: () => void
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
@@ -53,7 +59,7 @@ const classNameGenerator = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
     triggerButton:
-      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]>.smarthr-ui-Icon:last-child]:shr-rotate-180',
+      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
     actionList: [
       'smarthr-ui-DropdownMenuButton-panel',
       'shr-list-none shr-py-0.5',
@@ -79,6 +85,8 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   triggerSize,
   onlyIconTrigger,
   triggerIcon,
+  onOpen,
+  onClose,
   className,
   ...rest
 }) => {
@@ -96,17 +104,16 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   )
 
   return (
-    <Dropdown>
+    <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
         {...rest}
         label={label}
         onlyIconTrigger={onlyIconTrigger}
         triggerIcon={triggerIcon}
         triggerSize={triggerSize}
-        wrapperStyle={classNames.triggerWrapper}
-        buttonStyle={classNames.triggerButton}
+        classNames={classNames}
       />
-      <DropdownContent>
+      <DropdownContent controllable={true}>
         <menu ref={containerRef} className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
@@ -117,21 +124,27 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
 const MemoizedTriggerButton = memo<
   Pick<Props, 'onlyIconTrigger' | 'triggerSize' | 'label' | 'triggerIcon'> &
-    ElementProps & { wrapperStyle: string; buttonStyle: string }
->(({ onlyIconTrigger, triggerSize, label, triggerIcon, wrapperStyle, buttonStyle, ...rest }) => {
+    ElementProps & {
+      classNames: {
+        triggerWrapper: string
+        triggerButton: string
+      }
+    }
+>(({ onlyIconTrigger, triggerSize, label, triggerIcon, classNames, ...rest }) => {
+  const { active } = useContext(DropdownContext)
+
   const tooltip = useMemo(
     () => ({ show: onlyIconTrigger, message: label }),
     [label, onlyIconTrigger],
   )
 
   return (
-    <DropdownTrigger className={wrapperStyle} tooltip={tooltip}>
+    <DropdownTrigger className={classNames.triggerWrapper} tooltip={tooltip}>
       <Button
         {...rest}
-        suffix={<ButtonSuffixIcon onlyIconTrigger={onlyIconTrigger} />}
+        suffix={!onlyIconTrigger && <FaCaretDownIcon alt={`候補を${active ? '閉じる' : '開く'}`} />}
         size={triggerSize}
-        square={onlyIconTrigger}
-        className={buttonStyle}
+        className={classNames.triggerButton}
       >
         <TriggerLabelText
           label={label}
@@ -155,10 +168,6 @@ const TriggerLabelText = memo<Pick<Props, 'label' | 'onlyIconTrigger' | 'trigger
   },
 )
 
-const ButtonSuffixIcon = memo<Pick<Props, 'onlyIconTrigger'>>(
-  ({ onlyIconTrigger }) => !onlyIconTrigger && <FaCaretDownIcon alt="候補を開く" />,
-)
-
 export const renderButtonList = (children: Actions) =>
   Children.map(children, (item): ReactNode => {
     if (!item || !isValidElement(item)) {
@@ -174,11 +183,13 @@ export const renderButtonList = (children: Actions) =>
 
     return (
       <li>
-        {cloneElement(item as ReactElement, {
-          variant: 'text',
-          wide: true,
-          className: actionListItemButton({ className: item.props.className }),
-        })}
+        <DropdownCloser>
+          {cloneElement(item as ReactElement, {
+            variant: 'text',
+            wide: true,
+            className: actionListItemButton({ className: item.props.className }),
+          })}
+        </DropdownCloser>
       </li>
     )
   })
