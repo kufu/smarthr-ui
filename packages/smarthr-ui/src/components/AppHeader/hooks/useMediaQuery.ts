@@ -1,8 +1,7 @@
 import { useMemo, useSyncExternalStore } from 'react'
 
 export const mediaQuery = {
-  desktop: 'min-width: 752px',
-  mobile: 'max-width: 751px',
+  desktop: '(min-width: 752px)',
 } as const
 
 const NOOP = () => undefined
@@ -10,7 +9,7 @@ const RETURN_FALSE = () => false
 
 export const useMediaQuery = (query: string) => {
   const mediaQueryList = useMemo(
-    () => (typeof window === 'undefined' ? null : matchMedia(`(${query})`)),
+    () => (typeof window === 'undefined' ? null : matchMedia(query)),
     [query],
   )
 
