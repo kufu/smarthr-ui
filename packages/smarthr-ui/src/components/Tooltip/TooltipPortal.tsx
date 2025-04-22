@@ -1,6 +1,7 @@
 import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { debounce } from '../../libs/debounce'
 import { spacing } from '../../themes'
 import { Balloon } from '../Balloon'
 
@@ -52,12 +53,14 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
       setActualVertical(vertical.alignment)
       setActualHorizontal(horizontal.alignment)
     }
+    const debouncedAction = debounce(action, 100)
 
     action()
-    window.addEventListener('resize', action)
+
+    window.addEventListener('resize', debouncedAction)
 
     return () => {
-      window.removeEventListener('resize', action)
+      window.removeEventListener('resize', debouncedAction)
     }
   }, [parentRect])
 
