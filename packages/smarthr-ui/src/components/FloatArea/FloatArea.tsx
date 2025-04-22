@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
-import { Cluster } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
@@ -10,32 +10,80 @@ import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import type { Gap } from '../../types'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
+  slots: {
+    wrapper: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
+    mainButtonCluster: 'shr-ms-auto',
+    responseMessageWrapper: 'shr-ms-auto',
+  },
   variants: {
     bottom: {
-      0: 'shr-bottom-0',
-      0.25: 'shr-bottom-0.25',
-      0.5: 'shr-bottom-0.5',
-      0.75: 'shr-bottom-0.75',
-      1: 'shr-bottom-1',
-      1.25: 'shr-bottom-1.25',
-      1.5: 'shr-bottom-1.5',
-      2: 'shr-bottom-2',
-      2.5: 'shr-bottom-2.5',
-      3: 'shr-bottom-3',
-      3.5: 'shr-bottom-3.5',
-      4: 'shr-bottom-4',
-      8: 'shr-bottom-8',
-      X3S: 'shr-bottom-0.25',
-      XXS: 'shr-bottom-0.5',
-      XS: 'shr-bottom-1',
-      S: 'shr-bottom-1.5',
-      M: 'shr-bottom-2',
-      L: 'shr-bottom-2.5',
-      XL: 'shr-bottom-3',
-      XXL: 'shr-bottom-3.5',
-      X3L: 'shr-bottom-4',
-    } as { [key in Gap]: string },
+      0: {
+        wrapper: 'shr-bottom-0',
+      },
+      0.25: {
+        wrapper: 'shr-bottom-0.25',
+      },
+      0.5: {
+        wrapper: 'shr-bottom-0.5',
+      },
+      0.75: {
+        wrapper: 'shr-bottom-0.75',
+      },
+      1: {
+        wrapper: 'shr-bottom-1',
+      },
+      1.25: {
+        wrapper: 'shr-bottom-1.25',
+      },
+      1.5: {
+        wrapper: 'shr-bottom-1.5',
+      },
+      2: {
+        wrapper: 'shr-bottom-2',
+      },
+      2.5: {
+        wrapper: 'shr-bottom-2.5',
+      },
+      3: {
+        wrapper: 'shr-bottom-3',
+      },
+      3.5: {
+        wrapper: 'shr-bottom-3.5',
+      },
+      4: {
+        wrapper: 'shr-bottom-4',
+      },
+      8: {
+        wrapper: 'shr-bottom-8',
+      },
+      X3S: {
+        wrapper: 'shr-bottom-0.25',
+      },
+      XXS: {
+        wrapper: 'shr-bottom-0.5',
+      },
+      XS: {
+        wrapper: 'shr-bottom-1',
+      },
+      S: {
+        wrapper: 'shr-bottom-1.5',
+      },
+      M: {
+        wrapper: 'shr-bottom-2',
+      },
+      L: {
+        wrapper: 'shr-bottom-2.5',
+      },
+      XL: {
+        wrapper: 'shr-bottom-3',
+      },
+      XXL: {
+        wrapper: 'shr-bottom-3.5',
+      },
+      X3L: {
+        wrapper: 'shr-bottom-4',
+      },
+    } as { [key in Gap]: { wrapper: string } },
   },
   defaultVariants: {
     bottom: 1.5,
@@ -69,28 +117,33 @@ export const FloatArea: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const actualClassName = useMemo(
-    () => classNameGenerator({ bottom, className }),
-    [bottom, className],
-  )
+  const classNames = useMemo(() => {
+    const { wrapper, mainButtonCluster, responseMessageWrapper } = classNameGenerator({ bottom })
+
+    return {
+      wrapper: wrapper({ className }),
+      mainButtonCluster: mainButtonCluster(),
+      responseMessageWrapper: responseMessageWrapper(),
+    }
+  }, [bottom, className])
   const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
-    <Base {...rest} layer={3} padding={1} className={actualClassName} style={actualStyle}>
-      <Cluster gap={1}>
-        {tertiaryButton}
-        <div className="shr-ms-auto">
-          <Cluster gap={1} align="center">
-            {responseStatus && (
-              <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
-            )}
-            <Cluster gap={1}>
-              {secondaryButton}
-              {primaryButton}
-            </Cluster>
+    <Base {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
+      <Stack gap={0.5}>
+        <Cluster>
+          {tertiaryButton}
+          <Cluster gap={1} className={classNames.mainButtonCluster}>
+            {secondaryButton}
+            {primaryButton}
           </Cluster>
-        </div>
-      </Cluster>
+        </Cluster>
+        {responseStatus && (
+          <p className={classNames.responseMessageWrapper}>
+            <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
+          </p>
+        )}
+      </Stack>
     </Base>
   )
 }
