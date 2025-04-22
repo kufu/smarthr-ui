@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [70.1.0](https://github.com/kufu/smarthr-ui/compare/v70.0.1...v70.1.0) (2025-04-22)
+
+
+### Features
+
+* FloatAreaのresponseStatus表示位置を調整 SHRUI-1219 ([#5517](https://github.com/kufu/smarthr-ui/issues/5517)) ([bf00e8b](https://github.com/kufu/smarthr-ui/commit/bf00e8b620f196e88a46a61595082c249433583e))
+
+
+### Bug Fixes
+
+* LineClampのテキストが上下に見きれないように修正 ([#5558](https://github.com/kufu/smarthr-ui/issues/5558)) ([1daa316](https://github.com/kufu/smarthr-ui/commit/1daa31651f9313b55193f1c2e32762371a3d1e6b))
+* Tooltipのサイズ・位置計算をwindowサイズの変更時に再計算する SHRUI-1254 ([#5563](https://github.com/kufu/smarthr-ui/issues/5563)) ([8c75510](https://github.com/kufu/smarthr-ui/commit/8c755101792d385d60a03c19deed5b9b9ecff4d5))
+
 ### [70.0.1](https://github.com/kufu/smarthr-ui/compare/v70.0.0...v70.0.1) (2025-04-17)
 
 
