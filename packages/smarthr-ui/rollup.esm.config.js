@@ -60,7 +60,19 @@ export default {
     // reactの影響でprocess is not definedになってしまうので、"production"に置き換えている
     // import.meta.env等に置き換えるほうが本当は好ましいが、あまり良い方法がない
     replace({
-      'process.env.NODE_ENV': JSON.stringify('production'),
+      values: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      },
+      preventAssignment: true,
+    }),
+    // picocolorsのみprocessをglobalThis.processに置き換えて、process is not definedを回避する
+    replace({
+      values: {
+        'process': 'globalThis.process',
+      },
+      include: "**/picocolors.*",
+      delimiters: ['\\s', '\\s(?!\\.)'],
+      preventAssignment: true,
     }),
   ],
 }
