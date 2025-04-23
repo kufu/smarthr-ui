@@ -85,11 +85,12 @@ export const Default: StoryFn = ({ isForcedColor }) => {
           ariaLabel="Dialog"
           data-test="dialog-content"
         >
-          <Fieldset
-            title="Dialog"
-            titleType="sectionTitle"
-            {...(isForcedColor && { style: { backgroundColor: '#333' } })}
-          >
+          <Fieldset title="Dialog" titleType="sectionTitle">
+            {isForcedColor && (
+              <div
+                style={{ backgroundColor: 'rgba(3,3,2,0.8)', position: 'absolute', inset: '0' }}
+              />
+            )}
             <p>The value of isOpen must be managed by you, but you can customize content freely.</p>
             <DatePicker
               name="dialog_datepicker"
