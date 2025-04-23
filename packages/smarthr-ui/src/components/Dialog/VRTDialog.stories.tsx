@@ -36,7 +36,7 @@ export default {
   parameters: {
     withTheming: true,
     a11y: {
-      element: '.smarthr-ui-Dialo',
+      element: '.marhr-ui-ialog',
     },
   },
 }
