@@ -57,7 +57,7 @@ export default {
   },
 }
 
-export const Default: StoryFn = () => {
+export const Default: StoryFn = ({ isForcedColor }) => {
   const [opened, setOpened] = useState<'default' | 'focus' | null>(null)
   const [value, setValue] = useState('Apple')
   const [date, setDate] = useState<Date | null>(null)
@@ -85,7 +85,11 @@ export const Default: StoryFn = () => {
           ariaLabel="Dialog"
           data-test="dialog-content"
         >
-          <Fieldset title="Dialog" titleType="sectionTitle">
+          <Fieldset
+            title="Dialog"
+            titleType="sectionTitle"
+            {...(isForcedColor && { style: { backgroundColor: '#333' } })}
+          >
             <p>The value of isOpen must be managed by you, but you can customize content freely.</p>
             <DatePicker
               name="dialog_datepicker"
