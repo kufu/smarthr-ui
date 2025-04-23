@@ -47,6 +47,11 @@ export const Multiple: StoryObj<typeof InputFile> = {
   args: { multiple: true },
 }
 
+export const MultiplyAppendable: StoryObj<typeof InputFile> = {
+  name: 'multiplyAppendable',
+  args: { multiplyAppendable: true },
+}
+
 export const Disabled: StoryObj<typeof InputFile> = {
   name: 'disabled',
   args: { disabled: true },

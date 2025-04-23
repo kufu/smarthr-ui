@@ -74,6 +74,8 @@ export type Props = VariantProps<typeof classNameGenerator> & {
   /** コンポーネント内のテキストを変更する関数 */
   decorators?: DecoratorsType<DecoratorKeyTypes>
   error?: boolean
+  /** ファイル複数選択の際に、選択済みのファイルと結合するかどうか */
+  multiplyAppendable?: boolean
 }
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
 const DECORATOR_DEFAULT_TEXTS = {
@@ -93,6 +95,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       onChange,
       disabled = false,
       multiple,
+      multiplyAppendable = false,
       error,
       decorators,
       ...props
@@ -163,14 +166,14 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
 
         const newFiles = Array.from(e.target.files ?? [])
 
-        if (multiple) {
-          // multipleの場合、すでに選択済みのファイルと結合する
+        if (multiplyAppendable) {
+          // multiplyAppendableの場合、すでに選択済みのファイルと結合する
           updateFiles([...files, ...newFiles])
         } else {
           updateFiles(newFiles)
         }
       },
-      [files, isUpdatingFilesDirectly, updateFiles, multiple],
+      [files, isUpdatingFilesDirectly, updateFiles, multiplyAppendable],
     )
 
     const handleDelete = useCallback(
@@ -210,7 +213,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         <span className={classNames.inputWrapper}>
           <input
             {...props}
-            multiple={multiple}
+            multiple={multiple || multiplyAppendable}
             data-smarthr-ui-input="true"
             type="file"
             onChange={handleChange}
