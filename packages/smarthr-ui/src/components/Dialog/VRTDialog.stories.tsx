@@ -35,6 +35,9 @@ export default {
   },
   parameters: {
     withTheming: true,
+    a11y: {
+      element: '[role="dialog"]',
+    },
   },
 }
 export const VRTOpenDialogNarrow: StoryFn = () => (

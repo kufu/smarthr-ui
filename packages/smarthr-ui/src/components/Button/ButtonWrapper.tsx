@@ -143,7 +143,6 @@ export function ButtonWrapper({
         aria-disabled={disabledOnLoading}
         className={classNames.wrapper}
         onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
-        style={{ backgroundColor: '#333' }}
       >
         {actualPrefix}
         <span ref={innerRef} className={innerClassName}>
