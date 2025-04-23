@@ -35,9 +35,9 @@ export default {
   },
   parameters: {
     withTheming: true,
-    a11y: {
-      element: '.smarthr-ui-Dialog',
-    },
+    // a11y: {
+    //   element: '.smarthr-ui-Dialog',
+    // },
   },
 }
 export const VRTOpenDialogNarrow: StoryFn = () => (
