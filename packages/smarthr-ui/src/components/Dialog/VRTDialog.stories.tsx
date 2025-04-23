@@ -36,7 +36,7 @@ export default {
   parameters: {
     withTheming: true,
     a11y: {
-      element: '[role="dialog"]',
+      element: '.smarthr-ui-Dialog',
     },
   },
 }
