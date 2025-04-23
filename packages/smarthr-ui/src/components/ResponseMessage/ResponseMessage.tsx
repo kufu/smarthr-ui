@@ -1,5 +1,5 @@
-import React, { PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import {
   FaCircleCheckIcon,
@@ -10,9 +10,9 @@ import {
   WarningIcon,
 } from '../Icon'
 
-type Props = PropsWithChildren<VariantProps<typeof responseMessage>> & Omit<IconProps, 'text'>
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> & Omit<IconProps, 'text'>
 
-const responseMessage = tv({
+export const classNameGenerator = tv({
   base: '',
   variants: {
     type: {
@@ -33,9 +33,9 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: React.FC<Props> = ({ type = 'info', children, ...other }) => {
-  const styles = useMemo(() => responseMessage({ type }), [type])
+export const ResponseMessage: FC<Props> = ({ type = 'info', children, ...other }) => {
+  const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
 
-  return <Icon {...other} text={children} className={styles} />
+  return <Icon {...other} text={children} className={className} />
 }

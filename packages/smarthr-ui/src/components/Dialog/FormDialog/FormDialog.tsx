@@ -1,17 +1,18 @@
 'use client'
 
-import React, { ComponentProps, FormEvent, useCallback, useId } from 'react'
+import { type ComponentProps, type FC, type FormEvent, useCallback, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { FormDialogContentInner, FormDialogContentInnerProps } from './FormDialogContentInner'
+import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
+
+import type { DialogProps } from '../types'
 
 type Props = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const FormDialog: React.FC<Props & ElementProps> = ({
+export const FormDialog: FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,
@@ -23,8 +24,8 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   onSubmit,
   onClickClose,
   onPressEscape = onClickClose,
-  responseMessage,
-  actionDisabled = false,
+  responseStatus,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   className,
@@ -37,19 +38,16 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   const titleId = useId()
 
   const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
-      return
+    if (props.isOpen) {
+      onClickClose()
     }
-    onClickClose()
   }, [onClickClose, props.isOpen])
 
   const handleSubmitAction = useCallback(
     (close: () => void, e: FormEvent<HTMLFormElement>) => {
-      if (!props.isOpen) {
-        return
+      if (props.isOpen) {
+        onSubmit(close, e)
       }
-
-      onSubmit(close, e)
     },
     [onSubmit, props.isOpen],
   )
@@ -76,7 +74,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
         subActionArea={subActionArea}
         onClickClose={handleClickClose}
         onSubmit={handleSubmitAction}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         decorators={decorators}
       >
         {children}

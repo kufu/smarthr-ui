@@ -1,11 +1,11 @@
-import React, { type FC } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { StepStatusIcon } from './StepStatusIcon'
 
 import type { Step } from './types'
 
-const style = tv({
+const classNameGenerator = tv({
   slots: {
     // StatusIcon の位置基準となる wrapper
     wrapper: 'shr-relative',
@@ -36,15 +36,25 @@ type Props = Pick<Step, 'status'> & {
 }
 
 export const StepCounter: FC<Props> = ({ status, current, stepNumber }) => {
-  const statusType = typeof status === 'object' ? status.type : status
-  const { wrapper, counter, statusIcon } = style({ status: statusType, current })
+  const classNames = useMemo(() => {
+    const { wrapper, counter, statusIcon } = classNameGenerator({
+      status: typeof status === 'object' ? status.type : status,
+      current,
+    })
+
+    return {
+      wrapper: wrapper(),
+      counter: counter(),
+      statusIcon: statusIcon(),
+    }
+  }, [status, current])
 
   return (
-    <span className={wrapper()}>
-      <span className={counter()} aria-hidden>
+    <span className={classNames.wrapper}>
+      <span className={classNames.counter} aria-hidden>
         {stepNumber}
       </span>
-      <StepStatusIcon status={status} className={statusIcon()} />
+      <StepStatusIcon status={status} className={classNames.statusIcon} />
     </span>
   )
 }

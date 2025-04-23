@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
@@ -14,14 +14,15 @@ import { Cluster } from '../../../Layout'
 import { useLocale } from '../../hooks/useLocale'
 import { useTranslate } from '../../hooks/useTranslate'
 import { localeMap } from '../../multilingualization'
-import { HeaderProps } from '../../types'
 import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo'
 
-const desktopHeader = tv({
+import type { HeaderProps } from '../../types'
+
+const classNameGenerator = tv({
   slots: {
     wrapper: 'max-[751px]:!shr-hidden',
     appsButton: [
@@ -30,18 +31,6 @@ const desktopHeader = tv({
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
       'forced-colors:shr-border-shorthand',
     ],
-  },
-  variants: {
-    enableNew: {
-      true: {
-        appsButton: [
-          'shr-px-0.5 shr-font-bold shr-text-black',
-          '[&_>_svg]:aria-expanded:shr-rotate-180',
-          'hover:shr-bg-white-darken',
-          'focus-visible:shr-bg-white-darken',
-        ],
-      },
-    },
   },
 })
 
@@ -62,17 +51,33 @@ export const DesktopHeader: FC<HeaderProps> = ({
   features,
   ...props
 }) => {
-  const translate = useTranslate()
+  const classNames = useMemo(() => {
+    const { wrapper, appsButton } = classNameGenerator()
+
+    return {
+      wrapper: wrapper({ className }),
+      appsButton: appsButton(),
+    }
+  }, [className])
+
   const { locale } = useLocale()
 
-  const { wrapper, appsButton } = desktopHeader()
+  const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      appLauncherLabel: translate('DesktopHeader/DesktopHeader/appLauncherLabel'),
+      school: translate('common/school'),
+      help: translate('common/help'),
+    }),
+    [translate],
+  )
 
   return (
     <>
       <Header
         {...props}
         enableNew={enableNew}
-        className={`${className} ${wrapper()}`}
+        className={classNames.wrapper}
         featureName={appName}
         tenants={tenants}
         currentTenantId={currentTenantId}
@@ -82,14 +87,9 @@ export const DesktopHeader: FC<HeaderProps> = ({
             <>
               {features && features.length > 0 && (
                 <Dropdown>
-                  <DropdownTrigger>
-                    <Button prefix={enableNew ?? <FaToolboxIcon />} className={appsButton()}>
-                      <Translate>
-                        {translate('DesktopHeader/DesktopHeader/appLauncherLabel')}
-                      </Translate>
-                    </Button>
-                  </DropdownTrigger>
-
+                  <AppLauncherButton enableNew={enableNew} className={classNames.appsButton}>
+                    {translated.appLauncherLabel}
+                  </AppLauncherButton>
                   <DropdownContent controllable>
                     <AppLauncher features={features} />
                   </DropdownContent>
@@ -102,7 +102,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
                   prefix={<FaGraduationCapIcon />}
                   className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
                 >
-                  <Translate>{translate('common/school')}</Translate>
+                  <Translate>{translated.school}</Translate>
                 </HeaderLink>
               )}
             </>
@@ -117,7 +117,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
               }
               enableNew={enableNew}
             >
-              <Translate>{translate('common/help')}</Translate>
+              <Translate>{translated.help}</Translate>
             </HeaderLink>
           )}
 
@@ -156,3 +156,13 @@ export const DesktopHeader: FC<HeaderProps> = ({
     </>
   )
 }
+
+const AppLauncherButton = memo<
+  Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string }>
+>(({ enableNew, children, className }) => (
+  <DropdownTrigger>
+    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className}>
+      <Translate>{children}</Translate>
+    </Button>
+  </DropdownTrigger>
+))

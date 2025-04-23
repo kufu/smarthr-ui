@@ -1,12 +1,17 @@
 'use client'
 
-import React, { forwardRef, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap } from '../../../types'
-import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 type Props = PropsWithChildren<{
   /** コンテンツの最小高さ */
@@ -17,11 +22,11 @@ type Props = PropsWithChildren<{
   padding?: Gap
   /** 天地中央揃えも有効化するかどうか */
   verticalCentering?: boolean
-  as?: string | React.ComponentType<any>
+  as?: string | ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
 
-export const center = tv({
+export const centerClassNameGenerator = tv({
   base: 'shr-mx-auto shr-box-content shr-flex shr-flex-col shr-items-center',
   variants: {
     padding: {
@@ -59,23 +64,25 @@ export const Center = forwardRef<HTMLDivElement, Props & ElementProps>(
     { minHeight, maxWidth, padding, verticalCentering, as: Component = 'div', className, ...props },
     ref,
   ) => {
-    const styleProps = useMemo(
+    const style = useMemo(
       () => ({
-        className: center({ padding, verticalCentering, className }),
-        style: {
-          minHeight: minHeight ?? undefined,
-          maxWidth: maxWidth ?? undefined,
-        },
+        minHeight: minHeight ?? undefined,
+        maxWidth: maxWidth ?? undefined,
       }),
-      [padding, verticalCentering, className, minHeight, maxWidth],
+      [minHeight, maxWidth],
+    )
+    const actualClassName = useMemo(
+      () => centerClassNameGenerator({ padding, verticalCentering, className }),
+      [padding, verticalCentering, className],
     )
 
     const Wrapper = useSectionWrapper(Component)
+    const body = <Component {...props} ref={ref} className={actualClassName} style={style} />
 
-    return (
-      <Wrapper>
-        <Component {...styleProps} {...props} ref={ref} />
-      </Wrapper>
-    )
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

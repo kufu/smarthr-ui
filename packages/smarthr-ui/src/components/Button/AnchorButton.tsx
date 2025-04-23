@@ -1,21 +1,22 @@
-import React, {
-  ComponentPropsWithoutRef,
-  ElementType,
-  FC,
-  PropsWithoutRef,
-  ReactElement,
-  Ref,
+'use client'
+
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type FC,
+  type PropsWithoutRef,
+  type ReactElement,
+  type Ref,
   forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { ElementRef, ElementRefProps } from '../../types'
-
-import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
-import { BaseProps } from './types'
+
+import type { BaseProps } from './types'
+import type { ElementRef, ElementRefProps } from '../../types'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
@@ -27,7 +28,7 @@ type Props<T extends ElementType> = BaseProps & {
   elementAs?: T
 }
 
-const anchorButton = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-AnchorButton',
 })
 
@@ -35,7 +36,6 @@ const AnchorButton = forwardRef(
   <T extends ElementType = 'a'>(
     {
       size = 'default',
-      square = false,
       prefix,
       suffix,
       wide = false,
@@ -50,29 +50,24 @@ const AnchorButton = forwardRef(
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const styles = useMemo(() => anchorButton({ className }), [className])
-    const actualRel = useMemo(
-      () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
-      [rel, target],
-    )
+    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     const button = (
       <ButtonWrapper
         {...props}
         size={size}
-        square={square}
         wide={wide}
         variant={variant}
-        className={styles}
+        className={actualClassName}
         target={target}
-        rel={actualRel}
+        rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
         isAnchor
         anchorRef={ref}
         elementAs={elementAs}
+        prefix={prefix}
+        suffix={suffix}
       >
-        <ButtonInner prefix={prefix} suffix={suffix} size={size}>
-          {children}
-        </ButtonInner>
+        {children}
       </ButtonWrapper>
     )
 

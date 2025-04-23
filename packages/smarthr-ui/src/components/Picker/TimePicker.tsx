@@ -1,7 +1,8 @@
-import React, { forwardRef, useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 
-import { pickerStyle } from './style'
-import { PickerProps } from './types'
+import { classNameGenerator } from './style'
+
+import type { PickerProps } from './types'
 
 type Props = {
   /** フォームにエラーがあるかどうか */
@@ -11,25 +12,26 @@ type Props = {
 /** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
 export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
   ({ disabled, error, readOnly, className, ...rest }, ref) => {
-    const { wrapperStyle, innerStyle } = useMemo(() => {
-      const { wrapper, inner } = pickerStyle('TimePicker')
+    const classNames = useMemo(() => {
+      const { wrapper, inner } = classNameGenerator('Time')
+
       return {
-        wrapperStyle: wrapper({ className, disabled, readOnly }),
-        innerStyle: inner(),
+        wrapper: wrapper({ className }),
+        inner: inner(),
       }
-    }, [disabled, readOnly, className])
+    }, [className])
 
     return (
-      <span className={wrapperStyle}>
+      <span className={classNames.wrapper}>
         <input
           {...rest}
-          data-smarthr-ui-input="true"
           ref={ref}
           type="time"
           disabled={disabled}
           readOnly={readOnly}
           aria-invalid={error || undefined}
-          className={innerStyle}
+          className={classNames.inner}
+          data-smarthr-ui-input="true"
         />
       </span>
     )

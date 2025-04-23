@@ -1,15 +1,20 @@
 'use client'
 
-import React, { useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type ForwardedRef,
+  type PropsWithChildren,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { genericsForwardRef } from '../../../libs/util'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type { ComponentPropsWithoutRef, ForwardedRef, PropsWithChildren } from 'react'
 
-export const cluster = tv({
+export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
   variants: {
     inline: {
@@ -89,15 +94,15 @@ export const cluster = tv({
   },
 })
 
-type Props<T extends React.ElementType> = PropsWithChildren<
-  Omit<VariantProps<typeof cluster>, 'rowGap' | 'columnGap'> & {
+type Props<T extends ElementType> = PropsWithChildren<
+  Omit<VariantProps<typeof clusterClassNameGenerator>, 'rowGap' | 'columnGap'> & {
     as?: T
     gap?: Gap | SeparateGap
   }
 > &
   ComponentPropsWithoutRef<T>
 
-const ActualCluster = <T extends React.ElementType = 'div'>(
+const ActualCluster = <T extends ElementType = 'div'>(
   { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
@@ -112,19 +117,28 @@ const ActualCluster = <T extends React.ElementType = 'div'>(
     }
   }, [gap])
 
-  const styles = useMemo(
-    () => cluster({ inline, rowGap: gaps.row, columnGap: gaps.column, align, justify, className }),
+  const actualClassName = useMemo(
+    () =>
+      clusterClassNameGenerator({
+        inline,
+        rowGap: gaps.row,
+        columnGap: gaps.column,
+        align,
+        justify,
+        className,
+      }),
     [inline, gaps.row, gaps.column, align, justify, className],
   )
 
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
+  const body = <Component {...rest} ref={ref} className={actualClassName} />
 
-  return (
-    <Wrapper>
-      <Component {...rest} ref={ref} className={styles} />
-    </Wrapper>
-  )
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
+
+  return body
 }
 
 export const Cluster = genericsForwardRef(ActualCluster)

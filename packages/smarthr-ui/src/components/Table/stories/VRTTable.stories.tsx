@@ -1,5 +1,4 @@
-import React from 'react'
-
+import { Fragment } from 'react'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
@@ -8,6 +7,7 @@ import { Table } from '../Table'
 import { TableReel } from '../TableReel'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
+import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
@@ -18,15 +18,16 @@ export default {
   title: 'Data Display（データ表示）/Table/VRT',
   render: (args) => (
     <Stack>
-      {[undefined, true].map((fixed) =>
+      {[undefined, 'left', 'right'].map((fixed) =>
         [undefined, 'both'].map((borderType) => {
-          const Wrapper = fixed ? TableReel : React.Fragment
+          const Wrapper = fixed ? TableReel : Fragment
           const wrapperProps = fixed ? { className: 'shr-w-[50vw]' } : {}
           return (
             <Wrapper {...wrapperProps} key={String(fixed)}>
               <Table {...args} borderType={borderType as any}>
                 <thead>
                   <tr>
+                    {fixed === 'left' && <Th fixed={fixed}>操作</Th>}
                     <ThCheckbox name="thead_checkbox" mixed checked />
                     {[...Array(10)].map((_, i) => (
                       <Th
@@ -37,7 +38,7 @@ export default {
                         表頭{i + 1}
                       </Th>
                     ))}
-                    <Th fixed={fixed}>操作</Th>
+                    {fixed === 'right' && <Th fixed={fixed}>操作</Th>}
                   </tr>
                   <BulkActionRow>
                     <Cluster inline align="center" className="shr-sticky shr-left-1">
@@ -49,6 +50,11 @@ export default {
                 <tbody>
                   {[...Array(10)].map((_, i) => (
                     <tr key={i}>
+                      {fixed === 'left' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
                       <TdCheckbox
                         checked={i % 2 === 0}
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
@@ -65,9 +71,41 @@ export default {
                           </Text>
                         </Td>
                       ))}
-                      <Td fixed={fixed}>
-                        <Button size="s">操作</Button>
-                      </Td>
+                      {fixed === 'right' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
+                    </tr>
+                  ))}
+                  {[...Array(10)].map((_, i) => (
+                    <tr key={i}>
+                      {fixed === 'left' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
+                      <TdRadioButton
+                        checked={i === 0}
+                        aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
+                        name={`tbody_radio--${fixed}--${borderType}`}
+                      />
+                      {[...Array(10)].map((__, j) => (
+                        <Td
+                          align={j === 2 ? 'right' : undefined}
+                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
+                          key={j}
+                        >
+                          <Text whiteSpace="nowrap">
+                            表データ{i + 1}-{j + 1}
+                          </Text>
+                        </Td>
+                      ))}
+                      {fixed === 'right' && (
+                        <Td fixed={fixed}>
+                          <Button size="s">操作</Button>
+                        </Td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions'
-import React from 'react'
 
 import { Chip } from '../../Chip'
 import { Stack } from '../../Layout'
@@ -123,13 +122,22 @@ export const Fixed: StoryObj<typeof Th> = {
       <Table>
         <thead>
           <tr>
+            <Th {...args} fixed="left">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Th>
+            <Th {...args} fixed="left">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Th>
             {[...Array(20)].map((_, i) => (
               <Th {...args} key={i}>
                 <Text whiteSpace="nowrap">表頭{i + 1}</Text>
               </Th>
             ))}
-            <Th {...args} fixed>
-              <Text whiteSpace="nowrap">fixed: true</Text>
+            <Th {...args} fixed="right">
+              <Text whiteSpace="nowrap">fixed: right</Text>
+            </Th>
+            <Th {...args} fixed="right">
+              <Text whiteSpace="nowrap">fixed: right</Text>
             </Th>
           </tr>
         </thead>

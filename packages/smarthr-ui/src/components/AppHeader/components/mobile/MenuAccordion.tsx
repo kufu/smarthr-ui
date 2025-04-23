@@ -1,4 +1,13 @@
-import React, { Dispatch, FC, PropsWithChildren, ReactNode, useId } from 'react'
+import {
+  type Dispatch,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useId,
+  useMemo,
+} from 'react'
 
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -8,27 +17,46 @@ import { Section } from '../../../SectioningContent'
 import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
-type Props = {
+type Props = PropsWithChildren<{
   isOpen: boolean
   setIsOpen: Dispatch<(isOpen: boolean) => boolean>
   title: ReactNode
-}
+}>
 
-export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
-  isOpen,
-  setIsOpen,
-  title,
-  children,
-}) => {
-  const translate = useTranslate()
+export const MenuAccordion: FC<Props> = ({ title, children, ...rest }) =>
+  title ? (
+    <ActualMenuAccordion {...rest} title={title}>
+      {children}
+    </ActualMenuAccordion>
+  ) : (
+    children
+  )
+
+const ActualMenuAccordion: FC<Props> = ({ isOpen, children, ...rest }) => {
   const id = useId()
-
-  if (!title) {
-    return <div>{children}</div>
-  }
 
   return (
     <Section>
+      <AccordionHeading {...rest} isOpen={isOpen} id={id} />
+      <div id={id}>{isOpen && <div className="shr-mt-0.5">{children}</div>}</div>
+    </Section>
+  )
+}
+
+const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
+  ({ isOpen, setIsOpen, title, id }) => {
+    const onClickButton = useCallback(() => setIsOpen((prev) => !prev), [setIsOpen])
+
+    const translate = useTranslate()
+    const translated = useMemo(
+      () => ({
+        close: translate('MobileHeader/MenuAccordion/close'),
+        open: translate('MobileHeader/MenuAccordion/open'),
+      }),
+      [translate],
+    )
+
+    return (
       <Cluster justify="space-between" align="center">
         <Heading type="subSubBlockTitle">
           <Translate>{title}</Translate>
@@ -39,17 +67,15 @@ export const MenuAccordion: FC<PropsWithChildren<Props>> = ({
           aria-expanded={isOpen}
           aria-controls={id}
           className="[&&]:shr-p-0.25 [&&]:shr-min-h-0"
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={onClickButton}
         >
           {isOpen ? (
-            <FaCaretUpIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/close')} />
+            <FaCaretUpIcon alt={translated.close} />
           ) : (
-            <FaCaretDownIcon role="img" aria-label={translate('MobileHeader/MenuAccordion/open')} />
+            <FaCaretDownIcon alt={translated.open} />
           )}
         </Button>
       </Cluster>
-
-      <div id={id}>{isOpen && <div className="shr-mt-0.5">{children}</div>}</div>
-    </Section>
-  )
-}
+    )
+  },
+)

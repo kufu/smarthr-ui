@@ -1,11 +1,12 @@
-import React, { ComponentProps } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentProps, memo, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { TextLink } from '../TextLink'
 
-type Props = Omit<ComponentProps<typeof TextLink>, 'suffix'> & VariantProps<typeof headerLink>
+type Props = Omit<ComponentProps<typeof TextLink>, 'suffix'> &
+  VariantProps<typeof classNameGenerator>
 
-const headerLink = tv({
+const classNameGenerator = tv({
   base: [
     'shr-inline-flex shr-items-center',
     'shr-px-0.25 shr-text-white shr-shadow-none',
@@ -20,7 +21,11 @@ const headerLink = tv({
   },
 })
 
-export const HeaderLink: React.FC<Props> = ({ enableNew, className, ...props }) => {
-  const style = headerLink({ enableNew, className })
-  return <TextLink {...props} target="_blank" suffix={null} className={style} />
-}
+export const HeaderLink = memo<Props>(({ enableNew, className, ...props }) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ enableNew, className }),
+    [enableNew, className],
+  )
+
+  return <TextLink {...props} target="_blank" suffix={null} className={actualClassName} />
+})

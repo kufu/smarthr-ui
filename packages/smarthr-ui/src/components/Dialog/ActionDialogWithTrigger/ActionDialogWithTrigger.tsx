@@ -1,13 +1,22 @@
 'use client'
 
-import React, { ReactElement, cloneElement, useCallback, useId, useMemo, useState } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type ReactElement,
+  cloneElement,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
 
 import { ActionDialog } from '../ActionDialog'
 
 type ToggleModalActionType = () => void
 
-export const ActionDialogWithTrigger: React.FC<
-  Omit<React.ComponentProps<typeof ActionDialog>, 'isOpen' | 'onClickClose' | 'onPressEscape'> & {
+export const ActionDialogWithTrigger: FC<
+  Omit<ComponentProps<typeof ActionDialog>, 'isOpen' | 'onClickClose' | 'onPressEscape'> & {
     trigger: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
     onClickTrigger?: (open: ToggleModalActionType) => void
     onClickClose?: (close: ToggleModalActionType) => void
@@ -21,29 +30,20 @@ export const ActionDialogWithTrigger: React.FC<
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  const onClickOpen = useCallback(() => {
-    if (onClickTrigger) {
-      return onClickTrigger(open)
-    }
+  const onClickOpen = useMemo(
+    () => (onClickTrigger ? () => onClickTrigger(open) : open),
+    [onClickTrigger, open],
+  )
 
-    open()
-  }, [onClickTrigger, open])
+  const actualOnClickClose = useMemo(
+    () => (onClickClose ? () => onClickClose(close) : close),
+    [onClickClose, close],
+  )
 
-  const actualOnClickClose = useCallback(() => {
-    if (onClickClose) {
-      return onClickClose(close)
-    }
-
-    close()
-  }, [onClickClose, close])
-
-  const actualOnPressEscape = useCallback(() => {
-    if (onPressEscape) {
-      return onPressEscape(close)
-    }
-
-    close()
-  }, [onPressEscape, close])
+  const actualOnPressEscape = useMemo(
+    () => (onPressEscape ? () => onPressEscape(close) : close),
+    [onPressEscape, close],
+  )
 
   const actualTrigger = useMemo(
     () =>

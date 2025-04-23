@@ -1,5 +1,4 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import React from 'react'
 
 import { Stack } from '../../Layout'
 import { Textarea } from '../Textarea'
@@ -83,6 +82,29 @@ export const MaxLetters: StoryObj<typeof Textarea> = {
   args: {
     maxLetters: 100,
   },
+}
+
+export const Decorators: StoryObj<typeof Textarea> = {
+  name: 'decorators',
+  args: {
+    decorators: {
+      beforeMaxLettersCount: (org) => <>beforeMaxLettersCount({org})</>,
+      afterMaxLettersCount: (org) => <>afterMaxLettersCount({org})</>,
+      afterMaxLettersCountExceeded: (org) => <>afterMaxLettersCountExceeded({org})</>,
+      beforeScreenReaderMaxLettersDescription: (org) => (
+        <>beforeScreenReaderMaxLettersDescription({org})</>
+      ),
+      afterScreenReaderMaxLettersDescription: (org) => (
+        <>afterScreenReaderMaxLettersDescription({org})</>
+      ),
+    },
+  },
+  render: (args) => (
+    <>
+      <Textarea {...args} maxLetters={5} value="テキストエ" />
+      <Textarea {...args} maxLetters={5} value="テキストエリア" />
+    </>
+  ),
 }
 
 export const Placeholder: StoryObj<typeof Textarea> = {

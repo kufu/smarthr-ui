@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { type FC, memo, useMemo } from 'react'
 
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -12,48 +12,61 @@ type Props = {
   schoolUrl?: string | null
 }
 
-export const Help: FC<Props> = ({ helpPageUrl, schoolUrl }) => {
-  const translate = useTranslate()
+export const Help = memo<Props>(({ helpPageUrl, schoolUrl }) =>
+  helpPageUrl || schoolUrl ? <ActualHelp helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} /> : null,
+)
 
-  if (!helpPageUrl && !schoolUrl) {
-    return null
-  }
+const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => (
+  <Dropdown>
+    <MemoizedDropdownTrigger />
+    <DropdownContent controllable>
+      <ContentBody helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} />
+    </DropdownContent>
+  </Dropdown>
+)
+
+const MemoizedDropdownTrigger = memo(() => (
+  <DropdownTrigger>
+    <Button variant="skeleton" size="s" className="[&&&]:shr-border-transparent">
+      <FaCircleQuestionIcon alt="ヘルプ" />
+    </Button>
+  </DropdownTrigger>
+))
+
+const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
+  const translate = useTranslate()
+  const translated = useMemo(
+    () => ({
+      help: translate('common/help'),
+      school: translate('common/school'),
+    }),
+    [translate],
+  )
 
   return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button variant="skeleton" size="s" square className="[&&&]:shr-border-transparent">
-          <FaCircleQuestionIcon role="img" aria-label="ヘルプ" />
-        </Button>
-      </DropdownTrigger>
-
-      <DropdownContent controllable>
-        <div className="shr-p-0.5">
-          {helpPageUrl && (
-            <CommonButton
-              elementAs="a"
-              href={helpPageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              prefix={<FaCircleQuestionIcon />}
-            >
-              <Translate>{translate('common/help')}</Translate>
-            </CommonButton>
-          )}
-
-          {schoolUrl && (
-            <CommonButton
-              elementAs="a"
-              href={schoolUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              prefix={<FaGraduationCapIcon />}
-            >
-              <Translate>{translate('common/school')}</Translate>
-            </CommonButton>
-          )}
-        </div>
-      </DropdownContent>
-    </Dropdown>
+    <div className="shr-p-0.5">
+      {helpPageUrl && (
+        <CommonButton
+          elementAs="a"
+          href={helpPageUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          prefix={<FaCircleQuestionIcon />}
+        >
+          <Translate>{translated.help}</Translate>
+        </CommonButton>
+      )}
+      {schoolUrl && (
+        <CommonButton
+          elementAs="a"
+          href={schoolUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          prefix={<FaGraduationCapIcon />}
+        >
+          <Translate>{translated.school}</Translate>
+        </CommonButton>
+      )}
+    </div>
   )
-}
+})

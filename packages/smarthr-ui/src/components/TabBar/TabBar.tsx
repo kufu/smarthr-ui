@@ -1,9 +1,9 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
 
-const tabBar = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-TabBar',
     inner: 'shr-grow',
@@ -26,23 +26,19 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'role'>
 
-export const TabBar: FC<Props & ElementProps> = ({
-  className,
-  bordered = true,
-  children,
-  ...props
-}) => {
-  const { wrapperStyle, innerStyle } = useMemo(() => {
-    const { wrapper, inner } = tabBar()
+export const TabBar: FC<Props & ElementProps> = ({ className, bordered, children, ...props }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, inner } = classNameGenerator()
+
     return {
-      wrapperStyle: wrapper({ className }),
-      innerStyle: inner({ bordered }),
+      wrapper: wrapper({ className }),
+      inner: inner({ bordered: bordered ?? true }),
     }
   }, [bordered, className])
 
   return (
-    <Reel {...props} role="tablist" className={wrapperStyle}>
-      <div className={innerStyle}>{children}</div>
+    <Reel {...props} role="tablist" className={classNames.wrapper}>
+      <div className={classNames.inner}>{children}</div>
     </Reel>
   )
 }

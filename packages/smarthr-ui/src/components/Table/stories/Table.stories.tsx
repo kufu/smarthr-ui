@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Stack } from '../../Layout'
 import { BulkActionRow } from '../BulkActionRow'
 import { EmptyTableBody } from '../EmptyTableBody'

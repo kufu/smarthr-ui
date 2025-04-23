@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
@@ -17,7 +15,6 @@ export default {
     size: 'default',
     children: 'ボタン',
     variant: 'secondary',
-    square: false,
     disabled: false,
     wide: false,
     loading: false,
@@ -103,14 +100,6 @@ export const DisabledDetail: StoryObj<typeof Button> = {
   args: {
     disabled: true,
     disabledDetail: { message: 'ボタンが無効な理由' },
-  },
-}
-
-export const Square: StoryObj<typeof Button> = {
-  name: 'square',
-  args: {
-    square: true,
-    children: <FaCirclePlusIcon alt="ボタン" />,
   },
 }
 

@@ -1,20 +1,20 @@
-import React, {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  ElementType,
-  FC,
-  PropsWithoutRef,
-  ReactElement,
-  Ref,
+import {
+  type ComponentPropsWithoutRef,
+  type ComponentType,
+  type ElementType,
+  type FC,
+  type PropsWithoutRef,
+  type ReactElement,
+  type Ref,
   forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { ElementRef, ElementRefProps } from '../../types'
-import { ComponentProps as IconProps } from '../Icon'
+import { itemClassNameGenerator } from './itemClassNameGenerator'
 
-import { appNaviItemStyle } from './style'
+import type { ElementRef, ElementRefProps } from '../../types'
+import type { ComponentProps as IconProps } from '../Icon'
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
@@ -36,8 +36,8 @@ type AppNaviAnchorComponent = <T extends ElementType = 'a'>(
   props: AppNaviAnchorProps<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
-const appNaviAnchor = tv({
-  extend: appNaviItemStyle,
+const classNameGenerator = tv({
+  extend: itemClassNameGenerator,
   slots: {
     wrapper: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
   },
@@ -49,17 +49,18 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
       children,
       href,
       icon: Icon,
-      current = false,
+      current,
       elementAs,
       ...others
     }: PropsWithoutRef<AppNaviAnchorProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const { wrapperStyle, iconStyle } = useMemo(() => {
-      const { wrapper, icon } = appNaviAnchor({ active: current })
+    const classNames = useMemo(() => {
+      const { wrapper, icon } = classNameGenerator({ active: current })
+
       return {
-        wrapperStyle: wrapper(),
-        iconStyle: icon(),
+        wrapper: wrapper(),
+        icon: icon(),
       }
     }, [current])
 
@@ -71,9 +72,9 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
         ref={ref}
         href={href}
         aria-current={current ? 'page' : undefined}
-        className={wrapperStyle}
+        className={classNames.wrapper}
       >
-        {Icon && <Icon className={iconStyle} />}
+        {Icon && <Icon className={classNames.icon} />}
         {children}
       </Component>
     )

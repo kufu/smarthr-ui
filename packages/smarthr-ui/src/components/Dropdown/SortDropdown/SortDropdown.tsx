@@ -1,7 +1,14 @@
 'use client'
 
-import React, { ComponentPropsWithRef } from 'react'
-import { type FC, type MouseEventHandler } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEventHandler,
+  type OptionHTMLAttributes,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+} from 'react'
 
 import { Button } from '../../Button'
 import { Fieldset } from '../../Fieldset'
@@ -14,13 +21,13 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import { useSortDropdown } from './useSortDropdown'
+import { type DecoratorKeyTypes, useSortDropdown } from './useSortDropdown'
 
-import type { DecoratorsType } from '../../../types'
+import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 type SortFieldType = {
   value: string
-} & Omit<React.OptionHTMLAttributes<HTMLOptionElement>, 'value'>
+} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
 
 type ArgsOnApply = {
   field: string
@@ -37,14 +44,7 @@ type Props = {
   onApply: (args: ArgsOnApply) => void
   /** キャンセル時に発火するイベント */
   onCancel?: MouseEventHandler<HTMLButtonElement>
-  decorators?: DecoratorsType<
-    | 'sortFieldLabel'
-    | 'sortOrderLabel'
-    | 'ascLabel'
-    | 'descLabel'
-    | 'applyButtonLabel'
-    | 'cancelButtonLabel'
-  >
+  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
@@ -57,20 +57,12 @@ export const SortDropdown: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const {
-    labels: {
-      triggerLabel,
-      sortFieldLabel,
-      sortOrderLabel,
-      ascLabel,
-      descLabel,
-      applyButtonLabel,
-      cancelButtonLabel,
-    },
+    labels,
     SortIcon,
-    setCheckedInnerOrder,
+    onChangeSortOrderRadio,
     innerValues: { innerFields, innerCheckedOrder },
     handler: { handleApply, handleChange },
-    styles: { bodyStyle, selectStyle, footerStyle },
+    classNames,
   } = useSortDropdown({
     sortFields,
     defaultOrder,
@@ -82,53 +74,78 @@ export const SortDropdown: FC<Props & ElementProps> = ({
     <Dropdown>
       <DropdownTrigger>
         <Button {...props} suffix={<SortIcon />}>
-          {triggerLabel}
+          {labels.triggerLabel}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={handleApply}>
-          <Stack className={bodyStyle}>
-            <FormControl title={sortFieldLabel}>
+          <Stack className={classNames.body}>
+            <FormControl title={labels.sortFieldLabel}>
               <Select
                 name="sortFields"
                 options={innerFields}
                 onChange={handleChange}
-                className={selectStyle}
+                className={classNames.select}
               />
             </FormControl>
-            <Fieldset title={sortOrderLabel} innerMargin={0.5}>
+            <Fieldset title={labels.sortOrderLabel} innerMargin={0.5}>
               <Cluster gap={1.25}>
                 <RadioButton
                   name="sortOrder"
                   value="asc"
-                  defaultChecked={innerCheckedOrder === 'asc'}
-                  onChange={() => setCheckedInnerOrder('asc')}
+                  checked={innerCheckedOrder === 'asc'}
+                  onChange={onChangeSortOrderRadio}
                 >
-                  {ascLabel}
+                  {labels.ascLabel}
                 </RadioButton>
                 <RadioButton
                   name="sortOrder"
                   value="desc"
-                  defaultChecked={innerCheckedOrder === 'desc'}
-                  onChange={() => setCheckedInnerOrder('desc')}
+                  checked={innerCheckedOrder === 'desc'}
+                  onChange={onChangeSortOrderRadio}
                 >
-                  {descLabel}
+                  {labels.descLabel}
                 </RadioButton>
               </Cluster>
             </Fieldset>
           </Stack>
-          <Cluster gap={1} align="center" justify="flex-end" as="footer" className={footerStyle}>
-            <DropdownCloser>
-              <Button onClick={onCancel}>{cancelButtonLabel}</Button>
-            </DropdownCloser>
-            <DropdownCloser>
-              <Button type="submit" variant="primary">
-                {applyButtonLabel}
-              </Button>
-            </DropdownCloser>
-          </Cluster>
+          <Footer
+            onCancel={onCancel}
+            cancelButtonLabel={labels.cancelButtonLabel}
+            applyButtonLabel={labels.applyButtonLabel}
+            className={classNames.footer}
+          />
         </form>
       </DropdownContent>
     </Dropdown>
   )
 }
+
+const Footer = memo<
+  Pick<Props, 'onCancel'> & {
+    className: string
+    cancelButtonLabel: ReactNode
+    applyButtonLabel: ReactNode
+  }
+>(({ className, onCancel, cancelButtonLabel, applyButtonLabel }) => (
+  <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
+    <CancelButton onClick={onCancel}>{cancelButtonLabel}</CancelButton>
+    <ApplyButton>{applyButtonLabel}</ApplyButton>
+  </Cluster>
+))
+
+const CancelButton = memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
+  ({ onClick, children }) => (
+    <DropdownCloser>
+      <Button onClick={onClick}>{children}</Button>
+    </DropdownCloser>
+  ),
+)
+
+const ApplyButton = memo<PropsWithChildren>(({ children }) => (
+  <DropdownCloser>
+    <Button type="submit" variant="primary">
+      {children}
+    </Button>
+  </DropdownCloser>
+))

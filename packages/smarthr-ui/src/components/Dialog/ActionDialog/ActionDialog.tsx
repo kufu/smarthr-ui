@@ -1,17 +1,21 @@
 'use client'
 
-import React, { ComponentProps, useCallback, useId } from 'react'
+import { type ComponentProps, type FC, useCallback, useId } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
-import { DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
+import {
+  ActionDialogContentInner,
+  type ActionDialogContentInnerProps,
+} from './ActionDialogContentInner'
+
+import type { DialogProps } from '../types'
 
 type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const ActionDialog: React.FC<Props & ElementProps> = ({
+export const ActionDialog: FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,
@@ -23,8 +27,8 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   onClickAction,
   onClickClose,
   onPressEscape = onClickClose,
-  responseMessage,
-  actionDisabled = false,
+  responseStatus,
+  actionDisabled,
   closeDisabled,
   subActionArea,
   className,
@@ -37,17 +41,15 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   const titleId = useId()
 
   const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
-      return
+    if (props.isOpen) {
+      onClickClose()
     }
-    onClickClose()
   }, [onClickClose, props.isOpen])
 
   const handleClickAction = useCallback(() => {
-    if (!props.isOpen) {
-      return
+    if (props.isOpen) {
+      onClickAction(onClickClose)
     }
-    onClickAction(onClickClose)
   }, [onClickAction, onClickClose, props.isOpen])
 
   return createPortal(
@@ -71,7 +73,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
         onClickClose={handleClickClose}
         onClickAction={handleClickAction}
         subActionArea={subActionArea}
-        responseMessage={responseMessage}
+        responseStatus={responseStatus}
         decorators={decorators}
       >
         {children}

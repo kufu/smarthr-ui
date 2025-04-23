@@ -1,154 +1,187 @@
-import React, { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { debounce } from '../../libs/debounce'
+import { spacing } from '../../themes'
 import { Balloon } from '../Balloon'
-
-import { getTooltipRect } from './tooltipHelper'
 
 type Props = {
   message: ReactNode
   isVisible: boolean
   parentRect: DOMRect | null
   isIcon?: boolean
-  isMultiLine?: boolean
-  horizontal: 'left' | 'center' | 'right' | 'auto'
-  vertical: 'top' | 'middle' | 'bottom' | 'auto'
-  fullscreenElement: Element | null
 }
 
-const tooltipPortal = tv({
+const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
-    balloon: '',
+    balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
     balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
-  },
-  variants: {
-    isMultiLine: {
-      true: {
-        balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
-      },
-    },
   },
 })
 
-export const TooltipPortal: FC<Props> = ({
-  message,
-  isVisible,
-  parentRect,
-  isIcon = false,
-  isMultiLine = false,
-  horizontal,
-  vertical,
-  fullscreenElement,
-}) => {
-  const portalRef = useRef<HTMLDivElement>(null)
-  const [rect, setRect] = useState({
-    top: 0,
-    left: 0,
-    $width: 0,
-    $height: 0,
-  })
-  const [actualHorizontal, setActualHorizontal] = useState<'left' | 'center' | 'right' | null>(
-    horizontal === 'auto' ? null : horizontal,
-  )
-  const [actualVertical, setActualVertical] = useState<'top' | 'middle' | 'bottom' | null>(
-    vertical === 'auto' ? null : vertical,
-  )
+const OUTER_MARGIN = 10
+const SPACING = 5
 
-  const outerMargin = 10
+type HorizontalType = 'left' | 'center' | 'right'
+type VerticalType = 'top' | 'middle' | 'bottom'
+
+export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIcon }) => {
+  const portalRef = useRef<HTMLDivElement>(null)
+  const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
+  const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
+  const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
+
   useEffect(() => {
     if (!portalRef.current || !parentRect) {
       return
     }
-    const { offsetWidth, offsetHeight } = portalRef.current
 
-    if (vertical === 'auto') {
-      const requiredHeight = offsetHeight + outerMargin
-      const topSpace = parentRect.top
-      const bottomSpace = window.innerHeight - parentRect.bottom
-      setActualVertical(() => {
-        if (topSpace > requiredHeight) {
-          return 'bottom'
-        } else if (bottomSpace > requiredHeight || bottomSpace > topSpace) {
-          return 'top'
-        } else {
-          return 'bottom'
-        }
+    const portal = portalRef.current
+
+    const action = () => {
+      const vertical = calculateVertical(portal.offsetHeight, parentRect)
+      const horizontal = calculateHorizontal(portal.offsetWidth, parentRect)
+
+      setStyle({
+        insetBlockStart: vertical.insetBlockStart,
+        insetInlineStart: horizontal.insetInlineStart,
+        insetInlineEnd: horizontal.insetInlineEnd,
+        maxWidth: horizontal.maxWidth,
+        maxHeight: vertical.maxHeight,
       })
+      setActualVertical(vertical.alignment)
+      setActualHorizontal(horizontal.alignment)
     }
+    const debouncedAction = debounce(action, 100)
 
-    if (horizontal === 'auto') {
-      const requiredWidth = offsetWidth + outerMargin
-      const leftSpace = vertical === 'middle' ? parentRect.left : parentRect.right
-      const rightSpace =
-        vertical === 'middle'
-          ? window.innerWidth - parentRect.right
-          : window.innerWidth - parentRect.left
-      setActualHorizontal(() => {
-        if (rightSpace > requiredWidth) {
-          return 'left'
-        } else if (leftSpace > requiredWidth || leftSpace > rightSpace) {
-          return 'right'
-        } else {
-          return 'left'
-        }
-      })
+    action()
+
+    window.addEventListener('resize', debouncedAction)
+
+    return () => {
+      window.removeEventListener('resize', debouncedAction)
     }
-  }, [horizontal, parentRect, vertical])
+  }, [parentRect])
 
-  useEffect(() => {
-    if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
-      return
-    }
-    const scrollOffsetTop = fullscreenElement ? fullscreenElement.scrollTop : window.scrollY
-    const scrollOffsetLeft = fullscreenElement ? fullscreenElement.scrollLeft : window.scrollX
-    const { offsetWidth, offsetHeight } = portalRef.current
-    setRect(
-      getTooltipRect({
-        parentRect,
-        scrollOffset: {
-          top: scrollOffsetTop,
-          left: scrollOffsetLeft,
-        },
-        tooltipSize: {
-          width: offsetWidth,
-          height: offsetHeight,
-        },
-        vertical: actualVertical,
-        horizontal: actualHorizontal,
-        isIcon,
-        outerMargin,
-      }),
-    )
-  }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
+  const classNames = useMemo(() => {
+    const { container, balloon, balloonText } = classNameGenerator()
 
-  const { containerStyleProps, balloonStyle, balloonTextStyle } = useMemo(() => {
-    const { container, balloon, balloonText } = tooltipPortal()
     return {
-      containerStyleProps: {
-        className: container(),
-        style: {
-          top: rect.top,
-          left: rect.left,
-          width: rect.$width > 0 ? `${rect.$width}px` : undefined,
-          height: rect.$height > 0 ? `${rect.$height}px` : undefined,
-          maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
-        },
-      },
-      balloonStyle: balloon({ isMultiLine }),
-      balloonTextStyle: balloonText(),
+      container: container(),
+      balloon: balloon(),
+      balloonText: balloonText(),
     }
-  }, [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top])
+  }, [])
 
   return (
-    <div {...containerStyleProps} ref={portalRef} role="tooltip" aria-hidden={!isVisible}>
+    <div
+      ref={portalRef}
+      role="tooltip"
+      aria-hidden={!isVisible}
+      className={classNames.container}
+      style={style}
+    >
       <Balloon
-        horizontal={actualHorizontal || 'left'}
-        vertical={actualVertical || 'bottom'}
-        className={balloonStyle}
+        horizontal={actualHorizontal}
+        vertical={actualVertical}
+        triggerIcon={isIcon}
+        className={classNames.balloon}
       >
-        <div className={balloonTextStyle}>{message}</div>
+        <div className={classNames.balloonText}>{message}</div>
       </Balloon>
     </div>
   )
+}
+
+const calculateVertical = (
+  portalHeight: number,
+  parentRect: DOMRect,
+): { insetBlockStart: string; maxHeight: string | undefined; alignment: VerticalType } => {
+  // トリガの上側の領域に収まる場合
+  if (parentRect.top - portalHeight >= 0) {
+    return {
+      insetBlockStart: `${scrollY + parentRect.top - portalHeight - SPACING}px`,
+      maxHeight: undefined,
+      alignment: 'bottom',
+    }
+  }
+
+  // トリガの下側の領域に収まる場合
+  if (parentRect.bottom + portalHeight <= innerHeight) {
+    return {
+      insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+      maxHeight: undefined,
+      alignment: 'top',
+    }
+  }
+
+  const triggerHeight = parentRect.bottom - parentRect.top
+
+  // 上側の領域のほうが広い場合
+  if (parentRect.top + triggerHeight / 2 >= innerHeight / 2) {
+    return {
+      insetBlockStart: `${scrollY + OUTER_MARGIN - SPACING}px`,
+      maxHeight: `${parentRect.top - OUTER_MARGIN}px`,
+      alignment: 'bottom',
+    }
+  }
+
+  // 下側の領域のほうが広い場合
+  return {
+    insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+    maxHeight: `${innerHeight - parentRect.bottom - OUTER_MARGIN}px`,
+    alignment: 'top',
+  }
+}
+
+type ReturnCalculateHorizontalType = {
+  insetInlineStart: string | undefined
+  insetInlineEnd: string | undefined
+  maxWidth: string
+  alignment: HorizontalType
+}
+const calculateHorizontal = (
+  portalWidth: number,
+  parentRect: DOMRect,
+): ReturnCalculateHorizontalType => {
+  const triggerAlignCenter = parentRect.left + parentRect.width / 2
+  const portalHalfWidth = portalWidth / 2
+
+  // トリガを中心に左右に十分な余白がある場合
+  if (
+    triggerAlignCenter - portalHalfWidth > SPACING &&
+    triggerAlignCenter + portalHalfWidth < document.body.clientWidth - SPACING
+  ) {
+    const insetInlineStart = `${triggerAlignCenter - portalHalfWidth}px`
+
+    return {
+      insetInlineStart,
+      insetInlineEnd: undefined,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      alignment: 'center',
+    }
+  }
+
+  // トリガが画面左寄りの場合
+  if (triggerAlignCenter <= document.body.clientWidth / 2) {
+    const insetInlineStart = `${scrollX + parentRect.left - SPACING}px`
+
+    return {
+      insetInlineStart,
+      insetInlineEnd: undefined,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      alignment: 'left',
+    }
+  }
+
+  // トリガが画面右寄りの場合
+  const insetInlineEnd = `${document.body.clientWidth - parentRect.right - scrollX - SPACING}px`
+
+  return {
+    insetInlineStart: undefined,
+    insetInlineEnd,
+    maxWidth: `calc(100% - ${spacing[0.5]} - max(${insetInlineEnd}, 0px))`,
+    alignment: 'right',
+  }
 }

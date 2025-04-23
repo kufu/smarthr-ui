@@ -1,106 +1,89 @@
-import { useCallback, useEffect } from 'react'
+import { type RefObject, useEffect } from 'react'
 
-const matchesDisabledState = (element: Element): boolean =>
-  element.matches(':disabled') || element.getAttribute('aria-disabled') === 'true'
+const TABBABLE_SELECTOR = 'li button,li a,li [tabindex]:not([tabindex="-1"])'
+const DISABLED_SELECTOR = ':disabled,[aria-disabled="true"]'
+const isElementEnabled = (element: Element): boolean =>
+  !element.matches(DISABLED_SELECTOR) && !element.querySelector(DISABLED_SELECTOR)
 
-const isElementDisabled = (element: Element): boolean => {
-  if (matchesDisabledState(element)) return true
-  return Array.from(element.querySelectorAll('*')).some((child) => matchesDisabledState(child))
-}
+const KEY_UP_REGEX = /^(Arrow)?(Up|Left)$/
+const KEY_DOWN_REGEX = /^(Arrow)?(Down|Right)$/
 
-const moveFocus = (
-  direction: number,
-  enabledItems: Element[],
-  focusedIndex: number,
-  hoveredItem: Element | null,
-) => {
-  const calculateNextIndex = () => {
-    if (focusedIndex > -1) {
-      // フォーカスされているアイテムが存在する場合
-      return (focusedIndex + direction + enabledItems.length) % enabledItems.length
+const moveFocus = (element: Element, direction: 1 | -1) => {
+  let hoveredItem: Element | null = null
+  const tabbableItems: Element[] = []
+  let focusedIndex: number = -1
+
+  const pushTabbaleItem = (item: Element) => {
+    tabbableItems.push(item)
+
+    if (document.activeElement === item) {
+      focusedIndex = tabbableItems.length - 1
     }
-
-    if (hoveredItem) {
-      // ホバー状態のアイテムが存在する場合
-      return (
-        (enabledItems.indexOf(hoveredItem) + direction + enabledItems.length) % enabledItems.length
-      )
-    }
-
-    // どちらもない場合は最初のアイテムからスタート
-    return direction > 0 ? 0 : enabledItems.length - 1
   }
 
-  const nextIndex = calculateNextIndex()
-  const nextItem = enabledItems[nextIndex]
+  element.querySelectorAll(TABBABLE_SELECTOR).forEach((item) => {
+    if (hoveredItem === null && item.matches(':hover')) {
+      hoveredItem = item
+    }
+
+    if (isElementEnabled(item)) {
+      pushTabbaleItem(item)
+    }
+  })
+
+  let nextIndex = 0
+
+  if (focusedIndex > -1) {
+    // フォーカスされているアイテムが存在する場合
+    nextIndex = (focusedIndex + direction + tabbableItems.length) % tabbableItems.length
+  } else if (hoveredItem) {
+    // ホバー状態のアイテムが存在する場合
+    nextIndex =
+      (tabbableItems.indexOf(hoveredItem) + direction + tabbableItems.length) % tabbableItems.length
+  } else if (direction === -1) {
+    nextIndex = tabbableItems.length - 1
+  }
+
+  const nextItem = tabbableItems[nextIndex]
 
   if (nextItem instanceof HTMLElement) {
     nextItem.focus()
   }
 }
 
-const useKeyboardNavigation = (containerRef: React.RefObject<HTMLElement>) => {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+const useKeyboardNavigation = (containerRef: RefObject<HTMLElement>) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!containerRef.current || !document.activeElement) {
         return
       }
 
-      const allItems = Array.from(containerRef.current.querySelectorAll('li > *'))
-      const {
-        hoveredItem,
-        tabbableItems: enabledItems,
-        focusedIndex,
-      } = allItems.reduce(
-        (
-          acc: {
-            hoveredItem: Element | null
-            tabbableItems: Element[]
-            focusedIndex: number
-          },
-          item,
-        ) => {
-          if (item.matches(':hover') && acc.hoveredItem === null) {
-            acc.hoveredItem = item
-          }
+      let direction: -1 | 0 | 1 = 0
 
-          const isDisabled = isElementDisabled(item)
-
-          if (isDisabled) {
-            return acc
-          }
-
-          acc.tabbableItems.push(item)
-          if (document.activeElement === item) {
-            acc.focusedIndex = acc.tabbableItems.length - 1
-          }
-
-          return acc
-        },
-        {
-          hoveredItem: null,
-          tabbableItems: [],
-          focusedIndex: -1,
-        },
-      )
-
-      if (['Up', 'ArrowUp', 'Left', 'ArrowLeft'].includes(e.key)) {
-        moveFocus(-1, enabledItems, focusedIndex, hoveredItem)
+      // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
+      if (e.key === 'Tab') {
+        // HINT: tbのデフォルトの挙動の場合のみ、preventDefaultが必要
+        e.preventDefault()
+        direction = e.shiftKey ? -1 : 1
+      } else if (KEY_UP_REGEX.test(e.key)) {
+        direction = -1
+      } else if (KEY_DOWN_REGEX.test(e.key)) {
+        direction = 1
       }
 
-      if (['Down', 'ArrowDown', 'Right', 'ArrowRight'].includes(e.key)) {
-        moveFocus(1, enabledItems, focusedIndex, hoveredItem)
+      if (direction !== 0) {
+        moveFocus(containerRef.current, direction)
       }
-    },
-    [containerRef],
-  )
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [handleKeyDown])
+
+    const eventKey = 'keydown'
+
+    document.addEventListener(eventKey, handleKeyDown)
+
+    return () => {
+      document.removeEventListener(eventKey, handleKeyDown)
+    }
+  }, [containerRef])
 }
 
 export default useKeyboardNavigation

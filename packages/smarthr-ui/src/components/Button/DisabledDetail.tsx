@@ -1,24 +1,21 @@
-import React, { type FC } from 'react'
+import { type FC, type FunctionComponent, type JSX, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 
-type DisabledDetailProps = {
-  button: React.JSX.Element
+type Props = {
+  button: JSX.Element
   disabledDetail: {
-    icon?: React.FunctionComponent
-    message: React.ReactNode
+    icon?: FunctionComponent
+    message: ReactNode
   }
 }
 
-const disabledDetailStyle = tv({
+const classNameGenerator = tv({
   slots: {
-    disabledWrapper: [
-      'smarthr-ui-Button-disabledWrapper',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-    ],
-    disabledTooltip: [
+    wrapper: ['smarthr-ui-Button-disabledWrapper', 'shr-inline-flex shr-items-center shr-gap-0.25'],
+    tooltip: [
       'shr-overflow-y-visible',
       /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
       '[&_.smarthr-ui-Icon]:-shr-m-0.25',
@@ -30,22 +27,38 @@ const disabledDetailStyle = tv({
   },
 })
 
-export const DisabledDetail: FC<DisabledDetailProps> = ({ button, disabledDetail }) => {
-  const { disabledWrapper, disabledTooltip } = disabledDetailStyle()
-  const DisabledDetailIcon = disabledDetail.icon ?? FaCircleInfoIcon
+export const DisabledDetail: FC<Props> = ({ button, disabledDetail }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, tooltip } = classNameGenerator()
+
+    return {
+      wrapper: wrapper(),
+      tooltip: tooltip(),
+    }
+  }, [])
 
   return (
-    <div className={disabledWrapper()}>
+    <div className={classNames.wrapper}>
       {button}
-      <Tooltip
+      <TooltipIcon
+        icon={disabledDetail.icon}
         message={disabledDetail.message}
-        triggerType="icon"
-        horizontal="auto"
-        vertical="auto"
-        className={disabledTooltip()}
-      >
-        <DisabledDetailIcon />
-      </Tooltip>
+        className={classNames.tooltip}
+      />
     </div>
   )
 }
+
+const TooltipIcon = memo<{
+  icon?: FunctionComponent
+  message: ReactNode
+  className: string
+}>(({ icon, message, className }) => {
+  const DisabledDetailIcon = icon ?? FaCircleInfoIcon
+
+  return (
+    <Tooltip message={message} triggerType="icon" className={className}>
+      <DisabledDetailIcon />
+    </Tooltip>
+  )
+})

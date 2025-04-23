@@ -1,7 +1,8 @@
 'use client'
 
-import React, {
-  FocusEvent,
+import {
+  type ComponentProps,
+  type FocusEvent,
   forwardRef,
   useCallback,
   useEffect,
@@ -13,9 +14,8 @@ import React, {
 import { Input } from '../Input'
 
 import { formatCurrency } from './currencyInputHelper'
-import { useClassNames } from './useClassNames'
 
-type Props = Omit<React.ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
+type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
   /** 通貨の値 */
   value?: string
   /** デフォルトで表示する通貨の値 */
@@ -96,8 +96,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       [onBlur],
     )
 
-    const classNames = useClassNames(className)
-
     return (
       <Input
         {...props}
@@ -105,7 +103,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={innerRef}
-        className={classNames.wrapper}
+        className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
     )
   },

@@ -1,12 +1,14 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  FC,
-  MouseEvent,
-  PropsWithChildren,
-  ReactNode,
-  RefObject,
+import {
+  type ComponentProps,
+  type FC,
+  type KeyboardEvent,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  type RefObject,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -15,25 +17,25 @@ import React, {
   useState,
 } from 'react'
 import Draggable from 'react-draggable'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { spacing } from '../../themes'
-import { Base, BaseElementProps } from '../Base'
+import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
+import { Heading } from '../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../Icon'
 
 import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
 import { useDialogPortal } from './useDialogPortal'
 
-import type { DecoratorsType } from '../../types'
+import type { DecoratorsType } from '../../hooks/useDecorators'
 
 type Props = PropsWithChildren<{
   /**
-   * ダイアログのヘッダ部分の内容
+   * ダイアログのタイトルの内容
    */
-  header: ReactNode
+  title: ReactNode
   /**
    * ダイアログのフッタ部分の内容
    */
@@ -89,7 +91,9 @@ type Props = PropsWithChildren<{
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
-const modelessDialog = tv({
+const DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT = (def: string, _data: DOMRect | undefined) => def
+
+const classNameGenerator = tv({
   slots: {
     overlap: 'shr-inset-[unset]',
     wrapper: 'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
@@ -99,7 +103,7 @@ const modelessDialog = tv({
       'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
       'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
     ],
-    title: [
+    titleEl: [
       'shr-my-1 shr-me-1',
       /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
       '[.smarthr-ui-ModelessDialog-handle:focus-visible_+_&]:shr-relative',
@@ -120,8 +124,10 @@ const modelessDialog = tv({
   },
 })
 
-export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof modelessDialog>> = ({
-  header,
+export const ModelessDialog: FC<
+  Props & BaseElementProps & VariantProps<typeof classNameGenerator>
+> = ({
+  title,
   children,
   contentBgColor,
   contentPadding,
@@ -139,50 +145,27 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   className,
   decorators,
   id,
+  onClickClose,
   ...props
 }) => {
   const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
   const { createPortal } = useDialogPortal(portalParent, id)
 
-  const {
-    overlapStyle,
-    wrapperStyle,
-    headerStyle,
-    titleStyle,
-    dialogHandlerStyle,
-    closeButtonLayoutStyle,
-    footerStyle,
-  } = useMemo(() => {
-    const { overlap, wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
-      modelessDialog()
+  const classNames = useMemo(() => {
+    const { overlap, wrapper, headerEl, titleEl, dialogHandler, closeButtonLayout, footerEl } =
+      classNameGenerator()
+
     return {
-      overlapStyle: overlap({ className }),
-      wrapperStyle: wrapper({ resizable }),
-      headerStyle: headerEl(),
-      titleStyle: title(),
-      dialogHandlerStyle: dialogHandler(),
-      closeButtonLayoutStyle: closeButtonLayout(),
-      footerStyle: footerEl(),
+      overlap: overlap({ className }),
+      wrapper: wrapper({ resizable }),
+      header: headerEl(),
+      title: titleEl(),
+      dialogHandler: dialogHandler(),
+      closeButtonLayout: closeButtonLayout(),
+      footer: footerEl(),
     }
   }, [className, resizable])
-  const wrapperStyleProps = useMemo(() => {
-    const leftMargin = typeof left === 'number' ? `${left}px` : left
-    const rightMargin = typeof right === 'number' ? `${right}px` : right
-    /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
-    const style =
-      width === undefined
-        ? {
-            maxWidth: `min(calc(100vw - max(${leftMargin || 0}, ${spacing[0.5]}) - max(${
-              rightMargin || 0
-            }, ${spacing[0.5]})), 800px)`,
-          }
-        : undefined
-    return {
-      className: wrapperStyle,
-      style,
-    }
-  }, [wrapperStyle, left, right, width])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
@@ -199,11 +182,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
 
-  const dialogHandlerAriaLabel = useMemo(
-    () =>
-      decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
-    [decorators],
-  )
   const defaultAriaValuetext = useMemo(
     () =>
       wrapperPosition
@@ -211,28 +189,53 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
         : '',
     [wrapperPosition],
   )
+  const decorated = useMemo(() => {
+    if (!decorators) {
+      return {
+        dialogHandlerAriaLabel: DIALOG_HANDLER_ARIA_LABEL,
+        closeButtonIconAlt: CLOSE_BUTTON_ICON_ALT,
+        dialogHandlerAriaValuetext: DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT,
+      }
+    }
+
+    return {
+      dialogHandlerAriaLabel:
+        decorators.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
+      closeButtonIconAlt:
+        decorators.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
+      dialogHandlerAriaValuetext:
+        decorators.dialogHandlerAriaValuetext || DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT,
+    }
+  }, [decorators])
   const dialogHandlerAriaValuetext = useMemo(
     () =>
       defaultAriaValuetext
-        ? decorators?.dialogHandlerAriaValuetext?.(defaultAriaValuetext, wrapperPosition) ||
+        ? decorated.dialogHandlerAriaValuetext(defaultAriaValuetext, wrapperPosition) ||
           defaultAriaValuetext
         : undefined,
-    [defaultAriaValuetext, wrapperPosition, decorators],
-  )
-  const closeButtonIconAlt = useMemo(
-    () => decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
-    [decorators],
+    [defaultAriaValuetext, wrapperPosition, decorated],
   )
 
-  const topStyle = centering.top !== undefined ? centering.top : top
-  const leftStyle = centering.left !== undefined ? centering.left : left
+  const positionStyle = useMemo(
+    () => ({
+      top: centering.top ?? top,
+      left: centering.left ?? left,
+      right,
+      bottom,
+      width,
+      height,
+    }),
+    [centering, top, left, right, bottom, width, height],
+  )
 
   const handleArrowKey = useCallback(
-    (e: React.KeyboardEvent) => {
+    (e: KeyboardEvent) => {
       if (!isOpen || document.activeElement !== e.currentTarget) {
         return
       }
+
       const movingDistance = 20
+
       switch (e.key) {
         case 'ArrowUp':
           setPosition((prev) => ({
@@ -278,10 +281,13 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     if (!wrapperRef.current || !isOpen) {
       return
     }
+
     const isXCenter = left === undefined && right === undefined
     const isYCenter = top === undefined && bottom === undefined
+
     if (isXCenter || isYCenter) {
       const rect = wrapperRef.current.getBoundingClientRect()
+
       setCentering({
         top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
         left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
@@ -294,11 +300,13 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
 
     if (centering.top) {
       setDraggableBounds({ top: centering.top * -1 })
+
       return
     }
 
     if (wrapperRef.current) {
       const rect = wrapperRef.current.getBoundingClientRect()
+
       setDraggableBounds({ top: rect.top * -1 })
     }
   }, [isOpen, centering.top])
@@ -310,99 +318,91 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     }
   }, [isOpen])
 
-  const onClickClose = useCallback(
+  const actualOnClickClose = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       lastFocusElementRef.current?.focus()
-      props.onClickClose?.(e)
+      onClickClose?.(e)
     },
-    [props],
+    [onClickClose],
+  )
+
+  const actualOnPressEscape = useMemo(
+    () =>
+      onPressEscape
+        ? () => {
+            lastFocusElementRef.current?.focus()
+            onPressEscape()
+          }
+        : undefined,
+    [onPressEscape],
   )
 
   useHandleEscape(
-    useCallback(() => {
-      if (isOpen && onPressEscape) {
-        lastFocusElementRef.current?.focus()
-        onPressEscape()
-      }
-    }, [isOpen, onPressEscape]),
+    useMemo(
+      () => (actualOnPressEscape && isOpen ? actualOnPressEscape : undefined),
+      [isOpen, actualOnPressEscape],
+    ),
   )
 
   useEffect(() => {
     const focusHandler = (e: FocusEvent) => {
-      if (!(e.target instanceof HTMLElement)) return
-
-      // e.target(現在フォーカスがあたっている要素)がModeless dialogの中の要素であれば、lastFocusElementRefに代入しない
-      if (wrapperRef?.current?.contains(e.target)) {
-        return
+      // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
+      if (e.target instanceof HTMLElement && !wrapperRef?.current?.contains(e.target)) {
+        lastFocusElementRef.current = e.target
       }
-
-      lastFocusElementRef.current = e.target
     }
 
     document.addEventListener('focus', focusHandler, true)
+
     return () => document.removeEventListener('focus', focusHandler, true)
   }, [])
 
+  const onDragStart = useCallback((_: any, data: { x: number; y: number }) => setPosition(data), [])
+  const onDrag = useCallback((_: any, data: { deltaX: number; deltaY: number }) => {
+    setPosition((prev) => ({
+      x: prev.x + data.deltaX,
+      y: prev.y + data.deltaY,
+    }))
+  }, [])
+
   return createPortal(
-    <DialogOverlap isOpen={isOpen} className={overlapStyle}>
+    <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
-        onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
-        onDrag={(_, data) => {
-          setPosition((prev) => ({
-            x: prev.x + data.deltaX,
-            y: prev.y + data.deltaY,
-          }))
-        }}
+        onStart={onDragStart}
+        onDrag={onDrag}
         position={position}
         bounds={draggableBounds}
         nodeRef={wrapperRef}
       >
         <Base
           {...props}
-          {...wrapperStyleProps}
-          radius="m"
-          layer={3}
-          style={{
-            top: topStyle,
-            left: leftStyle,
-            right,
-            bottom,
-            width,
-            height,
-          }}
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
+          radius="m"
+          layer={3}
+          className={classNames.wrapper}
+          style={positionStyle}
         >
-          <div tabIndex={-1} ref={focusTargetRef}>
-            {/* dummy element for focus management. */}
-          </div>
-          <div className={headerStyle}>
-            <div
-              className={dialogHandlerStyle}
-              tabIndex={0}
-              role="slider"
-              aria-label={dialogHandlerAriaLabel}
+          {/* dummy element for focus management. */}
+          <div tabIndex={-1} ref={focusTargetRef} />
+          <div className={classNames.header}>
+            <Handler
+              aria-label={decorated.dialogHandlerAriaLabel}
               aria-valuetext={dialogHandlerAriaValuetext}
-              onKeyDown={handleArrowKey}
-            >
-              <FaGripIcon />
+              onArrowKeyDown={handleArrowKey}
+              className={classNames.dialogHandler}
+            />
+            <div id={labelId} className={classNames.title}>
+              {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+              <Heading>{title}</Heading>
             </div>
-            <div id={labelId} className={titleStyle}>
-              {header}
-            </div>
-            <div className={closeButtonLayoutStyle}>
-              <Button
-                type="button"
-                size="s"
-                square
-                onClick={onClickClose}
-                className="smarthr-ui-ModelessDialog-closeButton"
-              >
-                <FaXmarkIcon alt={closeButtonIconAlt} />
-              </Button>
-            </div>
+            <CloseButton
+              onClick={actualOnClickClose}
+              className={classNames.closeButtonLayout}
+              iconAlt={decorated.closeButtonIconAlt}
+            />
           </div>
           <DialogBody
             contentBgColor={contentBgColor}
@@ -411,9 +411,38 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
           >
             {children}
           </DialogBody>
-          {footer && <div className={footerStyle}>{footer}</div>}
+          {footer && <div className={classNames.footer}>{footer}</div>}
         </Base>
       </Draggable>
     </DialogOverlap>,
   )
 }
+
+const Handler = memo<{
+  'aria-label': string
+  'aria-valuetext': string | undefined
+  className: string
+  onArrowKeyDown: (e: KeyboardEvent) => void
+}>(({ onArrowKeyDown, ...rest }) => (
+  // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
+  <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
+    <FaGripIcon />
+  </div>
+))
+
+const CloseButton = memo<{
+  className: string
+  iconAlt: ReactNode
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ onClick, iconAlt, className }) => (
+  <div className={className}>
+    <Button
+      type="button"
+      size="s"
+      onClick={onClick}
+      className="smarthr-ui-ModelessDialog-closeButton"
+    >
+      <FaXmarkIcon alt={iconAlt} />
+    </Button>
+  </div>
+))

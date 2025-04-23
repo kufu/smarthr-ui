@@ -3,10 +3,10 @@
   "compilerOptions": {
     "outDir": "./lib",
     "lib": [
-      "es2020",
+      "es2022",
       "dom"
     ],
-    "target": "es2020",
+    "target": "es2022",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -16,7 +16,7 @@
       "vitest/globals",
       "@testing-library/jest-dom"
     ],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
@@ -27,6 +27,7 @@
     "noEmitOnError": true,
     "esModuleInterop": true,
     "paths": {},
+    "isolatedModules": true
   },
   "exclude": [
     "node_modules"

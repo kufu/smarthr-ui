@@ -1,7 +1,7 @@
-import React, {
-  ComponentProps,
-  FC,
-  PropsWithChildren,
+import {
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
   createContext,
   useEffect,
   useMemo,
@@ -13,10 +13,10 @@ import { tv } from 'tailwind-variants'
 import { spacing } from '../../themes'
 
 import { DropdownCloser } from './DropdownCloser'
-import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
+import { type ContentBoxStyle, type Rect, getContentBoxStyle } from './dropdownHelper'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
-const contentInner = tv({
+const classNameGenerator = tv({
   base: 'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3 shr-overflow-y-auto',
   variants: {
     isActive: {
@@ -56,27 +56,27 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  const wrapperStyleProps = useMemo(() => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isActive, className }),
+    [isActive, className],
+  )
+
+  const style = useMemo(() => {
     const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
     const rightMargin =
       contentBox.right === undefined ? spacing[0.5] : `max(${contentBox.right}, 0px)`
     const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
     return {
-      className: contentInner({ isActive, className }),
-      style: {
-        insetBlockStart: contentBox.top,
-        insetInlineStart: contentBox.left || undefined,
-        insetInlineEnd: contentBox.right || undefined,
-        maxWidth: maxWidthStyle,
-      },
+      insetBlockStart: contentBox.top,
+      insetInlineStart: contentBox.left || undefined,
+      insetInlineEnd: contentBox.right || undefined,
+      maxWidth: maxWidthStyle,
     }
-  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive])
+  }, [contentBox.left, contentBox.right, contentBox.top])
   const controllableWrapperStyleProps = useMemo(
     () => ({
-      style: {
-        maxHeight: contentBox.maxHeight || undefined,
-      },
+      maxHeight: contentBox.maxHeight || undefined,
     }),
     [contentBox.maxHeight],
   )
@@ -113,11 +113,11 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   useKeyboardNavigation(wrapperRef, focusTargetRef)
 
   return (
-    <div {...props} {...wrapperStyleProps} ref={wrapperRef}>
+    <div {...props} ref={wrapperRef} className={actualClassName} style={style}>
       {/* dummy element for focus management. */}
-      <div tabIndex={-1} ref={focusTargetRef} />
+      <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
-        <div {...controllableWrapperStyleProps}>{children}</div>
+        <div style={controllableWrapperStyleProps}>{children}</div>
       ) : (
         <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
           <DropdownCloser>{children}</DropdownCloser>

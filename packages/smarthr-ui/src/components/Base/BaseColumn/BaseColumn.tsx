@@ -1,13 +1,13 @@
-import React, { ComponentProps, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentProps, type FC, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 
 type BaseProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'>
-type Props = VariantProps<typeof baseColumn>
+type Props = VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps | keyof Props>
 
-export const baseColumn = tv({
+export const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
   variants: {
     bgColor: {
@@ -31,12 +31,16 @@ export const baseColumn = tv({
   },
 })
 
-export const BaseColumn: React.FC<BaseProps & Props & ElementProps> = ({
+export const BaseColumn: FC<BaseProps & Props & ElementProps> = ({
   bgColor,
   padding = 1,
   className,
   ...props
 }) => {
-  const styles = useMemo(() => baseColumn({ bgColor, className }), [bgColor, className])
-  return <Base {...props} padding={padding} layer={0} className={styles} />
+  const actualClassName = useMemo(
+    () => classNameGenerator({ bgColor, className }),
+    [bgColor, className],
+  )
+
+  return <Base {...props} padding={padding} layer={0} className={actualClassName} />
 }

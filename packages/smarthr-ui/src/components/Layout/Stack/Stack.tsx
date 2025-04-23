@@ -1,12 +1,19 @@
 'use client'
 
-import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type PropsWithChildren,
+  forwardRef,
+  useMemo,
+} from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
-import { Gap } from '../../../types'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
-const stack = tv({
+import type { Gap } from '../../../types'
+
+const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',
   variants: {
     inline: {
@@ -49,25 +56,26 @@ const stack = tv({
   },
 })
 
-type Props = VariantProps<typeof stack> &
+type Props = VariantProps<typeof classNameGenerator> &
   PropsWithChildren<{
-    as?: string | React.ComponentType<any>
+    as?: string | ComponentType<any>
   }> &
   ComponentPropsWithRef<'div'>
 
 export const Stack = forwardRef<HTMLDivElement, Props>(
   ({ as: Component = 'div', inline = false, gap = 1, align, className, ...props }, ref) => {
-    const styles = useMemo(
-      () => stack({ inline, align, gap, className }),
+    const actualClassName = useMemo(
+      () => classNameGenerator({ inline, align, gap, className }),
       [align, className, gap, inline],
     )
 
     const Wrapper = useSectionWrapper(Component)
+    const body = <Component {...props} ref={ref} className={actualClassName} />
 
-    return (
-      <Wrapper>
-        <Component {...props} ref={ref} className={styles} />
-      </Wrapper>
-    )
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )

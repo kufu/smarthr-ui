@@ -1,4 +1,11 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, ReactNode, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
@@ -8,7 +15,7 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
-const spreadsheetTable = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-SpreadsheetTable shr-border-shorthand shr-border-collapse shr-bg-head',
     // th
@@ -24,35 +31,25 @@ const spreadsheetTable = tv({
   ],
 })
 
-export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
+export const SpreadsheetTable: FC<Props & ElementProps> = ({
   data,
   className,
   children,
   ...props
 }) => {
-  const style = useMemo(() => spreadsheetTable({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <table {...props} className={style}>
+    <table {...props} className={actualClassName}>
       {data && (
         <>
-          <thead>
-            <tr>
-              <SpreadsheetTableCorner />
-              {data[0].map((_, i) => (
-                <th key={`headRow-${i}`}>
-                  {/* アルファベットを A から自動挿入 */}
-                  {String.fromCharCode(65 + i)}
-                </th>
-              ))}
-            </tr>
-          </thead>
+          <MemoizedThead cols={data[0].length} />
           <tbody>
             {data.map((row, i) => (
-              <tr key={`bodyRow-${i}`}>
+              <tr key={i}>
                 <th>{i + 1}</th>
                 {row.map((cell, j) => (
-                  <td key={`bodyCell-${i}-${j}`}>{cell}</td>
+                  <td key={`${i}-${j}`}>{cell}</td>
                 ))}
               </tr>
             ))}
@@ -63,3 +60,27 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
     </table>
   )
 }
+
+const MemoizedThead = memo<{ cols: number }>(({ cols }) => {
+  const columns: ReactNode[] = []
+
+  for (let i = 0; i < cols; i++) {
+    columns.push(
+      <th key={i}>
+        {
+          // アルファベットを A から自動挿入
+          String.fromCharCode(65 + i)
+        }
+      </th>,
+    )
+  }
+
+  return (
+    <thead>
+      <tr>
+        <SpreadsheetTableCorner />
+        {columns}
+      </tr>
+    </thead>
+  )
+})

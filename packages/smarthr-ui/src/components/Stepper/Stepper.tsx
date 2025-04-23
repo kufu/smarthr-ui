@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { HorizontalStepItem } from './HorizontalStepItem'
@@ -9,11 +9,10 @@ import type {
   Step,
   VerticalStepper as VStepperProps,
 } from './types'
-import type { FC } from 'react'
 
 type Props = HStepperProps | VStepperProps
 
-const stepper = tv({
+const classNameGenerator = tv({
   base: ['smarthr-ui-Stepper', 'shr-list-none shr-my-0 shr-ps-0'],
   variants: {
     type: {
@@ -28,10 +27,10 @@ export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...res
   const isHorizontal = type === 'horizontal'
   const ItemComponent = isHorizontal ? HorizontalStepItem : VerticalStepItem
 
-  const style = stepper({ type, className })
+  const actualClassName = useMemo(() => classNameGenerator({ type, className }), [type, className])
 
   return (
-    <ol {...rest} className={style}>
+    <ol {...rest} className={actualClassName}>
       {steps.map((step, index) => (
         <StepItem
           key={index}

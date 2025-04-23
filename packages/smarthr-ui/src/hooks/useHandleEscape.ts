@@ -1,18 +1,23 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
-export const useHandleEscape = (cb: () => void) => {
-  const handleKeyPress = useCallback(
-    (e: KeyboardEvent) => {
-      // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
-      // Esc is a IE/Edge specific value
-      if (e.key === 'Escape' || e.key === 'Esc') {
+// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
+// Esc is a IE/Edge specific value
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+
+export const useHandleEscape = (cb?: () => void) => {
+  useEffect(() => {
+    if (!cb) {
+      return
+    }
+
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (ESCAPE_KEY_REGEX.test(e.key)) {
         cb()
       }
-    },
-    [cb],
-  )
-  useEffect(() => {
+    }
+
     document.addEventListener('keydown', handleKeyPress)
+
     return () => document.removeEventListener('keydown', handleKeyPress)
-  }, [handleKeyPress])
+  }, [cb])
 }

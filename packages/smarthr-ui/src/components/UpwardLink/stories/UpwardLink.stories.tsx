@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef } from 'react'
+import { ComponentPropsWithoutRef } from 'react'
 
 import { Stack } from '../../Layout'
 import { UpwardLink } from '../UpwardLink'

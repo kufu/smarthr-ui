@@ -1,6 +1,6 @@
-import React from 'react'
+import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
 
-import { Button } from '../Button'
+import { AnchorButton, Button } from '../Button'
 import {
   FaAngleDoubleLeftIcon,
   FaAngleDoubleRightIcon,
@@ -10,10 +10,11 @@ import {
 
 type Props = {
   targetPage: number
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
   direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
+  hrefTemplate?: (pageNumber: number) => string
+  linkAs?: ElementType
 }
 
 const ICON_MAPPER = {
@@ -27,26 +28,46 @@ const ICON_MAPPER = {
   },
 }
 
-export const PaginationControllerItemButton: React.FC<Props> = ({
+export const PaginationControllerItemButton: FC<Props> = ({
   direction,
   disabled,
   double,
   targetPage,
-  onClick,
+  hrefTemplate,
+  linkAs,
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
+  const { Component, attrs } = useMemo(() => {
+    if (hrefTemplate) {
+      return {
+        Component: AnchorButton,
+        // HINT: elementAsにnext/linkを設定した場合、hrefがundefinedでは
+        // エラーになってしまうため、undefinedで指定されていない状態にする
+        attrs: (disabled
+          ? {
+              href: undefined,
+              elementAs: undefined,
+            }
+          : {
+              href: hrefTemplate(targetPage),
+              elementAs: linkAs,
+            }) as ComponentProps<typeof AnchorButton>,
+      }
+    }
+
+    return {
+      Component: Button,
+      attrs: {
+        disabled,
+        value: targetPage,
+      } as ComponentProps<typeof Button>,
+    }
+  }, [targetPage, disabled, hrefTemplate, linkAs])
+
   return (
-    <Button
-      aria-label={alt}
-      disabled={disabled}
-      onClick={onClick}
-      value={targetPage}
-      square
-      size="s"
-      className="shr-rounded-s"
-    >
+    <Component {...attrs} size="s" className="shr-rounded-s">
       <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
-    </Button>
+    </Component>
   )
 }

@@ -1,15 +1,16 @@
-import React, { FC } from 'react'
+import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { Locale, localeMap } from '../../multilingualization'
-import { LocaleProps } from '../../types'
+import { type Locale, localeMap } from '../../multilingualization'
 import { CommonButton } from '../common/CommonButton'
 
-const languageSelector = tv({
+import type { LocaleProps } from '../../types'
+
+const classNameGenerator = tv({
   slots: {
     header: [
       'shr-flex shr-justify-between shr-gap-1 shr-items-center shr-px-1 shr-py-0.75 shr-border-b-shorthand',
@@ -22,47 +23,77 @@ const languageSelector = tv({
 
 type Props = {
   locale: LocaleProps
-  onClickClose: (isOpen: boolean) => void
+  onClickClose: () => void
 }
 
-export const LanguageSelector: FC<Props> = ({ locale, onClickClose }) => {
-  const { header, headerTitle, buttonWrapper, button } = languageSelector()
+const LOCALE_KEYS = Object.keys(localeMap)
 
-  const onClickButton = (selectedLocale: Locale) => {
-    locale.onSelectLocale(selectedLocale)
-  }
+export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
+  const classNames = useMemo(() => {
+    const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
+
+    return {
+      header: header(),
+      headerTitle: headerTitle(),
+      buttonWrapper: buttonWrapper(),
+      button: button(),
+    }
+  }, [])
+
+  const onClickLocale = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      locale.onSelectLocale(e.currentTarget.value as Locale)
+    },
+    [locale],
+  )
 
   return (
     <Section>
-      <div className={header()}>
-        <Heading className={headerTitle()}>Language</Heading>
-
-        <Button
-          type="button"
-          size="s"
-          square
-          onClick={() => {
-            onClickClose(false)
-          }}
-        >
-          <FaXmarkIcon role="img" aria-label="close" />
-        </Button>
-      </div>
-
-      <div className={buttonWrapper()}>
-        {Object.keys(localeMap).map((localeKey) => (
-          <CommonButton
+      <SelectorHeading
+        onClickClose={onClickClose}
+        wrapperClassName={classNames.header}
+        className={classNames.headerTitle}
+      />
+      <div className={classNames.buttonWrapper}>
+        {LOCALE_KEYS.map((localeKey) => (
+          <LocaleButton
             key={localeKey}
-            elementAs="button"
-            className={button()}
-            type="button"
-            onClick={() => onClickButton(localeKey as Locale)}
-            prefix={localeKey === locale.selectedLocale && <FaCheckIcon color="MAIN" />}
-          >
-            {localeMap[localeKey as Locale]}
-          </CommonButton>
+            value={localeKey as Locale}
+            onClick={onClickLocale}
+            selected={localeKey === locale.selectedLocale}
+            className={classNames.button}
+          />
         ))}
       </div>
     </Section>
   )
-}
+})
+
+const SelectorHeading = memo<
+  Pick<Props, 'onClickClose'> & { wrapperClassName: string; className: string }
+>(({ onClickClose, wrapperClassName, className }) => (
+  <div className={wrapperClassName}>
+    <Heading className={className}>Language</Heading>
+    <Button type="button" size="s" onClick={onClickClose}>
+      <FaXmarkIcon alt="close" />
+    </Button>
+  </div>
+))
+
+const LocaleButton = memo<{
+  value: Locale
+  selected: boolean
+  className: string
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ value, selected, className, onClick }) => (
+  <CommonButton
+    elementAs="button"
+    type="button"
+    value={value}
+    onClick={onClick}
+    prefix={selected && <FaCheckIcon color="MAIN" />}
+    className={className}
+  >
+    {localeMap[value]}
+  </CommonButton>
+))

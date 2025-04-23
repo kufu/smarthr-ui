@@ -1,15 +1,17 @@
-import * as React from 'react'
+'use client'
 
-import { CreatedTheme, createTheme } from '../themes/createTheme'
+import { type FC, type ReactNode, createContext } from 'react'
 
-export const ThemeContext = React.createContext<CreatedTheme>(createTheme())
+import { type CreatedTheme, createTheme } from '../themes/createTheme'
+
+export const ThemeContext = createContext<CreatedTheme>(createTheme())
 const { Provider } = ThemeContext
 
 type Props = {
   theme: CreatedTheme
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-export const ThemeProvider: React.VFC<Props> = ({ theme, children }) => (
+export const ThemeProvider: FC<Props> = ({ theme, children }) => (
   <Provider value={theme}>{children}</Provider>
 )

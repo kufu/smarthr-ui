@@ -1,10 +1,15 @@
 'use client'
 
-import React, {
-  ComponentProps,
-  MouseEvent,
-  PropsWithChildren,
-  ReactElement,
+import {
+  Children,
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
+  cloneElement,
+  isValidElement,
   useContext,
   useEffect,
   useMemo,
@@ -13,27 +18,46 @@ import { tv } from 'tailwind-variants'
 
 import { tabbable } from '../../libs/tabbable'
 import { includeDisabledTrigger } from '../../libs/util'
+import { Tooltip } from '../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 
-type Props = PropsWithChildren<ComponentProps<'div'>>
+type ConditionalWrapperProps = {
+  shouldWrapContent?: boolean
+  wrapper: FC<PropsWithChildren>
+}
 
-const wrapper = tv({
+/**
+ * 条件付きでラッパをレンダリングする
+ */
+const ConditionalWrapper: FC<PropsWithChildren<ConditionalWrapperProps>> = ({
+  shouldWrapContent,
+  wrapper,
+  children,
+}) => (shouldWrapContent ? wrapper({ children }) : children)
+
+type Props = PropsWithChildren<ComponentProps<'div'>> & {
+  tooltip?: { message: ReactNode; show?: boolean }
+}
+
+const classNameGenerator = tv({
   base: 'smarthr-ui-Dropdown shr-inline-block',
 })
 
-export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
+export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
-  const styles = useMemo(() => wrapper({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
     if (!triggerElementRef.current) {
       return
     }
+
     // apply ARIA to all focusable elements in trigger
     const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
+
     triggers.forEach((trigger) => {
-      trigger.setAttribute('aria-expanded', String(active))
+      trigger.setAttribute('aria-expanded', active.toString())
       trigger.setAttribute('aria-controls', contentId)
     })
   }, [triggerElementRef, active, contentId])
@@ -41,30 +65,34 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
   let foundFirstElement = false
 
   return (
-    <div ref={triggerElementRef} className={styles}>
-      {React.Children.map(children, (child) => {
-        if (foundFirstElement || !React.isValidElement(child)) {
-          return child
-        }
+    <div ref={triggerElementRef} className={actualClassName}>
+      <ConditionalWrapper
+        shouldWrapContent={tooltip?.show}
+        wrapper={({ children: currentChildren }) => (
+          <Tooltip message={tooltip?.message} triggerType="icon" tabIndex={-1}>
+            {currentChildren}
+          </Tooltip>
+        )}
+      >
+        {/* 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する */}
+        {includeDisabledTrigger(children)
+          ? children
+          : Children.map(children, (child) => {
+              if (foundFirstElement || !isValidElement(child)) {
+                return child
+              }
 
-        foundFirstElement = true
+              foundFirstElement = true
 
-        return React.cloneElement(child as ReactElement, {
-          onClick: (e: MouseEvent) => {
-            // 引き金となる要素が disabled な場合は発火させない
-            if (includeDisabledTrigger(children)) {
-              return
-            }
+              return cloneElement(child as ReactElement, {
+                onClick: (e: MouseEvent) => {
+                  onClickTrigger(e.currentTarget.getBoundingClientRect())
 
-            const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
-            onClickTrigger({ top, right, bottom, left })
-
-            if (child.props.onClick) {
-              child.props.onClick(e)
-            }
-          },
-        })
-      })}
+                  child.props.onClick?.(e)
+                },
+              })
+            })}
+      </ConditionalWrapper>
     </div>
   )
 }

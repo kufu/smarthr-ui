@@ -1,13 +1,24 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode } from 'react'
+import {
+  Children,
+  type ComponentPropsWithoutRef,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  type ReactNode,
+  isValidElement,
+  memo,
+  useId,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Nav } from '../SectioningContent'
 import { StatusLabel } from '../StatusLabel'
 
-import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
-import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
-import { AppNaviCustomTag, AppNaviCustomTagProps } from './AppNaviCustomTag'
-import { AppNaviDropdown, AppNaviDropdownProps } from './AppNaviDropdown'
+import { AppNaviAnchor, type AppNaviAnchorProps } from './AppNaviAnchor'
+import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
+import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
+import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -28,7 +39,7 @@ type Props = PropsWithChildren<{
   additionalArea?: ReactNode
 }>
 
-const appNavi = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppNavi',
@@ -44,70 +55,71 @@ const appNavi = tv({
   },
 })
 
-const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = appNavi()
+const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = classNameGenerator()
+const classNames = {
+  statusLabel: statusLabel(),
+  buttonsEl: buttonsEl(),
+  listItem: listItem(),
+  additionalAreaEl: additionalAreaEl(),
+}
 
 export const AppNavi: FC<Props & ElementProps> = ({
   label,
   buttons,
   className,
   children,
-  displayDropdownCaret = false,
+  displayDropdownCaret,
   additionalArea,
-  ...props
-}) => (
-  // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-  <Nav {...props} className={wrapper({ className })}>
-    {label && <StatusLabel className={statusLabel()}>{label}</StatusLabel>}
+  ...rest
+}) => {
+  const labelId = useId()
+  const wrapperClassName = useMemo(() => wrapper({ className }), [className])
 
-    <ul className={buttonsEl()}>
-      {buttons &&
-        buttons.map((button, i) => {
-          if ('tag' in button) {
-            return (
-              <li key={i} className={listItem()}>
+  return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Nav {...rest} aria-labelledby={labelId} className={wrapperClassName}>
+      <MemoizedStatusLabel id={labelId}>{label}</MemoizedStatusLabel>
+      <ul className={classNames.buttonsEl}>
+        {buttons &&
+          buttons.map((button, i) => (
+            <li key={i} className={classNames.listItem}>
+              {'tag' in button ? (
                 <AppNaviCustomTag {...button} />
-              </li>
-            )
-          }
-
-          if ('href' in button) {
-            return (
-              <li key={i} className={listItem()}>
+              ) : 'href' in button ? (
                 <AppNaviAnchor {...button} />
-              </li>
-            )
-          }
-
-          if ('dropdownContent' in button) {
-            return (
-              <li key={i} className={listItem()}>
+              ) : 'dropdownContent' in button ? (
                 <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
-              </li>
-            )
-          }
-
-          return (
-            <li key={i} className={listItem()}>
-              <AppNaviButton {...button} />
+              ) : (
+                <AppNaviButton {...button} />
+              )}
             </li>
-          )
-        })}
-      {renderButtons(children)}
-    </ul>
+          ))}
+        {renderButtons(children)}
+      </ul>
 
-    {additionalArea && <div className={additionalAreaEl()}>{additionalArea}</div>}
-  </Nav>
+      {additionalArea && <div className={classNames.additionalAreaEl}>{additionalArea}</div>}
+    </Nav>
+  )
+}
+
+const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
+  ({ id, children }) =>
+    children && (
+      <StatusLabel aria-hidden={true} id={id} className={classNames.statusLabel}>
+        {children}
+      </StatusLabel>
+    ),
 )
 
 const renderButtons = (children: ReactNode) =>
-  React.Children.map(children, (child): ReactNode => {
-    if (!(child && React.isValidElement(child))) {
+  Children.map(children, (child): ReactNode => {
+    if (!child || !isValidElement(child)) {
       return null
     }
 
-    if (child.type === React.Fragment) {
+    if (child.type === Fragment) {
       return renderButtons(child.props.children)
     }
 
-    return <li className={listItem()}>{child}</li>
+    return <li className={classNames.listItem}>{child}</li>
   })

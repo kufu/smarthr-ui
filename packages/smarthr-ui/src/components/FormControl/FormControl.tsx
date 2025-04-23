@@ -1,10 +1,15 @@
 'use client'
 
-import React, {
+import {
   type ComponentProps,
   type ComponentPropsWithoutRef,
+  type ComponentType,
+  type FC,
+  Fragment,
+  type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -16,12 +21,13 @@ import { tv } from 'tailwind-variants'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
-import { Text, TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenText } from '../VisuallyHiddenText'
+import { Text, type TextProps } from '../Text'
+import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
 
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
+type StatusLabelType = FunctionComponentElement<StatusLabelProps>
 
 type Props = PropsWithChildren<{
   /** グループのタイトル名 */
@@ -39,7 +45,12 @@ type Props = PropsWithChildren<{
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
   /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
+  /**
+   * @deprecated statusLabelProps属性は非推奨です。statusLabelsを使ってください。
+   */
   statusLabelProps?: StatusLabelProps | StatusLabelProps[]
+  /** タイトルの隣に表示する `StatusLabel` の配列 */
+  statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
   /** タイトルの下に表示する入力例 */
@@ -52,11 +63,11 @@ type Props = PropsWithChildren<{
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  as?: string | React.ComponentType<any>
+  as?: string | ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
 
-const formGroup = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-FormControl',
@@ -72,68 +83,71 @@ const formGroup = tv({
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
     underTitleStack: ['[&&&]:shr-mt-0'],
+    childrenWrapper: [],
   },
-})
-
-// TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
-// FormControltとの差をわかりやすくしている
-// 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
-// https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-const childrenWrapper = tv({
   variants: {
     innerMargin: {
-      0: '',
-      0.25: '',
-      0.5: '',
-      0.75: '',
-      1: '',
-      1.25: '',
-      1.5: '',
-      2: '',
-      2.5: '',
-      3: '',
-      3.5: '',
-      4: '',
-      8: '',
-      X3S: '',
-      XXS: '',
-      XS: '',
-      S: '',
-      M: '',
-      L: '',
-      XL: '',
-      XXL: '',
-      X3L: '',
+      0: {},
+      0.25: {},
+      0.5: {},
+      0.75: {},
+      1: {},
+      1.25: {},
+      1.5: {},
+      2: {},
+      2.5: {},
+      3: {},
+      3.5: {},
+      4: {},
+      8: {},
+      X3S: {},
+      XXS: {},
+      XS: {},
+      S: {},
+      M: {},
+      L: {},
+      XL: {},
+      XXL: {},
+      X3L: {},
     } as { [key in Gap]: string },
     isFieldset: {
-      true: '',
-      false: '',
+      true: {},
+      false: {},
     },
   },
   compoundVariants: [
+    // TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
+    // FormControltとの差をわかりやすくしている
+    // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
+    // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
     {
-      innerMargin: 0.5,
+      innerMargin: undefined,
       isFieldset: true,
-      className: '[:not([hidden])_~_&&&]:shr-mt-1',
+      class: {
+        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-1',
+      },
     },
     {
-      innerMargin: 0.5,
+      innerMargin: undefined,
       isFieldset: false,
-      className: '[:not([hidden])_~_&&&]:shr-mt-0.5',
+      class: {
+        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
+      },
     },
   ],
 })
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: React.FC<Props & ElementProps> = ({
+export const ActualFormControl: FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
   subActionArea,
   dangerouslyTitleHidden = false,
   htmlFor,
   labelId,
-  innerMargin = 0.5,
+  innerMargin,
+  statusLabels,
   statusLabelProps,
   helpMessage,
   exampleMessage,
@@ -170,13 +184,23 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
-  const statusLabelList = useMemo(() => {
+
+  const actualStatusLabels = useMemo(() => {
+    if (statusLabels) {
+      return (Array.isArray(statusLabels) ? statusLabels : [statusLabels]).map(
+        (statusLabel, index) => <Fragment key={index}>{statusLabel}</Fragment>,
+      )
+    }
+
     if (!statusLabelProps) {
       return []
     }
 
-    return Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-  }, [statusLabelProps])
+    const labelProps = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
+
+    return labelProps.map((prop, index) => <StatusLabel {...prop} key={index} />)
+  }, [statusLabels, statusLabelProps])
+
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -185,40 +209,35 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, underTitleStackStyle } =
-    useMemo(() => {
-      const { wrapper, label, errorList, errorIcon, underTitleStack } = formGroup()
+  const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
 
-      return {
-        wrapperStyle: wrapper({ className }),
-        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-        errorListStyle: errorList(),
-        errorIconStyle: errorIcon(),
-        underTitleStackStyle: underTitleStack(),
-      }
-    }, [dangerouslyTitleHidden, className])
-  const childrenWrapperStyle = useMemo(
-    () => childrenWrapper({ innerMargin, isFieldset }),
-    [innerMargin, isFieldset],
-  )
+  const classNames = useMemo(() => {
+    const { wrapper, label, errorList, errorIcon, underTitleStack, childrenWrapper } =
+      classNameGenerator({ innerMargin, isFieldset })
+
+    return {
+      wrapper: wrapper({ className }),
+      label: label({
+        className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
+      }),
+      errorList: errorList(),
+      errorIcon: errorIcon(),
+      underTitleStack: underTitleStack(),
+      childrenWrapper: childrenWrapper(),
+    }
+  }, [innerMargin, isFieldset, dangerouslyTitleHidden, className])
 
   useEffect(() => {
-    if (isFieldset) {
+    if (
+      isFieldset ||
+      !inputWrapperRef?.current ||
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      document.getElementById(managedHtmlFor)
+    ) {
       return
     }
 
-    const inputWrapper = inputWrapperRef?.current
-
-    if (!inputWrapper) {
-      return
-    }
-
-    // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-    if (document.getElementById(managedHtmlFor)) {
-      return
-    }
-
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!input) {
       return
@@ -238,36 +257,34 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       }
     }
   }, [managedHtmlFor, isFieldset, managedLabelId])
+
   useEffect(() => {
-    if (!describedbyIds) {
+    if (!describedbyIds || !inputWrapperRef?.current) {
       return
     }
 
+    const inputWrapper = inputWrapperRef.current
     const attrName = 'aria-describedby'
-    const inputWrapper = inputWrapperRef?.current
 
-    if (!inputWrapper || inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
+    if (inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
       return
     }
 
     const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-    if (input && !input.getAttribute(attrName)) {
-      input.setAttribute(attrName, describedbyIds)
+    if (input) {
+      const attribute = input.getAttribute(attrName)
+
+      input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
     }
   }, [describedbyIds])
+
   useEffect(() => {
-    if (!autoBindErrorInput) {
+    if (!autoBindErrorInput || !inputWrapperRef?.current) {
       return
     }
 
-    const inputWrapper = inputWrapperRef?.current
-
-    if (!inputWrapper) {
-      return
-    }
-
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (input) {
       const attrName = 'aria-invalid'
@@ -287,10 +304,9 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       <ErrorMessageList
         errorMessages={actualErrorMessages}
         managedHtmlFor={managedHtmlFor}
-        errorListStyle={errorListStyle}
-        errorIconStyle={errorIconStyle}
+        classNames={classNames}
       />
-      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
+      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
         {children}
       </div>
       <SupplementaryMessageText
@@ -306,7 +322,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   if (dangerouslyTitleHidden) {
     body = (
       // eslint-disable-next-line smarthr/best-practice-for-layouts
-      <Stack gap={innerMargin} className={underTitleStackStyle}>
+      <Stack gap={actualInnerMargin} className={classNames.underTitleStack}>
         {body}
       </Stack>
     )
@@ -316,57 +332,51 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     <Stack
       {...props}
       as={as}
-      gap={innerMargin}
+      gap={actualInnerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
-      className={wrapperStyle}
+      className={classNames.wrapper}
     >
       <TitleCluster
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        labelStyle={labelStyle}
         dangerouslyTitleHidden={dangerouslyTitleHidden}
         titleType={titleType}
         title={title}
-        statusLabelList={statusLabelList}
+        statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
+        labelClassName={classNames.label}
       />
       {body}
     </Stack>
   )
 }
 
-const TitleCluster = React.memo<
+const TitleCluster = memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
     titleType: TextProps['styleType']
-    statusLabelList: StatusLabelProps[]
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
-    labelStyle: string
+    labelClassName: string
+    statusLabels: StatusLabelType[]
   }
 >(
   ({
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    labelStyle,
     dangerouslyTitleHidden,
     titleType,
     title,
-    statusLabelList,
     subActionArea,
+    labelClassName,
+    statusLabels,
   }) => {
     const body = (
       <>
         <Text styleType={titleType}>{title}</Text>
-        {statusLabelList.length > 0 && (
-          <Cluster gap={0.25} as="span">
-            {statusLabelList.map((prop, index) => (
-              <StatusLabel {...prop} key={index} />
-            ))}
-          </Cluster>
-        )}
+        <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
 
@@ -422,7 +432,7 @@ const TitleCluster = React.memo<
             className="[&&&]:shr--mt-0"
           >
             {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-            <Cluster {...attrs.label} align="center" className={labelStyle}>
+            <Cluster {...attrs.label} align="center" className={labelClassName}>
               {body}
             </Cluster>
             {subActionArea && <div className="shr-grow">{subActionArea}</div>}
@@ -433,7 +443,16 @@ const TitleCluster = React.memo<
   },
 )
 
-const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
+const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
+  statusLabels.length === 0 ? null : (
+    // eslint-disable-next-line smarthr/best-practice-for-layouts
+    <Cluster gap={0.25} as="span">
+      {statusLabels}
+    </Cluster>
+  ),
+)
+
+const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
   ({ helpMessage, managedHtmlFor }) =>
     helpMessage ? (
       <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
@@ -442,7 +461,7 @@ const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHt
     ) : null,
 )
 
-const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
+const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
   ({ exampleMessage, managedHtmlFor }) =>
     exampleMessage ? (
       <Text
@@ -457,24 +476,26 @@ const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedH
     ) : null,
 )
 
-const ErrorMessageList = React.memo<{
+const ErrorMessageList = memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
-  errorListStyle: string
-  errorIconStyle: string
-}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) =>
+  classNames: {
+    errorList: string
+    errorIcon: string
+  }
+}>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
+    <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <FaCircleExclamationIcon text={message} className={errorIconStyle} />
+          <FaCircleExclamationIcon text={message} className={classNames.errorIcon} />
         </p>
       ))}
     </div>
   ) : null,
 )
 
-const SupplementaryMessageText = React.memo<
+const SupplementaryMessageText = memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
 >(({ supplementaryMessage, managedHtmlFor }) =>
   supplementaryMessage ? (
@@ -490,5 +511,4 @@ const SupplementaryMessageText = React.memo<
   ) : null,
 )
 
-export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
-  ActualFormControl
+export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl

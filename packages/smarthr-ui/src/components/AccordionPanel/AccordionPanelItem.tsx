@@ -1,9 +1,9 @@
 'use client'
 
-import React, {
-  ComponentPropsWithoutRef,
-  FC,
-  PropsWithChildren,
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
   createContext,
   useMemo,
 } from 'react'
@@ -22,19 +22,20 @@ export const AccordionPanelItemContext = createContext<{ name: string }>({
   name: '',
 })
 
-const accordionPanelItem = tv({
+const classNameGenerator = tv({
   base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
 })
 
 export const AccordionPanelItem: FC<Props & ElementProps> = ({ name, className, ...props }) => {
-  const styles = useMemo(() => accordionPanelItem({ className }), [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
   return (
     <AccordionPanelItemContext.Provider
       value={{
         name,
       }}
     >
-      <Section {...props} className={styles} />
+      <Section {...props} className={actualClassName} />
     </AccordionPanelItemContext.Provider>
   )
 }

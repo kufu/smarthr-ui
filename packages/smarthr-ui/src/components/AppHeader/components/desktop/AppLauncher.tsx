@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { textColor } from '../../../../themes'
@@ -12,10 +12,11 @@ import { SideNav } from '../../../SideNav'
 import { TextLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
-import { Launcher } from '../../types'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
+
+import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>
@@ -68,7 +69,6 @@ const appLauncher = tv({
 })
 
 export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
-  const translate = useTranslate()
   const {
     features,
     page,
@@ -77,130 +77,94 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     searchQuery,
     changePage,
     setSortType,
-    changeSearchQuery,
+    onChangeSearchQuery,
+    onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const {
-    wrapper,
-    searchArea,
-    inner,
-    side,
-    sideNav,
-    sideNavHeading,
-    help,
-    main,
-    mainInner,
-    contentHead,
-    scrollArea,
-  } = appLauncher()
+  const classNames = useMemo(() => {
+    const {
+      wrapper,
+      searchArea,
+      inner,
+      side,
+      sideNav,
+      sideNavHeading,
+      help,
+      main,
+      mainInner,
+      contentHead,
+      scrollArea,
+    } = appLauncher()
 
-  const pageMap: Record<Launcher['page'], ReactNode> = {
-    favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
-    all: <Translate>{translate('Launcher/allModeText')}</Translate>,
-  }
+    return {
+      wrapper: wrapper(),
+      searchArea: searchArea(),
+      inner: inner(),
+      side: side(),
+      unselectedSideNav: sideNav({ selected: false }),
+      selectedSideNav: sideNav({ noIcon: true, selected: true }),
+      sideNavHeading: sideNavHeading(),
+      help: help(),
+      main: main(),
+      mainInner: mainInner(),
+      contentHead: contentHead(),
+      scrollArea: scrollArea(),
+    }
+  }, [])
+
+  const translate = useTranslate()
+  const translated = useMemo<
+    Record<
+      Launcher['page'] | 'listText' | 'searchInputTitle' | 'helpText' | 'searchResultText',
+      ReactNode
+    >
+  >(
+    () => ({
+      favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
+      all: <Translate>{translate('Launcher/allModeText')}</Translate>,
+      listText: <Translate>{translate('Launcher/listText')}</Translate>,
+      searchInputTitle: translate('Launcher/searchInputTitle'),
+      helpText: <Translate>{translate('Launcher/helpText')}</Translate>,
+      searchResultText: <Translate>{translate('Launcher/searchResultText')}</Translate>,
+    }),
+    [translate],
+  )
 
   return (
-    <div className={wrapper()}>
-      <div className={searchArea()}>
+    <div className={classNames.wrapper}>
+      <div className={classNames.searchArea}>
         <SearchInput
           name="search"
-          title={translate('Launcher/searchInputTitle')}
-          tooltipMessage={<Translate>{translate('Launcher/searchInputTitle')}</Translate>}
+          title={translated.searchInputTitle as string}
+          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
-          suffix={
-            mode === 'search' && (
-              <UnstyledButton
-                onClick={() => {
-                  // 別のキューにしないとドロップダウンが閉じてしまう
-                  setTimeout(() => {
-                    changeSearchQuery('')
-                  }, 0)
-                }}
-              >
-                <FaCircleXmarkIcon />
-              </UnstyledButton>
-            )
-          }
-          onChange={(e) => changeSearchQuery(e.target.value)}
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          onChange={onChangeSearchQuery}
         />
       </div>
 
-      <div className={inner()}>
-        <div className={side()}>
-          <SideNav
-            className={sideNav({ selected: false })}
-            size="s"
-            items={[
-              {
-                id: 'favorite',
-                title: pageMap.favorite,
-                prefix: (
-                  <FaStarIcon
-                    color={mode !== 'search' && page === 'favorite' ? textColor.white : undefined}
-                  />
-                ),
-                isSelected: mode !== 'search' && page === 'favorite',
-              },
-            ]}
-            onClick={(_, id) => {
-              changePage(id as Launcher['page'])
-            }}
-          />
-
-          <hr />
-
-          <Section>
-            <Heading className={sideNavHeading()} type="subSubBlockTitle">
-              <Translate>{translate('Launcher/listText')}</Translate>
-            </Heading>
-
-            <SideNav
-              className={sideNav({ noIcon: true, selected: true })}
-              size="s"
-              items={[
-                {
-                  id: 'all',
-                  title: pageMap.all,
-                  isSelected: mode !== 'search' && page === 'all',
-                },
-              ]}
-              onClick={(_, id) => {
-                changePage(id as Launcher['page'])
-              }}
-            />
-          </Section>
-
-          <div className={help()}>
-            <TextLink
-              href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
-              target="_blank"
-            >
-              <Translate>{translate('Launcher/helpText')}</Translate>
-            </TextLink>
-          </div>
-        </div>
-
-        <main className={main()}>
-          <Section className={mainInner()}>
-            <Cluster className={contentHead()} align="center" justify="space-between">
-              <Heading type="subSubBlockTitle">
-                {mode === 'search' ? (
-                  <Translate>{translate('Launcher/searchResultText')}</Translate>
-                ) : (
-                  pageMap[page]
-                )}
-              </Heading>
+      <div className={classNames.inner}>
+        <SideNavs
+          mode={mode}
+          page={page}
+          changePage={changePage}
+          translated={translated}
+          classNames={classNames}
+        />
+        <main className={classNames.main}>
+          <Section className={classNames.mainInner}>
+            <Cluster className={classNames.contentHead} align="center" justify="space-between">
+              <MemoizedSubSubBlockHeading>
+                {mode === 'search' ? translated.searchResultText : translated[page]}
+              </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (
-                <AppLauncherSortDropdown
-                  sortType={sortType}
-                  onSelectSortType={(value) => setSortType(value)}
-                />
+                <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
               )}
             </Cluster>
 
-            <div className={scrollArea()}>
+            <div className={classNames.scrollArea}>
               <AppLauncherFeatures features={features} page={page} />
             </div>
           </Section>
@@ -209,3 +173,101 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     </div>
   )
 }
+
+const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
+  <UnstyledButton onClick={onClick}>
+    <FaCircleXmarkIcon />
+  </UnstyledButton>
+))
+
+const SideNavs = memo<
+  Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
+    translated: { favorite: ReactNode; listText: ReactNode; all: ReactNode; helpText: ReactNode }
+    classNames: {
+      side: string
+      unselectedSideNav: string
+      sideNavHeading: string
+      selectedSideNav: string
+      help: string
+    }
+  }
+>(({ mode, page, changePage, translated, classNames }) => {
+  const isNotSearch = mode !== 'search'
+  const isFavorite = isNotSearch && page === 'favorite'
+  const isAll = isNotSearch && page === 'all'
+
+  const unselectedItems = useMemo(
+    () => [
+      {
+        id: 'favorite',
+        title: translated.favorite,
+        prefix: <FaStarIcon color={isFavorite ? textColor.white : undefined} />,
+        current: isFavorite,
+      },
+    ],
+    [isFavorite, translated],
+  )
+  const selectedItems = useMemo(
+    () => [
+      {
+        id: 'all',
+        title: translated.all,
+        current: isAll,
+      },
+    ],
+    [isAll, translated],
+  )
+
+  const onClick = useCallback(
+    (_: any, id: string) => {
+      changePage(id as Launcher['page'])
+    },
+    [changePage],
+  )
+
+  return (
+    <div className={classNames.side}>
+      <SideNav
+        className={classNames.unselectedSideNav}
+        size="s"
+        items={unselectedItems}
+        onClick={onClick}
+      />
+
+      <hr />
+
+      <Section>
+        <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
+          {translated.listText}
+        </MemoizedSubSubBlockHeading>
+        <SideNav
+          className={classNames.selectedSideNav}
+          size="s"
+          items={selectedItems}
+          onClick={onClick}
+        />
+      </Section>
+
+      <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
+    </div>
+  )
+})
+
+const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <div className={className}>
+    <TextLink
+      href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
+      target="_blank"
+    >
+      {children}
+    </TextLink>
+  </div>
+))
+
+const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
+  ({ children, className }) => (
+    <Heading type="subSubBlockTitle" className={className}>
+      {children}
+    </Heading>
+  ),
+)

@@ -1,9 +1,9 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
 // 1pxほど大きめに描画してbody部分と被るようにしています。
-const balloon = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Balloon',
     'shr-relative',
@@ -67,6 +67,9 @@ const balloon = tv({
         'after:-shr-translate-y-[5px]',
       ],
     },
+    triggerIcon: {
+      true: '',
+    },
   },
   compoundVariants: [
     {
@@ -76,8 +79,20 @@ const balloon = tv({
     },
     {
       vertical: ['top', 'bottom'],
+      horizontal: 'left',
+      triggerIcon: true,
+      className: ['before:shr-left-0.5', 'after:shr-left-0.5'],
+    },
+    {
+      vertical: ['top', 'bottom'],
       horizontal: 'right',
       className: ['before:shr-right-1.5', 'after:shr-right-1.5'],
+    },
+    {
+      vertical: ['top', 'bottom'],
+      horizontal: 'right',
+      triggerIcon: true,
+      className: ['before:shr-right-0.5', 'after:shr-right-0.5'],
     },
     {
       vertical: 'middle',
@@ -111,7 +126,7 @@ const balloon = tv({
 })
 
 type Props = PropsWithChildren<
-  VariantProps<typeof balloon> & {
+  VariantProps<typeof classNameGenerator> & {
     /** レンダリングするタグ */
     as?: 'div' | 'span'
   }
@@ -119,17 +134,13 @@ type Props = PropsWithChildren<
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-export const Balloon: FC<Props & ElementProps> = ({
-  horizontal,
-  vertical,
-  className,
-  as: Component = 'div',
-  ...props
-}) => {
-  const styles = useMemo(
-    () => balloon({ horizontal, vertical, className }),
-    [className, horizontal, vertical],
-  )
+export const Balloon = memo<Props & ElementProps>(
+  ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...props }) => {
+    const actualClassName = useMemo(
+      () => classNameGenerator({ horizontal, vertical, triggerIcon, className }),
+      [horizontal, vertical, className, triggerIcon],
+    )
 
-  return <Component {...props} className={styles} />
-}
+    return <Component {...props} className={actualClassName} />
+  },
+)

@@ -1,13 +1,12 @@
 import { Meta, StoryObj } from '@storybook/react'
-import React from 'react'
 
 import { Cluster } from '..'
 import { Gap as GapType } from '../../../../types'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
-import { cluster } from '../Cluster'
+import { clusterClassNameGenerator } from '../Cluster'
 
-const clusterGap = Object.keys(cluster.variants.rowGap)
+const clusterGap = Object.keys(clusterClassNameGenerator.variants.rowGap)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as GapType[]
@@ -71,7 +70,7 @@ export const Align: StoryObj<typeof Cluster> = {
   name: 'align',
   render: (args) => (
     <Stack>
-      {Object.keys(cluster.variants.align).map((align) => (
+      {Object.keys(clusterClassNameGenerator.variants.align).map((align) => (
         <Cluster
           {...args}
           align={align as any}
@@ -91,7 +90,7 @@ export const Justify: StoryObj<typeof Cluster> = {
   name: 'justify',
   render: (args) => (
     <Stack>
-      {Object.keys(cluster.variants.justify).map((justify) => (
+      {Object.keys(clusterClassNameGenerator.variants.justify).map((justify) => (
         <Cluster
           {...args}
           justify={justify as any}

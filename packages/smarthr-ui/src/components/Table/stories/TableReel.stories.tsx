@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Text } from '../../Text'
 import { Table } from '../Table'
 import { TableReel } from '../TableReel'

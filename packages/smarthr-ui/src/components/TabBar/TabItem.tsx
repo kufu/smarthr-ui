@@ -1,4 +1,13 @@
-import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -6,7 +15,7 @@ import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 
-const tabItem = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-TabItem',
@@ -44,7 +53,7 @@ type Props = PropsWithChildren<{
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
-  suffix?: React.ReactNode
+  suffix?: ReactNode
   /** `true` のとき、タブが選択状態のスタイルになる */
   selected?: boolean
   /** `true` のとき、タブを無効状態にしてクリック不能にする */
@@ -53,8 +62,8 @@ type Props = PropsWithChildren<{
    * 無効な理由
    */
   disabledDetail?: {
-    icon?: React.ReactNode
-    message: React.ReactNode
+    icon?: ReactNode
+    message: ReactNode
   }
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
@@ -76,12 +85,11 @@ export const TabItem: FC<Props & ElementProps> = ({
 
   if (rest.disabled && disabledDetail) {
     const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+
     return (
       <Tooltip
         {...tabAttrs}
         message={disabledDetail.message}
-        horizontal="center"
-        vertical="auto"
         ariaDescribedbyTarget="inner"
         aria-disabled={rest.disabled}
         className="focus-visible:shr-focus-indicator--inner"
@@ -102,25 +110,39 @@ const TabButton: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const { wrapperStyle, labelStyle, suffixStyle } = useMemo(() => {
-    const { wrapper, label, suffixWrapper } = tabItem({ isTouchDevice })
+  const classNames = useMemo(() => {
+    const { wrapper, label, suffixWrapper } = classNameGenerator({ isTouchDevice })
+
     return {
-      wrapperStyle: wrapper({ className }),
-      labelStyle: label(),
-      suffixStyle: suffixWrapper(),
+      wrapper: wrapper({ className }),
+      label: label(),
+      suffixWrapper: suffixWrapper(),
     }
   }, [className])
+
+  const actualOnClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => onClick(e.currentTarget.value),
+    [onClick],
+  )
 
   return (
     <UnstyledButton
       {...rest}
       type="button"
+      value={id}
       id={id}
-      className={wrapperStyle}
-      onClick={() => onClick(id)}
+      className={classNames.wrapper}
+      onClick={actualOnClick}
     >
-      <span className={labelStyle}>{children}</span>
-      {suffix && <span className={suffixStyle}>{suffix}</span>}
+      <TabLabel className={classNames.label}>{children}</TabLabel>
+      <TabButtonSuffix className={classNames.suffixWrapper}>{suffix}</TabButtonSuffix>
     </UnstyledButton>
   )
 }
+
+const TabLabel = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <span className={className}>{children}</span>
+))
+const TabButtonSuffix = memo<PropsWithChildren<{ className: string }>>(
+  ({ children, className }) => children && <span className={className}>{children}</span>,
+)

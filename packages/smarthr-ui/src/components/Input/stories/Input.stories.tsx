@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions'
-import React from 'react'
 
 import { backgroundColor } from '../../../themes'
 import { FaMagnifyingGlassIcon } from '../../Icon'
@@ -113,7 +112,7 @@ export const Width: StoryObj<typeof Input> = {
   name: 'width',
   render: (args) => (
     <Stack align="flex-start">
-      {['15em', '50%', 200].map((width) => (
+      {['15em', '50%', 500].map((width) => (
         // eslint-disable-next-line smarthr/a11y-input-in-form-control
         <Input {...args} width={width} key={width} />
       ))}
