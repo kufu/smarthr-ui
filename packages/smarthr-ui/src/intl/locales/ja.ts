@@ -3,4 +3,5 @@
 export const locale = {
   'smarthr-ui/common/language': '日本語',
   'smarthr-ui/RequiredLabel/text': '必須',
+  'smarthr-ui/Button/loading': '処理中',
 } as const

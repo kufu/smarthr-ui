@@ -1,3 +1,4 @@
+import { IntlProvider } from '../../../intl'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
@@ -10,7 +11,11 @@ export default {
   title: 'Buttons（ボタン）/Button',
   component: Button,
   subcomponents: { AnchorButton, UnstyledButton },
-  render: (args) => <Button {...args} />,
+  render: (args) => (
+    <IntlProvider locale="ja">
+      <Button {...args} />
+    </IntlProvider>
+  ),
   args: {
     size: 'default',
     children: 'ボタン',

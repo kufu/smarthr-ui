@@ -2,4 +2,5 @@
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': '繁體中文',
+  'smarthr-ui/Button/loading': '',
 } as const
