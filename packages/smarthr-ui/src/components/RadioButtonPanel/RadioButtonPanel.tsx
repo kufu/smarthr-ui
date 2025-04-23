@@ -36,8 +36,9 @@ const classNameGenerator = tv({
       '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
       'shr-cursor-pointer has-[:not(:disabled)]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-pointer',
       'has-[:disabled]:shr-cursor-default has-[:disabled]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-default',
+      'has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled [&:has(:disabled)]:shr-text-disabled',
     ],
-    description: 'shr-ms-[1.75em] shr-mt-0.5',
+    description: ['smarthr-ui-RadioButtonPanel-description', 'shr-ms-[1.75em] shr-mt-0.5'],
   },
   variants: {
     hasDescription: {
