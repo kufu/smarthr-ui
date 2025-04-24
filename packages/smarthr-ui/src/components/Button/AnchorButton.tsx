@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentPropsWithoutRef,
   type ElementType,
@@ -34,7 +36,6 @@ const AnchorButton = forwardRef(
   <T extends ElementType = 'a'>(
     {
       size = 'default',
-      square = false,
       prefix,
       suffix,
       wide = false,
@@ -55,7 +56,6 @@ const AnchorButton = forwardRef(
       <ButtonWrapper
         {...props}
         size={size}
-        square={square}
         wide={wide}
         variant={variant}
         className={actualClassName}

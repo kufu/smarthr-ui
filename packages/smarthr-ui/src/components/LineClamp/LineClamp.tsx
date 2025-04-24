@@ -28,7 +28,7 @@ const classNameGenerator = tv({
     maxLines: {
       1: {
         clampedLine:
-          'shr-inline-block shr-w-full shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+          'shr-inline-block shr-w-full shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle shr-overflow-x-clip',
       },
       2: {
         clampedLine: 'shr-line-clamp-[2]',
@@ -115,9 +115,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
   )
 
   return isTooltipVisible ? (
-    <Tooltip message={children} multiLine vertical="auto">
-      {actualLineClamp}
-    </Tooltip>
+    <Tooltip message={children}>{actualLineClamp}</Tooltip>
   ) : (
     actualLineClamp
   )

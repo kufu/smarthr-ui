@@ -66,12 +66,20 @@ type BaseComponentProps = {
 }
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
-const iconClassNameGenerator = tv({
-  base: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
+// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
+// altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
+
+const classNameGenerator = tv({
+  slots: {
+    icon: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
+    wrapperWithAlt: 'smarthr-ui-Icon-extended smarthr-ui-Icon-withAlt shr-leading-[0]',
+  },
 })
 
 const wrapperClassNameGenerator = tv({
-  base: ['smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline'],
+  base: [
+    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline',
+  ],
   variants: {
     gap: {
       0: 'shr-gap-x-0',
@@ -141,7 +149,14 @@ export const generateIcon = (SvgIcon: IconType) => {
         return undefined
       }, [ariaHidden, alt, ariaLabel, ariaLabelledby])
 
-      const iconClassName = useMemo(() => iconClassNameGenerator({ className }), [className])
+      const classNames = useMemo(() => {
+        const { icon, wrapperWithAlt } = classNameGenerator()
+
+        return {
+          icon: icon({ className }),
+          wrapperWithAlt: wrapperWithAlt(),
+        }
+      }, [className])
       const wrapperClassName = useMemo(() => wrapperClassNameGenerator({ gap: iconGap }), [iconGap])
 
       const replacedColor = useMemo(() => {
@@ -170,7 +185,7 @@ export const generateIcon = (SvgIcon: IconType) => {
           width={iconSize}
           height={iconSize}
           color={replacedColor}
-          className={iconClassName}
+          className={classNames.icon}
           role={role}
           aria-hidden={actualAriaHidden}
           aria-label={ariaLabel}
@@ -191,12 +206,19 @@ export const generateIcon = (SvgIcon: IconType) => {
         )
       }
 
-      return (
-        <>
-          {visuallyHiddenAlt}
-          {svgIcon}
-        </>
-      )
+      if (visuallyHiddenAlt) {
+        return (
+          // HINT: visuallyが存在すると、アイコンなのに2つの要素がある状態になってしまい
+          // styleなどを記述する際、意図しない状態になる場合がある
+          // 回避するため、spanでラップし、開発者のメンタルモデルに合わせる
+          <span className={classNames.wrapperWithAlt}>
+            {visuallyHiddenAlt}
+            {svgIcon}
+          </span>
+        )
+      }
+
+      return svgIcon
     },
   )
 

@@ -1,11 +1,11 @@
 import { StoryFn } from '@storybook/react'
 
-import { FaGearIcon } from '../../Icon'
+import { FaGearIcon } from '../Icon'
 
 import { SideMenu, SideMenuGroup, SideMenuItem } from '.'
 
 export default {
-  title: 'Experimental（実験的）/SideMenu',
+  title: 'Navigation（ナビゲーション）/SideMenu',
   component: SideMenu,
 }
 
@@ -13,7 +13,7 @@ export const Default: StoryFn = () => (
   <div className="shr-bg-background shr-p-2 shr-max-w-[15rem]">
     <SideMenu>
       <SideMenuItem href="#">アカウント</SideMenuItem>
-      <SideMenuItem href="#" current>
+      <SideMenuItem href="https://example.com" current>
         認証設定
       </SideMenuItem>
       <SideMenuItem href="#">評価項目の表示設定</SideMenuItem>

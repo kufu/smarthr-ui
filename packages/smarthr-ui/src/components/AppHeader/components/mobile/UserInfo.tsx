@@ -82,13 +82,9 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
     <>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="skeleton" size="s" square className={classNames.iconButton}>
+          <Button variant="skeleton" size="s" className={classNames.iconButton}>
             <span className={classNames.iconButtonInner}>
-              <FaUserLargeIcon
-                role="img"
-                aria-label={translated.account}
-                className="shr-fill-grey"
-              />
+              <FaUserLargeIcon alt={translated.account} className="shr-fill-grey" />
             </span>
           </Button>
         </DropdownTrigger>
@@ -129,7 +125,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
 
       {locale && (
         <Dialog isOpen={languageDialogOpen} onClickOverlay={dialogClose} width={246}>
-          <LanguageSelector locale={locale} onClickClose={setLanguageDialogOpen} />
+          <LanguageSelector locale={locale} onClickClose={dialogClose} />
         </Dialog>
       )}
     </>
