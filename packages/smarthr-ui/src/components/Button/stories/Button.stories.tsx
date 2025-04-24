@@ -11,11 +11,7 @@ export default {
   title: 'Buttons（ボタン）/Button',
   component: Button,
   subcomponents: { AnchorButton, UnstyledButton },
-  render: (args) => (
-    <IntlProvider locale="ja">
-      <Button {...args} />
-    </IntlProvider>
-  ),
+  render: (args) => <Button {...args} />,
   args: {
     size: 'default',
     children: 'ボタン',
