@@ -1,3 +1,4 @@
+import { IntlProvider } from '../../../intl'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
