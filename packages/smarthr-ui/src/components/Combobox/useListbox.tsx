@@ -314,7 +314,7 @@ export const useListbox = <T,>({
                   {decorated.noResultText ||
                     localize({
                       id: 'smarthr-ui/Combobox/noResultsText',
-                      defaultText: '一致する選択肢がありません',
+                      defaultText: '一致する選択肢がありません。',
                     })}
                 </p>
               ) : (
