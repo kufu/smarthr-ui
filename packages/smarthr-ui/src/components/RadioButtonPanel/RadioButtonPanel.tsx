@@ -32,17 +32,22 @@ const classNameGenerator = tv({
       'shr-border-shorthand shr-list-none shr-shadow-none',
       // FIX: なぜか storybook 上で :has が動作しないので重ねて書いている
       'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
+      'has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled [&:has(:disabled)]:shr-text-disabled',
+    ],
+    radio: [
       '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
       '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
       'shr-cursor-pointer has-[:not(:disabled)]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-pointer',
       'has-[:disabled]:shr-cursor-default has-[:disabled]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-default',
-      'has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled [&:has(:disabled)]:shr-text-disabled',
     ],
     description: ['smarthr-ui-RadioButtonPanel-description', 'shr-ms-[1.75em] shr-mt-0.5'],
   },
   variants: {
     hasDescription: {
-      true: 'shr-flex shr-flex-col',
+      true: {
+        base: 'shr-flex shr-flex-col',
+        radio: 'shr-font-bold',
+      },
     },
   },
 })
@@ -58,11 +63,11 @@ export const RadioButtonPanel: FC<Props> = ({
   ...props
 }) => {
   const classNames = useMemo(() => {
-    const { base, description: descriptionStyle } = classNameGenerator({
+    const { base, description, radio } = classNameGenerator({
       className,
       hasDescription: !!children,
     })
-    return { base: base(), description: descriptionStyle() }
+    return { base: base(), description: description(), radio: radio() }
   }, [className, children])
   const role = useMemo(
     () => (typeof as === 'string' && NONE_ROLE_TAG_REGEX.test(as) ? 'presentation' : undefined),
@@ -90,16 +95,21 @@ export const RadioButtonPanel: FC<Props> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={classNames.base}>
-      <RadioButton {...props} ref={innerRef} aria-describedby={actualAriaDescribedby}>
+      <RadioButton
+        {...props}
+        ref={innerRef}
+        aria-describedby={actualAriaDescribedby}
+        className={classNames.radio}
+      >
         <Cluster as="span">
-          {children ? <Text styleType="blockTitle">{label}</Text> : label}
+          {label}
           {labelSuffix}
         </Cluster>
       </RadioButton>
       {children && (
-        <span id={descriptionId} className={classNames.description}>
+        <div id={descriptionId} className={classNames.description}>
           {children}
-        </span>
+        </div>
       )}
     </Base>
   )
