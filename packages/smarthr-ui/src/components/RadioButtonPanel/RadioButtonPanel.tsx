@@ -15,7 +15,6 @@ import { tv } from 'tailwind-variants'
 import { Base } from '../Base'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
-import { Text } from '../Text'
 
 type Props = ComponentProps<typeof RadioButton> & {
   as?: string | ComponentType<any>
