@@ -5,4 +5,6 @@ import type { ja } from '.'
 export const locale = {
   'smarthr-ui/common/language': '简体中文',
   'smarthr-ui/RequiredLabel/text': '',
+  'smarthr-ui/Combobox/loadingText': '',
+  'smarthr-ui/Combobox/noResultsText': '没有符合条件的选项',
 } as const satisfies Record<keyof typeof ja, string>

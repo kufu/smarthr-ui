@@ -3,4 +3,6 @@
 export const locale = {
   'smarthr-ui/common/language': '日本語',
   'smarthr-ui/RequiredLabel/text': '必須',
+  'smarthr-ui/Combobox/loadingText': '処理中',
+  'smarthr-ui/Combobox/noResultsText': '一致する選択肢がありません。',
 } as const
