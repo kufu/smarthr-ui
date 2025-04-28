@@ -3,4 +3,5 @@
 export const locale = {
   'smarthr-ui/common/language': '日本語',
   'smarthr-ui/RequiredLabel/text': '必須',
+  'smarthr-ui/TextLink/openInNewTab': '別タブで開く',
 } as const
