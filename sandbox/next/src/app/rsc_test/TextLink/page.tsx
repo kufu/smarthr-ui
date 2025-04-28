@@ -7,6 +7,7 @@ export default function TextLinkPage() {
     <>
       <RSCChecker actualComponent={TextLink} />
       <TextLink href="/">TextLink</TextLink>
+      <TextLink href="/" target="_blank">TextLink</TextLink>
     </>
   )
 }
