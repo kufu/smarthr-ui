@@ -17,7 +17,7 @@ import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
-import { Cluster } from '../Layout'
+import { Cluster, Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 type AbstractProps = PropsWithChildren<{
@@ -172,7 +172,7 @@ export const InformationPanel: FC<Props> = ({
 
   return (
     <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
-      <Cluster align="center" justify="space-between" className={classNames.header}>
+      <Sidebar align="center" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
           {title}
@@ -187,7 +187,7 @@ export const InformationPanel: FC<Props> = ({
             decorators={decorators}
           />
         )}
-      </Cluster>
+      </Sidebar>
       <div id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </div>
