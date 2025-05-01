@@ -84,7 +84,7 @@ export const Default: StoryFn = ({ isForcedColor }) => {
           id="dialog-default"
           ariaLabel="Dialog"
           data-test="dialog-content"
-          style={{ backgroundColor: 'rgba(3,3,2,0.8)' }}
+          // style={{ backgroundColor: 'rgba(3,3,2,0.8)' }}
         >
           <Fieldset title="Dialog" titleType="sectionTitle">
             {/* {isForcedColor && (
