@@ -17,7 +17,7 @@ import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
-import { Cluster, Sidebar } from '../Layout'
+import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 type AbstractProps = PropsWithChildren<{
