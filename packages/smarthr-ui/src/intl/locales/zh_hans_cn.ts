@@ -5,5 +5,5 @@ import type { ja } from '.'
 export const locale = {
   'smarthr-ui/common/language': '简体中文',
   'smarthr-ui/RequiredLabel/text': '',
-  'smarthr-ui/TextLink/openInNewTab': '',
+  'smarthr-ui/TextLink/openInNewTab': '在新标签页中打开',
 } as const satisfies Record<keyof typeof ja, string>
