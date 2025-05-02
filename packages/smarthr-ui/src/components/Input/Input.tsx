@@ -75,6 +75,13 @@ const innerClassNameGenerator = tv({
     ],
     affix: 'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
   },
+  variants: {
+    disabled: {
+      true: {
+        affix: 'shr-text-disabled shr-opacity-100',
+      },
+    },
+  },
 })
 
 export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
@@ -134,14 +141,14 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     }, [width, bgColor])
 
     const innerClassNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator()
+      const { input, affix } = innerClassNameGenerator({ disabled })
 
       return {
         input: input(),
         prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
         suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
       }
-    }, [])
+    }, [disabled])
 
     return (
       <span
