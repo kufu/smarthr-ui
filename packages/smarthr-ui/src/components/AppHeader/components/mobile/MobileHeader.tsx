@@ -2,6 +2,7 @@ import { type FC, useState } from 'react'
 
 import { Header } from '../../../Header'
 import { useLocale } from '../../hooks/useLocale'
+import { localeMap as defaultLocaleMap } from '../../multilingualization'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { Help } from './Help'
@@ -27,6 +28,7 @@ export const MobileHeader: FC<HeaderProps> = ({
   currentTenantId,
   onTenantSelect,
   mobileAdditionalContent,
+  localeMap = defaultLocaleMap,
   ...props
 }) => {
   const [isAppLauncherSelected, setIsAppLauncherSelected] = useState(false)
@@ -71,7 +73,7 @@ export const MobileHeader: FC<HeaderProps> = ({
 
             <Help helpPageUrl={helpPageUrl} schoolUrl={schoolUrl} />
 
-            <UserInfo {...userInfo} locale={locale} />
+            <UserInfo {...userInfo} locale={locale} localeMap={localeMap} />
 
             {isMenuAvailable && (
               <Menu

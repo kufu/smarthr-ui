@@ -13,7 +13,7 @@ import {
 import { Cluster } from '../../../Layout'
 import { useLocale } from '../../hooks/useLocale'
 import { useTranslate } from '../../hooks/useTranslate'
-import { localeMap } from '../../multilingualization'
+import { localeMap as defaultLocaleMap } from '../../multilingualization'
 import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
@@ -49,6 +49,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
   desktopNavigationAdditionalContent,
   releaseNote,
   features,
+  localeMap = defaultLocaleMap,
   ...props
 }) => {
   const classNames = useMemo(() => {

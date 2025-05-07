@@ -7,6 +7,7 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
 import { useLocale } from '../../hooks/useLocale'
 import { useTranslate } from '../../hooks/useTranslate'
+import { localeMap as defaultLocaleMap } from '../../multilingualization'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -26,10 +27,10 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
+type Props = UserInfoProps & Pick<HeaderProps, 'locale' | 'localeMap'>
 
 export const UserInfo = memo<Props>(
-  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl }) => {
+  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl, localeMap }) => {
     const displayName = useMemo(
       () =>
         arbitraryDisplayName ??
@@ -42,13 +43,16 @@ export const UserInfo = memo<Props>(
       [arbitraryDisplayName, email, empCode, firstName, lastName],
     )
 
-    return displayName ? <ActualUserInfo accountUrl={accountUrl} displayName={displayName} /> : null
+    return displayName ? (
+      <ActualUserInfo accountUrl={accountUrl} displayName={displayName} localeMap={localeMap} />
+    ) : null
   },
 )
 
-const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = ({
+const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'localeMap'> & { displayName: string }> = ({
   displayName,
   accountUrl,
+  localeMap = defaultLocaleMap,
 }) => {
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
 
@@ -125,7 +129,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
 
       {locale && (
         <Dialog isOpen={languageDialogOpen} onClickOverlay={dialogClose} width={246}>
-          <LanguageSelector locale={locale} onClickClose={dialogClose} />
+          <LanguageSelector locale={locale} localeMap={localeMap} onClickClose={dialogClose} />
         </Dialog>
       )}
     </>

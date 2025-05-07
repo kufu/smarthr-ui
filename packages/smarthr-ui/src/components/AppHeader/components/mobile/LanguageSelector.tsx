@@ -5,9 +5,10 @@ import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { type Locale, localeMap } from '../../multilingualization'
 import { CommonButton } from '../common/CommonButton'
 
+import type { LocaleMap } from '../../../../types'
+import type { Locale } from '../../multilingualization'
 import type { LocaleProps } from '../../types'
 
 const classNameGenerator = tv({
@@ -23,12 +24,11 @@ const classNameGenerator = tv({
 
 type Props = {
   locale: LocaleProps
+  localeMap: LocaleMap
   onClickClose: () => void
 }
 
-const LOCALE_KEYS = Object.keys(localeMap)
-
-export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
+export const LanguageSelector = memo<Props>(({ locale, localeMap, onClickClose }) => {
   const classNames = useMemo(() => {
     const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
 
@@ -39,6 +39,8 @@ export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
       button: button(),
     }
   }, [])
+
+  const localeKeys = useMemo(() => Object.keys(localeMap), [localeMap])
 
   const onClickLocale = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -55,10 +57,11 @@ export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
         className={classNames.headerTitle}
       />
       <div className={classNames.buttonWrapper}>
-        {LOCALE_KEYS.map((localeKey) => (
+        {localeKeys.map((localeKey) => (
           <LocaleButton
             key={localeKey}
             value={localeKey as Locale}
+            localeMap={localeMap}
             onClick={onClickLocale}
             selected={localeKey === locale.selectedLocale}
             className={classNames.button}
@@ -82,10 +85,11 @@ const SelectorHeading = memo<
 
 const LocaleButton = memo<{
   value: Locale
+  localeMap: LocaleMap
   selected: boolean
   className: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ value, selected, className, onClick }) => (
+}>(({ value, localeMap, selected, className, onClick }) => (
   <CommonButton
     elementAs="button"
     type="button"

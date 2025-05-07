@@ -159,6 +159,30 @@ export const VRTNavigationDropdownGroup: Story = {
   },
 }
 
+export const VRTLocales: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('button', { name: 'Language' }).click()
+  },
+}
+
+export const VRTCustomLocales: Story = {
+  args: {
+    localeMap: {
+      ja: 'にほんご',
+      'en-us': 'えいご',
+    },
+    locale: {
+      selectedLocale: 'en-us',
+      onSelectLocale: (locale: Locale) => action(locale),
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('button', { name: 'Language' }).click()
+  },
+}
+
 export const VRTLocaleEnUs: Story = {
   args: {
     locale: {

@@ -1,3 +1,4 @@
+import type { LocaleMap } from '../../types'
 import type { Header } from '../Header'
 import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
 
@@ -22,6 +23,7 @@ export type UserInfoProps = {
 
 export type HeaderProps = ComponentProps<typeof Header> & {
   locale?: LocaleProps | null
+  localeMap?: LocaleMap
   enableNew?: boolean
   appName?: ReactNode
   schoolUrl?: string | null
