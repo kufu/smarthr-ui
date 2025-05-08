@@ -4,5 +4,5 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'Bahasa Indonesia',
-  'smarthr-ui/RequiredLabel/text': '',
+  'smarthr-ui/RequiredLabel/text': 'Wajib',
 } as const satisfies Record<keyof typeof ja, string>
