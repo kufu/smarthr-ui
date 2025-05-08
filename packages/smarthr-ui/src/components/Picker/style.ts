@@ -1,5 +1,7 @@
 import { tv } from 'tailwind-variants'
 
+// HINT: 日付系inputがsafariなどで対応されていないため、input要素内が空白になりフォームが潰れる場合がある
+// マジックナンバーになるが、ほかに適切なプロパティがないため、min-widthで最低幅を指定することで防ぐ
 const MIN_WIDTH = {
   DatetimeLocal: '14em',
   Month: '11em',
