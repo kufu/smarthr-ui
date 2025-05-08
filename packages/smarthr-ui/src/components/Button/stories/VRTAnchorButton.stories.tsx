@@ -13,73 +13,55 @@ type Variant = ComponentProps<typeof Button>['variant']
 /**
  * $ pict anchor-button.txt
  * size    disabled disabledDetail prefix suffix wide
- * default true     あり           なし   なし   false
- * s       false    なし           なし   あり   true
- * s       true     なし           なし   あり   false
- * default false    なし           なし   なし   false
- * default true     なし           なし   あり   true
- * s       true     なし           あり   なし   true
- * s       true     あり           なし   あり   false
- * default true     あり           あり   なし   false
- * s       true     あり           なし   なし   false
+ * s       true     なし           なし   なし   true
+ * default false    なし           なし   あり   false
  * s       false    なし           あり   なし   false
+ * default true     あり           なし   あり   false
+ * s       false    なし           なし   あり   true
+ * default true     あり           あり   なし   false
+ * s       true     あり           あり   なし   false
+ * default true     なし           あり   なし   true
  */
 const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
-    size: 'default',
+    size: 's',
     href: undefined,
-    disabledDetail: { message: 'ボタンが無効な理由' },
+    disabledDetail: undefined,
     prefix: undefined,
     suffix: undefined,
-    wide: false,
-  },
-  {
-    size: 's',
-    href: '#',
-    disabledDetail: undefined,
-    prefix: undefined,
-    suffix: <FaCaretDownIcon />,
     wide: true,
-  },
-  {
-    size: 's',
-    href: undefined,
-    disabledDetail: undefined,
-    prefix: undefined,
-    suffix: <FaCaretDownIcon />,
-    wide: false,
   },
   {
     size: 'default',
     href: '#',
     disabledDetail: undefined,
     prefix: undefined,
-    suffix: undefined,
+    suffix: <FaCaretDownIcon />,
     wide: false,
   },
   {
-    size: 'default',
-    href: undefined,
-    disabledDetail: undefined,
-    prefix: undefined,
-    suffix: <FaCaretDownIcon />,
-    wide: true,
-  },
-  {
     size: 's',
-    href: undefined,
+    href: '#',
     disabledDetail: undefined,
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
-    wide: true,
+    wide: false,
   },
   {
-    size: 's',
+    size: 'default',
     href: undefined,
     disabledDetail: { message: 'ボタンが無効な理由' },
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
     wide: false,
+  },
+  {
+    size: 's',
+    href: '#',
+    disabledDetail: undefined,
+    prefix: undefined,
+    suffix: <FaCaretDownIcon />,
+    wide: true,
   },
   {
     size: 'default',
@@ -93,17 +75,17 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     size: 's',
     href: undefined,
     disabledDetail: { message: 'ボタンが無効な理由' },
-    prefix: undefined,
+    prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: false,
   },
   {
-    size: 's',
-    href: '#',
+    size: 'default',
+    href: undefined,
     disabledDetail: undefined,
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
-    wide: false,
+    wide: true,
   },
 ]
 

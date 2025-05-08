@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [70.2.0](https://github.com/kufu/smarthr-ui/compare/v70.1.0...v70.2.0) (2025-04-30)
+
+
+### Features
+
+* **InputFile:** ファイルを追加して複数選択できるようにする ([#5281](https://github.com/kufu/smarthr-ui/issues/5281)) ([083a4ad](https://github.com/kufu/smarthr-ui/commit/083a4ad80e683488f3944f0b953bdd62ea7342b0))
+
+
+### Bug Fixes
+
+* AppHeaderの表示モードの判定をSSRでも最適に行えるようにする ([#5574](https://github.com/kufu/smarthr-ui/issues/5574)) ([8683ede](https://github.com/kufu/smarthr-ui/commit/8683edeb5811ff0fb069b450220710e5e099e0aa))
+* AppNaviはh1より先に設置されることが多く、heading levelが崩れるため、aria-labelledbyで表現する ([#5575](https://github.com/kufu/smarthr-ui/issues/5575)) ([2be4829](https://github.com/kufu/smarthr-ui/commit/2be4829bbfe20a3abe354822fa13c6af8e5039fd))
+* localesファイルをexportする ([#5569](https://github.com/kufu/smarthr-ui/issues/5569)) ([610ed8c](https://github.com/kufu/smarthr-ui/commit/610ed8cc364d5efb67772817c74fc7bfd5be45ec))
+* process is not definedエラーを解消 ([#5568](https://github.com/kufu/smarthr-ui/issues/5568)) ([16016e3](https://github.com/kufu/smarthr-ui/commit/16016e3fb1e3b74fddd6c439d52c437dc65e23ff))
+
+## [70.1.0](https://github.com/kufu/smarthr-ui/compare/v70.0.1...v70.1.0) (2025-04-22)
+
+
+### Features
+
+* FloatAreaのresponseStatus表示位置を調整 SHRUI-1219 ([#5517](https://github.com/kufu/smarthr-ui/issues/5517)) ([bf00e8b](https://github.com/kufu/smarthr-ui/commit/bf00e8b620f196e88a46a61595082c249433583e))
+
+
+### Bug Fixes
+
+* LineClampのテキストが上下に見きれないように修正 ([#5558](https://github.com/kufu/smarthr-ui/issues/5558)) ([1daa316](https://github.com/kufu/smarthr-ui/commit/1daa31651f9313b55193f1c2e32762371a3d1e6b))
+* Tooltipのサイズ・位置計算をwindowサイズの変更時に再計算する SHRUI-1254 ([#5563](https://github.com/kufu/smarthr-ui/issues/5563)) ([8c75510](https://github.com/kufu/smarthr-ui/commit/8c755101792d385d60a03c19deed5b9b9ecff4d5))
+
 ### [70.0.1](https://github.com/kufu/smarthr-ui/compare/v70.0.0...v70.0.1) (2025-04-17)
 
 

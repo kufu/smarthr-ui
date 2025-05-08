@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import preserveDirectives from "rollup-plugin-preserve-directives";
 import renameNodeModules from "rollup-plugin-rename-node-modules";
+import replace from '@rollup/plugin-replace';
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { globSync } from 'glob';
@@ -26,7 +27,7 @@ export default {
 		entryPoints.map(file => [
 			path.relative(
 				'src',
-        // 拡張子を除去し書き出し時に正しいファイルめになるようにしている
+        // 拡張子を除去し書き出し時に正しいファイル名になるようにしている
 				file.slice(0, file.length - path.extname(file).length)
 			),
 			fileURLToPath(new URL(file, import.meta.url))
@@ -55,6 +56,23 @@ export default {
     commonjs(),
     nodeResolve(),
     // node_modulesのままだとimportできないケースがあったので、vendorにrenameしている
-    renameNodeModules("vendor")
+    renameNodeModules("vendor"),
+    // reactの影響でprocess is not definedになってしまうので、"production"に置き換えている
+    // import.meta.env等に置き換えるほうが本当は好ましいが、あまり良い方法がない
+    replace({
+      values: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      },
+      preventAssignment: true,
+    }),
+    // picocolorsのみprocessをglobalThis.processに置き換えて、process is not definedを回避する
+    replace({
+      values: {
+        'process': 'globalThis.process',
+      },
+      include: "**/picocolors.*",
+      delimiters: ['\\s', '\\s(?!\\.)'],
+      preventAssignment: true,
+    }),
   ],
 }

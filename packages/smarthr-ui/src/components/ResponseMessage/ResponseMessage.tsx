@@ -12,7 +12,7 @@ import {
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> & Omit<IconProps, 'text'>
 
-const classNameGenerator = tv({
+export const classNameGenerator = tv({
   base: '',
   variants: {
     type: {

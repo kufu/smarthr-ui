@@ -10,18 +10,17 @@ import type { StoryFn, StoryObj } from '@storybook/react'
 type Variant = ComponentProps<typeof Button>['variant']
 
 /**
- * $ pict button.pixt.txt /e:button-seeds.pict.txt
- * size    disabled disabledDetail  loading prefix suffix wide
- * default false    なし            false   あり   なし   false
- * default false    なし            false   なし   なし   false
- * s       false    なし            false   なし   あり   true
- * s       true     なし            false   あり   なし   true
- * default false    なし            true    なし   あり   true
- * default true     あり            false   なし   なし   false
- * s       false    なし            true    なし   なし   false
- * s       false    なし            true    あり   なし   false
- * s       true     あり            false   なし   あり   false
- * default true     あり            false   あり   なし   false
+ * $ pict button.pict.txt /e:button-seeds.pict.txt
+ * size    disabled disabledDetail loading prefix suffix wide
+ * default false    なし           false   あり   なし   false
+ * default false    なし           false   なし   なし   false
+ * s       false    なし           false   なし   あり   true
+ * default true     あり           false   なし   あり   false
+ * default false    なし           true    なし   あり   true
+ * s       false    なし           true    あり   なし   true
+ * s       true     なし           false   あり   なし   true
+ * s       false    なし           true    あり   なし   false
+ * s       true     あり           false   あり   なし   false
  */
 const Template: StoryFn = (args) => (
   <Stack {...args}>
@@ -37,16 +36,21 @@ const Template: StoryFn = (args) => (
           <Button variant={variant} size="s" suffix={<FaCaretDownIcon />} wide>
             ボタン
           </Button>
-          <Button variant={variant} size="s" disabled prefix={<FaCirclePlusIcon />} wide>
+          <Button
+            variant={variant}
+            disabled
+            disabledDetail={{ message: 'ボタンが無効な理由' }}
+            suffix={<FaCaretDownIcon />}
+          >
             ボタン
           </Button>
           <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
             ボタン
           </Button>
-          <Button variant={variant} disabled disabledDetail={{ message: 'ボタンが無効な理由' }}>
+          <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />} wide>
             <FaCirclePlusIcon alt="ボタン" />
           </Button>
-          <Button variant={variant} size="s" loading>
+          <Button variant={variant} size="s" disabled prefix={<FaCirclePlusIcon />} wide>
             <FaCirclePlusIcon alt="ボタン" />
           </Button>
           <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />}>
@@ -55,14 +59,6 @@ const Template: StoryFn = (args) => (
           <Button
             variant={variant}
             size="s"
-            disabled
-            disabledDetail={{ message: 'ボタンが無効な理由' }}
-            suffix={<FaCaretDownIcon />}
-          >
-            ボタン
-          </Button>
-          <Button
-            variant={variant}
             disabled
             disabledDetail={{ message: 'ボタンが無効な理由' }}
             prefix={<FaCirclePlusIcon />}

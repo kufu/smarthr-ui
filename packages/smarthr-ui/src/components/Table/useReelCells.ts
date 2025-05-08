@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -6,14 +6,14 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-export const useReelCells = () => {
+export const useReelCells = (children: ReactNode) => {
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const [showShadow, setShowShadow] = useState(false)
 
   useEffect(() => {
-    const currentRef = tableWrapperRef.current
+    const wrapper = tableWrapperRef.current
 
-    if (!currentRef) {
+    if (!wrapper) {
       return
     }
 
@@ -24,7 +24,7 @@ export const useReelCells = () => {
     }
 
     const handleScroll = () => {
-      if (!currentRef.querySelector(HAS_FIXED_SELECTOR)) {
+      if (!wrapper.querySelector(HAS_FIXED_SELECTOR)) {
         return
       }
 
@@ -64,21 +64,21 @@ export const useReelCells = () => {
         })
       }
 
-      currentRef.querySelectorAll<HTMLElement>(TR_SELECTOR).forEach((tr) => {
+      wrapper.querySelectorAll<HTMLElement>(TR_SELECTOR).forEach((tr) => {
         const leftCells = tr.querySelectorAll<HTMLElement>(FIXED_LEFT_SELECTOR)
         const rightCells = Array.from(
           tr.querySelectorAll<HTMLElement>(FIXED_RIGHT_SELECTOR),
         ).reverse()
 
         if (leftCells.length > 0) {
-          commonAction(leftCells, 'left' as const, currentRef.scrollLeft > 0)
+          commonAction(leftCells, 'left' as const, wrapper.scrollLeft > 0)
         }
 
         if (rightCells.length > 0) {
           commonAction(
             rightCells,
             'right' as const,
-            currentRef.scrollLeft < currentRef.scrollWidth - currentRef.clientWidth - 1,
+            wrapper.scrollLeft < wrapper.scrollWidth - wrapper.clientWidth - 1,
           )
         }
       })
@@ -87,18 +87,19 @@ export const useReelCells = () => {
     }
 
     handleScroll()
-    currentRef.addEventListener('scroll', handleScroll)
+    wrapper.addEventListener('scroll', handleScroll)
 
     const observer = new ResizeObserver(handleScroll)
 
-    observer.observe(currentRef)
+    observer.observe(wrapper)
 
     return () => {
-      currentRef.removeEventListener('scroll', handleScroll)
-      observer.unobserve(currentRef)
+      wrapper.removeEventListener('scroll', handleScroll)
+      observer.unobserve(wrapper)
       allClean()
     }
-  }, [])
+    // HINT: Paginationと組み合わせた際などに再生成したい
+  }, [children])
 
   return { tableWrapperRef, showShadow }
 }
