@@ -7,25 +7,39 @@ export default {
   title: 'Forms（フォーム）/RadioButtonPanel/VRT',
   render: (args) => (
     <Stack>
-      {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <Cluster gap={2} id={id} key={id}>
-          {[false, true].map((checked) =>
-            [false, true].map((disabled) => (
-              // eslint-disable-next-line smarthr/a11y-input-in-form-control
-              <RadioButtonPanel
-                {...args}
-                checked={checked}
-                disabled={disabled}
-                key={`${id}-${checked}-${disabled}`}
-              />
-            )),
-          )}
-        </Cluster>
-      ))}
+      {[undefined, 'hover', 'focus-visible'].map((id) =>
+        [false, true].map((checked) => (
+          <Cluster gap={2} id={id} key={id}>
+            {[false, true].map((disabled) => (
+              <>
+                {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
+                <div>
+                  <RadioButtonPanel
+                    {...args}
+                    checked={checked}
+                    disabled={disabled}
+                    key={`${id}-${checked}-${disabled}`}
+                  />
+                </div>
+                <div>
+                  <RadioButtonPanel
+                    {...args}
+                    checked={checked}
+                    disabled={disabled}
+                    key={`${id}-${checked}-${disabled}`}
+                  >
+                    説明テキスト
+                  </RadioButtonPanel>
+                </div>
+              </>
+            ))}
+          </Cluster>
+        )),
+      )}
     </Stack>
   ),
   args: {
-    children: 'ラジオボタンパネル',
+    label: 'ラジオボタンパネル',
   },
   parameters: {
     chromatic: { disableSnapshot: false },
