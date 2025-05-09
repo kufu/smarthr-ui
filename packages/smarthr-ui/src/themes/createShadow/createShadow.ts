@@ -6,14 +6,6 @@ import { type ColorProperty, defaultColor } from '../createColor'
 import { defaultShadow } from './defaultShadow'
 
 export type ShadowProperty = {
-  /**
-   * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
-   */
-  BASE?: string
-  /**
-   * @deprecated The DIALOG property will be deprecated, please use LAYER0~4 property instead
-   */
-  DIALOG?: string
   LAYER0?: string
   LAYER1?: string
   LAYER2?: string
@@ -25,14 +17,6 @@ export type ShadowProperty = {
 }
 
 export type CreatedShadowTheme = {
-  /**
-   * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
-   */
-  BASE: string
-  /**
-   * @deprecated The DIALOG property will be deprecated, please use LAYER0~4 property instead
-   */
-  DIALOG: string
   LAYER0?: string
   LAYER1?: string
   LAYER2?: string
@@ -52,15 +36,20 @@ const createFocusIndicatorStyles = (outline: string) => css`
   box-shadow: ${outline};
 `
 
-export const createShadow = (userShadow: ShadowProperty = {}, userColor: ColorProperty = {}) => {
-  const outline = createOutline(userColor.OUTLINE || defaultColor.OUTLINE)
-  const created: CreatedShadowTheme = merge(
-    {
-      ...defaultShadow,
-      OUTLINE: outline,
-      focusIndicatorStyles: createFocusIndicatorStyles(outline),
-    },
-    userShadow,
-  )
-  return created
+export const createShadow = (
+  userShadow?: ShadowProperty,
+  userColor?: ColorProperty,
+): CreatedShadowTheme => {
+  const outline = createOutline(userColor?.OUTLINE || defaultColor.OUTLINE)
+  const shadows = {
+    ...defaultShadow,
+    OUTLINE: outline,
+    focusIndicatorStyles: createFocusIndicatorStyles(outline),
+  }
+
+  if (!userShadow) {
+    return shadows
+  }
+
+  return merge(shadows, userShadow)
 }
