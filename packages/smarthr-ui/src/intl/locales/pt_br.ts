@@ -6,6 +6,8 @@ export const locale = {
   'smarthr-ui/common/language': 'Português',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Nenhuma opção correspondente',
+  'smarthr-ui/DropdownMenuButton/triggerActive': '',
+  'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/RequiredLabel/text': '',
   'smarthr-ui/TextLink/openInNewTab': 'Abra em uma outra guia',
 } as const satisfies Record<keyof typeof ja, string>
