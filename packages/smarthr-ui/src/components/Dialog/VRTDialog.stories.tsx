@@ -35,6 +35,9 @@ export default {
   },
   parameters: {
     withTheming: true,
+    // a11y: {
+    //   element: '.smarthr-ui-Dialog',
+    // },
   },
 }
 export const VRTOpenDialogNarrow: StoryFn = () => (
@@ -51,7 +54,7 @@ export const VRTDialogForcedColors: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
-    <Default />
+    <Default isForcedColor />
   </Wrapper>
 )
 
