@@ -8,7 +8,7 @@ import { Checkbox } from '../Checkbox'
 import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
 import { Input } from '../Input'
-import { Cluster } from '../Layout'
+import { Center, Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
 import { StepFormDialog, StepFormDialogItem } from './StepFormDialog'
@@ -147,6 +147,9 @@ export const Default: StoryFn = () => {
             </ul>
           </Fieldset>
         </StepFormDialogItem>
+        <Center minHeight="1000px" verticalCentering={true}>
+          スクロール用領域
+        </Center>
       </StepFormDialog>
     </Cluster>
   )
