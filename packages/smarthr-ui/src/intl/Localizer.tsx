@@ -1,3 +1,5 @@
+'use client'
+
 import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 
 import type { ja } from './locales'
