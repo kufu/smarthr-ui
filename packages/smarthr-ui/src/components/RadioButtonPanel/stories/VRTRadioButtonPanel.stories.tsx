@@ -13,20 +13,24 @@ export default {
             {[false, true].map((disabled) => (
               <>
                 {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
-                <RadioButtonPanel
-                  {...args}
-                  checked={checked}
-                  disabled={disabled}
-                  key={`${id}-${checked}-${disabled}`}
-                />
-                <RadioButtonPanel
-                  {...args}
-                  checked={checked}
-                  disabled={disabled}
-                  key={`${id}-${checked}-${disabled}`}
-                >
-                  説明テキスト
-                </RadioButtonPanel>
+                <div>
+                  <RadioButtonPanel
+                    {...args}
+                    checked={checked}
+                    disabled={disabled}
+                    key={`${id}-${checked}-${disabled}`}
+                  />
+                </div>
+                <div>
+                  <RadioButtonPanel
+                    {...args}
+                    checked={checked}
+                    disabled={disabled}
+                    key={`${id}-${checked}-${disabled}`}
+                  >
+                    説明テキスト
+                  </RadioButtonPanel>
+                </div>
               </>
             ))}
           </Cluster>
