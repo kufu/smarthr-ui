@@ -88,7 +88,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   decorators,
   onClickBack,
 }) => {
-  const { currentStep, stepQueue, setCurrentStep } = useContext(StepFormDialogContext)
+  const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
   const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
 
   const handleCloseAction = useCallback(() => {
@@ -99,6 +99,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       setCurrentStep(firstStep)
     }, 300)
   }, [firstStep, stepQueue, setCurrentStep, onClickClose])
+
+  // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
+  const scrollerTop = useCallback(() => {
+    if (scrollerRef.current) {
+      scrollerRef.current.scroll(0, 0)
+    }
+  }, [scrollerRef])
 
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -113,15 +120,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
       if (next) {
         setCurrentStep(next)
+        scrollerTop()
       }
     },
-    [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction],
+    [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction, scrollerTop],
   )
   const handleBackAction = useCallback(() => {
     onClickBack?.()
 
     setCurrentStep(stepQueue.current.pop() ?? firstStep)
-  }, [firstStep, stepQueue, onClickBack, setCurrentStep])
+    scrollerTop()
+  }, [firstStep, stepQueue, onClickBack, scrollerTop, setCurrentStep])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
@@ -149,7 +158,11 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             subtitle={subtitle}
             titleId={titleId}
           />
-          <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+          <DialogBody
+            scrollerRef={scrollerRef}
+            contentPadding={contentPadding}
+            contentBgColor={contentBgColor}
+          >
             {children}
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
