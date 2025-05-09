@@ -4,6 +4,6 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'Tiếng Việt',
-  'smarthr-ui/RequiredLabel/text': '',
   'smarthr-ui/TextLink/openInNewTab': 'Mở trong tab mới',
+  'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
 } as const satisfies Record<keyof typeof ja, string>
