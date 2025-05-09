@@ -3,6 +3,7 @@ import { Text } from '../../Text'
 import { Table } from '../Table'
 import { TableReel } from '../TableReel'
 import { Td } from '../Td'
+import { Th } from '../Th'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react'
 
@@ -80,9 +81,49 @@ export const Nullable: StoryObj<typeof Td> = {
 export const Fixed: StoryObj<typeof Td> = {
   name: 'fixed',
   render: (args) => (
-    <TableReel className="shr-w-[50vw]">
-      <Table>
+    <TableReel className="shr-w-[50vw]" style={{ height: '5rem' }}>
+      <Table fixedHead>
+        <thead>
+          <tr>
+            <Th {...args} fixed="left">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Th>
+            <Th {...args} fixed="left">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Th>
+            {[...Array(20)].map((_, i) => (
+              <Th {...args} key={i}>
+                <Text whiteSpace="nowrap">表カラム{i + 1}</Text>
+              </Th>
+            ))}
+            <Th {...args} fixed="right">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Th>
+            <Th {...args} fixed="right">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Th>
+          </tr>
+        </thead>
         <tbody>
+          <tr>
+            <Td {...args} fixed="left">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Td>
+            <Td {...args} fixed="left">
+              <Text whiteSpace="nowrap">fixed: left</Text>
+            </Td>
+            {[...Array(20)].map((_, i) => (
+              <Td {...args} key={i}>
+                <Text whiteSpace="nowrap">表データ{i + 1}</Text>
+              </Td>
+            ))}
+            <Td {...args} fixed="right">
+              <Text whiteSpace="nowrap">fixed: right</Text>
+            </Td>
+            <Td {...args} fixed="right">
+              <Text whiteSpace="nowrap">fixed: right</Text>
+            </Td>
+          </tr>
           <tr>
             <Td {...args} fixed="left">
               <Text whiteSpace="nowrap">fixed: left</Text>
