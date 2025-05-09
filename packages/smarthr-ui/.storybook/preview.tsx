@@ -125,6 +125,16 @@ const preview: Preview = {
         </ThemeProvider>
       )
     },
+    (Story, context) => {
+      if (context.name.toLowerCase().includes('vrt')) {
+        return (
+          <div style={{ display: 'contents', caretColor: 'transparent' }}>
+            <Story />
+          </div>
+        )
+      }
+      return <Story />
+    },
   ],
   tags: ['autodocs'],
 }
