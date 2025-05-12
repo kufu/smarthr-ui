@@ -138,7 +138,7 @@ const preview: Preview = {
                   }
                   @media (forced-colors: active) {
                     body {
-                      /* trannsparentが使えないので、Fieldの色を指定 */
+                      /* transparentが使えないので、Fieldの色を指定 */
                       caret-color: Field;
                     }
                   }
