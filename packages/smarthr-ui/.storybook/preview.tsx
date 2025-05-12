@@ -126,7 +126,7 @@ const preview: Preview = {
       )
     },
     (Story, context) => {
-      if (context.name.toLowerCase().includes('vrt')) {
+      if (context.id.toLowerCase().includes('vrt')) {
         return (
           <div style={{ display: 'contents', caretColor: 'transparent' }}>
             <Story />
