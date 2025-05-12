@@ -126,14 +126,29 @@ const preview: Preview = {
       )
     },
     (Story, context) => {
-      if (context.id.toLowerCase().includes('vrt')) {
-        return (
-          <div style={{ display: 'contents', caretColor: 'transparent' }}>
-            <Story />
-          </div>
-        )
-      }
-      return <Story />
+      return (
+        <>
+          {
+            // VRTのときはカーソルを非表示にする
+            context.id.toLowerCase().includes('vrt') && (
+              <style>
+                {`
+                  body {
+                    caret-color: transparent;
+                  }
+                  @media (forced-colors: active) {
+                    body {
+                      /* trannsparentが使えないので、Fieldの色を指定 */
+                      caret-color: Field;
+                    }
+                  }
+                `}
+              </style>
+            )
+          }
+          <Story />
+        </>
+      )
     },
   ],
   tags: ['autodocs'],
