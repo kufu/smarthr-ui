@@ -1,4 +1,5 @@
 // components
+export { Disclosure, DisclosureTrigger, DisclosureContent } from './components/Disclosure'
 export { Balloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export * from './components/Chip'
