@@ -2,7 +2,6 @@ import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
-import { Sidebar } from '../Layout'
 import { Section } from '../SectioningContent/SectioningContent'
 
 import { StepCounter } from './StepCounter'
@@ -12,6 +11,7 @@ import type { VerticalStep } from './types'
 const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-group/stepItem',
+    section: 'shr-flex shr-gap-1',
     // StepCounterの中心に揃えるため、0.25remとborder分の1px paddingを追加している
     headingWrapper: 'shr-flex shr-items-center shr-gap-1 shr-py-[calc(0.25rem_+_1px)]',
     heading: 'shr-inline-block',
@@ -62,13 +62,15 @@ type Props = VerticalStep & {
 
 export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
   const classNames = useMemo(() => {
-    const { wrapper, headingWrapper, heading, body, inner, stepCounter } = classNameGenerator({
-      status: typeof status === 'object' ? status.type : status,
-      current,
-    })
+    const { wrapper, section, headingWrapper, heading, body, inner, stepCounter } =
+      classNameGenerator({
+        status: typeof status === 'object' ? status.type : status,
+        current,
+      })
 
     return {
       wrapper: wrapper(),
+      section: section(),
       headingWrapper: headingWrapper(),
       heading: heading(),
       body: body(),
@@ -79,20 +81,18 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
 
   return (
     <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
-      <Section>
-        <Sidebar>
-          <div className={classNames.stepCounter}>
-            <StepCounter status={status} current={current} stepNumber={stepNumber} />
+      <Section className={classNames.section}>
+        <div className={classNames.stepCounter}>
+          <StepCounter status={status} current={current} stepNumber={stepNumber} />
+        </div>
+        <div className={classNames.body}>
+          <div className={classNames.headingWrapper}>
+            <Heading type="sectionTitle" className={classNames.heading}>
+              {label}
+            </Heading>
           </div>
-          <div className={classNames.body}>
-            <div className={classNames.headingWrapper}>
-              <Heading type="sectionTitle" className={classNames.heading}>
-                {label}
-              </Heading>
-            </div>
-            <div className={classNames.inner}>{children}</div>
-          </div>
-        </Sidebar>
+          <div className={classNames.inner}>{children}</div>
+        </div>
       </Section>
     </li>
   )
