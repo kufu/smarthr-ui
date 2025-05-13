@@ -17,7 +17,7 @@ const classNameGenerator = tv({
     heading: 'shr-inline-block',
     body: [
       // (stepCounter + :after) + (body > inner) という構造
-      'shr-flex shr-flex-col',
+      'shr-flex shr-flex-col shr-grow',
       'forced-colors:before:shr-bg-[ButtonBorder]',
     ],
     inner: 'shr-grow shr-pt-0.5 shr-pb-1.5',
