@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
-import { IntlProvider } from 'react-intl'
+import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 
-import { useIntl } from './useIntl'
+import { IntlProvider, useIntl } from '.'
 
 import type { FC, PropsWithChildren } from 'react'
 
@@ -24,5 +24,17 @@ describe('useIntl', () => {
     const date = new Date(2025, 1 - 1, 1)
     const ret = formatDate(date)
     expect(ret).toBe('1/1/2025')
+  })
+
+  it('returns all messages even if provider is nested', async () => {
+    const wrapper: FC<PropsWithChildren> = ({ children }) => (
+      <ReactIntlProvider locale="ja" messages={{ test: 'テスト' }}>
+        <IntlProvider locale="ja">{children}</IntlProvider>
+      </ReactIntlProvider>
+    )
+    const { localize } = renderHook(() => useIntl(), { wrapper }).result.current
+    expect(localize({ id: 'smarthr-ui/common/language', defaultText: '日本語' })).toBe('日本語')
+    const { formatMessage } = renderHook(() => useReactIntl(), { wrapper }).result.current
+    expect(formatMessage({ id: 'test' })).toBe('テスト')
   })
 })
