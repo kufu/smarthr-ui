@@ -88,7 +88,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   decorators,
   onClickBack,
 }) => {
-  const { currentStep, stepQueue, setCurrentStep } = useContext(StepFormDialogContext)
+  const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
   const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
 
   const handleCloseAction = useCallback(() => {
@@ -99,6 +99,18 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       setCurrentStep(firstStep)
     }, 300)
   }, [firstStep, stepQueue, setCurrentStep, onClickClose])
+
+  const changeCurrentStep = useCallback(
+    (step: Parameters<typeof setCurrentStep>[0]) => {
+      setCurrentStep(step)
+
+      // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
+      if (scrollerRef.current) {
+        scrollerRef.current.scroll(0, 0)
+      }
+    },
+    [setCurrentStep, scrollerRef],
+  )
 
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -112,16 +124,16 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       const next = onSubmit(handleCloseAction, e, currentStep)
 
       if (next) {
-        setCurrentStep(next)
+        changeCurrentStep(next)
       }
     },
-    [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction],
+    [currentStep, stepQueue, onSubmit, handleCloseAction, changeCurrentStep],
   )
   const handleBackAction = useCallback(() => {
     onClickBack?.()
 
-    setCurrentStep(stepQueue.current.pop() ?? firstStep)
-  }, [firstStep, stepQueue, onClickBack, setCurrentStep])
+    changeCurrentStep(stepQueue.current.pop() ?? firstStep)
+  }, [firstStep, stepQueue, onClickBack, changeCurrentStep])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
@@ -149,7 +161,11 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             subtitle={subtitle}
             titleId={titleId}
           />
-          <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+          <DialogBody
+            scrollerRef={scrollerRef}
+            contentPadding={contentPadding}
+            contentBgColor={contentBgColor}
+          >
             {children}
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
