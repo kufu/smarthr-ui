@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [71.0.0](https://github.com/kufu/smarthr-ui/compare/v70.3.0...v71.0.0) (2025-05-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* intlで多言語化しdecoratorsを廃止 (Button) (#5615)
+* themeから非推奨のプロパティ、メソッドなどを削除 SHRUI-332 (#5531)
+
+### Features
+
+* themeから非推奨のプロパティ、メソッドなどを削除 SHRUI-332 ([#5531](https://github.com/kufu/smarthr-ui/issues/5531)) ([58bc0c1](https://github.com/kufu/smarthr-ui/commit/58bc0c1a60eb57ce412cec29b4efca8522b7dde2))
+
+
+### Bug Fixes
+
+* intlで多言語化しdecoratorsを廃止 (Button) ([#5615](https://github.com/kufu/smarthr-ui/issues/5615)) ([be8b7c7](https://github.com/kufu/smarthr-ui/commit/be8b7c74df7bce66503284e938be4d0794bf4d1a))
+
 ## [70.3.0](https://github.com/kufu/smarthr-ui/compare/v70.2.0...v70.3.0) (2025-05-13)
 
 
