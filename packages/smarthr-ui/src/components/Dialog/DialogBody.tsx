@@ -1,10 +1,11 @@
-import { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, type RefObject, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap } from '../../types'
 
 export type Props = PropsWithChildren<
   Pick<VariantProps<typeof classNameGenerator>, 'contentBgColor'> & {
+    scrollerRef?: RefObject<HTMLDivElement>
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
     className?: string | undefined
   }
@@ -79,7 +80,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
+export const DialogBody: FC<Props> = ({
+  scrollerRef,
+  contentBgColor,
+  contentPadding,
+  className,
+  ...rest
+}) => {
   const actualPaddings = useMemo(() => {
     const initialized = contentPadding === undefined ? 1.5 : contentPadding
 
@@ -96,5 +103,5 @@ export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, classNam
     [actualPaddings.block, actualPaddings.inline, contentBgColor, className],
   )
 
-  return <div {...rest} className={actualClassName} />
+  return <div {...rest} ref={scrollerRef} className={actualClassName} />
 }

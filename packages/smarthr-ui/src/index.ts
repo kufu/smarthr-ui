@@ -108,20 +108,17 @@ export { useDevice, DeviceProvider } from './hooks/useDevice'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
-export { defaultPalette } from './themes/createPalette'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
-export { defaultFrame } from './themes/createFrame'
 export { defaultBorder } from './themes/createBorder'
 export { defaultRadius } from './themes/createRadius'
-export { defaultSize } from './themes/createSize'
 export { defaultFontSize } from './themes/createFontSize'
 export { defaultLeading } from './themes/createLeading'
 export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // localization
-export { IntlProvider, useIntl, DateFormatter } from './intl'
+export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'

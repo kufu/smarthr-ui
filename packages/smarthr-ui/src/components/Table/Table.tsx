@@ -23,7 +23,7 @@ const classNameGenerator = tv({
       fixed: 'shr-table-fixed',
     },
     fixedHead: {
-      true: '[&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0 [&_thead]:shr-z-1',
+      true: '[&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0 [&_thead]:shr-z-[2] [&_tbody]:shr-relative [&_tbody]:shr-z-1',
     },
   },
   defaultVariants: {

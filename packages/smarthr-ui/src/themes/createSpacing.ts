@@ -28,35 +28,40 @@ export type CharRelativeSize = (typeof primitiveTokens)[number]
 export type AbstractSize = keyof CreatedSpacingTheme
 
 const getSpacing = (baseSize: number) => {
-  const spacingByChar = createSpacingByChar(baseSize)
+  const spacings = getSpacingByChar(baseSize)
+
   return {
-    X3S: spacingByChar(0.25),
-    XXS: spacingByChar(0.5),
-    XS: spacingByChar(1),
-    S: spacingByChar(1.5),
-    M: spacingByChar(2),
-    L: spacingByChar(2.5),
-    XL: spacingByChar(3),
-    XXL: spacingByChar(3.5),
-    X3L: spacingByChar(4),
-    NONE: spacingByChar(0),
+    X3S: spacings[0.25],
+    XXS: spacings[0.5],
+    XS: spacings[1],
+    S: spacings[1.5],
+    M: spacings[2],
+    L: spacings[2.5],
+    XL: spacings[3],
+    XXL: spacings[3.5],
+    X3L: spacings[4],
+    NONE: spacings[0],
   }
 }
 
 const getSpacingByChar = (baseSize: number) => {
   const charSize = baseSize * 2
-  return primitiveTokens
-    .map((size) => {
-      const value = !size ? '0' : `${charSize * size}px`
-      return { [size]: value }
-    })
-    .reduce((a, c) => Object.assign(a, c), {})
+
+  return primitiveTokens.reduce(
+    (prev, size) => {
+      prev[size] = size ? `${charSize * size}px` : '0'
+
+      return prev
+    },
+    {} as { [key: string]: string },
+  )
 }
 
 export const createSpacing = (userBaseSize: number = defaultBaseSize) => getSpacing(userBaseSize)
-export const createSpacingByChar =
-  (userBaseSize: number = defaultBaseSize) =>
-  (size: CharRelativeSize) =>
-    getSpacingByChar(userBaseSize)[size]
+export const createSpacingByChar = (userBaseSize: number = defaultBaseSize) => {
+  const spacings = getSpacingByChar(userBaseSize)
+
+  return (size: CharRelativeSize) => spacings[size]
+}
 
 export const defaultSpacing = createSpacing()
