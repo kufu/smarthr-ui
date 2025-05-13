@@ -4,5 +4,10 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'Tiếng Việt',
+  'smarthr-ui/Combobox/loadingText': '',
+  'smarthr-ui/Combobox/noResultsText': 'Không có kết quả phù hợp.',
+  'smarthr-ui/DropdownMenuButton/triggerActive': '',
+  'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
+  'smarthr-ui/TextLink/openInNewTab': 'Mở trong tab mới',
 } as const satisfies Record<keyof typeof ja, string>
