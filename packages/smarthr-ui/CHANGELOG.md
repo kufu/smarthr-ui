@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [70.3.0](https://github.com/kufu/smarthr-ui/compare/v70.2.0...v70.3.0) (2025-05-13)
+
+
+### Features
+
+* **HelpLink:** HelpLinkを追加 ([#5589](https://github.com/kufu/smarthr-ui/issues/5589)) ([bb8b4cc](https://github.com/kufu/smarthr-ui/commit/bb8b4cc2ad23c0d5322dea75c2da8fa152a7403f))
+
+
+### Bug Fixes
+
+* **Input:** disabled 時に、prefix/suffix もグレーアウトさせる ([#5596](https://github.com/kufu/smarthr-ui/issues/5596)) ([c0aaaa5](https://github.com/kufu/smarthr-ui/commit/c0aaaa503c2231b72b3c76972aef12774d089615))
+* **InputFile:** onChangeが2度呼ばれてしまう問題を修正 ([#5610](https://github.com/kufu/smarthr-ui/issues/5610)) ([ddccce0](https://github.com/kufu/smarthr-ui/commit/ddccce0e0c22f3d3b2f31c61414dc6c9f090c221))
+* **IntlProvider:** 複数のIntlProviderをネストできるように修正 ([#5595](https://github.com/kufu/smarthr-ui/issues/5595)) ([0efaf92](https://github.com/kufu/smarthr-ui/commit/0efaf924c1b41f431990d71033ce8721ad46b335))
+* SideNavItemButton に渡した props が漏れなく渡るように修正 ([#5604](https://github.com/kufu/smarthr-ui/issues/5604)) ([ef41264](https://github.com/kufu/smarthr-ui/commit/ef41264b6641bd5b2cc83abb3f29f4c8c82f90dd))
+* StepFormDialogのstepが切り替わる際、内容のスクロール位置を先頭に戻す処理を追加 SHRUI-1261 ([#5605](https://github.com/kufu/smarthr-ui/issues/5605)) ([3ee2c2d](https://github.com/kufu/smarthr-ui/commit/3ee2c2d2b9fb8f9efa09e8a7de41a45de0358182))
+* TableReelとPaginationを組み合わせた場合、うまく再レンダリングされない場合に対応 SHRUI-1181 ([#5526](https://github.com/kufu/smarthr-ui/issues/5526)) ([a2e994f](https://github.com/kufu/smarthr-ui/commit/a2e994ffbcde7aa5445fc1b588f15ac99be970d5))
+* TableコンポーネントのfixedHeadとTh,Tdのfixedを併用した場合、重なり順がおかしい問題を修正 ([#5580](https://github.com/kufu/smarthr-ui/issues/5580)) ([52d62d1](https://github.com/kufu/smarthr-ui/commit/52d62d1ea211820b5149a5604aae85c92a8c36c5))
+
 ## [70.2.0](https://github.com/kufu/smarthr-ui/compare/v70.1.0...v70.2.0) (2025-04-30)
 
 
