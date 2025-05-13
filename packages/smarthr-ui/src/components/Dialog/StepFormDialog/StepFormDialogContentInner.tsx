@@ -100,12 +100,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     }, 300)
   }, [firstStep, stepQueue, setCurrentStep, onClickClose])
 
-  // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
-  const scrollerTop = useCallback(() => {
-    if (scrollerRef.current) {
-      scrollerRef.current.scroll(0, 0)
-    }
-  }, [scrollerRef])
+  const changeCurrentStep = useCallback(
+    (step: Parameters<typeof setCurrentStep>[0]) => {
+      setCurrentStep(step)
+
+      // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
+      if (scrollerRef.current) {
+        scrollerRef.current.scroll(0, 0)
+      }
+    },
+    [setCurrentStep, scrollerRef],
+  )
 
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -119,18 +124,16 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       const next = onSubmit(handleCloseAction, e, currentStep)
 
       if (next) {
-        setCurrentStep(next)
-        scrollerTop()
+        changeCurrentStep(next)
       }
     },
-    [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction, scrollerTop],
+    [currentStep, stepQueue, onSubmit, handleCloseAction, changeCurrentStep],
   )
   const handleBackAction = useCallback(() => {
     onClickBack?.()
 
-    setCurrentStep(stepQueue.current.pop() ?? firstStep)
-    scrollerTop()
-  }, [firstStep, stepQueue, onClickBack, scrollerTop, setCurrentStep])
+    changeCurrentStep(stepQueue.current.pop() ?? firstStep)
+  }, [firstStep, stepQueue, onClickBack, changeCurrentStep])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
