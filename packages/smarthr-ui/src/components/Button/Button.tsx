@@ -1,10 +1,10 @@
 'use client'
 
-import { type ButtonHTMLAttributes, type PropsWithChildren, forwardRef, memo, useMemo } from 'react'
+import { type ButtonHTMLAttributes, forwardRef, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { usePortal } from '../../hooks/usePortal'
+import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ButtonWrapper } from './ButtonWrapper'
@@ -20,16 +20,7 @@ const classNameGenerator = tv({
   },
 })
 
-export type Props = {
-  decorators?: DecoratorsType<DecoratorKeyTypes>
-}
-
-const DECORATOR_DEFAULT_TEXTS = {
-  loading: '処理中',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
-
-export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & Props>(
+export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
   (
     {
       type = 'button',
@@ -43,7 +34,6 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
       className,
       children,
       loading = false,
-      decorators,
       ...props
     },
     ref,
@@ -55,8 +45,6 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         wrapper: wrapper({ className }),
       }
     }, [className])
-
-    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const button = (
       <ButtonWrapper
@@ -72,7 +60,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         suffix={suffix}
         disabled={disabled}
       >
-        <LoadingStatus loading={loading}>{decorated.loading}</LoadingStatus>
+        <LoadingStatus loading={loading} />
         {children}
       </ButtonWrapper>
     )
@@ -87,9 +75,13 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
 
-const LoadingStatus = memo<PropsWithChildren<{ loading: boolean }>>(({ loading, children }) => {
+const LoadingStatus = memo<{ loading: boolean }>(({ loading }) => {
   const { createPortal } = usePortal()
 
   // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-  return createPortal(<VisuallyHiddenText role="status">{loading && children}</VisuallyHiddenText>)
+  return createPortal(
+    <VisuallyHiddenText role="status">
+      {loading && <Localizer id="smarthr-ui/Button/loading" defaultText="処理中" />}
+    </VisuallyHiddenText>,
+  )
 })
