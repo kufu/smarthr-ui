@@ -4,6 +4,7 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'Português',
+  'smarthr-ui/Button/loading': 'Processando',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Nenhuma opção correspondente',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
