@@ -38,6 +38,7 @@ export {
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
   RemoteTriggerFormDialog,
+  RemoteTriggerStepFormDialog,
   RemoteTriggerMessageDialog,
   StepFormDialog,
   StepFormDialogItem,
