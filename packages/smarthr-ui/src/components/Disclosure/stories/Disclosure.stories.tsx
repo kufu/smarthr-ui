@@ -1,5 +1,3 @@
-import { action } from '@storybook/addon-actions'
-import { ComponentProps } from 'react'
 
 import { Button } from '../../Button/'
 import { Disclosure, DisclosureTrigger, DisclosureContent } from '../Disclosure'
