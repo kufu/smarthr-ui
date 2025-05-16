@@ -394,7 +394,27 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addComponents, addBase, addVariant, theme }) => {
+    plugin(({ addUtilities, addComponents, addBase, addVariant, theme }) => {
+      addUtilities({
+        '.border-t-solid': {
+          'border-top-style': 'solid',
+        },
+        '.border-t-dotted': {
+          'border-top-style': 'dotted',
+        },
+        '.border-t-dashed': {
+          'border-top-style': 'dashed',
+        },
+        '.border-l-solid': {
+          'border-left-style': 'solid',
+        },
+        '.border-l-dotted': {
+          'border-left-style': 'dotted',
+        },
+        '.border-l-dashed': {
+          'border-left-style': 'dashed',
+        },
+      })
       addComponents({
         /**
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
