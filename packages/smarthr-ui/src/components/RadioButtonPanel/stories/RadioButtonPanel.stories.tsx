@@ -11,6 +11,12 @@ export default {
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <RadioButtonPanel {...args} />,
   argTypes: {
+    checked: {
+      control: 'boolean',
+    },
+    disabled: {
+      control: 'boolean',
+    },
     as: {
       control: 'radio',
       options: Object.keys(_asOptions),
@@ -53,8 +59,8 @@ export const As: StoryObj<typeof RadioButtonPanel> = {
   },
 }
 
-export const Description: StoryObj<typeof RadioButtonPanel> = {
-  name: 'description',
+export const Children: StoryObj<typeof RadioButtonPanel> = {
+  name: 'children',
   args: {
     children: '説明のテキストです。',
   },
