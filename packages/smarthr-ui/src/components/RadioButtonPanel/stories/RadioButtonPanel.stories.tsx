@@ -1,3 +1,4 @@
+import { StatusLabel } from '../../StatusLabel'
 import { RadioButtonPanel } from '../RadioButtonPanel'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -10,14 +11,23 @@ export default {
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <RadioButtonPanel {...args} />,
   argTypes: {
+    checked: {
+      control: 'boolean',
+    },
+    disabled: {
+      control: 'boolean',
+    },
     as: {
       control: 'radio',
       options: Object.keys(_asOptions),
       mapping: _asOptions,
     },
+    children: {
+      control: 'text',
+    },
   },
   args: {
-    children: 'ラジオボタンパネル',
+    label: 'ラジオボタンパネル',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -46,5 +56,19 @@ export const As: StoryObj<typeof RadioButtonPanel> = {
   name: 'as',
   args: {
     as: 'span',
+  },
+}
+
+export const Children: StoryObj<typeof RadioButtonPanel> = {
+  name: 'children',
+  args: {
+    children: '説明のテキストです。',
+  },
+}
+
+export const LabelSuffix: StoryObj<typeof RadioButtonPanel> = {
+  name: 'labelSuffix',
+  args: {
+    labelSuffix: <StatusLabel>ステータスラベル</StatusLabel>,
   },
 }
