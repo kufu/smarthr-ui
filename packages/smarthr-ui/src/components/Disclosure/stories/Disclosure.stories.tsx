@@ -15,7 +15,7 @@ export default {
   },
   render: (args) => (
     <Disclosure {...args} trigger={<Button>Disclosure</Button>}>
-      Diclosure Content.
+      Disclosure Content.
     </Disclosure>
   ),
   argTypes: {},
