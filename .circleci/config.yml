@@ -57,7 +57,7 @@ commands:
       - run:
           command: pnpm ui test-storybook:ci
       - store_test_results:
-          path: junit.xml
+          path: ./junit.xml
   run-e2e-test:
     steps:
       - run:
