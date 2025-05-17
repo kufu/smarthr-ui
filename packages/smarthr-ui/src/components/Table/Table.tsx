@@ -117,7 +117,7 @@ export const Table: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const actualClassName = useMemo(() => {
+  const actualClassNames = useMemo(() => {
     const { table, wrapper } = classNameGenerator({
       borderType,
       borderStyle,
@@ -129,19 +129,19 @@ export const Table: FC<Props & ElementProps> = ({
     return { table: table(), wrapper: wrapper() }
   }, [borderType, borderStyle, className, fixedHead, layout, rounded])
   const [Wrapper, wrapperProps] = useMemo(
-    () => (rounded ? [RoundedWrapper, { className: actualClassName.wrapper }] : [Fragment, {}]),
-    [rounded, actualClassName.wrapper],
+    () => (rounded ? [RoundedWrapper, { className: actualClassNames.wrapper }] : [Fragment, {}]),
+    [rounded, actualClassNames.wrapper],
   )
 
   return (
     <Wrapper {...wrapperProps}>
-      <table {...rest} className={actualClassName.table} />
+      <table {...rest} className={actualClassNames.table} />
     </Wrapper>
   )
 }
 
-const RoundedWrapper = ({ children, ...rest }: PropsWithChildren) => (
-  <Base {...rest} overflow="hidden" layer={0}>
+const RoundedWrapper = ({ children, className }: PropsWithChildren<{ className?: string }>) => (
+  <Base className={className} overflow="hidden" layer={0}>
     <TableReel>{children}</TableReel>
   </Base>
 )
