@@ -44,7 +44,6 @@ export default {
     TableReel,
   },
   render: Template,
-  args: {},
   parameters: {
     chromatic: { disableSnapshot: true },
   },
@@ -56,20 +55,36 @@ export const BorderType: StoryObj<typeof Table> = {
   name: 'borderType',
   render: (args) => (
     <Stack>
-      <Template {...args} />
-      <Template {...args} borderType="horizontal" />
-      <Template {...args} borderType="both" />
+      {[undefined, 'vertical', 'horizontal', 'both', 'outer', 'all'].map((borderType) => (
+        <Template {...args} borderType={borderType as any} />
+      ))}
     </Stack>
   ),
+}
+
+export const BorderStyle: StoryObj<typeof Table> = {
+  name: 'borderStyle',
+  render: (args) => (
+    <Stack>
+      {[undefined, 'solid', 'dashed', 'dotted'].map((borderStyle) => (
+        <Template {...args} borderStyle={borderStyle as any} />
+      ))}
+    </Stack>
+  ),
+}
+
+export const Rounded: StoryObj<typeof Table> = {
+  name: 'rounded',
+  render: (args) => <Template {...args} rounded />,
 }
 
 export const Layout: StoryObj<typeof Table> = {
   name: 'layout',
   render: (args) => (
     <Stack>
-      <Template {...args} />
-      <Template {...args} layout="auto" />
-      <Template {...args} layout="fixed" />
+      {[undefined, 'auto', 'fixed'].map((layout) => (
+        <Template {...args} layout={layout as any} />
+      ))}
     </Stack>
   ),
 }
