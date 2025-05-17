@@ -23,17 +23,13 @@ const classNameGenerator = tv({
   variants: {
     borderType: {
       vertical: {},
-      horizontal: {
-        table: 'shr-table-border-horizontal',
-      },
-      both: {
-        table: 'shr-table-border-horizontal',
-      },
+      horizontal: {},
+      both: {},
       outer: {
         table: 'shr-border-shorthand',
       },
       all: {
-        table: 'shr-table-border-horizontal shr-border-shorthand',
+        table: 'shr-border-shorthand',
       },
     },
     borderStyle: {
