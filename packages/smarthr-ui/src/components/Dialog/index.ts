@@ -1,7 +1,6 @@
 export { Dialog } from './Dialog'
 export { MessageDialog, MessageDialogContent } from './MessageDialog'
-export { ActionDialog, ActionDialogContent } from './ActionDialog'
-export { ActionDialogWithTrigger } from './ActionDialogWithTrigger'
+export { ActionDialog, ActionDialogContent, ActionDialogWithTrigger } from './ActionDialog'
 export { FormDialog, FormDialogContent } from './FormDialog'
 export { StepFormDialog, StepFormDialogItem } from './StepFormDialog'
 export { DialogWrapper } from './DialogWrapper'
