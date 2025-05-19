@@ -201,11 +201,12 @@ export const renderButtonList = (children: Actions) =>
     }
 
     return (
-      <li role="menuitem">
+      <li role="presentation">
         <DropdownCloser>
           {cloneElement(item as ReactElement, {
             variant: 'text',
             wide: true,
+            role: 'menuitem',
             className: actionListItemButton({ className: item.props.className }),
           })}
         </DropdownCloser>
