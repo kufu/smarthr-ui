@@ -1,3 +1,5 @@
+'use client'
+
 import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 
 import type { ja } from './locales'
@@ -8,7 +10,7 @@ type Messages = Record<keyof typeof ja, string>
 type Props<Id extends keyof Messages> = {
   id: Id
   defaultText: (typeof ja)[Id]
-  values: ComponentProps<typeof ReactIntlFormattedMessage>['values']
+  values?: ComponentProps<typeof ReactIntlFormattedMessage>['values']
 }
 
 export const Localizer = <ID extends keyof Messages>({

@@ -60,6 +60,7 @@ export const SideNavItemButton: FC<Props & ElementProps> = ({
   size,
   onClick,
   children,
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, button, buttonInner } = classNameGenerator()
@@ -72,7 +73,7 @@ export const SideNavItemButton: FC<Props & ElementProps> = ({
   }, [size])
 
   return (
-    <li data-current={!!current} className={classNames.wrapper}>
+    <li {...rest} data-current={!!current} className={classNames.wrapper}>
       <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
         <ButtonBodyCluster
           prefix={prefix}

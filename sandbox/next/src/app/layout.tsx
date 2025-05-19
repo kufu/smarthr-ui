@@ -1,3 +1,4 @@
+import { IntlProvider } from 'smarthr-ui'
 import './global.css'
 
 export default function RootLayout({
@@ -6,8 +7,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <IntlProvider locale="ja">
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </IntlProvider>
   )
 }
