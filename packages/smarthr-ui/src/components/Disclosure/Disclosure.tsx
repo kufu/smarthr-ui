@@ -130,7 +130,6 @@ export const DisclosureContent: FC<ContentProps> = ({
   id,
   open,
   visuallyHidden,
-  className,
   children,
   ...rest
 }) => {
@@ -156,7 +155,7 @@ export const DisclosureContent: FC<ContentProps> = ({
 
   if (expanded) {
     return (
-      <div {...rest} id={id} className={className}>
+      <div {...rest} id={id}>
         {children}
       </div>
     )
@@ -164,7 +163,7 @@ export const DisclosureContent: FC<ContentProps> = ({
 
   if (visuallyHidden) {
     return (
-      <VisuallyHiddenText {...rest} id={id} className={className} as="div">
+      <VisuallyHiddenText {...rest} id={id} as="div">
         {children}
       </VisuallyHiddenText>
     )
