@@ -64,6 +64,8 @@ export const VRTExpanded: StoryObj = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.click(canvas.getByRole('textbox'))
+    const calendarHeader = await within(canvasElement.ownerDocument.body).findByText('2024年11月')
+    await userEvent.click(calendarHeader)
   },
 }
 
