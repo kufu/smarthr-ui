@@ -43,10 +43,10 @@ export default {
             <Button disabled disabledDetail={{ message: '非推奨な理由' }}>
               操作2
             </Button>
+            <RemoteDialogTrigger targetId="remote-dialog">
+              <Button>操作3</Button>
+            </RemoteDialogTrigger>
           </DropdownMenuGroup>
-          <RemoteDialogTrigger targetId="remote-dialog">
-            <Button>操作3</Button>
-          </RemoteDialogTrigger>
           <DropdownMenuGroup name="グループ2">
             <AnchorButton href="#">操作4</AnchorButton>
             <AnchorButton href="#">操作5</AnchorButton>
