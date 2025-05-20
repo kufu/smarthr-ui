@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [72.0.0](https://github.com/kufu/smarthr-ui/compare/v71.0.0...v72.0.0) (2025-05-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* RadioButtonPanel に説明テキストを渡せるようにする (#5556)
+
+### Features
+
+* RadioButtonPanel に説明テキストを渡せるようにする ([#5556](https://github.com/kufu/smarthr-ui/issues/5556)) ([056ff9d](https://github.com/kufu/smarthr-ui/commit/056ff9d1da9d0015182e65960e6c363a0bc3aaff))
+* RemoteTriggerStepFormDialogを追加 SHRUI-1262 ([#5606](https://github.com/kufu/smarthr-ui/issues/5606)) ([69d3d18](https://github.com/kufu/smarthr-ui/commit/69d3d1806f392d5c802ccf30e947b522b4b7eaea))
+
+
+### Bug Fixes
+
+* **Stepper:** タイトルが長いときに縦積み Stepper の接続線が途切れるのを修正 ([#5594](https://github.com/kufu/smarthr-ui/issues/5594)) ([9d8bed0](https://github.com/kufu/smarthr-ui/commit/9d8bed0ee08c39c69fe9041f3c639945a55bdce8))
+
 ## [71.0.0](https://github.com/kufu/smarthr-ui/compare/v70.3.0...v71.0.0) (2025-05-13)
 
 
