@@ -1,12 +1,8 @@
-import { background } from '@storybook/theming'
-import { ComponentProps } from 'react'
-
-import { backgroundColor } from '../../../themes'
+import { backgroundColor, bgColors } from '../../../themes'
 import { Gap } from '../../../types'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
-import { classNameGenerator as columnClassNameGenerator } from '../BaseColumn/BaseColumn'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -62,7 +58,7 @@ export const BgColor: StoryObj<typeof BaseColumn> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {Object.keys(columnClassNameGenerator.variants.bgColor).map((bgColor) => (
+      {Object.keys(bgColors).map((bgColor) => (
         <BaseColumn {...args} bgColor={bgColor as any} key={bgColor}>
           {bgColor}
         </BaseColumn>

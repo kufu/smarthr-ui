@@ -1,14 +1,15 @@
-import { type FC, type PropsWithChildren, type RefObject, useMemo } from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
+
+import { bgColors } from '../../themes/tailwind'
 
 import type { Gap } from '../../types'
 
 export type Props = PropsWithChildren<
   Pick<VariantProps<typeof classNameGenerator>, 'contentBgColor'> & {
-    scrollerRef?: RefObject<HTMLDivElement>
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
     className?: string | undefined
-  }
+  } & Pick<ComponentProps<'div'>, 'ref'>
 >
 
 const classNameGenerator = tv({
@@ -62,31 +63,11 @@ const classNameGenerator = tv({
       XXL: 'shr-px-3.5',
       X3L: 'shr-px-4',
     } as { [key in Gap]: string },
-    contentBgColor: {
-      BACKGROUND: 'shr-bg-background',
-      COLUMN: 'shr-bg-column',
-      BASE_GREY: 'shr-bg-base-grey',
-      OVER_BACKGROUND: 'shr-bg-over-background',
-      HEAD: 'shr-bg-head',
-      BORDER: 'shr-bg-[theme(colors.grey.20)]',
-      ACTION_BACKGROUND: 'shr-bg-action-background',
-      WHITE: 'shr-bg-white',
-      GREY_5: 'shr-bg-[theme(colors.grey.5)]',
-      GREY_6: 'shr-bg-[theme(colors.grey.6)]',
-      GREY_7: 'shr-bg-[theme(colors.grey.7)]',
-      GREY_9: 'shr-bg-[theme(colors.grey.9)]',
-      GREY_20: 'shr-bg-[theme(colors.grey.20)]',
-    },
+    contentBgColor: bgColors,
   },
 })
 
-export const DialogBody: FC<Props> = ({
-  scrollerRef,
-  contentBgColor,
-  contentPadding,
-  className,
-  ...rest
-}) => {
+export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
   const actualPaddings = useMemo(() => {
     const initialized = contentPadding === undefined ? 1.5 : contentPadding
 
@@ -103,5 +84,5 @@ export const DialogBody: FC<Props> = ({
     [actualPaddings.block, actualPaddings.inline, contentBgColor, className],
   )
 
-  return <div {...rest} ref={scrollerRef} className={actualClassName} />
+  return <div {...rest} className={actualClassName} />
 }
