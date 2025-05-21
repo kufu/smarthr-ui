@@ -113,7 +113,7 @@ export const Table: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const actualClassNames = useMemo(() => {
+  const classNames = useMemo(() => {
     const { table, wrapper } = classNameGenerator({
       borderType,
       borderStyle,
@@ -125,13 +125,13 @@ export const Table: FC<Props & ElementProps> = ({
     return { table: table(), wrapper: wrapper() }
   }, [borderType, borderStyle, className, fixedHead, layout, rounded])
   const [Wrapper, wrapperProps] = useMemo(
-    () => (rounded ? [RoundedWrapper, { className: actualClassNames.wrapper }] : [Fragment, {}]),
-    [rounded, actualClassNames.wrapper],
+    () => (rounded ? [RoundedWrapper, { className: classNames.wrapper }] : [Fragment]),
+    [rounded, classNames.wrapper],
   )
 
   return (
     <Wrapper {...wrapperProps}>
-      <table {...rest} className={actualClassNames.table} />
+      <table {...rest} className={classNames.table} />
     </Wrapper>
   )
 }
