@@ -242,7 +242,7 @@ importers:
         specifier: ^0.6.4
         version: 0.6.4(@babel/core@7.27.1)
       chromatic:
-        specifier: ^11.28.4
+        specifier: ^11.29.0
         version: 11.29.0
       css-loader:
         specifier: ^7.1.2
