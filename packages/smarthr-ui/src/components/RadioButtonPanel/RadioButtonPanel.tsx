@@ -28,7 +28,8 @@ const classNameGenerator = tv({
   slots: {
     base: [
       'smarthr-ui-RadioButtonPanel',
-      'shr-border-shorthand shr-list-none shr-shadow-none',
+      'shr-border-shorthand shr-list-none shr-shadow-none shr-cursor-pointer',
+      'has-[:disabled]:shr-cursor-default',
       // FIX: なぜか storybook 上で :has が動作しないので重ねて書いている
       'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
       'has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled [&:has(:disabled)]:shr-text-disabled',
@@ -36,8 +37,6 @@ const classNameGenerator = tv({
     radio: [
       '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
       '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
-      'shr-cursor-pointer has-[:not(:disabled)]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-pointer',
-      'has-[:disabled]:shr-cursor-default has-[:disabled]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-default',
     ],
     // RadioButtonPanel で指定している shr-ms-0.75 + RadioButton のボタンの shr-w-em を足して shr-ms-[1.75em] にしている
     description: ['smarthr-ui-RadioButtonPanel-description', 'shr-ms-[1.75em] shr-mt-0.5'],
