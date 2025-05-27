@@ -114,6 +114,54 @@ export default {
           )
         }),
       )}
+      {[false, true].map((rounded) =>
+        ['vertical', 'horizontal', 'both', 'outer', 'all'].map((borderType) =>
+          ['solid', 'dashed', 'dotted'].map((borderStyle) => (
+            <>
+              <Table
+                {...args}
+                borderType={borderType as any}
+                borderStyle={borderStyle as any}
+                rounded={rounded}
+              >
+                <thead>
+                  <tr>
+                    <Th>オブジェクト名</Th>
+                    <Th>オブジェクトの情報1</Th>
+                    <Th>オブジェクトの情報2</Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <Td>オブジェクト1</Td>
+                    <Td>情報1</Td>
+                    <Td>2024-11-26</Td>
+                  </tr>
+                </tbody>
+              </Table>
+              <Table
+                {...args}
+                borderType={borderType as any}
+                borderStyle={borderStyle as any}
+                rounded={rounded}
+              >
+                <tbody>
+                  <tr>
+                    <Th>オブジェクト1</Th>
+                    <Td>情報1</Td>
+                    <Td>2024-11-26</Td>
+                  </tr>
+                  <tr>
+                    <Th>オブジェクト2</Th>
+                    <Td>情報2</Td>
+                    <Td>2024-11-27</Td>
+                  </tr>
+                </tbody>
+              </Table>
+            </>
+          )),
+        ),
+      )}
     </Stack>
   ),
   parameters: {
