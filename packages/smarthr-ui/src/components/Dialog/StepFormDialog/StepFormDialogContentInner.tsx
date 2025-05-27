@@ -162,9 +162,9 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             titleId={titleId}
           />
           <DialogBody
-            scrollerRef={scrollerRef}
             contentPadding={contentPadding}
             contentBgColor={contentBgColor}
+            ref={scrollerRef}
           >
             {children}
           </DialogBody>
