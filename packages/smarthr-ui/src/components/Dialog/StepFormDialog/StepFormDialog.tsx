@@ -40,50 +40,48 @@ export const StepFormDialog: FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
+  isOpen,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
   const focusTrapRef = useRef<FocusTrapRef>(null)
 
-  const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
-      return
+  const actualOnClickClose = useCallback(() => {
+    if (isOpen) {
+      focusTrapRef.current?.focus()
+      onClickClose()
     }
+  }, [isOpen, onClickClose])
 
-    focusTrapRef.current?.focus()
-    onClickClose()
-  }, [onClickClose, props.isOpen])
-
-  const handleSubmitAction = useCallback(
+  const actualOnSubmitAction = useCallback(
     (close: () => void, e: FormEvent<HTMLFormElement>, currentStep: StepItem) => {
-      if (!props.isOpen) {
-        return undefined
+      if (isOpen) {
+        focusTrapRef.current?.focus()
+
+        return onSubmit(close, e, currentStep)
       }
 
-      focusTrapRef.current?.focus()
-
-      return onSubmit(close, e, currentStep)
+      return undefined
     },
-    [onSubmit, props.isOpen],
+    [onSubmit, isOpen],
   )
 
-  const handleBackSteps = useCallback(() => {
-    if (!props.isOpen) {
-      return
+  const actualOnClickBack = useCallback(() => {
+    if (isOpen) {
+      focusTrapRef.current?.focus()
+      onClickBack?.()
     }
-
-    focusTrapRef.current?.focus()
-    onClickBack?.()
-  }, [props.isOpen, onClickBack])
+  }, [isOpen, onClickBack])
 
   return createPortal(
     <StepFormDialogProvider firstStep={firstStep}>
       <DialogContentInner
         {...props}
+        isOpen={isOpen}
         ariaLabelledby={titleId}
         className={className}
-        onPressEscape={onPressEscape}
+        onPressEscape={closeDisabled ? undefined : onPressEscape}
         focusTrapRef={focusTrapRef}
       >
         {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
@@ -100,9 +98,9 @@ export const StepFormDialog: FC<Props & ElementProps> = ({
           actionDisabled={actionDisabled}
           closeDisabled={closeDisabled}
           submitLabel={submitLabel}
-          onClickClose={handleClickClose}
-          onSubmit={handleSubmitAction}
-          onClickBack={handleBackSteps}
+          onClickClose={actualOnClickClose}
+          onSubmit={actualOnSubmitAction}
+          onClickBack={actualOnClickBack}
           responseStatus={responseStatus}
           decorators={decorators}
         >
