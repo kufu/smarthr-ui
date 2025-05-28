@@ -10,9 +10,9 @@ import {
   useMemo,
 } from 'react'
 
-import { TRIGGER_EVENT } from './useRemoteTrigger'
+import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
-import type { Button } from '../Button'
+import type { Button } from '../../Button'
 
 const onClickRemoteDialogTrigger = (e: MouseEvent<HTMLElement>) => {
   document.dispatchEvent(
