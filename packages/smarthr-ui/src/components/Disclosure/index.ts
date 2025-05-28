@@ -1,1 +1,1 @@
-export { Disclosure, DisclosureTrigger, DisclosureContent } from './Disclosure'
+export { DisclosureTrigger, DisclosureContent } from './Disclosure'

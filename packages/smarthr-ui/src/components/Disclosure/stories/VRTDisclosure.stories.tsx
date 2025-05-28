@@ -1,32 +1,24 @@
-import { Stack, Cluster } from '../../Layout'
+import { Stack } from '../../Layout'
 import { Button } from '../../Button/'
-import { Disclosure, DisclosureTrigger, DisclosureContent } from '../Disclosure'
+import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Data Display（データ表示）/Disclosure/VRT',
   render: () => (
-    <Stack>
-      {[{}, { visuallyHidden: true }, { open: true }].map((args, index) => (
-        <Stack>
-          <Disclosure {...args} trigger={<Button>Disclosure</Button>}>
-            Diclosure Content.
-          </Disclosure>
-          <Stack>
-            <Cluster>
-              <DisclosureTrigger targetId={`disclosure_${index}`}>
-                <Button>Disclosure</Button>
-              </DisclosureTrigger>
-              <Button>other button</Button>
-            </Cluster>
-            <DisclosureContent {...args} id={`disclosure_${index}`}>
-              Disclosure Content.
-            </DisclosureContent>
-          </Stack>
-        </Stack>
+    <>
+      {[{}, { visuallyHidden: true }, { isOpen: true }].map((args, index) => (
+        <>
+          <DisclosureTrigger targetId={`disclosure_${index}`}>
+            {({ expanded }) => <Button>ディスクロージャーを{expanded ? '閉じる' : '開く'}</Button>}
+          </DisclosureTrigger>
+          <DisclosureContent {...args} id={`disclosure_${index}`}>
+            ディスクロージャーコンテンツ
+          </DisclosureContent>
+        </>
       ))}
-    </Stack>
+    </>
   ),
   parameters: {
     chromatic: { disableSnapshot: false },

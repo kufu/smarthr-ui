@@ -7,43 +7,21 @@ import {
   cloneElement,
   useCallback,
   useEffect,
-  useId,
   useMemo,
   useState,
 } from 'react'
 
-import { Stack } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { Button } from '../Button'
-
 type AbstractContentProps = PropsWithChildren<{
+  /** DisclosureTriggerのtargetIdと紐づけるId */
   id: string
-  open?: boolean
+  /** 開閉状態。デフォルトは閉じている */
+  isOpen?: boolean
+  /** 閉じた状態でContentを要素として存在させるか。デフォルトでは要素は存在しない */
   visuallyHidden?: boolean
 }>
 type ContentProps = AbstractContentProps & Omit<ComponentProps<'div'>, keyof AbstractContentProps>
-
-export const Disclosure: FC<
-  ComponentProps<typeof Stack> &
-    Pick<ContentProps, 'open' | 'visuallyHidden'> &
-    PropsWithChildren<{
-      trigger: Omit<ReactElement, 'onClick' | 'aria-expanded' | 'aria-controls' | 'variant'>
-    }>
-> = ({ trigger, children, open, visuallyHidden, ...rest }) => {
-  const id = useId()
-
-  return (
-    <Stack {...rest}>
-      <span>
-        <DisclosureTrigger targetId={id}>{trigger}</DisclosureTrigger>
-      </span>
-      <DisclosureContent id={id} open={open} visuallyHidden={visuallyHidden}>
-        {children}
-      </DisclosureContent>
-    </Stack>
-  )
-}
 
 const TRIGGER_EVENT = 'smarthr-ui:disclosure-trigger-dispatch'
 const CONTENT_TOGGLE_EVENT = 'smarthr-ui:disclosure-content-toggle-dispatch'
@@ -65,13 +43,15 @@ const toggleEffectListener = (
   }
 }
 
-export const DisclosureTrigger: FC<
-  Pick<ComponentProps<typeof Button>, 'variant'> & {
-    targetId: string
-    onClick?: (open: () => void, e: MouseEvent<HTMLButtonElement>) => void
-    children: Omit<ReactElement, 'onClick' | 'aria-expanded' | 'aria-controls' | 'variant'>
-  }
-> = ({ targetId, children, onClick, variant, ...rest }) => {
+type TriggerChildrenType = Omit<ReactElement, 'onClick' | 'aria-expanded' | 'aria-controls'>
+
+export const DisclosureTrigger: FC<{
+  /** DisclosureContentのidと紐づける文字列 */
+  targetId: string
+  /** 開閉時のハンドラー */
+  onClick?: (open: () => void, e: MouseEvent<HTMLButtonElement>) => void
+  children: TriggerChildrenType | ((args: { expanded: boolean }) => TriggerChildrenType)
+}> = ({ targetId, children, onClick, ...rest }) => {
   const [expanded, setExpanded] = useState(false)
 
   const actualOnClick = useCallback(
@@ -88,17 +68,16 @@ export const DisclosureTrigger: FC<
     },
     [onClick],
   )
-  const actualTrigger = useMemo(
-    () =>
-      cloneElement(children as ReactElement, {
-        onClick: actualOnClick,
-        'aria-expanded': expanded.toString(),
-        'aria-controls': targetId,
-        variant,
-        ...rest,
-      }),
-    [children, expanded, actualOnClick, targetId, variant, rest],
-  )
+  const actualTrigger = useMemo(() => {
+    const actualChildren = children instanceof Function ? children({ expanded }) : children
+
+    return cloneElement(actualChildren as ReactElement, {
+      onClick: actualOnClick,
+      'aria-expanded': expanded.toString(),
+      'aria-controls': targetId,
+      ...rest,
+    })
+  }, [expanded, children, actualOnClick, targetId, rest])
 
   useEffect(
     () =>
@@ -128,20 +107,20 @@ export const DisclosureTrigger: FC<
 
 export const DisclosureContent: FC<ContentProps> = ({
   id,
-  open,
+  isOpen,
   visuallyHidden,
   children,
   ...rest
 }) => {
-  const [expanded, setExpanded] = useState(open || false)
+  const [expanded, setExpanded] = useState(isOpen || false)
 
   useEffect(() => {
     document.dispatchEvent(
       new CustomEvent(CONTENT_TOGGLE_EVENT, {
-        detail: { id, expanded: open || false },
+        detail: { id, expanded: isOpen || false },
       }),
     )
-  }, [open, id])
+  }, [isOpen, id])
 
   useEffect(
     () =>

@@ -8,15 +8,12 @@ export default {
   title: 'Data Display（データ表示）/Disclosure/DisclosureTrigger',
   component: DisclosureTrigger,
   render: (args) => (
-    <Stack>
-      <Cluster>
-        <DisclosureTrigger {...args} targetId="disclosure_1">
-          <Button>Disclosure</Button>
-        </DisclosureTrigger>
-        <Button>other button</Button>
-      </Cluster>
-      <DisclosureContent id="disclosure_1">Disclosure Content.</DisclosureContent>
-    </Stack>
+    <>
+      <DisclosureTrigger {...args} targetId="disclosure_1">
+        {({ expanded }) => <Button>ディスクロージャーを{expanded ? '閉じる' : '開く'}</Button>}
+      </DisclosureTrigger>
+      <DisclosureContent id="disclosure_1">ディスクロージャーコンテンツ</DisclosureContent>
+    </>
   ),
   argTypes: {},
   args: {},

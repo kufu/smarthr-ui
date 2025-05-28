@@ -8,17 +8,14 @@ export default {
   title: 'Data Display（データ表示）/Disclosure/DisclosureContent',
   component: DisclosureContent,
   render: (args) => (
-    <Stack>
-      <Cluster>
-        <DisclosureTrigger targetId="disclosure_1">
-          <Button>Disclosure</Button>
-        </DisclosureTrigger>
-        <Button>other button</Button>
-      </Cluster>
+    <>
+      <DisclosureTrigger targetId="disclosure_1">
+        <Button>ディスクロージャー</Button>
+      </DisclosureTrigger>
       <DisclosureContent {...args} id="disclosure_1">
-        Disclosure Content.
+        ディスクロージャーコンテンツ
       </DisclosureContent>
-    </Stack>
+    </>
   ),
   argTypes: {},
   args: {},
@@ -31,10 +28,10 @@ export const Playground: StoryObj<typeof DisclosureContent> = {
   args: {},
 }
 
-export const Open: StoryObj<typeof DisclosureContent> = {
-  name: 'open',
+export const IsOpen: StoryObj<typeof DisclosureContent> = {
+  name: 'isOpen',
   args: {
-    open: true,
+    isOpen: true,
   },
 }
 
