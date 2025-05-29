@@ -1,4 +1,3 @@
-import { Stack } from '../../Layout'
 import { Button } from '../../Button/'
 import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
 
