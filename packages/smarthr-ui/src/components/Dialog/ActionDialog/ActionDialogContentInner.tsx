@@ -5,9 +5,9 @@ import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, use
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -97,13 +97,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             className={styles.buttonArea}
           />
         </Cluster>
-        {calcedResponseStatus.message && (
-          <div className={styles.message}>
-            <ResponseMessage type={calcedResponseStatus.status} role="alert">
-              {calcedResponseStatus.message}
-            </ResponseMessage>
-          </div>
-        )}
+        <DialogContentResponseStatusMessage responseStatus={calcedResponseStatus} />
       </Stack>
     </Section>
   )

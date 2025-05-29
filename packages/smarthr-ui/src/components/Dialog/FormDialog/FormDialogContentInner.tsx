@@ -12,9 +12,9 @@ import { tv } from 'tailwind-variants'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -123,13 +123,10 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
               className={styles.buttonArea}
             />
           </Cluster>
-          {calculatedResponseStatus.message && (
-            <div className={styles.message}>
-              <ResponseMessage type={calculatedResponseStatus.status} role="alert">
-                {calculatedResponseStatus.message}
-              </ResponseMessage>
-            </div>
-          )}
+          <DialogContentResponseStatusMessage
+            responseStatus={calculatedResponseStatus}
+            className={styles.message}
+          />
         </Stack>
       </form>
     </Section>
