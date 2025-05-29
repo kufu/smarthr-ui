@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [72.1.0](https://github.com/kufu/smarthr-ui/compare/v72.0.0...v72.1.0) (2025-05-27)
+
+
+### Features
+
+* **Table:** border の種類とスタイル、角丸を追加 ([#5622](https://github.com/kufu/smarthr-ui/issues/5622)) ([5125cc8](https://github.com/kufu/smarthr-ui/commit/5125cc8904ceb08d5d70c7906f36c4888a1e8179))
+
+
+### Bug Fixes
+
+* HelpLink が export されていなかった問題を修正 ([#5630](https://github.com/kufu/smarthr-ui/issues/5630)) ([bac2d47](https://github.com/kufu/smarthr-ui/commit/bac2d47cf6ddee08786e487352a2dd6faef7565f))
+
 ## [72.0.0](https://github.com/kufu/smarthr-ui/compare/v71.0.0...v72.0.0) (2025-05-20)
 
 
