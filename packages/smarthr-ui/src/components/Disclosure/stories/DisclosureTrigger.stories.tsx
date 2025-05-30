@@ -16,7 +16,9 @@ export default {
       <DisclosureContent id="disclosure_1">ディスクロージャーコンテンツ</DisclosureContent>
     </>
   ),
-  argTypes: {},
+  argTypes: {
+    children: {},
+  },
   args: {},
   parameters: {
     chromatic: { disableSnapshot: true },
