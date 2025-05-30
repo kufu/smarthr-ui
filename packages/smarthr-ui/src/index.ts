@@ -24,7 +24,6 @@ export { Loader } from './components/Loader'
 export {
   ActionDialog,
   ActionDialogContent,
-  ActionDialogWithTrigger,
   FormDialog,
   FormDialogContent,
   Dialog,
