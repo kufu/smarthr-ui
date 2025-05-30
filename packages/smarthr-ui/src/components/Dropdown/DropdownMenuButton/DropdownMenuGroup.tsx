@@ -4,6 +4,7 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
+  useId,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -12,10 +13,11 @@ import { Text } from '../../Text'
 
 import { renderButtonList } from './DropdownMenuButton'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   name?: ReactNode
 }>
-type ElementProps = Omit<ComponentProps<'li'>, keyof Props>
+type ElementProps = Omit<ComponentProps<'li'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 const classNameGenerator = tv({
   slots: {
@@ -35,32 +37,60 @@ const classNameGenerator = tv({
       ],
     ],
     groupName: 'shr-px-1 shr-py-0.5',
+    subMenu: 'shr-list-none',
   },
 })
 
-export const DropdownMenuGroup: FC<Props & ElementProps> = ({ name, children, className }) => {
+export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
+  const subMenuId = useId()
   const classNames = useMemo(() => {
-    const { group, groupName } = classNameGenerator()
+    const { group, groupName, subMenu } = classNameGenerator()
 
     return {
       group: group({ className }),
       groupName: groupName(),
+      subMenu: subMenu(),
     }
   }, [className])
 
+  const subMenu = (
+    <menu
+      role="group"
+      aria-labelledby={name ? subMenuId : undefined}
+      className={classNames.subMenu}
+    >
+      {renderButtonList(children)}
+    </menu>
+  )
+
   return (
-    <li className={classNames.group}>
-      <NameText className={classNames.groupName}>{name}</NameText>
-      <ul>{renderButtonList(children)}</ul>
+    <li role="presentation" className={classNames.group}>
+      {name ? (
+        <>
+          <NameText id={subMenuId} className={classNames.groupName}>
+            {name}
+          </NameText>
+          {subMenu}
+        </>
+      ) : (
+        subMenu
+      )}
     </li>
   )
 }
 
-const NameText = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) =>
-    children && (
-      <Text as="p" size="S" weight="bold" color="TEXT_GREY" leading="NONE" className={className}>
-        {children}
-      </Text>
-    ),
+const NameText = memo<PropsWithChildren<{ id: string; className: string }>>(
+  ({ id, children, className }) => (
+    <Text
+      size="S"
+      id={id}
+      weight="bold"
+      color="TEXT_GREY"
+      leading="NONE"
+      className={className}
+      as="div"
+    >
+      {children}
+    </Text>
+  ),
 )

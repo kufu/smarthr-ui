@@ -1,0 +1,15 @@
+export const bgColors = {
+  BACKGROUND: 'shr-bg-background',
+  COLUMN: 'shr-bg-column',
+  BASE_GREY: 'shr-bg-base-grey',
+  OVER_BACKGROUND: 'shr-bg-over-background',
+  HEAD: 'shr-bg-head',
+  BORDER: 'shr-bg-[theme(colors.grey.20)]',
+  ACTION_BACKGROUND: 'shr-bg-action-background',
+  WHITE: 'shr-bg-white',
+  GREY_5: 'shr-bg-[theme(colors.grey.5)]',
+  GREY_6: 'shr-bg-[theme(colors.grey.6)]',
+  GREY_7: 'shr-bg-[theme(colors.grey.7)]',
+  GREY_9: 'shr-bg-[theme(colors.grey.9)]',
+  GREY_20: 'shr-bg-[theme(colors.grey.20)]',
+}

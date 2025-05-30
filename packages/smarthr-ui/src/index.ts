@@ -1,4 +1,5 @@
 // components
+export { DisclosureTrigger, DisclosureContent } from './components/Disclosure'
 export { Balloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export * from './components/Chip'
@@ -17,7 +18,7 @@ export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
-export { TextLink } from './components/TextLink'
+export { TextLink, HelpLink } from './components/TextLink'
 export * from './components/UpwardLink'
 export { Loader } from './components/Loader'
 export {
@@ -37,6 +38,7 @@ export {
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
   RemoteTriggerFormDialog,
+  RemoteTriggerStepFormDialog,
   RemoteTriggerMessageDialog,
   StepFormDialog,
   StepFormDialogItem,
@@ -108,13 +110,10 @@ export { useDevice, DeviceProvider } from './hooks/useDevice'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
-export { defaultPalette } from './themes/createPalette'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
-export { defaultFrame } from './themes/createFrame'
 export { defaultBorder } from './themes/createBorder'
 export { defaultRadius } from './themes/createRadius'
-export { defaultSize } from './themes/createSize'
 export { defaultFontSize } from './themes/createFontSize'
 export { defaultLeading } from './themes/createLeading'
 export { defaultSpacing } from './themes/createSpacing'

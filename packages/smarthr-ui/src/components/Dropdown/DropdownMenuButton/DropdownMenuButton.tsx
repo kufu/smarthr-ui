@@ -20,6 +20,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
+import { useIntl } from '../../../intl'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { DropdownContext } from '../Dropdown'
@@ -114,7 +115,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         classNames={classNames}
       />
       <DropdownContent controllable={true}>
-        <menu ref={containerRef} className={classNames.actionList}>
+        <menu ref={containerRef} role="menu" className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
@@ -131,6 +132,8 @@ const MemoizedTriggerButton = memo<
       }
     }
 >(({ onlyIconTrigger, triggerSize, label, triggerIcon, classNames, ...rest }) => {
+  const { localize } = useIntl()
+
   const { active } = useContext(DropdownContext)
 
   const tooltip = useMemo(
@@ -142,7 +145,23 @@ const MemoizedTriggerButton = memo<
     <DropdownTrigger className={classNames.triggerWrapper} tooltip={tooltip}>
       <Button
         {...rest}
-        suffix={!onlyIconTrigger && <FaCaretDownIcon alt={`候補を${active ? '閉じる' : '開く'}`} />}
+        suffix={
+          !onlyIconTrigger && (
+            <FaCaretDownIcon
+              alt={
+                active
+                  ? localize({
+                      id: 'smarthr-ui/DropdownMenuButton/triggerActive',
+                      defaultText: '候補を閉じる',
+                    })
+                  : localize({
+                      id: 'smarthr-ui/DropdownMenuButton/triggerInactive',
+                      defaultText: '候補を開く',
+                    })
+              }
+            />
+          )
+        }
         size={triggerSize}
         className={classNames.triggerButton}
       >
@@ -182,11 +201,12 @@ export const renderButtonList = (children: Actions) =>
     }
 
     return (
-      <li>
+      <li role="presentation">
         <DropdownCloser>
           {cloneElement(item as ReactElement, {
             variant: 'text',
             wide: true,
+            role: 'menuitem',
             className: actionListItemButton({ className: item.props.className }),
           })}
         </DropdownCloser>

@@ -14,6 +14,7 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
+import { useIntl } from '../../intl'
 import { spacing } from '../../themes'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
@@ -44,8 +45,8 @@ type Rect = {
 }
 
 const DECORATOR_DEFAULT_TEXTS = {
-  noResultText: '一致する選択肢がありません',
-  loadingText: '処理中',
+  noResultText: '',
+  loadingText: '',
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
@@ -83,6 +84,7 @@ export const useListbox = <T,>({
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
+  const { localize } = useIntl()
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -284,7 +286,10 @@ export const useListbox = <T,>({
       createPortal(
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
+            <VisuallyHiddenText role="status">
+              {decorated.loadingText ||
+                localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' })}
+            </VisuallyHiddenText>
           )}
           <div
             id={listBoxId}
@@ -306,7 +311,11 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {decorated.noResultText}
+                  {decorated.noResultText ||
+                    localize({
+                      id: 'smarthr-ui/Combobox/noResultsText',
+                      defaultText: '一致する選択肢がありません。',
+                    })}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -342,6 +351,7 @@ export const useListbox = <T,>({
       dropdownListStyle,
       wrapperStyle,
       createPortal,
+      localize,
     ],
   )
 

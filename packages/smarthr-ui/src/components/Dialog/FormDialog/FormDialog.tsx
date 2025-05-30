@@ -32,32 +32,34 @@ export const FormDialog: FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
+  isOpen,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
 
-  const handleClickClose = useCallback(() => {
-    if (props.isOpen) {
+  const actualOnClickClose = useCallback(() => {
+    if (isOpen) {
       onClickClose()
     }
-  }, [onClickClose, props.isOpen])
+  }, [isOpen, onClickClose])
 
-  const handleSubmitAction = useCallback(
+  const actualOnSubmitAction = useCallback(
     (close: () => void, e: FormEvent<HTMLFormElement>) => {
-      if (props.isOpen) {
+      if (isOpen) {
         onSubmit(close, e)
       }
     },
-    [onSubmit, props.isOpen],
+    [isOpen, onSubmit],
   )
 
   return createPortal(
     <DialogContentInner
       {...props}
+      isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}
-      onPressEscape={onPressEscape}
+      onPressEscape={closeDisabled ? undefined : onPressEscape}
     >
       {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <FormDialogContentInner
@@ -72,8 +74,8 @@ export const FormDialog: FC<Props & ElementProps> = ({
         actionDisabled={actionDisabled}
         closeDisabled={closeDisabled}
         subActionArea={subActionArea}
-        onClickClose={handleClickClose}
-        onSubmit={handleSubmitAction}
+        onClickClose={actualOnClickClose}
+        onSubmit={actualOnSubmitAction}
         responseStatus={responseStatus}
         decorators={decorators}
       >
