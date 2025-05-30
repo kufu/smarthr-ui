@@ -2,7 +2,6 @@ import { action } from '@storybook/addon-actions'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { ActionDialog } from '../ActionDialog'
-import { ActionDialogContent } from '../ActionDialogContent'
 import { ComponentProps, useRef, useState } from 'react'
 import { Button } from '../../../Button'
 import { RadioButton } from '../../../RadioButton'
@@ -17,7 +16,6 @@ const _widthOptions = {
 export default {
   title: 'Dialog（ダイアログ）/Dialog/ActionDialog',
   component: ActionDialog,
-  subcomponents: { ActionDialogContent },
   render: ({ onClickAction, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)
     const handleAction = onClickAction
