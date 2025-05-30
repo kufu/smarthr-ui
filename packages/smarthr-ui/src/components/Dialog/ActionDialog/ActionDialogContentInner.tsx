@@ -97,7 +97,10 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             className={styles.buttonArea}
           />
         </Cluster>
-        <DialogContentResponseStatusMessage responseStatus={calcedResponseStatus} />
+        <DialogContentResponseStatusMessage
+          responseStatus={calcedResponseStatus}
+          className={styles.message}
+        />
       </Stack>
     </Section>
   )
