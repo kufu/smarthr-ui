@@ -43,10 +43,10 @@ export const Children: StoryObj<typeof DisclosureTrigger> = {
   name: 'children',
   render: () => (
     <>
-      <DisclosureTrigger targetId="disclosure_1">
+      <DisclosureTrigger targetId="disclosure_2">
         {({ expanded }) => <Button>ディスクロージャーを{expanded ? '閉じる' : '開く'}</Button>}
       </DisclosureTrigger>
-      <DisclosureContent id="disclosure_1">ディスクロージャーコンテンツ</DisclosureContent>
+      <DisclosureContent id="disclosure_2">ディスクロージャーコンテンツ</DisclosureContent>
     </>
   ),
 }
