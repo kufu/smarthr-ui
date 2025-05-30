@@ -8,6 +8,6 @@ export const dialogContentInner = tv({
       'shr-border-t-shorthand shr-px-1.5 shr-py-1 shr-flex-[0_0_auto] shr-sticky shr-bottom-0 shr-z-1 shr-bg-white shr-rounded-b-m',
     ],
     buttonArea: ['smarthr-ui-Dialog-buttonArea', 'shr-ms-auto'],
-    message: 'shr-text-right empty:!shr-mt-0',
+    message: 'shr-text-right',
   },
 })
