@@ -68,7 +68,7 @@ const classNameGenerator = tv({
         /* unset した Button の右 padding 分 */
         '[&_.smarthr-ui-Button-disabledWrapper]:shr-pe-1',
         '[&_.smarthr-ui-Button-disabledWrapper]:shr-gap-x-0.5',
-        '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset]',
+        '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-bg-transparent',
       ],
     ],
     actionListItemButton: [
@@ -204,7 +204,6 @@ export const renderButtonList = (children: Actions) =>
       <li role="presentation">
         <DropdownCloser>
           {cloneElement(item as ReactElement, {
-            variant: 'text',
             wide: true,
             role: 'menuitem',
             className: actionListItemButton({ className: item.props.className }),

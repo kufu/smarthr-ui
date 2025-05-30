@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type FC,
   type MouseEvent,
   type ReactElement,
@@ -12,8 +11,6 @@ import {
 
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
-import type { Button } from '../../Button'
-
 const onClickRemoteDialogTrigger = (e: MouseEvent<HTMLElement>) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
@@ -22,13 +19,11 @@ const onClickRemoteDialogTrigger = (e: MouseEvent<HTMLElement>) => {
   )
 }
 
-export const RemoteDialogTrigger: FC<
-  Pick<ComponentProps<typeof Button>, 'variant'> & {
-    targetId: string
-    onClick?: (open: () => void) => void
-    children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls' | 'variant'>
-  }
-> = ({ targetId, children, onClick, variant, ...rest }) => {
+export const RemoteDialogTrigger: FC<{
+  targetId: string
+  onClick?: (open: () => void) => void
+  children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
+}> = ({ targetId, children, onClick, ...rest }) => {
   const actualOnClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
       if (onClick) {
@@ -47,10 +42,9 @@ export const RemoteDialogTrigger: FC<
         onClick: actualOnClick,
         'aria-haspopup': 'dialog',
         'aria-controls': targetId,
-        variant,
         ...rest,
       }),
-    [children, actualOnClick, targetId, variant, rest],
+    [children, actualOnClick, targetId, rest],
   )
 
   return actualTrigger
