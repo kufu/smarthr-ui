@@ -122,7 +122,7 @@ export const Table: FC<Props & ElementProps> = ({
       rounded,
       className,
     })
-    return { table: table({ class: className }), wrapper: wrapper() }
+    return { table: table({ className }), wrapper: wrapper() }
   }, [borderType, borderStyle, className, fixedHead, layout, rounded])
   const [Wrapper, wrapperProps] = useMemo(
     () => (rounded ? [RoundedWrapper, { className: classNames.wrapper }] : [Fragment]),
