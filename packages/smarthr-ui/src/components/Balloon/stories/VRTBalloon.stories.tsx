@@ -1,0 +1,36 @@
+import { Cluster } from '../../Layout'
+import { Balloon } from '../Balloon'
+
+import type { Meta, StoryObj } from '@storybook/react'
+
+export default {
+  title: 'Data Display（データ表示）/Balloon/VRT',
+  render: () => (
+    <Cluster>
+      {['top', 'bottom', 'middle'].map((vertical) =>
+        ['center', 'right', 'left'].map((horizontal) => (
+          <Balloon
+            key={`${vertical}-${horizontal}`}
+            horizontal={horizontal as any}
+            vertical={vertical as any}
+          >
+            バルーン vertical: {vertical}, horizontal: {horizontal}
+          </Balloon>
+        )),
+      )}
+    </Cluster>
+  ),
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
+  tags: ['!autodocs'],
+} satisfies Meta<typeof Balloon>
+
+export const VRT = {}
+
+export const VRTForcedColors: StoryObj = {
+  ...VRT,
+  parameters: {
+    chromatic: { forcedColors: 'active' },
+  },
+}
