@@ -62,7 +62,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
   maxLines = 3,
   children,
   className,
-  ...props
+  ...rest
 }) => {
   if (maxLines < 1 || maxLines > 6) {
     throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
@@ -101,7 +101,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
   }, [maxLines, className])
 
   const actualLineClamp = (
-    <span {...props} className={classNames.base}>
+    <span {...rest} className={classNames.base}>
       <span ref={ref} className={classNames.clampedLine}>
         {children}
       </span>
