@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Data Display（データ表示）/Balloon/VRT',
   render: () => (
-    <Cluster>
+    <Cluster className="shr-p-1">
       {['top', 'bottom', 'middle'].map((vertical) =>
         ['center', 'right', 'left'].map((horizontal) => (
           <Balloon
