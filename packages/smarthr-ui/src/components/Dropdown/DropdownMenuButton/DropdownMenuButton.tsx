@@ -115,7 +115,12 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         classNames={classNames}
       />
       <DropdownContent controllable={true}>
-        <menu ref={containerRef} role="menu" className={classNames.actionList}>
+        <menu
+          ref={containerRef}
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+          role="menu"
+          className={classNames.actionList}
+        >
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
