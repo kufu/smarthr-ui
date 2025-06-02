@@ -16,7 +16,7 @@ const _suffixOptions = {
 }
 
 export default {
-  title: 'Forms（フォーム）/CurrencyInput',
+  title: 'Forms（フォーム）/Input/CurrencyInput',
   component: CurrencyInput,
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <CurrencyInput {...args} />,
