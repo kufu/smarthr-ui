@@ -78,4 +78,5 @@ reg_storybook
 smarthr-ui.css
 
 .idea
-.vscode
+.vscodepackages/smarthr-ui/.storybook.backup/
+packages/smarthr-ui/package.json.backup
