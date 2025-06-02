@@ -23,7 +23,6 @@ export * from './components/UpwardLink'
 export { Loader } from './components/Loader'
 export {
   ActionDialog,
-  ActionDialogWithTrigger,
   FormDialog,
   Dialog,
   DialogCloser,
