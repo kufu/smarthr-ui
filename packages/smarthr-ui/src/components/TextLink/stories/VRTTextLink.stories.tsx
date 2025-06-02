@@ -1,4 +1,4 @@
-import { within } from '@storybook/test'
+import { within } from 'storybook/test'
 import { ComponentProps } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'

@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import { useArgs } from '@storybook/preview-api'
+import { useArgs } from 'storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { backgroundColor } from '../../../../themes'

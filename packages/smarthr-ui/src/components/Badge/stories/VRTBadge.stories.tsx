@@ -1,4 +1,4 @@
-import { fireEvent, within } from '@storybook/test'
+import { fireEvent, within } from 'storybook/test'
 
 import { Cluster, Stack } from '../../Layout'
 import { Badge } from '../Badge'

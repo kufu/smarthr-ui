@@ -1,4 +1,4 @@
-import { fireEvent, userEvent, within } from '@storybook/test'
+import { fireEvent, userEvent, within } from 'storybook/test'
 
 import { FaChartAreaIcon, FaChartBarIcon, FaChartLineIcon } from '../../Icon'
 import { Stack } from '../../Layout'

@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import styled from 'styled-components'
 
 import { Button } from '../Button'

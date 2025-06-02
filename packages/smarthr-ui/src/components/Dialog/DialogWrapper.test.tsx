@@ -1,5 +1,5 @@
-import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
+import { userEvent } from 'storybook/test'
 
 import { Button } from '../Button'
 import { Heading } from '../Heading'

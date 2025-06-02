@@ -1,5 +1,5 @@
-import { action } from '@storybook/addon-actions'
-import { fireEvent, within } from '@storybook/test'
+import { action } from 'storybook/actions'
+import { fireEvent, within } from 'storybook/test'
 
 import { Badge } from '../../Badge'
 import { FaCircleExclamationIcon } from '../../Icon'

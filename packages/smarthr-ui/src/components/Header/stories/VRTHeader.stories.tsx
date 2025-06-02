@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { Stack } from '../../Layout'

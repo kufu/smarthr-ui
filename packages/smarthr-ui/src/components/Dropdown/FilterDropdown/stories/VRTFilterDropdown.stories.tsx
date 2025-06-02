@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import { ComponentProps } from 'react'
 
 import { Cluster } from '../../../Layout'

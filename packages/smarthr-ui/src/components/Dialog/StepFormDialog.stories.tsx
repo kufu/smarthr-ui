@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { StoryFn } from '@storybook/react'
 import { ChangeEvent, ComponentProps, useState } from 'react'
 import { tv } from 'tailwind-variants'

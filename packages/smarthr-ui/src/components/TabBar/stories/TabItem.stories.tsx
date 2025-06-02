@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Badge } from '../../Badge'
 import { TabItem } from '../TabItem'
