@@ -10,8 +10,6 @@ import {
 } from '@storybook/addon-docs/blocks'
 import ReactGA from 'react-ga4'
 
-import { Preview } from '@storybook/react'
-
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
@@ -20,13 +18,15 @@ import { backgroundColor } from '../src/themes'
 import { IntlProvider } from '../src'
 import * as locales from '../src/intl/locales'
 
-const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
+// Storybook 9.0対応: 環境変数の安全なアクセス
+const isProduction =
+  process?.env?.STORYBOOK_NODE_ENV === 'production' || process?.env?.NODE_ENV === 'production'
 
 if (isProduction) {
   ReactGA.initialize('G-65N1S3NF5R')
 }
 
-const preview: Preview = {
+const preview: any = {
   parameters: {
     options: {
       isFullscreen: false,
@@ -111,15 +111,15 @@ const preview: Preview = {
     },
   },
   decorators: [
-    (Story, context) => {
+    ((Story, context) => {
       const locale = context.globals?.locale
       return (
         <IntlProvider locale={locale}>
           <Story />
         </IntlProvider>
       )
-    },
-    (Story, context) => {
+    }) as Decorator,
+    ((Story, context) => {
       const theme = createTheme()
       const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
 
@@ -134,7 +134,7 @@ const preview: Preview = {
           <Story />
         </ThemeProvider>
       )
-    },
+    }) as Decorator,
   ],
   tags: ['autodocs'],
 }

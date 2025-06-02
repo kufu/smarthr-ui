@@ -1,6 +1,6 @@
 import path from 'path'
 import { StorybookConfig } from '@storybook/react-webpack5'
-import { DefinePlugin } from 'webpack'
+import { DefinePlugin, ProvidePlugin } from 'webpack'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
@@ -72,8 +72,14 @@ const config: StorybookConfig = {
     const plugins = config.plugins || []
     plugins.push(
       new DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+        'process.env.STORYBOOK_NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
         process: 'process',
         global: 'globalThis',
+      }),
+      new ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer'],
       }),
     )
 
