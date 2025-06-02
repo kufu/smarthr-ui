@@ -65,6 +65,7 @@
     "postcss-loader": "^8.1.1",
     "postcss-styled-syntax": "^0.7.1",
     "postcss-syntax": "^0.36.2",
+    "process": "^0.11.10",
     "react": "^19.1.0",
     "react-docgen-typescript": "^2.2.2",
     "react-dom": "^19.1.0",
@@ -83,6 +84,7 @@
     "ts-loader": "^9.5.2",
     "ttypescript": "^1.5.15",
     "typescript-plugin-styled-components": "^3.0.0",
+    "util": "^0.12.5",
     "vitest": "^3.1.4",
     "wait-on": "^8.0.3",
     "webpack": "^5.99.9"

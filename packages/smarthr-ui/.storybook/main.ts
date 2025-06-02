@@ -1,5 +1,6 @@
 import path from 'path'
 import { StorybookConfig } from '@storybook/react-webpack5'
+import { DefinePlugin } from 'webpack'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
@@ -28,6 +29,13 @@ const config: StorybookConfig = {
     resolve.alias = {
       ...resolve.alias,
       '@': path.resolve(__dirname, '../src'),
+    }
+
+    // Storybook 9.0対応: process, util等のpolyfillを追加
+    resolve.fallback = {
+      ...resolve.fallback,
+      process: require.resolve('process/browser'),
+      util: require.resolve('util'),
     }
 
     // PostCSS設定を直接追加（addon-styling-webpackの代替）
@@ -60,6 +68,15 @@ const config: StorybookConfig = {
       ],
     })
 
+    // Storybook 9.0対応: processとBuffer等のグローバル変数を定義
+    const plugins = config.plugins || []
+    plugins.push(
+      new DefinePlugin({
+        process: 'process',
+        global: 'globalThis',
+      }),
+    )
+
     return {
       ...config,
       resolve,
@@ -67,6 +84,7 @@ const config: StorybookConfig = {
         ...config.module,
         rules: filteredRules,
       },
+      plugins,
     }
   },
 }
