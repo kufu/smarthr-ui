@@ -1,4 +1,5 @@
 // components
+export { DisclosureTrigger, DisclosureContent } from './components/Disclosure'
 export { Balloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export * from './components/Chip'
@@ -22,9 +23,7 @@ export * from './components/UpwardLink'
 export { Loader } from './components/Loader'
 export {
   ActionDialog,
-  ActionDialogContent,
   FormDialog,
-  FormDialogContent,
   Dialog,
   DialogCloser,
   DialogContent,
