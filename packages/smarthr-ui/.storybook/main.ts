@@ -4,51 +4,10 @@ import { StorybookConfig } from '@storybook/react-webpack5'
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
-    {
-      name: '@storybook/addon-essentials',
-    },
     '@storybook/addon-a11y',
-    '@storybook/addon-interactions',
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        rule: {
-          test: [/\.stories\.jsx?$/],
-          include: [path.resolve(__dirname, '../src')],
-        },
-        loaderOptions: {
-          prettierConfig: {
-            printWidth: 80,
-            singleQuote: false,
-          },
-        },
-      },
-    },
-    {
-      name: '@storybook/addon-styling-webpack',
-      options: {
-        rules: [
-          // Replaces existing CSS rules to support PostCSS
-          {
-            test: /\.css$/,
-            use: [
-              'style-loader',
-              {
-                loader: 'css-loader',
-                options: { importLoaders: 1 },
-              },
-              {
-                // Gets options from `postcss.config.js` in your project root
-                loader: 'postcss-loader',
-                options: { implementation: require.resolve('postcss') },
-              },
-            ],
-          },
-        ],
-      },
-    },
     'storybook-addon-pseudo-states',
     '@storybook/addon-webpack5-compiler-babel',
+    '@storybook/addon-docs',
   ],
   refs: {
     'smarthr-patterns': {
@@ -70,7 +29,45 @@ const config: StorybookConfig = {
       ...resolve.alias,
       '@': path.resolve(__dirname, '../src'),
     }
-    return { ...config, resolve }
+
+    // PostCSS設定を直接追加（addon-styling-webpackの代替）
+    const rules = config.module?.rules || []
+
+    // 既存のCSS rulesを除去
+    const filteredRules = rules.filter((rule) => {
+      if (typeof rule === 'object' && rule !== null && 'test' in rule) {
+        const test = rule.test
+        if (test instanceof RegExp) {
+          return !test.test('.css')
+        }
+      }
+      return true
+    })
+
+    // PostCSS対応のCSS ruleを追加
+    filteredRules.push({
+      test: /\.css$/,
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: { importLoaders: 1 },
+        },
+        {
+          loader: 'postcss-loader',
+          options: { implementation: require.resolve('postcss') },
+        },
+      ],
+    })
+
+    return {
+      ...config,
+      resolve,
+      module: {
+        ...config.module,
+        rules: filteredRules,
+      },
+    }
   },
 }
 

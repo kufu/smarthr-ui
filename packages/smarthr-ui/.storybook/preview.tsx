@@ -1,6 +1,13 @@
 import { ReactNode, useEffect } from 'react'
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { Title, Subtitle, Description, Primary, Stories, Controls } from '@storybook/blocks'
+import { INITIAL_VIEWPORTS } from 'storybook/viewport'
+import {
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Stories,
+  Controls,
+} from '@storybook/addon-docs/blocks'
 import ReactGA from 'react-ga4'
 
 import { Preview } from '@storybook/react'
@@ -74,9 +81,12 @@ const preview: Preview = {
           <Stories includePrimary={false} />
         </>
       ),
+
       canvas: {
         sourceState: 'shown',
       },
+
+      codePanel: true,
     },
     chromatic: {
       forcedColors: 'none',
