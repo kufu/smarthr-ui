@@ -68,6 +68,12 @@ const config: StorybookConfig = {
       ],
     })
 
+    // SVGファイルをURLとして読み込むための設定を追加
+    filteredRules.push({
+      test: /\.svg$/,
+      type: 'asset/resource',
+    })
+
     // Storybook 9.0対応: processとBuffer等のグローバル変数を定義
     const plugins = config.plugins || []
     plugins.push(
