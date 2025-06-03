@@ -345,7 +345,7 @@ importers:
         specifier: ^1.52.0
         version: 1.52.0
       '@types/node':
-        specifier: ^20.17.50
+        specifier: ^20.17.57
         version: 20.17.57
       '@types/react':
         specifier: ^18.3.23
@@ -354,7 +354,7 @@ importers:
         specifier: ^19.1.5
         version: 19.1.5(@types/react@18.3.23)
       postcss:
-        specifier: ^8.5.3
+        specifier: ^8.5.4
         version: 8.5.4
       tailwindcss:
         specifier: ^3.4.17
@@ -9557,7 +9557,7 @@ snapshots:
 
   '@types/conventional-commits-parser@5.0.0':
     dependencies:
-      '@types/node': 22.15.29
+      '@types/node': 20.17.57
 
   '@types/cross-spawn@6.0.6':
     dependencies:
