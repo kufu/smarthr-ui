@@ -124,7 +124,6 @@ const DISABLED_COMPONENTS = [
   'Calendar',                // 必須のイベントハンドラをもつため
   'DropZone',                // 必須のイベントハンドラをもつため
   'FilterDropdown',          // 必須のイベントハンドラをもつため
-  'FlashMessage',            // 必須のイベントハンドラをもつため
   'FormDialog',              // 必須のイベントハンドラをもつため
   'MessageDialog',           // 必須のイベントハンドラをもつため
   'MessageDialogContent',    // 必須のイベントハンドラを持つため
