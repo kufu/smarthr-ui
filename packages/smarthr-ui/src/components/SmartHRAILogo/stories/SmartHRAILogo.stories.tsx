@@ -10,27 +10,25 @@ export default {
   },
 } satisfies Meta<typeof SmartHRAILogo>
 
-export const Playground: StoryObj<typeof SmartHRAILogo> = {
-  args: {},
-}
+export const Playground: StoryObj<typeof SmartHRAILogo> = {}
 
 export const alt: StoryObj<typeof SmartHRAILogo> = {
   name: 'alt',
   args: {
-    alt: 'SmartHR（スマートHR） AI',
+    alt: 'SmartHR（スマートHR） AIロゴ',
   },
 }
 
 export const width: StoryObj<typeof SmartHRAILogo> = {
   name: 'width',
   args: {
-    width: 200,
+    width: '5em',
   },
 }
 
 export const height: StoryObj<typeof SmartHRAILogo> = {
   name: 'height',
   args: {
-    height: 200,
+    height: '2em',
   },
 }

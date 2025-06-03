@@ -68,7 +68,7 @@ const classNameGenerator = tv({
         /* unset した Button の右 padding 分 */
         '[&_.smarthr-ui-Button-disabledWrapper]:shr-pe-1',
         '[&_.smarthr-ui-Button-disabledWrapper]:shr-gap-x-0.5',
-        '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset]',
+        '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-bg-transparent',
       ],
     ],
     actionListItemButton: [
@@ -115,7 +115,12 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         classNames={classNames}
       />
       <DropdownContent controllable={true}>
-        <menu ref={containerRef} role="menu" className={classNames.actionList}>
+        <menu
+          ref={containerRef}
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+          role="menu"
+          className={classNames.actionList}
+        >
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
@@ -204,7 +209,6 @@ export const renderButtonList = (children: Actions) =>
       <li role="presentation">
         <DropdownCloser>
           {cloneElement(item as ReactElement, {
-            variant: 'text',
             wide: true,
             role: 'menuitem',
             className: actionListItemButton({ className: item.props.className }),

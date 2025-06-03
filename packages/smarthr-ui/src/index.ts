@@ -1,4 +1,5 @@
 // components
+export { DisclosureTrigger, DisclosureContent } from './components/Disclosure'
 export { Balloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export * from './components/Chip'
@@ -22,10 +23,7 @@ export * from './components/UpwardLink'
 export { Loader } from './components/Loader'
 export {
   ActionDialog,
-  ActionDialogContent,
-  ActionDialogWithTrigger,
   FormDialog,
-  FormDialogContent,
   Dialog,
   DialogCloser,
   DialogContent,
@@ -75,7 +73,8 @@ export { FormControl } from './components/FormControl'
 export { Fieldset } from './components/Fieldset'
 export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav, SideNavItemButton } from './components/SideNav'
-export { Text, RangeSeparator } from './components/Text'
+export { Text } from './components/Text'
+export { RangeSeparator } from './components/RangeSeparator'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 export {

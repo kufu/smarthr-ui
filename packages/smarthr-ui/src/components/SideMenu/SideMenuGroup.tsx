@@ -63,7 +63,7 @@ export const SideMenuGroup = <TitleElement extends ElementType = 'span'>({
 
 const GroupHeading = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
   ({ titleElementAs: Inner, children, className }) => (
-    <Heading type="blockTitle" className={className}>
+    <Heading type="subBlockTitle" className={className}>
       {Inner ? <Inner>{children}</Inner> : children}
     </Heading>
   ),
