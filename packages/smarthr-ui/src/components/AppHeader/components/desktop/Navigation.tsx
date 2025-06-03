@@ -120,7 +120,7 @@ const DropdownCustomTag = memo<NavigationCustomTag>(
       [current, className],
     )
 
-    return <Component {...rest} aria-current={current} className={actualClassName} />
+    return <Component {...rest} aria-current={current || undefined} className={actualClassName} />
   },
 )
 const DropdownMenuAnchorButton = memo<NavigationLink>(({ current, ...rest }) => (
