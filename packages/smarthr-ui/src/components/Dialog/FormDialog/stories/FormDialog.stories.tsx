@@ -2,7 +2,6 @@ import { action } from 'storybook/actions'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { FormDialog } from '../FormDialog'
-import { FormDialogContent } from '../FormDialogContent'
 import { ComponentProps, useRef, useState } from 'react'
 import { Button } from '../../../Button'
 import { RadioButton } from '../../../RadioButton'
@@ -18,7 +17,6 @@ const _widthOptions = {
 export default {
   title: 'Dialog（ダイアログ）/Dialog/FormDialog',
   component: FormDialog,
-  subcomponents: { FormDialogContent },
   render: ({ onSubmit, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)
     const handleSubmit = (close: () => void, e: React.FormEvent<HTMLFormElement>) => {

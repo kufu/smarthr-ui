@@ -121,14 +121,11 @@ const CLIENT_COMPONENTS: string[] = [
  */
 const DISABLED_COMPONENTS = [
   'ActionDialog',            // 必須のイベントハンドラをもつため
-  'ActionDialogContent',     // 必須のイベントハンドラをもつため
-  'ActionDialogWithTrigger', // 必須のイベントハンドラをもつため
   'Calendar',                // 必須のイベントハンドラをもつため
   'DropZone',                // 必須のイベントハンドラをもつため
   'FilterDropdown',          // 必須のイベントハンドラをもつため
   'FlashMessage',            // 必須のイベントハンドラをもつため
   'FormDialog',              // 必須のイベントハンドラをもつため
-  'FormDialogContent',       // 必須のイベントハンドラをもつため
   'MessageDialog',           // 必須のイベントハンドラをもつため
   'MessageDialogContent',    // 必須のイベントハンドラを持つため
   'RemoteTriggerActionDialog',  // 必須のイベントハンドラをもつため
