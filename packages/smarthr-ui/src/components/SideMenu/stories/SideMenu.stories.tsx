@@ -4,7 +4,7 @@ import { SideMenu, SideMenuGroup, SideMenuItem } from '..'
 import { Stack } from '../../Layout'
 
 const meta = {
-  title: 'Navigation（ナビゲーション）/SideMenu',
+  title: 'Components/SideMenu',
   component: SideMenu,
   subcomponents: { SideMenuGroup, SideMenuItem },
   render: (args) => (

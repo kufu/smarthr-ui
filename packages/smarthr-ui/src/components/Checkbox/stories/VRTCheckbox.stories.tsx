@@ -33,7 +33,7 @@ const Template = (
 )
 
 export default {
-  title: 'Forms（フォーム）/Checkbox/VRT',
+  title: 'Components/Checkbox/VRT',
   parameters: {
     chromatic: { disableSnapshot: false },
   },

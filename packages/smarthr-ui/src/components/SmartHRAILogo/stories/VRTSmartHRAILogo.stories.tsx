@@ -4,7 +4,7 @@ import { SmartHRAILogo } from '../SmartHRAILogo'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Media（メディア）/SmartHRAILogo/VRT',
+  title: 'Components/SmartHRAILogo/VRT',
   render: (args) => (
     <Stack inline align="start">
       <SmartHRAILogo {...args} width="5em" />

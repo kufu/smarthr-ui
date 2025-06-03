@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { SideMenu, SideMenuGroup, SideMenuItem } from '..'
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideMenu/SideMenuGroup',
+  title: 'Components/SideMenu/SideMenuGroup',
   component: SideMenuGroup,
   render: ({ title, ...args }) => (
     <SideMenu>

@@ -5,7 +5,7 @@ import { Type } from './FlashMessage.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/FlashMessage（非推奨）/VRT',
+  title: 'Components/FlashMessage（非推奨）/VRT',
   render: Type.render,
   args: {
     visible: true,

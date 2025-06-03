@@ -23,7 +23,7 @@ const _steps = {
 }
 
 export default {
-  title: 'Data Display（データ表示）/Stepper/VRT',
+  title: 'Components/Stepper/VRT',
   component: Stepper,
   render: (_) => (
     <Stack>

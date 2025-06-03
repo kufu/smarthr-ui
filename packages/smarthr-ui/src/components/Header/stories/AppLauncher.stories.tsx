@@ -54,7 +54,7 @@ const apps = [
 ]
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header/AppLauncher',
+  title: 'Components/Header/AppLauncher',
   component: AppLauncher,
   render: (args) => <AppLauncher {...args} />,
   argTypes: {

@@ -4,7 +4,7 @@ import { Table } from '../Table'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Table/BulkActionRow',
+  title: 'Components/Table/BulkActionRow',
   component: BulkActionRow,
   render: (args) => (
     <Table>

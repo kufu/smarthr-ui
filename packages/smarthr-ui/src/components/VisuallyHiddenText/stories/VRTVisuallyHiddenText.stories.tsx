@@ -4,7 +4,7 @@ import { Stack } from '../../Layout'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Text（テキスト）/VisuallyHiddenText/VRT',
+  title: 'Components/VisuallyHiddenText/VRT',
   component: VisuallyHiddenText,
   render: () => (
     <Stack>

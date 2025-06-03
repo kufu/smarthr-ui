@@ -17,7 +17,7 @@ const _elementAsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/TextLink/HelpLink',
+  title: 'Components/TextLink/HelpLink',
   component: HelpLink,
   render: (args) => <HelpLink {...args} />,
   argTypes: {

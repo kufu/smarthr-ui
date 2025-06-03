@@ -17,7 +17,7 @@ const _elementAsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/UpwardLink',
+  title: 'Components/UpwardLink',
   component: UpwardLink,
   render: (args) => <UpwardLink {...args} />,
   argTypes: {

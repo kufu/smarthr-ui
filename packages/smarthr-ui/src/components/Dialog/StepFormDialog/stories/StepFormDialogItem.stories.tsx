@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { Button } from '../../../Button'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/StepFormDialog/StepFormDialogItem',
+  title: 'Components/Dialog/StepFormDialog/StepFormDialogItem',
   component: StepFormDialogItem,
   argTypes: {
     id: { control: false },

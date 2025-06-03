@@ -5,7 +5,7 @@ import { FormControl } from '../FormControl'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/FormControl/VRT',
+  title: 'Components/FormControl/VRT',
   render: (args) => (
     <Stack gap={4}>
       {[false, true].map((dangerouslyTitleHidden) => (

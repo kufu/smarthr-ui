@@ -3,7 +3,7 @@ import { Balloon } from '../Balloon'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Balloon',
+  title: 'Components/Balloon',
   component: Balloon,
   render: (args) => <Balloon {...args}>バルーン</Balloon>,
   parameters: {

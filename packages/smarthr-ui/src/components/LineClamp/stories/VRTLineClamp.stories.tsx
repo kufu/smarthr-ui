@@ -3,7 +3,7 @@ import { LineClamp } from '../LineClamp'
 import { MaxLines } from './LineClamp.stories'
 
 export default {
-  title: 'Data Display（データ表示）/LineClamp/VRT',
+  title: 'Components/LineClamp/VRT',
   render: MaxLines.render,
   parameters: {
     viewport: {

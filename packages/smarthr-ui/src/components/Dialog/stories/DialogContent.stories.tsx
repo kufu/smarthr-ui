@@ -15,7 +15,7 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/DialogContent',
+  title: 'Components/Dialog/DialogContent',
   component: DialogContent,
   render: (args) => (
     <DialogWrapper>

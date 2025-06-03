@@ -7,7 +7,7 @@ import { InputFile } from '../InputFile'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/InputFile',
+  title: 'Components/InputFile',
   component: InputFile,
   render: (args) => <InputFile {...args} />,
   argTypes: {

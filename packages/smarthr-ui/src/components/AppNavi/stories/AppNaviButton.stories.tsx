@@ -12,7 +12,7 @@ const _iconOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/AppNavi/AppNaviButton',
+  title: 'Components/AppNavi/AppNaviButton',
   component: AppNaviButton,
   render: (args) => <AppNaviButton {...args} />,
   argTypes: {

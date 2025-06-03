@@ -4,7 +4,7 @@ import Story from './RequiredLabel.stories'
 import type { Meta } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/StatusLabel/RequiredLabel/VRT',
+  title: 'Components/StatusLabel/RequiredLabel/VRT',
   render: Story.render,
   parameters: {
     chromatic: { disableSnapshot: false },

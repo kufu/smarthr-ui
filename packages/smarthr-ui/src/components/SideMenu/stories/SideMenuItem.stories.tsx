@@ -4,7 +4,7 @@ import { SideMenu, SideMenuItem } from '..'
 import { FaMessageIcon } from '../../Icon'
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideMenu/SideMenuItem',
+  title: 'Components/SideMenu/SideMenuItem',
   component: SideMenuItem,
   render: (args) => (
     <SideMenu>

@@ -25,7 +25,7 @@ const _cases: Array<Omit<ComponentProps<typeof Select>, 'options'>> = [
 ]
 
 export default {
-  title: 'Forms（フォーム）/Select/VRT',
+  title: 'Components/Select/VRT',
   render: (args) => (
     <Stack align="flex-start" gap={2}>
       {[undefined, 'hover', 'focus-visible'].map((id) => (

@@ -4,7 +4,7 @@ import { Stepper } from '..'
 import { Stack } from '../../Layout'
 
 export default {
-  title: 'Data Display（データ表示）/Stepper',
+  title: 'Components/Stepper',
   component: Stepper,
   render: (args) => <Stepper {...args} />,
   args: {

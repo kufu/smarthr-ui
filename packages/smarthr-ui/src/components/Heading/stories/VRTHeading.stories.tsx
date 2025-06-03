@@ -6,7 +6,7 @@ import { Heading, PageHeading } from '../Heading'
 import type { StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Text（テキスト）/Heading/VRT',
+  title: 'Components/Heading/VRT',
   // ペアワイズ法は使わずに総当りする
   render: (args: any) => {
     const types = [

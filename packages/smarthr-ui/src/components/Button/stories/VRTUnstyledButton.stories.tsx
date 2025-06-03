@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Story from './UnstyledButton.stories'
 
 export default {
-  title: 'Buttons（ボタン）/UnstyledButton/VRT',
+  title: 'Components/UnstyledButton/VRT',
   render: Story.render,
   parameters: {
     chromatic: { disableSnapshot: false },

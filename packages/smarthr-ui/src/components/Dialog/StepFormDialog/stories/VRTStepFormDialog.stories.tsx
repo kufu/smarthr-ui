@@ -3,7 +3,7 @@ import { StepFormDialog } from '../StepFormDialog'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/StepFormDialog/VRT',
+  title: 'Components/Dialog/StepFormDialog/VRT',
   component: StepFormDialog,
   args: {
     width: '30em',

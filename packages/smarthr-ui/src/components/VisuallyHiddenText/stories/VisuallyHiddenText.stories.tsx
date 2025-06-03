@@ -5,7 +5,7 @@ import { Stack } from '../../Layout'
 const asOptions = { なし: undefined, '<p>': 'p', '<div>': 'div', '<span>': 'span' }
 
 export default {
-  title: 'Text（テキスト）/VisuallyHiddenText',
+  title: 'Components/VisuallyHiddenText',
   component: VisuallyHiddenText,
   render: (args) => <VisuallyHiddenText {...args} />,
   argTypes: {

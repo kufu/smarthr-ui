@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { ModelessDialog } from '../ModelessDialog'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/ModelessDialog/VRT',
+  title: 'Components/Dialog/ModelessDialog/VRT',
   component: ModelessDialog,
   args: {
     isOpen: true,

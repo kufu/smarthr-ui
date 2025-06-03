@@ -5,7 +5,7 @@ import { Button } from '../../../Button'
 import { ModelessDialog } from '../ModelessDialog'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/ModelessDialog',
+  title: 'Components/Dialog/ModelessDialog',
   component: ModelessDialog,
   render: ({ title, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)

@@ -4,7 +4,7 @@ import type { StoryObj } from '@storybook/react'
 
 export default {
   ...TabBarStories,
-  title: 'Navigation（ナビゲーション）/TabBar/bordered',
+  title: 'Components/TabBar/bordered',
   tags: ['!autodocs'],
 }
 

@@ -15,7 +15,7 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/StepFormDialog',
+  title: 'Components/Dialog/StepFormDialog',
   component: StepFormDialog,
   subcomponents: { StepFormDialogItem },
   render: ({ onSubmit, onClickClose, children, ...args }) => {

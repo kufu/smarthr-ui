@@ -5,7 +5,7 @@ import { Reel } from '../../../..'
 import { GapStory, Padding } from './Reel.stories'
 
 export default {
-  title: 'Layouts（レイアウト）/Reel/VRT',
+  title: 'Components/Reel/VRT',
   component: Reel,
   render: (args, context) => (
     <>

@@ -30,7 +30,7 @@ const childrenOptions = {
 }
 
 export default {
-  title: 'Page Templates（ページテンプレート）/ErrorScreen',
+  title: 'Components/ErrorScreen',
   component: ErrorScreen,
   render: (args) => <ErrorScreen {...args} />,
   args: {
