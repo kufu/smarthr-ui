@@ -9,7 +9,7 @@ import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
 import { SideNav } from '../../../SideNav'
-import { TextLink } from '../../../TextLink'
+import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
@@ -255,12 +255,12 @@ const SideNavs = memo<
 
 const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
   <div className={className}>
-    <TextLink
+    <HelpLink
       href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
       target="_blank"
     >
       {children}
-    </TextLink>
+    </HelpLink>
   </div>
 ))
 
