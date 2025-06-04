@@ -32,7 +32,7 @@ const Template: StoryFn<typeof TableReel> = (args) => (
 )
 
 export default {
-  title: 'Data Display（データ表示）/Table/TableReel',
+  title: 'Components/Table/TableReel',
   component: TableReel,
   render: Template,
   args: {},

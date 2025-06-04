@@ -3,7 +3,7 @@ import { Checkbox } from '../Checkbox'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/Checkbox',
+  title: 'Components/Checkbox',
   component: Checkbox,
   render: (args) => <Checkbox {...args}>Checkbox</Checkbox>,
   args: {},

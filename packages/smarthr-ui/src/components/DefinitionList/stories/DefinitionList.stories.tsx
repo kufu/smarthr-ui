@@ -5,7 +5,7 @@ import { DefinitionListItem } from '../DefinitionListItem'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/DefinitionList',
+  title: 'Components/DefinitionList',
   component: DefinitionList,
   render: (args) => <DefinitionList {...args} />,
   args: {

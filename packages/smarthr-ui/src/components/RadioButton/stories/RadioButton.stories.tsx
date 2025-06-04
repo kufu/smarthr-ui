@@ -3,7 +3,7 @@ import { RadioButton } from '../RadioButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/RadioButton',
+  title: 'Components/RadioButton',
   component: RadioButton,
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <RadioButton {...args} />,

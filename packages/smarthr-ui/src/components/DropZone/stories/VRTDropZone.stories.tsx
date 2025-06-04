@@ -4,7 +4,7 @@ import { DropZone } from '../DropZone'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DropZone/VRT',
+  title: 'Components/DropZone/VRT',
   render: (args) => (
     <Stack>
       <DropZone {...args} />

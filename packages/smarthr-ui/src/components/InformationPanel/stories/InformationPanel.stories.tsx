@@ -6,7 +6,7 @@ import { InformationPanel, classNameGenerator } from '../InformationPanel'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/InformationPanel',
+  title: 'Components/InformationPanel',
   component: InformationPanel,
   render: (args) => <InformationPanel {...args} />,
   args: {

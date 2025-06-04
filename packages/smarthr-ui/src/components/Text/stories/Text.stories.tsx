@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
 export default {
-  title: 'Text（テキスト）/Text',
+  title: 'Components/Text',
   component: Text,
   render: (args) => <Text {...args} />,
   argTypes: {

@@ -18,7 +18,7 @@ const Template: StoryFn<typeof Td> = (args) => (
 )
 
 export default {
-  title: 'Data Display（データ表示）/Table/Td',
+  title: 'Components/Table/Td',
   component: Td,
   render: Template,
   argTypes: {

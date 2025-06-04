@@ -5,7 +5,7 @@ import { SmartHRLogo } from '../SmartHRLogo'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Media（メディア）/SmartHRLogo',
+  title: 'Components/SmartHRLogo',
   component: SmartHRLogo,
   render: (args) => <SmartHRLogo {...args} />,
   args: {},

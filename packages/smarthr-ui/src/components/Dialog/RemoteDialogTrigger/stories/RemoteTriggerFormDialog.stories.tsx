@@ -7,7 +7,7 @@ import { RemoteTriggerFormDialog } from '../RemoteTriggerFormDialog'
 
 /** props は [FormDialog](./?path=/docs/dialog（ダイアログ）-dialog-formdialog--docs) を参照してください。 */
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/RemoteDialogTrigger/RemoteTriggerFormDialog',
+  title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerFormDialog',
   component: RemoteTriggerFormDialog,
   render: (args) => {
     return (

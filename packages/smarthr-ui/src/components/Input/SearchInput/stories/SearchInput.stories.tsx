@@ -5,7 +5,7 @@ import { SearchInput } from '../SearchInput'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/SearchInput',
+  title: 'Components/SearchInput',
   component: SearchInput,
 
   render: (args) => <SearchInput {...args} />,

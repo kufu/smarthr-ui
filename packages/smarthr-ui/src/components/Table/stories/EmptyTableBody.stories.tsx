@@ -26,7 +26,7 @@ const Template: StoryFn<typeof EmptyTableBody> = ({ children, ...args }) => (
 )
 
 export default {
-  title: 'Data Display（データ表示）/Table/EmptyTableBody',
+  title: 'Components/Table/EmptyTableBody',
   component: EmptyTableBody,
   render: Template,
   args: {},

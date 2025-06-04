@@ -2,8 +2,7 @@ import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useState } from 'react'
 
-import { Button } from '../Button'
-import { Heading } from '../Heading'
+import { Button } from '../../Button'
 
 import { ModelessDialog } from './ModelessDialog'
 

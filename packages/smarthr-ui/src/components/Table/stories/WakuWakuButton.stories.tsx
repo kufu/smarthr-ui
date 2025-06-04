@@ -6,7 +6,7 @@ import { WakuWakuButton } from '../WakuWakuButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Table/WakuWakuButton',
+  title: 'Components/Table/WakuWakuButton',
   component: WakuWakuButton,
   render: (args) => (
     <Table>

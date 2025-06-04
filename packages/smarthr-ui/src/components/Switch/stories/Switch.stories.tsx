@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { Switch } from '..'
 
 export default {
-  title: 'Forms（フォーム）/Switch',
+  title: 'Components/Switch',
   component: Switch,
   render: (args) => <Switch {...args} />,
   args: {

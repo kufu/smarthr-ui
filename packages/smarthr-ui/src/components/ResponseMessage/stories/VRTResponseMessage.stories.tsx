@@ -46,7 +46,7 @@ const testCases: Array<Partial<ResponseMessageProps>> = [
 ]
 
 export default {
-  title: 'Text（テキスト）/ResponseMessage/VRT',
+  title: 'Components/ResponseMessage/VRT',
   component: ResponseMessage,
   args: {
     children: 'レスポンスメッセージレスポンスメッセージレスポンスメッセージ',

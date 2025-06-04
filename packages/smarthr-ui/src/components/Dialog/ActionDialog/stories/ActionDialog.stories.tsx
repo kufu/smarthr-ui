@@ -14,7 +14,7 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/ActionDialog',
+  title: 'Components/Dialog/ActionDialog',
   component: ActionDialog,
   render: ({ onClickAction, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)

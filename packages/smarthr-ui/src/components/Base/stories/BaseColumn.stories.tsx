@@ -12,7 +12,7 @@ const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
   .sort() as Gap[]
 
 export default {
-  title: 'Data Display（データ表示）/Base/BaseColumn',
+  title: 'Components/Base/BaseColumn',
   component: BaseColumn,
   render: (args) => <BaseColumn {...args} />,
   argTypes: {

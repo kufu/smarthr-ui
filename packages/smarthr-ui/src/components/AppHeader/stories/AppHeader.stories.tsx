@@ -5,7 +5,7 @@ import { AppHeader } from '../AppHeader'
 import { args } from './args'
 
 const meta = {
-  title: 'Navigation（ナビゲーション）/AppHeader',
+  title: 'Components/AppHeader',
   component: AppHeader,
   args,
 } satisfies Meta<typeof AppHeader>
