@@ -36,6 +36,7 @@ export default {
   output: {
     format: 'es',
     sourcemap: true,
+    inlineSources: true,
     dir: 'esm',
     preserveModules: true,
     preserveModulesRoot: 'src',
