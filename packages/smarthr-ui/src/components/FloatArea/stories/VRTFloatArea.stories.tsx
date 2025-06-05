@@ -6,7 +6,7 @@ import { FloatArea } from '../FloatArea'
 import type { Meta } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/FloatArea/VRT',
+  title: 'Components/FloatArea/VRT',
   render: (args) => (
     <Stack gap={1.5}>
       <Stack>

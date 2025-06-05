@@ -5,7 +5,7 @@ import { Stack } from '../../../..'
 import { GapStory } from './Stack.stories'
 
 export default {
-  title: 'Layouts（レイアウト）/Stack/VRT',
+  title: 'Components/Stack/VRT',
   component: Stack,
   render: GapStory.render,
   parameters: {

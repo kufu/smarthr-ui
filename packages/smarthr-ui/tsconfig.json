@@ -10,6 +10,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
+    "inlineSources": true,
     "types": [
       "node",
       "react",

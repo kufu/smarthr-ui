@@ -28,7 +28,7 @@ const _elementAsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/TextLink',
+  title: 'Components/TextLink',
   component: TextLink,
   subcomponents: { UpwardLink },
   render: (args) => <TextLink {...args} />,

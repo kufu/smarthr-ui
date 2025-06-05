@@ -3,7 +3,7 @@ import { ResponseMessage, classNameGenerator } from '../ResponseMessage'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Text（テキスト）/ResponseMessage',
+  title: 'Components/ResponseMessage',
   component: ResponseMessage,
   render: (args) => <ResponseMessage {...args} />,
   argTypes: {

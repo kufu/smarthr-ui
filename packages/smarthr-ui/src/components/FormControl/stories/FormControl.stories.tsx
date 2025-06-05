@@ -34,7 +34,7 @@ const _errorMessages = {
 }
 
 export default {
-  title: 'Forms（フォーム）/FormControl',
+  title: 'Components/FormControl',
   component: FormControl,
   render: (args) => <FormControl {...args} />,
   argTypes: {

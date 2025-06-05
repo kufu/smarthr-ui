@@ -108,7 +108,7 @@ const Template: StoryFn<typeof AnchorButton> = (args) => (
 )
 
 export default {
-  title: 'Buttons（ボタン）/Button/AnchorButton/VRT',
+  title: 'Components/Button/AnchorButton/VRT',
   render: Template,
   args: {
     children: 'ボタン',

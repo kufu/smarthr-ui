@@ -71,7 +71,7 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 }
 
 export default {
-  title: 'Forms（フォーム）/MultiCombobox/VRT',
+  title: 'Components/MultiCombobox/VRT',
   component: MultiCombobox,
   render: (args) => {
     const items = Object.values(defaultItems)

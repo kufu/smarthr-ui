@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type FC,
   type MouseEvent,
   type ReactElement,
@@ -12,32 +11,32 @@ import {
 
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
-import type { Button } from '../../Button'
-
-const onClickRemoteDialogTrigger = (e: MouseEvent<HTMLElement>) => {
+const onClickRemoteDialogTrigger = (ariaControls: string) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
-      detail: { id: e.currentTarget.getAttribute('aria-controls') as string },
+      detail: { id: ariaControls },
     }),
   )
 }
 
-export const RemoteDialogTrigger: FC<
-  Pick<ComponentProps<typeof Button>, 'variant'> & {
-    targetId: string
-    onClick?: (open: () => void) => void
-    children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls' | 'variant'>
-  }
-> = ({ targetId, children, onClick, variant, ...rest }) => {
+export const RemoteDialogTrigger: FC<{
+  targetId: string
+  onClick?: (open: () => void) => void
+  children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
+}> = ({ targetId, children, onClick, ...rest }) => {
   const actualOnClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
+      // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+      // 先にariaControlsを取得しておく
+      const ariaControls = e.currentTarget.getAttribute('aria-controls') as string
+
       if (onClick) {
         return onClick(() => {
-          onClickRemoteDialogTrigger(e)
+          onClickRemoteDialogTrigger(ariaControls)
         })
       }
 
-      onClickRemoteDialogTrigger(e)
+      onClickRemoteDialogTrigger(ariaControls)
     },
     [onClick],
   )
@@ -47,10 +46,9 @@ export const RemoteDialogTrigger: FC<
         onClick: actualOnClick,
         'aria-haspopup': 'dialog',
         'aria-controls': targetId,
-        variant,
         ...rest,
       }),
-    [children, actualOnClick, targetId, variant, rest],
+    [children, actualOnClick, targetId, rest],
   )
 
   return actualTrigger

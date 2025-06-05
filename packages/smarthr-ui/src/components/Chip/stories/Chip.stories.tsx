@@ -4,7 +4,7 @@ import { Chip, classNameGenerator } from '../Chip'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Chip',
+  title: 'Components/Chip',
   component: Chip,
   render: (args) => <Chip {...args} />,
   argTypes: {

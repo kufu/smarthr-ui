@@ -6,7 +6,7 @@ import { WarekiPicker } from '../WarekiPicker'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/WarekiPicker',
+  title: 'Components/WarekiPicker',
   component: WarekiPicker,
   render: (args) => <WarekiPicker {...args} />,
   args: {},

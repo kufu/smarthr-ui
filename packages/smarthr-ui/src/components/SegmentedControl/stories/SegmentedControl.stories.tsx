@@ -19,7 +19,7 @@ const chartLineIcon = <FaChartLineIcon />
 const chartPieIcon = <FaChartPieIcon />
 
 export default {
-  title: 'Buttons（ボタン）/SegmentedControl',
+  title: 'Components/SegmentedControl',
   component: SegmentedControl,
   render: (args) => <SegmentedControl {...args} />,
   args: {

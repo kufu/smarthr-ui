@@ -5,7 +5,7 @@ import { RemoteTriggerMessageDialog } from '../RemoteTriggerMessageDialog'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/RemoteDialogTrigger',
+  title: 'Components/Dialog/RemoteDialogTrigger',
   component: RemoteDialogTrigger,
   args: {
     targetId: 'remote-dialog',

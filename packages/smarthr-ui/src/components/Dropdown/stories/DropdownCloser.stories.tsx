@@ -7,7 +7,7 @@ import { DropdownTrigger } from '../DropdownTrigger'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/Dropdown/DropdownCloser',
+  title: 'Components/Dropdown/DropdownCloser',
   component: DropdownCloser,
   render: (args) => (
     <Dropdown>

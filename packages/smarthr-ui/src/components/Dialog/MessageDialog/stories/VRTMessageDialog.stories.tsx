@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { MessageDialog } from '../MessageDialog'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/MessageDialog/VRT',
+  title: 'Components/Dialog/MessageDialog/VRT',
   component: MessageDialog,
   args: {
     width: '40em',

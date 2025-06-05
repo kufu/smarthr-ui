@@ -14,9 +14,9 @@ import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -53,6 +53,7 @@ export type StepFormDialogContentInnerProps = BaseProps & {
   firstStep: StepItem
   onClickClose: () => void
   responseStatus?: ResponseStatus
+  /** ステップの総数 */
   stepLength: number
   onClickBack?: () => void
 }
@@ -74,6 +75,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   title,
   titleId,
   subtitle,
+  titleTag,
   contentBgColor,
   contentPadding,
   submitLabel,
@@ -159,6 +161,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <DialogHeader
             title={`${title} ${activeStep}/${stepLength}`}
             subtitle={subtitle}
+            titleTag={titleTag}
             titleId={titleId}
           />
           <DialogBody
@@ -169,7 +172,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             {children}
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
-            <Cluster justify="space-between">
+            <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
@@ -198,13 +201,10 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                 </Button>
               </Cluster>
             </Cluster>
-            {calcedResponseStatus.message && (
-              <div className={classNames.message}>
-                <ResponseMessage type={calcedResponseStatus.status} role="alert">
-                  {calcedResponseStatus.message}
-                </ResponseMessage>
-              </div>
-            )}
+            <DialogContentResponseStatusMessage
+              responseStatus={calcedResponseStatus}
+              className={classNames.message}
+            />
           </Stack>
         </div>
       </form>

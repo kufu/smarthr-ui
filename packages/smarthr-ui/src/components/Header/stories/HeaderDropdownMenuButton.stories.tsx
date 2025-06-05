@@ -5,7 +5,7 @@ import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header/HeaderDropdownMenuButton',
+  title: 'Components/Header/HeaderDropdownMenuButton',
   component: HeaderDropdownMenuButton,
   render: (args) => (
     <Header>

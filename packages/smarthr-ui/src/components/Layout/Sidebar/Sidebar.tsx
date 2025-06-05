@@ -120,7 +120,7 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       right = false,
       className,
       children,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -189,7 +189,7 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
 
     const Wrapper = useSectionWrapper(Component)
     const body = (
-      <Component {...props} ref={ref} className={actualClassName}>
+      <Component {...rest} ref={ref} className={actualClassName}>
         {styledChildren}
       </Component>
     )

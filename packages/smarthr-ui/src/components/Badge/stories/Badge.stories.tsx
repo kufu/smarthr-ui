@@ -5,7 +5,7 @@ import { Badge } from '../Badge'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/Badge',
+  title: 'Components/Badge',
   component: Badge,
   render: (args) => <Badge {...args} />,
   args: {
