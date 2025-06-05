@@ -6,7 +6,7 @@ import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { Text } from '../../../Text'
-import { TextLink } from '../../../TextLink'
+import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
@@ -120,12 +120,12 @@ const SearchResultText = memo<PropsWithChildren>(({ children }) => (
 const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
   <div className={className}>
     <Text size="XS">
-      <TextLink
+      <HelpLink
         href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
         target="_blank"
       >
         <Translate>{children}</Translate>
-      </TextLink>
+      </HelpLink>
     </Text>
   </div>
 ))
