@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 /** props は [MessageDialog](./?path=/docs/dialog（ダイアログ）-dialog-messagedialog--docs) を参照してください。 */
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/RemoteDialogTrigger/RemoteTriggerMessageDialog',
+  title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerMessageDialog',
   component: RemoteTriggerMessageDialog,
   render: (args) => {
     return (

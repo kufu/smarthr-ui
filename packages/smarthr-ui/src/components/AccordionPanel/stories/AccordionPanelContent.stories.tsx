@@ -6,7 +6,7 @@ import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/AccordionPanel/AccordionPanelContent',
+  title: 'Components/AccordionPanel/AccordionPanelContent',
   component: AccordionPanelContent,
   render: (args) => (
     <AccordionPanel defaultExpanded={['accordion-panel-item']}>

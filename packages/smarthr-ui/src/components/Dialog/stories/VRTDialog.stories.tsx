@@ -5,7 +5,7 @@ import { IsOpen } from './Dialog.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/VRT',
+  title: 'Components/Dialog/VRT',
   args: {
     width: '40em',
     isOpen: true,

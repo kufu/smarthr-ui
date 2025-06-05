@@ -22,7 +22,7 @@ const _elementAsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/AppNavi/AppNaviAnchor',
+  title: 'Components/AppNavi/AppNaviAnchor',
   component: AppNaviAnchor,
   render: (args) => <AppNaviAnchor {...args} />,
   argTypes: {

@@ -28,7 +28,7 @@ export const sampleOnCloseHandlers = {
 }
 
 export default {
-  title: 'States（状態）/NotificationBar',
+  title: 'Components/NotificationBar',
   component: NotificationBar,
   render: (args) => (
     <div>

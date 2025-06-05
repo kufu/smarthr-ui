@@ -14,7 +14,7 @@ const _sampleTriggerIcons = {
 }
 
 export default {
-  title: 'Buttons（ボタン）/DropdownMenuButton',
+  title: 'Components/DropdownMenuButton',
   component: DropdownMenuButton,
   subcomponents: { DropdownMenuGroup },
   render: (args) => (

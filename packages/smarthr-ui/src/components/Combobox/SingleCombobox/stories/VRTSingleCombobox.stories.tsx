@@ -121,7 +121,7 @@ const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
 }
 
 export default {
-  title: 'Forms（フォーム）/SingleCombobox/VRT',
+  title: 'Components/SingleCombobox/VRT',
   component: SingleCombobox,
   render: (args) => (
     <Stack align="flex-start" gap={2} className="shr-h-screen">

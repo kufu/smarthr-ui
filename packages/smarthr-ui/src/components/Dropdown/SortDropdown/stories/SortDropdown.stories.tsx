@@ -6,7 +6,7 @@ import { SortDropdown } from '../SortDropdown'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/SortDropdown',
+  title: 'Components/SortDropdown',
   component: SortDropdown,
   render: (args) => <SortDropdown {...args} />,
   args: {

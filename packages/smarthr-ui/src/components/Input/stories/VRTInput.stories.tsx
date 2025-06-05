@@ -84,7 +84,7 @@ const _cases: Array<ComponentProps<typeof Input>> = [
 ]
 
 export default {
-  title: 'Forms（フォーム）/Input/VRT',
+  title: 'Components/Input/VRT',
   render: (args) => (
     <Stack align="flex-start">
       {_cases.map((props, i) => (

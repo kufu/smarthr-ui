@@ -30,7 +30,7 @@ export const _childrenOptions = {
 }
 
 export default {
-  title: 'Forms（フォーム）/Fieldset',
+  title: 'Components/Fieldset',
   component: Fieldset,
   render: (args) => <Fieldset {...args} />,
   argTypes: {

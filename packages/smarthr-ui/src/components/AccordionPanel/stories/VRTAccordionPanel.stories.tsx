@@ -7,7 +7,7 @@ import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/AccordionPanel/VRT',
+  title: 'Components/AccordionPanel/VRT',
   render: () => (
     <Stack>
       {['left', 'right'].map((iconPosition) => (

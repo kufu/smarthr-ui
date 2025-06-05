@@ -4,7 +4,7 @@ import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Disclosure/VRT',
+  title: 'Components/Disclosure/VRT',
   render: () => (
     <>
       {[{}, { visuallyHidden: true }, { isOpen: true }].map((args, index) => (

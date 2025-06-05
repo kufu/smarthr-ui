@@ -4,7 +4,7 @@ import { RadioButtonPanel } from '../RadioButtonPanel'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/RadioButtonPanel/VRT',
+  title: 'Components/RadioButtonPanel/VRT',
   render: (args) => (
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((id) =>

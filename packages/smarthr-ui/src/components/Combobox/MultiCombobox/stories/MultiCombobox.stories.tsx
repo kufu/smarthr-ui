@@ -52,7 +52,7 @@ export const defaultItems = {
 }
 
 export default {
-  title: 'Forms（フォーム）/MultiCombobox',
+  title: 'Components/MultiCombobox',
   component: MultiCombobox,
   render: (args) => {
     const [_, setArgs] = useArgs()

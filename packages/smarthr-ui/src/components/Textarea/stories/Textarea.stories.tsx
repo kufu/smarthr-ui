@@ -6,7 +6,7 @@ import { Textarea } from '../Textarea'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/Textarea',
+  title: 'Components/Textarea',
   component: Textarea,
   render: (args) => <Textarea {...args} />,
   argTypes: {

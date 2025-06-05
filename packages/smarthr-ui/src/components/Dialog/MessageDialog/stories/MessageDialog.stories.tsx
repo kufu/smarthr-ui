@@ -7,7 +7,7 @@ import { MessageDialog } from '../MessageDialog'
 import { MessageDialogContent } from '../MessageDialogContent'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/MessageDialog',
+  title: 'Components/Dialog/MessageDialog',
   component: MessageDialog,
   subcomponents: { MessageDialogContent },
   render: ({ onClickClose, ...args }) => {

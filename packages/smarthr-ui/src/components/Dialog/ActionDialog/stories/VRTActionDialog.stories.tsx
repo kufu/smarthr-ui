@@ -4,7 +4,7 @@ import { ActionDialog } from '../ActionDialog'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/ActionDialog/VRT',
+  title: 'Components/Dialog/ActionDialog/VRT',
   component: ActionDialog,
   args: {
     width: '40em',

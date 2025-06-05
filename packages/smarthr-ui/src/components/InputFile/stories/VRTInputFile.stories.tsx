@@ -5,7 +5,7 @@ import { InputFile } from '../InputFile'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/InputFile/VRT',
+  title: 'Components/InputFile/VRT',
   render: (args) => (
     <Stack>
       {[undefined, 'hover', 'focus-within'].map((id) => (

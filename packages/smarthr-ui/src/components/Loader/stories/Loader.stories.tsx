@@ -4,7 +4,7 @@ import { Loader } from '../Loader'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/Loader',
+  title: 'Components/Loader',
   component: Loader,
   render: (args) => <Loader {...args} />,
   args: {},

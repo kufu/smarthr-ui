@@ -17,7 +17,7 @@ const baseLayer = Object.keys(baseClassNameGenerator.variants.layer).map(Number)
 >
 
 export default {
-  title: 'Data Display（データ表示）/Base',
+  title: 'Components/Base',
   component: Base,
   subcomponents: { BaseColumn },
   render: (args) => <Base {...args} />,
