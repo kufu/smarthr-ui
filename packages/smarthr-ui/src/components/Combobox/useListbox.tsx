@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
-import { useIntl } from '../../intl'
+import { locales, useIntl } from '../../intl'
 import { spacing } from '../../themes'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
@@ -45,8 +45,8 @@ type Rect = {
 }
 
 const DECORATOR_DEFAULT_TEXTS = {
-  noResultText: '',
-  loadingText: '',
+  noResultText: locales.ja['smarthr-ui/Combobox/noResultsText'],
+  loadingText: locales.ja['smarthr-ui/Combobox/loadingText'],
 } as const
 type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
@@ -287,8 +287,9 @@ export const useListbox = <T,>({
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
             <VisuallyHiddenText role="status">
-              {decorated.loadingText ||
-                localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' })}
+              {decorators?.loadingText
+                ? decorated.loadingText
+                : localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' })}
             </VisuallyHiddenText>
           )}
           <div
@@ -311,11 +312,12 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {decorated.noResultText ||
-                    localize({
-                      id: 'smarthr-ui/Combobox/noResultsText',
-                      defaultText: '一致する選択肢がありません。',
-                    })}
+                  {decorators?.noResultText
+                    ? decorated.noResultText
+                    : localize({
+                        id: 'smarthr-ui/Combobox/noResultsText',
+                        defaultText: '一致する選択肢がありません。',
+                      })}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -343,6 +345,7 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
+      decorators,
       decorated,
       handleAdd,
       handleHoverOption,
