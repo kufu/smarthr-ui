@@ -15,7 +15,6 @@ describe('createColor', () => {
       BASE_GREY: '#777',
       MAIN: '#888',
       DANGER: '#999',
-      WARNING: '#aaa',
       SCRIM: '#bbb',
       OVERLAY: '#ccc',
     })
@@ -31,7 +30,6 @@ describe('createColor', () => {
     expect(actual.BASE_GREY).toBe('#777')
     expect(actual.MAIN).toBe('#888')
     expect(actual.DANGER).toBe('#999')
-    expect(actual.WARNING).toBe('#aaa')
     expect(actual.SCRIM).toBe('#bbb')
     expect(actual.OVERLAY).toBe('#ccc')
   })

@@ -1,9 +1,5 @@
 import { defaultBorder } from '../createBorder'
-import { defaultBreakpoint } from '../createBreakpoint'
-import { defaultColor } from '../createColor'
-import { defaultFontSize } from '../createFontSize'
 import { defaultLeading } from '../createLeading'
-import { defaultRadius } from '../createRadius'
 import { createTheme } from '../createTheme'
 
 describe('createTheme', () => {
@@ -25,7 +21,6 @@ describe('createTheme', () => {
         BASE_GREY: '#011',
         MAIN: '#012',
         DANGER: '#013',
-        WARNING: '#014',
         SCRIM: '#015',
         OVERLAY: '#016',
         OUTLINE: '#017',
@@ -46,7 +41,6 @@ describe('createTheme', () => {
     expect(actual.color.BASE_GREY).toBe('#011')
     expect(actual.color.MAIN).toBe('#012')
     expect(actual.color.DANGER).toBe('#013')
-    expect(actual.color.WARNING).toBe('#014')
     expect(actual.color.SCRIM).toBe('#015')
     expect(actual.color.OVERLAY).toBe('#016')
     expect(actual.color.OUTLINE).toBe('#017')
