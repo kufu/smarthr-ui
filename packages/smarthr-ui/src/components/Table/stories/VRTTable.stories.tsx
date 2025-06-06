@@ -15,7 +15,7 @@ import { WakuWakuButton } from '../WakuWakuButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Table/VRT',
+  title: 'Components/Table/VRT',
   render: (args) => (
     <Stack>
       {[undefined, 'left', 'right'].map((fixed) =>

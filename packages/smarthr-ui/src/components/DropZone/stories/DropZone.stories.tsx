@@ -5,7 +5,7 @@ import { DropZone } from '../DropZone'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DropZone',
+  title: 'Components/DropZone',
   component: DropZone,
   render: (args) => <DropZone {...args} name="file" />,
   args: {

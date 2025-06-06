@@ -23,7 +23,7 @@ const iconOptions = (disabled: boolean): Option[] => [
 ]
 
 export default {
-  title: 'Buttons（ボタン）/SegmentedControl/VRT',
+  title: 'Components/SegmentedControl/VRT',
   /* ペアワイズ法による網羅 */
   // options.content options.disabled        value   size
   // icon            true                    null    default

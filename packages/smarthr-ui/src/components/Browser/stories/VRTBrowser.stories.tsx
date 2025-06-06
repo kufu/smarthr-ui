@@ -3,7 +3,7 @@ import { Browser } from '../Browser'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Browser/VRT',
+  title: 'Components/Browser/VRT',
   render: () => (
     <>
       <Browser

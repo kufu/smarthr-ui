@@ -6,7 +6,7 @@ import { FlashMessage, messageTypes } from '../FlashMessage'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/FlashMessage（非推奨）',
+  title: 'Components/FlashMessage（非推奨）',
   component: FlashMessage,
   render: (args) => <FlashMessage {...args} />,
   args: {

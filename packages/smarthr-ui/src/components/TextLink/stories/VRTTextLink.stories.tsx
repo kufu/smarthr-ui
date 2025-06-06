@@ -65,7 +65,7 @@ const _cases: Array<
 ]
 
 export default {
-  title: 'Navigation（ナビゲーション）/TextLink/VRT',
+  title: 'Components/TextLink/VRT',
   render: (args) => (
     <Stack>
       {_cases.map((props, i) => (

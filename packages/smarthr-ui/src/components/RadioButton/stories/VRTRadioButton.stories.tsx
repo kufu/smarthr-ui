@@ -4,7 +4,7 @@ import { RadioButton } from '../RadioButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/RadioButton/VRT',
+  title: 'Components/RadioButton/VRT',
   render: (args) => (
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((id) => (

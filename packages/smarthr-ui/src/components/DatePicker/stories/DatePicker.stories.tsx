@@ -7,7 +7,7 @@ import { DatePicker } from '../DatePicker'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker（非推奨）',
+  title: 'Components/DatePicker（非推奨）',
   component: DatePicker,
   render: (args) => <DatePicker {...args} />,
   args: {},

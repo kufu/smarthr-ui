@@ -15,7 +15,7 @@ const _defaultExpandedOptions = {
 }
 
 export default {
-  title: 'Data Display（データ表示）/AccordionPanel',
+  title: 'Components/AccordionPanel',
   component: AccordionPanel,
   subcomponents: {
     AccordionPanelItem,

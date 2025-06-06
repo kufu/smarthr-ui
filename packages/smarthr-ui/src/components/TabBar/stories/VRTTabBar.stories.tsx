@@ -10,7 +10,7 @@ import { TabItem } from '../TabItem'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/TabBar/VRT',
+  title: 'Components/TabBar/VRT',
   /* ペアワイズ法による網羅
    * bordered selected disabled suffix disabledDetail
    * false    false    false    あり    なし

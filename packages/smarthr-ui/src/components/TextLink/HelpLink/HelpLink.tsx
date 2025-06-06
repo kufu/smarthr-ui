@@ -1,8 +1,7 @@
 import { type ComponentPropsWithoutRef, type FC, memo } from 'react'
 
-import { FaCircleQuestionIcon } from '../Icon'
-
-import { TextLink } from './TextLink'
+import { FaCircleQuestionIcon } from '../../Icon'
+import { TextLink } from '../TextLink'
 
 type Props = Omit<ComponentPropsWithoutRef<typeof TextLink>, 'rel' | 'prefix' | 'suffix'>
 

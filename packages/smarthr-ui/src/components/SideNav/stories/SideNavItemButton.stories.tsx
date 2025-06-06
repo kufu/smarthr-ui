@@ -7,7 +7,7 @@ import { SideNavItemButton, SideNavSizeType } from '../SideNavItemButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideNav/SideNavItemButton',
+  title: 'Components/SideNav/SideNavItemButton',
   component: SideNavItemButton,
   render: (args) => (
     <ul className="shr-list-none">

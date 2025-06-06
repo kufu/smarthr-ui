@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react'
 import { RangeSeparator } from './RangeSeparator'
 
 export default {
-  title: 'Text（テキスト）/RangeSeparator/VRT',
+  title: 'Components/RangeSeparator/VRT',
   component: RangeSeparator,
   parameters: {
     chromatic: { disableSnapshot: false },

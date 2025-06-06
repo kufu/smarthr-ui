@@ -6,7 +6,7 @@ import { TabItem } from '../TabItem'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/TabBar',
+  title: 'Components/TabBar',
   component: TabBar,
   subcomponents: { TabItem },
   render: (args) => (

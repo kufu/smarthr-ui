@@ -15,7 +15,7 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/FormDialog',
+  title: 'Components/Dialog/FormDialog',
   component: FormDialog,
   render: ({ onSubmit, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)

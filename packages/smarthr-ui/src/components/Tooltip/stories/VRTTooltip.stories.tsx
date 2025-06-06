@@ -7,7 +7,7 @@ import { Tooltip } from '../Tooltip'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Tooltip/VRT',
+  title: 'Components/Tooltip/VRT',
   render: (args) => (
     <Stack gap={8} align="flex-start" className="shr-p-4">
       <Tooltip {...args} triggerType="icon">

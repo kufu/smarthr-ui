@@ -6,7 +6,7 @@ import { Badge } from '../Badge'
 import type { StoryObj } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/Badge/VRT',
+  title: 'Components/Badge/VRT',
   /* ペアワイズ法は使わずにすべての組み合わせを網羅する */
   render: (args: any) => {
     const types = ['grey', 'blue', 'red', 'yellow'] as const

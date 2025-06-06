@@ -6,7 +6,7 @@ import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
 
 const meta = {
-  title: 'Layouts（レイアウト）/Reel',
+  title: 'Components/Reel',
   component: Reel,
   render: (args) => (
     <Reel {...args}>

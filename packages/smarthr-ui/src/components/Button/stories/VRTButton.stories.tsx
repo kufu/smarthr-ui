@@ -72,7 +72,7 @@ const Template: StoryFn = (args) => (
 )
 
 export default {
-  title: 'Buttons（ボタン）/Button/VRT',
+  title: 'Components/Button/VRT',
   render: Template,
   parameters: {
     chromatic: { disableSnapshot: false },

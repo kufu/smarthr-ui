@@ -21,7 +21,7 @@ const _cases: Array<ComponentProps<typeof Loader>> = [
 ]
 
 export default {
-  title: 'States（状態）/Loader/VRT',
+  title: 'Components/Loader/VRT',
   render: (args) => (
     <Stack>
       {_cases.map((props, i) => (

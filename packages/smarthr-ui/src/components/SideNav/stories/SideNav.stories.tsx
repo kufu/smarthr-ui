@@ -28,7 +28,7 @@ export const _sideNavItems: SideNavItemButtonProps[] = [
 ]
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideNav',
+  title: 'Components/SideNav',
   component: SideNav,
   argTypes: {
     items: {

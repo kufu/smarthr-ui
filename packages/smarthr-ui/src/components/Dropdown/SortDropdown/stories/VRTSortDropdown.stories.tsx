@@ -6,7 +6,7 @@ import { SortDropdown } from '../SortDropdown'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/SortDropdown/VRT',
+  title: 'Components/SortDropdown/VRT',
   component: SortDropdown,
   render: (args) => (
     <Cluster align="center" className="shr-h-screen">

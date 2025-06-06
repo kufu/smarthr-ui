@@ -6,7 +6,7 @@ import { Layer, Overflow, Padding, Radius } from './Base.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Base/VRT',
+  title: 'Components/Base/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}

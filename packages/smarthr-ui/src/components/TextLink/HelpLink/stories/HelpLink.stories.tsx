@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { HelpLink } from '..'
+import { HelpLink } from '../HelpLink'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import type { ComponentPropsWithoutRef } from 'react'
@@ -17,7 +17,7 @@ const _elementAsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/HelpLink',
+  title: 'Components/TextLink/HelpLink',
   component: HelpLink,
   render: (args) => <HelpLink {...args} />,
   argTypes: {

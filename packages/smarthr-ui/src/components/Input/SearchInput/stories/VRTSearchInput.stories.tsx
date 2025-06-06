@@ -7,7 +7,7 @@ import { Width } from './SearchInput.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/SearchInput/VRT',
+  title: 'Components/SearchInput/VRT',
   render: Width.render,
   args: {
     tooltipMessage: '氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。',

@@ -89,7 +89,7 @@ export const _appsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header',
+  title: 'Components/Header',
   component: Header,
   subcomponents: { HeaderLink, HeaderDropdownMenuButton },
   render: (args) => <Header {...args} />,

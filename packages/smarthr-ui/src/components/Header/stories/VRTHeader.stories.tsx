@@ -11,7 +11,7 @@ import { _appsOptions } from './Header.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header/VRT',
+  title: 'Components/Header/VRT',
   render: (args) => (
     <Stack className="shr-h-screen">
       {[undefined, 'focus-visible'].map((id) => (
