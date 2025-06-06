@@ -5,7 +5,7 @@ import { DropdownMenuGroup } from '../DropdownMenuGroup'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Components/DropdownMenuButton/DropdownMenuGroup',
+  title: 'Components/Dropdown/DropdownMenuButton/DropdownMenuGroup',
   component: DropdownMenuGroup,
   render: (args) => (
     <DropdownMenuButton label="その他の操作">
