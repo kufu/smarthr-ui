@@ -6,7 +6,7 @@ import { Cluster } from '../../Cluster'
 import { ColorBox } from '../../ComponentsForStories'
 
 export default {
-  title: 'Components/Stack',
+  title: 'Components/Layout/Stack',
   component: Stack,
   render: (args) => (
     <Stack {...args}>

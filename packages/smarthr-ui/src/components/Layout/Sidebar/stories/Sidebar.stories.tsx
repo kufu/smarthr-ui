@@ -6,7 +6,7 @@ import { Stack } from '../../Stack'
 import { TextLink } from '../../../TextLink'
 
 const meta = {
-  title: 'Components/Sidebar',
+  title: 'Components/Layout/Sidebar',
   component: Sidebar,
   render: (args) => (
     <Sidebar {...args}>

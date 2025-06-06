@@ -12,7 +12,7 @@ const centerPadding = Object.keys(centerClassNameGenerator.variants.padding)
   .sort() as GapType[]
 
 export default {
-  title: 'Components/Center',
+  title: 'Components/Layout/Center',
   component: Center,
   render: (args) => (
     <Center {...args}>

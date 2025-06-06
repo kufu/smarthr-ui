@@ -32,7 +32,7 @@ const _cases: Array<
 ]
 
 export default {
-  title: 'Components/DropdownMenuButton/VRT',
+  title: 'Components/Dropdown/DropdownMenuButton/VRT',
   component: DropdownMenuButton,
   render: (args) => (
     <Cluster align="center" className="shr-h-screen">

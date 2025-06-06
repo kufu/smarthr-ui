@@ -1,10 +1,10 @@
-import { Stack } from '../../Layout'
+import { Stack } from '../../../Layout'
 import { UpwardLink } from '../UpwardLink'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Components/UpwardLink/VRT',
+  title: 'Components/TextLink/UpwardLink/VRT',
   render: (args) => (
     <Stack>
       {[undefined, true, false].map((indent, i) => (
