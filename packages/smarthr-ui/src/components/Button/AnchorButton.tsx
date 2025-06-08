@@ -23,10 +23,12 @@ type ElementProps<T extends ElementType> = Omit<
   keyof Props<T> & ElementRefProps<T>
 >
 
-type Props<T extends ElementType> = BaseProps & {
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  elementAs?: T
-}
+type Props<T extends ElementType> = Omit<PropsWithoutRef<BaseProps>, keyof ElementProps<T>> &
+  Omit<ElementProps<T>, 'href'> & {
+    /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+    elementAs?: T
+    href: string | undefined
+  }
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-AnchorButton',
@@ -47,7 +49,7 @@ const AnchorButton = forwardRef(
       className,
       children,
       ...props
-    }: PropsWithoutRef<Props<T>> & ElementProps<T>,
+    }: Props<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])

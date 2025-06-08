@@ -15,8 +15,10 @@ type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
   prefix?: ReactNode
 }>
 
-type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
-  Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
+type Props<AsElement extends ElementType = 'a'> = Omit<BaseProps<AsElement>, 'href'> &
+  Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>> & {
+    href: string | undefined
+  }
 
 const classNameGenerator = tv({
   slots: {

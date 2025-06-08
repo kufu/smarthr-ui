@@ -33,7 +33,9 @@ type Props<T extends ElementType> = VariantProps<typeof classNameGenerator> & {
 }
 
 type TextLinkComponent = <T extends ElementType = 'a'>(
-  props: Props<T> & ElementProps<T> & ElementRefProps<T>,
+  props: Omit<Props<T> & ElementProps<T> & ElementRefProps<T>, 'href'> & {
+    href: string | undefined
+  },
 ) => ReturnType<FC>
 
 const classNameGenerator = tv({
@@ -76,7 +78,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       className,
       size,
       ...others
-    }: PropsWithoutRef<Props<T>> & ElementProps<T>,
+    }: Omit<PropsWithoutRef<Props<T>> & ElementProps<T>, 'href'> & { href: string | undefined },
     ref: Ref<ElementRef<T>>,
   ) => {
     const Anchor = elementAs || 'a'
