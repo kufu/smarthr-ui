@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 
 import { Button } from '../../Button'
 import { FaArrowsRotateIcon } from '../../Icon'

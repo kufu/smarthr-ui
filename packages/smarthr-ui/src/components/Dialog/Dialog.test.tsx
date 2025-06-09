@@ -1,6 +1,6 @@
-import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useRef, useState } from 'react'
+import { userEvent } from 'storybook/test'
 
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'

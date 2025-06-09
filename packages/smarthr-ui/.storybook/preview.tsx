@@ -1,9 +1,15 @@
 import { ReactNode, useEffect } from 'react'
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { Title, Subtitle, Description, Primary, Stories, Controls } from '@storybook/blocks'
+import { INITIAL_VIEWPORTS } from 'storybook/viewport'
+import {
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Stories,
+  Controls,
+} from '@storybook/addon-docs/blocks'
+import type { Preview } from '@storybook/react-webpack5'
 import ReactGA from 'react-ga4'
-
-import { Preview } from '@storybook/react'
 
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
