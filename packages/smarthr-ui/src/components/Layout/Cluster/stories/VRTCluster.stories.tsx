@@ -5,7 +5,7 @@ import { Cluster } from '../../../..'
 import { Gap } from './Cluster.stories'
 
 export default {
-  title: 'Components/Cluster/VRT',
+  title: 'Components/Layout/Cluster/VRT',
   component: Cluster,
   render: Gap.render,
   parameters: {

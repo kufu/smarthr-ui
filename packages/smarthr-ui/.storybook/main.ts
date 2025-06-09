@@ -1,14 +1,12 @@
 import path from 'path'
 import { StorybookConfig } from '@storybook/react-webpack5'
+import { DefinePlugin, ProvidePlugin } from 'webpack'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
-    {
-      name: '@storybook/addon-essentials',
-    },
+    '@storybook/addon-docs',
     '@storybook/addon-a11y',
-    '@storybook/addon-interactions',
     {
       name: '@storybook/addon-storysource',
       options: {
@@ -70,7 +68,29 @@ const config: StorybookConfig = {
       ...resolve.alias,
       '@': path.resolve(__dirname, '../src'),
     }
-    return { ...config, resolve }
+
+    // Storybook 9でprocess polyfillが必要
+    resolve.fallback = {
+      ...resolve.fallback,
+      process: require.resolve('process/browser'),
+    }
+
+    const plugins = config.plugins || []
+    plugins.push(
+      new DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+        'process.env.STORYBOOK_NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      }),
+      new ProvidePlugin({
+        process: 'process/browser',
+      }),
+    )
+
+    return {
+      ...config,
+      resolve,
+      plugins,
+    }
   },
 }
 

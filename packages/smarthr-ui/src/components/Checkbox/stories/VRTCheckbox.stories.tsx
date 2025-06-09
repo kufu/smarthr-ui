@@ -1,5 +1,4 @@
-import { Heading } from '@storybook/blocks'
-
+import { Heading } from '@storybook/addon-docs/blocks'
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { Checkbox } from '../Checkbox'

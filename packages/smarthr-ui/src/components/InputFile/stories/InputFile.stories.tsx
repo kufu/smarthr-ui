@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { InputFile } from '../InputFile'

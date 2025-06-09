@@ -1,4 +1,4 @@
-import { fireEvent, within } from '@storybook/test'
+import { fireEvent, within } from 'storybook/test'
 
 import { Stack } from '../../Layout'
 import { NotificationBar } from '../NotificationBar'
