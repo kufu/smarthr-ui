@@ -6,7 +6,7 @@ import { FilterDropdown } from '../FilterDropdown'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Components/FilterDropdown',
+  title: 'Components/Dropdown/FilterDropdown',
   component: FilterDropdown,
   render: (args) => <FilterDropdown {...args}>絞り込みドロップダウンパネル</FilterDropdown>,
   argTypes: {},

@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef } from 'react'
 
-import { Stack } from '../../Layout'
+import { Stack } from '../../../Layout'
 import { UpwardLink } from '../UpwardLink'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -17,7 +17,7 @@ const _elementAsOptions = {
 }
 
 export default {
-  title: 'Components/UpwardLink',
+  title: 'Components/TextLink/UpwardLink',
   component: UpwardLink,
   render: (args) => <UpwardLink {...args} />,
   argTypes: {

@@ -71,7 +71,7 @@ export const defaultItems = {
 export const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
 
 export default {
-  title: 'Components/SingleCombobox',
+  title: 'Components/Combobox/SingleCombobox',
   component: SingleCombobox,
   render: (args) => {
     const [, setArgs] = useArgs()

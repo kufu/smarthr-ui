@@ -29,7 +29,7 @@ const _cases: Array<
 ]
 
 export default {
-  title: 'Components/FilterDropdown/VRT',
+  title: 'Components/Dropdown/FilterDropdown/VRT',
   component: FilterDropdown,
   render: (args) => (
     <Cluster align="center" className="shr-h-screen">

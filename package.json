@@ -8,7 +8,7 @@
     "@commitlint/config-conventional": "^19.8.1",
     "eslint": "^9.28.0",
     "eslint-config-smarthr": "^9.5.0",
-    "eslint-plugin-storybook": "^9.0.5",
+    "eslint-plugin-storybook": "^9.0.6",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
@@ -39,8 +39,8 @@
       "cross-spawn@<7.0.5": ">=7.0.6",
       "nanoid": "3.3.11",
       "esbuild@<=0.24.2": ">=0.25.5",
-      "@babel/runtime@<7.26.10": ">=7.27.4",
-      "@babel/helpers@<7.26.10": ">=7.27.4"
+      "@babel/runtime@<7.26.10": ">=7.27.6",
+      "@babel/helpers@<7.26.10": ">=7.27.6"
     }
   }
 }
