@@ -1,14 +1,54 @@
 import path from 'path'
 import { StorybookConfig } from '@storybook/react-webpack5'
-import { DefinePlugin, ProvidePlugin } from 'webpack'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
+    {
+      name: '@storybook/addon-essentials',
+    },
     '@storybook/addon-a11y',
+    '@storybook/addon-interactions',
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        rule: {
+          test: [/\.stories\.jsx?$/],
+          include: [path.resolve(__dirname, '../src')],
+        },
+        loaderOptions: {
+          prettierConfig: {
+            printWidth: 80,
+            singleQuote: false,
+          },
+        },
+      },
+    },
+    {
+      name: '@storybook/addon-styling-webpack',
+      options: {
+        rules: [
+          // Replaces existing CSS rules to support PostCSS
+          {
+            test: /\.css$/,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: { importLoaders: 1 },
+              },
+              {
+                // Gets options from `postcss.config.js` in your project root
+                loader: 'postcss-loader',
+                options: { implementation: require.resolve('postcss') },
+              },
+            ],
+          },
+        ],
+      },
+    },
     'storybook-addon-pseudo-states',
     '@storybook/addon-webpack5-compiler-babel',
-    '@storybook/addon-docs',
   ],
   refs: {
     'smarthr-patterns': {
@@ -30,68 +70,7 @@ const config: StorybookConfig = {
       ...resolve.alias,
       '@': path.resolve(__dirname, '../src'),
     }
-
-    resolve.fallback = {
-      ...resolve.fallback,
-      process: require.resolve('process/browser'),
-      util: require.resolve('util'),
-    }
-
-    const rules = config.module?.rules || []
-
-    const filteredRules = rules.filter((rule) => {
-      if (typeof rule === 'object' && rule !== null && 'test' in rule) {
-        const test = rule.test
-        if (test instanceof RegExp) {
-          return !test.test('.css')
-        }
-      }
-      return true
-    })
-
-    filteredRules.push({
-      test: /\.css$/,
-      use: [
-        'style-loader',
-        {
-          loader: 'css-loader',
-          options: { importLoaders: 1 },
-        },
-        {
-          loader: 'postcss-loader',
-          options: { implementation: require.resolve('postcss') },
-        },
-      ],
-    })
-
-    filteredRules.push({
-      test: /\.svg$/,
-      type: 'asset/resource',
-    })
-
-    const plugins = config.plugins || []
-    plugins.push(
-      new DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.STORYBOOK_NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        process: 'process',
-        global: 'globalThis',
-      }),
-      new ProvidePlugin({
-        process: 'process/browser',
-        Buffer: ['buffer', 'Buffer'],
-      }),
-    )
-
-    return {
-      ...config,
-      resolve,
-      module: {
-        ...config.module,
-        rules: filteredRules,
-      },
-      plugins,
-    }
+    return { ...config, resolve }
   },
 }
 
