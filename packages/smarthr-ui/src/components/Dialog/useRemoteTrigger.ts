@@ -1,6 +1,15 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
+
+type Props = {
+  id: string
+  onClickClose?: (close: () => void) => void
+  onPressEscape?: (close: () => void) => void
+  onToggle?: (isOpen: boolean) => void
+  onOpen?: () => void
+  onClose?: () => void
+}
 
 export function useRemoteTrigger({
   onClickClose: orgOnClickClose,
@@ -9,15 +18,13 @@ export function useRemoteTrigger({
   onOpen,
   onClose,
   id,
-}: {
-  id: string
-  onClickClose?: (close: () => void) => void
-  onPressEscape?: (close: () => void) => void
-  onToggle?: (isOpen: boolean) => void
-  onOpen?: () => void
-  onClose?: () => void
-}) {
+}: Props) {
   const [isOpen, setIsOpen] = useState(false)
+  const togglerRef = useRef<Pick<Props, 'onToggle' | 'onOpen' | 'onClose'>>({
+    onToggle,
+    onOpen,
+    onClose,
+  })
 
   const onClickClose = useCallback(() => {
     if (orgOnClickClose) {
@@ -54,16 +61,19 @@ export function useRemoteTrigger({
   }, [id])
 
   useEffect(() => {
-    onToggle?.(isOpen)
+    togglerRef.current.onToggle = onToggle
+    togglerRef.current.onOpen = onOpen
+    togglerRef.current.onClose = onClose
+  }, [onToggle, onOpen, onClose])
+
+  useEffect(() => {
+    togglerRef.current.onToggle?.(isOpen)
 
     if (isOpen) {
-      onOpen?.()
+      togglerRef.current.onOpen?.()
     } else {
-      onClose?.()
+      togglerRef.current.onClose?.()
     }
-    // HINT: 再レンダリング際にhookを利用していないonToggleなどが渡されると意図せず発火してしまう場合がありえるため
-    // onToggle, onOpen, onClose を depsに含めていません
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   return {
