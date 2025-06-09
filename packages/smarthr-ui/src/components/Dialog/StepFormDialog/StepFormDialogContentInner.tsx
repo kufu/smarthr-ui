@@ -121,11 +121,10 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
 
-      stepQueue.current.push(currentStep)
-
       const next = onSubmit(handleCloseAction, e, currentStep)
 
       if (next) {
+        stepQueue.current.push(currentStep)
         changeCurrentStep(next)
       }
     },
