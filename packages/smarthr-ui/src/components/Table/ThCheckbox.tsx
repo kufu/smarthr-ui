@@ -24,14 +24,14 @@ const classNameGenerator = tv({
   slots: {
     inner: [
       'shr-group/label',
-      'shr-relative shr-flex shr-justify-center shr-py-0.75 shr-px-1',
+      'shr-relative shr-flex shr-justify-center shr-px-1 shr-py-0.75',
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
-    wrapper: 'shr-p-0 shr-w-[theme(fontSize.base)]',
+    wrapper: 'shr-w-[theme(fontSize.base)] shr-p-0',
     checkbox: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
     balloon: [
       // 位置はセルの真ん中(50%)+checkboxの幅の半分(8px)+outlineの幅(4px)+Balloonの矢印の幅(5px), sr-onlyで隠す
-      'shr-absolute shr-left-[calc(50%+(theme(fontSize.base)/2)+4px+5px)] shr-sr-only',
+      'shr-sr-only shr-absolute shr-left-[calc(50%+(theme(fontSize.base)/2)+4px+5px)]',
       // labelの中の要素に hover or focus-visible がある時のスタイル。shr-absoluteはshr-not-sr-onlyのpositionをabsoluteに上書きしている
       'group-has-[:hover,:focus-visible]/label:shr-not-sr-only group-has-[:hover,:focus-visible]/label:shr-absolute group-has-[:hover,:focus-visible]/label:shr-whitespace-nowrap',
     ],
@@ -63,7 +63,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={classNames.inner}>
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
-            <span className="shr-p-0.5 shr-block">{decorated.checkAllInvisibleLabel}</span>
+            <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
           </Balloon>
           <Checkbox {...others} ref={ref} className={classNames.checkbox} />
         </label>

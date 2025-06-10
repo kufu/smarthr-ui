@@ -32,14 +32,14 @@ export default {
   title: 'Components/Tooltip',
   component: Tooltip,
   render: (args) => (
-    <div className="shr-w-full shr-relative" style={{ height: '250px' }}>
-      <div className="shr-absolute shr-top-0 shr-left-0">
+    <div className="shr-relative shr-w-full" style={{ height: '250px' }}>
+      <div className="shr-absolute shr-left-0 shr-top-0">
         <Tooltip {...args} />
       </div>
-      <div className="shr-absolute shr-top-0 shr-right-0">
+      <div className="shr-absolute shr-right-0 shr-top-0">
         <Tooltip {...args} />
       </div>
-      <div className="shr-absolute shr-top-0 shr-right-0">
+      <div className="shr-absolute shr-right-0 shr-top-0">
         <Tooltip {...args} />
       </div>
       <div className="shr-absolute" style={{ top: '40%', left: '40%' }}>

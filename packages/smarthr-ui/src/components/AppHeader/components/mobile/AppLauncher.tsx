@@ -23,15 +23,15 @@ type Props = {
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: ['smarthr-ui-AppLauncher', 'shr-flex shr-flex-col shr-h-full'],
+    wrapper: ['smarthr-ui-AppLauncher', 'shr-flex shr-h-full shr-flex-col'],
     searchArea: [
       'smarthr-ui-AppLauncher-searchArea',
-      'shr-py-0.75 shr-px-1 shr-border-b-shorthand',
+      'shr-border-b-shorthand shr-px-1 shr-py-0.75',
       '[&_.smarthr-ui-Input]:shr-h-[42px]',
     ],
-    headArea: 'shr-py-0.75 shr-px-1',
-    scrollArea: 'shr-overflow-y-scroll shr-flex-1 shr-basis-0',
-    bottomArea: 'shr-py-0.75 shr-px-1 shr-border-t-shorthand',
+    headArea: 'shr-px-1 shr-py-0.75',
+    scrollArea: 'shr-flex-1 shr-basis-0 shr-overflow-y-scroll',
+    bottomArea: 'shr-border-t-shorthand shr-px-1 shr-py-0.75',
   },
 })
 

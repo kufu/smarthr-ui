@@ -9,10 +9,10 @@ import { ItemNode, type ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-Browser shr-flex shr-flex-row shr-flex-nowrap shr-min-h-[355px]',
+  base: 'smarthr-ui-Browser shr-flex shr-min-h-[355px] shr-flex-row shr-flex-nowrap',
   variants: {
     columnCount: {
-      0: 'shr-justify-center shr-items-center',
+      0: 'shr-items-center shr-justify-center',
       1: '[&>div]:shr-flex-1',
       2: '[&>div:nth-child(1)]:shr-flex-1 [&>div:nth-child(2)]:shr-flex-[2]',
       3: '[&>div]:shr-flex-1',

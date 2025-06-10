@@ -52,7 +52,7 @@ export const Td = memo<Props & ElementProps>(
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-Td',
-    'shr-border-0 shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black shr-h-[calc(1em_*_theme(lineHeight.normal))]',
+    'shr-h-[calc(1em_*_theme(lineHeight.normal))] shr-border-0 shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black',
     '[&.fixed]:shr-bg-white',
   ],
   variants: {
