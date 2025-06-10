@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [74.0.0](https://github.com/kufu/smarthr-ui/compare/v73.0.1...v74.0.0) (2025-06-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* 非推奨コンポーネントのFlashMessageを削除する SHRUI-800 (#5579)
+* color.ORANGE と color.GREEN を見直し (#5671)
+
+### Bug Fixes
+
+* color.ORANGE と color.GREEN を見直し ([#5671](https://github.com/kufu/smarthr-ui/issues/5671)) ([132330c](https://github.com/kufu/smarthr-ui/commit/132330cf73b66793f286ae9d68294832f329aa41))
+* 非推奨コンポーネントのFlashMessageを削除する SHRUI-800 ([#5579](https://github.com/kufu/smarthr-ui/issues/5579)) ([0d13cf6](https://github.com/kufu/smarthr-ui/commit/0d13cf6db9878f284d06cc49c0e29f4da18f9697))
+
 ### [73.0.1](https://github.com/kufu/smarthr-ui/compare/v73.0.0...v73.0.1) (2025-06-10)
 
 
