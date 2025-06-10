@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [73.0.1](https://github.com/kufu/smarthr-ui/compare/v73.0.0...v73.0.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* RemoteDialogTriggerがasync-awaitなど非同期処理と併用されると正常動作しない可能性があるため修正する ([#5666](https://github.com/kufu/smarthr-ui/issues/5666)) ([d7f82c8](https://github.com/kufu/smarthr-ui/commit/d7f82c80ca859a4dbaebd8f8158c284bee319986))
+* RollupとTypeScriptの設定でinlineSourcesを有効にする ([#5668](https://github.com/kufu/smarthr-ui/issues/5668)) ([6268aaa](https://github.com/kufu/smarthr-ui/commit/6268aaac91a88910b042511c1bb8bb802bf45734))
+* StepFormDialogでバリデーションエラー時に戻るボタンが動かない問題の修正 ([#5679](https://github.com/kufu/smarthr-ui/issues/5679)) ([622623d](https://github.com/kufu/smarthr-ui/commit/622623daa36246bb69787ec6edf9041f16623bfc))
+
 ## [73.0.0](https://github.com/kufu/smarthr-ui/compare/v72.1.0...v73.0.0) (2025-06-03)
 
 
