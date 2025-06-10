@@ -15,7 +15,7 @@ const Template: StoryFn<typeof TdCheckbox> = (args) => (
 )
 
 export default {
-  title: 'Data Display（データ表示）/Table/TdCheckbox',
+  title: 'Components/Table/TdCheckbox',
   component: TdCheckbox,
   render: Template,
   argTypes: {

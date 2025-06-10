@@ -1,8 +1,8 @@
 import { type ComponentProps, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { FaArrowLeftIcon } from '../Icon'
-import { TextLink } from '../TextLink'
+import { TextLink } from '..'
+import { FaArrowLeftIcon } from '../../Icon'
 
 const classNameGenerator = tv({
   base: 'shr-leading-none',

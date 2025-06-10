@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import dayjs from 'dayjs'
 
 import { Cluster } from '../../Layout'
@@ -7,7 +7,7 @@ import { Calendar } from '../Calendar'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Calendar/VRT',
+  title: 'Components/Calendar/VRT',
   render: (args) => (
     <Cluster gap="S">
       <Calendar value={dayjs('2024/10/06').toDate()} onSelectDate={args.onSelectDate} />

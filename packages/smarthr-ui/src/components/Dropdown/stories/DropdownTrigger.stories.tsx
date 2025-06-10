@@ -6,7 +6,7 @@ import { DropdownTrigger } from '../DropdownTrigger'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/Dropdown/DropdownTrigger',
+  title: 'Components/Dropdown/DropdownTrigger',
   component: DropdownTrigger,
   render: (args) => (
     <Dropdown>

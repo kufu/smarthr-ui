@@ -1,5 +1,5 @@
-import { userEvent } from '@storybook/test'
 import { render, screen } from '@testing-library/react'
+import { userEvent } from 'storybook/test'
 
 import { Browser } from './Browser'
 

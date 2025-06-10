@@ -5,7 +5,7 @@ import { LineClamp } from '../LineClamp'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
-  title: 'Data Display（データ表示）/LineClamp',
+  title: 'Components/LineClamp',
   component: LineClamp,
   render: (args) => (
     <LineClamp {...args}>

@@ -4,7 +4,7 @@ import { FaAddressBookIcon, WarningIcon } from '../Icon'
 import type { StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Media（メディア）/Icon/VRT',
+  title: 'Components/Icon/VRT',
   /**
    * $ pict icon.pict
    * color   alt  text gap    right

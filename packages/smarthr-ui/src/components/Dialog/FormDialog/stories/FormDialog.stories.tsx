@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { FormDialog } from '../FormDialog'
@@ -15,7 +15,7 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/FormDialog',
+  title: 'Components/Dialog/FormDialog',
   component: FormDialog,
   render: ({ onSubmit, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)

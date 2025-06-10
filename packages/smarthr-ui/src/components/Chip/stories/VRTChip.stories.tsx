@@ -4,7 +4,7 @@ import { Chip } from '../Chip'
 import type { Meta } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Chip/VRT',
+  title: 'Components/Chip/VRT',
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, true].map((disabled) => (

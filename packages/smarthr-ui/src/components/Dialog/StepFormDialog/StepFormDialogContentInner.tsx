@@ -53,6 +53,7 @@ export type StepFormDialogContentInnerProps = BaseProps & {
   firstStep: StepItem
   onClickClose: () => void
   responseStatus?: ResponseStatus
+  /** ステップの総数 */
   stepLength: number
   onClickBack?: () => void
 }
@@ -74,6 +75,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   title,
   titleId,
   subtitle,
+  titleTag,
   contentBgColor,
   contentPadding,
   submitLabel,
@@ -119,11 +121,10 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
 
-      stepQueue.current.push(currentStep)
-
       const next = onSubmit(handleCloseAction, e, currentStep)
 
       if (next) {
+        stepQueue.current.push(currentStep)
         changeCurrentStep(next)
       }
     },
@@ -159,6 +160,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <DialogHeader
             title={`${title} ${activeStep}/${stepLength}`}
             subtitle={subtitle}
+            titleTag={titleTag}
             titleId={titleId}
           />
           <DialogBody
@@ -169,7 +171,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             {children}
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
-            <Cluster justify="space-between">
+            <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}

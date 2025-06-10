@@ -11,10 +11,10 @@ import {
 
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
-const onClickRemoteDialogTrigger = (e: MouseEvent<HTMLElement>) => {
+const onClickRemoteDialogTrigger = (ariaControls: string) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
-      detail: { id: e.currentTarget.getAttribute('aria-controls') as string },
+      detail: { id: ariaControls },
     }),
   )
 }
@@ -26,13 +26,17 @@ export const RemoteDialogTrigger: FC<{
 }> = ({ targetId, children, onClick, ...rest }) => {
   const actualOnClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
+      // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+      // 先にariaControlsを取得しておく
+      const ariaControls = e.currentTarget.getAttribute('aria-controls') as string
+
       if (onClick) {
         return onClick(() => {
-          onClickRemoteDialogTrigger(e)
+          onClickRemoteDialogTrigger(ariaControls)
         })
       }
 
-      onClickRemoteDialogTrigger(e)
+      onClickRemoteDialogTrigger(ariaControls)
     },
     [onClick],
   )

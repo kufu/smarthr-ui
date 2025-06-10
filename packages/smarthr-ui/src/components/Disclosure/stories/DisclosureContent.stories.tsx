@@ -4,7 +4,7 @@ import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Disclosure/DisclosureContent',
+  title: 'Components/Disclosure/DisclosureContent',
   component: DisclosureContent,
   render: (args) => (
     <>

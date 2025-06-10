@@ -5,7 +5,7 @@ import { AnchorButton } from '../AnchorButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/Button/AnchorButton',
+  title: 'Components/Button/AnchorButton',
   component: AnchorButton,
   render: (args) => <AnchorButton {...args} />,
   args: {

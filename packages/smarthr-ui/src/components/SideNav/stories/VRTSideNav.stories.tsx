@@ -11,7 +11,7 @@ import { _sideNavItems } from './SideNav.stories'
 const _casse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideNav/VRT',
+  title: 'Components/SideNav/VRT',
   component: SideNav,
   argTypes: {
     items: {

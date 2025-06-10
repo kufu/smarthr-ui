@@ -1,6 +1,6 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
 import { Meta, StoryObj } from '@storybook/react'
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import { useState } from 'react'
 
 import { Stack } from '../../../Layout'
@@ -71,7 +71,7 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 }
 
 export default {
-  title: 'Forms（フォーム）/MultiCombobox/VRT',
+  title: 'Components/Combobox/MultiCombobox/VRT',
   component: MultiCombobox,
   render: (args) => {
     const items = Object.values(defaultItems)

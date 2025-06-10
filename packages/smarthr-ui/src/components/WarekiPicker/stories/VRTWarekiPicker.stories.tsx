@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import dayjs from 'dayjs'
 
 import { Cluster } from '../../Layout'
@@ -7,7 +7,7 @@ import { WarekiPicker } from '../WarekiPicker'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/WarekiPicker/VRT',
+  title: 'Components/WarekiPicker/VRT',
   component: WarekiPicker,
   render: (args) => {
     const value = '2024/11/06'

@@ -1,9 +1,15 @@
 import { ReactNode, useEffect } from 'react'
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { Title, Subtitle, Description, Primary, Stories, Controls } from '@storybook/blocks'
+import { INITIAL_VIEWPORTS } from 'storybook/viewport'
+import {
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Stories,
+  Controls,
+} from '@storybook/addon-docs/blocks'
+import type { Preview } from '@storybook/react-webpack5'
 import ReactGA from 'react-ga4'
-
-import { Preview } from '@storybook/react'
 
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
@@ -24,23 +30,6 @@ const preview: Preview = {
     options: {
       isFullscreen: false,
       isToolshown: true,
-      storySort: {
-        // 並び替え方針がないためアルファベット順
-        order: [
-          'Buttons（ボタン）',
-          'Data Display（データ表示）',
-          'Dialog（ダイアログ）',
-          'Forms（フォーム）',
-          'Layouts（レイアウト）',
-          'Media（メディア）',
-          'Navigation（ナビゲーション）',
-          'Page Templates（ページテンプレート）',
-          'States（状態）',
-          'Text（テキスト）',
-          'Hooks',
-          'Experimental（実験的）',
-        ],
-      },
     },
     viewport: {
       viewports: {

@@ -7,7 +7,7 @@ import { DialogWrapper } from '../DialogWrapper'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/DialogCloser',
+  title: 'Components/Dialog/DialogCloser',
   component: DialogCloser,
   render: (args) => (
     <DialogWrapper>

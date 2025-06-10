@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 
 import { Dialog } from '../Dialog'
 
@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   ...DialogContentStory,
-  title: 'Dialog（ダイアログ）/Dialog/DialogContent/VRT',
+  title: 'Components/Dialog/DialogContent/VRT',
   args: {
     width: '40em',
   },

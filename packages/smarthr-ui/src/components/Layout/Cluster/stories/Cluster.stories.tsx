@@ -12,7 +12,7 @@ const clusterGap = Object.keys(clusterClassNameGenerator.variants.rowGap)
   .sort() as GapType[]
 
 export default {
-  title: 'Layouts（レイアウト）/Cluster',
+  title: 'Components/Layout/Cluster',
   component: Cluster,
   render: (args) => (
     <Cluster {...args}>

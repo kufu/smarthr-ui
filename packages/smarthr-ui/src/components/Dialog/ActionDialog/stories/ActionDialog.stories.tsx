@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { ActionDialog } from '../ActionDialog'
@@ -14,7 +14,7 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/ActionDialog',
+  title: 'Components/Dialog/ActionDialog',
   component: ActionDialog,
   render: ({ onClickAction, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)

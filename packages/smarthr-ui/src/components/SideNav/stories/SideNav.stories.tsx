@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
@@ -28,7 +28,7 @@ export const _sideNavItems: SideNavItemButtonProps[] = [
 ]
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideNav',
+  title: 'Components/SideNav',
   component: SideNav,
   argTypes: {
     items: {

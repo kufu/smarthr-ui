@@ -6,7 +6,7 @@ import { BgColor, Padding } from './BaseColumn.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Base/BaseColumn/VRT',
+  title: 'Components/Base/BaseColumn/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}

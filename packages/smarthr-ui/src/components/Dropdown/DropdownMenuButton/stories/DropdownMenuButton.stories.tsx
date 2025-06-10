@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { AnchorButton, Button } from '../../../Button'
 import { RemoteDialogTrigger } from '../../../Dialog'
@@ -14,7 +14,7 @@ const _sampleTriggerIcons = {
 }
 
 export default {
-  title: 'Buttons（ボタン）/DropdownMenuButton',
+  title: 'Components/Dropdown/DropdownMenuButton',
   component: DropdownMenuButton,
   subcomponents: { DropdownMenuGroup },
   render: (args) => (

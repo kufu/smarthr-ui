@@ -15,7 +15,7 @@ const Template: StoryFn<typeof TdRadioButton> = (args) => (
 )
 
 export default {
-  title: 'Data Display（データ表示）/Table/TdRadioButton',
+  title: 'Components/Table/TdRadioButton',
   component: TdRadioButton,
   render: Template,
   argTypes: {

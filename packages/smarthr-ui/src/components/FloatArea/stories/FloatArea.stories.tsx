@@ -27,7 +27,7 @@ const _responseStatusOptions: { [key: string]: ResponseStatusWithoutProcessing |
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/FloatArea',
+  title: 'Components/FloatArea',
   component: FloatArea,
   render: (args) => <FloatArea {...args} />,
   argTypes: {

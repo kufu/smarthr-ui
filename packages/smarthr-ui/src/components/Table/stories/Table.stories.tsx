@@ -31,7 +31,7 @@ const Template: StoryFn<typeof Table> = (args) => (
 )
 
 export default {
-  title: 'Data Display（データ表示）/Table',
+  title: 'Components/Table',
   component: Table,
   subcomponents: {
     Th,

@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import { ComponentProps } from 'react'
 
 import { Cluster } from '../../../Layout'
@@ -29,7 +29,7 @@ const _cases: Array<
 ]
 
 export default {
-  title: 'Buttons（ボタン）/FilterDropdown/VRT',
+  title: 'Components/Dropdown/FilterDropdown/VRT',
   component: FilterDropdown,
   render: (args) => (
     <Cluster align="center" className="shr-h-screen">
