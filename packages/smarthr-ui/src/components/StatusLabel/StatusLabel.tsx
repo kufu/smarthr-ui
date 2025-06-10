@@ -22,7 +22,7 @@ export const classNameGenerator = tv({
       blue: 'shr-text-main',
       /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
        * https://smarthr.design/basics/colors/#h4-1 */
-      green: 'shr-text-[#0f7f85]',
+      green: 'shr-text-green',
       red: 'shr-text-danger',
       warning: 'shr-border-warning-yellow shr-bg-warning-yellow shr-text-black',
       error: 'shr-bg-danger shr-border-danger shr-text-white',
@@ -47,7 +47,7 @@ export const classNameGenerator = tv({
       bold: true,
       /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
        * https://smarthr.design/basics/colors/#h4-1 */
-      class: 'shr-border-[#0f7f85] shr-bg-[#0f7f85]',
+      class: 'shr-border-green shr-bg-green',
     },
     {
       type: 'red',

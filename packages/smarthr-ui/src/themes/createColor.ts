@@ -33,8 +33,9 @@ const primitiveTokens = {
   WHITE: '#fff',
   BLUE_100: '#0077c7',
   BLUE_101: '#0071c1',
+  GREEN_100: '#0f7f85',
+  ORANGE_100: '#f56121',
   RED_100: '#e01e5a',
-  ORANGE_100: '#ff8800',
   YELLOW_100: '#ffcc17',
   SMARTHR_BLUE: '#00c4cc',
 }
@@ -56,7 +57,6 @@ const semanticTokens = {
   MAIN: primitiveTokens.BLUE_100,
   OUTLINE: primitiveTokens.BLUE_100,
   DANGER: primitiveTokens.RED_100,
-  WARNING: primitiveTokens.ORANGE_100,
   WARNING_YELLOW: primitiveTokens.YELLOW_100,
   OVERLAY: transparencyScale.TRANSPARENCY_15,
   SCRIM: transparencyScale.TRANSPARENCY_50,
