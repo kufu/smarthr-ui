@@ -35,29 +35,31 @@ export const ActionDialog: FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
+  isOpen,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
 
-  const handleClickClose = useCallback(() => {
-    if (props.isOpen) {
+  const actualOnClickClose = useCallback(() => {
+    if (isOpen) {
       onClickClose()
     }
-  }, [onClickClose, props.isOpen])
+  }, [isOpen, onClickClose])
 
-  const handleClickAction = useCallback(() => {
-    if (props.isOpen) {
+  const actualOnClickAction = useCallback(() => {
+    if (isOpen) {
       onClickAction(onClickClose)
     }
-  }, [onClickAction, onClickClose, props.isOpen])
+  }, [isOpen, onClickAction, onClickClose])
 
   return createPortal(
     <DialogContentInner
       {...props}
+      isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}
-      onPressEscape={onPressEscape}
+      onPressEscape={closeDisabled ? undefined : onPressEscape}
     >
       <ActionDialogContentInner
         title={title}
@@ -70,8 +72,8 @@ export const ActionDialog: FC<Props & ElementProps> = ({
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}
         closeDisabled={closeDisabled}
-        onClickClose={handleClickClose}
-        onClickAction={handleClickAction}
+        onClickClose={actualOnClickClose}
+        onClickAction={actualOnClickAction}
         subActionArea={subActionArea}
         responseStatus={responseStatus}
         decorators={decorators}

@@ -29,7 +29,7 @@ const _messages = {
 }
 
 export default {
-  title: 'Data Display（データ表示）/Tooltip',
+  title: 'Components/Tooltip',
   component: Tooltip,
   render: (args) => (
     <div className="shr-w-full shr-relative" style={{ height: '250px' }}>

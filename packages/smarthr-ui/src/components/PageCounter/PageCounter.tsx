@@ -3,7 +3,8 @@ import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { Cluster } from '../Layout'
-import { RangeSeparator, Text } from '../Text'
+import { RangeSeparator } from '../RangeSeparator'
+import { Text } from '../Text'
 
 type Props = {
   start: number

@@ -41,7 +41,7 @@ const _cases: Array<ComponentProps<typeof Switch>> = [
 ]
 
 export default {
-  title: 'Forms（フォーム）/Switch/VRT',
+  title: 'Components/Switch/VRT',
   render: (args) => (
     <Stack>
       {[undefined, 'focus-visible'].map((id) => (

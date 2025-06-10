@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { Pagination } from '../Pagination'
@@ -7,7 +7,7 @@ import { Pagination } from '../Pagination'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
-  title: 'Navigation（ナビゲーション）/Pagination',
+  title: 'Components/Pagination',
   component: Pagination,
   render: (args) => <Pagination {...args} />,
   args: {

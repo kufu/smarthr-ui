@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Badge } from '../../Badge'
 import { TabItem } from '../TabItem'
@@ -6,7 +6,7 @@ import { TabItem } from '../TabItem'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/TabBar/TabItem',
+  title: 'Components/TabBar/TabItem',
   component: TabItem,
   render: (args) => <TabItem {...args} />,
   args: {

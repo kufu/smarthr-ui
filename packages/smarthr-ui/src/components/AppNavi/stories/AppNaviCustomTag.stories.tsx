@@ -23,7 +23,7 @@ const Link: FC<{
 )
 
 export default {
-  title: 'Navigation（ナビゲーション）/AppNavi/AppNaviCustomTag',
+  title: 'Components/AppNavi/AppNaviCustomTag',
   component: AppNaviCustomTag,
   render: (args) => <AppNaviCustomTag {...args} />,
   argTypes: {

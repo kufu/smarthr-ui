@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { InputFile } from '../InputFile'
@@ -7,7 +7,7 @@ import { InputFile } from '../InputFile'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/InputFile',
+  title: 'Components/InputFile',
   component: InputFile,
   render: (args) => <InputFile {...args} />,
   argTypes: {
@@ -45,6 +45,11 @@ export const Size: StoryObj<typeof InputFile> = {
 export const Multiple: StoryObj<typeof InputFile> = {
   name: 'multiple',
   args: { multiple: true },
+}
+
+export const MultiplyAppendable: StoryObj<typeof InputFile> = {
+  name: 'multiplyAppendable',
+  args: { multiplyAppendable: true },
 }
 
 export const Disabled: StoryObj<typeof InputFile> = {

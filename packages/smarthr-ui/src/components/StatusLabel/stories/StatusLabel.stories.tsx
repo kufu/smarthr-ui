@@ -4,7 +4,7 @@ import { StatusLabel, classNameGenerator } from '../StatusLabel'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/StatusLabel',
+  title: 'Components/StatusLabel',
   component: StatusLabel,
   render: (args) => <StatusLabel {...args} />,
   args: {

@@ -10,7 +10,7 @@ const cases = [
 ]
 
 export default {
-  title: 'Data Display（データ表示）/PageCounter/VRT',
+  title: 'Components/PageCounter/VRT',
   render: (args) => (
     <Stack>
       {cases.map((props, i) => (

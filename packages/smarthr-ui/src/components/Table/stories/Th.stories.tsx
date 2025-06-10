@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Chip } from '../../Chip'
 import { Stack } from '../../Layout'
@@ -20,7 +20,7 @@ const Template: StoryFn<typeof Th> = (args) => (
 )
 
 export default {
-  title: 'Data Display（データ表示）/Table/Th',
+  title: 'Components/Table/Th',
   component: Th,
   render: Template,
   argTypes: {

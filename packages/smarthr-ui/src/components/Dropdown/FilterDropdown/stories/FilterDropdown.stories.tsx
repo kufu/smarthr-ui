@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'
@@ -6,7 +6,7 @@ import { FilterDropdown } from '../FilterDropdown'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/FilterDropdown',
+  title: 'Components/Dropdown/FilterDropdown',
   component: FilterDropdown,
   render: (args) => <FilterDropdown {...args}>絞り込みドロップダウンパネル</FilterDropdown>,
   argTypes: {},

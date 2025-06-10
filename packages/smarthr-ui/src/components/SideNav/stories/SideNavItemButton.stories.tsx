@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
@@ -7,7 +7,7 @@ import { SideNavItemButton, SideNavSizeType } from '../SideNavItemButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideNav/SideNavItemButton',
+  title: 'Components/SideNav/SideNavItemButton',
   component: SideNavItemButton,
   render: (args) => (
     <ul className="shr-list-none">

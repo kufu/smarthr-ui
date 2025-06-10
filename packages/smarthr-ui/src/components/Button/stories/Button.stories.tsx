@@ -7,7 +7,7 @@ import { UnstyledButton } from '../UnstyledButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/Button',
+  title: 'Components/Button',
   component: Button,
   subcomponents: { AnchorButton, UnstyledButton },
   render: (args) => <Button {...args} />,

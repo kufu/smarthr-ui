@@ -3,7 +3,7 @@ import { PageCounter } from '../PageCounter'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/PageCounter',
+  title: 'Components/PageCounter',
   component: PageCounter,
   render: (args) => <PageCounter {...args} />,
   args: {

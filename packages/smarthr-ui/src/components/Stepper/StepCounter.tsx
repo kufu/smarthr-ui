@@ -8,7 +8,7 @@ import type { Step } from './types'
 const classNameGenerator = tv({
   slots: {
     // StatusIcon の位置基準となる wrapper
-    wrapper: 'shr-relative',
+    wrapper: 'shr-relative shr-inline-block',
     counter:
       'shr-inline-flex shr-items-center shr-justify-center shr-rounded-full shr-border-shorthand shr-bg-white shr-tabular-nums shr-w-[2em] shr-h-[2em]',
     statusIcon: 'shr-absolute -shr-top-0.25 shr-left-1.5',

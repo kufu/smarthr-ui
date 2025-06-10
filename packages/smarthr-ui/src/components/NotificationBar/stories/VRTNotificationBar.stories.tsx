@@ -1,4 +1,4 @@
-import { fireEvent, within } from '@storybook/test'
+import { fireEvent, within } from 'storybook/test'
 
 import { Stack } from '../../Layout'
 import { NotificationBar } from '../NotificationBar'
@@ -8,7 +8,7 @@ import { sampleMessages, sampleOnCloseHandlers } from './NotificationBar.stories
 import type { StoryObj } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/NotificationBar/VRT',
+  title: 'Components/NotificationBar/VRT',
   /* ペアワイズ法による網羅
   base    bold    type      message     layer       onClose
   ---------------------------------------------------------

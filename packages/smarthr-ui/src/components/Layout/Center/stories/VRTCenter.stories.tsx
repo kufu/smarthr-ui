@@ -5,7 +5,7 @@ import { Center } from '../../../..'
 import { Padding } from './Center.stories'
 
 export default {
-  title: 'Layouts（レイアウト）/Center/VRT',
+  title: 'Components/Layout/Center/VRT',
   component: Center,
   render: Padding.render,
   parameters: {

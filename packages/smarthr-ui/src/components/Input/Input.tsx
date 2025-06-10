@@ -72,8 +72,18 @@ const innerClassNameGenerator = tv({
       'placeholder:shr-text-grey',
       'disabled:shr-text-disabled disabled:shr-opacity-100',
       'shr-h-[theme(fontSize.base)]',
+      // HINT: 日付系inputがsafariなどで対応されていないため、input要素内が空白になりフォームが潰れる場合がある
+      // マジックナンバーになるが、ほかに適切なプロパティがないため、min-widthで最低幅を指定することで防ぐ
+      '[&[type="datetime-local"]]:shr-min-w-[11em] [&[type="month"]]:shr-min-w-[8em] [&[type="time"]]:shr-min-w-[5em]',
     ],
     affix: 'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
+  },
+  variants: {
+    disabled: {
+      true: {
+        affix: 'shr-text-disabled shr-opacity-100',
+      },
+    },
   },
 })
 
@@ -134,14 +144,14 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     }, [width, bgColor])
 
     const innerClassNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator()
+      const { input, affix } = innerClassNameGenerator({ disabled })
 
       return {
         input: input(),
         prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
         suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
       }
-    }, [])
+    }, [disabled])
 
     return (
       <span

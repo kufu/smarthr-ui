@@ -14,9 +14,9 @@ import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -53,6 +53,7 @@ export type StepFormDialogContentInnerProps = BaseProps & {
   firstStep: StepItem
   onClickClose: () => void
   responseStatus?: ResponseStatus
+  /** ステップの総数 */
   stepLength: number
   onClickBack?: () => void
 }
@@ -74,6 +75,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   title,
   titleId,
   subtitle,
+  titleTag,
   contentBgColor,
   contentPadding,
   submitLabel,
@@ -88,7 +90,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   decorators,
   onClickBack,
 }) => {
-  const { currentStep, stepQueue, setCurrentStep } = useContext(StepFormDialogContext)
+  const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
   const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
 
   const handleCloseAction = useCallback(() => {
@@ -100,6 +102,18 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     }, 300)
   }, [firstStep, stepQueue, setCurrentStep, onClickClose])
 
+  const changeCurrentStep = useCallback(
+    (step: Parameters<typeof setCurrentStep>[0]) => {
+      setCurrentStep(step)
+
+      // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
+      if (scrollerRef.current) {
+        scrollerRef.current.scroll(0, 0)
+      }
+    },
+    [setCurrentStep, scrollerRef],
+  )
+
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -107,21 +121,20 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
 
-      stepQueue.current.push(currentStep)
-
       const next = onSubmit(handleCloseAction, e, currentStep)
 
       if (next) {
-        setCurrentStep(next)
+        stepQueue.current.push(currentStep)
+        changeCurrentStep(next)
       }
     },
-    [currentStep, stepQueue, onSubmit, setCurrentStep, handleCloseAction],
+    [currentStep, stepQueue, onSubmit, handleCloseAction, changeCurrentStep],
   )
   const handleBackAction = useCallback(() => {
     onClickBack?.()
 
-    setCurrentStep(stepQueue.current.pop() ?? firstStep)
-  }, [firstStep, stepQueue, onClickBack, setCurrentStep])
+    changeCurrentStep(stepQueue.current.pop() ?? firstStep)
+  }, [firstStep, stepQueue, onClickBack, changeCurrentStep])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
@@ -147,13 +160,18 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <DialogHeader
             title={`${title} ${activeStep}/${stepLength}`}
             subtitle={subtitle}
+            titleTag={titleTag}
             titleId={titleId}
           />
-          <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+          <DialogBody
+            contentPadding={contentPadding}
+            contentBgColor={contentBgColor}
+            ref={scrollerRef}
+          >
             {children}
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
-            <Cluster justify="space-between">
+            <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
@@ -182,13 +200,10 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                 </Button>
               </Cluster>
             </Cluster>
-            {calcedResponseStatus.message && (
-              <div className={classNames.message}>
-                <ResponseMessage type={calcedResponseStatus.status} role="alert">
-                  {calcedResponseStatus.message}
-                </ResponseMessage>
-              </div>
-            )}
+            <DialogContentResponseStatusMessage
+              responseStatus={calcedResponseStatus}
+              className={classNames.message}
+            />
           </Stack>
         </div>
       </form>

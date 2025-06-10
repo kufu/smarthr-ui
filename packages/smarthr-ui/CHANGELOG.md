@@ -2,6 +2,123 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [73.0.1](https://github.com/kufu/smarthr-ui/compare/v73.0.0...v73.0.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* RemoteDialogTriggerがasync-awaitなど非同期処理と併用されると正常動作しない可能性があるため修正する ([#5666](https://github.com/kufu/smarthr-ui/issues/5666)) ([d7f82c8](https://github.com/kufu/smarthr-ui/commit/d7f82c80ca859a4dbaebd8f8158c284bee319986))
+* RollupとTypeScriptの設定でinlineSourcesを有効にする ([#5668](https://github.com/kufu/smarthr-ui/issues/5668)) ([6268aaa](https://github.com/kufu/smarthr-ui/commit/6268aaac91a88910b042511c1bb8bb802bf45734))
+* StepFormDialogでバリデーションエラー時に戻るボタンが動かない問題の修正 ([#5679](https://github.com/kufu/smarthr-ui/issues/5679)) ([622623d](https://github.com/kufu/smarthr-ui/commit/622623daa36246bb69787ec6edf9041f16623bfc))
+
+## [73.0.0](https://github.com/kufu/smarthr-ui/compare/v72.1.0...v73.0.0) (2025-06-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* ActionDialogWithTriggerを削除 SHRUI-1273 (#5636)
+* ActionDialogContent, FormDialogContentを削除する SHRUI-1272 (#5652)
+* RemoteDialogTriggerからvariant属性を削除し、Button自体に持つ形で修正する SHRUI-1275 (#5651)
+* GoogleDrive 関連のアイコンを削除 (#5650)
+
+### Features
+
+* ActionDialogContent, FormDialogContentを削除する SHRUI-1272 ([#5652](https://github.com/kufu/smarthr-ui/issues/5652)) ([d42c2ad](https://github.com/kufu/smarthr-ui/commit/d42c2ad38e5b5c8c5674c73b141061558c50200c))
+* ActionDialogWithTriggerを削除 SHRUI-1273 ([#5636](https://github.com/kufu/smarthr-ui/issues/5636)) ([f866a48](https://github.com/kufu/smarthr-ui/commit/f866a4845278cef017d5a32d3a00d6b33581ff44))
+* Disclosureコンポーネントを追加 SHRUI-1253 ([#5616](https://github.com/kufu/smarthr-ui/issues/5616)) ([dfb566f](https://github.com/kufu/smarthr-ui/commit/dfb566f2ca75d2a8349b6ba5b22ff7ab9bf8e3db))
+* FaClipboardQuestionIcon を追加 ([#5645](https://github.com/kufu/smarthr-ui/issues/5645)) ([05b7e30](https://github.com/kufu/smarthr-ui/commit/05b7e30d03ad36c3997e69f0c873f8f6a58eb756))
+
+
+### Bug Fixes
+
+* ActionDialog, FormDialogでcloseDisabledが指定されている場合、onPressEscapeも動作しないようにする SHRUI-1276 ([#5641](https://github.com/kufu/smarthr-ui/issues/5641)) ([ac3d45d](https://github.com/kufu/smarthr-ui/commit/ac3d45d651b0749f74c831bf9befc70e4fefb80b))
+* Dialog内のresponseStatusメッセージのlive regionが通知されるように修正 SHRUI-1282 ([#5648](https://github.com/kufu/smarthr-ui/issues/5648)) ([f32b5f3](https://github.com/kufu/smarthr-ui/commit/f32b5f33eb8518df4d39de8b52276a2952ff269b))
+* DropdownCustomTagがcurrentの場合にも下線を表示する ([#5659](https://github.com/kufu/smarthr-ui/issues/5659)) ([7267f74](https://github.com/kufu/smarthr-ui/commit/7267f74a836e0538ef25c1425a52f227a751c21e))
+* GoogleDrive 関連のアイコンを削除 ([#5650](https://github.com/kufu/smarthr-ui/issues/5650)) ([3880ec7](https://github.com/kufu/smarthr-ui/commit/3880ec7ea01b0776f8cafba58b6f33568c671037))
+* RadioButtonPanel に cursor: pointer; がつくように修正 SHRUI-1285 ([#5639](https://github.com/kufu/smarthr-ui/issues/5639)) ([9bec6f7](https://github.com/kufu/smarthr-ui/commit/9bec6f763b90d602106d757854cd525b83a3efd9))
+* RemoteDialogTriggerからvariant属性を削除し、Button自体に持つ形で修正する SHRUI-1275 ([#5651](https://github.com/kufu/smarthr-ui/issues/5651)) ([83fbafb](https://github.com/kufu/smarthr-ui/commit/83fbafbf902ebeec630fa3a45e2914a6416a4eec))
+* SideMenu のグループタイトルの type を `blockTitle` から `subBlockTitle` に変更する ([#5640](https://github.com/kufu/smarthr-ui/issues/5640)) ([769b529](https://github.com/kufu/smarthr-ui/commit/769b5290b30b21b3534d82354c927dc8539a1ccd))
+* Tableで<table>タグにpropsのclassNameが渡されなくなっている不具合修正 ([#5649](https://github.com/kufu/smarthr-ui/issues/5649)) ([ab49cad](https://github.com/kufu/smarthr-ui/commit/ab49cad34a78c557cb12d5bbc2c4f2771d7446fa))
+
+## [72.1.0](https://github.com/kufu/smarthr-ui/compare/v72.0.0...v72.1.0) (2025-05-27)
+
+
+### Features
+
+* **Table:** border の種類とスタイル、角丸を追加 ([#5622](https://github.com/kufu/smarthr-ui/issues/5622)) ([5125cc8](https://github.com/kufu/smarthr-ui/commit/5125cc8904ceb08d5d70c7906f36c4888a1e8179))
+
+
+### Bug Fixes
+
+* HelpLink が export されていなかった問題を修正 ([#5630](https://github.com/kufu/smarthr-ui/issues/5630)) ([bac2d47](https://github.com/kufu/smarthr-ui/commit/bac2d47cf6ddee08786e487352a2dd6faef7565f))
+
+## [72.0.0](https://github.com/kufu/smarthr-ui/compare/v71.0.0...v72.0.0) (2025-05-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* RadioButtonPanel に説明テキストを渡せるようにする (#5556)
+
+### Features
+
+* RadioButtonPanel に説明テキストを渡せるようにする ([#5556](https://github.com/kufu/smarthr-ui/issues/5556)) ([056ff9d](https://github.com/kufu/smarthr-ui/commit/056ff9d1da9d0015182e65960e6c363a0bc3aaff))
+* RemoteTriggerStepFormDialogを追加 SHRUI-1262 ([#5606](https://github.com/kufu/smarthr-ui/issues/5606)) ([69d3d18](https://github.com/kufu/smarthr-ui/commit/69d3d1806f392d5c802ccf30e947b522b4b7eaea))
+
+
+### Bug Fixes
+
+* **Stepper:** タイトルが長いときに縦積み Stepper の接続線が途切れるのを修正 ([#5594](https://github.com/kufu/smarthr-ui/issues/5594)) ([9d8bed0](https://github.com/kufu/smarthr-ui/commit/9d8bed0ee08c39c69fe9041f3c639945a55bdce8))
+
+## [71.0.0](https://github.com/kufu/smarthr-ui/compare/v70.3.0...v71.0.0) (2025-05-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* intlで多言語化しdecoratorsを廃止 (Button) (#5615)
+* themeから非推奨のプロパティ、メソッドなどを削除 SHRUI-332 (#5531)
+
+### Features
+
+* themeから非推奨のプロパティ、メソッドなどを削除 SHRUI-332 ([#5531](https://github.com/kufu/smarthr-ui/issues/5531)) ([58bc0c1](https://github.com/kufu/smarthr-ui/commit/58bc0c1a60eb57ce412cec29b4efca8522b7dde2))
+
+
+### Bug Fixes
+
+* intlで多言語化しdecoratorsを廃止 (Button) ([#5615](https://github.com/kufu/smarthr-ui/issues/5615)) ([be8b7c7](https://github.com/kufu/smarthr-ui/commit/be8b7c74df7bce66503284e938be4d0794bf4d1a))
+
+## [70.3.0](https://github.com/kufu/smarthr-ui/compare/v70.2.0...v70.3.0) (2025-05-13)
+
+
+### Features
+
+* **HelpLink:** HelpLinkを追加 ([#5589](https://github.com/kufu/smarthr-ui/issues/5589)) ([bb8b4cc](https://github.com/kufu/smarthr-ui/commit/bb8b4cc2ad23c0d5322dea75c2da8fa152a7403f))
+
+
+### Bug Fixes
+
+* **Input:** disabled 時に、prefix/suffix もグレーアウトさせる ([#5596](https://github.com/kufu/smarthr-ui/issues/5596)) ([c0aaaa5](https://github.com/kufu/smarthr-ui/commit/c0aaaa503c2231b72b3c76972aef12774d089615))
+* **InputFile:** onChangeが2度呼ばれてしまう問題を修正 ([#5610](https://github.com/kufu/smarthr-ui/issues/5610)) ([ddccce0](https://github.com/kufu/smarthr-ui/commit/ddccce0e0c22f3d3b2f31c61414dc6c9f090c221))
+* **IntlProvider:** 複数のIntlProviderをネストできるように修正 ([#5595](https://github.com/kufu/smarthr-ui/issues/5595)) ([0efaf92](https://github.com/kufu/smarthr-ui/commit/0efaf924c1b41f431990d71033ce8721ad46b335))
+* SideNavItemButton に渡した props が漏れなく渡るように修正 ([#5604](https://github.com/kufu/smarthr-ui/issues/5604)) ([ef41264](https://github.com/kufu/smarthr-ui/commit/ef41264b6641bd5b2cc83abb3f29f4c8c82f90dd))
+* StepFormDialogのstepが切り替わる際、内容のスクロール位置を先頭に戻す処理を追加 SHRUI-1261 ([#5605](https://github.com/kufu/smarthr-ui/issues/5605)) ([3ee2c2d](https://github.com/kufu/smarthr-ui/commit/3ee2c2d2b9fb8f9efa09e8a7de41a45de0358182))
+* TableReelとPaginationを組み合わせた場合、うまく再レンダリングされない場合に対応 SHRUI-1181 ([#5526](https://github.com/kufu/smarthr-ui/issues/5526)) ([a2e994f](https://github.com/kufu/smarthr-ui/commit/a2e994ffbcde7aa5445fc1b588f15ac99be970d5))
+* TableコンポーネントのfixedHeadとTh,Tdのfixedを併用した場合、重なり順がおかしい問題を修正 ([#5580](https://github.com/kufu/smarthr-ui/issues/5580)) ([52d62d1](https://github.com/kufu/smarthr-ui/commit/52d62d1ea211820b5149a5604aae85c92a8c36c5))
+
+## [70.2.0](https://github.com/kufu/smarthr-ui/compare/v70.1.0...v70.2.0) (2025-04-30)
+
+
+### Features
+
+* **InputFile:** ファイルを追加して複数選択できるようにする ([#5281](https://github.com/kufu/smarthr-ui/issues/5281)) ([083a4ad](https://github.com/kufu/smarthr-ui/commit/083a4ad80e683488f3944f0b953bdd62ea7342b0))
+
+
+### Bug Fixes
+
+* AppHeaderの表示モードの判定をSSRでも最適に行えるようにする ([#5574](https://github.com/kufu/smarthr-ui/issues/5574)) ([8683ede](https://github.com/kufu/smarthr-ui/commit/8683edeb5811ff0fb069b450220710e5e099e0aa))
+* AppNaviはh1より先に設置されることが多く、heading levelが崩れるため、aria-labelledbyで表現する ([#5575](https://github.com/kufu/smarthr-ui/issues/5575)) ([2be4829](https://github.com/kufu/smarthr-ui/commit/2be4829bbfe20a3abe354822fa13c6af8e5039fd))
+* localesファイルをexportする ([#5569](https://github.com/kufu/smarthr-ui/issues/5569)) ([610ed8c](https://github.com/kufu/smarthr-ui/commit/610ed8cc364d5efb67772817c74fc7bfd5be45ec))
+* process is not definedエラーを解消 ([#5568](https://github.com/kufu/smarthr-ui/issues/5568)) ([16016e3](https://github.com/kufu/smarthr-ui/commit/16016e3fb1e3b74fddd6c439d52c437dc65e23ff))
+
 ## [70.1.0](https://github.com/kufu/smarthr-ui/compare/v70.0.1...v70.1.0) (2025-04-22)
 
 

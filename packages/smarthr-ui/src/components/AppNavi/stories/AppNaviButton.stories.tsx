@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
@@ -12,7 +12,7 @@ const _iconOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/AppNavi/AppNaviButton',
+  title: 'Components/AppNavi/AppNaviButton',
   component: AppNaviButton,
   render: (args) => <AppNaviButton {...args} />,
   argTypes: {

@@ -1,7 +1,7 @@
 /* eslint-disable smarthr/a11y-input-has-name-attribute */
 /* eslint-disable smarthr/a11y-prohibit-input-placeholder */
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import dayjs from 'dayjs'
 
 import { Cluster } from '../../Layout'
@@ -10,7 +10,7 @@ import { DatePicker } from '../DatePicker'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker（非推奨）/VRT',
+  title: 'Components/DatePicker（非推奨）/VRT',
   component: DatePicker,
   render: (args) => {
     const value = '2024/11/06'

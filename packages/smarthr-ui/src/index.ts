@@ -1,4 +1,5 @@
 // components
+export { DisclosureTrigger, DisclosureContent } from './components/Disclosure'
 export { Balloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export * from './components/Chip'
@@ -16,15 +17,11 @@ export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
-export { TextLink } from './components/TextLink'
-export * from './components/UpwardLink'
+export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
   ActionDialog,
-  ActionDialogContent,
-  ActionDialogWithTrigger,
   FormDialog,
-  FormDialogContent,
   Dialog,
   DialogCloser,
   DialogContent,
@@ -36,6 +33,7 @@ export {
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
   RemoteTriggerFormDialog,
+  RemoteTriggerStepFormDialog,
   RemoteTriggerMessageDialog,
   StepFormDialog,
   StepFormDialogItem,
@@ -73,7 +71,8 @@ export { FormControl } from './components/FormControl'
 export { Fieldset } from './components/Fieldset'
 export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav, SideNavItemButton } from './components/SideNav'
-export { Text, RangeSeparator } from './components/Text'
+export { Text } from './components/Text'
+export { RangeSeparator } from './components/RangeSeparator'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 export {
@@ -107,20 +106,17 @@ export { useDevice, DeviceProvider } from './hooks/useDevice'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
-export { defaultPalette } from './themes/createPalette'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
-export { defaultFrame } from './themes/createFrame'
 export { defaultBorder } from './themes/createBorder'
 export { defaultRadius } from './themes/createRadius'
-export { defaultSize } from './themes/createSize'
 export { defaultFontSize } from './themes/createFontSize'
 export { defaultLeading } from './themes/createLeading'
 export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // localization
-export { IntlProvider, useIntl, DateFormatter } from './intl'
+export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'

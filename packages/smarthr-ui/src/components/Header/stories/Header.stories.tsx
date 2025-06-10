@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { Header } from '../Header'
@@ -89,7 +89,7 @@ export const _appsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header',
+  title: 'Components/Header',
   component: Header,
   subcomponents: { HeaderLink, HeaderDropdownMenuButton },
   render: (args) => <Header {...args} />,

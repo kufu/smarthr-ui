@@ -74,6 +74,8 @@ export type Props = VariantProps<typeof classNameGenerator> & {
   /** コンポーネント内のテキストを変更する関数 */
   decorators?: DecoratorsType<DecoratorKeyTypes>
   error?: boolean
+  /** ファイル複数選択の際に、選択済みのファイルと結合するかどうか */
+  multiplyAppendable?: boolean
 }
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
 const DECORATOR_DEFAULT_TEXTS = {
@@ -92,6 +94,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       hasFileList = true,
       onChange,
       disabled = false,
+      multiple,
+      multiplyAppendable = false,
       error,
       decorators,
       ...props
@@ -125,24 +129,52 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
 
     const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
+    const updateInputValue = useCallback(
+      (newFiles: File[]) => {
+        if (!inputRef.current) {
+          return
+        }
+        const buff = new DataTransfer()
+        newFiles.forEach((file) => {
+          buff.items.add(file)
+        })
+
+        isUpdatingFilesDirectly.current = true
+        inputRef.current.files = buff.files
+        isUpdatingFilesDirectly.current = false
+      },
+      [inputRef],
+    )
+
     const updateFiles = useMemo(
       () =>
         onChange
           ? (newFiles: File[]) => {
               onChange(newFiles)
+              updateInputValue(newFiles)
               setFiles(newFiles)
             }
           : setFiles,
-      [onChange],
+      [onChange, updateInputValue],
     )
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        if (!isUpdatingFilesDirectly.current) {
-          updateFiles(Array.from(e.target.files ?? []))
+        // Safari において、input.files への直接代入時はonChangeを発火させない
+        if (isUpdatingFilesDirectly.current) {
+          return
+        }
+
+        const newFiles = Array.from(e.target.files ?? [])
+
+        if (multiplyAppendable) {
+          // multiplyAppendableの場合、すでに選択済みのファイルと結合する
+          updateFiles([...files, ...newFiles])
+        } else {
+          updateFiles(newFiles)
         }
       },
-      [isUpdatingFilesDirectly, updateFiles],
+      [files, isUpdatingFilesDirectly, updateFiles, multiplyAppendable],
     )
 
     const handleDelete = useCallback(
@@ -155,18 +187,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         const newFiles = files.filter((_, i) => index !== i)
 
         updateFiles(newFiles)
-
-        const buff = new DataTransfer()
-
-        newFiles.forEach((file) => {
-          buff.items.add(file)
-        })
-
-        isUpdatingFilesDirectly.current = true
-        inputRef.current.files = buff.files
-        isUpdatingFilesDirectly.current = false
       },
-      [files, isUpdatingFilesDirectly, inputRef, updateFiles],
+      [files, inputRef, updateFiles],
     )
 
     return (
@@ -192,14 +214,15 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         <span className={classNames.inputWrapper}>
           <input
             {...props}
-            ref={inputRef}
+            multiple={multiple || multiplyAppendable}
+            data-smarthr-ui-input="true"
             type="file"
+            onChange={handleChange}
             disabled={disabled}
+            ref={inputRef}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
-            onChange={handleChange}
             className={classNames.input}
-            data-smarthr-ui-input="true"
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />

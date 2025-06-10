@@ -1,6 +1,6 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { Meta, StoryObj } from '@storybook/react/*'
-import { within } from '@storybook/test'
+import { within } from 'storybook/test'
 
 import { AppHeader } from '../AppHeader'
 import { Locale } from '../multilingualization'
@@ -8,7 +8,7 @@ import { Locale } from '../multilingualization'
 import { args } from './args'
 
 const meta = {
-  title: 'Navigation（ナビゲーション）/AppHeader/VRT',
+  title: 'Components/AppHeader/VRT',
   component: AppHeader,
   args,
   decorators: [

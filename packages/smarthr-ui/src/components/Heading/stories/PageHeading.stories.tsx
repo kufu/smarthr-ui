@@ -6,7 +6,7 @@ import { PageHeading } from '../Heading'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Text（テキスト）/Heading/PageHeading',
+  title: 'Components/Heading/PageHeading',
   component: PageHeading,
   render: (args) => <PageHeading {...args}>PageHeading</PageHeading>,
   args: {},

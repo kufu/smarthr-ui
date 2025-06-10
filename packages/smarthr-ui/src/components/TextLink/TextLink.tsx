@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { FaUpRightFromSquareIcon } from '../Icon'
+import { OpenInNewTabIcon } from './OpenInNewTabIcon'
 
 import type { ElementRef, ElementRefProps } from '../../types'
 
@@ -82,7 +82,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     const Anchor = elementAs || 'a'
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
-        return <FaUpRightFromSquareIcon alt="別タブで開く" />
+        return <OpenInNewTabIcon />
       }
 
       return suffix
