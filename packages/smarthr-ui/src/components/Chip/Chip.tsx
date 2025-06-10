@@ -15,10 +15,8 @@ export const classNameGenerator = tv({
     color: {
       grey: 'shr-border-grey-20',
       blue: 'shr-border-main',
-      /* green がトークン化されたら置き換える */
-      green: 'shr-border-[#0f7f85]',
-      /* oragen がトークン化されたら置き換える */
-      orange: 'shr-border-[#ff8800]',
+      green: 'shr-border-green',
+      orange: 'shr-border-orange',
       red: 'shr-border-danger',
     },
     size: {
