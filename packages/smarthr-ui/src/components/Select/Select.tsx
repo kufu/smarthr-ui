@@ -58,7 +58,7 @@ const classNameGenerator = tv({
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
       'disabled:shr-pointer-events-none disabled:shr-bg-white-darken disabled:shr-text-disabled disabled:shr-opacity-100',
-      'contrast-more:shr-border-r-highContrast',
+      'contrast-more:shr-border-high-contrast',
       /* padding に依る積み上げでは文字が見切れてしまうため */
       'shr-min-h-[calc(theme(fontSize.base)_+_theme(spacing[0.75])_*_2_+_theme(spacing.px)_*_2)]',
       'shr-border-default disabled:shr-border-disabled',
