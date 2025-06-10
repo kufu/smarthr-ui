@@ -29,29 +29,26 @@ const classNameGenerator = tv({
     wrapper: [
       'smarthr-ui-TimelineItem',
       // mark(1) + 余白(0.75) の分だけ padding
-      'shr-relative shr-pl-[calc(theme(spacing[1])+theme(spacing[0.75]))]',
+      'shr-relative shr-pl-[calc(theme(fontSize.sm)+theme(spacing[0.75]))]',
       'has-[+_&]:shr-pb-2',
-      'before:shr-absolute before:-shr-bottom-0.5 before:shr-left-[calc(theme(spacing[0.5])-1px)] before:shr-h-full before:shr-w-[2px] before:shr-bg-border',
+      // 繋ぎ線: 欠けたりはみ出たりしないように bottom で調整
+      'before:shr-absolute before:-shr-bottom-0.75 before:shr-left-[calc((theme(fontSize.sm)/2)-1px)] before:shr-h-full before:shr-w-[2px] before:shr-bg-border',
       // 最後のアイテムには線を引かない
       '[&:not(:last-child)]:before:shr-content-[""]',
       'forced-colors:before:shr-bg-[ButtonBorder]',
     ],
-    header: [
-      'shr-relative',
-      // 日付と中央寄せにしやすくするために mark は header に配置
-      'before:shr-absolute before:-shr-left-[calc(theme(spacing[1])+theme(spacing[0.75]))] before:shr-size-1 before:shr-rounded-full before:shr-bg-border before:shr-content-[""]',
+    dateArea: 'shr-grow',
+    title: [
+      // 日付と中央寄せにしやすくするために mark は title に生やす
+      'before:shr-absolute before:shr-left-0 before:shr-size-[theme(fontSize.sm)] before:shr-rounded-full before:shr-bg-border before:shr-content-[""]',
       'forced-colors:before:shr-bg-[ButtonBorder]',
-      // header が折り返されたときにも線が途切れないように
-      'after:shr-absolute after:-shr-left-[calc(theme(spacing[1.25])+1px)] after:shr-top-0 after:shr-h-1/2 after:shr-w-[2px] after:shr-bg-border',
-      'forced-colors:after:shr-bg-[ButtonBorder]',
-      '[.smarthr-ui-TimelineItem:not(:first-child)]:after:shr-content-[""]',
     ],
   },
   variants: {
     current: {
       true: {
-        header: [
-          'before:shr-z-1 before:shr-bg-main before:shr-shadow-[0_0_0_2px_white,0_0_0_4px_theme(colors.main)]',
+        title: [
+          'before:shr-left-[calc(theme(fontSize.sm)-theme(spacing[0.75]))] before:shr-z-1 before:shr-size-0.75 before:shr-bg-main before:shr-shadow-[0_0_0_2px_white,0_0_0_4px_theme(colors.main)]',
           'forced-colors:before:shr-bg-[Mark]',
         ],
       },
@@ -71,12 +68,13 @@ export const TimelineItem: React.FC<Props & ElementProps> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, header } = classNameGenerator({
+    const { wrapper, dateArea, title } = classNameGenerator({
       current: !!current,
     })
     return {
       wrapper: wrapper({ className }),
-      header: header(),
+      dateArea: dateArea(),
+      title: title(),
     }
   }, [current, className])
 
@@ -93,9 +91,15 @@ export const TimelineItem: React.FC<Props & ElementProps> = ({
 
   return (
     <Stack {...rest} as="li" gap={0.5} aria-current={current} className={classNames.wrapper}>
-      <Cluster align="center" justify="space-between" className={classNames.header}>
-        <Sidebar align="center" gap={0.5} className="shr-grow">
-          <Cluster align="center" as="time" dateTime={isoString} id={id}>
+      <Cluster align="center" justify="space-between">
+        <Sidebar align="center" gap={0.5} className={classNames.dateArea}>
+          <Cluster
+            align="center"
+            as="time"
+            dateTime={isoString}
+            id={id}
+            className={classNames.title}
+          >
             <Text styleType="blockTitle" leading="NONE">
               {dateLabel || date}
             </Text>

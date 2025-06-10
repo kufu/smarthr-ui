@@ -23,7 +23,9 @@ export default {
             <Button size="s" variant="text">
               ボタン
             </Button>
-            <TextLink href="#">リンク</TextLink>
+            <TextLink href="#" size="S">
+              リンク
+            </TextLink>
           </Cluster>
         }
       >
@@ -40,7 +42,9 @@ export default {
             <Button size="s" variant="text">
               ボタン
             </Button>
-            <TextLink href="#">リンク</TextLink>
+            <TextLink href="#" size="S">
+              リンク
+            </TextLink>
           </Cluster>
         }
         sideActionArea={<Button size="s">ボタン</Button>}
