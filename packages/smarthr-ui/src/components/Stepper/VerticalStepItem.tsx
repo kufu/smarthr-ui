@@ -17,13 +17,13 @@ const classNameGenerator = tv({
     heading: 'shr-inline-block',
     body: [
       // (stepCounter + :after) + (body > inner) という構造
-      'shr-flex shr-flex-col shr-grow',
+      'shr-flex shr-grow shr-flex-col',
       'forced-colors:before:shr-bg-[ButtonBorder]',
     ],
-    inner: 'shr-grow shr-pt-0.5 shr-pb-1.5',
+    inner: 'shr-grow shr-pb-1.5 shr-pt-0.5',
     stepCounter: [
       // stepCounter の after 疑似要素がステップを繋ぐ線
-      'after:shr-block after:shr-content-[""] after:shr-relative after:shr-mx-1 after:shr-bg-border after:shr-w-[theme(borderWidth.2)] after:shr-h-full',
+      'after:shr-relative after:shr-mx-1 after:shr-block after:shr-h-full after:shr-w-[theme(borderWidth.2)] after:shr-bg-border after:shr-content-[""]',
       // 最後のステップの線を消す
       'group-last/stepItem:after:shr-bg-transparent',
     ],

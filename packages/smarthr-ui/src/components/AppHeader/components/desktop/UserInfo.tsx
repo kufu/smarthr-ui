@@ -17,9 +17,9 @@ import type { HeaderProps, UserInfoProps } from '../../types'
 const classNameGenerator = tv({
   slots: {
     userSummary: [
-      'shr-relative -shr-mt-0.5 -shr-mx-0.25 shr-p-1',
+      'shr-relative -shr-mx-0.25 -shr-mt-0.5 shr-p-1',
       // FIXME: smarthr-ui で DropdownMenuButton のグルーピングができるようになったら修正しましょう
-      'after:shr-absolute after:shr-content-[""] after:shr-block after:shr-inset-x-0.5 after:shr-bottom-0 after:shr-h-px after:shr-bg-border',
+      'after:shr-absolute after:shr-inset-x-0.5 after:shr-bottom-0 after:shr-block after:shr-h-px after:shr-bg-border after:shr-content-[""]',
     ],
     dropdownMenuButton: [
       '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-border-transparent [&_.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.5 [&_.smarthr-ui-DropdownMenuButton-trigger]:shr-font-normal',
@@ -44,7 +44,7 @@ const classNameGenerator = tv({
       },
       false: {
         button:
-          '[&&]:shr-bg-transparent [&&]:hover:shr-bg-transparent [&&]:shr-px-0.25 [&&]:shr-text-white',
+          '[&&]:shr-bg-transparent [&&]:shr-px-0.25 [&&]:shr-text-white [&&]:hover:shr-bg-transparent',
       },
     },
   },
@@ -52,7 +52,7 @@ const classNameGenerator = tv({
     {
       slots: ['accountImage', 'placeholderImage'],
       className:
-        'shr-box-border shr-flex shr-items-center shr-justify-center -shr-my-1 shr-border-shorthand shr-rounded-full shr-bg-white shr-size-2',
+        'shr-border-shorthand -shr-my-1 shr-box-border shr-flex shr-size-2 shr-items-center shr-justify-center shr-rounded-full shr-bg-white',
     },
   ],
 })
