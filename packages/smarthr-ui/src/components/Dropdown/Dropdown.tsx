@@ -93,11 +93,23 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
     return result
   }, [active, createPortal])
 
+  const togglerRef = useRef({
+    isPortalRootMounted,
+    onOpen,
+    onClose,
+  })
   useEffect(() => {
-    if (isPortalRootMounted()) {
-      ;(active ? onOpen : onClose)?.()
+    togglerRef.current = {
+      isPortalRootMounted,
+      onOpen,
+      onClose,
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPortalRootMounted, onOpen, onClose])
+
+  useEffect(() => {
+    if (togglerRef.current.isPortalRootMounted()) {
+      togglerRef.current[active ? 'onOpen' : 'onClose']?.()
+    }
   }, [active])
 
   const onClickTrigger = useCallback((rect: Rect) => {
