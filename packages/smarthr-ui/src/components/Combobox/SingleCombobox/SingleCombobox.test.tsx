@@ -19,22 +19,28 @@ describe('SingleCombobox', () => {
   const listbox = () => screen.queryByRole('listbox')
   const clearButton = () => screen.getByRole('button', { name: '削除' })
 
-  const template = (args: Partial<ComponentProps<typeof SingleCombobox>>) => (
+  const template = ({
+    name,
+    items,
+    selectedItem,
+    ...rest
+  }: Partial<ComponentProps<typeof SingleCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
         <FormControl title="コンボボックス">
           <SingleCombobox
-            name="default"
-            items={[
-              { label: 'option 1', value: 'value-1' },
-              { label: 'option 2', value: 'value-2' },
-              { label: 'option 3', value: 'value-3' },
-              { label: 'option 4', value: 'value-4' },
-              { label: 'option 5', value: 'value-5' },
-            ]}
-            selectedItem={{ label: 'option 1', value: 'value-1' }}
-            // eslint-disable-next-line smarthr/jsx-start-with-spread-attributes
-            {...args}
+            {...rest}
+            name={name || 'default'}
+            items={
+              items || [
+                { label: 'option 1', value: 'value-1' },
+                { label: 'option 2', value: 'value-2' },
+                { label: 'option 3', value: 'value-3' },
+                { label: 'option 4', value: 'value-4' },
+                { label: 'option 5', value: 'value-5' },
+              ]
+            }
+            selectedItem={selectedItem || { label: 'option 1', value: 'value-1' }}
           />
         </FormControl>
       </form>
