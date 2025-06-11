@@ -11,10 +11,8 @@ import type { Meta, StoryObj } from '@storybook/react'
 export const _childrenOptions = {
   radio: (
     <Cluster gap={1.25}>
-      {/* eslint-disable smarthr/a11y-input-in-form-control */}
       <RadioButton name="radio">あり</RadioButton>
       <RadioButton name="radio">なし</RadioButton>
-      {/* eslint-enable smarthr/a11y-input-in-form-control */}
     </Cluster>
   ),
   form: (
