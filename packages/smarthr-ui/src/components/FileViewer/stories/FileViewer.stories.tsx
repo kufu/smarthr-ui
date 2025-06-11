@@ -3,18 +3,44 @@ import { FileViewer } from '..'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/FileViewer',
+  title: 'Components/FileViewer',
   component: FileViewer,
   render: (args) => (
     <div className="shr-h-[90vh]">
       <FileViewer {...args} />
     </div>
   ),
+  argTypes: {
+    file: {
+      control: 'select',
+      options: ['Japanese PDF', 'English PDF (long, multuple pages)', 'JPEG', 'PNG'],
+      mapping: {
+        'Japanese PDF': {
+          url: '/fixtures/sample-japanese-pdf.pdf',
+          contentType: 'application/pdf',
+        },
+        'English PDF (long, multuple pages)': {
+          url: '/fixtures/sample-english-pdf.pdf',
+          contentType: 'application/pdf',
+        },
+        JPEG: {
+          url: '/fixtures/sample-jpeg.jpg',
+          contentType: 'image/jpeg',
+          alt: 'SmartHR (スマートエイチアール) ロゴ',
+        },
+        PNG: {
+          url: '/fixtures/sample-png.png',
+          contentType: 'image/png',
+          alt: 'SmartHR (スマートエイチアール) ロゴ',
+        },
+      },
+    },
+  },
   args: {
-    url: '/fixtures/example.pdf',
-    contentType: 'application/pdf',
-    filename: 'sample.pdf',
-    width: 600,
+    file: {
+      url: '/fixtures/sample-japanese-pdf.pdf',
+      contentType: 'application/pdf',
+    },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -25,4 +51,11 @@ type Story = StoryObj<typeof FileViewer>
 
 export const Playground: Story = {
   args: {},
+}
+
+export const width: Story = {
+  name: 'width',
+  args: {
+    width: 80,
+  },
 }
