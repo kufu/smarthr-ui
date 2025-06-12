@@ -4,6 +4,8 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': '繁體中文',
+  'smarthr-ui/AppLauncher/showAllText': '',
+  'smarthr-ui/AppLauncher/triggerLabel': '',
   'smarthr-ui/Button/loading': '處理中',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': '沒有符合條件的選項',
