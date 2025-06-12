@@ -12,5 +12,11 @@ export const locale = {
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/RequiredLabel/text': '',
+  'smarthr-ui/SortDropdown/applyButtonLabel': '',
+  'smarthr-ui/SortDropdown/ascLabel': '',
+  'smarthr-ui/SortDropdown/cancelButtonLabel': '',
+  'smarthr-ui/SortDropdown/descLabel': '',
+  'smarthr-ui/SortDropdown/sortFieldLabel': '',
+  'smarthr-ui/SortDropdown/sortOrderLabel': '',
   'smarthr-ui/TextLink/openInNewTab': 'Abra em uma outra guia',
 } as const satisfies Record<keyof typeof ja, string>
