@@ -85,7 +85,8 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(() => {
-    const result = (props) => (active ? createPortal(props.children) : null)
+    const result: FC<{ children: ReactNode }> = (props) =>
+      active ? createPortal(props.children) : null
 
     // set the displayName explicit for DevTools
     result.displayName = 'DropdownContentRoot'

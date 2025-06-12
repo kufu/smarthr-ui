@@ -41,7 +41,8 @@
       "esbuild@<=0.24.2": ">=0.25.5",
       "@babel/runtime@<7.26.10": ">=7.27.6",
       "@babel/helpers@<7.26.10": ">=7.27.6",
-      "brace-expansion@>=2.0.0 <=2.0.1": ">=2.0.2"
+      "brace-expansion@<1.1.12": "^1.1.12",
+      "brace-expansion@<2.0.2": "^2.0.2"
     }
   }
 }
