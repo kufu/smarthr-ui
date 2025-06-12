@@ -119,4 +119,4 @@ export { defaultBreakpoint } from './themes/createBreakpoint'
 export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
 
 // constants
-export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
