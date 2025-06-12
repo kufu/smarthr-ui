@@ -2,7 +2,6 @@
 
 import Decimal from 'decimal.js'
 import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Document, Page, pdfjs } from 'react-pdf'
 
 import {
   Button,
@@ -16,37 +15,17 @@ import {
   VisuallyHiddenText,
 } from '../..'
 
-import 'react-pdf/dist/Page/TextLayer.css'
-import 'react-pdf/dist/Page/AnnotationLayer.css'
-import type {
-  OnDocumentLoadSuccess,
-  OnPageLoadSuccess,
-  Options,
-} from 'react-pdf/dist/cjs/shared/types'
+import { ImageViewer } from './ImageViewer'
+import { PDFViewer } from './PDFViewer'
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
-).toString()
+import type { FileForViewer } from './types'
 
 const defaultScaleStep = new Decimal(0.2)
 
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
-const options = {
-  // 非latin文字を読み込むためのオプション
-  // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
-  cMapUrl: '/cmaps/',
-} satisfies Options
-
-type File = {
-  url: string
-  contentType: string
-  alt?: string
-}
-
 type Props = {
-  file: File
+  file: FileForViewer
   width?: number
 
   /*
@@ -57,12 +36,7 @@ type Props = {
   scaleStep?: number
 }
 
-export const FileViewer: FC<Props> = ({
-  scaleStep,
-  scaleSteps,
-  width: fixedWidth,
-  file: { contentType, url, alt },
-}) => {
+export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixedWidth }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
@@ -131,23 +105,23 @@ export const FileViewer: FC<Props> = ({
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
           {(() => {
-            if (contentType === 'application/pdf') {
+            if (file.contentType === 'application/pdf') {
               return (
                 <PDFViewer
                   scale={scale}
                   rotation={rotation}
-                  file={{ url, contentType }}
+                  file={file}
                   width={width}
                   onLoad={() => setLoaded(true)}
                 />
               )
             }
-            if (contentType.startsWith('image/')) {
+            if (file.contentType.startsWith('image/')) {
               return (
                 <ImageViewer
                   scale={scale}
                   rotation={rotation}
-                  file={{ url, contentType, alt }}
+                  file={file}
                   width={width}
                   onLoad={() => setLoaded(true)}
                 />
@@ -219,117 +193,3 @@ const Controller: FC<ControllerProps> = memo(
     </div>
   ),
 )
-
-type ViewerProps = {
-  file: File
-  scale: number
-  rotation: number
-  width: number
-  onLoad: () => void
-}
-
-const ImageViewer = memo(({ scale, rotation, file, width, onLoad }: ViewerProps) => {
-  const imageRef = useRef<HTMLImageElement>(null)
-  const [viewConfig, setViewConfig] = useState({
-    wrapperWidth: 0,
-    wrapperHeight: 0,
-    imgScale: 1,
-  })
-
-  // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
-  const updateViewConfig = useCallback(() => {
-    if (!imageRef.current) {
-      return
-    }
-
-    const img = imageRef.current
-    // 与えられたwidthに対する適切なscaleを算出
-    const viewportScale = width / img.naturalWidth
-
-    const rad = (rotation * Math.PI) / 180
-    const sin = Math.abs(Math.sin(rad))
-    const cos = Math.abs(Math.cos(rad))
-
-    // imgをwidth: 100%で表示したときと同等の値を算出
-    const scaledWidth = img.naturalWidth * scale * viewportScale
-    const scaledHeight = img.naturalHeight * scale * viewportScale
-
-    setViewConfig({
-      wrapperWidth: scaledWidth * cos + scaledHeight * sin,
-      wrapperHeight: scaledWidth * sin + scaledHeight * cos,
-      imgScale: scale * viewportScale,
-    })
-  }, [scale, rotation, width])
-
-  const handleLoad = useCallback(() => {
-    updateViewConfig()
-    onLoad?.()
-  }, [updateViewConfig, onLoad])
-
-  useEffect(() => {
-    updateViewConfig()
-  }, [updateViewConfig])
-
-  return (
-    <div
-      style={{
-        width: viewConfig.wrapperWidth,
-        height: viewConfig.wrapperHeight,
-      }}
-      className="shr-relative shr-w-full shr-h-full"
-    >
-      {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-      <img
-        className="shr-absolute shr-top-[50%] shr-left-[50%] -shr-translate-x-1/2 -shr-translate-y-1/2 shr-origin-top-left"
-        ref={imageRef}
-        src={file.url}
-        alt={file.alt}
-        style={{
-          rotate: `${rotation}deg`,
-          scale: `${viewConfig.imgScale}`,
-        }}
-        onLoad={handleLoad}
-      />
-    </div>
-  )
-})
-
-const PDFViewer = memo(({ scale, rotation, file, width, onLoad }: ViewerProps) => {
-  const [pdfNumPages, setPdfNumPages] = useState(1)
-
-  const onDocumentLoadSuccess: OnDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setPdfNumPages(numPages)
-  }
-
-  const onPageLoad: OnPageLoadSuccess = (page) => {
-    // DocumentのLoadだとページごとの読み込みが考慮されないため
-    if (page.pageNumber === pdfNumPages) {
-      onLoad?.()
-    }
-  }
-
-  return (
-    <Document
-      options={options}
-      file={file.url}
-      onLoadSuccess={onDocumentLoadSuccess}
-      rotate={rotation}
-      className={`shr-h-full shr-flex shr-flex-col shr-gap-1 shr-items-center shr-w-fit shr-overflow-auto`}
-      externalLinkTarget="_blank"
-      loading={null}
-    >
-      {Array.from({ length: pdfNumPages }).map((_, i) => (
-        <Page
-          key={`page_${i}`}
-          pageNumber={i + 1}
-          width={width}
-          scale={scale}
-          className="shr-w-full"
-          onLoadSuccess={onPageLoad}
-          loading={null}
-        />
-      ))}
-    </Document>
-  )
-})
