@@ -7,16 +7,16 @@ import type { Step } from './types'
 
 const classNameGenerator = tv({
   base: [
-    'shr-bg-white shr-rounded-full shr-shadow-[0_0_0_theme(borderWidth.2)_theme(colors.white)]',
-    'forced-colors:shr-fill-[Canvas] forced-colors:shr-bg-[CanvasText] forced-colors:shr-shadow-[0_0_0_theme(borderWidth.2)_Canvas]',
+    'shr-rounded-full shr-bg-white shr-shadow-[0_0_0_theme(borderWidth.2)_theme(colors.white)]',
+    'forced-colors:shr-bg-[CanvasText] forced-colors:shr-fill-[Canvas] forced-colors:shr-shadow-[0_0_0_theme(borderWidth.2)_Canvas]',
   ],
   variants: {
     status: {
       completed: [
         'shr-text-main',
-        'forced-colors:shr-fill-[Highlight] forced-colors:shr-bg-[Canvas]',
+        'forced-colors:shr-bg-[Canvas] forced-colors:shr-fill-[Highlight]',
       ],
-      closed: ['shr-text-grey', 'forced-colors:shr-fill-[GrayText] forced-colors:shr-bg-[Canvas]'],
+      closed: ['shr-text-grey', 'forced-colors:shr-bg-[Canvas] forced-colors:shr-fill-[GrayText]'],
     },
   },
 })

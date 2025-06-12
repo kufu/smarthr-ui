@@ -1,6 +1,6 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
 import { Meta, StoryObj } from '@storybook/react'
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import { backgroundColor } from '../../../../themes'
 
 import { Stack, Cluster } from '../../../Layout'
@@ -121,7 +121,7 @@ const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
 }
 
 export default {
-  title: 'Components/SingleCombobox/VRT',
+  title: 'Components/Combobox/SingleCombobox/VRT',
   component: SingleCombobox,
   render: (args) => (
     <Stack align="flex-start" gap={2} className="shr-h-screen">

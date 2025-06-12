@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { Pagination } from '../Pagination'

@@ -35,7 +35,7 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 const classNameGenerator = tv({
   slots: {
     appsButton: [
-      'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
+      'shr-border-none shr-bg-transparent shr-px-0.25 shr-font-normal shr-text-white',
       'hover:shr-border-transparent hover:shr-bg-transparent',
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
       'forced-colors:shr-border-shorthand',
@@ -46,7 +46,7 @@ const classNameGenerator = tv({
     link: 'smarthr-ui-AppLauncher-link',
     footer: [
       'smarthr-ui-AppLauncher-footer',
-      'shr-border-t-shorthand -shr-mx-0.75 shr-px-0.75 shr-pt-1 -shr-mb-0.25',
+      'shr-border-t-shorthand -shr-mx-0.75 -shr-mb-0.25 shr-px-0.75 shr-pt-1',
     ],
   },
   variants: {

@@ -22,8 +22,8 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-AccordionPanel-content',
-    'shr-max-h-0 shr-transition-[max-height,_visible,_opacity] shr-duration-150 shr-ease-in-out shr-invisible shr-opacity-0',
-    '[&.entered]:shr-max-h-[revert] [&.entered]:shr-visible [&.entered]:shr-opacity-100',
+    'shr-invisible shr-max-h-0 shr-opacity-0 shr-transition-[max-height,_visible,_opacity] shr-duration-150 shr-ease-in-out',
+    '[&.entered]:shr-visible [&.entered]:shr-max-h-[revert] [&.entered]:shr-opacity-100',
     // HINT: flexなどで囲まれると、非表示だが内容分高さが出てしまい、スクロール領域が不自然に伸びてしまう現象が起きる場合がある
     // 非表示の場合、visually hiddenを適用することで、内容としては残しつつ、高さを0にすることで回避する
     'aria-[hidden]:shr-absolute aria-[hidden]:shr-h-px aria-[hidden]:shr-overflow-hidden',

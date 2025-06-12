@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { StepFormDialog } from '../StepFormDialog'
@@ -53,7 +53,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} satisfies Meta<typeof StepFormDialog>
+} as Meta<typeof StepFormDialog>
 
 export const Playground: StoryObj<typeof StepFormDialog> = {}
 

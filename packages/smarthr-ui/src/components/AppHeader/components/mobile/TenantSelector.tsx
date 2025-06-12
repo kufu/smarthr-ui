@@ -19,7 +19,7 @@ import type { Header } from '../../../Header'
 
 const tenantDropdownTriggerButton = tv({
   base: [
-    'shr-border-none shr-bg-white shr-text-start shr-text-sm shr-rounded-s shr-px-0.5 shr-py-0.25 shr-cursor-pointer',
+    'shr-cursor-pointer shr-rounded-s shr-border-none shr-bg-white shr-px-0.5 shr-py-0.25 shr-text-start shr-text-sm',
     'hover:shr-bg-white-darken',
     '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
   ],

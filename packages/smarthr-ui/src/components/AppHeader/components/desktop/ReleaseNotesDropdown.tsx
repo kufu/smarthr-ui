@@ -68,7 +68,7 @@ const ReleaseNoteDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
   <DropdownTrigger>
     <Button
       suffix={<FaCaretDownIcon />}
-      className="shr-border-none shr-font-normal shr-rounded-none [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
+      className="shr-rounded-none shr-border-none shr-font-normal [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
     >
       <Translate>{children}</Translate>
     </Button>
@@ -82,7 +82,7 @@ const StyledLoader = memo(() => (
 ))
 
 const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
-  <div className="shr-p-0.75 shr-whitespace-pre-wrap">
+  <div className="shr-whitespace-pre-wrap shr-p-0.75">
     <Text>
       <Translate>{children}</Translate>
     </Text>
@@ -90,7 +90,7 @@ const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
 ))
 
 const ArticleLink = memo<PropsWithChildren<{ href: string }>>(({ href, children }) => (
-  <div className="shr-p-0.75 shr-border-b-shorthand shr-border-dashed">
+  <div className="shr-border-b-shorthand shr-border-dashed shr-p-0.75">
     <TextLink
       href={href}
       target="_blank"

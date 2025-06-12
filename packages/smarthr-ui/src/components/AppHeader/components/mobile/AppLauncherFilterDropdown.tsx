@@ -22,9 +22,9 @@ const classNameGenerator = tv({
       'shr-gap-0.25 shr-text-grey',
       '[&[aria-expanded="true"]_.smarthr-ui-Icon]:shr-rotate-180',
     ],
-    contentBody: ['shr-px-0.25 shr-py-0.5 shr-flex shr-flex-col shr-items-stretch'],
+    contentBody: ['shr-flex shr-flex-col shr-items-stretch shr-px-0.25 shr-py-0.5'],
     contentButton: [
-      'shr-border-none shr-justify-start shr-py-0.75 shr-font-normal shr-pl-2.5',
+      'shr-justify-start shr-border-none shr-py-0.75 shr-pl-2.5 shr-font-normal',
       'aria-selected:shr-pl-1',
     ],
   },

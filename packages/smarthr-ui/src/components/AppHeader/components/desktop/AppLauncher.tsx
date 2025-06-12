@@ -9,7 +9,7 @@ import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
 import { SideNav } from '../../../SideNav'
-import { TextLink } from '../../../TextLink'
+import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { useTranslate } from '../../hooks/useTranslate'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
@@ -26,33 +26,33 @@ const appLauncher = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppLauncher',
-      'shr-grid shr-grid-rows-[auto_1fr] shr-w-[38rem] shr-h-[40rem]',
+      'shr-grid shr-h-[40rem] shr-w-[38rem] shr-grid-rows-[auto_1fr]',
     ],
     searchArea: [
       'smarthr-ui-AppLauncher-searchArea',
-      'shr-p-1 shr-border-b-shorthand',
+      'shr-border-b-shorthand shr-p-1',
       '[&_.smarthr-ui-Input]:shr-h-[42px]',
     ],
-    inner: ['smarthr-ui-AppLauncher-inner', 'shr-grid shr-grid-cols-[11rem_1fr] shr-min-h-0'],
+    inner: ['smarthr-ui-AppLauncher-inner', 'shr-grid shr-min-h-0 shr-grid-cols-[11rem_1fr]'],
     side: [
       'smarthr-ui-AppLauncher-side',
-      'shr-flex shr-flex-col shr-pt-0.5 shr-pb-1 shr-border-r-shorthand shr-bg-column',
-      '[&_hr]:shr-h-[1px] [&_hr]:shr-m-0.5 [&_hr]:shr-border-none [&_hr]:shr-bg-border',
+      'shr-border-r-shorthand shr-flex shr-flex-col shr-bg-column shr-pb-1 shr-pt-0.5',
+      '[&_hr]:shr-m-0.5 [&_hr]:shr-h-[1px] [&_hr]:shr-border-none [&_hr]:shr-bg-border',
     ],
     sideNav: [
-      '[&_.smarthr-ui-SideNav-item>button]:shr-py-0.75 [&_.smarthr-ui-SideNav-item>button]:shr-px-1',
+      '[&_.smarthr-ui-SideNav-item>button]:shr-px-1 [&_.smarthr-ui-SideNav-item>button]:shr-py-0.75',
       '[&_.smarthr-ui-SideNav-item>button>span]:shr-flex-nowrap',
       '[&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-shrink-0 [&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-align-bottom',
     ],
-    sideNavHeading: ['shr-py-0.75 shr-px-1 shr-text-xs shr-text-black'],
+    sideNavHeading: ['shr-px-1 shr-py-0.75 shr-text-xs shr-text-black'],
     help: ['smarthr-ui-AppLauncher-help', 'shr-mt-auto shr-px-1 shr-text-xs'],
     main: ['smarthr-ui-AppLauncher-main', 'shr-grid shr-min-h-0'],
-    mainInner: ['shr-grid shr-grid-rows-[auto_1fr] shr-min-h-0'],
+    mainInner: ['shr-grid shr-min-h-0 shr-grid-rows-[auto_1fr]'],
     contentHead: [
-      'shr-min-h-[2rem] shr-py-0.75 shr-px-1',
+      'shr-min-h-[2rem] shr-px-1 shr-py-0.75',
       '[&_.smarthr-ui-Heading]:shr-text-black',
     ],
-    scrollArea: ['shr-overflow-y-scroll shr-h-[509px]'],
+    scrollArea: ['shr-h-[509px] shr-overflow-y-scroll'],
   },
   variants: {
     noIcon: {
@@ -255,12 +255,12 @@ const SideNavs = memo<
 
 const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
   <div className={className}>
-    <TextLink
+    <HelpLink
       href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
       target="_blank"
     >
       {children}
-    </TextLink>
+    </HelpLink>
   </div>
 ))
 

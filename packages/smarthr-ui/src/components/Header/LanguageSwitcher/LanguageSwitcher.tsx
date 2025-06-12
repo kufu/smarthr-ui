@@ -64,7 +64,7 @@ const onKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
 const classNameGenerator = tv({
   slots: {
     switchButton: [
-      'shr-border-none shr-font-normal shr-text-white shr-transition-transform shr-duration-100 shr-bg-transparent shr-px-0.25',
+      'shr-border-none shr-bg-transparent shr-px-0.25 shr-font-normal shr-text-white shr-transition-transform shr-duration-100',
       'hover:shr-border-transparent hover:shr-bg-transparent',
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
       'forced-colors:shr-border-shorthand',
@@ -73,7 +73,7 @@ const classNameGenerator = tv({
     languageItemsList: ['shr-p-0.5'],
     languageItem: ['shr-flex shr-items-center'],
     languageButton: [
-      'shr-border-transparent shr-font-normal shr-justify-start shr-px-0.5',
+      'shr-justify-start shr-border-transparent shr-px-0.5 shr-font-normal',
       '[&:not(:has(svg))]:shr-ps-2',
       'hover:shr-border-transparent',
     ],

@@ -11,6 +11,10 @@ export default {
     size: {
       control: 'select',
     },
+    color: {
+      control: 'select',
+      options: Object.keys(classNameGenerator.variants.color),
+    },
   },
   args: {
     children: 'ラベル',
@@ -20,9 +24,7 @@ export default {
   },
 } satisfies Meta<typeof Chip>
 
-export const Playground: StoryObj<typeof Chip> = {
-  args: {},
-}
+export const Playground: StoryObj<typeof Chip> = {}
 
 export const Size: StoryObj<typeof Chip> = {
   name: 'size',

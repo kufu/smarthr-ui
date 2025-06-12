@@ -2,7 +2,7 @@ import { Button } from '../../Button'
 import { Stack, Cluster } from '../../Layout'
 import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
 
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {

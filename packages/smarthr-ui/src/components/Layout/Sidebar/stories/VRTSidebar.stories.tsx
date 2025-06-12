@@ -4,7 +4,7 @@ import { Sidebar, Stack } from '../../../..'
 import { GapStory, Align as AlignStory } from './Sidebar.stories'
 
 export default {
-  title: 'Components/Sidebar/VRT',
+  title: 'Components/Layout/Sidebar/VRT',
   component: Sidebar,
   render: (args, context) => (
     <Stack>
