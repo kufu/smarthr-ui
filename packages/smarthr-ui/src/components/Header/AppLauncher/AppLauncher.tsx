@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
