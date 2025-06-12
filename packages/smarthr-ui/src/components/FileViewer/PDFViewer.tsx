@@ -12,14 +12,14 @@ import type { ViewerProps } from './types'
 //   'pdfjs-dist/build/pdf.worker.min.mjs',
 //   import.meta.url,
 // ).toString()
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
 
 const options = {
   // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
   // 非latin文字を読み込むためのオプション
   // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
   // cMapUrl: '/cmaps/',
-  cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
+  cMapUrl: `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
 export const PDFViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width, onLoad }) => {
@@ -49,7 +49,7 @@ export const PDFViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width, 
         file={file.url}
         onLoadSuccess={onDocumentLoadSuccess}
         rotate={rotation}
-        className={`shr-h-full shr-flex shr-flex-col shr-gap-1 shr-items-center shr-w-fit shr-overflow-auto`}
+        className={`shr-flex shr-h-full shr-w-fit shr-flex-col shr-items-center shr-gap-1 shr-overflow-auto`}
         externalLinkTarget="_blank"
         loading={null}
       >
