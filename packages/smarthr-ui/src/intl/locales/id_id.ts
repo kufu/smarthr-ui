@@ -9,6 +9,7 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': 'Tidak ada pilihan yang cocok',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
+  'smarthr-ui/DropZone/selectButtonLabel': '',
   'smarthr-ui/RequiredLabel/text': 'Wajib',
   'smarthr-ui/TextLink/openInNewTab': '',
 } as const satisfies Record<keyof typeof ja, string>
