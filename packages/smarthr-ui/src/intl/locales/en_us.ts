@@ -9,6 +9,7 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': 'No matching options found.',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
+  'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/RequiredLabel/text': 'Required',
   'smarthr-ui/TextLink/openInNewTab': 'Open in another tab',
 } as const satisfies Record<keyof typeof ja, string>
