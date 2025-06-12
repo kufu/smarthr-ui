@@ -4,6 +4,7 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'Bahasa Indonesia',
+  'smarthr-ui/ActionDialog/closeButtonLabel': 'Batal',
   'smarthr-ui/Button/loading': 'Sedang diproses',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Tidak ada pilihan yang cocok',
