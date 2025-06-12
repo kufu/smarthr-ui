@@ -1,5 +1,5 @@
-import { action } from '@storybook/addon-actions'
-import { fireEvent, within } from '@storybook/test'
+import { action } from 'storybook/actions'
+import { fireEvent, within } from 'storybook/test'
 
 import { Badge } from '../../Badge'
 import { FaCircleExclamationIcon } from '../../Icon'
@@ -10,7 +10,7 @@ import { TabItem } from '../TabItem'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/TabBar/VRT',
+  title: 'Components/TabBar/VRT',
   /* ペアワイズ法による網羅
    * bordered selected disabled suffix disabledDetail
    * false    false    false    あり    なし

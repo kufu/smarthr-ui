@@ -1,7 +1,8 @@
-import { userEvent } from '@storybook/test'
 import { render, screen } from '@testing-library/react'
 import { type ComponentProps, act } from 'react'
+import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../../intl'
 import { FormControl } from '../../FormControl'
 
 import { MultiCombobox } from './MultiCombobox'
@@ -19,23 +20,25 @@ describe('SingleCombobox', () => {
   const deleteButtons = () => screen.getAllByRole('button', { name: /を削除$/ })
 
   const template = (args: Partial<ComponentProps<typeof MultiCombobox>>) => (
-    <form>
-      <FormControl title="コンボボックス">
-        <MultiCombobox
-          name="default"
-          items={[
-            { label: 'option 1', value: 'value-1' },
-            { label: 'option 2', value: 'value-2' },
-            { label: 'option 3', value: 'value-3' },
-            { label: 'option 4', value: 'value-4' },
-            { label: 'option 5', value: 'value-5' },
-          ]}
-          selectedItems={[{ label: 'option 1', value: 'value-1' }]}
-          // eslint-disable-next-line smarthr/jsx-start-with-spread-attributes
-          {...args}
-        />
-      </FormControl>
-    </form>
+    <IntlProvider locale="ja">
+      <form>
+        <FormControl title="コンボボックス">
+          <MultiCombobox
+            name="default"
+            items={[
+              { label: 'option 1', value: 'value-1' },
+              { label: 'option 2', value: 'value-2' },
+              { label: 'option 3', value: 'value-3' },
+              { label: 'option 4', value: 'value-4' },
+              { label: 'option 5', value: 'value-5' },
+            ]}
+            selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+            // eslint-disable-next-line smarthr/jsx-start-with-spread-attributes
+            {...args}
+          />
+        </FormControl>
+      </form>
+    </IntlProvider>
   )
 
   it('アイテムを選択できること', async () => {

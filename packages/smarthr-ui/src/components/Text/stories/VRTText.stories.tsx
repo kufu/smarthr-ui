@@ -65,7 +65,7 @@ const pict = [
 ]
 
 export default {
-  title: 'Text（テキスト）/Text/VRT',
+  title: 'Components/Text/VRT',
   render: (args) => (
     <Stack gap={0.5}>
       {/* styleType ごとにペアワイズ法で抽出したパターンをあてる */}

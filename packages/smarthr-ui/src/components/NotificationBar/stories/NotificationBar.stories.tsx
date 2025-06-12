@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
@@ -28,7 +28,7 @@ export const sampleOnCloseHandlers = {
 }
 
 export default {
-  title: 'States（状態）/NotificationBar',
+  title: 'Components/NotificationBar',
   component: NotificationBar,
   render: (args) => (
     <div>

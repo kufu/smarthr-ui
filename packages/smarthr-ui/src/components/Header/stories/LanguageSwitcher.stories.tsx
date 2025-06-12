@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { backgroundColor } from '../../../themes'
 import { LanguageSwitcher } from '../LanguageSwitcher'
@@ -16,7 +16,7 @@ const localeMap = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header/LanguageSwitcher',
+  title: 'Components/Header/LanguageSwitcher',
   component: LanguageSwitcher,
   render: (args) => <LanguageSwitcher {...args} />,
   args: {

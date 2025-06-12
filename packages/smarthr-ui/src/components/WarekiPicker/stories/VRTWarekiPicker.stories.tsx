@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import dayjs from 'dayjs'
 
 import { Cluster } from '../../Layout'
@@ -7,7 +7,7 @@ import { WarekiPicker } from '../WarekiPicker'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/WarekiPicker/VRT',
+  title: 'Components/WarekiPicker/VRT',
   component: WarekiPicker,
   render: (args) => {
     const value = '2024/11/06'
@@ -57,13 +57,15 @@ export const VRTForcedColors: StoryObj = {
 }
 
 export const VRTExpanded: StoryObj = {
-  render: (args) => <WarekiPicker {...args} className="shr-min-w-[500px] shr-h-[500px]" />,
+  render: (args) => <WarekiPicker {...args} className="shr-h-[500px] shr-min-w-[500px]" />,
   args: {
     value: '2024/11/06',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.click(canvas.getByRole('textbox'))
+    const calendarHeader = await within(canvasElement.ownerDocument.body).findByText('2024年11月')
+    await userEvent.click(calendarHeader)
   },
 }
 
@@ -93,7 +95,7 @@ export const VRTExpandedFromToForcedColor: StoryObj = {
 export const VRTExpandedBottom: StoryObj = {
   ...VRTExpanded,
   render: (args) => (
-    <div className="shr-w-full shr-h-[100vh] shr-relative">
+    <div className="shr-relative shr-h-[100vh] shr-w-full">
       <WarekiPicker {...args} className="shr-absolute shr-bottom-0" />
     </div>
   ),

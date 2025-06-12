@@ -1,11 +1,10 @@
-import { userEvent } from '@storybook/test'
 import { act, render, screen, waitFor } from '@testing-library/react'
+import { userEvent } from 'storybook/test'
 
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-import { ActionDialogContent } from './ActionDialog/ActionDialogContent'
 import { DialogCloser } from './DialogCloser'
 import { DialogContent } from './DialogContent'
 import { DialogTrigger } from './DialogTrigger'
@@ -138,76 +137,6 @@ describe('DialogWrapper', () => {
         () => {
           expect(
             screen.queryByRole('dialog', { name: 'Uncontrolled Message Dialog' }),
-          ).not.toBeNull()
-        },
-        { timeout: 1000 },
-      )
-    })
-  })
-  describe('ActionDialogContent', () => {
-    const ActionDialogContentTemplate = () => (
-      <DialogWrapper>
-        <DialogTrigger>
-          <Button>ActionDialog</Button>
-        </DialogTrigger>
-        <ActionDialogContent
-          title="Uncontrolled Action Dialog"
-          actionText="実行"
-          actionDisabled={false}
-          onClickAction={(closeDialog) => {
-            closeDialog()
-          }}
-        >
-          <p>
-            The content of ActionDialogContent is freely implemented by the user as children.
-            <br />
-            So you need to prepare your own style.
-            <br />
-            When action is executed, you can specify when to close dialog. In this story, dialog
-            closes one second after clicking action
-          </p>
-        </ActionDialogContent>
-      </DialogWrapper>
-    )
-    it('ActionDialogContent が開閉できること', async () => {
-      render(<ActionDialogContentTemplate />)
-
-      expect(screen.queryByRole('dialog', { name: 'Uncontrolled Action Dialog' })).toBeNull()
-      await act(() => userEvent.tab())
-      await act(() => userEvent.keyboard('{enter}'))
-      expect(screen.getByRole('dialog', { name: 'Uncontrolled Action Dialog' })).toBeVisible()
-
-      await act(() => userEvent.tab({ shift: true }))
-      await act(() => userEvent.keyboard('{ }'))
-      await waitFor(
-        () => {
-          expect(screen.queryByRole('dialog', { name: 'Uncontrolled Action Dialog' })).toBeNull()
-        },
-        { timeout: 1000 },
-      )
-      // ダイアログを閉じた後、トリガがフォーカスされることを確認
-      expect(screen.getByRole('button', { name: 'ActionDialog' })).toHaveFocus()
-    })
-
-    it('ダイアログの外側をクリックするとダイアログが閉じないこと', async () => {
-      render(<ActionDialogContentTemplate />)
-
-      expect(screen.queryByRole('dialog', { name: 'Uncontrolled Action Dialog' })).toBeNull()
-      act(() => {
-        screen.getByRole('button', { name: 'ActionDialog' }).click()
-      })
-      expect(screen.getByRole('dialog', { name: 'Uncontrolled Action Dialog' })).toBeVisible()
-
-      act(() => {
-        screen
-          .getAllByRole('presentation')
-          .find((presentation) => presentation.classList.contains('smarthr-ui-Dialog-background'))
-          ?.click()
-      })
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByRole('dialog', { name: 'Uncontrolled Action Dialog' }),
           ).not.toBeNull()
         },
         { timeout: 1000 },

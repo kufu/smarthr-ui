@@ -5,7 +5,7 @@ import { HeaderLink } from '../HeaderLink'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header/HeaderLink',
+  title: 'Components/Header/HeaderLink',
   component: HeaderLink,
   render: (args) => <HeaderLink {...args}>ヘルプ</HeaderLink>,
   args: {

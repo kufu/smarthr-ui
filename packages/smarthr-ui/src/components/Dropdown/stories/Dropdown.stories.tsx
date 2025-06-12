@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Button } from '../../Button'
 import { Dropdown } from '../Dropdown'
@@ -9,7 +9,7 @@ import { DropdownTrigger } from '../DropdownTrigger'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/Dropdown',
+  title: 'Components/Dropdown',
   component: Dropdown,
   subcomponents: {
     DropdownTrigger,

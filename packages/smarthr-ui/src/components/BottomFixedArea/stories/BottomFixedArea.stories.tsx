@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { Button } from '../../Button'
 import { FaThumbtackIcon } from '../../Icon'
 import { BottomFixedArea } from '../BottomFixedArea'
@@ -25,7 +25,7 @@ export const _tertiaryLinksOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/BottomFixedArea（非推奨）',
+  title: 'Components/BottomFixedArea（非推奨）',
   component: BottomFixedArea,
   render: (args) => <BottomFixedArea {...args} />,
   argTypes: {

@@ -160,8 +160,9 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        if (!isUpdatingFilesDirectly.current) {
-          updateFiles(Array.from(e.target.files ?? []))
+        // Safari において、input.files への直接代入時はonChangeを発火させない
+        if (isUpdatingFilesDirectly.current) {
+          return
         }
 
         const newFiles = Array.from(e.target.files ?? [])

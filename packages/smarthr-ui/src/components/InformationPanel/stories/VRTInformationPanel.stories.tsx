@@ -37,7 +37,7 @@ const _cases: Array<
 ]
 
 export default {
-  title: 'Data Display（データ表示）/InformationPanel/VRT',
+  title: 'Components/InformationPanel/VRT',
   render: (args) => (
     <Stack>
       {_cases.map((props, index) => (

@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import { useArgs } from '@storybook/preview-api'
+import { useArgs } from 'storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { Stack } from '../../../Layout'
@@ -52,7 +52,7 @@ export const defaultItems = {
 }
 
 export default {
-  title: 'Forms（フォーム）/MultiCombobox',
+  title: 'Components/Combobox/MultiCombobox',
   component: MultiCombobox,
   render: (args) => {
     const [_, setArgs] = useArgs()

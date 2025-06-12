@@ -6,7 +6,7 @@ import { Bold, Type } from './StatusLabel.stories'
 import type { Meta } from '@storybook/react'
 
 export default {
-  title: 'States（状態）/StatusLabel/VRT',
+  title: 'Components/StatusLabel/VRT',
   render: (args, context) => (
     <Stack>
       {Type.render?.(args, context)}

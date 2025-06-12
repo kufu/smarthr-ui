@@ -1,7 +1,8 @@
-import { userEvent } from '@storybook/test'
 import { render, screen } from '@testing-library/react'
 import { type ComponentProps, act } from 'react'
+import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../../intl'
 import { FormControl } from '../../FormControl'
 
 import { SingleCombobox } from './SingleCombobox'
@@ -19,23 +20,25 @@ describe('SingleCombobox', () => {
   const clearButton = () => screen.getByRole('button', { name: '削除' })
 
   const template = (args: Partial<ComponentProps<typeof SingleCombobox>>) => (
-    <form>
-      <FormControl title="コンボボックス">
-        <SingleCombobox
-          name="default"
-          items={[
-            { label: 'option 1', value: 'value-1' },
-            { label: 'option 2', value: 'value-2' },
-            { label: 'option 3', value: 'value-3' },
-            { label: 'option 4', value: 'value-4' },
-            { label: 'option 5', value: 'value-5' },
-          ]}
-          selectedItem={{ label: 'option 1', value: 'value-1' }}
-          // eslint-disable-next-line smarthr/jsx-start-with-spread-attributes
-          {...args}
-        />
-      </FormControl>
-    </form>
+    <IntlProvider locale="ja">
+      <form>
+        <FormControl title="コンボボックス">
+          <SingleCombobox
+            name="default"
+            items={[
+              { label: 'option 1', value: 'value-1' },
+              { label: 'option 2', value: 'value-2' },
+              { label: 'option 3', value: 'value-3' },
+              { label: 'option 4', value: 'value-4' },
+              { label: 'option 5', value: 'value-5' },
+            ]}
+            selectedItem={{ label: 'option 1', value: 'value-1' }}
+            // eslint-disable-next-line smarthr/jsx-start-with-spread-attributes
+            {...args}
+          />
+        </FormControl>
+      </form>
+    </IntlProvider>
   )
 
   it('アイテムを選択できること', async () => {
@@ -156,18 +159,21 @@ describe('SingleCombobox', () => {
   it('キーボードで操作しても親要素のformがsubmitされないこと', async () => {
     const onSubmit = vi.fn()
     render(
-      <form onSubmit={onSubmit}>
-        <FormControl title="コンボボックス">
-          <SingleCombobox
-            name="default"
-            items={[
-              { label: 'option 1', value: 'value-1' },
-              { label: 'option 2', value: 'value-2' },
-            ]}
-            selectedItem={{ label: 'option 1', value: 'value-1' }}
-          />
-        </FormControl>
-      </form>,
+      <IntlProvider locale="ja">
+        <form onSubmit={onSubmit}>
+          <FormControl title="コンボボックス">
+            <SingleCombobox
+              name="default"
+              items={[
+                { label: 'option 1', value: 'value-1' },
+                { label: 'option 2', value: 'value-2' },
+              ]}
+              selectedItem={{ label: 'option 1', value: 'value-1' }}
+            />
+          </FormControl>
+        </form>
+        ,
+      </IntlProvider>,
     )
 
     await act(() => userEvent.keyboard('{tab}'))

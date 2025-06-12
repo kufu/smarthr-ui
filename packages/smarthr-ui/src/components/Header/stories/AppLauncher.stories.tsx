@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { backgroundColor } from '../../../themes'
 import { AppLauncher } from '../AppLauncher'
@@ -54,7 +54,7 @@ const apps = [
 ]
 
 export default {
-  title: 'Navigation（ナビゲーション）/Header/AppLauncher',
+  title: 'Components/Header/AppLauncher',
   component: AppLauncher,
   render: (args) => <AppLauncher {...args} />,
   argTypes: {

@@ -21,7 +21,7 @@ export type Props = {
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-Dialog-titleArea',
-    'shr-border-b-shorthand shr-px-1.5 shr-py-1 shr-flex-[0_0_auto]',
+    'shr-border-b-shorthand shr-flex-[0_0_auto] shr-px-1.5 shr-py-1',
   ],
 })
 

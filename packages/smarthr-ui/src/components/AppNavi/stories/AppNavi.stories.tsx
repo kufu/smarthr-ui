@@ -43,7 +43,7 @@ export const Template: StoryFn<typeof AppNavi> = (args) => (
 )
 
 export default {
-  title: 'Navigation（ナビゲーション）/AppNavi',
+  title: 'Components/AppNavi',
   component: AppNavi,
   render: Template,
   argTypes: {

@@ -8,9 +8,9 @@ import type { Step } from './types'
 const classNameGenerator = tv({
   slots: {
     // StatusIcon の位置基準となる wrapper
-    wrapper: 'shr-relative',
+    wrapper: 'shr-relative shr-inline-block',
     counter:
-      'shr-inline-flex shr-items-center shr-justify-center shr-rounded-full shr-border-shorthand shr-bg-white shr-tabular-nums shr-w-[2em] shr-h-[2em]',
+      'shr-border-shorthand shr-inline-flex shr-h-[2em] shr-w-[2em] shr-items-center shr-justify-center shr-rounded-full shr-bg-white shr-tabular-nums',
     statusIcon: 'shr-absolute -shr-top-0.25 shr-left-1.5',
   },
   variants: {
@@ -21,8 +21,8 @@ const classNameGenerator = tv({
     current: {
       true: {
         counter: [
-          'shr-bg-main shr-border-main shr-text-white shr-font-bold',
-          'forced-colors:shr-bg-[Mark] forced-colors:shr-border-[Mark]',
+          'shr-border-main shr-bg-main shr-font-bold shr-text-white',
+          'forced-colors:shr-border-[Mark] forced-colors:shr-bg-[Mark]',
         ],
       },
       false: {},

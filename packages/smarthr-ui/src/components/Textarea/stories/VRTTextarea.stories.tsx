@@ -7,7 +7,7 @@ import { Textarea } from '../Textarea'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/Textarea/VRT',
+  title: 'Components/Textarea/VRT',
   render: (args) => (
     <Stack>
       {[undefined, 'focus-visible'].map((id) => (

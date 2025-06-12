@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import { ComponentProps } from 'react'
 
 import { AnchorButton, Button } from '../../../Button'
@@ -32,7 +32,7 @@ const _cases: Array<
 ]
 
 export default {
-  title: 'Buttons（ボタン）/DropdownMenuButton/VRT',
+  title: 'Components/Dropdown/DropdownMenuButton/VRT',
   component: DropdownMenuButton,
   render: (args) => (
     <Cluster align="center" className="shr-h-screen">
@@ -43,10 +43,10 @@ export default {
             <Button disabled disabledDetail={{ message: '非推奨な理由' }}>
               操作2
             </Button>
+            <RemoteDialogTrigger targetId="remote-dialog">
+              <Button>操作3</Button>
+            </RemoteDialogTrigger>
           </DropdownMenuGroup>
-          <RemoteDialogTrigger targetId="remote-dialog">
-            <Button>操作3</Button>
-          </RemoteDialogTrigger>
           <DropdownMenuGroup name="グループ2">
             <AnchorButton href="#">操作4</AnchorButton>
             <AnchorButton href="#">操作5</AnchorButton>
