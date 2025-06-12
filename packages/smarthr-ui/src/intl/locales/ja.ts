@@ -7,6 +7,8 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': '一致する選択肢がありません。',
   'smarthr-ui/DropdownMenuButton/triggerActive': '候補を閉じる',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '候補を開く',
+  'smarthr-ui/InformationPanel/closeButtonLabel': '閉じる',
+  'smarthr-ui/InformationPanel/openButtonLabel': '開く',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/TextLink/openInNewTab': '別タブで開く',
 } as const
