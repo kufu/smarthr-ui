@@ -41,7 +41,6 @@ export type ActionDialogContentInnerProps = BaseProps & {
   responseStatus?: ResponseStatus
 }
 
-const CLOSE_BUTTON_LABEL = 'キャンセル'
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
