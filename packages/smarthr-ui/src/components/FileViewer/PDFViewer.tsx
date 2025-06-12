@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentProps, type FC, memo, useState } from 'react'
+import { type ComponentProps, type FC, memo, useCallback, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
 import { ReactPDFStyle } from './generatedReactPDFStyle'
@@ -25,20 +25,21 @@ const options = {
 export const PDFViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width, onLoad }) => {
   const [pdfNumPages, setPdfNumPages] = useState(1)
 
-  const onDocumentLoadSuccess: ComponentProps<typeof Document>['onLoadSuccess'] = ({
-    numPages,
-  }: {
-    numPages: number
-  }) => {
+  const onDocumentLoadSuccess = useCallback<
+    NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
+  >(({ numPages }) => {
     setPdfNumPages(numPages)
-  }
+  }, [])
 
-  const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = (page) => {
-    // DocumentのLoadだとページごとの読み込みが考慮されないため
-    if (page.pageNumber === pdfNumPages) {
-      onLoad?.()
-    }
-  }
+  const onPageLoad = useCallback<NonNullable<ComponentProps<typeof Page>['onLoadSuccess']>>(
+    (page) => {
+      // DocumentのLoadだとページごとの読み込みが考慮されないため
+      if (page.pageNumber === pdfNumPages) {
+        onLoad?.()
+      }
+    },
+    [pdfNumPages, onLoad],
+  )
 
   return (
     <>

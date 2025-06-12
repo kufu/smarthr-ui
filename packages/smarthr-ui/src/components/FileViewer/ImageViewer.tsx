@@ -20,20 +20,20 @@ export const ImageViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width
 
     const img = imageRef.current
     // 与えられたwidthに対する適切なscaleを算出
-    const viewportScale = width / img.naturalWidth
+    const viewportScale = (width / img.naturalWidth) * scale
 
     const rad = (rotation * Math.PI) / 180
     const sin = Math.abs(Math.sin(rad))
     const cos = Math.abs(Math.cos(rad))
 
     // imgをwidth: 100%で表示したときと同等の値を算出
-    const scaledWidth = img.naturalWidth * scale * viewportScale
-    const scaledHeight = img.naturalHeight * scale * viewportScale
+    const scaledWidth = img.naturalWidth * viewportScale
+    const scaledHeight = img.naturalHeight * viewportScale
 
     setViewConfig({
       wrapperWidth: scaledWidth * cos + scaledHeight * sin,
       wrapperHeight: scaledWidth * sin + scaledHeight * cos,
-      imgScale: scale * viewportScale,
+      imgScale: viewportScale,
     })
   }, [scale, rotation, width])
 
@@ -52,12 +52,12 @@ export const ImageViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width
         width: viewConfig.wrapperWidth,
         height: viewConfig.wrapperHeight,
       }}
-      className="shr-relative shr-w-full shr-h-full"
+      className="shr-relative shr-h-full shr-w-full"
     >
       {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <img
-        className="shr-absolute shr-top-[50%] shr-left-[50%] -shr-translate-x-1/2 -shr-translate-y-1/2 shr-origin-top-left"
+        className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
         ref={imageRef}
         src={file.url}
         alt={file.alt}

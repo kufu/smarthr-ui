@@ -61,17 +61,11 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
   }, [])
 
   useEffect(() => {
-    if (!ref.current) {
-      return
-    }
-    if (typeof fixedWidth !== 'undefined') {
+    if (!ref.current || fixedWidth !== undefined) {
       return
     }
 
     const resizeObserver = new ResizeObserver(() => {
-      if (!ref.current) {
-        return
-      }
       setWidth((ref.current?.clientWidth ?? 0) - 64)
     })
 
@@ -84,10 +78,10 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
 
   return (
     <div
-      className="shr-flex shr-flex-col shr-w-full shr-gap-2 shr-bg-scrim shr-h-full shr-overflow-auto shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
+      className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-overflow-auto shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
       ref={ref}
     >
-      <div className="shr-flex-shrink-0 shr-flex shr-gap-0.5 shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-w-full">
+      <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
         <Controller
           scale={scale}
           setScale={setScale}
@@ -97,38 +91,32 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
           onClickRotateButton={handleOnClickRotateButton}
         />
       </div>
-      <div className="shr-flex-shrink-0 shr-mx-auto shr-my-0 shr-w-fit shr-z-[0] shr-px-2 shr-pb-2 shr-items-center shr-justify-center shr-box-border shr-flex shr-grow">
+      <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
         {!loaded && (
-          <div className="shr-w-full shr-h-full shr-fixed shr-flex shr-items-center shr-justify-center shr-inset-0 shr-pointer-events-none">
+          <div className="shr-pointer-events-none shr-fixed shr-inset-0 shr-flex shr-h-full shr-w-full shr-items-center shr-justify-center">
             <Loader type="light" size="m" />
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
-          {(() => {
-            if (file.contentType === 'application/pdf') {
-              return (
-                <PDFViewer
-                  scale={scale}
-                  rotation={rotation}
-                  file={file}
-                  width={width}
-                  onLoad={() => setLoaded(true)}
-                />
-              )
-            }
-            if (file.contentType.startsWith('image/')) {
-              return (
-                <ImageViewer
-                  scale={scale}
-                  rotation={rotation}
-                  file={file}
-                  width={width}
-                  onLoad={() => setLoaded(true)}
-                />
-              )
-            }
-            return <Text>サポートされていない形式のファイルです。</Text>
-          })()}
+          {file.contentType === 'application/pdf' ? (
+            <PDFViewer
+              scale={scale}
+              rotation={rotation}
+              file={file}
+              width={width}
+              onLoad={() => setLoaded(true)}
+            />
+          ) : file.contentType.startsWith('image/') ? (
+            <ImageViewer
+              scale={scale}
+              rotation={rotation}
+              file={file}
+              width={width}
+              onLoad={() => setLoaded(true)}
+            />
+          ) : (
+            <Text>サポートされていない形式のファイルです。</Text>
+          )}
         </div>
       </div>
     </div>
@@ -153,13 +141,13 @@ const Controller: FC<ControllerProps> = memo(
     onClickScaleDownButton,
     onClickRotateButton,
   }) => (
-    <div className="shr-flex shr-w-full shr-items-center shr-p-0.5 shr-gap-0.5 shr-sticky shr-justify-center shr-justify-items-center shr-bg-scrim shr-shadow-layer-1">
+    <div className="shr-sticky shr-flex shr-w-full shr-items-center shr-justify-center shr-justify-items-center shr-gap-0.5 shr-bg-scrim shr-p-0.5 shr-shadow-layer-1">
       <Cluster gap={0.5}>
-        <div className="shr-flex shr-rounded-m shr-border-shorthand shr-overflow-hidden shr-divide-x shr-divide-solid">
+        <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
           <Button
             onClick={onClickScaleDownButton}
             disabled={scale <= scaleSteps[0]}
-            className="shr-border-none shr-rounded-none"
+            className="shr-rounded-none shr-border-none"
           >
             <FaMagnifyingGlassMinusIcon alt="縮小" />
           </Button>
@@ -170,19 +158,19 @@ const Controller: FC<ControllerProps> = memo(
                 {`${(scale * 100).toFixed(0)}%`}
               </Text>
             }
-            className="shr-border-[theme(borderColor.default)] shr-border-y-0 [&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-[transparent]"
+            className="shr-border-y-0 shr-border-[theme(borderColor.default)] [&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-[transparent]"
           >
             {scaleSteps.map((step) => (
               <Button
                 key={step.toString()}
                 onClick={() => setScale(step)}
-                className="shr-border-0 shr-rounded-none"
+                className="shr-rounded-none shr-border-0"
               >
                 {`${(step * 100).toFixed(0)}%`}
               </Button>
             ))}
           </DropdownMenuButton>
-          <Button onClick={onClickScaleUpButton} className="shr-border-0 shr-rounded-none">
+          <Button onClick={onClickScaleUpButton} className="shr-rounded-none shr-border-0">
             <FaMagnifyingGlassPlusIcon alt="拡大" />
           </Button>
         </div>
