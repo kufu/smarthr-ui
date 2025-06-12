@@ -3,8 +3,7 @@
 import { type ComponentProps, type FC, memo, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
-import 'react-pdf/dist/Page/TextLayer.css'
-import 'react-pdf/dist/Page/AnnotationLayer.css'
+import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
 
@@ -42,26 +41,30 @@ export const PDFViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width, 
   }
 
   return (
-    <Document
-      options={options}
-      file={file.url}
-      onLoadSuccess={onDocumentLoadSuccess}
-      rotate={rotation}
-      className={`shr-h-full shr-flex shr-flex-col shr-gap-1 shr-items-center shr-w-fit shr-overflow-auto`}
-      externalLinkTarget="_blank"
-      loading={null}
-    >
-      {Array.from({ length: pdfNumPages }).map((_, i) => (
-        <Page
-          key={`page_${i}`}
-          pageNumber={i + 1}
-          width={width}
-          scale={scale}
-          className="shr-w-full"
-          onLoadSuccess={onPageLoad}
-          loading={null}
-        />
-      ))}
-    </Document>
+    <>
+      {/* TODO: 外部CSSをsmarthr-uiから読み込んでもらえるようにする機構ができたら消す */}
+      <ReactPDFStyle />
+      <Document
+        options={options}
+        file={file.url}
+        onLoadSuccess={onDocumentLoadSuccess}
+        rotate={rotation}
+        className={`shr-h-full shr-flex shr-flex-col shr-gap-1 shr-items-center shr-w-fit shr-overflow-auto`}
+        externalLinkTarget="_blank"
+        loading={null}
+      >
+        {Array.from({ length: pdfNumPages }).map((_, i) => (
+          <Page
+            key={`page_${i}`}
+            pageNumber={i + 1}
+            width={width}
+            scale={scale}
+            className="shr-w-full"
+            onLoadSuccess={onPageLoad}
+            loading={null}
+          />
+        ))}
+      </Document>
+    </>
   )
 })
