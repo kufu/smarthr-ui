@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
-import { locales, useIntl } from '../../intl'
+import { useIntl } from '../../intl'
 import { spacing } from '../../themes'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
@@ -44,11 +44,7 @@ type Rect = {
   height?: number
 }
 
-const DECORATOR_DEFAULT_TEXTS = {
-  noResultText: locales.ja['smarthr-ui/Combobox/noResultsText'],
-  loadingText: locales.ja['smarthr-ui/Combobox/loadingText'],
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'loadingText' | 'noResultText'
 
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
@@ -279,18 +275,25 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
+      noResultText: localize({
+        id: 'smarthr-ui/Combobox/noResultsText',
+        defaultText: '一致する選択肢がありません。',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   const renderListBox = useCallback(
     () =>
       createPortal(
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">
-              {decorators?.loadingText
-                ? decorated.loadingText
-                : localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' })}
-            </VisuallyHiddenText>
+            <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
           )}
           <div
             id={listBoxId}
@@ -312,12 +315,7 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {decorators?.noResultText
-                    ? decorated.noResultText
-                    : localize({
-                        id: 'smarthr-ui/Combobox/noResultsText',
-                        defaultText: '一致する選択肢がありません。',
-                      })}
+                  {decorated.noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -345,7 +343,6 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      decorators,
       decorated,
       handleAdd,
       handleHoverOption,
@@ -354,7 +351,6 @@ export const useListbox = <T,>({
       dropdownListStyle,
       wrapperStyle,
       createPortal,
-      localize,
     ],
   )
 
