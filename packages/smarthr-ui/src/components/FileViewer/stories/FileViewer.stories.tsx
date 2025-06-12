@@ -59,3 +59,17 @@ export const width: Story = {
     width: 80,
   },
 }
+
+export const ScaleSteps: Story = {
+  name: 'scaleSteps',
+  args: {
+    scaleSteps: [0.5, 1, 1.5, 2],
+  },
+}
+
+export const ScaleStep: Story = {
+  name: 'scaleStep',
+  args: {
+    scaleStep: 1,
+  },
+}
