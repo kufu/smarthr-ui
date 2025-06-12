@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useState } from 'react'
 import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
 
 import { ActionDialog } from './ActionDialog'
@@ -10,7 +11,7 @@ describe('ActionDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
-      <>
+      <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>ActionDialog</Button>
         <ActionDialog
           isOpen={isOpen}
@@ -23,7 +24,7 @@ describe('ActionDialog', () => {
         >
           <p>ActionDialog の本文です。</p>
         </ActionDialog>
-      </>
+      </IntlProvider>
     )
   }
   it('ダイアログが開閉できること', async () => {

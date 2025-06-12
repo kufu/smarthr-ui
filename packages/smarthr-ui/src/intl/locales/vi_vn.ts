@@ -4,6 +4,7 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'Tiếng Việt',
+  'smarthr-ui/ActionDialog/closeButtonLabel': 'Hủy',
   'smarthr-ui/Button/loading': 'Đang xử lý',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Không có kết quả phù hợp.',
