@@ -9,6 +9,11 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': 'Không có kết quả phù hợp.',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
+  'smarthr-ui/FilterDropdown/applyButton': '',
+  'smarthr-ui/FilterDropdown/cancelButton': '',
+  'smarthr-ui/FilterDropdown/resetButton': '',
+  'smarthr-ui/FilterDropdown/status': '',
+  'smarthr-ui/FilterDropdown/triggerButton': '',
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
   'smarthr-ui/TextLink/openInNewTab': 'Mở trong tab mới',
 } as const satisfies Record<keyof typeof ja, string>

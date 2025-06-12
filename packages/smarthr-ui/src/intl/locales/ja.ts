@@ -7,6 +7,11 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': '一致する選択肢がありません。',
   'smarthr-ui/DropdownMenuButton/triggerActive': '候補を閉じる',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '候補を開く',
+  'smarthr-ui/FilterDropdown/applyButton': '適用',
+  'smarthr-ui/FilterDropdown/cancelButton': 'キャンセル',
+  'smarthr-ui/FilterDropdown/resetButton': '絞り込み条件を解除',
+  'smarthr-ui/FilterDropdown/status': '適用中',
+  'smarthr-ui/FilterDropdown/triggerButton': '絞り込み',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/TextLink/openInNewTab': '別タブで開く',
 } as const
