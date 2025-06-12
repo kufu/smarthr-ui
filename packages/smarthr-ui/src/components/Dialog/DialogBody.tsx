@@ -13,7 +13,7 @@ export type Props = PropsWithChildren<
 >
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-Dialog-body', 'shr-overflow-auto shr-flex-auto'],
+  base: ['smarthr-ui-Dialog-body', 'shr-flex-auto shr-overflow-auto'],
   variants: {
     paddingBlock: {
       0: 'shr-py-0',

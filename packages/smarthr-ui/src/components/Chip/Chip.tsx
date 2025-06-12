@@ -8,21 +8,19 @@ type Props = PropsWithChildren<
 export const classNameGenerator = tv({
   base: [
     'smarthr-ui-Chip',
-    'shr-border-shorthand shr-rounded-full shr-bg-white shr-text-black shr-leading-none',
+    'shr-border-shorthand shr-rounded-full shr-bg-white shr-leading-none shr-text-black',
     'contrast-more:shr-border-high-contrast',
   ],
   variants: {
     color: {
       grey: 'shr-border-grey-20',
       blue: 'shr-border-main',
-      /* green がトークン化されたら置き換える */
-      green: 'shr-border-[#0f7f85]',
-      /* oragen がトークン化されたら置き換える */
-      orange: 'shr-border-[#ff8800]',
+      green: 'shr-border-green',
+      orange: 'shr-border-orange',
       red: 'shr-border-danger',
     },
     size: {
-      s: 'shr-text-sm shr-px-0.5 shr-py-0.25',
+      s: 'shr-px-0.5 shr-py-0.25 shr-text-sm',
     },
     disabled: {
       true: 'shr-bg-white/50 shr-text-disabled',

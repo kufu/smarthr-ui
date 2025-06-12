@@ -18,7 +18,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: [
       // Switch 本体
-      'shr-border-shorthand shr-relative shr-inline-flex shr-w-[calc(theme(fontSize.base)*2)] shr-items-center shr-rounded-full shr-bg-white shr-h-fit',
+      'shr-border-shorthand shr-relative shr-inline-flex shr-h-fit shr-w-[calc(theme(fontSize.base)*2)] shr-items-center shr-rounded-full shr-bg-white',
       // 理想的には padding: 2px; だが、box-shadow を outline で使用しているため、border と padding で2pxの疑似余白を作っている。
       'shr-p-px',
       // :focus-visible-within の代替, なぜかhasが機能しないので以下の書き方で代用している
