@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { Select } from '../Select'
@@ -6,7 +6,7 @@ import { Select } from '../Select'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/Select',
+  title: 'Components/Select',
   component: Select,
   // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <Select {...args} />,

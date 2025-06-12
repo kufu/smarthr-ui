@@ -17,7 +17,7 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog',
+  title: 'Components/Dialog',
   component: Dialog,
   subcomponents: { DialogWrapper, DialogTrigger, DialogContent, DialogCloser },
   render: (args) => {

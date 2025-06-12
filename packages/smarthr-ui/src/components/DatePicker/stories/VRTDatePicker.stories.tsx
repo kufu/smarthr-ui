@@ -1,7 +1,7 @@
 /* eslint-disable smarthr/a11y-input-has-name-attribute */
 /* eslint-disable smarthr/a11y-prohibit-input-placeholder */
 /* eslint-disable smarthr/a11y-input-in-form-control */
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 import dayjs from 'dayjs'
 
 import { Cluster } from '../../Layout'
@@ -10,7 +10,7 @@ import { DatePicker } from '../DatePicker'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/DatePicker（非推奨）/VRT',
+  title: 'Components/DatePicker（非推奨）/VRT',
   component: DatePicker,
   render: (args) => {
     const value = '2024/11/06'
@@ -67,7 +67,7 @@ export const VRTForcedColors: StoryObj = {
 }
 
 export const VRTExpanded: StoryObj = {
-  render: (args) => <DatePicker {...args} className="shr-min-w-[500px] shr-h-[500px]" />,
+  render: (args) => <DatePicker {...args} className="shr-h-[500px] shr-min-w-[500px]" />,
   args: {
     value: '2024/11/06',
   },
@@ -103,7 +103,7 @@ export const VRTExpandedFromToForcedColor: StoryObj = {
 export const VRTExpandedBottom: StoryObj = {
   ...VRTExpanded,
   render: (args) => (
-    <div className="shr-w-full shr-h-[100vh] shr-relative">
+    <div className="shr-relative shr-h-[100vh] shr-w-full">
       <DatePicker {...args} className="shr-absolute shr-bottom-0" />
     </div>
   ),

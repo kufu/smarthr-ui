@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { SmartHRAILogo } from '../SmartHRAILogo'
 
 export default {
-  title: 'Media（メディア）/SmartHRAILogo',
+  title: 'Components/SmartHRAILogo',
   component: SmartHRAILogo,
   render: (args) => <SmartHRAILogo {...args} />,
   parameters: {

@@ -6,7 +6,7 @@ import { Input } from '../../../Input'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/FormDialog/VRT',
+  title: 'Components/Dialog/FormDialog/VRT',
   component: FormDialog,
   args: {
     width: '40em',

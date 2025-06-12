@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { Button } from '../../../Button'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 
@@ -7,7 +7,7 @@ import { RemoteTriggerFormDialog } from '../RemoteTriggerFormDialog'
 
 /** props は [FormDialog](./?path=/docs/dialog（ダイアログ）-dialog-formdialog--docs) を参照してください。 */
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/RemoteDialogTrigger/RemoteTriggerFormDialog',
+  title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerFormDialog',
   component: RemoteTriggerFormDialog,
   render: (args) => {
     return (

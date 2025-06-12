@@ -5,7 +5,7 @@ import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/AppNavi/AppNaviDropdownMenuButton',
+  title: 'Components/AppNavi/AppNaviDropdownMenuButton',
   component: AppNaviDropdownMenuButton,
   render: (args) => (
     <AppNaviDropdownMenuButton {...args}>

@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 const FaAddressBookIcon = Icons.FaAddressBookIcon
 
 export default {
-  title: 'Media（メディア）/Icon',
+  title: 'Components/Icon',
   component: FaAddressBookIcon,
   render: (args) => <FaAddressBookIcon {...args} />,
   argTypes: {

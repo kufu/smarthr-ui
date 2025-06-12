@@ -95,6 +95,7 @@ export default {
       'warning-yellow-darken': theme('colors.warning-yellow-darken'),
       overlay: defaultColor.OVERLAY,
       scrim: defaultColor.SCRIM,
+      green: theme('colors.green'),
       grey: {
         9: theme('colors.grey.9'),
         '9-darken': darkenColor(theme('colors.grey.9')),
@@ -134,6 +135,9 @@ export default {
       'danger-darken': darkenColor(defaultColor.DANGER),
       'warning-yellow': defaultColor.WARNING_YELLOW,
       'warning-yellow-darken': darkenColor(defaultColor.WARNING_YELLOW),
+      // 色トークン周りの整理が必要（GREEN_100 と ORANGE_100 は primitive にしかない。）
+      green: '#0f7f85',
+      orange: '#f56121',
       grey: {
         DEFAULT: defaultColor.GREY_65,
         5: defaultColor.GREY_5,
@@ -206,6 +210,7 @@ export default {
       'link-darken': darkenColor(theme('colors.link'), 0.062),
       grey: theme('colors.grey.65'),
       danger: theme('colors.danger'),
+      green: theme('colors.green'),
       'color-inherit': 'inherit',
       transparent: 'transparent',
     }),
@@ -234,6 +239,8 @@ export default {
         darken: darkenColor(theme('colors.grey.20')),
         'high-contrast': theme('colors.grey.100'),
         link: theme('colors.link'),
+        orange: theme('colors.orange'),
+        green: theme('colors.green'),
       }),
       strokeWidth: {
         '0.5': '0.5',
@@ -461,7 +468,7 @@ export default {
         'p, dl': {
           marginBlock: 'unset',
         },
-        'menu, ul': {
+        'menu, ul, ol': {
           marginBlock: 'unset',
           paddingInlineStart: 'unset',
         },
@@ -493,4 +500,5 @@ export default {
     }),
   ],
   prefix: 'shr-',
+  tailwindFunctions: ['tv'],
 } satisfies Config

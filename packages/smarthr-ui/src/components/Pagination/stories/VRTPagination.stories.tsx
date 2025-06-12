@@ -1,4 +1,4 @@
-import { fireEvent, within } from '@storybook/test'
+import { fireEvent, within } from 'storybook/test'
 
 import { Stack } from '../../Layout'
 import { Pagination } from '../Pagination'
@@ -8,7 +8,7 @@ import { Current } from './Pagination.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta = {
-  title: 'Navigation（ナビゲーション）/Pagination/VRT',
+  title: 'Components/Pagination/VRT',
   render: (args, context) => (
     <Stack>
       {Current.render?.(args, context)}

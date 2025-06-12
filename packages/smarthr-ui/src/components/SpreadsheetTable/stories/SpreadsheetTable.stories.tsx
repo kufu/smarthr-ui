@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { SpreadsheetTableCorner } from '../SpreadsheetTableCorner'
 
 export default {
-  title: 'Data Display（データ表示）/SpreadsheetTable',
+  title: 'Components/SpreadsheetTable',
   component: SpreadsheetTable,
   render: (args) => <SpreadsheetTable {...args} />,
   args: {

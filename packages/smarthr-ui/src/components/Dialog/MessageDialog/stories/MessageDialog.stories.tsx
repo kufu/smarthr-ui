@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { useRef, useState } from 'react'
@@ -7,7 +7,7 @@ import { MessageDialog } from '../MessageDialog'
 import { MessageDialogContent } from '../MessageDialogContent'
 
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/MessageDialog',
+  title: 'Components/Dialog/MessageDialog',
   component: MessageDialog,
   subcomponents: { MessageDialogContent },
   render: ({ onClickClose, ...args }) => {

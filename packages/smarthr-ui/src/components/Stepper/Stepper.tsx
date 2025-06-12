@@ -13,11 +13,11 @@ import type {
 type Props = HStepperProps | VStepperProps
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-Stepper', 'shr-list-none shr-my-0 shr-ps-0'],
+  base: ['smarthr-ui-Stepper', 'shr-my-0 shr-list-none shr-ps-0'],
   variants: {
     type: {
       // ステップ見出しの左右パディングをネガティブマージンで消し込んでいてる
-      horizontal: 'shr-flex -shr-mx-0.75',
+      horizontal: '-shr-mx-0.75 shr-flex',
       vertical: '',
     },
   },

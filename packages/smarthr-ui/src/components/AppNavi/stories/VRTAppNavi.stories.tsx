@@ -1,4 +1,4 @@
-import { userEvent, within } from '@storybook/test'
+import { userEvent, within } from 'storybook/test'
 
 import { Button } from '../../Button'
 import { FaArrowsRotateIcon } from '../../Icon'
@@ -11,7 +11,7 @@ import { Template } from './AppNavi.stories'
 import type { Meta } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/AppNavi/VRT',
+  title: 'Components/AppNavi/VRT',
   render: (args) => (
     <Stack className="shr-h-screen">
       {[undefined, 'hover', 'focus-visible'].map((id) => (

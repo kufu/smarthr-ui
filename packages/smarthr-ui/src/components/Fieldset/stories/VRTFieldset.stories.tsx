@@ -6,7 +6,7 @@ import { _childrenOptions } from './Fieldset.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Forms（フォーム）/Fieldset/VRT',
+  title: 'Components/Fieldset/VRT',
   render: (args) => (
     <Stack gap={4}>
       {[false, true].map((dangerouslyTitleHidden) =>

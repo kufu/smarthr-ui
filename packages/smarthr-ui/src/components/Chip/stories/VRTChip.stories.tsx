@@ -1,15 +1,17 @@
 import { Stack } from '../../Layout'
-import { Chip } from '../Chip'
+import { Chip, classNameGenerator } from '../Chip'
 
 import type { Meta } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Chip/VRT',
+  title: 'Components/Chip/VRT',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, true].map((disabled) => (
-        <Chip {...args} disabled={disabled} key={String(disabled)} />
-      ))}
+      {[undefined, true].map((disabled) =>
+        Object.keys(classNameGenerator.variants.color).map((color) => (
+          <Chip {...args} disabled={disabled} key={`${disabled}${color}`} color={color as any} />
+        )),
+      )}
     </Stack>
   ),
   args: {

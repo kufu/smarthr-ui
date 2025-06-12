@@ -1,8 +1,8 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { ComponentPropsWithoutRef } from 'react'
 
 import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
-import { UpwardLink } from '../../UpwardLink'
+import { UpwardLink } from '../UpwardLink'
 import { TextLink } from '../TextLink'
 import { Table, Th } from '../../Table'
 
@@ -28,7 +28,7 @@ const _elementAsOptions = {
 }
 
 export default {
-  title: 'Navigation（ナビゲーション）/TextLink',
+  title: 'Components/TextLink',
   component: TextLink,
   subcomponents: { UpwardLink },
   render: (args) => <TextLink {...args} />,

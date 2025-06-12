@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { Cluster } from '../../../Layout'
 import { SortDropdown } from '../SortDropdown'
@@ -6,7 +6,7 @@ import { SortDropdown } from '../SortDropdown'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Buttons（ボタン）/SortDropdown',
+  title: 'Components/Dropdown/SortDropdown',
   component: SortDropdown,
   render: (args) => <SortDropdown {...args} />,
   args: {

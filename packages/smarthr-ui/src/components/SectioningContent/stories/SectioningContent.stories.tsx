@@ -5,7 +5,7 @@ import { Article, Aside, Nav, Section } from '../SectioningContent'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Navigation（ナビゲーション）/SectioningContent',
+  title: 'Components/SectioningContent',
   component: Section,
   subcomponents: { Article, Aside, Nav },
   render: (args) => (

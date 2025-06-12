@@ -13,9 +13,9 @@ import type { LocaleProps } from '../../types'
 const classNameGenerator = tv({
   slots: {
     header: [
-      'shr-flex shr-justify-between shr-gap-1 shr-items-center shr-px-1 shr-py-0.75 shr-border-b-shorthand',
+      'shr-border-b-shorthand shr-flex shr-items-center shr-justify-between shr-gap-1 shr-px-1 shr-py-0.75',
     ],
-    headerTitle: ['[&&]:shr-text-base shr-font-normal'],
+    headerTitle: ['shr-font-normal [&&]:shr-text-base'],
     buttonWrapper: ['shr-p-0.5'],
     button: ['[&&:not(:has(svg))]:shr-ps-2.5'],
   },

@@ -13,13 +13,11 @@ export {
   DropdownMenuGroup,
   SortDropdown,
 } from './components/Dropdown'
-export * from './components/FlashMessage'
 export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
-export { TextLink, HelpLink } from './components/TextLink'
-export * from './components/UpwardLink'
+export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
   ActionDialog,
@@ -97,6 +95,7 @@ export * from './components/Picker'
 export * from './components/Browser'
 export * from './components/WarekiPicker'
 export { AppHeader } from './components/AppHeader'
+export * from './components/Timeline'
 
 // layout components
 export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
@@ -121,4 +120,4 @@ export { defaultBreakpoint } from './themes/createBreakpoint'
 export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
 
 // constants
-export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'

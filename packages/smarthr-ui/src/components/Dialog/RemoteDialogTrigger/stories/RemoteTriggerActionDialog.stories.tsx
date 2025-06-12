@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { Button } from '../../../Button'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 import { RemoteTriggerActionDialog } from '../RemoteTriggerActionDialog'
@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 /** props は [ActionDialog](./?path=/docs/dialog（ダイアログ）-dialog-actiondialog--docs) を参照してください。 */
 export default {
-  title: 'Dialog（ダイアログ）/Dialog/RemoteDialogTrigger/RemoteTriggerActionDialog',
+  title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerActionDialog',
   component: RemoteTriggerActionDialog,
   render: (args) => {
     return (

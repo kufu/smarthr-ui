@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Story, { Data } from './SpreadsheetTable.stories'
 
 export default {
-  title: 'Data Display（データ表示）/SpreadsheetTable/VRT',
+  title: 'Components/SpreadsheetTable/VRT',
   /* ペアワイズ法による網羅 */
   render: Story.render,
   parameters: {

@@ -26,7 +26,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: 'max-[751px]:!shr-hidden',
     appsButton: [
-      'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
+      'shr-border-none shr-bg-transparent shr-px-0.25 shr-font-normal shr-text-white',
       'hover:shr-border-transparent hover:shr-bg-transparent',
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
       'forced-colors:shr-border-shorthand',

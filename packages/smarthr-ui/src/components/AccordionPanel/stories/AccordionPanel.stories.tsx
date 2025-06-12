@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { ComponentProps } from 'react'
 
 import { Stack } from '../../Layout'
@@ -15,7 +15,7 @@ const _defaultExpandedOptions = {
 }
 
 export default {
-  title: 'Data Display（データ表示）/AccordionPanel',
+  title: 'Components/AccordionPanel',
   component: AccordionPanel,
   subcomponents: {
     AccordionPanelItem,

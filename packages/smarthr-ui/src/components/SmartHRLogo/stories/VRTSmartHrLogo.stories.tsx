@@ -6,7 +6,7 @@ import { Fill } from './SmartHrLogo.stories'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Media（メディア）/SmartHRLogo/VRT',
+  title: 'Components/SmartHRLogo/VRT',
   render: (args, context) => (
     <Stack inline align="start">
       <SmartHRLogo {...args} width="20em" />

@@ -1,4 +1,4 @@
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { backgroundColor } from '../../../themes'
 import { FaMagnifyingGlassIcon } from '../../Icon'
@@ -15,7 +15,7 @@ const _affixOptions = {
 }
 
 export default {
-  title: 'Forms（フォーム）/Input',
+  title: 'Components/Input',
   component: Input,
   subcomponents: { CurrencyInput, SearchInput },
   // eslint-disable-next-line smarthr/a11y-input-in-form-control

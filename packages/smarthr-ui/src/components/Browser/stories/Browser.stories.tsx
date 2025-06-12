@@ -5,7 +5,7 @@ import { Browser } from '../Browser'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Browser',
+  title: 'Components/Browser',
   component: Browser,
   render: (args) => {
     const [value, setValue] = useState<string | undefined>('department_2')

@@ -4,12 +4,16 @@ import { Chip, classNameGenerator } from '../Chip'
 import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
-  title: 'Data Display（データ表示）/Chip',
+  title: 'Components/Chip',
   component: Chip,
   render: (args) => <Chip {...args} />,
   argTypes: {
     size: {
       control: 'select',
+    },
+    color: {
+      control: 'select',
+      options: Object.keys(classNameGenerator.variants.color),
     },
   },
   args: {
@@ -20,9 +24,7 @@ export default {
   },
 } satisfies Meta<typeof Chip>
 
-export const Playground: StoryObj<typeof Chip> = {
-  args: {},
-}
+export const Playground: StoryObj<typeof Chip> = {}
 
 export const Size: StoryObj<typeof Chip> = {
   name: 'size',
