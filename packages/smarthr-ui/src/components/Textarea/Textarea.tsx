@@ -45,8 +45,9 @@ type Props = {
   placeholder?: string
 }
 type ElementProps = Omit<ComponentPropsWithRef<'textarea'>, keyof Props>
+type TextareaValue = string | number | readonly string[]
 
-const getStringLength = (value: string | number | readonly string[]) => {
+const getStringLength = (value: TextareaValue) => {
   const formattedValue =
     typeof value === 'number' || typeof value === 'string'
       ? `${value}`
@@ -181,9 +182,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const debouncedUpdateCount = useMemo(
       () =>
         maxLetters
-          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+          ? debounce((value: TextareaValue) => {
               startTransition(() => {
-                setCount(getStringLength(e.target.value))
+                setCount(getStringLength(value))
               })
             }, 200)
           : undefined,
@@ -194,9 +195,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const debouncedUpdateSrCounterMessage = useMemo(
       () =>
         maxLetters
-          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+          ? debounce((value: TextareaValue) => {
               startTransition(() => {
-                const counterText = getCounterMessage(getStringLength(e.target.value))
+                const counterText = getCounterMessage(getStringLength(value))
 
                 if (counterText) {
                   setSrCounterMessage(counterText)
@@ -207,19 +208,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       [maxLetters, getCounterMessage],
     )
 
-    const handleChange = useMemo(() => {
-      const callbacks = [debouncedUpdateCount, debouncedUpdateSrCounterMessage, onChange].filter(
-        (c) => !!c,
-      )
-
-      if (callbacks.length === 0) {
-        return undefined
-      }
-
-      return (e: ChangeEvent<HTMLTextAreaElement>) => {
-        callbacks.forEach((c) => c(e))
-      }
-    }, [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage])
+    const handleChange = useMemo(
+      () => (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value
+        debouncedUpdateCount?.(value)
+        debouncedUpdateSrCounterMessage?.(value)
+        onChange?.(e)
+      },
+      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage],
+    )
 
     // autoFocus時に、フォーカスを当てる
     useEffect(() => {
@@ -234,6 +231,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
       }
     }, [setInterimRows, maxRows, autoResize])
+
+    // value 変更時にもカウントを更新する
+    useEffect(() => {
+      if (currentValue && maxLetters) {
+        debouncedUpdateCount?.(currentValue)
+        debouncedUpdateSrCounterMessage?.(currentValue)
+      }
+    }, [currentValue, maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage])
 
     const handleInput = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {

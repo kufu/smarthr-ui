@@ -1,6 +1,7 @@
 /* eslint-disable smarthr/a11y-prohibit-input-placeholder */
 /* eslint-disable smarthr/a11y-input-in-form-control */
 
+import { useEffect, useState } from 'react'
 import { Stack } from '../../Layout'
 import { Textarea } from '../Textarea'
 
@@ -8,23 +9,33 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Components/Textarea/VRT',
-  render: (args) => (
-    <Stack>
-      {[undefined, 'focus-visible'].map((id) => (
-        <Stack id={id} key={id} align="flex-start">
-          <Textarea {...args} disabled />
-          <Textarea {...args} error />
-          <Textarea {...args} width="20em" />
-          <Textarea {...args} rows={3} />
-          <Textarea {...args} maxLetters={5} />
-          <Textarea {...args} maxLetters={5} value="テキスト" />
-          <Textarea {...args} maxLetters={5} value="テキストエ" />
-          <Textarea {...args} maxLetters={5} value="テキストエリア" />
-          <Textarea {...args} placeholder="テキストエリア" />
-        </Stack>
-      ))}
-    </Stack>
-  ),
+  render: (args) => {
+    const [debouncedValue, setDebouncedValue] = useState('')
+
+    useEffect(() => {
+      const handler = setTimeout(() => setDebouncedValue('テキス'), 50)
+      return () => clearTimeout(handler)
+    })
+
+    return (
+      <Stack>
+        {[undefined, 'focus-visible'].map((id) => (
+          <Stack id={id} key={id} align="flex-start">
+            <Textarea {...args} disabled />
+            <Textarea {...args} error />
+            <Textarea {...args} width="20em" />
+            <Textarea {...args} rows={3} />
+            <Textarea {...args} maxLetters={5} />
+            <Textarea {...args} maxLetters={5} value={debouncedValue} />
+            <Textarea {...args} maxLetters={5} value="テキスト" />
+            <Textarea {...args} maxLetters={5} value="テキストエ" />
+            <Textarea {...args} maxLetters={5} value="テキストエリア" />
+            <Textarea {...args} placeholder="テキストエリア" />
+          </Stack>
+        ))}
+      </Stack>
+    )
+  },
   parameters: {
     pseudo: {
       focusVisible: ['#focus-visible textarea'],
