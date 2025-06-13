@@ -9,6 +9,7 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': '一致する選択肢がありません。',
   'smarthr-ui/DropdownMenuButton/triggerActive': '候補を閉じる',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '候補を開く',
+  'smarthr-ui/DropZone/selectButtonLabel': 'ファイルを選択',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/SortDropdown/applyButtonLabel': '適用',
   'smarthr-ui/SortDropdown/ascLabel': '昇順',

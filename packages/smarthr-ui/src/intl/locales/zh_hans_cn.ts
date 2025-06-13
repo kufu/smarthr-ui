@@ -11,6 +11,7 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': '没有符合条件的选项',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
+  'smarthr-ui/DropZone/selectButtonLabel': '',
   'smarthr-ui/RequiredLabel/text': '必须',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
