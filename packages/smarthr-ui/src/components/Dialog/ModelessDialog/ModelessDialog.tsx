@@ -60,7 +60,7 @@ type Props = PropsWithChildren<{
   /**
    * ダイアログの大きさ
    */
-  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'FULL'
+  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'
   /**
    * ダイアログの高さ
    */
@@ -121,6 +121,7 @@ const classNameGenerator = tv({
       M: { wrapper: 'shr-w-col5' },
       L: { wrapper: 'shr-w-col6' },
       XL: { wrapper: 'shr-w-col7' },
+      XXL: { wrapper: 'shr-w-col8' },
       FULL: { wrapper: 'shr-w-full' },
     },
     resizable: {
