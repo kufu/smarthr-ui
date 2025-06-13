@@ -52,9 +52,14 @@ type Props = PropsWithChildren<{
    */
   onPressEscape?: () => void
   /**
+   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
    * ダイアログの幅
    */
   width?: string | number
+  /**
+   * ダイアログの大きさ
+   */
+  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'FULL'
   /**
    * ダイアログの高さ
    */
@@ -114,6 +119,14 @@ const classNameGenerator = tv({
     footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
   variants: {
+    size: {
+      XS: { wrapper: 'shr-w-col3' },
+      S: { wrapper: 'shr-w-col4' },
+      M: { wrapper: 'shr-w-col5' },
+      L: { wrapper: 'shr-w-col6' },
+      XL: { wrapper: 'shr-w-col7' },
+      FULL: { wrapper: 'shr-w-full' },
+    },
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
@@ -135,6 +148,7 @@ export const ModelessDialog: FC<
   onPressEscape,
   resizable = false,
   width,
+  size,
   height,
   top,
   left,
@@ -157,14 +171,14 @@ export const ModelessDialog: FC<
 
     return {
       overlap: overlap({ className }),
-      wrapper: wrapper({ resizable }),
+      wrapper: wrapper({ size, resizable }),
       header: headerEl(),
       title: titleEl(),
       dialogHandler: dialogHandler(),
       closeButtonLayout: closeButtonLayout(),
       footer: footerEl(),
     }
-  }, [className, resizable])
+  }, [className, size, resizable])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
@@ -221,10 +235,10 @@ export const ModelessDialog: FC<
       left: centering.left ?? left,
       right,
       bottom,
-      width,
+      width: size ? undefined : width,
       height,
     }),
-    [centering, top, left, right, bottom, width, height],
+    [centering, top, left, right, bottom, width, height, size],
   )
 
   const handleArrowKey = useCallback(

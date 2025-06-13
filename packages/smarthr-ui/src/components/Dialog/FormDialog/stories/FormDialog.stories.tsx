@@ -239,9 +239,16 @@ export const PortalParent: StoryObj<typeof FormDialog> = {
 }
 
 export const Width: StoryObj<typeof FormDialog> = {
-  name: 'width',
+  name: 'width（非推奨）',
   args: {
     width: _widthOptions.string,
+  },
+}
+
+export const Size: StoryObj<typeof FormDialog> = {
+  name: 'size',
+  args: {
+    size: 'M',
   },
 }
 
