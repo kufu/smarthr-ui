@@ -149,6 +149,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
   const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
+  const stepText = `（${activeStep}/${stepLength}）`
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
@@ -158,8 +159,8 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       <form onSubmit={handleSubmitAction}>
         <div className={classNames.wrapper}>
           <DialogHeader
-            title={`${title} ${activeStep}/${stepLength}`}
-            subtitle={subtitle}
+            title={subtitle ? title : `${title}${stepText}`}
+            subtitle={subtitle ? `${subtitle}${stepText}` : undefined}
             titleTag={titleTag}
             titleId={titleId}
           />
