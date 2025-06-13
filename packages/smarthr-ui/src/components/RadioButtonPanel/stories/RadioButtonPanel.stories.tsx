@@ -8,7 +8,6 @@ const _asOptions = { なし: undefined, '<span>': 'span', '<p>': 'p' }
 export default {
   title: 'Components/RadioButtonPanel',
   component: RadioButtonPanel,
-  // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <RadioButtonPanel {...args} />,
   argTypes: {
     checked: {

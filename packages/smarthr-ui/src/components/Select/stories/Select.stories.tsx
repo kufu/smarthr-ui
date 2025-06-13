@@ -8,7 +8,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Components/Select',
   component: Select,
-  // eslint-disable-next-line smarthr/a11y-input-in-form-control
   render: (args) => <Select {...args} />,
   argTypes: {
     disabled: { control: 'boolean' },
@@ -64,7 +63,6 @@ export const Width: StoryObj<typeof Select> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 200].map((width) => (
-        // eslint-disable-next-line smarthr/a11y-input-in-form-control
         <Select {...args} width={width} key={width} />
       ))}
     </Stack>
@@ -76,7 +74,6 @@ export const Size: StoryObj<typeof Select> = {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, 'default', 's'].map((size) => (
-        // eslint-disable-next-line smarthr/a11y-input-in-form-control
         <Select {...args} size={size as any} key={size} />
       ))}
     </Stack>

@@ -297,15 +297,20 @@ const ActualMultiCombobox = <T,>(
   const outerClickRef = useMemo(() => [outerRef, listBoxRef], [outerRef, listBoxRef])
   useOuterClick(outerClickRef, blur)
 
+  const highlightedRef = useRef(highlighted)
+
   useEffect(() => {
-    if (highlighted) {
+    highlightedRef.current = highlighted
+  }, [highlighted])
+
+  useEffect(() => {
+    if (highlightedRef.current) {
       setHighlighted(false)
       inputRef.current?.select()
     } else {
       setInputValueIfUncontrolled('')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItems, inputRef, setInputValueIfUncontrolled]) // highlighted 変更時には発火してほしくないため
+  }, [selectedItems, inputRef, setInputValueIfUncontrolled])
 
   useEffect(() => {
     if (isFocused) {
