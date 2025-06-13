@@ -38,7 +38,7 @@ export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * ダイアログの大きさ
    */
-  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'FULL'
+  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'
   /**
    * ダイアログの `id`
    * TODO 使われてなさそうなので確認
@@ -80,6 +80,7 @@ const classNameGenerator = tv({
       M: { layout: 'shr-w-col5' },
       L: { layout: 'shr-w-col6' },
       XL: { layout: 'shr-w-col7' },
+      XXL: { layout: 'shr-w-col8' },
       FULL: { layout: 'shr-w-full' },
     },
   },
