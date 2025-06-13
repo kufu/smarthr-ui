@@ -11,6 +11,8 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': 'Không có kết quả phù hợp.',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
+  'smarthr-ui/InformationPanel/closeButtonLabel': '',
+  'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',

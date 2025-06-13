@@ -13,6 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
@@ -36,11 +37,7 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  openButtonLabel: '開く',
-  closeButtonLabel: '閉じる',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
@@ -218,7 +215,23 @@ const TogglableButton: FC<
     className: string
   }
 > = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      openButtonLabel: localize({
+        id: 'smarthr-ui/InformationPanel/openButtonLabel',
+        defaultText: '開く',
+      }),
+      closeButtonLabel: localize({
+        id: 'smarthr-ui/InformationPanel/closeButtonLabel',
+        defaultText: '閉じる',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   const onClick = useMemo(
     () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
