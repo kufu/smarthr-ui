@@ -234,11 +234,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
-      if (currentValue && maxLetters) {
-        debouncedUpdateCount?.(currentValue)
-        debouncedUpdateSrCounterMessage?.(currentValue)
+      if (props.value && maxLetters) {
+        debouncedUpdateCount?.(props.value)
+        debouncedUpdateSrCounterMessage?.(props.value)
       }
-    }, [currentValue, maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage])
+    }, [maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage, props.value])
 
     const handleInput = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
