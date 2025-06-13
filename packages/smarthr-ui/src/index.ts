@@ -99,7 +99,7 @@ export { AppHeader } from './components/AppHeader'
 export * from './components/Timeline'
 
 // layout components
-export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
+export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'
