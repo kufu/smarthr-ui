@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentProps, type FC, memo, useCallback, useState } from 'react'
+import { type ComponentProps, type FC, memo, useCallback, useMemo, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
 import { ReactPDFStyle } from './generatedReactPDFStyle'
@@ -31,15 +31,19 @@ export const PDFViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width, 
     setPdfNumPages(numPages)
   }, [])
 
-  const onPageLoad = useCallback<NonNullable<ComponentProps<typeof Page>['onLoadSuccess']>>(
-    (page) => {
+  const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
+    if (!onLoad) {
+      return undefined
+    }
+
+    return (page) => {
       // DocumentのLoadだとページごとの読み込みが考慮されないため
-      if (page.pageNumber === pdfNumPages) {
-        onLoad?.()
+      if (page.pageNumber !== pdfNumPages) {
+        return
       }
-    },
-    [pdfNumPages, onLoad],
-  )
+      onLoad()
+    }
+  }, [pdfNumPages, onLoad])
 
   return (
     <>
@@ -50,7 +54,7 @@ export const PDFViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width, 
         file={file.url}
         onLoadSuccess={onDocumentLoadSuccess}
         rotate={rotation}
-        className={`shr-flex shr-h-full shr-w-fit shr-flex-col shr-items-center shr-gap-1 shr-overflow-auto`}
+        className="shr-flex shr-h-full shr-w-fit shr-flex-col shr-items-center shr-gap-1 shr-overflow-auto"
         externalLinkTarget="_blank"
         loading={null}
       >

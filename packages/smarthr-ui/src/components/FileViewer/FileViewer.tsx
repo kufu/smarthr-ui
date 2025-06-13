@@ -48,16 +48,20 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
     [scaleStep],
   )
 
-  const handleOnClickScaleUpButton = useCallback(() => {
+  const scaleUp = useCallback(() => {
     setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
   }, [internalScaleStep])
 
-  const handleOnClickScaleDownButton = useCallback(() => {
+  const scaleDown = useCallback(() => {
     setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
   }, [internalScaleStep])
 
-  const handleOnClickRotateButton = useCallback(() => {
+  const rotate = useCallback(() => {
     setRotation((currentRotation) => currentRotation - 90)
+  }, [])
+
+  const handleLoaded = useCallback(() => {
+    setLoaded(true)
   }, [])
 
   useEffect(() => {
@@ -86,9 +90,9 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
           scale={scale}
           setScale={setScale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          onClickScaleUpButton={handleOnClickScaleUpButton}
-          onClickScaleDownButton={handleOnClickScaleDownButton}
-          onClickRotateButton={handleOnClickRotateButton}
+          onClickScaleUpButton={scaleUp}
+          onClickScaleDownButton={scaleDown}
+          onClickRotateButton={rotate}
         />
       </div>
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
@@ -104,7 +108,7 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={() => setLoaded(true)}
+              onLoad={handleLoaded}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
@@ -112,7 +116,7 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={() => setLoaded(true)}
+              onLoad={handleLoaded}
             />
           ) : (
             <Text>サポートされていない形式のファイルです。</Text>
