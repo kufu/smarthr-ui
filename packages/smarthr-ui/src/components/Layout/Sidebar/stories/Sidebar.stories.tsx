@@ -29,7 +29,7 @@ export const Align: StoryObj<typeof Sidebar> = {
       <Stack>
         {[undefined, 'stretch', 'flex-start', 'center', 'flex-end'].map((align) => (
           <Sidebar {...args} align={align as any}>
-            <div className="shr-border-shorthand shr-bg-white shr-p-1.5 shr-min-w-[8em]">
+            <div className="shr-border-shorthand shr-min-w-[8em] shr-bg-white shr-p-1.5">
               align: {align ?? 'undefined'}
             </div>
             <div className="shr-border-shorthand shr-bg-white shr-p-1.5">

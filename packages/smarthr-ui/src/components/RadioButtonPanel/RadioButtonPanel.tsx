@@ -28,11 +28,11 @@ const classNameGenerator = tv({
   slots: {
     base: [
       'smarthr-ui-RadioButtonPanel',
-      'shr-border-shorthand shr-list-none shr-shadow-none shr-cursor-pointer',
+      'shr-border-shorthand shr-cursor-pointer shr-list-none shr-shadow-none',
       'has-[:disabled]:shr-cursor-default',
       // FIX: なぜか storybook 上で :has が動作しないので重ねて書いている
       'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
-      'has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled [&:has(:disabled)]:shr-text-disabled',
+      '[&:has(:disabled)]:shr-text-disabled has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled',
     ],
     radio: [
       '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',

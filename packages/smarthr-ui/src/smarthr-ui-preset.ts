@@ -500,4 +500,5 @@ export default {
     }),
   ],
   prefix: 'shr-',
+  tailwindFunctions: ['tv'],
 } satisfies Config

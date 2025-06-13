@@ -18,7 +18,7 @@ const classNameGenerator = tv({
     list: ['shr-list-none', '[&>li]:shr-px-0.5 [&>li]:shr-py-0.25'],
     listItem: [
       'smarthr-ui-AppLauncher-listItem',
-      'shr-grid shr-grid-cols-[1rem_1fr_1rem] shr-gap-0.75 shr-min-h-[2.5rem] shr-px-1 shr-py-0 shr-leading-tight shr-text-left shr-whitespace-normal',
+      'shr-grid shr-min-h-[2.5rem] shr-grid-cols-[1rem_1fr_1rem] shr-gap-0.75 shr-whitespace-normal shr-px-1 shr-py-0 shr-text-left shr-leading-tight',
       'data-[favorite="false"]:shr-grid-cols-[1fr_1rem]',
     ],
   },

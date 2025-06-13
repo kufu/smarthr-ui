@@ -11,7 +11,7 @@ import type { Gap } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: 'smarthr-ui-FloatArea shr-z-fixed-menu shr-sticky -shr-mx-0.5',
+    wrapper: 'smarthr-ui-FloatArea shr-sticky shr-z-fixed-menu -shr-mx-0.5',
     mainButtonCluster: 'shr-ms-auto',
     responseMessageWrapper: 'shr-ms-auto',
   },

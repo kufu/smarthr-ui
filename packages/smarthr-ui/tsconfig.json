@@ -7,7 +7,7 @@
       "dom"
     ],
     "target": "es2022",
-    "module": "commonjs",
+    "module": "es2022",
     "moduleResolution": "node",
     "sourceMap": true,
     "inlineSources": true,

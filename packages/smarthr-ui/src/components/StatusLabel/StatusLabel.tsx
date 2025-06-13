@@ -12,7 +12,7 @@ import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 export const classNameGenerator = tv({
   base: [
     'smarthr-ui-StatusLabel',
-    'shr-box-content shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25 shr-border-shorthand shr-border-current shr-bg-white shr-px-0.5 shr-py-0.25 shr-whitespace-nowrap shr-text-sm shr-font-bold shr-min-w-[3.5em] shr-min-h-em',
+    'shr-border-shorthand shr-box-content shr-inline-flex shr-min-h-em shr-min-w-[3.5em] shr-items-center shr-justify-center shr-gap-0.25 shr-whitespace-nowrap shr-border-current shr-bg-white shr-px-0.5 shr-py-0.25 shr-text-sm shr-font-bold',
     // ラベルが天地中央に揃わないため暫定対応
     'shr-leading-[0]',
   ],
@@ -25,7 +25,7 @@ export const classNameGenerator = tv({
       green: 'shr-text-green',
       red: 'shr-text-danger',
       warning: 'shr-border-warning-yellow shr-bg-warning-yellow shr-text-black',
-      error: 'shr-bg-danger shr-border-danger shr-text-white',
+      error: 'shr-border-danger shr-bg-danger shr-text-white',
     },
     bold: {
       true: 'shr-text-white',

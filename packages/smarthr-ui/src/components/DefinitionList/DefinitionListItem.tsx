@@ -30,7 +30,7 @@ const classNameGenerator = tv({
     ],
     termEl: 'smarthr-ui-DefinitionListItem-term',
     descriptionEl:
-      'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-pb-0.25 shr-min-h-[calc(1em*theme(lineHeight.normal))]',
+      'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-min-h-[calc(1em*theme(lineHeight.normal))] shr-pb-0.25',
   },
   variants: {
     fullWidth: {

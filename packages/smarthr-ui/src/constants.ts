@@ -20,4 +20,12 @@ export const CHART_COLORS = [
   ...BASE_CHART_COLORS.map((color) => tint(0.4, color)),
   ...BASE_CHART_COLORS.map((color) => shade(0.4, color)),
 ]
+export const SINGLE_CHART_COLORS = [
+  'rgb(161, 227, 230)',
+  'rgb(0, 196, 204)',
+  'rgb(0, 172, 179)',
+  'rgb(5, 134, 139)',
+  'rgb(5, 86, 89)',
+  'rgb(3, 48, 51)',
+]
 export const OTHER_CHART_COLOR = 'rgb(235, 235, 235)'

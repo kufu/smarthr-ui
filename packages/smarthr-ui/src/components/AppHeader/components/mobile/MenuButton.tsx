@@ -16,7 +16,7 @@ export const MenuButton = memo<Props>(({ children, onClick, isCurrent }) => (
     onClick={onClick}
     current={isCurrent}
     boldWhenCurrent
-    className="[&&]:shr-px-0.5 [&&]:shr-justify-between"
+    className="[&&]:shr-justify-between [&&]:shr-px-0.5"
   >
     <Translate>{children}</Translate>
     <FaAngleRightIcon color="TEXT_BLACK" />

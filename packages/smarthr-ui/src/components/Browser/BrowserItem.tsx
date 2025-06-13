@@ -11,7 +11,7 @@ import type { ItemNode } from './models'
 
 const classNameGenerator = tv({
   base: [
-    'shr-block shr-px-1 shr-py-0.5 shr-rounded-m focus-within:shr-shadow-outline',
+    'shr-block shr-rounded-m shr-px-1 shr-py-0.5 focus-within:shr-shadow-outline',
     '[&[data-selected="true"][data-type="parent"]]:shr-bg-white-darken',
     '[&[data-selected="true"][data-type="last"]]:shr-bg-main [&[data-selected="true"][data-type="last"]]:shr-text-white [&[data-selected="true"][data-type="last"]]:forced-colors:shr-bg-[Highlight]',
     '[&[data-selected="false"]]:hover:shr-bg-white-darken',

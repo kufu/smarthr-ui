@@ -18,7 +18,7 @@ type Props = {
 }
 
 const separatorClassNameGenerator = tv({
-  base: ['[&&]:shr-mx-0 [&&]:shr-my-0.5 [&&]:shr-border-b-shorthand'],
+  base: ['[&&]:shr-border-b-shorthand [&&]:shr-mx-0 [&&]:shr-my-0.5'],
 })
 
 export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (

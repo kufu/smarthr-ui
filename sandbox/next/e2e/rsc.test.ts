@@ -4,7 +4,6 @@ import test, { expect } from '@playwright/test'
  * サーバーコンポーネントとして利用できるコンポーネント一覧(アルファベット順)
  */
 const SERVER_COMPONENTS = [
-  'AppLauncher',
   'AppNavi',
   'AppNaviAnchor',
   'AppNaviButton',
@@ -66,6 +65,7 @@ const CLIENT_COMPONENTS: string[] = [
   'AccordionPanelItem',    // 開いているパネル名を共有するためのuseContext
   'AccordionPanelTrigger', // 開いているパネル名を共有するためのuseContext
   'AnchorButton',   // アイコンのみの場合のstyle調整のためのquerySelector
+  'AppLauncher',    // 翻訳
   'AppHeader',      // ドロップダウンやダイアログを表示するためのuseStateなど
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため

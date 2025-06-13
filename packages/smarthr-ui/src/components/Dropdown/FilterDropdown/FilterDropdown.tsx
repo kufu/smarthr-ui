@@ -57,9 +57,9 @@ const ON_SUBMIT = (e: FormEvent) => {
 const classNameGenerator = tv({
   slots: {
     iconWrapper: ['smarthr-ui-Icon-extended', 'shr-relative shr-leading-none'],
-    filteredIcon: 'shr-h-[0.5em] shr-w-[0.5em] shr-absolute shr-bottom-[2px] shr-right-[-4px]',
+    filteredIcon: 'shr-absolute shr-bottom-[2px] shr-right-[-4px] shr-h-[0.5em] shr-w-[0.5em]',
     inner: 'shr-p-1.5',
-    actionArea: 'shr-sticky shr-bottom-0 shr-border-t-shorthand shr-bg-white shr-px-1.5 shr-py-1',
+    actionArea: 'shr-border-t-shorthand shr-sticky shr-bottom-0 shr-bg-white shr-px-1.5 shr-py-1',
     resetButtonArea: '-shr-ms-0.5',
     rightButtonArea: 'shr-ms-auto',
     message: 'shr-text-right',

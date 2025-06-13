@@ -10,6 +10,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useDecorators } from '../../../hooks/useDecorators'
+import { useIntl } from '../../../intl'
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import type { SortDropdown } from './SortDropdown'
@@ -24,18 +25,48 @@ const classNameGenerator = tv({
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  sortFieldLabel: '並べ替え項目',
-  sortOrderLabel: '並び順',
-  ascLabel: '昇順',
-  descLabel: '降順',
-  applyButtonLabel: '適用',
-  cancelButtonLabel: 'キャンセル',
-} as const
-export type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+export type DecoratorKeyTypes =
+  | 'sortFieldLabel'
+  | 'sortOrderLabel'
+  | 'ascLabel'
+  | 'descLabel'
+  | 'applyButtonLabel'
+  | 'cancelButtonLabel'
 
 export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators }: Props) => {
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      sortFieldLabel: localize({
+        id: 'smarthr-ui/SortDropdown/sortFieldLabel',
+        defaultText: '並べ替え項目',
+      }),
+      sortOrderLabel: localize({
+        id: 'smarthr-ui/SortDropdown/sortOrderLabel',
+        defaultText: '並び順',
+      }),
+      ascLabel: localize({
+        id: 'smarthr-ui/SortDropdown/ascLabel',
+        defaultText: '昇順',
+      }),
+      descLabel: localize({
+        id: 'smarthr-ui/SortDropdown/descLabel',
+        defaultText: '降順',
+      }),
+      applyButtonLabel: localize({
+        id: 'smarthr-ui/SortDropdown/applyButtonLabel',
+        defaultText: '適用',
+      }),
+      cancelButtonLabel: localize({
+        id: 'smarthr-ui/SortDropdown/cancelButtonLabel',
+        defaultText: 'キャンセル',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   // 外向きの値
   const [selectedLabel, setSelectedLabel] = useState<string>()

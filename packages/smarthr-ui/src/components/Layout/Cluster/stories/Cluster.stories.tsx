@@ -74,7 +74,7 @@ export const Align: StoryObj<typeof Cluster> = {
         <Cluster
           {...args}
           align={align as any}
-          className="shr-bg-background shr-h-[160px]"
+          className="shr-h-[160px] shr-bg-background"
           key={align}
         >
           {[...Array(3)].map((_, i) => (
@@ -94,7 +94,7 @@ export const Justify: StoryObj<typeof Cluster> = {
         <Cluster
           {...args}
           justify={justify as any}
-          className="shr-bg-background shr-h-[160px]"
+          className="shr-h-[160px] shr-bg-background"
           key={justify}
         >
           {[...Array(3)].map((_, i) => (

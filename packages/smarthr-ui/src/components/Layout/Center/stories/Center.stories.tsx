@@ -48,10 +48,10 @@ export const VerticalCentering: StoryObj<typeof Center> = {
   name: 'verticalCentering',
   render: (args) => (
     <Stack className="shr-h-screen">
-      <Center {...args} className="shr-bg-background shr-h-1/2">
+      <Center {...args} className="shr-h-1/2 shr-bg-background">
         <ColorBox />
       </Center>
-      <Center {...args} verticalCentering className="shr-bg-background shr-h-1/2">
+      <Center {...args} verticalCentering className="shr-h-1/2 shr-bg-background">
         <ColorBox />
       </Center>
     </Stack>

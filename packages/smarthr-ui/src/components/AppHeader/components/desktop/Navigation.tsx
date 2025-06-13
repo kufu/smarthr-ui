@@ -27,7 +27,7 @@ import type {
 
 const classNameGenerator = tv({
   base: [
-    'shr-overflow-x-auto shr-min-w-[auto]',
+    'shr-min-w-[auto] shr-overflow-x-auto',
     'max-[751px]:!shr-hidden',
     'data-[with-releasenote="true"]:shr-pe-0',
   ],
@@ -124,8 +124,8 @@ const DropdownCustomTag = memo<NavigationCustomTag>(
   },
 )
 const DropdownMenuAnchorButton = memo<NavigationLink>(({ current, ...rest }) => (
-  <AnchorButton {...rest} aria-current={current && 'page'} />
+  <AnchorButton {...rest} aria-current={current ? 'page' : undefined} />
 ))
 const DropdownNavigationButton = memo<NavigationButton>(({ current, ...rest }) => (
-  <Button {...rest} aria-current={current && 'page'} />
+  <Button {...rest} aria-current={current ? 'page' : undefined} />
 ))

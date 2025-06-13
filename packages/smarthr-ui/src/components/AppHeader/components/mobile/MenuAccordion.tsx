@@ -66,7 +66,7 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
           size="s"
           aria-expanded={isOpen}
           aria-controls={id}
-          className="[&&]:shr-p-0.25 [&&]:shr-min-h-0"
+          className="[&&]:shr-min-h-0 [&&]:shr-p-0.25"
           onClick={onClickButton}
         >
           {isOpen ? (

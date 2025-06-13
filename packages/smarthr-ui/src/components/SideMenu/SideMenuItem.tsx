@@ -22,22 +22,22 @@ const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-SideMenu-item',
-      '[&>a]:shr-no-underline [&>a]:shr-block',
+      '[&>a]:shr-block [&>a]:shr-no-underline',
       '[&>*:focus-visible]:shr-focus-indicator',
     ],
     content: [
-      'shr-flex shr-gap-0.5 shr-p-0.75 shr-items-baseline',
+      'shr-flex shr-items-baseline shr-gap-0.5 shr-p-0.75',
       'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
       'hover:shr-bg-head-darken',
     ],
     // 視覚調整のためのtranslate 参考: https://github.com/kufu/smarthr-ui/blob/01d127a4888f5698b2bf17be855ce1e985b575ea/packages/smarthr-ui/src/components/Icon/generateIcon.tsx#L73C81-L73C106
-    iconWrapper: ['shr-text-grey shr-translate-y-[0.125em]'],
+    iconWrapper: ['shr-translate-y-[0.125em] shr-text-grey'],
   },
   variants: {
     current: {
       true: {
         content:
-          'shr-ps-1.25 shr-border-[theme(colors.main)] shr-border-0 shr-border-s-4 shr-border-solid shr-bg-over-background',
+          'shr-border-0 shr-border-s-4 shr-border-solid shr-border-[theme(colors.main)] shr-bg-over-background shr-ps-1.25',
       },
       false: {
         content: 'shr-ps-1.5',

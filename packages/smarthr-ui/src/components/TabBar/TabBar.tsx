@@ -13,7 +13,7 @@ const classNameGenerator = tv({
       true: {
         inner: [
           'shr-relative',
-          'before:shr-absolute before:shr-inset-x-0 before:shr-bottom-0 before:shr-border-b-shorthand before:shr-content-[""] before:shr-z-1',
+          'before:shr-border-b-shorthand before:shr-absolute before:shr-inset-x-0 before:shr-bottom-0 before:shr-z-1 before:shr-content-[""]',
         ],
       },
     },
