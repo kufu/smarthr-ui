@@ -57,9 +57,16 @@ export const Id: StoryObj<typeof Dialog> = {
 }
 
 export const Width: StoryObj<typeof Dialog> = {
-  name: 'width',
+  name: 'width（非推奨）',
   args: {
     width: _widthOptions.string,
+  },
+}
+
+export const Size: StoryObj<typeof Dialog> = {
+  name: 'size',
+  args: {
+    size: 'M',
   },
 }
 

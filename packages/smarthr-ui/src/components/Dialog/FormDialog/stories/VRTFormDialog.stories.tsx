@@ -10,6 +10,7 @@ export default {
   component: FormDialog,
   args: {
     width: '40em',
+    size: 'M',
     isOpen: true,
     title: 'フォームダイアログタイトル',
     subtitle: 'フォームダイアログのサブタイトル',
