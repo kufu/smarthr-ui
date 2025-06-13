@@ -6,6 +6,7 @@ import { defaultColor } from './themes/createColor'
 import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
 import { defaultShadow } from './themes/createShadow/defaultShadow'
 import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/createSpacing'
+import { defaultWidth } from './themes/createWidth'
 import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
@@ -177,6 +178,7 @@ export default {
       loose: '1.75',
     },
     maxWidth: {
+      ...defaultWidth,
       none: 'none',
       full: '100%',
       min: 'min-content',
@@ -224,6 +226,9 @@ export default {
     extend: {
       aria: {
         'current-page': 'current="page"',
+      },
+      width: {
+        ...defaultWidth,
       },
       minHeight: ({ theme }) => ({
         ...theme('spacing'),
