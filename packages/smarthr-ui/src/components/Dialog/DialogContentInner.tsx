@@ -31,9 +31,14 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   isOpen: boolean
   /**
+   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
    * ダイアログの幅
    */
   width?: string | number
+  /**
+   * ダイアログの大きさ
+   */
+  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'FULL'
   /**
    * ダイアログの `id`
    * TODO 使われてなさそうなので確認
@@ -68,6 +73,16 @@ const classNameGenerator = tv({
     ],
     background: ['smarthr-ui-Dialog-background', 'shr-absolute shr-inset-0 shr-bg-scrim'],
   },
+  variants: {
+    size: {
+      XS: { layout: 'shr-w-col3' },
+      S: { layout: 'shr-w-col4' },
+      M: { layout: 'shr-w-col5' },
+      L: { layout: 'shr-w-col6' },
+      XL: { layout: 'shr-w-col7' },
+      FULL: { layout: 'shr-w-full' },
+    },
+  },
 })
 
 export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
@@ -76,6 +91,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   isOpen,
   id,
   width,
+  size,
   firstFocusTarget,
   ariaLabel,
   ariaLabelledby,
@@ -88,16 +104,17 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     const { layout, inner, background } = classNameGenerator()
 
     return {
-      layout: layout(),
+      layout: layout({ size }),
       inner: inner({ className }),
       background: background(),
     }
-  }, [className])
+  }, [size, className])
   const style = useMemo(() => {
-    const actualWidth = typeof width === 'number' ? `${width}px` : width
+    // width は deprecated なので、size が指定されている場合は width を無視する
+    const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
     return actualWidth ? { width: actualWidth } : undefined
-  }, [width])
+  }, [width, size])
 
   const innerRef = useRef<HTMLDivElement>(null)
 
