@@ -44,6 +44,13 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
+  const selectedPath = useMemo(() => {
+    if (!value) return []
+    const node = rootNode.findByValue(value)
+    if (!node) return []
+    return [...node.getAncestors().map((n) => n.value), node.value]
+  }, [rootNode, value])
+
   const className = useMemo(
     () => classNameGenerator({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
     [columns.length],
@@ -120,7 +127,7 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
             key={index}
             items={colItems}
             index={index}
-            value={value}
+            value={selectedPath[index]}
             onChangeInput={onChangeInput}
           />
         ))
