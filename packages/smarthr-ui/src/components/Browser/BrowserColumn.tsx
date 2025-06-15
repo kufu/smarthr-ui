@@ -1,4 +1,5 @@
-import { type ChangeEvent, type FC, memo } from 'react'
+import { type ChangeEvent, type ComponentProps, type FC, memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { BrowserItem } from './BrowserItem'
 
@@ -12,10 +13,24 @@ type Props = {
   index: number
   onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
+type ElementProps = Omit<ComponentProps<'ul'>, keyof Props>
 
-export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onChangeInput }) => (
-  <div className="[&:not(:last-child)]:shr-border-r-shorthand last:shr-flex-1 [&:not(:last-child)]:shr-w-[218px]">
-    <ul className="shr-list-none shr-px-0.25 shr-py-0.5" id={getColumnId(columnIndex)}>
+const classNameGenerator = tv({
+  base: 'shr-px-0.25 shr-py-0.5',
+})
+
+export const BrowserColumn: FC<Props & ElementProps> = ({
+  items,
+  index: columnIndex,
+  value,
+  onChangeInput,
+  className,
+  ...rest
+}) => {
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
+  return (
+    <ul {...rest} className={actualClassName} id={getColumnId(columnIndex)}>
       {items.map((item, rowIndex) => (
         <ListItem
           key={rowIndex}
@@ -29,8 +44,8 @@ export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onC
         />
       ))}
     </ul>
-  </div>
-)
+  )
+}
 
 type ListItemProps = Pick<Props, 'value' | 'onChangeInput'> & {
   itemValue: ItemNode['value']

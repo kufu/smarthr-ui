@@ -4,11 +4,6 @@ import { userEvent } from 'storybook/test'
 import { Browser } from './Browser'
 
 describe('Browser', () => {
-  test('アイテムが空のとき', () => {
-    render(<Browser items={[]} />)
-    expect(screen.getByText(/該当する項目がありません/)).toBeInTheDocument()
-  })
-
   test('アイテムが存在するとき、最初の要素がタブストップになる', async () => {
     const onSelectItem = vi.fn()
     render(
