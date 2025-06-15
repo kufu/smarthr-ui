@@ -6,8 +6,8 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "eslint": "^9.28.0",
-    "eslint-config-smarthr": "^9.5.0",
+    "eslint": "^9.29.0",
+    "eslint-config-smarthr": "^9.6.0",
     "eslint-plugin-storybook": "^9.0.10",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
