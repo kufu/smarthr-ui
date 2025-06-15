@@ -138,11 +138,7 @@ const ActualPagination: FC<Props> = ({
   }, [onClick, hrefTemplate])
 
   return (
-    // TODO: https://github.com/kufu/tamatebako/pull/680 が対応されれば下記コメントとあわせて削除する
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Nav {...props} className={classNames.wrapper} aria-label="ページネーション">
-      {/* TODO: https://github.com/kufu/tamatebako/pull/679 でXxxButtonsがインタラクティブな要素として判定されれば↓のコメントと合わせて削除する */}
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <Reel onClick={actualOnClick} role="presentation">
         <ItemButtons
           total={total}

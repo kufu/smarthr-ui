@@ -40,7 +40,11 @@ describe('SingleCombobox', () => {
                 { label: 'option 5', value: 'value-5' },
               ]
             }
-            selectedItems={selectedItems || [{ label: 'option 1', value: 'value-1' }]}
+            selectedItems={
+              selectedItems !== undefined
+                ? selectedItems
+                : [{ label: 'option 1', value: 'value-1' }]
+            }
           />
         </FormControl>
       </form>
