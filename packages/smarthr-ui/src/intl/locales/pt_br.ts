@@ -11,6 +11,7 @@ export const locale = {
   'smarthr-ui/Combobox/noResultsText': 'Nenhuma opção correspondente',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
+  'smarthr-ui/DropZone/selectButtonLabel': '',
   'smarthr-ui/RequiredLabel/text': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
