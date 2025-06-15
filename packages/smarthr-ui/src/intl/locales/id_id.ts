@@ -4,11 +4,19 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'Bahasa Indonesia',
+  'smarthr-ui/AppLauncher/showAllText': '',
+  'smarthr-ui/AppLauncher/triggerLabel': '',
   'smarthr-ui/Button/loading': 'Sedang diproses',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Tidak ada pilihan yang cocok',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/RequiredLabel/text': 'Wajib',
+  'smarthr-ui/SortDropdown/applyButtonLabel': '',
+  'smarthr-ui/SortDropdown/ascLabel': '',
+  'smarthr-ui/SortDropdown/cancelButtonLabel': '',
+  'smarthr-ui/SortDropdown/descLabel': '',
+  'smarthr-ui/SortDropdown/sortFieldLabel': '',
+  'smarthr-ui/SortDropdown/sortOrderLabel': '',
   'smarthr-ui/TextLink/openInNewTab': '',
 } as const satisfies Record<keyof typeof ja, string>
