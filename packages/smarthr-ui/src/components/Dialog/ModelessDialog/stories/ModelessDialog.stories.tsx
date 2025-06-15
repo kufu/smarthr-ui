@@ -59,9 +59,16 @@ export const OnPressEscape: StoryObj<typeof ModelessDialog> = {
 }
 
 export const Width: StoryObj<typeof ModelessDialog> = {
-  name: 'width',
+  name: 'width（非推奨）',
   args: {
     width: '20em',
+  },
+}
+
+export const Size: StoryObj<typeof ModelessDialog> = {
+  name: 'size',
+  args: {
+    size: 'M',
   },
 }
 

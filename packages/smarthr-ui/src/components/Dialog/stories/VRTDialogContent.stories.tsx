@@ -11,6 +11,7 @@ export default {
   title: 'Components/Dialog/DialogContent/VRT',
   args: {
     width: '40em',
+    size: 'M',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

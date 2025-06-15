@@ -11,6 +11,7 @@ import type { UncontrolledDialogProps } from '../types'
 type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
+/** @deprecated */
 export const MessageDialogContent: FC<Props & ElementProps> = ({
   title,
   description,

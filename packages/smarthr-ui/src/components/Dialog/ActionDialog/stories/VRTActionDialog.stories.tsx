@@ -8,6 +8,7 @@ export default {
   component: ActionDialog,
   args: {
     width: '40em',
+    size: 'M',
     isOpen: true,
     title: 'アクションダイアログタイトル',
     subtitle: 'アクションダイアログのサブタイトル',
