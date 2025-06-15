@@ -1,5 +1,3 @@
-/* eslint-disable smarthr/a11y-heading-in-sectioning-content */
-
 import { Stack } from '../../Layout'
 import { PageHeading } from '../Heading'
 

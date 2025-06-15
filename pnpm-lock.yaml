@@ -34,8 +34,8 @@ importers:
         specifier: ^9.28.0
         version: 9.28.0(jiti@2.4.1)
       eslint-config-smarthr:
-        specifier: ^9.5.0
-        version: 9.5.0(eslint@9.28.0(jiti@2.4.1))(react@19.1.0)(typescript@5.8.3)
+        specifier: ^9.6.0
+        version: 9.6.0(eslint@9.28.0(jiti@2.4.1))(react@19.1.0)(typescript@5.8.3)
       eslint-plugin-storybook:
         specifier: ^9.0.10
         version: 9.0.10(eslint@9.28.0(jiti@2.4.1))(storybook@9.0.10(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)
@@ -3656,8 +3656,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-config-smarthr@9.5.0:
-    resolution: {integrity: sha512-aOUpShV+wbGQiWlX0qs3M8HESjCtiCav/eho1fILY26URhqVfJ0GkRgYngEOaTwXSXE1cgwjPzUECK/YtlnYXA==}
+  eslint-config-smarthr@9.6.0:
+    resolution: {integrity: sha512-rGxFOU/GRkSY3/b4zLB5iRI7FAg0ZGm/rGUJPNkbg6AcU0RfyQ8NcJYDLl+zu+ENVH5ZpfKpRVzYx7AEAHTdog==}
     peerDependencies:
       eslint: ^9.0.0
       react: ^19.1.0
@@ -3715,8 +3715,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-plugin-smarthr@1.7.0:
-    resolution: {integrity: sha512-NHmveqo5wppgWslnwlwKi39od8diqH3tGQe6dLAAOeqjbbI5js10+u+o4zBR+PkRLuzSRSu8P8fEe9jc7V0xCQ==}
+  eslint-plugin-smarthr@1.8.1:
+    resolution: {integrity: sha512-XyIbfhY7P/6ovQ+bjUOJwlFnW1rV6vh5pjEiko23iwrcTiOdv20pNWEZGRVB8z6oc08XvIbkkU/gaJJLHN9oJQ==}
     engines: {node: '>=22.16.0'}
     peerDependencies:
       eslint: ^9
@@ -6104,7 +6104,6 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qs@6.14.0:
@@ -7249,8 +7248,8 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
-  vite@6.0.11:
-    resolution: {integrity: sha512-4VL9mQPKoHy4+FE0NnRE/kbY51TOfaknxAjt3fJbGJxhIpBZiqVzlZDEesWWsuREXHwNdAoOFZ9MkPEVXczHwg==}
+  vite@6.3.5:
+    resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -9822,13 +9821,13 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.3(vite@6.0.11(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))':
+  '@vitest/mocker@3.2.3(vite@6.3.5(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))':
     dependencies:
       '@vitest/spy': 3.2.3
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 6.0.11(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
+      vite: 6.3.5(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
 
   '@vitest/pretty-format@3.0.9':
     dependencies:
@@ -11340,7 +11339,7 @@ snapshots:
     dependencies:
       eslint: 9.28.0(jiti@2.4.1)
 
-  eslint-config-smarthr@9.5.0(eslint@9.28.0(jiti@2.4.1))(react@19.1.0)(typescript@5.8.3):
+  eslint-config-smarthr@9.6.0(eslint@9.28.0(jiti@2.4.1))(react@19.1.0)(typescript@5.8.3):
     dependencies:
       '@eslint/js': 9.28.0
       '@typescript-eslint/eslint-plugin': 8.34.0(@typescript-eslint/parser@8.34.0(eslint@9.28.0(jiti@2.4.1))(typescript@5.8.3))(eslint@9.28.0(jiti@2.4.1))(typescript@5.8.3)
@@ -11351,7 +11350,7 @@ snapshots:
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.28.0(jiti@2.4.1))
       eslint-plugin-react: 7.37.5(eslint@9.28.0(jiti@2.4.1))
       eslint-plugin-react-hooks: 5.2.0(eslint@9.28.0(jiti@2.4.1))
-      eslint-plugin-smarthr: 1.7.0(eslint@9.28.0(jiti@2.4.1))
+      eslint-plugin-smarthr: 1.8.1(eslint@9.28.0(jiti@2.4.1))
       globals: 16.2.0
       react: 19.1.0
       typescript: 5.8.3
@@ -11453,7 +11452,7 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-smarthr@1.7.0(eslint@9.28.0(jiti@2.4.1)):
+  eslint-plugin-smarthr@1.8.1(eslint@9.28.0(jiti@2.4.1)):
     dependencies:
       eslint: 9.28.0(jiti@2.4.1)
       json5: 2.2.3
@@ -15556,7 +15555,7 @@ snapshots:
       debug: 4.4.1(supports-color@5.5.0)
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 6.0.11(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
+      vite: 6.3.5(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -15571,11 +15570,14 @@ snapshots:
       - tsx
       - yaml
 
-  vite@6.0.11(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0):
+  vite@6.3.5(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0):
     dependencies:
       esbuild: 0.25.5
+      fdir: 6.4.4(picomatch@4.0.2)
+      picomatch: 4.0.2
       postcss: 8.5.5
       rollup: 4.42.0
+      tinyglobby: 0.2.14
     optionalDependencies:
       '@types/node': 20.19.0
       fsevents: 2.3.3
@@ -15589,7 +15591,7 @@ snapshots:
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.3
-      '@vitest/mocker': 3.2.3(vite@6.0.11(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))
+      '@vitest/mocker': 3.2.3(vite@6.3.5(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))
       '@vitest/pretty-format': 3.2.3
       '@vitest/runner': 3.2.3
       '@vitest/snapshot': 3.2.3
@@ -15607,7 +15609,7 @@ snapshots:
       tinyglobby: 0.2.14
       tinypool: 1.1.0
       tinyrainbow: 2.0.0
-      vite: 6.0.11(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
+      vite: 6.3.5(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
       vite-node: 3.2.3(@types/node@20.19.0)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
       why-is-node-running: 2.3.0
     optionalDependencies:

@@ -138,11 +138,9 @@ const ActualPagination: FC<Props> = ({
   }, [onClick, hrefTemplate])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Nav {...props} className={classNames.wrapper} aria-label="ページネーション">
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <Reel onClick={actualOnClick} role="presentation">
-        <ItemCluster
+        <ItemButtons
           total={total}
           current={current}
           padding={padding}
@@ -156,7 +154,7 @@ const ActualPagination: FC<Props> = ({
   )
 }
 
-const ItemCluster = memo<
+const ItemButtons = memo<
   Pick<Props, 'total' | 'current' | 'padding' | 'withoutNumbers' | 'hrefTemplate' | 'linkAs'> & {
     classNames: {
       list: string

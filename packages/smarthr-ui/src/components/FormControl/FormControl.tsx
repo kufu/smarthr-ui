@@ -321,7 +321,6 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
   if (dangerouslyTitleHidden) {
     body = (
-      // eslint-disable-next-line smarthr/best-practice-for-layouts
       <Stack gap={actualInnerMargin} className={classNames.underTitleStack}>
         {body}
       </Stack>
@@ -431,7 +430,6 @@ const TitleCluster = memo<
             // 常にmargin-topを0にする
             className="[&&&]:shr--mt-0"
           >
-            {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
             <Cluster {...attrs.label} align="center" className={labelClassName}>
               {body}
             </Cluster>
@@ -445,7 +443,6 @@ const TitleCluster = memo<
 
 const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
   statusLabels.length === 0 ? null : (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts
     <Cluster gap={0.25} as="span">
       {statusLabels}
     </Cluster>

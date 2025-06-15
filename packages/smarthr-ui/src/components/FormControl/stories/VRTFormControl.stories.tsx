@@ -9,7 +9,6 @@ export default {
   render: (args) => (
     <Stack gap={4}>
       {[false, true].map((dangerouslyTitleHidden) => (
-        // eslint-disable-next-line smarthr/a11y-form-control-in-form
         <FormControl
           {...args}
           key={dangerouslyTitleHidden.toString()}
@@ -19,7 +18,6 @@ export default {
     </Stack>
   ),
   args: {
-    // eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
     children: <Input />,
     title: 'フォームコントロール',
     statusLabelProps: { type: 'grey', children: '任意' },

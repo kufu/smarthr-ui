@@ -76,7 +76,6 @@ export const AppNavi: FC<Props & ElementProps> = ({
   const wrapperClassName = useMemo(() => wrapper({ className }), [className])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Nav {...rest} aria-labelledby={labelId} className={wrapperClassName}>
       <MemoizedStatusLabel id={labelId}>{label}</MemoizedStatusLabel>
       <ul className={classNames.buttonsEl}>

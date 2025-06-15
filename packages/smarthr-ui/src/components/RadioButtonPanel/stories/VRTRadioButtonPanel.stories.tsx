@@ -12,7 +12,6 @@ export default {
           <Cluster gap={2} id={id} key={id}>
             {[false, true].map((disabled) => (
               <>
-                {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
                 <div>
                   <RadioButtonPanel
                     {...args}

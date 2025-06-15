@@ -75,7 +75,6 @@ export const FirstFocusTarget: StoryObj<typeof Dialog> = {
         <Dialog {...args} firstFocusTarget={inputRef} isOpen={open} onPressEscape={handleClose}>
           <label>
             入力要素
-            {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control */}
             <Input ref={inputRef} />
           </label>
         </Dialog>
@@ -91,7 +90,6 @@ export const IsOpen: StoryObj<typeof Dialog> = {
     const renderCheckbox = (
       <>
         <p>isOpen: {String(open)}</p>
-        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <Checkbox checked={open} onChange={() => setOpen(!open)}>
           isOpen
         </Checkbox>
