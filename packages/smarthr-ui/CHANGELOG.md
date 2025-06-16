@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [74.1.0](https://github.com/kufu/smarthr-ui/compare/v74.0.0...v74.1.0) (2025-06-16)
+
+
+### Features
+
+* **FileViewer:** FileViewerを追加 ([#5603](https://github.com/kufu/smarthr-ui/issues/5603)) ([1cbb75e](https://github.com/kufu/smarthr-ui/commit/1cbb75ecaa575a2b74f0ed8062acce7977bb9029))
+* Timeline を追加 ([#5680](https://github.com/kufu/smarthr-ui/issues/5680)) ([ba96f08](https://github.com/kufu/smarthr-ui/commit/ba96f082263cfa64c7c0896547a26af436c5b387))
+* 単色チャートの色を追加 ([#5687](https://github.com/kufu/smarthr-ui/issues/5687)) ([1f7d380](https://github.com/kufu/smarthr-ui/commit/1f7d380d956e2ed20ced4ccb676929ded81649e5))
+
+
+### Bug Fixes
+
+* **Disclosure:** RSC環境でのエラーを修正 ([#5702](https://github.com/kufu/smarthr-ui/issues/5702)) ([fdd5309](https://github.com/kufu/smarthr-ui/commit/fdd530911a4114f20f254650efbd32dd4fec348b))
+* prettier-plugin-tailwindcss が効くように修正 ([#5686](https://github.com/kufu/smarthr-ui/issues/5686)) ([5798cf4](https://github.com/kufu/smarthr-ui/commit/5798cf4c71e7779262fb152e0b30ae1e4cda2309))
+* tsconfigのmoduleをes2022からcommonjsに戻した ([#5706](https://github.com/kufu/smarthr-ui/issues/5706)) ([2342df5](https://github.com/kufu/smarthr-ui/commit/2342df5e05b67e44edb46bb427f556a1881ab48e))
+* ドロップダウンナビゲーションボタンの current が false の場合は aria-current を undefined にする ([#5690](https://github.com/kufu/smarthr-ui/issues/5690)) ([2e41575](https://github.com/kufu/smarthr-ui/commit/2e41575a9b9f2f4126ce4bfd82eed243acea00d2))
+* 強制カラーモードやハイコントラストモード下における Dialog と Select の枠線を修正 ([#5689](https://github.com/kufu/smarthr-ui/issues/5689)) ([f68d3b0](https://github.com/kufu/smarthr-ui/commit/f68d3b053a34a34d3ddd306c0b2bbb066d5aa866))
+
 ## [74.0.0](https://github.com/kufu/smarthr-ui/compare/v73.0.1...v74.0.0) (2025-06-10)
 
 
