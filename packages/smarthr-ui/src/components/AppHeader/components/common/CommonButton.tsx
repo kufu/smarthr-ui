@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 export const commonButtonClassNameGenerator = tv({
   base: [
-    '[&&]:shr-flex [&&]:shr-items-center [&&]:shr-w-full [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-box-border [&&]:shr-bg-transparent [&&]:shr-text-base [&&]:shr-text-black [&&]:shr-leading-normal [&&]:shr-no-underline [&&]:shr-rounded-m [&&]:shr-cursor-pointer [&&]:shr-border-none',
+    '[&&]:shr-box-border [&&]:shr-flex [&&]:shr-w-full [&&]:shr-cursor-pointer [&&]:shr-items-center [&&]:shr-rounded-m [&&]:shr-border-none [&&]:shr-bg-transparent [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-text-base [&&]:shr-leading-normal [&&]:shr-text-black [&&]:shr-no-underline',
     '[&&]:hover:shr-bg-white-darken',
     '[&&]:focus-visible:shr-bg-white-darken',
   ],

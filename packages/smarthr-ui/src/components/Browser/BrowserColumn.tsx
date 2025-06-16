@@ -14,7 +14,7 @@ type Props = {
 }
 
 export const BrowserColumn: FC<Props> = ({ items, index: columnIndex, value, onChangeInput }) => (
-  <div className="last:shr-flex-1 [&:not(:last-child)]:shr-w-[218px] [&:not(:last-child)]:shr-border-r-shorthand">
+  <div className="[&:not(:last-child)]:shr-border-r-shorthand last:shr-flex-1 [&:not(:last-child)]:shr-w-[218px]">
     <ul className="shr-list-none shr-px-0.25 shr-py-0.5" id={getColumnId(columnIndex)}>
       {items.map((item, rowIndex) => (
         <ListItem

@@ -31,14 +31,14 @@ import { ReleaseNoteContext } from './ReleaseNoteContext'
 const classNameGenerator = tv({
   slots: {
     wrapper: [
-      'shr-fixed shr-top-0 shr-left-0 shr-w-full shr-h-full shr-flex shr-flex-col shr-bg-white',
+      'shr-fixed shr-left-0 shr-top-0 shr-flex shr-h-full shr-w-full shr-flex-col shr-bg-white',
       'shr-translate-opacity shr-opacity-0 shr-duration-150',
       '[&&.shr-sp-menu-enter-active]:shr-opacity-100',
       '[&&.shr-sp-menu-enter-done]:shr-opacity-100',
       '[&&.shr-sp-menu-exit-active]:shr-opacity-0',
       '[&&.shr-sp-menu-exit-done]:shr-opacity-0',
     ],
-    header: 'shr-px-0.75 shr-py-0.5 shr-border-b-shorthand shr-sticky shr-top-0',
+    header: 'shr-border-b-shorthand shr-sticky shr-top-0 shr-px-0.75 shr-py-0.5',
     content: 'shr-overflow-auto shr-p-1',
   },
 })

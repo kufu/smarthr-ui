@@ -8,7 +8,7 @@ type Props = PropsWithChildren<
 export const classNameGenerator = tv({
   base: [
     'smarthr-ui-Chip',
-    'shr-border-shorthand shr-rounded-full shr-bg-white shr-text-black shr-leading-none',
+    'shr-border-shorthand shr-rounded-full shr-bg-white shr-leading-none shr-text-black',
     'contrast-more:shr-border-high-contrast',
   ],
   variants: {
@@ -20,7 +20,7 @@ export const classNameGenerator = tv({
       red: 'shr-border-danger',
     },
     size: {
-      s: 'shr-text-sm shr-px-0.5 shr-py-0.25',
+      s: 'shr-px-0.5 shr-py-0.25 shr-text-sm',
     },
     disabled: {
       true: 'shr-bg-white/50 shr-text-disabled',

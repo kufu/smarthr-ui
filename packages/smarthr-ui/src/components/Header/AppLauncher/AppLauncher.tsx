@@ -1,7 +1,10 @@
+'use client'
+
 import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -27,15 +30,12 @@ type Props = {
 } & VariantProps<typeof classNameGenerator>
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  triggerLabel: 'アプリ',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'triggerLabel'
 
 const classNameGenerator = tv({
   slots: {
     appsButton: [
-      'shr-border-none shr-font-normal shr-text-white shr-bg-transparent shr-px-0.25',
+      'shr-border-none shr-bg-transparent shr-px-0.25 shr-font-normal shr-text-white',
       'hover:shr-border-transparent hover:shr-bg-transparent',
       'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
       'forced-colors:shr-border-shorthand',
@@ -46,7 +46,7 @@ const classNameGenerator = tv({
     link: 'smarthr-ui-AppLauncher-link',
     footer: [
       'smarthr-ui-AppLauncher-footer',
-      'shr-border-t-shorthand -shr-mx-0.75 shr-px-0.75 shr-pt-1 -shr-mb-0.25',
+      'shr-border-t-shorthand -shr-mx-0.75 -shr-mb-0.25 shr-px-0.75 shr-pt-1',
     ],
   },
   variants: {
@@ -160,7 +160,19 @@ export const AppLauncher: FC<Props & ElementProps> = ({
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'enableNew' | 'decorators'> & { className: string }
 >(({ enableNew, className, decorators }) => {
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      triggerLabel: localize({
+        id: 'smarthr-ui/AppLauncher/triggerLabel',
+        defaultText: 'アプリ',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
     <DropdownTrigger>
@@ -176,14 +188,22 @@ const MemoizedDropdownTrigger = memo<
 })
 
 const TextLinkToShowAll = memo<{ href: Props['urlToShowAll']; className: string }>(
-  ({ href, className }) =>
-    href && (
+  ({ href, className }) => {
+    const { localize } = useIntl()
+
+    if (!href) return null
+
+    return (
       <div className={className}>
         <TextLink href={href} style={{ width: 'fit-content' }}>
-          すべて見る
+          {localize({
+            id: 'smarthr-ui/AppLauncher/showAllText',
+            defaultText: 'すべて見る',
+          })}
         </TextLink>
       </div>
-    ),
+    )
+  },
 )
 
 const LinkListItem = memo<{

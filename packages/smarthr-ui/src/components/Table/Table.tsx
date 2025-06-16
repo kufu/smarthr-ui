@@ -13,7 +13,7 @@ const classNameGenerator = tv({
     wrapper: '',
     table: [
       'smarthr-ui-Table',
-      'shr-border-collapse shr-w-full',
+      'shr-w-full shr-border-collapse',
       '[&_tbody]:shr-bg-white',
       '[&_th]:contrast-more:shr-border-shorthand [&_th]:shr-bg-head [&_th]:contrast-more:shr-border-high-contrast',
       '[&_td]:contrast-more:shr-border-shorthand [&_td]:contrast-more:shr-border-high-contrast',
@@ -55,7 +55,7 @@ const classNameGenerator = tv({
     fixedHead: {
       true: {
         table:
-          '[&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0 [&_thead]:shr-z-[2] [&_tbody]:shr-relative [&_tbody]:shr-z-1',
+          '[&_tbody]:shr-relative [&_tbody]:shr-z-1 [&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0 [&_thead]:shr-z-[2]',
       },
     },
   },

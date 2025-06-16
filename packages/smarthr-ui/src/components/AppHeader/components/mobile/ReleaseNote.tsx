@@ -16,7 +16,7 @@ const classNameGenerator = tv({
   slots: {
     anchor: ['shr-text-base shr-text-link [&&]:shr-underline', '[&&]:hover:shr-no-underline'],
     icon: ['shr-ms-0.5'],
-    indexLinkWrapper: ['shr-text-end shr-mt-2'],
+    indexLinkWrapper: ['shr-mt-2 shr-text-end'],
     indexLinkAnchor: [
       'shr-text-base shr-text-link [&&]:shr-no-underline',
       '[&&]:hover:shr-underline',

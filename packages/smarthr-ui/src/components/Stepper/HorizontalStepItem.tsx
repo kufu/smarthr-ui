@@ -15,19 +15,19 @@ const classNameGenerator = tv({
       'shr-flex-1',
     ],
     labelWrapper: 'shr-flex shr-flex-col shr-items-center shr-gap-0.5',
-    stepCounterWrapper: 'shr-self-stretch shr-flex shr-items-center',
+    stepCounterWrapper: 'shr-flex shr-items-center shr-self-stretch',
     beforeLine: [
       'group-first/stepItem:shr-bg-transparent',
-      'shr-grow shr-h-[theme(borderWidth.2)] shr-bg-border',
+      'shr-h-[theme(borderWidth.2)] shr-grow shr-bg-border',
       'forced-colors:shr-bg-[ButtonBorder]',
     ],
     afterLine: [
       'group-last/stepItem:shr-bg-transparent',
       // compoundSlots で書けるが、variants の上書きが複雑になるため切り出していない
-      'shr-grow shr-h-[theme(borderWidth.2)] shr-bg-border',
+      'shr-h-[theme(borderWidth.2)] shr-grow shr-bg-border',
       'forced-colors:shr-bg-[ButtonBorder]',
     ],
-    label: 'shr-px-0.25 shr-text-sm shr-text-center',
+    label: 'shr-px-0.25 shr-text-center shr-text-sm',
   },
   variants: {
     status: {
