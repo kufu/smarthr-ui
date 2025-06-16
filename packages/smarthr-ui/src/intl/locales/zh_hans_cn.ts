@@ -4,6 +4,7 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': '简体中文',
+  'smarthr-ui/ActionDialog/closeButtonLabel': '取消',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
   'smarthr-ui/Button/loading': '处理中',

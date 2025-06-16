@@ -2,6 +2,7 @@
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': '日本語',
+  'smarthr-ui/ActionDialog/closeButtonLabel': 'キャンセル',
   'smarthr-ui/AppLauncher/showAllText': 'すべて見る',
   'smarthr-ui/AppLauncher/triggerLabel': 'アプリ',
   'smarthr-ui/Button/loading': '処理中',
