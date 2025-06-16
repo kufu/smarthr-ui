@@ -18,6 +18,8 @@ export const locale = {
   'smarthr-ui/FilterDropdown/resetButton': '',
   'smarthr-ui/FilterDropdown/status': '',
   'smarthr-ui/FilterDropdown/triggerButton': '',
+  'smarthr-ui/InformationPanel/closeButtonLabel': '',
+  'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/RequiredLabel/text': '필수',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
