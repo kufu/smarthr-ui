@@ -63,8 +63,8 @@ const classNameGenerator = tv({
     layout: ['smarthr-ui-Dialog-wrapper', 'shr-max-w-[calc(100dvw-theme(spacing.1))]'],
     inner: [
       'smarthr-ui-Dialog',
-      'shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
-      'contrast-more:shr-border-highContrast contrast-more:shr-border-shorthand',
+      'shr-border-shorthand shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
+      'contrast-more:shr-border-high-contrast',
     ],
     background: ['smarthr-ui-Dialog-background', 'shr-absolute shr-inset-0 shr-bg-scrim'],
   },

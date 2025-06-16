@@ -1,4 +1,3 @@
-/* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { render } from '@testing-library/react'
 import { createRef } from 'react'
 
@@ -8,22 +7,22 @@ import { Article, Aside, Nav, Section } from './SectioningContent'
 
 describe('SectioningContent', () => {
   it('<Section> を使用すると section 要素が描画されること', async () => {
-    const { container } = render(<Section></Section>)
+    const { container } = render(<Section />)
     expect(container.querySelector('section')).toBeInTheDocument()
   })
 
   it('<Article> を使用すると article 要素が描画されること', async () => {
-    const { container } = render(<Article></Article>)
+    const { container } = render(<Article />)
     expect(container.querySelector('article')).toBeInTheDocument()
   })
 
   it('<Aside> を使用すると aside 要素が描画されること', async () => {
-    const { container } = render(<Aside></Aside>)
+    const { container } = render(<Aside />)
     expect(container.querySelector('aside')).toBeInTheDocument()
   })
 
   it('<Nav> を使用すると nav 要素が描画されること', async () => {
-    const { container } = render(<Nav></Nav>)
+    const { container } = render(<Nav />)
     expect(container.querySelector('nav')).toBeInTheDocument()
   })
 
@@ -133,6 +132,7 @@ describe('SectioningContent', () => {
   })
 
   it('SectioningContent に PageHeading が含まれている場合、見出しレベルは常に1になること', async () => {
+    /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
     const { container } = render(
       <Section>
         <Section>
@@ -142,6 +142,7 @@ describe('SectioningContent', () => {
         </Section>
       </Section>,
     )
+    /* eslint-enable smarthr/a11y-heading-in-sectioning-content */
 
     expect(container.querySelector('h1')).toHaveTextContent('PageHeading')
   })

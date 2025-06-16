@@ -31,7 +31,6 @@ export default {
       {[undefined, 'hover', 'focus-visible'].map((id) => (
         <Stack id={id} align="flex-start" key={id}>
           {_cases.map((props, i) => (
-            // eslint-disable-next-line smarthr/a11y-input-in-form-control
             <Select {...args} {...props} key={i} />
           ))}
         </Stack>

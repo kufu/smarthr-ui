@@ -21,6 +21,12 @@ export default [
       'jsx-a11y/role-has-required-aria-props': 'error',
       'jsx-a11y/mouse-events-have-key-events': 'error',
       'jsx-a11y/no-noninteractive-element-interactions': 'error',
+      'jsx-a11y/no-noninteractive-element-to-interactive-role': [
+        'error',
+        {
+          menu: ['menu'],
+        },
+      ],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       'react-hooks/exhaustive-deps': 'error',
       'smarthr/require-barrel-import': 'off',
