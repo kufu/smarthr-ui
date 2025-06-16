@@ -209,8 +209,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       [maxLetters, getCounterMessage],
     )
 
-    const handleChange = useMemo(
-      () => (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = useCallback(
+      (e: ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = e.target.value
         debouncedUpdateCount?.(newValue)
         debouncedUpdateSrCounterMessage?.(newValue)
