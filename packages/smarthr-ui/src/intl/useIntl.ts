@@ -19,9 +19,14 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
 }
 
 const DATE_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions | undefined> = {
-  // localeがjaの場合、フォーマットを YYYY/MM/DD 形式にする
+  // localeがja, ja-easyの場合、フォーマットを YYYY/MM/DD 形式にする
   // 参考: https://smarthr.design/products/contents/idiomatic-usage/count/#h2-3
   ja: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  },
+  'ja-easy': {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
