@@ -15,6 +15,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useDecorators } from '../../hooks/useDecorators'
+import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
@@ -61,8 +63,6 @@ type DropZoneProps = PropsWithChildren<{
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'selectButtonLabel'>
 }>
-
-const SELECT_BUTTON_LABEL = 'ファイルを選択'
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -137,14 +137,23 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 
 const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
   ({ onClick, decorators }) => {
-    const selectButtonLabel = useMemo(
-      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
-      [decorators],
+    const { localize } = useIntl()
+
+    const decoratorDefaultTexts = useMemo(
+      () => ({
+        selectButtonLabel: localize({
+          id: 'smarthr-ui/DropZone/selectButtonLabel',
+          defaultText: 'ファイルを選択',
+        }),
+      }),
+      [localize],
     )
+
+    const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
 
     return (
       <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
-        {selectButtonLabel}
+        {decorated.selectButtonLabel}
       </Button>
     )
   },
