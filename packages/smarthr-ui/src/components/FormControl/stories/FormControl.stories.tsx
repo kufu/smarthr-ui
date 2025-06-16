@@ -1,5 +1,3 @@
-/* eslint-disable smarthr/a11y-input-in-form-control */
-/* eslint-disable smarthr/a11y-input-has-name-attribute */
 import { MultiCombobox, SingleCombobox } from '../../Combobox'
 import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'

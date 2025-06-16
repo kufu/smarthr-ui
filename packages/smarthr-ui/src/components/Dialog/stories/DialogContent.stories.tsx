@@ -72,7 +72,6 @@ export const FirstFocusTarget: StoryObj<typeof DialogContent> = {
         <DialogContent {...args} firstFocusTarget={inputRef}>
           <label>
             入力要素
-            {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control */}
             <Input ref={inputRef} />
           </label>
           <DialogCloser>

@@ -88,7 +88,6 @@ export default {
   render: (args) => (
     <Stack align="flex-start">
       {_cases.map((props, i) => (
-        // eslint-disable-next-line smarthr/a11y-input-in-form-control
         <Input {...props} {...args} key={i} />
       ))}
     </Stack>

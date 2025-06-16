@@ -19,22 +19,32 @@ describe('SingleCombobox', () => {
   const listbox = () => screen.queryByRole('listbox')
   const deleteButtons = () => screen.getAllByRole('button', { name: /を削除$/ })
 
-  const template = (args: Partial<ComponentProps<typeof MultiCombobox>>) => (
+  const template = ({
+    name,
+    items,
+    selectedItems,
+    ...rest
+  }: Partial<ComponentProps<typeof MultiCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
         <FormControl title="コンボボックス">
           <MultiCombobox
-            name="default"
-            items={[
-              { label: 'option 1', value: 'value-1' },
-              { label: 'option 2', value: 'value-2' },
-              { label: 'option 3', value: 'value-3' },
-              { label: 'option 4', value: 'value-4' },
-              { label: 'option 5', value: 'value-5' },
-            ]}
-            selectedItems={[{ label: 'option 1', value: 'value-1' }]}
-            // eslint-disable-next-line smarthr/jsx-start-with-spread-attributes
-            {...args}
+            {...rest}
+            name={name || 'default'}
+            items={
+              items || [
+                { label: 'option 1', value: 'value-1' },
+                { label: 'option 2', value: 'value-2' },
+                { label: 'option 3', value: 'value-3' },
+                { label: 'option 4', value: 'value-4' },
+                { label: 'option 5', value: 'value-5' },
+              ]
+            }
+            selectedItems={
+              selectedItems !== undefined
+                ? selectedItems
+                : [{ label: 'option 1', value: 'value-1' }]
+            }
           />
         </FormControl>
       </form>
