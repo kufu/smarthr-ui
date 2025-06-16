@@ -45,8 +45,9 @@ type Props = {
   placeholder?: string
 }
 type ElementProps = Omit<ComponentPropsWithRef<'textarea'>, keyof Props>
+type TextareaValue = string | number | readonly string[]
 
-const getStringLength = (value: string | number | readonly string[]) => {
+const getStringLength = (value: TextareaValue) => {
   const formattedValue =
     typeof value === 'number' || typeof value === 'string'
       ? `${value}`
@@ -123,6 +124,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       decorators,
       error,
       onChange,
+      value,
       ...props
     },
     ref,
@@ -132,7 +134,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const currentValue = props.defaultValue || props.value
+    const currentValue = props.defaultValue || value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
@@ -181,9 +183,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const debouncedUpdateCount = useMemo(
       () =>
         maxLetters
-          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+          ? debounce((newValue: TextareaValue) => {
               startTransition(() => {
-                setCount(getStringLength(e.target.value))
+                setCount(getStringLength(newValue))
               })
             }, 200)
           : undefined,
@@ -194,9 +196,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const debouncedUpdateSrCounterMessage = useMemo(
       () =>
         maxLetters
-          ? debounce((e: ChangeEvent<HTMLTextAreaElement>) => {
+          ? debounce((newValue: TextareaValue) => {
               startTransition(() => {
-                const counterText = getCounterMessage(getStringLength(e.target.value))
+                const counterText = getCounterMessage(getStringLength(newValue))
 
                 if (counterText) {
                   setSrCounterMessage(counterText)
@@ -207,19 +209,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       [maxLetters, getCounterMessage],
     )
 
-    const handleChange = useMemo(() => {
-      const callbacks = [debouncedUpdateCount, debouncedUpdateSrCounterMessage, onChange].filter(
-        (c) => !!c,
-      )
-
-      if (callbacks.length === 0) {
-        return undefined
-      }
-
-      return (e: ChangeEvent<HTMLTextAreaElement>) => {
-        callbacks.forEach((c) => c(e))
-      }
-    }, [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage])
+    const handleChange = useCallback(
+      (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const newValue = e.target.value
+        debouncedUpdateCount?.(newValue)
+        debouncedUpdateSrCounterMessage?.(newValue)
+        onChange?.(e)
+      },
+      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage],
+    )
 
     // autoFocus時に、フォーカスを当てる
     useEffect(() => {
@@ -234,6 +232,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
       }
     }, [setInterimRows, maxRows, autoResize])
+
+    // value 変更時にもカウントを更新する
+    useEffect(() => {
+      if (value && maxLetters) {
+        debouncedUpdateCount?.(value)
+        debouncedUpdateSrCounterMessage?.(value)
+      }
+    }, [maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage, value])
 
     const handleInput = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -271,6 +277,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         {...props}
         {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
+        value={value}
         onChange={handleChange}
         ref={textareaRef}
         aria-invalid={error || countError || undefined}

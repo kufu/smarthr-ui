@@ -13,6 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
+import { useIntl } from '../../../intl'
 import { Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -39,14 +40,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  status: '適用中',
-  triggerButton: '絞り込み',
-  applyButton: '適用',
-  cancelButton: 'キャンセル',
-  resetButton: '絞り込み条件を解除',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
 
 const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
@@ -93,7 +87,35 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   onlyIconTrigger = false,
   ...props
 }: Props) => {
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      status: localize({
+        id: 'smarthr-ui/FilterDropdown/status',
+        defaultText: '適用中',
+      }),
+      triggerButton: localize({
+        id: 'smarthr-ui/FilterDropdown/triggerButton',
+        defaultText: '絞り込み',
+      }),
+      applyButton: localize({
+        id: 'smarthr-ui/FilterDropdown/applyButton',
+        defaultText: '適用',
+      }),
+      cancelButton: localize({
+        id: 'smarthr-ui/FilterDropdown/cancelButton',
+        defaultText: 'キャンセル',
+      }),
+      resetButton: localize({
+        id: 'smarthr-ui/FilterDropdown/resetButton',
+        defaultText: '絞り込み条件を解除',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
   const filteredIconAriaLabel = useMemo(() => innerText(decorated.status), [decorated.status])
   const calcedResponseStatus = useResponseStatus(responseStatus)
 

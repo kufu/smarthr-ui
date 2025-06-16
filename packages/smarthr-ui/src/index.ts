@@ -13,6 +13,7 @@ export {
   DropdownMenuGroup,
   SortDropdown,
 } from './components/Dropdown'
+export * from './components/FileViewer'
 export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
