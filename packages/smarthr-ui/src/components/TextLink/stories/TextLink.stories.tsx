@@ -23,7 +23,6 @@ const _elementAsOptions = {
     ...rest
   }: Omit<ComponentPropsWithoutRef<'a'>, 'href'> & {
     to: ComponentPropsWithoutRef<'a'>['href']
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
   }) => <a {...rest} href={to} />,
 }
 
