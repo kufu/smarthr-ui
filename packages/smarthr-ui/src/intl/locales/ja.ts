@@ -2,6 +2,7 @@
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': '日本語',
+  'smarthr-ui/ActionDialog/closeButtonLabel': 'キャンセル',
   'smarthr-ui/AppLauncher/showAllText': 'すべて見る',
   'smarthr-ui/AppLauncher/triggerLabel': 'アプリ',
   'smarthr-ui/Button/loading': '処理中',
@@ -10,6 +11,14 @@ export const locale = {
   'smarthr-ui/DropdownMenuButton/triggerActive': '候補を閉じる',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '候補を開く',
   'smarthr-ui/DropZone/selectButtonLabel': 'ファイルを選択',
+  'smarthr-ui/FilterDropdown/applyButton': '適用',
+  'smarthr-ui/FilterDropdown/cancelButton': 'キャンセル',
+  'smarthr-ui/FilterDropdown/resetButton': '絞り込み条件を解除',
+  'smarthr-ui/FilterDropdown/status': '適用中',
+  'smarthr-ui/FilterDropdown/triggerButton': '絞り込み',
+  'smarthr-ui/InformationPanel/closeButtonLabel': '閉じる',
+  'smarthr-ui/InformationPanel/openButtonLabel': '開く',
+  'smarthr-ui/InputFile/destroy': '削除',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/SortDropdown/applyButtonLabel': '適用',
   'smarthr-ui/SortDropdown/ascLabel': '昇順',

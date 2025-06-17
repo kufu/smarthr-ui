@@ -1,4 +1,3 @@
-/* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'

@@ -4,6 +4,7 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': '한국어',
+  'smarthr-ui/ActionDialog/closeButtonLabel': '취소',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
   'smarthr-ui/Button/loading': '처리중',
@@ -12,6 +13,14 @@ export const locale = {
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/DropZone/selectButtonLabel': '',
+  'smarthr-ui/FilterDropdown/applyButton': '',
+  'smarthr-ui/FilterDropdown/cancelButton': '',
+  'smarthr-ui/FilterDropdown/resetButton': '',
+  'smarthr-ui/FilterDropdown/status': '',
+  'smarthr-ui/FilterDropdown/triggerButton': '',
+  'smarthr-ui/InformationPanel/closeButtonLabel': '',
+  'smarthr-ui/InformationPanel/openButtonLabel': '',
+  'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/RequiredLabel/text': '필수',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',

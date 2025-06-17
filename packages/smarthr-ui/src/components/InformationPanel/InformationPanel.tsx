@@ -13,11 +13,12 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
-import { Cluster } from '../Layout'
+import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 type AbstractProps = PropsWithChildren<{
@@ -36,11 +37,7 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  openButtonLabel: '開く',
-  closeButtonLabel: '閉じる',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
@@ -172,7 +169,7 @@ export const InformationPanel: FC<Props> = ({
 
   return (
     <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
-      <Cluster align="center" justify="space-between" className={classNames.header}>
+      <Sidebar align="baseline" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
           {title}
@@ -187,7 +184,7 @@ export const InformationPanel: FC<Props> = ({
             decorators={decorators}
           />
         )}
-      </Cluster>
+      </Sidebar>
       <div id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </div>
@@ -218,7 +215,23 @@ const TogglableButton: FC<
     className: string
   }
 > = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      openButtonLabel: localize({
+        id: 'smarthr-ui/InformationPanel/openButtonLabel',
+        defaultText: '開く',
+      }),
+      closeButtonLabel: localize({
+        id: 'smarthr-ui/InformationPanel/closeButtonLabel',
+        defaultText: '閉じる',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   const onClick = useMemo(
     () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
