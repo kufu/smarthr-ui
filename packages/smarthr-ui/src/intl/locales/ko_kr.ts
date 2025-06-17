@@ -20,6 +20,7 @@ export const locale = {
   'smarthr-ui/FilterDropdown/triggerButton': '',
   'smarthr-ui/InformationPanel/closeButtonLabel': '',
   'smarthr-ui/InformationPanel/openButtonLabel': '',
+  'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/RequiredLabel/text': '필수',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
