@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [74.1.1](https://github.com/kufu/smarthr-ui/compare/v74.1.0...v74.1.1) (2025-06-17)
+
+
+### Bug Fixes
+
+* **Combobox:** decoratorsにデフォルトテキストが渡るように修正 ([#5663](https://github.com/kufu/smarthr-ui/issues/5663)) ([3fc8aa6](https://github.com/kufu/smarthr-ui/commit/3fc8aa66c0ead37291a0c8913f068dec3b0289c9))
+* **InformationPanel:** トグルが段落ちしないように修正 ([#5593](https://github.com/kufu/smarthr-ui/issues/5593)) ([7c82f22](https://github.com/kufu/smarthr-ui/commit/7c82f22df13231472bb0084c3351b1492bea90d4))
+* **Textarea:** 非同期に value が更新された場合に文字数カウンタが更新されない不具合を修正する ([#5703](https://github.com/kufu/smarthr-ui/issues/5703)) ([0b4ee4a](https://github.com/kufu/smarthr-ui/commit/0b4ee4a8a6cfa5b45d8594ceb2ee60699fbaed19))
+
 ## [74.1.0](https://github.com/kufu/smarthr-ui/compare/v74.0.0...v74.1.0) (2025-06-16)
 
 
