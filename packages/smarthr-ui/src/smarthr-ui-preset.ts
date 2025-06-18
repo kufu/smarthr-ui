@@ -35,14 +35,14 @@ defaultConfig.twMergeConfig = {
       'border-b-shorthand',
       'border-l-shorthand',
     ],
-    'font-size': [
+    fontSize: [
       {
         text: ['2xs', 'xs', 'sm', 'base', 'lg', 'xl', '2xl', 'inherit'],
       },
     ],
     lineHeight: [
       {
-        leading: ['none', 'tight', 'normal', 'loose'],
+        leading: ['none', 'tight', 'normal', 'loose', '[0]'],
       },
     ],
     zIndex: [
