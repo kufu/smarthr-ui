@@ -7,6 +7,7 @@ import {
   useIntl as useReactIntl,
 } from 'react-intl'
 
+import { useAvailableLocales } from './IntlProvider'
 import * as locales from './locales'
 
 import type { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
@@ -45,6 +46,7 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
 export const useIntl = () => {
   const intl = useReactIntl()
   const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
+  const availableLocales = useAvailableLocales()
 
   const localize = useCallback(
     <T extends keyof Messages>(
@@ -62,5 +64,5 @@ export const useIntl = () => {
     [intl, locale],
   )
 
-  return { localize, formatDate }
+  return { availableLocales, localize, formatDate }
 }
