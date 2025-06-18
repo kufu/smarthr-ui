@@ -13,9 +13,9 @@ import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
 import { usePortal } from '../../../../hooks/usePortal'
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 import { AppLauncherContext } from './AppLauncherContext'
@@ -59,15 +59,28 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   useHandleEscape(close)
 
   const className = useMemo(() => classNameGenerator(), [])
-  const translate = useTranslate()
+
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      open: translate('MobileHeader/Menu/openMenu'),
-      launcherListText: translate('Launcher/listText'),
-      management: translate('MobileHeader/Menu/managementMenu'),
-      releaseNote: translate('common/releaseNote'),
+      open: localize({
+        id: 'smarthr-ui/AppHeader/MobileHeader/openMenu',
+        defaultText: 'メニューを開く',
+      }),
+      launcherListText: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/listText',
+        defaultText: 'アプリ一覧',
+      }),
+      management: localize({
+        id: 'smarthr-ui/AppHeader/MobileHeader/managementMenu',
+        defaultText: '管理メニュー',
+      }),
+      releaseNote: localize({
+        id: 'smarthr-ui/AppHeader/releaseNotes',
+        defaultText: 'リリースノート',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   return (
