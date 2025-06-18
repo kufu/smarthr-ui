@@ -29,6 +29,9 @@ export const Type: StoryObj<typeof Heading> = {
       <Heading {...args} type="sectionTitle">
         SectionTitle
       </Heading>
+      <Heading {...args} type="subSectionTitle">
+        SectionTitle
+      </Heading>
       <Heading {...args} type="blockTitle">
         BlockTitle
       </Heading>
