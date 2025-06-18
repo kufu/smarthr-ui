@@ -166,6 +166,9 @@ export const VRTLocaleEnUs: Story = {
       onSelectLocale: (locale: Locale) => action(locale),
     },
   },
+  globals: {
+    locale: 'en-us',
+  },
 }
 
 export const VRTLocaleIdId: Story = {
@@ -174,6 +177,9 @@ export const VRTLocaleIdId: Story = {
       selectedLocale: 'id-id',
       onSelectLocale: (locale: Locale) => action(locale),
     },
+  },
+  globals: {
+    locale: 'id-id',
   },
 }
 
@@ -184,6 +190,9 @@ export const VRTLocalePt: Story = {
       onSelectLocale: (locale: Locale) => action(locale),
     },
   },
+  globals: {
+    locale: 'pt',
+  },
 }
 
 export const VRTLocaleVi: Story = {
@@ -192,6 +201,9 @@ export const VRTLocaleVi: Story = {
       selectedLocale: 'vi',
       onSelectLocale: (locale: Locale) => action(locale),
     },
+  },
+  globals: {
+    locale: 'vi',
   },
 }
 
@@ -202,6 +214,9 @@ export const VRTLocaleKo: Story = {
       onSelectLocale: (locale: Locale) => action(locale),
     },
   },
+  globals: {
+    locale: 'ko',
+  },
 }
 
 export const VRTLocaleZhCn: Story = {
@@ -211,6 +226,9 @@ export const VRTLocaleZhCn: Story = {
       onSelectLocale: (locale: Locale) => action(locale),
     },
   },
+  globals: {
+    locale: 'zh-cn',
+  },
 }
 
 export const VRTLocaleZhTw: Story = {
@@ -219,5 +237,8 @@ export const VRTLocaleZhTw: Story = {
       selectedLocale: 'zh-tw',
       onSelectLocale: (locale: Locale) => action(locale),
     },
+  },
+  globals: {
+    locale: 'zh-tw',
   },
 }
