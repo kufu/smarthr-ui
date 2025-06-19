@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
-import { FaChevronDownIcon } from '../Icon'
+import { FaAngleDownIcon } from '../Icon'
 
 type Option<T extends string> = {
   value: T
@@ -172,7 +172,7 @@ const ActualSelect = <T extends string>(
         <NotOmittingLabelsInMobileSafari className={classNames.blankOptGroup} />
       </select>
       <span className={classNames.iconWrap}>
-        <FaChevronDownIcon />
+        <FaAngleDownIcon />
       </span>
     </span>
   )
