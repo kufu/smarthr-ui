@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 
-import { IntlProvider, useIntl } from '.'
+import { IntlProvider, locales, useIntl } from '.'
 
 import type { FC, PropsWithChildren } from 'react'
 
@@ -36,5 +36,23 @@ describe('useIntl', () => {
     expect(localize({ id: 'smarthr-ui/common/language', defaultText: '日本語' })).toBe('日本語')
     const { formatMessage } = renderHook(() => useReactIntl(), { wrapper }).result.current
     expect(formatMessage({ id: 'test' })).toBe('テスト')
+  })
+
+  it('returns narrowed availableLocales', async () => {
+    const wrapper: FC<PropsWithChildren> = ({ children }) => (
+      <IntlProvider locale="ja" availableLocales={['ja', 'en-us']}>
+        {children}
+      </IntlProvider>
+    )
+    const { availableLocales } = renderHook(() => useIntl(), { wrapper }).result.current
+    expect(availableLocales).toEqual(['ja', 'en-us'])
+  })
+
+  it('returns all locales as availableLocales when not narrowed', async () => {
+    const wrapper: FC<PropsWithChildren> = ({ children }) => (
+      <IntlProvider locale="ja">{children}</IntlProvider>
+    )
+    const { availableLocales } = renderHook(() => useIntl(), { wrapper }).result.current
+    expect(availableLocales).toEqual(Object.keys(locales))
   })
 })
