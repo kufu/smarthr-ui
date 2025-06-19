@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
-import { FaSortIcon } from '../Icon'
+import { FaChevronDownIcon } from '../Icon'
 
 type Option<T extends string> = {
   value: T
@@ -53,7 +53,7 @@ type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Select shr-relative shr-inline-block',
-    selectEl: [
+    select: [
       'shr-peer shr-border-shorthand shr-w-full shr-cursor-pointer shr-appearance-none shr-rounded-m shr-bg-white shr-text-base shr-leading-tight shr-text-black shr-outline-none',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
@@ -73,11 +73,12 @@ const classNameGenerator = tv({
   variants: {
     size: {
       default: {
-        selectEl: 'shr-py-0.5 shr-pe-2 shr-ps-0.5',
-        iconWrap: 'shr-end-0.75',
+        select: 'shr-py-0.5 shr-pe-2 shr-ps-0.5',
+        // ((右 padding - アイコン幅) / 2) + 右 border
+        iconWrap: 'shr-end-[calc(theme(spacing[0.5])_+_theme(spacing.px))]',
       },
       s: {
-        selectEl: [
+        select: [
           'shr-px-0.5 shr-py-0.25 shr-pe-1.5 shr-text-sm',
           /* padding に依る積み上げでは文字が見切れてしまうため */
           'shr-min-h-[calc(theme(fontSize.sm)_+_theme(spacing[0.5])_*_2_+_theme(spacing.px)_*_2)]',
@@ -125,14 +126,14 @@ const ActualSelect = <T extends string>(
   )
 
   const classNames = useMemo(() => {
-    const { wrapper, selectEl, iconWrap, blankOptgroup } = classNameGenerator()
+    const { wrapper, select, iconWrap, blankOptgroup } = classNameGenerator()
     const sizeProps = {
       size: size || 'default',
     }
 
     return {
       wrapper: wrapper({ className }),
-      select: selectEl(sizeProps),
+      select: select(sizeProps),
       iconWrap: iconWrap(sizeProps),
       blankOptGroup: blankOptgroup(),
     }
@@ -170,7 +171,9 @@ const ActualSelect = <T extends string>(
         ))}
         <NotOmittingLabelsInMobileSafari className={classNames.blankOptGroup} />
       </select>
-      <StyledFaSortIcon className={classNames.iconWrap} />
+      <span className={classNames.iconWrap}>
+        <FaChevronDownIcon />
+      </span>
     </span>
   )
 }
@@ -203,11 +206,5 @@ const Option = memo<Props<string>['options'][number]>((option) => {
 const NotOmittingLabelsInMobileSafari = memo<{ className: string }>(
   ({ className }) => isMobileSafari && <optgroup className={className} />,
 )
-
-const StyledFaSortIcon = memo<{ className: string }>(({ className }) => (
-  <span className={className}>
-    <FaSortIcon />
-  </span>
-))
 
 export const Select = genericsForwardRef(ActualSelect)
