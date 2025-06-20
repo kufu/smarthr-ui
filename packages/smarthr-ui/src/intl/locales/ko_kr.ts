@@ -21,6 +21,8 @@ export const locale = {
   'smarthr-ui/InformationPanel/closeButtonLabel': '',
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
+  'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
+  'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
   'smarthr-ui/RequiredLabel/text': '필수',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',

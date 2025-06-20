@@ -13,6 +13,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useIntl } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaTimesCircleIcon } from '../../Icon'
@@ -30,10 +31,7 @@ export type Props<T> = {
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const DECORATOR_DEFAULT_TEXTS = {
-  destroyButtonIconAltSuffix: 'を削除',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'destroyButtonIconAltSuffix'
 
 const classNameGenerator = tv({
   slots: {
@@ -162,6 +160,7 @@ const BaseDestroyButton = <T,>({
   className: string
   iconStyle: string
 }) => {
+  const { localize } = useIntl()
   const onClick = useCallback(() => {
     onDelete(item)
   }, [item, onDelete])
@@ -178,7 +177,17 @@ const BaseDestroyButton = <T,>({
     [onClick],
   )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      destroyButtonIconAltSuffix: localize({
+        id: 'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix',
+        defaultText: 'を削除',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
     <UnstyledButton
