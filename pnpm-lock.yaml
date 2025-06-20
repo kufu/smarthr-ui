@@ -221,8 +221,8 @@ importers:
         specifier: ^0.6.4
         version: 0.6.4(@babel/core@7.27.4)
       chromatic:
-        specifier: ^13.0.1
-        version: 13.0.1
+        specifier: ^12.1.1
+        version: 12.2.0
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.99.9(@swc/core@1.12.1)(esbuild@0.25.5))
@@ -2928,8 +2928,8 @@ packages:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
 
-  chromatic@13.0.1:
-    resolution: {integrity: sha512-vX0Rs/pAeFAnGuQiVrA4h0XD36MYbTUp9Mlm1jFqXo3Cejd2BdBY1CA+vd6CkeO5CRSc6TRWmCz0zQAsE1q3Hw==}
+  chromatic@12.2.0:
+    resolution: {integrity: sha512-GswmBW9ZptAoTns1BMyjbm55Z7EsIJnUvYKdQqXIBZIKbGErmpA+p4c0BYA+nzw5B0M+rb3Iqp1IaH8TFwIQew==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
@@ -10516,7 +10516,7 @@ snapshots:
 
   chownr@2.0.0: {}
 
-  chromatic@13.0.1: {}
+  chromatic@12.2.0: {}
 
   chrome-trace-event@1.0.3: {}
 
