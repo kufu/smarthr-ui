@@ -1,6 +1,9 @@
+'use client'
+
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
@@ -8,7 +11,6 @@ import { Center } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
-import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 import type { ReleaseNoteProps } from '../../types'
@@ -27,14 +29,23 @@ const BOX_SHADOW_STYLE = { boxShadow: 'none' }
 export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, loading, error }) => {
   const wrapperClassName = useMemo(() => wrapperClassNameGenerator(), [])
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      releaseNote: translate('common/releaseNote'),
-      loadError: translate('common/releaseNotesLoadError'),
-      seeAll: translate('common/seeAllReleaseNotes'),
+      releaseNote: localize({
+        id: 'smarthr-ui/AppHeader/releaseNotes',
+        defaultText: 'リリースノート',
+      }),
+      loadError: localize({
+        id: 'smarthr-ui/AppHeader/releaseNotesLoadError',
+        defaultText: 'リリースノートの読み込みに失敗しました。\n時間をおいて、やり直してください。',
+      }),
+      seeAll: localize({
+        id: 'smarthr-ui/AppHeader/seeAllReleaseNotes',
+        defaultText: 'すべてのリリースノートを見る',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   return (

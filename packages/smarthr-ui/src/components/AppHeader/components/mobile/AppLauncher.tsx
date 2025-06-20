@@ -1,6 +1,7 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
@@ -8,7 +9,6 @@ import { Cluster } from '../../../Layout'
 import { Text } from '../../../Text'
 import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
-import { useTranslate } from '../../hooks/useTranslate'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
@@ -60,14 +60,23 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     }
   }, [])
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      searchInputTitle: translate('Launcher/searchInputTitle'),
-      searchResultText: translate('Launcher/searchResultText'),
-      helpText: translate('Launcher/helpText'),
+      searchInputTitle: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+        defaultText: 'アプリ名を入力してください。',
+      }),
+      searchResultText: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
+        defaultText: '検索結果',
+      }),
+      helpText: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/helpText',
+        defaultText: 'よく使うアプリとは',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   return (

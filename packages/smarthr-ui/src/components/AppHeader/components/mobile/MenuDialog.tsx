@@ -13,12 +13,12 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog/FocusTrap'
 import { FaXmarkIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
-import { useTranslate } from '../../hooks/useTranslate'
 
 import { AppLauncher } from './AppLauncher'
 import { AppLauncherContext } from './AppLauncherContext'
@@ -88,14 +88,24 @@ export const Content: FC<
       content: content(),
     }
   }, [])
-  const translate = useTranslate()
+
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      launcherListText: translate('Launcher/listText'),
-      latestReleaseNotes: translate('MobileHeader/Menu/latestReleaseNotes'),
-      closeMenu: translate('MobileHeader/Menu/closeMenu'),
+      launcherListText: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/listText',
+        defaultText: 'アプリ一覧',
+      }),
+      latestReleaseNotes: localize({
+        id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
+        defaultText: '最新のリリースノート',
+      }),
+      closeMenu: localize({
+        id: 'smarthr-ui/AppHeader/MobileHeader/closeMenu',
+        defaultText: 'メニューを閉じる',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])

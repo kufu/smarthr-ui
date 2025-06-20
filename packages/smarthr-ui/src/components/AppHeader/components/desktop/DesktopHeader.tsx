@@ -1,6 +1,7 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'
@@ -12,7 +13,6 @@ import {
 } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { useLocale } from '../../hooks/useLocale'
-import { useTranslate } from '../../hooks/useTranslate'
 import { localeMap } from '../../multilingualization'
 import { Translate } from '../common/Translate'
 
@@ -62,14 +62,17 @@ export const DesktopHeader: FC<HeaderProps> = ({
 
   const { locale } = useLocale()
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      appLauncherLabel: translate('DesktopHeader/DesktopHeader/appLauncherLabel'),
-      school: translate('common/school'),
-      help: translate('common/help'),
+      appLauncherLabel: localize({
+        id: 'smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel',
+        defaultText: 'アプリ',
+      }),
+      school: localize({ id: 'smarthr-ui/AppHeader/school', defaultText: 'スクール' }),
+      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
     }),
-    [translate],
+    [localize],
   )
 
   return (

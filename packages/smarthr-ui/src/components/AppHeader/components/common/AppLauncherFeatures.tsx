@@ -1,12 +1,12 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { AnchorButton } from '../../../Button'
 import { FaArrowRightIcon, FaStarIcon } from '../../../Icon'
 import { LineClamp } from '../../../LineClamp'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
-import { useTranslate } from '../../hooks/useTranslate'
 
 import { Translate } from './Translate'
 
@@ -38,8 +38,15 @@ const EmptyList = memo(() => {
 
     return empty()
   }, [])
-  const translate = useTranslate()
-  const translated = useMemo(() => translate('Launcher/emptyText'), [translate])
+  const { localize } = useIntl()
+  const translated = useMemo(
+    () =>
+      localize({
+        id: 'smarthr-ui/AppHeader/Launcher/emptyText',
+        defaultText: '該当するアプリが見つかりませんでした。',
+      }),
+    [localize],
+  )
 
   return (
     <div className={className}>

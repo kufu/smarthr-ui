@@ -1,6 +1,7 @@
 import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { textColor } from '../../../../themes'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -11,7 +12,6 @@ import { Section } from '../../../SectioningContent'
 import { SideNav } from '../../../SideNav'
 import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
-import { useTranslate } from '../../hooks/useTranslate'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
 import { Translate } from '../common/Translate'
@@ -112,7 +112,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     }
   }, [])
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo<
     Record<
       Launcher['page'] | 'listText' | 'searchInputTitle' | 'helpText' | 'searchResultText',
@@ -120,14 +120,49 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     >
   >(
     () => ({
-      favorite: <Translate>{translate('Launcher/favoriteModeText')}</Translate>,
-      all: <Translate>{translate('Launcher/allModeText')}</Translate>,
-      listText: <Translate>{translate('Launcher/listText')}</Translate>,
-      searchInputTitle: translate('Launcher/searchInputTitle'),
-      helpText: <Translate>{translate('Launcher/helpText')}</Translate>,
-      searchResultText: <Translate>{translate('Launcher/searchResultText')}</Translate>,
+      favorite: (
+        <Translate>
+          {localize({
+            id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
+            defaultText: 'よく使うアプリ',
+          })}
+        </Translate>
+      ),
+      all: (
+        <Translate>
+          {localize({
+            id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+            defaultText: 'すべてのアプリ',
+          })}
+        </Translate>
+      ),
+      listText: (
+        <Translate>
+          {localize({ id: 'smarthr-ui/AppHeader/Launcher/listText', defaultText: 'アプリ一覧' })}
+        </Translate>
+      ),
+      searchInputTitle: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+        defaultText: 'アプリ名を入力してください。',
+      }),
+      helpText: (
+        <Translate>
+          {localize({
+            id: 'smarthr-ui/AppHeader/Launcher/helpText',
+            defaultText: 'よく使うアプリとは',
+          })}
+        </Translate>
+      ),
+      searchResultText: (
+        <Translate>
+          {localize({
+            id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
+            defaultText: '検索結果',
+          })}
+        </Translate>
+      ),
     }),
-    [translate],
+    [localize],
   )
 
   return (
