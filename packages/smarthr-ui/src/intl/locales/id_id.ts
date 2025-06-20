@@ -5,6 +5,8 @@ import type { ja } from '.'
 export const locale = {
   'smarthr-ui/common/language': 'Bahasa Indonesia',
   'smarthr-ui/ActionDialog/closeButtonLabel': 'Batal',
+  'smarthr-ui/Browser/notFoundDescription': '',
+  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
   'smarthr-ui/Button/loading': 'Sedang diproses',

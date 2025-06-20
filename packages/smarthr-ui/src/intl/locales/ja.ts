@@ -3,6 +3,8 @@
 export const locale = {
   'smarthr-ui/common/language': '日本語',
   'smarthr-ui/ActionDialog/closeButtonLabel': 'キャンセル',
+  'smarthr-ui/Browser/notFoundDescription': '別の条件を試してください。',
+  'smarthr-ui/Browser/notFoundTitle': '該当する項目がありません。',
   'smarthr-ui/AppLauncher/showAllText': 'すべて見る',
   'smarthr-ui/AppLauncher/triggerLabel': 'アプリ',
   'smarthr-ui/Button/loading': '処理中',
