@@ -12,7 +12,7 @@ type Props = {
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
     checkColumnName?: (text: string) => string
   }
-} & Pick<ComponentProps<typeof Th>, 'vAlign'>
+} & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
 
 const DECORATOR_DEFAULT_TEXTS = {
   checkAllInvisibleLabel: 'すべての項目を選択/解除',
@@ -39,7 +39,7 @@ const classNameGenerator = tv({
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
-  ({ vAlign, decorators, className, ...others }, ref) => {
+  ({ vAlign, fixed, decorators, className, ...others }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner, balloon, checkbox } = classNameGenerator()
 
@@ -57,6 +57,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
       // Th に必要な属性やイベントは不要
       <Th
         vAlign={vAlign}
+        fixed={fixed}
         className={classNames.wrapper}
         aria-label={decorated.checkColumnName as string}
       >
