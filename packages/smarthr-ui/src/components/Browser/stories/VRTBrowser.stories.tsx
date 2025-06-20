@@ -2,55 +2,37 @@ import { Browser } from '../Browser'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
+import { Stack } from '../../../'
+
 export default {
   title: 'Components/Browser/VRT',
   render: () => (
-    <>
-      <Browser
-        value="department_2"
-        items={[
-          {
-            value: 'basic',
-            label: '標準従業員項目',
-            children: [
-              { value: 'gender', label: '戸籍上の性別' },
-              { value: 'job_title', label: '役職' },
-              { value: 'grade', label: '等級' },
-              { value: 'employment_type', label: '雇用形態' },
-              { value: 'age', label: '年齢' },
-              { value: 'service_year', label: '勤続年数' },
-              {
-                value: 'department',
-                label: '部署',
-                children: [
-                  { value: 'department_1', label: '部署階層1' },
-                  { value: 'department_2', label: '部署階層2' },
-                  { value: 'department_3', label: '部署階層3' },
-                  { value: 'department_4', label: '部署階層4' },
-                  { value: 'department_5', label: '部署階層5' },
-                  { value: 'department_6', label: '部署階層6' },
-                  { value: 'department_last', label: '部署最終階層' },
-                ],
-              },
-            ],
-          },
-          {
-            value: 'custom',
-            label: 'カスタム従業員項目',
-            children: [
-              { value: 'custom_1', label: 'カスタム項目1' },
-              { value: 'custom_2', label: 'カスタム項目2' },
-            ],
-          },
-          {
-            value: 'evaluation',
-            label: '人事評価',
-            children: [{ value: 'latest_evaluation', label: '最終評価' }],
-          },
-        ]}
-      />
-      <Browser items={[]} />
-    </>
+    <Stack>
+      {[undefined, 'hover', 'focus-visible'].map((state) => (
+        <div key={state} id={state}>
+          {['parent1', 'parent2', 'child1', 'child2', 'grandchild1'].map((value) => (
+            <Browser
+              value={value}
+              items={[
+                {
+                  label: '親項目',
+                  value: 'parent1',
+                  children: [
+                    {
+                      value: 'child1',
+                      label: '子項目1',
+                      children: [{ value: 'grandchild1', label: '孫項目1' }],
+                    },
+                    { value: 'child2', label: '子項目2' },
+                  ],
+                },
+                { label: '親項目2', value: 'parent2' },
+              ]}
+            />
+          ))}
+        </div>
+      ))}
+    </Stack>
   ),
   parameters: {
     chromatic: { disableSnapshot: false },
@@ -58,7 +40,14 @@ export default {
   tags: ['!autodocs'],
 } satisfies Meta<typeof Browser>
 
-export const VRT = {}
+export const VRT = {
+  parameters: {
+    pseudo: {
+      hover: ['#hover label'],
+      focusVisible: ['#focus-visible input'],
+    },
+  },
+}
 
 export const VRTForcedColors: StoryObj = {
   ...VRT,
