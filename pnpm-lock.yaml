@@ -230,8 +230,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1(webpack@5.99.9(@swc/core@1.12.1)(esbuild@0.25.5))
       eslint-plugin-storybook:
-        specifier: 9.0.6
-        version: 9.0.6(eslint@9.29.0(jiti@2.4.1))(storybook@9.0.10(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)
+        specifier: 9.0.4
+        version: 9.0.4(eslint@9.29.0(jiti@2.4.1))(storybook@9.0.10(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -3729,12 +3729,12 @@ packages:
       eslint: '>=8'
       storybook: ^9.0.10
 
-  eslint-plugin-storybook@9.0.6:
-    resolution: {integrity: sha512-eVxNgHXojaUAVh2uu2ACHJRZfar1E5CnOMp01QIYVZxlkEmaMTR6/V2MAVpKbEnvKi/xjTOPyygufFRhpyXrqA==}
+  eslint-plugin-storybook@9.0.4:
+    resolution: {integrity: sha512-HdwbfgPkZKsWG859RQk4iROH8D4zGsXxH2C3/7RlqELoT+nZYtc1BzVWzDeMAHadSXRasX3J+O1/4HNyuPXpJw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       eslint: '>=8'
-      storybook: ^9.0.6
+      storybook: ^9.0.4
 
   eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
@@ -11468,7 +11468,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-storybook@9.0.6(eslint@9.29.0(jiti@2.4.1))(storybook@9.0.10(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3):
+  eslint-plugin-storybook@9.0.4(eslint@9.29.0(jiti@2.4.1))(storybook@9.0.10(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/utils': 8.34.1(eslint@9.29.0(jiti@2.4.1))(typescript@5.8.3)
       eslint: 9.29.0(jiti@2.4.1)
