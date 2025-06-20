@@ -221,7 +221,6 @@ export default {
       'fixed-menu': `${defaultZIndex.FIXED_MENU}`,
       'overlap-base': `${defaultZIndex.OVERLAP_BASE}`,
       overlap: `${defaultZIndex.OVERLAP}`,
-      'flash-message': `${defaultZIndex.FLASH_MESSAGE}`,
     },
     extend: {
       aria: {

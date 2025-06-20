@@ -6,7 +6,6 @@ export type ZIndexProperty = {
   FIXED_MENU?: number
   OVERLAP_BASE?: number
   OVERLAP?: number
-  FLASH_MESSAGE?: number
 }
 
 export type CreatedZindexTheme = {
@@ -15,7 +14,6 @@ export type CreatedZindexTheme = {
   FIXED_MENU: number
   OVERLAP_BASE: number
   OVERLAP: number
-  FLASH_MESSAGE: number
 }
 
 export const defaultZIndex: CreatedZindexTheme = {
@@ -24,7 +22,6 @@ export const defaultZIndex: CreatedZindexTheme = {
   FIXED_MENU: 100,
   OVERLAP_BASE: 10000,
   OVERLAP: 10500,
-  FLASH_MESSAGE: 11000,
 }
 
 export const createZIndex = (userZIndex?: ZIndexProperty): CreatedZindexTheme => {
