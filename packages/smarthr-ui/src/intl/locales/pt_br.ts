@@ -3,13 +3,13 @@ import type { ja } from '.'
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
-  'smarthr-ui/common/language': 'Português',
-  'smarthr-ui/ActionDialog/closeButtonLabel': 'Cancelar',
+  'smarthr-ui/common/language': 'Português (Brasil)',
+  'smarthr-ui/ActionDialog/closeButtonLabel': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
-  'smarthr-ui/Button/loading': 'Processando',
+  'smarthr-ui/Button/loading': '',
   'smarthr-ui/Combobox/loadingText': '',
-  'smarthr-ui/Combobox/noResultsText': 'Nenhuma opção correspondente',
+  'smarthr-ui/Combobox/noResultsText': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/DropZone/selectButtonLabel': '',
@@ -21,6 +21,9 @@ export const locale = {
   'smarthr-ui/InformationPanel/closeButtonLabel': '',
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
+  'smarthr-ui/ModelessDialog/closeButtonIconAlt': '',
+  'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel': '',
+  'smarthr-ui/ModelessDialog/dialogHandlerAriaValuetext': '',
   'smarthr-ui/RequiredLabel/text': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
@@ -28,5 +31,5 @@ export const locale = {
   'smarthr-ui/SortDropdown/descLabel': '',
   'smarthr-ui/SortDropdown/sortFieldLabel': '',
   'smarthr-ui/SortDropdown/sortOrderLabel': '',
-  'smarthr-ui/TextLink/openInNewTab': 'Abra em uma outra guia',
+  'smarthr-ui/TextLink/openInNewTab': '',
 } as const satisfies Record<keyof typeof ja, string>
