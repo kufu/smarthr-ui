@@ -16,6 +16,7 @@ export const locale = {
   'smarthr-ui/FilterDropdown/resetButton': '絞り込み条件を解除',
   'smarthr-ui/FilterDropdown/status': '適用中',
   'smarthr-ui/FilterDropdown/triggerButton': '絞り込み',
+  'smarthr-ui/FormDialog/closeButtonLabel': 'キャンセル',
   'smarthr-ui/InformationPanel/closeButtonLabel': '閉じる',
   'smarthr-ui/InformationPanel/openButtonLabel': '開く',
   'smarthr-ui/InputFile/destroy': '削除',

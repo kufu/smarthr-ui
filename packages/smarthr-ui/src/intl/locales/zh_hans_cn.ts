@@ -18,6 +18,7 @@ export const locale = {
   'smarthr-ui/FilterDropdown/resetButton': '',
   'smarthr-ui/FilterDropdown/status': '',
   'smarthr-ui/FilterDropdown/triggerButton': '',
+  'smarthr-ui/FormDialog/closeButtonLabel': '取消',
   'smarthr-ui/InformationPanel/closeButtonLabel': '',
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
