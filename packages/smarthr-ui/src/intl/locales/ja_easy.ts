@@ -28,5 +28,7 @@ export const locale = {
   'smarthr-ui/SortDropdown/descLabel': '',
   'smarthr-ui/SortDropdown/sortFieldLabel': '',
   'smarthr-ui/SortDropdown/sortOrderLabel': '',
+  'smarthr-ui/StepStatusIcon/closedAlt': '',
+  'smarthr-ui/StepStatusIcon/completedAlt': '',
   'smarthr-ui/TextLink/openInNewTab': '',
 } as const satisfies Record<keyof typeof ja, string>
