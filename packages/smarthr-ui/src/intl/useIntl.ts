@@ -19,27 +19,64 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
   defaultText: (typeof locales.ja)[T]
 }
 
-const DATE_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions | undefined> = {
+const DATE_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions> = {
   // localeがja, ja-easyの場合、フォーマットを YYYY/MM/DD 形式にする
   // 参考: https://smarthr.design/products/contents/idiomatic-usage/count/#h2-3
   ja: {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
+    weekday: 'short',
   },
   'ja-easy': {
     year: 'numeric',
-    month: '2-digit',
+    month: 'long',
     day: '2-digit',
+    weekday: 'short',
   },
-  'en-us': undefined,
-  'id-id': undefined,
-  ko: undefined,
-  pt: undefined,
-  vi: undefined,
-  'zh-cn': undefined,
-  'zh-tw': undefined,
-} as const
+  'en-us': {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    weekday: 'short',
+  },
+  'id-id': {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+  },
+  ko: {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+  },
+  pt: {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+  },
+  vi: {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+  },
+  'zh-cn': {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+  },
+  'zh-tw': {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+  },
+}
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
@@ -59,10 +96,59 @@ export const useIntl = () => {
   )
 
   const formatDate = useCallback(
-    (date: Date, opts?: Intl.DateTimeFormatOptions & { jaFormat?: boolean }): string =>
-      intl.formatDate(date, { ...DATE_FORMATS[locale], ...opts }),
+    /**
+     * 日付をロケールに応じた形式でフォーマットする関数
+     *
+     * @param date - フォーマット対象の日付
+     * @param fields - 表示するフィールド。指定しない場合は全て表示
+     * @param options - フォーマットオプション
+     *
+     * @example
+     * // 基本的な使用法（ロケールのデフォルト形式）
+     * formatDate(new Date()) // "2024/01/15" (ja)
+     *
+     * // 特定のフィールドのみ表示
+     * formatDate(new Date(), ['year', 'month']) // "2024/01" (ja)
+     * formatDate(new Date(), ['weekday']) // "月" (ja)
+     *
+     * // 日本語でスラッシュを無効化（月を長形式で表示）
+     * formatDate(new Date(), ['year', 'month'], { disableSlashInJa: true }) // "2024年1月" (ja)
+     *
+     * // 最初の文字を大文字化
+     * formatDate(new Date(), ['weekday'], { capitalize: true }) // "月" (ja)
+     *
+     * @returns フォーマットされた日付文字列
+     */
+    (
+      date: Date,
+      fields?: Array<'year' | 'month' | 'day' | 'weekday'>,
+      options?: { disableSlashInJa?: boolean; capitalize?: boolean },
+    ): string => {
+      const { disableSlashInJa = false, capitalize = false } = options || {}
+      const requestedFields = fields || []
+
+      // 指定されたフィールドが含まれているかチェック（指定がない場合は全て含まれる）
+      const hasField = (field: 'year' | 'month' | 'day' | 'weekday') =>
+        requestedFields.length === 0 || requestedFields.includes(field)
+
+      // ロケールのデフォルト形式を取得
+      const formatOptions: Intl.DateTimeFormatOptions = {
+        year: hasField('year') ? DATE_FORMATS[locale].year : undefined,
+        month: hasField('month') ? DATE_FORMATS[locale].month : undefined,
+        day: hasField('day') ? DATE_FORMATS[locale].day : undefined,
+        weekday: hasField('weekday') ? DATE_FORMATS[locale].weekday : undefined,
+      }
+
+      // 日本語でスラッシュを無効化する場合
+      if (disableSlashInJa && hasField('month') && locale === 'ja') {
+        formatOptions.month = 'long'
+      }
+
+      const result = intl.formatDate(date, formatOptions)
+      return capitalize ? result.charAt(0).toUpperCase() + result.slice(1) : result
+    },
     [intl, locale],
   )
 
-  return { availableLocales, localize, formatDate }
+  return { availableLocales, localize, formatDate, locale }
 }
