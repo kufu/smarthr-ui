@@ -15,6 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
@@ -51,6 +52,8 @@ const classNameGenerator = tv({
 
 export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
+    const { formatDate, localize, getWeekStartDay } = useIntl()
+
     const classNames = useMemo(() => {
       const { container, yearMonth, header, monthButtons, tableLayout, yearSelectButton } =
         classNameGenerator()
@@ -121,11 +124,14 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         prev: currentMonth.subtract(1, 'month'),
         next: currentMonth.add(1, 'month'),
         day: currentMonth,
-        months: getMonthArray(currentMonth.toDate()),
-        yearMonthText: `${currentMonth.year()}年${currentMonth.month() + 1}月`,
+        months: getMonthArray(currentMonth.toDate(), getWeekStartDay()),
+        yearMonthText: formatDate(currentMonth.toDate(), ['year', 'month'], {
+          disableSlashInJa: true,
+          capitalize: true,
+        }),
         selectedText: currentMonth.toString(),
       }),
-      [currentMonth],
+      [currentMonth, formatDate, getWeekStartDay],
     )
 
     const onSelectYear = useCallback(
@@ -152,6 +158,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             aria-controls={yearPickerId}
             onClick={onClickSelectYear}
             className={classNames.yearSelectButton}
+            localize={localize}
           />
           <MonthDirectionCluster
             isSelectingYear={isSelectingYear}
@@ -160,6 +167,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             to={formattedTo.day}
             setCurrentMonth={setCurrentMonth}
             className={classNames.monthButtons}
+            localize={localize}
           />
         </header>
         <div className={classNames.tableLayout}>
@@ -193,9 +201,15 @@ const YearSelectButton = memo<{
   'aria-controls': string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>((rest) => (
+  localize: ReturnType<typeof useIntl>['localize']
+}>(({ localize, ...rest }) => (
   <Button {...rest} size="s">
-    <FaCaretDownIcon alt="年を選択する" />
+    <FaCaretDownIcon
+      alt={localize({
+        id: 'smarthr-ui/Calendar/selectYear',
+        defaultText: '年を選択する',
+      })}
+    />
   </Button>
 ))
 
@@ -209,28 +223,49 @@ const MonthDirectionCluster = memo<{
   to: DayJsType
   setCurrentMonth: (day: DayJsType) => void
   className: string
-}>(({ isSelectingYear, directionMonth: { prev, next }, from, to, setCurrentMonth, className }) => {
-  const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
-  const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
+  localize: ReturnType<typeof useIntl>['localize']
+}>(
+  ({
+    isSelectingYear,
+    directionMonth: { prev, next },
+    from,
+    to,
+    setCurrentMonth,
+    className,
+    localize,
+  }) => {
+    const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
+    const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
 
-  return (
-    <Cluster gap={0.5} className={className}>
-      <Button
-        disabled={isSelectingYear || prev.isBefore(from, 'month')}
-        onClick={onClickMonthPrev}
-        size="s"
-        className="smarthr-ui-Calendar-monthButtonPrev"
-      >
-        <FaChevronLeftIcon alt="前の月へ" />
-      </Button>
-      <Button
-        disabled={isSelectingYear || next.isAfter(to, 'month')}
-        onClick={onClickMonthNext}
-        size="s"
-        className="smarthr-ui-Calendar-monthButtonNext"
-      >
-        <FaChevronRightIcon alt="次の月へ" />
-      </Button>
-    </Cluster>
-  )
-})
+    return (
+      <Cluster gap={0.5} className={className}>
+        <Button
+          disabled={isSelectingYear || prev.isBefore(from, 'month')}
+          onClick={onClickMonthPrev}
+          size="s"
+          className="smarthr-ui-Calendar-monthButtonPrev"
+        >
+          <FaChevronLeftIcon
+            alt={localize({
+              id: 'smarthr-ui/Calendar/previousMonth',
+              defaultText: '前の月へ',
+            })}
+          />
+        </Button>
+        <Button
+          disabled={isSelectingYear || next.isAfter(to, 'month')}
+          onClick={onClickMonthNext}
+          size="s"
+          className="smarthr-ui-Calendar-monthButtonNext"
+        >
+          <FaChevronRightIcon
+            alt={localize({
+              id: 'smarthr-ui/Calendar/nextMonth',
+              defaultText: '次の月へ',
+            })}
+          />
+        </Button>
+      </Cluster>
+    )
+  },
+)
