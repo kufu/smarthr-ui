@@ -28,5 +28,8 @@ export const locale = {
   'smarthr-ui/SortDropdown/descLabel': '',
   'smarthr-ui/SortDropdown/sortFieldLabel': '',
   'smarthr-ui/SortDropdown/sortOrderLabel': '',
+  'smarthr-ui/Textarea/availableLetters': '',
+  'smarthr-ui/Textarea/maxLettersExceeded': '',
+  'smarthr-ui/Textarea/screenReaderMaxLettersDescription': '',
   'smarthr-ui/TextLink/openInNewTab': '다른 창으로 열기',
 } as const satisfies Record<keyof typeof ja, string>

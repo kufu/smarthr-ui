@@ -26,5 +26,8 @@ export const locale = {
   'smarthr-ui/SortDropdown/descLabel': '降順',
   'smarthr-ui/SortDropdown/sortFieldLabel': '並べ替え項目',
   'smarthr-ui/SortDropdown/sortOrderLabel': '並び順',
+  'smarthr-ui/Textarea/availableLetters': 'あと{availableLetters}文字',
+  'smarthr-ui/Textarea/maxLettersExceeded': '{exceededLetters}文字オーバー',
+  'smarthr-ui/Textarea/screenReaderMaxLettersDescription': '最大{maxLetters}文字入力できます',
   'smarthr-ui/TextLink/openInNewTab': '別タブで開く',
 } as const
