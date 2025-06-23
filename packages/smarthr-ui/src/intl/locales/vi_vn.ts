@@ -22,6 +22,7 @@ export const locale = {
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
+  'smarthr-ui/SearchInput/iconAlt': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
   'smarthr-ui/SortDropdown/cancelButtonLabel': '',
