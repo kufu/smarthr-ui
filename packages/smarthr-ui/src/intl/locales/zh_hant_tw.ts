@@ -29,4 +29,9 @@ export const locale = {
   'smarthr-ui/SortDropdown/sortFieldLabel': '',
   'smarthr-ui/SortDropdown/sortOrderLabel': '',
   'smarthr-ui/TextLink/openInNewTab': '在新視窗中開啟',
+  'smarthr-ui/Th/sortDirectionAsc': '',
+  'smarthr-ui/Th/sortDirectionDesc': '',
+  'smarthr-ui/Th/sortDirectionNone': '',
+  'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '',
+  'smarthr-ui/ThCheckbox/checkColumnName': '',
 } as const satisfies Record<keyof typeof ja, string>

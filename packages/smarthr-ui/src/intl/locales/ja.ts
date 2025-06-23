@@ -27,4 +27,9 @@ export const locale = {
   'smarthr-ui/SortDropdown/sortFieldLabel': '並べ替え項目',
   'smarthr-ui/SortDropdown/sortOrderLabel': '並び順',
   'smarthr-ui/TextLink/openInNewTab': '別タブで開く',
+  'smarthr-ui/Th/sortDirectionAsc': '昇順',
+  'smarthr-ui/Th/sortDirectionDesc': '降順',
+  'smarthr-ui/Th/sortDirectionNone': '並び替えなし',
+  'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'すべての項目を選択/解除',
+  'smarthr-ui/ThCheckbox/checkColumnName': '選択',
 } as const
