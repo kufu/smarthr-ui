@@ -9,9 +9,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 
-import { daysInWeek, isBetween } from './calendarHelper'
+import { isBetween } from './calendarHelper'
 
 type Props = {
   /** 現在の日付 */
@@ -57,6 +58,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
+  const { formatDate, getWeekStartDay } = useIntl()
+
   const classNames = useMemo(() => {
     const { wrapper, table, th, td, cellButton, dateCell } = classNameGenerator()
 
@@ -70,13 +73,28 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     }
   }, [className])
 
+  // Generate internationalized day names starting from the locale-specific week start day
+  const daysInWeek = useMemo(() => {
+    const weekStartDay = getWeekStartDay()
+    const days = []
+
+    for (let i = 0; i < 7; i++) {
+      const dayOfWeek = (weekStartDay + i) % 7
+      // 2024年1月の最初の週の日曜日から土曜日までの日付を基準にする
+      const baseDate = dayjs('2024-01-07').add(dayOfWeek, 'day').toDate()
+      days.push(formatDate(baseDate, ['weekday'], { capitalize: true }))
+    }
+
+    return days
+  }, [formatDate, getWeekStartDay])
+
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
   const nowDateText = dayjs().startOf('date').toString()
 
   return (
     <div className={classNames.wrapper}>
       <table {...props} className={classNames.table}>
-        <MemoizedThead thStyle={classNames.th} />
+        <MemoizedThead thStyle={classNames.th} daysInWeek={daysInWeek} />
         <tbody>
           {current.months.map((week, weekIndex) => (
             <tr key={weekIndex}>
@@ -105,7 +123,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   )
 }
 
-const MemoizedThead = memo<{ thStyle: string }>(({ thStyle }) => (
+const MemoizedThead = memo<{ thStyle: string; daysInWeek: string[] }>(({ thStyle, daysInWeek }) => (
   <thead>
     <tr>
       {daysInWeek.map((day) => (
