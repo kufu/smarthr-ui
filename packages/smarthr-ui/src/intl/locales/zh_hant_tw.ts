@@ -5,10 +5,10 @@ import type { ja } from '.'
 export const locale = {
   'smarthr-ui/common/language': '繁體中文',
   'smarthr-ui/ActionDialog/closeButtonLabel': '取消',
-  'smarthr-ui/Browser/notFoundDescription': '',
-  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
+  'smarthr-ui/Browser/notFoundDescription': '',
+  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': '處理中',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': '沒有符合條件的選項',

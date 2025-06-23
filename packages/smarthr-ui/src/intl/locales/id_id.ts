@@ -5,10 +5,10 @@ import type { ja } from '.'
 export const locale = {
   'smarthr-ui/common/language': 'Bahasa Indonesia',
   'smarthr-ui/ActionDialog/closeButtonLabel': 'Batal',
-  'smarthr-ui/Browser/notFoundDescription': '',
-  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
+  'smarthr-ui/Browser/notFoundDescription': '',
+  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': 'Sedang diproses',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Tidak ada pilihan yang cocok',

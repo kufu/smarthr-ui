@@ -5,10 +5,10 @@ import type { ja } from '.'
 export const locale = {
   'smarthr-ui/common/language': 'Português',
   'smarthr-ui/ActionDialog/closeButtonLabel': 'Cancelar',
-  'smarthr-ui/Browser/notFoundDescription': '',
-  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
+  'smarthr-ui/Browser/notFoundDescription': '',
+  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': 'Processando',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Nenhuma opção correspondente',

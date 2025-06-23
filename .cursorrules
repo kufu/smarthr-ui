@@ -1,0 +1,108 @@
+# Cursor Rules for SmartHR UI Internationalization
+
+## General Rules
+- Always respond in Japanese
+- Use parallel tool calls whenever possible for efficiency
+- Prioritize reading multiple files simultaneously rather than sequentially
+
+## Internationalization (i18n) Workflow
+
+### 1. Component Discovery and Analysis
+- Use `file_search` to find target component files
+- Read the main component file to identify hardcoded Japanese strings
+- Look for existing `DECORATOR_DEFAULT_TEXTS` or similar constants
+- Identify all user-facing text that needs translation
+
+### 2. Locale File Updates
+
+#### Key Naming Convention
+- Format: `'smarthr-ui/ComponentName/keyName'`
+- Use camelCase for keyName (e.g., `triggerLabel`, `showAllText`)
+- Be descriptive and consistent with existing patterns
+
+#### Key Ordering Rules
+- `'smarthr-ui/common/language'` always stays at the top
+- All other keys in alphabetical order
+- Process all locale files in parallel
+
+#### Locale File Pattern
+1. **Japanese (ja.ts)**: Add actual Japanese text
+2. **All other locales**: Add empty strings `''` for new keys
+
+#### Files to Update (in parallel)
+- `packages/smarthr-ui/src/intl/locales/ja.ts`
+- `packages/smarthr-ui/src/intl/locales/ja_easy.ts`
+- `packages/smarthr-ui/src/intl/locales/en_us.ts`
+- `packages/smarthr-ui/src/intl/locales/ko_kr.ts`
+- `packages/smarthr-ui/src/intl/locales/pt_br.ts`
+- `packages/smarthr-ui/src/intl/locales/vi_vn.ts`
+- `packages/smarthr-ui/src/intl/locales/zh_hans_cn.ts`
+- `packages/smarthr-ui/src/intl/locales/zh_hant_tw.ts`
+- `packages/smarthr-ui/src/intl/locales/id_id.ts`
+
+### 3. Component Implementation Pattern
+
+#### Required Imports
+```typescript
+import { useIntl } from '../../../intl' // Adjust path as needed
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+```
+
+#### Implementation Pattern
+```typescript
+export const ComponentName: FC<Props> = ({ decorators, ...otherProps }) => {
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      keyName: localize({
+        id: 'smarthr-ui/ComponentName/keyName',
+        defaultText: 'デフォルトの日本語テキスト',
+      }),
+      // Add other keys...
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
+
+  // Use decorated.keyName in JSX
+  return <div>{decorated.keyName}</div>
+}
+```
+
+#### Key Steps
+1. Remove existing `DECORATOR_DEFAULT_TEXTS` constants
+2. Update `DecoratorKeyTypes` to use string union type
+3. Add `useIntl()` hook
+4. Create `decoratorDefaultTexts` with `useMemo`
+5. Use `useDecorators` with the new default texts
+6. Maintain backward compatibility with existing `decorators` prop
+
+### 4. Type Definitions
+- Update `DecoratorKeyTypes` from `keyof typeof DECORATOR_DEFAULT_TEXTS` to explicit string union
+- Example: `type DecoratorKeyTypes = 'triggerLabel' | 'showAllText'`
+
+### 5. Testing Considerations
+- Ensure existing `decorators` prop functionality is preserved
+- Verify that empty locale strings fall back to `defaultText`
+- Test with different locale contexts
+
+### 6. Best Practices
+- Always use `useMemo` for `decoratorDefaultTexts` to prevent unnecessary re-renders
+- Keep `defaultText` values as Japanese (the source language)
+- Maintain consistent key naming across similar components
+- Group related keys logically within the same component namespace
+
+### 7. Common Patterns by Component Type
+- **Dropdown/Filter components**: `triggerButton`, `applyButton`, `cancelButton`, `resetButton`
+- **File/Media components**: `selectButtonLabel`, `uploadText`
+- **Navigation components**: `showAllText`, `viewMore`
+- **Action components**: `confirmButton`, `deleteButton`
+
+### 8. Error Handling
+- If TypeScript errors occur after removing constants, ensure all references are updated
+- Use parallel file reading to gather context before making changes
+- Verify locale file key consistency across all languages
+
+This workflow ensures consistent, maintainable internationalization across all SmartHR UI components while preserving backward compatibility and developer experience. 
