@@ -21,6 +21,7 @@ export const locale = {
   'smarthr-ui/InformationPanel/closeButtonLabel': '',
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
+  'smarthr-ui/MessageDialog/closeButtonLabel': '',
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
