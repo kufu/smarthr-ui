@@ -1,6 +1,7 @@
 import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type Props = {
@@ -121,15 +122,9 @@ const classNameGenerator = tv({
 })
 
 export const Loader = memo<Props & ElementProps>(
-  ({
-    size = 'm',
-    alt = '処理中',
-    text,
-    type = 'primary',
-    role = 'status',
-    className,
-    ...props
-  }) => {
+  ({ size = 'm', alt, text, type = 'primary', role = 'status', className, ...props }) => {
+    const { localize } = useIntl()
+
     const classNames = useMemo(() => {
       const { wrapper, spinner, line, cog, cogInner, textSlot } = classNameGenerator({
         type,
@@ -150,6 +145,11 @@ export const Loader = memo<Props & ElementProps>(
       }
     }, [type, size, className])
 
+    const actualAlt = useMemo(
+      () => alt ?? localize({ id: 'smarthr-ui/Loader/alt', defaultText: '処理中' }),
+      [alt, localize],
+    )
+
     const lineBody = (
       <>
         <span className={classNames.cog}>
@@ -168,7 +168,7 @@ export const Loader = memo<Props & ElementProps>(
           <span className={classNames.line2}>{lineBody}</span>
           <span className={classNames.line3}>{lineBody}</span>
           <span className={classNames.line4}>{lineBody}</span>
-          <VisuallyHiddenText>{alt}</VisuallyHiddenText>
+          <VisuallyHiddenText>{actualAlt}</VisuallyHiddenText>
         </span>
         {text && <span className={classNames.text}>{text}</span>}
       </span>
