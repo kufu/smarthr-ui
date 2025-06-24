@@ -24,8 +24,6 @@ export const locale = {
   'smarthr-ui/InformationPanel/closeButtonLabel': '',
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
-  'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
-  'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
   'smarthr-ui/Loader/alt': '',
   'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
