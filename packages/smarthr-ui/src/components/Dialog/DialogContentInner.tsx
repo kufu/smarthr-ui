@@ -17,6 +17,8 @@ import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'
 import { useBodyScrollLock } from './useBodyScrollLock'
 
+import type { DialogSize } from './types'
+
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
@@ -38,7 +40,7 @@ export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * ダイアログの大きさ
    */
-  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'
+  size?: DialogSize
   /**
    * ダイアログの `id`
    * TODO 使われてなさそうなので確認

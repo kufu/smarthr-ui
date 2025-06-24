@@ -19,3 +19,5 @@ export type DialogProps = CommonProps & ControlledProps & PortalProps
 export type UncontrolledDialogProps = CommonProps & PortalProps
 
 export type DirectChildren = Pick<DialogContentInnerProps, 'children'>
+
+export type DialogSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'

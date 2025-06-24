@@ -30,6 +30,7 @@ import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
+import type { DialogSize } from '../types'
 
 type Props = PropsWithChildren<{
   /**
@@ -60,7 +61,7 @@ type Props = PropsWithChildren<{
   /**
    * ダイアログの大きさ
    */
-  size?: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'
+  size?: DialogSize
   /**
    * ダイアログの高さ
    */
