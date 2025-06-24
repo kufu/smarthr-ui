@@ -198,6 +198,14 @@ describe('useIntl', () => {
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
         expect(formatDate(testDate, ['year', 'month'], { disableSlashInJa: true })).toBe('Jan 2025')
       })
+
+      it('handles undefined options', () => {
+        const wrapper: FC<PropsWithChildren> = ({ children }) => (
+          <IntlProvider locale="ja">{children}</IntlProvider>
+        )
+        const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+        expect(formatDate(testDate, ['year', 'month'], undefined)).toBe('2025/01')
+      })
     })
 
     describe('edge cases', () => {
@@ -221,13 +229,31 @@ describe('useIntl', () => {
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
         expect(formatDate(testDate, [])).toBe('2025/01/01(水)')
       })
+    })
+  })
 
-      it('handles undefined options', () => {
+  describe('getWeekStartDay', () => {
+    it('returns 0 (Sunday) for Sunday-start locales', () => {
+      const sundayStartLocales = ['en-us', 'ja', 'ja-easy', 'ko', 'zh-cn', 'zh-tw'] as const
+
+      sundayStartLocales.forEach((locale) => {
         const wrapper: FC<PropsWithChildren> = ({ children }) => (
-          <IntlProvider locale="ja">{children}</IntlProvider>
+          <IntlProvider locale={locale}>{children}</IntlProvider>
         )
-        const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate(testDate, ['year', 'month'], undefined)).toBe('2025/01')
+        const { getWeekStartDay } = renderHook(() => useIntl(), { wrapper }).result.current
+        expect(getWeekStartDay()).toBe(0)
+      })
+    })
+
+    it('returns 1 (Monday) for Monday-start locales', () => {
+      const mondayStartLocales = ['id-id', 'vi', 'pt'] as const
+
+      mondayStartLocales.forEach((locale) => {
+        const wrapper: FC<PropsWithChildren> = ({ children }) => (
+          <IntlProvider locale={locale}>{children}</IntlProvider>
+        )
+        const { getWeekStartDay } = renderHook(() => useIntl(), { wrapper }).result.current
+        expect(getWeekStartDay()).toBe(1)
       })
     })
   })
