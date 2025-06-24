@@ -7,6 +7,8 @@ export const locale = {
   'smarthr-ui/ActionDialog/closeButtonLabel': 'Cancelar',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
+  'smarthr-ui/Browser/notFoundDescription': '',
+  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': 'Processando',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Nenhuma opção correspondente',

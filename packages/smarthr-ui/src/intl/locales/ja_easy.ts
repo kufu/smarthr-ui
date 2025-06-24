@@ -7,6 +7,8 @@ export const locale = {
   'smarthr-ui/ActionDialog/closeButtonLabel': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
+  'smarthr-ui/Browser/notFoundDescription': '',
+  'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': '',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': '',

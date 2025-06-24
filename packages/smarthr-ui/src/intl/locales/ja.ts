@@ -5,6 +5,8 @@ export const locale = {
   'smarthr-ui/ActionDialog/closeButtonLabel': 'キャンセル',
   'smarthr-ui/AppLauncher/showAllText': 'すべて見る',
   'smarthr-ui/AppLauncher/triggerLabel': 'アプリ',
+  'smarthr-ui/Browser/notFoundDescription': '別の条件を試してください。',
+  'smarthr-ui/Browser/notFoundTitle': '該当する項目がありません。',
   'smarthr-ui/Button/loading': '処理中',
   'smarthr-ui/Combobox/loadingText': '処理中',
   'smarthr-ui/Combobox/noResultsText': '一致する選択肢がありません。',
