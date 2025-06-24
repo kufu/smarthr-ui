@@ -3,15 +3,15 @@ import type { ja } from '.'
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
-  'smarthr-ui/common/language': 'Português',
-  'smarthr-ui/ActionDialog/closeButtonLabel': 'Cancelar',
+  'smarthr-ui/common/language': 'Português (Brasil)',
+  'smarthr-ui/ActionDialog/closeButtonLabel': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
   'smarthr-ui/Browser/notFoundDescription': '',
   'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': 'Processando',
   'smarthr-ui/Combobox/loadingText': '',
-  'smarthr-ui/Combobox/noResultsText': 'Nenhuma opção correspondente',
+  'smarthr-ui/Combobox/noResultsText': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/DropZone/selectButtonLabel': '',
@@ -26,6 +26,9 @@ export const locale = {
   'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/Loader/alt': '',
   'smarthr-ui/MessageDialog/closeButtonLabel': '',
+  'smarthr-ui/ModelessDialog/closeButtonIconAlt': '',
+  'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel': '',
+  'smarthr-ui/ModelessDialog/dialogHandlerAriaValuetext': '',
   'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
   'smarthr-ui/RequiredLabel/text': '',
