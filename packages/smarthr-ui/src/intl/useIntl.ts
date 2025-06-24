@@ -76,7 +76,7 @@ const DATE_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions> = {
     day: '2-digit',
     weekday: 'short',
   },
-}
+} as const
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
@@ -95,30 +95,30 @@ export const useIntl = () => {
     [intl],
   )
 
+  /**
+   * 日付をロケールに応じた形式でフォーマットする関数
+   *
+   * @param date - フォーマット対象の日付
+   * @param fields - 表示するフィールド。指定しない場合は全て表示
+   * @param options - フォーマットオプション
+   *
+   * @example
+   * // 基本的な使用法（ロケールのデフォルト形式）
+   * formatDate(new Date()) // "2024/01/15" (ja)
+   *
+   * // 特定のフィールドのみ表示
+   * formatDate(new Date(), ['year', 'month']) // "2024/01" (ja)
+   * formatDate(new Date(), ['weekday']) // "月" (ja)
+   *
+   * // 日本語でスラッシュを無効化（月を長形式で表示）
+   * formatDate(new Date(), ['year', 'month'], { disableSlashInJa: true }) // "2024年1月" (ja)
+   *
+   * // 最初の文字を大文字化
+   * formatDate(new Date(), ['weekday'], { capitalize: true }) // "月" (ja)
+   *
+   * @returns フォーマットされた日付文字列
+   */
   const formatDate = useCallback(
-    /**
-     * 日付をロケールに応じた形式でフォーマットする関数
-     *
-     * @param date - フォーマット対象の日付
-     * @param fields - 表示するフィールド。指定しない場合は全て表示
-     * @param options - フォーマットオプション
-     *
-     * @example
-     * // 基本的な使用法（ロケールのデフォルト形式）
-     * formatDate(new Date()) // "2024/01/15" (ja)
-     *
-     * // 特定のフィールドのみ表示
-     * formatDate(new Date(), ['year', 'month']) // "2024/01" (ja)
-     * formatDate(new Date(), ['weekday']) // "月" (ja)
-     *
-     * // 日本語でスラッシュを無効化（月を長形式で表示）
-     * formatDate(new Date(), ['year', 'month'], { disableSlashInJa: true }) // "2024年1月" (ja)
-     *
-     * // 最初の文字を大文字化
-     * formatDate(new Date(), ['weekday'], { capitalize: true }) // "月" (ja)
-     *
-     * @returns フォーマットされた日付文字列
-     */
     (
       date: Date,
       fields?: Array<'year' | 'month' | 'day' | 'weekday'>,
@@ -150,5 +150,31 @@ export const useIntl = () => {
     [intl, locale],
   )
 
-  return { availableLocales, localize, formatDate, locale }
+  /**
+   * 現在のロケールに基づいて週の開始日を決定する関数
+   * Intl.Locale.prototype.getWeekInfo()の動作を再現
+   * getWeekInfo()を使わない理由は、Firefoxでは動作しないため
+   *
+   * @returns 週の開始日（0 = 日曜日, 1 = 月曜日, ..., 6 = 土曜日）
+   *
+   * @example
+   * const { getWeekStartDay } = useIntl()
+   * getWeekStartDay() // 0 (日曜日開始) for 'en-us', 1 (月曜日開始) for 'id-id'
+   */
+  const getWeekStartDay = (): number => {
+    const weekStartMap: Partial<Record<keyof typeof locales, number>> = {
+      // 日曜日開始
+      'en-us': 0,
+      ja: 0,
+      'ja-easy': 0,
+      ko: 0,
+      'zh-cn': 0,
+      'zh-tw': 0,
+      // その他の曜日開始も拡張可能
+    }
+
+    return weekStartMap[locale] ?? 1 // デフォルトは月曜日開始
+  }
+
+  return { availableLocales, localize, formatDate, locale, getWeekStartDay }
 }
