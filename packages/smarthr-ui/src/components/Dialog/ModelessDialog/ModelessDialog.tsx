@@ -21,6 +21,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useIntl } from '../../../intl'
+import { dialogSize } from '../../../themes/tailwind'
 import { Base, type BaseElementProps } from '../../Base'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
@@ -117,13 +118,13 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      XS: { wrapper: 'shr-w-col3' },
-      S: { wrapper: 'shr-w-col4' },
-      M: { wrapper: 'shr-w-col5' },
-      L: { wrapper: 'shr-w-col6' },
-      XL: { wrapper: 'shr-w-col7' },
-      XXL: { wrapper: 'shr-w-col8' },
-      FULL: { wrapper: 'shr-w-full' },
+      XS: { wrapper: dialogSize.XS },
+      S: { wrapper: dialogSize.S },
+      M: { wrapper: dialogSize.M },
+      L: { wrapper: dialogSize.L },
+      XL: { wrapper: dialogSize.XL },
+      XXL: { wrapper: dialogSize.XXL },
+      FULL: { wrapper: dialogSize.FULL },
     },
     resizable: {
       true: {
