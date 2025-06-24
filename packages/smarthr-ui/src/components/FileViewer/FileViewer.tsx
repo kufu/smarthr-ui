@@ -14,6 +14,7 @@ import {
   Text,
   VisuallyHiddenText,
 } from '../..'
+import { Localizer } from '../../intl'
 
 import { ImageViewer } from './ImageViewer'
 import { PDFViewer } from './PDFViewer'
@@ -119,7 +120,12 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
               onLoad={handleLoaded}
             />
           ) : (
-            <Text>サポートされていない形式のファイルです。</Text>
+            <Text>
+              <Localizer
+                id="smarthr-ui/FileViewer/unsupportedFileText"
+                defaultText="サポートされていない形式のファイルです。"
+              />
+            </Text>
           )}
         </div>
       </div>
@@ -153,12 +159,16 @@ const Controller: FC<ControllerProps> = memo(
             disabled={scale <= scaleSteps[0]}
             className="shr-rounded-none shr-border-none"
           >
-            <FaMagnifyingGlassMinusIcon alt="縮小" />
+            <FaMagnifyingGlassMinusIcon
+              alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
+            />
           </Button>
           <DropdownMenuButton
             label={
               <Text>
-                <VisuallyHiddenText>拡大率</VisuallyHiddenText>
+                <VisuallyHiddenText>
+                  <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
+                </VisuallyHiddenText>
                 {`${(scale * 100).toFixed(0)}%`}
               </Text>
             }
@@ -175,11 +185,15 @@ const Controller: FC<ControllerProps> = memo(
             ))}
           </DropdownMenuButton>
           <Button onClick={onClickScaleUpButton} className="shr-rounded-none shr-border-0">
-            <FaMagnifyingGlassPlusIcon alt="拡大" />
+            <FaMagnifyingGlassPlusIcon
+              alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
+            />
           </Button>
         </div>
         <Button onClick={onClickRotateButton} className="shr-p-0.75">
-          <FaArrowRotateLeftIcon alt="左回転" />
+          <FaArrowRotateLeftIcon
+            alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
+          />
         </Button>
       </Cluster>
     </div>
