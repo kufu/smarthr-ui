@@ -23,6 +23,7 @@ export const locale = {
   'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/Loader/alt': '',
   'smarthr-ui/RequiredLabel/text': '必填',
+  'smarthr-ui/Select/blankLabel': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
   'smarthr-ui/SortDropdown/cancelButtonLabel': '',

@@ -21,6 +21,7 @@ export const locale = {
   'smarthr-ui/InputFile/destroy': '削除',
   'smarthr-ui/Loader/alt': '処理中',
   'smarthr-ui/RequiredLabel/text': '必須',
+  'smarthr-ui/Select/blankLabel': '選択してください',
   'smarthr-ui/SortDropdown/applyButtonLabel': '適用',
   'smarthr-ui/SortDropdown/ascLabel': '昇順',
   'smarthr-ui/SortDropdown/cancelButtonLabel': 'キャンセル',
