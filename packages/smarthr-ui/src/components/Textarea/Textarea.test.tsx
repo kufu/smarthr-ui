@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { useEffect, useState } from 'react'
 
+import { IntlProvider } from '../../intl'
 import { FormControl } from '../FormControl'
 
 import { Textarea } from './Textarea'
@@ -19,11 +20,13 @@ describe('Textarea', () => {
         }, [])
 
         return (
-          <form>
-            <FormControl title="Textarea">
-              <Textarea name="textarea" value={value} maxLetters={10} />
-            </FormControl>
-          </form>
+          <IntlProvider locale="ja">
+            <form>
+              <FormControl title="Textarea">
+                <Textarea name="textarea" value={value} maxLetters={10} />
+              </FormControl>
+            </form>
+          </IntlProvider>
         )
       }
 
