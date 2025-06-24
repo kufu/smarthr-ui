@@ -25,6 +25,7 @@ export const locale = {
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/Loader/alt': '',
+  'smarthr-ui/MessageDialog/closeButtonLabel': '',
   'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
   'smarthr-ui/RequiredLabel/text': 'Wajib',

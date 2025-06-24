@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
@@ -14,20 +15,22 @@ import { MessageDialogContent } from './MessageDialog'
 describe('DialogWrapper', () => {
   describe('DialogContent', () => {
     const DialogContentTemplate = () => (
-      <DialogWrapper>
-        <DialogTrigger>
-          <Button>Dialog</Button>
-        </DialogTrigger>
-        <DialogContent ariaLabelledby="dialog-title">
-          <Section>
-            <Heading id="dialog-title">DialogContent</Heading>
-            <p>Uncontrolled Dialog.</p>
-            <DialogCloser>
-              <Button>Close</Button>
-            </DialogCloser>
-          </Section>
-        </DialogContent>
-      </DialogWrapper>
+      <IntlProvider locale="ja">
+        <DialogWrapper>
+          <DialogTrigger>
+            <Button>Dialog</Button>
+          </DialogTrigger>
+          <DialogContent ariaLabelledby="dialog-title">
+            <Section>
+              <Heading id="dialog-title">DialogContent</Heading>
+              <p>Uncontrolled Dialog.</p>
+              <DialogCloser>
+                <Button>Close</Button>
+              </DialogCloser>
+            </Section>
+          </DialogContent>
+        </DialogWrapper>
+      </IntlProvider>
     )
     it('DialogContent が開閉できること', async () => {
       render(<DialogContentTemplate />)
@@ -74,29 +77,31 @@ describe('DialogWrapper', () => {
   })
   describe('MessageDialogContent', () => {
     const MessageDialogContentTemplate = () => (
-      <DialogWrapper>
-        <DialogTrigger>
-          <Button>MessageDialog</Button>
-        </DialogTrigger>
-        <MessageDialogContent
-          title="Uncontrolled Message Dialog"
-          description={
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua.
-              <br />
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
-              <br />
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur.
-              <br />
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-              mollit anim id est laborum.
-            </p>
-          }
-        />
-      </DialogWrapper>
+      <IntlProvider locale="ja">
+        <DialogWrapper>
+          <DialogTrigger>
+            <Button>MessageDialog</Button>
+          </DialogTrigger>
+          <MessageDialogContent
+            title="Uncontrolled Message Dialog"
+            description={
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua.
+                <br />
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat.
+                <br />
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat nulla pariatur.
+                <br />
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                mollit anim id est laborum.
+              </p>
+            }
+          />
+        </DialogWrapper>
+      </IntlProvider>
     )
     it('MessageDialogContent が開閉できること', async () => {
       render(<MessageDialogContentTemplate />)
