@@ -2,43 +2,30 @@ import {
   type AriaAttributes,
   type ComponentPropsWithoutRef,
   type PropsWithChildren,
-  type ReactNode,
   memo,
   useMemo,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { UnstyledButton } from '../Button'
-import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
+import { ThSortButton } from './ThSortButton'
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-type sortTypes = keyof typeof SORT_DIRECTION_LABEL
 export type Props = PropsWithChildren<
   {
     /** 並び替え状態 */
-    sort?: sortTypes
+    sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
     /** 並び替えをクリックした時に発火するコールバック関数 */
     onSort?: () => void
     /** 横スクロール時、カラムを左右いずれかに固定 */
     fixed?: 'left' | 'right'
     /** 文言を変更するための関数 */
-    decorators?: {
-      sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
-    }
+    decorators?: ComponentPropsWithoutRef<typeof ThSortButton>['decorators']
     contentWidth?: CellContentWidth
   } & VariantProps<typeof classNameGenerator>
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
-
-const SORT_DIRECTION_LABEL = {
-  asc: '昇順',
-  desc: '降順',
-  none: '並び替えなし',
-}
 
 const classNameGenerator = tv({
   base: [
@@ -79,7 +66,7 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
 
 type ActualProps = Props & ElementProps
 
-export const Th = memo<Props & ElementProps>(
+export const Th = memo<ActualProps>(
   ({
     children,
     sort,
@@ -112,13 +99,6 @@ export const Th = memo<Props & ElementProps>(
       [style, contentWidth],
     )
 
-    const sortLabel = useMemo(
-      () =>
-        sort &&
-        (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
-          SORT_DIRECTION_LABEL[sort]),
-      [decorators, sort],
-    )
     const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
       () => (sort ? (sort === 'none' ? 'none' : `${sort}ending`) : undefined),
       [sort],
@@ -133,9 +113,9 @@ export const Th = memo<Props & ElementProps>(
         style={actualStyle}
       >
         {sort ? (
-          <MemoizedSortButton align={align} onSort={onSort} sortLabel={sortLabel}>
+          <ThSortButton align={align} onSort={onSort} sort={sort} decorators={decorators}>
             {children}
-          </MemoizedSortButton>
+          </ThSortButton>
         ) : (
           children
         )}
@@ -143,69 +123,3 @@ export const Th = memo<Props & ElementProps>(
     )
   },
 )
-
-const sortButtonClassNameGenerator = tv({
-  base: '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-items-center shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
-  variants: {
-    align: {
-      left: '',
-      right: 'shr-justify-end',
-    },
-  },
-})
-
-const MemoizedSortButton = memo<
-  Pick<ActualProps, 'align' | 'onSort'> &
-    PropsWithChildren<{
-      sortLabel: ReactNode
-    }>
->(({ align, onSort, sortLabel, children }) => {
-  const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
-
-  return (
-    <UnstyledButton onClick={onSort} className={className}>
-      {children}
-      <SortIcon />
-      <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
-    </UnstyledButton>
-  )
-})
-
-const sortIconClassNameGenerator = tv({
-  slots: {
-    wrapper: 'smarthr-ui-Icon-extended shr-relative shr-h-1 shr-w-1',
-    upIcon: [
-      'shr-absolute shr-left-0 shr-top-0',
-      'shr-text-base',
-      '[[aria-sort="none"]_&]:shr-text-disabled',
-      '[[aria-sort="ascending"]_&]:shr-text-black',
-      '[[aria-sort="descending"]_&]:shr-text-disabled',
-    ],
-    downIcon: [
-      'shr-absolute shr-left-0 shr-top-0',
-      'shr-text-base',
-      '[[aria-sort="none"]_&]:shr-text-disabled',
-      '[[aria-sort="ascending"]_&]:shr-text-disabled',
-      '[[aria-sort="descending"]_&]:shr-text-black',
-    ],
-  },
-})
-
-const SortIcon = memo(() => {
-  const classNames = useMemo(() => {
-    const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      upIcon: upIcon(),
-      downIcon: downIcon(),
-    }
-  }, [])
-
-  return (
-    <span className={classNames.wrapper}>
-      <FaSortUpIcon className={classNames.upIcon} />
-      <FaSortDownIcon className={classNames.downIcon} />
-    </span>
-  )
-})

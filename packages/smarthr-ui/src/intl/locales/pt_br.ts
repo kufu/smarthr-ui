@@ -36,4 +36,9 @@ export const locale = {
   'smarthr-ui/StepStatusIcon/closedAlt': '',
   'smarthr-ui/StepStatusIcon/completedAlt': '',
   'smarthr-ui/TextLink/openInNewTab': 'Abra em uma outra guia',
+  'smarthr-ui/Th/sortDirectionAsc': '',
+  'smarthr-ui/Th/sortDirectionDesc': '',
+  'smarthr-ui/Th/sortDirectionNone': '',
+  'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '',
+  'smarthr-ui/ThCheckbox/checkColumnName': '',
 } as const satisfies Record<keyof typeof ja, string>
