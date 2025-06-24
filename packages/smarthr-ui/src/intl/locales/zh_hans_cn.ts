@@ -25,6 +25,8 @@ export const locale = {
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
   'smarthr-ui/Loader/alt': '',
+  'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
+  'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
   'smarthr-ui/RequiredLabel/text': '必须',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',

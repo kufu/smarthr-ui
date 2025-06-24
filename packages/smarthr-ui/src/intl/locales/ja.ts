@@ -23,6 +23,8 @@ export const locale = {
   'smarthr-ui/InformationPanel/openButtonLabel': '開く',
   'smarthr-ui/InputFile/destroy': '削除',
   'smarthr-ui/Loader/alt': '処理中',
+  'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': 'を削除',
+  'smarthr-ui/MultiCombobox/selectedListAriaLabel': '選択済みアイテム',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '削除',
   'smarthr-ui/SortDropdown/applyButtonLabel': '適用',
