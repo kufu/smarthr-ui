@@ -3,298 +3,198 @@ description: Figma Dev Mode MCP サーバーを使って画面を実装する際
 globs: 
 alwaysApply: false
 ---
-# SmartHR UI コンポーネント実装ルール
+# SmartHR UI 動的実装確認ルール
 
-Figma Dev Mode MCP サーバーを使って SmartHR UI コンポーネントを実装する際の重要なルール：
+Figma Dev Mode MCP サーバーを使って SmartHR UI コンポーネントを実装する際の動的確認ルール：
 
-## 基本原則
-- **インラインスタイルを使用しない**
-- SmartHR UI のデザインシステムクラス名を優先使用する
-- 適切な SmartHR UI コンポーネントを選択する
-- **Figma デザインデータに基づいて実装する**
+## 🔄 基本ワークフロー
 
-## import文のパターン
+1. **Figmaデータ取得**: MCPサーバーからデザインデータを取得
+2. **使用コンポーネント特定**: Figmaから必要なコンポーネントを識別  
+3. **実装動的確認**: 特定されたコンポーネントの実装を確認
+4. **適切なコード生成**: 実装仕様に基づいたコード生成
+
+## 🚀 実践的ワークフロー例
+
+### Phase 1: Figmaデータ取得と分析
+```bash
+# 1. Figmaからコード生成
+mcp_Figma_Dev_Mode_MCP_get_code
+
+# 2. 使用コンポーネントを特定
+# 出力例: InformationPanel, Cluster, Base, Pagination, Switch など
+```
+
+### Phase 2: コンポーネント実装の動的確認
+```bash
+# 3. 特定されたコンポーネントの実装を確認
+read_file packages/smarthr-ui/src/components/InformationPanel/InformationPanel.tsx
+read_file packages/smarthr-ui/src/components/Cluster/Cluster.tsx
+read_file packages/smarthr-ui/src/components/Base/Base.tsx
+# ... 他の必要なコンポーネント
+```
+
+### Phase 3: 実装仕様に基づくコード生成
+```typescript
+// 4. 型定義とデフォルト値を確認してコード生成
+// InformationPanel: type="info"(default), active=true(default)
+<InformationPanel title="タイトル">  {/* デフォルト値活用 */}
+  内容
+</InformationPanel>
+```
+
+## 📁 コンポーネント実装確認手順
+
+### Step 1: 使用コンポーネントの特定
+Figmaデータから使用されるコンポーネントを特定し、以下のパスで実装を確認：
+
+```
+packages/smarthr-ui/src/components/{ComponentName}/{ComponentName}.tsx
+```
+
+### Step 2: 重要な確認ポイント
+各コンポーネントの実装確認時に注目すべき項目：
+
+#### 🔧 型定義の確認
+```typescript
+type Props = {
+  // プロパティの型定義
+  // 必須/オプショナルの確認
+  // デフォルト値の確認
+}
+```
+
+#### ⚙️ デフォルト値の確認
+```typescript
+const Component = ({ 
+  prop1 = "defaultValue",  // デフォルト値
+  prop2,                   // 必須プロパティ
+  ...
+}) => {
+```
+
+#### 🎨 バリアント・オプションの確認
+```typescript
+const classNameGenerator = tv({
+  variants: {
+    // 利用可能なバリアント
+  }
+})
+```
+
+## 🎯 動的確認の実践例
+
+### 例: InformationPanelを使用する場合
+
+1. **実装確認**:
+   ```bash
+   packages/smarthr-ui/src/components/InformationPanel/InformationPanel.tsx
+   ```
+
+2. **型定義確認**:
+   ```typescript
+   type Props = {
+     title: ReactNode           // 必須
+     type?: 'success' | 'info' | 'warning' | 'error' | 'sync'  // デフォルト: 'info'
+     togglable?: boolean        // デフォルト: undefined
+     active?: boolean           // デフォルト: true
+     // ...
+   }
+   ```
+
+3. **適切なコード生成**:
+   ```tsx
+   // デフォルト値を活用（type="info"は省略）
+   <InformationPanel title="タイトル">
+     内容
+   </InformationPanel>
+   ```
+
+## 📋 汎用的なベストプラクティス
+
+### import文のパターン
 ```tsx
 import { useState } from 'react'
 import {
-  Button,
-  Container,
-  FormControl,
-  Fieldset,
-  Heading,
-  MultiCombobox,
-  Input,
-  RadioButton,
-  Stack,
-  Cluster,
-  Base,
-  PageHeading,
-  RequiredLabel,
+  // 使用するコンポーネントのみimport
+  // アルファベット順で整理
 } from 'smarthr-ui'
 ```
-- **React hooksを先にimport**
-- SmartHR UIコンポーネントは後にimport
 
-## 状態管理の命名規則と順序
+### 基本レイアウトパターン
 ```tsx
-// 状態変数の宣言順序
-const [selectedItems, setSelectedItems] = useState<any[]>([])
-const [inputValue, setInputValue] = useState('')
-const [selectedRadio, setSelectedRadio] = useState('option1')
-```
-
-## レイアウト
-- ページレイアウトには `Container` コンポーネントを使用
-- 背景色には `className="shr-bg-background"` を使用
-- `Stack`コンポーネントの`gap`は**デフォルト値（gap={1}）を積極的に使用**し、必要に応じて省略する
-
-```tsx
-// 良い例（デフォルト値を活用）
 <Container className="shr-bg-background">
   <Stack gap={1.5}>
-    <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
-      <PageHeading>メインタイトル</PageHeading>
-      <p>説明文</p>
-    </Stack>
-    
-    <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
-      <Cluster justify="space-between">
-        <Heading>セクションタイトル</Heading>
-        <Button>編集</Button>
-      </Cluster>
-      {/* その他のコンテンツ */}
-    </Stack>
+    {/* メインコンテンツ */}
   </Stack>
 </Container>
-
-// 悪い例（デフォルト値を明示的に指定）
-<Stack gap={1}>  {/* 不要 */}
-  <PageHeading>メインタイトル</PageHeading>
-  <p>説明文</p>
-</Stack>
 ```
 
-## ヘッダーコンポーネント
-- ページタイトルには `PageHeading` コンポーネントを使用
-- セクションタイトルには `Heading` コンポーネントを使用（type属性は指定しない）
+### スタイリング原則
+- **インラインスタイルを使用しない**
+- SmartHR UIのデザインシステムクラス名を使用
+- `className="shr-w-full"` などの適切なクラス名
 
-```tsx
-// 良い例
-<PageHeading>ページタイトル</PageHeading>
-<Heading>セクションタイトル</Heading>
+## 🔍 動的確認チェックリスト
 
-// 悪い例
-<Heading tag="h1" type="screenTitle">ページタイトル</Heading>
-<Heading type="sectionTitle">セクションタイトル</Heading>
+コード生成前に以下を確認：
+
+### 実装確認
+- [ ] **使用コンポーネントの実装ファイルを確認済み**
+- [ ] **型定義からプロパティの仕様を把握済み**  
+- [ ] **デフォルト値を確認し、不要な明示を避けている**
+- [ ] **利用可能なバリアント・オプションを把握済み**
+
+### コード品質
+- [ ] **import順序が正しい**（React hooks → smarthr-ui）
+- [ ] **インラインスタイルを使用していない**
+- [ ] **適切なクラス名を使用している**
+- [ ] **Figmaデザインに忠実な実装**
+
+### レイアウト構造
+- [ ] **適切なコンポーネントの組み合わせ**
+- [ ] **デフォルト値を活用した簡潔なコード**
+- [ ] **一貫性のあるレイアウトパターン**
+
+## 🎪 コンポーネント確認の自動化
+
+理想的には以下のような確認を自動化：
+
+1. **Figmaコンポーネント → SmartHR UIコンポーネント のマッピング**
+2. **実装ファイルの自動読み取り**  
+3. **型定義・デフォルト値の自動抽出**
+4. **最適なプロパティの自動決定**
+
+## 🔄 継続的改善
+
+このアプローチにより：
+- **ルールファイルの簡潔性維持**
+- **常に最新の実装仕様に基づくコード生成**
+- **新しいコンポーネントへの自動対応**
+- **メンテナンス負荷の大幅削減**
+
+## 💡 実装確認の効率化Tips
+
+### 複数コンポーネントの並列確認
+```bash
+# 複数のコンポーネント実装を同時に確認
+read_file packages/smarthr-ui/src/components/ComponentA/ComponentA.tsx &
+read_file packages/smarthr-ui/src/components/ComponentB/ComponentB.tsx &
+read_file packages/smarthr-ui/src/components/ComponentC/ComponentC.tsx &
 ```
 
-## ボタンコンポーネント
-- 基本的にvariant属性は指定しない（デフォルトを使用）
-- プライマリボタンの場合のみ `variant="primary"` を指定
-- ボタンを単体配置する場合は `<div>` で囲む
+### 型定義の重点確認項目
+- **必須プロパティ** (`prop: Type`)
+- **オプショナルプロパティ** (`prop?: Type`)  
+- **デフォルト値** (`prop = defaultValue`)
+- **ユニオン型** (`prop: 'a' | 'b' | 'c'`)
 
-```tsx
-// 良い例
-<Button>編集</Button>
-<div>
-  <Button variant="primary">保存</Button>
-</div>
+### よくあるパターンの理解
+- **Base**: `overflow` vs `padding` の使い分け
+- **Stack**: `gap` のデフォルト値活用
+- **Cluster**: `align` と `justify` の組み合わせ
+- **FormControl**: `helpMessage` の省略パターン
 
-// 悪い例
-<Button variant="secondary">編集</Button>
-<Button variant="primary">保存</Button>
-```
+---
 
-## フォームコンポーネント
-- 必須ラベルには `RequiredLabel` コンポーネントを使用
-- `StatusLabel` ではなく `RequiredLabel` を使う
-- エラーハンドリングは三項演算子を使用
-- `FormControl` の `helpMessage` は**コンテキストによって省略可能**
-- `Input` コンポーネントの `error` 属性は使用する
-
-```tsx
-// 良い例（helpMessage省略パターン）
-<FormControl title="ラベル名">
-  <MultiCombobox
-    items={multiComboboxItems}
-    selectedItems={selectedItems}
-    onChangeSelected={setSelectedItems}
-    className="shr-w-full"
-  />
-</FormControl>
-
-// 良い例（helpMessage有りパターン）
-<FormControl
-  title="入力項目名"
-  statusLabels={<RequiredLabel />}
-  helpMessage="入力に関する説明文"
-  errorMessages={inputValue ? [] : ['必須項目です。']}
->
-  <Input
-    value={inputValue}
-    onChange={(e) => setInputValue(e.target.value)}
-    error={!inputValue}
-    className="shr-w-full"
-  />
-</FormControl>
-
-// 悪い例
-statusLabels={[
-  <StatusLabel key="required" type="red">
-    必須
-  </StatusLabel>,
-]}
-errorMessages={inputValue === '' ? ['必須項目です。'] : []}
-```
-
-## MultiCombobox
-- 配列変数名は `multiComboboxItems` を使用
-- `any[]` 型を使用（型安全性より簡潔性を優先）
-- **onChangeSelectedは関数参照を直接渡す（簡潔にする）**
-
-```tsx
-// 良い例
-const [selectedItems, setSelectedItems] = useState<any[]>([])
-const multiComboboxItems = [
-  { value: 'option1', label: 'オプション1' },
-  { value: 'option2', label: 'オプション2' },
-]
-
-<MultiCombobox
-  items={multiComboboxItems}
-  selectedItems={selectedItems}
-  onChangeSelected={setSelectedItems}  // 直接関数参照を渡す
-  className="shr-w-full"
-/>
-
-// 悪い例
-onChangeSelected={(items) => setSelectedItems(items)}  // アロー関数で包む
-```
-
-## RadioButton
-- value値は意味のある名前で指定（`option1`, `option2`など）
-- name属性は `radioGroup` を使用
-- RadioButtonグループの Stack には `gap={0.75}` を指定
-
-```tsx
-// 良い例
-<Fieldset title="選択項目">
-  <Stack gap={0.75}>
-    <RadioButton
-      name="radioGroup"
-      value="option1"
-      checked={selectedRadio === 'option1'}
-      onChange={(e) => setSelectedRadio(e.target.value)}
-    >
-      選択肢1
-    </RadioButton>
-  </Stack>
-</Fieldset>
-
-// 悪い例
-<RadioButton
-  name="radio"
-  value="選択肢1"
-  checked={radioValue === '選択肢1'}
-  onChange={(e) => setRadioValue(e.target.value)}
->
-  選択肢1
-</RadioButton>
-```
-
-## スタイリング
-- 幅指定には `className="shr-w-full"` を使用
-- インラインスタイルは避ける
-- SmartHR UI のデザインシステムクラス名を使用
-
-```tsx
-// 良い例
-<Input className="shr-w-full" />
-
-// 悪い例
-<Input style={{ width: '100%' }} />
-```
-
-## Stackコンポーネントのgap指定
-**Stack の gap はデフォルト値（gap={1}）を積極的に活用し、必要に応じて省略する**
-
-- **推奨の**gap値:
-  - メインレイアウト: `gap={1.5}` 
-  - ページヘッダー部分: **省略**（デフォルト値gap={1}を使用）
-  - セクション間: **省略**（デフォルト値gap={1}を使用）
-  - フォーム要素間: `gap={1.5}`
-  - RadioButtonグループ: `gap={0.75}`
-
-```tsx
-// 良い例（デフォルト値を活用）
-<Stack gap={1.5}>
-  <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
-    <PageHeading>メインタイトル</PageHeading>
-    <p>説明文やサブタイトル</p>
-  </Stack>
-  
-  <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
-    <Cluster justify="space-between">
-      <Heading>セクションタイトル</Heading>
-      <Button>操作ボタン</Button>
-    </Cluster>
-  </Stack>
-</Stack>
-
-// 悪い例（不要にgap値を明示）
-<Stack gap={1}>  {/* デフォルト値なので省略可能 */}
-  <PageHeading>タイトル</PageHeading>
-  <p>説明文</p>
-</Stack>
-```
-
-## コンポーネント使い分け
-- `PageHeading`: ページのメインタイトル
-- `Heading`: セクションタイトル（type属性なし）
-- `RequiredLabel`: 必須項目のラベル
-- `Container`: ページレイアウト
-- `Base`: カード風のコンテナ（**必ず padding={1.5} を指定**）
-
-```tsx
-// 良い例
-<Container className="shr-bg-background">
-  <Stack gap={1.5}>
-    {/* コンテンツ */}
-  </Stack>
-</Container>
-
-<Base padding={1.5}>
-  <Stack gap={1.5}>
-    {/* カード内容 */}
-  </Stack>
-</Base>
-
-// 悪い例
-<Base>  {/* padding={1.5} が必須 */}
-  {/* カード内容 */}
-</Base>
-
-<div style={{ backgroundColor: '#F8F7F6', padding: '32px 188px' }}>
-  {/* コンテンツ */}
-</div>
-```
-
-## 重要な原則
-**コードの一貫性を保つ**
-- Stack の gap: デフォルト値（gap={1}）を積極的に活用し、省略する
-- FormControl の helpMessage: コンテキストによって省略可能
-- Input の error 属性: 常に使用する
-- Base コンポーネント: 必ず padding={1.5} を指定する
-- 関数参照は可能な限り直接渡す（簡潔にする）
-
-## チェックリスト
-コード生成時は以下を確認：
-- [ ] import順序が正しい（React hooks → smarthr-ui）
-- [ ] 状態変数の宣言順序が正しい（selectedItems, inputValue, selectedRadio）
-- [ ] `RequiredLabel` が使用されている（`StatusLabel`ではない）
-- [ ] **Stackのgap値はデフォルト値を積極的に活用し、省略している**
-- [ ] **FormControlのhelpMessageはコンテキストによって省略している**
-- [ ] onChangeSelectedは関数参照を直接渡している
-- [ ] インラインスタイルを使用していない
-- [ ] 適切なクラス名を使用している
-- [ ] **Base コンポーネントに padding={1.5} が指定されている**
+**動的確認により、スケーラブルで正確なコード生成を実現します。**
