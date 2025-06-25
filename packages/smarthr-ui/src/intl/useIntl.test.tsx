@@ -129,13 +129,13 @@ describe('useIntl', () => {
       })
     })
 
-    describe('field combinations', () => {
+    describe('part combinations', () => {
       it('formats only year and month', () => {
         const wrapper: FC<PropsWithChildren> = ({ children }) => (
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: ['year', 'month'] })).toBe('2025/01')
+        expect(formatDate({ date: testDate, parts: ['year', 'month'] })).toBe('2025/01')
       })
 
       it('formats only year', () => {
@@ -143,7 +143,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: ['year'] })).toBe('2025年')
+        expect(formatDate({ date: testDate, parts: ['year'] })).toBe('2025年')
       })
 
       it('formats only month and day', () => {
@@ -151,7 +151,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: ['month', 'day'] })).toBe('01/01')
+        expect(formatDate({ date: testDate, parts: ['month', 'day'] })).toBe('01/01')
       })
 
       it('formats only weekday', () => {
@@ -159,7 +159,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: ['weekday'] })).toBe('水')
+        expect(formatDate({ date: testDate, parts: ['weekday'] })).toBe('水')
       })
 
       it('formats year, month, day, and weekday', () => {
@@ -167,7 +167,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: ['year', 'month', 'day', 'weekday'] })).toBe(
+        expect(formatDate({ date: testDate, parts: ['year', 'month', 'day', 'weekday'] })).toBe(
           '2025/01/01（水）',
         )
       })
@@ -182,7 +182,7 @@ describe('useIntl', () => {
         expect(
           formatDate({
             date: testDate,
-            fields: ['year', 'month'],
+            parts: ['year', 'month'],
             options: { disableSlashInJa: true },
           }),
         ).toBe('2025年1月')
@@ -196,14 +196,14 @@ describe('useIntl', () => {
         expect(
           formatDate({
             date: testDate,
-            fields: ['weekday'],
+            parts: ['weekday'],
             options: { capitalizeFirstLetter: true },
           }),
         ).not.toBe('qua.')
         expect(
           formatDate({
             date: testDate,
-            fields: ['weekday'],
+            parts: ['weekday'],
             options: { capitalizeFirstLetter: true },
           }),
         ).toBe('Qua.')
@@ -217,7 +217,7 @@ describe('useIntl', () => {
         expect(
           formatDate({
             date: testDate,
-            fields: ['year', 'month'],
+            parts: ['year', 'month'],
             options: { disableSlashInJa: true },
           }),
         ).toBe('Jan 2025')
@@ -228,7 +228,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: ['year', 'month'], options: undefined })).toBe(
+        expect(formatDate({ date: testDate, parts: ['year', 'month'], options: undefined })).toBe(
           '2025/01',
         )
       })
@@ -248,12 +248,12 @@ describe('useIntl', () => {
         expect(formatDate({ date: date2 })).toBe('2023/06/30（金）')
       })
 
-      it('handles empty fields array', () => {
+      it('handles empty parts array', () => {
         const wrapper: FC<PropsWithChildren> = ({ children }) => (
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: [] })).toBe('2025/01/01（水）')
+        expect(formatDate({ date: testDate, parts: [] })).toBe('2025/01/01（水）')
       })
 
       it('does not add brackets for Chinese locales when only weekday is included', () => {
@@ -264,7 +264,7 @@ describe('useIntl', () => {
         const { formatDate: formatDateZhCn } = renderHook(() => useIntl(), { wrapper: zhCnWrapper })
           .result.current
 
-        expect(formatDateZhCn({ date: testDate, fields: ['weekday'] })).toBe('周三')
+        expect(formatDateZhCn({ date: testDate, parts: ['weekday'] })).toBe('周三')
 
         // 簡体字をチェック
         const zhTwWrapper: FC<PropsWithChildren> = ({ children }) => (
@@ -272,7 +272,7 @@ describe('useIntl', () => {
         )
         const { formatDate: formatDateZhTw } = renderHook(() => useIntl(), { wrapper: zhTwWrapper })
           .result.current
-        expect(formatDateZhTw({ date: testDate, fields: ['weekday'] })).toBe('週三')
+        expect(formatDateZhTw({ date: testDate, parts: ['weekday'] })).toBe('週三')
       })
 
       it('does not add brackets for English locale when only weekday is included', () => {
@@ -280,7 +280,7 @@ describe('useIntl', () => {
           <IntlProvider locale="en-us">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, fields: ['weekday'] })).toBe('Wed')
+        expect(formatDate({ date: testDate, parts: ['weekday'] })).toBe('Wed')
       })
     })
   })
