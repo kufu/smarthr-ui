@@ -29,6 +29,7 @@ export const locale = {
   'smarthr-ui/ModelessDialog/dialogHandlerAriaValuetext': '上から{top}px、左から{left}px',
   'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': 'を削除',
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '選択済みアイテム',
+  'smarthr-ui/NotificationBar/closeButtonIconAlt': '閉じる',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '削除',
   'smarthr-ui/SortDropdown/applyButtonLabel': '適用',

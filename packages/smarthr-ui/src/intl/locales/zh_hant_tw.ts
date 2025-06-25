@@ -31,6 +31,7 @@ export const locale = {
   'smarthr-ui/MessageDialog/closeButtonLabel': '',
   'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
+  'smarthr-ui/NotificationBar/closeButtonIconAlt': '',
   'smarthr-ui/RequiredLabel/text': '必填',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',

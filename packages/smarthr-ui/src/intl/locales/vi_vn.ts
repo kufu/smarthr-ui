@@ -31,6 +31,7 @@ export const locale = {
   'smarthr-ui/ModelessDialog/dialogHandlerAriaValuetext': '',
   'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix': '',
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
+  'smarthr-ui/NotificationBar/closeButtonIconAlt': '',
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
