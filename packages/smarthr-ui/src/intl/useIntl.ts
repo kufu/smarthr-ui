@@ -19,6 +19,8 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
   defaultText: (typeof locales.ja)[T]
 }
 
+type DatePart = 'year' | 'month' | 'day' | 'weekday'
+
 export type FormatDateProps = {
   /**
    * フォーマット対象の日付
@@ -28,7 +30,7 @@ export type FormatDateProps = {
   /**
    * 表示する日付のパーツ。指定しない場合は全て表示
    */
-  parts?: Array<'year' | 'month' | 'day' | 'weekday'>
+  parts?: DatePart[]
 
   /**
    * フォーマットオプション
@@ -52,108 +54,6 @@ export type FormatDateProps = {
   }
 }
 
-type BracketConfig = {
-  /**
-   * 曜日を含む日付文字列にマッチする正規表現パターン
-   */
-  pattern: RegExp
-
-  /**
-   * 括弧付きの曜日表示に変換するためのテンプレート文字列
-   * $1: 日付部分, $2: 曜日部分
-   */
-  template: string
-}
-
-const DATE_FORMATS: Record<
-  keyof typeof locales,
-  Intl.DateTimeFormatOptions & { weekStartDay: number }
-> = {
-  // localeがja, ja-easyの場合、フォーマットを YYYY/MM/DD 形式にする
-  // 参考: https://smarthr.design/products/contents/idiomatic-usage/count/#h2-3
-  ja: {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 0, // 日曜日開始
-  },
-  'ja-easy': {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 0, // 日曜日開始
-  },
-  'en-us': {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 0, // 日曜日開始
-  },
-  'id-id': {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 1, // 月曜日開始
-  },
-  ko: {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 0, // 日曜日開始
-  },
-  pt: {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 1, // 月曜日開始
-  },
-  vi: {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 1, // 月曜日開始
-  },
-  'zh-cn': {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 0, // 日曜日開始
-  },
-  'zh-tw': {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    weekday: 'short',
-    weekStartDay: 0, // 日曜日開始
-  },
-} as const
-
-/**
- * 各ロケールの括弧設定マップ
- * ロケールに応じて適切な括弧スタイル（半角/全角）と配置を定義
- */
-const WEEKDAY_FORMATS: Record<keyof typeof locales, BracketConfig> = {
-  ja: { pattern: /(.+?)\(([月火水木金土日])\)$/, template: '$1（$2）' },
-  'ja-easy': { pattern: /(.+?)\(([月火水木金土日])\)$/, template: '$1（$2）' },
-  'en-us': { pattern: /^([A-Za-z]{3}), (.+)$/, template: '$2 ($1)' },
-  'id-id': { pattern: /^([A-Za-z]{3}), (.+)$/, template: '$2 ($1)' },
-  ko: { pattern: /(.+?)([월화수목금토일])$/, template: '$1（$2）' },
-  pt: { pattern: /^([A-Za-z]{3}\.), (.+)$/, template: '$2 ($1)' },
-  vi: { pattern: /^([A-Za-z]{2} \d+), (.+)$/, template: '$2 ($1)' },
-  'zh-cn': { pattern: /(.+?)\s*([周][一二三四五六日])$/, template: '$1（$2）' },
-  'zh-tw': { pattern: /(.+?)\s*([週][一二三四五六日])$/, template: '$1（$2）' },
-} as const
-
-const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
-
 /**
  * useIntlフックの戻り値の型定義
  */
@@ -166,12 +66,15 @@ export type UseIntlReturn = {
     values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
     opts?: IntlMessageFormatOptions,
   ) => string
+
   /**
    * 日付をロケールに応じた形式でフォーマットする関数
    * @param props - フォーマットのオプション
    * @param props.date - フォーマット対象の日付
-   * @param props.parts - 表示する日付のパーツ。指定しない場合は全て表示
+   * @param props.parts - 表示する日付のパーツ。デフォルトは ['year', 'month', 'day', 'weekday']
    * @param props.options - フォーマットオプション
+   * @param props.options.disableSlashInJa - 日本語ロケールでスラッシュを無効化し、月を長形式で表示する
+   * @param props.options.capitalizeFirstLetter - 最初の文字を大文字化する
    * @returns フォーマットされた日付文字列
    * @example
    * // 基本的な使用法（ロケールのデフォルト形式）
@@ -188,6 +91,7 @@ export type UseIntlReturn = {
    * formatDate({ date: new Date(), parts: ['weekday'], options: { capitalizeFirstLetter: true } }) // "Seg." (pt)（指定しなければ "seg."）
    */
   formatDate(props: FormatDateProps): string
+
   /**
    * 現在のロケールに基づいて週の開始日を決定する関数
    * Intl.Locale.prototype.getWeekInfo()の動作を再現
@@ -199,6 +103,108 @@ export type UseIntlReturn = {
   /** 現在のロケール */
   locale: keyof typeof locales
 }
+
+const WEEK_START_DAYS = {
+  SUNDAY: 0,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
+} as const
+
+const DATE_FORMATS: Record<
+  keyof typeof locales,
+  Intl.DateTimeFormatOptions & { weekStartDay: number }
+> = {
+  // localeがja, ja-easyの場合、フォーマットを YYYY/MM/DD 形式にする
+  // 参考: https://smarthr.design/products/contents/idiomatic-usage/count/#h2-3
+  ja: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.SUNDAY,
+  },
+  'ja-easy': {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.SUNDAY,
+  },
+  'en-us': {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.SUNDAY,
+  },
+  'id-id': {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.MONDAY,
+  },
+  ko: {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.SUNDAY,
+  },
+  pt: {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.MONDAY,
+  },
+  vi: {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.MONDAY,
+  },
+  'zh-cn': {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.SUNDAY,
+  },
+  'zh-tw': {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    weekday: 'short',
+    weekStartDay: WEEK_START_DAYS.SUNDAY,
+  },
+} as const
+
+/**
+ * 各ロケールの括弧設定マップ
+ * ロケールに応じて適切な括弧スタイル（半角/全角）と配置を定義
+ */
+const WEEKDAY_FORMATS: Record<keyof typeof locales, { replacer: (base: string) => string }> = {
+  ja: { replacer: (base) => base.replace(/(.+?)\(([月火水木金土日])\)$/, '$1（$2）') },
+  'ja-easy': { replacer: (base) => base.replace(/(.+?)\(([月火水木金土日])\)$/, '$1（$2）') },
+  'en-us': { replacer: (base) => base.replace(/^([A-Za-z]{3}), (.+)$/, '$2 ($1)') },
+  'id-id': { replacer: (base) => base.replace(/^([A-Za-z]{3}), (.+)$/, '$2 ($1)') },
+  ko: { replacer: (base) => base.replace(/(.+?)([월화수목금토일])$/, '$1（$2）') },
+  pt: { replacer: (base) => base.replace(/^([A-Za-z]{3}\.), (.+)$/, '$2 ($1)') },
+  vi: { replacer: (base) => base.replace(/^([A-Za-z]{2} \d+), (.+)$/, '$2 ($1)') },
+  'zh-cn': { replacer: (base) => base.replace(/(.+?)\s*([周][一二三四五六日])$/, '$1（$2）') },
+  'zh-tw': { replacer: (base) => base.replace(/(.+?)\s*([週][一二三四五六日])$/, '$1（$2）') },
+} as const
+
+const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
+
+const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
+  shouldCapitalize ? text.charAt(0).toUpperCase() + text.slice(1) : text
 
 /**
  * 多言語化機能を提供するフック
@@ -242,53 +248,48 @@ export const useIntl = (): UseIntlReturn => {
   )
 
   const formatDate = useCallback(
-    (props: FormatDateProps): string => {
-      const { date, parts, options } = props
+    ({ date, parts = ['year', 'month', 'day', 'weekday'], options }: FormatDateProps): string => {
       const {
         disableSlashInJa = false,
         capitalizeFirstLetter = false,
         ...formatOptions
       } = options || {}
-      const requestedParts = parts || []
 
       // 指定されたパーツが含まれているかチェック（指定がない場合は全て含まれる）
-      const hasPart = (part: 'year' | 'month' | 'day' | 'weekday') =>
-        requestedParts.length === 0 || requestedParts.includes(part)
+      const shouldIncludePart = (part: DatePart) => {
+        // arrayが空の場合は全てのパーツを含める
+        if (parts.length === 0) return true
+        // 指定されたパーツのみを含める
+        return parts.includes(part)
+      }
 
       // ロケールのデフォルト形式を取得
-      const finalFormatOptions: Intl.DateTimeFormatOptions = {
-        year: hasPart('year') ? DATE_FORMATS[locale].year : undefined,
-        month: hasPart('month') ? DATE_FORMATS[locale].month : undefined,
-        day: hasPart('day') ? DATE_FORMATS[locale].day : undefined,
-        weekday: hasPart('weekday') ? DATE_FORMATS[locale].weekday : undefined,
+      const actualFormatOptions: Intl.DateTimeFormatOptions = {
+        year: shouldIncludePart('year') ? DATE_FORMATS[locale].year : undefined,
+        month: shouldIncludePart('month')
+          ? disableSlashInJa && locale === 'ja'
+            ? 'long'
+            : DATE_FORMATS[locale].month
+          : undefined,
+        day: shouldIncludePart('day') ? DATE_FORMATS[locale].day : undefined,
+        weekday: shouldIncludePart('weekday') ? DATE_FORMATS[locale].weekday : undefined,
         ...formatOptions,
       }
 
-      // 日本語でスラッシュを無効化する場合
-      if (disableSlashInJa && hasPart('month') && locale === 'ja') {
-        finalFormatOptions.month = 'long'
-      }
-
-      const result = intl.formatDate(date, finalFormatOptions)
+      const formattedDate = intl.formatDate(date, actualFormatOptions)
 
       // 曜日をロケールに応じてフォーマットする
-      let formattedResult = result
+      let formattedResult = formattedDate
       const config = WEEKDAY_FORMATS[locale]
       if (
         config &&
-        hasPart('weekday') &&
-        !(requestedParts.length === 1 && requestedParts[0] === 'weekday')
+        shouldIncludePart('weekday') &&
+        !(parts.length === 1 && parts[0] === 'weekday')
       ) {
-        // 正規表現とテンプレートを適用
-        const match = result.match(config.pattern)
-        if (match) {
-          formattedResult = result.replace(config.pattern, config.template)
-        }
+        formattedResult = config.replacer(formattedDate)
       }
 
-      return capitalizeFirstLetter
-        ? formattedResult.charAt(0).toUpperCase() + formattedResult.slice(1)
-        : formattedResult
+      return applyCapitalization(formattedResult, capitalizeFirstLetter)
     },
     [intl, locale],
   )
