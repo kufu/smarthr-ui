@@ -19,6 +19,52 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
   defaultText: (typeof locales.ja)[T]
 }
 
+export type FormatDateProps = {
+  /**
+   * フォーマット対象の日付
+   */
+  date: Date
+
+  /**
+   * 表示する日付のパーツ。指定しない場合は全て表示
+   */
+  parts?: Array<'year' | 'month' | 'day' | 'weekday'>
+
+  /**
+   * フォーマットオプション
+   */
+  options?: Intl.DateTimeFormatOptions & {
+    /**
+     * 日本語ロケールでスラッシュを無効化し、月を長形式で表示する
+     * @example
+     * // 通常: "2025/01"
+     * // disableSlashInJa: true の場合: "2025年1月"
+     */
+    disableSlashInJa?: boolean
+
+    /**
+     * 最初の文字を大文字化する
+     * @example
+     * // 通常: "seg." (pt)
+     * // capitalizeFirstLetter: true の場合: "Seg." (pt)
+     */
+    capitalizeFirstLetter?: boolean
+  }
+}
+
+type BracketConfig = {
+  /**
+   * 曜日を含む日付文字列にマッチする正規表現パターン
+   */
+  pattern: RegExp
+
+  /**
+   * 括弧付きの曜日表示に変換するためのテンプレート文字列
+   * $1: 日付部分, $2: 曜日部分
+   */
+  template: string
+}
+
 const DATE_FORMATS: Record<
   keyof typeof locales,
   Intl.DateTimeFormatOptions & { weekStartDay: number }
@@ -90,7 +136,11 @@ const DATE_FORMATS: Record<
   },
 } as const
 
-const BRACKET_CONFIG = {
+/**
+ * 各ロケールの括弧設定マップ
+ * ロケールに応じて適切な括弧スタイル（半角/全角）と配置を定義
+ */
+const WEEKDAY_FORMATS: Record<keyof typeof locales, BracketConfig> = {
   ja: { pattern: /(.+?)\(([月火水木金土日])\)$/, template: '$1（$2）' },
   'ja-easy': { pattern: /(.+?)\(([月火水木金土日])\)$/, template: '$1（$2）' },
   'en-us': { pattern: /^([A-Za-z]{3}), (.+)$/, template: '$2 ($1)' },
@@ -104,7 +154,79 @@ const BRACKET_CONFIG = {
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
-export const useIntl = () => {
+/**
+ * useIntlフックの戻り値の型定義
+ */
+export type UseIntlReturn = {
+  /** 利用可能なロケールのリスト */
+  availableLocales: string[]
+  /** メッセージのローカライズ関数 */
+  localize: <T extends keyof Messages>(
+    descriptor: MessageDescriptor<T>,
+    values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
+    opts?: IntlMessageFormatOptions,
+  ) => string
+  /**
+   * 日付をロケールに応じた形式でフォーマットする関数
+   * @param props - フォーマットのオプション
+   * @param props.date - フォーマット対象の日付
+   * @param props.parts - 表示する日付のパーツ。指定しない場合は全て表示
+   * @param props.options - フォーマットオプション
+   * @returns フォーマットされた日付文字列
+   * @example
+   * // 基本的な使用法（ロケールのデフォルト形式）
+   * formatDate({ date: new Date() }) // "2024/01/15（水）" (ja)
+   *
+   * // 特定のフィールドのみ表示
+   * formatDate({ date: new Date(), parts: ['year', 'month'] }) // "2024/01" (ja)
+   * formatDate({ date: new Date(), parts: ['weekday'] }) // "月" (ja)
+   *
+   * // 日本語でスラッシュを無効化（月を長形式で表示）
+   * formatDate({ date: new Date(), parts: ['year', 'month'], options: { disableSlashInJa: true } }) // "2024年1月" (ja)
+   *
+   * // 最初の文字を大文字化
+   * formatDate({ date: new Date(), parts: ['weekday'], options: { capitalizeFirstLetter: true } }) // "Seg." (pt)（指定しなければ "seg."）
+   */
+  formatDate(props: FormatDateProps): string
+  /**
+   * 現在のロケールに基づいて週の開始日を決定する関数
+   * Intl.Locale.prototype.getWeekInfo()の動作を再現
+   * getWeekInfo()を使わない理由は、Firefoxでは動作しないため
+   *
+   * @returns 週の開始日（0 = 日曜日, 1 = 月曜日, ..., 6 = 土曜日）
+   */
+  getWeekStartDay: () => number
+  /** 現在のロケール */
+  locale: keyof typeof locales
+}
+
+/**
+ * 多言語化機能を提供するフック
+ * react-intlをベースにした国際化機能を提供します
+ *
+ * @returns {UseIntlReturn} 国際化に関連する関数とプロパティを含むオブジェクト
+ * @example
+ * // 基本的な使用法（メッセージのローカライズ）
+ * const Component = () => {
+ *   const { localize } = useIntl()
+ *   return <span>{localize({ id: 'smarthr-ui/common/language', defaultText: '日本語' })}</span>
+ * }
+ *
+ * @example
+ * // 日付のフォーマット
+ * const Component = () => {
+ *   const { formatDate } = useIntl()
+ *   return <span>{formatDate({ date: new Date() })}</span> // "2024/01/15（水）" (ja)
+ * }
+ *
+ * @example
+ * // 利用可能なロケールの確認
+ * const Component = () => {
+ *   const { availableLocales, locale } = useIntl()
+ *   return <div>現在のロケール: {locale}</div>
+ * }
+ */
+export const useIntl = (): UseIntlReturn => {
   const intl = useReactIntl()
   const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
   const availableLocales = useAvailableLocales()
@@ -119,64 +241,31 @@ export const useIntl = () => {
     [intl],
   )
 
-  /**
-   * 日付をロケールに応じた形式でフォーマットする関数
-   *
-   * @param date - フォーマット対象の日付
-   * @param fields - 表示するフィールド。指定しない場合は全て表示
-   * @param options - フォーマットオプション
-   *
-   * @example
-   * // 基本的な使用法（ロケールのデフォルト形式）
-   * formatDate({ date: new Date() }) // "2024/01/15（水）" (ja)
-   *
-   * // 特定のフィールドのみ表示
-   * formatDate({ date: new Date(), fields: ['year', 'month'] }) // "2024/01" (ja)
-   * formatDate({ date: new Date(), fields: ['weekday'] }) // "月" (ja)
-   *
-   * // 日本語でスラッシュを無効化（月を長形式で表示）
-   * formatDate({ date: new Date(), fields: ['year', 'month'], options: { disableSlashInJa: true } }) // "2024年1月" (ja)
-   *
-   * // 最初の文字を大文字化
-   * formatDate({ date: new Date(), fields: ['weekday'], options: { capitalizeFirstLetter: true } }) // "Seg." (pt)（指定しなければ "seg."）
-   *
-   * @returns フォーマットされた日付文字列
-   */
   const formatDate = useCallback(
-    ({
-      date,
-      fields,
-      options,
-    }: {
-      date: Date
-      fields?: Array<'year' | 'month' | 'day' | 'weekday'>
-      options?: Intl.DateTimeFormatOptions & {
-        disableSlashInJa?: boolean
-        capitalizeFirstLetter?: boolean
-      }
-    }): string => {
+    (props: FormatDateProps): string => {
+      const { date, parts, options } = props
       const {
         disableSlashInJa = false,
         capitalizeFirstLetter = false,
         ...formatOptions
       } = options || {}
-      const requestedFields = fields || []
+      const requestedParts = parts || []
 
-      // 指定されたフィールドが含まれているかチェック（指定がない場合は全て含まれる）
-      const hasField = (field: 'year' | 'month' | 'day' | 'weekday') =>
-        requestedFields.length === 0 || requestedFields.includes(field)
+      // 指定されたパーツが含まれているかチェック（指定がない場合は全て含まれる）
+      const hasPart = (part: 'year' | 'month' | 'day' | 'weekday') =>
+        requestedParts.length === 0 || requestedParts.includes(part)
 
       // ロケールのデフォルト形式を取得
       const finalFormatOptions: Intl.DateTimeFormatOptions = {
-        year: hasField('year') ? DATE_FORMATS[locale].year : undefined,
-        month: hasField('month') ? DATE_FORMATS[locale].month : undefined,
-        day: hasField('day') ? DATE_FORMATS[locale].day : undefined,
-        weekday: hasField('weekday') ? DATE_FORMATS[locale].weekday : undefined,
+        year: hasPart('year') ? DATE_FORMATS[locale].year : undefined,
+        month: hasPart('month') ? DATE_FORMATS[locale].month : undefined,
+        day: hasPart('day') ? DATE_FORMATS[locale].day : undefined,
+        weekday: hasPart('weekday') ? DATE_FORMATS[locale].weekday : undefined,
         ...formatOptions,
       }
 
       // 日本語でスラッシュを無効化する場合
-      if (disableSlashInJa && hasField('month') && locale === 'ja') {
+      if (disableSlashInJa && hasPart('month') && locale === 'ja') {
         finalFormatOptions.month = 'long'
       }
 
@@ -184,11 +273,11 @@ export const useIntl = () => {
 
       // 曜日をロケールに応じてフォーマットする
       let formattedResult = result
-      const config = BRACKET_CONFIG[locale as keyof typeof BRACKET_CONFIG]
+      const config = WEEKDAY_FORMATS[locale]
       if (
         config &&
-        hasField('weekday') &&
-        !(requestedFields.length === 1 && requestedFields[0] === 'weekday')
+        hasPart('weekday') &&
+        !(requestedParts.length === 1 && requestedParts[0] === 'weekday')
       ) {
         // 正規表現とテンプレートを適用
         const match = result.match(config.pattern)
@@ -204,17 +293,6 @@ export const useIntl = () => {
     [intl, locale],
   )
 
-  /**
-   * 現在のロケールに基づいて週の開始日を決定する関数
-   * Intl.Locale.prototype.getWeekInfo()の動作を再現
-   * getWeekInfo()を使わない理由は、Firefoxでは動作しないため
-   *
-   * @returns 週の開始日（0 = 日曜日, 1 = 月曜日, ..., 6 = 土曜日）
-   *
-   * @example
-   * const { getWeekStartDay } = useIntl()
-   * getWeekStartDay() // 0 (日曜日開始) for 'en-us', 1 (月曜日開始) for 'id-id'
-   */
   const getWeekStartDay = (): number => DATE_FORMATS[locale].weekStartDay
 
   return { availableLocales, localize, formatDate, locale, getWeekStartDay }
