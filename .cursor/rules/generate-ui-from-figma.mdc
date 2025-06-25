@@ -10,134 +10,173 @@ Figma Dev Mode MCP サーバーを使って SmartHR UI コンポーネントを�
 ## 🔄 基本ワークフロー
 
 1. **Figmaデータ取得**: MCPサーバーからデザインデータを取得
-2. **使用コンポーネント特定**: Figmaから必要なコンポーネントを識別  
-3. **実装動的確認**: 特定されたコンポーネントの実装を確認
-4. **適切なコード生成**: 実装仕様に基づいたコード生成
+2. **デザイン詳細分析**: UIパターンとコンポーネントの状態を詳細に観察
+3. **使用コンポーネント特定**: Figmaから必要なコンポーネントを識別  
+4. **実装動的確認**: 特定されたコンポーネントの実装を確認
+5. **適切なコード生成**: 実装仕様とデザイン詳細に基づいたコード生成
+
+## 🎨 Figmaデザイン詳細分析の重要ポイント
+
+### 🔍 必須確認項目
+
+#### 1. **見出しの階層とサイズ**
+- **画面タイトル**: 大きなフォントサイズ → `PageHeading`
+- **セクションタイトル**: 中程度のフォントサイズ → `Heading`（デフォルト）
+- **ブロックタイトル**: 小さめのフォントサイズ → `Heading type="blockTitle"`
+
+#### 2. **ボタンの種類とアイコン**
+- **下矢印アイコン付き**: `DropdownMenuButton`
+- **単色ボタン**: `Button variant="secondary"`
+- **プライマリボタン**: `Button`（デフォルト）
+
+#### 3. **情報パネルの状態**
+- **開閉ボタンなし**: `InformationPanel`（デフォルト）
+- **開閉ボタンあり**: `InformationPanel togglable`
+
+#### 4. **テーブルとページネーション**
+- **中央寄せのページネーション**: `<Center><Pagination /></Center>`
+- **左寄せのページネーション**: `<Pagination />`
+- **テーブルのスクロール**: `<Base overflow="auto">`
 
 ## 🚀 実践的ワークフロー例
 
-### Phase 1: Figmaデータ取得と分析
+### Phase 1: Figmaデータ取得と詳細分析
 ```bash
 # 1. Figmaからコード生成
 mcp_Figma_Dev_Mode_MCP_get_code
 
-# 2. 使用コンポーネントを特定
-# 出力例: InformationPanel, Cluster, Base, Pagination, Switch など
+# 2. Figmaからイメージを取得して詳細観察
+mcp_Figma_Dev_Mode_MCP_get_image
+
+# 3. デザインの詳細確認
+# - 見出しのサイズ比較
+# - ボタンのアイコンの有無
+# - パネルの開閉ボタンの有無
+# - レイアウトの中央寄せの有無
 ```
 
-### Phase 2: コンポーネント実装の動的確認
+### Phase 2: SmartHR UI特有のパターン確認
 ```bash
-# 3. 特定されたコンポーネントの実装を確認
+# 4. 特定されたコンポーネントの実装を確認
+read_file packages/smarthr-ui/src/components/Heading/Heading.tsx  # PageHeading vs Heading
+read_file packages/smarthr-ui/src/components/Dropdown/DropdownMenuButton/DropdownMenuButton.tsx
 read_file packages/smarthr-ui/src/components/InformationPanel/InformationPanel.tsx
-read_file packages/smarthr-ui/src/components/Cluster/Cluster.tsx
-read_file packages/smarthr-ui/src/components/Base/Base.tsx
-# ... 他の必要なコンポーネント
+read_file packages/smarthr-ui/src/components/Layout/Center/Center.tsx
 ```
 
 ### Phase 3: 実装仕様に基づくコード生成
 ```typescript
-// 4. 型定義とデフォルト値を確認してコード生成
-// InformationPanel: type="info"(default), active=true(default)
-<InformationPanel title="タイトル">  {/* デフォルト値活用 */}
+// 5. 正確なコンポーネント選択でコード生成
+// 画面タイトルは必ずPageHeading
+<PageHeading>配置プロジェクト</PageHeading>
+
+// ドロップダウンボタンは子要素を持つ
+<DropdownMenuButton label="配置プロジェクトを作成">
+  <Button>新規に作成</Button>
+  <Button>プロジェクトを統合して作成</Button>
+</DropdownMenuButton>
+```
+
+## 📋 SmartHR UI コンポーネント選択指針
+
+### 🎯 見出しコンポーネントの選択
+
+#### PageHeading vs Heading
+```typescript
+// ✅ 正しい使い分け
+<PageHeading>画面のメインタイトル</PageHeading>        // 画面に1つだけ
+<Heading>セクションタイトル</Heading>                 // セクションの見出し
+<Heading type="blockTitle">ブロックタイトル</Heading>   // ブロックの見出し
+
+// ❌ 間違った使い方
+<Heading tag="h1">画面のメインタイトル</Heading>        // PageHeadingを使うべき
+```
+
+#### 判断基準
+- **画面で最も大きなタイトル** → `PageHeading`
+- **セクションの見出し** → `Heading`（デフォルト）
+- **小さなブロックの見出し** → `Heading type="blockTitle"`
+
+### 🔽 ボタンコンポーネントの選択
+
+#### Button vs DropdownMenuButton
+```typescript
+// ✅ Figmaでドロップダウン矢印アイコンがある場合
+<DropdownMenuButton label="ラベル">
+  <Button>選択肢1</Button>
+  <Button>選択肢2</Button>
+</DropdownMenuButton>
+
+// ✅ Figmaで単純なボタンの場合
+<Button variant="secondary">ボタン</Button>
+
+// ❌ ドロップダウンなのに単純なButtonを使用
+<Button>ドロップダウンのはずのボタン</Button>
+```
+
+#### 判断基準
+- **下矢印アイコンあり** → `DropdownMenuButton`
+- **複数の選択肢が想定される** → `DropdownMenuButton`
+- **単一のアクション** → `Button`
+
+### 📋 InformationPanelの設定
+
+#### togglable の判断
+```typescript
+// ✅ Figmaで開閉ボタンが見える場合
+<InformationPanel title="タイトル" togglable>
   内容
 </InformationPanel>
+
+// ✅ Figmaで開閉ボタンがない場合（デフォルト）
+<InformationPanel title="タイトル">
+  内容
+</InformationPanel>
+
+// ❌ 不要なtogglableの指定
+<InformationPanel title="タイトル" togglable={true}>  // trueは冗長
 ```
 
-## 📁 コンポーネント実装確認手順
+#### 判断基準
+- **開閉ボタンが見える** → `togglable`
+- **開閉ボタンがない** → togglableプロパティなし
 
-### Step 1: 使用コンポーネントの特定
-Figmaデータから使用されるコンポーネントを特定し、以下のパスで実装を確認：
+### 📊 テーブルとレイアウト
 
-```
-packages/smarthr-ui/src/components/{ComponentName}/{ComponentName}.tsx
-```
-
-### Step 2: 重要な確認ポイント
-各コンポーネントの実装確認時に注目すべき項目：
-
-#### 🔧 型定義の確認
+#### Pagination の配置
 ```typescript
-type Props = {
-  // プロパティの型定義
-  // 必須/オプショナルの確認
-  // デフォルト値の確認
-}
+// ✅ Figmaでページネーションが中央寄せの場合
+<Center>
+  <Pagination total={98} current={50} onClick={...} />
+</Center>
+
+// ✅ Figmaでページネーションが左寄せの場合
+<Pagination total={98} current={50} onClick={...} />
 ```
 
-#### ⚙️ デフォルト値の確認
+#### Base の overflow 設定
 ```typescript
-const Component = ({ 
-  prop1 = "defaultValue",  // デフォルト値
-  prop2,                   // 必須プロパティ
-  ...
-}) => {
+// ✅ テーブルがスクロール可能な場合
+<Base overflow="auto">
+  <Table>...</Table>
+</Base>
+
+// ✅ テーブルがスクロール不要な場合
+<Base overflow="hidden">
+  <Table>...</Table>
+</Base>
 ```
-
-#### 🎨 バリアント・オプションの確認
-```typescript
-const classNameGenerator = tv({
-  variants: {
-    // 利用可能なバリアント
-  }
-})
-```
-
-## 🎯 動的確認の実践例
-
-### 例: InformationPanelを使用する場合
-
-1. **実装確認**:
-   ```bash
-   packages/smarthr-ui/src/components/InformationPanel/InformationPanel.tsx
-   ```
-
-2. **型定義確認**:
-   ```typescript
-   type Props = {
-     title: ReactNode           // 必須
-     type?: 'success' | 'info' | 'warning' | 'error' | 'sync'  // デフォルト: 'info'
-     togglable?: boolean        // デフォルト: undefined
-     active?: boolean           // デフォルト: true
-     // ...
-   }
-   ```
-
-3. **適切なコード生成**:
-   ```tsx
-   // デフォルト値を活用（type="info"は省略）
-   <InformationPanel title="タイトル">
-     内容
-   </InformationPanel>
-   ```
-
-## 📋 汎用的なベストプラクティス
-
-### import文のパターン
-```tsx
-import { useState } from 'react'
-import {
-  // 使用するコンポーネントのみimport
-  // アルファベット順で整理
-} from 'smarthr-ui'
-```
-
-### 基本レイアウトパターン
-```tsx
-<Container className="shr-bg-background">
-  <Stack gap={1.5}>
-    {/* メインコンテンツ */}
-  </Stack>
-</Container>
-```
-
-### スタイリング原則
-- **インラインスタイルを使用しない**
-- SmartHR UIのデザインシステムクラス名を使用
-- `className="shr-w-full"` などの適切なクラス名
 
 ## 🔍 動的確認チェックリスト
 
 コード生成前に以下を確認：
+
+### 📋 Figmaデザイン確認
+- [ ] **画面タイトルのサイズを確認**（大きい→PageHeading、普通→Heading）
+- [ ] **ボタンに下矢印アイコンがあるか確認**（あり→DropdownMenuButton）
+- [ ] **情報パネルに開閉ボタンがあるか確認**（なし→togglableなし）
+- [ ] **ページネーションの配置を確認**（中央→Center、左→そのまま）
+- [ ] **テーブルのスクロールの必要性を確認**
 
 ### 実装確認
 - [ ] **使用コンポーネントの実装ファイルを確認済み**
@@ -151,50 +190,26 @@ import {
 - [ ] **適切なクラス名を使用している**
 - [ ] **Figmaデザインに忠実な実装**
 
-### レイアウト構造
-- [ ] **適切なコンポーネントの組み合わせ**
-- [ ] **デフォルト値を活用した簡潔なコード**
-- [ ] **一貫性のあるレイアウトパターン**
+### 💡 コード生成確認
+- [ ] **PageHeading vs Heading を正しく選択**
+- [ ] **Button vs DropdownMenuButton を正しく選択**
+- [ ] **InformationPanel の togglable を正しく設定**
+- [ ] **レイアウトコンポーネントを正しく組み合わせ**
 
-## 🎪 コンポーネント確認の自動化
+## 🎯 よくある間違いと対策
 
-理想的には以下のような確認を自動化：
+### ❌ よくある間違い
+1. **画面タイトルに Heading を使用** → PageHeading を使用すべき
+2. **ドロップダウンに Button を使用** → DropdownMenuButton を使用すべき
+3. **不要な togglable の指定** → デザインに開閉ボタンがなければ省略
+4. **Pagination の配置ミス** → デザインの配置に合わせて Center で囲むかどうか決定
 
-1. **Figmaコンポーネント → SmartHR UIコンポーネント のマッピング**
-2. **実装ファイルの自動読み取り**  
-3. **型定義・デフォルト値の自動抽出**
-4. **最適なプロパティの自動決定**
-
-## 🔄 継続的改善
-
-このアプローチにより：
-- **ルールファイルの簡潔性維持**
-- **常に最新の実装仕様に基づくコード生成**
-- **新しいコンポーネントへの自動対応**
-- **メンテナンス負荷の大幅削減**
-
-## 💡 実装確認の効率化Tips
-
-### 複数コンポーネントの並列確認
-```bash
-# 複数のコンポーネント実装を同時に確認
-read_file packages/smarthr-ui/src/components/ComponentA/ComponentA.tsx &
-read_file packages/smarthr-ui/src/components/ComponentB/ComponentB.tsx &
-read_file packages/smarthr-ui/src/components/ComponentC/ComponentC.tsx &
-```
-
-### 型定義の重点確認項目
-- **必須プロパティ** (`prop: Type`)
-- **オプショナルプロパティ** (`prop?: Type`)  
-- **デフォルト値** (`prop = defaultValue`)
-- **ユニオン型** (`prop: 'a' | 'b' | 'c'`)
-
-### よくあるパターンの理解
-- **Base**: `overflow` vs `padding` の使い分け
-- **Stack**: `gap` のデフォルト値活用
-- **Cluster**: `align` と `justify` の組み合わせ
-- **FormControl**: `helpMessage` の省略パターン
+### ✅ 対策
+1. **デザインの詳細を必ず観察**
+2. **コンポーネントの用途を正確に理解**
+3. **実装ファイルを確認してデフォルト値を活用**
+4. **SmartHR UI の設計思想を理解**
 
 ---
 
-**動的確認により、スケーラブルで正確なコード生成を実現します。**
+**詳細なデザイン分析と動的確認により、正確で保守性の高いコード生成を実現します。**
