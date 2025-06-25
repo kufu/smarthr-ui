@@ -125,9 +125,13 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
         next: currentMonth.add(1, 'month'),
         day: currentMonth,
         months: getMonthArray(currentMonth.toDate(), getWeekStartDay()),
-        yearMonthText: formatDate(currentMonth.toDate(), ['year', 'month'], {
-          disableSlashInJa: true,
-          capitalize: true,
+        yearMonthText: formatDate({
+          date: currentMonth.toDate(),
+          parts: ['year', 'month'],
+          options: {
+            disableSlashInJa: true,
+            capitalizeFirstLetter: true,
+          },
         }),
         selectedText: currentMonth.toString(),
       }),
@@ -202,16 +206,22 @@ const YearSelectButton = memo<{
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
   localize: ReturnType<typeof useIntl>['localize']
-}>(({ localize, ...rest }) => (
-  <Button {...rest} size="s">
-    <FaCaretDownIcon
-      alt={localize({
+}>(({ localize, ...rest }) => {
+  const selectYearAltText = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/Calendar/selectYear',
         defaultText: '年を選択する',
-      })}
-    />
-  </Button>
-))
+      }),
+    [localize],
+  )
+
+  return (
+    <Button {...rest} size="s">
+      <FaCaretDownIcon alt={selectYearAltText} />
+    </Button>
+  )
+})
 
 const MonthDirectionCluster = memo<{
   isSelectingYear: boolean
@@ -237,6 +247,24 @@ const MonthDirectionCluster = memo<{
     const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
     const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
 
+    const previousMonthAltText = useMemo(
+      () =>
+        localize({
+          id: 'smarthr-ui/Calendar/previousMonth',
+          defaultText: '前の月へ',
+        }),
+      [localize],
+    )
+
+    const nextMonthAltText = useMemo(
+      () =>
+        localize({
+          id: 'smarthr-ui/Calendar/nextMonth',
+          defaultText: '次の月へ',
+        }),
+      [localize],
+    )
+
     return (
       <Cluster gap={0.5} className={className}>
         <Button
@@ -245,12 +273,7 @@ const MonthDirectionCluster = memo<{
           size="s"
           className="smarthr-ui-Calendar-monthButtonPrev"
         >
-          <FaChevronLeftIcon
-            alt={localize({
-              id: 'smarthr-ui/Calendar/previousMonth',
-              defaultText: '前の月へ',
-            })}
-          />
+          <FaChevronLeftIcon alt={previousMonthAltText} />
         </Button>
         <Button
           disabled={isSelectingYear || next.isAfter(to, 'month')}
@@ -258,12 +281,7 @@ const MonthDirectionCluster = memo<{
           size="s"
           className="smarthr-ui-Calendar-monthButtonNext"
         >
-          <FaChevronRightIcon
-            alt={localize({
-              id: 'smarthr-ui/Calendar/nextMonth',
-              defaultText: '次の月へ',
-            })}
-          />
+          <FaChevronRightIcon alt={nextMonthAltText} />
         </Button>
       </Cluster>
     )
