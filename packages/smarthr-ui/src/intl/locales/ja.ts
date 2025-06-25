@@ -31,6 +31,7 @@ export const locale = {
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '選択済みアイテム',
   'smarthr-ui/NotificationBar/closeButtonIconAlt': '閉じる',
   'smarthr-ui/RequiredLabel/text': '必須',
+  'smarthr-ui/SearchInput/iconAlt': '検索',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '削除',
   'smarthr-ui/SortDropdown/applyButtonLabel': '適用',
   'smarthr-ui/SortDropdown/ascLabel': '昇順',

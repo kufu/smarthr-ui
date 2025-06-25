@@ -33,6 +33,7 @@ export const locale = {
   'smarthr-ui/MultiCombobox/selectedListAriaLabel': '',
   'smarthr-ui/NotificationBar/closeButtonIconAlt': '',
   'smarthr-ui/RequiredLabel/text': 'Required',
+  'smarthr-ui/SearchInput/iconAlt': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
