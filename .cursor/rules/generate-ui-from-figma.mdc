@@ -40,7 +40,7 @@ import {
 // 状態変数の宣言順序
 const [selectedItems, setSelectedItems] = useState<any[]>([])
 const [inputValue, setInputValue] = useState('')
-const [selectedRadio, setSelectedRadio] = useState('radio1')
+const [selectedRadio, setSelectedRadio] = useState('option1')
 ```
 
 ## レイアウト
@@ -53,7 +53,7 @@ const [selectedRadio, setSelectedRadio] = useState('radio1')
 <Container className="shr-bg-background">
   <Stack gap={1.5}>
     <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
-      <PageHeading>タイトル</PageHeading>
+      <PageHeading>メインタイトル</PageHeading>
       <p>説明文</p>
     </Stack>
     
@@ -69,7 +69,7 @@ const [selectedRadio, setSelectedRadio] = useState('radio1')
 
 // 悪い例（デフォルト値を明示的に指定）
 <Stack gap={1}>  {/* 不要 */}
-  <PageHeading>タイトル</PageHeading>
+  <PageHeading>メインタイトル</PageHeading>
   <p>説明文</p>
 </Stack>
 ```
@@ -114,7 +114,7 @@ const [selectedRadio, setSelectedRadio] = useState('radio1')
 
 ```tsx
 // 良い例（helpMessage省略パターン）
-<FormControl title="これはマルチコンボボックス">
+<FormControl title="ラベル名">
   <MultiCombobox
     items={multiComboboxItems}
     selectedItems={selectedItems}
@@ -125,10 +125,10 @@ const [selectedRadio, setSelectedRadio] = useState('radio1')
 
 // 良い例（helpMessage有りパターン）
 <FormControl
-  title="これは almost ライン"
+  title="入力項目名"
   statusLabels={<RequiredLabel />}
-  helpMessage="これくらいはスッと実装してほしい。"
-  errorMessages={inputValue ? [] : ['入力されていません。']}
+  helpMessage="入力に関する説明文"
+  errorMessages={inputValue ? [] : ['必須項目です。']}
 >
   <Input
     value={inputValue}
@@ -144,7 +144,7 @@ statusLabels={[
     必須
   </StatusLabel>,
 ]}
-errorMessages={inputValue === '' ? ['入力されていません。'] : []}
+errorMessages={inputValue === '' ? ['必須項目です。'] : []}
 ```
 
 ## MultiCombobox
@@ -172,21 +172,21 @@ onChangeSelected={(items) => setSelectedItems(items)}  // アロー関数で包�
 ```
 
 ## RadioButton
-- value値は英語で指定（`radio1`, `radio2`など）
+- value値は意味のある名前で指定（`option1`, `option2`など）
 - name属性は `radioGroup` を使用
 - RadioButtonグループの Stack には `gap={0.75}` を指定
 
 ```tsx
 // 良い例
-<Fieldset title="タイトル">
+<Fieldset title="選択項目">
   <Stack gap={0.75}>
     <RadioButton
       name="radioGroup"
-      value="radio1"
-      checked={selectedRadio === 'radio1'}
+      value="option1"
+      checked={selectedRadio === 'option1'}
       onChange={(e) => setSelectedRadio(e.target.value)}
     >
-      ラジオボタン1
+      選択肢1
     </RadioButton>
   </Stack>
 </Fieldset>
@@ -194,11 +194,11 @@ onChangeSelected={(items) => setSelectedItems(items)}  // アロー関数で包�
 // 悪い例
 <RadioButton
   name="radio"
-  value="ラジオボタン1"
-  checked={radioValue === 'ラジオボタン1'}
+  value="選択肢1"
+  checked={radioValue === '選択肢1'}
   onChange={(e) => setRadioValue(e.target.value)}
 >
-  ラジオボタン1
+  選択肢1
 </RadioButton>
 ```
 
@@ -229,14 +229,14 @@ onChangeSelected={(items) => setSelectedItems(items)}  // アロー関数で包�
 // 良い例（デフォルト値を活用）
 <Stack gap={1.5}>
   <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
-    <PageHeading>これが実装できれば almost</PageHeading>
-    <p>これくらいは簡単に実装できるよね?</p>
+    <PageHeading>メインタイトル</PageHeading>
+    <p>説明文やサブタイトル</p>
   </Stack>
   
   <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
     <Cluster justify="space-between">
       <Heading>セクションタイトル</Heading>
-      <Button>編集</Button>
+      <Button>操作ボタン</Button>
     </Cluster>
   </Stack>
 </Stack>
