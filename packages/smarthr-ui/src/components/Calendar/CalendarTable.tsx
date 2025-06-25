@@ -73,16 +73,23 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     }
   }, [className])
 
-  // Generate internationalized day names starting from the locale-specific week start day
+  // ロケールに応じた週の開始日から国際化された曜日名を生成
   const daysInWeek = useMemo(() => {
     const weekStartDay = getWeekStartDay()
     const days = []
+    // 2024年1月の最初の週の日曜日を基準日として定義
+    const baseCalendarStart = dayjs('2024-01-07')
 
     for (let i = 0; i < 7; i++) {
       const dayOfWeek = (weekStartDay + i) % 7
-      // 2024年1月の最初の週の日曜日から土曜日までの日付を基準にする
-      const baseDate = dayjs('2024-01-07').add(dayOfWeek, 'day').toDate()
-      days.push(formatDate(baseDate, ['weekday'], { capitalize: true }))
+      const baseDate = baseCalendarStart.add(dayOfWeek, 'day').toDate()
+      days.push(
+        formatDate({
+          date: baseDate,
+          parts: ['weekday'],
+          options: { capitalizeFirstLetter: true },
+        }),
+      )
     }
 
     return days
