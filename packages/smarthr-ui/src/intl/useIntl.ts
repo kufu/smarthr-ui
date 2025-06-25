@@ -30,7 +30,7 @@ export type FormatDateProps = {
   /**
    * 表示する日付のパーツ。指定しない場合は全て表示
    */
-  parts?: DatePart[]
+  parts?: [DatePart, ...DatePart[]]
 
   /**
    * フォーマットオプション

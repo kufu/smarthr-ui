@@ -248,14 +248,6 @@ describe('useIntl', () => {
         expect(formatDate({ date: date2 })).toBe('2023/06/30（金）')
       })
 
-      it('handles empty parts array', () => {
-        const wrapper: FC<PropsWithChildren> = ({ children }) => (
-          <IntlProvider locale="ja">{children}</IntlProvider>
-        )
-        const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate, parts: [] })).toBe('2025/01/01（水）')
-      })
-
       it('does not add brackets for Chinese locales when only weekday is included', () => {
         // 簡体字をチェック
         const zhCnWrapper: FC<PropsWithChildren> = ({ children }) => (
