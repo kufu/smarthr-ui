@@ -10,6 +10,7 @@ export const locale = {
   'smarthr-ui/Browser/notFoundDescription': '',
   'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': 'Sedang diproses',
+  'smarthr-ui/Combobox/addItemButtonLabel': '',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Tidak ada pilihan yang cocok',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',

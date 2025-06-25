@@ -10,6 +10,7 @@ export const locale = {
   'smarthr-ui/Browser/notFoundDescription': '',
   'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': '처리중',
+  'smarthr-ui/Combobox/addItemButtonLabel': '',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': '일치하는 선택지가 없습니다.',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',

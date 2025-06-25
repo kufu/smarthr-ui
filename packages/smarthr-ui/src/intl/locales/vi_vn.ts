@@ -10,6 +10,7 @@ export const locale = {
   'smarthr-ui/Browser/notFoundDescription': '',
   'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': 'Đang xử lý',
+  'smarthr-ui/Combobox/addItemButtonLabel': '',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'Không có kết quả phù hợp.',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
