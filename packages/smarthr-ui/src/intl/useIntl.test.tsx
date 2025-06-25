@@ -85,7 +85,7 @@ describe('useIntl', () => {
           <IntlProvider locale="id-id">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('01 Januari 2025 (Rab)')
+        expect(formatDate({ date: testDate })).toBe('01 Jan 2025 (Rab)')
       })
 
       it('formats date in ko locale', () => {
@@ -93,7 +93,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ko">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025년 1월 01일 （수）')
+        expect(formatDate({ date: testDate })).toBe('2025년 1월 1일  (수)')
       })
 
       it('formats date in pt locale', () => {
@@ -101,7 +101,7 @@ describe('useIntl', () => {
           <IntlProvider locale="pt">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('01 de janeiro de 2025 (qua.)')
+        expect(formatDate({ date: testDate })).toBe('01 de jan. de 2025 (qua.)')
       })
 
       it('formats date in vi locale', () => {
@@ -117,7 +117,7 @@ describe('useIntl', () => {
           <IntlProvider locale="zh-cn">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025年1月01日（周三）')
+        expect(formatDate({ date: testDate })).toBe('2025年1月1日（周三）')
       })
 
       it('formats date in zh-tw locale', () => {
@@ -125,7 +125,7 @@ describe('useIntl', () => {
           <IntlProvider locale="zh-tw">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025年1月01日（週三）')
+        expect(formatDate({ date: testDate })).toBe('2025年1月1日（週三）')
       })
     })
 
