@@ -1,3 +1,5 @@
+'use client'
+
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
@@ -88,7 +90,7 @@ export const classNameGenerator = tv({
 
 export const Container: FC<Props & ElementProps> = ({
   size = 'DEFAULT',
-  padding = { narrowModeBlock: 1.5, narrowModeInline: 1 },
+  padding = { block: 2, inline: 2, narrowModeBlock: 1.5, narrowModeInline: 1 },
   className,
   ...rest
 }) => {
