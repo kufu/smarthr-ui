@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useState } from 'react'
 import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
 
 import { ModelessDialog } from './ModelessDialog'
@@ -10,12 +11,12 @@ describe('ModelessDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
-      <>
+      <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>ModelessDialog</Button>
         <ModelessDialog isOpen={isOpen} title="座標指定表示" onClickClose={() => setIsOpen(false)}>
           <p>ダイアログの中身</p>
         </ModelessDialog>
-      </>
+      </IntlProvider>
     )
   }
   it('ダイアログが開閉できること', async () => {

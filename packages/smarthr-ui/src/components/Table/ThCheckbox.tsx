@@ -1,7 +1,10 @@
+'use client'
+
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useIntl } from '../../intl'
 import { Balloon } from '../Balloon'
 import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 
@@ -13,12 +16,6 @@ type Props = {
     checkColumnName?: (text: string) => string
   }
 } & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
-
-const DECORATOR_DEFAULT_TEXTS = {
-  checkAllInvisibleLabel: 'すべての項目を選択/解除',
-  checkColumnName: '選択',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({
   slots: {
@@ -40,6 +37,27 @@ const classNameGenerator = tv({
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
   ({ vAlign, fixed, decorators, className, ...others }, ref) => {
+    const { localize } = useIntl()
+
+    const decoratorDefaultTexts = useMemo(
+      () => ({
+        checkAllInvisibleLabel: localize({
+          id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
+          defaultText: 'すべての項目を選択/解除',
+        }),
+        checkColumnName: localize({
+          id: 'smarthr-ui/ThCheckbox/checkColumnName',
+          defaultText: '選択',
+        }),
+      }),
+      [localize],
+    )
+
+    const decorated = useDecorators<'checkAllInvisibleLabel' | 'checkColumnName'>(
+      decoratorDefaultTexts,
+      decorators,
+    )
+
     const classNames = useMemo(() => {
       const { wrapper, inner, balloon, checkbox } = classNameGenerator()
 
@@ -50,8 +68,6 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
         checkbox: checkbox(),
       }
     }, [className])
-
-    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     return (
       // Th に必要な属性やイベントは不要
