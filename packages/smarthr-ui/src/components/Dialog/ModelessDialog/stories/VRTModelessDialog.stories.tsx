@@ -15,6 +15,7 @@ export default {
     bottom: 10,
     width: '20em',
     height: '10em',
+    size: 'M',
     resizable: true,
     contentBgColor: 'BACKGROUND',
     contentPadding: {

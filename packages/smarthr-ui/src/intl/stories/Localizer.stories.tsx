@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Localizer } from '../'
 
 export default {
-  title: 'Internal（内部）/Localizer',
+  title: 'Internal/Localizer',
   component: Localizer,
   render: (args) => <Localizer {...args} />,
   args: {
