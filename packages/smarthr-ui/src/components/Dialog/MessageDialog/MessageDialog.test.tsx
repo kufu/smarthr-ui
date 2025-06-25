@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useState } from 'react'
 import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
 
 import { MessageDialog } from './MessageDialog'
@@ -10,7 +11,7 @@ describe('MessageDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
-      <>
+      <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>MessageDialog</Button>
         <MessageDialog
           isOpen={isOpen}
@@ -18,7 +19,7 @@ describe('MessageDialog', () => {
           description={<p>説明です</p>}
           onClickClose={() => setIsOpen(false)}
         />
-      </>
+      </IntlProvider>
     )
   }
   it('ダイアログが開閉できること', async () => {

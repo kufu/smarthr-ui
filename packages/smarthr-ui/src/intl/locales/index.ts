@@ -1,4 +1,5 @@
 export { locale as ja } from './ja'
+export { locale as 'ja-easy' } from './ja_easy'
 export { locale as 'en-us' } from './en_us'
 export { locale as ko } from './ko_kr'
 export { locale as pt } from './pt_br'

@@ -7,6 +7,7 @@ import {
   useIntl as useReactIntl,
 } from 'react-intl'
 
+import { useAvailableLocales } from './IntlProvider'
 import * as locales from './locales'
 
 import type { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
@@ -19,9 +20,14 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
 }
 
 const DATE_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions | undefined> = {
-  // localeがjaの場合、フォーマットを YYYY/MM/DD 形式にする
+  // localeがja, ja-easyの場合、フォーマットを YYYY/MM/DD 形式にする
   // 参考: https://smarthr.design/products/contents/idiomatic-usage/count/#h2-3
   ja: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  },
+  'ja-easy': {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -40,6 +46,7 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
 export const useIntl = () => {
   const intl = useReactIntl()
   const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
+  const availableLocales = useAvailableLocales()
 
   const localize = useCallback(
     <T extends keyof Messages>(
@@ -57,5 +64,5 @@ export const useIntl = () => {
     [intl, locale],
   )
 
-  return { localize, formatDate }
+  return { availableLocales, localize, formatDate }
 }
