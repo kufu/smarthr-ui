@@ -24,6 +24,7 @@ export const locale = {
   'smarthr-ui/InformationPanel/closeButtonLabel': '',
   'smarthr-ui/InformationPanel/openButtonLabel': '',
   'smarthr-ui/InputFile/destroy': '',
+  'smarthr-ui/LanguageSwitcher/checkIconAlt': '',
   'smarthr-ui/Loader/alt': '',
   'smarthr-ui/MessageDialog/closeButtonLabel': '',
   'smarthr-ui/ModelessDialog/closeButtonIconAlt': '',
