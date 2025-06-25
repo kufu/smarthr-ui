@@ -1,6 +1,7 @@
 import { type ComponentProps, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../intl'
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
 import type { Step } from './types'
@@ -31,11 +32,11 @@ export const StepStatusIcon: FC<Props> = (props) =>
 
 const ICON_MAPPER = {
   completed: {
-    alt: '完了',
+    alt: <Localizer id="smarthr-ui/StepStatusIcon/completedAlt" defaultText="完了" />,
     Component: FaCircleCheckIcon,
   },
   closed: {
-    alt: '中断',
+    alt: <Localizer id="smarthr-ui/StepStatusIcon/closedAlt" defaultText="中断" />,
     Component: FaCircleXmarkIcon,
   },
 }

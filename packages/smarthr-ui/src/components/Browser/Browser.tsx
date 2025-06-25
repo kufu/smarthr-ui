@@ -1,7 +1,10 @@
+'use client'
+
 import { type ChangeEvent, type FC, type KeyboardEventHandler, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useIntl } from '../../intl'
 import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'
@@ -34,13 +37,10 @@ type Props = {
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-const DECORATOR_DEFAULT_TEXTS = {
-  notFoundTitle: '該当する項目がありません。',
-  notFoundDescription: '別の条件を試してください。',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'notFoundTitle' | 'notFoundDescription'
 
 export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) => {
+  const { localize } = useIntl()
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
@@ -48,7 +48,22 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
     () => classNameGenerator({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
     [columns.length],
   )
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      notFoundTitle: localize({
+        id: 'smarthr-ui/Browser/notFoundTitle',
+        defaultText: '該当する項目がありません。',
+      }),
+      notFoundDescription: localize({
+        id: 'smarthr-ui/Browser/notFoundDescription',
+        defaultText: '別の条件を試してください。',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   const selectedNode = useMemo(
     () => (value ? rootNode.findByValue(value) : undefined),
