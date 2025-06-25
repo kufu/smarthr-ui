@@ -33,6 +33,9 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
 type DayJsType = ReturnType<typeof dayjs>
 
+// 2024年1月の最初の週の日曜日を基準日として定義
+const BASE_CALENDAR_START = dayjs('2024-01-07')
+
 const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-px-0.75 shr-pb-1 shr-pt-0.25',
@@ -77,12 +80,10 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   const daysInWeek = useMemo(() => {
     const weekStartDay = getWeekStartDay()
     const days = []
-    // 2024年1月の最初の週の日曜日を基準日として定義
-    const baseCalendarStart = dayjs('2024-01-07')
 
     for (let i = 0; i < 7; i++) {
       const dayOfWeek = (weekStartDay + i) % 7
-      const baseDate = baseCalendarStart.add(dayOfWeek, 'day').toDate()
+      const baseDate = BASE_CALENDAR_START.add(dayOfWeek, 'day').toDate()
       days.push(
         formatDate({
           date: baseDate,
