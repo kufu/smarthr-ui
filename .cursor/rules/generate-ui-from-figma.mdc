@@ -1,0 +1,300 @@
+---
+description: Figma Dev Mode MCP サーバーを使って画面を実装する際に使うルール
+globs: 
+alwaysApply: false
+---
+# SmartHR UI コンポーネント実装ルール
+
+Figma Dev Mode MCP サーバーを使って SmartHR UI コンポーネントを実装する際の重要なルール：
+
+## 基本原則
+- **インラインスタイルを使用しない**
+- SmartHR UI のデザインシステムクラス名を優先使用する
+- 適切な SmartHR UI コンポーネントを選択する
+- **Figma デザインデータに基づいて実装する**
+
+## import文のパターン
+```tsx
+import { useState } from 'react'
+import {
+  Button,
+  Container,
+  FormControl,
+  Fieldset,
+  Heading,
+  MultiCombobox,
+  Input,
+  RadioButton,
+  Stack,
+  Cluster,
+  Base,
+  PageHeading,
+  RequiredLabel,
+} from 'smarthr-ui'
+```
+- **React hooksを先にimport**
+- SmartHR UIコンポーネントは後にimport
+
+## 状態管理の命名規則と順序
+```tsx
+// 状態変数の宣言順序
+const [selectedItems, setSelectedItems] = useState<any[]>([])
+const [inputValue, setInputValue] = useState('')
+const [selectedRadio, setSelectedRadio] = useState('radio1')
+```
+
+## レイアウト
+- ページレイアウトには `Container` コンポーネントを使用
+- 背景色には `className="shr-bg-background"` を使用
+- `Stack`コンポーネントの`gap`は**デフォルト値（gap={1}）を積極的に使用**し、必要に応じて省略する
+
+```tsx
+// 良い例（デフォルト値を活用）
+<Container className="shr-bg-background">
+  <Stack gap={1.5}>
+    <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
+      <PageHeading>タイトル</PageHeading>
+      <p>説明文</p>
+    </Stack>
+    
+    <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
+      <Cluster justify="space-between">
+        <Heading>セクションタイトル</Heading>
+        <Button>編集</Button>
+      </Cluster>
+      {/* その他のコンテンツ */}
+    </Stack>
+  </Stack>
+</Container>
+
+// 悪い例（デフォルト値を明示的に指定）
+<Stack gap={1}>  {/* 不要 */}
+  <PageHeading>タイトル</PageHeading>
+  <p>説明文</p>
+</Stack>
+```
+
+## ヘッダーコンポーネント
+- ページタイトルには `PageHeading` コンポーネントを使用
+- セクションタイトルには `Heading` コンポーネントを使用（type属性は指定しない）
+
+```tsx
+// 良い例
+<PageHeading>ページタイトル</PageHeading>
+<Heading>セクションタイトル</Heading>
+
+// 悪い例
+<Heading tag="h1" type="screenTitle">ページタイトル</Heading>
+<Heading type="sectionTitle">セクションタイトル</Heading>
+```
+
+## ボタンコンポーネント
+- 基本的にvariant属性は指定しない（デフォルトを使用）
+- プライマリボタンの場合のみ `variant="primary"` を指定
+- ボタンを単体配置する場合は `<div>` で囲む
+
+```tsx
+// 良い例
+<Button>編集</Button>
+<div>
+  <Button variant="primary">保存</Button>
+</div>
+
+// 悪い例
+<Button variant="secondary">編集</Button>
+<Button variant="primary">保存</Button>
+```
+
+## フォームコンポーネント
+- 必須ラベルには `RequiredLabel` コンポーネントを使用
+- `StatusLabel` ではなく `RequiredLabel` を使う
+- エラーハンドリングは三項演算子を使用
+- `FormControl` の `helpMessage` は**コンテキストによって省略可能**
+- `Input` コンポーネントの `error` 属性は使用する
+
+```tsx
+// 良い例（helpMessage省略パターン）
+<FormControl title="これはマルチコンボボックス">
+  <MultiCombobox
+    items={multiComboboxItems}
+    selectedItems={selectedItems}
+    onChangeSelected={setSelectedItems}
+    className="shr-w-full"
+  />
+</FormControl>
+
+// 良い例（helpMessage有りパターン）
+<FormControl
+  title="これは almost ライン"
+  statusLabels={<RequiredLabel />}
+  helpMessage="これくらいはスッと実装してほしい。"
+  errorMessages={inputValue ? [] : ['入力されていません。']}
+>
+  <Input
+    value={inputValue}
+    onChange={(e) => setInputValue(e.target.value)}
+    error={!inputValue}
+    className="shr-w-full"
+  />
+</FormControl>
+
+// 悪い例
+statusLabels={[
+  <StatusLabel key="required" type="red">
+    必須
+  </StatusLabel>,
+]}
+errorMessages={inputValue === '' ? ['入力されていません。'] : []}
+```
+
+## MultiCombobox
+- 配列変数名は `multiComboboxItems` を使用
+- `any[]` 型を使用（型安全性より簡潔性を優先）
+- **onChangeSelectedは関数参照を直接渡す（簡潔にする）**
+
+```tsx
+// 良い例
+const [selectedItems, setSelectedItems] = useState<any[]>([])
+const multiComboboxItems = [
+  { value: 'option1', label: 'オプション1' },
+  { value: 'option2', label: 'オプション2' },
+]
+
+<MultiCombobox
+  items={multiComboboxItems}
+  selectedItems={selectedItems}
+  onChangeSelected={setSelectedItems}  // 直接関数参照を渡す
+  className="shr-w-full"
+/>
+
+// 悪い例
+onChangeSelected={(items) => setSelectedItems(items)}  // アロー関数で包む
+```
+
+## RadioButton
+- value値は英語で指定（`radio1`, `radio2`など）
+- name属性は `radioGroup` を使用
+- RadioButtonグループの Stack には `gap={0.75}` を指定
+
+```tsx
+// 良い例
+<Fieldset title="タイトル">
+  <Stack gap={0.75}>
+    <RadioButton
+      name="radioGroup"
+      value="radio1"
+      checked={selectedRadio === 'radio1'}
+      onChange={(e) => setSelectedRadio(e.target.value)}
+    >
+      ラジオボタン1
+    </RadioButton>
+  </Stack>
+</Fieldset>
+
+// 悪い例
+<RadioButton
+  name="radio"
+  value="ラジオボタン1"
+  checked={radioValue === 'ラジオボタン1'}
+  onChange={(e) => setRadioValue(e.target.value)}
+>
+  ラジオボタン1
+</RadioButton>
+```
+
+## スタイリング
+- 幅指定には `className="shr-w-full"` を使用
+- インラインスタイルは避ける
+- SmartHR UI のデザインシステムクラス名を使用
+
+```tsx
+// 良い例
+<Input className="shr-w-full" />
+
+// 悪い例
+<Input style={{ width: '100%' }} />
+```
+
+## Stackコンポーネントのgap指定
+**Stack の gap はデフォルト値（gap={1}）を積極的に活用し、必要に応じて省略する**
+
+- **推奨の**gap値:
+  - メインレイアウト: `gap={1.5}` 
+  - ページヘッダー部分: **省略**（デフォルト値gap={1}を使用）
+  - セクション間: **省略**（デフォルト値gap={1}を使用）
+  - フォーム要素間: `gap={1.5}`
+  - RadioButtonグループ: `gap={0.75}`
+
+```tsx
+// 良い例（デフォルト値を活用）
+<Stack gap={1.5}>
+  <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
+    <PageHeading>これが実装できれば almost</PageHeading>
+    <p>これくらいは簡単に実装できるよね?</p>
+  </Stack>
+  
+  <Stack>  {/* デフォルト値gap={1}を使用するため省略 */}
+    <Cluster justify="space-between">
+      <Heading>セクションタイトル</Heading>
+      <Button>編集</Button>
+    </Cluster>
+  </Stack>
+</Stack>
+
+// 悪い例（不要にgap値を明示）
+<Stack gap={1}>  {/* デフォルト値なので省略可能 */}
+  <PageHeading>タイトル</PageHeading>
+  <p>説明文</p>
+</Stack>
+```
+
+## コンポーネント使い分け
+- `PageHeading`: ページのメインタイトル
+- `Heading`: セクションタイトル（type属性なし）
+- `RequiredLabel`: 必須項目のラベル
+- `Container`: ページレイアウト
+- `Base`: カード風のコンテナ（**必ず padding={1.5} を指定**）
+
+```tsx
+// 良い例
+<Container className="shr-bg-background">
+  <Stack gap={1.5}>
+    {/* コンテンツ */}
+  </Stack>
+</Container>
+
+<Base padding={1.5}>
+  <Stack gap={1.5}>
+    {/* カード内容 */}
+  </Stack>
+</Base>
+
+// 悪い例
+<Base>  {/* padding={1.5} が必須 */}
+  {/* カード内容 */}
+</Base>
+
+<div style={{ backgroundColor: '#F8F7F6', padding: '32px 188px' }}>
+  {/* コンテンツ */}
+</div>
+```
+
+## 重要な原則
+**コードの一貫性を保つ**
+- Stack の gap: デフォルト値（gap={1}）を積極的に活用し、省略する
+- FormControl の helpMessage: コンテキストによって省略可能
+- Input の error 属性: 常に使用する
+- Base コンポーネント: 必ず padding={1.5} を指定する
+- 関数参照は可能な限り直接渡す（簡潔にする）
+
+## チェックリスト
+コード生成時は以下を確認：
+- [ ] import順序が正しい（React hooks → smarthr-ui）
+- [ ] 状態変数の宣言順序が正しい（selectedItems, inputValue, selectedRadio）
+- [ ] `RequiredLabel` が使用されている（`StatusLabel`ではない）
+- [ ] **Stackのgap値はデフォルト値を積極的に活用し、省略している**
+- [ ] **FormControlのhelpMessageはコンテキストによって省略している**
+- [ ] onChangeSelectedは関数参照を直接渡している
+- [ ] インラインスタイルを使用していない
+- [ ] 適切なクラス名を使用している
+- [ ] **Base コンポーネントに padding={1.5} が指定されている**
