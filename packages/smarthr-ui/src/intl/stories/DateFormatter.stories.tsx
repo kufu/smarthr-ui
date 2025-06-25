@@ -13,7 +13,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof DateFormatter>
+} satisfies Meta<typeof DateFormatter>
 
 type Story = StoryObj<typeof DateFormatter>
 
