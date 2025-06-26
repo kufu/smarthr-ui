@@ -36,6 +36,7 @@ export const locale = {
   'smarthr-ui/Browser/notFoundDescription': '別の条件を試してください。',
   'smarthr-ui/Browser/notFoundTitle': '該当する項目がありません。',
   'smarthr-ui/Button/loading': '処理中',
+  'smarthr-ui/Combobox/addItemButtonLabel': '「{name}」を追加',
   'smarthr-ui/Combobox/loadingText': '処理中',
   'smarthr-ui/Combobox/noResultsText': '一致する選択肢がありません。',
   'smarthr-ui/DropdownMenuButton/triggerActive': '候補を閉じる',

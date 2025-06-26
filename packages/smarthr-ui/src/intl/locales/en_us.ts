@@ -38,6 +38,7 @@ export const locale = {
   'smarthr-ui/Browser/notFoundDescription': '',
   'smarthr-ui/Browser/notFoundTitle': '',
   'smarthr-ui/Button/loading': 'In progress',
+  'smarthr-ui/Combobox/addItemButtonLabel': '',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': 'No matching options found.',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
