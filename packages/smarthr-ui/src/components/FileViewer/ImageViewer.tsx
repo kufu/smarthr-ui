@@ -14,7 +14,7 @@ export const ImageViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width
 
   // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
   const updateViewConfig = useCallback(() => {
-    if (!imageRef.current) {
+    if (!imageRef.current?.complete) {
       return
     }
 
