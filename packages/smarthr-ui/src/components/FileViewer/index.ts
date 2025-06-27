@@ -1,1 +1,1 @@
-export { FileViewer } from './FileViewer'
+export { FileViewer, PasswordResponses } from './FileViewer'

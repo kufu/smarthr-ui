@@ -1,7 +1,12 @@
 'use client'
 
 import { type ComponentProps, type FC, memo, useCallback, useMemo, useState } from 'react'
-import { Document, Page, pdfjs } from 'react-pdf'
+import {
+  Document,
+  Page,
+  type PasswordResponses as ReactPdfPasswordResponses,
+  pdfjs,
+} from 'react-pdf'
 
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
@@ -22,9 +27,7 @@ const options = {
   cMapUrl: `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
-type PDFViewerProps = ViewerProps & { onPassword?: ComponentProps<typeof Document>['onPassword'] }
-
-export const PDFViewer: FC<PDFViewerProps> = memo(
+export const PDFViewer: FC<ViewerProps> = memo(
   ({ scale, rotation, file, width, onLoad, onPassword }) => {
     const [pdfNumPages, setPdfNumPages] = useState(1)
 
@@ -78,3 +81,17 @@ export const PDFViewer: FC<PDFViewerProps> = memo(
     )
   },
 )
+
+/**
+ * Passwordの入力状況を示す定数。
+ * NEED_PASSWORD: パスワードが必要かつ未入力
+ * INCORRECT_PASSWORD: パスワードが間違っている
+ *
+ * react-pdfのPasswordResponsesをそのまま使うと、
+ * 利用者側でsmarthr-uiをビルドする際にPasswordResponsesの参照が解決できないことがある。
+ * それを防ぐために全く同じ内容をsmarthr-ui側で定義してexportする。
+ **/
+export const PasswordResponses: typeof ReactPdfPasswordResponses = {
+  NEED_PASSWORD: 1,
+  INCORRECT_PASSWORD: 2,
+}
