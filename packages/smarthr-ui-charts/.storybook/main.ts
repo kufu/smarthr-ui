@@ -1,32 +1,16 @@
-import type { StorybookConfig } from '@storybook/react-webpack5'
+import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
-  addons: [
-    '@storybook/addon-docs',
-    '@storybook/addon-a11y',
-    '@storybook/addon-webpack5-compiler-babel',
-  ],
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   framework: {
-    name: '@storybook/react-webpack5',
+    name: '@storybook/react-vite',
     options: {},
   },
   typescript: {
     reactDocgen: 'react-docgen-typescript',
     check: false,
     checkOptions: {},
-  },
-  babel: async (options, { configType }) => {
-    options.presets = [
-      ['@babel/preset-env', { targets: { chrome: 100 } }],
-      ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
-      ['@babel/preset-react', { runtime: 'automatic' }],
-    ]
-    return options
-  },
-  webpackFinal: async (conf) => {
-    conf.resolve.extensions.push('.ts', '.tsx')
-    return conf
   },
 }
 
