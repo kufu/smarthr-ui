@@ -1,7 +1,16 @@
 'use client'
 
 import Decimal from 'decimal.js'
-import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   Button,
@@ -34,9 +43,16 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
+  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
 }
 
-export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixedWidth }) => {
+export const FileViewer: FC<Props> = ({
+  file,
+  scaleStep,
+  scaleSteps,
+  width: fixedWidth,
+  onPassword,
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
@@ -109,6 +125,7 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
               file={file}
               width={width}
               onLoad={handleLoaded}
+              onPassword={onPassword}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
