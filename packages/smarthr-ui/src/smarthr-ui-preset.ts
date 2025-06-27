@@ -1,4 +1,5 @@
 import { darken } from 'polished'
+import { validators } from 'tailwind-merge'
 import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
@@ -14,6 +15,7 @@ import type { Config } from 'tailwindcss'
 defaultConfig.twMergeConfig = {
   prefix: 'shr-',
   classGroups: {
+    w: [{ w: [...Object.keys(defaultWidth), validators.isArbitraryValue] }],
     boxShadow: [
       {
         shadow: [
