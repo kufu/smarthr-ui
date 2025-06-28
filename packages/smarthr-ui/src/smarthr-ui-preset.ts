@@ -16,6 +16,7 @@ defaultConfig.twMergeConfig = {
   prefix: 'shr-',
   classGroups: {
     w: [{ w: [...Object.keys(defaultWidth), validators.isArbitraryValue] }],
+    basis: [{ basis: [...Object.keys(defaultWidth), validators.isArbitraryValue] }],
     boxShadow: [
       {
         shadow: [
@@ -230,6 +231,9 @@ export default {
         'current-page': 'current="page"',
       },
       width: {
+        ...defaultWidth,
+      },
+      flexBasis: {
         ...defaultWidth,
       },
       minHeight: ({ theme }) => ({
