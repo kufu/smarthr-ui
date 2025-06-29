@@ -1,4 +1,3 @@
-/* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { Meta } from '@storybook/react/*'
 import React, { ComponentProps } from 'react'
 

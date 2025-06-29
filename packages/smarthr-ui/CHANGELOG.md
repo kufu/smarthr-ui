@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [74.2.0](https://github.com/kufu/smarthr-ui/compare/v74.1.1...v74.2.0) (2025-06-25)
+
+
+### Features
+
+* **intl:** IntlProviderにavailableLocalesを指定できるようにする ([#5718](https://github.com/kufu/smarthr-ui/issues/5718)) ([ac4e481](https://github.com/kufu/smarthr-ui/commit/ac4e481db84615cda9b636e1356b59fbdf562f72))
+* **intl:** localesにやさしい日本語を追加 ([#5712](https://github.com/kufu/smarthr-ui/issues/5712)) ([a2acfd2](https://github.com/kufu/smarthr-ui/commit/a2acfd28d18d7c1f63054527389c3829a1ae4f67))
+* ThCheckbox と TdCheckbox で fixed を渡せるようにしたい ([#5723](https://github.com/kufu/smarthr-ui/issues/5723)) ([2fa5cfd](https://github.com/kufu/smarthr-ui/commit/2fa5cfd75e65cc75613104483bcf0061c0fd523e))
+
+
+### Bug Fixes
+
+* **FlashMessage:** 消し漏れていたトークンを削除 ([#5724](https://github.com/kufu/smarthr-ui/issues/5724)) ([e9b6fe7](https://github.com/kufu/smarthr-ui/commit/e9b6fe7d4762854049de62024eb127ca94bbd300))
+* **Select:** Select の示唆アイコンを見直し ([#5721](https://github.com/kufu/smarthr-ui/issues/5721)) ([2ed68ec](https://github.com/kufu/smarthr-ui/commit/2ed68ec91b150c5b10691e0e9630dd5d137cae96))
+* **StepFormDialog:** 副題付きのステップ表示を修正 ([#5688](https://github.com/kufu/smarthr-ui/issues/5688)) ([0cbad39](https://github.com/kufu/smarthr-ui/commit/0cbad392c4f8788aa1ca171011803f42a1bc787b))
+* **twMerge:** leading-[0] も leading 扱いになるように修正 ([#5719](https://github.com/kufu/smarthr-ui/issues/5719)) ([9a4cc99](https://github.com/kufu/smarthr-ui/commit/9a4cc9918d7d6efd79b7f3b83f983ebee78abaea))
+
+### [74.1.1](https://github.com/kufu/smarthr-ui/compare/v74.1.0...v74.1.1) (2025-06-17)
+
+
+### Bug Fixes
+
+* **Combobox:** decoratorsにデフォルトテキストが渡るように修正 ([#5663](https://github.com/kufu/smarthr-ui/issues/5663)) ([3fc8aa6](https://github.com/kufu/smarthr-ui/commit/3fc8aa66c0ead37291a0c8913f068dec3b0289c9))
+* **InformationPanel:** トグルが段落ちしないように修正 ([#5593](https://github.com/kufu/smarthr-ui/issues/5593)) ([7c82f22](https://github.com/kufu/smarthr-ui/commit/7c82f22df13231472bb0084c3351b1492bea90d4))
+* **Textarea:** 非同期に value が更新された場合に文字数カウンタが更新されない不具合を修正する ([#5703](https://github.com/kufu/smarthr-ui/issues/5703)) ([0b4ee4a](https://github.com/kufu/smarthr-ui/commit/0b4ee4a8a6cfa5b45d8594ceb2ee60699fbaed19))
+
+## [74.1.0](https://github.com/kufu/smarthr-ui/compare/v74.0.0...v74.1.0) (2025-06-16)
+
+
+### Features
+
+* **FileViewer:** FileViewerを追加 ([#5603](https://github.com/kufu/smarthr-ui/issues/5603)) ([1cbb75e](https://github.com/kufu/smarthr-ui/commit/1cbb75ecaa575a2b74f0ed8062acce7977bb9029))
+* Timeline を追加 ([#5680](https://github.com/kufu/smarthr-ui/issues/5680)) ([ba96f08](https://github.com/kufu/smarthr-ui/commit/ba96f082263cfa64c7c0896547a26af436c5b387))
+* 単色チャートの色を追加 ([#5687](https://github.com/kufu/smarthr-ui/issues/5687)) ([1f7d380](https://github.com/kufu/smarthr-ui/commit/1f7d380d956e2ed20ced4ccb676929ded81649e5))
+
+
+### Bug Fixes
+
+* **Disclosure:** RSC環境でのエラーを修正 ([#5702](https://github.com/kufu/smarthr-ui/issues/5702)) ([fdd5309](https://github.com/kufu/smarthr-ui/commit/fdd530911a4114f20f254650efbd32dd4fec348b))
+* prettier-plugin-tailwindcss が効くように修正 ([#5686](https://github.com/kufu/smarthr-ui/issues/5686)) ([5798cf4](https://github.com/kufu/smarthr-ui/commit/5798cf4c71e7779262fb152e0b30ae1e4cda2309))
+* tsconfigのmoduleをes2022からcommonjsに戻した ([#5706](https://github.com/kufu/smarthr-ui/issues/5706)) ([2342df5](https://github.com/kufu/smarthr-ui/commit/2342df5e05b67e44edb46bb427f556a1881ab48e))
+* ドロップダウンナビゲーションボタンの current が false の場合は aria-current を undefined にする ([#5690](https://github.com/kufu/smarthr-ui/issues/5690)) ([2e41575](https://github.com/kufu/smarthr-ui/commit/2e41575a9b9f2f4126ce4bfd82eed243acea00d2))
+* 強制カラーモードやハイコントラストモード下における Dialog と Select の枠線を修正 ([#5689](https://github.com/kufu/smarthr-ui/issues/5689)) ([f68d3b0](https://github.com/kufu/smarthr-ui/commit/f68d3b053a34a34d3ddd306c0b2bbb066d5aa866))
+
 ## [74.0.0](https://github.com/kufu/smarthr-ui/compare/v73.0.1...v74.0.0) (2025-06-10)
 
 

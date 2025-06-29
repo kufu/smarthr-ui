@@ -10,7 +10,7 @@ type Props = PropsWithChildren<{
   /** 値を特定するための行 id */
   'aria-labelledby': string
 }> &
-  Pick<ComponentProps<typeof Td>, 'vAlign'>
+  Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed'>
 
 const classNameGenerator = tv({
   slots: {
@@ -24,7 +24,7 @@ const classNameGenerator = tv({
 })
 
 export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckboxProps, keyof Props> & Props>(
-  ({ vAlign, children, className, ...rest }, ref) => {
+  ({ vAlign, fixed, children, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner, checkbox } = classNameGenerator()
 
@@ -38,7 +38,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckboxProps, keyof
     return (
       // Td に必要な属性やイベントは不要
       // contentWidth={0} で td をテーブルの計算上最小幅にする
-      <Td contentWidth={0} vAlign={vAlign} className={classNames.wrapper}>
+      <Td contentWidth={0} vAlign={vAlign} fixed={fixed} className={classNames.wrapper}>
         <label className={classNames.inner}>
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}

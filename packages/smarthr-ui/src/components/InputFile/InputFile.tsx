@@ -17,6 +17,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useIntl } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
@@ -78,10 +79,7 @@ export type Props = VariantProps<typeof classNameGenerator> & {
   multiplyAppendable?: boolean
 }
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
-const DECORATOR_DEFAULT_TEXTS = {
-  destroy: '削除',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'destroy'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
@@ -104,6 +102,19 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   ) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
+    const { localize } = useIntl()
+
+    const decoratorDefaultTexts = useMemo(
+      () => ({
+        destroy: localize({
+          id: 'smarthr-ui/InputFile/destroy',
+          defaultText: '削除',
+        }),
+      }),
+      [localize],
+    )
+
+    const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
     const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
@@ -126,8 +137,6 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       ref,
       () => inputRef.current,
     )
-
-    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
 
     const updateInputValue = useCallback(
       (newFiles: File[]) => {

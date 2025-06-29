@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { Localizer } from '../../intl'
 import { Base } from '../Base'
 import { Button } from '../Button'
 import {
@@ -256,7 +257,11 @@ const CloseButton = memo<Pick<ActualProps, 'onClose'> & { className: string }>(
   ({ onClose, className }) =>
     onClose && (
       <Button variant="text" size="s" onClick={onClose} className={className}>
-        <FaXmarkIcon alt="閉じる" />
+        <FaXmarkIcon
+          alt={
+            <Localizer id="smarthr-ui/NotificationBar/closeButtonIconAlt" defaultText="閉じる" />
+          }
+        />
       </Button>
     ),
 )

@@ -20,6 +20,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../../hooks/useOuterClick'
+import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { FaCaretDownIcon } from '../../Icon'
@@ -78,7 +79,6 @@ type Props<T> = BaseProps<T> & {
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
-const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 const NOOP = () => undefined
 
 const preventDefaultWithPressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -181,6 +181,7 @@ const ActualMultiCombobox = <T,>(
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
+  const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
@@ -297,15 +298,20 @@ const ActualMultiCombobox = <T,>(
   const outerClickRef = useMemo(() => [outerRef, listBoxRef], [outerRef, listBoxRef])
   useOuterClick(outerClickRef, blur)
 
+  const highlightedRef = useRef(highlighted)
+
   useEffect(() => {
-    if (highlighted) {
+    highlightedRef.current = highlighted
+  }, [highlighted])
+
+  useEffect(() => {
+    if (highlightedRef.current) {
       setHighlighted(false)
       inputRef.current?.select()
     } else {
       setInputValueIfUncontrolled('')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItems, inputRef, setInputValueIfUncontrolled]) // highlighted 変更時には発火してほしくないため
+  }, [selectedItems, inputRef, setInputValueIfUncontrolled])
 
   useEffect(() => {
     if (isFocused) {
@@ -464,9 +470,21 @@ const ActualMultiCombobox = <T,>(
     }
   }, [isFocused, disabled, className])
 
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      selectedListAriaLabel: localize({
+        id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
+        defaultText: '選択済みアイテム',
+      }),
+    }),
+    [localize],
+  )
+
   const decoratedAriaLabel = useMemo(
-    () => decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) || SELECTED_LIST_ARIA_LABEL,
-    [decorators],
+    () =>
+      decorators?.selectedListAriaLabel?.(decoratorDefaultTexts.selectedListAriaLabel) ||
+      decoratorDefaultTexts.selectedListAriaLabel,
+    [decorators, decoratorDefaultTexts],
   )
 
   return (

@@ -1,5 +1,8 @@
 import { getFromDate, getMonthArray, getToDate, isBetween } from './calendarHelper'
 
+// eslint-disable-next-line smarthr/best-practice-for-date
+const INVALID_DATE = new Date('aaa')
+
 describe('calendarHelper', () => {
   describe('getFromDate', () => {
     it('returns given date when date is after 1900-01-01', () => {
@@ -15,8 +18,7 @@ describe('calendarHelper', () => {
       expect(actual.getDate()).toBe(1)
     })
     it('returns 1900-01-01 when date is invalid', () => {
-      // eslint-disable-next-line smarthr/best-practice-for-date
-      const actual = getFromDate(new Date('aaa'))
+      const actual = getFromDate(INVALID_DATE)
       expect(actual.getFullYear()).toBe(1900)
       expect(actual.getMonth()).toBe(0)
       expect(actual.getDate()).toBe(1)
@@ -45,8 +47,8 @@ describe('calendarHelper', () => {
     })
     it('returns date of today in 50 years time when date is invalid', () => {
       const now = new Date()
-      // eslint-disable-next-line smarthr/best-practice-for-date
-      const actual = getToDate(new Date('aaa'))
+
+      const actual = getToDate(INVALID_DATE)
       expect(actual.getFullYear()).toBe(now.getFullYear() + 50)
       expect(actual.getMonth()).toBe(now.getMonth())
       expect(actual.getDate()).toBe(now.getDate())

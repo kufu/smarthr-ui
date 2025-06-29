@@ -19,6 +19,7 @@ import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
@@ -72,10 +73,7 @@ type Props<T> = BaseProps<T> & {
 
 type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  destroyButtonIconAlt: '削除',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'destroyButtonIconAlt'
 
 const NOOP = () => undefined
 
@@ -152,6 +150,7 @@ const ActualSingleCombobox = <T,>(
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
+  const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -376,7 +375,17 @@ const ActualSingleCombobox = <T,>(
     }
   }, [notSelected, disabled, readOnly, className])
 
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      destroyButtonIconAlt: localize({
+        id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
+        defaultText: '削除',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
     <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>

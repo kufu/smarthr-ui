@@ -84,19 +84,33 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, childr
   }, [isChildPortal, portalRoot])
 
   // This is the root container of a dropdown content located in outside the DOM tree
-  const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
-    () => (props) => (active ? createPortal(props.children) : null),
-    [active, createPortal],
-  )
+  const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(() => {
+    const result: FC<{ children: ReactNode }> = (props) =>
+      active ? createPortal(props.children) : null
 
-  // set the displayName explicit for DevTools
-  DropdownContentRoot.displayName = 'DropdownContentRoot'
+    // set the displayName explicit for DevTools
+    result.displayName = 'DropdownContentRoot'
+
+    return result
+  }, [active, createPortal])
+
+  const togglerRef = useRef({
+    isPortalRootMounted,
+    onOpen,
+    onClose,
+  })
+  useEffect(() => {
+    togglerRef.current = {
+      isPortalRootMounted,
+      onOpen,
+      onClose,
+    }
+  }, [isPortalRootMounted, onOpen, onClose])
 
   useEffect(() => {
-    if (isPortalRootMounted()) {
-      ;(active ? onOpen : onClose)?.()
+    if (togglerRef.current.isPortalRootMounted()) {
+      togglerRef.current[active ? 'onOpen' : 'onClose']?.()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
   const onClickTrigger = useCallback((rect: Rect) => {
