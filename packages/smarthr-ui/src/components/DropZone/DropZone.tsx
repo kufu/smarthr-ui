@@ -2,8 +2,8 @@
 
 import {
   type ChangeEvent,
-  type ComponentProps,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type DragEvent,
   type PropsWithChildren,
   forwardRef,
@@ -170,7 +170,8 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 )
 
 const SelectButton = memo<
-  ComponentProps<typeof Button> & Pick<DropZoneProps, 'decorators'> & { onClick: () => void }
+  ComponentPropsWithoutRef<typeof Button> &
+    Pick<DropZoneProps, 'decorators'> & { onClick: () => void }
 >(({ onClick, decorators, ...rest }) => {
   const { localize } = useIntl()
 
