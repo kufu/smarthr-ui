@@ -51,7 +51,7 @@
     "autoprefixer": "^10.4.21",
     "axe-playwright": "^2.1.0",
     "babel-loader": "^10.0.0",
-    "babel-plugin-polyfill-corejs2": "^0.4.13",
+    "babel-plugin-polyfill-corejs2": "^0.4.14",
     "babel-plugin-polyfill-regenerator": "^0.6.4",
     "chromatic": "^13.0.1",
     "css-loader": "^7.1.2",
