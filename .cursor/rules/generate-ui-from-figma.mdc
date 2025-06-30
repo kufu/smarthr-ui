@@ -3,7 +3,7 @@ description: Figma Dev Mode MCP サーバーを使って画面を実装する際
 globs: 
 alwaysApply: false
 ---
-# SmartHR UI 汎用画面実装ルール
+# SmartHR 汎用画面実装ルール
 
 Figma Dev Mode MCP サーバーを使って SmartHR Design System で画面を実装する際の汎用実装ルール：
 
@@ -53,6 +53,8 @@ SmartHR UIライブラリにコンポーネントが存在する場合、**必�
 - **境界線と背景**: 視覚的なグループ化とセパレーション
 - **開閉状態**: 展開可能なコンテンツの識別
 - **スクロール領域**: オーバーフロー対応の必要性
+- **🚨 コンテナ内部のpadding分析**: FigmaのXMLで子要素の`style[x]`と`style[y]`値を確認し、コンテナからのオフセット距離をpadding値として正確に反映する
+- **🚨 Base/Container padding の責任分離**: コンテナ要素（Base、Container）の内部余白と、子コンポーネント（DefinitionList等）の内部gap管理は別の責任領域として明確に区別する
 
 #### 4. **データ表示パターン**
 - **🚨 テーブル構造検出時**: 必ずSmartHR UIの`Table`、`Th`、`Td`コンポーネントを使用
@@ -70,6 +72,9 @@ SmartHR UIライブラリにコンポーネントが存在する場合、**必�
 - **コンポーネントプロパティ**: Figmaで設定された明示的なプロパティ値
 - **バリアント設定**: デザインで指定されたバリアント状態
 - **レイヤー名**: セマンティック意味を持つレイヤー名の活用
+- **🚨 StatusLabel type値の正確な反映**: `prop[type]="grey"`など、Figmaで指定された正確な値を使用
+- **🚨 Button アイコンの正確な反映**: `prop[prefix_icon_value]="Icon/FaCloudDownloadAlt"`など、絵文字ではなく指定されたアイコンコンポーネントを使用
+- **🚨 DefinitionList構造の判定**: `prop[type]="singleColumn"`が指定されている場合は`maxColumns={1}`を設定
 
 #### 7. **🆕 視覚的配置の詳細確認**
 - **要素の配置**: 各要素の相対的な位置関係（左・中央・右・両端）
@@ -81,6 +86,14 @@ SmartHR UIライブラリにコンポーネントが存在する場合、**必�
 - **論理的な要素の分離**: 関連する要素のグループ化
 - **階層構造の反映**: Figmaの視覚的な階層をコード構造に反映
 - **セクション単位の分割**: 機能的・意味的に異なるセクションの明確な分離
+
+#### 9. **🚨 推測禁止・データ優先分析（必須）**
+- **🚫 推測による実装の完全禁止**: 「〜っぽい」「〜だろう」による判断を一切行わない
+- **📊 Figma XML数値データの必須確認**: `style[fontSize]`, `style[x]`, `style[y]`, `frame name`, `prop[*]` の全数値・文字列を必ず参照
+- **📏 フォントサイズ階層の数値比較**: 全テキスト要素の `style[fontSize]` を抽出し、24px以上→PageHeading、19-23px→Heading、16-18px→Heading type="blockTitle" で判定
+- **🎯 レイアウト方向の座標分析**: `style[x]`, `style[y]` から要素の相対位置を分析し、同じy座標→水平配置（Cluster）、異なるy座標で縦並び→縦積み（Stack）で判定
+- **🔍 frame名とprop値の完全読取**: `<frame name="Cluster[0.5]">`, `prop[type]="singleColumn"` 等の明示的指示を見落とさない
+- **✅ 一貫性チェックの強制**: 同種コンポーネント（DefinitionList, Heading等）の設定統一を必ず確認
 
 ## 🚀 実践的ワークフロー例
 
@@ -101,6 +114,7 @@ mcp_Figma_Dev_Mode_MCP_get_image
 # - Figma propsとバリアント設定の確認
 # - 🆕 各要素の視覚的な配置位置を詳細に観察
 # - 🆕 論理的なコンテンツグループの境界を確認
+# - 🚨 コンテナのpadding値を正確に算出（子要素のstyle[x]/style[y]からオフセット距離を確認）
 ```
 
 ### Phase 2: コンポーネント実装確認
@@ -201,9 +215,10 @@ mcp_Figma_Dev_Mode_MCP_get_image
 </Cluster>
 
 // ✅ 2カラムレイアウト（サイドバー+メイン）
+// 🚨 Sidebar使用時はサイドコンテンツに幅トークンを指定
 <Sidebar>
-  <div>サイドバーコンテンツ</div>
-  <div>メインコンテンツ</div>
+  <Stack className="shr-basis-col2">サイドバーコンテンツ</Stack>
+  <Stack>メインコンテンツ</Stack>
 </Sidebar>
 
 // ✅ 縦積みレイアウト
@@ -245,6 +260,10 @@ mcp_Figma_Dev_Mode_MCP_get_image
 // セカンダリ色・アウトライン → Button variant="secondary"
 // ドロップダウン矢印 → DropdownMenuButton
 // テキストのみ → TextButton
+
+// 🚨 「〜に戻る」リンクは必ずUpwardLinkを使用
+// 画面上部の「一覧に戻る」「前のページに戻る」等のパターン
+<UpwardLink href="#">一覧に戻る</UpwardLink>
 
 // フォーム要素もデザインに応じて選択
 <Input type="text" />
@@ -306,11 +325,26 @@ mcp_Figma_Dev_Mode_MCP_get_image
 <Button>ボタン</Button>                     // variant="primary"は省略
 <Heading>見出し</Heading>                   // type="sectionTitle"は省略
 <Text>テキスト</Text>                       // size="M"は省略
+<DefinitionList>                            // maxColumns、termStyleType等は省略
+  <DefinitionListItem term="項目">値</DefinitionListItem>
+</DefinitionList>
 
 // ❌ 不要な明示化
 <Button variant="primary">ボタン</Button>
 <Heading type="sectionTitle">見出し</Heading>
 <Text size="M">テキスト</Text>
+<DefinitionList maxColumns={1} termStyleType="subBlockTitle">  // 不要な指定
+  <DefinitionListItem term="項目" termStyleType="subSubBlockTitle">値</DefinitionListItem>
+</DefinitionList>
+
+// 🚨 ただし、Figmaで明示的に指定されている場合は従う
+<StatusLabel type="grey">成功</StatusLabel>  // Figmaでprop[type]="grey"が指定されている場合
+<Button variant="secondary" prefix={<FaCloudArrowDownIcon />}>  // Figmaでアイコンが指定されている場合
+  ダウンロード
+</Button>
+<DefinitionList maxColumns={1}>  // Figmaでprop[type]="singleColumn"が指定されている場合
+  <DefinitionListItem term="項目">値</DefinitionListItem>
+</DefinitionList>
 ```
 
 ## 🔍 動的確認チェックリスト
@@ -318,6 +352,11 @@ mcp_Figma_Dev_Mode_MCP_get_image
 コード生成前に以下を確認：
 
 ### 📋 Figmaデザイン確認
+- [ ] **🚨 Figma XML数値データの完全確認**（推測禁止・データ優先の徹底）
+  - [ ] 全テキスト要素の `style[fontSize]` を抽出・比較済み
+  - [ ] 全要素の `style[x]`, `style[y]` から配置方向を分析済み
+  - [ ] `frame name`（Cluster, Stack, Sidebar等）を確認済み
+  - [ ] `prop[*]` 値を全て読み取り済み
 - [ ] **テキスト階層を詳細に確認**（フォントサイズ、重み、色の相対比較）
 - [ ] **インタラクティブ要素の状態を確認**（ボタン種類、アイコン、状態）
 - [ ] **コンテナ要素の境界と背景を確認**（パネル、カード等の視覚的区分）
@@ -328,6 +367,7 @@ mcp_Figma_Dev_Mode_MCP_get_image
 - [ ] **Figma propsとバリアント設定を確認**
 - [ ] **🆕 各要素の視覚的な配置を詳細に確認**（左・中央・右・両端の配置）
 - [ ] **🆕 コンテンツの論理的なグループ境界を確認**
+- [ ] **🚨 コンテナのpadding値を正確に算出**（子要素のstyle[x]/style[y]からオフセット距離を確認）
 
 ### 実装確認
 - [ ] **検出された全コンポーネントの実装ファイルを確認済み**
@@ -368,6 +408,13 @@ mcp_Figma_Dev_Mode_MCP_get_image
 9. **🆕 デフォルト値の過度な明示化** → 不要な指定を省略すべき
 10. **🆕 テキスト要素の選択ミス** → 通常のコンテンツはpタグ、特殊なスタイリングはTextコンポーネント
 11. **🆕 論理的なグループ分けの不備** → 関連要素を適切にグループ化すべき
+12. **🚨 StatusLabel type値の読み取りミス** → Figmaのprop[type]値を正確に反映すべき（grey/green/blue/red等）
+13. **🚨 Button アイコンの実装ミス** → 絵文字ではなくFigmaで指定されたSmartHR UIアイコンコンポーネントを使用すべき
+14. **🚨 DefinitionList設定の見落とし** → Figmaでprop[type]="singleColumn"が指定されている場合はmaxColumns={1}を設定すべき
+15. **🚨 コンテナpadding の見落とし** → FigmaのXMLで子要素のstyle[x]/style[y]値からコンテナの内部paddingを正確に算出すべき
+16. **🚨 フォントサイズ階層の推測判定** → 24px→PageHeading、19px→Heading等、数値データで正確に判定すべき
+17. **🚨 レイアウト方向の視覚的判断ミス** → frame名とxy座標データで水平配置（Cluster）vs縦積み（Stack）を正確に判定すべき
+18. **🚨 同種コンポーネントの設定不統一** → DefinitionListのmaxColumns等、同じ種類のコンポーネントは一貫した設定にすべき
 
 ### ✅ 対策
 1. **デザインの詳細を多角的に分析**
@@ -378,6 +425,8 @@ mcp_Figma_Dev_Mode_MCP_get_image
 6. **🚨 生のHTML要素使用を完全に避け、コンポーネント優先を確立**
 7. **🆕 デザインの視覚的配置を詳細に分析**
 8. **🆕 論理的なコンテンツ構造を適切に反映**
+9. **🚨 推測による実装を完全に禁止し、データ優先の分析を徹底**
+10. **🚨 Figma XMLの数値・文字列データを必ず参照して正確な判定を実施**
 
 ---
 
