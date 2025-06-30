@@ -8,7 +8,7 @@ describe('twMergeConfig', () => {
     describe('width', () => {
       it('width関連のクラスが正しくマージされること', () => {
         const testClassNameGenerator = tv({
-          base: 'shr-w-col1 shr-w-px',
+          base: 'shr-w-col1 shr-w-full',
         })
 
         const result = testClassNameGenerator({
@@ -19,11 +19,7 @@ describe('twMergeConfig', () => {
         expect(result).toContain('shr-w-[20em]')
 
         // twMergeConfigが効いている場合、古いクラスは削除される
-        if (
-          result.includes('shr-w-col1') &&
-          result.includes('shr-w-px') &&
-          result.includes('shr-w-[20em]')
-        ) {
+        if (result.includes('shr-w-col1') || result.includes('shr-w-full')) {
           console.warn('❌ twMergeConfigが効いていない: width classGroup')
           // テストを失敗させる
           expect(result).not.toContain('shr-w-col1')
@@ -44,11 +40,7 @@ describe('twMergeConfig', () => {
         // 最後に指定されたクラスが優先されることを確認
         expect(result).toContain('shr-basis-[300px]')
 
-        if (
-          result.includes('shr-basis-px') &&
-          result.includes('shr-basis-col6') &&
-          result.includes('shr-basis-[300px]')
-        ) {
+        if (result.includes('shr-basis-px') || result.includes('shr-basis-col6')) {
           console.warn('❌ twMergeConfigが効いていない: flexBasis classGroup')
           expect(result).not.toContain('shr-basis-col6')
         }
