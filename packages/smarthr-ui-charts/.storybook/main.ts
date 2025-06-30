@@ -10,7 +10,6 @@ const config: StorybookConfig = {
   typescript: {
     reactDocgen: 'react-docgen-typescript',
     check: false,
-    checkOptions: {},
   },
 }
 
