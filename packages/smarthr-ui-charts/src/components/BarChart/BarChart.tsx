@@ -1,28 +1,34 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
+import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { createBarChartOptions, getChartColors, registerChartComponents } from '../../config'
 
-import type { ChartData, ChartOptions } from 'chart.js'
+import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
-export type BarChartProps = {
-  /** チャートデータ */
+// Chart.jsのコンポーネントをモジュールレベルで登録
+registerChartComponents()
+
+type Props = {
+  // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
   data: ChartData<'bar'>
-  /** チャートオプション（省略時はデフォルト設定を使用） */
   options?: ChartOptions<'bar'>
-  /** チャートの幅 */
-  width?: number
-  /** チャートの高さ */
-  height?: number
+  title: string
 }
 
-export const BarChart: React.FC<BarChartProps> = ({ data, options, width, height }) => {
+export const BarChart: React.FC<Props> = ({ data, options, title }) => {
+  const chartId = useId()
+  const chartRef = useRef<Chart<'bar'>>(null)
+  const chartColors = getChartColors(data.datasets.length)
+  const ariaLabel = `${title} 棒グラフ ${data.datasets.length}個のデータ ${data.datasets[0].data.length}本の棒`
+
   useEffect(() => {
-    // Chart.js の必要な要素を登録
-    registerChartComponents()
+    if (chartRef.current?.canvas) {
+      chartRef.current.canvas.setAttribute('tabindex', '0')
+    }
   }, [])
 
   const enhancedData: ChartData<'bar'> = useMemo(
@@ -30,18 +36,33 @@ export const BarChart: React.FC<BarChartProps> = ({ data, options, width, height
       ...data,
       datasets: data.datasets.map((dataset, index) => ({
         ...dataset,
-        backgroundColor: dataset.backgroundColor || getChartColors(data.datasets.length)[index],
-        borderColor: dataset.borderColor || getChartColors(data.datasets.length)[index],
+        ...chartColors[index],
       })),
     }),
-    [data],
+    [data, chartColors],
   )
 
-  // デフォルトオプションとカスタムオプションをマージ
-  const chartOptions: ChartOptions<'bar'> = {
-    ...createBarChartOptions(),
-    ...options,
-  }
+  const chartOptions: ChartOptions<'bar'> = useMemo(
+    () => ({
+      ...createBarChartOptions({ title }),
+      ...options,
+      plugins: {
+        keyboardNavigation: {
+          liveRegionId: chartId,
+        },
+        title: {
+          display: true,
+          text: title,
+        },
+      },
+    }),
+    [options, title, chartId],
+  )
 
-  return <Bar data={enhancedData} options={chartOptions} width={width} height={height} />
+  return (
+    <>
+      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
+      <Bar ref={chartRef} data={enhancedData} options={chartOptions} aria-label={ariaLabel} />
+    </>
+  )
 }

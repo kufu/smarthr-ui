@@ -13,9 +13,14 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { CHART_COLORS, SINGLE_CHART_COLORS } from 'smarthr-ui'
+import { CHART_COLORS, FONT_FAMILY } from 'smarthr-ui'
 
-import type { ChartOptions } from 'chart.js'
+import { keyboardNavigationPlugin } from '../plugins'
+
+import type { ChartDataset, ChartOptions } from 'chart.js'
+
+// TODO: themeProviderから取得する
+const OUTLINE_COLOR = '#0077c7'
 
 /**
  * Chart.jsの必要な要素を登録
@@ -32,30 +37,35 @@ export const registerChartComponents = () => {
     Tooltip,
     Legend,
     Filler,
+    keyboardNavigationPlugin,
   )
 }
 
-const createBaseChartOptions = (): Partial<ChartOptions> => ({
+// 使用する側で変更しても良いオプションだけ受け取る
+type BaseOptionProps = {
+  title?: string
+}
+const createBaseChartOptions = ({ title }: BaseOptionProps): Partial<ChartOptions> => ({
   responsive: true,
   maintainAspectRatio: false,
+  events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
   plugins: {
+    title: {
+      display: true,
+      text: title,
+    },
     legend: {
       position: 'bottom',
       labels: {
         usePointStyle: true,
-        font: {
-          family: 'system-ui, sans-serif',
-          size: 12,
-        },
-        color: '#333',
-        padding: 16,
+        font: { family: FONT_FAMILY },
       },
     },
     tooltip: {
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       titleColor: '#fff',
       bodyColor: '#fff',
-      borderColor: CHART_COLORS[0],
+      borderColor: '#fff',
       borderWidth: 1,
       cornerRadius: 4,
     },
@@ -66,8 +76,10 @@ const createBaseChartOptions = (): Partial<ChartOptions> => ({
   },
 })
 
-export const createBarChartOptions = (): Partial<ChartOptions<'bar'>> => ({
-  ...createBaseChartOptions(),
+export const createBarChartOptions = ({
+  title,
+}: BaseOptionProps): Partial<ChartOptions<'bar'>> => ({
+  ...createBaseChartOptions({ title }),
   elements: {
     bar: {
       borderWidth: 0,
@@ -89,23 +101,25 @@ export const createBarChartOptions = (): Partial<ChartOptions<'bar'>> => ({
   },
 })
 
-/**
- * データ数に応じて適切なカラーパレットを取得
- */
-export const getChartColors = (dataLength: number): string[] => {
-  if (dataLength === 1) {
-    return [SINGLE_CHART_COLORS[0]]
-  }
-
-  if (dataLength <= CHART_COLORS.length) {
-    return CHART_COLORS.slice(0, dataLength)
-  }
-
-  // データ数がカラーパレットを超える場合は繰り返し使用
+// TODO: SINGLE_CHART_COLORS を使うオプションを追加する
+export const getChartColors = (
+  dataLength: number,
+): Array<
+  Pick<
+    ChartDataset<'bar'>,
+    'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'
+  >
+> => {
   const colors: string[] = []
   for (let i = 0; i < dataLength; i++) {
     colors.push(CHART_COLORS[i % CHART_COLORS.length])
   }
 
-  return colors
+  // outline-offsetを表現できていない
+  return colors.map((color) => ({
+    backgroundColor: color,
+    borderColor: color,
+    hoverBorderColor: OUTLINE_COLOR,
+    hoverBorderWidth: 4,
+  }))
 }

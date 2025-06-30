@@ -4,6 +4,13 @@ import { BarChart } from './BarChart'
 const meta: Meta<typeof BarChart> = {
   title: 'Charts/BarChart',
   component: BarChart,
+  decorators: [
+    (Story) => (
+      <div style={{ height: '500px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 }
 
 export default meta
@@ -37,11 +44,13 @@ const multiDatasetData = {
 export const Default: Story = {
   args: {
     data: sampleData,
+    title: '棒グラフ',
   },
 }
 
 export const MultipleDatasets: Story = {
   args: {
     data: multiDatasetData,
+    title: '複数データの棒グラフ',
   },
 }
