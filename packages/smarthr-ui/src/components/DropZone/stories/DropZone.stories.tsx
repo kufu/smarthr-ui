@@ -36,6 +36,20 @@ export const Multiple: StoryObj<typeof DropZone> = {
   },
 }
 
+export const Disabled: StoryObj<typeof DropZone> = {
+  name: 'disabled',
+  args: {
+    disabled: true,
+  },
+}
+
+export const Error: StoryObj<typeof DropZone> = {
+  name: 'error',
+  args: {
+    error: true,
+  },
+}
+
 export const Decorators: StoryObj<typeof DropZone> = {
   name: 'decorators',
   args: {
