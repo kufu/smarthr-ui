@@ -38,7 +38,7 @@ importers:
         version: 9.6.0(eslint@9.29.0(jiti@2.4.1))(react@19.1.0)(typescript@5.8.3)
       eslint-plugin-storybook:
         specifier: ^9.0.12
-        version: 9.0.12(eslint@9.29.0(jiti@2.4.1))(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)
+        version: 9.0.12(eslint@9.29.0(jiti@2.4.1))(storybook@9.0.13(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -334,6 +334,61 @@ importers:
       webpack:
         specifier: ^5.99.9
         version: 5.99.9(@swc/core@1.12.5)(esbuild@0.25.5)
+
+  packages/smarthr-ui-charts:
+    dependencies:
+      chart.js:
+        specifier: ^4.4.0
+        version: 4.5.0
+      react-chartjs-2:
+        specifier: ^5.2.0
+        version: 5.3.0(chart.js@4.5.0)(react@19.1.0)
+      smarthr-ui:
+        specifier: ^74.0.0
+        version: 74.2.0(@types/react@18.3.23)(eslint@9.29.0(jiti@2.4.1))(react-dom@19.1.0(react@19.1.0))(react-intl@7.1.11(react@19.1.0)(typescript@5.8.3))(react@19.1.0)(styled-components@5.3.11(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0))(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3))(typescript@5.8.3)
+    devDependencies:
+      '@storybook/addon-a11y':
+        specifier: 9.0.12
+        version: 9.0.12(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))
+      '@storybook/addon-docs':
+        specifier: 9.0.12
+        version: 9.0.12(@types/react@18.3.23)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))
+      '@storybook/cli':
+        specifier: 9.0.12
+        version: 9.0.12(@babel/preset-env@7.27.2(@babel/core@7.27.4))(@testing-library/dom@10.4.0)(prettier@3.6.0)
+      '@storybook/react':
+        specifier: 9.0.12
+        version: 9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)
+      '@storybook/react-vite':
+        specifier: 9.0.12
+        version: 9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.44.0)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))
+      '@types/react':
+        specifier: ^18.3.23
+        version: 18.3.23
+      '@types/react-dom':
+        specifier: ^19.1.6
+        version: 19.1.6(@types/react@18.3.23)
+      '@types/styled-components':
+        specifier: ^5.1.34
+        version: 5.1.34
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.1.0(react@19.1.0)
+      react-intl:
+        specifier: ^7.1.11
+        version: 7.1.11(react@19.1.0)(typescript@5.8.3)
+      storybook:
+        specifier: 9.0.12
+        version: 9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0)
+      styled-components:
+        specifier: ^5.3.11
+        version: 5.3.11(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
   sandbox/next:
     dependencies:
@@ -1595,6 +1650,15 @@ packages:
     resolution: {integrity: sha512-u3UPsIilWKOM3F9CXtrG8LEJmNxwoCQC/XVj4IKYXvvpx7QIi/Kg1LI5uDmDpKlac62NUtX7eLjRh+jVZcLOzw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.0':
+    resolution: {integrity: sha512-dPo6SE4dm8UKcgGg4LsV9iw6f5HkIeJwzMA2M2Lb+mhl5vxesbDvb3ENTzNTkGnOxS6PqJig2pfXdtYaW3S9fg==}
+    peerDependencies:
+      typescript: '>= 4.3.x'
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   '@jridgewell/gen-mapping@0.1.1':
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}
     engines: {node: '>=6.0.0'}
@@ -1625,6 +1689,9 @@ packages:
 
   '@keyv/serialize@1.0.3':
     resolution: {integrity: sha512-qnEovoOp5Np2JDGonIDL6Ayihw0RhnRh6vxPuHo4RDn1UOzwEo4AeIfpL6UGIrsceWrCMiVPgwRjbHu4vYFc3g==}
+
+  '@kurkle/color@0.3.4':
+    resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
 
   '@mdx-js/react@3.1.0':
     resolution: {integrity: sha512-QjHtSaoameoalGnKDT3FoIl4+9RwyTmo9ZJGBdLOks/YOiWHoRDI3PUwEzOE7kEmGcV3AFcp9K6dYu9rEuKLAQ==}
@@ -1908,6 +1975,12 @@ packages:
     resolution: {integrity: sha512-J4uVxEfkd2iAxPxcT90iebt5wuLSd0EYuMJa94t1jVUGlvZZAvnmqXAqscRITNU37nOr0c9yZ2YVS/sFOZyOVw==}
     engines: {node: '>=18'}
 
+  '@storybook/builder-vite@9.0.12':
+    resolution: {integrity: sha512-Jh6CJKHJQ+N1BiPr6fY91EMV5X0xBuIAhLpaNSKrshkdnXd/fBbRgE8iPJdnr+SCqaFErBjAjBzKkotwKU138A==}
+    peerDependencies:
+      storybook: ^9.0.12
+      vite: ^5.0.0 || ^6.0.0
+
   '@storybook/builder-webpack5@9.0.12':
     resolution: {integrity: sha512-zfmGYZjDppYPZZgSwW9ZRfIrCvshZcLombKmVEodlt/RMs5N5zaTCNf5p7+Z1BBcRpH5HXHWjwmrlobW6LzsLg==}
     peerDependencies:
@@ -1968,6 +2041,15 @@ packages:
       react: ^19.1.0
       react-dom: ^19.1.0
       storybook: ^9.0.12
+
+  '@storybook/react-vite@9.0.12':
+    resolution: {integrity: sha512-TAXkBBiy2dYGL8rXiqAZh1A9w83R9SFa9EiGDYIek+fSKRnbMAclO8cxtDUOuwKzVQ0mzvL2DPtHV6uaoec/Eg==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: ^19.1.0
+      react-dom: ^19.1.0
+      storybook: ^9.0.12
+      vite: ^5.0.0 || ^6.0.0
 
   '@storybook/react-webpack5@9.0.12':
     resolution: {integrity: sha512-SHVwmmnodGcvLn0pclPu4P9b3qexUXTFPsGmtjQnGObZ3AqhjWiei8h4pYtX8m8zhu419QWevykJq6oWvYzHdA==}
@@ -2915,6 +2997,10 @@ packages:
 
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
+
+  chart.js@4.5.0:
+    resolution: {integrity: sha512-aYeC/jDgSEx8SHWZvANYMioYMZ2KX02W6f6uVfyteuCGcadDLcYVHdfdygsTQkQ4TKn5lghoojAsPj5pu0SnvQ==}
+    engines: {pnpm: '>=8'}
 
   check-error@2.1.1:
     resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==}
@@ -6135,6 +6221,12 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
+  react-chartjs-2@5.3.0:
+    resolution: {integrity: sha512-UfZZFnDsERI3c3CZGxzvNJd02SHjaSJ8kgW1djn65H1KK8rehwTjyrRKOG3VTMG8wtHZ5rgAO5oTHtHi9GCCmw==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      react: ^19.1.0
+
   react-docgen-typescript@2.4.0:
     resolution: {integrity: sha512-ZtAp5XTO5HRzQctjPU0ybY0RRCQO19X/8fxn3w7y2VVTUbGHDKULPTL4ky3vB05euSgG5NpALhEhDPvQ56wvXg==}
     peerDependencies:
@@ -6143,6 +6235,10 @@ packages:
   react-docgen@7.1.1:
     resolution: {integrity: sha512-hlSJDQ2synMPKFZOsKo9Hi8WWZTC7POR8EmWvTSjow+VDgKzkmjQvFm2fk0tmRw+f0vTOIYKlarR0iL4996pdg==}
     engines: {node: '>=16.14.0'}
+
+  react-docgen@8.0.0:
+    resolution: {integrity: sha512-kmob/FOTwep7DUWf9KjuenKX0vyvChr3oTdvvPt09V60Iz75FJp+T/0ZeHMbAfJj2WaVWqAPP5Hmm3PYzSPPKg==}
+    engines: {node: ^20.9.0 || >=22}
 
   react-dom@19.1.0:
     resolution: {integrity: sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==}
@@ -6566,6 +6662,14 @@ packages:
     resolution: {integrity: sha512-bSiSngZ/jWeX93BqeIAbImyTbEihizcwNjFoRUIY/T1wWQsfsm2Vw1agPKylXvQTU7iASGdHhyqRlqQzfz+Htg==}
     engines: {node: '>=18'}
 
+  smarthr-ui@74.2.0:
+    resolution: {integrity: sha512-7qLYS3SPozb0/xNP7GI8VLax302XLhSv79iM5nP8M+n3BqyjoMpNjGhbphc6yQASGa0wMo9+r7rcJhgOLkqjvQ==}
+    peerDependencies:
+      react: ^19.1.0
+      react-dom: ^19.1.0
+      react-intl: ^7.0.4
+      styled-components: ^5.0.1
+
   snake-case@3.0.4:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
 
@@ -6650,6 +6754,15 @@ packages:
 
   storybook@9.0.12:
     resolution: {integrity: sha512-mpACe6BMd/M5sqcOiA8NmWIm2zdx0t4ujnA4NTcq4aErdK/KKuU255UM4pO3DIf5zWR5VrDfNV5UaMi/VgE2mA==}
+    hasBin: true
+    peerDependencies:
+      prettier: ^2 || ^3
+    peerDependenciesMeta:
+      prettier:
+        optional: true
+
+  storybook@9.0.13:
+    resolution: {integrity: sha512-RMCTZ24IF8cMu1Ru1vUfnsP+w/OfI6Wm/wjjXaDMoTrriuQG24AF+VL+UipEoqkmZtqoZcfwRyiOgnEWQX8akw==}
     hasBin: true
     peerDependencies:
       prettier: ^2 || ^3
@@ -8994,6 +9107,15 @@ snapshots:
       '@types/yargs': 17.0.10
       chalk: 4.1.2
 
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.0(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))':
+    dependencies:
+      glob: 10.4.5
+      magic-string: 0.30.17
+      react-docgen-typescript: 2.4.0(typescript@5.8.3)
+      vite: 6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
+    optionalDependencies:
+      typescript: 5.8.3
+
   '@jridgewell/gen-mapping@0.1.1':
     dependencies:
       '@jridgewell/set-array': 1.2.1
@@ -9029,6 +9151,8 @@ snapshots:
   '@keyv/serialize@1.0.3':
     dependencies:
       buffer: 6.0.3
+
+  '@kurkle/color@0.3.4': {}
 
   '@mdx-js/react@3.1.0(@types/react@18.3.23)(react@19.1.0)':
     dependencies:
@@ -9247,6 +9371,13 @@ snapshots:
       - supports-color
       - webpack
 
+  '@storybook/builder-vite@9.0.12(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))':
+    dependencies:
+      '@storybook/csf-plugin': 9.0.12(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))
+      storybook: 9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0)
+      ts-dedent: 2.2.0
+      vite: 6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
+
   '@storybook/builder-webpack5@9.0.12(@swc/core@1.12.5)(esbuild@0.25.5)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)':
     dependencies:
       '@storybook/core-webpack': 9.0.12(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))
@@ -9381,6 +9512,26 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       storybook: 9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0)
+
+  '@storybook/react-vite@9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.44.0)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))':
+    dependencies:
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.0(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))
+      '@rollup/pluginutils': 5.1.4(rollup@4.44.0)
+      '@storybook/builder-vite': 9.0.12(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))
+      '@storybook/react': 9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)
+      find-up: 7.0.0
+      magic-string: 0.30.17
+      react: 19.1.0
+      react-docgen: 8.0.0
+      react-dom: 19.1.0(react@19.1.0)
+      resolve: 1.22.8
+      storybook: 9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0)
+      tsconfig-paths: 4.2.0
+      vite: 6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0)
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+      - typescript
 
   '@storybook/react-webpack5@9.0.12(@swc/core@1.12.5)(esbuild@0.25.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3)':
     dependencies:
@@ -10500,6 +10651,10 @@ snapshots:
 
   chardet@0.7.0: {}
 
+  chart.js@4.5.0:
+    dependencies:
+      '@kurkle/color': 0.3.4
+
   check-error@2.1.1: {}
 
   chokidar@3.6.0:
@@ -11457,6 +11612,15 @@ snapshots:
       '@typescript-eslint/utils': 8.35.0(eslint@9.29.0(jiti@2.4.1))(typescript@5.8.3)
       eslint: 9.29.0(jiti@2.4.1)
       storybook: 9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  eslint-plugin-storybook@9.0.12(eslint@9.29.0(jiti@2.4.1))(storybook@9.0.13(@testing-library/dom@10.4.0)(prettier@3.6.0))(typescript@5.8.3):
+    dependencies:
+      '@typescript-eslint/utils': 8.35.0(eslint@9.29.0(jiti@2.4.1))(typescript@5.8.3)
+      eslint: 9.29.0(jiti@2.4.1)
+      storybook: 9.0.13(@testing-library/dom@10.4.0)(prettier@3.6.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -14003,6 +14167,14 @@ snapshots:
       postcss: 8.5.6
       ts-node: 10.9.2(@swc/core@1.12.5)(@types/node@20.19.1)(typescript@5.8.3)
 
+  postcss-load-config@4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3)):
+    dependencies:
+      lilconfig: 3.1.3
+      yaml: 2.8.0
+    optionalDependencies:
+      postcss: 8.5.6
+      ts-node: 10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3)
+
   postcss-loader@8.1.1(postcss@8.5.6)(typescript@5.8.3)(webpack@5.99.9(@swc/core@1.12.5)(esbuild@0.25.5)):
     dependencies:
       cosmiconfig: 9.0.0(typescript@5.8.3)
@@ -14187,11 +14359,31 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
+  react-chartjs-2@5.3.0(chart.js@4.5.0)(react@19.1.0):
+    dependencies:
+      chart.js: 4.5.0
+      react: 19.1.0
+
   react-docgen-typescript@2.4.0(typescript@5.8.3):
     dependencies:
       typescript: 5.8.3
 
   react-docgen@7.1.1:
+    dependencies:
+      '@babel/core': 7.27.4
+      '@babel/traverse': 7.27.4(supports-color@5.5.0)
+      '@babel/types': 7.27.6
+      '@types/babel__core': 7.20.5
+      '@types/babel__traverse': 7.20.4
+      '@types/doctrine': 0.0.9
+      '@types/resolve': 1.20.6
+      doctrine: 3.0.0
+      resolve: 1.22.8
+      strip-indent: 4.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  react-docgen@8.0.0:
     dependencies:
       '@babel/core': 7.27.4
       '@babel/traverse': 7.27.4(supports-color@5.5.0)
@@ -14733,6 +14925,35 @@ snapshots:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 5.0.0
 
+  smarthr-ui@74.2.0(@types/react@18.3.23)(eslint@9.29.0(jiti@2.4.1))(react-dom@19.1.0(react@19.1.0))(react-intl@7.1.11(react@19.1.0)(typescript@5.8.3))(react@19.1.0)(styled-components@5.3.11(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0))(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3))(typescript@5.8.3):
+    dependencies:
+      '@smarthr/wareki': 1.3.0
+      dayjs: 1.11.13
+      decimal.js: 10.5.0
+      intl-messageformat: 10.7.16
+      lodash.merge: 4.6.2
+      lodash.range: 3.2.0
+      polished: 4.3.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      react-draggable: 4.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-icons: 5.5.0(react@19.1.0)
+      react-innertext: 1.1.5(@types/react@18.3.23)(react@19.1.0)
+      react-intl: 7.1.11(react@19.1.0)(typescript@5.8.3)
+      react-pdf: 9.2.1(@types/react@18.3.23)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-transition-group: 4.4.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      styled-components: 5.3.11(react-dom@19.1.0(react@19.1.0))(react-is@19.1.0)(react@19.1.0)
+      tailwind-variants: 0.3.1(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3)))
+      tailwindcss: 3.4.17(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3))
+      typescript-eslint: 8.35.0(eslint@9.29.0(jiti@2.4.1))(typescript@5.8.3)
+    transitivePeerDependencies:
+      - '@types/react'
+      - bare-buffer
+      - eslint
+      - supports-color
+      - ts-node
+      - typescript
+
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
@@ -14833,6 +15054,27 @@ snapshots:
       storybook: 9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0)
 
   storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.6.0):
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@testing-library/jest-dom': 6.6.3
+      '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.0)
+      '@vitest/expect': 3.0.9
+      '@vitest/spy': 3.0.9
+      better-opn: 3.0.2
+      esbuild: 0.25.5
+      esbuild-register: 3.5.0(esbuild@0.25.5)
+      recast: 0.23.6
+      semver: 7.7.2
+      ws: 8.18.0
+    optionalDependencies:
+      prettier: 3.6.0
+    transitivePeerDependencies:
+      - '@testing-library/dom'
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  storybook@9.0.13(@testing-library/dom@10.4.0)(prettier@3.6.0):
     dependencies:
       '@storybook/global': 5.0.0
       '@testing-library/jest-dom': 6.6.3
@@ -15128,6 +15370,11 @@ snapshots:
       tailwind-merge: 2.5.4
       tailwindcss: 3.4.17(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@20.19.1)(typescript@5.8.3))
 
+  tailwind-variants@0.3.1(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3))):
+    dependencies:
+      tailwind-merge: 2.5.4
+      tailwindcss: 3.4.17(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3))
+
   tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@20.19.1)(typescript@5.8.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
@@ -15148,6 +15395,33 @@ snapshots:
       postcss-import: 15.1.0(postcss@8.5.6)
       postcss-js: 4.0.1(postcss@8.5.6)
       postcss-load-config: 4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@20.19.1)(typescript@5.8.3))
+      postcss-nested: 6.2.0(postcss@8.5.6)
+      postcss-selector-parser: 6.1.2
+      resolve: 1.22.8
+      sucrase: 3.35.0
+    transitivePeerDependencies:
+      - ts-node
+
+  tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3)):
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.6.0
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.3
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.21.6
+      lilconfig: 3.1.3
+      micromatch: 4.0.8
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.1.1
+      postcss: 8.5.6
+      postcss-import: 15.1.0(postcss@8.5.6)
+      postcss-js: 4.0.1(postcss@8.5.6)
+      postcss-load-config: 4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.12.5)(@types/node@22.9.1)(typescript@5.8.3))
       postcss-nested: 6.2.0(postcss@8.5.6)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.8
@@ -15573,6 +15847,23 @@ snapshots:
       tinyglobby: 0.2.14
     optionalDependencies:
       '@types/node': 20.19.1
+      fsevents: 2.3.3
+      jiti: 2.4.1
+      less: 4.2.0
+      terser: 5.39.0
+      tsx: 4.19.3
+      yaml: 2.8.0
+
+  vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0):
+    dependencies:
+      esbuild: 0.25.5
+      fdir: 6.4.4(picomatch@4.0.2)
+      picomatch: 4.0.2
+      postcss: 8.5.6
+      rollup: 4.44.0
+      tinyglobby: 0.2.14
+    optionalDependencies:
+      '@types/node': 22.9.1
       fsevents: 2.3.3
       jiti: 2.4.1
       less: 4.2.0

@@ -41,19 +41,11 @@ export const registerChartComponents = () => {
   )
 }
 
-// 使用する側で変更しても良いオプションだけ受け取る
-type BaseOptionProps = {
-  title?: string
-}
-const createBaseChartOptions = ({ title }: BaseOptionProps): Partial<ChartOptions> => ({
+const createBaseChartOptions = ({ plugins }: Partial<ChartOptions>): Partial<ChartOptions> => ({
   responsive: true,
   maintainAspectRatio: false,
   events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
   plugins: {
-    title: {
-      display: true,
-      text: title,
-    },
     legend: {
       position: 'bottom',
       labels: {
@@ -69,6 +61,7 @@ const createBaseChartOptions = ({ title }: BaseOptionProps): Partial<ChartOption
       borderWidth: 1,
       cornerRadius: 4,
     },
+    ...plugins,
   },
   animation: {
     duration: 750,
@@ -76,13 +69,12 @@ const createBaseChartOptions = ({ title }: BaseOptionProps): Partial<ChartOption
   },
 })
 
-export const createBarChartOptions = ({
-  title,
-}: BaseOptionProps): Partial<ChartOptions<'bar'>> => ({
-  ...createBaseChartOptions({ title }),
+export const createBarChartOptions = (
+  plugins: Partial<ChartOptions>,
+): Partial<ChartOptions<'bar'>> => ({
+  ...createBaseChartOptions(plugins),
   elements: {
     bar: {
-      borderWidth: 0,
       borderRadius: 4,
     },
   },
