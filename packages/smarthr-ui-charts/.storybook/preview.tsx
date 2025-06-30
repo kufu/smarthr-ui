@@ -1,4 +1,5 @@
 import { ThemeProvider, createTheme } from 'smarthr-ui'
+import 'smarthr-ui/smarthr-ui.css'
 
 import type { Preview } from '@storybook/react'
 
