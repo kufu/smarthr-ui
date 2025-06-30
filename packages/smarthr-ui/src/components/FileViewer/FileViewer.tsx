@@ -29,8 +29,6 @@ import { PDFViewer } from './PDFViewer'
 
 import type { FileForViewer } from './types'
 
-export { PasswordResponses } from './PDFViewer'
-
 const defaultScaleStep = new Decimal(0.2)
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
