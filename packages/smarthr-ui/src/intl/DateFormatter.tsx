@@ -15,7 +15,12 @@ import type { FormatDateProps } from './useIntl'
  * @returns フォーマットされた日付を含むtime要素
  * @example
  * // 基本的な使用法（ロケールのデフォルト形式）
- * <DateFormatter date={new Date()} /> // <time datetime="2024-01-15T10:30:00.000Z">2024/01/15（水）</time>
+ * <DateFormatter date={new Date()} />
+ * // <time datetime="2024-01-15T10:30:00.000Z">2024/01/15</time>
+ *
+ * // 日付を曜日ありで表示
+ * <DateFormatter date={new Date()} parts={['year', 'month', 'day', 'weekday']} />
+ * // <time datetime="2024-01-15T10:30:00.000Z">2024/01/15（水）</time>
  *
  * // 特定のパーツのみ表示
  * <DateFormatter

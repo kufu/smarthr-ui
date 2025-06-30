@@ -77,8 +77,11 @@ export type UseIntlReturn = {
    * @param props.options.capitalizeFirstLetter - 最初の文字を大文字化する
    * @returns フォーマットされた日付文字列
    * @example
-   * // 基本的な使用法（ロケールのデフォルト形式）
-   * formatDate({ date: new Date() }) // "2024/01/15（水）" (ja)
+   * // 基本的な使用法（ロケールのデフォルト形式：曜日なし）
+   * formatDate({ date: new Date() }) // "2024/01/15" (ja)
+   *
+   * // 日付を曜日ありで表示
+   * formatDate({ date: new Date(), parts: ['year', 'month', 'day', 'weekday'] }) // "2024/01/15（水）" (ja)
    *
    * // 特定のフィールドのみ表示
    * formatDate({ date: new Date(), parts: ['year', 'month'] }) // "2024/01" (ja)
@@ -119,6 +122,7 @@ const DATE_FORMATS: Record<
   Intl.DateTimeFormatOptions & { weekStartDay: number }
 > = {
   // localeがja, ja-easyの場合、フォーマットを YYYY/MM/DD 形式にする
+  // 曜日が含まれている場合は括弧を追加する
   // 参考: https://smarthr.design/products/contents/idiomatic-usage/count/#h2-3
   ja: {
     year: 'numeric',
@@ -222,7 +226,7 @@ const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
  * // 日付のフォーマット
  * const Component = () => {
  *   const { formatDate } = useIntl()
- *   return <span>{formatDate({ date: new Date() })}</span> // "2024/01/15（水）" (ja)
+ *   return <span>{formatDate({ date: new Date() })}</span> // "2024/01/15" (ja)
  * }
  *
  * @example

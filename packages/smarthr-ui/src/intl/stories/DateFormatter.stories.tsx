@@ -20,9 +20,17 @@ type Story = StoryObj<typeof DateFormatter>
 export const Playground: Story = {}
 
 export const Default: Story = {
-  name: 'デフォルト（全日付パートを表示）',
+  name: 'デフォルト（曜日なしの表示）',
   args: {
     date: testDate,
+  },
+}
+
+export const YearMonthDayWeekday: Story = {
+  name: '年月日＋曜日の表示',
+  args: {
+    date: testDate,
+    parts: ['year', 'month', 'day', 'weekday'],
   },
 }
 
@@ -31,14 +39,6 @@ export const YearMonthOnly: Story = {
   args: {
     date: testDate,
     parts: ['year', 'month'],
-  },
-}
-
-export const YearMonthDayOnly: Story = {
-  name: '年月日のみ表示（曜日なし）',
-  args: {
-    date: testDate,
-    parts: ['year', 'month', 'day'],
   },
 }
 
