@@ -12,11 +12,13 @@ import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
 
+const DEFAULT_WIDTH_KEYS = Object.keys(defaultWidth) as Array<keyof typeof defaultWidth>
+
 defaultConfig.twMergeConfig = {
   prefix: 'shr-',
   classGroups: {
-    w: [{ w: [...Object.keys(defaultWidth), validators.isArbitraryValue] }],
-    basis: [{ basis: [...Object.keys(defaultWidth), validators.isArbitraryValue] }],
+    w: [{ w: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
+    basis: [{ basis: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
     boxShadow: [
       {
         shadow: [
