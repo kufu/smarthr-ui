@@ -83,14 +83,14 @@ export const PDFViewer: FC<ViewerProps> = memo(
 )
 
 /**
- * Passwordの入力状況を示す定数。
- * NEED_PASSWORD: パスワードが必要かつ未入力
- * INCORRECT_PASSWORD: パスワードが間違っている
+ * <Document onPassword={(callback, reason) => {..}} /> のreasonに渡ってくる値とその意味のマッパー。
  *
- * react-pdfのPasswordResponsesをそのまま使うと、
- * 利用者側でsmarthr-uiをビルドする際にPasswordResponsesの参照が解決できないことがある。
- * それを防ぐために全く同じ内容をsmarthr-ui側で定義してexportする。
- **/
+ * react-pdfのPasswordResponsesと同じ値をそのまま再定義してexportしている。
+ * (react-pdfのPasswordResponsesをre-exportするとビルド時に参照が解決できないことがあるため)
+ * @see: https://github.com/wojtekmaj/react-pdf/blob/d4542589c449c1b8d2d11f9c099e91e5b87e43f5/packages/react-pdf/src/Document.tsx#L216-L230
+ *
+ * 利用側ではreasonはただのnumberとなり意味が把握しづらいため、この定数を利用することで意図を明確にする。
+x` **/
 export const PasswordResponses: typeof ReactPdfPasswordResponses = {
   NEED_PASSWORD: 1,
   INCORRECT_PASSWORD: 2,
