@@ -54,14 +54,25 @@ describe('useIntl', () => {
 
   describe('formatDate', () => {
     const testDate = new Date(2025, 1 - 1, 1) // 2025年1月1日
+    const fullParts = ['year', 'month', 'day', 'weekday'] as const
 
-    describe('locale variations', () => {
+    describe('locale variations with default parts (no weekday)', () => {
       it('formats date in ja locale', () => {
         const wrapper: FC<PropsWithChildren> = ({ children }) => (
           <IntlProvider locale="ja">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025/01/01（水）')
+        expect(formatDate({ date: testDate })).toBe('2025/01/01')
+      })
+    })
+
+    describe('locale variations with full parts', () => {
+      it('formats date in ja locale', () => {
+        const wrapper: FC<PropsWithChildren> = ({ children }) => (
+          <IntlProvider locale="ja">{children}</IntlProvider>
+        )
+        const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('2025/01/01（水）')
       })
 
       it('formats date in en-us locale', () => {
@@ -69,7 +80,7 @@ describe('useIntl', () => {
           <IntlProvider locale="en-us">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('Jan 01, 2025 (Wed)')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('Jan 01, 2025 (Wed)')
       })
 
       it('formats date in ja-easy locale', () => {
@@ -77,7 +88,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ja-easy">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025年1月01日（水）')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('2025年1月01日（水）')
       })
 
       it('formats date in id-id locale', () => {
@@ -85,7 +96,7 @@ describe('useIntl', () => {
           <IntlProvider locale="id-id">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('01 Jan 2025 (Rab)')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('01 Jan 2025 (Rab)')
       })
 
       it('formats date in ko locale', () => {
@@ -93,7 +104,7 @@ describe('useIntl', () => {
           <IntlProvider locale="ko">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025년 1월 1일  (수)')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('2025년 1월 1일  (수)')
       })
 
       it('formats date in pt locale', () => {
@@ -101,7 +112,7 @@ describe('useIntl', () => {
           <IntlProvider locale="pt">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('01 de jan. de 2025 (qua.)')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('01 de jan. de 2025 (qua.)')
       })
 
       it('formats date in vi locale', () => {
@@ -109,7 +120,7 @@ describe('useIntl', () => {
           <IntlProvider locale="vi">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('01 tháng 1, 2025 (Th 4)')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('01 tháng 1, 2025 (Th 4)')
       })
 
       it('formats date in zh-cn locale', () => {
@@ -117,7 +128,7 @@ describe('useIntl', () => {
           <IntlProvider locale="zh-cn">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025年1月1日（周三）')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('2025年1月1日（周三）')
       })
 
       it('formats date in zh-tw locale', () => {
@@ -125,7 +136,7 @@ describe('useIntl', () => {
           <IntlProvider locale="zh-tw">{children}</IntlProvider>
         )
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-        expect(formatDate({ date: testDate })).toBe('2025年1月1日（週三）')
+        expect(formatDate({ date: testDate, parts: fullParts })).toBe('2025年1月1日（週三）')
       })
     })
 
@@ -242,10 +253,10 @@ describe('useIntl', () => {
         const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
 
         const date1 = new Date(2024, 11 - 1, 15) // 2024年11月15日
-        expect(formatDate({ date: date1 })).toBe('2024/11/15（金）')
+        expect(formatDate({ date: date1 })).toBe('2024/11/15')
 
         const date2 = new Date(2023, 6 - 1, 30) // 2023年6月30日
-        expect(formatDate({ date: date2 })).toBe('2023/06/30（金）')
+        expect(formatDate({ date: date2 })).toBe('2023/06/30')
       })
 
       it('does not add brackets for Chinese locales when only weekday is included', () => {

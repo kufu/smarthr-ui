@@ -30,7 +30,7 @@ export type FormatDateProps = {
   /**
    * 表示する日付のパーツ。指定しない場合は全て表示
    */
-  parts?: [DatePart, ...DatePart[]]
+  parts?: readonly [DatePart, ...DatePart[]]
 
   /**
    * フォーマットオプション
@@ -248,7 +248,7 @@ export const useIntl = (): UseIntlReturn => {
   )
 
   const formatDate = useCallback(
-    ({ date, parts = ['year', 'month', 'day', 'weekday'], options }: FormatDateProps): string => {
+    ({ date, parts = ['year', 'month', 'day'], options }: FormatDateProps): string => {
       const {
         disableSlashInJa = false,
         capitalizeFirstLetter = false,
@@ -256,12 +256,7 @@ export const useIntl = (): UseIntlReturn => {
       } = options || {}
 
       // 指定されたパーツが含まれているかチェック（指定がない場合は全て含まれる）
-      const shouldIncludePart = (part: DatePart) => {
-        // arrayが空の場合は全てのパーツを含める
-        if (parts.length === 0) return true
-        // 指定されたパーツのみを含める
-        return parts.includes(part)
-      }
+      const shouldIncludePart = (part: DatePart) => parts.includes(part)
 
       // ロケールのデフォルト形式を取得
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
