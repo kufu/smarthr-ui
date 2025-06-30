@@ -218,8 +218,8 @@ importers:
         specifier: ^0.4.14
         version: 0.4.14(@babel/core@7.27.4)
       babel-plugin-polyfill-regenerator:
-        specifier: ^0.6.4
-        version: 0.6.4(@babel/core@7.27.4)
+        specifier: ^0.6.5
+        version: 0.6.5(@babel/core@7.27.4)
       chromatic:
         specifier: ^13.0.1
         version: 13.0.1
@@ -2710,8 +2710,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
-  babel-plugin-polyfill-regenerator@0.6.4:
-    resolution: {integrity: sha512-7gD3pRadPrbjhjLyxebmx/WrFYcuSjZ0XbdUujQMZ/fcE9oeewk2U/7PCvez84UeuK3oSjmPZ0Ch0dlupQvGzw==}
+  babel-plugin-polyfill-regenerator@0.6.5:
+    resolution: {integrity: sha512-ISqQ2frbiNU9vIJkzg7dlPpznPZ4jOiUQ1uSmB0fEHeowtN3COYRsXr/xexn64NpU13P06jc/L5TgiJXOgrbEg==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
@@ -8306,7 +8306,7 @@ snapshots:
       '@babel/preset-modules': 0.1.6-no-external-plugins(@babel/core@7.27.4)
       babel-plugin-polyfill-corejs2: 0.4.14(@babel/core@7.27.4)
       babel-plugin-polyfill-corejs3: 0.11.1(@babel/core@7.27.4)
-      babel-plugin-polyfill-regenerator: 0.6.4(@babel/core@7.27.4)
+      babel-plugin-polyfill-regenerator: 0.6.5(@babel/core@7.27.4)
       core-js-compat: 3.40.0
       semver: 6.3.1
     transitivePeerDependencies:
@@ -10255,7 +10255,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-polyfill-regenerator@0.6.4(@babel/core@7.27.4):
+  babel-plugin-polyfill-regenerator@0.6.5(@babel/core@7.27.4):
     dependencies:
       '@babel/core': 7.27.4
       '@babel/helper-define-polyfill-provider': 0.6.5(@babel/core@7.27.4)
