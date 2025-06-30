@@ -1,7 +1,6 @@
 # Build outputs
 /lib
 /esm
-*.d.ts
 *.d.ts.map
 *.js.map
 
