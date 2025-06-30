@@ -255,19 +255,30 @@ export const useIntl = (): UseIntlReturn => {
         ...formatOptions
       } = options || {}
 
-      // 指定されたパーツが含まれているかチェック（指定がない場合は全て含まれる）
-      const shouldIncludePart = (part: DatePart) => parts.includes(part)
+      // パーツの存在を事前に計算
+      const hasPart = parts.reduce(
+        (prev, part) => {
+          prev[part] = true
+          return prev
+        },
+        { year: false, month: false, day: false, weekday: false } as {
+          year: boolean
+          month: boolean
+          day: boolean
+          weekday: boolean
+        },
+      )
 
       // ロケールのデフォルト形式を取得
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
-        year: shouldIncludePart('year') ? DATE_FORMATS[locale].year : undefined,
-        month: shouldIncludePart('month')
+        year: hasPart.year ? DATE_FORMATS[locale].year : undefined,
+        month: hasPart.month
           ? disableSlashInJa && locale === 'ja'
             ? 'long'
             : DATE_FORMATS[locale].month
           : undefined,
-        day: shouldIncludePart('day') ? DATE_FORMATS[locale].day : undefined,
-        weekday: shouldIncludePart('weekday') ? DATE_FORMATS[locale].weekday : undefined,
+        day: hasPart.day ? DATE_FORMATS[locale].day : undefined,
+        weekday: hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined,
         ...formatOptions,
       }
 
@@ -276,11 +287,9 @@ export const useIntl = (): UseIntlReturn => {
       // 曜日をロケールに応じてフォーマットする
       let formattedResult = formattedDate
       const config = WEEKDAY_FORMATS[locale]
-      if (
-        config &&
-        shouldIncludePart('weekday') &&
-        !(parts.length === 1 && parts[0] === 'weekday')
-      ) {
+      // 曜日が含まれており、かつ曜日のみの表示でない場合は括弧を追加
+      // 例: "2025/01/01（水）" → 括弧あり, "水" → 括弧なし
+      if (config && hasPart.weekday && (parts.length !== 1 || parts[0] !== 'weekday')) {
         formattedResult = config.replacer(formattedDate)
       }
 
