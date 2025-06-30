@@ -4,11 +4,6 @@ export type KeyboardNavigationOptions = {
   liveRegionId?: string
 }
 
-/**
- * のこりの実装
- * - キーボード操作したときにcanvasのフォーカスアウトラインを見えなくする
- */
-
 export const keyboardNavigationPlugin = {
   id: 'keyboardNavigation',
   defaults: {
@@ -62,16 +57,19 @@ export const keyboardNavigationPlugin = {
       }
 
       if (nextDatasetIndex === -1 && nextDataIndex === -1) {
+        canvas.style.outline = ''
         chart.setActiveElements([])
         chart.tooltip.setActiveElements([], { x: 0, y: 0 })
         chart.update()
         // ライブリージョンのクリア処理
         if (liveRegionElement) {
           liveRegionElement.textContent = ''
-          console.log('🚀 ~ Live region cleared')
         }
         return
       }
+
+      // キーボードナビゲーション中はcanvas要素のアウトラインを非表示にしている
+      canvas.style.outline = 'none'
 
       const actualNextDatasetIndex = Math.max(nextDatasetIndex, 0)
       const actualNextDataIndex = Math.max(nextDataIndex, 0)
