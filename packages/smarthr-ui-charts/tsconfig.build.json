@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "node_modules",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.stories.tsx",
+    "src/**/__tests__"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "types": ["node", "react"],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
+}
