@@ -15,7 +15,7 @@ export default {
     const width = '100%'
     const formatDate = (date: Date | null) => dayjs(date).format('YYYY年MM月DD')
 
-    const matrics = [
+    const matrices = [
       { error: false, disabled: false },
       { error: false, disabled: true },
       { error: true, disabled: false },
@@ -24,7 +24,7 @@ export default {
 
     return (
       <Cluster>
-        {matrics.map((m) => (
+        {matrices.map((m) => (
           <>
             <WarekiPicker {...args} error={m.error} disabled={m.disabled} />
             <WarekiPicker error={m.error} disabled={m.disabled} placeholder={placeholder} />
