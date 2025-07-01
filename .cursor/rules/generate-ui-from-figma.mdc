@@ -22,6 +22,7 @@ SmartHR UIライブラリにコンポーネントが存在する場合、**必�
 
 ### 🚫 具体的な禁止事項
 - `<div>` + Tailwindクラス → 適切なレイアウトコンポーネント（`Stack`、`Cluster`、`Sidebar`等）を使用
+- 角丸白地囲み（`shr-border-shorthand shr-rounded-m shr-bg-white`）→ `Base` コンポーネントを使用
 - `<table>` → `<Table>` を使用
 - `<th>` → `<Th>` を使用  
 - `<td>` → `<Td>` を使用
@@ -90,10 +91,17 @@ SmartHR UIライブラリにコンポーネントが存在する場合、**必�
 #### 9. **🚨 推測禁止・データ優先分析（必須）**
 - **🚫 推測による実装の完全禁止**: 「〜っぽい」「〜だろう」による判断を一切行わない
 - **📊 Figma XML数値データの必須確認**: `style[fontSize]`, `style[x]`, `style[y]`, `frame name`, `prop[*]` の全数値・文字列を必ず参照
-- **📏 フォントサイズ階層の数値比較**: 全テキスト要素の `style[fontSize]` を抽出し、24px以上→PageHeading、19-23px→Heading、16-18px→Heading type="blockTitle" で判定
+- **📏 フォントサイズ + 色階層の数値比較**: 全テキスト要素の `style[fontSize]` と色を抽出し、24px以上→PageHeading、19-23px→Heading、16px+黒色→Heading type="blockTitle"、16px+グレー色→Heading type="subBlockTitle"、14px+グレー色→Heading type="subSubBlockTitle" で判定
 - **🎯 レイアウト方向の座標分析**: `style[x]`, `style[y]` から要素の相対位置を分析し、同じy座標→水平配置（Cluster）、異なるy座標で縦並び→縦積み（Stack）で判定
 - **🔍 frame名とprop値の完全読取**: `<frame name="Cluster[0.5]">`, `prop[type]="singleColumn"` 等の明示的指示を見落とさない
 - **✅ 一貫性チェックの強制**: 同種コンポーネント（DefinitionList, Heading等）の設定統一を必ず確認
+
+#### 10. **🚨 XMLコンポーネント識別の必須確認（最重要）**
+- **instance name の最優先確認**: `<instance name="PageCounter">` → PageCounter コンポーネント使用
+- **instance name の最優先確認**: `<instance name="Tooltip">` → Tooltip コンポーネント使用  
+- **🚫 視覚的推測の完全禁止**: テキスト「1–10 / 100」を見て Text と判断するのは禁止
+- **🚫 アイコン単体判断の禁止**: FaCircleInfo を見て Icon のみと判断するのは禁止
+- **✅ XML構造の正確な読み取り**: instance name がコンポーネント名を直接指示している
 
 ## 🚀 実践的ワークフロー例
 
@@ -238,10 +246,12 @@ mcp_Figma_Dev_Mode_MCP_get_image
 
 #### フォントサイズと重みによる判定
 ```typescript
-// ✅ フォントサイズ比較による適切な選択
+// ✅ フォントサイズ + 色による適切な選択
 // 最大サイズ（画面タイトル）→ PageHeading
 // 大サイズ（セクション見出し）→ Heading
-// 中サイズ（ブロック見出し）→ Heading type="blockTitle"
+// 中サイズ + 黒色（ブロック見出し）→ Heading type="blockTitle"
+// 中サイズ + グレー色（ラベル見出し）→ Heading type="subBlockTitle"
+// 小サイズ + グレー色（小ラベル見出し）→ Heading type="subSubBlockTitle"
 // 小サイズ（ラベル等）→ Text または適切なコンポーネント
 
 // 通常のコンテンツテキスト
@@ -415,6 +425,7 @@ mcp_Figma_Dev_Mode_MCP_get_image
 16. **🚨 フォントサイズ階層の推測判定** → 24px→PageHeading、19px→Heading等、数値データで正確に判定すべき
 17. **🚨 レイアウト方向の視覚的判断ミス** → frame名とxy座標データで水平配置（Cluster）vs縦積み（Stack）を正確に判定すべき
 18. **🚨 同種コンポーネントの設定不統一** → DefinitionListのmaxColumns等、同じ種類のコンポーネントは一貫した設定にすべき
+19. **🚨 Heading type指定の色判定ミス** → 16px+グレー色は`subBlockTitle`、16px+黒色は`blockTitle`、14px+グレー色は`subSubBlockTitle`で正確に判定すべき
 
 ### ✅ 対策
 1. **デザインの詳細を多角的に分析**
