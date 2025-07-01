@@ -10,11 +10,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { textColor } from '../../../../themes'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
@@ -52,16 +52,31 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
     }
   }, [])
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      label: translate('Launcher/sortDropdownLabel'),
-      selected: translate('Launcher/sortDropdownSelected'),
-      default: translate('Launcher/sortDropdownOrderDefault'),
-      asc: translate('Launcher/sortDropdownOrderNameAsc'),
-      desc: translate('Launcher/sortDropdownOrderNameDesc'),
+      label: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownLabel',
+        defaultText: '表示順',
+      }),
+      selected: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownSelected',
+        defaultText: '選択中',
+      }),
+      default: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault',
+        defaultText: 'デフォルト',
+      }),
+      asc: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameAsc',
+        defaultText: 'アプリ名の昇順',
+      }),
+      desc: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameDesc',
+        defaultText: 'アプリ名の降順',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   const options = useMemo(

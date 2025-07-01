@@ -16,7 +16,7 @@ export default {
     const showAlternative = (_: Date | null) => <div>alt</div>
     const formatDate = (date: Date | null) => dayjs(date).format('YYYY年MM月DD')
 
-    const matrics = [
+    const matrices = [
       { error: false, disabled: false },
       { error: false, disabled: true },
       { error: true, disabled: false },
@@ -25,7 +25,7 @@ export default {
 
     return (
       <Cluster>
-        {matrics.map((m) => (
+        {matrices.map((m) => (
           <>
             <DatePicker {...args} error={m.error} disabled={m.disabled} />
             <DatePicker error={m.error} disabled={m.disabled} placeholder={placeholder} />

@@ -7,6 +7,7 @@ export default {
   component: StepFormDialog,
   args: {
     width: '30em',
+    size: 'M',
     isOpen: true,
     title: 'アクションダイアログタイトル',
     subtitle: 'アクションダイアログのサブタイトル',

@@ -1,11 +1,11 @@
 import { type FC, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { FaUpRightFromSquareIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
-import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
@@ -33,13 +33,19 @@ export const ReleaseNote = memo(() => {
 const ActualReleaseNote: FC<{
   data: Exclude<Required<HeaderProps>['releaseNote'], null>
 }> = ({ data }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      error: translate('common/releaseNotesLoadError'),
-      seeAll: translate('common/seeAllReleaseNotes'),
+      error: localize({
+        id: 'smarthr-ui/AppHeader/releaseNotesLoadError',
+        defaultText: 'リリースノートの読み込みに失敗しました。\n時間をおいて、やり直してください。',
+      }),
+      seeAll: localize({
+        id: 'smarthr-ui/AppHeader/seeAllReleaseNotes',
+        defaultText: 'すべてのリリースノートを見る',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   const classNames = useMemo(() => {
