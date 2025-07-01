@@ -1,4 +1,5 @@
 import { darken } from 'polished'
+import { validators } from 'tailwind-merge'
 import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
@@ -11,9 +12,13 @@ import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
 
+const DEFAULT_WIDTH_KEYS = Object.keys(defaultWidth) as Array<keyof typeof defaultWidth>
+
 defaultConfig.twMergeConfig = {
   prefix: 'shr-',
   classGroups: {
+    w: [{ w: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
+    basis: [{ basis: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
     boxShadow: [
       {
         shadow: [
@@ -228,6 +233,9 @@ export default {
         'current-page': 'current="page"',
       },
       width: {
+        ...defaultWidth,
+      },
+      flexBasis: {
         ...defaultWidth,
       },
       minHeight: ({ theme }) => ({

@@ -85,6 +85,7 @@
     "storybook-addon-pseudo-states": "9.0.14",
     "style-loader": "^4.0.0",
     "styled-components": "^5.3.11",
+    "tailwind-merge": "^3.3.1",
     "ts-loader": "^9.5.2",
     "ttypescript": "^1.5.15",
     "typescript-plugin-styled-components": "^3.0.0",
