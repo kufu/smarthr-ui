@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [75.0.0](https://github.com/kufu/smarthr-ui/compare/v74.2.0...v75.0.0) (2025-07-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **useIntl:** 日付のフォーマットをロケール毎に変更、週の開始日を特定できるようにする (#5749)
+
+### Features
+
+* **DropZone:** disabled と error を追加 ([#5759](https://github.com/kufu/smarthr-ui/issues/5759)) ([cf566d6](https://github.com/kufu/smarthr-ui/commit/cf566d6bcd9b73893ebf4b8a3028e3106a05aa69))
+* **FileView:** PDFViewer でパスワード付き PDF を開くときの操作を利用側で制御できるようにする ([#5762](https://github.com/kufu/smarthr-ui/issues/5762)) ([3442d85](https://github.com/kufu/smarthr-ui/commit/3442d8517b69f8cd8e89e29f32b8873f9ea23baf))
+* **useIntl:** 日付のフォーマットをロケール毎に変更、週の開始日を特定できるようにする ([#5749](https://github.com/kufu/smarthr-ui/issues/5749)) ([894d1e3](https://github.com/kufu/smarthr-ui/commit/894d1e314886c2a1aa44d497bab08ff592d1be7a))
+* 幅のトークンと Container を追加 ([#5704](https://github.com/kufu/smarthr-ui/issues/5704)) ([8ae4933](https://github.com/kufu/smarthr-ui/commit/8ae49333d4f19bbfc8685bb91cc52f6f1a46d566))
+
+
+### Bug Fixes
+
+* imageViewerの初期読み込み時、画像サイズの計算処理でゼロ除算によるエラーが発生していたため修正 ([#5757](https://github.com/kufu/smarthr-ui/issues/5757)) ([bae3225](https://github.com/kufu/smarthr-ui/commit/bae3225bc35529f840ce8d59bb2685b7bf11600e))
+* **smarthr-ui-preset:** width 周りのマージ設定を修正 ([#5763](https://github.com/kufu/smarthr-ui/issues/5763)) ([546f800](https://github.com/kufu/smarthr-ui/commit/546f8008399c0c7503ab0dda1a0e4fc8d24ca7c9))
+* typo matrics → matrices ([#5770](https://github.com/kufu/smarthr-ui/issues/5770)) ([5bfc450](https://github.com/kufu/smarthr-ui/commit/5bfc45042cf566850b61d1b6793340e2ca385852))
+
 ## [74.2.0](https://github.com/kufu/smarthr-ui/compare/v74.1.1...v74.2.0) (2025-06-25)
 
 
