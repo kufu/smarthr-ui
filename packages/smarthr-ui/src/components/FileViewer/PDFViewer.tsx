@@ -1,12 +1,7 @@
 'use client'
 
 import { type ComponentProps, type FC, memo, useCallback, useMemo, useState } from 'react'
-import {
-  Document,
-  Page,
-  type PasswordResponses as ReactPdfPasswordResponses,
-  pdfjs,
-} from 'react-pdf'
+import { Document, Page, pdfjs } from 'react-pdf'
 
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
@@ -81,17 +76,3 @@ export const PDFViewer: FC<ViewerProps> = memo(
     )
   },
 )
-
-/**
- * <Document onPassword={(callback, reason) => {..}} /> のreasonに渡ってくる値とその意味のマッパー。
- *
- * react-pdfのPasswordResponsesと同じ値をそのまま再定義してexportしている。
- * (react-pdfのPasswordResponsesをre-exportするとビルド時に参照が解決できないことがあるため)
- * @see: https://github.com/wojtekmaj/react-pdf/blob/d4542589c449c1b8d2d11f9c099e91e5b87e43f5/packages/react-pdf/src/Document.tsx#L216-L230
- *
- * 利用側ではreasonはただのnumberとなり意味が把握しづらいため、この定数を利用することで意図を明確にする。
-x` **/
-export const PasswordResponses: typeof ReactPdfPasswordResponses = {
-  NEED_PASSWORD: 1,
-  INCORRECT_PASSWORD: 2,
-}
