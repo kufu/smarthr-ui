@@ -62,6 +62,7 @@ export const locale = {
   'smarthr-ui/NotificationBar/closeButtonIconAlt': '閉じる',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/SearchInput/iconAlt': '検索',
+  'smarthr-ui/Select/blankLabel': '選択してください',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '削除',
   'smarthr-ui/SortDropdown/applyButtonLabel': '適用',
   'smarthr-ui/SortDropdown/ascLabel': '昇順',
