@@ -33,7 +33,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} satisfies Meta<typeof MessageDialog>
+} as Meta<typeof MessageDialog>
 
 export const Playground: StoryObj<typeof MessageDialog> = {}
 
@@ -121,8 +121,15 @@ export const PortalParent: StoryObj<typeof MessageDialog> = {
 }
 
 export const Width: StoryObj<typeof MessageDialog> = {
-  name: 'width',
+  name: 'width（非推奨）',
   args: {
     width: '40em',
+  },
+}
+
+export const Size: StoryObj<typeof MessageDialog> = {
+  name: 'size',
+  args: {
+    size: 'M',
   },
 }

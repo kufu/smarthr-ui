@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [74.2.0](https://github.com/kufu/smarthr-ui/compare/v74.1.1...v74.2.0) (2025-06-25)
+
+
+### Features
+
+* **intl:** IntlProviderにavailableLocalesを指定できるようにする ([#5718](https://github.com/kufu/smarthr-ui/issues/5718)) ([ac4e481](https://github.com/kufu/smarthr-ui/commit/ac4e481db84615cda9b636e1356b59fbdf562f72))
+* **intl:** localesにやさしい日本語を追加 ([#5712](https://github.com/kufu/smarthr-ui/issues/5712)) ([a2acfd2](https://github.com/kufu/smarthr-ui/commit/a2acfd28d18d7c1f63054527389c3829a1ae4f67))
+* ThCheckbox と TdCheckbox で fixed を渡せるようにしたい ([#5723](https://github.com/kufu/smarthr-ui/issues/5723)) ([2fa5cfd](https://github.com/kufu/smarthr-ui/commit/2fa5cfd75e65cc75613104483bcf0061c0fd523e))
+
+
+### Bug Fixes
+
+* **FlashMessage:** 消し漏れていたトークンを削除 ([#5724](https://github.com/kufu/smarthr-ui/issues/5724)) ([e9b6fe7](https://github.com/kufu/smarthr-ui/commit/e9b6fe7d4762854049de62024eb127ca94bbd300))
+* **Select:** Select の示唆アイコンを見直し ([#5721](https://github.com/kufu/smarthr-ui/issues/5721)) ([2ed68ec](https://github.com/kufu/smarthr-ui/commit/2ed68ec91b150c5b10691e0e9630dd5d137cae96))
+* **StepFormDialog:** 副題付きのステップ表示を修正 ([#5688](https://github.com/kufu/smarthr-ui/issues/5688)) ([0cbad39](https://github.com/kufu/smarthr-ui/commit/0cbad392c4f8788aa1ca171011803f42a1bc787b))
+* **twMerge:** leading-[0] も leading 扱いになるように修正 ([#5719](https://github.com/kufu/smarthr-ui/issues/5719)) ([9a4cc99](https://github.com/kufu/smarthr-ui/commit/9a4cc9918d7d6efd79b7f3b83f983ebee78abaea))
+
 ### [74.1.1](https://github.com/kufu/smarthr-ui/compare/v74.1.0...v74.1.1) (2025-06-17)
 
 

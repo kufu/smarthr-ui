@@ -8,6 +8,7 @@ export default {
   title: 'Components/Dialog/VRT',
   args: {
     width: '40em',
+    size: 'M',
     isOpen: true,
   },
   parameters: {

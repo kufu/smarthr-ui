@@ -1,12 +1,12 @@
 import { type FC, memo, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
 import { useLocale } from '../../hooks/useLocale'
-import { useTranslate } from '../../hooks/useTranslate'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -56,14 +56,20 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
   const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
 
   const { locale } = useLocale()
-  const translate = useTranslate()
 
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      account: translate('MobileHeader/UserInfo/account'),
-      userSetting: translate('common/userSetting'),
+      account: localize({
+        id: 'smarthr-ui/AppHeader/MobileHeader/account',
+        defaultText: 'アカウント',
+      }),
+      userSetting: localize({
+        id: 'smarthr-ui/AppHeader/userSettings',
+        defaultText: '個人設定',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   const classNames = useMemo(() => {
