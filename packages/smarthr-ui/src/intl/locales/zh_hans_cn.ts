@@ -64,6 +64,7 @@ export const locale = {
   'smarthr-ui/NotificationBar/closeButtonIconAlt': '',
   'smarthr-ui/RequiredLabel/text': '必须',
   'smarthr-ui/SearchInput/iconAlt': '',
+  'smarthr-ui/Select/blankLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',
