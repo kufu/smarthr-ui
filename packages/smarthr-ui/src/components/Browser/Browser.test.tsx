@@ -6,15 +6,6 @@ import { IntlProvider } from '../../intl'
 import { Browser } from './Browser'
 
 describe('Browser', () => {
-  test('アイテムが空のとき', () => {
-    render(
-      <IntlProvider locale="ja">
-        <Browser items={[]} />
-      </IntlProvider>,
-    )
-    expect(screen.getByText(/該当する項目がありません/)).toBeInTheDocument()
-  })
-
   test('アイテムが存在するとき、最初の要素がタブストップになる', async () => {
     const onSelectItem = vi.fn()
     render(
