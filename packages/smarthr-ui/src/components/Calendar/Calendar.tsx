@@ -119,14 +119,16 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
       }
     }, [value, isValidValue])
 
-    const calculatedCurrentMonth = useMemo(
-      () => ({
+    const calculatedCurrentMonth = useMemo(() => {
+      const d = currentMonth.toDate()
+
+      return {
         prev: currentMonth.subtract(1, 'month'),
         next: currentMonth.add(1, 'month'),
         day: currentMonth,
-        months: getMonthArray(currentMonth.toDate(), getWeekStartDay()),
+        months: getMonthArray(d, getWeekStartDay()),
         yearMonthText: formatDate({
-          date: currentMonth.toDate(),
+          date: d,
           parts: ['year', 'month'],
           options: {
             disableSlashInJa: true,
@@ -134,9 +136,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
           },
         }),
         selectedText: currentMonth.toString(),
-      }),
-      [currentMonth, formatDate, getWeekStartDay],
-    )
+      }
+    }, [currentMonth, formatDate, getWeekStartDay])
 
     const onSelectYear = useCallback(
       (e: MouseEvent<HTMLButtonElement>) => {
