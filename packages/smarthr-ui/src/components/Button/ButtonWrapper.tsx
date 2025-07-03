@@ -184,6 +184,7 @@ const wrapperClassNameGenerator = tv({
       danger: {},
       skeleton: {},
       text: {},
+      tertiary: {},
     },
     size: {
       default: {},
@@ -329,6 +330,20 @@ const wrapperClassNameGenerator = tv({
       ],
     },
     {
+      slots: ['button'],
+      variant: 'tertiary',
+      className: [
+        'shr-border-transparent',
+        'shr-bg-transparent',
+        'shr-text-link',
+        'shr-font-normal',
+        'focus-visible:shr-bg-white-darken',
+        'hover:shr-bg-white-darken',
+        'aria-disabled:shr-bg-transparent',
+        'aria-disabled:shr-text-link/50',
+      ],
+    },
+    {
       slots: ['button', 'anchor'],
       variant: 'danger',
       className: [
@@ -423,7 +438,7 @@ const wrapperClassNameGenerator = tv({
     },
     {
       slots: ['loader'],
-      variant: ['primary', 'danger', 'skeleton', 'text'],
+      variant: ['primary', 'tertiary', 'danger', 'skeleton', 'text'],
       className: [
         '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
         '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
