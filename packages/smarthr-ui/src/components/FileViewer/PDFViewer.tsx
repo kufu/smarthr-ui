@@ -19,7 +19,7 @@ const options = {
   // 非latin文字を読み込むためのオプション
   // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
   // cMapUrl: '/cmaps/',
-  cMapUrl: `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/cmaps/`,
+  cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
 export const PDFViewer: FC<ViewerProps> = memo(
