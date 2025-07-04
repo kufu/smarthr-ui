@@ -12,10 +12,13 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { dialogSize } from '../../themes/tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'
 import { useBodyScrollLock } from './useBodyScrollLock'
+
+import type { DialogSize } from './types'
 
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
@@ -31,9 +34,14 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   isOpen: boolean
   /**
+   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
    * ダイアログの幅
    */
   width?: string | number
+  /**
+   * ダイアログの大きさ
+   */
+  size?: DialogSize
   /**
    * ダイアログの `id`
    * TODO 使われてなさそうなので確認
@@ -68,6 +76,17 @@ const classNameGenerator = tv({
     ],
     background: ['smarthr-ui-Dialog-background', 'shr-absolute shr-inset-0 shr-bg-scrim'],
   },
+  variants: {
+    size: {
+      XS: { layout: dialogSize.XS },
+      S: { layout: dialogSize.S },
+      M: { layout: dialogSize.M },
+      L: { layout: dialogSize.L },
+      XL: { layout: dialogSize.XL },
+      XXL: { layout: dialogSize.XXL },
+      FULL: { layout: dialogSize.FULL },
+    },
+  },
 })
 
 export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
@@ -76,6 +95,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   isOpen,
   id,
   width,
+  size,
   firstFocusTarget,
   ariaLabel,
   ariaLabelledby,
@@ -88,16 +108,17 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     const { layout, inner, background } = classNameGenerator()
 
     return {
-      layout: layout(),
+      layout: layout({ size }),
       inner: inner({ className }),
       background: background(),
     }
-  }, [className])
+  }, [size, className])
   const style = useMemo(() => {
-    const actualWidth = typeof width === 'number' ? `${width}px` : width
+    // width は deprecated なので、size が指定されている場合は width を無視する
+    const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
     return actualWidth ? { width: actualWidth } : undefined
-  }, [width])
+  }, [width, size])
 
   const innerRef = useRef<HTMLDivElement>(null)
 

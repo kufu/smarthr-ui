@@ -1,4 +1,5 @@
 import { darken } from 'polished'
+import { validators } from 'tailwind-merge'
 import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
@@ -6,13 +7,18 @@ import { defaultColor } from './themes/createColor'
 import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
 import { defaultShadow } from './themes/createShadow/defaultShadow'
 import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/createSpacing'
+import { defaultWidth } from './themes/createWidth'
 import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
 
+const DEFAULT_WIDTH_KEYS = Object.keys(defaultWidth) as Array<keyof typeof defaultWidth>
+
 defaultConfig.twMergeConfig = {
   prefix: 'shr-',
   classGroups: {
+    w: [{ w: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
+    basis: [{ basis: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
     boxShadow: [
       {
         shadow: [
@@ -177,6 +183,7 @@ export default {
       loose: '1.75',
     },
     maxWidth: {
+      ...defaultWidth,
       none: 'none',
       full: '100%',
       min: 'min-content',
@@ -224,6 +231,12 @@ export default {
     extend: {
       aria: {
         'current-page': 'current="page"',
+      },
+      width: {
+        ...defaultWidth,
+      },
+      flexBasis: {
+        ...defaultWidth,
       },
       minHeight: ({ theme }) => ({
         ...theme('spacing'),

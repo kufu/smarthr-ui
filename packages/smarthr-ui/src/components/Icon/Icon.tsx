@@ -87,6 +87,7 @@ import {
   FaEyeSlash,
   FaFile,
   FaFileArrowDown,
+  FaFileCirclePlus,
   FaFileCode,
   FaFileCsv,
   FaFileExcel,
@@ -287,6 +288,7 @@ export const FaExpandIcon = /*#__PURE__*/ generateIcon(FaExpand)
 export const FaEyeIcon = /*#__PURE__*/ generateIcon(FaEye)
 export const FaEyeSlashIcon = /*#__PURE__*/ generateIcon(FaEyeSlash)
 export const FaFileArrowDownIcon = /*#__PURE__*/ generateIcon(FaFileArrowDown)
+export const FaFileCirclePlusIcon = /*#__PURE__*/ generateIcon(FaFileCirclePlus)
 export const FaFileCodeIcon = /*#__PURE__*/ generateIcon(FaFileCode)
 export const FaFileCsvIcon = /*#__PURE__*/ generateIcon(FaFileCsv)
 export const FaFileExcelIcon = /*#__PURE__*/ generateIcon(FaFileExcel)

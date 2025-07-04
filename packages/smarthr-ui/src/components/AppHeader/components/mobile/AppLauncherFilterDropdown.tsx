@@ -1,11 +1,11 @@
 import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { textColor } from '../../../../themes'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
@@ -41,14 +41,23 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
     }
   }, [])
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      favorite: translate('Launcher/favoriteModeText'),
-      all: translate('MobileHeader/Menu/allAppButton'),
-      checkIconAlt: translate('Launcher/sortDropdownSelected'),
+      favorite: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
+        defaultText: 'よく使うアプリ',
+      }),
+      all: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+        defaultText: 'すべてのアプリ',
+      }),
+      checkIconAlt: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownSelected',
+        defaultText: '選択中',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   return (

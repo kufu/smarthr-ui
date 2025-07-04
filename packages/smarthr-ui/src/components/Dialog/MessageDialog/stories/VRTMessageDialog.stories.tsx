@@ -6,6 +6,7 @@ export default {
   component: MessageDialog,
   args: {
     width: '40em',
+    size: 'M',
     isOpen: true,
     title: 'メッセージダイアログタイトル',
     subtitle: 'メッセージダイアログのサブタイトル',

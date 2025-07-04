@@ -9,12 +9,12 @@ import {
   useMemo,
 } from 'react'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
-import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 type Props = PropsWithChildren<{
@@ -47,13 +47,19 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
   ({ isOpen, setIsOpen, title, id }) => {
     const onClickButton = useCallback(() => setIsOpen((prev) => !prev), [setIsOpen])
 
-    const translate = useTranslate()
+    const { localize } = useIntl()
     const translated = useMemo(
       () => ({
-        close: translate('MobileHeader/MenuAccordion/close'),
-        open: translate('MobileHeader/MenuAccordion/open'),
+        close: localize({
+          id: 'smarthr-ui/AppHeader/MobileHeader/closeMenuAccordion',
+          defaultText: '閉じる',
+        }),
+        open: localize({
+          id: 'smarthr-ui/AppHeader/MobileHeader/openMenuAccordion',
+          defaultText: '開く',
+        }),
       }),
-      [translate],
+      [localize],
     )
 
     return (

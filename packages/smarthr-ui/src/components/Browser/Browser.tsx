@@ -1,26 +1,39 @@
-import { type ChangeEvent, type FC, type KeyboardEventHandler, useCallback, useMemo } from 'react'
+import {
+  type ChangeEvent,
+  type ComponentProps,
+  type FC,
+  type KeyboardEventHandler,
+  useCallback,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
-
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
-import { Text } from '../Text'
 
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, type ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-Browser shr-flex shr-min-h-[355px] shr-flex-row shr-flex-nowrap',
+  slots: {
+    wrapper: ['smarthr-ui-Browser', 'shr-flex'],
+    column: ['shr-min-w-[13em] shr-list-none', '[&_+_&]:shr-border-l-shorthand'],
+  },
   variants: {
-    columnCount: {
-      0: 'shr-items-center shr-justify-center',
-      1: '[&>div]:shr-flex-1',
-      2: '[&>div:nth-child(1)]:shr-flex-1 [&>div:nth-child(2)]:shr-flex-[2]',
-      3: '[&>div]:shr-flex-1',
+    maxColumn: {
+      1: {
+        column: 'shr-max-w-[theme(width.1/3)]',
+      },
+      2: {},
+      3: {},
     },
   },
-  defaultVariants: {
-    columnCount: 0,
-  },
+  compoundVariants: [
+    {
+      maxColumn: [2, 3],
+      className: {
+        column: 'last:shr-grow',
+      },
+    },
+  ],
 })
 
 type Props = {
@@ -30,25 +43,35 @@ type Props = {
   value?: string
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  notFoundTitle: '該当する項目がありません。',
-  notFoundDescription: '別の条件を試してください。',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
-
-export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) => {
+export const Browser: FC<Props & ElementProps> = ({
+  value,
+  items,
+  onSelectItem,
+  className,
+  ...rest
+}) => {
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
-  const className = useMemo(
-    () => classNameGenerator({ columnCount: columns.length as 0 | 1 | 2 | 3 }),
-    [columns.length],
-  )
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const classNames = useMemo(() => {
+    const { wrapper, column } = classNameGenerator({ className })
+    return {
+      wrapper: wrapper(),
+      column: column({
+        maxColumn: columns.length as 1 | 2 | 3,
+      }),
+    }
+  }, [className, columns.length])
+
+  const selectedPath = useMemo(() => {
+    if (!value) return []
+    const node = rootNode.findByValue(value)
+    if (!node) return []
+    return [...node.getAncestors().map((n) => n.value), node.value]
+  }, [rootNode, value])
 
   const selectedNode = useMemo(
     () => (value ? rootNode.findByValue(value) : undefined),
@@ -113,24 +136,17 @@ export const Browser: FC<Props> = ({ value, items, decorators, onSelectItem }) =
 
   return (
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
-    <div role="application" onKeyDown={handleKeyDown} className={className}>
-      {columns.length > 0 ? (
-        columns.map((colItems, index) => (
-          <BrowserColumn
-            key={index}
-            items={colItems}
-            index={index}
-            value={value}
-            onChangeInput={onChangeInput}
-          />
-        ))
-      ) : (
-        <Text>
-          {decorated.notFoundTitle}
-          <br />
-          {decorated.notFoundDescription}
-        </Text>
-      )}
+    <div {...rest} role="application" onKeyDown={handleKeyDown} className={classNames.wrapper}>
+      {columns.map((colItems, index) => (
+        <BrowserColumn
+          key={index}
+          items={colItems}
+          index={index}
+          value={selectedPath[index]}
+          onChangeInput={onChangeInput}
+          className={classNames.column}
+        />
+      ))}
     </div>
   )
 }

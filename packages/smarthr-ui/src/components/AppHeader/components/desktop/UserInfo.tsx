@@ -1,12 +1,12 @@
 import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { AnchorButton, Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownMenuButton, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
-import { useTranslate } from '../../hooks/useTranslate'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -141,12 +141,12 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
     }
   }, [enableNew])
 
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      userSetting: translate('common/userSetting'),
+      userSetting: localize({ id: 'smarthr-ui/AppHeader/userSettings', defaultText: '個人設定' }),
     }),
-    [translate],
+    [localize],
   )
 
   const currentTenantName = useMemo(

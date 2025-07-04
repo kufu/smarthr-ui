@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useRef, useState } from 'react'
 import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
@@ -13,7 +14,7 @@ describe('FormDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
-      <>
+      <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>FormDialog</Button>
         <FormDialog
           isOpen={isOpen}
@@ -28,7 +29,7 @@ describe('FormDialog', () => {
         >
           <Text>ダイアログの中身です</Text>
         </FormDialog>
-      </>
+      </IntlProvider>
     )
   }
   it('ダイアログが開閉できること', async () => {
@@ -56,7 +57,7 @@ describe('FormDialog', () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const openedFocusRef = useRef<HTMLInputElement>(null)
     return (
-      <>
+      <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>開いた状態で DOM に投入</Button>
         {isOpen && (
           <FormDialog
@@ -82,7 +83,7 @@ describe('FormDialog', () => {
             </FormControl>
           </FormDialog>
         )}
-      </>
+      </IntlProvider>
     )
   }
   it('開いた状態で DOM に投入されたダイアログにフォーカスが移動すること', async () => {

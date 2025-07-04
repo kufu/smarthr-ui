@@ -3,6 +3,7 @@
 import {
   type ChangeEvent,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type DragEvent,
   type PropsWithChildren,
   forwardRef,
@@ -22,13 +23,14 @@ import { FaFolderOpenIcon } from '../Icon'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'
 
-const dropZone = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-DropZone',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
     ],
     input: 'shr-hidden',
+    button: '',
   },
   variants: {
     filesDraggedOver: {
@@ -37,6 +39,16 @@ const dropZone = tv({
       },
       false: {
         wrapper: 'shr-border-dashed',
+      },
+    },
+    disabled: {
+      true: {
+        wrapper: 'shr-cursor-not-allowed',
+      },
+    },
+    error: {
+      true: {
+        button: 'shr-border-danger',
       },
     },
   },
@@ -60,6 +72,9 @@ type DropZoneProps = PropsWithChildren<{
   /** 複数ファイルを選択できるかどうか */
   multiple?: boolean
   name?: string
+  disabled?: boolean
+  /** フォームにエラーがあるかどうか */
+  error?: boolean
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'selectButtonLabel'>
 }>
@@ -70,10 +85,17 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
-  ({ children, onSelectFiles, multiple = true, decorators, ...props }, ref) => {
+  ({ children, onSelectFiles, multiple = true, disabled, error, decorators, ...props }, ref) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-    const { wrapper, input } = useMemo(() => dropZone({ filesDraggedOver }), [filesDraggedOver])
+    const classNames = useMemo(() => {
+      const { wrapper, input, button } = classNameGenerator({ filesDraggedOver, disabled, error })
+      return {
+        wrapper: wrapper(),
+        input: input(),
+        button: button(),
+      }
+    }, [disabled, error, filesDraggedOver])
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => fileRef.current,
@@ -117,9 +139,19 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-      <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
+      <div
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        className={classNames.wrapper}
+      >
         {children}
-        <SelectButton decorators={decorators} onClick={onClickButton} />
+        <SelectButton
+          onClick={onClickButton}
+          disabled={disabled}
+          className={classNames.button}
+          decorators={decorators}
+        />
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...props}
@@ -127,34 +159,37 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
           ref={fileRef}
           type="file"
           multiple={multiple}
+          disabled={disabled}
+          aria-invalid={error || undefined}
           onChange={onChange}
-          className={input()}
+          className={classNames.input}
         />
       </div>
     )
   },
 )
 
-const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
-  ({ onClick, decorators }) => {
-    const { localize } = useIntl()
+const SelectButton = memo<
+  ComponentPropsWithoutRef<typeof Button> &
+    Pick<DropZoneProps, 'decorators'> & { onClick: () => void }
+>(({ onClick, decorators, ...rest }) => {
+  const { localize } = useIntl()
 
-    const decoratorDefaultTexts = useMemo(
-      () => ({
-        selectButtonLabel: localize({
-          id: 'smarthr-ui/DropZone/selectButtonLabel',
-          defaultText: 'ファイルを選択',
-        }),
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      selectButtonLabel: localize({
+        id: 'smarthr-ui/DropZone/selectButtonLabel',
+        defaultText: 'ファイルを選択',
       }),
-      [localize],
-    )
+    }),
+    [localize],
+  )
 
-    const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
+  const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
 
-    return (
-      <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
-        {decorated.selectButtonLabel}
-      </Button>
-    )
-  },
-)
+  return (
+    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
+      {decorated.selectButtonLabel}
+    </Button>
+  )
+})

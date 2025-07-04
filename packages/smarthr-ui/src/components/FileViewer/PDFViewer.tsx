@@ -22,54 +22,57 @@ const options = {
   cMapUrl: `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
-export const PDFViewer: FC<ViewerProps> = memo(({ scale, rotation, file, width, onLoad }) => {
-  const [pdfNumPages, setPdfNumPages] = useState(1)
+export const PDFViewer: FC<ViewerProps> = memo(
+  ({ scale, rotation, file, width, onLoad, onPassword }) => {
+    const [pdfNumPages, setPdfNumPages] = useState(1)
 
-  const onDocumentLoadSuccess = useCallback<
-    NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
-  >(({ numPages }) => {
-    setPdfNumPages(numPages)
-  }, [])
+    const onDocumentLoadSuccess = useCallback<
+      NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
+    >(({ numPages }) => {
+      setPdfNumPages(numPages)
+    }, [])
 
-  const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-    if (!onLoad) {
-      return undefined
-    }
-
-    return (page) => {
-      // DocumentのLoadだとページごとの読み込みが考慮されないため
-      if (page.pageNumber !== pdfNumPages) {
-        return
+    const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
+      if (!onLoad) {
+        return undefined
       }
-      onLoad()
-    }
-  }, [pdfNumPages, onLoad])
 
-  return (
-    <>
-      {/* TODO: 外部CSSをsmarthr-uiから読み込んでもらえるようにする機構ができたら消す */}
-      <ReactPDFStyle />
-      <Document
-        options={options}
-        file={file.url}
-        onLoadSuccess={onDocumentLoadSuccess}
-        rotate={rotation}
-        className="shr-flex shr-h-full shr-w-fit shr-flex-col shr-items-center shr-gap-1 shr-overflow-auto"
-        externalLinkTarget="_blank"
-        loading={null}
-      >
-        {Array.from({ length: pdfNumPages }).map((_, i) => (
-          <Page
-            key={`page_${i}`}
-            pageNumber={i + 1}
-            width={width}
-            scale={scale}
-            className="shr-w-full"
-            onLoadSuccess={onPageLoad}
-            loading={null}
-          />
-        ))}
-      </Document>
-    </>
-  )
-})
+      return (page) => {
+        // DocumentのLoadだとページごとの読み込みが考慮されないため
+        if (page.pageNumber !== pdfNumPages) {
+          return
+        }
+        onLoad()
+      }
+    }, [pdfNumPages, onLoad])
+
+    return (
+      <>
+        {/* TODO: 外部CSSをsmarthr-uiから読み込んでもらえるようにする機構ができたら消す */}
+        <ReactPDFStyle />
+        <Document
+          options={options}
+          file={file.url}
+          onLoadSuccess={onDocumentLoadSuccess}
+          rotate={rotation}
+          className="shr-flex shr-h-full shr-w-fit shr-flex-col shr-items-center shr-gap-1 shr-overflow-auto"
+          externalLinkTarget="_blank"
+          loading={null}
+          onPassword={onPassword}
+        >
+          {Array.from({ length: pdfNumPages }).map((_, i) => (
+            <Page
+              key={`page_${i}`}
+              pageNumber={i + 1}
+              width={width}
+              scale={scale}
+              className="shr-w-full"
+              onLoadSuccess={onPageLoad}
+              loading={null}
+            />
+          ))}
+        </Document>
+      </>
+    )
+  },
+)

@@ -1,5 +1,7 @@
 'use client'
 
+import { IntlProvider } from '../../intl'
+
 import { DesktopHeader } from './components/desktop/DesktopHeader'
 import { MobileHeader } from './components/mobile/MobileHeader'
 import { LocaleContextProvider } from './hooks/useLocale'
@@ -17,9 +19,11 @@ export const AppHeader: FC<HeaderProps> = ({ locale, children, ...props }) => {
   // HINT: Desktop,Mobileの両ヘッダーは常にHTML上に存在し、cssでvisibleを切り替えることでSSR環境でのレイアウトシフトが発生しないようにしています
   // 表示切替は画面幅によって決まり、SSR環境では判定出来ないためです
   return (
-    <LocaleContextProvider locale={locale}>
-      <DesktopHeader {...props}>{isDesktop ? children : undefined}</DesktopHeader>
-      <MobileHeader {...props}>{isDesktop ? undefined : children}</MobileHeader>
-    </LocaleContextProvider>
+    <IntlProvider locale={locale?.selectedLocale ?? 'ja'}>
+      <LocaleContextProvider locale={locale}>
+        <DesktopHeader {...props}>{isDesktop ? children : undefined}</DesktopHeader>
+        <MobileHeader {...props}>{isDesktop ? undefined : children}</MobileHeader>
+      </LocaleContextProvider>
+    </IntlProvider>
   )
 }

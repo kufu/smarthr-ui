@@ -3,7 +3,7 @@ import type { RefObject } from 'react'
 
 type CommonProps = Pick<
   DialogContentInnerProps,
-  'width' | 'id' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
+  'width' | 'size' | 'id' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
 >
 
 type ControlledProps = Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
@@ -19,3 +19,5 @@ export type DialogProps = CommonProps & ControlledProps & PortalProps
 export type UncontrolledDialogProps = CommonProps & PortalProps
 
 export type DirectChildren = Pick<DialogContentInnerProps, 'children'>
+
+export type DialogSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'
