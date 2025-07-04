@@ -1,6 +1,7 @@
 import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { AnchorButton, Button } from '../Button'
 
 const classNameGenerator = tv({
@@ -19,10 +20,24 @@ type Props = {
 }
 
 export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, linkAs }) => {
+  const { localize } = useIntl()
   const className = useMemo(() => classNameGenerator(), [])
+
+  const ariaLabel = useMemo(
+    () =>
+      localize(
+        {
+          id: 'smarthr-ui/Pagination/itemButtonLabel',
+          defaultText: '{page}ページ目',
+        },
+        { page },
+      ),
+    [localize, page],
+  )
+
   const { Component, attrs } = useMemo(() => {
     const common = {
-      'aria-label': `${page}ページ目`,
+      'aria-label': ariaLabel,
       'aria-current': disabled ? 'page' : undefined,
     }
 
@@ -54,7 +69,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
         value: page,
       } as ComponentProps<typeof Button>,
     }
-  }, [disabled, page, hrefTemplate, linkAs])
+  }, [disabled, page, hrefTemplate, linkAs, ariaLabel])
 
   return (
     <Component {...attrs} size="s" className={className}>
