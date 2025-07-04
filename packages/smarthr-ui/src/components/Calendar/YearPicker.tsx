@@ -57,8 +57,6 @@ const ActualYearPicker: FC<ActualProps> = ({
   id,
   ...props
 }) => {
-  const { localize } = useIntl()
-
   const classNames = useMemo(() => {
     const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
 
@@ -105,7 +103,6 @@ const ActualYearPicker: FC<ActualProps> = ({
             className={classNames.yearButton}
             childrenStyle={classNames.yearWrapper}
             onClick={onSelectYear}
-            localize={localize}
           />
         ))}
       </div>
@@ -121,8 +118,8 @@ const YearButton = memo<{
   className: string
   childrenStyle: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-  localize: ReturnType<typeof useIntl>['localize']
-}>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle, localize }) => {
+}>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
+  const { localize } = useIntl()
   const isThisYear = thisYear === year
 
   return (
