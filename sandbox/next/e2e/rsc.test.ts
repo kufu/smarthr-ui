@@ -48,7 +48,6 @@ const SERVER_COMPONENTS = [
   'Text',
   'TextLink',
   'Th',
-  'ThCheckbox',
   'TimePicker',
   'UnstyledButton',
   'UpwardLink',
@@ -113,6 +112,7 @@ const CLIENT_COMPONENTS: string[] = [
   'Stack',          // 見出しレベルの自動生成のため
   'TableReel',      // scroll監視のためのuseEffect
   'Textarea',       // オートフォーカスや文字数カウントのための状態管理
+  'ThCheckbox',     // 多言語化対応のため
   'Tooltip',        // 開閉状態の管理
 ]
 

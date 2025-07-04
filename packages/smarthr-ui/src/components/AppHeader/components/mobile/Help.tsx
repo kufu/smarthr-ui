@@ -1,9 +1,9 @@
 import { type FC, memo, useMemo } from 'react'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
@@ -34,13 +34,13 @@ const MemoizedDropdownTrigger = memo(() => (
 ))
 
 const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      help: translate('common/help'),
-      school: translate('common/school'),
+      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
+      school: localize({ id: 'smarthr-ui/AppHeader/school', defaultText: 'スクール' }),
     }),
-    [translate],
+    [localize],
   )
 
   return (

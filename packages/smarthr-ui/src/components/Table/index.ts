@@ -1,7 +1,7 @@
 export { Table } from './Table'
 export { Th } from './Th'
-export { Td } from './Td'
 export { ThCheckbox } from './ThCheckbox'
+export { Td } from './Td'
 export { TdCheckbox } from './TdCheckbox'
 export { TdRadioButton } from './TdRadioButton'
 export { BulkActionRow } from './BulkActionRow'

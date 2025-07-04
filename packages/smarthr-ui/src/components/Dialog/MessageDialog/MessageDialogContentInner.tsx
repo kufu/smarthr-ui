@@ -1,13 +1,13 @@
 import { type FC, type ReactNode, memo, useMemo } from 'react'
 
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
-
-import type { DecoratorsType } from '../../../hooks/useDecorators'
 
 export type BaseProps = DialogHeaderProps &
   DialogBodyProps & {
@@ -20,8 +20,6 @@ export type BaseProps = DialogHeaderProps &
 export type MessageDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
 }
-
-const CLOSE_BUTTON_LABEL = '閉じる'
 
 export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   title,
@@ -62,15 +60,24 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
 const FooterCluster = memo<
   Pick<MessageDialogContentInnerProps, 'onClickClose' | 'decorators'> & { className: string }
 >(({ onClickClose, decorators, className }) => {
-  const children = useMemo(
-    () => decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
-    [decorators],
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      closeButtonLabel: localize({
+        id: 'smarthr-ui/MessageDialog/closeButtonLabel',
+        defaultText: '閉じる',
+      }),
+    }),
+    [localize],
   )
+
+  const decorated = useDecorators<'closeButtonLabel'>(decoratorDefaultTexts, decorators)
 
   return (
     <Cluster as="footer" justify="flex-end" className={className}>
       <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
-        {children}
+        {decorated.closeButtonLabel}
       </Button>
     </Cluster>
   )
