@@ -4,10 +4,10 @@ import type { ja } from '.'
 // prettier-ignore
 export const locale = {
   'smarthr-ui/common/language': 'やさしい日本語',
-  'smarthr-ui/ActionDialog/closeButtonLabel': 'キャンセル',
+  'smarthr-ui/ActionDialog/closeButtonLabel': '',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
-  'smarthr-ui/Button/loading': '処理中',
+  'smarthr-ui/Button/loading': '',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',

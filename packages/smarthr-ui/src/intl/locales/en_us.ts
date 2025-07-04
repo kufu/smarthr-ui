@@ -7,9 +7,9 @@ export const locale = {
   'smarthr-ui/ActionDialog/closeButtonLabel': 'Cancel',
   'smarthr-ui/AppLauncher/showAllText': '',
   'smarthr-ui/AppLauncher/triggerLabel': '',
-  'smarthr-ui/Button/loading': 'Processing',
+  'smarthr-ui/Button/loading': 'In progress',
   'smarthr-ui/Combobox/loadingText': '',
-  'smarthr-ui/Combobox/noResultsText': 'No matching options.',
+  'smarthr-ui/Combobox/noResultsText': 'No matching options found.',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/DropZone/selectButtonLabel': '',
@@ -34,5 +34,5 @@ export const locale = {
   'smarthr-ui/SortDropdown/descLabel': '',
   'smarthr-ui/SortDropdown/sortFieldLabel': '',
   'smarthr-ui/SortDropdown/sortOrderLabel': '',
-  'smarthr-ui/TextLink/openInNewTab': 'Open in new tab',
+  'smarthr-ui/TextLink/openInNewTab': 'Open in another tab',
 } as const satisfies Record<keyof typeof ja, string>
