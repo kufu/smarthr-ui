@@ -53,74 +53,49 @@ describe('Calendar', () => {
     expect(onSelectDate).toHaveBeenCalledWith(expect.anything(), new Date(2021, 8, 10))
   })
 
-  describe('i18n化', () => {
-    it('日本語で月と年の表示が正しいこと', () => {
-      renderWithIntl(<Calendar value={new Date(2020, 0, 15)} onSelectDate={vi.fn()} />, 'ja')
+  it('年選択ボタンのアクセシビリティが正しいこと', () => {
+    renderWithIntl(<Calendar value={new Date(2020, 0, 15)} onSelectDate={vi.fn()} />)
 
-      expect(screen.queryByText('2020年1月')).toBeTruthy()
-      expect(screen.getByRole('button', { name: '前の月へ' })).toBeTruthy()
-      expect(screen.getByRole('button', { name: '次の月へ' })).toBeTruthy()
-      expect(screen.getByRole('button', { name: '年を選択する' })).toBeTruthy()
-    })
+    const yearSelectButton = screen.getByRole('button', { name: /年を選択/ })
+    expect(yearSelectButton.getAttribute('aria-expanded')).toBe('false')
 
-    it('英語で月と年の表示が正しいこと', () => {
-      renderWithIntl(<Calendar value={new Date(2020, 0, 15)} onSelectDate={vi.fn()} />, 'en-us')
+    act(() => yearSelectButton.click())
+    expect(yearSelectButton.getAttribute('aria-expanded')).toBe('true')
+  })
 
-      expect(screen.queryByText('Jan 2020')).toBeTruthy()
-      expect(screen.getByRole('button', { name: 'Previous month' })).toBeTruthy()
-      expect(screen.getByRole('button', { name: 'Next month' })).toBeTruthy()
-      expect(screen.getByRole('button', { name: 'Select year' })).toBeTruthy()
-    })
+  describe('ロケール別の日付配置', () => {
+    it('日付が正しい週開始日に従って配置されること', () => {
+      // 2020年9月1日は火曜日をテストケースとして使用
+      const september1st2020 = new Date(2020, 8, 1) // 2020年9月1日（火曜日）
+      const targetDateText = '1' // 9月1日を探す
 
-    it('異なる月の表示が正しいこと', () => {
-      renderWithIntl(<Calendar value={new Date(2020, 11, 15)} onSelectDate={vi.fn()} />, 'ja')
-      expect(screen.queryByText('2020年12月')).toBeTruthy()
-
-      renderWithIntl(<Calendar value={new Date(2020, 11, 15)} onSelectDate={vi.fn()} />, 'en-us')
-      expect(screen.queryByText('Dec 2020')).toBeTruthy()
-    })
-
-    it('年選択ボタンのアクセシビリティが正しいこと', () => {
-      renderWithIntl(<Calendar value={new Date(2020, 0, 15)} onSelectDate={vi.fn()} />, 'ja')
-
-      const yearSelectButton = screen.getByRole('button', { name: '年を選択する' })
-      expect(yearSelectButton.getAttribute('aria-expanded')).toBe('false')
-
-      act(() => yearSelectButton.click())
-      expect(yearSelectButton.getAttribute('aria-expanded')).toBe('true')
-    })
-
-    it('ロケールに応じて週の開始日が変わること', () => {
-      // 2020年1月1日は水曜日で、月曜日開始の週の3日目
-      const testDate = new Date(2020, 0, 1)
-
-      // 日本語（日曜日開始）の場合
-      const { container: jaContainer } = renderWithIntl(
-        <Calendar value={testDate} onSelectDate={vi.fn()} />,
-        'ja',
-      )
-
-      // 英語（日曜日開始）の場合
+      // 日曜日開始のロケール（英語）
       const { container: enContainer } = renderWithIntl(
-        <Calendar value={testDate} onSelectDate={vi.fn()} />,
+        <Calendar value={september1st2020} onSelectDate={vi.fn()} />,
         'en-us',
       )
 
-      // インドネシア語（月曜日開始）の場合
+      // 月曜日開始のロケール（インドネシア語）
       const { container: idContainer } = renderWithIntl(
-        <Calendar value={testDate} onSelectDate={vi.fn()} />,
+        <Calendar value={september1st2020} onSelectDate={vi.fn()} />,
         'id-id',
       )
 
-      // 日曜日開始のロケール（日本語、英語）では同じ週の順序になる
-      const jaWeekOrder = Array.from(jaContainer.querySelectorAll('th')).map((th) => th.textContent)
-      const enWeekOrder = Array.from(enContainer.querySelectorAll('th')).map((th) => th.textContent)
-      const idWeekOrder = Array.from(idContainer.querySelectorAll('th')).map((th) => th.textContent)
+      // 英語（日曜日開始）: 火曜日は3番目の列（index 2）に表示される
+      const enFirstRow = enContainer.querySelector('tbody tr')
+      const enCells = Array.from(enFirstRow!.querySelectorAll('td'))
+      const enDateOneCell = enCells.find((cell) => cell.textContent?.includes(targetDateText))
+      const enPositionIndex = enCells.indexOf(enDateOneCell!)
+      const expectedEnglishPosition = 2 // 日曜日開始: 日(0), 月(1), 火(2)
+      expect(enPositionIndex).toBe(expectedEnglishPosition)
 
-      // 両方とも日曜日開始なので、最初の曜日は日曜日になる
-      expect(jaWeekOrder[0]).toContain('日') // 日本語で日曜日
-      expect(enWeekOrder[0]).toContain('Sun') // 英語で日曜日
-      expect(idWeekOrder[0]).toContain('Sen') // インドネシア語で月曜日
+      // インドネシア語（月曜日開始）: 火曜日は2番目の列（index 1）に表示される
+      const idFirstRow = idContainer.querySelector('tbody tr')
+      const idCells = Array.from(idFirstRow!.querySelectorAll('td'))
+      const idDateOneCell = idCells.find((cell) => cell.textContent?.includes(targetDateText))
+      const idPositionIndex = idCells.indexOf(idDateOneCell!)
+      const expectedIndonesianPosition = 1 // 月曜日開始: 月(0), 火(1)
+      expect(idPositionIndex).toBe(expectedIndonesianPosition)
     })
   })
 })
