@@ -174,3 +174,31 @@ export const Disabled: StoryObj<typeof Fieldset> = {
     disabled: true,
   },
 }
+
+export const PhoneNumberWithAccessibleNamesOnly: StoryObj<typeof Fieldset> = {
+  name: '電話番号（アクセシブルネームのみinput3つ）',
+  args: {
+    title: '電話番号',
+    children: (
+      <Cluster gap={1}>
+        <Input name="areaCode" aria-label="市外局番" />
+        <Input name="cityCode" aria-label="市内局番" />
+        <Input name="subscriberNumber" aria-label="加入者番号" />
+      </Cluster>
+    ),
+  },
+}
+
+export const PhoneNumberWithLegendInAccessibleNames: StoryObj<typeof Fieldset> = {
+  name: '電話番号（アクセシブルネームにlegendも含めるinput3つ）',
+  args: {
+    title: '電話番号',
+    children: (
+      <Cluster gap={1}>
+        <Input name="areaCode" aria-label="電話番号 市外局番" />
+        <Input name="cityCode" aria-label="電話番号 市内局番" />
+        <Input name="subscriberNumber" aria-label="電話番号 加入者番号" />
+      </Cluster>
+    ),
+  },
+}
