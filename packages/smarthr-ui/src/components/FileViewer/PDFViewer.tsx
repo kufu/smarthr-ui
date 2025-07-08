@@ -7,12 +7,30 @@ import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
 
-// TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   'pdfjs-dist/build/pdf.worker.min.mjs',
-//   import.meta.url,
-// ).toString()
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
+if (typeof window !== 'undefined') {
+  // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
+  // @ts-expect-error
+  if (typeof window.Promise.withResolvers === 'undefined') {
+    // @ts-expect-error
+    window.Promise.withResolvers = function () {
+      let resolve, reject
+      const promise = new Promise((res, rej) => {
+        resolve = res
+        reject = rej
+      })
+      return { promise, resolve, reject }
+    }
+    // web workerもpolyfillされたものを読み込む
+    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
+  } else {
+    // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+    // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    //   'pdfjs-dist/build/pdf.worker.min.mjs',
+    //   import.meta.url,
+    // ).toString()
+    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+  }
+}
 
 const options = {
   // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
