@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [75.1.0](https://github.com/kufu/smarthr-ui/compare/v75.0.0...v75.1.0) (2025-07-08)
+
+
+### Features
+
+* **FileViewer:** iOS17.4未満でpdfを開くとエラーを吐くためPolyfill処理を加えた ([#5774](https://github.com/kufu/smarthr-ui/issues/5774)) ([c8f7504](https://github.com/kufu/smarthr-ui/commit/c8f7504bb1da0cc53e5286eb6537b82f9ea24852))
+* **Icon:** FaCamera と FaImages アイコンを追加 ([#5775](https://github.com/kufu/smarthr-ui/issues/5775)) ([07970f1](https://github.com/kufu/smarthr-ui/commit/07970f1c6ad5195410dddec5913d3669ea843a14))
+* **Icon:** FaFileCirclePlusIcon を追加 ([#5776](https://github.com/kufu/smarthr-ui/issues/5776)) ([cefb5a6](https://github.com/kufu/smarthr-ui/commit/cefb5a6a1db6db7743e6f91ab20cafe9ed6abb7e))
+
+
+### Bug Fixes
+
+* **Browser:** 装飾を見直し ([#5707](https://github.com/kufu/smarthr-ui/issues/5707)) ([9688c5a](https://github.com/kufu/smarthr-ui/commit/9688c5a32f36ce53d1682482a34ad525b95ee1e2))
+* **FileViewer:** cmapsの読み込み先が存在しないリンクになっていたため変更した ([#5778](https://github.com/kufu/smarthr-ui/issues/5778)) ([afafbb4](https://github.com/kufu/smarthr-ui/commit/afafbb4081e34cc47f224b91bb071f6329d65231))
+
 ## [75.0.0](https://github.com/kufu/smarthr-ui/compare/v74.2.0...v75.0.0) (2025-07-01)
 
 
