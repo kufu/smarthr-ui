@@ -57,7 +57,8 @@ describe('calendarHelper', () => {
 
   describe('getMonthArray', () => {
     it('returns calendar array of month of the beginning of year', () => {
-      const date = new Date(2020, 0, 1) // 2020-01-01
+      const date = new Date(2020, 0, 1) // 2020-01-01 (水曜日)
+      // 2020年1月1日は水曜日、日曜日開始の週では4番目の位置（index 3）
       const expected = [
         [null, null, null, 1, 2, 3, 4],
         [5, 6, 7, 8, 9, 10, 11],
@@ -69,19 +70,19 @@ describe('calendarHelper', () => {
     })
 
     it('returns calendar array of month of the end of year', () => {
-      const date = new Date(2025, 11, 31) // 2025-12-31
+      const date = new Date(2020, 11, 31) // 2020-12-31 (木曜日)
       const expected = [
-        [null, 1, 2, 3, 4, 5, 6],
-        [7, 8, 9, 10, 11, 12, 13],
-        [14, 15, 16, 17, 18, 19, 20],
-        [21, 22, 23, 24, 25, 26, 27],
-        [28, 29, 30, 31, null, null, null],
+        [null, null, 1, 2, 3, 4, 5],
+        [6, 7, 8, 9, 10, 11, 12],
+        [13, 14, 15, 16, 17, 18, 19],
+        [20, 21, 22, 23, 24, 25, 26],
+        [27, 28, 29, 30, 31, null, null],
       ]
       expect(getMonthArray(date)).toEqual(expected)
     })
 
     it('returns calendar array of February of the leap year', () => {
-      const date = new Date(2020, 1, 1) // 2020-02-01
+      const date = new Date(2020, 1, 1) // 2020-02-01 (土曜日)
       const expected = [
         [null, null, null, null, null, null, 1],
         [2, 3, 4, 5, 6, 7, 8],
@@ -90,6 +91,42 @@ describe('calendarHelper', () => {
         [23, 24, 25, 26, 27, 28, 29],
       ]
       expect(getMonthArray(date)).toEqual(expected)
+    })
+
+    describe('with different week start days', () => {
+      const date = new Date(2020, 6, 1) // 2020-07-01 (水曜日)
+      it('returns correct calendar array for Sunday start (weekStartDay = 0)', () => {
+        const expected = [
+          [null, null, null, 1, 2, 3, 4],
+          [5, 6, 7, 8, 9, 10, 11],
+          [12, 13, 14, 15, 16, 17, 18],
+          [19, 20, 21, 22, 23, 24, 25],
+          [26, 27, 28, 29, 30, 31, null],
+        ]
+        expect(getMonthArray(date, 0)).toEqual(expected)
+      })
+
+      it('returns correct calendar array for Monday start (weekStartDay = 1)', () => {
+        const expected = [
+          [null, null, 1, 2, 3, 4, 5],
+          [6, 7, 8, 9, 10, 11, 12],
+          [13, 14, 15, 16, 17, 18, 19],
+          [20, 21, 22, 23, 24, 25, 26],
+          [27, 28, 29, 30, 31, null, null],
+        ]
+        expect(getMonthArray(date, 1)).toEqual(expected)
+      })
+
+      it('returns correct calendar array for Saturday start (weekStartDay = 6)', () => {
+        const expected = [
+          [null, null, null, null, 1, 2, 3],
+          [4, 5, 6, 7, 8, 9, 10],
+          [11, 12, 13, 14, 15, 16, 17],
+          [18, 19, 20, 21, 22, 23, 24],
+          [25, 26, 27, 28, 29, 30, 31],
+        ]
+        expect(getMonthArray(date, 6)).toEqual(expected)
+      })
     })
   })
 
