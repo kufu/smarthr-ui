@@ -8,5 +8,5 @@ type Props = Omit<
 >
 
 export const WakuWakuButton: FC<Props> = (props) => (
-  <Button {...props} variant="text" size="s" className="shr-text-link-darken" />
+  <Button {...props} variant="tertiary" size="s" className="shr-text-link-darken" />
 )
