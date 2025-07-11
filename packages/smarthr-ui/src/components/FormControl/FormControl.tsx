@@ -297,75 +297,31 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
 
+  // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
+  // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
   useEffect(() => {
     if (!isFieldset || !inputWrapperRef.current) return
     const inputs = inputWrapperRef.current.querySelectorAll(SMARTHR_UI_INPUT_SELECTOR)
-    console.log('[FormControl][debug] fieldset内input数:', inputs.length)
     if (!inputs.length) return
 
-    // legend文言取得
     const legendText = innerText(title)
-    console.log('[FormControl][debug] legendText:', legendText)
     if (!legendText) return
 
-    inputs.forEach((input, idx) => {
-      // 可視ラベルの有無判定
+    inputs.forEach((input) => {
       const inputId = input.getAttribute('id')
-      let hasVisibleLabel = false
-      if (inputId) {
-        hasVisibleLabel = !!document.querySelector(`label[for="${inputId}"]`)
-        console.log(
-          `[FormControl][debug][input#${idx}] idあり:`,
-          inputId,
-          'label[for]存在:',
-          hasVisibleLabel,
-        )
-      }
-      if (!hasVisibleLabel) {
-        // <label><input /></label> のケース
-        hasVisibleLabel = !!input.closest('label')
-        console.log(`[FormControl][debug][input#${idx}] closest label存在:`, hasVisibleLabel)
-      }
-      if (hasVisibleLabel) {
-        console.log(`[FormControl][debug][input#${idx}] 可視ラベルあり、スキップ`)
-        return // 可視ラベルがあれば何もしない
+      if (inputId && !!document.querySelector(`label[for="${inputId}"]`)) {
+        return
       }
 
-      // アクセシブルネーム取得
       let accessibleName = ''
-      if (input.hasAttribute('aria-labelledby')) {
-        const labelledby = input.getAttribute('aria-labelledby')
-        if (labelledby) {
-          accessibleName = labelledby
-            .split(' ')
-            .map((id) => {
-              const el = document.getElementById(id)
-              const text = el ? el.textContent || '' : ''
-              console.log(
-                `[FormControl][debug][input#${idx}] aria-labelledby id:`,
-                id,
-                'text:',
-                text,
-              )
-              return text
-            })
-            .join(' ')
-            .trim()
-        }
-      } else if (input.hasAttribute('aria-label')) {
+      if (input.hasAttribute('aria-label')) {
         accessibleName = input.getAttribute('aria-label') || ''
-        console.log(`[FormControl][debug][input#${idx}] aria-label:`, accessibleName)
+      } else if (input.hasAttribute('title')) {
+        accessibleName = input.getAttribute('title') || ''
       }
 
-      // legend文言が含まれていなければ先頭に追加
-      if (!accessibleName.startsWith(legendText)) {
+      if (!accessibleName.includes(legendText)) {
         input.setAttribute('aria-label', `${legendText} ${accessibleName}`.trim())
-        console.log(
-          `[FormControl][debug][input#${idx}] aria-label付与:`,
-          `${legendText} ${accessibleName}`.trim(),
-        )
-      } else {
-        console.log(`[FormControl][debug][input#${idx}] legendText既に含むためスキップ`)
       }
     })
   }, [isFieldset, title])
@@ -480,7 +436,6 @@ const TitleCluster = memo<
           as: 'label' as const,
           htmlFor: managedHtmlFor,
           id: managedLabelId,
-          'data-smarthr-ui-label': 'true',
         },
         visuallyHidden: null,
       }
