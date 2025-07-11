@@ -133,7 +133,6 @@ export default {
         {...args}
         name="default"
         items={Object.values(defaultItems)}
-        dropdownHelpMessage="入力でフィルタリングできます。"
         selectedItem={null}
       />
     </Stack>

@@ -83,14 +83,6 @@ export default {
   argTypes: {
     items: { control: 'object' },
     selectedItems: { control: 'object' },
-    dropdownHelpMessage: {
-      control: { type: 'select' },
-      options: ['文字列', 'ReactNode'],
-      mapping: {
-        文字列: 'ヘルプメッセージ',
-        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
-      },
-    },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -125,7 +117,6 @@ export const Creatable: StoryObj<typeof MultiCombobox> = {
   name: 'creatable',
   args: {
     creatable: true,
-    dropdownHelpMessage: '新しいアイテムを追加できます。',
   },
 }
 
@@ -140,13 +131,6 @@ export const Width: StoryObj<typeof MultiCombobox> = {
   name: 'width',
   args: {
     width: '20rem',
-  },
-}
-
-export const DropdownHelpMessage: StoryObj<typeof MultiCombobox> = {
-  name: 'dropdownHelpMessage',
-  args: {
-    dropdownHelpMessage: 'ヘルプメッセージ',
   },
 }
 

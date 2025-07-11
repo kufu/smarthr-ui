@@ -56,10 +56,6 @@ export type BaseProps<T> = {
    */
   width?: number | string
   /**
-   * ドロップダウンリスト内に表示するヘルプメッセージ
-   */
-  dropdownHelpMessage?: ReactNode
-  /**
    * ドロップダウンリストの `width` スタイルに適用する値
    */
   dropdownWidth?: number | string

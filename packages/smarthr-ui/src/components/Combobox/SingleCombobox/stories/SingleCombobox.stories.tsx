@@ -178,7 +178,6 @@ export const Creatable: StoryObj<typeof SingleCombobox> = {
   name: 'creatable',
   args: {
     creatable: true,
-    dropdownHelpMessage: '新しいアイテムを追加できます。',
     onAdd: action('onAdd'),
   },
 }
@@ -194,13 +193,6 @@ export const Width: StoryObj<typeof SingleCombobox> = {
   name: 'width',
   args: {
     width: '20rem',
-  },
-}
-
-export const DropdownHelpMessage: StoryObj<typeof SingleCombobox> = {
-  name: 'dropdownHelpMessage',
-  args: {
-    dropdownHelpMessage: 'ヘルプメッセージ',
   },
 }
 

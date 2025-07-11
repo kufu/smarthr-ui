@@ -84,7 +84,6 @@ export default {
           {...args}
           name="default"
           items={items}
-          dropdownHelpMessage="入力でフィルタリングできます。"
           selectedItems={selectedItems}
           onChangeSelected={(its) => setSelectedItems(its)}
         />
