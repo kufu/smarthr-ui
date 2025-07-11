@@ -1,7 +1,6 @@
 import {
   type KeyboardEvent,
   type PropsWithChildren,
-  type RefObject,
   memo,
   useCallback,
   useEffect,
@@ -27,7 +26,6 @@ export type Props<T> = {
   disabled: boolean
   onDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
-  buttonRef: RefObject<HTMLButtonElement>
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
@@ -67,7 +65,6 @@ export function MultiSelectedItem<T>({
   disabled,
   onDelete,
   enableEllipsis,
-  buttonRef,
   decorators,
 }: Props<T>) {
   const [needsTooltip, setNeedsTooltip] = useState(false)
@@ -100,7 +97,6 @@ export function MultiSelectedItem<T>({
           item={item}
           onDelete={onDelete}
           disabled={disabled}
-          buttonRef={buttonRef}
           decorators={decorators}
           className={classNames.deleteButton}
           iconStyle={classNames.deleteButtonIcon}
@@ -150,11 +146,10 @@ const BaseDestroyButton = <T,>({
   item,
   onDelete,
   disabled,
-  buttonRef,
   decorators,
   className,
   iconStyle,
-}: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'buttonRef' | 'decorators'> & {
+}: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'decorators'> & {
   labelId: string
   suffixTextId: string
   className: string
@@ -191,9 +186,7 @@ const BaseDestroyButton = <T,>({
 
   return (
     <UnstyledButton
-      ref={buttonRef}
       disabled={disabled}
-      tabIndex={-1}
       aria-labelledby={`${labelId} ${suffixTextId}`}
       onClick={onClick}
       onKeyDown={onKeyDown}

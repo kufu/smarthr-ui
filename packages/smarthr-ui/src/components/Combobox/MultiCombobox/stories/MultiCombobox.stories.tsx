@@ -1,9 +1,12 @@
+import { action } from 'storybook/actions'
+
 import { useArgs } from 'storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { MultiCombobox } from '../MultiCombobox'
+import { Input } from '../../../Input'
 
 export const defaultItems = {
   'option 1': {
@@ -151,5 +154,19 @@ export const DropdownWidth: StoryObj<typeof MultiCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',
+  },
+}
+
+export const OnChange: StoryObj<typeof MultiCombobox> = {
+  name: 'onChange',
+  args: {
+    onChange: action('onChange'),
+  },
+}
+
+export const OnChangeInput: StoryObj<typeof MultiCombobox> = {
+  name: 'onChangeInput',
+  args: {
+    onChangeInput: action('onChangeInput'),
   },
 }

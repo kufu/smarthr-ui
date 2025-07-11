@@ -1,6 +1,7 @@
 import {
+  type ChangeEventHandler,
+  type FocusEvent,
   type KeyboardEvent,
-  type ReactNode,
   type RefObject,
   useCallback,
   useEffect,
@@ -15,8 +16,11 @@ import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { useIntl } from '../../intl'
+import { tabbable } from '../../libs/tabbable'
 import { spacing } from '../../themes'
-import { FaInfoCircleIcon } from '../Icon'
+import { FaMagnifyingGlassIcon } from '../Icon'
+import { Input } from '../Input'
+import { Center } from '../Layout'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -28,7 +32,6 @@ import type { ComboboxItem, ComboboxOption } from './types'
 
 type Props<T> = {
   options: Array<ComboboxOption<T>>
-  dropdownHelpMessage?: ReactNode
   dropdownWidth?: string | number
   onAdd?: (label: string) => void
   onSelect: (item: ComboboxItem<T>) => void
@@ -36,6 +39,11 @@ type Props<T> = {
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
   decorators?: DecoratorsType<DecoratorKeyTypes>
+  searchValue?: string
+  onSearchValueChange?: (value: string) => void
+  onChangeInput?: ChangeEventHandler<HTMLInputElement>
+  onEscape?: () => void
+  onShiftTab?: () => void
 }
 
 type Rect = {
@@ -48,28 +56,37 @@ type DecoratorKeyTypes = 'loadingText' | 'noResultText'
 
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
-const classNameGenerator = tv({
+const { wrapper, dropdownList, inputWrapper, input, helpMessage, noItems } = tv({
   slots: {
     wrapper: 'shr-absolute',
     dropdownList: [
       'smarthr-ui-Combobox-dropdownList',
-      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-overflow-y-auto shr-overscroll-contain shr-rounded-m shr-bg-white shr-shadow-layer-3',
       /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
       = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
       'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
       'aria-hidden:shr-hidden',
     ],
+    inputWrapper: 'shr-sticky shr-top-0 shr-bg-white shr-p-0.5',
+    input: 'shr-w-full',
     helpMessage:
       'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
-    loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
     noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
   },
-})
+})()
+const classNames = {
+  wrapper: wrapper(),
+  dropdownList: dropdownList(),
+  inputWrapper: inputWrapper(),
+  input: input(),
+  helpMessage: helpMessage(),
+  noItems: noItems(),
+}
 
 export const useListbox = <T,>({
   options,
-  dropdownHelpMessage,
   dropdownWidth,
   onAdd,
   onSelect,
@@ -77,10 +94,18 @@ export const useListbox = <T,>({
   isLoading,
   triggerRef,
   decorators,
+  searchValue: externalSearchValue,
+  onSearchValueChange,
+  onChangeInput,
+  onEscape,
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
   const { localize } = useIntl()
+  const [internalSearchValue, setInternalSearchValue] = useState('')
+
+  const searchValue = externalSearchValue !== undefined ? externalSearchValue : internalSearchValue
+  const setSearchValue = onSearchValueChange || setInternalSearchValue
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -89,7 +114,15 @@ export const useListbox = <T,>({
     }
   }, [isExpanded, setActiveOption])
 
+  useEffect(() => {
+    // ドロップダウンが閉じたときに検索値をクリア（外部制御でない場合のみ）
+    if (!isExpanded && externalSearchValue === undefined) {
+      setSearchValue('')
+    }
+  }, [isExpanded, externalSearchValue, setSearchValue])
+
   const listBoxRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
@@ -199,11 +232,63 @@ export const useListbox = <T,>({
         } else if (onAdd) {
           onAdd(activeOption.item.value)
         }
+      } else if (ESCAPE_KEY_REGEX.test(e.key)) {
+        e.stopPropagation()
+        onEscape?.()
+      } else if (e.key === 'Tab') {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (e.shiftKey) {
+          // Shift+Tabの場合：パネルを閉じてトリガー要素にフォーカス
+          onEscape?.()
+          requestAnimationFrame(() => {
+            if (triggerRef.current) {
+              const focusableElements = tabbable(triggerRef.current)
+              const lastElement = focusableElements[focusableElements.length - 1]
+              if (lastElement) {
+                lastElement.focus()
+              }
+            }
+          })
+        } else {
+          // 順方向Tabの場合：パネルを閉じてトリガーの次の要素にフォーカス
+          onEscape?.()
+          requestAnimationFrame(() => {
+            if (triggerRef.current) {
+              const allFocusableElements = tabbable(document.body)
+              const triggerElements = tabbable(triggerRef.current)
+              const lastTriggerElement = triggerElements[triggerElements.length - 1]
+
+              if (lastTriggerElement) {
+                const triggerIndex = allFocusableElements.indexOf(lastTriggerElement)
+                const nextElement = allFocusableElements[triggerIndex + 1]
+
+                if (nextElement) {
+                  nextElement.focus()
+                }
+              }
+            }
+          })
+        }
       } else {
         setActiveOption(null)
       }
     },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption, onEscape, triggerRef],
+  )
+
+  const onBlurListBox = useCallback(
+    (e: FocusEvent<HTMLDivElement>) => {
+      // リストボックス内の要素間でのフォーカス移動は無視
+      if (e.currentTarget.contains(e.relatedTarget as Node)) {
+        return
+      }
+
+      // リストボックス外にフォーカスが移動した場合はonEscapeを呼ぶ
+      onEscape?.()
+    },
+    [onEscape],
   )
 
   const { createPortal } = usePortal()
@@ -216,19 +301,19 @@ export const useListbox = <T,>({
     ),
   })
 
-  const handleAdd = useMemo(
-    () =>
-      onAdd
-        ? (option: ComboboxOption<T>) => {
-            // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-            requestAnimationFrame(() => {
-              onAdd(option.item.value)
-            })
-          }
-        : undefined,
-    [onAdd],
-  )
+  const handleAdd = useMemo(() => {
+    if (!onAdd) {
+      return
+    }
+
+    return (option: ComboboxOption<T>) => {
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        onAdd(option.item.value)
+      })
+    }
+  }, [onAdd])
   const handleSelect = useCallback(
     (option: ComboboxOption<T>) => {
       onSelect(option.item)
@@ -263,18 +348,6 @@ export const useListbox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth])
 
-  const classNames = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      dropdownList: dropdownList(),
-      helpMessage: helpMessage(),
-      loaderWrapper: loaderWrapper(),
-      noItems: noItems(),
-    }
-  }, [])
-
   const decoratorDefaultTexts = useMemo(
     () => ({
       loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
@@ -295,42 +368,53 @@ export const useListbox = <T,>({
           {isExpanded && isLoading && (
             <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
           )}
-          <div
-            id={listBoxId}
-            ref={listBoxRef}
-            role="listbox"
-            aria-hidden={!isExpanded}
-            className={classNames.dropdownList}
-            style={dropdownListStyle}
-          >
-            {dropdownHelpMessage && (
-              <p className={classNames.helpMessage}>
-                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-              </p>
-            )}
-            {isExpanded ? (
-              isLoading ? (
-                <div className={classNames.loaderWrapper}>
-                  <Loader aria-hidden />
-                </div>
-              ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {decorated.noResultText}
-                </p>
-              ) : (
-                partialOptions.map((option) => (
-                  <ItemButton
-                    key={option.id}
-                    option={option}
-                    onAdd={handleAdd}
-                    onSelect={handleSelect}
-                    onMouseOver={handleHoverOption}
-                    activeRef={option.id === activeOption?.id ? activeRef : undefined}
-                  />
-                ))
-              )
-            ) : null}
-            {renderIntersection()}
+          <div role="presentation" onBlur={onBlurListBox}>
+            <div
+              id={listBoxId}
+              ref={listBoxRef}
+              role="listbox"
+              aria-hidden={!isExpanded}
+              className={classNames.dropdownList}
+              style={dropdownListStyle}
+            >
+              <div className={classNames.inputWrapper}>
+                {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control */}
+                <Input
+                  ref={searchInputRef}
+                  value={searchValue}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value)
+                    onChangeInput?.(e)
+                  }}
+                  onKeyDown={onKeyDownListBox}
+                  prefix={<FaMagnifyingGlassIcon />}
+                  disabled={isLoading}
+                  className={classNames.input}
+                />
+              </div>
+              {isExpanded &&
+                (isLoading ? (
+                  <Center verticalCentering padding={1}>
+                    <Loader aria-hidden />
+                  </Center>
+                ) : options.length === 0 ? (
+                  <p role="alert" aria-live="polite" className={classNames.noItems}>
+                    {decorated.noResultText}
+                  </p>
+                ) : (
+                  partialOptions.map((option) => (
+                    <ItemButton
+                      key={option.id}
+                      option={option}
+                      onAdd={handleAdd}
+                      onSelect={handleSelect}
+                      onMouseOver={handleHoverOption}
+                      activeRef={option.id === activeOption?.id ? activeRef : undefined}
+                    />
+                  ))
+                ))}
+              {renderIntersection()}
+            </div>
           </div>
         </div>,
       ),
@@ -341,24 +425,27 @@ export const useListbox = <T,>({
       options.length,
       isExpanded,
       isLoading,
-      dropdownHelpMessage,
       listBoxId,
       decorated,
       handleAdd,
       handleHoverOption,
       handleSelect,
-      classNames,
       dropdownListStyle,
       wrapperStyle,
       createPortal,
+      searchValue,
+      setSearchValue,
+      onKeyDownListBox,
+      onChangeInput,
+      onBlurListBox,
     ],
   )
 
   return {
     renderListBox,
     activeOption,
-    onKeyDownListBox,
     listBoxId,
     listBoxRef,
+    searchInputRef,
   }
 }

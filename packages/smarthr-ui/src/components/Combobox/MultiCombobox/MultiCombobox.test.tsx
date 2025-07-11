@@ -7,7 +7,7 @@ import { FormControl } from '../../FormControl'
 
 import { MultiCombobox } from './MultiCombobox'
 
-describe('SingleCombobox', () => {
+describe('MultiCombobox', () => {
   beforeEach(() => {
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
       cb(0)
@@ -16,6 +16,7 @@ describe('SingleCombobox', () => {
   })
 
   const combobox = () => screen.getByRole('combobox', { name: 'コンボボックス' })
+  const searchInput = () => screen.getByRole('textbox')
   const listbox = () => screen.queryByRole('listbox')
   const deleteButtons = () => screen.getAllByRole('button', { name: /を削除$/ })
 
@@ -57,7 +58,7 @@ describe('SingleCombobox', () => {
 
     // コンボボックスをクリックしてリストボックスを表示
     await act(() => userEvent.click(combobox()))
-    expect(combobox()).toHaveFocus()
+    expect(searchInput()).toHaveFocus()
     expect(screen.queryByRole('listbox')).toBeInTheDocument()
 
     // リストボックスからアイテムを2種続けて選択して、選択イベントの発火を確認
@@ -218,7 +219,7 @@ describe('SingleCombobox', () => {
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 3', value: 'value-3' })
   })
 
-  it('キーボードで選択中アイテムのフォーカス移動ができること', async () => {
+  it('キーボードで選択中アイテムにフォーカスを移動できること', async () => {
     render(
       template({
         selectedItems: [
@@ -235,34 +236,21 @@ describe('SingleCombobox', () => {
     // 適当にキー入力
     await act(() => userEvent.keyboard('ops'))
 
-    // カーソルを左に移動をしても、キャレットがテキストの先頭にない間は削除ボタンにフォーカスが移動しないこと
-    await act(() => userEvent.keyboard('{arrowleft}'))
-    expect(deleteButtons()[2]).not.toHaveFocus()
-    await act(() => userEvent.keyboard('{arrowleft}'))
-    expect(deleteButtons()[2]).not.toHaveFocus()
-    await act(() => userEvent.keyboard('{arrowleft}'))
-    expect(deleteButtons()[2]).not.toHaveFocus()
-
     // キャレットが先頭にある状態でカーソルを左に移動すると、末尾の削除ボタンにフォーカスが移動すること
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await act(() => userEvent.keyboard('{shift>}{tab}'))
     expect(deleteButtons()[2]).toHaveFocus()
 
     // 削除ボタンにフォーカスがある状態でさらに手前の削除ボタンに移動できること
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await act(() => userEvent.keyboard('{shift>}{tab}'))
     expect(deleteButtons()[1]).toHaveFocus()
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await act(() => userEvent.keyboard('{shift>}{tab}'))
     expect(deleteButtons()[0]).toHaveFocus()
 
-    // 一番手前の削除ボタンにフォーカスがある場合は、左矢印キーを押下してもこれ以上フォーカス移動できないこと
-    await act(() => userEvent.keyboard('{arrowleft}'))
-    expect(deleteButtons()[0]).toHaveFocus()
-
-    // 末尾日の削除ボタンにフォーカスがある場合、右矢印キーを押下すると input いフォーカスが移動すること
-    await act(() => userEvent.keyboard('{arrowright}'))
-    await act(() => userEvent.keyboard('{arrowright}'))
-    await act(() => userEvent.keyboard('{arrowright}'))
-    expect(deleteButtons()[2]).not.toHaveFocus()
-    expect(combobox()).toHaveFocus()
+    // 削除ボタンにフォーカスがある状態で、tab を押すと次の削除ボタンに移動できること
+    await act(() => userEvent.keyboard('{tab}'))
+    expect(deleteButtons()[1]).toHaveFocus()
+    await act(() => userEvent.keyboard('{tab}'))
+    expect(deleteButtons()[2]).toHaveFocus()
   })
 
   it('キーボードで選択中アイテムにフォーカス移動して削除できること', async () => {
@@ -281,34 +269,11 @@ describe('SingleCombobox', () => {
     await act(() => userEvent.keyboard('{tab}'))
 
     // 選択中のアイテムにフォーカスを移動
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await act(() => userEvent.keyboard('{shift>}{tab}'))
     expect(deleteButtons()[1]).toHaveFocus()
 
     // Enter キーで削除
     await act(() => userEvent.keyboard('{enter}'))
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
-  })
-
-  it('Backspaceキーでアイテムを削除できること', async () => {
-    const onDelete = vi.fn()
-    render(
-      template({
-        selectedItems: [
-          { label: 'option 1', value: 'value-1' },
-          { label: 'option 2', value: 'value-2' },
-        ],
-        onDelete,
-      }),
-    )
-
-    // リストボックスを開く
-    await act(() => userEvent.keyboard('{tab}'))
-
-    // Backspace キーで末尾のアイテムが削除されること
-    await act(() => userEvent.keyboard('{backspace}'))
-    expect(onDelete).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
-
-    // Backspace によって削除した末尾アイテムはテキスト化されること
-    expect(combobox()).toHaveValue('option 2')
   })
 })

@@ -14,7 +14,6 @@ type BaseUseOptionsProps<T> = {
   items: Array<ComboboxItem<T>>
   creatable?: boolean
   inputValue?: string
-  isFilteringDisabled?: boolean
 }
 
 export const useSingleOptions = <T>({
@@ -48,7 +47,7 @@ export const useMultiOptions = <T>({
 }
 
 function useOptions<T>(
-  { items, creatable, inputValue = '', isFilteringDisabled = false }: BaseUseOptionsProps<T>,
+  { items, creatable, inputValue = '' }: BaseUseOptionsProps<T>,
   isSelected: (item: ComboboxItem<T>) => boolean,
 ) {
   const newItemId = useId()
@@ -83,14 +82,14 @@ function useOptions<T>(
   )
 
   const options = useMemo(() => {
-    if (isFilteringDisabled || !inputValue) {
+    if (!inputValue) {
       return allOptions
     }
 
     return allOptions.filter(({ item: { label } }) =>
       convertMatchableString(innerText(label)).includes(convertMatchableString(inputValue)),
     )
-  }, [allOptions, inputValue, isFilteringDisabled])
+  }, [allOptions, inputValue])
 
   return {
     options,
