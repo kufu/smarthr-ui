@@ -65,8 +65,6 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const option2 = await within(body).findByRole('option', { name: 'option 2' })
   await userEvent.click(option2)
   await waitForRAF()
-  const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
-  await userEvent.click(helpMessage[0]) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
 }
 
 export default {

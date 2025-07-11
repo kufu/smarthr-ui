@@ -115,8 +115,6 @@ const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
   const body = canvasElement.ownerDocument.body
   const option = await within(body).findByText('option 1')
   await userEvent.hover(option)
-  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
-  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
 }
 
 export default {

@@ -433,7 +433,7 @@ const ActualMultiCombobox = <T,>(
         </div>
 
         <ul id={selectedListId} aria-label={decoratedAriaLabel} className={classNames.selectedList}>
-          {selectedItems.map((selectedItem, i) => (
+          {selectedItems.map((selectedItem) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
                 item={selectedItem}
