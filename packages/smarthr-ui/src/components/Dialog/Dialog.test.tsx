@@ -28,12 +28,13 @@ describe('Dialog', () => {
               <p>
                 The value of isOpen must be managed by you, but you can customize content freely.
               </p>
-              <DatePicker
-                name="dialog_datepicker"
-                value={'2021-01-01'}
-                formatDate={(_date) => (_date ? _date.toDateString() : '')}
-                title="dialog_datepicker"
-              />
+              <FormControl title="dialog_datepicker">
+                <DatePicker
+                  name="dialog_datepicker"
+                  value={'2021-01-01'}
+                  formatDate={(_date) => (_date ? _date.toDateString() : '')}
+                />
+              </FormControl>
               <Fieldset title="Fruits">
                 <Cluster as="ul">
                   <li>
