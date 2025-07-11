@@ -18,8 +18,8 @@ import { usePortal } from '../../hooks/usePortal'
 import { useIntl } from '../../intl'
 import { tabbable } from '../../libs/tabbable'
 import { spacing } from '../../themes'
-import { FaMagnifyingGlassIcon } from '../Icon'
 import { Input } from '../Input'
+import { SearchInputIcon } from '../Input/SearchInput/SearchInputIcon'
 import { Center } from '../Layout'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -387,7 +387,7 @@ export const useListbox = <T,>({
                     onChangeInput?.(e)
                   }}
                   onKeyDown={onKeyDownListBox}
-                  prefix={<FaMagnifyingGlassIcon />}
+                  prefix={<SearchInputIcon />}
                   disabled={isLoading}
                   className={classNames.input}
                 />
