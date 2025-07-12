@@ -93,7 +93,6 @@ export default {
   },
   play: playMulti,
   parameters: {
-    withTheming: true,
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs', 'skip-test-runner'],
