@@ -27,7 +27,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InputFile shr-block',
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
-    fileItem: 'shr-flex shr-items-center',
+    fileItem: 'shr-flex shr-items-center shr-break-all',
     inputWrapper: [
       'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-bg-white shr-font-bold shr-leading-none',
       'contrast-more:shr-border-high-contrast',
