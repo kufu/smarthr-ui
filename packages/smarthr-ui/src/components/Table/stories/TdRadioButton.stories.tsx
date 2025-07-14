@@ -25,7 +25,6 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-  tags: ['skip-test-runner'],
 } satisfies Meta<typeof TdRadioButton>
 
 export const Playground: StoryObj<typeof TdRadioButton> = {}

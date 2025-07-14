@@ -6,7 +6,6 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
     '@storybook/addon-docs',
-    '@storybook/addon-a11y',
     {
       name: '@storybook/addon-storysource',
       options: {
