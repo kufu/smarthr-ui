@@ -162,7 +162,6 @@
     "build:esm": "rollup --config rollup.esm.config.js",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet",
-    "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",
     "clean": "rimraf ./lib ./esm ./smarthr-ui.css",
     "format": "run-s -c format:*",
     "format:eslint": "eslint --fix './**/*.ts{,x}'",
