@@ -33,6 +33,10 @@ import type { FileForViewer } from './types'
 const defaultScaleStep = new Decimal(0.2)
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
+const defaultOnLoadError = () => {
+  alert('読み込みに失敗しました。ファイルが破損している可能性があります。')
+}
+
 type Props = {
   file: FileForViewer
   width?: number
@@ -44,6 +48,7 @@ type Props = {
 
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onLoadError?: () => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -52,6 +57,7 @@ export const FileViewer: FC<Props> = ({
   scaleSteps,
   width: fixedWidth,
   onPassword,
+  onLoadError = defaultOnLoadError,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
@@ -126,6 +132,7 @@ export const FileViewer: FC<Props> = ({
               width={width}
               onLoad={handleLoaded}
               onPassword={onPassword}
+              onLoadError={onLoadError}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
@@ -134,6 +141,7 @@ export const FileViewer: FC<Props> = ({
               file={file}
               width={width}
               onLoad={handleLoaded}
+              onLoadError={onLoadError}
             />
           ) : (
             <Text>
