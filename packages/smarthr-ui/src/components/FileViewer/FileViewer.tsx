@@ -33,10 +33,6 @@ import type { FileForViewer } from './types'
 const defaultScaleStep = new Decimal(0.2)
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
-const defaultOnLoadError = () => {
-  alert('読み込みに失敗しました。ファイルが破損している可能性があります。')
-}
-
 type Props = {
   file: FileForViewer
   width?: number
@@ -57,7 +53,7 @@ export const FileViewer: FC<Props> = ({
   scaleSteps,
   width: fixedWidth,
   onPassword,
-  onLoadError = defaultOnLoadError,
+  onLoadError,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
