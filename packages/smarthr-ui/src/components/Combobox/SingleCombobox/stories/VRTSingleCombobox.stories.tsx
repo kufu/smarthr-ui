@@ -140,7 +140,6 @@ export default {
   ),
   play: playSingle,
   parameters: {
-    withTheming: true,
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
