@@ -41,7 +41,7 @@ const options = {
 } satisfies ComponentProps<typeof Document>['options']
 
 export const PDFViewer: FC<ViewerProps> = memo(
-  ({ scale, rotation, file, width, onLoad, onPassword }) => {
+  ({ scale, rotation, file, width, onLoad, onPassword, onLoadError }) => {
     const [pdfNumPages, setPdfNumPages] = useState(1)
 
     const onDocumentLoadSuccess = useCallback<
@@ -72,6 +72,7 @@ export const PDFViewer: FC<ViewerProps> = memo(
           options={options}
           file={file.url}
           onLoadSuccess={onDocumentLoadSuccess}
+          onLoadError={onLoadError}
           rotate={rotation}
           className="shr-flex shr-h-full shr-w-fit shr-flex-col shr-items-center shr-gap-1 shr-overflow-auto"
           externalLinkTarget="_blank"

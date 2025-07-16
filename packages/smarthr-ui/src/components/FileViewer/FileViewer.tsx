@@ -44,6 +44,7 @@ type Props = {
 
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onLoadError?: () => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -52,6 +53,7 @@ export const FileViewer: FC<Props> = ({
   scaleSteps,
   width: fixedWidth,
   onPassword,
+  onLoadError,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
@@ -126,6 +128,7 @@ export const FileViewer: FC<Props> = ({
               width={width}
               onLoad={handleLoaded}
               onPassword={onPassword}
+              onLoadError={onLoadError}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
@@ -134,6 +137,7 @@ export const FileViewer: FC<Props> = ({
               file={file}
               width={width}
               onLoad={handleLoaded}
+              onLoadError={onLoadError}
             />
           ) : (
             <Text>
