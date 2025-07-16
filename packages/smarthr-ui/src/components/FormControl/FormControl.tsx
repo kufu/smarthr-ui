@@ -307,9 +307,13 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     const legendText = innerText(title)
     if (!legendText) return
 
+    const labels = new Set(
+      Array.from(document.querySelectorAll('label[for]')).map((label) => label.getAttribute('for')),
+    )
+
     inputs.forEach((input) => {
       const inputId = input.getAttribute('id')
-      if (inputId && !!document.querySelector(`label[for="${inputId}"]`)) {
+      if (inputId && labels.has(inputId)) {
         return
       }
 
