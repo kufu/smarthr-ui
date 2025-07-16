@@ -68,6 +68,9 @@ export const Variant: StoryObj<typeof Button> = {
       <Button {...args} variant="primary">
         ボタン
       </Button>
+      <Button {...args} variant="tertiary">
+        ボタン
+      </Button>
       <Button {...args} variant="danger">
         ボタン
       </Button>
