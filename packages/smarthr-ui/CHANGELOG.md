@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [75.2.0](https://github.com/kufu/smarthr-ui/compare/v75.1.1...v75.2.0) (2025-07-22)
+
+
+### Features
+
+* **FileViewer:** 読み込みエラー時のハンドラーを追加した ([#5798](https://github.com/kufu/smarthr-ui/issues/5798)) ([13bf4f4](https://github.com/kufu/smarthr-ui/commit/13bf4f40966dc76ed7cacb8c3765ca6380d4665b))
+
+
+### Bug Fixes
+
+* **Fieldset:** legendの文字を可視ラベルを持たないフォームコントロール要素のアクセシブルネームに追加する ([#5783](https://github.com/kufu/smarthr-ui/issues/5783)) ([22f9778](https://github.com/kufu/smarthr-ui/commit/22f97788b5601f566d8a37c56a19f8d2d3b69e2d))
+
 ### [75.1.1](https://github.com/kufu/smarthr-ui/compare/v75.1.0...v75.1.1) (2025-07-15)
 
 
