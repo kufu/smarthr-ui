@@ -297,6 +297,39 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     }
   }, [actualErrorMessages.length, autoBindErrorInput])
 
+  // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
+  // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
+  useEffect(() => {
+    if (!isFieldset || !inputWrapperRef.current) return
+    const inputs = inputWrapperRef.current.querySelectorAll(SMARTHR_UI_INPUT_SELECTOR)
+    if (!inputs.length) return
+
+    const legendText = innerText(title)
+    if (!legendText) return
+
+    const labels = new Set(
+      Array.from(document.querySelectorAll('label[for]')).map((label) => label.getAttribute('for')),
+    )
+
+    inputs.forEach((input) => {
+      const inputId = input.getAttribute('id')
+      if (inputId && labels.has(inputId)) {
+        return
+      }
+
+      let accessibleName = ''
+      if (input.hasAttribute('aria-label')) {
+        accessibleName = input.getAttribute('aria-label') || ''
+      } else if (input.hasAttribute('title')) {
+        accessibleName = input.getAttribute('title') || ''
+      }
+
+      if (!accessibleName.includes(legendText)) {
+        input.setAttribute('aria-label', `${legendText} ${accessibleName}`.trim())
+      }
+    })
+  }, [isFieldset, title])
+
   let body = (
     <>
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />

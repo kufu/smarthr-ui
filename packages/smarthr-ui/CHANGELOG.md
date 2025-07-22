@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [75.1.1](https://github.com/kufu/smarthr-ui/compare/v75.1.0...v75.1.1) (2025-07-15)
+
+
+### Bug Fixes
+
+* **TabItem:** 不要なスタイルを消す ([#5791](https://github.com/kufu/smarthr-ui/issues/5791)) ([8cf4218](https://github.com/kufu/smarthr-ui/commit/8cf421875e4ae736d9f524e62bf49165154e4e08))
+
 ## [75.1.0](https://github.com/kufu/smarthr-ui/compare/v75.0.0...v75.1.0) (2025-07-08)
 
 
