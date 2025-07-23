@@ -166,7 +166,13 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
               }
               setFiles(newFiles)
             }
-          : setFiles,
+          : (newFiles: File[]) => {
+              setFiles(newFiles)
+              if (multiplyAppendable) {
+                // multiplyAppendable以外ではinput要素を直接弄る必要がないので、updateInputFilesを呼ばない
+                updateInputFiles(newFiles)
+              }
+            },
       [onChange, updateInputFiles, multiplyAppendable],
     )
 
