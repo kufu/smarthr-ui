@@ -207,7 +207,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         updateFiles(newFiles)
 
         // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-        inputRef.current.value = newFiles[0]?.name || ''
+        inputRef.current.value = ''
       },
       [files, updateFiles],
     )
