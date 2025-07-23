@@ -198,10 +198,10 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         const index = parseInt(e.currentTarget.value, 10)
         const newFiles = files.filter((_, i) => index !== i)
 
-        updateFiles(newFiles)
-
         // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
         inputRef.current.value = ''
+
+        updateFiles(newFiles)
       },
       [files, updateFiles],
     )
