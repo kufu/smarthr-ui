@@ -27,7 +27,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InputFile shr-block',
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
-    fileItem: 'shr-flex shr-items-center shr-break-all',
+    fileItem: 'shr-flex shr-items-center',
     inputWrapper: [
       'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-bg-white shr-font-bold shr-leading-none',
       'contrast-more:shr-border-high-contrast',
@@ -206,7 +206,9 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <li key={index} className={classNames.fileItem}>
-                <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
+                <span className="smarthr-ui-InputFile-fileName shr-wrap-break-word shr-min-w-[0]">
+                  {file.name}
+                </span>
                 <Button
                   variant="text"
                   prefix={<FaTrashCanIcon />}
