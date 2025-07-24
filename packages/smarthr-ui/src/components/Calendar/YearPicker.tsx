@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 
 type AbstractProps = {
@@ -118,6 +119,7 @@ const YearButton = memo<{
   childrenStyle: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
+  const { localize } = useIntl()
   const isThisYear = thisYear === year
 
   return (
@@ -128,6 +130,14 @@ const YearButton = memo<{
       onClick={onClick}
       className={className}
       data-this-year={isThisYear}
+      aria-label={
+        isThisYear
+          ? localize({
+              id: 'smarthr-ui/Calendar/currentYear',
+              defaultText: '現在の年',
+            })
+          : undefined
+      }
     >
       <span className={childrenStyle}>{year}</span>
     </UnstyledButton>

@@ -10,7 +10,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { isTouchDevice } from '../../libs/ua'
 import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
@@ -39,13 +38,6 @@ const classNameGenerator = tv({
       // 内包アイコンの leading を詰める
       '[&_.smarthr-ui-Icon]:shr-block',
     ],
-  },
-  variants: {
-    isTouchDevice: {
-      false: {
-        wrapper: 'shr-transition-colors',
-      },
-    },
   },
 })
 
@@ -111,7 +103,7 @@ const TabButton: FC<Props & ElementProps> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, label, suffixWrapper } = classNameGenerator({ isTouchDevice })
+    const { wrapper, label, suffixWrapper } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),

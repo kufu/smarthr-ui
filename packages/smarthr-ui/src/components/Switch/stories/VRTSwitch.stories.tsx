@@ -59,7 +59,7 @@ export default {
       focusVisible: ['#focus-visible .smarthr-ui-Switch'],
     },
   },
-  tags: ['!autodocs', 'skip-test-runner'],
+  tags: ['!autodocs'],
 } as Meta<typeof Switch>
 
 export const VRT = {}

@@ -140,10 +140,9 @@ export default {
   ),
   play: playSingle,
   parameters: {
-    withTheming: true,
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs', 'skip-test-runner'],
+  tags: ['!autodocs'],
 } as Meta<typeof SingleCombobox>
 
 export const VRT: StoryObj<typeof SingleCombobox> = {

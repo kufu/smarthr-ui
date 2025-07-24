@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 import {
   Title,
@@ -10,9 +10,6 @@ import {
 } from '@storybook/addon-docs/blocks'
 import type { Preview } from '@storybook/react-webpack5'
 import ReactGA from 'react-ga4'
-
-import { createTheme, CreatedTheme } from '../src/themes/createTheme'
-import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
 import '../src/styles/index.css'
 import { backgroundColor } from '../src/themes'
@@ -99,33 +96,16 @@ const preview: Preview = {
       )
     },
     (Story, context) => {
-      const theme = createTheme()
-      const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
-
       useEffect(() => {
         if (isProduction) {
           ReactGA.send({ hitType: 'pageview', title: context.title })
         }
       }, [context.title])
 
-      return (
-        <ThemeProvider>
-          <Story />
-        </ThemeProvider>
-      )
+      return <Story />
     },
   ],
   tags: ['autodocs'],
 }
 
 export default preview
-
-const callThemeProvider =
-  (withThemeProvider: boolean, theme: CreatedTheme) =>
-  ({ children }: { children: ReactNode }) => {
-    if (withThemeProvider) {
-      return <SCThemeProvider theme={theme}>{children}</SCThemeProvider>
-    }
-
-    return <>{children}</>
-  }

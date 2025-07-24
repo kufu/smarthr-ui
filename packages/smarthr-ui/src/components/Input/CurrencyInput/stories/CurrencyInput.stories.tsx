@@ -37,7 +37,6 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-  tags: ['skip-test-runner'],
 } as Meta<typeof CurrencyInput>
 
 export const Playground: StoryObj<typeof CurrencyInput> = {}

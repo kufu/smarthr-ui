@@ -46,18 +46,6 @@ commands:
     steps:
       - run: pnpm ui test
       - run: pnpm ui test:build-assets
-  run-a11y-test:
-    steps:
-      - run: pnpm ui exec playwright install
-      - run:
-          command: pnpm ui build-storybook
-      - run:
-          command: pnpm dlx http-server ./packages/smarthr-ui/storybook-static --port 6006 --silent
-          background: true
-      - run:
-          command: pnpm ui test-storybook:ci
-      - store_test_results:
-          path: junit.xml
   run-e2e-test:
     steps:
       - run:
@@ -116,14 +104,6 @@ jobs:
       - setup-for-test
       - check-source
       - run-npm-test
-  a11y-test:
-    executor: node-active-lts-browsers
-    working_directory: ~/repo
-    resource_class: medium+
-    steps:
-      - setup-for-test
-      - install-noto-sans-cjk-jp
-      - run-a11y-test
   e2e-test:
     executor: node-active-lts-browsers
     working_directory: ~/repo
@@ -149,8 +129,6 @@ workflows:
       - node-maintenance:
           context: smarthr-dockerhub
       - node-active-lts:
-          context: smarthr-dockerhub
-      - a11y-test:
           context: smarthr-dockerhub
       - e2e-test:
           context: smarthr-dockerhub

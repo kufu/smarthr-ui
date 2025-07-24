@@ -119,7 +119,6 @@ export default {
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['_appsOptions'],
-  tags: ['skip-test-runner'],
 } as Meta<typeof Header>
 
 export const Playground: StoryObj<typeof Header> = {

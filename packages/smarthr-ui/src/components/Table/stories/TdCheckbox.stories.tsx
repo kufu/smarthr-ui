@@ -25,7 +25,6 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-  tags: ['skip-test-runner'],
 } satisfies Meta<typeof TdCheckbox>
 
 export const Playground: StoryObj<typeof TdCheckbox> = {}

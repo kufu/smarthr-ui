@@ -44,7 +44,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs', 'skip-test-runner'],
+  tags: ['!autodocs'],
 } satisfies Meta<typeof WarekiPicker>
 
 export const VRT = {}
