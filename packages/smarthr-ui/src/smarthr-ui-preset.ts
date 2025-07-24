@@ -83,6 +83,7 @@ export default {
       white: defaultColor.WHITE,
       'white-darken': theme('colors.white-darken'),
       background: defaultColor.BACKGROUND,
+      'background-darken': darkenColor(defaultColor.BACKGROUND),
       border: theme('colors.grey.20'),
       brand: theme('colors.brand'),
       column: defaultColor.COLUMN,
