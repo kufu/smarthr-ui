@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useRef, useState } from 'react'
 import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
 import { Fieldset } from '../Fieldset'
@@ -13,6 +14,9 @@ import { RadioButton } from '../RadioButton'
 import { Dialog } from './Dialog'
 
 describe('Dialog', () => {
+  const renderWithIntl = (component: React.ReactElement) =>
+    render(<IntlProvider locale="ja">{component}</IntlProvider>)
+
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
@@ -24,12 +28,13 @@ describe('Dialog', () => {
               <p>
                 The value of isOpen must be managed by you, but you can customize content freely.
               </p>
-              <DatePicker
-                name="dialog_datepicker"
-                value={'2021-01-01'}
-                formatDate={(_date) => (_date ? _date.toDateString() : '')}
-                title="dialog_datepicker"
-              />
+              <FormControl title="dialog_datepicker">
+                <DatePicker
+                  name="dialog_datepicker"
+                  value={'2021-01-01'}
+                  formatDate={(_date) => (_date ? _date.toDateString() : '')}
+                />
+              </FormControl>
               <Fieldset title="Fruits">
                 <Cluster as="ul">
                   <li>
@@ -56,7 +61,7 @@ describe('Dialog', () => {
   }
 
   it('ダイアログが開閉できること', async () => {
-    render(<DialogTemplate />)
+    renderWithIntl(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
     await act(() => userEvent.tab())
@@ -75,7 +80,7 @@ describe('Dialog', () => {
     expect(screen.getByRole('button', { name: 'Dialog' })).toHaveFocus()
   })
   it('ダイアログの外側をクリックするとダイアログが閉じないこと', async () => {
-    render(<DialogTemplate />)
+    renderWithIntl(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
     act(() => {
@@ -98,7 +103,7 @@ describe('Dialog', () => {
   })
 
   it('フォーカストラップが動作すること', async () => {
-    render(<DialogTemplate />)
+    renderWithIntl(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
     await act(() => userEvent.tab())
@@ -136,7 +141,7 @@ describe('Dialog', () => {
     )
   }
   it('開いた時に特定の要素をフォーカスできること', async () => {
-    render(<DialogTemplateWithFocusTrap />)
+    renderWithIntl(<DialogTemplateWithFocusTrap />)
 
     expect(
       screen.queryByRole('dialog', { name: '特定の要素をフォーカスするダイアログ' }),

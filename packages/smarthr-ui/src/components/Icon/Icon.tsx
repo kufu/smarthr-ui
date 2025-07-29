@@ -36,6 +36,7 @@ import {
   FaCalendarCheck,
   FaCalendarDays,
   FaCalendarXmark,
+  FaCamera,
   FaCaretDown,
   FaCaretLeft,
   FaCaretRight,
@@ -87,6 +88,7 @@ import {
   FaEyeSlash,
   FaFile,
   FaFileArrowDown,
+  FaFileCirclePlus,
   FaFileCode,
   FaFileCsv,
   FaFileExcel,
@@ -115,6 +117,7 @@ import {
   FaIdBadge,
   FaIdCard,
   FaImage,
+  FaImages,
   FaInbox,
   FaIntercom,
   FaKey,
@@ -235,6 +238,7 @@ export const FaCalculatorIcon = /*#__PURE__*/ generateIcon(FaCalculator)
 export const FaCalendarCheckIcon = /*#__PURE__*/ generateIcon(FaCalendarCheck)
 export const FaCalendarDaysIcon = /*#__PURE__*/ generateIcon(FaCalendarDays)
 export const FaCalendarXmarkIcon = /*#__PURE__*/ generateIcon(FaCalendarXmark)
+export const FaCameraIcon = /*#__PURE__*/ generateIcon(FaCamera)
 export const FaCaretDownIcon = /*#__PURE__*/ generateIcon(FaCaretDown)
 export const FaCaretLeftIcon = /*#__PURE__*/ generateIcon(FaCaretLeft)
 export const FaCaretRightIcon = /*#__PURE__*/ generateIcon(FaCaretRight)
@@ -287,6 +291,7 @@ export const FaExpandIcon = /*#__PURE__*/ generateIcon(FaExpand)
 export const FaEyeIcon = /*#__PURE__*/ generateIcon(FaEye)
 export const FaEyeSlashIcon = /*#__PURE__*/ generateIcon(FaEyeSlash)
 export const FaFileArrowDownIcon = /*#__PURE__*/ generateIcon(FaFileArrowDown)
+export const FaFileCirclePlusIcon = /*#__PURE__*/ generateIcon(FaFileCirclePlus)
 export const FaFileCodeIcon = /*#__PURE__*/ generateIcon(FaFileCode)
 export const FaFileCsvIcon = /*#__PURE__*/ generateIcon(FaFileCsv)
 export const FaFileExcelIcon = /*#__PURE__*/ generateIcon(FaFileExcel)
@@ -316,6 +321,7 @@ export const FaHouseIcon = /*#__PURE__*/ generateIcon(FaHouse)
 export const FaIdBadgeIcon = /*#__PURE__*/ generateIcon(FaIdBadge)
 export const FaIdCardIcon = /*#__PURE__*/ generateIcon(FaIdCard)
 export const FaImageIcon = /*#__PURE__*/ generateIcon(FaImage)
+export const FaImagesIcon = /*#__PURE__*/ generateIcon(FaImages)
 export const FaInboxIcon = /*#__PURE__*/ generateIcon(FaInbox)
 export const FaIntercomIcon = /*#__PURE__*/ generateIcon(FaIntercom)
 export const FaKeyIcon = /*#__PURE__*/ generateIcon(FaKey)

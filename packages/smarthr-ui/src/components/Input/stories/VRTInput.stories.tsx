@@ -95,7 +95,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs', 'skip-test-runner'],
+  tags: ['!autodocs'],
 } as Meta<typeof Input>
 
 export const VRT = {}

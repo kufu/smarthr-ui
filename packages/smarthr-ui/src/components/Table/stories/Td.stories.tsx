@@ -30,7 +30,6 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-  tags: ['skip-test-runner'],
 } satisfies Meta<typeof Td>
 
 export const Playground: StoryObj<typeof Td> = {}
