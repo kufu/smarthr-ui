@@ -438,7 +438,7 @@ const wrapperClassNameGenerator = tv({
     },
     {
       slots: ['loader'],
-      variant: ['primary', 'tertiary', 'danger', 'skeleton', 'text'],
+      variant: ['primary', 'danger', 'skeleton'],
       className: [
         '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
         '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
@@ -446,8 +446,13 @@ const wrapperClassNameGenerator = tv({
     },
     {
       slots: ['loader'],
-      variant: 'secondary',
+      variant: ['secondary', 'text'],
       className: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
+    },
+    {
+      slots: ['loader'],
+      variant: 'tertiary',
+      className: '[&_.smarthr-ui-Loader-line]:shr-border-link/50',
     },
   ],
 })
