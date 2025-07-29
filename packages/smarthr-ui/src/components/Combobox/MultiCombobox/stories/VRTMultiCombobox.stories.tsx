@@ -93,10 +93,9 @@ export default {
   },
   play: playMulti,
   parameters: {
-    withTheming: true,
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs', 'skip-test-runner'],
+  tags: ['!autodocs'],
 } as Meta<typeof MultiCombobox>
 
 export const VRT: StoryObj<typeof MultiCombobox> = {}
