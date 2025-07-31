@@ -13,14 +13,11 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { CHART_COLORS, FONT_FAMILY } from 'smarthr-ui'
+import { CHART_COLORS, FONT_FAMILY, defaultColor, defaultRadius } from 'smarthr-ui'
 
 import { keyboardNavigationPlugin } from '../plugins'
 
 import type { ChartDataset, ChartOptions } from 'chart.js'
-
-// TODO: themeProviderから取得する
-const OUTLINE_COLOR = '#0077c7'
 
 /**
  * Chart.jsの必要な要素を登録
@@ -41,6 +38,7 @@ export const registerChartComponents = () => {
   )
 }
 
+// FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
 const createBaseChartOptions = ({ plugins }: Partial<ChartOptions>): Partial<ChartOptions> => ({
   responsive: true,
   maintainAspectRatio: false,
@@ -54,18 +52,14 @@ const createBaseChartOptions = ({ plugins }: Partial<ChartOptions>): Partial<Cha
       },
     },
     tooltip: {
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      titleColor: '#fff',
-      bodyColor: '#fff',
-      borderColor: '#fff',
+      backgroundColor: defaultColor.BACKGROUND,
+      titleColor: defaultColor.TEXT_BLACK,
+      bodyColor: defaultColor.TEXT_BLACK,
+      borderColor: defaultColor.BORDER,
       borderWidth: 1,
       cornerRadius: 4,
     },
     ...plugins,
-  },
-  animation: {
-    duration: 750,
-    easing: 'easeInOutQuart',
   },
 })
 
@@ -87,7 +81,7 @@ export const createBarChartOptions = (
     y: {
       beginAtZero: true,
       grid: {
-        color: 'rgba(0, 0, 0, 0.1)',
+        color: defaultColor.BORDER,
       },
     },
   },
@@ -111,7 +105,7 @@ export const getChartColors = (
   return colors.map((color) => ({
     backgroundColor: color,
     borderColor: color,
-    hoverBorderColor: OUTLINE_COLOR,
+    hoverBorderColor: defaultColor.OUTLINE,
     hoverBorderWidth: 4,
   }))
 }
