@@ -15,11 +15,10 @@ type Props = {
   // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
   data: ChartData<'bar'>
-  options?: ChartOptions<'bar'>
   title: string
 }
 
-export const BarChart: React.FC<Props> = ({ data, options, title }) => {
+export const BarChart: React.FC<Props> = ({ data, title }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
   const chartColors = getChartColors(data.datasets.length)
@@ -43,26 +42,31 @@ export const BarChart: React.FC<Props> = ({ data, options, title }) => {
   )
 
   const chartOptions: ChartOptions<'bar'> = useMemo(
-    () => ({
-      ...createBarChartOptions({ title }),
-      ...options,
-      plugins: {
-        keyboardNavigation: {
-          liveRegionId: chartId,
+    () =>
+      createBarChartOptions({
+        plugins: {
+          title: {
+            display: true,
+            text: title,
+          },
+          keyboardNavigation: {
+            liveRegionId: chartId,
+          },
         },
-        title: {
-          display: true,
-          text: title,
-        },
-      },
-    }),
-    [options, title, chartId],
+      }),
+    [title, chartId],
   )
 
   return (
     <>
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
-      <Bar ref={chartRef} data={enhancedData} options={chartOptions} aria-label={ariaLabel} />
+      <Bar
+        role="application"
+        ref={chartRef}
+        data={enhancedData}
+        options={chartOptions}
+        aria-label={ariaLabel}
+      />
     </>
   )
 }
