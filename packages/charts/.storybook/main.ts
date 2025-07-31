@@ -1,3 +1,6 @@
+import autoprefixer from 'autoprefixer'
+import tailwindcss from 'tailwindcss'
+
 import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
@@ -11,6 +14,14 @@ const config: StorybookConfig = {
     reactDocgen: 'react-docgen-typescript',
     check: false,
   },
+  viteFinal: async (conf) => ({
+    ...conf,
+    css: {
+      postcss: {
+        plugins: [tailwindcss, autoprefixer],
+      },
+    },
+  }),
 }
 
 export default config
