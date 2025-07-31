@@ -1,5 +1,5 @@
 {
-  "name": "smarthr-ui-charts",
+  "name": "@smarthr-ui/charts",
   "description": "Chart components for SmartHR UI built with React.",
   "version": "0.1.0",
   "author": "SmartHR-UI Team",
@@ -75,10 +75,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kufu/smarthr-ui.git",
-    "directory": "packages/smarthr-ui-charts"
+    "directory": "packages/charts"
   },
   "bugs": {
     "url": "https://github.com/kufu/smarthr-ui/issues"
-  },
-  "homepage": "https://github.com/kufu/smarthr-ui/tree/master/packages/smarthr-ui-charts#readme"
+  }
 }
