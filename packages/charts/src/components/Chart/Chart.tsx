@@ -20,7 +20,7 @@ type Props = {
 }
 
 const classNameGenerator = tv({
-  base: 'h-[500px]',
+  base: 'shr-h-[500px]',
 })
 
 export const Chart: React.FC<Props> = ({ type, data, title, className }) => {

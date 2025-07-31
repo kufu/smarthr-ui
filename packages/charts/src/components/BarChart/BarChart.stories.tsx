@@ -6,7 +6,7 @@ const meta: Meta<typeof BarChart> = {
   component: BarChart,
   decorators: [
     (Story) => (
-      <div style={{ height: '500px' }}>
+      <div className="shr-h-[500px]">
         <Story />
       </div>
     ),
