@@ -22,7 +22,12 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
   const chartColors = getChartColors(data.datasets.length)
-  const ariaLabel = `${title} 棒グラフ ${data.datasets.length}個のデータ ${data.datasets[0].data.length}本の棒`
+
+  const ariaLabel = useMemo(() => {
+    const datasetCount = data.datasets.length
+    const barCount = data.datasets[0].data.length
+    return `${title} 棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
+  }, [title, data])
 
   useEffect(() => {
     if (chartRef.current?.canvas) {
