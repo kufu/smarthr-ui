@@ -307,22 +307,34 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     const legendText = innerText(title)
     if (!legendText) return
 
-    const labels = new Set(
-      Array.from(document.querySelectorAll('label[for]')).map((label) => label.getAttribute('for')),
+    const labelMap = new Map(
+      Array.from(document.querySelectorAll('label[for]')).map((label) => [
+        label.getAttribute('for'),
+        label,
+      ]),
     )
 
     inputs.forEach((input) => {
       const inputId = input.getAttribute('id')
-      if (inputId && labels.has(inputId)) {
-        return
+      if (inputId && labelMap.has(inputId)) {
+        const label = labelMap.get(inputId)!
+        const isVisuallyHidden = label.closest('.smarthr-ui-VisuallyHiddenText') !== null
+
+        if (!isVisuallyHidden) {
+          return
+        }
       }
 
-      const accessibleName = input.hasAttribute('aria-label')
-        ? input.getAttribute('aria-label')
-        : null
+      let accessibleName = ''
+      if (input.hasAttribute('aria-label')) {
+        accessibleName = input.getAttribute('aria-label') || ''
+      } else if (inputId && labelMap.has(inputId)) {
+        const label = labelMap.get(inputId)!
+        accessibleName = label.textContent || ''
+      }
 
       if (accessibleName && !accessibleName.includes(legendText)) {
-        input.setAttribute('aria-label', `${accessibleName} ${legendText} `.trim())
+        input.setAttribute('aria-label', `${accessibleName} ${legendText}`.trim())
       }
     })
   }, [isFieldset, title])
