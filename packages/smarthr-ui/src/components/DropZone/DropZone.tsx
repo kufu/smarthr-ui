@@ -20,6 +20,7 @@ import { useDecorators } from '../../hooks/useDecorators'
 import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'
 
@@ -29,7 +30,6 @@ const classNameGenerator = tv({
       'smarthr-ui-DropZone',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
     ],
-    input: 'shr-hidden',
     button: '',
   },
   variants: {
@@ -89,10 +89,9 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
     const classNames = useMemo(() => {
-      const { wrapper, input, button } = classNameGenerator({ filesDraggedOver, disabled, error })
+      const { wrapper, button } = classNameGenerator({ filesDraggedOver, disabled, error })
       return {
         wrapper: wrapper(),
-        input: input(),
         button: button(),
       }
     }, [disabled, error, filesDraggedOver])
@@ -152,18 +151,19 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
           className={classNames.button}
           decorators={decorators}
         />
-        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
-        <input
-          {...props}
-          data-smarthr-ui-input="true"
-          ref={fileRef}
-          type="file"
-          multiple={multiple}
-          disabled={disabled}
-          aria-invalid={error || undefined}
-          onChange={onChange}
-          className={classNames.input}
-        />
+        <VisuallyHiddenText>
+          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
+          <input
+            {...props}
+            data-smarthr-ui-input="true"
+            ref={fileRef}
+            type="file"
+            multiple={multiple}
+            disabled={disabled}
+            aria-invalid={error || undefined}
+            onChange={onChange}
+          />
+        </VisuallyHiddenText>
       </div>
     )
   },
