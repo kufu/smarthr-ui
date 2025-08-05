@@ -18,14 +18,18 @@ import { DisabledDetail } from './DisabledDetail'
 import type { BaseProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
 
+// tertiaryはAnchorButtonでは使用不可
+type AnchorButtonVariant = Exclude<BaseProps['variant'], 'tertiary'>
+
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
   keyof Props<T> & ElementRefProps<T>
 >
 
-type Props<T extends ElementType> = BaseProps & {
+type Props<T extends ElementType> = Omit<BaseProps, 'variant'> & {
   /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
+  variant?: AnchorButtonVariant
 }
 
 const classNameGenerator = tv({
