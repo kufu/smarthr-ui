@@ -316,20 +316,18 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
     inputs.forEach((input) => {
       const inputId = input.getAttribute('id')
-      if (inputId && labelMap.has(inputId)) {
-        const label = labelMap.get(inputId)!
-        const isVisuallyHidden = label.closest('.smarthr-ui-VisuallyHiddenText') !== null
-
-        if (!isVisuallyHidden) {
-          return
-        }
-      }
-
       let accessibleName = ''
+
       if (input.hasAttribute('aria-label')) {
         accessibleName = input.getAttribute('aria-label') || ''
       } else if (inputId && labelMap.has(inputId)) {
         const label = labelMap.get(inputId)!
+
+        if (!label.closest('.smarthr-ui-VisuallyHiddenText')) {
+          // HINT: <label> があり、かつ <VisuallyHiddenText> でラップされていない場合
+          return
+        }
+
         accessibleName = label.textContent || ''
       }
 
