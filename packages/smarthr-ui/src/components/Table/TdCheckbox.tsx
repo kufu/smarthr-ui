@@ -18,7 +18,7 @@ const classNameGenerator = tv({
       'shr-flex shr-justify-center shr-px-1 shr-py-0.75',
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
-    wrapper: 'shr-p-0',
+    wrapper: 'shr-w-min shr-p-0',
     checkbox: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
   },
 })
