@@ -17,7 +17,7 @@ import { CHART_COLORS, FONT_FAMILY, defaultColor, defaultRadius } from 'smarthr-
 
 import { keyboardNavigationPlugin } from '../plugins'
 
-import type { ChartDataset, ChartOptions } from 'chart.js'
+import type { ChartDataset, ChartOptions, ChartType } from 'chart.js'
 
 /**
  * Chart.jsの必要な要素を登録
@@ -87,14 +87,29 @@ export const createBarChartOptions = (
   },
 })
 
+export const createLineChartOptions = (
+  plugins: Partial<ChartOptions>,
+): Partial<ChartOptions<'line'>> => ({
+  ...createBaseChartOptions(plugins),
+  scales: {
+    x: {
+      grid: {
+        display: false,
+      },
+    },
+    y: {
+      grid: {
+        color: defaultColor.BORDER,
+      },
+    },
+  },
+})
+
 // TODO: SINGLE_CHART_COLORS を使うオプションを追加する
-export const getChartColors = (
+export const getChartColors = <T extends ChartType>(
   dataLength: number,
 ): Array<
-  Pick<
-    ChartDataset<'bar'>,
-    'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'
-  >
+  Pick<ChartDataset<T>, 'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'>
 > => {
   const colors: string[] = []
   for (let i = 0; i < dataLength; i++) {
