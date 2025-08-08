@@ -1,1 +1,6 @@
-export { registerChartComponents, createBarChartOptions, getChartColors } from './chartConfig'
+export {
+  registerChartComponents,
+  createBarChartOptions,
+  createLineChartOptions,
+  getChartColors,
+} from './chartConfig'

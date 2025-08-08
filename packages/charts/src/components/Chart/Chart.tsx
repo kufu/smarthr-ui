@@ -5,38 +5,42 @@ import { tv } from 'tailwind-variants'
 
 import { registerChartComponents } from '../../config'
 import { BarChart } from '../BarChart'
+import { LineChart } from '../LineChart'
 
 import type { ChartData } from 'chart.js'
 
 registerChartComponents()
 
-type ChartType = 'bar'
+type ChartType = 'bar' | 'line'
 
 type Props = {
-  type: ChartType
-  data: ChartData<ChartType>
-  title: string
-  className?: string
-}
+  [K in ChartType]: {
+    type: K
+    data: ChartData<K>
+    title: string
+    className?: string
+  }
+}[ChartType]
 
 const classNameGenerator = tv({
   base: 'shr-h-[500px]',
 })
 
-export const Chart: React.FC<Props> = ({ type, data, title, className }) => {
+export const Chart: React.FC<Props> = ({ className, ...props }) => {
   const classNames = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     <div className={classNames}>
-      <InnerChart type={type} data={data} title={title} />
+      <InnerChart {...props} />
     </div>
   )
 }
-
 const InnerChart: React.FC<Props> = ({ type, data, title }) => {
   switch (type) {
     case 'bar':
       return <BarChart data={data} title={title} />
+    case 'line':
+      return <LineChart data={data} title={title} />
     default:
       return null
   }
