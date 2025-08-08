@@ -67,15 +67,11 @@ export const createBarChartOptions = (
   plugins: Partial<ChartOptions>,
 ): Partial<ChartOptions<'bar'>> => ({
   ...createBaseChartOptions(plugins),
-  elements: {
-    bar: {
-      borderRadius: 4,
-    },
-  },
+  elements: {},
   scales: {
     x: {
       grid: {
-        display: false,
+        color: defaultColor.BORDER,
       },
     },
     y: {
@@ -94,7 +90,7 @@ export const createLineChartOptions = (
   scales: {
     x: {
       grid: {
-        display: false,
+        color: defaultColor.BORDER,
       },
     },
     y: {
