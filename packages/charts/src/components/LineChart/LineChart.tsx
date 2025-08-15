@@ -29,12 +29,6 @@ export const LineChart: React.FC<Props> = ({ data, title }) => {
     return `${title} 線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
   }, [title, data])
 
-  useEffect(() => {
-    if (chartRef.current?.canvas) {
-      chartRef.current.canvas.setAttribute('tabindex', '0')
-    }
-  }, [])
-
   const enhancedData: ChartData<'line'> = useMemo(
     () => ({
       ...data,
@@ -66,6 +60,7 @@ export const LineChart: React.FC<Props> = ({ data, title }) => {
     <>
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Line
+        tabIndex={0}
         role="application"
         ref={chartRef}
         data={enhancedData}

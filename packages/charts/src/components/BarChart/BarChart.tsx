@@ -29,12 +29,6 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
     return `${title} 棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
   }, [title, data])
 
-  useEffect(() => {
-    if (chartRef.current?.canvas) {
-      chartRef.current.canvas.setAttribute('tabindex', '0')
-    }
-  }, [])
-
   const enhancedData: ChartData<'bar'> = useMemo(
     () => ({
       ...data,
@@ -66,6 +60,7 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
     <>
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Bar
+        tabIndex={0}
         role="application"
         ref={chartRef}
         data={enhancedData}
