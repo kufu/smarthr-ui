@@ -35,12 +35,12 @@ export const Chart: React.FC<Props> = ({ className, ...props }) => {
     </div>
   )
 }
-const InnerChart: React.FC<Props> = ({ type, data, title }) => {
+const InnerChart: React.FC<Props> = ({ type, data, ...props }) => {
   switch (type) {
     case 'bar':
-      return <BarChart data={data} title={title} />
+      return <BarChart {...props} data={data} />
     case 'line':
-      return <LineChart data={data} title={title} />
+      return <LineChart {...props} data={data} />
     default:
       return null
   }
