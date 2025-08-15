@@ -1,10 +1,10 @@
 'use client'
 
 import { useId, useMemo, useRef } from 'react'
-import { Bar } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
-import { createBarChartOptions, getChartColors, registerChartComponents } from '../../config'
+import { createLineChartOptions, getChartColors, registerChartComponents } from '../../config'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
@@ -14,22 +14,22 @@ registerChartComponents()
 type Props = {
   // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
-  data: ChartData<'bar'>
+  data: ChartData<'line'>
   title: string
 }
 
-export const BarChart: React.FC<Props> = ({ data, title }) => {
+export const LineChart: React.FC<Props> = ({ data, title }) => {
   const chartId = useId()
-  const chartRef = useRef<Chart<'bar'>>(null)
-  const chartColors = getChartColors<'bar'>(data.datasets.length)
+  const chartRef = useRef<Chart<'line'>>(null)
+  const chartColors = getChartColors<'line'>(data.datasets.length)
 
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length
-    const barCount = data.datasets[0].data.length
-    return `${title} 棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
+    const pointCount = data.datasets[0].data.length
+    return `${title} 線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
   }, [title, data])
 
-  const enhancedData: ChartData<'bar'> = useMemo(
+  const enhancedData: ChartData<'line'> = useMemo(
     () => ({
       ...data,
       datasets: data.datasets.map((dataset, index) => ({
@@ -40,9 +40,9 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
     [data, chartColors],
   )
 
-  const chartOptions: ChartOptions<'bar'> = useMemo(
+  const chartOptions: ChartOptions<'line'> = useMemo(
     () =>
-      createBarChartOptions({
+      createLineChartOptions({
         plugins: {
           title: {
             display: true,
@@ -59,7 +59,7 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
   return (
     <>
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
-      <Bar
+      <Line
         tabIndex={0}
         role="application"
         ref={chartRef}
