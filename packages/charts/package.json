@@ -68,7 +68,7 @@
     "storybook": "9.0.12",
     "styled-components": "^5.3.11",
     "tailwind-variants": "^0.3.1",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.1.12",
     "typescript": "^5.8.3"
   },
   "keywords": [
