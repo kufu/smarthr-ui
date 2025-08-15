@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useRef } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
