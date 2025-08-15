@@ -20,7 +20,7 @@ describe('Fieldset', () => {
     expect(screen.getByRole('textbox', { name: 'form-control-title' })).toBeInTheDocument()
   })
 
-  it('子要素が可視ラベルを持たないフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
+  it('子要素が可視ラベルを持たないaria-labelを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
     render(
       <form>
         {/* アクセシブルネームを付けるのにtitleは最適ではないためルール修正まで一時的にdisableにしている */}
@@ -37,6 +37,28 @@ describe('Fieldset', () => {
     ).toBeInTheDocument()
     expect(
       screen.getByRole('textbox', { name: 'input-accessible-name-2 fieldset-title' }),
+    ).toBeInTheDocument()
+  })
+
+  it('子要素がdangerouslyTitleHidden:trueを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
+    render(
+      <form>
+        <Fieldset title="fieldset-title">
+          <FormControl title="form-control-title1" dangerouslyTitleHidden>
+            <Input name="test1" />
+          </FormControl>
+          <FormControl title="form-control-title2" dangerouslyTitleHidden>
+            <Input name="test2" />
+          </FormControl>
+        </Fieldset>
+      </form>,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: 'form-control-title1 fieldset-title' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('textbox', { name: 'form-control-title2 fieldset-title' }),
     ).toBeInTheDocument()
   })
 })

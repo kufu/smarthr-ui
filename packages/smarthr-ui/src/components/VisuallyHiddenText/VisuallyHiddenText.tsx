@@ -20,7 +20,7 @@ const ActualVisuallyHiddenText = <T extends ElementType = 'span'>({
     [className],
   )
 
-  return <Component {...props} className={actualClassName} />
+  return <Component {...props} className={`smarthr-ui-VisuallyHiddenText ${actualClassName}`} />
 }
 
 export const VisuallyHiddenText = memo(ActualVisuallyHiddenText) as typeof ActualVisuallyHiddenText
