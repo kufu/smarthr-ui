@@ -317,15 +317,12 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         return
       }
 
-      let accessibleName = ''
-      if (input.hasAttribute('aria-label')) {
-        accessibleName = input.getAttribute('aria-label') || ''
-      } else if (input.hasAttribute('title')) {
-        accessibleName = input.getAttribute('title') || ''
-      }
+      const accessibleName = input.hasAttribute('aria-label')
+        ? input.getAttribute('aria-label')
+        : null
 
-      if (!accessibleName.includes(legendText)) {
-        input.setAttribute('aria-label', `${legendText} ${accessibleName}`.trim())
+      if (accessibleName && !accessibleName.includes(legendText)) {
+        input.setAttribute('aria-label', `${accessibleName} ${legendText} `.trim())
       }
     })
   }, [isFieldset, title])

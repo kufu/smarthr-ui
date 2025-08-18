@@ -10,13 +10,13 @@
   },
   "dependencies": {
     "next": "15.2.5",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "smarthr-ui": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.1",
-    "@types/node": "^20.19.7",
+    "@types/node": "^20.19.9",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^19.1.6",
     "postcss": "^8.5.6",

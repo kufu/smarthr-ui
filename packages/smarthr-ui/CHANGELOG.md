@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [75.3.0](https://github.com/kufu/smarthr-ui/compare/v75.2.1...v75.3.0) (2025-08-05)
+
+
+### Features
+
+* Buttonにvariant=tertiaryを追加 ([#5777](https://github.com/kufu/smarthr-ui/issues/5777)) ([7a53478](https://github.com/kufu/smarthr-ui/commit/7a53478e3dc973751e66407fc117093d5a1d1c33))
+
+
+### Bug Fixes
+
+* a11y担保のためDropZone内のinput要素をdisplay:noneではなくvisually hiddenで非表示にする ([#5815](https://github.com/kufu/smarthr-ui/issues/5815)) ([d1a0248](https://github.com/kufu/smarthr-ui/commit/d1a02489a9fba500bf110cf484bb70bde22086a8))
+* **Fieldset:** アクセシブルネームの計算にtitle属性を含めるのをやめる ([#5812](https://github.com/kufu/smarthr-ui/issues/5812)) ([e273719](https://github.com/kufu/smarthr-ui/commit/e273719fee392965ee9057210b3755b972f5b355))
+* **InputFile:** ファイル名が長いときに削除ボタンが見えなくなってしまうのを修正 ([#5795](https://github.com/kufu/smarthr-ui/issues/5795)) ([7447fa4](https://github.com/kufu/smarthr-ui/commit/7447fa4efcd0f89ea64f5f8c76b88d4b7d90d8ee))
+
+### [75.2.1](https://github.com/kufu/smarthr-ui/compare/v75.2.0...v75.2.1) (2025-07-29)
+
+## [75.2.0](https://github.com/kufu/smarthr-ui/compare/v75.1.1...v75.2.0) (2025-07-22)
+
+
+### Features
+
+* **FileViewer:** 読み込みエラー時のハンドラーを追加した ([#5798](https://github.com/kufu/smarthr-ui/issues/5798)) ([13bf4f4](https://github.com/kufu/smarthr-ui/commit/13bf4f40966dc76ed7cacb8c3765ca6380d4665b))
+
+
+### Bug Fixes
+
+* **Fieldset:** legendの文字を可視ラベルを持たないフォームコントロール要素のアクセシブルネームに追加する ([#5783](https://github.com/kufu/smarthr-ui/issues/5783)) ([22f9778](https://github.com/kufu/smarthr-ui/commit/22f97788b5601f566d8a37c56a19f8d2d3b69e2d))
+
 ### [75.1.1](https://github.com/kufu/smarthr-ui/compare/v75.1.0...v75.1.1) (2025-07-15)
 
 

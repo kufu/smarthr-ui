@@ -218,7 +218,9 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <li key={index} className={classNames.fileItem}>
-                <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
+                <span className="smarthr-ui-InputFile-fileName shr-wrap-break-word shr-min-w-[0]">
+                  {file.name}
+                </span>
                 <Button
                   variant="text"
                   prefix={<FaTrashCanIcon />}

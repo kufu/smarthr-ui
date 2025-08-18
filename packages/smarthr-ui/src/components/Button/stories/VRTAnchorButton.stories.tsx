@@ -4,11 +4,10 @@ import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
-import { Button } from '../Button'
 
 import type { StoryFn, StoryObj } from '@storybook/react'
 
-type Variant = ComponentProps<typeof Button>['variant']
+type Variant = ComponentProps<typeof AnchorButton>['variant']
 
 /**
  * $ pict anchor-button.txt

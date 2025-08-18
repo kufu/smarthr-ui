@@ -19,7 +19,7 @@ const classNameGenerator = tv({
       'shr-flex shr-justify-center shr-px-1 shr-py-0.75',
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
-    wrapper: 'shr-p-0',
+    wrapper: 'shr-w-min shr-p-0',
     radio: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
   },
 })
@@ -38,8 +38,7 @@ export const TdRadioButton = forwardRef<HTMLInputElement, Props>(
 
     return (
       // Td に必要な属性やイベントは不要
-      // contentWidth={0} で td をテーブルの計算上最小幅にする
-      <Td contentWidth={0} vAlign={vAlign} className={classNames.wrapper}>
+      <Td vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
           <RadioButton {...rest} ref={ref} className={classNames.radio} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
