@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [75.3.1](https://github.com/kufu/smarthr-ui/compare/v75.3.0...v75.3.1) (2025-08-19)
+
 ## [75.3.0](https://github.com/kufu/smarthr-ui/compare/v75.2.1...v75.3.0) (2025-08-05)
 
 
