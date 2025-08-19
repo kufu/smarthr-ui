@@ -1,3 +1,5 @@
+import type { ja } from '.'
+
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
@@ -99,4 +101,4 @@ export const locale = {
   'smarthr-ui/Th/sortDirectionNone': '无排序',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '选择/取消所有项目',
   'smarthr-ui/ThCheckbox/checkColumnName': '选择',
-} as const
+} as const satisfies Record<keyof typeof ja, string>
