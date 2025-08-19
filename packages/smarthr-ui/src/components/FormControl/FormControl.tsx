@@ -307,22 +307,29 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     const legendText = innerText(title)
     if (!legendText) return
 
-    const labels = new Set(
-      Array.from(document.querySelectorAll('label[for]')).map((label) => label.getAttribute('for')),
+    const labelMap = new Map(
+      Array.from(document.querySelectorAll('label[for]')).map((label) => [
+        label.getAttribute('for'),
+        label,
+      ]),
     )
 
     inputs.forEach((input) => {
       const inputId = input.getAttribute('id')
-      if (inputId && labels.has(inputId)) {
-        return
+      let accessibleName = input.getAttribute('aria-label')
+
+      if (!accessibleName) {
+        const label = labelMap.get(inputId)
+        if (!label?.closest('.smarthr-ui-VisuallyHiddenText')) {
+          // HINT: <label> があり、かつ <VisuallyHiddenText> でラップされていない場合
+          return
+        }
+
+        accessibleName = label.textContent || ''
       }
 
-      const accessibleName = input.hasAttribute('aria-label')
-        ? input.getAttribute('aria-label')
-        : null
-
       if (accessibleName && !accessibleName.includes(legendText)) {
-        input.setAttribute('aria-label', `${accessibleName} ${legendText} `.trim())
+        input.setAttribute('aria-label', `${accessibleName} ${legendText}`.trim())
       }
     })
   }, [isFieldset, title])
