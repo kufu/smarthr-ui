@@ -64,7 +64,7 @@ export const MobileHeader: FC<HeaderProps> = ({
         >
           <Header
             {...props}
-            className={`${className} min-[752px]:!shr-hidden`}
+            className={`${className} default:!shr-hidden`}
             tenants={isMenuAvailable ? undefined : tenants}
           >
             {children}
