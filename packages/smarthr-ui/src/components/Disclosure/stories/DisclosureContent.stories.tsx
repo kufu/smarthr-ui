@@ -1,5 +1,6 @@
 import { Button } from '../../Button'
-import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
+import { DisclosureContent } from '../DisclosureContent'
+import { DisclosureTrigger } from '../DisclosureTrigger'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
