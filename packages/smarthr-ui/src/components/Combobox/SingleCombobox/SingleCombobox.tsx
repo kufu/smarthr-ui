@@ -219,12 +219,12 @@ const ActualSingleCombobox = <T,>(
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (!selectedItem && defaultItem) {
-      setInputValue(innerText(defaultItem.label))
-
+    if (selectedItem) {
+      setInputValue(innerText(selectedItem.label))
+    } else {
       selectDefaultItem()
     }
-  }, [isFocused, onBlur, selectedItem, defaultItem, selectDefaultItem])
+  }, [isFocused, onBlur, selectedItem, selectDefaultItem])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
@@ -342,14 +342,14 @@ const ActualSingleCombobox = <T,>(
   )
 
   useEffect(() => {
-    setInputValue(selectedItem ? innerText(selectedItem.label) : '')
+    setInputValue(innerText(selectedItem?.label))
+  }, [selectedItem])
 
+  useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
-    } else if (!selectedItem) {
-      selectDefaultItem()
     }
-  }, [isFocused, selectedItem, selectDefaultItem])
+  }, [isFocused])
 
   const wrapperStyle = useMemo(
     () => ({
