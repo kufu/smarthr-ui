@@ -203,7 +203,7 @@ const ActualSingleCombobox = <T,>(
 
   const focus = useCallback(() => {
     onFocus?.()
-
+    inputRef.current?.focus()
     setIsFocused(true)
 
     if (!isFocused) {
@@ -344,12 +344,6 @@ const ActualSingleCombobox = <T,>(
   useEffect(() => {
     setInputValue(innerText(selectedItem?.label))
   }, [selectedItem])
-
-  useEffect(() => {
-    if (isFocused && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [isFocused])
 
   const wrapperStyle = useMemo(
     () => ({
