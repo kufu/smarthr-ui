@@ -341,9 +341,10 @@ const ActualSingleCombobox = <T,>(
     unfocus,
   )
 
+  const selectedItemLabelText = innerText(selectedItem?.label)
   useEffect(() => {
-    setInputValue(innerText(selectedItem?.label))
-  }, [selectedItem])
+    setInputValue(selectedItemLabelText)
+  }, [selectedItemLabelText])
 
   const wrapperStyle = useMemo(
     () => ({
