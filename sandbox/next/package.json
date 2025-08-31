@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "15.2.5",
+    "next": "15.4.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "smarthr-ui": "workspace:*"
