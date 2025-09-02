@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [75.3.2](https://github.com/kufu/smarthr-ui/compare/v75.3.1...v75.3.2) (2025-08-26)
+
+
+### Bug Fixes
+
+* **Fieldset:** dangerouslyTitleHiddenのFormControlで囲われていた場合の考慮漏れに対応 ([#5816](https://github.com/kufu/smarthr-ui/issues/5816)) ([a51eac4](https://github.com/kufu/smarthr-ui/commit/a51eac4cc8283059fd44a071d4dda8333e2dc894))
+
+### [75.3.1](https://github.com/kufu/smarthr-ui/compare/v75.3.0...v75.3.1) (2025-08-19)
+
 ## [75.3.0](https://github.com/kufu/smarthr-ui/compare/v75.2.1...v75.3.0) (2025-08-05)
 
 
