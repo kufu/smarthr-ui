@@ -155,7 +155,7 @@ test.describe('RSC非対応コンポーネントはRSCでエラーになるこ�
   for (const component of DISABLED_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
-      await expect(page.getByText(/Server Error|Unhandled Runtime Error/)).toBeVisible()
+      await expect(page.getByText(/Server Error|Unhandled Runtime Error|Runtime Error/)).toBeVisible()
       await expect(page.getByText('This is server component')).not.toBeVisible()
       await expect(page.getByText('This is client component')).not.toBeVisible()
     })
