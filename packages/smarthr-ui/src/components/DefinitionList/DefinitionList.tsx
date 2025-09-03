@@ -2,6 +2,7 @@ import {
   Children,
   type ComponentProps,
   type FC,
+  Fragment,
   type PropsWithChildren,
   type ReactElement,
   cloneElement,
@@ -55,15 +56,21 @@ export const DefinitionList: FC<Props & ElementProps> = ({
             termStyleType={termStyleType}
           />
         ))}
-      {Children.map(
-        children,
-        (child) =>
-          isValidElement(child) &&
-          cloneElement(child as ReactElement, {
-            maxColumns,
-            termStyleType,
-          }),
-      )}
+      {Children.toArray(children)
+        .flatMap((child) => {
+          if (isValidElement(child) && child.type === Fragment) {
+            return Children.toArray(child.props.children)
+          }
+          return child
+        })
+        .map((child) =>
+          isValidElement(child)
+            ? cloneElement(child as ReactElement, {
+                maxColumns,
+                termStyleType,
+              })
+            : child,
+        )}
     </Cluster>
   )
 }
