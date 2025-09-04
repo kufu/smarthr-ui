@@ -5,6 +5,7 @@ import {
   Fragment,
   type PropsWithChildren,
   type ReactElement,
+  type ReactNode,
   cloneElement,
   isValidElement,
   useMemo,
@@ -36,6 +37,38 @@ const classNameGenerator = tv({
   base: 'smarthr-ui-DefinitionList shr-my-[initial]',
 })
 
+// children のうち DefinitionListItem にだけ maxColumns / termStyleType を注入して返す
+function childrenToItems(
+  children: ReactNode,
+  extra: Pick<ItemType, 'maxColumns' | 'termStyleType'>,
+): ReactNode[] {
+  const out: ReactNode[] = []
+
+  const walk = (nodes: ReactNode) => {
+    Children.forEach(nodes, (child) => {
+      if (!isValidElement(child)) {
+        out.push(child)
+        return
+      }
+
+      if (child.type === Fragment) {
+        walk(child.props.children) // Fragment は再帰的に展開
+        return
+      }
+
+      // DefinitionListItem にだけ追加 props を注入
+      if (child.type === DefinitionListItem) {
+        out.push(cloneElement(child, extra))
+      } else {
+        out.push(child) // 他の要素はそのまま
+      }
+    })
+  }
+
+  walk(children)
+  return out
+}
+
 export const DefinitionList: FC<Props & ElementProps> = ({
   items,
   maxColumns,
@@ -56,21 +89,7 @@ export const DefinitionList: FC<Props & ElementProps> = ({
             termStyleType={termStyleType}
           />
         ))}
-      {Children.toArray(children)
-        .flatMap((child) => {
-          if (isValidElement(child) && child.type === Fragment) {
-            return Children.toArray(child.props.children)
-          }
-          return child
-        })
-        .map((child) =>
-          isValidElement(child)
-            ? cloneElement(child as ReactElement, {
-                maxColumns,
-                termStyleType,
-              })
-            : child,
-        )}
+      {childrenToItems(children, { maxColumns, termStyleType })}
     </Cluster>
   )
 }
