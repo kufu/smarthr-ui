@@ -71,7 +71,7 @@ jobs:
           branch: 'merge-release-${{ env.NEW_TAG }}'
           labels: release candidate
       - name: Send message to Slack
-        uses: slackapi/slack-github-action@v2.1.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger
