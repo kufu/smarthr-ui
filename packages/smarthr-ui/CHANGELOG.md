@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [75.4.0](https://github.com/kufu/smarthr-ui/compare/v75.3.2...v75.4.0) (2025-09-09)
+
+
+### Features
+
+* add new icons: FaAt ([#5835](https://github.com/kufu/smarthr-ui/issues/5835)) ([a752cad](https://github.com/kufu/smarthr-ui/commit/a752cadc9a4de71c244f6905507b7a299bc90b90))
+* SideMenuItemにsuffix機能を追加 ([#5828](https://github.com/kufu/smarthr-ui/issues/5828)) ([f955efd](https://github.com/kufu/smarthr-ui/commit/f955efd490c9afc22a3e0e0ceb43870df5c52621))
+
+
+### Bug Fixes
+
+* DisclosureContent / DisclosureTriggerでDOMの順序にかかわらずisOpenが反映されるよう修正 ([#5830](https://github.com/kufu/smarthr-ui/issues/5830)) ([f3f497c](https://github.com/kufu/smarthr-ui/commit/f3f497c802bc979f7125d8c08de6f65287972ce1))
+* RangeSeparatorを非推奨化する ([#5829](https://github.com/kufu/smarthr-ui/issues/5829)) ([32dfcae](https://github.com/kufu/smarthr-ui/commit/32dfcae1bc8cf81cc1bede17a891a72abc4aeb81))
+
 ### [75.3.2](https://github.com/kufu/smarthr-ui/compare/v75.3.1...v75.3.2) (2025-08-26)
 
 
