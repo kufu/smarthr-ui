@@ -19,6 +19,7 @@ import {
   FaArrowUpWideShort,
   FaArrowsRotate,
   FaAsterisk,
+  FaAt,
   FaBabyCarriage,
   FaBan,
   FaBars,
@@ -221,6 +222,7 @@ export const FaArrowUpIcon = /*#__PURE__*/ generateIcon(FaArrowUp)
 export const FaArrowUpWideShortIcon = /*#__PURE__*/ generateIcon(FaArrowUpWideShort)
 export const FaArrowsRotateIcon = /*#__PURE__*/ generateIcon(FaArrowsRotate)
 export const FaAsteriskIcon = /*#__PURE__*/ generateIcon(FaAsterisk)
+export const FaAtIcon = /*#__PURE__*/ generateIcon(FaAt)
 export const FaBabyCarriageIcon = /*#__PURE__*/ generateIcon(FaBabyCarriage)
 export const FaBanIcon = /*#__PURE__*/ generateIcon(FaBan)
 export const FaBarsIcon = /*#__PURE__*/ generateIcon(FaBars)
