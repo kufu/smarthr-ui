@@ -164,7 +164,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
   const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
-  const stepText = `（${activeStep}/${stepLength}）`
+  const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
