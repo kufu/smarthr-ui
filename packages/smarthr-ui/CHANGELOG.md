@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [75.4.1](https://github.com/kufu/smarthr-ui/compare/v75.4.0...v75.4.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* **StepFormDialog:** ステップ数が1だったときはstepTextを表示しない ([#5843](https://github.com/kufu/smarthr-ui/issues/5843)) ([e52c2e3](https://github.com/kufu/smarthr-ui/commit/e52c2e3e8e678a04f9db38d05d4cee8802414275))
+
 ## [75.4.0](https://github.com/kufu/smarthr-ui/compare/v75.3.2...v75.4.0) (2025-09-09)
 
 
