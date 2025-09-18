@@ -9,7 +9,7 @@ const FaAddressBookIcon = Icons.FaAddressBookIcon
 export default {
   title: 'Components/Icon',
   component: FaAddressBookIcon,
-  render: (args) => <FaAddressBookIcon {...args} />,
+  render: (args) => <FaAddressBookIcon aria-hidden={true} {...args} />,
   argTypes: {
     color: {
       options: Object.keys(colorSet),
@@ -52,15 +52,15 @@ export const Color: StoryObj<typeof FaAddressBookIcon> = {
   name: 'color',
   render: (args) => (
     <Cluster>
-      <FaAddressBookIcon {...args} color="TEXT_BLACK" />
-      <FaAddressBookIcon {...args} color="TEXT_WHITE" />
-      <FaAddressBookIcon {...args} color="TEXT_GREY" />
-      <FaAddressBookIcon {...args} color="TEXT_DISABLED" />
-      <FaAddressBookIcon {...args} color="TEXT_LINK" />
-      <FaAddressBookIcon {...args} color="MAIN" />
-      <FaAddressBookIcon {...args} color="DANGER" />
-      <FaAddressBookIcon {...args} color="WARNING" />
-      <FaAddressBookIcon {...args} color="BRAND" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="TEXT_BLACK" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="TEXT_WHITE" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="TEXT_GREY" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="TEXT_DISABLED" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="TEXT_LINK" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="MAIN" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="DANGER" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="WARNING" />
+      <FaAddressBookIcon aria-hidden={true} {...args} color="BRAND" />
     </Cluster>
   ),
 }
@@ -86,8 +86,8 @@ export const IconGap: StoryObj<typeof FaAddressBookIcon> = {
   },
   render: (args) => (
     <Stack>
-      <FaAddressBookIcon {...args} iconGap={0.25} />
-      <FaAddressBookIcon {...args} iconGap={0.5} />
+      <FaAddressBookIcon aria-hidden={true} {...args} iconGap={0.25} />
+      <FaAddressBookIcon aria-hidden={true} {...args} iconGap={0.5} />
     </Stack>
   ),
 }

@@ -239,7 +239,7 @@ const DropdownMenuLabel = memo<
           <img src={accountImageUrl} className={accountImageClassName} aria-hidden />
         ) : (
           <span className={placeHolderImageClassName}>
-            <FaUserIcon color="TEXT_GREY" />
+            <FaUserIcon aria-hidden={true} color="TEXT_GREY" />
           </span>
         )}
 
@@ -284,7 +284,7 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        prefix={<FaGearIcon />}
+        prefix={<FaGearIcon aria-hidden={true} />}
         className={className}
       >
         <Translate>{children}</Translate>
@@ -295,7 +295,7 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
 const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => (
     <DropdownTrigger>
-      <Button variant="text" suffix={<FaCaretDownIcon />} className={className}>
+      <Button variant="text" suffix={<FaCaretDownIcon aria-hidden={true} />} className={className}>
         <Translate>{children}</Translate>
       </Button>
     </DropdownTrigger>
@@ -310,7 +310,7 @@ const AccountLink = memo<PropsWithChildren<{ href?: string | null }>>(
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        prefix={<FaGearIcon />}
+        prefix={<FaGearIcon aria-hidden={true} />}
       >
         <Translate>{children}</Translate>
       </CommonButton>

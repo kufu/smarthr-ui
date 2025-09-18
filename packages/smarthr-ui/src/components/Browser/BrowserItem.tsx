@@ -101,6 +101,6 @@ export const BrowserItem: FC<Props> = ({
 const BodyCluster = memo<{ label: string; hasChildren: boolean }>(({ label, hasChildren }) => (
   <Cluster align="center" justify="space-between" as="span">
     <Text>{label}</Text>
-    {hasChildren && <FaAngleRightIcon />}
+    {hasChildren && <FaAngleRightIcon aria-hidden={true} />}
   </Cluster>
 ))

@@ -202,7 +202,11 @@ const BaseDestroyButton = <T,>({
       <VisuallyHiddenText id={suffixTextId}>
         {decorated.destroyButtonIconAltSuffix}
       </VisuallyHiddenText>
-      <FaTimesCircleIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
+      <FaTimesCircleIcon
+        aria-hidden={true}
+        color={disabled ? 'TEXT_DISABLED' : 'inherit'}
+        className={iconStyle}
+      />
     </UnstyledButton>
   )
 }

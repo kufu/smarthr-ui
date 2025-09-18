@@ -200,8 +200,12 @@ const MemoizedTitle = memo<
   }>
 >(({ classNames, iconPosition, children }) => (
   <Cluster className={classNames.titleWrapper} align="center" as="span">
-    {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
+    {iconPosition === 'left' && (
+      <FaCaretRightIcon aria-hidden={true} className={classNames.leftIcon} />
+    )}
     <span className={classNames.title}>{children}</span>
-    {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
+    {iconPosition === 'right' && (
+      <FaCaretDownIcon aria-hidden={true} className={classNames.rightIcon} />
+    )}
   </Cluster>
 ))

@@ -19,6 +19,6 @@ export const MenuButton = memo<Props>(({ children, onClick, isCurrent }) => (
     className="[&&]:shr-justify-between [&&]:shr-px-0.5"
   >
     <Translate>{children}</Translate>
-    <FaAngleRightIcon color="TEXT_BLACK" />
+    <FaAngleRightIcon aria-hidden={true} color="TEXT_BLACK" />
   </CommonButton>
 ))

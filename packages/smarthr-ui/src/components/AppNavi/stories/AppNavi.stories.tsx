@@ -73,7 +73,7 @@ export const AdditionalArea: StoryObj<typeof AppNavi> = {
     additionalArea: (
       <Cluster align="center">
         <Text size="S">最終同期： 2024/11/21 10:13</Text>
-        <Button size="s" prefix={<FaArrowsRotateIcon />}>
+        <Button size="s" prefix={<FaArrowsRotateIcon aria-hidden={true} />}>
           データを同期
         </Button>
       </Cluster>

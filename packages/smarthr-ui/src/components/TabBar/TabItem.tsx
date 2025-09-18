@@ -76,7 +76,7 @@ export const TabItem: FC<Props & ElementProps> = ({
   }
 
   if (rest.disabled && disabledDetail) {
-    const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+    const Icon = disabledDetail.icon || <FaCircleInfoIcon aria-hidden={true} color="TEXT_GREY" />
 
     return (
       <Tooltip

@@ -29,12 +29,12 @@ export const Current: StoryObj<typeof SideMenuItem> = {
 
 export const Prefix: StoryObj<typeof SideMenuItem> = {
   args: {
-    prefix: <FaMessageIcon />,
+    prefix: <FaMessageIcon aria-hidden={true} />,
   },
 }
 
 export const Suffix: StoryObj<typeof SideMenuItem> = {
   args: {
-    suffix: <FaMessageIcon />,
+    suffix: <FaMessageIcon aria-hidden={true} />,
   },
 }

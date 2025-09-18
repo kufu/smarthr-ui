@@ -28,7 +28,7 @@ export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
 
   return (
     <div className={actualClassName}>
-      <TextLink {...rest} prefix={<FaArrowLeftIcon />} />
+      <TextLink {...rest} prefix={<FaArrowLeftIcon aria-hidden={true} />} />
     </div>
   )
 })

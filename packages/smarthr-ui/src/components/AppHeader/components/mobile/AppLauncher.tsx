@@ -116,7 +116,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
 
 const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
   <UnstyledButton onClick={onClick}>
-    <FaCircleXmarkIcon />
+    <FaCircleXmarkIcon alt="削除" />
   </UnstyledButton>
 ))
 

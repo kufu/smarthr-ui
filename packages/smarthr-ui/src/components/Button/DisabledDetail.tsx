@@ -58,7 +58,7 @@ const TooltipIcon = memo<{
 
   return (
     <Tooltip message={message} triggerType="icon" className={className}>
-      <DisabledDetailIcon />
+      <DisabledDetailIcon aria-hidden={true} />
     </Tooltip>
   )
 })

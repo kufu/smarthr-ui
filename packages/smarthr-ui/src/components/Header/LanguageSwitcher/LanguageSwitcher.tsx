@@ -195,7 +195,7 @@ const LanguageListItemButton = memo<{
       value={code}
       onClick={onClick}
       wide
-      prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
+      prefix={current ? <FaCheckIcon aria-hidden={true} color="MAIN" alt={iconAlt} /> : null}
       className={buttonStyle}
     >
       {children}
@@ -208,13 +208,13 @@ const MemoizedDropdownTrigger = memo<
 >(({ narrow, invert, className, label }) => (
   <DropdownTrigger>
     {narrow ? (
-      <Button suffix={<FaCaretDownIcon />} className={className}>
-        {invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />}
+      <Button suffix={<FaCaretDownIcon aria-hidden={true} />} className={className}>
+        {invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon aria-hidden={true} alt={label} />}
       </Button>
     ) : (
       <Button
-        prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
-        suffix={<FaCaretDownIcon />}
+        prefix={invert ? <LanguageIcon /> : <FaGlobeIcon aria-hidden={true} />}
+        suffix={<FaCaretDownIcon aria-hidden={true} />}
         className={className}
       >
         {label}

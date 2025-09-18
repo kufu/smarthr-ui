@@ -154,7 +154,7 @@ export const Content: FC<
           )}
 
           <Button variant="secondary" size="s" onClick={dialogClose}>
-            <FaXmarkIcon alt={translated.closeMenu} />
+            <FaXmarkIcon aria-hidden={true} alt={translated.closeMenu} />
           </Button>
         </Cluster>
       </div>

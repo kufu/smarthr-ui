@@ -305,7 +305,12 @@ export const useListbox = <T,>({
           >
             {dropdownHelpMessage && (
               <p className={classNames.helpMessage}>
-                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
+                <FaInfoCircleIcon
+                  aria-hidden={true}
+                  color="TEXT_GREY"
+                  text={dropdownHelpMessage}
+                  iconGap={0.25}
+                />
               </p>
             )}
             {isExpanded ? (

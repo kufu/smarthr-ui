@@ -107,7 +107,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
                   elementAs="button"
                   type="button"
                   onClick={dialogOpen}
-                  prefix={<FaGlobeIcon />}
+                  prefix={<FaGlobeIcon aria-hidden={true} />}
                 >
                   Language
                 </CommonButton>
@@ -119,7 +119,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = 
                   href={accountUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  prefix={<FaGearIcon />}
+                  prefix={<FaGearIcon aria-hidden={true} />}
                 >
                   <Translate>{translated.userSetting}</Translate>
                 </CommonButton>

@@ -20,7 +20,7 @@ export default {
             <Header {...args} enableNew={enableNew} key={String(enableNew)}>
               <HeaderLink
                 href="https://support.smarthr.jp"
-                prefix={<FaRegCircleQuestionIcon />}
+                prefix={<FaRegCircleQuestionIcon aria-hidden={true} />}
                 enableNew={enableNew}
               >
                 ヘルプ

@@ -12,11 +12,11 @@ import { SegmentedControl } from '../SegmentedControl'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-const tableIcon = <FaTableIcon />
-const chartBarIcon = <FaChartBarIcon />
-const chartAreaIcon = <FaChartAreaIcon />
-const chartLineIcon = <FaChartLineIcon />
-const chartPieIcon = <FaChartPieIcon />
+const tableIcon = <FaTableIcon aria-hidden={true} />
+const chartBarIcon = <FaChartBarIcon aria-hidden={true} />
+const chartAreaIcon = <FaChartAreaIcon aria-hidden={true} />
+const chartLineIcon = <FaChartLineIcon aria-hidden={true} />
+const chartPieIcon = <FaChartPieIcon aria-hidden={true} />
 
 export default {
   title: 'Components/SegmentedControl',

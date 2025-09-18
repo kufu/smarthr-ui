@@ -134,8 +134,8 @@ const ActualFeatureButton: FC<
       <Button
         variant="secondary"
         wide
-        prefix={<FaToolboxIcon />}
-        suffix={<FaAngleRightIcon className="shr-ms-auto" />}
+        prefix={<FaToolboxIcon aria-hidden={true} />}
+        suffix={<FaAngleRightIcon aria-hidden={true} className="shr-ms-auto" />}
         onClick={onClick}
       >
         <Translate>{children}</Translate>

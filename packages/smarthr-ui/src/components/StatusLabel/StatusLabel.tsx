@@ -91,9 +91,9 @@ const Icon: FC<Pick<Props, 'type' | 'bold'>> = ({ type, bold }) => {
   if (bold) {
     switch (type) {
       case 'warning':
-        return <FaTriangleExclamationIcon />
+        return <FaTriangleExclamationIcon aria-hidden={true} />
       case 'error':
-        return <FaCircleExclamationIcon />
+        return <FaCircleExclamationIcon aria-hidden={true} />
     }
   }
 

@@ -6,13 +6,13 @@ import type { Meta, StoryObj } from '@storybook/react'
 const _prefixOptions = {
   なし: undefined,
   string: '￥',
-  ReactNode: <FaMoneyCheckDollarIcon />,
+  ReactNode: <FaMoneyCheckDollarIcon aria-hidden={true} />,
 }
 
 const _suffixOptions = {
   なし: undefined,
   string: '円',
-  ReactNode: <FaMoneyCheckDollarIcon />,
+  ReactNode: <FaMoneyCheckDollarIcon aria-hidden={true} />,
 }
 
 export default {

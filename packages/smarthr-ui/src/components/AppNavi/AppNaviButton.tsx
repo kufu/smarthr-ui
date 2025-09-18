@@ -44,7 +44,7 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
       onClick={onClick}
       className={classNames.wrapper}
     >
-      {Icon && <Icon className={classNames.icon} />}
+      {Icon && <Icon aria-hidden={true} className={classNames.icon} />}
       {children}
     </UnstyledButton>
   )

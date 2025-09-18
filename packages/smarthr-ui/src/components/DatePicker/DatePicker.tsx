@@ -406,7 +406,7 @@ const InputSuffixIcon = memo<{
   <span className={classNames.inputSuffixLayout}>
     <span className={classNames.inputSuffixWrapper}>
       {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
-      <FaCalendarAltIcon color={caretIconColor} />
+      <FaCalendarAltIcon aria-hidden={true} color={caretIconColor} />
     </span>
   </span>
 ))

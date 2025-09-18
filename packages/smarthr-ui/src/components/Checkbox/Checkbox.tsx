@@ -133,9 +133,9 @@ const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClass
   ({ mixed, className, iconClassName }) => (
     <span className={className}>
       {mixed ? (
-        <FaMinusIcon className={iconClassName} />
+        <FaMinusIcon aria-hidden={true} className={iconClassName} />
       ) : (
-        <FaCheckIcon className={iconClassName} />
+        <FaCheckIcon aria-hidden={true} className={iconClassName} />
       )}
     </span>
   ),

@@ -6,9 +6,9 @@ import { Option, SegmentedControl } from '../SegmentedControl'
 
 import type { StoryObj } from '@storybook/react'
 
-const chartBarIcon = <FaChartBarIcon />
-const chartAreaIcon = <FaChartAreaIcon />
-const chartLineIcon = <FaChartLineIcon />
+const chartBarIcon = <FaChartBarIcon aria-hidden={true} />
+const chartAreaIcon = <FaChartAreaIcon aria-hidden={true} />
+const chartLineIcon = <FaChartLineIcon aria-hidden={true} />
 
 const textOptions = (disabled: boolean): Option[] => [
   { value: '1', content: '部署', disabled },

@@ -26,7 +26,7 @@ export const Playground: StoryObj<typeof HeaderLink> = {
 export const Prefix: StoryObj<typeof HeaderLink> = {
   name: 'prefix',
   args: {
-    prefix: <FaRegCircleQuestionIcon />,
+    prefix: <FaRegCircleQuestionIcon aria-hidden={true} />,
   },
 }
 
@@ -34,7 +34,7 @@ export const EnableNew: StoryObj<typeof HeaderLink> = {
   name: 'enableNew',
   render: (args) => <HeaderLink {...args}>ヘルプ</HeaderLink>,
   args: {
-    prefix: <FaRegCircleQuestionIcon />,
+    prefix: <FaRegCircleQuestionIcon aria-hidden={true} />,
     enableNew: true,
   },
   parameters: {

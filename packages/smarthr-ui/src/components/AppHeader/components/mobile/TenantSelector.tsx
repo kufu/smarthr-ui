@@ -117,7 +117,7 @@ const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => 
     <DropdownTrigger>
       <button type="button" className={actualClassName}>
         {children}
-        <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
+        <FaCaretDownIcon aria-hidden={true} className="shr-ms-0.5" color="TEXT_BLACK" />
       </button>
     </DropdownTrigger>
   )

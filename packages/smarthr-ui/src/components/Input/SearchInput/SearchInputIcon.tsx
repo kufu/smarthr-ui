@@ -27,5 +27,5 @@ export const SearchInputIcon = ({ decorators }: Props) => {
 
   const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
-  return <FaMagnifyingGlassIcon alt={decorated.iconAlt} color="TEXT_GREY" />
+  return <FaMagnifyingGlassIcon aria-hidden={true} alt={decorated.iconAlt} color="TEXT_GREY" />
 }

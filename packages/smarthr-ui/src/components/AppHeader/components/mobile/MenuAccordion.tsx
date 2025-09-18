@@ -76,9 +76,9 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
           onClick={onClickButton}
         >
           {isOpen ? (
-            <FaCaretUpIcon alt={translated.close} />
+            <FaCaretUpIcon aria-hidden={true} alt={translated.close} />
           ) : (
-            <FaCaretDownIcon alt={translated.open} />
+            <FaCaretDownIcon aria-hidden={true} alt={translated.open} />
           )}
         </Button>
       </Cluster>

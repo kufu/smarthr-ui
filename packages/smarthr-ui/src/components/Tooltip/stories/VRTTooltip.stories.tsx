@@ -11,7 +11,7 @@ export default {
   render: (args) => (
     <Stack gap={8} align="flex-start" className="shr-p-4">
       <Tooltip {...args} triggerType="icon">
-        <FaCircleQuestionIcon alt="ツールチップ" />
+        <FaCircleQuestionIcon aria-hidden={true} alt="ツールチップ" />
       </Tooltip>
       <Tooltip
         {...args}

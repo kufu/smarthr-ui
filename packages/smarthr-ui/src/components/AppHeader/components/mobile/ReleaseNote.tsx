@@ -80,7 +80,7 @@ const ActualReleaseNote: FC<{
                 className={classNames.anchor}
               >
                 {link.title}
-                <FaUpRightFromSquareIcon className={classNames.icon} />
+                <FaUpRightFromSquareIcon className={classNames.icon} alt="別タブで開く" />
               </a>
             </div>
           ))}
@@ -95,7 +95,7 @@ const ActualReleaseNote: FC<{
           className={classNames.indexLinkAnchor}
         >
           <Translate>{translated.seeAll}</Translate>
-          <FaUpRightFromSquareIcon className={classNames.icon} />
+          <FaUpRightFromSquareIcon className={classNames.icon} alt="別タブで開く" />
         </a>
       </div>
     </div>

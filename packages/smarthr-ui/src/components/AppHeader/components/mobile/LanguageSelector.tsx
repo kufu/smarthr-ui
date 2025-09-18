@@ -91,7 +91,7 @@ const LocaleButton = memo<{
     type="button"
     value={value}
     onClick={onClick}
-    prefix={selected && <FaCheckIcon color="MAIN" />}
+    prefix={selected && <FaCheckIcon color="MAIN" alt="選択済み" />}
     className={className}
   >
     {localeMap[value]}

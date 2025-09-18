@@ -180,6 +180,7 @@ const Controller: FC<ControllerProps> = memo(
             className="shr-rounded-none shr-border-none"
           >
             <FaMagnifyingGlassMinusIcon
+              aria-hidden={true}
               alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
             />
           </Button>
@@ -206,12 +207,14 @@ const Controller: FC<ControllerProps> = memo(
           </DropdownMenuButton>
           <Button onClick={onClickScaleUpButton} className="shr-rounded-none shr-border-0">
             <FaMagnifyingGlassPlusIcon
+              aria-hidden={true}
               alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
             />
           </Button>
         </div>
         <Button onClick={onClickRotateButton} className="shr-p-0.75">
           <FaArrowRotateLeftIcon
+            aria-hidden={true}
             alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
           />
         </Button>

@@ -211,7 +211,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
                 </span>
                 <Button
                   variant="text"
-                  prefix={<FaTrashCanIcon />}
+                  prefix={<FaTrashCanIcon aria-hidden={true} />}
                   value={index}
                   onClick={handleDelete}
                   className="smarthr-ui-InputFile-deleteButton"
@@ -245,7 +245,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
-    <FaFolderOpenIcon />
+    <FaFolderOpenIcon aria-hidden={true} />
   </span>
 ))
 
