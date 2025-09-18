@@ -188,7 +188,7 @@ const SelectButton = memo<
   const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
 
   return (
-    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
+    <Button {...rest} prefix={<FaFolderOpenIcon aria-hidden={true} />} onClick={onClick}>
       {decorated.selectButtonLabel}
     </Button>
   )

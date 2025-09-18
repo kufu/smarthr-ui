@@ -21,7 +21,7 @@ export const MenuSubHeading = memo<Props>(({ title, onClickBack }) => {
   return (
     <>
       <Button size="s" onClick={onClickBack}>
-        <FaArrowLeftIcon alt={backButtonAriaLabel} />
+        <FaArrowLeftIcon aria-hidden={true} alt={backButtonAriaLabel} />
       </Button>
       <Heading type="blockTitle">
         <Translate>{title}</Translate>

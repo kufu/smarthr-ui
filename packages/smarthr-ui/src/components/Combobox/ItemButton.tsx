@@ -100,6 +100,7 @@ const AddButton = <T,>({
 
 const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
   <FaCirclePlusIcon
+    aria-hidden={true}
     color="TEXT_LINK"
     text={
       <Text color="TEXT_LINK">

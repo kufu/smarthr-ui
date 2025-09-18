@@ -455,7 +455,7 @@ const Handler = memo<{
 }>(({ onArrowKeyDown, ...rest }) => (
   // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
   <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
-    <FaGripIcon />
+    <FaGripIcon aria-hidden={true} />
   </div>
 ))
 
@@ -471,7 +471,7 @@ const CloseButton = memo<{
       onClick={onClick}
       className="smarthr-ui-ModelessDialog-closeButton"
     >
-      <FaXmarkIcon alt={iconAlt} />
+      <FaXmarkIcon aria-hidden={true} alt={iconAlt} />
     </Button>
   </div>
 ))

@@ -102,7 +102,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
               {schoolUrl && (
                 <HeaderLink
                   href={schoolUrl}
-                  prefix={<FaGraduationCapIcon />}
+                  prefix={<FaGraduationCapIcon aria-hidden={true} />}
                   className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
                 >
                   <Translate>{translated.school}</Translate>
@@ -114,7 +114,13 @@ export const DesktopHeader: FC<HeaderProps> = ({
           {helpPageUrl && (
             <HeaderLink
               href={helpPageUrl}
-              prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
+              prefix={
+                enableNew ? (
+                  <FaRegCircleQuestionIcon aria-hidden={true} />
+                ) : (
+                  <FaCircleQuestionIcon aria-hidden={true} />
+                )
+              }
               className={
                 enableNew ? undefined : 'shr-flex shr-items-center shr-py-0.75 shr-leading-none'
               }
@@ -164,7 +170,7 @@ const AppLauncherButton = memo<
   Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string }>
 >(({ enableNew, children, className }) => (
   <DropdownTrigger>
-    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className}>
+    <Button prefix={enableNew ?? <FaToolboxIcon aria-hidden={true} />} className={className}>
       <Translate>{children}</Translate>
     </Button>
   </DropdownTrigger>

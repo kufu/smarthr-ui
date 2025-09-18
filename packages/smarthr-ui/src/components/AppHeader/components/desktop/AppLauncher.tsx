@@ -211,7 +211,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
 
 const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
   <UnstyledButton onClick={onClick}>
-    <FaCircleXmarkIcon />
+    <FaCircleXmarkIcon alt="削除" />
   </UnstyledButton>
 ))
 
@@ -236,7 +236,7 @@ const SideNavs = memo<
       {
         id: 'favorite',
         title: translated.favorite,
-        prefix: <FaStarIcon color={isFavorite ? textColor.white : undefined} />,
+        prefix: <FaStarIcon color={isFavorite ? textColor.white : undefined} alt="お気に入り" />,
         current: isFavorite,
       },
     ],

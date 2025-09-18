@@ -177,8 +177,8 @@ const MemoizedDropdownTrigger = memo<
   return (
     <DropdownTrigger>
       <Button
-        prefix={enableNew ?? <FaToolboxIcon />}
-        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+        prefix={enableNew ?? <FaToolboxIcon aria-hidden={true} />}
+        suffix={enableNew ? <FaCaretDownIcon aria-hidden={true} /> : undefined}
         className={className}
       >
         {decorated.triggerLabel}

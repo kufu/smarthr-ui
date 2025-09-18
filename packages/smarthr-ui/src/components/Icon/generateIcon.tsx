@@ -54,16 +54,36 @@ type IconProps = {
 
 type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
 
+/** 代替テキストを指定するときのProps */
+type WithAltProps = {
+  alt: ReactNode
+  'aria-hidden'?: never
+  'aria-label'?: never
+}
+/** 装飾目的のアイコンのProps */
+type HiddenProps = {
+  alt?: never
+  'aria-hidden': true
+  'aria-label'?: never
+}
+/** 代替テキストの指定にaltではなくaria-labelを使用する箇所が多くあるため一時的に作成 */
+type WidthAriaLabelProps = {
+  alt?: never
+  'aria-label': string
+  'aria-hidden'?: never
+}
+/**
+ * アイコンの代替テキストを設定するか、aria-hiddenを指定するようにしています
+ */
 type BaseComponentProps = {
-  /**アイコンの説明テキスト*/
-  alt?: ReactNode
   /** アイコンと並べるテキスト */
   text?: ReactNode
   /** アイコンと並べるテキストとの溝 */
   iconGap?: CharRelativeSize | AbstractSize
   /** `true` のとき、アイコンを右側に表示する */
   right?: boolean
-}
+} & (WithAltProps | HiddenProps | WidthAriaLabelProps)
+
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass

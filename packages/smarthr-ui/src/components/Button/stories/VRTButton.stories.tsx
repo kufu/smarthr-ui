@@ -28,33 +28,50 @@ const Template: StoryFn = (args) => (
       (variant) => (
         <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
           <Cluster align="center">
-            <Button variant={variant} prefix={<FaCirclePlusIcon />}>
+            <Button variant={variant} prefix={<FaCirclePlusIcon aria-hidden={true} />}>
               ボタン
             </Button>
             <Button variant={variant}>
-              <FaCirclePlusIcon alt="ボタン" />
+              <FaCirclePlusIcon aria-hidden={true} alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" suffix={<FaCaretDownIcon />} wide>
+            <Button variant={variant} size="s" suffix={<FaCaretDownIcon aria-hidden={true} />} wide>
               ボタン
             </Button>
             <Button
               variant={variant}
               disabled
               disabledDetail={{ message: 'ボタンが無効な理由' }}
-              suffix={<FaCaretDownIcon />}
+              suffix={<FaCaretDownIcon aria-hidden={true} />}
             >
               ボタン
             </Button>
-            <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
+            <Button variant={variant} loading suffix={<FaCaretDownIcon aria-hidden={true} />} wide>
               ボタン
             </Button>
-            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />} wide>
-              <FaCirclePlusIcon alt="ボタン" />
+            <Button
+              variant={variant}
+              size="s"
+              loading
+              prefix={<FaCirclePlusIcon aria-hidden={true} />}
+              wide
+            >
+              <FaCirclePlusIcon aria-hidden={true} alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" disabled prefix={<FaCirclePlusIcon />} wide>
-              <FaCirclePlusIcon alt="ボタン" />
+            <Button
+              variant={variant}
+              size="s"
+              disabled
+              prefix={<FaCirclePlusIcon aria-hidden={true} />}
+              wide
+            >
+              <FaCirclePlusIcon aria-hidden={true} alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />}>
+            <Button
+              variant={variant}
+              size="s"
+              loading
+              prefix={<FaCirclePlusIcon aria-hidden={true} />}
+            >
               ボタン
             </Button>
             <Button
@@ -62,7 +79,7 @@ const Template: StoryFn = (args) => (
               size="s"
               disabled
               disabledDetail={{ message: 'ボタンが無効な理由' }}
-              prefix={<FaCirclePlusIcon />}
+              prefix={<FaCirclePlusIcon aria-hidden={true} />}
             >
               ボタン
             </Button>

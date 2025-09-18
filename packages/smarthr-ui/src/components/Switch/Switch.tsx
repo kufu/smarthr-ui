@@ -113,7 +113,7 @@ const MemoizedLabel = memo<
 const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
   ({ className, iconClassName }) => (
     <span className={className}>
-      <FaCheckIcon className={iconClassName} size="XXS" />
+      <FaCheckIcon aria-hidden={true} className={iconClassName} size="XXS" />
     </span>
   ),
 )

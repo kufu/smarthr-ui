@@ -258,6 +258,7 @@ const CloseButton = memo<Pick<ActualProps, 'onClose'> & { className: string }>(
     onClose && (
       <Button variant="text" size="s" onClick={onClose} className={className}>
         <FaXmarkIcon
+          aria-hidden={true}
           alt={
             <Localizer id="smarthr-ui/NotificationBar/closeButtonIconAlt" defaultText="閉じる" />
           }

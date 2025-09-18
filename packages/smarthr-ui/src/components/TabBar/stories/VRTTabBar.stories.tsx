@@ -59,7 +59,7 @@ export default {
               id="tab5"
               onClick={action('clicked')}
               selected
-              suffix={<FaCircleExclamationIcon color="DANGER" />}
+              suffix={<FaCircleExclamationIcon aria-hidden={true} color="DANGER" />}
               disabledDetail={{ message: 'タブが無効な理由' }}
             >
               タブ5
