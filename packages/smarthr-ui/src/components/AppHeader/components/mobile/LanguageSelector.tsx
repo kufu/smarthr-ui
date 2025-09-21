@@ -1,11 +1,11 @@
 import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type Locale, localeMap } from '../../../../intl/localeMap'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { type Locale, localeMap } from '../../multilingualization'
 import { CommonButton } from '../common/CommonButton'
 
 import type { LocaleProps } from '../../types'

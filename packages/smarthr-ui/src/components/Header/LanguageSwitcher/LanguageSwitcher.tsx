@@ -18,11 +18,11 @@ import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
 
-import type { LocaleMap } from '../../../types'
+import type { Locale } from '../../../intl/localeMap'
 
 export type Props = {
   narrow?: boolean
-  localeMap: LocaleMap
+  localeMap: Partial<Record<Locale, string>>
   locale?: string
   defaultLocale?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
