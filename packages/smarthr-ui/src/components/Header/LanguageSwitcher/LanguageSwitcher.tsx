@@ -109,13 +109,13 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const { localize } = useIntl()
+  const { localize, availableLocales } = useIntl()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
-      locales: Object.entries(localeMap),
+      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
-    [localeMap],
+    [localeMap, availableLocales],
   )
 
   const decoratorDefaultTexts = useMemo(
