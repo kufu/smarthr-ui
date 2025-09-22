@@ -1,11 +1,9 @@
-import { action } from 'storybook/actions'
 import { Meta, StoryObj } from '@storybook/react/*'
 import { within } from 'storybook/test'
 
 import { AppHeader } from '../AppHeader'
 
 import { args } from './args'
-import { Locale } from '../../../intl/localeMap'
 
 const meta = {
   title: 'Components/AppHeader/VRT',
@@ -171,12 +169,6 @@ export const VRTLocaleEnUs: Story = {
   },
 }
 
-export const VRTLocaleIdId: Story = {
-  globals: {
-    locale: 'id-id',
-  },
-}
-
 export const VRTLocalePt: Story = {
   globals: {
     locale: 'pt',
@@ -204,5 +196,11 @@ export const VRTLocaleZhCn: Story = {
 export const VRTLocaleZhTw: Story = {
   globals: {
     locale: 'zh-tw',
+  },
+}
+
+export const VRTLocaleIdId: Story = {
+  globals: {
+    locale: 'id-id',
   },
 }
