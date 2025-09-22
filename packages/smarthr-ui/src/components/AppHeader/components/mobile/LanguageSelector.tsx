@@ -27,8 +27,8 @@ type Props = {
   onClickClose: () => void
 }
 
-export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
-  const { availableLocales } = useIntl()
+export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose }) => {
+  const { locale, availableLocales } = useIntl()
   const { locales } = useMemo(
     () => ({
       locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
@@ -48,9 +48,9 @@ export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
 
   const onClickLocale = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      locale.onSelectLocale(e.currentTarget.value as Locale)
+      localeProps.onSelectLocale(e.currentTarget.value as Locale)
     },
-    [locale],
+    [localeProps],
   )
 
   return (
@@ -66,7 +66,7 @@ export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
             key={localeKey}
             value={localeKey as Locale}
             onClick={onClickLocale}
-            selected={localeKey === locale.selectedLocale}
+            selected={localeKey === locale}
             className={classNames.button}
           >
             {label}

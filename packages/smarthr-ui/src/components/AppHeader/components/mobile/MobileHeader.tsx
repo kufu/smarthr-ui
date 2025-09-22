@@ -1,7 +1,6 @@
 import { type FC, useState } from 'react'
 
 import { Header } from '../../../Header'
-import { useLocale } from '../../hooks/useLocale'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { Help } from './Help'
@@ -27,6 +26,7 @@ export const MobileHeader: FC<HeaderProps> = ({
   currentTenantId,
   onTenantSelect,
   mobileAdditionalContent,
+  locale,
   ...props
 }) => {
   const [isAppLauncherSelected, setIsAppLauncherSelected] = useState(false)
@@ -34,8 +34,6 @@ export const MobileHeader: FC<HeaderProps> = ({
   const [selectedNavigationGroup, setSelectedNavigationGroup] = useState<NavigationGroup | null>(
     null,
   )
-
-  const { locale } = useLocale()
 
   // navigations の設定をメニューの解放条件とする
   const isMenuAvailable = navigations && navigations.length > 0

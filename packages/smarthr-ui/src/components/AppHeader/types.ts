@@ -3,7 +3,6 @@ import type { Header } from '../Header'
 import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
 
 export type LocaleProps = {
-  selectedLocale: Locale
   onSelectLocale: (locale: Locale) => void
 }
 
