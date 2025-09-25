@@ -39,7 +39,6 @@ export const args: ComponentProps<typeof AppHeader> = {
   schoolUrl: 'https://example.com',
   helpPageUrl: 'https://example.com',
   locale: {
-    selectedLocale: 'ja',
     onSelectLocale: action('locale'),
   },
   userInfo: {

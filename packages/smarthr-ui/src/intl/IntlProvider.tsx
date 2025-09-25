@@ -3,24 +3,22 @@
 import { type FC, type PropsWithChildren, createContext, useContext, useMemo } from 'react'
 import { IntlContext, IntlProvider as ReactIntlProvider } from 'react-intl'
 
+import { type Locale, localeMap } from './localeMap'
 import * as locales from './locales'
 
 // Object.keys は常に string[] を返却するが、locales は実行時に変更されないため、as 型キャストを使用することは自明に安全なので使用している
-const allLocaleKeys = Object.keys(locales) as Array<keyof typeof locales>
+const allLocaleKeys = Object.keys(localeMap) as Locale[]
 
-type Props<AvailableLocales extends Array<keyof typeof locales> = typeof allLocaleKeys> =
-  PropsWithChildren<{
-    locale: AvailableLocales[number]
-    availableLocales?: AvailableLocales
-  }>
+type Props<AvailableLocales extends Locale[] = typeof allLocaleKeys> = PropsWithChildren<{
+  locale: AvailableLocales[number]
+  availableLocales?: AvailableLocales
+}>
 
-const AvailableLocalesContext = createContext<Array<keyof typeof locales>>(allLocaleKeys)
+const AvailableLocalesContext = createContext<Locale[]>(allLocaleKeys)
 
 export const useAvailableLocales = () => useContext(AvailableLocalesContext)
 
-export const IntlProvider = <
-  AvailableLocales extends Array<keyof typeof locales> = typeof allLocaleKeys,
->({
+export const IntlProvider = <AvailableLocales extends Locale[] = typeof allLocaleKeys>({
   availableLocales,
   locale,
   children,
