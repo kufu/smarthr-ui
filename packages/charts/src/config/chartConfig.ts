@@ -130,18 +130,7 @@ export function getChartColors<T extends Exclude<ChartType, 'line'>>(
 >
 export function getChartColors<T extends ChartType>(chartType: T, dataLength: number): any {
   const colors: string[] = []
-  const pointStyles = [
-    'circle',
-    'cross',
-    'crossRot',
-    'dash',
-    'line',
-    'rect',
-    'rectRounded',
-    'rectRot',
-    'star',
-    'triangle',
-  ] as const
+  const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'star', 'triangle'] as const
 
   for (let i = 0; i < dataLength; i++) {
     colors.push(CHART_COLORS[i % CHART_COLORS.length])
