@@ -78,7 +78,7 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
 const ReleaseNoteDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
   <DropdownTrigger>
     <Button
-      suffix={<FaCaretDownIcon />}
+      suffix={<FaCaretDownIcon aria-hidden={true} />}
       className="shr-rounded-none shr-border-none shr-font-normal [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
     >
       <Translate>{children}</Translate>

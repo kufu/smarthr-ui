@@ -28,6 +28,7 @@ const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => (
 const MemoizedDropdownTrigger = memo(() => (
   <DropdownTrigger>
     <Button variant="skeleton" size="s" className="[&&&]:shr-border-transparent">
+      {/* TODO: 代替テキストわからない */}
       <FaCircleQuestionIcon alt="ヘルプ" />
     </Button>
   </DropdownTrigger>
@@ -51,7 +52,7 @@ const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
           href={helpPageUrl}
           target="_blank"
           rel="noopener noreferrer"
-          prefix={<FaCircleQuestionIcon />}
+          prefix={<FaCircleQuestionIcon aria-hidden={true} />}
         >
           <Translate>{translated.help}</Translate>
         </CommonButton>
@@ -62,7 +63,7 @@ const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
           href={schoolUrl}
           target="_blank"
           rel="noopener noreferrer"
-          prefix={<FaGraduationCapIcon />}
+          prefix={<FaGraduationCapIcon aria-hidden={true} />}
         >
           <Translate>{translated.school}</Translate>
         </CommonButton>

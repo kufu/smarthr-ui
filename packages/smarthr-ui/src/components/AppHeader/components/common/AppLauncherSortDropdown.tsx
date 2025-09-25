@@ -137,7 +137,7 @@ const TriggerButton = memo<
       ref={triggerRef}
       size="s"
       variant="text"
-      suffix={<FaCaretDownIcon />}
+      suffix={<FaCaretDownIcon aria-hidden={true} />}
       className={className}
     >
       <Translate>{children}</Translate>

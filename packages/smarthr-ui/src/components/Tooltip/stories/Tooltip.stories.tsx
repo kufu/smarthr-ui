@@ -85,7 +85,7 @@ export const TriggerType: StoryObj<typeof Tooltip> = {
   name: 'triggerType',
   args: {
     triggerType: 'icon',
-    children: <FaCircleQuestionIcon alt="ツールチップ" />,
+    children: <FaCircleQuestionIcon aria-hidden={true} alt="ツールチップ" />,
   },
 }
 
@@ -118,6 +118,6 @@ export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {
   args: {
     ariaDescribedbyTarget: 'inner',
     triggerType: 'icon',
-    children: <FaCircleQuestionIcon alt="ツールチップ" />,
+    children: <FaCircleQuestionIcon aria-hidden={true} alt="ツールチップ" />,
   },
 }

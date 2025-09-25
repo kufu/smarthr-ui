@@ -181,7 +181,7 @@ const ActualSelect = <T extends string>(
         <NotOmittingLabelsInMobileSafari className={classNames.blankOptGroup} />
       </select>
       <span className={classNames.iconWrap}>
-        <FaAngleDownIcon />
+        <FaAngleDownIcon aria-hidden={true} />
       </span>
     </span>
   )

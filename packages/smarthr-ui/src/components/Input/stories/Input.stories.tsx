@@ -10,7 +10,7 @@ import { SearchInput } from '../SearchInput'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const _affixOptions = {
-  あり: <FaMagnifyingGlassIcon alt="検索" />,
+  あり: <FaMagnifyingGlassIcon aria-hidden={true} alt="検索" />,
   なし: undefined,
 }
 
@@ -75,14 +75,14 @@ export const Error: StoryObj<typeof Input> = {
 export const Prefix: StoryObj<typeof Input> = {
   name: 'prefix',
   args: {
-    prefix: <FaMagnifyingGlassIcon alt="検索" />,
+    prefix: <FaMagnifyingGlassIcon aria-hidden={true} alt="検索" />,
   },
 }
 
 export const Suffix: StoryObj<typeof Input> = {
   name: 'suffix',
   args: {
-    suffix: <FaMagnifyingGlassIcon alt="検索" />,
+    suffix: <FaMagnifyingGlassIcon aria-hidden={true} alt="検索" />,
   },
 }
 

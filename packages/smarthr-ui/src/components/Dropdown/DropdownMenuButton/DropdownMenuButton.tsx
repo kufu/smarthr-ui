@@ -148,6 +148,7 @@ const MemoizedTriggerButton = memo<
         suffix={
           !onlyIconTrigger && (
             <FaCaretDownIcon
+              aria-hidden={true}
               alt={
                 active
                   ? localize({

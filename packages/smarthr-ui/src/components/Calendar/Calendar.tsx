@@ -217,7 +217,7 @@ const YearSelectButton = memo<{
 
   return (
     <Button {...rest} size="s">
-      <FaCaretDownIcon alt={selectYearAltText} />
+      <FaCaretDownIcon aria-hidden={true} alt={selectYearAltText} />
     </Button>
   )
 })
@@ -263,7 +263,7 @@ const MonthDirectionCluster = memo<{
         size="s"
         className="smarthr-ui-Calendar-monthButtonPrev"
       >
-        <FaChevronLeftIcon alt={previousMonthAltText} />
+        <FaChevronLeftIcon aria-hidden={true} alt={previousMonthAltText} />
       </Button>
       <Button
         disabled={isSelectingYear || next.isAfter(to, 'month')}
@@ -271,7 +271,7 @@ const MonthDirectionCluster = memo<{
         size="s"
         className="smarthr-ui-Calendar-monthButtonNext"
       >
-        <FaChevronRightIcon alt={nextMonthAltText} />
+        <FaChevronRightIcon aria-hidden={true} alt={nextMonthAltText} />
       </Button>
     </Cluster>
   )

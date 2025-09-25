@@ -103,8 +103,8 @@ const SortIcon = memo(() => {
 
   return (
     <span className={classNames.wrapper}>
-      <FaSortUpIcon className={classNames.upIcon} />
-      <FaSortDownIcon className={classNames.downIcon} />
+      <FaSortUpIcon aria-hidden={true} className={classNames.upIcon} />
+      <FaSortDownIcon aria-hidden={true} className={classNames.downIcon} />
     </span>
   )
 })
