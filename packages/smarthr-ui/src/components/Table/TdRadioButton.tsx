@@ -1,7 +1,7 @@
 import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { RadioButton } from '../RadioButton'
+import { UnlabeledRadioButton } from '../RadioButton'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
@@ -10,7 +10,7 @@ type Props = PropsWithChildren<{
   /** 値を特定するための行 id */
   'aria-labelledby': string
 }> &
-  ComponentProps<typeof RadioButton> &
+  ComponentProps<typeof UnlabeledRadioButton> &
   Pick<ComponentProps<typeof Td>, 'vAlign'>
 
 const classNameGenerator = tv({
@@ -40,7 +40,7 @@ export const TdRadioButton = forwardRef<HTMLInputElement, Props>(
       // Td に必要な属性やイベントは不要
       <Td vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
-          <RadioButton {...rest} ref={ref} className={classNames.radio} />
+          <UnlabeledRadioButton {...rest} ref={ref} className={classNames.radio} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>
       </Td>

@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useIntl } from '../../intl'
 import { Balloon } from '../Balloon'
-import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
+import { UnlabeledCheckbox } from '../Checkbox'
 
 import { Th } from './Th'
 
@@ -15,7 +15,8 @@ type Props = {
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
     checkColumnName?: (text: string) => string
   }
-} & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+} & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'> &
+  ComponentProps<typeof UnlabeledCheckbox>
 
 const classNameGenerator = tv({
   slots: {
@@ -35,7 +36,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
+export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
   ({ vAlign, fixed, decorators, className, ...others }, ref) => {
     const { localize } = useIntl()
 
@@ -82,7 +83,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
             <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
           </Balloon>
-          <Checkbox {...others} ref={ref} className={classNames.checkbox} />
+          <UnlabeledCheckbox {...others} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>
     )

@@ -1,10 +1,12 @@
 import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
+import { UnlabeledCheckbox } from '../Checkbox'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
+
+type CheckboxProps = ComponentProps<typeof UnlabeledCheckbox>
 
 type Props = PropsWithChildren<{
   /** 値を特定するための行 id */
@@ -39,7 +41,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckboxProps, keyof
       // Td に必要な属性やイベントは不要
       <Td vAlign={vAlign} fixed={fixed} className={classNames.wrapper}>
         <label className={classNames.inner}>
-          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
+          <UnlabeledCheckbox {...rest} ref={ref} className={classNames.checkbox} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>
       </Td>
