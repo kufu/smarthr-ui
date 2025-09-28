@@ -3,7 +3,7 @@
 import { type FC, type PropsWithChildren, createContext, useContext, useMemo } from 'react'
 import { IntlContext, IntlProvider as ReactIntlProvider } from 'react-intl'
 
-import { type Locale, localeMap } from './localeMap'
+import { type Locale, convertLang, localeMap } from './localeMap'
 import * as locales from './locales'
 
 // Object.keys は常に string[] を返却するが、locales は実行時に変更されないため、as 型キャストを使用することは自明に安全なので使用している
@@ -27,21 +27,21 @@ export const IntlProvider = <AvailableLocales extends Locale[] = typeof allLocal
   locale,
   children,
 }: Props<AvailableLocales>): ReturnType<FC> => {
+  const convertedLocale = convertLang(locale)
+  const convertedAvailableLocales = availableLocales?.map(convertLang)
+
   // プロダクト側でIntlProviderを使っている場合、プロダクト側のmessagesとマージして提供するためにContextから取得している
   const intl = useContext(IntlContext)
-  const actualMessages = useMemo(() => ({ ...intl?.messages, ...locales[locale] }), [intl, locale])
+  const actualMessages = useMemo(
+    () => ({ ...intl?.messages, ...locales[convertedLocale] }),
+    [intl, convertedLocale],
+  )
 
   return (
-    <AvailableLocalesContext.Provider value={availableLocales ?? allLocaleKeys}>
-      <ReactIntlProvider locale={locale} messages={actualMessages}>
+    <AvailableLocalesContext.Provider value={convertedAvailableLocales ?? allLocaleKeys}>
+      <ReactIntlProvider locale={convertedLocale} messages={actualMessages}>
         {children}
       </ReactIntlProvider>
     </AvailableLocalesContext.Provider>
   )
 }
-
-export const Hoge = () => (
-  <IntlProvider locale="ja" availableLocales={['ja', 'en-us']}>
-    <p>hoge</p>
-  </IntlProvider>
-)
