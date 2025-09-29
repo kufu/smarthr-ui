@@ -95,8 +95,8 @@ const FeatureListItem = memo<{
     <AnchorButton
       href={href}
       target="_blank"
-      prefix={isFavorite && <FaStarIcon />}
-      suffix={<FaArrowRightIcon />}
+      prefix={isFavorite && <FaStarIcon aria-hidden={true} />}
+      suffix={<FaArrowRightIcon aria-hidden={true} />}
       variant="text"
       wide
       data-favorite={isFavorite}

@@ -21,9 +21,9 @@ export default {
   },
 } as Meta<typeof AnchorButton>
 
-const childrens = { 文字列: 'ボタン', アイコン: <FaCirclePlusIcon /> }
-const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
-const suffixes = { なし: '', あり: <FaCaretDownIcon /> }
+const childrens = { 文字列: 'ボタン', アイコン: <FaCirclePlusIcon aria-hidden={true} /> }
+const prefixes = { なし: '', あり: <FaCirclePlusIcon aria-hidden={true} /> }
+const suffixes = { なし: '', あり: <FaCaretDownIcon aria-hidden={true} /> }
 const disabledDetails = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
 
 export const ButtonControl: StoryObj<typeof AnchorButton> = {
@@ -110,13 +110,13 @@ export const Wide: StoryObj<typeof AnchorButton> = {
 export const Prefix: StoryObj<typeof AnchorButton> = {
   name: 'prefix',
   args: {
-    prefix: <FaCirclePlusIcon />,
+    prefix: <FaCirclePlusIcon aria-hidden={true} />,
   },
 }
 
 export const Suffix: StoryObj<typeof AnchorButton> = {
   name: 'suffix',
   args: {
-    suffix: <FaCaretDownIcon />,
+    suffix: <FaCaretDownIcon aria-hidden={true} />,
   },
 }

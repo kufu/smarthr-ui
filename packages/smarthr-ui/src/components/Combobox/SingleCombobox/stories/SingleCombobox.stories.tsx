@@ -67,7 +67,7 @@ export const defaultItems = {
   },
 }
 
-export const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
+export const prefixes = { なし: '', あり: <FaCirclePlusIcon aria-hidden={true} /> }
 
 export default {
   title: 'Components/Combobox/SingleCombobox',

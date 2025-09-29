@@ -424,6 +424,7 @@ const ActualSingleCombobox = <T,>(
               className={classNames.clearButton}
             >
               <FaCircleXmarkIcon
+                aria-hidden={true}
                 color="TEXT_BLACK"
                 alt={decorated.destroyButtonIconAlt}
                 className={classNames.clearButtonIcon}
@@ -431,7 +432,11 @@ const ActualSingleCombobox = <T,>(
             </UnstyledButton>
             {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
             <span onClick={onClickInput} role="presentation" className={classNames.caretDownLayout}>
-              <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
+              <FaCaretDownIcon
+                aria-hidden={true}
+                color={caretIconColor}
+                className={classNames.caretDownIcon}
+              />
             </span>
           </>
         }

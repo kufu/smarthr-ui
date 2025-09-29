@@ -159,10 +159,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         <FaFilterIcon alt={onlyIconTrigger ? decorated.triggerButton : undefined} />
 
         {isFiltered && (
-          <FaCircleCheckIcon
-            aria-label={filteredIconAriaLabel}
-            className={classNames.filteredIcon}
-          />
+          <FaCircleCheckIcon alt={filteredIconAriaLabel} className={classNames.filteredIcon} />
         )}
       </span>
     )
@@ -197,7 +194,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                   <Button
                     variant="text"
                     size="s"
-                    prefix={<FaRotateLeftIcon />}
+                    prefix={<FaRotateLeftIcon aria-hidden={true} />}
                     onClick={onReset}
                     disabled={calcedResponseStatus.isProcessing}
                   >

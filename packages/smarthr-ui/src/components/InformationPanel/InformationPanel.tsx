@@ -243,7 +243,9 @@ const TogglableButton: FC<
       aria-expanded={active}
       aria-controls={contentId}
       onClick={onClick}
-      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+      suffix={
+        active ? <FaCaretUpIcon aria-hidden={true} /> : <FaCaretDownIcon aria-hidden={true} />
+      }
       size="s"
       className={className}
     >

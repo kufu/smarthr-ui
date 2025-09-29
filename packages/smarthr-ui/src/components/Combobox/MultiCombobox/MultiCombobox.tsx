@@ -577,7 +577,7 @@ const MemoizedCaretDown = memo<{
 
   return (
     <div className={className}>
-      <FaCaretDownIcon color={caretIconColor} className={iconStyle} />
+      <FaCaretDownIcon aria-hidden={true} color={caretIconColor} className={iconStyle} />
     </div>
   )
 })

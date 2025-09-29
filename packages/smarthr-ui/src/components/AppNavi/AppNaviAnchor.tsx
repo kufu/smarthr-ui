@@ -74,7 +74,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
         aria-current={current ? 'page' : undefined}
         className={classNames.wrapper}
       >
-        {Icon && <Icon className={classNames.icon} />}
+        {Icon && <Icon className={classNames.icon} aria-hidden={true} />}
         {children}
       </Component>
     )

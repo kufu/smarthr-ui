@@ -10,11 +10,11 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 const _prefixOptions = {
   なし: undefined,
-  あり: <FaCircleQuestionIcon />,
+  あり: <FaCircleQuestionIcon aria-hidden={true} />,
 }
 const _suffixOptions = {
   なし: undefined,
-  あり: <FaUpRightFromSquareIcon />,
+  あり: <FaUpRightFromSquareIcon aria-hidden={true} />,
 }
 const _elementAsOptions = {
   なし: undefined,
@@ -73,7 +73,7 @@ export const Href: StoryObj<typeof TextLink> = {
 export const Prefix: StoryObj<typeof TextLink> = {
   name: 'prefix',
   args: {
-    prefix: <FaCircleQuestionIcon />,
+    prefix: <FaCircleQuestionIcon aria-hidden={true} />,
     children: 'プレフィックス付きリンク',
   },
 }
@@ -81,7 +81,7 @@ export const Prefix: StoryObj<typeof TextLink> = {
 export const Suffix: StoryObj<typeof TextLink> = {
   name: 'suffix',
   args: {
-    suffix: <FaUpRightFromSquareIcon />,
+    suffix: <FaUpRightFromSquareIcon aria-hidden={true} />,
     children: 'サフィックス付きリンク',
   },
 }
