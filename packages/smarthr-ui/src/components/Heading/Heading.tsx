@@ -1,6 +1,14 @@
 'use client'
 
-import { type ComponentProps, type PropsWithChildren, memo, useContext, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type PropsWithChildren,
+  memo,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
@@ -24,6 +32,8 @@ type ElementProps = Omit<
   ComponentProps<'h1'>,
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
+
+type ActualProps = Props & ElementProps
 
 const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   let role = undefined
@@ -54,7 +64,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Heading = memo<Props & ElementProps>(
+export const Heading = memo<ActualProps>(
   ({ tag, type = 'sectionTitle', className, visuallyHidden, ...props }) => {
     const level = useContext(LevelContext)
     const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
@@ -70,9 +80,25 @@ export const Heading = memo<Props & ElementProps>(
   },
 )
 
-export const PageHeading = memo<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>>(
-  ({ type = 'screenTitle', ...props }) => (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Heading {...props} type={type} tag="h1" />
-  ),
+export const PageHeading = memo<
+  Omit<ActualProps, 'visuallyHidden' | 'tag'> & { pageTitle?: string; pageTitleSuffix?: string }
+>(
+  ({
+    type = 'screenTitle',
+    pageTitleSuffix = 'SmartHR（スマートHR）',
+    pageTitle,
+    children,
+    ...props
+  }) => {
+    useEffect(() => {
+      document.title = `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
+    }, [children, pageTitle, pageTitleSuffix])
+
+    return (
+      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+      <Heading {...props} type={type} tag="h1">
+        {children}
+      </Heading>
+    )
+  },
 )
