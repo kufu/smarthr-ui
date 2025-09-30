@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [76.0.0](https://github.com/kufu/smarthr-ui/compare/v75.4.1...v76.0.0) (2025-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* AppHeader の言語選択 UI に IntlProvider で渡した locale や availableLocales が反映されるようにする (#5848)
+
+### Bug Fixes
+
+* AppHeader の言語選択 UI に IntlProvider で渡した locale や availableLocales が反映されるようにする ([#5848](https://github.com/kufu/smarthr-ui/issues/5848)) ([6f46385](https://github.com/kufu/smarthr-ui/commit/6f46385f2030fececaa9b0b8ee05fa4bcf77ffcb))
+* SpreadsheetTableのthのコントラスト比を改善 ([#5846](https://github.com/kufu/smarthr-ui/issues/5846)) ([55f8a41](https://github.com/kufu/smarthr-ui/commit/55f8a411df39fcd43a8e287585ff30af24a19f9b))
+
 ### [75.4.1](https://github.com/kufu/smarthr-ui/compare/v75.4.0...v75.4.1) (2025-09-17)
 
 
