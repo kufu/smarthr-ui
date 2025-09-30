@@ -1,11 +1,12 @@
 import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
+import { type Locale, localeMap } from '../../../../intl/localeMap'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { type Locale, localeMap } from '../../multilingualization'
 import { CommonButton } from '../common/CommonButton'
 
 import type { LocaleProps } from '../../types'
@@ -26,9 +27,14 @@ type Props = {
   onClickClose: () => void
 }
 
-const LOCALE_KEYS = Object.keys(localeMap)
-
-export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
+export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose }) => {
+  const { locale, availableLocales } = useIntl()
+  const { locales } = useMemo(
+    () => ({
+      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
+    }),
+    [availableLocales],
+  )
   const classNames = useMemo(() => {
     const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
 
@@ -42,9 +48,9 @@ export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
 
   const onClickLocale = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      locale.onSelectLocale(e.currentTarget.value as Locale)
+      localeProps.onSelectLocale(e.currentTarget.value as Locale)
     },
-    [locale],
+    [localeProps],
   )
 
   return (
@@ -55,14 +61,16 @@ export const LanguageSelector = memo<Props>(({ locale, onClickClose }) => {
         className={classNames.headerTitle}
       />
       <div className={classNames.buttonWrapper}>
-        {LOCALE_KEYS.map((localeKey) => (
+        {locales.map(([localeKey, label]) => (
           <LocaleButton
             key={localeKey}
             value={localeKey as Locale}
             onClick={onClickLocale}
-            selected={localeKey === locale.selectedLocale}
+            selected={localeKey === locale}
             className={classNames.button}
-          />
+          >
+            {label}
+          </LocaleButton>
         ))}
       </div>
     </Section>
@@ -84,8 +92,9 @@ const LocaleButton = memo<{
   value: Locale
   selected: boolean
   className: string
+  children: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ value, selected, className, onClick }) => (
+}>(({ value, selected, className, children, onClick }) => (
   <CommonButton
     elementAs="button"
     type="button"
@@ -94,6 +103,6 @@ const LocaleButton = memo<{
     prefix={selected && <FaCheckIcon color="MAIN" />}
     className={className}
   >
-    {localeMap[value]}
+    {children}
   </CommonButton>
 ))

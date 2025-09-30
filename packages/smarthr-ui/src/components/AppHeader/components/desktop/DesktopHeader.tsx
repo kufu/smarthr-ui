@@ -2,6 +2,7 @@ import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
+import { localeMap } from '../../../../intl/localeMap'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'
@@ -12,8 +13,6 @@ import {
   FaToolboxIcon,
 } from '../../../Icon'
 import { Cluster } from '../../../Layout'
-import { useLocale } from '../../hooks/useLocale'
-import { localeMap } from '../../multilingualization'
 import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
@@ -49,6 +48,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
   desktopNavigationAdditionalContent,
   releaseNote,
   features,
+  locale: localeProps,
   ...props
 }) => {
   const classNames = useMemo(() => {
@@ -60,9 +60,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
     }
   }, [className])
 
-  const { locale } = useLocale()
-
-  const { localize } = useIntl()
+  const { localize, locale } = useIntl()
   const translated = useMemo(
     () => ({
       appLauncherLabel: localize({
@@ -124,11 +122,11 @@ export const DesktopHeader: FC<HeaderProps> = ({
             </HeaderLink>
           )}
 
-          {locale && (
+          {localeProps && (
             <LanguageSwitcher
               localeMap={localeMap}
-              locale={locale.selectedLocale}
-              onLanguageSelect={locale.onSelectLocale as (locale: string) => void}
+              locale={locale}
+              onLanguageSelect={localeProps.onSelectLocale as (locale: string) => void}
               enableNew={enableNew}
             />
           )}

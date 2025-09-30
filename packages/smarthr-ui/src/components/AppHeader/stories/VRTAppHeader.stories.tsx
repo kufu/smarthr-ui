@@ -1,9 +1,7 @@
-import { action } from 'storybook/actions'
 import { Meta, StoryObj } from '@storybook/react/*'
 import { within } from 'storybook/test'
 
 import { AppHeader } from '../AppHeader'
-import { Locale } from '../multilingualization'
 
 import { args } from './args'
 
@@ -159,65 +157,50 @@ export const VRTNavigationDropdownGroup: Story = {
   },
 }
 
-export const VRTLocaleEnUs: Story = {
-  args: {
-    locale: {
-      selectedLocale: 'en-us',
-      onSelectLocale: (locale: Locale) => action(locale),
-    },
+export const VRTLocaleJaEasy: Story = {
+  globals: {
+    locale: 'ja-easy',
   },
 }
 
-export const VRTLocaleIdId: Story = {
-  args: {
-    locale: {
-      selectedLocale: 'id-id',
-      onSelectLocale: (locale: Locale) => action(locale),
-    },
+export const VRTLocaleEnUs: Story = {
+  globals: {
+    locale: 'en-us',
   },
 }
 
 export const VRTLocalePt: Story = {
-  args: {
-    locale: {
-      selectedLocale: 'pt',
-      onSelectLocale: (locale: Locale) => action(locale),
-    },
+  globals: {
+    locale: 'pt',
   },
 }
 
 export const VRTLocaleVi: Story = {
-  args: {
-    locale: {
-      selectedLocale: 'vi',
-      onSelectLocale: (locale: Locale) => action(locale),
-    },
+  globals: {
+    locale: 'vi',
   },
 }
 
 export const VRTLocaleKo: Story = {
-  args: {
-    locale: {
-      selectedLocale: 'ko',
-      onSelectLocale: (locale: Locale) => action(locale),
-    },
+  globals: {
+    locale: 'ko',
   },
 }
 
 export const VRTLocaleZhCn: Story = {
-  args: {
-    locale: {
-      selectedLocale: 'zh-cn',
-      onSelectLocale: (locale: Locale) => action(locale),
-    },
+  globals: {
+    locale: 'zh-cn',
   },
 }
 
 export const VRTLocaleZhTw: Story = {
-  args: {
-    locale: {
-      selectedLocale: 'zh-tw',
-      onSelectLocale: (locale: Locale) => action(locale),
-    },
+  globals: {
+    locale: 'zh-tw',
+  },
+}
+
+export const VRTLocaleIdId: Story = {
+  globals: {
+    locale: 'id-id',
   },
 }
