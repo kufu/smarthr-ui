@@ -11,7 +11,10 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
-type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> & Omit<IconProps, 'text'>
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
+  Omit<IconProps, 'text' | 'size'> & {
+    size?: VariantProps<typeof Text>['size']
+  }
 
 export const classNameGenerator = tv({
   base: '',
@@ -34,12 +37,12 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ type = 'info', children, ...other }) => {
+export const ResponseMessage: FC<Props> = ({ type = 'info', size, children, ...other }) => {
   const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
 
   return (
-    <Text>
+    <Text size={size}>
       <Icon {...other} text={children} className={className} />
     </Text>
   )
