@@ -32,7 +32,7 @@ import type { TextProps } from '../Text'
 
 type Props = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
-  headingType?: TextProps['styleType']
+  headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
    * @deprecated headingTag属性は非推奨です
    */
