@@ -9,6 +9,7 @@ import {
   type ComponentProps as IconProps,
   WarningIcon,
 } from '../Icon'
+import { Text } from '../Text'
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> & Omit<IconProps, 'text'>
 
@@ -37,5 +38,9 @@ export const ResponseMessage: FC<Props> = ({ type = 'info', children, ...other }
   const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
 
-  return <Icon {...other} text={children} className={className} />
+  return (
+    <Text>
+      <Icon {...other} text={children} className={className} />
+    </Text>
+  )
 }
