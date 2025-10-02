@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import {
@@ -13,7 +13,7 @@ import { Text } from '../Text'
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
   Omit<IconProps, 'text' | 'size'> & {
-    size?: VariantProps<typeof Text>['size']
+    size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
   }
 
 export const classNameGenerator = tv({
