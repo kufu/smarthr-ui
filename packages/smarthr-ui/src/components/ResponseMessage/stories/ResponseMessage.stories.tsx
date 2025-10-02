@@ -12,7 +12,7 @@ export default {
       control: 'select',
       options: Object.keys(classNameGenerator.variants.type),
     },
-    size: { name: 'size（非推奨）' },
+    size: { name: 'size' },
     color: { table: { disable: true } },
   },
   args: {
@@ -42,16 +42,12 @@ export const Type: StoryObj<typeof ResponseMessage> = {
 }
 
 export const Size: StoryObj<typeof ResponseMessage> = {
-  name: 'size（非推奨）',
+  name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      <ResponseMessage {...args} size="XXS" />
       <ResponseMessage {...args} size="XS" />
       <ResponseMessage {...args} size="S" />
       <ResponseMessage {...args} size="M" />
-      <ResponseMessage {...args} size="L" />
-      <ResponseMessage {...args} size="XL" />
-      <ResponseMessage {...args} size="XXL" />
     </Stack>
   ),
 }
