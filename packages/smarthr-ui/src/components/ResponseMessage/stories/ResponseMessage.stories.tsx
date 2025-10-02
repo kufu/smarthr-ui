@@ -45,13 +45,9 @@ export const Size: StoryObj<typeof ResponseMessage> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      <ResponseMessage {...args} size="XXS" />
       <ResponseMessage {...args} size="XS" />
       <ResponseMessage {...args} size="S" />
       <ResponseMessage {...args} size="M" />
-      <ResponseMessage {...args} size="L" />
-      <ResponseMessage {...args} size="XL" />
-      <ResponseMessage {...args} size="XXL" />
     </Stack>
   ),
 }
