@@ -98,7 +98,7 @@ export const Size: StoryObj<typeof TextLink> = {
   name: 'size',
   render: (args) => (
     <>
-      {([undefined, 'M', 'S'] as const).map((size) => (
+      {([undefined, 'M', 'S', 'XS'] as const).map((size) => (
         <p>
           <TextLink {...args} size={size}>
             {size || 'size未指定'}

@@ -49,6 +49,9 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
+      XS: {
+        anchor: 'shr-text-xs',
+      },
       S: {
         anchor: 'shr-text-sm',
       },
