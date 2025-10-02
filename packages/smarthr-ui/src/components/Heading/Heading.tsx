@@ -6,6 +6,7 @@ import {
   memo,
   useContext,
   useEffect,
+  useId,
   useMemo,
 } from 'react'
 import innerText from 'react-innertext'
@@ -13,7 +14,7 @@ import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{
   /** テキストのスタイル */
@@ -80,19 +81,51 @@ export const Heading = memo<ActualProps>(
   },
 )
 
+const PSEUDO_TITLE_CLASS_NAME = visuallyHiddenTextClassNameGenerator()
+
 export const PageHeading = memo<
-  Omit<ActualProps, 'visuallyHidden' | 'tag'> & { pageTitle?: string; pageTitleSuffix?: string }
+  Omit<ActualProps, 'visuallyHidden' | 'tag'> & {
+    autoPageTitle?: boolean
+    pageTitle?: string
+    pageTitleSuffix?: string
+  }
 >(
   ({
     type = 'screenTitle',
+    autoPageTitle = true,
     pageTitleSuffix = 'SmartHR（スマートHR）',
     pageTitle,
     children,
     ...props
   }) => {
+    const id = useId()
+
     useEffect(() => {
-      document.title = `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
-    }, [children, pageTitle, pageTitleSuffix])
+      if (autoPageTitle) {
+        // HINT: SPAで遷移する場合などの対策としてspanにaria-liveを仕込む
+        // head内はスクリーンリーダーの変更検知のチェック対象外のため
+        let pseudoTitle: HTMLDivElement | null = document.createElement('div')
+
+        pseudoTitle.setAttribute('id', id)
+        pseudoTitle.setAttribute('class', PSEUDO_TITLE_CLASS_NAME)
+        pseudoTitle.setAttribute('aria-live', 'polite')
+        document.body.prepend(pseudoTitle)
+
+        requestAnimationFrame(() => {
+          if (pseudoTitle) {
+            const nextTitle = `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
+
+            pseudoTitle.innerText = nextTitle
+            document.title = nextTitle
+          }
+        })
+
+        return () => {
+          pseudoTitle.remove()
+          pseudoTitle = null
+        }
+      }
+    }, [children, pageTitle, pageTitleSuffix, autoPageTitle, id])
 
     return (
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
