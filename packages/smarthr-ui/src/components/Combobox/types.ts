@@ -1,4 +1,4 @@
-import type { ChangeEvent, ReactNode } from 'react'
+import type { ChangeEventHandler, ReactNode } from 'react'
 
 export type ComboboxItem<T> = {
   value: string
@@ -56,17 +56,13 @@ export type BaseProps<T> = {
    */
   width?: number | string
   /**
-   * ドロップダウンリスト内に表示するヘルプメッセージ
-   */
-  dropdownHelpMessage?: ReactNode
-  /**
    * ドロップダウンリストの `width` スタイルに適用する値
    */
   dropdownWidth?: number | string
   /**
    * input 要素の `value` が変わった時に発火するコールバック関数
    */
-  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeInput?: ChangeEventHandler<HTMLInputElement>
   /**
    * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
    */
@@ -79,5 +75,5 @@ export type BaseProps<T> = {
    * input 要素の `value` が変わった時に発火するコールバック関数
    * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
    */
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  onChange?: ChangeEventHandler<HTMLInputElement>
 }

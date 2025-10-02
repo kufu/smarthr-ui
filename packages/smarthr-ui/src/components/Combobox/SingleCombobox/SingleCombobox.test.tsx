@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { type ComponentProps, act } from 'react'
 import { userEvent } from 'storybook/test'
 
@@ -10,12 +10,13 @@ import { SingleCombobox } from './SingleCombobox'
 describe('SingleCombobox', () => {
   beforeEach(() => {
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
-      cb(0)
+      setTimeout(() => cb(0), 0)
       return 0
     })
   })
 
   const combobox = () => screen.getByRole('combobox', { name: 'コンボボックス' })
+  const searchInput = () => screen.getByRole('textbox')
   const listbox = () => screen.queryByRole('listbox')
   const clearButton = () => screen.getByRole('button', { name: '削除' })
 
@@ -55,7 +56,7 @@ describe('SingleCombobox', () => {
 
     // コンボボックスをクリックしてリストボックスを表示
     await act(() => userEvent.click(combobox()))
-    expect(combobox()).toHaveFocus()
+    expect(searchInput()).toHaveFocus()
     expect(screen.queryByRole('listbox')).toBeInTheDocument()
 
     // リストボックスからアイテムを選択して、選択イベントの発火を確認
@@ -88,7 +89,8 @@ describe('SingleCombobox', () => {
     await act(() => userEvent.click(combobox()))
     expect(listbox()).toBeInTheDocument()
 
-    // ESCで閉じる
+    // ESCで閉じる（検索用のInputに明示的にフォーカスしてからESCキーを押す）
+    await act(() => userEvent.click(searchInput()))
     await act(() => userEvent.keyboard('{escape}'))
     expect(listbox()).not.toBeInTheDocument()
   })
@@ -111,7 +113,7 @@ describe('SingleCombobox', () => {
     expect(listbox()).toBeInTheDocument()
 
     // 新しいアイテムを入力する
-    await act(() => userEvent.type(combobox(), '新しいアイテム'))
+    await act(() => userEvent.type(searchInput(), '新しいアイテム'))
     expect(listbox()).toHaveTextContent('「新しいアイテム」を追加')
 
     // 新しいアイテムをクリックして、追加イベントの発火を確認
