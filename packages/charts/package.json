@@ -37,7 +37,7 @@
     "react-dom": "^19.0.0",
     "react-intl": "^7.0.4",
     "smarthr-ui": "^74.0.0",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.0.1 || ^6.0.0"
   },
   "dependencies": {
     "chart.js": "^4.4.0",
@@ -66,7 +66,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.44.0",
     "storybook": "9.0.12",
-    "styled-components": "^5.3.11",
+    "styled-components": "^6.1.19",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"

@@ -82,7 +82,7 @@
     "storybook": "9.0.18",
     "storybook-addon-pseudo-states": "9.0.18",
     "style-loader": "^4.0.0",
-    "styled-components": "^5.3.11",
+    "styled-components": "^6.1.19",
     "tailwind-merge": "^3.3.1",
     "ts-loader": "^9.5.2",
     "ttypescript": "^1.5.15",
@@ -95,7 +95,7 @@
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
     "react-intl": "^7.0.4",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.0.1 || ^6.0.0"
   },
   "bugs": {
     "url": "https://github.com/kufu/smarthr-ui/issues"
