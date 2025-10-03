@@ -7,30 +7,19 @@ export default {
   title: 'Components/Heading/PageHeading/VRT',
   // ペアワイズ法は使わずに総当りする
   render: (args: any) => {
-    const types = [
-      'screenTitle',
-      'blockTitle',
-      'subBlockTitle',
-      'sectionTitle',
-      'subSubBlockTitle',
-    ] as const
     const sizes = ['XXL', 'XL', 'L'] as const
     return (
       <Stack {...args}>
-        {types.map((type) =>
-          sizes.map((size) => (
-            <>
-              {/* @ts-expect-error */}
-              <PageHeading type={type} size={size} visuallyHidden={true}>
-                {type}
-              </PageHeading>
-              {/* @ts-expect-error */}
-              <PageHeading type={type} size={size} visuallyHidden={false}>
-                {type}
-              </PageHeading>
-            </>
-          )),
-        )}
+        {sizes.map((size) => (
+          <>
+            <PageHeading size={size} visuallyHidden={true}>
+              {size}
+            </PageHeading>
+            <PageHeading size={size} visuallyHidden={false}>
+              {size}
+            </PageHeading>
+          </>
+        ))}
       </Stack>
     )
   },

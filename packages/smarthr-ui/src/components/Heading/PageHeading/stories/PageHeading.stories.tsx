@@ -19,47 +19,18 @@ export const PageHeadingControl: StoryObj<typeof PageHeading> = {
   args: {},
 }
 
-export const Type: StoryObj<typeof PageHeading> = {
-  name: 'type',
-  render: (args) => (
-    <Stack>
-      <PageHeading {...args} type="screenTitle">
-        ScreenTitle
-      </PageHeading>
-      <PageHeading {...args} type="sectionTitle">
-        SectionTitle
-      </PageHeading>
-      <PageHeading {...args} type="blockTitle">
-        BlockTitle
-      </PageHeading>
-      <PageHeading {...args} type="subBlockTitle">
-        SubBlockTitle
-      </PageHeading>
-      <PageHeading {...args} type="subSubBlockTitle">
-        SubSubBlockTitle
-      </PageHeading>
-    </Stack>
-  ),
-}
-
 export const Size: StoryObj<typeof PageHeading> = {
   name: 'size',
   render: (args: Omit<ComponentPropsWithoutRef<typeof PageHeading>, 'type'>) => (
     <Stack>
-      <PageHeading {...args} type="screenTitle" size="XXL">
+      <PageHeading {...args} size="XXL">
         ScreenTitle XXL
       </PageHeading>
-      <PageHeading {...args} type="screenTitle" size="XL">
+      <PageHeading {...args} size="XL">
         ScreenTitle XL
       </PageHeading>
-      <PageHeading {...args} type="sectionTitle" size="XXL">
+      <PageHeading {...args} size="XXL">
         SectionTitle XXL
-      </PageHeading>
-      <PageHeading {...args} type="sectionTitle" size="XL">
-        SectionTitle XL
-      </PageHeading>
-      <PageHeading {...args} type="sectionTitle" size="L">
-        SectionTitle L
       </PageHeading>
     </Stack>
   ),

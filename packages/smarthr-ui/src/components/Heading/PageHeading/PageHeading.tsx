@@ -8,44 +8,17 @@ import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import type { ElementProps } from '../Heading'
 
-type StylingProps =
-  | {
-      /** テキストのスタイル */
-      type: Extract<TextProps['styleType'], 'screenTitle'>
-
-      /**
-       * テキストのサイズ
-       *
-       * `screenTitle`の場合、`XXL`か`XL`を指定できます。
-       *
-       * @default 'XL'
-       */
-      size?: Extract<TextProps['size'], 'XXL' | 'XL'>
-    }
-  | {
-      /** テキストのスタイル */
-      type?: Extract<TextProps['styleType'], 'sectionTitle'>
-
-      /**
-       * テキストのサイズ
-       *
-       * `sectionTitle`の場合、`XXL`か`XL`か`L`を指定してください
-       *
-       * @default 'L'
-       */
-      size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
-    }
-  | {
-      /** テキストのスタイル */
-      type: Exclude<TextProps['styleType'], 'screenTitle' | 'sectionTitle'>
-      size?: never
-    }
-
 export type Props = PropsWithChildren<{
+  /**
+   * テキストのサイズ
+   *
+   * @default 'XL'
+   */
+  size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
+
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
-}> &
-  StylingProps
+}>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -60,18 +33,18 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo<Props & ElementProps>(
-  ({ type = 'screenTitle', size, className, visuallyHidden, ...props }) => {
+  ({ size, className, visuallyHidden, ...props }) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
     const actualTypography = useMemo(() => {
-      const defaultTypography = STYLE_TYPE_MAP[type]
-      if (size && (type === 'screenTitle' || type === 'sectionTitle')) {
+      const defaultTypography = STYLE_TYPE_MAP.screenTitle
+      if (size) {
         return { ...defaultTypography, size }
       }
       return defaultTypography
-    }, [type, size])
+    }, [size])
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
     return (
