@@ -1,11 +1,20 @@
 'use client'
 
-import { type ComponentProps, type PropsWithChildren, memo, useContext, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type PropsWithChildren,
+  memo,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+} from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{
   /** テキストのスタイル */
@@ -24,6 +33,8 @@ type ElementProps = Omit<
   ComponentProps<'h1'>,
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
+
+type ActualProps = Props & ElementProps
 
 const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   let role = undefined
@@ -54,7 +65,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Heading = memo<Props & ElementProps>(
+export const Heading = memo<ActualProps>(
   ({ tag, type = 'sectionTitle', className, visuallyHidden, ...props }) => {
     const level = useContext(LevelContext)
     const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
@@ -70,9 +81,57 @@ export const Heading = memo<Props & ElementProps>(
   },
 )
 
-export const PageHeading = memo<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>>(
-  ({ type = 'screenTitle', ...props }) => (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Heading {...props} type={type} tag="h1" />
-  ),
+const PSEUDO_TITLE_CLASS_NAME = visuallyHiddenTextClassNameGenerator()
+
+export const PageHeading = memo<
+  Omit<ActualProps, 'visuallyHidden' | 'tag'> & {
+    autoPageTitle?: boolean
+    pageTitle?: string
+    pageTitleSuffix?: string
+  }
+>(
+  ({
+    type = 'screenTitle',
+    autoPageTitle = true,
+    pageTitleSuffix = 'SmartHR（スマートHR）',
+    pageTitle,
+    children,
+    ...props
+  }) => {
+    const id = useId()
+
+    useEffect(() => {
+      if (autoPageTitle) {
+        // HINT: SPAで遷移する場合などの対策としてspanにaria-liveを仕込む
+        // head内はスクリーンリーダーの変更検知のチェック対象外のため
+        let pseudoTitle: HTMLDivElement | null = document.createElement('div')
+
+        pseudoTitle.setAttribute('id', id)
+        pseudoTitle.setAttribute('class', PSEUDO_TITLE_CLASS_NAME)
+        pseudoTitle.setAttribute('aria-live', 'polite')
+        document.body.prepend(pseudoTitle)
+
+        requestAnimationFrame(() => {
+          if (pseudoTitle) {
+            const nextTitle = `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
+
+            pseudoTitle.innerText = nextTitle
+            document.title = nextTitle
+          }
+        })
+
+        return () => {
+          pseudoTitle.remove()
+          pseudoTitle = null
+        }
+      }
+    }, [children, pageTitle, pageTitleSuffix, autoPageTitle, id])
+
+    return (
+      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+      <Heading {...props} type={type} tag="h1">
+        {children}
+      </Heading>
+    )
+  },
 )

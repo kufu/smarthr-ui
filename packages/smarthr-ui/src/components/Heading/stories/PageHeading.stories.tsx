@@ -40,3 +40,25 @@ export const Type: StoryObj<typeof PageHeading> = {
     </Stack>
   ),
 }
+
+export const PageTitle: StoryObj<typeof PageHeading> = {
+  name: 'pageTitle',
+  render: (args) => (
+    <Stack>
+      <PageHeading {...args} pageTitle="h1">
+        PageHeading
+      </PageHeading>
+    </Stack>
+  ),
+}
+
+export const PageTitleSuffix: StoryObj<typeof PageHeading> = {
+  name: 'pageTitleSuffix',
+  render: (args) => (
+    <Stack>
+      <PageHeading {...args} pageTitleSuffix="smarthr-ui stories">
+        PageHeading
+      </PageHeading>
+    </Stack>
+  ),
+}
