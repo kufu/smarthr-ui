@@ -341,6 +341,7 @@ const ActualSingleCombobox = <T,>(
     unfocus,
   )
 
+  // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
   const selectedItemLabelText = innerText(selectedItem?.label)
   useEffect(() => {
     setInputValue(selectedItemLabelText)
