@@ -4,16 +4,7 @@ import { backgroundColor } from '../../../themes'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import type { Meta, StoryObj } from '@storybook/react'
-
-const localeMap = {
-  ja: '日本語',
-  'en-us': 'English',
-  pt: 'Português',
-  vi: 'Tiếng Việt',
-  ko: '한국어',
-  'zh-cn': '简体中文',
-  'zh-tw': '繁體中文',
-}
+import { localeMap } from '../../../intl/localeMap'
 
 export default {
   title: 'Components/Header/LanguageSwitcher',
@@ -39,7 +30,7 @@ export const LocaleMap: StoryObj<typeof LanguageSwitcher> = {
   },
 }
 
-export const Loacle: StoryObj<typeof LanguageSwitcher> = {
+export const Locale: StoryObj<typeof LanguageSwitcher> = {
   name: 'locale',
   args: {
     locale: 'en-us',

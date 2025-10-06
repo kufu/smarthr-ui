@@ -1,3 +1,5 @@
 packages:
-  - 'packages/*'
-  - 'sandbox/*'
+  - packages/*
+  - sandbox/*
+
+minimumReleaseAge: 4320
