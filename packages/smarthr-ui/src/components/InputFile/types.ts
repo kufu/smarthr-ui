@@ -3,7 +3,7 @@ import type { DecoratorsType } from '../../hooks/useDecorators'
 import type { ComponentPropsWithRef, ReactNode } from 'react'
 import type { VariantProps } from 'tailwind-variants'
 
-type DecoratorKeyTypes = 'destroy'
+export type DecoratorKeyTypes = 'destroy'
 
 export type Props = VariantProps<typeof classNameGenerator> & {
   /** フォームのラベル */
