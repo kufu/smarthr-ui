@@ -198,10 +198,10 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Props & 
         const index = parseInt(e.currentTarget.value, 10)
         const newFiles = files.filter((_, i) => index !== i)
 
-        updateFiles(newFiles)
-
         // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
         inputRef.current.value = ''
+
+        updateFiles(newFiles)
       },
       [files, updateFiles],
     )
@@ -227,6 +227,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Props & 
           </BaseColumn>
         )}
         <span className={classNames.inputWrapper}>
+          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...props}
             multiple={multiple || multiplyAppendable}
