@@ -27,7 +27,10 @@ import type { DecoratorKeyTypes, ElementProps, Props } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Props & ElementProps>(
+export const InputFileMultiplyAppendable = forwardRef<
+  HTMLInputElement,
+  Omit<Props, 'multiplyAppendable'> & Omit<ElementProps, 'multiple'>
+>(
   (
     {
       className,
@@ -36,8 +39,6 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Props & 
       hasFileList = true,
       onChange,
       disabled = false,
-      multiple,
-      multiplyAppendable = false,
       error,
       decorators,
       ...props
@@ -104,20 +105,14 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Props & 
         onChange
           ? (newFiles: File[]) => {
               onChange(newFiles)
-              if (multiplyAppendable) {
-                // multiplyAppendable以外ではinput要素を直接弄る必要がないので、updateInputFilesを呼ばない
-                updateInputFiles(newFiles)
-              }
+              updateInputFiles(newFiles)
               setFiles(newFiles)
             }
           : (newFiles: File[]) => {
               setFiles(newFiles)
-              if (multiplyAppendable) {
-                // multiplyAppendable以外ではinput要素を直接弄る必要がないので、updateInputFilesを呼ばない
-                updateInputFiles(newFiles)
-              }
+              updateInputFiles(newFiles)
             },
-      [onChange, updateInputFiles, multiplyAppendable],
+      [onChange, updateInputFiles],
     )
 
     const handleChange = useCallback(
@@ -129,14 +124,9 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Props & 
 
         const newFiles = Array.from(e.target.files ?? [])
 
-        if (multiplyAppendable) {
-          // multiplyAppendableの場合、すでに選択済みのファイルと結合する
-          updateFiles([...files, ...newFiles])
-        } else {
-          updateFiles(newFiles)
-        }
+        updateFiles([...files, ...newFiles])
       },
-      [files, isUpdatingFilesDirectly, updateFiles, multiplyAppendable],
+      [files, isUpdatingFilesDirectly, updateFiles],
     )
 
     const handleDelete = useCallback(
@@ -180,7 +170,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Props & 
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...props}
-            multiple={multiple || multiplyAppendable}
+            multiple
             data-smarthr-ui-input="true"
             type="file"
             onChange={handleChange}
