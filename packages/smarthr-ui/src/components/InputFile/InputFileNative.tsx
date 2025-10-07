@@ -81,7 +81,7 @@ type DecoratorKeyTypes = 'destroy'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
+export const InputFileNative = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
     {
       className,
