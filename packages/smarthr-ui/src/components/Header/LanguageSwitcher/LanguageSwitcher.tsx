@@ -18,11 +18,11 @@ import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
 
-import type { LocaleMap } from '../../../types'
+import type { Locale } from '../../../intl/localeMap'
 
 export type Props = {
   narrow?: boolean
-  localeMap: LocaleMap
+  localeMap: Partial<Record<Locale, string>>
   locale?: string
   defaultLocale?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
@@ -109,13 +109,13 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const { localize } = useIntl()
+  const { localize, availableLocales } = useIntl()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
-      locales: Object.entries(localeMap),
+      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
-    [localeMap],
+    [localeMap, availableLocales],
   )
 
   const decoratorDefaultTexts = useMemo(
