@@ -1,5 +1,6 @@
 import { Button } from '../../Button/'
-import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
+import { DisclosureContent } from '../DisclosureContent'
+import { DisclosureTrigger } from '../DisclosureTrigger'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -23,7 +24,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} as Meta<typeof Disclosure>
+} as Meta<typeof DisclosureContent>
 
 export const VRT = {
   parameters: {},

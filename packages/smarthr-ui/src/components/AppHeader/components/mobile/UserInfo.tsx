@@ -6,7 +6,6 @@ import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
-import { useLocale } from '../../hooks/useLocale'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -29,7 +28,7 @@ const classNameGenerator = tv({
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
 
 export const UserInfo = memo<Props>(
-  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl }) => {
+  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl, locale }) => {
     const displayName = useMemo(
       () =>
         arbitraryDisplayName ??
@@ -42,20 +41,21 @@ export const UserInfo = memo<Props>(
       [arbitraryDisplayName, email, empCode, firstName, lastName],
     )
 
-    return displayName ? <ActualUserInfo accountUrl={accountUrl} displayName={displayName} /> : null
+    return displayName ? (
+      <ActualUserInfo accountUrl={accountUrl} displayName={displayName} locale={locale} />
+    ) : null
   },
 )
 
-const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = ({
+const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: string }> = ({
   displayName,
   accountUrl,
+  locale,
 }) => {
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
 
   const dialogOpen = useCallback(() => setLanguageDialogOpen(true), [])
   const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
-
-  const { locale } = useLocale()
 
   const { localize } = useIntl()
   const translated = useMemo(

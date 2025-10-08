@@ -1,9 +1,9 @@
 import { Button } from '../../Button'
-import { Stack, Cluster } from '../../Layout'
-import { DisclosureTrigger, DisclosureContent } from '../Disclosure'
+import { DisclosureTrigger } from '../DisclosureTrigger'
+import { DisclosureContent } from '../DisclosureContent'
 
-import { action } from 'storybook/actions'
 import type { Meta, StoryObj } from '@storybook/react'
+import { action } from 'storybook/actions'
 
 export default {
   title: 'Components/Disclosure/DisclosureTrigger',
