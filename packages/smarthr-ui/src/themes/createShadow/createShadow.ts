@@ -31,9 +31,11 @@ export type CreatedShadowTheme = {
 const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
 
 const createFocusIndicatorStyles = (outline: string) => css`
+  /* stylelint-disable no-invalid-position-declaration */
   outline: none;
   isolation: isolate;
   box-shadow: ${outline};
+  /* stylelint-enable no-invalid-position-declaration */
 `
 
 export const createShadow = (
