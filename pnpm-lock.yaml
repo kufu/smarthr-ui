@@ -81,6 +81,9 @@ importers:
 
   packages/charts:
     dependencies:
+      '@smarthr/patternomaly':
+        specifier: ^2.0.0
+        version: 2.0.0
       chart.js:
         specifier: ^4.4.0
         version: 4.5.0
@@ -1897,6 +1900,9 @@ packages:
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
+
+  '@smarthr/patternomaly@2.0.0':
+    resolution: {integrity: sha512-dLzwwejmMKvzCVDtTcVmCsKCMLjps4k6xJticba7GMBX3s7wpNvKotjSMboSkXwyNKnlsggpt3qj2qILa0hWDQ==}
 
   '@smarthr/wareki@1.3.0':
     resolution: {integrity: sha512-Jwa7pfFysy9yGin+xCdY1SgoUjTI97I+qjUzmlgnU67tSa9xKIdsxKQgJ0mwgWMPJ9jLgR2nNKlkSKas5vV3UQ==}
@@ -8401,6 +8407,8 @@ snapshots:
   '@sindresorhus/merge-streams@2.3.0': {}
 
   '@sindresorhus/merge-streams@4.0.0': {}
+
+  '@smarthr/patternomaly@2.0.0': {}
 
   '@smarthr/wareki@1.3.0': {}
 
