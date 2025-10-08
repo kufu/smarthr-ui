@@ -87,7 +87,7 @@ export const Heading = memo<Props & ElementProps>(
     )
     const actualTypography = useMemo(() => {
       const defaultTypography = STYLE_TYPE_MAP[type]
-      if (size && type === 'sectionTitle') {
+      if (type === 'sectionTitle' && size) {
         return { ...defaultTypography, size }
       }
       return defaultTypography
