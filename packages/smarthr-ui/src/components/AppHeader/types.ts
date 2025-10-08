@@ -1,10 +1,8 @@
+import type { Locale } from '../../intl/localeMap'
 import type { Header } from '../Header'
 import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
 
-type Locale = 'ja' | 'en-us' | 'id-id' | 'pt' | 'vi' | 'ko' | 'zh-cn' | 'zh-tw'
-
 export type LocaleProps = {
-  selectedLocale: Locale
   onSelectLocale: (locale: Locale) => void
 }
 

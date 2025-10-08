@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [76.1.0](https://github.com/kufu/smarthr-ui/compare/v76.0.0...v76.1.0) (2025-10-08)
+
+
+### Features
+
+* TextLink の size プロパティに XS を追加する ([#5861](https://github.com/kufu/smarthr-ui/issues/5861)) ([9beb355](https://github.com/kufu/smarthr-ui/commit/9beb355af3686c738ab538dee4c6a4e18a903aca))
+
+
+### Bug Fixes
+
+* IntlProvider で受け取る locale と availableLocales を SmartHR UI で使っている言語コード以外でも渡せるようにする ([#5853](https://github.com/kufu/smarthr-ui/issues/5853)) ([824b09c](https://github.com/kufu/smarthr-ui/commit/824b09c3a7657065d75a14d319f810779d76a626))
+* tar-fs の脆弱性対応 ([#5863](https://github.com/kufu/smarthr-ui/issues/5863)) ([e36b81e](https://github.com/kufu/smarthr-ui/commit/e36b81e5a9cd32b806baec8b66881c6ab7e51040))
+
+## [76.0.0](https://github.com/kufu/smarthr-ui/compare/v75.4.1...v76.0.0) (2025-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* AppHeader の言語選択 UI に IntlProvider で渡した locale や availableLocales が反映されるようにする (#5848)
+
+### Bug Fixes
+
+* AppHeader の言語選択 UI に IntlProvider で渡した locale や availableLocales が反映されるようにする ([#5848](https://github.com/kufu/smarthr-ui/issues/5848)) ([6f46385](https://github.com/kufu/smarthr-ui/commit/6f46385f2030fececaa9b0b8ee05fa4bcf77ffcb))
+* SpreadsheetTableのthのコントラスト比を改善 ([#5846](https://github.com/kufu/smarthr-ui/issues/5846)) ([55f8a41](https://github.com/kufu/smarthr-ui/commit/55f8a411df39fcd43a8e287585ff30af24a19f9b))
+
+### [75.4.1](https://github.com/kufu/smarthr-ui/compare/v75.4.0...v75.4.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* **StepFormDialog:** ステップ数が1だったときはstepTextを表示しない ([#5843](https://github.com/kufu/smarthr-ui/issues/5843)) ([e52c2e3](https://github.com/kufu/smarthr-ui/commit/e52c2e3e8e678a04f9db38d05d4cee8802414275))
+
+## [75.4.0](https://github.com/kufu/smarthr-ui/compare/v75.3.2...v75.4.0) (2025-09-09)
+
+
+### Features
+
+* add new icons: FaAt ([#5835](https://github.com/kufu/smarthr-ui/issues/5835)) ([a752cad](https://github.com/kufu/smarthr-ui/commit/a752cadc9a4de71c244f6905507b7a299bc90b90))
+* SideMenuItemにsuffix機能を追加 ([#5828](https://github.com/kufu/smarthr-ui/issues/5828)) ([f955efd](https://github.com/kufu/smarthr-ui/commit/f955efd490c9afc22a3e0e0ceb43870df5c52621))
+
+
+### Bug Fixes
+
+* DisclosureContent / DisclosureTriggerでDOMの順序にかかわらずisOpenが反映されるよう修正 ([#5830](https://github.com/kufu/smarthr-ui/issues/5830)) ([f3f497c](https://github.com/kufu/smarthr-ui/commit/f3f497c802bc979f7125d8c08de6f65287972ce1))
+* RangeSeparatorを非推奨化する ([#5829](https://github.com/kufu/smarthr-ui/issues/5829)) ([32dfcae](https://github.com/kufu/smarthr-ui/commit/32dfcae1bc8cf81cc1bede17a891a72abc4aeb81))
+
 ### [75.3.2](https://github.com/kufu/smarthr-ui/compare/v75.3.1...v75.3.2) (2025-08-26)
 
 

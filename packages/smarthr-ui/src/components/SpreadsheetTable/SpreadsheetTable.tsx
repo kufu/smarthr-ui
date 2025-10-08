@@ -19,7 +19,7 @@ const classNameGenerator = tv({
   base: [
     'smarthr-ui-SpreadsheetTable shr-border-shorthand shr-border-collapse shr-bg-head',
     // th
-    '[&_th]:shr-p-0.25 [&_th]:shr-text-sm [&_th]:shr-font-normal [&_th]:shr-text-grey',
+    '[&_th]:shr-p-0.25 [&_th]:shr-text-sm [&_th]:shr-font-normal [&_th]:shr-text-black',
     // th + th
     '[&_th_+_th]:shr-border-l-shorthand [&_th_+_th]:shr-border-[theme(backgroundColor[head-darken])]',
     // 左上の角： tr:first-child th:first-child
