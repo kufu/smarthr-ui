@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [76.1.0](https://github.com/kufu/smarthr-ui/compare/v76.0.0...v76.1.0) (2025-10-08)
+
+
+### Features
+
+* TextLink の size プロパティに XS を追加する ([#5861](https://github.com/kufu/smarthr-ui/issues/5861)) ([9beb355](https://github.com/kufu/smarthr-ui/commit/9beb355af3686c738ab538dee4c6a4e18a903aca))
+
+
+### Bug Fixes
+
+* IntlProvider で受け取る locale と availableLocales を SmartHR UI で使っている言語コード以外でも渡せるようにする ([#5853](https://github.com/kufu/smarthr-ui/issues/5853)) ([824b09c](https://github.com/kufu/smarthr-ui/commit/824b09c3a7657065d75a14d319f810779d76a626))
+* tar-fs の脆弱性対応 ([#5863](https://github.com/kufu/smarthr-ui/issues/5863)) ([e36b81e](https://github.com/kufu/smarthr-ui/commit/e36b81e5a9cd32b806baec8b66881c6ab7e51040))
+
 ## [76.0.0](https://github.com/kufu/smarthr-ui/compare/v75.4.1...v76.0.0) (2025-09-30)
 
 
