@@ -47,15 +47,6 @@ export const PageHeading = memo<Props & ElementProps>(
     }, [size])
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
-    return (
-      <Component
-        {...props}
-        {...actualTypography}
-        role="heading"
-        aria-level={1}
-        as="h1"
-        className={actualClassName}
-      />
-    )
+    return <Component {...props} {...actualTypography} as="h1" className={actualClassName} />
   },
 )
