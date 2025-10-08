@@ -1,3 +1,5 @@
+import { action } from 'storybook/actions'
+
 import { useArgs } from 'storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
@@ -5,7 +7,6 @@ import { backgroundColor } from '../../../../themes'
 
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
-import { Text } from '../../../Text'
 import { SingleCombobox } from '../SingleCombobox'
 
 export const defaultItems = {
@@ -106,14 +107,6 @@ export default {
       options: Object.keys(prefixes),
       mapping: prefixes,
     },
-    dropdownHelpMessage: {
-      control: { type: 'select' },
-      options: ['文字列', 'ReactNode'],
-      mapping: {
-        文字列: 'ヘルプメッセージ',
-        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
-      },
-    },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -185,7 +178,7 @@ export const Creatable: StoryObj<typeof SingleCombobox> = {
   name: 'creatable',
   args: {
     creatable: true,
-    dropdownHelpMessage: '新しいアイテムを追加できます。',
+    onAdd: action('onAdd'),
   },
 }
 
@@ -203,16 +196,23 @@ export const Width: StoryObj<typeof SingleCombobox> = {
   },
 }
 
-export const DropdownHelpMessage: StoryObj<typeof SingleCombobox> = {
-  name: 'dropdownHelpMessage',
-  args: {
-    dropdownHelpMessage: 'ヘルプメッセージ',
-  },
-}
-
 export const DropdownWidth: StoryObj<typeof SingleCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',
+  },
+}
+
+export const OnChange: StoryObj<typeof SingleCombobox> = {
+  name: 'onChange',
+  args: {
+    onChange: action('onChange'),
+  },
+}
+
+export const OnChangeInput: StoryObj<typeof SingleCombobox> = {
+  name: 'onChangeInput',
+  args: {
+    onChangeInput: action('onChangeInput'),
   },
 }

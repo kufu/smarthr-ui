@@ -1,9 +1,12 @@
+import { action } from 'storybook/actions'
+
 import { useArgs } from 'storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { MultiCombobox } from '../MultiCombobox'
+import { Input } from '../../../Input'
 
 export const defaultItems = {
   'option 1': {
@@ -80,14 +83,6 @@ export default {
   argTypes: {
     items: { control: 'object' },
     selectedItems: { control: 'object' },
-    dropdownHelpMessage: {
-      control: { type: 'select' },
-      options: ['文字列', 'ReactNode'],
-      mapping: {
-        文字列: 'ヘルプメッセージ',
-        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
-      },
-    },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -122,7 +117,6 @@ export const Creatable: StoryObj<typeof MultiCombobox> = {
   name: 'creatable',
   args: {
     creatable: true,
-    dropdownHelpMessage: '新しいアイテムを追加できます。',
   },
 }
 
@@ -140,16 +134,23 @@ export const Width: StoryObj<typeof MultiCombobox> = {
   },
 }
 
-export const DropdownHelpMessage: StoryObj<typeof MultiCombobox> = {
-  name: 'dropdownHelpMessage',
-  args: {
-    dropdownHelpMessage: 'ヘルプメッセージ',
-  },
-}
-
 export const DropdownWidth: StoryObj<typeof MultiCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',
+  },
+}
+
+export const OnChange: StoryObj<typeof MultiCombobox> = {
+  name: 'onChange',
+  args: {
+    onChange: action('onChange'),
+  },
+}
+
+export const OnChangeInput: StoryObj<typeof MultiCombobox> = {
+  name: 'onChangeInput',
+  args: {
+    onChangeInput: action('onChangeInput'),
   },
 }
