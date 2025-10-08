@@ -32,10 +32,6 @@ type StylingProps =
       size?: never
     }
 
-// type Satisfies<T1, T2 extends T1> = T2
-//
-// type _ = Satisfies<Props, StylingProps>
-
 export type Props = PropsWithChildren<{
   /**
    * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
