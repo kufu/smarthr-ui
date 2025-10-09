@@ -3,6 +3,7 @@
 import {
   type ComponentPropsWithRef,
   type FC,
+  type FormEvent,
   type MouseEventHandler,
   type OptionHTMLAttributes,
   type PropsWithChildren,
@@ -48,6 +49,10 @@ type Props = {
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
+const ON_SUBMIT = (e: FormEvent) => {
+  e.preventDefault()
+}
+
 export const SortDropdown: FC<Props & ElementProps> = ({
   sortFields,
   defaultOrder,
@@ -78,7 +83,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <form onSubmit={handleApply}>
+        <form onSubmit={ON_SUBMIT}>
           <Stack className={classNames.body}>
             <FormControl title={labels.sortFieldLabel}>
               <Select
@@ -110,6 +115,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
             </Fieldset>
           </Stack>
           <Footer
+            onApply={handleApply}
             onCancel={onCancel}
             cancelButtonLabel={labels.cancelButtonLabel}
             applyButtonLabel={labels.applyButtonLabel}
@@ -123,14 +129,15 @@ export const SortDropdown: FC<Props & ElementProps> = ({
 
 const Footer = memo<
   Pick<Props, 'onCancel'> & {
+    onApply: MouseEventHandler<HTMLButtonElement>
     className: string
     cancelButtonLabel: ReactNode
     applyButtonLabel: ReactNode
   }
->(({ className, onCancel, cancelButtonLabel, applyButtonLabel }) => (
+>(({ className, onApply, onCancel, cancelButtonLabel, applyButtonLabel }) => (
   <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
     <CancelButton onClick={onCancel}>{cancelButtonLabel}</CancelButton>
-    <ApplyButton>{applyButtonLabel}</ApplyButton>
+    <ApplyButton onClick={onApply}>{applyButtonLabel}</ApplyButton>
   </Cluster>
 ))
 
@@ -142,10 +149,12 @@ const CancelButton = memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
   ),
 )
 
-const ApplyButton = memo<PropsWithChildren>(({ children }) => (
-  <DropdownCloser>
-    <Button type="submit" variant="primary">
-      {children}
-    </Button>
-  </DropdownCloser>
-))
+const ApplyButton = memo<PropsWithChildren<{ onClick: MouseEventHandler<HTMLButtonElement> }>>(
+  ({ onClick, children }) => (
+    <DropdownCloser>
+      <Button variant="primary" onClick={onClick}>
+        {children}
+      </Button>
+    </DropdownCloser>
+  ),
+)
