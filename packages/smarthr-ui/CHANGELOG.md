@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [76.1.1](https://github.com/kufu/smarthr-ui/compare/v76.1.0...v76.1.1) (2025-10-09)
+
+
+### Bug Fixes
+
+* SingleCombobox で意図せぬタイミングでの input の値の変更が発生しないように修正 ([#5833](https://github.com/kufu/smarthr-ui/issues/5833)) ([9af289a](https://github.com/kufu/smarthr-ui/commit/9af289a1b75d9743b2f8957187fdd3a9989753f2))
+* **SortDropdown:** 適用ボタンが正しく動作するように修正 ([#5873](https://github.com/kufu/smarthr-ui/issues/5873)) ([cad49fb](https://github.com/kufu/smarthr-ui/commit/cad49fbd4fbc3b05f8663da5d08d233976210ec0))
+* useTableHeadCellCountでcolSpanを考慮したカラム数の計算に対応 ([#5862](https://github.com/kufu/smarthr-ui/issues/5862)) ([4fa8044](https://github.com/kufu/smarthr-ui/commit/4fa804420ad1ca7e461d5504c530cc75d30f4ce9))
+
 ## [76.1.0](https://github.com/kufu/smarthr-ui/compare/v76.0.0...v76.1.0) (2025-10-08)
 
 
