@@ -18,7 +18,6 @@ export default {
   args: {
     children: 'レスポンスメッセージ',
     type: 'info',
-    size: 'M',
     alt: '',
     right: false,
     iconGap: 0.25,
@@ -45,9 +44,11 @@ export const Size: StoryObj<typeof ResponseMessage> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      <ResponseMessage {...args} size="XS" />
-      <ResponseMessage {...args} size="S" />
-      <ResponseMessage {...args} size="M" />
+      {([undefined, 'M', 'S', 'XS'] as const).map((size) => (
+        <ResponseMessage {...args} size={size}>
+          {size || 'size未指定はMと同サイズ'}
+        </ResponseMessage>
+      ))}
     </Stack>
   ),
 }
