@@ -138,7 +138,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       () => inputRef.current,
     )
 
-    const updateInputValue = useCallback(
+    const updateInputFiles = useCallback(
       (newFiles: File[]) => {
         if (!inputRef.current) {
           return
@@ -160,11 +160,14 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         onChange
           ? (newFiles: File[]) => {
               onChange(newFiles)
-              updateInputValue(newFiles)
+              if (multiplyAppendable) {
+                // multiplyAppendable以外ではinput要素を直接弄る必要がないので、updateInputFilesを呼ばない
+                updateInputFiles(newFiles)
+              }
               setFiles(newFiles)
             }
           : setFiles,
-      [onChange, updateInputValue],
+      [onChange, updateInputFiles, multiplyAppendable],
     )
 
     const handleChange = useCallback(
@@ -196,8 +199,11 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         const newFiles = files.filter((_, i) => index !== i)
 
         updateFiles(newFiles)
+
+        // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
+        inputRef.current.value = ''
       },
-      [files, inputRef, updateFiles],
+      [files, updateFiles],
     )
 
     return (
