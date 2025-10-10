@@ -31,14 +31,14 @@
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.27.2",
-      "@types/react": "^18.3.24",
+      "@types/react": "^18.3.25",
       "minimist": "1.2.8",
       "react": "^19.1.1",
       "react-dom": "^19.1.1",
       "micromatch@<4.0.8": ">=4.0.8",
       "cross-spawn@<7.0.5": ">=7.0.6",
       "nanoid": "3.3.11",
-      "esbuild@<=0.24.2": ">=0.25.8",
+      "esbuild@<=0.24.2": ">=0.25.10",
       "@babel/runtime@<7.26.10": ">=7.28.4",
       "@babel/helpers@<7.26.10": ">=7.28.4",
       "brace-expansion@<1.1.12": "^4.0.1",
