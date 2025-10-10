@@ -7,9 +7,15 @@ export default {
   title: 'Components/Heading/VRT',
   // ペアワイズ法は使わずに総当りする
   render: (args: any) => {
-    const types = ['blockTitle', 'subBlockTitle', 'sectionTitle', 'subSubBlockTitle'] as const
-    const tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
-    const sizes = ['XXL', 'XL', 'L'] as const
+    const types = [
+      undefined,
+      'blockTitle',
+      'subBlockTitle',
+      'sectionTitle',
+      'subSubBlockTitle',
+    ] as const
+    const tags = [undefined, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
+    const sizes = [undefined, 'XXL', 'XL', 'L'] as const
     return (
       <Stack {...args}>
         {types.map((type) =>
@@ -18,11 +24,11 @@ export default {
               <>
                 {/* @ts-expect-error */}
                 <Heading type={type} size={size} tag={tag} visuallyHidden={true}>
-                  {type}
+                  {type ? type : 'undefined'}
                 </Heading>
                 {/* @ts-expect-error */}
                 <Heading type={type} size={size} tag={tag} visuallyHidden={false}>
-                  {type}
+                  {type ? type : 'undefined'}
                 </Heading>
               </>
             )),

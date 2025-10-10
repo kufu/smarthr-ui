@@ -7,16 +7,16 @@ export default {
   title: 'Components/Heading/PageHeading/VRT',
   // ペアワイズ法は使わずに総当りする
   render: (args: any) => {
-    const sizes = ['XXL', 'XL', 'L'] as const
+    const sizes = [undefined, 'XXL', 'XL', 'L'] as const
     return (
       <Stack {...args}>
         {sizes.map((size) => (
           <>
             <PageHeading size={size} visuallyHidden={true}>
-              {size}
+              {size ? size : 'undefined'}
             </PageHeading>
             <PageHeading size={size} visuallyHidden={false}>
-              {size}
+              {size ? size : 'undefined'}
             </PageHeading>
           </>
         ))}

@@ -23,6 +23,7 @@ export const Size: StoryObj<typeof PageHeading> = {
   name: 'size',
   render: (args: Omit<ComponentPropsWithoutRef<typeof PageHeading>, 'type'>) => (
     <Stack>
+      <PageHeading {...args}>size未指定</PageHeading>
       <PageHeading {...args} size="XXL">
         ScreenTitle XXL
       </PageHeading>
@@ -40,6 +41,7 @@ export const VisuallyHidden: StoryObj<typeof PageHeading> = {
   name: 'visuallyHidden',
   render: (args) => (
     <Stack>
+      <PageHeading {...args}>visuallyHidden未指定</PageHeading>
       <PageHeading {...args} visuallyHidden={true}>
         visuallyHidden=true
       </PageHeading>

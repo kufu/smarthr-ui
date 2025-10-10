@@ -23,6 +23,7 @@ export const Type: StoryObj<typeof Heading> = {
   name: 'type',
   render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'size'>) => (
     <Stack>
+      <Heading {...args}>type未指定</Heading>
       <Heading {...args} type="sectionTitle">
         SectionTitle
       </Heading>
@@ -43,6 +44,9 @@ export const Size: StoryObj<typeof Heading> = {
   name: 'size',
   render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'type'>) => (
     <Stack>
+      <Heading {...args} type="sectionTitle">
+        SectionTitle (size未指定)
+      </Heading>
       <Heading {...args} type="sectionTitle" size="XXL">
         SectionTitle XXL
       </Heading>
@@ -87,6 +91,7 @@ export const VisuallyHidden: StoryObj<typeof Heading> = {
   name: 'visuallyHidden',
   render: (args) => (
     <Stack>
+      <Heading {...args}>visuallyHidden未指定</Heading>
       <Heading {...args} visuallyHidden={true}>
         visuallyHidden=true
       </Heading>
