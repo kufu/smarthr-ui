@@ -84,7 +84,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
   ) => {
     const Anchor = elementAs || 'a'
     const actualSuffix = useMemo(() => {
-      if (target === '_blank' && suffix === undefined) {
+      if (target === '_blank' && !suffix) {
         return <OpenInNewTabIcon />
       }
 
