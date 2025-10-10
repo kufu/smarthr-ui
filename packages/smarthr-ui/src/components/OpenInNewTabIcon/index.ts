@@ -1,0 +1,1 @@
+export { OpenInNewTabIcon } from './OpenInNewTabIcon'

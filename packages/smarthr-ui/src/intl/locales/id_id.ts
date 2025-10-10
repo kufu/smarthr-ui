@@ -95,7 +95,7 @@ export const locale = {
   'smarthr-ui/Textarea/availableLetters': '',
   'smarthr-ui/Textarea/maxLettersExceeded': '',
   'smarthr-ui/Textarea/screenReaderMaxLettersDescription': '',
-  'smarthr-ui/TextLink/openInNewTab': '',
+  'smarthr-ui/OpenInNewTabIcon/openInNewTab': '',
   'smarthr-ui/Th/sortDirectionAsc': '',
   'smarthr-ui/Th/sortDirectionDesc': '',
   'smarthr-ui/Th/sortDirectionNone': '',

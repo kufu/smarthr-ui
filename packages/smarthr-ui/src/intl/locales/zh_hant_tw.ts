@@ -95,7 +95,7 @@ export const locale = {
   'smarthr-ui/Textarea/availableLetters': '還可輸入{availableLetters}個字',
   'smarthr-ui/Textarea/maxLettersExceeded': '超出{exceededLetters}個字',
   'smarthr-ui/Textarea/screenReaderMaxLettersDescription': '最多可輸入{maxLetters}個字',
-  'smarthr-ui/TextLink/openInNewTab': '在新視窗中開啟',
+  'smarthr-ui/OpenInNewTabIcon/openInNewTab': '在新視窗中開啟',
   'smarthr-ui/Th/sortDirectionAsc': '遞增',
   'smarthr-ui/Th/sortDirectionDesc': '遞減',
   'smarthr-ui/Th/sortDirectionNone': '無排序',

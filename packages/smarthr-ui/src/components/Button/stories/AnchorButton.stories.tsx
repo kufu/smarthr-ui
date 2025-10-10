@@ -120,3 +120,11 @@ export const Suffix: StoryObj<typeof AnchorButton> = {
     suffix: <FaCaretDownIcon />,
   },
 }
+
+export const TargetBlank: StoryObj<typeof AnchorButton> = {
+  name: 'target="_blank"',
+  args: {
+    target: '_blank',
+    children: '別タブで開くリンク',
+  },
+}

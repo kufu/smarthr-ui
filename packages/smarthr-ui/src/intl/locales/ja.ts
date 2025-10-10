@@ -93,7 +93,7 @@ export const locale = {
   'smarthr-ui/Textarea/availableLetters': 'あと{availableLetters}文字',
   'smarthr-ui/Textarea/maxLettersExceeded': '{exceededLetters}文字オーバー',
   'smarthr-ui/Textarea/screenReaderMaxLettersDescription': '最大{maxLetters}文字入力できます',
-  'smarthr-ui/TextLink/openInNewTab': '別タブで開く',
+  'smarthr-ui/OpenInNewTabIcon/openInNewTab': '別タブで開く',
   'smarthr-ui/Th/sortDirectionAsc': '昇順',
   'smarthr-ui/Th/sortDirectionDesc': '降順',
   'smarthr-ui/Th/sortDirectionNone': '並び替えなし',
