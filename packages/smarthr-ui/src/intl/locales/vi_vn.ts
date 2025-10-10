@@ -95,7 +95,7 @@ export const locale = {
   'smarthr-ui/Textarea/availableLetters': 'Còn {availableLetters} ký tự nữa',
   'smarthr-ui/Textarea/maxLettersExceeded': 'Thửa {exceededLetters} ký tự',
   'smarthr-ui/Textarea/screenReaderMaxLettersDescription': 'Có thể nhập tối đa {maxLetters} ký tự.',
-  'smarthr-ui/TextLink/openInNewTab': 'Mở trong tab mới',
+  'smarthr-ui/OpenInNewTabIcon/openInNewTab': 'Mở trong tab mới',
   'smarthr-ui/Th/sortDirectionAsc': 'Tăng dần',
   'smarthr-ui/Th/sortDirectionDesc': 'Giảm dần',
   'smarthr-ui/Th/sortDirectionNone': 'Không sắp xếp',

@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { OpenInNewTabIcon } from './OpenInNewTabIcon'
+import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
 
 import type { ElementRef, ElementRefProps } from '../../types'
 

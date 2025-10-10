@@ -12,6 +12,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledDetail } from './DisabledDetail'
 
@@ -56,6 +58,14 @@ const AnchorButton = forwardRef(
   ): ReactElement => {
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
+    const actualSuffix = useMemo(() => {
+      if (target === '_blank' && suffix === undefined) {
+        return <OpenInNewTabIcon />
+      }
+
+      return suffix
+    }, [suffix, target])
+
     const button = (
       <ButtonWrapper
         {...props}
@@ -69,7 +79,7 @@ const AnchorButton = forwardRef(
         anchorRef={ref}
         elementAs={elementAs}
         prefix={prefix}
-        suffix={suffix}
+        suffix={actualSuffix}
       >
         {children}
       </ButtonWrapper>

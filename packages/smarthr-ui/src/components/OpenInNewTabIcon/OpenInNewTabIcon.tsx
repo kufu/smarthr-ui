@@ -9,7 +9,10 @@ export const OpenInNewTabIcon = memo(() => {
   const { localize } = useIntl()
   return (
     <FaUpRightFromSquareIcon
-      alt={localize({ id: 'smarthr-ui/TextLink/openInNewTab', defaultText: '別タブで開く' })}
+      alt={localize({
+        id: 'smarthr-ui/OpenInNewTabIcon/openInNewTab',
+        defaultText: '別タブで開く',
+      })}
     />
   )
 })

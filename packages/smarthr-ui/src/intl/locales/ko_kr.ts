@@ -95,7 +95,7 @@ export const locale = {
   'smarthr-ui/Textarea/availableLetters': '앞으로 {availableLetters}자',
   'smarthr-ui/Textarea/maxLettersExceeded': '{exceededLetters}자 초과',
   'smarthr-ui/Textarea/screenReaderMaxLettersDescription': '최대 {maxLetters}자까지 입력할 수 있습니다',
-  'smarthr-ui/TextLink/openInNewTab': '다른 창으로 열기',
+  'smarthr-ui/OpenInNewTabIcon/openInNewTab': '다른 창으로 열기',
   'smarthr-ui/Th/sortDirectionAsc': '오름차순',
   'smarthr-ui/Th/sortDirectionDesc': '내림차순',
   'smarthr-ui/Th/sortDirectionNone': '정렬하지 않음',
