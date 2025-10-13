@@ -203,7 +203,7 @@ const ActualSingleCombobox = <T,>(
 
   const focus = useCallback(() => {
     onFocus?.()
-
+    inputRef.current?.focus()
     setIsFocused(true)
 
     if (!isFocused) {
@@ -219,12 +219,12 @@ const ActualSingleCombobox = <T,>(
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (!selectedItem && defaultItem) {
-      setInputValue(innerText(defaultItem.label))
-
+    if (selectedItem) {
+      setInputValue(innerText(selectedItem.label))
+    } else {
       selectDefaultItem()
     }
-  }, [isFocused, onBlur, selectedItem, defaultItem, selectDefaultItem])
+  }, [isFocused, onBlur, selectedItem, selectDefaultItem])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
@@ -341,15 +341,11 @@ const ActualSingleCombobox = <T,>(
     unfocus,
   )
 
+  // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
+  const selectedItemLabelText = innerText(selectedItem?.label)
   useEffect(() => {
-    setInputValue(selectedItem ? innerText(selectedItem.label) : '')
-
-    if (isFocused && inputRef.current) {
-      inputRef.current.focus()
-    } else if (!selectedItem) {
-      selectDefaultItem()
-    }
-  }, [isFocused, selectedItem, selectDefaultItem])
+    setInputValue(selectedItemLabelText)
+  }, [selectedItemLabelText])
 
   const wrapperStyle = useMemo(
     () => ({
