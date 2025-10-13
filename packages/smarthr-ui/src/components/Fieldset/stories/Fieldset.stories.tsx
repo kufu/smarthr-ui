@@ -17,10 +17,10 @@ export const _childrenOptions = {
   ),
   form: (
     <Cluster gap={1}>
-      <FormControl title="姓" titleType="subBlockTitle">
+      <FormControl label="姓" labelType="subBlockTitle">
         <Input name="lastName" />
       </FormControl>
-      <FormControl title="名" titleType="subBlockTitle">
+      <FormControl label="名" labelType="subBlockTitle">
         <Input name="firstName" />
       </FormControl>
     </Cluster>
@@ -40,7 +40,7 @@ export default {
     disabled: { control: 'boolean' },
   },
   args: {
-    title: 'フィールドセットタイトル',
+    legend: 'フィールドセットタイトル',
     children: _childrenOptions.radio,
   },
   parameters: {
@@ -62,23 +62,23 @@ export const Playground: StoryObj<typeof Fieldset> = {
   args: {},
 }
 
-export const Title: StoryObj<typeof Fieldset> = {
-  name: 'title',
+export const Legend: StoryObj<typeof Fieldset> = {
+  name: 'legend',
   args: {
-    title: '入力要素に紐づく名前',
+    legend: '入力要素に紐づく名前',
   },
 }
 
-export const TitleType: StoryObj<typeof Fieldset> = {
-  name: 'titleType',
+export const LegendType: StoryObj<typeof Fieldset> = {
+  name: 'legendType',
   render: (args) => (
     <Stack>
-      {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((titleType) => (
+      {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((legendType) => (
         <Fieldset
           {...args}
-          title={titleType ?? 'undefined'}
-          titleType={titleType as any}
-          key={titleType}
+          legend={legendType ?? 'undefined'}
+          legendType={legendType as any}
+          key={legendType}
         />
       ))}
     </Stack>
@@ -97,10 +97,10 @@ export const SubActionArea: StoryObj<typeof Fieldset> = {
   },
 }
 
-export const DangerouslyTitleHidden: StoryObj<typeof Fieldset> = {
-  name: 'dangerouslyTitleHidden（非推奨）',
+export const DangerouslyHideLegend: StoryObj<typeof Fieldset> = {
+  name: 'dangerouslyHideLegend（非推奨）',
   args: {
-    dangerouslyTitleHidden: true,
+    dangerouslyHideLegend: true,
   },
 }
 
