@@ -8,18 +8,18 @@ export default {
   title: 'Components/FormControl/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyTitleHidden) => (
+      {[false, true].map((dangerouslyHideLabel) => (
         <FormControl
           {...args}
-          key={dangerouslyTitleHidden.toString()}
-          dangerouslyTitleHidden={dangerouslyTitleHidden}
+          key={dangerouslyHideLabel.toString()}
+          dangerouslyHideLabel={dangerouslyHideLabel}
         />
       ))}
     </Stack>
   ),
   args: {
     children: <Input />,
-    title: 'フォームコントロール',
+    label: 'フォームコントロール',
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">
