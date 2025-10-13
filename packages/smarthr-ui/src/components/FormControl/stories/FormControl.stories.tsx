@@ -72,23 +72,23 @@ export const Playground: StoryObj<typeof FormControl> = {
   args: {},
 }
 
-export const Title: StoryObj<typeof FormControl> = {
-  name: 'title',
+export const Label: StoryObj<typeof FormControl> = {
+  name: 'label',
   args: {
-    title: '入力要素に紐づく名前',
+    label: '入力要素に紐づく名前',
   },
 }
 
-export const TitleType: StoryObj<typeof FormControl> = {
-  name: 'titleType',
+export const LabelType: StoryObj<typeof FormControl> = {
+  name: 'labelType',
   render: (args) => (
     <Stack>
-      {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((titleType) => (
+      {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((labelType) => (
         <FormControl
           {...args}
-          title={titleType ?? 'undefined'}
-          titleType={titleType as any}
-          key={titleType}
+          label={labelType ?? 'undefined'}
+          labelType={labelType as any}
+          key={labelType}
         />
       ))}
     </Stack>
@@ -108,9 +108,9 @@ export const SubActionArea: StoryObj<typeof FormControl> = {
 }
 
 export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'dangerouslyTitleHidden（利用注意）',
+  name: 'dangerouslyHideLabel（利用注意）',
   args: {
-    dangerouslyTitleHidden: true,
+    dangerouslyHideLabel: true,
   },
 }
 
