@@ -44,10 +44,10 @@ describe('Fieldset', () => {
     render(
       <form>
         <Fieldset legend="fieldset-legend">
-          <FormControl label="form-control-label" dangerouslyHideLabel>
+          <FormControl label="form-control-label1" dangerouslyHideLabel>
             <Input name="test1" />
           </FormControl>
-          <FormControl label="form-control-label" dangerouslyHideLabel>
+          <FormControl label="form-control-label2" dangerouslyHideLabel>
             <Input name="test2" />
           </FormControl>
         </Fieldset>
@@ -55,10 +55,10 @@ describe('Fieldset', () => {
     )
 
     expect(
-      screen.getByRole('textbox', { name: 'form-control-title1 fieldset-label' }),
+      screen.getByRole('textbox', { name: 'form-control-label1 fieldset-legend' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('textbox', { name: 'form-control-title2 fieldset-label' }),
+      screen.getByRole('textbox', { name: 'form-control-label2 fieldset-legend' }),
     ).toBeInTheDocument()
   })
 })

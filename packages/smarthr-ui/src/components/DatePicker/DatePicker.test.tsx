@@ -21,7 +21,7 @@ describe('DatePicker', () => {
   it('カレンダーから日付を選択することができる', async () => {
     renderWithIntl(
       <form>
-        <FormControl title="DatePicker">
+        <FormControl label="DatePicker">
           <DatePicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
@@ -47,7 +47,7 @@ describe('DatePicker', () => {
   it('フォーカスを失うときにテキストボックスの内容がフォーマットされること', async () => {
     renderWithIntl(
       <form>
-        <FormControl title="DatePicker">
+        <FormControl label="DatePicker">
           <DatePicker name="date" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
