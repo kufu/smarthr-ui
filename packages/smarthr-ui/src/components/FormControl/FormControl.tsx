@@ -301,6 +301,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   useEffect(() => {
     if (!isFieldset || !inputWrapperRef.current) return
 
+    // HINT: <label for={any}> があり、かつ <VisuallyHiddenText> でラップされている場合だけ処理したい
+    const labelElements = document.querySelectorAll('.smarthr-ui-VisuallyHiddenText label[for]')
+
+    if (labelElements.length === 0) return
+
     const inputs = inputWrapperRef.current.querySelectorAll(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!inputs.length) return
@@ -309,27 +314,16 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
     if (!legendText) return
 
-    const labelMap = new Map(
-      Array.from(document.querySelectorAll('label[for]')).map((l) => [l.getAttribute('for'), l]),
-    )
+    const labelMap = new Map(Array.from(labelElements).map((l) => [l.getAttribute('for'), l]))
 
     inputs.forEach((input) => {
-      const inputId = input.getAttribute('id')
-      let accessibleName = input.getAttribute('aria-label')
-
-      if (!accessibleName) {
-        const l = labelMap.get(inputId)
-
-        if (!l?.closest('.smarthr-ui-VisuallyHiddenText')) {
-          // HINT: <label> があり、かつ <VisuallyHiddenText> でラップされていない場合
-          return
-        }
-
-        accessibleName = l.textContent || ''
-      }
+      const accessibleName =
+        input.getAttribute('aria-label') ||
+        labelMap.get(input.getAttribute('id'))?.textContent ||
+        ''
 
       if (accessibleName && !accessibleName.includes(legendText)) {
-        input.setAttribute('aria-label', `${accessibleName} ${legendText}`.trim())
+        input.setAttribute('aria-label', `${accessibleName} ${legendText}`)
       }
     })
   }, [isFieldset, label])
