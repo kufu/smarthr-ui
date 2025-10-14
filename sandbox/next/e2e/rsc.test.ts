@@ -29,7 +29,6 @@ const SERVER_COMPONENTS = [
   'MonthPicker',
   'NotificationBar',
   'PageCounter',
-  'Pagination',
   'RangeSeparator',
   'ResponseMessage',
   'SearchInput',
@@ -120,17 +119,18 @@ const CLIENT_COMPONENTS: string[] = [
  * サーバーコンポーネント内では利用できないコンポーネント一覧(アルファベット順)
  */
 const DISABLED_COMPONENTS = [
-  'ActionDialog',            // 必須のイベントハンドラをもつため
-  'Calendar',                // 必須のイベントハンドラをもつため
-  'DropZone',                // 必須のイベントハンドラをもつため
-  'FilterDropdown',          // 必須のイベントハンドラをもつため
-  'FormDialog',              // 必須のイベントハンドラをもつため
-  'MessageDialog',           // 必須のイベントハンドラをもつため
-  'MessageDialogContent',    // 必須のイベントハンドラを持つため
+  'ActionDialog',               // 必須のイベントハンドラをもつため
+  'Calendar',                   // 必須のイベントハンドラをもつため
+  'DropZone',                   // 必須のイベントハンドラをもつため
+  'FilterDropdown',             // 必須のイベントハンドラをもつため
+  'FormDialog',                 // 必須のイベントハンドラをもつため
+  'MessageDialog',              // 必須のイベントハンドラをもつため
+  'MessageDialogContent',       // 必須のイベントハンドラを持つため
   'RemoteTriggerActionDialog',  // 必須のイベントハンドラをもつため
   'RemoteTriggerFormDialog',    // 必須のイベントハンドラをもつため
-  'SortDropdown',           // 必須のイベントハンドラをもつため
-  'TabItem',                // 必須のイベントハンドラをもつため
+  'SortDropdown',               // 必須のイベントハンドラをもつため
+  'TabItem',                    // 必須のイベントハンドラをもつため
+  'Pagination',                 // 必須のイベントハンドラをもつため
 ]
 
 test.describe('RSC対応コンポーネントがRSCで利用できること', () => {
