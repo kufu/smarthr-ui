@@ -301,7 +301,8 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   useEffect(() => {
     if (!isFieldset || !inputWrapperRef.current) return
 
-    const inputs = inputWrapperRef.current.querySelectorAll(SMARTHR_UI_INPUT_SELECTOR)
+    const inputs =
+      inputWrapperRef.current.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!inputs.length) return
 
@@ -321,7 +322,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       if (inputId) {
         // HINT: <label> があり、かつ <VisuallyHiddenText> でラップされている場合
         return (
-          inputWrapperRef.current.querySelector(
+          inputWrapperRef.current?.querySelector(
             `label.smarthr-ui-VisuallyHiddenText[for="${inputId}"]`,
           )?.textContent || ''
         )
