@@ -22,7 +22,7 @@ describe('Textarea', () => {
         return (
           <IntlProvider locale="ja">
             <form>
-              <FormControl title="Textarea">
+              <FormControl label="Textarea">
                 <Textarea name="textarea" value={value} maxLetters={10} />
               </FormControl>
             </form>

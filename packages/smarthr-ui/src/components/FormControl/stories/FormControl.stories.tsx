@@ -50,8 +50,7 @@ export default {
     supplementaryMessage: { control: 'text' },
   },
   args: {
-    title: 'フォームコントロール',
-
+    label: 'フォームコントロール',
     children: <Input />,
   },
   parameters: {

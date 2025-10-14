@@ -19,7 +19,7 @@ export default {
   ),
   args: {
     children: <Input />,
-    title: 'フォームコントロール',
+    label: 'フォームコントロール',
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">
