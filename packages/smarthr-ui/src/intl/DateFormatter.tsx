@@ -1,3 +1,5 @@
+'use client'
+
 import { useIntl } from './useIntl'
 
 import type { FormatDateProps } from './useIntl'
