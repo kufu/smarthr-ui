@@ -4,6 +4,7 @@ import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
+import { FaAddressBookIcon } from '../../Icon'
 import { Fieldset } from '../Fieldset'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -172,5 +173,12 @@ export const Disabled: StoryObj<typeof Fieldset> = {
   name: 'disabled',
   args: {
     disabled: true,
+  },
+}
+
+export const LegendIcon: StoryObj<typeof Fieldset> = {
+  name: 'legendIcon',
+  args: {
+    legendIcon: <FaAddressBookIcon />,
   },
 }

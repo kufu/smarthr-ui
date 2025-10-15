@@ -1,7 +1,15 @@
-import { type ComponentProps, type ElementType, type PropsWithChildren, memo, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type ElementType,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { Gap } from '../../types'
 
 type StyleType =
   | 'screenTitle'

@@ -7,17 +7,19 @@ type FormControlType = ComponentProps<typeof ActualFormControl>
 export const Fieldset: FC<
   Omit<
     FormControlType,
-    'as' | 'label' | 'labelType' | 'labelId' | 'htmlFor' | 'dangerouslyHideLabel'
+    'as' | 'label' | 'labelType' | 'labelId' | 'labelIcon' | 'htmlFor' | 'dangerouslyHideLabel'
   > & {
     legend: FormControlType['label']
     legendType?: FormControlType['labelType']
+    legendIcon?: FormControlType['labelIcon']
     dangerouslyHideLegend?: FormControlType['dangerouslyHideLabel']
   }
-> = ({ legend, legendType, dangerouslyHideLegend, ...props }) => (
+> = ({ legend, legendType, legendIcon, dangerouslyHideLegend, ...props }) => (
   <ActualFormControl
     {...props}
     label={legend}
     labelType={legendType}
+    labelIcon={legendIcon}
     dangerouslyHideLabel={dangerouslyHideLegend}
     as="fieldset"
   />

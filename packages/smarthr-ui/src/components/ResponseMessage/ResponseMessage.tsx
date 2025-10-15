@@ -1,10 +1,4 @@
-import {
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import {
@@ -17,10 +11,12 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
-  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> &
-  Pick<ComponentProps<typeof Text>, 'iconGap'> & {
+  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> & {
     size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
+    iconGap?: CharRelativeSize | AbstractSize
   }
 
 export const classNameGenerator = tv({

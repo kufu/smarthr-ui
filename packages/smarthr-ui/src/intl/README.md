@@ -1,6 +1,6 @@
 # intlについて
 
-smarthr-uiの多言語化基盤です。 `react-intl` をベースにしています。  
+smarthr-uiの多言語化基盤です。 `react-intl` をベースにしています。
 
 ## 使い方
 
@@ -12,9 +12,9 @@ smarthr-uiの多言語化基盤です。 `react-intl` をベースにしてい�
 import { useIntl } from 'smarthr-ui'
 
 const Component = () => {
-  const { localize } = useIntl();
-  return <span>{localize({ id: 'smarthr-ui/common/language', defaultText="日本語" })}</span>;
-};
+  const { localize } = useIntl()
+  return <span>{localize({ id: 'smarthr-ui/common/language', defaultText = '日本語' })}</span>
+}
 ```
 
 `Localizer` componentを使う場合
@@ -23,8 +23,6 @@ const Component = () => {
 import { Localizer } from 'smarthr-ui'
 
 const Component = () => {
-  return <Localizer id="smarthr-ui/common/language" defaultText="日本語" />;
-};
+  return <Localizer id="smarthr-ui/common/language" defaultText="日本語" />
+}
 ```
-
-

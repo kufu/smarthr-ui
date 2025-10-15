@@ -10,6 +10,7 @@ import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
+import { FaAddressBookIcon } from '../../Icon'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -174,5 +175,12 @@ export const SupplementaryMessage: StoryObj<typeof FormControl> = {
   name: 'supplementaryMessage',
   args: {
     supplementaryMessage: '入力要素に紐づく補足メッセージ',
+  },
+}
+
+export const LabelIcon: StoryObj<typeof FormControl> = {
+  name: 'labelIcon',
+  args: {
+    labelIcon: <FaAddressBookIcon />,
   },
 }

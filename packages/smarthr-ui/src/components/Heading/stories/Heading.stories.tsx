@@ -1,5 +1,6 @@
 import { Stack } from '../../Layout'
 import { Heading, PageHeading } from '../Heading'
+import { FaAddressBookIcon } from '../../Icon'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -80,5 +81,14 @@ export const VisuallyHidden: StoryObj<typeof Heading> = {
         visuallyHidden=false:
       </Heading>
     </Stack>
+  ),
+}
+
+export const Icon: StoryObj<typeof Heading> = {
+  name: 'icon',
+  render: (args) => (
+    <Heading {...args} icon={<FaAddressBookIcon />}>
+      icon
+    </Heading>
   ),
 }

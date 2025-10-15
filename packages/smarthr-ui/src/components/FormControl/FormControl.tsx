@@ -34,6 +34,8 @@ type Props = PropsWithChildren<{
   label: ReactNode
   /** タイトルの見出しのタイプ */
   labelType?: TextProps['styleType']
+  /** label左に設置するアイコン */
+  labelIcon?: ComponentProps<typeof Text>['prefixIcon']
   /** タイトル右の領域 */
   subActionArea?: ReactNode
   /** タイトルの見出しを視覚的に隠すかどうか */
@@ -142,6 +144,7 @@ const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 export const ActualFormControl: FC<Props & ElementProps> = ({
   label,
   labelType = 'blockTitle',
+  labelIcon,
   subActionArea,
   dangerouslyHideLabel = false,
   htmlFor,
@@ -379,6 +382,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         dangerouslyHideLabel={dangerouslyHideLabel}
         labelType={labelType}
         label={label}
+        labelIcon={labelIcon}
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
         labelClassName={classNames.label}
@@ -389,7 +393,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 }
 
 const LabelCluster = memo<
-  Pick<Props, 'dangerouslyHideLabel' | 'label' | 'subActionArea'> & {
+  Pick<Props, 'dangerouslyHideLabel' | 'label' | 'subActionArea' | 'labelIcon'> & {
     labelType: TextProps['styleType']
     isFieldset: boolean
     managedHtmlFor: string
@@ -405,13 +409,16 @@ const LabelCluster = memo<
     dangerouslyHideLabel,
     labelType,
     label,
+    labelIcon,
     subActionArea,
     labelClassName,
     statusLabels,
   }) => {
     const body = (
       <>
-        <Text styleType={labelType}>{label}</Text>
+        <Text styleType={labelType} prefixIcon={labelIcon}>
+          {label}
+        </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
