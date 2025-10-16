@@ -113,6 +113,7 @@ const CLIENT_COMPONENTS: string[] = [
   'Textarea',       // オートフォーカスや文字数カウントのための状態管理
   'ThCheckbox',     // 多言語化対応のため
   'Tooltip',        // 開閉状態の管理
+  'DateFormatter',  // 多言語化対応のため
 ]
 
 /**
