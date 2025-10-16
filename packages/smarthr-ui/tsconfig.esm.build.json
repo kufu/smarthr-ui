@@ -6,12 +6,10 @@
     "moduleResolution": "bundler",
     "target": "esnext"
   },
-  "include": [
-    "src/**/*.tsx",
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.tsx", "src/**/*.ts"],
   "exclude": [
     "src/**/*.stories.tsx",
+    "src/**/stories/*.tsx",
     "src/**/*.test.tsx",
     "src/**/*.test.ts",
     "src/**/__tests__/*.ts"

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [77.0.0](https://github.com/kufu/smarthr-ui/compare/v76.1.1...v77.0.0) (2025-10-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* ResponseMessage コンポーネントで size プロパティを受け取れるようにする (#5859)
+
+### Features
+
+* Paginationをクライアントコンポーネントとして扱うように修正 ([#5889](https://github.com/kufu/smarthr-ui/issues/5889)) ([a493ec9](https://github.com/kufu/smarthr-ui/commit/a493ec9450af6ce987d8ee1c1e0c7951f2fbe376))
+* ResponseMessage コンポーネントで size プロパティを受け取れるようにする ([#5859](https://github.com/kufu/smarthr-ui/issues/5859)) ([9ca70c2](https://github.com/kufu/smarthr-ui/commit/9ca70c24af3609df54d2c6f9b5d53ae9c42fd13c))
+
 ### [76.1.1](https://github.com/kufu/smarthr-ui/compare/v76.1.0...v76.1.1) (2025-10-09)
 
 
