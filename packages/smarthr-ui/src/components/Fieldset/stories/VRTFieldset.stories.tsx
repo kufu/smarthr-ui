@@ -30,8 +30,10 @@ export default {
     </Stack>
   ),
   args: {
-    legendIcon: <FaAddressBookIcon />,
-    legend: 'フィールドセットタイトル',
+    legend: {
+      text: 'フィールドセットタイトル',
+      icon: <FaAddressBookIcon />,
+    },
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">

@@ -70,20 +70,56 @@ export const Legend: StoryObj<typeof Fieldset> = {
   },
 }
 
-export const LegendType: StoryObj<typeof Fieldset> = {
-  name: 'legendType',
+export const LegendStyleType: StoryObj<typeof Fieldset> = {
+  name: 'legend.styleType',
   render: (args) => (
     <Stack>
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((legendType) => (
         <Fieldset
           {...args}
-          legend={legendType ?? 'undefined'}
-          legendType={legendType as any}
+          legend={
+            legendType
+              ? {
+                  text: legendType,
+                  styleType: legendType,
+                }
+              : 'undefined'
+          }
           key={legendType}
         />
       ))}
     </Stack>
   ),
+}
+
+export const DangerouslyHideLegend: StoryObj<typeof Fieldset> = {
+  name: 'legend.dangerouslyHide（非推奨）',
+  args: {
+    legend: {
+      text: '入力要素に紐づく名前',
+      dangerouslyHide: true,
+    },
+  },
+}
+
+export const LegendId: StoryObj<typeof Fieldset> = {
+  name: 'legend.id',
+  args: {
+    legend: {
+      text: '入力要素に紐づく名前',
+      id: 'legend-id',
+    },
+  },
+}
+
+export const LegendIcon: StoryObj<typeof Fieldset> = {
+  name: 'legend.icon',
+  args: {
+    legend: {
+      text: '入力要素に紐づく名前',
+      icon: <FaAddressBookIcon />,
+    },
+  },
 }
 
 export const SubActionArea: StoryObj<typeof Fieldset> = {
@@ -95,27 +131,6 @@ export const SubActionArea: StoryObj<typeof Fieldset> = {
         <div>サブアクションエリア（end)</div>
       </Cluster>
     ),
-  },
-}
-
-export const DangerouslyHideLegend: StoryObj<typeof Fieldset> = {
-  name: 'dangerouslyHideLegend（非推奨）',
-  args: {
-    dangerouslyHideLegend: true,
-  },
-}
-
-export const HtmlFor: StoryObj<typeof Fieldset> = {
-  name: 'htmlFor',
-  args: {
-    htmlFor: 'input-id',
-  },
-}
-
-export const LabelId: StoryObj<typeof Fieldset> = {
-  name: 'labelId',
-  args: {
-    labelId: 'label-id',
   },
 }
 
@@ -173,12 +188,5 @@ export const Disabled: StoryObj<typeof Fieldset> = {
   name: 'disabled',
   args: {
     disabled: true,
-  },
-}
-
-export const LegendIcon: StoryObj<typeof Fieldset> = {
-  name: 'legendIcon',
-  args: {
-    legendIcon: <FaAddressBookIcon />,
   },
 }

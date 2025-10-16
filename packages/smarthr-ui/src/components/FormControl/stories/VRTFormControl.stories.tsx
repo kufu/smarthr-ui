@@ -12,16 +12,21 @@ export default {
       {[false, true].map((dangerouslyHideLabel) => (
         <FormControl
           {...args}
+          label={{
+            text: args.label,
+            dangerouslyHide: dangerouslyHideLabel,
+          }}
           key={dangerouslyHideLabel.toString()}
-          dangerouslyHideLabel={dangerouslyHideLabel}
         />
       ))}
     </Stack>
   ),
   args: {
     children: <Input />,
-    labelIcon: <FaAddressBookIcon />,
-    label: 'フォームコントロール',
+    label: {
+      text: 'フォームコントロール',
+      icon: <FaAddressBookIcon />,
+    },
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">
