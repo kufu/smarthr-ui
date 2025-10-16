@@ -1,4 +1,5 @@
 import { Cluster, Stack } from '../../Layout'
+import { FaAddressBookIcon } from '../../Icon'
 import { Fieldset } from '../Fieldset'
 
 import { _childrenOptions } from './Fieldset.stories'
@@ -29,6 +30,7 @@ export default {
     </Stack>
   ),
   args: {
+    legendIcon: <FaAddressBookIcon />,
     legend: 'フィールドセットタイトル',
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (

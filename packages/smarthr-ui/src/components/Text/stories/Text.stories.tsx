@@ -162,9 +162,18 @@ export const SuffixIcon: StoryObj<typeof Text> = {
   name: 'suffixIcon',
   render: (args) => (
     <Stack>
-      <Text {...args} suffixIcon={<FaAddressBookIcon />} />
+      <Text {...args} size="XXS" />
+      <Text {...args} size="XS" />
+      <Text {...args} size="S" />
+      <Text {...args} size="M" />
+      <Text {...args} size="L" />
+      <Text {...args} size="XL" />
+      <Text {...args} size="XXL" />
     </Stack>
   ),
+  args: {
+    suffixIcon: <FaAddressBookIcon />,
+  },
 }
 
 export const IconGap: StoryObj<typeof Text> = {

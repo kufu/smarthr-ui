@@ -1,5 +1,6 @@
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
+import { FaAddressBookIcon } from '../../Icon'
 import { FormControl } from '../FormControl'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -19,6 +20,7 @@ export default {
   ),
   args: {
     children: <Input />,
+    labelIcon: <FaAddressBookIcon />,
     label: 'フォームコントロール',
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (

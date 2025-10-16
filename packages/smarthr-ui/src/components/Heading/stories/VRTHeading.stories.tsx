@@ -1,5 +1,6 @@
 import { Stack } from '../../Layout'
 import { Heading, PageHeading } from '../Heading'
+import { FaAddressBookIcon } from '../../Icon'
 
 import type { StoryObj } from '@storybook/react'
 
@@ -22,7 +23,10 @@ export default {
             <PageHeading type={type} />
             {tags.map((tag) => (
               <>
-                <Heading type={type} tag={tag} visuallyHidden={true}>
+                <Heading type={type} tag={tag}>
+                  {type}
+                </Heading>
+                <Heading type={type} tag={tag} icon={<FaAddressBookIcon />}>
                   {type}
                 </Heading>
                 <Heading type={type} tag={tag} visuallyHidden={false}>

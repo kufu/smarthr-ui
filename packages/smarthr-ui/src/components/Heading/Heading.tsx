@@ -79,7 +79,7 @@ export const Heading = memo<Props & ElementProps>(
   },
 )
 
-export const PageHeading = memo<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>>(
+export const PageHeading = memo<Omit<Props & ElementProps, 'visuallyHidden' | 'tag' | 'icon'>>(
   ({ type = 'screenTitle', ...props }) => (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading {...props} type={type} tag="h1" />
