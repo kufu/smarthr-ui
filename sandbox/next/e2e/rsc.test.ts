@@ -29,7 +29,6 @@ const SERVER_COMPONENTS = [
   'MonthPicker',
   'NotificationBar',
   'PageCounter',
-  'RangeSeparator',
   'ResponseMessage',
   'SearchInput',
   'SideMenu',
