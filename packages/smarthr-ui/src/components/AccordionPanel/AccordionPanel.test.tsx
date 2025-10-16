@@ -26,7 +26,7 @@ describe('AccordionPanel', () => {
           <AccordionPanelItem name="accordion-panel-1">
             <AccordionPanelTrigger>アコーディオンパネル1</AccordionPanelTrigger>
             <AccordionPanelContent>
-              <Fieldset title="ラジオボタン" innerMargin={0.5}>
+              <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio1">ラジオボタン1-1</RadioButton>
                 <RadioButton name="radio1">ラジオボタン1-2</RadioButton>
               </Fieldset>
@@ -36,7 +36,7 @@ describe('AccordionPanel', () => {
           <AccordionPanelItem name="accordion-panel-2">
             <AccordionPanelTrigger>アコーディオンパネル2</AccordionPanelTrigger>
             <AccordionPanelContent>
-              <Fieldset title="ラジオボタン" innerMargin={0.5}>
+              <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio2">ラジオボタン2-1</RadioButton>
                 <RadioButton name="radio2">ラジオボタン2-2</RadioButton>
               </Fieldset>
@@ -73,7 +73,7 @@ describe('AccordionPanel', () => {
           <AccordionPanelItem name="accordion-panel-1">
             <AccordionPanelTrigger>アコーディオンパネル1</AccordionPanelTrigger>
             <AccordionPanelContent>
-              <Fieldset title="ラジオボタン" innerMargin={0.5}>
+              <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio1">ラジオボタン1-1</RadioButton>
                 <RadioButton name="radio1">ラジオボタン1-2</RadioButton>
               </Fieldset>
@@ -83,7 +83,7 @@ describe('AccordionPanel', () => {
           <AccordionPanelItem name="accordion-panel-2">
             <AccordionPanelTrigger>アコーディオンパネル2</AccordionPanelTrigger>
             <AccordionPanelContent>
-              <Fieldset title="ラジオボタン" innerMargin={0.5}>
+              <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio2">ラジオボタン2-1</RadioButton>
                 <RadioButton name="radio2">ラジオボタン2-2</RadioButton>
               </Fieldset>

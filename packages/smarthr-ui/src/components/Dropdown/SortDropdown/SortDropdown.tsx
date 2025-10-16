@@ -85,7 +85,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
       <DropdownContent controllable>
         <form onSubmit={ON_SUBMIT}>
           <Stack className={classNames.body}>
-            <FormControl title={labels.sortFieldLabel}>
+            <FormControl label={labels.sortFieldLabel}>
               <Select
                 name="sortFields"
                 options={innerFields}
@@ -93,7 +93,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                 className={classNames.select}
               />
             </FormControl>
-            <Fieldset title={labels.sortOrderLabel} innerMargin={0.5}>
+            <Fieldset legend={labels.sortOrderLabel} innerMargin={0.5}>
               <Cluster gap={1.25}>
                 <RadioButton
                   name="sortOrder"

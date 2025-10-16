@@ -27,7 +27,7 @@ describe('SingleCombobox', () => {
   }: Partial<ComponentProps<typeof SingleCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
-        <FormControl title="コンボボックス">
+        <FormControl label="コンボボックス">
           <SingleCombobox
             {...rest}
             name={name || 'default'}
@@ -169,7 +169,7 @@ describe('SingleCombobox', () => {
     render(
       <IntlProvider locale="ja">
         <form onSubmit={onSubmit}>
-          <FormControl title="コンボボックス">
+          <FormControl label="コンボボックス">
             <SingleCombobox
               name="default"
               items={[

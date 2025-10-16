@@ -24,18 +24,18 @@ describe('Dialog', () => {
         <Button onClick={() => setIsOpen(true)}>Dialog</Button>
         <Dialog isOpen={isOpen} ariaLabel="Dialog">
           <form>
-            <Fieldset title="Dialog" titleType="sectionTitle">
+            <Fieldset legend="Dialog" legendType="sectionTitle">
               <p>
                 The value of isOpen must be managed by you, but you can customize content freely.
               </p>
-              <FormControl title="dialog_datepicker">
+              <FormControl label="dialog_datepicker">
                 <DatePicker
                   name="dialog_datepicker"
                   value={'2021-01-01'}
                   formatDate={(_date) => (_date ? _date.toDateString() : '')}
                 />
               </FormControl>
-              <Fieldset title="Fruits">
+              <Fieldset legend="Fruits">
                 <Cluster as="ul">
                   <li>
                     <RadioButton name="Apple" checked>
@@ -129,7 +129,7 @@ describe('Dialog', () => {
           ariaLabel="特定の要素をフォーカスするダイアログ"
         >
           <form>
-            <FormControl title="特定の要素をフォーカスするダイアログのInput">
+            <FormControl label="特定の要素をフォーカスするダイアログのInput">
               <Input ref={inputRef} name="input_focus_target" />
             </FormControl>
             <div>

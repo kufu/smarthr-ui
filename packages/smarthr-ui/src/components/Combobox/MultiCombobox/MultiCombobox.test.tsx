@@ -27,7 +27,7 @@ describe('SingleCombobox', () => {
   }: Partial<ComponentProps<typeof MultiCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
-        <FormControl title="コンボボックス">
+        <FormControl label="コンボボックス">
           <MultiCombobox
             {...rest}
             name={name || 'default'}
