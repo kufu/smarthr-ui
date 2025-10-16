@@ -170,6 +170,7 @@ const ActualText = <T extends ElementType = 'span'>({
   leading,
   whiteSpace,
   className,
+  children,
   ...props
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
   const actualClassName = useMemo(() => {
@@ -192,19 +193,19 @@ const ActualText = <T extends ElementType = 'span'>({
     [prefixIcon, suffixIcon, iconGap],
   )
 
-  const body = <Component {...props} className={actualClassName} />
-
-  if (wrapperClassName) {
-    return (
-      <span className={wrapperClassName}>
-        {prefixIcon}
-        {body}
-        {suffixIcon}
-      </span>
-    )
-  }
-
-  return body
+  return (
+    <Component {...props} className={actualClassName}>
+      {wrapperClassName ? (
+        <span className={wrapperClassName}>
+          {prefixIcon}
+          {children}
+          {suffixIcon}
+        </span>
+      ) : (
+        children
+      )}
+    </Component>
+  )
 }
 
 export const Text = memo(ActualText) as typeof ActualText

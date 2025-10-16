@@ -144,9 +144,18 @@ export const PrefixIcon: StoryObj<typeof Text> = {
   name: 'prefixIcon',
   render: (args) => (
     <Stack>
-      <Text {...args} prefixIcon={<FaAddressBookIcon />} />
+      <Text {...args} size="XXS" />
+      <Text {...args} size="XS" />
+      <Text {...args} size="S" />
+      <Text {...args} size="M" />
+      <Text {...args} size="L" />
+      <Text {...args} size="XL" />
+      <Text {...args} size="XXL" />
     </Stack>
   ),
+  args: {
+    prefixIcon: <FaAddressBookIcon />,
+  },
 }
 
 export const SuffixIcon: StoryObj<typeof Text> = {
