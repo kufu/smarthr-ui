@@ -195,7 +195,7 @@ const ActualText = <T extends ElementType = 'span'>({
 
   return (
     <Component {...props} className={actualClassName}>
-      {wrapperClassName ? (
+      {prefixIcon || suffixIcon ? (
         <span className={wrapperClassName}>
           {prefixIcon}
           {children}

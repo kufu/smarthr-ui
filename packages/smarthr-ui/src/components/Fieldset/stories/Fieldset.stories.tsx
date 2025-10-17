@@ -18,10 +18,20 @@ export const _childrenOptions = {
   ),
   form: (
     <Cluster gap={1}>
-      <FormControl label="姓" labelType="subBlockTitle">
+      <FormControl
+        label={{
+          text: '姓',
+          type: 'subBlockTitle',
+        }}
+      >
         <Input name="lastName" />
       </FormControl>
-      <FormControl label="名" labelType="subBlockTitle">
+      <FormControl
+        label={{
+          text: '名',
+          type: 'subBlockTitle',
+        }}
+      >
         <Input name="firstName" />
       </FormControl>
     </Cluster>

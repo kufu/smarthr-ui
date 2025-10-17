@@ -10,16 +10,24 @@ export default {
   title: 'Components/Fieldset/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyHideLegend) =>
+      {[false, true].map((dangerouslyHide) =>
         [false, true].map((disabled) => (
           <Fieldset
             {...args}
-            dangerouslyHideLegend={dangerouslyHideLegend}
+            legend={{
+              ...args.legend,
+              dangerouslyHide = { dangerouslyHide },
+            }}
             disabled={disabled}
-            key={`${dangerouslyHideLegend}${disabled}`}
+            key={`${dangerouslyHide}${disabled}`}
           >
             <Stack>
-              <Fieldset legend="入れ子になったフィールドセット" legendType="subBlockTitle">
+              <Fieldset
+                legend={{
+                  text: '入れ子になったフィールドセット',
+                  type: 'subBlockTitle',
+                }}
+              >
                 {_childrenOptions.radio}
               </Fieldset>
               {_childrenOptions.form}
