@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { Heading, PageHeading } from '../Heading'
+import { Heading } from '../Heading'
 
 import type { StoryObj } from '@storybook/react'
 
@@ -8,30 +8,32 @@ export default {
   // ペアワイズ法は使わずに総当りする
   render: (args: any) => {
     const types = [
-      'screenTitle',
+      undefined,
       'blockTitle',
       'subBlockTitle',
       'sectionTitle',
       'subSubBlockTitle',
     ] as const
-    const tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
+    const tags = [undefined, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
+    const sizes = [undefined, 'XXL', 'XL', 'L'] as const
     return (
       <Stack {...args}>
-        {types.map((type) => (
-          <>
-            <PageHeading type={type} />
-            {tags.map((tag) => (
+        {types.map((type) =>
+          tags.map((tag) =>
+            sizes.map((size) => (
               <>
-                <Heading type={type} tag={tag} visuallyHidden={true}>
-                  {type}
+                {/* @ts-expect-error */}
+                <Heading type={type} size={size} tag={tag} visuallyHidden={true}>
+                  {type ? type : 'undefined'}
                 </Heading>
-                <Heading type={type} tag={tag} visuallyHidden={false}>
-                  {type}
+                {/* @ts-expect-error */}
+                <Heading type={type} size={size} tag={tag} visuallyHidden={false}>
+                  {type ? type : 'undefined'}
                 </Heading>
               </>
-            ))}
-          </>
-        ))}
+            )),
+          ),
+        )}
       </Stack>
     )
   },
