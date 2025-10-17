@@ -13,7 +13,7 @@ export default {
         <FormControl
           {...args}
           label={{
-            text: args.label,
+            ...args.label,
             dangerouslyHide: dangerouslyHideLabel,
           }}
           key={dangerouslyHideLabel.toString()}
