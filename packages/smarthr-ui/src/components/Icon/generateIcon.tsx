@@ -57,6 +57,13 @@ type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
 type BaseComponentProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
+  /**
+   * @deprecated この属性は指定した場合の挙動が想像しにくく、コードもわかりづらくなってしまうため、他の方法を利用してください
+   *  - TextコンポーネントのprefixIcon, suffixIcon
+   *  - Headingコンポーネントのicon
+   *  - FormControlのlabel.icon
+   *  - Fieldsetのlegend.icon
+   */
   /** アイコンと並べるテキスト */
   text?: ReactNode
   /** アイコンと並べるテキストとの溝 */

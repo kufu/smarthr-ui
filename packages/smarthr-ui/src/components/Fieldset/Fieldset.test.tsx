@@ -40,14 +40,14 @@ describe('Fieldset', () => {
     ).toBeInTheDocument()
   })
 
-  it('子要素がdangerouslyHideLabel:trueを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
+  it('子要素がlabel.dangerouslyHide:trueを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
     render(
       <form>
         <Fieldset legend="fieldset-legend">
-          <FormControl label="form-control-label1" dangerouslyHideLabel>
+          <FormControl label={{ text: 'form-control-label1', dangerouslyHide: true }}>
             <Input name="test1" />
           </FormControl>
-          <FormControl label="form-control-label2" dangerouslyHideLabel>
+          <FormControl label={{ text: 'form-control-label2', dangerouslyHide: true }}>
             <Input name="test2" />
           </FormControl>
         </Fieldset>

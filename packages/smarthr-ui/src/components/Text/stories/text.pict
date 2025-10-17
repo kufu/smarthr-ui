@@ -6,5 +6,9 @@ leading: undefined (10), NONE, TIGHT, NORMAL, LOOSE
 emphasis: false (10), true
 # whiteSpace も自分たちで定義した値ではないので除外
 # styleType は styleType ごとに展開するので除外
+prefixIcon: undefined (10), <FaAddressBookIcon />
+suffixIcon: undefined (10), <FaAddressBookIcon />
 
 IF [emphasis] = "true" THEN [weight] = "bold";
+IF [prefixIcon] = "<FaAddressBookIcon />" THEN [suffixIcon] = "undefined";
+IF [suffixIcon] = "<FaAddressBookIcon />" THEN [prefixIcon] = "undefined";

@@ -1,5 +1,6 @@
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
+import { FaAddressBookIcon } from '../../Icon'
 import { FormControl } from '../FormControl'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -11,15 +12,21 @@ export default {
       {[false, true].map((dangerouslyHideLabel) => (
         <FormControl
           {...args}
+          label={{
+            ...args.label,
+            dangerouslyHide: dangerouslyHideLabel,
+          }}
           key={dangerouslyHideLabel.toString()}
-          dangerouslyHideLabel={dangerouslyHideLabel}
         />
       ))}
     </Stack>
   ),
   args: {
     children: <Input />,
-    label: 'フォームコントロール',
+    label: {
+      text: 'フォームコントロール',
+      icon: <FaAddressBookIcon />,
+    },
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">

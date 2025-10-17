@@ -10,6 +10,7 @@ import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
+import { FaAddressBookIcon } from '../../Icon'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -78,20 +79,66 @@ export const Label: StoryObj<typeof FormControl> = {
   },
 }
 
-export const LabelType: StoryObj<typeof FormControl> = {
-  name: 'labelType',
+export const LabelStyleType: StoryObj<typeof FormControl> = {
+  name: 'label.styleType',
   render: (args) => (
     <Stack>
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((labelType) => (
         <FormControl
           {...args}
-          label={labelType ?? 'undefined'}
-          labelType={labelType as any}
+          label={
+            labelType
+              ? {
+                  text: labelType,
+                  styleType: labelType,
+                }
+              : 'undefined'
+          }
           key={labelType}
         />
       ))}
     </Stack>
   ),
+}
+
+export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
+  name: 'label.dangerouslyHide（利用注意）',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      dangerouslyHide: true,
+    },
+  },
+}
+
+export const HtmlFor: StoryObj<typeof FormControl> = {
+  name: 'label.htmlFor',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      htmlFor: 'input-id',
+    },
+  },
+}
+
+export const LabelId: StoryObj<typeof FormControl> = {
+  name: 'label.id',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      id: 'label-id',
+    },
+  },
+}
+
+export const LabelIcon: StoryObj<typeof FormControl> = {
+  name: 'label.icon',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      icon: <FaAddressBookIcon />,
+    },
+  },
 }
 
 export const SubActionArea: StoryObj<typeof FormControl> = {
@@ -103,27 +150,6 @@ export const SubActionArea: StoryObj<typeof FormControl> = {
         <div>サブアクションエリア（end)</div>
       </Cluster>
     ),
-  },
-}
-
-export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'dangerouslyHideLabel（利用注意）',
-  args: {
-    dangerouslyHideLabel: true,
-  },
-}
-
-export const HtmlFor: StoryObj<typeof FormControl> = {
-  name: 'htmlFor',
-  args: {
-    htmlFor: 'input-id',
-  },
-}
-
-export const LabelId: StoryObj<typeof FormControl> = {
-  name: 'labelId',
-  args: {
-    labelId: 'label-id',
   },
 }
 
