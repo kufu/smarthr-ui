@@ -73,7 +73,6 @@ export { Fieldset } from './components/Fieldset'
 export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav, SideNavItemButton } from './components/SideNav'
 export { Text } from './components/Text'
-export { RangeSeparator } from './components/RangeSeparator'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 export {
