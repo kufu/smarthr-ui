@@ -35,7 +35,7 @@ type ObjectLabelType = {
   /** ラベルの表示タイプ */
   styleType?: TextProps['styleType']
   /** ラベル左に設置するアイコン */
-  icon?: ComponentProps<typeof Text>['prefixIcon']
+  icon?: TextProps['prefixIcon']
   /** ラベルを視覚的に隠すかどうか */
   dangerouslyHide?: boolean
   /** ラベルを紐づける入力要素のID属性と同じ値 */
