@@ -17,7 +17,7 @@ export type Props = PropsWithChildren<{
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
   /** テキスト左に設置するアイコン */
-  icon?: ComponentProps<typeof Text>['prefixIcon']
+  icon?: TextProps['prefixIcon']
 }>
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
