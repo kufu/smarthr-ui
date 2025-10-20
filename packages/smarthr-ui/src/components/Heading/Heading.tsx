@@ -7,22 +7,45 @@ import { LevelContext } from '../SectioningContent'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
+export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+
+type StylingProps =
+  | {
+      /** テキストのスタイル */
+      type?: Extract<TextProps['styleType'], 'sectionTitle'>
+
+      /**
+       * テキストのサイズ
+       *
+       * `sectionTitle`の場合、`XXL`か`XL`か`L`を指定してください
+       *
+       * @default 'L'
+       */
+      size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
+    }
+  | {
+      /** テキストのスタイル
+       *
+       * screenTitleを使用する場合、PageHeadingコンポーネントを使用してください
+       * */
+      type: Exclude<TextProps['styleType'], 'screenTitle' | 'sectionTitle'>
+      size?: never
+    }
+
 export type Props = PropsWithChildren<{
-  /** テキストのスタイル */
-  type?: TextProps['styleType']
   /**
    * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
    */
   tag?: HeadingTagTypes
+
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
   /** テキスト左に設置するアイコン */
   icon?: TextProps['prefixIcon']
-}>
+}> &
+  StylingProps
 
-export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-
-type ElementProps = Omit<
+export type ElementProps = Omit<
   ComponentProps<'h1'>,
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
@@ -57,16 +80,26 @@ const classNameGenerator = tv({
 })
 
 export const Heading = memo<Props & ElementProps>(
-  ({ tag, type = 'sectionTitle', className, visuallyHidden, icon, ...props }) => {
+  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...props }) => {
     const level = useContext(LevelContext)
     const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
     const actualClassName = useMemo(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
+    const actualTypography = useMemo(() => {
+      const defaultTypography = STYLE_TYPE_MAP[type]
+
+      if (type === 'sectionTitle' && size) {
+        return { ...defaultTypography, size }
+      }
+
+      return defaultTypography
+    }, [type, size])
+
     const commonProps = {
       ...props,
-      ...STYLE_TYPE_MAP[type],
+      ...actualTypography,
       ...tagProps,
       className: actualClassName,
     }
@@ -77,11 +110,4 @@ export const Heading = memo<Props & ElementProps>(
 
     return <Text {...commonProps} prefixIcon={icon} />
   },
-)
-
-export const PageHeading = memo<Omit<Props & ElementProps, 'visuallyHidden' | 'tag' | 'icon'>>(
-  ({ type = 'screenTitle', ...props }) => (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Heading {...props} type={type} tag="h1" />
-  ),
 )
