@@ -8,7 +8,9 @@ type StyleType =
   | 'subBlockTitle'
   | 'subSubBlockTitle'
 
-export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
+export const STYLE_TYPE_MAP: {
+  [key in StyleType]: Omit<VariantProps<typeof classNameGenerator>, 'italic'>
+} = {
   screenTitle: {
     size: 'XL',
     leading: 'TIGHT',
