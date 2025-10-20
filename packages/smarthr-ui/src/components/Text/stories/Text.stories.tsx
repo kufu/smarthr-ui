@@ -5,6 +5,8 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
+const italicOptions = { なし: undefined, true: true, false: false }
+
 export default {
   title: 'Components/Text',
   component: Text,
@@ -15,10 +17,15 @@ export default {
       options: Object.keys(asOptions),
       mapping: asOptions,
     },
+    italic: {
+      control: 'radio',
+      options: Object.keys(italicOptions),
+      mapping: italicOptions,
+    },
   },
   args: {
     children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる。',
-    italic: false,
+    italic: 'なし',
     emphasis: false,
     as: 'なし',
   },
