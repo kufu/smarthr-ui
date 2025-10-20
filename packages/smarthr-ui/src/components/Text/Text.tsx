@@ -8,7 +8,9 @@ type StyleType =
   | 'subBlockTitle'
   | 'subSubBlockTitle'
 
-export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
+export const STYLE_TYPE_MAP: {
+  [key in StyleType]: Omit<VariantProps<typeof classNameGenerator>, 'italic'>
+} = {
   screenTitle: {
     size: 'XL',
     leading: 'TIGHT',
@@ -61,6 +63,9 @@ const classNameGenerator = tv({
     },
     italic: {
       true: 'shr-italic',
+      false: 'shr-not-italic',
+      // tailwind-variantsの仕様でundefinedがfalseとして扱われてしまうため、italicがundefinedの場合空文字にするためのフォールバック
+      undefined: '',
     },
     color: {
       TEXT_BLACK: 'shr-text-black',
@@ -84,16 +89,25 @@ const classNameGenerator = tv({
       'pre-wrap': 'shr-whitespace-pre-wrap',
     },
   },
+  defaultVariants: {
+    italic: 'undefined',
+  },
 })
 
 // VariantProps を使うとコメントが書けない〜🥹
-export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
+// italicはtailwind-variantsの仕様でundefinedがfalseとして扱われるのを回避するワークアラウンドの都合でTextPropsで再定義している
+export type TextProps<T extends ElementType = 'span'> = Omit<
+  VariantProps<typeof classNameGenerator>,
+  'italic'
+> & {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
   as?: T
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
   emphasis?: boolean
   /** 見た目の種類 */
   styleType?: StyleType
+  /** 斜体にするかどうかの真偽値 */
+  italic?: boolean
 }
 
 const ActualText = <T extends ElementType = 'span'>({
@@ -119,7 +133,7 @@ const ActualText = <T extends ElementType = 'span'>({
       weight: weight || styleTypeValues.weight,
       color: color || styleTypeValues.color,
       leading: leading || styleTypeValues.leading,
-      italic,
+      italic: italic ?? 'undefined',
       whiteSpace,
       className,
     })
