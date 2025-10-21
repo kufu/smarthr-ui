@@ -80,6 +80,7 @@ export const locale = {
   'smarthr-ui/RequiredLabel/text': 'Wajib',
   'smarthr-ui/SearchInput/iconAlt': '',
   'smarthr-ui/Select/blankLabel': '',
+  'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '',
   'smarthr-ui/SortDropdown/applyButtonLabel': '',
   'smarthr-ui/SortDropdown/ascLabel': '',

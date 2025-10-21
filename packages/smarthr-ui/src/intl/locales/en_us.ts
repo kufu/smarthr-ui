@@ -80,6 +80,7 @@ export const locale = {
   'smarthr-ui/RequiredLabel/text': 'Required',
   'smarthr-ui/SearchInput/iconAlt': 'Search',
   'smarthr-ui/Select/blankLabel': 'Select',
+  'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': 'Delete',
   'smarthr-ui/SortDropdown/applyButtonLabel': 'Apply',
   'smarthr-ui/SortDropdown/ascLabel': 'Ascending',
