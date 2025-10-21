@@ -21,7 +21,7 @@ export const _childrenOptions = {
       <FormControl
         label={{
           text: '姓',
-          type: 'subBlockTitle',
+          styleType: 'subBlockTitle',
         }}
       >
         <Input name="lastName" />
@@ -29,7 +29,7 @@ export const _childrenOptions = {
       <FormControl
         label={{
           text: '名',
-          type: 'subBlockTitle',
+          styleType: 'subBlockTitle',
         }}
       >
         <Input name="firstName" />

@@ -27,7 +27,7 @@ describe('Dialog', () => {
             <Fieldset
               legend={{
                 text: 'Dialog',
-                type: 'sectionTitle',
+                styleType: 'sectionTitle',
               }}
             >
               <p>
