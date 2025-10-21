@@ -40,9 +40,11 @@ export const PageHeading = memo<Props & ElementProps>(
     )
     const actualTypography = useMemo(() => {
       const defaultTypography = STYLE_TYPE_MAP.screenTitle
+
       if (size) {
         return { ...defaultTypography, size }
       }
+
       return defaultTypography
     }, [size])
     const Component = visuallyHidden ? VisuallyHiddenText : Text

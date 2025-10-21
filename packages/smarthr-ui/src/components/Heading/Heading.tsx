@@ -40,6 +40,8 @@ export type Props = PropsWithChildren<{
 
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
+  /** テキスト左に設置するアイコン */
+  icon?: TextProps['prefixIcon']
 }> &
   StylingProps
 
@@ -78,7 +80,7 @@ const classNameGenerator = tv({
 })
 
 export const Heading = memo<Props & ElementProps>(
-  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, ...props }) => {
+  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...props }) => {
     const level = useContext(LevelContext)
     const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
     const actualClassName = useMemo(
@@ -87,13 +89,25 @@ export const Heading = memo<Props & ElementProps>(
     )
     const actualTypography = useMemo(() => {
       const defaultTypography = STYLE_TYPE_MAP[type]
+
       if (type === 'sectionTitle' && size) {
         return { ...defaultTypography, size }
       }
+
       return defaultTypography
     }, [type, size])
-    const Component = visuallyHidden ? VisuallyHiddenText : Text
 
-    return <Component {...props} {...actualTypography} {...tagProps} className={actualClassName} />
+    const commonProps = {
+      ...props,
+      ...actualTypography,
+      ...tagProps,
+      className: actualClassName,
+    }
+
+    if (visuallyHidden) {
+      return <VisuallyHiddenText {...commonProps} />
+    }
+
+    return <Text {...commonProps} prefixIcon={icon} />
   },
 )

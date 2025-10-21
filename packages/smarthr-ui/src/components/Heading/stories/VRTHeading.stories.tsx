@@ -1,5 +1,6 @@
 import { Stack } from '../../Layout'
 import { Heading } from '../Heading'
+import { FaAddressBookIcon } from '../../Icon'
 
 import type { StoryObj } from '@storybook/react'
 
@@ -28,6 +29,10 @@ export default {
                 </Heading>
                 {/* @ts-expect-error */}
                 <Heading type={type} size={size} tag={tag} visuallyHidden={false}>
+                  {type ? type : 'undefined'}
+                </Heading>
+                {/* @ts-expect-error */}
+                <Heading type={type} size={size} tag={tag} icon={<FaAddressBookIcon />}>
                   {type ? type : 'undefined'}
                 </Heading>
               </>

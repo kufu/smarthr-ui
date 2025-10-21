@@ -4,6 +4,7 @@ import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
+import { FaAddressBookIcon } from '../../Icon'
 import { Fieldset } from '../Fieldset'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -17,10 +18,20 @@ export const _childrenOptions = {
   ),
   form: (
     <Cluster gap={1}>
-      <FormControl label="姓" labelType="subBlockTitle">
+      <FormControl
+        label={{
+          text: '姓',
+          styleType: 'subBlockTitle',
+        }}
+      >
         <Input name="lastName" />
       </FormControl>
-      <FormControl label="名" labelType="subBlockTitle">
+      <FormControl
+        label={{
+          text: '名',
+          styleType: 'subBlockTitle',
+        }}
+      >
         <Input name="firstName" />
       </FormControl>
     </Cluster>
@@ -69,20 +80,56 @@ export const Legend: StoryObj<typeof Fieldset> = {
   },
 }
 
-export const LegendType: StoryObj<typeof Fieldset> = {
-  name: 'legendType',
+export const LegendStyleType: StoryObj<typeof Fieldset> = {
+  name: 'legend.styleType',
   render: (args) => (
     <Stack>
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((legendType) => (
         <Fieldset
           {...args}
-          legend={legendType ?? 'undefined'}
-          legendType={legendType as any}
+          legend={
+            legendType
+              ? {
+                  text: legendType,
+                  styleType: legendType,
+                }
+              : 'undefined'
+          }
           key={legendType}
         />
       ))}
     </Stack>
   ),
+}
+
+export const DangerouslyHideLegend: StoryObj<typeof Fieldset> = {
+  name: 'legend.dangerouslyHide（非推奨）',
+  args: {
+    legend: {
+      text: '入力要素に紐づく名前',
+      dangerouslyHide: true,
+    },
+  },
+}
+
+export const LegendId: StoryObj<typeof Fieldset> = {
+  name: 'legend.id',
+  args: {
+    legend: {
+      text: '入力要素に紐づく名前',
+      id: 'legend-id',
+    },
+  },
+}
+
+export const LegendIcon: StoryObj<typeof Fieldset> = {
+  name: 'legend.icon',
+  args: {
+    legend: {
+      text: '入力要素に紐づく名前',
+      icon: <FaAddressBookIcon />,
+    },
+  },
 }
 
 export const SubActionArea: StoryObj<typeof Fieldset> = {
@@ -94,27 +141,6 @@ export const SubActionArea: StoryObj<typeof Fieldset> = {
         <div>サブアクションエリア（end)</div>
       </Cluster>
     ),
-  },
-}
-
-export const DangerouslyHideLegend: StoryObj<typeof Fieldset> = {
-  name: 'dangerouslyHideLegend（非推奨）',
-  args: {
-    dangerouslyHideLegend: true,
-  },
-}
-
-export const HtmlFor: StoryObj<typeof Fieldset> = {
-  name: 'htmlFor',
-  args: {
-    htmlFor: 'input-id',
-  },
-}
-
-export const LabelId: StoryObj<typeof Fieldset> = {
-  name: 'labelId',
-  args: {
-    labelId: 'label-id',
   },
 }
 
