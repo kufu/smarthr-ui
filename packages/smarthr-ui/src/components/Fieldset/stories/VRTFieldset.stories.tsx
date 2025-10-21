@@ -16,7 +16,7 @@ export default {
             {...args}
             legend={{
               ...args.legend,
-              dangerouslyHide = { dangerouslyHide },
+              dangerouslyHide,
             }}
             disabled={disabled}
             key={`${dangerouslyHide}${disabled}`}
@@ -25,7 +25,7 @@ export default {
               <Fieldset
                 legend={{
                   text: '入れ子になったフィールドセット',
-                  type: 'subBlockTitle',
+                  styleType: 'subBlockTitle',
                 }}
               >
                 {_childrenOptions.radio}
