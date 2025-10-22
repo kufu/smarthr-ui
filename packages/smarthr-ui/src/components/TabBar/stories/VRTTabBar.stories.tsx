@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 export default {
   title: 'Components/TabBar/VRT',
   /* ペアワイズ法による網羅
-   * bordered selected disabled suffix disabledDetail
+   * bordered selected disabled suffix disabledReason
    * false    false    false    あり    なし
    * false    true     true     なし    あり
    * true     true     true     あり    なし
@@ -32,7 +32,7 @@ export default {
               onClick={action('clicked')}
               selected
               disabled
-              disabledDetail={{ message: 'タブが無効な理由' }}
+              disabledReason={{ message: 'タブが無効な理由' }}
             >
               タブ2
             </TabItem>
@@ -51,7 +51,7 @@ export default {
               id="tab4"
               onClick={action('clicked')}
               disabled
-              disabledDetail={{ message: 'タブが無効な理由' }}
+              disabledReason={{ message: 'タブが無効な理由' }}
             >
               タブ4
             </TabItem>
@@ -60,7 +60,7 @@ export default {
               onClick={action('clicked')}
               selected
               suffix={<FaCircleExclamationIcon color="DANGER" />}
-              disabledDetail={{ message: 'タブが無効な理由' }}
+              disabledReason={{ message: 'タブが無効な理由' }}
             >
               タブ5
             </TabItem>
