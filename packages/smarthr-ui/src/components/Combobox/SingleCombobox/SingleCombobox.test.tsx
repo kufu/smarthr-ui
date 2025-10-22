@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { type ComponentProps, act } from 'react'
 import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../../intl'
+import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
 
 import { SingleCombobox } from './SingleCombobox'
@@ -17,7 +18,7 @@ describe('SingleCombobox', () => {
 
   const combobox = () => screen.getByRole('combobox', { name: 'コンボボックス' })
   const listbox = () => screen.queryByRole('listbox')
-  const clearButton = () => screen.getByRole('button', { name: '削除' })
+  const clearButton = () => screen.getByRole('button', { name: '入力中のテキストを削除' })
 
   const template = ({
     name,
@@ -188,4 +189,27 @@ describe('SingleCombobox', () => {
     await act(() => userEvent.keyboard('{enter}'))
     expect(onSubmit).not.toHaveBeenCalled()
   })
+})
+
+test('groupロールによってComboboxと削除ボタンの関連が明らかである', () => {
+  render(
+    <IntlProvider locale="ja">
+      <FormControl label="コンボボックス">
+        <SingleCombobox
+          name="default"
+          items={[
+            { label: 'option 1', value: 'value-1' },
+            { label: 'option 2', value: 'value-2' },
+          ]}
+          selectedItem={{ label: 'option 1', value: 'value-1' }}
+        />
+      </FormControl>
+      <Button>削除</Button>
+    </IntlProvider>,
+  )
+
+  expect(
+    within(screen.getByRole('group')).getByRole('combobox', { name: /コンボボックス/ }),
+  ).toBeVisible()
+  expect(within(screen.getByRole('group')).getByRole('button', { name: /削除/ })).toBeVisible()
 })
