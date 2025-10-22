@@ -10,6 +10,7 @@ import {
   useEffect,
   useId,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -122,7 +123,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       autoResize = false,
       maxRows = Infinity,
       rows = 2,
-      onInput,
       decorators,
       error,
       onChange,
@@ -272,9 +272,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         const newValue = e.target.value
         debouncedUpdateCount?.(newValue)
         debouncedUpdateSrCounterMessage?.(newValue)
+
+        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
+        e.target.rows = rows
+
+        if (autoResize) {
+          const currentRows = calculateIdealRows(e.target, maxRows)
+          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
+          e.target.rows = currentRows
+          setInterimRows(currentRows)
+        }
+
         onChange?.(e)
       },
-      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage],
+      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage, autoResize, maxRows, rows],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -285,7 +296,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     }, [autoFocus])
 
     // autoResize時に、初期値での高さを指定
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (autoResize && textareaRef.current) {
         setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
       }
@@ -298,23 +309,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         debouncedUpdateSrCounterMessage?.(value)
       }
     }, [maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage, value])
-
-    const handleInput = useCallback(
-      (e: ChangeEvent<HTMLTextAreaElement>) => {
-        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = rows
-
-        if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows)
-          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
-          e.target.rows = currentRows
-          setInterimRows(currentRows)
-        }
-
-        onInput?.(e)
-      },
-      [autoResize, maxRows, onInput, rows],
-    )
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
@@ -340,7 +334,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         ref={textareaRef}
         aria-invalid={error || countError || undefined}
         rows={interimRows}
-        onInput={handleInput}
         className={classNames.textarea}
         style={textareaStyle}
       />
