@@ -10,7 +10,6 @@ import {
   useEffect,
   useId,
   useImperativeHandle,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -296,7 +295,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     }, [autoFocus])
 
     // autoResize時に、初期値での高さを指定
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (autoResize && textareaRef.current) {
         setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
       }
