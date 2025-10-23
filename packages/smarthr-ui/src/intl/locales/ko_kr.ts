@@ -80,6 +80,7 @@ export const locale = {
   'smarthr-ui/RequiredLabel/text': '필수',
   'smarthr-ui/SearchInput/iconAlt': '검색',
   'smarthr-ui/Select/blankLabel': '선택해 주세요',
+  'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '삭제',
   'smarthr-ui/SortDropdown/applyButtonLabel': '적용',
   'smarthr-ui/SortDropdown/ascLabel': '오름차순',
