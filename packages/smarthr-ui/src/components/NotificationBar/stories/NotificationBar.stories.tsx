@@ -8,7 +8,7 @@ import { NotificationBar } from '../NotificationBar'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-export const sampleMessages = {
+export const sampleChildrens = {
   String: 'NotificationBar が表示されました',
   ReactNode: (
     <>
@@ -19,6 +19,10 @@ export const sampleMessages = {
       </TextLink>
     </>
   ),
+}
+export const sampleSubActionAreas = {
+  なし: undefined,
+  ReactNode: <Button size="s">編集</Button>,
 }
 export const sampleOnCloseHandlers = {
   あり: () => {
@@ -40,16 +44,22 @@ export default {
     animate: false,
     bold: false,
     type: 'success',
-    message: 'String',
+    children: 'String',
     role: 'alert',
     layer: 0,
     onClose: undefined,
+    subActionArea: undefined,
   },
   argTypes: {
-    message: {
+    children: {
       control: { type: 'radio' },
-      options: Object.keys(sampleMessages),
-      mapping: sampleMessages,
+      options: Object.keys(sampleChildrens),
+      mapping: sampleChildrens,
+    },
+    subActionArea: {
+      control: { type: 'radio' },
+      options: Object.keys(sampleSubActionAreas),
+      mapping: sampleSubActionAreas,
     },
     onClose: {
       control: { type: 'radio' },
@@ -60,7 +70,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-  excludeStories: ['sampleMessages', 'sampleOnCloseHandlers'],
+  excludeStories: ['sampleChildrens', 'sampleSubActionAreas', 'sampleOnCloseHandlers'],
 } as Meta<typeof NotificationBar>
 
 export const Playground: StoryObj<typeof NotificationBar> = {
@@ -110,21 +120,27 @@ export const Type: StoryObj<typeof NotificationBar> = {
   ),
 }
 
-export const Message: StoryObj<typeof NotificationBar> = {
-  name: 'message',
+export const Children: StoryObj<typeof NotificationBar> = {
+  name: 'children',
   render: (args) => (
     <Stack>
-      <NotificationBar {...args} message="NotificationBar が表示されました" />
-      <NotificationBar
-        {...args}
-        message={
-          <Stack>
-            <Text>任意の</Text>
-            <Text>ReactNode</Text>
-            <Text>を設定できます</Text>
-          </Stack>
-        }
-      />
+      <NotificationBar {...args}>NotificationBar が表示されました</NotificationBar>
+      <NotificationBar {...args}>
+        <Stack>
+          <Text>任意の</Text>
+          <Text>ReactNode</Text>
+          <Text>を設定できます</Text>
+        </Stack>
+      </NotificationBar>
+    </Stack>
+  ),
+}
+
+export const SubActionArea: StoryObj<typeof NotificationBar> = {
+  name: 'subActionArea',
+  render: (args) => (
+    <Stack>
+      <NotificationBar {...args} subActionArea={<Text>任意のReactNodeを設定できます</Text>} />
     </Stack>
   ),
 }
