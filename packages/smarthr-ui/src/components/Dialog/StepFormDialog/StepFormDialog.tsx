@@ -55,14 +55,11 @@ export const StepFormDialog: FC<Props & ElementProps> = ({
   }, [isOpen, onClickClose])
 
   const actualOnSubmitAction = useCallback(
-    (close: () => void, e: FormEvent<HTMLFormElement>, currentStep: StepItem) => {
+    (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
       if (isOpen) {
         focusTrapRef.current?.focus()
-
-        return onSubmit(close, e, currentStep)
+        onSubmit(e, helpers)
       }
-
-      return undefined
     },
     [onSubmit, isOpen],
   )

@@ -24,12 +24,12 @@ export default {
           stepLength={2}
           submitLabel="保存"
           firstStep={{ id: 'step-1', stepNumber: 1 }}
-          onSubmit={(closeDialog, e, currentStep) => {
+          onSubmit={(e, { moveStep, close, currentStep }) => {
             action('onSubmit')(e)
             if (currentStep.id === 'step-2') {
-              closeDialog()
+              close()
             } else {
-              return { id: 'step-2', stepNumber: 2 }
+              moveStep({ id: 'step-2', stepNumber: 2 })
             }
           }}
           onClickClose={handleClose}
