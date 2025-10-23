@@ -48,11 +48,11 @@ export const Disabled: StoryObj<typeof TabItem> = {
   },
 }
 
-export const DisabledDetail: StoryObj<typeof TabItem> = {
-  name: 'disabledDetail',
+export const DisabledReason: StoryObj<typeof TabItem> = {
+  name: 'disabledReason',
   args: {
     disabled: true,
-    disabledDetail: {
+    disabledReason: {
       message: '無効な理由',
     },
   },
