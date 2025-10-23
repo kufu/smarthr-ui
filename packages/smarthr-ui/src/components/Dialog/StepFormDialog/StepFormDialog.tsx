@@ -9,7 +9,7 @@ import {
   StepFormDialogContentInner,
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
-import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
+import { StepFormDialogProvider } from './StepFormDialogProvider'
 
 import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
