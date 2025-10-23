@@ -126,6 +126,7 @@ import {
   FaLeftRight,
   FaLightbulb,
   FaLink,
+  FaLinkSlash,
   FaList,
   FaListOl,
   FaListUl,
@@ -331,6 +332,7 @@ export const FaLeftLongIcon = /*#__PURE__*/ generateIcon(FaLeftLong)
 export const FaLeftRightIcon = /*#__PURE__*/ generateIcon(FaLeftRight)
 export const FaLightbulbIcon = /*#__PURE__*/ generateIcon(FaLightbulb)
 export const FaLinkIcon = /*#__PURE__*/ generateIcon(FaLink)
+export const FaLinkSlashIcon = /*#__PURE__*/ generateIcon(FaLinkSlash)
 export const FaListIcon = /*#__PURE__*/ generateIcon(FaList)
 export const FaListOlIcon = /*#__PURE__*/ generateIcon(FaListOl)
 export const FaListUlIcon = /*#__PURE__*/ generateIcon(FaListUl)
