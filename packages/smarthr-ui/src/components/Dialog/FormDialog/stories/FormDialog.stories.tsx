@@ -30,7 +30,7 @@ export default {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <FormDialog {...args} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
-          <FormControl title="名前">
+          <FormControl label="名前">
             <Input name="name" />
           </FormControl>
         </FormDialog>
@@ -151,7 +151,7 @@ export const ResponseStatus: StoryObj<typeof FormDialog> = {
             close()
           }}
         >
-          <FormControl title="名前">
+          <FormControl label="名前">
             <Input name="name" />
           </FormControl>
           <Cluster gap={1.25} className="shr-mt-2">
@@ -226,7 +226,7 @@ export const PortalParent: StoryObj<typeof FormDialog> = {
             close()
           }}
         >
-          <FormControl title="名前">
+          <FormControl label="名前">
             <Input name="name" />
           </FormControl>
         </FormDialog>
@@ -273,7 +273,7 @@ export const FirstFocusTarget: StoryObj<typeof FormDialog> = {
             close()
           }}
         >
-          <FormControl title="名前">
+          <FormControl label="名前">
             <Input ref={inputRef} name="name" />
           </FormControl>
         </FormDialog>

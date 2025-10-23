@@ -20,7 +20,7 @@ describe('WarekiPicker', () => {
   it('日本語で正しく和暦を表示する', () => {
     renderWithIntl(
       <form>
-        <FormControl title="WarekiPicker">
+        <FormControl label="WarekiPicker">
           <WarekiPicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
@@ -36,7 +36,7 @@ describe('WarekiPicker', () => {
   it('非日本語で正しく和暦を表示する', () => {
     renderWithIntl(
       <form>
-        <FormControl title="WarekiPicker">
+        <FormControl label="WarekiPicker">
           <WarekiPicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
@@ -53,7 +53,7 @@ describe('WarekiPicker', () => {
   it('和暦表示のDatePickerが正しく動作する', async () => {
     renderWithIntl(
       <form>
-        <FormControl title="WarekiPicker">
+        <FormControl label="WarekiPicker">
           <WarekiPicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
