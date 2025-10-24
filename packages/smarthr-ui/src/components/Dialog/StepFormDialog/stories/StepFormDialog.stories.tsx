@@ -303,7 +303,7 @@ export const AsyncSubmitSuccess: StoryObj<typeof StepFormDialog> = {
 
     const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = async (
       _e,
-      { moveStep, close, currentStep },
+      { goto, close, currentStep },
     ) => {
       setResponseStatus({ status: 'processing' })
       // APIコールをシミュレート（成功パターン）
@@ -314,10 +314,10 @@ export const AsyncSubmitSuccess: StoryObj<typeof StepFormDialog> = {
           // ステップに応じて遷移を制御
           if (currentStep.stepNumber === 1) {
             // ステップ1 → ステップ2へ遷移
-            moveStep({ id: 'step-2', stepNumber: 2 })
+            goto({ id: 'step-2', stepNumber: 2 })
           } else if (currentStep.stepNumber === 2) {
             // ステップ2 → ステップ3へ遷移
-            moveStep({ id: 'step-3', stepNumber: 3 })
+            goto({ id: 'step-3', stepNumber: 3 })
           } else {
             // 最終ステップ → ダイアログを閉じる
             close()

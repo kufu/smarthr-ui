@@ -24,8 +24,8 @@ import { dialogContentInner } from '../dialogInnerStyle'
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
 type StepFormHelpers = {
-  /** 次のステップに移動する関数 */
-  moveStep: (nextStep: StepItem) => void
+  /** 指定したステップに移動する関数 */
+  goto: (nextStep: StepItem) => void
   /** ダイアログを閉じる関数 */
   close: () => void
   /** 現在のステップ情報 */
@@ -123,7 +123,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       e.stopPropagation()
 
       const helpers: StepFormHelpers = {
-        moveStep: (nextStep: StepItem) => {
+        goto: (nextStep: StepItem) => {
           stepQueue.current.push(currentStep)
           changeCurrentStep(nextStep)
         },
