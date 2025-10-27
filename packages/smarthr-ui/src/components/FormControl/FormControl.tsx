@@ -323,19 +323,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     if (!legendText) return
 
     inputs.forEach((input: HTMLInputElement) => {
-      let accessibleName = input.getAttribute('aria-label') || ''
-
-      if (!accessibleName) {
-        const inputId = input.getAttribute('id')
-
-        if (inputId) {
-          // HINT: <label> があり、かつ <VisuallyHiddenText> でラップされている場合
-          accessibleName =
-            inputWrapperRef.current?.querySelector(
-              `label.smarthr-ui-VisuallyHiddenText[for="${inputId}"]`,
-            )?.textContent || ''
-        }
-      }
+      const accessibleName =
+        input.getAttribute('aria-label') ||
+        (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
+          ? input.labels![0].textContent
+          : '')
 
       if (accessibleName && !accessibleName.includes(legendText)) {
         input.setAttribute('aria-label', `${accessibleName} ${legendText}`)
