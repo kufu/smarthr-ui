@@ -1,4 +1,5 @@
 import { Cluster, Stack } from '../../Layout'
+import { FaAddressBookIcon } from '../../Icon'
 import { Fieldset } from '../Fieldset'
 
 import { _childrenOptions } from './Fieldset.stories'
@@ -9,16 +10,24 @@ export default {
   title: 'Components/Fieldset/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyHideLegend) =>
+      {[false, true].map((dangerouslyHide) =>
         [false, true].map((disabled) => (
           <Fieldset
             {...args}
-            dangerouslyHideLegend={dangerouslyHideLegend}
+            legend={{
+              ...args.legend,
+              dangerouslyHide,
+            }}
             disabled={disabled}
-            key={`${dangerouslyHideLegend}${disabled}`}
+            key={`${dangerouslyHide}${disabled}`}
           >
             <Stack>
-              <Fieldset legend="入れ子になったフィールドセット" legendType="subBlockTitle">
+              <Fieldset
+                legend={{
+                  text: '入れ子になったフィールドセット',
+                  styleType: 'subBlockTitle',
+                }}
+              >
                 {_childrenOptions.radio}
               </Fieldset>
               {_childrenOptions.form}
@@ -29,7 +38,10 @@ export default {
     </Stack>
   ),
   args: {
-    legend: 'フィールドセットタイトル',
+    legend: {
+      text: 'フィールドセットタイトル',
+      icon: <FaAddressBookIcon />,
+    },
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">
