@@ -27,5 +27,5 @@ export const HeaderLink = memo<Props>(({ enableNew, className, ...props }) => {
     [enableNew, className],
   )
 
-  return <TextLink {...props} target="_blank" suffix={null} className={actualClassName} />
+  return <TextLink {...props} target="_blank" className={actualClassName} />
 })
