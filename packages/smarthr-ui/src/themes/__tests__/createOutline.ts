@@ -8,9 +8,13 @@ describe('createOutline', () => {
   it('ユーザー指定の OUTLINE がフォーカススタイルに反映されること', () => {
     const userOutlineColor = 'black'
     const actual = createOutline({ OUTLINE: userOutlineColor })
-    const expectedOutline = `0 0 0 2px white, 0 0 0 4px ${userOutlineColor}`
+    const expectedOutline = replaceSpaces(css`
+      outline: 2px solid ${userOutlineColor};
+      outline-offset: -2px;
+      box-shadow: inset 0 0 0 2px white;
+    `)
 
-    expect(actual.OUTLINE).toBe(expectedOutline)
+    expect(replaceSpaces(actual.OUTLINE)).toBe(expectedOutline)
 
     const actualFocusIndicator = replaceSpaces(actual.focusIndicatorStyles)
     const expectedFocusIndicator = replaceSpaces(css`
