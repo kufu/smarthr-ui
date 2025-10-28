@@ -12,6 +12,7 @@ import {
   createInteraction,
 } from './createInteraction'
 import { type CreatedLeading, type LeadingProperty, createLeading } from './createLeading'
+import { type CreatedOutlineTheme, createOutline } from './createOutline'
 import { type CreatedRadiusTheme, type RadiusProperty, createRadius } from './createRadius'
 import { type CreatedShadowTheme, type ShadowProperty, createShadow } from './createShadow'
 import {
@@ -48,6 +49,7 @@ export type CreatedTheme = {
   radius: CreatedRadiusTheme
   interaction: CreatedInteractionTheme
   shadow: CreatedShadowTheme
+  outline: CreatedOutlineTheme
   zIndex: CreatedZindexTheme
 }
 
@@ -67,7 +69,8 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
     border: createBorder(theme.border, colorProperty),
     radius: createRadius(theme.radius),
     interaction: createInteraction(theme.interaction),
-    shadow: createShadow(theme.shadow, colorProperty),
+    shadow: createShadow(theme.shadow),
+    outline: createOutline(colorProperty),
     zIndex: createZIndex(theme.zIndex),
   }
 }

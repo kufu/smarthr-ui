@@ -27,7 +27,6 @@ defaultConfig.twMergeConfig = {
           'layer-2',
           'layer-3',
           'layer-4',
-          'outline',
           'underline',
           'input-hover',
           'none',
@@ -64,7 +63,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-    focus: ['focus-indicator', 'focus-indicator--inner'],
+    focus: ['focus-indicator'],
   },
 }
 
@@ -122,7 +121,6 @@ export default {
       'layer-2': defaultShadow.LAYER2,
       'layer-3': defaultShadow.LAYER3,
       'layer-4': defaultShadow.LAYER4,
-      outline: defaultShadow.OUTLINE,
       underline: defaultShadow.UNDERLINE,
       'input-hover': defaultShadow.INPUT_HOVER,
       none: 'none',
@@ -411,14 +409,10 @@ export default {
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
         '.focus-indicator': {
-          outline: 'none',
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '-2px',
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
-        },
-        '.focus-indicator--inner': {
-          outline: 'none',
-          isolation: 'isolate',
-          boxShadow: `inset 0 0 0 2px ${theme('colors.outline')}, inset 0 0 0 4px ${theme('colors.white')}`,
+          boxShadow: `inset 0 0 0 2px ${theme('colors.white')}`,
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),

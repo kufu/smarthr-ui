@@ -1,7 +1,4 @@
-import { type FlattenSimpleInterpolation, css } from 'styled-components'
-
 import { merge } from '../../libs/lodash'
-import { type ColorProperty, defaultColor } from '../createColor'
 
 import { defaultShadow } from './defaultShadow'
 
@@ -11,8 +8,6 @@ export type ShadowProperty = {
   LAYER2?: string
   LAYER3?: string
   LAYER4?: string
-  OUTLINE?: string
-  OUTLINE_MARGIN?: string
   UNDERLINE?: string
 }
 
@@ -22,36 +17,13 @@ export type CreatedShadowTheme = {
   LAYER2?: string
   LAYER3?: string
   LAYER4?: string
-  OUTLINE: string
-  OUTLINE_MARGIN: string
   UNDERLINE: string
-  focusIndicatorStyles: FlattenSimpleInterpolation
 }
 
-const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
-
-const createFocusIndicatorStyles = (outline: string) => css`
-  /* stylelint-disable no-invalid-position-declaration */
-  outline: none;
-  isolation: isolate;
-  box-shadow: ${outline};
-  /* stylelint-enable no-invalid-position-declaration */
-`
-
-export const createShadow = (
-  userShadow?: ShadowProperty,
-  userColor?: ColorProperty,
-): CreatedShadowTheme => {
-  const outline = createOutline(userColor?.OUTLINE || defaultColor.OUTLINE)
-  const shadows = {
-    ...defaultShadow,
-    OUTLINE: outline,
-    focusIndicatorStyles: createFocusIndicatorStyles(outline),
-  }
-
+export const createShadow = (userShadow?: ShadowProperty): CreatedShadowTheme => {
   if (!userShadow) {
-    return shadows
+    return defaultShadow
   }
 
-  return merge(shadows, userShadow)
+  return merge({ ...defaultShadow }, userShadow)
 }
