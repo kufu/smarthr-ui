@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [78.1.0](https://github.com/kufu/smarthr-ui/compare/v78.0.0...v78.1.0) (2025-10-30)
+
+
+### Features
+
+* add new icons: FaLinkSlash ([#5912](https://github.com/kufu/smarthr-ui/issues/5912)) ([38d1d23](https://github.com/kufu/smarthr-ui/commit/38d1d23168f747af4e0070f1a0a8d2570e57c3ae))
+
+
+### Bug Fixes
+
+* **FileViewer:** pdf回転時にハイパーリンクが正常に動作しないのを修正 ([#5915](https://github.com/kufu/smarthr-ui/issues/5915)) ([cba4a35](https://github.com/kufu/smarthr-ui/commit/cba4a358710a6252ea4e0332a5494994cfdf8fbb))
+* target="_blank"を指定していてもprefixがあればOpenInNewTabIconを表示しない ([#5916](https://github.com/kufu/smarthr-ui/issues/5916)) ([0006f50](https://github.com/kufu/smarthr-ui/commit/0006f50751380fce5c3ce9c643e862f6e8043cd8))
+
 ## [78.0.0](https://github.com/kufu/smarthr-ui/compare/v77.0.0...v78.0.0) (2025-10-23)
 
 
