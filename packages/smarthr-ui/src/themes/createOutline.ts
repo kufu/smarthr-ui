@@ -14,7 +14,10 @@ export type CreatedOutlineTheme = {
 const createOutlineStyles = (color: string) => css`
   outline: 2px solid ${color};
   outline-offset: -2px;
-  box-shadow: inset 0 0 0 2px white;
+  isolation: isolate;
+
+  /** outline は border の外側から生えるが、box-shadow は border の内側から生えるため、border の幅を引いている */
+  box-shadow: inset 0 0 0 3px white;
 `
 
 export const defaultOutline = {

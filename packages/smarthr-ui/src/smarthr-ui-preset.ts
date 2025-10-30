@@ -412,7 +412,8 @@ export default {
           outline: `2px solid ${theme('colors.outline')}`,
           outlineOffset: '-2px',
           isolation: 'isolate',
-          boxShadow: `inset 0 0 0 2px ${theme('colors.white')}`,
+          /** outline は border の外側から生えるが、box-shadow は border の内側から生えるため、border の幅を引いている */
+          boxShadow: `inset 0 0 0 3px ${theme('colors.white')}`,
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),
