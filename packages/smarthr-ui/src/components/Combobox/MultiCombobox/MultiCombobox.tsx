@@ -100,7 +100,7 @@ const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'has-[[aria-invalid]]:shr-border-danger',
     ],
-    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
+    inputArea: 'shr-overflow-y-auto shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5',
     selectedList:
       'smarthr-ui-MultiCombobox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
     inputWrapper: 'shr-flex shr-flex-1 shr-items-center',

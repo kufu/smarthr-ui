@@ -25,7 +25,7 @@ export default {
       />
       <div className="shr-w-[5em]">
         <Tooltip {...args} ellipsisOnly>
-          <span className="shr-inline-block shr-max-w-full shr-overflow-hidden shr-text-ellipsis shr-text-nowrap">
+          <span className="shr-overflow-hidden shr-inline-block shr-max-w-full shr-text-ellipsis shr-text-nowrap">
             省略されるメッセージ
           </span>
         </Tooltip>
