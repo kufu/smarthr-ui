@@ -21,7 +21,7 @@ type Props = VariantProps<typeof classNameGenerator> &
 
 const classNameGenerator = tv({
   base: [
-    'shr-flex shr-overflow-x-auto shr-overflow-y-hidden',
+    'shr-overflow-y-hidden shr-overflow-x-auto shr-flex',
     '[&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto',
     /*
       Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
