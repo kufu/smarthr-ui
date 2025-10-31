@@ -35,11 +35,11 @@ const classNameGenerator = tv({
   slots: {
     overlay: 'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white',
     container:
-      'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-overflow-y-auto shr-px-0.25 shr-py-0.5',
+      'shr-overflow-y-auto shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-px-0.25 shr-py-0.5',
     yearButton:
-      'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none',
+      'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none focus-visible:shr-outline-none',
     yearWrapper: [
-      'shr-box-border shr-inline-block shr-rounded-full shr-px-0.75 shr-py-0.5 shr-text-base shr-leading-none group-hover:shr-bg-base-grey group-hover:shr-text-black',
+      'shr-box-border shr-inline-block shr-rounded-full shr-px-0.75 shr-py-0.5 shr-text-base shr-leading-none group-focus-visible:shr-focus-indicator group-hover:shr-bg-base-grey group-hover:shr-text-black',
       '[[data-this-year="true"]>&]:shr-border-shorthand',
       '[[aria-pressed="true"]>&]:shr-bg-main [[aria-pressed="true"]>&]:shr-text-white',
     ],

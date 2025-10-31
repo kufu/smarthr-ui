@@ -42,10 +42,9 @@ const classNameGenerator = tv({
       'smarthr-ui-MultiCombobox-deleteButton',
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
-      'focus-visible:shr-shadow-[unset]',
     ],
     deleteButtonIcon:
-      'group-focus-visible/deleteButton:shr-focus-indicator group-focus-visible/deleteButton:shr-rounded-full',
+      'group-focus-visible/deleteButton:shr-focus-indicator--outer group-focus-visible/deleteButton:shr-rounded-full',
   },
   variants: {
     enableEllipsis: {
