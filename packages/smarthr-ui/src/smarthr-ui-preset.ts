@@ -408,7 +408,7 @@ export default {
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
-        '.focus-indicator': {
+        ':where(.focus-indicator)': {
           outline: `2px solid ${theme('colors.outline')}`,
           outlineOffset: '2px',
           isolation: 'isolate',
