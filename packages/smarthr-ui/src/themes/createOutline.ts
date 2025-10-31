@@ -9,9 +9,17 @@ export type OutlineProperty = {
 export type CreatedOutlineTheme = {
   OUTLINE: FlattenSimpleInterpolation
   focusIndicatorStyles: FlattenSimpleInterpolation
+  innerFocusIndicatorStyles: FlattenSimpleInterpolation
 }
 
-const createOutlineStyles = (color: string) => css`
+const createOuterOutlineStyles = (color: string) => css`
+  outline: 2px solid ${color};
+  outline-offset: 2px;
+  isolation: isolate;
+  box-shadow: 0 0 0 2px white;
+`
+
+const createInnerOutlineStyles = (color: string) => css`
   outline: 2px solid ${color};
   outline-offset: -2px;
   isolation: isolate;
@@ -20,14 +28,12 @@ const createOutlineStyles = (color: string) => css`
   box-shadow: inset 0 0 0 3px white;
 `
 
-export const defaultOutline = {
-  OUTLINE: createOutlineStyles(defaultColor.OUTLINE),
-}
-
 export const createOutline = (userOutline?: OutlineProperty): CreatedOutlineTheme => {
-  const outline = userOutline?.OUTLINE || defaultColor.OUTLINE
+  const outlineColor = userOutline?.OUTLINE || defaultColor.OUTLINE
   return {
-    OUTLINE: createOutlineStyles(outline),
-    focusIndicatorStyles: createOutlineStyles(outline),
+    OUTLINE: createOuterOutlineStyles(outlineColor),
+    focusIndicatorStyles: createOuterOutlineStyles(outlineColor),
+    innerFocusIndicatorStyles: createInnerOutlineStyles(outlineColor),
   }
 }
+export const defaultOutline = createOutline()
