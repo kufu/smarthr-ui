@@ -8,7 +8,7 @@ export type BaseProps = PropsWithChildren<{
   /**
    * 無効な理由
    */
-  disabledDetail?: {
+  disabledReason?: {
     icon?: FunctionComponent
     message: ReactNode
   }
