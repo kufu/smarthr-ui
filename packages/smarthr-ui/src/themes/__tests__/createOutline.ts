@@ -9,18 +9,22 @@ describe('createOutline', () => {
     const userOutlineColor = 'black'
     const actual = createOutline({ OUTLINE: userOutlineColor })
     const expectedOutline = replaceSpaces(css`
+      /* stylelint-disable no-invalid-position-declaration */
       outline: 2px solid ${userOutlineColor};
       outline-offset: -2px;
       box-shadow: inset 0 0 0 2px white;
+      /* stylelint-enable no-invalid-position-declaration */
     `)
 
     expect(replaceSpaces(actual.OUTLINE)).toBe(expectedOutline)
 
     const actualFocusIndicator = replaceSpaces(actual.focusIndicatorStyles)
     const expectedFocusIndicator = replaceSpaces(css`
+      /* stylelint-disable no-invalid-position-declaration */
       outline: 2px solid ${userOutlineColor};
       outline-offset: -2px;
       box-shadow: inset 0 0 0 2px white;
+      /* stylelint-enable no-invalid-position-declaration */
     `)
 
     expect(actualFocusIndicator).toBe(expectedFocusIndicator)
