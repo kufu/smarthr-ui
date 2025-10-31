@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { type ComponentProps, act } from 'react'
 import { userEvent } from 'storybook/test'
 
@@ -17,7 +17,7 @@ describe('SingleCombobox', () => {
 
   const combobox = () => screen.getByRole('combobox', { name: 'コンボボックス' })
   const listbox = () => screen.queryByRole('listbox')
-  const clearButton = () => screen.getByRole('button', { name: '削除' })
+  const clearButton = () => screen.getByRole('button', { name: 'クリア' })
 
   const template = ({
     name,
@@ -188,4 +188,29 @@ describe('SingleCombobox', () => {
     await act(() => userEvent.keyboard('{enter}'))
     expect(onSubmit).not.toHaveBeenCalled()
   })
+})
+
+test('groupロールが付与されている', () => {
+  const onClearClick = vi.fn()
+
+  render(
+    <IntlProvider locale="ja">
+      <form>
+        <FormControl label="コンボボックス">
+          <SingleCombobox
+            name="default"
+            items={[
+              { label: 'option 1', value: 'value-1' },
+              { label: 'option 2', value: 'value-2' },
+            ]}
+            selectedItem={{ label: 'option 1', value: 'value-1' }}
+            onClearClick={onClearClick}
+          />
+        </FormControl>
+      </form>
+    </IntlProvider>,
+  )
+
+  within(screen.getByRole('group')).getByRole('button', { name: 'クリア' }).click()
+  expect(onClearClick).toBeCalled()
 })
