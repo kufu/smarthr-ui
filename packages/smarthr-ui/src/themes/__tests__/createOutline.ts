@@ -11,9 +11,9 @@ describe('createOutline', () => {
     const expectedOutline = replaceSpaces(css`
       /* stylelint-disable no-invalid-position-declaration */
       outline: 2px solid ${userOutlineColor};
-      outline-offset: -2px;
+      outline-offset: 2px;
       isolation: isolate;
-      box-shadow: inset 0 0 0 2px white;
+      box-shadow: 0 0 0 2px white;
       /* stylelint-enable no-invalid-position-declaration */
     `)
 
@@ -23,9 +23,9 @@ describe('createOutline', () => {
     const expectedFocusIndicator = replaceSpaces(css`
       /* stylelint-disable no-invalid-position-declaration */
       outline: 2px solid ${userOutlineColor};
-      outline-offset: -2px;
+      outline-offset: 2px;
       isolation: isolate;
-      box-shadow: inset 0 0 0 2px white;
+      box-shadow: 0 0 0 2px white;
       /* stylelint-enable no-invalid-position-declaration */
     `)
 
