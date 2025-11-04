@@ -375,7 +375,7 @@ const ActualSingleCombobox = <T,>(
     () => ({
       destroyButtonIconAlt: localize({
         id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
-        defaultText: '削除',
+        defaultText: 'クリア',
       }),
     }),
     [localize],
@@ -384,7 +384,7 @@ const ActualSingleCombobox = <T,>(
   const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
-    <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
+    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
         {...rest}
         ref={inputRef}
