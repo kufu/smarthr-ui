@@ -162,7 +162,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   ...props
 }) => {
   // HINT: ReactNodeとObjectのどちらかを判定
-  // tyoepfはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
   // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
   const label: ObjectLabelType =
     !orgLabel || typeof orgLabel !== 'object' || isValidElement(orgLabel)
@@ -329,7 +329,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
           ? input.labels![0].textContent
           : '')
 
-      if (accessibleName && !accessibleName.includes(legendText)) {
+      if (
+        accessibleName &&
+        !accessibleName.includes(legendText) &&
+        !legendText.includes(accessibleName)
+      ) {
         input.setAttribute('aria-label', `${accessibleName} ${legendText}`)
       }
     })
