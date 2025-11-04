@@ -29,6 +29,8 @@
     "clean": "rimraf ./lib ./esm",
     "dev": "storybook dev -p 6007",
     "prepublishOnly": "run-s clean build",
+    "release": "standard-version -a",
+    "release:dryrun": "standard-version --dry-run",
     "storybook": "storybook dev -p 6007",
     "watch:css": "tailwindcss -i ./src/styles/index.css -o ./lib/styles.css --watch"
   },
@@ -65,6 +67,7 @@
     "react-intl": "^7.1.11",
     "rimraf": "^6.0.1",
     "rollup": "^4.44.0",
+    "standard-version": "^9.3.2",
     "storybook": "9.0.12",
     "styled-components": "^5.3.11",
     "tailwind-variants": "^0.3.1",
@@ -86,5 +89,12 @@
   },
   "bugs": {
     "url": "https://github.com/kufu/smarthr-ui/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "standard-version": {
+    "tagPrefix": "@smarthr-ui/charts@"
   }
 }
