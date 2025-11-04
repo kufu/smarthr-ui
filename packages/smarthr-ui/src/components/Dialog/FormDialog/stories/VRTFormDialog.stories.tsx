@@ -22,7 +22,7 @@ export default {
       text: '送信しました。',
     },
     children: (
-      <FormControl title="名前">
+      <FormControl label="名前">
         <Input name="name" />
       </FormControl>
     ),

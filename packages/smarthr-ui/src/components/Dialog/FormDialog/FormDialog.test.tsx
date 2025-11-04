@@ -73,7 +73,7 @@ describe('FormDialog', () => {
             firstFocusTarget={openedFocusRef}
           >
             <FormControl
-              title={
+              label={
                 <>
                   <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
                 </>

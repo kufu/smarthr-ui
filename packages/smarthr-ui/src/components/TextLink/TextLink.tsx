@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { OpenInNewTabIcon } from './OpenInNewTabIcon'
+import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
 
 import type { ElementRef, ElementRefProps } from '../../types'
 
@@ -49,6 +49,9 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
+      XS: {
+        anchor: 'shr-text-xs',
+      },
       S: {
         anchor: 'shr-text-sm',
       },
@@ -81,12 +84,12 @@ const ActualTextLink: TextLinkComponent = forwardRef(
   ) => {
     const Anchor = elementAs || 'a'
     const actualSuffix = useMemo(() => {
-      if (target === '_blank' && suffix === undefined) {
+      if (target === '_blank' && !prefix && !suffix) {
         return <OpenInNewTabIcon />
       }
 
       return suffix
-    }, [suffix, target])
+    }, [prefix, suffix, target])
     const actualHref = useMemo(() => {
       if (href) {
         return href

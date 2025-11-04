@@ -13,7 +13,7 @@ jobs:
       CHANGELOG_PATH: /tmp/CHANGELOG.md
       IS_PRERELEASE: ${{ contains(github.event.issue.labels.*.name, 'prerelease') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: release-candidate
           fetch-depth: 0
@@ -71,7 +71,7 @@ jobs:
           branch: 'merge-release-${{ env.NEW_TAG }}'
           labels: release candidate
       - name: Send message to Slack
-        uses: slackapi/slack-github-action@v2.1.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger

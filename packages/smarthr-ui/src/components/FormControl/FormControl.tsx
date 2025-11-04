@@ -9,6 +9,7 @@ import {
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
+  isValidElement,
   memo,
   useEffect,
   useMemo,
@@ -29,19 +30,24 @@ import type { Gap } from '../../types'
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
 type StatusLabelType = FunctionComponentElement<StatusLabelProps>
 
+type ObjectLabelType = {
+  text: ReactNode
+  /** ラベルの表示タイプ */
+  styleType?: TextProps['styleType']
+  /** ラベル左に設置するアイコン */
+  icon?: TextProps['prefixIcon']
+  /** ラベルを視覚的に隠すかどうか */
+  dangerouslyHide?: boolean
+  /** ラベルを紐づける入力要素のID属性と同じ値 */
+  htmlFor?: string
+  /** ラベルに適用する `id` 値 */
+  id?: string
+}
 type Props = PropsWithChildren<{
-  /** グループのタイトル名 */
-  title: ReactNode
-  /** タイトルの見出しのタイプ */
-  titleType?: TextProps['styleType']
+  /** グループのラベル名 */
+  label: ReactNode | ObjectLabelType
   /** タイトル右の領域 */
   subActionArea?: ReactNode
-  /** タイトルの見出しを視覚的に隠すかどうか */
-  dangerouslyTitleHidden?: boolean
-  /** label 要素に適用する `htmlFor` 値 */
-  htmlFor?: string
-  /** label 要素に適用する `id` 値 */
-  labelId?: string
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
   /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
@@ -82,7 +88,7 @@ const classNameGenerator = tv({
     label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
-    underTitleStack: ['[&&&]:shr-mt-0'],
+    underLabelStack: ['[&&&]:shr-mt-0'],
     childrenWrapper: [],
   },
   variants: {
@@ -140,12 +146,8 @@ const classNameGenerator = tv({
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
 export const ActualFormControl: FC<Props & ElementProps> = ({
-  title,
-  titleType = 'blockTitle',
+  label: orgLabel,
   subActionArea,
-  dangerouslyTitleHidden = false,
-  htmlFor,
-  labelId,
   innerMargin,
   statusLabels,
   statusLabelProps,
@@ -159,10 +161,20 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   children,
   ...props
 }) => {
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // tyoepfはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const label: ObjectLabelType =
+    !orgLabel || typeof orgLabel !== 'object' || isValidElement(orgLabel)
+      ? {
+          text: orgLabel as ReactNode,
+        }
+      : (orgLabel as ObjectLabelType)
+
   const defaultHtmlFor = useId()
   const defaultLabelId = useId()
-  const managedHtmlFor = htmlFor || defaultHtmlFor
-  const managedLabelId = labelId || defaultLabelId
+  const managedHtmlFor = label.htmlFor || defaultHtmlFor
+  const managedLabelId = label.id || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isFieldset = as === 'fieldset'
 
@@ -212,20 +224,19 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
 
   const classNames = useMemo(() => {
-    const { wrapper, label, errorList, errorIcon, underTitleStack, childrenWrapper } =
-      classNameGenerator({ innerMargin, isFieldset })
+    const generators = classNameGenerator({ innerMargin, isFieldset })
 
     return {
-      wrapper: wrapper({ className }),
-      label: label({
-        className: dangerouslyTitleHidden ? visuallyHiddenTextClassNameGenerator() : '',
+      wrapper: generators.wrapper({ className }),
+      label: generators.label({
+        className: label.dangerouslyHide ? visuallyHiddenTextClassNameGenerator() : '',
       }),
-      errorList: errorList(),
-      errorIcon: errorIcon(),
-      underTitleStack: underTitleStack(),
-      childrenWrapper: childrenWrapper(),
+      errorList: generators.errorList(),
+      errorIcon: generators.errorIcon(),
+      underLabelStack: generators.underLabelStack(),
+      childrenWrapper: generators.childrenWrapper(),
     }
-  }, [innerMargin, isFieldset, dangerouslyTitleHidden, className])
+  }, [innerMargin, isFieldset, label.dangerouslyHide, className])
 
   useEffect(() => {
     if (
@@ -301,17 +312,17 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
   useEffect(() => {
     if (!isFieldset || !inputWrapperRef.current) return
+
     const inputs = inputWrapperRef.current.querySelectorAll(SMARTHR_UI_INPUT_SELECTOR)
+
     if (!inputs.length) return
 
-    const legendText = innerText(title)
+    const legendText = innerText(label.text)
+
     if (!legendText) return
 
     const labelMap = new Map(
-      Array.from(document.querySelectorAll('label[for]')).map((label) => [
-        label.getAttribute('for'),
-        label,
-      ]),
+      Array.from(document.querySelectorAll('label[for]')).map((l) => [l.getAttribute('for'), l]),
     )
 
     inputs.forEach((input) => {
@@ -319,20 +330,21 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       let accessibleName = input.getAttribute('aria-label')
 
       if (!accessibleName) {
-        const label = labelMap.get(inputId)
-        if (!label?.closest('.smarthr-ui-VisuallyHiddenText')) {
+        const l = labelMap.get(inputId)
+
+        if (!l?.closest('.smarthr-ui-VisuallyHiddenText')) {
           // HINT: <label> があり、かつ <VisuallyHiddenText> でラップされていない場合
           return
         }
 
-        accessibleName = label.textContent || ''
+        accessibleName = l.textContent || ''
       }
 
       if (accessibleName && !accessibleName.includes(legendText)) {
         input.setAttribute('aria-label', `${accessibleName} ${legendText}`.trim())
       }
     })
-  }, [isFieldset, title])
+  }, [isFieldset, label.text])
 
   let body = (
     <>
@@ -353,12 +365,12 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     </>
   )
 
-  // HINT: dangerouslyTitleHiddenの場合、body以下の余白の計算を簡略化するため
+  // HINT: label.dangerouslyHideの場合、body以下の余白の計算を簡略化するため
   // Stackをネストし、そのStackに対してmargin-top: 0を指定する
   // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
-  if (dangerouslyTitleHidden) {
+  if (label.dangerouslyHide) {
     body = (
-      <Stack gap={actualInnerMargin} className={classNames.underTitleStack}>
+      <Stack gap={actualInnerMargin} className={classNames.underLabelStack}>
         {body}
       </Stack>
     )
@@ -372,13 +384,14 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={classNames.wrapper}
     >
-      <TitleCluster
+      <LabelCluster
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        dangerouslyTitleHidden={dangerouslyTitleHidden}
-        titleType={titleType}
-        title={title}
+        dangerouslyHideLabel={label.dangerouslyHide}
+        labelType={label.styleType}
+        label={label.text}
+        labelIcon={label.icon}
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
         labelClassName={classNames.label}
@@ -388,9 +401,12 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   )
 }
 
-const TitleCluster = memo<
-  Pick<Props, 'dangerouslyTitleHidden' | 'title' | 'subActionArea'> & {
-    titleType: TextProps['styleType']
+const LabelCluster = memo<
+  Pick<Props, 'subActionArea'> & {
+    label: ReactNode
+    labelType: TextProps['styleType']
+    labelIcon?: ReactNode
+    dangerouslyHideLabel?: boolean
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
@@ -402,22 +418,25 @@ const TitleCluster = memo<
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    dangerouslyTitleHidden,
-    titleType,
-    title,
+    dangerouslyHideLabel,
+    labelType = 'blockTitle',
+    label,
+    labelIcon,
     subActionArea,
     labelClassName,
     statusLabels,
   }) => {
     const body = (
       <>
-        <Text styleType={titleType}>{title}</Text>
+        <Text styleType={labelType} prefixIcon={labelIcon}>
+          {label}
+        </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
 
     const attrs = useMemo(() => {
-      if (dangerouslyTitleHidden) {
+      if (dangerouslyHideLabel) {
         return {
           label: null,
           visuallyHidden: isFieldset
@@ -447,7 +466,7 @@ const TitleCluster = memo<
         },
         visuallyHidden: null,
       }
-    }, [managedLabelId, managedHtmlFor, dangerouslyTitleHidden, isFieldset])
+    }, [managedLabelId, managedHtmlFor, dangerouslyHideLabel, isFieldset])
 
     return (
       <>
