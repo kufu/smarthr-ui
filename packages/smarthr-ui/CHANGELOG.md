@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [79.0.0](https://github.com/kufu/smarthr-ui/compare/v78.1.0...v79.0.0) (2025-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Button, AnchorButton, TabItem:** disabledDetail属性をButton[disabledReason],AnchorButton[inactiveReason]に変更 (#5908)
+* **NotificationBar:** children -> subActionArea属性、message属性 -> childrenに変更 (#5905)
+
+### Bug Fixes
+
+* Comboboxにgroupロールを追加し、削除ボタンとの関係を明らかにする ([#5901](https://github.com/kufu/smarthr-ui/issues/5901)) ([a414885](https://github.com/kufu/smarthr-ui/commit/a4148857df9163a1e519697caf2d4fdbcdbdd685))
+
+
+* **Button, AnchorButton, TabItem:** disabledDetail属性をButton[disabledReason],AnchorButton[inactiveReason]に変更 ([#5908](https://github.com/kufu/smarthr-ui/issues/5908)) ([cc39d9f](https://github.com/kufu/smarthr-ui/commit/cc39d9f12e4f6fe366011ed9965ed1ca398ddae0))
+* **NotificationBar:** children -> subActionArea属性、message属性 -> childrenに変更 ([#5905](https://github.com/kufu/smarthr-ui/issues/5905)) ([7254c29](https://github.com/kufu/smarthr-ui/commit/7254c29fb4e9eee09079c9073e67fa65920eaccf))
+
 ## [78.1.0](https://github.com/kufu/smarthr-ui/compare/v78.0.0...v78.1.0) (2025-10-30)
 
 
