@@ -6,7 +6,7 @@ import { Tooltip } from '../Tooltip'
 
 type Props = {
   button: JSX.Element
-  disabledDetail: {
+  disabledReason: {
     icon?: FunctionComponent
     message: ReactNode
   }
@@ -27,7 +27,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DisabledDetail: FC<Props> = ({ button, disabledDetail }) => {
+export const DisabledReason: FC<Props> = ({ button, disabledReason }) => {
   const classNames = useMemo(() => {
     const { wrapper, tooltip } = classNameGenerator()
 
@@ -41,8 +41,8 @@ export const DisabledDetail: FC<Props> = ({ button, disabledDetail }) => {
     <div className={classNames.wrapper}>
       {button}
       <TooltipIcon
-        icon={disabledDetail.icon}
-        message={disabledDetail.message}
+        icon={disabledReason.icon}
+        message={disabledReason.message}
         className={classNames.tooltip}
       />
     </div>
@@ -54,11 +54,11 @@ const TooltipIcon = memo<{
   message: ReactNode
   className: string
 }>(({ icon, message, className }) => {
-  const DisabledDetailIcon = icon ?? FaCircleInfoIcon
+  const DisabledReasonIcon = icon ?? FaCircleInfoIcon
 
   return (
     <Tooltip message={message} triggerType="icon" className={className}>
-      <DisabledDetailIcon />
+      <DisabledReasonIcon />
     </Tooltip>
   )
 })

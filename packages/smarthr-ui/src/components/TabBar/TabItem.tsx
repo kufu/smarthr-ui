@@ -53,7 +53,7 @@ type Props = PropsWithChildren<{
   /**
    * 無効な理由
    */
-  disabledDetail?: {
+  disabledReason?: {
     icon?: ReactNode
     message: ReactNode
   }
@@ -67,7 +67,7 @@ type ElementProps = Omit<
 
 export const TabItem: FC<Props & ElementProps> = ({
   selected = false,
-  disabledDetail,
+  disabledReason,
   ...rest
 }) => {
   const tabAttrs = {
@@ -75,13 +75,13 @@ export const TabItem: FC<Props & ElementProps> = ({
     'aria-selected': selected,
   }
 
-  if (rest.disabled && disabledDetail) {
-    const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+  if (rest.disabled && disabledReason) {
+    const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
 
     return (
       <Tooltip
         {...tabAttrs}
-        message={disabledDetail.message}
+        message={disabledReason.message}
         ariaDescribedbyTarget="inner"
         aria-disabled={rest.disabled}
         className="focus-visible:shr-focus-indicator--inner"
