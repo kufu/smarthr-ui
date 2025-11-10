@@ -18,11 +18,11 @@ import { CHART_COLORS, FONT_FAMILY, defaultColor } from 'smarthr-ui'
 
 import { keyboardNavigationPlugin } from '../plugins'
 
-import type { ChartDataset, ChartOptions, ChartType } from 'chart.js'
+import type { ChartDataset, ChartOptions, ChartType, LegendOptions } from 'chart.js'
 
-const PATTERN_SHAPE_TYPES = [
-  'zigzag',
+const SHAPE_TYPES = [
   'diamond',
+  'zigzag',
   'disc',
   'zigzag-vertical',
   'diamond-box',
@@ -38,6 +38,12 @@ const PATTERN_SHAPE_TYPES = [
   'box',
   'triangle-inverted',
 ] as const
+
+const BORDER_DASHES = [[], [10, 10], [20, 5], [15, 3, 3, 3], [2, 2]] as const satisfies number[][]
+
+const POINT_STYLES = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'] as const
+
+const getColor = (index: number) => CHART_COLORS[index % CHART_COLORS.length]
 
 /**
  * Chart.jsの必要な要素を登録
@@ -58,6 +64,33 @@ export const registerChartComponents = () => {
   )
 }
 
+/** Lineチャートのレジェンドはポインターではなく線にしたいが、lineDash を簡単に指定できないため generateLabels を使っている */
+/** 折れ線グラフはレジェンドを線+ポイントにしたい */
+const generateLegendOptions = <TType extends ChartType>(
+  chartType: TType,
+): Partial<LegendOptions<TType>['labels']> => {
+  if (chartType === 'line') {
+    return {
+      font: { family: FONT_FAMILY },
+      usePointStyle: true,
+      pointStyleWidth: 48,
+      generateLabels: (chart) =>
+        chart.data.datasets.map((dataset, index) => ({
+          text: dataset.label,
+          strokeStyle: getColor(index),
+          lineDash: BORDER_DASHES[index % BORDER_DASHES.length],
+          lineWidth: 4,
+          pointStyle: 'line',
+        })),
+    }
+  }
+  return {
+    font: { family: FONT_FAMILY },
+    pointStyle: 'rect',
+    pointStyleWidth: 48,
+  }
+}
+
 // FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
 const createBaseChartOptions = (
   { plugins }: Partial<ChartOptions>,
@@ -69,12 +102,7 @@ const createBaseChartOptions = (
   plugins: {
     legend: {
       position: 'bottom',
-      labels: {
-        font: { family: FONT_FAMILY },
-        usePointStyle: true,
-        pointStyle: chartType === 'line' ? undefined : 'rect',
-        pointStyleWidth: chartType === 'line' ? undefined : 48,
-      },
+      labels: generateLegendOptions(chartType),
     },
     tooltip: {
       backgroundColor: defaultColor.BACKGROUND,
@@ -149,10 +177,9 @@ export function getChartColors<T extends Exclude<ChartType, 'line'>>(
 >
 export function getChartColors<T extends ChartType>(chartType: T, dataLength: number): any {
   const colors: string[] = []
-  const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'star', 'triangle'] as const
 
   for (let i = 0; i < dataLength; i++) {
-    colors.push(CHART_COLORS[i % CHART_COLORS.length])
+    colors.push(getColor(i))
   }
 
   // outline-offsetを表現できていない
@@ -160,17 +187,15 @@ export function getChartColors<T extends ChartType>(chartType: T, dataLength: nu
     return colors.map((color, index) => ({
       backgroundColor: color,
       borderColor: color,
+      borderDash: BORDER_DASHES[index % BORDER_DASHES.length],
       hoverBorderColor: defaultColor.OUTLINE,
       hoverBorderWidth: 4,
-      pointStyle: pointStyles[index % pointStyles.length],
-      pointRadius: 4,
+      pointStyle: POINT_STYLES[index % POINT_STYLES.length],
+      pointRadius: 8,
     }))
   }
   return colors.map((color, index) => ({
-    // データが１件だけのときはパターンをつけない
-    backgroundColor: index
-      ? draw(PATTERN_SHAPE_TYPES[index % PATTERN_SHAPE_TYPES.length], color)
-      : color,
+    backgroundColor: index ? draw(SHAPE_TYPES[index % SHAPE_TYPES.length], color) : color,
     borderColor: color,
     hoverBorderColor: defaultColor.OUTLINE,
     hoverBorderWidth: 4,
