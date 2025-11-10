@@ -1,6 +1,6 @@
 'use client'
 
-import { generate } from '@smarthr/patternomaly'
+import { draw } from '@smarthr/patternomaly'
 import {
   ArcElement,
   BarElement,
@@ -19,6 +19,25 @@ import { CHART_COLORS, FONT_FAMILY, defaultColor } from 'smarthr-ui'
 import { keyboardNavigationPlugin } from '../plugins'
 
 import type { ChartDataset, ChartOptions, ChartType } from 'chart.js'
+
+const PATTERN_SHAPE_TYPES = [
+  'zigzag',
+  'diamond',
+  'disc',
+  'zigzag-vertical',
+  'diamond-box',
+  'square',
+  'ring',
+  'plus',
+  'cross',
+  'diagonal',
+  'triangle',
+  'dash',
+  'dot',
+  'diagonal-right-left',
+  'box',
+  'triangle-inverted',
+] as const
 
 /**
  * Chart.jsの必要な要素を登録
@@ -147,8 +166,11 @@ export function getChartColors<T extends ChartType>(chartType: T, dataLength: nu
       pointRadius: 4,
     }))
   }
-  return generate(colors).map((color) => ({
-    backgroundColor: color,
+  return colors.map((color, index) => ({
+    // データが１件だけのときはパターンをつけない
+    backgroundColor: index
+      ? draw(PATTERN_SHAPE_TYPES[index % PATTERN_SHAPE_TYPES.length], color)
+      : color,
     borderColor: color,
     hoverBorderColor: defaultColor.OUTLINE,
     hoverBorderWidth: 4,
