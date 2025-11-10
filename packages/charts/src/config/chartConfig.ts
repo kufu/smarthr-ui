@@ -1,5 +1,6 @@
 'use client'
 
+import { generate } from '@smarthr/patternomaly'
 import {
   ArcElement,
   BarElement,
@@ -13,7 +14,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { CHART_COLORS, FONT_FAMILY, defaultColor, defaultRadius } from 'smarthr-ui'
+import { CHART_COLORS, FONT_FAMILY, defaultColor } from 'smarthr-ui'
 
 import { keyboardNavigationPlugin } from '../plugins'
 
@@ -47,7 +48,6 @@ const createBaseChartOptions = ({ plugins }: Partial<ChartOptions>): Partial<Cha
     legend: {
       position: 'bottom',
       labels: {
-        usePointStyle: true,
         font: { family: FONT_FAMILY },
       },
     },
@@ -113,7 +113,7 @@ export const getChartColors = <T extends ChartType>(
   }
 
   // outline-offsetを表現できていない
-  return colors.map((color) => ({
+  return generate(colors).map((color) => ({
     backgroundColor: color,
     borderColor: color,
     hoverBorderColor: defaultColor.OUTLINE,
