@@ -55,6 +55,7 @@
     "@storybook/cli": "9.0.18",
     "@storybook/react": "9.0.18",
     "@storybook/react-vite": "9.0.18",
+    "@types/node": "^20.19.20",
     "@types/react": "^18.3.26",
     "@types/react-dom": "^19.1.11",
     "@types/styled-components": "^5.1.34",
