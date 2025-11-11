@@ -21,7 +21,7 @@ type Props = {
 export const BarChart: React.FC<Props> = ({ data, title }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
-  const chartColors = getChartColors('bar', data.datasets.length)
+  const chartColors = getChartColors(data.datasets.length)
 
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length

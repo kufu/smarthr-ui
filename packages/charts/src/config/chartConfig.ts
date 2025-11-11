@@ -154,13 +154,11 @@ export const createLineChartOptions = (
   },
 })
 
-// TODO: SINGLE_CHART_COLORS を使うオプションを追加する
-export function getChartColors<T extends 'line'>(
-  chartType: T,
+export const getLineChartColors = (
   dataLength: number,
 ): Array<
   Pick<
-    ChartDataset<T>,
+    ChartDataset<'line'>,
     | 'backgroundColor'
     | 'borderColor'
     | 'hoverBorderColor'
@@ -168,36 +166,45 @@ export function getChartColors<T extends 'line'>(
     | 'pointStyle'
     | 'pointRadius'
   >
->
-export function getChartColors<T extends Exclude<ChartType, 'line'>>(
-  chartType: T,
+> => {
+  const colors: Array<Omit<ChartDataset<'line'>, 'data'>> = []
+  for (let i = 0; i < dataLength; i++) {
+    const color = getColor(i)
+    colors.push({
+      backgroundColor: color,
+      borderColor: color,
+      borderDash: BORDER_DASHES[i % BORDER_DASHES.length],
+      hoverBorderColor: defaultColor.OUTLINE,
+      hoverBorderWidth: 4,
+      pointStyle: POINT_STYLES[i % POINT_STYLES.length],
+      pointRadius: 8,
+    })
+  }
+  return colors
+}
+
+// TODO: SINGLE_CHART_COLORS を使うオプションを追加する
+export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   dataLength: number,
 ): Array<
   Pick<ChartDataset<T>, 'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'>
->
-export function getChartColors<T extends ChartType>(chartType: T, dataLength: number): any {
-  const colors: string[] = []
+> => {
+  const colors: Array<
+    Pick<
+      ChartDataset<T>,
+      'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'
+    >
+  > = []
 
   for (let i = 0; i < dataLength; i++) {
-    colors.push(getColor(i))
-  }
-
-  // outline-offsetを表現できていない
-  if (chartType === 'line') {
-    return colors.map((color, index) => ({
-      backgroundColor: color,
+    const color = getColor(i)
+    colors.push({
+      backgroundColor: i > 0 ? draw(SHAPE_TYPES[i % SHAPE_TYPES.length], color) : color,
       borderColor: color,
-      borderDash: BORDER_DASHES[index % BORDER_DASHES.length],
       hoverBorderColor: defaultColor.OUTLINE,
       hoverBorderWidth: 4,
-      pointStyle: POINT_STYLES[index % POINT_STYLES.length],
-      pointRadius: 8,
-    }))
+    })
   }
-  return colors.map((color, index) => ({
-    backgroundColor: index ? draw(SHAPE_TYPES[index % SHAPE_TYPES.length], color) : color,
-    borderColor: color,
-    hoverBorderColor: defaultColor.OUTLINE,
-    hoverBorderWidth: 4,
-  }))
+
+  return colors
 }

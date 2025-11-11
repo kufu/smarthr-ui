@@ -3,4 +3,5 @@ export {
   createBarChartOptions,
   createLineChartOptions,
   getChartColors,
+  getLineChartColors,
 } from './chartConfig'
