@@ -89,7 +89,7 @@ importers:
         version: 5.3.0(chart.js@4.5.0)(react@19.2.0)
       smarthr-ui:
         specifier: ^74.0.0
-        version: 74.2.0(@types/react@18.3.26)(eslint@9.32.0(jiti@2.4.1))(react-dom@19.2.0(react@19.2.0))(react-intl@7.1.14(react@19.2.0)(typescript@5.8.3))(react@19.2.0)(styled-components@5.3.11(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0))(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3))(typescript@5.8.3)
+        version: 74.2.0(@types/react@18.3.26)(eslint@9.32.0(jiti@2.4.1))(react-dom@19.2.0(react@19.2.0))(react-intl@7.1.14(react@19.2.0)(typescript@5.8.3))(react@19.2.0)(styled-components@5.3.11(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0))(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))(typescript@5.8.3)
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^28.0.6
@@ -117,7 +117,10 @@ importers:
         version: 9.0.18(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(typescript@5.8.3)
       '@storybook/react-vite':
         specifier: 9.0.18
-        version: 9.0.18(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(rollup@4.46.1)(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))
+        version: 9.0.18(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(rollup@4.46.1)(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))
+      '@types/node':
+        specifier: ^20.19.20
+        version: 20.19.20
       '@types/react':
         specifier: ^18.3.26
         version: 18.3.26
@@ -165,10 +168,10 @@ importers:
         version: 5.3.11(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)
       tailwind-variants:
         specifier: ^0.3.1
-        version: 0.3.1(tailwindcss@3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3)))
+        version: 0.3.1(tailwindcss@3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3)))
       tailwindcss:
         specifier: ^3.4.18
-        version: 3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3))
+        version: 3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -7964,12 +7967,12 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.1(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))':
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.1(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))':
     dependencies:
       glob: 10.4.5
       magic-string: 0.30.17
       react-docgen-typescript: 2.4.0(typescript@5.8.3)
-      vite: 6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1)
+      vite: 6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1)
     optionalDependencies:
       typescript: 5.8.3
 
@@ -8203,12 +8206,12 @@ snapshots:
       - supports-color
       - webpack
 
-  '@storybook/builder-vite@9.0.18(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))':
+  '@storybook/builder-vite@9.0.18(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(vite@6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))':
     dependencies:
       '@storybook/csf-plugin': 9.0.18(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))
       storybook: 9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2)
       ts-dedent: 2.2.0
-      vite: 6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1)
+      vite: 6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1)
 
   '@storybook/builder-webpack5@9.0.18(@swc/core@1.13.5)(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(typescript@5.8.3)':
     dependencies:
@@ -8333,11 +8336,11 @@ snapshots:
       react-dom: 19.2.0(react@19.2.0)
       storybook: 9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2)
 
-  '@storybook/react-vite@9.0.18(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(rollup@4.46.1)(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))':
+  '@storybook/react-vite@9.0.18(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(rollup@4.46.1)(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))':
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.1(typescript@5.8.3)(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.1(typescript@5.8.3)(vite@6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))
       '@rollup/pluginutils': 5.1.4(rollup@4.46.1)
-      '@storybook/builder-vite': 9.0.18(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))
+      '@storybook/builder-vite': 9.0.18(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(vite@6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1))
       '@storybook/react': 9.0.18(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(typescript@5.8.3)
       find-up: 7.0.0
       magic-string: 0.30.17
@@ -8347,7 +8350,7 @@ snapshots:
       resolve: 1.22.10
       storybook: 9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2)
       tsconfig-paths: 4.2.0
-      vite: 6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1)
+      vite: 6.3.5(@types/node@20.19.20)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -11921,14 +11924,6 @@ snapshots:
       postcss: 8.5.6
       ts-node: 10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3)
 
-  postcss-load-config@4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3)):
-    dependencies:
-      lilconfig: 3.1.3
-      yaml: 2.8.1
-    optionalDependencies:
-      postcss: 8.5.6
-      ts-node: 10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3)
-
   postcss-loader@8.1.1(postcss@8.5.6)(typescript@5.8.3)(webpack@5.100.2(@swc/core@1.13.5)):
     dependencies:
       cosmiconfig: 9.0.0(typescript@5.8.3)
@@ -12621,7 +12616,7 @@ snapshots:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 5.0.0
 
-  smarthr-ui@74.2.0(@types/react@18.3.26)(eslint@9.32.0(jiti@2.4.1))(react-dom@19.2.0(react@19.2.0))(react-intl@7.1.14(react@19.2.0)(typescript@5.8.3))(react@19.2.0)(styled-components@5.3.11(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0))(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3))(typescript@5.8.3):
+  smarthr-ui@74.2.0(@types/react@18.3.26)(eslint@9.32.0(jiti@2.4.1))(react-dom@19.2.0(react@19.2.0))(react-intl@7.1.14(react@19.2.0)(typescript@5.8.3))(react@19.2.0)(styled-components@5.3.11(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0))(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))(typescript@5.8.3):
     dependencies:
       '@smarthr/wareki': 1.3.0
       dayjs: 1.11.18
@@ -12639,8 +12634,8 @@ snapshots:
       react-pdf: 9.2.1(@types/react@18.3.26)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-transition-group: 4.4.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       styled-components: 5.3.11(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)
-      tailwind-variants: 0.3.1(tailwindcss@3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3)))
-      tailwindcss: 3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3))
+      tailwind-variants: 0.3.1(tailwindcss@3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3)))
+      tailwindcss: 3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))
       typescript-eslint: 8.46.0(eslint@9.32.0(jiti@2.4.1))(typescript@5.8.3)
     transitivePeerDependencies:
       - '@types/react'
@@ -13006,11 +13001,6 @@ snapshots:
       tailwind-merge: 2.5.4
       tailwindcss: 3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))
 
-  tailwind-variants@0.3.1(tailwindcss@3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3))):
-    dependencies:
-      tailwind-merge: 2.5.4
-      tailwindcss: 3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3))
-
   tailwindcss@3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
@@ -13031,33 +13021,6 @@ snapshots:
       postcss-import: 15.1.0(postcss@8.5.6)
       postcss-js: 4.0.1(postcss@8.5.6)
       postcss-load-config: 4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))
-      postcss-nested: 6.2.0(postcss@8.5.6)
-      postcss-selector-parser: 6.1.2
-      resolve: 1.22.10
-      sucrase: 3.35.0
-    transitivePeerDependencies:
-      - ts-node
-
-  tailwindcss@3.4.18(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3)):
-    dependencies:
-      '@alloc/quick-lru': 5.2.0
-      arg: 5.0.2
-      chokidar: 3.6.0
-      didyoumean: 1.2.2
-      dlv: 1.1.3
-      fast-glob: 3.3.3
-      glob-parent: 6.0.2
-      is-glob: 4.0.3
-      jiti: 1.21.7
-      lilconfig: 3.1.3
-      micromatch: 4.0.8
-      normalize-path: 3.0.0
-      object-hash: 3.0.0
-      picocolors: 1.1.1
-      postcss: 8.5.6
-      postcss-import: 15.1.0(postcss@8.5.6)
-      postcss-js: 4.0.1(postcss@8.5.6)
-      postcss-load-config: 4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3))
       postcss-nested: 6.2.0(postcss@8.5.6)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.10
@@ -13435,23 +13398,6 @@ snapshots:
       tinyglobby: 0.2.15
     optionalDependencies:
       '@types/node': 20.19.20
-      fsevents: 2.3.3
-      jiti: 2.4.1
-      less: 4.2.0
-      terser: 5.39.0
-      tsx: 4.19.3
-      yaml: 2.8.1
-
-  vite@6.3.5(@types/node@22.9.1)(jiti@2.4.1)(less@4.2.0)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.1):
-    dependencies:
-      esbuild: 0.25.10
-      fdir: 6.5.0(picomatch@4.0.3)
-      picomatch: 4.0.3
-      postcss: 8.5.6
-      rollup: 4.46.1
-      tinyglobby: 0.2.15
-    optionalDependencies:
-      '@types/node': 22.9.1
       fsevents: 2.3.3
       jiti: 2.4.1
       less: 4.2.0
