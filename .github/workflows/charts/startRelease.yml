@@ -1,0 +1,75 @@
+name: start release (charts)
+
+on:
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        type: boolean
+        description: 'プレリリース'
+      manual_preparation:
+        type: boolean
+        description: '前リリースタグとの合流を手動で行う'
+  repository_dispatch:
+    types: [remote_dispatch]
+
+jobs:
+  start_release:
+    runs-on: ubuntu-latest
+    env:
+      RESULT_PATH: /tmp/result.txt
+      IS_PRERELEASE: ${{ github.event.inputs.prerelease == 'true' }}
+      NO_BRANCH_PREPARATION: ${{ github.event.inputs.manual_preparation == 'true' }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+      - name: git config
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+      - name: prepare release
+        if: ${{ env.NO_BRANCH_PREPARATION == 'false' }}
+        run: |
+          BASE_TAG=@smarthr/smarthr-ui-charts@$(cat ./packages/charts/package.json | grep "\"version\"" | cut -d "\"" -f 4)
+          git checkout $BASE_TAG
+          git merge --no-edit ${{ github.ref }}
+      - run: pnpm install --filter @smarthr/smarthr-ui-charts
+      - name: release dry run
+        if: ${{ env.IS_PRERELEASE == 'false' }}
+        run: pnpm --filter @smarthr/smarthr-ui-charts release:dryrun > ${{ env.RESULT_PATH }}
+      - name: prerelease dry run
+        if: ${{ env.IS_PRERELEASE == 'true' }}
+        run: pnpm --filter @smarthr/smarthr-ui-charts release:dryrun --prerelease > ${{ env.RESULT_PATH }}
+      - name: wrap dry run log
+        run: |
+          echo "Dry Run Log:
+          \`\`\`
+          $(cat ${{ env.RESULT_PATH }})
+          \`\`\`" > ${{ env.RESULT_PATH }}
+      - name: push branch
+        run: |
+          git checkout -b release-candidate-charts
+          git push origin release-candidate-charts
+      - name: release issue labels
+        if: ${{ env.IS_PRERELEASE == 'false' }}
+        run: echo ISSUE_LABELS='charts release candidate' >> $GITHUB_ENV
+      - name: prerelease issue labels
+        if: ${{ env.IS_PRERELEASE == 'true' }}
+        run: echo ISSUE_LABELS='charts release candidate, charts prerelease' >> $GITHUB_ENV
+      - name: create issue
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Release candidate (charts)
+          content-filepath: ${{ env.RESULT_PATH }}
+          labels: ${{ env.ISSUE_LABELS }}
+      - name: Send GitHub Action trigger data to Slack
+        if: ${{ github.event.client_payload.channel_id != null }}
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: ${{ github.event.client_payload.say }}
