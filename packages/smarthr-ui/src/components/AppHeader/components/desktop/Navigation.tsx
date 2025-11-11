@@ -27,7 +27,7 @@ import type {
 
 const classNameGenerator = tv({
   base: [
-    'shr-min-w-[auto] shr-overflow-x-auto',
+    'shr-overflow-x-auto shr-min-w-[auto]',
     'max-[751px]:!shr-hidden',
     'data-[with-releasenote="true"]:shr-pe-0',
   ],

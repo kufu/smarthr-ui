@@ -27,7 +27,6 @@ defaultConfig.twMergeConfig = {
           'layer-2',
           'layer-3',
           'layer-4',
-          'outline',
           'underline',
           'input-hover',
           'none',
@@ -64,7 +63,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-    focus: ['focus-indicator', 'focus-indicator--inner'],
+    focus: ['focus-indicator'],
   },
 }
 
@@ -122,7 +121,6 @@ export default {
       'layer-2': defaultShadow.LAYER2,
       'layer-3': defaultShadow.LAYER3,
       'layer-4': defaultShadow.LAYER4,
-      outline: defaultShadow.OUTLINE,
       underline: defaultShadow.UNDERLINE,
       'input-hover': defaultShadow.INPUT_HOVER,
       none: 'none',
@@ -410,15 +408,34 @@ export default {
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
-        '.focus-indicator': {
-          outline: 'none',
+        ':where(.focus-indicator)': {
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
+
+          /** overflow する可能性がある場合はフォーカスインジケーターを内側に設定する */
+          '.overflow-hidden &, .overflow-y-hidden &, .overflow-x-hidden &, .overflow-y-clip &, .overflow-x-clip &, .overflow-y-auto &, .overflow-x-auto &':
+            {
+              outline: `2px solid ${theme('colors.outline')}`,
+              outlineOffset: '-2px',
+              isolation: 'isolate',
+              /** outline は border の外側から生えるが、box-shadow は border の内側から生えるため、border の幅を引いている */
+              boxShadow: `inset 0 0 0 3px ${theme('colors.white')}`,
+            },
+        },
+        '.focus-indicator--outer': {
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
+          isolation: 'isolate',
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
         },
         '.focus-indicator--inner': {
-          outline: 'none',
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '-2px',
           isolation: 'isolate',
-          boxShadow: `inset 0 0 0 2px ${theme('colors.outline')}, inset 0 0 0 4px ${theme('colors.white')}`,
+          /** outline は border の外側から生えるが、box-shadow は border の内側から生えるため、border の幅を引いている */
+          boxShadow: `inset 0 0 0 3px ${theme('colors.white')}`,
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),
