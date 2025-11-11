@@ -47,7 +47,7 @@ jobs:
       - name: extract version from tag
         run: echo VERSION=$(echo $NEW_TAG | sed 's/@smarthr\/smarthr-ui-charts@//') >> $GITHUB_ENV
       - run: git push origin $NEW_TAG
-      - run: npx ts-node ./packages/charts/scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
+      - run: npx ts-node --esm ./packages/charts/scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
       - name: create release on GitHub
         uses: actions/create-release@v1
         env:
