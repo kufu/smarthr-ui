@@ -21,7 +21,7 @@ jobs:
           npm install -g corepack@latest
           corepack enable
           corepack prepare
-          pnpm install --filter @smarthr-ui/charts
+          pnpm install --filter @smarthr/smarthr-ui-charts
       - name: Build
-        run: pnpm --filter @smarthr-ui/charts build
+        run: pnpm --filter @smarthr/smarthr-ui-charts build
       - run: pnpx pkg-pr-new publish packages/charts

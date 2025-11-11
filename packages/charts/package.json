@@ -1,5 +1,5 @@
 {
-  "name": "@smarthr-ui/charts",
+  "name": "@smarthr/smarthr-ui-charts",
   "description": "Chart components for SmartHR UI built with React.",
   "version": "0.1.0",
   "author": "SmartHR-UI Team",
@@ -95,6 +95,6 @@
     "registry": "https://registry.npmjs.org"
   },
   "standard-version": {
-    "tagPrefix": "@smarthr-ui/charts@"
+    "tagPrefix": "@smarthr/smarthr-ui-charts@"
   }
 }

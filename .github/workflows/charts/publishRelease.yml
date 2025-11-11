@@ -30,22 +30,22 @@ jobs:
           npm install -g corepack@latest
           corepack enable
           corepack prepare
-          pnpm install --filter @smarthr-ui/charts
-      - run: pnpm --filter @smarthr-ui/charts release
+          pnpm install --filter @smarthr/smarthr-ui-charts
+      - run: pnpm --filter @smarthr/smarthr-ui-charts release
         if: ${{ env.IS_PRERELEASE == 'false' }}
-      - run: pnpm --filter @smarthr-ui/charts release --prerelease
+      - run: pnpm --filter @smarthr/smarthr-ui-charts release --prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
-      - run: pnpm publish --filter @smarthr-ui/charts --no-git-checks
+      - run: pnpm publish --filter @smarthr/smarthr-ui-charts --no-git-checks
         if: ${{ env.IS_PRERELEASE == 'false' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.KUFU_NPM_RELEASE_TOKEN }}
-      - run: pnpm publish --filter @smarthr-ui/charts --tag prerelease --no-git-checks
+      - run: pnpm publish --filter @smarthr/smarthr-ui-charts --tag prerelease --no-git-checks
         if: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.KUFU_NPM_RELEASE_TOKEN }}
       - run: echo NEW_TAG=$(git describe) >> $GITHUB_ENV
       - name: extract version from tag
-        run: echo VERSION=$(echo $NEW_TAG | sed 's/@smarthr-ui\/charts@//') >> $GITHUB_ENV
+        run: echo VERSION=$(echo $NEW_TAG | sed 's/@smarthr\/smarthr-ui-charts@//') >> $GITHUB_ENV
       - run: git push origin $NEW_TAG
       - run: npx ts-node ./packages/charts/scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
       - name: create release on GitHub
@@ -78,4 +78,4 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger
           payload: |
-            text: "<!subteam^S01RJL6PHJ8> @smarthr-ui/charts の npm publish が完了しました。Release Pull Request を手動でマージしたらリリース完了です。"
+            text: "<!subteam^S01RJL6PHJ8> @smarthr/smarthr-ui-charts の npm publish が完了しました。Release Pull Request を手動でマージしたらリリース完了です。"

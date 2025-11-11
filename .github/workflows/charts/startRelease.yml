@@ -34,16 +34,16 @@ jobs:
       - name: prepare release
         if: ${{ env.NO_BRANCH_PREPARATION == 'false' }}
         run: |
-          BASE_TAG=@smarthr-ui/charts@$(cat ./packages/charts/package.json | grep "\"version\"" | cut -d "\"" -f 4)
+          BASE_TAG=@smarthr/smarthr-ui-charts@$(cat ./packages/charts/package.json | grep "\"version\"" | cut -d "\"" -f 4)
           git checkout $BASE_TAG
           git merge --no-edit ${{ github.ref }}
-      - run: pnpm install --filter @smarthr-ui/charts
+      - run: pnpm install --filter @smarthr/smarthr-ui-charts
       - name: release dry run
         if: ${{ env.IS_PRERELEASE == 'false' }}
-        run: pnpm --filter @smarthr-ui/charts release:dryrun > ${{ env.RESULT_PATH }}
+        run: pnpm --filter @smarthr/smarthr-ui-charts release:dryrun > ${{ env.RESULT_PATH }}
       - name: prerelease dry run
         if: ${{ env.IS_PRERELEASE == 'true' }}
-        run: pnpm --filter @smarthr-ui/charts release:dryrun --prerelease > ${{ env.RESULT_PATH }}
+        run: pnpm --filter @smarthr/smarthr-ui-charts release:dryrun --prerelease > ${{ env.RESULT_PATH }}
       - name: wrap dry run log
         run: |
           echo "Dry Run Log:
