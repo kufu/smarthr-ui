@@ -140,7 +140,7 @@ type Props = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** コンポーネント右の領域 */
-      subActionArea: ReactNode
+      subActionArea?: ReactNode
       /** 閉じるボタン押下時に発火させる関数 */
       onClose?: () => void
       /** role 属性 */
