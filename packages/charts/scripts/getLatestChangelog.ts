@@ -1,6 +1,11 @@
 import * as fs from 'fs'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
 
-const stream = fs.createReadStream(`${__dirname}/../CHANGELOG.md`, {
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+const stream = fs.createReadStream(join(__dirname, '../CHANGELOG.md'), {
   encoding: 'utf8',
   highWaterMark: 1024,
 })
