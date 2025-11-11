@@ -1,6 +1,5 @@
 'use client'
 
-import { draw } from '@smarthr/patternomaly'
 import {
   ArcElement,
   BarElement,
@@ -14,36 +13,12 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { CHART_COLORS, FONT_FAMILY, defaultColor } from 'smarthr-ui'
 
 import { keyboardNavigationPlugin } from '../plugins'
 
-import type { ChartDataset, ChartOptions, ChartType, LegendOptions } from 'chart.js'
+import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from './constants'
 
-const SHAPE_TYPES = [
-  'diamond',
-  'zigzag',
-  'disc',
-  'zigzag-vertical',
-  'diamond-box',
-  'plus',
-  'square',
-  'ring',
-  'diagonal',
-  'cross',
-  'triangle',
-  'dash',
-  'dot',
-  'diagonal-right-left',
-  'box',
-  'triangle-inverted',
-] as const
-
-const BORDER_DASHES = [[], [10, 10], [20, 5], [15, 3, 3, 3], [2, 2]] as const satisfies number[][]
-
-const POINT_STYLES = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'] as const
-
-const getColor = (index: number) => CHART_COLORS[index % CHART_COLORS.length]
+import type { ChartOptions, ChartType, LegendOptions } from 'chart.js'
 
 /**
  * Chart.jsの必要な要素を登録
@@ -77,7 +52,7 @@ const generateLegendOptions = <TType extends ChartType>(
       generateLabels: (chart) =>
         chart.data.datasets.map((dataset, index) => ({
           text: dataset.label,
-          strokeStyle: getColor(index),
+          strokeStyle: CHART_COLORS[index % CHART_COLORS.length],
           lineDash: BORDER_DASHES[index % BORDER_DASHES.length],
           lineWidth: 4,
           pointStyle: 'line',
@@ -105,10 +80,10 @@ const createBaseChartOptions = (
       labels: generateLegendOptions(chartType),
     },
     tooltip: {
-      backgroundColor: defaultColor.BACKGROUND,
-      titleColor: defaultColor.TEXT_BLACK,
-      bodyColor: defaultColor.TEXT_BLACK,
-      borderColor: defaultColor.BORDER,
+      backgroundColor: SMARTHR_DEFAULT_COLORS.BACKGROUND,
+      titleColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+      bodyColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+      borderColor: SMARTHR_DEFAULT_COLORS.BORDER,
       borderWidth: 1,
       cornerRadius: 4,
     },
@@ -124,13 +99,13 @@ export const createBarChartOptions = (
   scales: {
     x: {
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
     y: {
       beginAtZero: true,
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
   },
@@ -143,68 +118,13 @@ export const createLineChartOptions = (
   scales: {
     x: {
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
     y: {
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
   },
 })
-
-export const getLineChartColors = (
-  dataLength: number,
-): Array<
-  Pick<
-    ChartDataset<'line'>,
-    | 'backgroundColor'
-    | 'borderColor'
-    | 'hoverBorderColor'
-    | 'hoverBorderWidth'
-    | 'pointStyle'
-    | 'pointRadius'
-  >
-> => {
-  const colors: Array<Omit<ChartDataset<'line'>, 'data'>> = []
-  for (let i = 0; i < dataLength; i++) {
-    const color = getColor(i)
-    colors.push({
-      backgroundColor: color,
-      borderColor: color,
-      borderDash: BORDER_DASHES[i % BORDER_DASHES.length],
-      hoverBorderColor: defaultColor.OUTLINE,
-      hoverBorderWidth: 4,
-      pointStyle: POINT_STYLES[i % POINT_STYLES.length],
-      pointRadius: 8,
-    })
-  }
-  return colors
-}
-
-// TODO: SINGLE_CHART_COLORS を使うオプションを追加する
-export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
-  dataLength: number,
-): Array<
-  Pick<ChartDataset<T>, 'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'>
-> => {
-  const colors: Array<
-    Pick<
-      ChartDataset<T>,
-      'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'
-    >
-  > = []
-
-  for (let i = 0; i < dataLength; i++) {
-    const color = getColor(i)
-    colors.push({
-      backgroundColor: i > 0 ? draw(SHAPE_TYPES[i % SHAPE_TYPES.length], color) : color,
-      borderColor: color,
-      hoverBorderColor: defaultColor.OUTLINE,
-      hoverBorderWidth: 4,
-    })
-  }
-
-  return colors
-}
