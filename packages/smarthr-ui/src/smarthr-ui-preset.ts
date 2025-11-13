@@ -193,6 +193,14 @@ export default {
     outlineColor: {
       DEFAULT: defaultColor.OUTLINE,
     },
+    screens: {
+      narrow: {
+        max: '751px',
+      },
+      default: {
+        min: '752px',
+      },
+    },
     spacing: {
       px: '1px',
       em: '1em',
