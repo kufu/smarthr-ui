@@ -58,7 +58,8 @@ const AnchorButton = forwardRef(
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     const actualSuffix = useMemo(() => {
-      if (target === '_blank' && !prefix && !suffix) {
+      // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
+      if (target === '_blank' && !prefix && suffix === undefined) {
         return <OpenInNewTabIcon />
       }
 
