@@ -22,9 +22,10 @@ export default {
 } as Meta<typeof AnchorButton>
 
 const childrens = { 文字列: 'ボタン', アイコン: <FaCirclePlusIcon /> }
-const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
-const suffixes = { なし: '', あり: <FaCaretDownIcon /> }
+const prefixes = { なし: undefined, あり: <FaCirclePlusIcon /> }
+const suffixes = { なし: undefined, あり: <FaCaretDownIcon />, null: null }
 const disabledReasons = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
+const targets = { なし: undefined, _blank: '_blank' }
 
 export const ButtonControl: StoryObj<typeof AnchorButton> = {
   name: 'Playground',
@@ -48,6 +49,11 @@ export const ButtonControl: StoryObj<typeof AnchorButton> = {
       control: { type: 'radio' },
       options: Object.keys(disabledReasons),
       mapping: disabledReasons,
+    },
+    target: {
+      control: { type: 'radio' },
+      options: Object.keys(targets),
+      mapping: targets,
     },
   },
   args: {

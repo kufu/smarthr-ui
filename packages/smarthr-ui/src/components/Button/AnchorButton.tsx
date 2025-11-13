@@ -58,7 +58,7 @@ const AnchorButton = forwardRef(
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     const actualSuffix = useMemo(() => {
-      if (target === '_blank' && !prefix && !suffix) {
+      if (target === '_blank' && !prefix && suffix === undefined) {
         return <OpenInNewTabIcon />
       }
 
