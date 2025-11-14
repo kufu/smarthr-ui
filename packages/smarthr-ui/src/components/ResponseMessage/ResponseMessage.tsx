@@ -11,9 +11,12 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
-  Omit<IconProps, 'text' | 'size'> & {
+  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> & {
     size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
+    iconGap?: CharRelativeSize | AbstractSize
   }
 
 export const classNameGenerator = tv({
@@ -37,13 +40,26 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ type = 'info', size, children, ...other }) => {
+export const ResponseMessage: FC<Props> = ({
+  type = 'info',
+  size,
+  iconGap,
+  right,
+  children,
+  ...other
+}) => {
   const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
+  const icon = <Icon {...other} className={className} />
+  const textIconAttributes = {
+    iconGap,
+    prefixIcon: right ? undefined : icon,
+    suffixIcon: right ? icon : undefined,
+  }
 
   return (
-    <Text size={size}>
-      <Icon {...other} text={children} className={className} />
+    <Text {...textIconAttributes} size={size}>
+      {children}
     </Text>
   )
 }

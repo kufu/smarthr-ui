@@ -1,5 +1,6 @@
 import { Stack } from '../../Layout'
 import { Text } from '../Text'
+import { FaAddressBookIcon } from '../../Icon'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -17,7 +18,7 @@ export default {
     },
   },
   args: {
-    children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる。',
+    children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
     italic: false,
     emphasis: false,
     as: 'なし',
@@ -102,7 +103,7 @@ export const WhiteSpace: StoryObj<typeof Text> = {
   ),
   args: {
     children:
-      'well-working\n\n労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる。',
+      'well-working\n\n労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
   },
 }
 
@@ -135,6 +136,68 @@ export const As: StoryObj<typeof Text> = {
     <Stack>
       <Text {...args} as="h1" />
       <Text {...args} as="p" />
+    </Stack>
+  ),
+}
+
+export const PrefixIcon: StoryObj<typeof Text> = {
+  name: 'prefixIcon',
+  render: (args) => (
+    <Stack>
+      <Text {...args} size="XXS" />
+      <Text {...args} size="XS" />
+      <Text {...args} size="S" />
+      <Text {...args} size="M" />
+      <Text {...args} size="L" />
+      <Text {...args} size="XL" />
+      <Text {...args} size="XXL" />
+    </Stack>
+  ),
+  args: {
+    prefixIcon: <FaAddressBookIcon />,
+  },
+}
+
+export const SuffixIcon: StoryObj<typeof Text> = {
+  name: 'suffixIcon',
+  render: (args) => (
+    <Stack>
+      <Text {...args} size="XXS" />
+      <Text {...args} size="XS" />
+      <Text {...args} size="S" />
+      <Text {...args} size="M" />
+      <Text {...args} size="L" />
+      <Text {...args} size="XL" />
+      <Text {...args} size="XXL" />
+    </Stack>
+  ),
+  args: {
+    suffixIcon: <FaAddressBookIcon />,
+  },
+}
+
+export const IconGap: StoryObj<typeof Text> = {
+  name: 'iconGap',
+  render: (args) => (
+    <Stack>
+      <Text {...args} prefixIcon={<FaAddressBookIcon />}>
+        default 0.25
+      </Text>
+      <Text {...args} prefixIcon={<FaAddressBookIcon />} iconGap={0.5}>
+        0.5
+      </Text>
+      <Text {...args} prefixIcon={<FaAddressBookIcon />} iconGap={1}>
+        1
+      </Text>
+      <Text {...args} suffixIcon={<FaAddressBookIcon />}>
+        default 0.25
+      </Text>
+      <Text {...args} suffixIcon={<FaAddressBookIcon />} iconGap={0.5}>
+        0.5
+      </Text>
+      <Text {...args} suffixIcon={<FaAddressBookIcon />} iconGap={1}>
+        1
+      </Text>
     </Stack>
   ),
 }

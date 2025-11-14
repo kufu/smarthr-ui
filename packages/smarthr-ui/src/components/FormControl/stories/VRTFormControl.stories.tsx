@@ -1,5 +1,6 @@
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
+import { FaAddressBookIcon } from '../../Icon'
 import { FormControl } from '../FormControl'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -8,18 +9,24 @@ export default {
   title: 'Components/FormControl/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyTitleHidden) => (
+      {[false, true].map((dangerouslyHide) => (
         <FormControl
           {...args}
-          key={dangerouslyTitleHidden.toString()}
-          dangerouslyTitleHidden={dangerouslyTitleHidden}
+          label={{
+            ...args.label,
+            dangerouslyHide: dangerouslyHide,
+          }}
+          key={dangerouslyHide.toString()}
         />
       ))}
     </Stack>
   ),
   args: {
     children: <Input />,
-    title: 'フォームコントロール',
+    label: {
+      text: 'フォームコントロール',
+      icon: <FaAddressBookIcon />,
+    },
     statusLabelProps: { type: 'grey', children: '任意' },
     subActionArea: (
       <Cluster justify="space-between">
