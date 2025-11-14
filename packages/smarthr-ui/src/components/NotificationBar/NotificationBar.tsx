@@ -23,6 +23,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
+import { Text } from '../Text'
 
 const classNameGenerator = tv({
   slots: {
@@ -138,8 +139,8 @@ type StyleVariants = VariantProps<typeof classNameGenerator>
 type Props = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
-      /** メッセージ */
-      message: ReactNode
+      /** コンポーネント右の領域 */
+      subActionArea?: ReactNode
       /** 閉じるボタン押下時に発火させる関数 */
       onClose?: () => void
       /** role 属性 */
@@ -173,7 +174,7 @@ export const NotificationBar: FC<ActualProps> = ({
   type,
   bold,
   animate,
-  message,
+  subActionArea,
   onClose,
   children,
   role,
@@ -226,10 +227,12 @@ export const NotificationBar: FC<ActualProps> = ({
     <WrapBase {...baseProps}>
       <div {...props} className={classNames.wrapper} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
-          <MessageArea message={message} bold={bold} type={type} classNames={classNames} />
-          {children && (
+          <MessageArea bold={bold} type={type} classNames={classNames}>
+            {children}
+          </MessageArea>
+          {subActionArea && (
             <Cluster align="center" justify="flex-end" className={classNames.actionArea}>
-              {children}
+              {subActionArea}
             </Cluster>
           )}
         </Cluster>
@@ -240,16 +243,20 @@ export const NotificationBar: FC<ActualProps> = ({
 }
 
 const MessageArea = memo<
-  Pick<ActualProps, 'message' | 'bold' | 'type'> & {
+  Pick<ActualProps, 'children' | 'bold' | 'type'> & {
     classNames: { messageArea: string; icon: string }
   }
->(({ message, bold, type, classNames }) => {
+>(({ children, bold, type, classNames }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
-    <div className={classNames.messageArea}>
-      <Icon text={message} iconGap={0.5} className={classNames.icon} />
-    </div>
+    <Text
+      prefixIcon={<Icon iconGap={0.5} className={classNames.icon} />}
+      className={classNames.messageArea}
+      as="div"
+    >
+      {children}
+    </Text>
   )
 })
 
