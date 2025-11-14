@@ -15,23 +15,22 @@ import { tv } from 'tailwind-variants'
 import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
 
 import { ButtonWrapper } from './ButtonWrapper'
-import { DisabledDetail } from './DisabledDetail'
+import { DisabledReason } from './DisabledReason'
 
 import type { BaseProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
-
-// tertiaryはAnchorButtonでは使用不可
-type AnchorButtonVariant = Exclude<BaseProps['variant'], 'tertiary'>
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
   keyof Props<T> & ElementRefProps<T>
 >
 
-type Props<T extends ElementType> = Omit<BaseProps, 'variant'> & {
+type Props<T extends ElementType> = Omit<BaseProps, 'variant' | 'disabledReason'> & {
   /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
-  variant?: AnchorButtonVariant
+  // tertiaryはAnchorButtonでは使用不可
+  variant?: Exclude<BaseProps['variant'], 'tertiary'>
+  inactiveReason?: BaseProps['disabledReason']
 }
 
 const classNameGenerator = tv({
@@ -46,7 +45,7 @@ const AnchorButton = forwardRef(
       suffix,
       wide = false,
       variant = 'secondary',
-      disabledDetail,
+      inactiveReason,
       target,
       rel,
       elementAs,
@@ -59,7 +58,8 @@ const AnchorButton = forwardRef(
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     const actualSuffix = useMemo(() => {
-      if (target === '_blank' && !prefix && !suffix) {
+      // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
+      if (target === '_blank' && !prefix && suffix === undefined) {
         return <OpenInNewTabIcon />
       }
 
@@ -85,8 +85,8 @@ const AnchorButton = forwardRef(
       </ButtonWrapper>
     )
 
-    if (!props.href && disabledDetail) {
-      return <DisabledDetail button={button} disabledDetail={disabledDetail} />
+    if (!props.href && inactiveReason) {
+      return <DisabledReason button={button} disabledReason={inactiveReason} />
     }
 
     return button

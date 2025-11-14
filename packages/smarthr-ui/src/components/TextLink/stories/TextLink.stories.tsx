@@ -1,7 +1,7 @@
 import { action } from 'storybook/actions'
 import { ComponentPropsWithoutRef } from 'react'
 
-import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
+import { FaCircleQuestionIcon, FaUpRightFromSquareIcon, FaArrowRightIcon } from '../../Icon'
 import { UpwardLink } from '../UpwardLink'
 import { TextLink } from '../TextLink'
 import { Table, Th } from '../../Table'
@@ -14,7 +14,8 @@ const _prefixOptions = {
 }
 const _suffixOptions = {
   なし: undefined,
-  あり: <FaUpRightFromSquareIcon />,
+  あり: <FaArrowRightIcon />,
+  null: null,
 }
 const _elementAsOptions = {
   なし: undefined,
