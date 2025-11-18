@@ -14,9 +14,10 @@ import { Text } from '../Text'
 import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
-  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> & {
+  Omit<IconProps, 'size' | 'alt'> & {
     size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
     iconGap?: CharRelativeSize | AbstractSize
+    right?: boolean
   }
 
 export const classNameGenerator = tv({
@@ -51,14 +52,14 @@ export const ResponseMessage: FC<Props> = ({
   const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
   const icon = <Icon {...other} className={className} />
-  const textIconAttributes = {
-    iconGap,
-    prefixIcon: right ? undefined : icon,
-    suffixIcon: right ? icon : undefined,
+  const iconAttr = {
+    prefix: right ? undefined : icon,
+    suffix: right ? icon : undefined,
+    gap: iconGap,
   }
 
   return (
-    <Text {...textIconAttributes} size={size}>
+    <Text icon={iconAttr} size={size}>
       {children}
     </Text>
   )

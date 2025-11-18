@@ -15,14 +15,10 @@ export default {
       options: Object.keys(colorSet),
     },
     alt: { control: 'text' },
-    text: { control: 'text' },
   },
   args: {
     color: 'TEXT_BLACK',
     alt: '',
-    text: '',
-    iconGap: 0.25,
-    right: false,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -34,14 +30,14 @@ export const All: StoryObj<typeof FaAddressBookIcon> = {
     <Stack gap={0.75} as="ul" className="shr-list-none">
       {Object.entries(Icons).map(([name, Icon]) => (
         <li key={name}>
-          <Icon {...args} text={args.text || name.replace(/Icon$/, '')} />
+          <Cluster gap={0.5} align="center">
+            <Icon {...args} />
+            <span>{name.replace(/Icon$/, '')}</span>
+          </Cluster>
         </li>
       ))}
     </Stack>
   ),
-  args: {
-    iconGap: 0.5,
-  },
 }
 
 export const IconControl: StoryObj<typeof FaAddressBookIcon> = {
@@ -69,33 +65,5 @@ export const Alt: StoryObj<typeof FaAddressBookIcon> = {
   name: 'alt',
   args: {
     alt: '連絡帳',
-  },
-}
-
-export const Text: StoryObj<typeof FaAddressBookIcon> = {
-  name: 'text',
-  args: {
-    text: '連絡帳',
-  },
-}
-
-export const IconGap: StoryObj<typeof FaAddressBookIcon> = {
-  name: 'iconGap',
-  args: {
-    text: '連絡帳',
-  },
-  render: (args) => (
-    <Stack>
-      <FaAddressBookIcon {...args} iconGap={0.25} />
-      <FaAddressBookIcon {...args} iconGap={0.5} />
-    </Stack>
-  ),
-}
-
-export const Right: StoryObj<typeof FaAddressBookIcon> = {
-  name: 'right',
-  args: {
-    text: '連絡帳',
-    right: true,
   },
 }
