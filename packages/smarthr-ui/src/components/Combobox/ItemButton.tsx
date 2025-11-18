@@ -99,18 +99,13 @@ const AddButton = <T,>({
 }
 
 const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
-  <FaCirclePlusIcon
-    color="TEXT_LINK"
-    text={
-      <Text color="TEXT_LINK">
-        <Localizer
-          id="smarthr-ui/Combobox/addItemButtonLabel"
-          defaultText="「{name}」を追加"
-          values={{ name: label }}
-        />
-      </Text>
-    }
-  />
+  <Text color="TEXT_LINK" prefixIcon={<FaCirclePlusIcon color="TEXT_LINK" />}>
+    <Localizer
+      id="smarthr-ui/Combobox/addItemButtonLabel"
+      defaultText="「{name}」を追加"
+      values={{ name: label }}
+    />
+  </Text>
 ))
 
 const SelectButton = <T,>({
