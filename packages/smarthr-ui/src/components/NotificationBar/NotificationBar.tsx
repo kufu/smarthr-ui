@@ -251,7 +251,7 @@ const MessageArea = memo<
 
   return (
     <Text
-      prefixIcon={<Icon iconGap={0.5} className={classNames.icon} />}
+      prefixIcon={<Icon className={classNames.icon} />}
       className={classNames.messageArea}
       as="div"
     >
