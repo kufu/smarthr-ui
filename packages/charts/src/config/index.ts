@@ -2,5 +2,6 @@ export {
   registerChartComponents,
   createBarChartOptions,
   createLineChartOptions,
-  getChartColors,
 } from './chartConfig'
+
+export { getChartColors, getLineChartColors } from './colors'
