@@ -156,7 +156,7 @@
   },
   "scripts": {
     "build": "run-p build:*",
-    "build:lib": "tsc -p tsconfig.build.json",
+    "build:lib": "NODE_ENV=production tsc -p tsconfig.build.json",
     "build:esm": "rollup --config rollup.esm.config.js",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet",
