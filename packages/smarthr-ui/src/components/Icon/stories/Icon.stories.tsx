@@ -34,7 +34,7 @@ export const All: StoryObj<typeof FaAddressBookIcon> = {
     <Stack gap={0.75} as="ul" className="shr-list-none">
       {Object.entries(Icons).map(([name, Icon]) => (
         <li key={name}>
-          <Icon {...args} text={args.text || name.replace(/Icon$/, '')} />
+          <Icon {...args} text={args.text || name} />
         </li>
       ))}
     </Stack>
