@@ -3,6 +3,7 @@
   "description": "SmartHR ui components built with React.",
   "version": "79.2.0",
   "author": "SmartHR-UI Team",
+  "type": "module",
   "dependencies": {
     "@smarthr/wareki": "^1.3.0",
     "dayjs": "^1.11.18",
