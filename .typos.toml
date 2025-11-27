@@ -6,3 +6,5 @@ extend-exclude = [
 ]
 
 [default.extend-words]
+# togglable is correct spelling (toggleable is just an alternative form)
+togglable = "togglable"
