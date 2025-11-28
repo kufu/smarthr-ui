@@ -12,6 +12,11 @@ import {
   createInteraction,
 } from './createInteraction'
 import { type CreatedLeading, type LeadingProperty, createLeading } from './createLeading'
+import {
+  type CreatedMediaQueryTheme,
+  type MediaQueryProperty,
+  createMediaQuery,
+} from './createMediaQuery'
 import { type CreatedRadiusTheme, type RadiusProperty, createRadius } from './createRadius'
 import { type CreatedShadowTheme, type ShadowProperty, createShadow } from './createShadow'
 import {
@@ -29,6 +34,7 @@ type ThemeProperty = {
   leading?: LeadingProperty
   spacing?: SpacingProperty
   breakpoint?: BreakpointProperty
+  mediaQuery?: MediaQueryProperty
   border?: BorderProperty
   radius?: RadiusProperty
   interaction?: InteractionProperty
@@ -44,6 +50,7 @@ export type CreatedTheme = {
   spacingByChar: CreatedSpacingByCharTheme
   space: CreatedSpacingByCharTheme
   breakpoint: CreatedBreakpointTheme
+  mediaQuery: CreatedMediaQueryTheme
   border: CreatedBorderTheme
   radius: CreatedRadiusTheme
   interaction: CreatedInteractionTheme
@@ -64,6 +71,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
     space: spacingByChar,
     leading: createLeading(theme.leading),
     breakpoint: createBreakpoint(theme.breakpoint),
+    mediaQuery: createMediaQuery(theme.mediaQuery),
     border: createBorder(theme.border, colorProperty),
     radius: createRadius(theme.radius),
     interaction: createInteraction(theme.interaction),

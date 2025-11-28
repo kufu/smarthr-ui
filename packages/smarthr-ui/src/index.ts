@@ -103,10 +103,12 @@ export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/L
 // hooks
 export { useTheme } from './hooks/useTheme'
 export { useDevice, DeviceProvider } from './hooks/useDevice'
+export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
 
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
+export { createMediaQuery, defaultMediaQuery } from './themes/createMediaQuery'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
 export { defaultBorder } from './themes/createBorder'
@@ -121,3 +123,6 @@ export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+
+// libs
+export { sv } from './libs/smarthr-ui-variants'
