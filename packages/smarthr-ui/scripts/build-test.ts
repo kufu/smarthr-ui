@@ -1,9 +1,9 @@
 /* eslint @typescript-eslint/no-require-imports: 0 */
-const path = require('path')
+import path from 'node:path'
 
-const { ECMAVersionValidatorPlugin } = require('ecma-version-validator-webpack-plugin')
-const MemoryFS = require('memory-fs')
-const webpack = require('webpack')
+import { ECMAVersionValidatorPlugin } from 'ecma-version-validator-webpack-plugin'
+import MemoryFS from 'memory-fs'
+import webpack from 'webpack'
 
 const compiler = webpack({
   mode: 'development',
@@ -32,7 +32,7 @@ compiler.run((err, stats) => {
   if (err !== null) {
     throw err
   }
-  if (stats.compilation.errors.length > 0) {
+  if (stats && stats.compilation.errors.length > 0) {
     throw stats.compilation.errors
   }
 })
