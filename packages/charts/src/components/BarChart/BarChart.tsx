@@ -4,7 +4,8 @@ import { useId, useMemo, useRef } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
-import { createBarChartOptions, getChartColors, registerChartComponents } from '../../config'
+import { createBarChartOptions, registerChartComponents } from '../../config'
+import { getChartColors } from '../../helper'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 

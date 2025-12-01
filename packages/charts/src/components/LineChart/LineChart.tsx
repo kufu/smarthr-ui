@@ -4,7 +4,8 @@ import { useId, useMemo, useRef } from 'react'
 import { Line } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
-import { createLineChartOptions, getLineChartColors, registerChartComponents } from '../../config'
+import { createLineChartOptions, registerChartComponents } from '../../config'
+import { getLineChartColors } from '../../helper'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
