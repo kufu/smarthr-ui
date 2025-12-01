@@ -14,9 +14,8 @@ import {
   Tooltip,
 } from 'chart.js'
 
+import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'
 import { keyboardNavigationPlugin } from '../plugins'
-
-import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from './constants'
 
 import type { ChartOptions, ChartType, LegendOptions } from 'chart.js'
 
@@ -40,7 +39,7 @@ export const registerChartComponents = () => {
 }
 
 /** Lineチャートのレジェンドはポインターではなく線にしたいが、lineDash を簡単に指定できないため generateLabels を使っている */
-/** 折れ線グラフはレジェンドを線+ポイントにしたい */
+/** TODO: 折れ線グラフはレジェンドを線+ポイントにしたい */
 const generateLegendOptions = <TType extends ChartType>(
   chartType: TType,
 ): Partial<LegendOptions<TType>['labels']> => {
@@ -68,9 +67,10 @@ const generateLegendOptions = <TType extends ChartType>(
 
 // FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
 const createBaseChartOptions = (
-  { plugins }: Partial<ChartOptions>,
+  { plugins }: Partial<ChartOptions<ChartType>>,
   chartType: ChartType,
-): Partial<ChartOptions> => ({
+): Partial<ChartOptions<ChartType>> => ({
+  animation: false,
   responsive: true,
   maintainAspectRatio: false,
   events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
