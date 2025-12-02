@@ -79,13 +79,13 @@ export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & B
 const classNameGenerator = tv({
   slots: {
     icon: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
-    wrapperWithAlt: 'smarthr-ui-Icon-extended smarthr-ui-Icon-withAlt shr-leading-[0]',
+    wrapperWithAlt: 'smarthr-ui-Icon-extended smarthr-ui-Icon-withAlt shr-relative shr-leading-[0]',
   },
 })
 
 const wrapperClassNameGenerator = tv({
   base: [
-    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline',
+    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-relative shr-inline-flex shr-items-baseline',
   ],
   variants: {
     gap: {
