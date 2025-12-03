@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [79.2.0](https://github.com/kufu/smarthr-ui/compare/v79.1.0...v79.2.0) (2025-11-20)
+
+
+### Features
+
+* PageHeadingを利用時、自動的にtitle要素のテキストを設定する ([#5855](https://github.com/kufu/smarthr-ui/issues/5855)) ([2db4e0e](https://github.com/kufu/smarthr-ui/commit/2db4e0e2581fc3edef215e5e71a477ab16624ddd))
+
 ## [79.1.0](https://github.com/kufu/smarthr-ui/compare/v79.0.0...v79.1.0) (2025-11-13)
 
 
