@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import { config } from 'react-transition-group'
-import { userEvent } from 'storybook/test'
 
 import { Fieldset } from '../Fieldset'
 import { RadioButton } from '../RadioButton'
