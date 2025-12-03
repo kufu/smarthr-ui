@@ -11,7 +11,7 @@ const classNameGenerator = tv({
     wrapper: 'shr-relative shr-inline-block',
     counter:
       'shr-border-shorthand shr-inline-flex shr-h-[2em] shr-w-[2em] shr-items-center shr-justify-center shr-rounded-full shr-bg-white shr-tabular-nums',
-    statusIcon: 'shr-absolute -shr-top-0.25 shr-left-1.5',
+    statusIcon: 'shr-absolute -shr-top-[12px] shr-left-[-10px]',
   },
   variants: {
     status: {
