@@ -1,5 +1,5 @@
-import { Meta, StoryFn, StoryObj } from '@storybook/react/*'
-import { FC } from 'react'
+import { Meta, StoryObj } from '@storybook/react/*'
+import { FC, PropsWithChildren } from 'react'
 
 import { EnvironmentProvider } from './EnvironmentProvider'
 import { useEnvironment } from './useEnvironment'
@@ -50,4 +50,36 @@ export const FixedValue: StoryObj<typeof EnvironmentProvider> = {
       mobile: true,
     },
   },
+}
+
+const CustomEnvironmentProvider: FC<PropsWithChildren> = ({ children }) => {
+  const environment = useEnvironment()
+  const mobile = environment.matches.SCREEN_SMALL && window.navigator.maxTouchPoints > 0
+  return (
+    <EnvironmentProvider environment={{ ...environment, mobile }}>{children}</EnvironmentProvider>
+  )
+}
+
+export const CustomMobile: StoryObj<typeof EnvironmentProvider> = {
+  name: 'モバイルの判定をカスタマイズする場合 (例：タッチデバイスかつ画面がSCREEN_SMALL)',
+  render: (args) => (
+    <EnvironmentProvider {...args}>
+      <CustomEnvironmentProvider>
+        <Content />
+      </CustomEnvironmentProvider>
+      <code style={{ whiteSpace: 'pre-wrap' }}>
+        {`
+const CustomEnvironmentProvider : FC<PropsWithChildren> = ({ children }) => {
+  const environment = useEnvironment()
+  const mobile = environment.matches.SCREEN_SMALL && window.navigator.maxTouchPoints > 0
+  return (
+    <EnvironmentProvider environment={{ ...environment, mobile }}>
+      { children }
+     </EnvironmentProvider>
+  )
+}
+        `}
+      </code>
+    </EnvironmentProvider>
+  ),
 }

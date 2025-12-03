@@ -26,6 +26,9 @@ const defaultEnvironment: Environment = {
   },
 }
 
-export const EnvironmentContext = createContext<Environment>(defaultEnvironment)
+export const EnvironmentContext = createContext<Environment | null>(null)
 
-export const useEnvironment = () => useContext(EnvironmentContext)
+export const useEnvironment = () => {
+  const environment = useContext(EnvironmentContext)
+  return environment || defaultEnvironment
+}
