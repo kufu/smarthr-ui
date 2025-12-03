@@ -1,11 +1,12 @@
 import { render, screen, within } from '@testing-library/react'
-import { type ComponentProps, act } from 'react'
-import { userEvent } from 'storybook/test'
+import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../../intl'
 import { FormControl } from '../../FormControl'
 
 import { SingleCombobox } from './SingleCombobox'
+
+import type { ComponentProps } from 'react'
 
 describe('SingleCombobox', () => {
   beforeEach(() => {
@@ -54,12 +55,12 @@ describe('SingleCombobox', () => {
     render(template({ onSelect }))
 
     // コンボボックスをクリックしてリストボックスを表示
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(combobox()).toHaveFocus()
     expect(screen.queryByRole('listbox')).toBeInTheDocument()
 
     // リストボックスからアイテムを選択して、選択イベントの発火を確認
-    await act(() => userEvent.click(screen.getByRole('option', { name: 'option 2' })))
+    await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
   })
@@ -69,7 +70,7 @@ describe('SingleCombobox', () => {
     render(template({ onClear }))
 
     // 削除ボタンをクリックして削除イベントの発火を確認
-    await act(() => userEvent.click(clearButton()))
+    await userEvent.click(clearButton())
     expect(onClear).toHaveBeenCalledWith()
   })
 
@@ -77,19 +78,19 @@ describe('SingleCombobox', () => {
     render(template({}))
 
     // クリックで開く
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).toBeInTheDocument()
 
     // 外側クリックで閉じる
-    await act(() => userEvent.click(document.body))
+    await userEvent.click(document.body)
     expect(listbox()).not.toBeInTheDocument()
 
     // 再度クリックで開く
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).toBeInTheDocument()
 
     // ESCで閉じる
-    await act(() => userEvent.keyboard('{escape}'))
+    await userEvent.keyboard('{escape}')
     expect(listbox()).not.toBeInTheDocument()
   })
 
@@ -98,7 +99,7 @@ describe('SingleCombobox', () => {
     render(template({ onClear }))
 
     // 選択解除ボタンをクリックしてリストボックスが表示されることを確認
-    await act(() => userEvent.click(clearButton()))
+    await userEvent.click(clearButton())
     expect(listbox()).toBeInTheDocument()
   })
 
@@ -107,17 +108,15 @@ describe('SingleCombobox', () => {
     render(template({ onAdd, creatable: true, selectedItem: null }))
 
     // コンボボックスをクリックしてリストボックスを表示
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).toBeInTheDocument()
 
     // 新しいアイテムを入力する
-    await act(() => userEvent.type(combobox(), '新しいアイテム'))
+    await userEvent.type(combobox(), '新しいアイテム')
     expect(listbox()).toHaveTextContent('「新しいアイテム」を追加')
 
     // 新しいアイテムをクリックして、追加イベントの発火を確認
-    await act(() =>
-      userEvent.click(screen.getByRole('option', { name: '「新しいアイテム」を追加' })),
-    )
+    await userEvent.click(screen.getByRole('option', { name: '「新しいアイテム」を追加' }))
     expect(onAdd).toHaveBeenCalledWith('新しいアイテム')
   })
 
@@ -126,7 +125,7 @@ describe('SingleCombobox', () => {
     render(template({ onClear, disabled: true }))
 
     // コンボボックスをクリックしてもリストボックスが表示されないことを確認
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).not.toBeInTheDocument()
 
     // 選択解除ボタンが表示されていない(非表示用のクラスが付与されている)
@@ -138,7 +137,7 @@ describe('SingleCombobox', () => {
     render(template({ onClear, readOnly: true }))
 
     // コンボボックスをクリックしてもリストボックスが表示されないことを確認
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).not.toBeInTheDocument()
 
     // 選択解除ボタンが表示されていない(非表示用のクラスが付与されている)
@@ -149,18 +148,18 @@ describe('SingleCombobox', () => {
     const onSelect = vi.fn()
     render(template({ onSelect, selectedItem: null }))
 
-    await act(() => userEvent.keyboard('{tab}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.keyboard('{tab}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{enter}')
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 3', value: 'value-3' })
 
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{enter}')
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
   })
 
@@ -184,8 +183,8 @@ describe('SingleCombobox', () => {
       </IntlProvider>,
     )
 
-    await act(() => userEvent.keyboard('{tab}'))
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.keyboard('{tab}')
+    await userEvent.keyboard('{enter}')
     expect(onSubmit).not.toHaveBeenCalled()
   })
 })
