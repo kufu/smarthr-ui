@@ -7,6 +7,9 @@ import { DefinitionList, DefinitionListItem } from '../../components/DefinitionL
 import { Stack } from '../../components/Layout'
 import { Heading } from '../../components/Heading'
 import { BaseColumn } from '../../components/Base'
+import { ThemeProvider } from '../../themes/ThemeProvider'
+import { defaultMediaQuery } from '../../themes'
+import { createTheme } from '../../themes/createTheme'
 
 const Content = () => {
   const { mobile, matches } = useEnvironment()
@@ -81,5 +84,21 @@ const CustomEnvironmentProvider : FC<PropsWithChildren> = ({ children }) => {
         `}
       </code>
     </EnvironmentProvider>
+  ),
+}
+
+export const CustomMediaQuery: StoryObj<typeof EnvironmentProvider> = {
+  name: 'カスタムしたメディアクエリトークンを使用する場合',
+  render: (args) => (
+    <ThemeProvider
+      theme={{
+        ...createTheme(),
+        mediaQuery: { ...defaultMediaQuery, SCREEN_SMALL: '(width <= 400px)' },
+      }}
+    >
+      <EnvironmentProvider {...args}>
+        <Content />
+      </EnvironmentProvider>
+    </ThemeProvider>
   ),
 }
