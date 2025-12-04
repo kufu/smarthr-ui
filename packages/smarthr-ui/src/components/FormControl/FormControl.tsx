@@ -35,7 +35,7 @@ type ObjectLabelType = {
   /** ラベルの表示タイプ */
   styleType?: TextProps['styleType']
   /** ラベル左に設置するアイコン */
-  icon?: TextProps['prefixIcon']
+  icon?: TextProps['icon']
   /** ラベルを視覚的に隠すかどうか */
   dangerouslyHide?: boolean
   /** ラベルを紐づける入力要素のID属性と同じ値 */
@@ -398,7 +398,7 @@ const LabelCluster = memo<
   Pick<Props, 'subActionArea'> & {
     label: ReactNode
     labelType: TextProps['styleType']
-    labelIcon?: ReactNode
+    labelIcon?: ObjectLabelType['icon']
     dangerouslyHideLabel?: boolean
     isFieldset: boolean
     managedHtmlFor: string
@@ -421,7 +421,7 @@ const LabelCluster = memo<
   }) => {
     const body = (
       <>
-        <Text styleType={labelType} prefixIcon={labelIcon}>
+        <Text styleType={labelType} icon={labelIcon}>
           {label}
         </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
@@ -534,7 +534,7 @@ const ErrorMessageList = memo<{
     <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <Text className={classNames.errorMessage} prefixIcon={<FaCircleExclamationIcon />}>
+          <Text className={classNames.errorMessage} icon={<FaCircleExclamationIcon />}>
             {message}
           </Text>
         </p>
