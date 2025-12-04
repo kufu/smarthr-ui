@@ -3,10 +3,3 @@ packages:
   - sandbox/*
 
 minimumReleaseAge: 4320
-minimumReleaseAgeExclude:
-- react@19.0.1
-- react@19.1.2
-- react@^19.2.1
-- react-dom@19.0.1
-- react-dom@19.1.2
-- react-dom@^19.2.1
