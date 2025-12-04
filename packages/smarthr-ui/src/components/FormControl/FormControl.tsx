@@ -534,7 +534,7 @@ const ErrorMessageList = memo<{
     <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <Text className={classNames.errorMessage} icon={<FaCircleExclamationIcon />}>
+          <Text className={classNames.errorMessage} prefixIcon={<FaCircleExclamationIcon />}>
             {message}
           </Text>
         </p>
