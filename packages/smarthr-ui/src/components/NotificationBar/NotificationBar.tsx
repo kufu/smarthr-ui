@@ -254,6 +254,7 @@ const MessageArea = memo<
       prefixIcon={<Icon className={classNames.icon} />}
       className={classNames.messageArea}
       as="div"
+      iconGap={0.5}
     >
       {children}
     </Text>

@@ -32,7 +32,7 @@ export const All: StoryObj<typeof FaAddressBookIcon> = {
         <li key={name}>
           <Cluster gap={0.5} align="center">
             <Icon {...args} />
-            <span>{name.replace(/Icon$/, '')}</span>
+            <span>{name}</span>
           </Cluster>
         </li>
       ))}

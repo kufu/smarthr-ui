@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 
-const stream = fs.createReadStream(`${__dirname}/../CHANGELOG.md`, {
+const stream = fs.createReadStream(`${import.meta.dirname}/../CHANGELOG.md`, {
   encoding: 'utf8',
   highWaterMark: 1024,
 })

@@ -29,7 +29,7 @@ type AbstractProps = PropsWithChildren<{
    */
   titleTag?: HeadingTagTypes
   /** `true` のとき、開閉ボタンを表示する */
-  togglable?: boolean
+  toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
@@ -46,7 +46,7 @@ export const classNameGenerator = tv({
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: 'shr-p-1.5',
     heading: 'smarthr-ui-InformationPanel-title',
-    togglableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
+    toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
       'smarthr-ui-InformationPanel-content',
       'shr-p-1.5 shr-pt-0 shr-text-base aria-hidden:shr-hidden',
@@ -115,7 +115,7 @@ export const InformationPanel: FC<Props> = ({
   title,
   titleTag,
   type = 'info',
-  togglable,
+  toggleable,
   active: activeProps = true,
   bold,
   className,
@@ -152,14 +152,14 @@ export const InformationPanel: FC<Props> = ({
         wrapper: withActive.wrapper(wrapperProps),
         header: withActive.header(),
         heading: withActive.heading(),
-        togglableButton: withActive.togglableButton(),
+        toggleableButton: withActive.toggleableButton(),
         content: withActive.content(),
       },
       inactive: {
         wrapper: withInactive.wrapper(wrapperProps),
         header: withInactive.header(),
         heading: withInactive.heading(),
-        togglableButton: withInactive.togglableButton(),
+        toggleableButton: withInactive.toggleableButton(),
         content: withInactive.content(),
       },
     }
@@ -174,13 +174,13 @@ export const InformationPanel: FC<Props> = ({
         <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
           {title}
         </MemoizedHeading>
-        {togglable && (
-          <TogglableButton
+        {toggleable && (
+          <ToggleableButton
             active={active}
             onClickTrigger={onClickTrigger}
             setActive={setActive}
             contentId={contentId}
-            className={classNames.togglableButton}
+            className={classNames.toggleableButton}
             decorators={decorators}
           />
         )}
@@ -207,7 +207,7 @@ const MemoizedHeading = memo<
   </Heading>
 ))
 
-const TogglableButton: FC<
+const ToggleableButton: FC<
   Pick<Props, 'onClickTrigger' | 'decorators'> & {
     active: boolean
     setActive: (flg: boolean) => void
