@@ -21,7 +21,7 @@ const sv = defineSV(({ mobile }) => ({
 
 type Props = VariantProps<typeof sv>
 
-const Component: FC<Props> = ({ color }) => {
+const Component: FC<Props> = ({ color = 'main' }) => {
   const { box } = useSV(sv, { color })
   return <div className={box} />
 }
