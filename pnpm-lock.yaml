@@ -414,12 +414,6 @@ importers:
       tsx:
         specifier: ^4.20.6
         version: 4.20.6
-      ttypescript:
-        specifier: ^1.5.15
-        version: 1.5.15(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))(typescript@5.8.3)
-      typescript-plugin-styled-components:
-        specifier: ^3.0.0
-        version: 3.0.0(typescript@5.8.3)
       vitest:
         specifier: ^4.0.12
         version: 4.0.13(@types/node@20.19.20)(jiti@2.4.1)(jsdom@26.1.0(canvas@3.1.0))(less@4.2.0)(terser@5.39.0)(tsx@4.20.6)(yaml@2.8.1)
@@ -6243,13 +6237,6 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  ttypescript@1.5.15:
-    resolution: {integrity: sha512-48ykDNHzFnPMnv4hYX1P8Q84TvCZyL1QlFxeuxsuZ48X2+ameBgPenvmCkHJtoOSxpoWTWi8NcgNrRnVDOmfSg==}
-    hasBin: true
-    peerDependencies:
-      ts-node: '>=8.0.2'
-      typescript: '>=3.2.2'
-
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
@@ -6302,11 +6289,6 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
       typescript: '>=4.8.4 <6.0.0'
-
-  typescript-plugin-styled-components@3.0.0:
-    resolution: {integrity: sha512-QWlhTl6NqsFxtJyxn7pJjm3RhgzXSByUftZ3AoQClrMMpa4yAaHuJKTN1gFpH3Ti+Rwm56fNUfG9pXSBU+WW3A==}
-    peerDependencies:
-      typescript: ~4.8 || 5
 
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
@@ -13067,6 +13049,7 @@ snapshots:
       yn: 3.1.1
     optionalDependencies:
       '@swc/core': 1.13.5
+    optional: true
 
   ts-node@10.9.2(@swc/core@1.13.5)(@types/node@22.9.1)(typescript@5.8.3):
     dependencies:
@@ -13109,12 +13092,6 @@ snapshots:
       get-tsconfig: 4.10.1
     optionalDependencies:
       fsevents: 2.3.3
-
-  ttypescript@1.5.15(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))(typescript@5.8.3):
-    dependencies:
-      resolve: 1.22.10
-      ts-node: 10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3)
-      typescript: 5.8.3
 
   tunnel-agent@0.6.0:
     dependencies:
@@ -13180,10 +13157,6 @@ snapshots:
       typescript: 5.8.3
     transitivePeerDependencies:
       - supports-color
-
-  typescript-plugin-styled-components@3.0.0(typescript@5.8.3):
-    dependencies:
-      typescript: 5.8.3
 
   typescript@5.8.3: {}
 
