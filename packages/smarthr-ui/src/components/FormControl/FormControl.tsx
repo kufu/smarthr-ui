@@ -87,7 +87,7 @@ const classNameGenerator = tv({
     ],
     label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
-    errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
+    errorMessage: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
     underLabelStack: ['[&&&]:shr-mt-0'],
     childrenWrapper: [],
   },
@@ -232,7 +232,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         className: label.dangerouslyHide ? visuallyHiddenTextClassNameGenerator() : '',
       }),
       errorList: generators.errorList(),
-      errorIcon: generators.errorIcon(),
+      errorMessage: generators.errorMessage(),
       underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
     }
@@ -527,14 +527,16 @@ const ErrorMessageList = memo<{
   managedHtmlFor: string
   classNames: {
     errorList: string
-    errorIcon: string
+    errorMessage: string
   }
 }>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
     <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <FaCircleExclamationIcon text={message} className={classNames.errorIcon} />
+          <Text className={classNames.errorMessage} icon={<FaCircleExclamationIcon />}>
+            {message}
+          </Text>
         </p>
       ))}
     </div>
