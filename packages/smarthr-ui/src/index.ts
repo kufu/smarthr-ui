@@ -125,4 +125,4 @@ export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
 
 // libs
-export { sv } from './libs/smarthr-ui-variants'
+export { defineSV, useSV } from './hooks/useSV'
