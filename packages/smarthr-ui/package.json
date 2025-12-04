@@ -55,7 +55,6 @@
     "css-loader": "^7.1.2",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint-plugin-storybook": "9.0.18",
-    "fs-extra": "^11.3.2",
     "glob": "11.0.3",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
