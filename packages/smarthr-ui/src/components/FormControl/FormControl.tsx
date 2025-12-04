@@ -81,13 +81,14 @@ const classNameGenerator = tv({
       'disabled:shr-text-disabled',
       '[&:disabled_.smarthr-ui-FormControl-label_>_span]:shr-text-disabled',
       '[&:disabled_.smarthr-ui-FormControl-exampleMessage]:shr-text-color-inherit',
-      '[&:disabled_.smarthr-ui-FormControl-errorMessage]:shr-text-color-inherit',
+      '[&:disabled_.smarthr-ui-FormControl-errorMessage-Icon]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
     label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
-    errorMessage: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
+    errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
+    errorMessage: ['smarthr-ui-FormControl-errorMessage'],
     underLabelStack: ['[&&&]:shr-mt-0'],
     childrenWrapper: [],
   },
@@ -232,6 +233,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         className: label.dangerouslyHide ? visuallyHiddenTextClassNameGenerator() : '',
       }),
       errorList: generators.errorList(),
+      errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
       underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
@@ -527,6 +529,7 @@ const ErrorMessageList = memo<{
   managedHtmlFor: string
   classNames: {
     errorList: string
+    errorIcon: string
     errorMessage: string
   }
 }>(({ errorMessages, managedHtmlFor, classNames }) =>
@@ -534,7 +537,10 @@ const ErrorMessageList = memo<{
     <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <Text className={classNames.errorMessage} prefixIcon={<FaCircleExclamationIcon />}>
+          <Text
+            className={classNames.errorMessage}
+            prefixIcon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
+          >
             {message}
           </Text>
         </p>
