@@ -16,7 +16,7 @@ import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators
 import { useIntl } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
-import { FaTimesCircleIcon } from '../../Icon'
+import { FaCircleXmarkIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
@@ -202,7 +202,7 @@ const BaseDestroyButton = <T,>({
       <VisuallyHiddenText id={suffixTextId}>
         {decorated.destroyButtonIconAltSuffix}
       </VisuallyHiddenText>
-      <FaTimesCircleIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
+      <FaCircleXmarkIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
     </UnstyledButton>
   )
 }
