@@ -189,7 +189,7 @@ describe('SingleCombobox', () => {
   })
 })
 
-test('groupロールが付与されている', () => {
+test('groupロールが付与されている', async () => {
   const onClearClick = vi.fn()
 
   render(
@@ -210,6 +210,6 @@ test('groupロールが付与されている', () => {
     </IntlProvider>,
   )
 
-  within(screen.getByRole('group')).getByRole('button', { name: 'クリア' }).click()
+  await userEvent.click(within(screen.getByRole('group')).getByRole('button', { name: 'クリア' }))
   expect(onClearClick).toBeCalled()
 })
