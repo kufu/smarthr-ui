@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type PropsWithChildren, memo, useContext, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useContext,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
@@ -41,7 +48,7 @@ export type Props = PropsWithChildren<{
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
   /** テキスト左に設置するアイコン */
-  icon?: TextProps['prefixIcon']
+  icon?: ReactNode
 }> &
   StylingProps
 
@@ -108,6 +115,6 @@ export const Heading = memo<Props & ElementProps>(
       return <VisuallyHiddenText {...commonProps} />
     }
 
-    return <Text {...commonProps} prefixIcon={icon} />
+    return <Text {...commonProps} icon={icon} />
   },
 )

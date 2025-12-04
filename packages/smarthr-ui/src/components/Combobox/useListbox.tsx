@@ -307,7 +307,7 @@ export const useListbox = <T,>({
             {dropdownHelpMessage && (
               <Text
                 className={classNames.helpMessage}
-                prefixIcon={<FaInfoCircleIcon color="TEXT_GREY" />}
+                icon={<FaInfoCircleIcon color="TEXT_GREY" />}
                 as="p"
               >
                 {dropdownHelpMessage}
