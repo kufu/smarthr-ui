@@ -21,7 +21,7 @@ import { tv } from 'tailwind-variants'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { textColor } from '../../themes'
 import { Calendar } from '../Calendar'
-import { FaCalendarAltIcon } from '../Icon'
+import { FaCalendarDaysIcon } from '../Icon'
 import { Input } from '../Input'
 
 import { Portal } from './Portal'
@@ -401,12 +401,12 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
 const InputSuffixIcon = memo<{
   classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
   alternativeFormat: null | ReactNode
-  caretIconColor: ComponentProps<typeof FaCalendarAltIcon>['color']
+  caretIconColor: ComponentProps<typeof FaCalendarDaysIcon>['color']
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
   <span className={classNames.inputSuffixLayout}>
     <span className={classNames.inputSuffixWrapper}>
       {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
-      <FaCalendarAltIcon color={caretIconColor} />
+      <FaCalendarDaysIcon color={caretIconColor} />
     </span>
   </span>
 ))
