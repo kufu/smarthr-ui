@@ -9,7 +9,7 @@ import {
   StepFormDialogContentInner,
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
-import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
+import { StepFormDialogProvider } from './StepFormDialogProvider'
 
 import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
@@ -55,14 +55,11 @@ export const StepFormDialog: FC<Props & ElementProps> = ({
   }, [isOpen, onClickClose])
 
   const actualOnSubmitAction = useCallback(
-    (close: () => void, e: FormEvent<HTMLFormElement>, currentStep: StepItem) => {
+    (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
       if (isOpen) {
         focusTrapRef.current?.focus()
-
-        return onSubmit(close, e, currentStep)
+        onSubmit(e, helpers)
       }
-
-      return undefined
     },
     [onSubmit, isOpen],
   )
