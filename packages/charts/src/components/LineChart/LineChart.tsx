@@ -57,7 +57,7 @@ export const LineChart: React.FC<Props> = ({ data, title }) => {
   )
 
   return (
-    <>
+    <div className="shr-relative">
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Line
         tabIndex={0}
@@ -67,6 +67,6 @@ export const LineChart: React.FC<Props> = ({ data, title }) => {
         options={chartOptions}
         aria-label={ariaLabel}
       />
-    </>
+    </div>
   )
 }

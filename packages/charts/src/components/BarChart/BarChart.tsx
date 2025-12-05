@@ -57,7 +57,7 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
   )
 
   return (
-    <>
+    <div className="shr-relative">
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Bar
         tabIndex={0}
@@ -67,6 +67,6 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
         options={chartOptions}
         aria-label={ariaLabel}
       />
-    </>
+    </div>
   )
 }

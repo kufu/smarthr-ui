@@ -55,6 +55,7 @@ type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-Tooltip',
+    'shr-relative',
     'shr-inline-block shr-max-w-full shr-align-bottom',
     'focus-visible:shr-focus-indicator',
   ],

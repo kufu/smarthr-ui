@@ -40,6 +40,7 @@ const classNameGenerator = tv({
     itemLabel: 'smarthr-ui-MultiCombobox-selectedItemLabel',
     deleteButton: [
       'smarthr-ui-MultiCombobox-deleteButton',
+      'shr-relative',
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
       'focus-visible:shr-shadow-[unset]',
