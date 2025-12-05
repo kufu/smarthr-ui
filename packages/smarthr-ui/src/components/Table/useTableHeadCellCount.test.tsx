@@ -140,7 +140,7 @@ describe('useTableHeadCellCount', () => {
     expect(cell).toHaveAttribute('colspan', '4')
   })
 
-  it('ヘッダーがない場合、カラム数が0であること', () => {
+  it('ヘッダーがない場合、カラム数が999であること', () => {
     const TestComponent: FC = () => {
       const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
@@ -158,6 +158,6 @@ describe('useTableHeadCellCount', () => {
     const { getByTestId } = render(<TestComponent />)
     const cell = getByTestId('cell')
 
-    expect(cell).toHaveTextContent('カラム数: 0')
+    expect(cell).toHaveTextContent('カラム数: 999')
   })
 })
