@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [80.0.0](https://github.com/kufu/smarthr-ui/compare/v79.2.0...v80.0.0) (2025-12-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* InformationPanelのtogglable属性をtoggleableに変更 (#5956)
+
+### Bug Fixes
+
+* InformationPanelのtogglable属性をtoggleableに変更 ([#5956](https://github.com/kufu/smarthr-ui/issues/5956)) ([7cd6c94](https://github.com/kufu/smarthr-ui/commit/7cd6c94cddb6b38277c4bd110013af1ad5b4fc75))
+* NotificationBar において iconGap が適用されていない箇所を修正 ([#5955](https://github.com/kufu/smarthr-ui/issues/5955)) ([786532a](https://github.com/kufu/smarthr-ui/commit/786532a6af691e67f170e7d0d5014acd179ee52b))
+
+## [79.2.0](https://github.com/kufu/smarthr-ui/compare/v79.1.0...v79.2.0) (2025-11-20)
+
+
+### Features
+
+* PageHeadingを利用時、自動的にtitle要素のテキストを設定する ([#5855](https://github.com/kufu/smarthr-ui/issues/5855)) ([2db4e0e](https://github.com/kufu/smarthr-ui/commit/2db4e0e2581fc3edef215e5e71a477ab16624ddd))
+
+## [79.1.0](https://github.com/kufu/smarthr-ui/compare/v79.0.0...v79.1.0) (2025-11-13)
+
+
+### Features
+
+* smarthr-ui-charts のリリースワークフローを追加 ([#5923](https://github.com/kufu/smarthr-ui/issues/5923)) ([379c6de](https://github.com/kufu/smarthr-ui/commit/379c6deaa7b08397790b1a79bec2212366ee7b9b))
+
+
+### Bug Fixes
+
+* **AnchorButton,TextLink:** suffix=nullの場合にexternalIconを出さないようにした ([#5930](https://github.com/kufu/smarthr-ui/issues/5930)) ([12d96a5](https://github.com/kufu/smarthr-ui/commit/12d96a55cf5ccf90db93749f8c8706de0fa797c6))
+* NotificationBarのsubActionArea属性をoptionalに修正する ([#5926](https://github.com/kufu/smarthr-ui/issues/5926)) ([1871460](https://github.com/kufu/smarthr-ui/commit/1871460c2569a998e18a2585f56e9bac4ceb3f0d))
+
 ## [79.0.0](https://github.com/kufu/smarthr-ui/compare/v78.1.0...v79.0.0) (2025-11-06)
 
 
