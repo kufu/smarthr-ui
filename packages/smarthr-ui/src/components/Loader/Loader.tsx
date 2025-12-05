@@ -17,7 +17,7 @@ type ElementProps = Omit<ComponentProps<'span'>, keyof Props>
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: ['smarthr-ui-Loader', 'shr-inline-block shr-overflow-hidden'],
+    wrapper: ['smarthr-ui-Loader', 'shr-overflow-hidden shr-inline-block'],
     textSlot: ['shr-block', 'shr-mt-1', 'shr-text-base', 'shr-text-center'],
   },
   variants: {

@@ -40,13 +40,13 @@ type DayJsType = ReturnType<typeof dayjs>
 const classNameGenerator = tv({
   slots: {
     container:
-      'smarthr-ui-Calendar shr-inline-block shr-overflow-hidden shr-rounded-m shr-bg-white shr-text-black shr-shadow-layer-3 forced-colors:shr-border-shorthand forced-colors:shr-shadow-none',
+      'smarthr-ui-Calendar shr-overflow-hidden shr-inline-block shr-rounded-m shr-bg-white shr-text-black shr-shadow-layer-3 forced-colors:shr-border-shorthand forced-colors:shr-shadow-none',
     header: 'smarthr-ui-Calendar-header shr-border-b-shorthand shr-flex shr-items-center shr-p-1',
     yearMonth: 'smarthr-ui-Calendar-yearMonth shr-me-0.5 shr-text-base shr-font-bold',
     monthButtons: 'smarthr-ui-Calendar-monthButtons shr-ms-auto shr-flex',
     tableLayout: 'shr-relative',
     yearSelectButton:
-      'smarthr-ui-Calendar-selectingYear [&[aria-expanded="true"]_.smarthr-ui-Icon]:shr-rotate-180',
+      'smarthr-ui-Calendar-selectingYear focus-visible:shr-focus-indicator--outer [&[aria-expanded="true"]_.smarthr-ui-Icon]:shr-rotate-180',
   },
 })
 
@@ -261,7 +261,7 @@ const MonthDirectionCluster = memo<{
         disabled={isSelectingYear || prev.isBefore(from, 'month')}
         onClick={onClickMonthPrev}
         size="s"
-        className="smarthr-ui-Calendar-monthButtonPrev"
+        className="smarthr-ui-Calendar-monthButtonPrev focus-visible:shr-focus-indicator--outer"
       >
         <FaChevronLeftIcon alt={previousMonthAltText} />
       </Button>
@@ -269,7 +269,7 @@ const MonthDirectionCluster = memo<{
         disabled={isSelectingYear || next.isAfter(to, 'month')}
         onClick={onClickMonthNext}
         size="s"
-        className="smarthr-ui-Calendar-monthButtonNext"
+        className="smarthr-ui-Calendar-monthButtonNext focus-visible:shr-focus-indicator--outer"
       >
         <FaChevronRightIcon alt={nextMonthAltText} />
       </Button>
