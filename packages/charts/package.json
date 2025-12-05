@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "chart.js": "^4.5.0",
+    "@smarthr/patternomaly": "^2.0.0",
     "react-chartjs-2": "^5.2.0"
   },
   "devDependencies": {

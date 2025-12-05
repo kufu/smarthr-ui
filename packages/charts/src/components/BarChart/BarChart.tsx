@@ -4,7 +4,8 @@ import { useId, useMemo, useRef } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
-import { createBarChartOptions, getChartColors, registerChartComponents } from '../../config'
+import { createBarChartOptions, registerChartComponents } from '../../config'
+import { getChartColors } from '../../helper'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
@@ -21,7 +22,7 @@ type Props = {
 export const BarChart: React.FC<Props> = ({ data, title }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
-  const chartColors = getChartColors<'bar'>(data.datasets.length)
+  const chartColors = useMemo(() => getChartColors(data.datasets.length), [data.datasets.length])
 
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length
