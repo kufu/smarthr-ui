@@ -179,7 +179,6 @@ import {
   FaTags,
   FaThumbtack,
   FaToolbox,
-  FaTrash,
   FaTrashCan,
   FaTriangleExclamation,
   FaTruck,
@@ -386,7 +385,6 @@ export const FaTagsIcon = /*#__PURE__*/ generateIcon(FaTags)
 export const FaThumbtackIcon = /*#__PURE__*/ generateIcon(FaThumbtack)
 export const FaToolboxIcon = /*#__PURE__*/ generateIcon(FaToolbox)
 export const FaTrashCanIcon = /*#__PURE__*/ generateIcon(FaTrashCan)
-export const FaTrashIcon = /*#__PURE__*/ generateIcon(FaTrash)
 export const FaTriangleExclamationIcon = /*#__PURE__*/ generateIcon(FaTriangleExclamation)
 export const FaTruckIcon = /*#__PURE__*/ generateIcon(FaTruck)
 export const FaTruckRampBoxIcon = /*#__PURE__*/ generateIcon(FaTruckRampBox)
