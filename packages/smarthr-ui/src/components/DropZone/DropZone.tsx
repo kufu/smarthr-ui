@@ -28,6 +28,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-DropZone',
+      'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
     ],
     button: '',
