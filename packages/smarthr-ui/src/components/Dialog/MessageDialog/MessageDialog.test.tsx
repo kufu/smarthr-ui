@@ -15,7 +15,7 @@ describe('MessageDialog', () => {
         <Button onClick={() => setIsOpen(true)}>MessageDialog</Button>
         <MessageDialog
           isOpen={isOpen}
-          title="MessageDialog"
+          heading="MessageDialog"
           description={<p>説明です</p>}
           onClickClose={() => setIsOpen(false)}
         />

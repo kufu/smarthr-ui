@@ -12,8 +12,10 @@ export default {
     width: '40em',
     size: 'M',
     isOpen: true,
-    title: 'フォームダイアログタイトル',
-    subtitle: 'フォームダイアログのサブタイトル',
+    heading: {
+      text: 'フォームダイアログタイトル',
+      sub: 'フォームダイアログのサブタイトル',
+    },
     actionText: '送信',
     subActionArea: <Button>サブアクション</Button>,
     contentBgColor: 'BACKGROUND',

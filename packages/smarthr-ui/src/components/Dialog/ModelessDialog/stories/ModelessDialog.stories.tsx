@@ -7,14 +7,14 @@ import { ModelessDialog } from '../ModelessDialog'
 export default {
   title: 'Components/Dialog/ModelessDialog',
   component: ModelessDialog,
-  render: ({ title, onClickClose, ...args }) => {
+  render: ({ heading, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ModelessDialog
           {...args}
-          title={title || 'モードレスダイアログ'}
+          heading={heading || 'モードレスダイアログ'}
           isOpen={open}
           onClickClose={onClickClose ?? (() => setOpen(false))}
         >
@@ -30,10 +30,10 @@ export default {
 
 export const Playground: StoryObj<typeof ModelessDialog> = {}
 
-export const Title: StoryObj<typeof ModelessDialog> = {
-  name: 'title',
+export const Heading: StoryObj<typeof ModelessDialog> = {
+  name: 'heading',
   args: {
-    title: 'モードレスダイアログのタイトル',
+    heading: 'モードレスダイアログのタイトル',
   },
 }
 
@@ -120,7 +120,7 @@ export const PortalParent: StoryObj<typeof ModelessDialog> = {
         </div>
         <ModelessDialog
           {...args}
-          title="ポータルに開いたダイアログ"
+          heading="ポータルに開いたダイアログ"
           portalParent={parentRef}
           isOpen={open}
           onClickClose={() => setOpen(false)}

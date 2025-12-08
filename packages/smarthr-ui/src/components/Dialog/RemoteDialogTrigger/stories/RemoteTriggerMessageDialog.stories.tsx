@@ -17,7 +17,7 @@ export default {
         <RemoteTriggerMessageDialog
           {...args}
           id="remote-dialog"
-          title="リモートトリガーメッセージダイアログ"
+          heading="リモートトリガーメッセージダイアログ"
           description="RemoteDialogTrigger で開かれた MessageDialog です。"
         />
       </>

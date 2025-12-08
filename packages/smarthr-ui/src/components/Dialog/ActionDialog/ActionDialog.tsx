@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type FC, useCallback, useId } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type ReactNode,
+  isValidElement,
+  useCallback,
+  useId,
+} from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -12,14 +19,15 @@ import {
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = Omit<ActionDialogContentInnerProps, 'heading'> &
+  DialogProps & {
+    heading: ReactNode | Omit<ActionDialogContentInnerProps['heading'], 'id'>
+  }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const ActionDialog: FC<Props & ElementProps> = ({
   children,
-  title,
-  subtitle,
-  titleTag,
+  heading: orgHeading,
   contentBgColor,
   contentPadding,
   actionText,
@@ -40,6 +48,16 @@ export const ActionDialog: FC<Props & ElementProps> = ({
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const heading: ActionDialogContentInnerProps['heading'] =
+    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
+      ? {
+          text: orgHeading as ReactNode,
+          id: titleId,
+        }
+      : ({ ...orgHeading, id: titleId } as ActionDialogContentInnerProps['heading'])
 
   const actualOnClickClose = useCallback(() => {
     if (isOpen) {
@@ -62,10 +80,7 @@ export const ActionDialog: FC<Props & ElementProps> = ({
       onPressEscape={closeDisabled ? undefined : onPressEscape}
     >
       <ActionDialogContentInner
-        title={title}
-        titleId={titleId}
-        subtitle={subtitle}
-        titleTag={titleTag}
+        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         actionText={actionText}

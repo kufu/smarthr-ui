@@ -37,13 +37,8 @@ export default {
       </>
     )
   },
-  argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
-    },
-  },
   args: {
-    title: 'フォームダイアログ',
+    heading: 'フォームダイアログ',
     actionText: '送信',
   },
   parameters: {
@@ -53,24 +48,20 @@ export default {
 
 export const Playground: StoryObj<typeof FormDialog> = {}
 
-export const Title: StoryObj<typeof FormDialog> = {
-  name: 'title',
+export const Heading: StoryObj<typeof FormDialog> = {
+  name: 'heading',
   args: {
-    title: 'フォームダイアログタイトル',
+    heading: 'フォームダイアログタイトル',
   },
 }
 
-export const Subtitle: StoryObj<typeof FormDialog> = {
-  name: 'subtitle',
+export const HeadingSub: StoryObj<typeof FormDialog> = {
+  name: 'heading.sub',
   args: {
-    subtitle: 'フォームダイアログサブタイトル',
-  },
-}
-
-export const TitleTag: StoryObj<typeof FormDialog> = {
-  name: 'titleTag（非推奨）',
-  args: {
-    titleTag: 'h3',
+    heading: {
+      text: 'フォームダイアログタイトル',
+      sub: 'フォームダイアログサブタイトル',
+    },
   },
 }
 

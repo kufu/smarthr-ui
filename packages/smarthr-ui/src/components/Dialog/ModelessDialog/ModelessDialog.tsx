@@ -37,7 +37,7 @@ type Props = PropsWithChildren<{
   /**
    * ダイアログのタイトルの内容
    */
-  title: ReactNode
+  heading: ReactNode
   /**
    * ダイアログのフッタ部分の内容
    */
@@ -105,7 +105,7 @@ const classNameGenerator = tv({
       'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
       'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
     ],
-    titleEl: [
+    headingEl: [
       'shr-my-1 shr-me-1',
       /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
       '[.smarthr-ui-ModelessDialog-handle:focus-visible_+_&]:shr-relative',
@@ -138,7 +138,7 @@ const classNameGenerator = tv({
 export const ModelessDialog: FC<
   Props & BaseElementProps & VariantProps<typeof classNameGenerator>
 > = ({
-  title,
+  heading,
   children,
   contentBgColor,
   contentPadding,
@@ -166,14 +166,14 @@ export const ModelessDialog: FC<
   const { localize } = useIntl()
 
   const classNames = useMemo(() => {
-    const { overlap, wrapper, headerEl, titleEl, dialogHandler, closeButtonLayout, footerEl } =
+    const { overlap, wrapper, headerEl, headingEl, dialogHandler, closeButtonLayout, footerEl } =
       classNameGenerator()
 
     return {
       overlap: overlap({ className }),
       wrapper: wrapper({ size, resizable }),
       header: headerEl(),
-      title: titleEl(),
+      heading: headingEl(),
       dialogHandler: dialogHandler(),
       closeButtonLayout: closeButtonLayout(),
       footer: footerEl(),
@@ -423,9 +423,9 @@ export const ModelessDialog: FC<
               onArrowKeyDown={handleArrowKey}
               className={classNames.dialogHandler}
             />
-            <div id={labelId} className={classNames.title}>
+            <div id={labelId} className={classNames.heading}>
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-              <Heading>{title}</Heading>
+              <Heading>{heading}</Heading>
             </div>
             <CloseButton
               onClick={actualOnClickClose}
