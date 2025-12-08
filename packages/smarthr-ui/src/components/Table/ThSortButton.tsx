@@ -9,7 +9,7 @@ import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 const sortButtonClassNameGenerator = tv({
-  base: '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-items-center shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
+  base: 'shr-relative -shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-items-center shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
   variants: {
     align: {
       left: '',
