@@ -130,6 +130,7 @@ import {
   FaList,
   FaListOl,
   FaListUl,
+  FaLocationDot,
   FaLock,
   FaLockOpen,
   FaMagnifyingGlass,
@@ -139,12 +140,14 @@ import {
   FaMicrosoft,
   FaMinus,
   FaMoneyCheckDollar,
+  FaMugHot,
   FaPaintbrush,
   FaPaperPlane,
   FaPaperclip,
   FaPen,
   FaPenToSquare,
   FaPencil,
+  FaPersonWalkingArrowLoopLeft,
   FaPiggyBank,
   FaPlus,
   FaPowerOff,
@@ -335,6 +338,7 @@ export const FaLinkSlashIcon = /*#__PURE__*/ generateIcon(FaLinkSlash)
 export const FaListIcon = /*#__PURE__*/ generateIcon(FaList)
 export const FaListOlIcon = /*#__PURE__*/ generateIcon(FaListOl)
 export const FaListUlIcon = /*#__PURE__*/ generateIcon(FaListUl)
+export const FaLocationDotIcon = /*#__PURE__*/ generateIcon(FaLocationDot)
 export const FaLockIcon = /*#__PURE__*/ generateIcon(FaLock)
 export const FaLockOpenIcon = /*#__PURE__*/ generateIcon(FaLockOpen)
 export const FaMagnifyingGlassIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlass)
@@ -344,12 +348,16 @@ export const FaMessageIcon = /*#__PURE__*/ generateIcon(FaMessage)
 export const FaMicrosoftIcon = /*#__PURE__*/ generateIcon(FaMicrosoft)
 export const FaMinusIcon = /*#__PURE__*/ generateIcon(FaMinus)
 export const FaMoneyCheckDollarIcon = /*#__PURE__*/ generateIcon(FaMoneyCheckDollar)
+export const FaMugHotIcon = /*#__PURE__*/ generateIcon(FaMugHot)
 export const FaPaintbrushIcon = /*#__PURE__*/ generateIcon(FaPaintbrush)
 export const FaPaperPlaneIcon = /*#__PURE__*/ generateIcon(FaPaperPlane)
 export const FaPaperclipIcon = /*#__PURE__*/ generateIcon(FaPaperclip)
 export const FaPenIcon = /*#__PURE__*/ generateIcon(FaPen)
 export const FaPenToSquareIcon = /*#__PURE__*/ generateIcon(FaPenToSquare)
 export const FaPencilIcon = /*#__PURE__*/ generateIcon(FaPencil)
+export const FaPersonWalkingArrowLoopLeftIcon = /*#__PURE__*/ generateIcon(
+  FaPersonWalkingArrowLoopLeft,
+)
 export const FaPiggyBankIcon = /*#__PURE__*/ generateIcon(FaPiggyBank)
 export const FaPlusIcon = /*#__PURE__*/ generateIcon(FaPlus)
 export const FaPowerOffIcon = /*#__PURE__*/ generateIcon(FaPowerOff)
