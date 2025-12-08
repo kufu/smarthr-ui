@@ -15,6 +15,7 @@ type Props = PropsWithChildren<{
 const classNameGenerator = tv({
   slots: {
     inner: [
+      'shr-relative',
       'shr-flex shr-justify-center shr-px-1 shr-py-0.75',
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
