@@ -339,7 +339,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
 
     return maxLetters ? (
-      <span>
+      <span className="shr-relative">
         {body}
         <VisuallyHiddenText id={maxLettersNoticeId}>
           {buildScreenReaderMaxLettersDescription(maxLetters)}
