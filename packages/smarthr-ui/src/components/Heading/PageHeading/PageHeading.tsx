@@ -5,7 +5,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
 
 import type { ElementProps } from '../Heading'
 
@@ -37,8 +37,6 @@ const classNameGenerator = tv({
     visuallyHidden: false,
   },
 })
-
-const PSEUDO_TITLE_CLASS_NAME = visuallyHiddenTextClassNameGenerator()
 
 export const PageHeading = memo<Props & ElementProps>(
   ({
@@ -79,7 +77,7 @@ export const PageHeading = memo<Props & ElementProps>(
           document.createElement('div')) as HTMLDivElement
 
         pseudoTitle.setAttribute('id', pseudoTitleId)
-        pseudoTitle.setAttribute('class', PSEUDO_TITLE_CLASS_NAME)
+        pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
         pseudoTitle.setAttribute('aria-live', 'polite')
         document.body.prepend(pseudoTitle)
 
