@@ -175,7 +175,7 @@ const Controller: FC<ControllerProps> = memo(
   }) => (
     <div className="shr-sticky shr-flex shr-w-full shr-items-center shr-justify-center shr-justify-items-center shr-gap-0.5 shr-bg-scrim shr-p-0.5 shr-shadow-layer-1">
       <Cluster gap={0.5}>
-        <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
+        <div className="shr-overflow-hidden shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-rounded-m">
           <Button
             onClick={onClickScaleDownButton}
             disabled={scale <= scaleSteps[0]}

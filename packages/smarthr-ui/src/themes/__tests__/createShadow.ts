@@ -1,26 +1,12 @@
-import { type FlattenSimpleInterpolation, css } from 'styled-components'
-
 import { createShadow } from '../createShadow'
 
-const replaceSpaces = (str: FlattenSimpleInterpolation) => String(str).replace(/\s/g, '')
-
 describe('createShadow', () => {
-  it('ユーザー指定の OUTLINE がフォーカススタイルに反映されること', () => {
-    const userOutlineColor = 'black'
-    const actual = createShadow(undefined, { OUTLINE: userOutlineColor })
-    const expectedOutline = `0 0 0 2px white, 0 0 0 4px ${userOutlineColor}`
-
-    expect(actual.OUTLINE).toBe(expectedOutline)
-
-    const actualFocusIndicator = replaceSpaces(actual.focusIndicatorStyles)
-    const expectedFocusIndicator = replaceSpaces(css`
-      /* stylelint-disable no-invalid-position-declaration */
-      outline: none;
-      isolation: isolate;
-      box-shadow: ${expectedOutline};
-      /* stylelint-enable no-invalid-position-declaration */
-    `)
-
-    expect(actualFocusIndicator).toBe(expectedFocusIndicator)
+  it('デフォルトのシャドウが返されること', () => {
+    const actual = createShadow()
+    expect(actual.LAYER0).toBe('none')
+    expect(actual.LAYER1).toBe('0 1px 2px 0 rgba(3,3,2,0.3)')
+    expect(actual.LAYER2).toBe('0 2px 4px 1px rgba(3,3,2,0.3)')
+    expect(actual.LAYER3).toBe('0 4px 8px 2px rgba(3,3,2,0.3)')
+    expect(actual.LAYER4).toBe('0 8px 16px 4px rgba(3,3,2,0.3)')
   })
 })
