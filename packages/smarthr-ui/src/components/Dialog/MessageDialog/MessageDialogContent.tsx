@@ -14,7 +14,7 @@ type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 /** @deprecated */
 export const MessageDialogContent: FC<Props & ElementProps> = ({
   title,
-  description,
+  children,
   portalParent,
   className,
   contentBgColor,
@@ -43,12 +43,13 @@ export const MessageDialogContent: FC<Props & ElementProps> = ({
       <MessageDialogContentInner
         title={title}
         titleId={titleId}
-        description={description}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
         decorators={decorators}
-      />
+      >
+        {children}
+      </MessageDialogContentInner>
     </DialogContentInner>,
   )
 }

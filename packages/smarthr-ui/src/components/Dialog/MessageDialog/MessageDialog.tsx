@@ -19,7 +19,7 @@ export const MessageDialog: FC<Props & ElementProps> = ({
   title,
   subtitle,
   titleTag,
-  description,
+  children,
   onClickClose,
   onPressEscape = onClickClose,
   contentBgColor,
@@ -51,12 +51,13 @@ export const MessageDialog: FC<Props & ElementProps> = ({
         titleTag={titleTag}
         titleId={titleId}
         subtitle={subtitle}
-        description={description}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
         decorators={decorators}
-      />
+      >
+        {children}
+      </MessageDialogContentInner>
     </DialogContentInner>,
   )
 }
