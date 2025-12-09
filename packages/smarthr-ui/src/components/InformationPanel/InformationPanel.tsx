@@ -4,6 +4,7 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
+  isValidElement,
   memo,
   useEffect,
   useId,
@@ -21,13 +22,17 @@ import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
+type ObjectHeadingType = {
+  text: ReactNode
+  /**
+   * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
+   */
+  tag?: HeadingTagTypes
+}
+type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
-  title: ReactNode
-  /**
-   * @deprecated titleTagは非推奨です
-   */
-  titleTag?: HeadingTagTypes
+  heading: ReactNode | ObjectHeadingType
   /** `true` のとき、開閉ボタンを表示する */
   toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
@@ -37,15 +42,13 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
-
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
 export const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: 'shr-p-1.5',
-    heading: 'smarthr-ui-InformationPanel-title',
+    heading: 'smarthr-ui-InformationPanel-heading',
     toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
       'smarthr-ui-InformationPanel-content',
@@ -112,8 +115,7 @@ export const classNameGenerator = tv({
 })
 
 export const InformationPanel: FC<Props> = ({
-  title,
-  titleTag,
+  heading,
   type = 'info',
   toggleable,
   active: activeProps = true,
@@ -126,7 +128,6 @@ export const InformationPanel: FC<Props> = ({
 }) => {
   const [active, setActive] = useState(activeProps)
   const id = useId()
-  const titleId = `${id}-title`
   const contentId = `${id}-content`
 
   useEffect(() => {
@@ -170,10 +171,12 @@ export const InformationPanel: FC<Props> = ({
   return (
     <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
-          {title}
-        </MemoizedHeading>
+        <MemoizedHeading
+          heading={heading}
+          id={`${id}-heading`}
+          className={classNames.heading}
+          type={type}
+        />
         {toggleable && (
           <ToggleableButton
             active={active}
@@ -194,18 +197,30 @@ export const InformationPanel: FC<Props> = ({
 
 const MemoizedHeading = memo<
   Pick<Props, 'type'> & {
-    tag: Props['titleTag']
+    heading: Props['heading']
     id: string
     className: string
-    children: Props['title']
   }
->(({ type, children, ...rest }) => (
-  <Heading {...rest} type="blockTitle">
-    <ResponseMessage type={type} iconGap={0.5}>
-      {children}
-    </ResponseMessage>
-  </Heading>
-))
+>(({ type, heading: orgHeading, ...rest }) => {
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const heading: ObjectHeadingType =
+    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
+      ? {
+          text: orgHeading as ReactNode,
+        }
+      : (orgHeading as ObjectHeadingType)
+
+  return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    <Heading {...rest} tag={heading.tag} type="blockTitle">
+      <ResponseMessage type={type} iconGap={0.5}>
+        {heading.text}
+      </ResponseMessage>
+    </Heading>
+  )
+})
 
 const ToggleableButton: FC<
   Pick<Props, 'onClickTrigger' | 'decorators'> & {
