@@ -13,11 +13,11 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { CHART_COLORS, FONT_FAMILY, defaultColor, defaultRadius } from 'smarthr-ui'
 
+import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'
 import { keyboardNavigationPlugin } from '../plugins'
 
-import type { ChartDataset, ChartOptions, ChartType } from 'chart.js'
+import type { ChartOptions, ChartType, LegendOptions } from 'chart.js'
 
 /**
  * Chart.jsの必要な要素を登録
@@ -38,24 +38,52 @@ export const registerChartComponents = () => {
   )
 }
 
+/** Lineチャートのレジェンドはポインターではなく線にしたいが、lineDash を簡単に指定できないため generateLabels を使っている */
+/** TODO: 折れ線グラフはレジェンドを線+ポイントにしたい */
+const generateLegendOptions = <TType extends ChartType>(
+  chartType: TType,
+): Partial<LegendOptions<TType>['labels']> => {
+  if (chartType === 'line') {
+    return {
+      font: { family: FONT_FAMILY },
+      usePointStyle: true,
+      pointStyleWidth: 48,
+      generateLabels: (chart) =>
+        chart.data.datasets.map((dataset, index) => ({
+          text: dataset.label,
+          strokeStyle: CHART_COLORS[index % CHART_COLORS.length],
+          lineDash: BORDER_DASHES[index % BORDER_DASHES.length],
+          lineWidth: 4,
+          pointStyle: 'line',
+        })),
+    }
+  }
+  return {
+    font: { family: FONT_FAMILY },
+    pointStyle: 'rect',
+    pointStyleWidth: 48,
+  }
+}
+
 // FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
-const createBaseChartOptions = ({ plugins }: Partial<ChartOptions>): Partial<ChartOptions> => ({
+const createBaseChartOptions = (
+  { plugins }: Partial<ChartOptions<ChartType>>,
+  chartType: ChartType,
+): Partial<ChartOptions<ChartType>> => ({
+  animation: false,
   responsive: true,
   maintainAspectRatio: false,
   events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
   plugins: {
     legend: {
       position: 'bottom',
-      labels: {
-        usePointStyle: true,
-        font: { family: FONT_FAMILY },
-      },
+      labels: generateLegendOptions(chartType),
     },
     tooltip: {
-      backgroundColor: defaultColor.BACKGROUND,
-      titleColor: defaultColor.TEXT_BLACK,
-      bodyColor: defaultColor.TEXT_BLACK,
-      borderColor: defaultColor.BORDER,
+      backgroundColor: SMARTHR_DEFAULT_COLORS.BACKGROUND,
+      titleColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+      bodyColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+      borderColor: SMARTHR_DEFAULT_COLORS.BORDER,
       borderWidth: 1,
       cornerRadius: 4,
     },
@@ -66,18 +94,18 @@ const createBaseChartOptions = ({ plugins }: Partial<ChartOptions>): Partial<Cha
 export const createBarChartOptions = (
   plugins: Partial<ChartOptions>,
 ): Partial<ChartOptions<'bar'>> => ({
-  ...createBaseChartOptions(plugins),
+  ...createBaseChartOptions(plugins, 'bar'),
   elements: {},
   scales: {
     x: {
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
     y: {
       beginAtZero: true,
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
   },
@@ -86,37 +114,17 @@ export const createBarChartOptions = (
 export const createLineChartOptions = (
   plugins: Partial<ChartOptions>,
 ): Partial<ChartOptions<'line'>> => ({
-  ...createBaseChartOptions(plugins),
+  ...createBaseChartOptions(plugins, 'line'),
   scales: {
     x: {
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
     y: {
       grid: {
-        color: defaultColor.BORDER,
+        color: SMARTHR_DEFAULT_COLORS.BORDER,
       },
     },
   },
 })
-
-// TODO: SINGLE_CHART_COLORS を使うオプションを追加する
-export const getChartColors = <T extends ChartType>(
-  dataLength: number,
-): Array<
-  Pick<ChartDataset<T>, 'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'>
-> => {
-  const colors: string[] = []
-  for (let i = 0; i < dataLength; i++) {
-    colors.push(CHART_COLORS[i % CHART_COLORS.length])
-  }
-
-  // outline-offsetを表現できていない
-  return colors.map((color) => ({
-    backgroundColor: color,
-    borderColor: color,
-    hoverBorderColor: defaultColor.OUTLINE,
-    hoverBorderWidth: 4,
-  }))
-}
