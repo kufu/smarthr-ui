@@ -65,16 +65,24 @@ const generateLegendOptions = <TType extends ChartType>(
   }
 }
 
+type CreateBaseChartOptionsReturn<T extends ChartType> = T extends 'line'
+  ? Partial<ChartOptions<'line'>>
+  : Partial<ChartOptions<'bar'>>
+
 // FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
-const createBaseChartOptions = (
-  { plugins }: Partial<ChartOptions<ChartType>>,
-  chartType: ChartType,
-): Partial<ChartOptions<ChartType>> => ({
+const createBaseChartOptions = <T extends ChartType>({
+  plugins,
+  chartType,
+}: {
+  plugins: ChartOptions<T>['plugins']
+  chartType: T
+}): CreateBaseChartOptionsReturn<T> => ({
   animation: false,
   responsive: true,
   maintainAspectRatio: false,
   events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
   plugins: {
+    ...plugins,
     legend: {
       position: 'bottom',
       labels: generateLegendOptions(chartType),
@@ -87,14 +95,14 @@ const createBaseChartOptions = (
       borderWidth: 1,
       cornerRadius: 4,
     },
-    ...plugins,
   },
 })
 
-export const createBarChartOptions = (
-  plugins: Partial<ChartOptions>,
-): Partial<ChartOptions<'bar'>> => ({
-  ...createBaseChartOptions(plugins, 'bar'),
+// TODO: plugins 以外も受け取ってdeepmergeする
+export const createBarChartOptions = ({
+  plugins,
+}: ChartOptions<'bar'>): Partial<ChartOptions<'bar'>> => ({
+  ...createBaseChartOptions({ plugins, chartType: 'bar' }),
   elements: {},
   scales: {
     x: {
@@ -111,10 +119,11 @@ export const createBarChartOptions = (
   },
 })
 
-export const createLineChartOptions = (
-  plugins: Partial<ChartOptions>,
-): Partial<ChartOptions<'line'>> => ({
-  ...createBaseChartOptions(plugins, 'line'),
+// TODO: plugins 以外も受け取ってdeepmergeする
+export const createLineChartOptions = ({
+  plugins,
+}: ChartOptions<'line'>): Partial<ChartOptions<'line'>> => ({
+  ...createBaseChartOptions({ plugins, chartType: 'line' }),
   scales: {
     x: {
       grid: {
