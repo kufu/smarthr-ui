@@ -23,7 +23,7 @@ import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
 import { Text, type TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
 
@@ -230,7 +230,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     return {
       wrapper: generators.wrapper({ className }),
       label: generators.label({
-        className: label.dangerouslyHide ? visuallyHiddenTextClassNameGenerator() : '',
+        className: label.dangerouslyHide ? visuallyHiddenTextClassName : '',
       }),
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
