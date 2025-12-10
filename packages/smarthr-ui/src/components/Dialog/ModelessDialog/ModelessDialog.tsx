@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithoutRef,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -22,7 +22,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useIntl } from '../../../intl'
 import { dialogSize } from '../../../themes/tailwind'
-import { Base, type BaseElementProps } from '../../Base'
+import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
@@ -31,6 +31,7 @@ import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
+import type { PropsWithHTMLAttributes } from '../../../types/ComponentTypes'
 import type { DialogSize } from '../types'
 
 type Props = PropsWithChildren<{
@@ -135,9 +136,12 @@ const classNameGenerator = tv({
   },
 })
 
-export const ModelessDialog: FC<
-  Props & BaseElementProps & VariantProps<typeof classNameGenerator>
-> = ({
+type ComponentProps = PropsWithHTMLAttributes<
+  Props & VariantProps<typeof classNameGenerator>,
+  'div'
+>
+
+export const ModelessDialog: FC<ComponentProps> = ({
   title,
   children,
   contentBgColor,
@@ -193,7 +197,7 @@ export const ModelessDialog: FC<
     y: 0,
   })
   const [draggableBounds, setDraggableBounds] =
-    useState<ComponentProps<typeof Draggable>['bounds']>()
+    useState<ComponentPropsWithoutRef<typeof Draggable>['bounds']>()
 
   const decoratorDefaultTexts = useMemo(
     () => ({
