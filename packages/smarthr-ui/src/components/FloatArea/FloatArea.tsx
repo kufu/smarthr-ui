@@ -140,7 +140,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
         </Cluster>
         {responseStatus && (
           <p className={classNames.responseMessageWrapper}>
-            <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
+            <ResponseMessage icon={responseStatus.status}>{responseStatus.text}</ResponseMessage>
           </p>
         )}
       </Stack>

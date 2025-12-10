@@ -229,7 +229,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
             </Cluster>
             {calcedResponseStatus.message && (
               <div className={classNames.message}>
-                <ResponseMessage type={calcedResponseStatus.status} role="alert">
+                <ResponseMessage icon={calcedResponseStatus.status} role="alert">
                   {calcedResponseStatus.message}
                 </ResponseMessage>
               </div>

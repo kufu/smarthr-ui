@@ -1,5 +1,11 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  isValidElement,
+  useMemo,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
 import {
   FaCircleCheckIcon,
@@ -13,11 +19,15 @@ import { Text } from '../Text'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 
-type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
-  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> & {
-    size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-    iconGap?: CharRelativeSize | AbstractSize
-  }
+type IconType = keyof typeof ICON_MAPPER
+type ObjectIconType = {
+  type: IconType
+  gap?: CharRelativeSize | AbstractSize
+}
+type Props = PropsWithChildren<Omit<IconProps, 'right' | 'text' | 'size' | 'alt' | 'iconGap'>> & {
+  size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
+  icon?: IconType | ObjectIconType
+}
 
 export const classNameGenerator = tv({
   base: '',
@@ -40,25 +50,25 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({
-  type = 'info',
-  size,
-  iconGap,
-  right,
-  children,
-  ...other
-}) => {
-  const className = useMemo(() => classNameGenerator({ type }), [type])
-  const Icon = ICON_MAPPER[type]
-  const icon = <Icon {...other} className={className} />
-  const iconAttrs = {
-    prefix: right ? undefined : icon,
-    suffix: right ? icon : undefined,
-    gap: iconGap,
-  }
+export const ResponseMessage: FC<Props> = ({ icon, size, children, ...other }) => {
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const actualIcon: ObjectIconType =
+    !icon || typeof icon !== 'object' || isValidElement(icon)
+      ? {
+          type: icon as IconType,
+        }
+      : (icon as ObjectIconType)
+
+  const className = useMemo(() => classNameGenerator({ type: actualIcon.type }), [actualIcon.type])
+  const TextIcon = ICON_MAPPER[actualIcon.type || 'info']
 
   return (
-    <Text icon={iconAttrs} size={size}>
+    <Text
+      icon={{ prefix: <TextIcon {...other} className={className} />, gap: actualIcon.gap }}
+      size={size}
+    >
       {children}
     </Text>
   )

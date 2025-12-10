@@ -192,18 +192,15 @@ export const InformationPanel: FC<Props> = ({
   )
 }
 
-const MemoizedHeading = memo<
-  Pick<Props, 'type'> & {
-    tag: Props['titleTag']
-    id: string
-    className: string
-    children: Props['title']
-  }
->(({ type, children, ...rest }) => (
+const MemoizedHeading = memo<{
+  type: Required<Props>['type']
+  tag: Props['titleTag']
+  id: string
+  className: string
+  children: Props['title']
+}>(({ type, children, ...rest }) => (
   <Heading {...rest} type="blockTitle">
-    <ResponseMessage type={type} iconGap={0.5}>
-      {children}
-    </ResponseMessage>
+    <ResponseMessage icon={{ type, gap: 0.5 }}>{children}</ResponseMessage>
   </Heading>
 ))
 
