@@ -293,6 +293,125 @@ describe('intl', () => {
       })
     })
 
+    describe('formatTime', () => {
+      const testDate = new Date(2025, 1 - 1, 1, 14, 30, 45) // 2025年1月1日 14:30:45
+
+      describe('locale variations with default parts (hour and minute)', () => {
+        it('formats time in 24-hour format locales', () => {
+          const locales24h = ['ja', 'ja-easy', 'ko', 'pt', 'vi', 'zh-cn', 'zh-tw'] as const
+          locales24h.forEach((locale) => {
+            const wrapper: FC<PropsWithChildren> = ({ children }) => (
+              <IntlProvider locale={locale}>{children}</IntlProvider>
+            )
+            const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+            expect(formatTime({ date: testDate })).toBe('14:30')
+          })
+        })
+
+        it('formats time in non-colon format locale (id-ID)', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="id-id">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate })).toBe('14.30')
+        })
+
+        it('formats time in 12-hour format locale (en-us)', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="en-us">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate })).toMatch(/^2:30 PM$/)
+        })
+      })
+
+      describe('part combinations', () => {
+        it('formats only hour and minute (default)', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate })).toBe('14:30')
+        })
+
+        it('formats hour, minute, and second in 24-hour format', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate, parts: ['hour', 'minute', 'second'] })).toBe(
+            '14:30:45',
+          )
+        })
+
+        it('formats hour, minute, and second in 12-hour format (en-us)', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="en-us">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate, parts: ['hour', 'minute', 'second'] })).toMatch(
+            /^2:30:45 PM$/,
+          )
+        })
+
+        it('formats hour, minute, and second in non-colon format (id-ID)', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="id-id">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate, parts: ['hour', 'minute', 'second'] })).toBe(
+            '14.30.45',
+          )
+        })
+
+        it('formats only hour', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate, parts: ['hour'] })).toMatch(/^14/)
+        })
+
+        it('formats only minute', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate, parts: ['minute'] })).toMatch(/^30/)
+        })
+
+        it('formats only second', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate, parts: ['second'] })).toMatch(/^45/)
+        })
+      })
+
+      describe('options', () => {
+        it('uses 12-hour format when hour12 option is true', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const formatted = formatTime({
+            date: testDate,
+            options: { hour12: true },
+          })
+          expect(formatted).toBe('午後02:30')
+        })
+
+        it('uses 24-hour format when hour12 option is false', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="en-us">{children}</IntlProvider>
+          )
+          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTime({ date: testDate, options: { hour12: false } })).toBe('14:30')
+        })
+      })
+    })
+
     describe('getWeekStartDay', () => {
       it('returns 0 (Sunday) for Sunday-start locales', () => {
         const sundayStartLocales = ['en-us', 'ja', 'ja-easy', 'ko', 'zh-cn', 'zh-tw'] as const

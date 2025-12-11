@@ -21,6 +21,8 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
 
 type DatePart = 'year' | 'month' | 'day' | 'weekday'
 
+type TimePart = 'hour' | 'minute' | 'second'
+
 export type FormatDateProps = {
   /**
    * フォーマット対象の日付
@@ -52,6 +54,23 @@ export type FormatDateProps = {
      */
     capitalizeFirstLetter?: boolean
   }
+}
+
+export type FormatTimeProps = {
+  /**
+   * フォーマット対象の日付
+   */
+  date: Date
+
+  /**
+   * 表示する時刻のパーツ。指定しない場合は ['hour', 'minute'] がデフォルト
+   */
+  parts?: readonly [TimePart, ...TimePart[]]
+
+  /**
+   * フォーマットオプション
+   */
+  options?: Intl.DateTimeFormatOptions
 }
 
 /**
@@ -94,6 +113,28 @@ export type UseIntlReturn = {
    * formatDate({ date: new Date(), parts: ['weekday'], options: { capitalizeFirstLetter: true } }) // "Seg." (pt)（指定しなければ "seg."）
    */
   formatDate(props: FormatDateProps): string
+
+  /**
+   * 時刻をロケールに応じた形式でフォーマットする関数
+   * @param props - フォーマットのオプション
+   * @param props.date - フォーマット対象の日付
+   * @param props.parts - 表示する時刻のパーツ。デフォルトは ['hour', 'minute']
+   * @param props.options - フォーマットオプション
+   * @returns フォーマットされた時刻文字列
+   * @example
+   * // 基本的な使用法（ロケールのデフォルト形式）
+   * formatTime({ date: new Date() }) // "10:30" (ja)
+   *
+   * // 秒を含めて表示
+   * formatTime({ date: new Date(), parts: ['hour', 'minute', 'second'] }) // "10:30:45" (ja)
+   *
+   * // 時のみ表示
+   * formatTime({ date: new Date(), parts: ['hour'] }) // "10" (ja)
+   *
+   * // 12時間形式で表示
+   * formatTime({ date: new Date(), options: { hour12: true } }) // "午前10:30" (ja)
+   */
+  formatTime(props: FormatTimeProps): string
 
   /**
    * 現在のロケールに基づいて週の開始日を決定する関数
@@ -205,6 +246,54 @@ const WEEKDAY_FORMATS: Record<keyof typeof locales, { replacer: (base: string) =
   'zh-tw': { replacer: (base) => base.replace(/(.+?)\s*([週][一二三四五六日])$/, '$1（$2）') },
 } as const
 
+const TIME_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions> = {
+  ja: {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+  'ja-easy': {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+  'en-us': {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  },
+  'id-id': {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+  ko: {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+  pt: {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+  vi: {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+  'zh-cn': {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+  'zh-tw': {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  },
+} as const
+
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
 const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
@@ -226,7 +315,14 @@ const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
  * // 日付のフォーマット
  * const Component = () => {
  *   const { formatDate } = useIntl()
- *   return <span>{formatDate({ date: new Date() })}</span> // "2024/01/15" (ja)
+ *   return <span>{formatDate({ date: new Date(2024, 1 - 1, 15) })}</span> // "2024/01/15" (ja)
+ * }
+ *
+ * @example
+ * // 時刻のフォーマット
+ * const Component = () => {
+ *   const { formatTime } = useIntl()
+ *   return <span>{formatTime({ date: new Date(2024, 1 - 1, 15, 10, 30, 0) })}</span> // "10:30" (ja)
  * }
  *
  * @example
@@ -302,7 +398,37 @@ export const useIntl = (): UseIntlReturn => {
     [intl, locale],
   )
 
+  const formatTime = useCallback(
+    ({ date, parts = ['hour', 'minute'], options }: FormatTimeProps): string => {
+      const { ...formatOptions } = options || {}
+
+      const hasPart = parts.reduce(
+        (prev, part) => {
+          prev[part] = true
+          return prev
+        },
+        { hour: false, minute: false, second: false } as {
+          hour: boolean
+          minute: boolean
+          second: boolean
+        },
+      )
+
+      const actualFormatOptions: Intl.DateTimeFormatOptions = {
+        hour: hasPart.hour ? TIME_FORMATS[locale].hour : undefined,
+        minute: hasPart.minute ? TIME_FORMATS[locale].minute : undefined,
+        second: hasPart.second ? '2-digit' : undefined,
+        hour12:
+          formatOptions.hour12 !== undefined ? formatOptions.hour12 : TIME_FORMATS[locale].hour12,
+        ...formatOptions,
+      }
+
+      return intl.formatDate(date, actualFormatOptions)
+    },
+    [intl, locale],
+  )
+
   const getWeekStartDay = (): number => DATE_FORMATS[locale].weekStartDay
 
-  return { availableLocales, localize, formatDate, locale, getWeekStartDay }
+  return { availableLocales, localize, formatDate, formatTime, locale, getWeekStartDay }
 }
