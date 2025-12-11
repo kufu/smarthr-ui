@@ -1,5 +1,5 @@
 import { Cluster, Stack } from '../../Layout'
-import * as Icons from '../Icon'
+import * as Icons from '../index'
 import { colorSet } from '../generateIcon'
 
 import type { Meta, StoryObj } from '@storybook/react'

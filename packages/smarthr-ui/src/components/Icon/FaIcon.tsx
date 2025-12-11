@@ -413,7 +413,3 @@ export const FaWindowMinimizeIcon = /*#__PURE__*/ generateIcon(FaWindowMinimize)
 export const FaWindowRestoreIcon = /*#__PURE__*/ generateIcon(FaWindowRestore)
 export const FaXmarkIcon = /*#__PURE__*/ generateIcon(FaXmark)
 export const FaYenSignIcon = /*#__PURE__*/ generateIcon(FaYenSign)
-
-export { WarningIcon } from './WarningIcon'
-export { SparklesIcon } from './SparklesIcon'
-export { LanguageIcon } from './LanguageIcon'
