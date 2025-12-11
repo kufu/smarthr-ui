@@ -23,13 +23,13 @@ import { Stack } from '../Layout'
 
 import { classNameGenerator } from './style'
 
-import type { DecoratorKeyTypes, ElementProps, Props } from './types'
+import type { DecoratorKeyTypes, Props } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFileMultiplyAppendable = forwardRef<
   HTMLInputElement,
-  Omit<Props, 'multiplyAppendable'> & Omit<ElementProps, 'multiple'>
+  Omit<Props, 'multiplyAppendable' | 'multiple'>
 >(
   (
     {

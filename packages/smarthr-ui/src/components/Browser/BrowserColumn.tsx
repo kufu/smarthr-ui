@@ -7,19 +7,19 @@ import type { ItemNode } from './models'
 
 const getColumnId = (column: number) => `column-${column}`
 
-type Props = {
+type AbstractProps = {
   value?: string
   items: ItemNode[]
   index: number
   onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
-type ElementProps = Omit<ComponentProps<'ul'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'ul'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'shr-px-0.25 shr-py-0.5',
 })
 
-export const BrowserColumn: FC<Props & ElementProps> = ({
+export const BrowserColumn: FC<Props> = ({
   items,
   index: columnIndex,
   value,

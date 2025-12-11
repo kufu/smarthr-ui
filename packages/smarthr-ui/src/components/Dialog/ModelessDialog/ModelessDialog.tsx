@@ -33,7 +33,7 @@ import { useDialogPortal } from '../useDialogPortal'
 import type { DecoratorsType } from '../../../hooks/useDecorators'
 import type { DialogSize } from '../types'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /**
    * ダイアログのタイトルの内容
    */
@@ -92,8 +92,11 @@ type Props = PropsWithChildren<{
     dialogHandlerAriaLabel?: (txt: string) => string
     dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
   }
-}> &
-  DialogBodyProps
+}>
+type Props = AbstractProps &
+  Omit<DialogBodyProps, keyof AbstractProps> &
+  Omit<BaseElementProps, keyof AbstractProps> &
+  Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -135,9 +138,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const ModelessDialog: FC<
-  Props & BaseElementProps & VariantProps<typeof classNameGenerator>
-> = ({
+export const ModelessDialog: FC<Props> = ({
   title,
   children,
   contentBgColor,

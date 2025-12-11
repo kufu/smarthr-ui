@@ -10,11 +10,11 @@ import type { Gap } from '../../types'
 
 type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** 境界とコンテンツの間の余白 */
   padding?: Padding
 }>
-type ElementProps = Omit<ComponentPropsWithRef<'tbody'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'tbody'>, keyof AbstractProps>
 
 const tdClassNameGenerator = tv({
   base: 'shr-text-center',
@@ -74,7 +74,7 @@ const tdClassNameGenerator = tv({
   },
 })
 
-export const EmptyTableBody: FC<Props & ElementProps> = ({ children, padding, ...props }) => {
+export const EmptyTableBody: FC<Props> = ({ children, padding, ...props }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
   const tdClassName = useMemo(() => {

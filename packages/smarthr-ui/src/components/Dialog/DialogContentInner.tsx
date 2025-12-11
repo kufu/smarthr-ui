@@ -64,7 +64,7 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   focusTrapRef?: RefObject<FocusTrapRef>
 }>
-type ElementProps = Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
+type Props = DialogContentInnerProps & Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -89,7 +89,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
+export const DialogContentInner: FC<Props> = ({
   onClickOverlay,
   onPressEscape,
   isOpen,
@@ -154,14 +154,14 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   )
 }
 
-const Overlay = memo<
-  Pick<DialogContentInnerProps, 'onClickOverlay' | 'isOpen'> & { className: string }
->(({ onClickOverlay, isOpen, className }) => {
-  const handleClickOverlay = useMemo(
-    () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
-    [isOpen, onClickOverlay],
-  )
+const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: string }>(
+  ({ onClickOverlay, isOpen, className }) => {
+    const handleClickOverlay = useMemo(
+      () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
+      [isOpen, onClickOverlay],
+    )
 
-  // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-  return <div onClick={handleClickOverlay} className={className} role="presentation" />
-})
+    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+    return <div onClick={handleClickOverlay} className={className} role="presentation" />
+  },
+)

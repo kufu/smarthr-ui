@@ -12,10 +12,10 @@ import {
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type AbstractProps = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const MessageDialog: FC<Props & ElementProps> = ({
+export const MessageDialog: FC<Props> = ({
   title,
   subtitle,
   titleTag,

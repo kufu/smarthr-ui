@@ -27,7 +27,7 @@ type Optgroup<T extends string> = {
   options: Array<Option<T>>
 } & OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type Props<T extends string> = {
+type AbstractProps<T extends string> = {
   /** 選択肢のデータの配列 */
   options: Array<Option<T> | Optgroup<T>>
   /** フォームの値が変わったときに発火するコールバック関数 */
@@ -44,7 +44,8 @@ type Props<T extends string> = {
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-type ElementProps = Omit<ComponentPropsWithoutRef<'select'>, keyof Props<string> | 'children'>
+type Props<T extends string> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'select'>, keyof AbstractProps<string> | 'children'>
 
 type DecoratorKeyTypes = 'blankLabel'
 
@@ -101,7 +102,7 @@ const ActualSelect = <T extends string>(
     disabled,
     required,
     ...props
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
   const { localize } = useIntl()

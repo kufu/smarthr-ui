@@ -5,7 +5,7 @@ import type { VariantProps } from 'tailwind-variants'
 
 export type DecoratorKeyTypes = 'destroy'
 
-export type Props = VariantProps<typeof classNameGenerator> & {
+type AbstractProps = VariantProps<typeof classNameGenerator> & {
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
@@ -18,5 +18,4 @@ export type Props = VariantProps<typeof classNameGenerator> & {
   /** ファイル複数選択の際に、選択済みのファイルと結合するかどうか */
   multiplyAppendable?: boolean
 }
-
-export type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+export type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps>

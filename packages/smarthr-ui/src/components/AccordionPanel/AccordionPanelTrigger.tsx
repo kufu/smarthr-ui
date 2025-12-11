@@ -30,7 +30,7 @@ import {
 
 import type { TextProps } from '../Text'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
   headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
@@ -38,7 +38,7 @@ type Props = PropsWithChildren<{
    */
   headingTag?: HeadingTagTypes
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'button'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -64,7 +64,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
+export const AccordionPanelTrigger: FC<Props> = ({
   children,
   className,
   headingType = 'blockTitle',
