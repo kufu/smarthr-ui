@@ -44,13 +44,18 @@ describe('InputFile', () => {
     expect(onChange).toHaveBeenCalledWith([file1, file2])
   })
 
-  it('multiplyAppendableでファイル選択時にonChangeが発火すること', async () => {
+  it('multiple.appendableでファイル選択時にonChangeが発火すること', async () => {
     const onChange = vi.fn()
     await render(
       <IntlProvider locale="ja">
         <form>
           <FormControl title="input file">
-            <InputFile name="test" label="input file" multiplyAppendable onChange={onChange} />
+            <InputFile
+              name="test"
+              label="input file"
+              multiple={{ appendable: true }}
+              onChange={onChange}
+            />
           </FormControl>
         </form>
       </IntlProvider>,
