@@ -18,11 +18,11 @@ const classNameGenerator = tv({
   },
 })
 
-export const BaseColumn: FC<Props> = ({ bgColor, padding = 1, className, ...props }) => {
+export const BaseColumn: FC<Props> = ({ bgColor, padding = 1, className, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ bgColor, className }),
     [bgColor, className],
   )
 
-  return <Base {...props} padding={padding} layer={0} className={actualClassName} />
+  return <Base {...rest} padding={padding} layer={0} className={actualClassName} />
 }

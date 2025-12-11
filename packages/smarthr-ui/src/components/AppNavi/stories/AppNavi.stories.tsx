@@ -18,8 +18,8 @@ const Link: FC<{
   children: ReactNode
   disabled?: boolean
   className?: string
-}> = ({ to, children, disabled = false, className = '', ...props }) => (
-  <a {...props} {...(disabled ? {} : { href: to })} className={className}>
+}> = ({ to, children, disabled = false, className = '', ...rest }) => (
+  <a {...rest} {...(disabled ? {} : { href: to })} className={className}>
     {children}
   </a>
 )

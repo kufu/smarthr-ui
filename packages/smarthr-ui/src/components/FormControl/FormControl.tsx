@@ -161,7 +161,7 @@ export const ActualFormControl: FC<Props> = ({
   as = 'div',
   className,
   children,
-  ...props
+  ...rest
 }) => {
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
@@ -374,7 +374,7 @@ export const ActualFormControl: FC<Props> = ({
 
   return (
     <Stack
-      {...props}
+      {...rest}
       as={as}
       gap={actualInnerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}

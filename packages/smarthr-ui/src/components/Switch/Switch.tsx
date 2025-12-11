@@ -62,7 +62,7 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 }
 
 export const Switch = forwardRef<HTMLInputElement, Props>(
-  ({ children, dangerouslyLabelHidden, className, id, ...props }, ref) => {
+  ({ children, dangerouslyLabelHidden, className, id, ...rest }, ref) => {
     const defaultId = useId()
     const inputId = id || defaultId
 
@@ -84,7 +84,7 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
         </MemoizedLabel>
         <span className={classNames.wrapper}>
           <input
-            {...props}
+            {...rest}
             type="checkbox"
             role="switch"
             id={inputId}
