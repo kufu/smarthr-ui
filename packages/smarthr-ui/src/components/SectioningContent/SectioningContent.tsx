@@ -11,12 +11,13 @@ import {
 
 import { LevelContext } from './levelContext'
 
-type BaseProps = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
   as?: 'article' | 'aside' | 'nav' | 'section'
   baseLevel?: number
 }>
-type SectioningContentProps = Omit<ComponentPropsWithRef<'section'>, keyof BaseProps> & BaseProps
+type SectioningContentProps = Omit<ComponentPropsWithRef<'section'>, keyof AbstractProps> &
+  AbstractProps
 
 const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
   ({ children, baseLevel, as: Wrapper = 'section', ...props }, ref) => (

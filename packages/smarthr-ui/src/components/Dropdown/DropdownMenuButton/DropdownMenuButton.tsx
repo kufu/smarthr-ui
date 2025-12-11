@@ -21,7 +21,7 @@ import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { useIntl } from '../../../intl'
-import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
+import { type AnchorButton, Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { DropdownContext } from '../Dropdown'
 

@@ -17,7 +17,7 @@ import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
 
-import type { BaseProps } from './types'
+import type { AbstractProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
 
 type ElementProps<T extends ElementType> = Omit<
@@ -25,12 +25,12 @@ type ElementProps<T extends ElementType> = Omit<
   keyof Props<T> & ElementRefProps<T>
 >
 
-type Props<T extends ElementType> = Omit<BaseProps, 'variant' | 'disabledReason'> & {
+type Props<T extends ElementType> = Omit<AbstractProps, 'variant' | 'disabledReason'> & {
   /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
   // tertiaryはAnchorButtonでは使用不可
-  variant?: Exclude<BaseProps['variant'], 'tertiary'>
-  inactiveReason?: BaseProps['disabledReason']
+  variant?: Exclude<AbstractProps['variant'], 'tertiary'>
+  inactiveReason?: AbstractProps['disabledReason']
 }
 
 const classNameGenerator = tv({

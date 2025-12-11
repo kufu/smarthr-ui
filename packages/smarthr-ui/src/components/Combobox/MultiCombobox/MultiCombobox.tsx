@@ -32,9 +32,9 @@ import { useMultiOptions } from '../useOptions'
 import { MultiSelectedItem } from './MultiSelectedItem'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
-import type { BaseProps, ComboboxItem } from '../types'
+import type { AbstractProps, ComboboxItem } from '../types'
 
-type Props<T> = BaseProps<T> & {
+type Props<T> = AbstractProps<T> & {
   /**
    * 選択されているアイテムのリスト
    */

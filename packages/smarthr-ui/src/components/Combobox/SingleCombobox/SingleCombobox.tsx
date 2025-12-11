@@ -28,9 +28,9 @@ import { Input } from '../../Input'
 import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { BaseProps, ComboboxItem } from '../types'
+import type { AbstractProps, ComboboxItem } from '../types'
 
-type Props<T> = BaseProps<T> & {
+type Props<T> = AbstractProps<T> & {
   /**
    * 選択されているアイテム
    */
