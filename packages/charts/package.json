@@ -42,7 +42,7 @@
     "styled-components": "^5.0.1"
   },
   "dependencies": {
-    "chart.js": "^4.5.0",
+    "chart.js": "^4.5.1",
     "@smarthr/patternomaly": "^2.0.0",
     "react-chartjs-2": "^5.2.0"
   },

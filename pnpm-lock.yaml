@@ -89,11 +89,11 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       chart.js:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^4.5.1
+        version: 4.5.1
       react-chartjs-2:
         specifier: ^5.2.0
-        version: 5.3.0(chart.js@4.5.0)(react@19.2.1)
+        version: 5.3.0(chart.js@4.5.1)(react@19.2.1)
       smarthr-ui:
         specifier: ^74.0.0
         version: 74.2.0(@types/react@18.3.27)(eslint@9.32.0(jiti@2.4.1))(react-dom@19.2.1(react@19.2.1))(react-intl@7.1.14(react@19.2.1)(typescript@5.8.3))(react@19.2.1)(styled-components@5.3.11(react-dom@19.2.1(react@19.2.1))(react-is@19.2.0)(react@19.2.1))(ts-node@10.9.2(@swc/core@1.13.5)(@types/node@20.19.20)(typescript@5.8.3))(typescript@5.8.3)
@@ -2812,8 +2812,8 @@ packages:
   chardet@2.1.0:
     resolution: {integrity: sha512-bNFETTG/pM5ryzQ9Ad0lJOTa6HWD/YsScAR3EnCPZRPlQh77JocYktSHOUHelyhm8IARL+o4c4F1bP5KVOjiRA==}
 
-  chart.js@4.5.0:
-    resolution: {integrity: sha512-aYeC/jDgSEx8SHWZvANYMioYMZ2KX02W6f6uVfyteuCGcadDLcYVHdfdygsTQkQ4TKn5lghoojAsPj5pu0SnvQ==}
+  chart.js@4.5.1:
+    resolution: {integrity: sha512-GIjfiT9dbmHRiYi6Nl2yFCq7kkwdkp1W/lp2J99rX0yo9tgJGn3lKQATztIjb5tVtevcBtIdICNWqlq5+E8/Pw==}
     engines: {pnpm: '>=8'}
 
   check-error@2.1.1:
@@ -9215,7 +9215,7 @@ snapshots:
 
   chardet@2.1.0: {}
 
-  chart.js@4.5.0:
+  chart.js@4.5.1:
     dependencies:
       '@kurkle/color': 0.3.4
 
@@ -12016,9 +12016,9 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  react-chartjs-2@5.3.0(chart.js@4.5.0)(react@19.2.1):
+  react-chartjs-2@5.3.0(chart.js@4.5.1)(react@19.2.1):
     dependencies:
-      chart.js: 4.5.0
+      chart.js: 4.5.1
       react: 19.2.1
 
   react-docgen-typescript@2.4.0(typescript@5.8.3):
