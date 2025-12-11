@@ -32,9 +32,9 @@ import { useMultiOptions } from '../useOptions'
 import { MultiSelectedItem } from './MultiSelectedItem'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
-import type { AbstractProps, ComboboxItem } from '../types'
+import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
-type Props<T> = AbstractProps<T> & {
+type AbstractProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテムのリスト
    */
@@ -76,8 +76,8 @@ type Props<T> = AbstractProps<T> & {
    */
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
+type Props<T> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
 
 const NOOP = () => undefined
 
@@ -178,7 +178,7 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     style,
     ...rest
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const { localize } = useIntl()

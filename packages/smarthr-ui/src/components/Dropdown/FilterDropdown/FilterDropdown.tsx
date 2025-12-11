@@ -23,7 +23,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-type Props = {
+type AbstractProps = {
   isFiltered?: boolean
   onApply: MouseEventHandler<HTMLButtonElement>
   onCancel?: MouseEventHandler<HTMLButtonElement>
@@ -38,7 +38,7 @@ type Props = {
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIconTrigger?: boolean
 }
-type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'button'>, keyof AbstractProps>
 
 type DecoratorKeyTypes = 'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
 
@@ -73,7 +73,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const FilterDropdown: FC<Props & ElementProps> = ({
+export const FilterDropdown: FC<Props> = ({
   isFiltered,
   onApply,
   onCancel,
@@ -86,7 +86,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   triggerSize,
   onlyIconTrigger = false,
   ...props
-}: Props) => {
+}) => {
   const { localize } = useIntl()
 
   const decoratorDefaultTexts = useMemo(

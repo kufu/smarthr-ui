@@ -12,10 +12,10 @@ import {
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type AbstractProps = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const ActionDialog: FC<Props & ElementProps> = ({
+export const ActionDialog: FC<Props> = ({
   children,
   title,
   subtitle,

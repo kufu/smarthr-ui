@@ -21,7 +21,7 @@ type AbstractProps = PropsWithChildren<{
   /** ドット表示するかどうか */
   dot?: boolean
 }>
-type Props = Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps> & AbstractProps
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {

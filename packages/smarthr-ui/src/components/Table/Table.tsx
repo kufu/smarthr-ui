@@ -5,8 +5,8 @@ import { Base } from '../Base'
 
 import { TableReel } from './TableReel'
 
-type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type ElementProps = Omit<ComponentProps<'table'>, keyof Props>
+type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type Props = AbstractProps & Omit<ComponentProps<'table'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -104,7 +104,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Table: FC<Props & ElementProps> = ({
+export const Table: FC<Props> = ({
   borderType,
   borderStyle,
   fixedHead,

@@ -6,7 +6,7 @@ import { Base } from '../Base'
 
 type AbstractProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'> &
   VariantProps<typeof classNameGenerator>
-type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
@@ -18,12 +18,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const BaseColumn: FC<AbstractProps & ElementProps> = ({
-  bgColor,
-  padding = 1,
-  className,
-  ...props
-}) => {
+export const BaseColumn: FC<Props> = ({ bgColor, padding = 1, className, ...props }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ bgColor, className }),
     [bgColor, className],

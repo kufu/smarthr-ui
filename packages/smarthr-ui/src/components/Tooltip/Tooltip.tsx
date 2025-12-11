@@ -38,7 +38,7 @@ const subscribeFullscreenChange = (callback: () => void) => {
 const getFullscreenElement = () => document.fullscreenElement
 const getFullscreenElementOnSSR = () => null
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
   /** ツールチップを表示する対象のタイプ。アイコンの場合は `icon` を指定する */
@@ -50,7 +50,7 @@ type Props = PropsWithChildren<{
   /** ツールチップを内包要素に紐付けるかどうか */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
-type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby'>
+type Props = AbstractProps & Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby'>
 
 const classNameGenerator = tv({
   base: [
@@ -66,7 +66,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Tooltip: FC<Props & ElementProps> = ({
+export const Tooltip: FC<Props> = ({
   message,
   children,
   triggerType,

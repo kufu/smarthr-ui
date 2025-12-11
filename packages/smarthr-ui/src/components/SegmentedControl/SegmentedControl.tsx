@@ -26,7 +26,7 @@ export type Option = {
   disabled?: boolean
 }
 
-type Props = {
+type AbstractProps = {
   /** 選択肢の配列 */
   options: Option[]
   /** 選択中の値 */
@@ -36,7 +36,7 @@ type Props = {
   /** 各ボタンの大きさ */
   size?: 'default' | 's'
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -62,7 +62,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SegmentedControl: FC<Props & ElementProps> = ({
+export const SegmentedControl: FC<Props> = ({
   options,
   value,
   onClickOption,

@@ -38,7 +38,7 @@ type ActionItem =
   | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
   | ReactNode
 
-type Props = {
+type AbstractProps = {
   /** 引き金となるボタンラベル */
   label: ReactNode
   /** 操作群 */
@@ -54,7 +54,8 @@ type Props = {
   /** ドロップダウンメニューが閉じられた際のイベント */
   onClose?: () => void
 }
-type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 const classNameGenerator = tv({
   slots: {
@@ -80,7 +81,7 @@ const classNameGenerator = tv({
 
 const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
 
-export const DropdownMenuButton: FC<Props & ElementProps> = ({
+export const DropdownMenuButton: FC<Props> = ({
   label,
   children,
   triggerSize,

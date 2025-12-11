@@ -27,8 +27,7 @@ type AbstractProps = {
   /** HTMLのid属性 */
   id: string
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 type ActualProps = Omit<Props, 'isDisplayed'>
 
 const classNameGenerator = tv({
@@ -46,7 +45,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const YearPicker: FC<Props & ElementProps> = ({ isDisplayed, ...rest }) =>
+export const YearPicker: FC<Props> = ({ isDisplayed, ...rest }) =>
   isDisplayed ? <ActualYearPicker {...rest} /> : null
 
 const ActualYearPicker: FC<ActualProps> = ({

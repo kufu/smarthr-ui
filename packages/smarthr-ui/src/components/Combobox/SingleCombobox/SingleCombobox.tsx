@@ -28,9 +28,9 @@ import { Input } from '../../Input'
 import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { AbstractProps, ComboboxItem } from '../types'
+import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
-type Props<T> = AbstractProps<T> & {
+type AbstractProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -70,8 +70,8 @@ type Props<T> = AbstractProps<T> & {
    */
   decorators?: DecoratorsType<DecoratorKeyTypes | 'noResultText' | 'loadingText'>
 }
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
+type Props<T> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
 
 type DecoratorKeyTypes = 'destroyButtonIconAlt'
 
@@ -147,7 +147,7 @@ const ActualSingleCombobox = <T,>(
     decorators,
     style,
     ...rest
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const { localize } = useIntl()

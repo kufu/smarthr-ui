@@ -15,7 +15,7 @@ export type SideNavItemButtonProps = Omit<
   'size' | 'onClick'
 >
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** 各アイテムのデータの配列
    * @deprecated SideNavItemButton を使ってください
    */
@@ -27,13 +27,13 @@ type Props = PropsWithChildren<{
   /** コンポーネントに適用するクラス名 */
   className?: string
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-SideNav', 'shr-list-none shr-bg-column'],
 })
 
-export const SideNav: FC<Props & ElementProps> = ({
+export const SideNav: FC<Props> = ({
   items,
   size = 'default',
   onClick,

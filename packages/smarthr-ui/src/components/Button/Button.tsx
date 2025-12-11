@@ -12,7 +12,7 @@ import { DisabledReason } from './DisabledReason'
 
 import type { AbstractProps } from './types'
 
-type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof AbstractProps>
+type Props = AbstractProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -20,7 +20,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Button = forwardRef<HTMLButtonElement, AbstractProps & ElementProps>(
+export const Button = forwardRef<HTMLButtonElement, Props>(
   (
     {
       type = 'button',

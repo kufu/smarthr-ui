@@ -9,7 +9,7 @@ import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyH
 
 import type { ElementProps } from '../Heading'
 
-export type Props = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
    * テキストのサイズ
    *
@@ -25,6 +25,7 @@ export type Props = PropsWithChildren<{
   /** title要素のsuffix */
   pageTitleSuffix?: string
 }>
+type Props = AbstractProps & Omit<ElementProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -38,7 +39,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const PageHeading = memo<Props & ElementProps>(
+export const PageHeading = memo<Props>(
   ({
     size,
     className,
