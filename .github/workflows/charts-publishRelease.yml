@@ -17,7 +17,7 @@ jobs:
         with:
           ref: release-candidate-charts
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.node-version'
           registry-url: 'https://registry.npmjs.org'
