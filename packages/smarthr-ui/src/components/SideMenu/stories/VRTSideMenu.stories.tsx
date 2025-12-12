@@ -6,7 +6,7 @@ export default {
   component: SideMenu,
   render: () => (
     <SideMenu>
-      <SideMenuGroup title="グループタイトル">
+      <SideMenuGroup heading="グループタイトル">
         <SideMenuItem href="#">メニュー1</SideMenuItem>
         <SideMenuItem href="#" current>
           メニュー2
