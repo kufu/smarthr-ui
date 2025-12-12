@@ -15,7 +15,11 @@ type AbstractProps = VariantProps<typeof classNameGenerator> & {
   /** コンポーネント内のテキストを変更する関数 */
   decorators?: DecoratorsType<DecoratorKeyTypes>
   error?: boolean
-  /** ファイル複数選択の際に、選択済みのファイルと結合するかどうか */
-  multiplyAppendable?: boolean
+  multiple?:
+    | boolean
+    | {
+        /** ファイル複数選択の際に、選択済みのファイルと結合するかどうか */
+        appendable?: boolean
+      }
 }
 export type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps>

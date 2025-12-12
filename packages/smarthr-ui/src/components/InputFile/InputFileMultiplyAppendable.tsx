@@ -27,10 +27,7 @@ import type { DecoratorKeyTypes, Props } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileMultiplyAppendable = forwardRef<
-  HTMLInputElement,
-  Omit<Props, 'multiplyAppendable' | 'multiple'>
->(
+export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
   (
     {
       className,
