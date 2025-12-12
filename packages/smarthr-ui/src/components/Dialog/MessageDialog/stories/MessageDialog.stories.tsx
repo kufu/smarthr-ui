@@ -28,7 +28,7 @@ export default {
   },
   args: {
     title: 'メッセージダイアログタイトル',
-    description: 'メッセージダイアログ本文',
+    children: 'メッセージダイアログ本文',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -58,10 +58,10 @@ export const TitleTag: StoryObj<typeof MessageDialog> = {
   },
 }
 
-export const Description: StoryObj<typeof MessageDialog> = {
-  name: 'description',
+export const Children: StoryObj<typeof MessageDialog> = {
+  name: 'children',
   args: {
-    description: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
+    children: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
   },
 }
 
