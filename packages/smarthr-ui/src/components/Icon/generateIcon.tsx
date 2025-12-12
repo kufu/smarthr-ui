@@ -57,7 +57,7 @@ type AbstractProps = {
   alt?: ReactNode
   /**
    * @deprecated この属性は指定した場合の挙動が想像しにくく、コードもわかりづらくなってしまうため、他の方法を利用してください
-   *  - TextコンポーネントのprefixIcon, suffixIcon
+   *  - Textコンポーネントのicon
    *  - Headingコンポーネントのicon
    *  - FormControlのlabel.icon
    *  - Fieldsetのlegend.icon

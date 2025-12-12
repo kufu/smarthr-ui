@@ -16,7 +16,7 @@ export const DialogContentResponseStatusMessage: FC<{
   const classNames = useMemo(() => classNameGenerator({ className }), [className])
 
   const StatusMessage = () => (
-    <ResponseMessage type={responseStatus.status}>{responseStatus.message}</ResponseMessage>
+    <ResponseMessage icon={responseStatus.status}>{responseStatus.message}</ResponseMessage>
   )
 
   return (
