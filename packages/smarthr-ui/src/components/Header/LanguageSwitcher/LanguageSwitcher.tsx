@@ -12,16 +12,17 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useIntl } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
 
-import type { LocaleMap } from '../../../types'
+import type { Locale } from '../../../intl/localeMap'
 
-export type Props = {
+export type AbstractProps = {
   narrow?: boolean
-  localeMap: LocaleMap
+  localeMap: Partial<Record<Locale, string>>
   locale?: string
   defaultLocale?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
@@ -30,13 +31,14 @@ export type Props = {
   onLanguageSelect?: (code: string) => void
 } & VariantProps<typeof classNameGenerator>
 
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
 
+// トリガーはどの言語でも英語のままLanguageと表示するのが好ましいため、intlにはおかない。decoratorは一旦そのままにしている。
 const DECORATOR_DEFAULT_TEXTS = {
   triggerLabel: 'Language',
-  checkIconAlt: '選択中',
 } as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+
+type DecoratorKeyTypes = 'checkIconAlt' | keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
@@ -96,7 +98,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const LanguageSwitcher: FC<Props & ElementProps> = ({
+export const LanguageSwitcher: FC<Props> = ({
   narrow,
   enableNew,
   invert = enableNew,
@@ -107,14 +109,27 @@ export const LanguageSwitcher: FC<Props & ElementProps> = ({
   onLanguageSelect,
   ...rest
 }) => {
+  const { localize, availableLocales } = useIntl()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
-      locales: Object.entries(localeMap),
+      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
-    [localeMap],
+    [localeMap, availableLocales],
   )
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      triggerLabel: DECORATOR_DEFAULT_TEXTS.triggerLabel,
+      checkIconAlt: localize({
+        id: 'smarthr-ui/LanguageSwitcher/checkIconAlt',
+        defaultText: '選択中',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
   const currentLang = locale || defaultLocale || defaultCurrentLang
   const classNames = useMemo(() => {
     const { languageButton, languageItemsList, languageItem, switchButton } = classNameGenerator()

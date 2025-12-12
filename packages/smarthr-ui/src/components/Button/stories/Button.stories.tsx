@@ -27,7 +27,7 @@ export default {
 const childrens = { 文字列: 'ボタン', アイコン: <FaCirclePlusIcon /> }
 const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
 const suffixes = { なし: '', あり: <FaCaretDownIcon /> }
-const disabledDetails = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
+const disabledReasons = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
 
 export const ButtonControl: StoryObj<typeof Button> = {
   name: 'Playground',
@@ -47,10 +47,10 @@ export const ButtonControl: StoryObj<typeof Button> = {
       options: Object.keys(suffixes),
       mapping: suffixes,
     },
-    disabledDetail: {
+    disabledReason: {
       control: { type: 'radio' },
-      options: Object.keys(disabledDetails),
-      mapping: disabledDetails,
+      options: Object.keys(disabledReasons),
+      mapping: disabledReasons,
     },
   },
   args: {
@@ -66,6 +66,9 @@ export const Variant: StoryObj<typeof Button> = {
     <Stack align="flex-start">
       <Button {...args}>ボタン</Button>
       <Button {...args} variant="primary">
+        ボタン
+      </Button>
+      <Button {...args} variant="tertiary">
         ボタン
       </Button>
       <Button {...args} variant="danger">
@@ -95,11 +98,11 @@ export const Disabled: StoryObj<typeof Button> = {
   },
 }
 
-export const DisabledDetail: StoryObj<typeof Button> = {
-  name: 'disabledDetail',
+export const DisabledReason: StoryObj<typeof Button> = {
+  name: 'disabledReason',
   args: {
     disabled: true,
-    disabledDetail: { message: 'ボタンが無効な理由' },
+    disabledReason: { message: 'ボタンが無効な理由' },
   },
 }
 

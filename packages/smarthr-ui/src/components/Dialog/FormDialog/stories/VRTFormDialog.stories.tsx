@@ -10,6 +10,7 @@ export default {
   component: FormDialog,
   args: {
     width: '40em',
+    size: 'M',
     isOpen: true,
     title: 'フォームダイアログタイトル',
     subtitle: 'フォームダイアログのサブタイトル',
@@ -21,7 +22,7 @@ export default {
       text: '送信しました。',
     },
     children: (
-      <FormControl title="名前">
+      <FormControl label="名前">
         <Input name="name" />
       </FormControl>
     ),

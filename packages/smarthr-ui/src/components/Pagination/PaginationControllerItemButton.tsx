@@ -1,12 +1,8 @@
 import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
 
+import { Localizer } from '../../intl'
 import { AnchorButton, Button } from '../Button'
-import {
-  FaAngleDoubleLeftIcon,
-  FaAngleDoubleRightIcon,
-  FaChevronLeftIcon,
-  FaChevronRightIcon,
-} from '../Icon'
+import { FaAnglesLeftIcon, FaAnglesRightIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 
 type Props = {
   targetPage: number
@@ -19,12 +15,35 @@ type Props = {
 
 const ICON_MAPPER = {
   prev: {
-    single: { Icon: FaChevronLeftIcon, alt: '前へ' },
-    double: { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' },
+    single: {
+      Icon: FaChevronLeftIcon,
+      alt: (
+        <Localizer
+          id="smarthr-ui/Pagination/controllerItemButtonPreviousLabel"
+          defaultText="前へ"
+        />
+      ),
+    },
+    double: {
+      Icon: FaAnglesLeftIcon,
+      alt: (
+        <Localizer id="smarthr-ui/Pagination/controllerItemButtonFirstLabel" defaultText="最初へ" />
+      ),
+    },
   },
   next: {
-    single: { Icon: FaChevronRightIcon, alt: '次へ' },
-    double: { Icon: FaAngleDoubleRightIcon, alt: '最後へ' },
+    single: {
+      Icon: FaChevronRightIcon,
+      alt: (
+        <Localizer id="smarthr-ui/Pagination/controllerItemButtonNextLabel" defaultText="次へ" />
+      ),
+    },
+    double: {
+      Icon: FaAnglesRightIcon,
+      alt: (
+        <Localizer id="smarthr-ui/Pagination/controllerItemButtonLastLabel" defaultText="最後へ" />
+      ),
+    },
   },
 }
 
@@ -66,7 +85,7 @@ export const PaginationControllerItemButton: FC<Props> = ({
   }, [targetPage, disabled, hrefTemplate, linkAs])
 
   return (
-    <Component {...attrs} size="s" className="shr-rounded-s">
+    <Component {...attrs} variant="secondary" size="s" className="shr-rounded-s">
       <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
     </Component>
   )

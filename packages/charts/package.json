@@ -1,0 +1,102 @@
+{
+  "name": "@smarthr/smarthr-ui-charts",
+  "description": "Chart components for SmartHR UI built with React.",
+  "version": "0.1.0",
+  "author": "SmartHR-UI Team",
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "esm",
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./styles.css": "./lib/styles.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "run-p build:*",
+    "build:css": "tailwindcss -i ./src/styles/index.css -o ./lib/styles.css",
+    "build:lib": "tsc -p tsconfig.build.json",
+    "build:esm": "rollup --config rollup.esm.config.js",
+    "build-storybook": "storybook build",
+    "clean": "rimraf ./lib ./esm",
+    "dev": "storybook dev -p 6007",
+    "prepublishOnly": "run-s clean build",
+    "release": "standard-version -a",
+    "release:dryrun": "standard-version --dry-run",
+    "storybook": "storybook dev -p 6007",
+    "watch:css": "tailwindcss -i ./src/styles/index.css -o ./lib/styles.css --watch"
+  },
+  "peerDependencies": {
+    "react": "^19.0.3",
+    "react-dom": "^19.0.3",
+    "react-intl": "^7.0.4",
+    "smarthr-ui": "^74.0.0",
+    "styled-components": "^5.0.1"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "@smarthr/patternomaly": "^2.0.0",
+    "react-chartjs-2": "^5.2.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.2",
+    "@rollup/plugin-replace": "^6.0.2",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@storybook/addon-a11y": "9.0.18",
+    "@storybook/addon-docs": "9.0.18",
+    "@storybook/cli": "9.0.18",
+    "@storybook/react": "9.0.18",
+    "@storybook/react-vite": "9.0.18",
+    "@types/node": "^20.19.20",
+    "@types/react": "^18.3.26",
+    "@types/react-dom": "^19.1.11",
+    "@types/styled-components": "^5.1.34",
+    "autoprefixer": "^10.4.21",
+    "glob": "11.0.3",
+    "npm-run-all2": "^8.0.4",
+    "postcss": "^8.5.6",
+    "react": "^19.1.4",
+    "react-dom": "^19.1.4",
+    "react-intl": "^7.1.14",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.44.2",
+    "standard-version": "^9.5.0",
+    "storybook": "9.0.18",
+    "styled-components": "^5.3.11",
+    "tailwind-variants": "^0.3.1",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.8.3"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "smarthr",
+    "charts",
+    "typescript"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kufu/smarthr-ui.git",
+    "directory": "packages/charts"
+  },
+  "bugs": {
+    "url": "https://github.com/kufu/smarthr-ui/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "standard-version": {
+    "tagPrefix": "@smarthr/smarthr-ui-charts@"
+  }
+}

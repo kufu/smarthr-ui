@@ -3,8 +3,6 @@ import dayjsIsBetween from 'dayjs/plugin/isBetween'
 
 dayjs.extend(dayjsIsBetween)
 
-export const daysInWeek = ['日', '月', '火', '水', '木', '金', '土']
-
 export const minDate = new Date(1900, 0, 1)
 const minDatetime = minDate.getTime()
 const maxDate = new Date(9999, 11, 31)
@@ -30,9 +28,16 @@ export function getToDate(date?: Date): Date {
   return time > maxDatetime ? maxDate : date
 }
 
-export function getMonthArray(date: Date) {
+export function getMonthArray(date: Date, weekStartDay: number = 0) {
   const day = dayjs(date)
-  const startDay = day.date(1).day()
+
+  // 月の最初の日の曜日を取得（0=日曜日, 1=月曜日, ..., 6=土曜日）
+  const firstDayOfMonth = day.date(1).day()
+
+  // 週の開始日からのオフセットを計算
+  // weekStartDay を基準とした場合の月の最初の日の位置を計算
+  const startDay = (firstDayOfMonth - weekStartDay + 7) % 7
+
   const lastDate = day.add(1, 'month').date(0).date()
   const numOfWeek = Math.ceil((lastDate + startDay) / 7)
 

@@ -19,6 +19,7 @@ import {
   FaArrowUpWideShort,
   FaArrowsRotate,
   FaAsterisk,
+  FaAt,
   FaBabyCarriage,
   FaBan,
   FaBars,
@@ -36,6 +37,7 @@ import {
   FaCalendarCheck,
   FaCalendarDays,
   FaCalendarXmark,
+  FaCamera,
   FaCaretDown,
   FaCaretLeft,
   FaCaretRight,
@@ -87,6 +89,7 @@ import {
   FaEyeSlash,
   FaFile,
   FaFileArrowDown,
+  FaFileCirclePlus,
   FaFileCode,
   FaFileCsv,
   FaFileExcel,
@@ -115,6 +118,7 @@ import {
   FaIdBadge,
   FaIdCard,
   FaImage,
+  FaImages,
   FaInbox,
   FaIntercom,
   FaKey,
@@ -122,9 +126,11 @@ import {
   FaLeftRight,
   FaLightbulb,
   FaLink,
+  FaLinkSlash,
   FaList,
   FaListOl,
   FaListUl,
+  FaLocationDot,
   FaLock,
   FaLockOpen,
   FaMagnifyingGlass,
@@ -134,12 +140,14 @@ import {
   FaMicrosoft,
   FaMinus,
   FaMoneyCheckDollar,
+  FaMugHot,
   FaPaintbrush,
   FaPaperPlane,
   FaPaperclip,
   FaPen,
   FaPenToSquare,
   FaPencil,
+  FaPersonWalkingArrowLoopLeft,
   FaPiggyBank,
   FaPlus,
   FaPowerOff,
@@ -174,7 +182,6 @@ import {
   FaTags,
   FaThumbtack,
   FaToolbox,
-  FaTrash,
   FaTrashCan,
   FaTriangleExclamation,
   FaTruck,
@@ -218,6 +225,7 @@ export const FaArrowUpIcon = /*#__PURE__*/ generateIcon(FaArrowUp)
 export const FaArrowUpWideShortIcon = /*#__PURE__*/ generateIcon(FaArrowUpWideShort)
 export const FaArrowsRotateIcon = /*#__PURE__*/ generateIcon(FaArrowsRotate)
 export const FaAsteriskIcon = /*#__PURE__*/ generateIcon(FaAsterisk)
+export const FaAtIcon = /*#__PURE__*/ generateIcon(FaAt)
 export const FaBabyCarriageIcon = /*#__PURE__*/ generateIcon(FaBabyCarriage)
 export const FaBanIcon = /*#__PURE__*/ generateIcon(FaBan)
 export const FaBarsIcon = /*#__PURE__*/ generateIcon(FaBars)
@@ -235,6 +243,7 @@ export const FaCalculatorIcon = /*#__PURE__*/ generateIcon(FaCalculator)
 export const FaCalendarCheckIcon = /*#__PURE__*/ generateIcon(FaCalendarCheck)
 export const FaCalendarDaysIcon = /*#__PURE__*/ generateIcon(FaCalendarDays)
 export const FaCalendarXmarkIcon = /*#__PURE__*/ generateIcon(FaCalendarXmark)
+export const FaCameraIcon = /*#__PURE__*/ generateIcon(FaCamera)
 export const FaCaretDownIcon = /*#__PURE__*/ generateIcon(FaCaretDown)
 export const FaCaretLeftIcon = /*#__PURE__*/ generateIcon(FaCaretLeft)
 export const FaCaretRightIcon = /*#__PURE__*/ generateIcon(FaCaretRight)
@@ -287,6 +296,7 @@ export const FaExpandIcon = /*#__PURE__*/ generateIcon(FaExpand)
 export const FaEyeIcon = /*#__PURE__*/ generateIcon(FaEye)
 export const FaEyeSlashIcon = /*#__PURE__*/ generateIcon(FaEyeSlash)
 export const FaFileArrowDownIcon = /*#__PURE__*/ generateIcon(FaFileArrowDown)
+export const FaFileCirclePlusIcon = /*#__PURE__*/ generateIcon(FaFileCirclePlus)
 export const FaFileCodeIcon = /*#__PURE__*/ generateIcon(FaFileCode)
 export const FaFileCsvIcon = /*#__PURE__*/ generateIcon(FaFileCsv)
 export const FaFileExcelIcon = /*#__PURE__*/ generateIcon(FaFileExcel)
@@ -316,6 +326,7 @@ export const FaHouseIcon = /*#__PURE__*/ generateIcon(FaHouse)
 export const FaIdBadgeIcon = /*#__PURE__*/ generateIcon(FaIdBadge)
 export const FaIdCardIcon = /*#__PURE__*/ generateIcon(FaIdCard)
 export const FaImageIcon = /*#__PURE__*/ generateIcon(FaImage)
+export const FaImagesIcon = /*#__PURE__*/ generateIcon(FaImages)
 export const FaInboxIcon = /*#__PURE__*/ generateIcon(FaInbox)
 export const FaIntercomIcon = /*#__PURE__*/ generateIcon(FaIntercom)
 export const FaKeyIcon = /*#__PURE__*/ generateIcon(FaKey)
@@ -323,9 +334,11 @@ export const FaLeftLongIcon = /*#__PURE__*/ generateIcon(FaLeftLong)
 export const FaLeftRightIcon = /*#__PURE__*/ generateIcon(FaLeftRight)
 export const FaLightbulbIcon = /*#__PURE__*/ generateIcon(FaLightbulb)
 export const FaLinkIcon = /*#__PURE__*/ generateIcon(FaLink)
+export const FaLinkSlashIcon = /*#__PURE__*/ generateIcon(FaLinkSlash)
 export const FaListIcon = /*#__PURE__*/ generateIcon(FaList)
 export const FaListOlIcon = /*#__PURE__*/ generateIcon(FaListOl)
 export const FaListUlIcon = /*#__PURE__*/ generateIcon(FaListUl)
+export const FaLocationDotIcon = /*#__PURE__*/ generateIcon(FaLocationDot)
 export const FaLockIcon = /*#__PURE__*/ generateIcon(FaLock)
 export const FaLockOpenIcon = /*#__PURE__*/ generateIcon(FaLockOpen)
 export const FaMagnifyingGlassIcon = /*#__PURE__*/ generateIcon(FaMagnifyingGlass)
@@ -335,12 +348,16 @@ export const FaMessageIcon = /*#__PURE__*/ generateIcon(FaMessage)
 export const FaMicrosoftIcon = /*#__PURE__*/ generateIcon(FaMicrosoft)
 export const FaMinusIcon = /*#__PURE__*/ generateIcon(FaMinus)
 export const FaMoneyCheckDollarIcon = /*#__PURE__*/ generateIcon(FaMoneyCheckDollar)
+export const FaMugHotIcon = /*#__PURE__*/ generateIcon(FaMugHot)
 export const FaPaintbrushIcon = /*#__PURE__*/ generateIcon(FaPaintbrush)
 export const FaPaperPlaneIcon = /*#__PURE__*/ generateIcon(FaPaperPlane)
 export const FaPaperclipIcon = /*#__PURE__*/ generateIcon(FaPaperclip)
 export const FaPenIcon = /*#__PURE__*/ generateIcon(FaPen)
 export const FaPenToSquareIcon = /*#__PURE__*/ generateIcon(FaPenToSquare)
 export const FaPencilIcon = /*#__PURE__*/ generateIcon(FaPencil)
+export const FaPersonWalkingArrowLoopLeftIcon = /*#__PURE__*/ generateIcon(
+  FaPersonWalkingArrowLoopLeft,
+)
 export const FaPiggyBankIcon = /*#__PURE__*/ generateIcon(FaPiggyBank)
 export const FaPlusIcon = /*#__PURE__*/ generateIcon(FaPlus)
 export const FaPowerOffIcon = /*#__PURE__*/ generateIcon(FaPowerOff)
@@ -376,7 +393,6 @@ export const FaTagsIcon = /*#__PURE__*/ generateIcon(FaTags)
 export const FaThumbtackIcon = /*#__PURE__*/ generateIcon(FaThumbtack)
 export const FaToolboxIcon = /*#__PURE__*/ generateIcon(FaToolbox)
 export const FaTrashCanIcon = /*#__PURE__*/ generateIcon(FaTrashCan)
-export const FaTrashIcon = /*#__PURE__*/ generateIcon(FaTrash)
 export const FaTriangleExclamationIcon = /*#__PURE__*/ generateIcon(FaTriangleExclamation)
 export const FaTruckIcon = /*#__PURE__*/ generateIcon(FaTruck)
 export const FaTruckRampBoxIcon = /*#__PURE__*/ generateIcon(FaTruckRampBox)

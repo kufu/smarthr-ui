@@ -2,11 +2,15 @@ import { render, screen } from '@testing-library/react'
 import { act } from 'react'
 import { userEvent } from 'storybook/test'
 
+import { IntlProvider } from '../../intl'
 import { FormControl } from '../FormControl'
 
 import { DatePicker } from './DatePicker'
 
 describe('DatePicker', () => {
+  const renderWithIntl = (component: React.ReactElement) =>
+    render(<IntlProvider locale="ja">{component}</IntlProvider>)
+
   beforeEach(() => {
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
       cb(0)
@@ -15,9 +19,9 @@ describe('DatePicker', () => {
   })
 
   it('カレンダーから日付を選択することができる', async () => {
-    render(
+    renderWithIntl(
       <form>
-        <FormControl title="DatePicker">
+        <FormControl label="DatePicker">
           <DatePicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
@@ -41,9 +45,9 @@ describe('DatePicker', () => {
   })
 
   it('フォーカスを失うときにテキストボックスの内容がフォーマットされること', async () => {
-    render(
+    renderWithIntl(
       <form>
-        <FormControl title="DatePicker">
+        <FormControl label="DatePicker">
           <DatePicker name="date" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,

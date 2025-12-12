@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 
 type AbstractProps = {
@@ -26,8 +27,7 @@ type AbstractProps = {
   /** HTMLのid属性 */
   id: string
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 type ActualProps = Omit<Props, 'isDisplayed'>
 
 const classNameGenerator = tv({
@@ -45,7 +45,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const YearPicker: FC<Props & ElementProps> = ({ isDisplayed, ...rest }) =>
+export const YearPicker: FC<Props> = ({ isDisplayed, ...rest }) =>
   isDisplayed ? <ActualYearPicker {...rest} /> : null
 
 const ActualYearPicker: FC<ActualProps> = ({
@@ -118,6 +118,7 @@ const YearButton = memo<{
   childrenStyle: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
+  const { localize } = useIntl()
   const isThisYear = thisYear === year
 
   return (
@@ -128,6 +129,14 @@ const YearButton = memo<{
       onClick={onClick}
       className={className}
       data-this-year={isThisYear}
+      aria-label={
+        isThisYear
+          ? localize({
+              id: 'smarthr-ui/Calendar/currentYear',
+              defaultText: '現在の年',
+            })
+          : undefined
+      }
     >
       <span className={childrenStyle}>{year}</span>
     </UnstyledButton>

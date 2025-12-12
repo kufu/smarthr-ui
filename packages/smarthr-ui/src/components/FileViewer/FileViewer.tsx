@@ -1,7 +1,16 @@
 'use client'
 
 import Decimal from 'decimal.js'
-import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   Button,
@@ -14,6 +23,7 @@ import {
   Text,
   VisuallyHiddenText,
 } from '../..'
+import { Localizer } from '../../intl'
 
 import { ImageViewer } from './ImageViewer'
 import { PDFViewer } from './PDFViewer'
@@ -21,7 +31,6 @@ import { PDFViewer } from './PDFViewer'
 import type { FileForViewer } from './types'
 
 const defaultScaleStep = new Decimal(0.2)
-
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
 type Props = {
@@ -34,9 +43,18 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
+  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onLoadError?: () => void
 }
 
-export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixedWidth }) => {
+export const FileViewer: FC<Props> = ({
+  file,
+  scaleStep,
+  scaleSteps,
+  width: fixedWidth,
+  onPassword,
+  onLoadError,
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
@@ -57,8 +75,10 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
   }, [internalScaleStep])
 
   const rotate = useCallback(() => {
-    setRotation((currentRotation) => currentRotation - 90)
-  }, [])
+    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+    const newRotation = rotation === 0 ? 270 : rotation - 90
+    setRotation(newRotation)
+  }, [rotation])
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
@@ -109,6 +129,8 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
               file={file}
               width={width}
               onLoad={handleLoaded}
+              onPassword={onPassword}
+              onLoadError={onLoadError}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
@@ -117,9 +139,15 @@ export const FileViewer: FC<Props> = ({ file, scaleStep, scaleSteps, width: fixe
               file={file}
               width={width}
               onLoad={handleLoaded}
+              onLoadError={onLoadError}
             />
           ) : (
-            <Text>サポートされていない形式のファイルです。</Text>
+            <Text>
+              <Localizer
+                id="smarthr-ui/FileViewer/unsupportedFileText"
+                defaultText="サポートされていない形式のファイルです。"
+              />
+            </Text>
           )}
         </div>
       </div>
@@ -153,12 +181,16 @@ const Controller: FC<ControllerProps> = memo(
             disabled={scale <= scaleSteps[0]}
             className="shr-rounded-none shr-border-none"
           >
-            <FaMagnifyingGlassMinusIcon alt="縮小" />
+            <FaMagnifyingGlassMinusIcon
+              alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
+            />
           </Button>
           <DropdownMenuButton
             label={
               <Text>
-                <VisuallyHiddenText>拡大率</VisuallyHiddenText>
+                <VisuallyHiddenText>
+                  <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
+                </VisuallyHiddenText>
                 {`${(scale * 100).toFixed(0)}%`}
               </Text>
             }
@@ -175,11 +207,15 @@ const Controller: FC<ControllerProps> = memo(
             ))}
           </DropdownMenuButton>
           <Button onClick={onClickScaleUpButton} className="shr-rounded-none shr-border-0">
-            <FaMagnifyingGlassPlusIcon alt="拡大" />
+            <FaMagnifyingGlassPlusIcon
+              alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
+            />
           </Button>
         </div>
         <Button onClick={onClickRotateButton} className="shr-p-0.75">
-          <FaArrowRotateLeftIcon alt="左回転" />
+          <FaArrowRotateLeftIcon
+            alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
+          />
         </Button>
       </Cluster>
     </div>

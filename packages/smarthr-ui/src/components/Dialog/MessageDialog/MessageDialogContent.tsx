@@ -4,14 +4,18 @@ import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { type BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
+import {
+  type AbstractProps as ContentInnerProps,
+  MessageDialogContentInner,
+} from './MessageDialogContentInner'
 
 import type { UncontrolledDialogProps } from '../types'
 
-type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type AbstractProps = Omit<ContentInnerProps, 'titleId'> & UncontrolledDialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const MessageDialogContent: FC<Props & ElementProps> = ({
+/** @deprecated */
+export const MessageDialogContent: FC<Props> = ({
   title,
   description,
   portalParent,

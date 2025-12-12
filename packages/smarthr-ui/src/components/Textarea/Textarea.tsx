@@ -16,13 +16,15 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
 import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-type Props = {
+import type { DecoratorsType } from '../../hooks/useDecorators'
+
+type AbstractProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
   /** コンポーネントの幅 */
@@ -44,7 +46,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<ComponentPropsWithRef<'textarea'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {
@@ -110,7 +112,7 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
   (
     {
       autoFocus,
@@ -120,7 +122,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       autoResize = false,
       maxRows = Infinity,
       rows = 2,
-      onInput,
       decorators,
       error,
       onChange,
@@ -139,7 +140,80 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+    const buildAvailableLetters = useCallback(
+      (availableLetters: number): ReactNode => {
+        if (decorators?.beforeMaxLettersCount || decorators?.afterMaxLettersCount) {
+          return (
+            <>
+              {decorators.beforeMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.beforeMaxLettersCount)}
+              {availableLetters}
+              {decorators.afterMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount)}
+            </>
+          )
+        }
+        return (
+          <Localizer
+            id="smarthr-ui/Textarea/availableLetters"
+            defaultText="あと{availableLetters}文字"
+            values={{ availableLetters }}
+          />
+        )
+      },
+      [decorators],
+    )
+
+    const buildmaxLettersExceeded = useCallback(
+      (exceededLetters: number): ReactNode => {
+        if (decorators?.afterMaxLettersCount || decorators?.afterMaxLettersCountExceeded) {
+          return (
+            <>
+              {exceededLetters}
+              {decorators.afterMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount)}
+              {decorators.afterMaxLettersCountExceeded?.(
+                DECORATOR_DEFAULT_TEXTS.afterMaxLettersCountExceeded,
+              )}
+            </>
+          )
+        }
+        return (
+          <Localizer
+            id="smarthr-ui/Textarea/maxLettersExceeded"
+            defaultText="{exceededLetters}文字オーバー"
+            values={{ exceededLetters }}
+          />
+        )
+      },
+      [decorators],
+    )
+
+    const buildScreenReaderMaxLettersDescription = useCallback(
+      (internalMaxLetters: number): ReactNode => {
+        if (
+          decorators?.beforeScreenReaderMaxLettersDescription ||
+          decorators?.afterScreenReaderMaxLettersDescription
+        ) {
+          return (
+            <>
+              {decorators.beforeScreenReaderMaxLettersDescription?.(
+                DECORATOR_DEFAULT_TEXTS.beforeScreenReaderMaxLettersDescription,
+              )}
+              {internalMaxLetters}
+              {decorators.afterScreenReaderMaxLettersDescription?.(
+                DECORATOR_DEFAULT_TEXTS.afterScreenReaderMaxLettersDescription,
+              )}
+            </>
+          )
+        }
+        return (
+          <Localizer
+            id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
+            defaultText="最大{maxLetters}文字入力できます"
+            values={{ maxLetters: internalMaxLetters }}
+          />
+        )
+      },
+      [decorators],
+    )
 
     const getCounterMessage = useCallback(
       (counterValue: number) => {
@@ -147,30 +221,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
         if (counterValue > maxLetters) {
           // {count}文字オーバー
-          return (
-            <>
-              {counterValue - maxLetters}
-              {decorated.afterMaxLettersCount}
-              {decorated.afterMaxLettersCountExceeded}
-            </>
-          )
+          return <>{buildmaxLettersExceeded(counterValue - maxLetters)}</>
         }
 
         // あと{count}文字
-        return (
-          <>
-            {decorated.beforeMaxLettersCount}
-            {maxLetters - counterValue}
-            {decorated.afterMaxLettersCount}
-          </>
-        )
+        return <>{buildAvailableLetters(maxLetters - counterValue)}</>
       },
-      [
-        maxLetters,
-        decorated.afterMaxLettersCountExceeded,
-        decorated.afterMaxLettersCount,
-        decorated.beforeMaxLettersCount,
-      ],
+      [maxLetters, buildAvailableLetters, buildmaxLettersExceeded],
     )
 
     const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
@@ -214,9 +271,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         const newValue = e.target.value
         debouncedUpdateCount?.(newValue)
         debouncedUpdateSrCounterMessage?.(newValue)
+
+        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
+        e.target.rows = rows
+
+        if (autoResize) {
+          const currentRows = calculateIdealRows(e.target, maxRows)
+          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
+          e.target.rows = currentRows
+          setInterimRows(currentRows)
+        }
+
         onChange?.(e)
       },
-      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage],
+      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage, autoResize, maxRows, rows],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -240,23 +308,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         debouncedUpdateSrCounterMessage?.(value)
       }
     }, [maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage, value])
-
-    const handleInput = useCallback(
-      (e: ChangeEvent<HTMLTextAreaElement>) => {
-        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = rows
-
-        if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows)
-          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
-          e.target.rows = currentRows
-          setInterimRows(currentRows)
-        }
-
-        onInput?.(e)
-      },
-      [autoResize, maxRows, onInput, rows],
-    )
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
@@ -282,19 +333,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         ref={textareaRef}
         aria-invalid={error || countError || undefined}
         rows={interimRows}
-        onInput={handleInput}
         className={classNames.textarea}
         style={textareaStyle}
       />
     )
 
     return maxLetters ? (
-      <span>
+      <span className="shr-relative">
         {body}
         <VisuallyHiddenText id={maxLettersNoticeId}>
-          {decorated.beforeScreenReaderMaxLettersDescription}
-          {maxLetters}
-          {decorated.afterScreenReaderMaxLettersDescription}
+          {buildScreenReaderMaxLettersDescription(maxLetters)}
         </VisuallyHiddenText>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>

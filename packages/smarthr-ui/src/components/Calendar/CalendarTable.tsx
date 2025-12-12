@@ -9,11 +9,12 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 
-import { daysInWeek, isBetween } from './calendarHelper'
+import { isBetween } from './calendarHelper'
 
-type Props = {
+type AbstractProps = {
   /** 現在の日付 */
   current: {
     day: DayJsType
@@ -28,9 +29,12 @@ type Props = {
   /** 選択された日付 */
   selectedDayText: string
 }
-type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'table'>, keyof AbstractProps>
 
 type DayJsType = ReturnType<typeof dayjs>
+
+// 2024年1月の最初の週の日曜日を基準日として定義
+const BASE_CALENDAR_START = dayjs('2024-01-07')
 
 const classNameGenerator = tv({
   slots: {
@@ -48,7 +52,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const CalendarTable: FC<Props & ElementProps> = ({
+export const CalendarTable: FC<Props> = ({
   current,
   from,
   to,
@@ -57,6 +61,8 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
+  const { formatDate, getWeekStartDay } = useIntl()
+
   const classNames = useMemo(() => {
     const { wrapper, table, th, td, cellButton, dateCell } = classNameGenerator()
 
@@ -70,13 +76,33 @@ export const CalendarTable: FC<Props & ElementProps> = ({
     }
   }, [className])
 
+  // ロケールに応じた週の開始日から国際化された曜日名を生成
+  const daysInWeek = useMemo(() => {
+    const weekStartDay = getWeekStartDay()
+    const days = []
+
+    for (let i = 0; i < 7; i++) {
+      const dayOfWeek = (weekStartDay + i) % 7
+      const baseDate = BASE_CALENDAR_START.add(dayOfWeek, 'day').toDate()
+      days.push(
+        formatDate({
+          date: baseDate,
+          parts: ['weekday'],
+          options: { capitalizeFirstLetter: true },
+        }),
+      )
+    }
+
+    return days
+  }, [formatDate, getWeekStartDay])
+
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
   const nowDateText = dayjs().startOf('date').toString()
 
   return (
     <div className={classNames.wrapper}>
       <table {...props} className={classNames.table}>
-        <MemoizedThead thStyle={classNames.th} />
+        <MemoizedThead thStyle={classNames.th} daysInWeek={daysInWeek} />
         <tbody>
           {current.months.map((week, weekIndex) => (
             <tr key={weekIndex}>
@@ -105,7 +131,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   )
 }
 
-const MemoizedThead = memo<{ thStyle: string }>(({ thStyle }) => (
+const MemoizedThead = memo<{ thStyle: string; daysInWeek: string[] }>(({ thStyle, daysInWeek }) => (
   <thead>
     <tr>
       {daysInWeek.map((day) => (

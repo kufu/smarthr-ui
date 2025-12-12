@@ -12,6 +12,7 @@ import {
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
+import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
@@ -22,7 +23,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
-export type BaseProps = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
       /** アクションボタンのラベル */
@@ -49,7 +50,7 @@ export type BaseProps = PropsWithChildren<
     }
 >
 
-export type StepFormDialogContentInnerProps = BaseProps & {
+export type StepFormDialogContentInnerProps = AbstractProps & {
   firstStep: StepItem
   onClickClose: () => void
   responseStatus?: ResponseStatus
@@ -58,12 +59,7 @@ export type StepFormDialogContentInnerProps = BaseProps & {
   onClickBack?: () => void
 }
 
-const DECORATOR_DEFAULT_TEXTS = {
-  closeButtonLabel: 'キャンセル',
-  nextButtonLabel: '次へ',
-  backButtonLabel: '戻る',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel'
 
 const BUTTON_COLUMN_GAP = {
   row: 0.5,
@@ -90,6 +86,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   decorators,
   onClickBack,
 }) => {
+  const { localize } = useIntl()
   const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
   const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
 
@@ -147,9 +144,27 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     }
   }, [])
 
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      closeButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
+        defaultText: 'キャンセル',
+      }),
+      nextButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
+        defaultText: '次へ',
+      }),
+      backButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/backButtonLabel',
+        defaultText: '戻る',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
   const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
-  const stepText = `（${activeStep}/${stepLength}）`
+  const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 

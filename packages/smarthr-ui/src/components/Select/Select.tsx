@@ -14,6 +14,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useIntl } from '../../intl'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
@@ -26,7 +27,7 @@ type Optgroup<T extends string> = {
   options: Array<Option<T>>
 } & OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type Props<T extends string> = {
+type AbstractProps<T extends string> = {
   /** 選択肢のデータの配列 */
   options: Array<Option<T> | Optgroup<T>>
   /** フォームの値が変わったときに発火するコールバック関数 */
@@ -43,12 +44,10 @@ type Props<T extends string> = {
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
-type ElementProps = Omit<ComponentPropsWithoutRef<'select'>, keyof Props<string> | 'children'>
+type Props<T extends string> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'select'>, keyof AbstractProps<string> | 'children'>
 
-const DECORATOR_DEFAULT_TEXTS = {
-  blankLabel: '選択してください',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'blankLabel'
 
 const classNameGenerator = tv({
   slots: {
@@ -103,9 +102,11 @@ const ActualSelect = <T extends string>(
     disabled,
     required,
     ...props
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
+  const { localize } = useIntl()
+
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       if (onChange) onChange(e)
@@ -144,8 +145,17 @@ const ActualSelect = <T extends string>(
     }),
     [width],
   )
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      blankLabel: localize({
+        id: 'smarthr-ui/Select/blankLabel',
+        defaultText: '選択してください',
+      }),
+    }),
+    [localize],
+  )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
     <span className={classNames.wrapper} style={wrapperStyle}>

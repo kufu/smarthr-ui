@@ -1,12 +1,11 @@
 import { type FC, memo, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
-import { useLocale } from '../../hooks/useLocale'
-import { useTranslate } from '../../hooks/useTranslate'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -29,7 +28,7 @@ const classNameGenerator = tv({
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
 
 export const UserInfo = memo<Props>(
-  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl }) => {
+  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl, locale }) => {
     const displayName = useMemo(
       () =>
         arbitraryDisplayName ??
@@ -42,28 +41,35 @@ export const UserInfo = memo<Props>(
       [arbitraryDisplayName, email, empCode, firstName, lastName],
     )
 
-    return displayName ? <ActualUserInfo accountUrl={accountUrl} displayName={displayName} /> : null
+    return displayName ? (
+      <ActualUserInfo accountUrl={accountUrl} displayName={displayName} locale={locale} />
+    ) : null
   },
 )
 
-const ActualUserInfo: FC<Pick<Props, 'accountUrl'> & { displayName: string }> = ({
+const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: string }> = ({
   displayName,
   accountUrl,
+  locale,
 }) => {
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
 
   const dialogOpen = useCallback(() => setLanguageDialogOpen(true), [])
   const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
 
-  const { locale } = useLocale()
-  const translate = useTranslate()
-
+  const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      account: translate('MobileHeader/UserInfo/account'),
-      userSetting: translate('common/userSetting'),
+      account: localize({
+        id: 'smarthr-ui/AppHeader/MobileHeader/account',
+        defaultText: 'アカウント',
+      }),
+      userSetting: localize({
+        id: 'smarthr-ui/AppHeader/userSettings',
+        defaultText: '個人設定',
+      }),
     }),
-    [translate],
+    [localize],
   )
 
   const classNames = useMemo(() => {

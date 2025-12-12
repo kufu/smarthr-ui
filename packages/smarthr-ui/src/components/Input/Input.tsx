@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../themes'
 
-type Props = {
+type AbstractProps = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -35,7 +35,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps>
 
 export const bgColors = {
   BACKGROUND: 'background',
@@ -87,7 +87,7 @@ const innerClassNameGenerator = tv({
   },
 })
 
-export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
+export const Input = forwardRef<HTMLInputElement, Props>(
   (
     {
       onFocus,

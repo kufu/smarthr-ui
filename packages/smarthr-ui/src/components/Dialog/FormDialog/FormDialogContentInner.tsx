@@ -9,7 +9,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
+import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
@@ -18,9 +20,7 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import type { DecoratorsType } from '../../../hooks/useDecorators'
-
-export type BaseProps = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
       /** アクションボタンのラベル */
@@ -43,12 +43,11 @@ export type BaseProps = PropsWithChildren<
     }
 >
 
-export type FormDialogContentInnerProps = BaseProps & {
+export type FormDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
   responseStatus?: ResponseStatus
 }
 
-const CLOSE_BUTTON_LABEL = 'キャンセル'
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const formDialogContentInner = tv({
@@ -191,14 +190,23 @@ const CloseButton = memo<
     disabled: boolean
   }
 >(({ onClick, disabled, decorators }) => {
-  const children = useMemo(
-    () => decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL,
-    [decorators],
+  const { localize } = useIntl()
+
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      closeButtonLabel: localize({
+        id: 'smarthr-ui/FormDialog/closeButtonLabel',
+        defaultText: 'キャンセル',
+      }),
+    }),
+    [localize],
   )
+
+  const decorated = useDecorators(decoratorDefaultTexts, decorators)
 
   return (
     <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {children}
+      {decorated.closeButtonLabel}
     </Button>
   )
 })

@@ -19,6 +19,7 @@ import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
@@ -27,9 +28,9 @@ import { Input } from '../../Input'
 import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { BaseProps, ComboboxItem } from '../types'
+import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
-type Props<T> = BaseProps<T> & {
+type AbstractProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -69,13 +70,10 @@ type Props<T> = BaseProps<T> & {
    */
   decorators?: DecoratorsType<DecoratorKeyTypes | 'noResultText' | 'loadingText'>
 }
+type Props<T> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
 
-type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
-
-const DECORATOR_DEFAULT_TEXTS = {
-  destroyButtonIconAlt: '削除',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
+type DecoratorKeyTypes = 'destroyButtonIconAlt'
 
 const NOOP = () => undefined
 
@@ -149,9 +147,10 @@ const ActualSingleCombobox = <T,>(
     decorators,
     style,
     ...rest
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
+  const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -204,7 +203,7 @@ const ActualSingleCombobox = <T,>(
 
   const focus = useCallback(() => {
     onFocus?.()
-
+    inputRef.current?.focus()
     setIsFocused(true)
 
     if (!isFocused) {
@@ -220,12 +219,12 @@ const ActualSingleCombobox = <T,>(
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (!selectedItem && defaultItem) {
-      setInputValue(innerText(defaultItem.label))
-
+    if (selectedItem) {
+      setInputValue(innerText(selectedItem.label))
+    } else {
       selectDefaultItem()
     }
-  }, [isFocused, onBlur, selectedItem, defaultItem, selectDefaultItem])
+  }, [isFocused, onBlur, selectedItem, selectDefaultItem])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
@@ -342,15 +341,11 @@ const ActualSingleCombobox = <T,>(
     unfocus,
   )
 
+  // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
+  const selectedItemLabelText = innerText(selectedItem?.label)
   useEffect(() => {
-    setInputValue(selectedItem ? innerText(selectedItem.label) : '')
-
-    if (isFocused && inputRef.current) {
-      inputRef.current.focus()
-    } else if (!selectedItem) {
-      selectDefaultItem()
-    }
-  }, [isFocused, selectedItem, selectDefaultItem])
+    setInputValue(selectedItemLabelText)
+  }, [selectedItemLabelText])
 
   const wrapperStyle = useMemo(
     () => ({
@@ -376,10 +371,20 @@ const ActualSingleCombobox = <T,>(
     }
   }, [notSelected, disabled, readOnly, className])
 
-  const decorated = useDecorators<DecoratorKeyTypes>(DECORATOR_DEFAULT_TEXTS, decorators)
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      destroyButtonIconAlt: localize({
+        id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
+        defaultText: 'クリア',
+      }),
+    }),
+    [localize],
+  )
+
+  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
-    <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
+    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
         {...rest}
         ref={inputRef}

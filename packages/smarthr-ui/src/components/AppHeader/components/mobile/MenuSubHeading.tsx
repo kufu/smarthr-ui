@@ -1,9 +1,9 @@
 import { type ReactNode, memo, useMemo } from 'react'
 
+import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaArrowLeftIcon } from '../../../Icon'
-import { useTranslate } from '../../hooks/useTranslate'
 import { Translate } from '../common/Translate'
 
 type Props = {
@@ -12,10 +12,10 @@ type Props = {
 }
 
 export const MenuSubHeading = memo<Props>(({ title, onClickBack }) => {
-  const translate = useTranslate()
+  const { localize } = useIntl()
   const backButtonAriaLabel = useMemo(
-    () => translate('MobileHeader/MenuSubHeading/back'),
-    [translate],
+    () => localize({ id: 'smarthr-ui/AppHeader/MobileHeader/back', defaultText: '戻る' }),
+    [localize],
   )
 
   return (

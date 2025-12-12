@@ -3,6 +3,7 @@
 import {
   type ChangeEvent,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type DragEvent,
   type PropsWithChildren,
   forwardRef,
@@ -19,16 +20,18 @@ import { useDecorators } from '../../hooks/useDecorators'
 import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'
 
-const dropZone = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-DropZone',
+      'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
     ],
-    input: 'shr-hidden',
+    button: '',
   },
   variants: {
     filesDraggedOver: {
@@ -39,12 +42,20 @@ const dropZone = tv({
         wrapper: 'shr-border-dashed',
       },
     },
+    disabled: {
+      true: {
+        wrapper: 'shr-cursor-not-allowed',
+      },
+    },
+    error: {
+      true: {
+        button: 'shr-border-danger',
+      },
+    },
   },
 })
 
-type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof DropZoneProps>
-
-type DropZoneProps = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -60,20 +71,30 @@ type DropZoneProps = PropsWithChildren<{
   /** 複数ファイルを選択できるかどうか */
   multiple?: boolean
   name?: string
+  disabled?: boolean
+  /** フォームにエラーがあるかどうか */
+  error?: boolean
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'selectButtonLabel'>
 }>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }
 
-export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
-  ({ children, onSelectFiles, multiple = true, decorators, ...props }, ref) => {
+export const DropZone = forwardRef<HTMLInputElement, Props>(
+  ({ children, onSelectFiles, multiple = true, disabled, error, decorators, ...props }, ref) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-    const { wrapper, input } = useMemo(() => dropZone({ filesDraggedOver }), [filesDraggedOver])
+    const classNames = useMemo(() => {
+      const { wrapper, button } = classNameGenerator({ filesDraggedOver, disabled, error })
+      return {
+        wrapper: wrapper(),
+        button: button(),
+      }
+    }, [disabled, error, filesDraggedOver])
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => fileRef.current,
@@ -117,44 +138,57 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-      <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
+      <div
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        className={classNames.wrapper}
+      >
         {children}
-        <SelectButton decorators={decorators} onClick={onClickButton} />
-        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
-        <input
-          {...props}
-          data-smarthr-ui-input="true"
-          ref={fileRef}
-          type="file"
-          multiple={multiple}
-          onChange={onChange}
-          className={input()}
+        <SelectButton
+          onClick={onClickButton}
+          disabled={disabled}
+          className={classNames.button}
+          decorators={decorators}
         />
+        <VisuallyHiddenText>
+          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
+          <input
+            {...props}
+            data-smarthr-ui-input="true"
+            ref={fileRef}
+            type="file"
+            multiple={multiple}
+            disabled={disabled}
+            aria-invalid={error || undefined}
+            onChange={onChange}
+          />
+        </VisuallyHiddenText>
       </div>
     )
   },
 )
 
-const SelectButton = memo<Pick<DropZoneProps, 'decorators'> & { onClick: () => void }>(
-  ({ onClick, decorators }) => {
-    const { localize } = useIntl()
+const SelectButton = memo<
+  ComponentPropsWithoutRef<typeof Button> & Pick<Props, 'decorators'> & { onClick: () => void }
+>(({ onClick, decorators, ...rest }) => {
+  const { localize } = useIntl()
 
-    const decoratorDefaultTexts = useMemo(
-      () => ({
-        selectButtonLabel: localize({
-          id: 'smarthr-ui/DropZone/selectButtonLabel',
-          defaultText: 'ファイルを選択',
-        }),
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      selectButtonLabel: localize({
+        id: 'smarthr-ui/DropZone/selectButtonLabel',
+        defaultText: 'ファイルを選択',
       }),
-      [localize],
-    )
+    }),
+    [localize],
+  )
 
-    const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
+  const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
 
-    return (
-      <Button prefix={<FaFolderOpenIcon />} onClick={onClick}>
-        {decorated.selectButtonLabel}
-      </Button>
-    )
-  },
-)
+  return (
+    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
+      {decorated.selectButtonLabel}
+    </Button>
+  )
+})

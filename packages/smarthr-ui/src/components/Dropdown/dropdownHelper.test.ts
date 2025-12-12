@@ -1,7 +1,7 @@
 import { getContentBoxStyle } from './dropdownHelper'
 
 describe('dropdownHelper', () => {
-  describe('getConetentBoxStyle', () => {
+  describe('getContentBoxStyle', () => {
     it('returns bottom style when the bottom side of the trigger has enough space to display content', () => {
       const triggerRect = { top: 100, bottom: 140, left: 0, right: 120 }
       const contentSize = { width: 300, height: 400 }

@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ElementType,
   type FC,
@@ -8,6 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
 import { Nav } from '../SectioningContent'
@@ -69,8 +72,7 @@ type AnchorProps = CommonProps & {
 }
 
 type AbstractProps = ButtonProps | AnchorProps
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
 
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i
@@ -92,6 +94,7 @@ const ActualPagination: FC<Props> = ({
   linkAs,
   ...props
 }) => {
+  const { localize } = useIntl()
   const classNames = useMemo(() => {
     const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } =
       classNameGenerator()
@@ -137,8 +140,17 @@ const ActualPagination: FC<Props> = ({
     }
   }, [onClick, hrefTemplate])
 
+  const navigationLabel = useMemo(
+    () =>
+      localize({
+        id: 'smarthr-ui/Pagination/navigationLabel',
+        defaultText: 'ページネーション',
+      }),
+    [localize],
+  )
+
   return (
-    <Nav {...props} className={classNames.wrapper} aria-label="ページネーション">
+    <Nav {...props} className={classNames.wrapper} aria-label={navigationLabel}>
       <Reel onClick={actualOnClick} role="presentation">
         <ItemButtons
           total={total}

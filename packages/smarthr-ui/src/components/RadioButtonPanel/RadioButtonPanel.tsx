@@ -13,13 +13,11 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
-import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
 type Props = ComponentProps<typeof RadioButton> & {
   as?: string | ComponentType<any>
   label: ReactNode
-  labelSuffix?: ReactNode
 }
 
 const NONE_ROLE_TAG_REGEX = /^(div|span)$/
@@ -57,17 +55,18 @@ export const RadioButtonPanel: FC<Props> = ({
   className,
   children,
   label,
-  labelSuffix,
   'aria-describedby': ariaDescribedby,
   ...props
 }) => {
+  const hasDescription = !!children
   const classNames = useMemo(() => {
     const { base, description, radio } = classNameGenerator({
       className,
-      hasDescription: !!children,
+      hasDescription,
     })
+
     return { base: base(), description: description(), radio: radio() }
-  }, [className, children])
+  }, [className, hasDescription])
   const role = useMemo(
     () => (typeof as === 'string' && NONE_ROLE_TAG_REGEX.test(as) ? 'presentation' : undefined),
     [as],
@@ -87,13 +86,10 @@ export const RadioButtonPanel: FC<Props> = ({
       <RadioButton
         {...props}
         ref={innerRef}
-        aria-describedby={`${descriptionId} ${ariaDescribedby ?? ''}`}
+        aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
         className={classNames.radio}
       >
-        <Cluster align="center" as="span">
-          {label}
-          {labelSuffix}
-        </Cluster>
+        {label}
       </RadioButton>
       {children && (
         <div id={descriptionId} className={classNames.description}>

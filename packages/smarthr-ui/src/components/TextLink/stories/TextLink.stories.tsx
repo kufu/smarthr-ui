@@ -1,7 +1,7 @@
 import { action } from 'storybook/actions'
 import { ComponentPropsWithoutRef } from 'react'
 
-import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
+import { FaCircleQuestionIcon, FaUpRightFromSquareIcon, FaArrowRightIcon } from '../../Icon'
 import { UpwardLink } from '../UpwardLink'
 import { TextLink } from '../TextLink'
 import { Table, Th } from '../../Table'
@@ -14,7 +14,8 @@ const _prefixOptions = {
 }
 const _suffixOptions = {
   なし: undefined,
-  あり: <FaUpRightFromSquareIcon />,
+  あり: <FaArrowRightIcon />,
+  null: null,
 }
 const _elementAsOptions = {
   なし: undefined,
@@ -98,7 +99,7 @@ export const Size: StoryObj<typeof TextLink> = {
   name: 'size',
   render: (args) => (
     <>
-      {([undefined, 'M', 'S'] as const).map((size) => (
+      {([undefined, 'M', 'S', 'XS'] as const).map((size) => (
         <p>
           <TextLink {...args} size={size}>
             {size || 'size未指定'}

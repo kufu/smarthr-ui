@@ -10,16 +10,16 @@ import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   data?: ReactNode[][]
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'table'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-SpreadsheetTable shr-border-shorthand shr-border-collapse shr-bg-head',
     // th
-    '[&_th]:shr-p-0.25 [&_th]:shr-text-sm [&_th]:shr-font-normal [&_th]:shr-text-grey',
+    '[&_th]:shr-p-0.25 [&_th]:shr-text-sm [&_th]:shr-font-normal [&_th]:shr-text-black',
     // th + th
     '[&_th_+_th]:shr-border-l-shorthand [&_th_+_th]:shr-border-[theme(backgroundColor[head-darken])]',
     // 左上の角： tr:first-child th:first-child
@@ -31,12 +31,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const SpreadsheetTable: FC<Props & ElementProps> = ({
-  data,
-  className,
-  children,
-  ...props
-}) => {
+export const SpreadsheetTable: FC<Props> = ({ data, className, children, ...props }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (

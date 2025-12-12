@@ -20,6 +20,8 @@ import Draggable from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
+import { useIntl } from '../../../intl'
+import { dialogSize } from '../../../themes/tailwind'
 import { Base, type BaseElementProps } from '../../Base'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
@@ -29,8 +31,9 @@ import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
+import type { DialogSize } from '../types'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /**
    * ダイアログのタイトルの内容
    */
@@ -52,9 +55,14 @@ type Props = PropsWithChildren<{
    */
   onPressEscape?: () => void
   /**
+   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
    * ダイアログの幅
    */
   width?: string | number
+  /**
+   * ダイアログの大きさ
+   */
+  size?: DialogSize
   /**
    * ダイアログの高さ
    */
@@ -84,13 +92,11 @@ type Props = PropsWithChildren<{
     dialogHandlerAriaLabel?: (txt: string) => string
     dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
   }
-}> &
-  DialogBodyProps
-
-const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
-const CLOSE_BUTTON_ICON_ALT = '閉じる'
-
-const DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT = (def: string, _data: DOMRect | undefined) => def
+}>
+type Props = AbstractProps &
+  Omit<DialogBodyProps, keyof AbstractProps> &
+  Omit<BaseElementProps, keyof AbstractProps> &
+  Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -114,6 +120,15 @@ const classNameGenerator = tv({
     footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
   variants: {
+    size: {
+      XS: { wrapper: dialogSize.XS },
+      S: { wrapper: dialogSize.S },
+      M: { wrapper: dialogSize.M },
+      L: { wrapper: dialogSize.L },
+      XL: { wrapper: dialogSize.XL },
+      XXL: { wrapper: dialogSize.XXL },
+      FULL: { wrapper: dialogSize.FULL },
+    },
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
@@ -123,9 +138,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const ModelessDialog: FC<
-  Props & BaseElementProps & VariantProps<typeof classNameGenerator>
-> = ({
+export const ModelessDialog: FC<Props> = ({
   title,
   children,
   contentBgColor,
@@ -135,6 +148,7 @@ export const ModelessDialog: FC<
   onPressEscape,
   resizable = false,
   width,
+  size,
   height,
   top,
   left,
@@ -150,6 +164,7 @@ export const ModelessDialog: FC<
   const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
   const { createPortal } = useDialogPortal(portalParent, id)
+  const { localize } = useIntl()
 
   const classNames = useMemo(() => {
     const { overlap, wrapper, headerEl, titleEl, dialogHandler, closeButtonLayout, footerEl } =
@@ -157,14 +172,14 @@ export const ModelessDialog: FC<
 
     return {
       overlap: overlap({ className }),
-      wrapper: wrapper({ resizable }),
+      wrapper: wrapper({ size, resizable }),
       header: headerEl(),
       title: titleEl(),
       dialogHandler: dialogHandler(),
       closeButtonLayout: closeButtonLayout(),
       footer: footerEl(),
     }
-  }, [className, resizable])
+  }, [className, size, resizable])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
@@ -181,39 +196,54 @@ export const ModelessDialog: FC<
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
 
-  const defaultAriaValuetext = useMemo(
-    () =>
-      wrapperPosition
-        ? `上から${Math.trunc(wrapperPosition.top)}px、左から${Math.trunc(wrapperPosition.left)}px`
+  const decoratorDefaultTexts = useMemo(
+    () => ({
+      closeButtonIconAlt: localize({
+        id: 'smarthr-ui/ModelessDialog/closeButtonIconAlt',
+        defaultText: '閉じる',
+      }),
+      dialogHandlerAriaLabel: localize({
+        id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel',
+        defaultText: 'ダイアログの位置',
+      }),
+      dialogHandlerAriaValuetext: wrapperPosition
+        ? localize(
+            {
+              id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaValuetext',
+              defaultText: '上から{top}px、左から{left}px',
+            },
+            {
+              top: Math.trunc(wrapperPosition.top).toString(),
+              left: Math.trunc(wrapperPosition.left).toString(),
+            },
+          )
         : '',
-    [wrapperPosition],
+    }),
+    [localize, wrapperPosition],
   )
+
   const decorated = useMemo(() => {
     if (!decorators) {
       return {
-        dialogHandlerAriaLabel: DIALOG_HANDLER_ARIA_LABEL,
-        closeButtonIconAlt: CLOSE_BUTTON_ICON_ALT,
-        dialogHandlerAriaValuetext: DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT,
+        dialogHandlerAriaLabel: decoratorDefaultTexts.dialogHandlerAriaLabel,
+        closeButtonIconAlt: decoratorDefaultTexts.closeButtonIconAlt,
+        dialogHandlerAriaValuetext: decoratorDefaultTexts.dialogHandlerAriaValuetext,
       }
     }
 
     return {
       dialogHandlerAriaLabel:
-        decorators.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
+        decorators.dialogHandlerAriaLabel?.(decoratorDefaultTexts.dialogHandlerAriaLabel) ||
+        decoratorDefaultTexts.dialogHandlerAriaLabel,
       closeButtonIconAlt:
-        decorators.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
-      dialogHandlerAriaValuetext:
-        decorators.dialogHandlerAriaValuetext || DEFAULT_DIALOG_HANDLER_ARIA_VALUETEXT,
+        decorators.closeButtonIconAlt?.(decoratorDefaultTexts.closeButtonIconAlt) ||
+        decoratorDefaultTexts.closeButtonIconAlt,
+      dialogHandlerAriaValuetext: decorators.dialogHandlerAriaValuetext?.(
+        decoratorDefaultTexts.dialogHandlerAriaValuetext,
+        wrapperPosition,
+      ),
     }
-  }, [decorators])
-  const dialogHandlerAriaValuetext = useMemo(
-    () =>
-      defaultAriaValuetext
-        ? decorated.dialogHandlerAriaValuetext(defaultAriaValuetext, wrapperPosition) ||
-          defaultAriaValuetext
-        : undefined,
-    [defaultAriaValuetext, wrapperPosition, decorated],
-  )
+  }, [decorators, decoratorDefaultTexts, wrapperPosition])
 
   const positionStyle = useMemo(
     () => ({
@@ -221,10 +251,10 @@ export const ModelessDialog: FC<
       left: centering.left ?? left,
       right,
       bottom,
-      width,
+      width: size ? undefined : width,
       height,
     }),
-    [centering, top, left, right, bottom, width, height],
+    [centering, top, left, right, bottom, width, height, size],
   )
 
   const handleArrowKey = useCallback(
@@ -390,7 +420,7 @@ export const ModelessDialog: FC<
           <div className={classNames.header}>
             <Handler
               aria-label={decorated.dialogHandlerAriaLabel}
-              aria-valuetext={dialogHandlerAriaValuetext}
+              aria-valuetext={decorated.dialogHandlerAriaValuetext}
               onArrowKeyDown={handleArrowKey}
               className={classNames.dialogHandler}
             />

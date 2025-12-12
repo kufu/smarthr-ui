@@ -1,6 +1,7 @@
 import { type ComponentProps, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../intl'
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
 import type { Step } from './types'
@@ -22,20 +23,20 @@ const classNameGenerator = tv({
 })
 
 type StatusProps = { status?: Step['status'] }
-type BaseProps = ComponentProps<typeof FaCircleCheckIcon>
-type Props = BaseProps & StatusProps
-type ActualProps = BaseProps & Required<StatusProps>
+type AbstractProps = ComponentProps<typeof FaCircleCheckIcon>
+type Props = AbstractProps & StatusProps
+type ActualProps = AbstractProps & Required<StatusProps>
 
 export const StepStatusIcon: FC<Props> = (props) =>
   props.status ? <ActualStepStatusIcon {...(props as ActualProps)} /> : null
 
 const ICON_MAPPER = {
   completed: {
-    alt: '完了',
+    alt: <Localizer id="smarthr-ui/StepStatusIcon/completedAlt" defaultText="完了" />,
     Component: FaCircleCheckIcon,
   },
   closed: {
-    alt: '中断',
+    alt: <Localizer id="smarthr-ui/StepStatusIcon/closedAlt" defaultText="中断" />,
     Component: FaCircleXmarkIcon,
   },
 }

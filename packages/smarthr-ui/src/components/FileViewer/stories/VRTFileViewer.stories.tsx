@@ -48,13 +48,13 @@ export default {
   argTypes: {
     file: {
       control: 'select',
-      options: ['Japanese PDF', 'English PDF (long, multuple pages)', 'JPEG', 'PNG'],
+      options: ['Japanese PDF', 'English PDF (long, multiple pages)', 'JPEG', 'PNG'],
       mapping: {
         'Japanese PDF': {
           url: '/fixtures/sample-japanese-pdf.pdf',
           contentType: 'application/pdf',
         },
-        'English PDF (long, multuple pages)': {
+        'English PDF (long, multiple pages)': {
           url: '/fixtures/sample-english-pdf.pdf',
           contentType: 'application/pdf',
         },

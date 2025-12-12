@@ -1,6 +1,6 @@
 import type { FunctionComponent, PropsWithChildren, ReactNode } from 'react'
 
-export type BaseProps = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
    * ボタンの大きさ
    */
@@ -8,7 +8,7 @@ export type BaseProps = PropsWithChildren<{
   /**
    * 無効な理由
    */
-  disabledDetail?: {
+  disabledReason?: {
     icon?: FunctionComponent
     message: ReactNode
   }
@@ -36,4 +36,4 @@ export type BaseProps = PropsWithChildren<{
   loading?: boolean
 }>
 
-export type Variant = 'primary' | 'secondary' | 'danger' | 'skeleton' | 'text'
+export type Variant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'skeleton' | 'text'

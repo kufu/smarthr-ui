@@ -43,7 +43,7 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: false },
   },
-  tags: ['!autodocs', 'skip-test-runner'],
+  tags: ['!autodocs'],
 } as Meta<typeof Select>
 
 export const VRT: StoryObj<typeof Select> = {

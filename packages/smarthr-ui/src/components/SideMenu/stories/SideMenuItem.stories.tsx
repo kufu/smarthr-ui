@@ -32,3 +32,9 @@ export const Prefix: StoryObj<typeof SideMenuItem> = {
     prefix: <FaMessageIcon />,
   },
 }
+
+export const Suffix: StoryObj<typeof SideMenuItem> = {
+  args: {
+    suffix: <FaMessageIcon />,
+  },
+}

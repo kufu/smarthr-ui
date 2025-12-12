@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import {
@@ -9,8 +9,15 @@ import {
   type ComponentProps as IconProps,
   WarningIcon,
 } from '../Icon'
+import { Text } from '../Text'
 
-type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> & Omit<IconProps, 'text'>
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+
+type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
+  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> & {
+    size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
+    iconGap?: CharRelativeSize | AbstractSize
+  }
 
 export const classNameGenerator = tv({
   base: '',
@@ -33,9 +40,26 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ type = 'info', children, ...other }) => {
+export const ResponseMessage: FC<Props> = ({
+  type = 'info',
+  size,
+  iconGap,
+  right,
+  children,
+  ...other
+}) => {
   const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
+  const icon = <Icon {...other} className={className} />
+  const textIconAttributes = {
+    iconGap,
+    prefixIcon: right ? undefined : icon,
+    suffixIcon: right ? icon : undefined,
+  }
 
-  return <Icon {...other} text={children} className={className} />
+  return (
+    <Text {...textIconAttributes} size={size}>
+      {children}
+    </Text>
+  )
 }

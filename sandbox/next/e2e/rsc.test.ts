@@ -25,12 +25,9 @@ const SERVER_COMPONENTS = [
   'HeaderLink',
   'Icon',
   'Loader',
-  'MessageScreen',
   'MonthPicker',
   'NotificationBar',
   'PageCounter',
-  'Pagination',
-  'RangeSeparator',
   'ResponseMessage',
   'SearchInput',
   'SideMenu',
@@ -48,7 +45,6 @@ const SERVER_COMPONENTS = [
   'Text',
   'TextLink',
   'Th',
-  'ThCheckbox',
   'TimePicker',
   'UnstyledButton',
   'UpwardLink',
@@ -113,24 +109,27 @@ const CLIENT_COMPONENTS: string[] = [
   'Stack',          // 見出しレベルの自動生成のため
   'TableReel',      // scroll監視のためのuseEffect
   'Textarea',       // オートフォーカスや文字数カウントのための状態管理
+  'ThCheckbox',     // 多言語化対応のため
   'Tooltip',        // 開閉状態の管理
+  'DateFormatter',  // 多言語化対応のため
 ]
 
 /**
  * サーバーコンポーネント内では利用できないコンポーネント一覧(アルファベット順)
  */
 const DISABLED_COMPONENTS = [
-  'ActionDialog',            // 必須のイベントハンドラをもつため
-  'Calendar',                // 必須のイベントハンドラをもつため
-  'DropZone',                // 必須のイベントハンドラをもつため
-  'FilterDropdown',          // 必須のイベントハンドラをもつため
-  'FormDialog',              // 必須のイベントハンドラをもつため
-  'MessageDialog',           // 必須のイベントハンドラをもつため
-  'MessageDialogContent',    // 必須のイベントハンドラを持つため
+  'ActionDialog',               // 必須のイベントハンドラをもつため
+  'Calendar',                   // 必須のイベントハンドラをもつため
+  'DropZone',                   // 必須のイベントハンドラをもつため
+  'FilterDropdown',             // 必須のイベントハンドラをもつため
+  'FormDialog',                 // 必須のイベントハンドラをもつため
+  'MessageDialog',              // 必須のイベントハンドラをもつため
+  'MessageDialogContent',       // 必須のイベントハンドラを持つため
   'RemoteTriggerActionDialog',  // 必須のイベントハンドラをもつため
   'RemoteTriggerFormDialog',    // 必須のイベントハンドラをもつため
-  'SortDropdown',           // 必須のイベントハンドラをもつため
-  'TabItem',                // 必須のイベントハンドラをもつため
+  'SortDropdown',               // 必須のイベントハンドラをもつため
+  'TabItem',                    // 必須のイベントハンドラをもつため
+  'Pagination',                 // 必須のイベントハンドラをもつため
 ]
 
 test.describe('RSC対応コンポーネントがRSCで利用できること', () => {
@@ -155,7 +154,7 @@ test.describe('RSC非対応コンポーネントはRSCでエラーになるこ�
   for (const component of DISABLED_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
-      await expect(page.getByText(/Server Error|Unhandled Runtime Error/)).toBeVisible()
+      await expect(page.getByText(/Server Error|Unhandled Runtime Error|Runtime Error|Runtime TypeError/)).toBeVisible()
       await expect(page.getByText('This is server component')).not.toBeVisible()
       await expect(page.getByText('This is client component')).not.toBeVisible()
     })

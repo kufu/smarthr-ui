@@ -52,11 +52,16 @@ type IconProps = {
   size?: FontSizes
 }
 
-type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
-
-type BaseComponentProps = {
+type AbstractProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
+  /**
+   * @deprecated この属性は指定した場合の挙動が想像しにくく、コードもわかりづらくなってしまうため、他の方法を利用してください
+   *  - TextコンポーネントのprefixIcon, suffixIcon
+   *  - Headingコンポーネントのicon
+   *  - FormControlのlabel.icon
+   *  - Fieldsetのlegend.icon
+   */
   /** アイコンと並べるテキスト */
   text?: ReactNode
   /** アイコンと並べるテキストとの溝 */
@@ -64,7 +69,8 @@ type BaseComponentProps = {
   /** `true` のとき、アイコンを右側に表示する */
   right?: boolean
 }
-export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
+export type Props = AbstractProps &
+  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
@@ -72,13 +78,13 @@ export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & B
 const classNameGenerator = tv({
   slots: {
     icon: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
-    wrapperWithAlt: 'smarthr-ui-Icon-extended smarthr-ui-Icon-withAlt shr-leading-[0]',
+    wrapperWithAlt: 'smarthr-ui-Icon-extended smarthr-ui-Icon-withAlt shr-relative shr-leading-[0]',
   },
 })
 
 const wrapperClassNameGenerator = tv({
   base: [
-    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline',
+    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-relative shr-inline-flex shr-items-baseline',
   ],
   variants: {
     gap: {

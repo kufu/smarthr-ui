@@ -23,7 +23,6 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-  tags: ['skip-test-runner'],
 } as Meta<typeof Switch>
 
 export const Playground: StoryObj<typeof Switch> = {}

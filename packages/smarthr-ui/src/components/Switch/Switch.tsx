@@ -78,7 +78,7 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     return (
-      <Cluster align="center">
+      <Cluster align="center" className="shr-relative">
         <MemoizedLabel htmlFor={inputId} dangerouslyLabelHidden={dangerouslyLabelHidden}>
           {children}
         </MemoizedLabel>

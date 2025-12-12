@@ -11,7 +11,7 @@ type Variant = ComponentProps<typeof Button>['variant']
 
 /**
  * $ pict button.pict.txt /e:button-seeds.pict.txt
- * size    disabled disabledDetail loading prefix suffix wide
+ * size    disabled disabledReason loading prefix suffix wide
  * default false    なし           false   あり   なし   false
  * default false    なし           false   なし   なし   false
  * s       false    なし           false   なし   あり   true
@@ -24,50 +24,52 @@ type Variant = ComponentProps<typeof Button>['variant']
  */
 const Template: StoryFn = (args) => (
   <Stack {...args}>
-    {(['secondary', 'primary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
-      <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
-        <Cluster align="center">
-          <Button variant={variant} prefix={<FaCirclePlusIcon />}>
-            ボタン
-          </Button>
-          <Button variant={variant}>
-            <FaCirclePlusIcon alt="ボタン" />
-          </Button>
-          <Button variant={variant} size="s" suffix={<FaCaretDownIcon />} wide>
-            ボタン
-          </Button>
-          <Button
-            variant={variant}
-            disabled
-            disabledDetail={{ message: 'ボタンが無効な理由' }}
-            suffix={<FaCaretDownIcon />}
-          >
-            ボタン
-          </Button>
-          <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
-            ボタン
-          </Button>
-          <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />} wide>
-            <FaCirclePlusIcon alt="ボタン" />
-          </Button>
-          <Button variant={variant} size="s" disabled prefix={<FaCirclePlusIcon />} wide>
-            <FaCirclePlusIcon alt="ボタン" />
-          </Button>
-          <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />}>
-            ボタン
-          </Button>
-          <Button
-            variant={variant}
-            size="s"
-            disabled
-            disabledDetail={{ message: 'ボタンが無効な理由' }}
-            prefix={<FaCirclePlusIcon />}
-          >
-            ボタン
-          </Button>
-        </Cluster>
-      </BaseColumn>
-    ))}
+    {(['secondary', 'primary', 'tertiary', 'danger', 'text', 'skeleton'] as Variant[]).map(
+      (variant) => (
+        <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+          <Cluster align="center">
+            <Button variant={variant} prefix={<FaCirclePlusIcon />}>
+              ボタン
+            </Button>
+            <Button variant={variant}>
+              <FaCirclePlusIcon alt="ボタン" />
+            </Button>
+            <Button variant={variant} size="s" suffix={<FaCaretDownIcon />} wide>
+              ボタン
+            </Button>
+            <Button
+              variant={variant}
+              disabled
+              disabledReason={{ message: 'ボタンが無効な理由' }}
+              suffix={<FaCaretDownIcon />}
+            >
+              ボタン
+            </Button>
+            <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
+              ボタン
+            </Button>
+            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />} wide>
+              <FaCirclePlusIcon alt="ボタン" />
+            </Button>
+            <Button variant={variant} size="s" disabled prefix={<FaCirclePlusIcon />} wide>
+              <FaCirclePlusIcon alt="ボタン" />
+            </Button>
+            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />}>
+              ボタン
+            </Button>
+            <Button
+              variant={variant}
+              size="s"
+              disabled
+              disabledReason={{ message: 'ボタンが無効な理由' }}
+              prefix={<FaCirclePlusIcon />}
+            >
+              ボタン
+            </Button>
+          </Cluster>
+        </BaseColumn>
+      ),
+    )}
   </Stack>
 )
 
