@@ -16,8 +16,8 @@ import { getIsInclude } from '../../libs/map'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-type Props = PropsWithChildren
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type AbstractProps = PropsWithChildren
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: [
@@ -30,7 +30,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...props }) => {
+export const AccordionPanelContent: FC<Props> = ({ className, ...props }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
   const visible = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])

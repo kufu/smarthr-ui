@@ -28,6 +28,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-DropZone',
+      'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
     ],
     button: '',
@@ -54,9 +55,7 @@ const classNameGenerator = tv({
   },
 })
 
-type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof DropZoneProps>
-
-type DropZoneProps = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -78,13 +77,14 @@ type DropZoneProps = PropsWithChildren<{
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'selectButtonLabel'>
 }>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }
 
-export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
+export const DropZone = forwardRef<HTMLInputElement, Props>(
   ({ children, onSelectFiles, multiple = true, disabled, error, decorators, ...props }, ref) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
@@ -170,8 +170,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 )
 
 const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> &
-    Pick<DropZoneProps, 'decorators'> & { onClick: () => void }
+  ComponentPropsWithoutRef<typeof Button> & Pick<Props, 'decorators'> & { onClick: () => void }
 >(({ onClick, decorators, ...rest }) => {
   const { localize } = useIntl()
 

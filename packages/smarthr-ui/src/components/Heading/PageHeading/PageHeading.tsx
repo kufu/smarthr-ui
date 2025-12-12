@@ -5,11 +5,11 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
 
 import type { ElementProps } from '../Heading'
 
-export type Props = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
    * テキストのサイズ
    *
@@ -25,6 +25,7 @@ export type Props = PropsWithChildren<{
   /** title要素のsuffix */
   pageTitleSuffix?: string
 }>
+type Props = AbstractProps & Omit<ElementProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -38,9 +39,7 @@ const classNameGenerator = tv({
   },
 })
 
-const PSEUDO_TITLE_CLASS_NAME = visuallyHiddenTextClassNameGenerator()
-
-export const PageHeading = memo<Props & ElementProps>(
+export const PageHeading = memo<Props>(
   ({
     size,
     className,
@@ -79,7 +78,7 @@ export const PageHeading = memo<Props & ElementProps>(
           document.createElement('div')) as HTMLDivElement
 
         pseudoTitle.setAttribute('id', pseudoTitleId)
-        pseudoTitle.setAttribute('class', PSEUDO_TITLE_CLASS_NAME)
+        pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
         pseudoTitle.setAttribute('aria-live', 'polite')
         document.body.prepend(pseudoTitle)
 

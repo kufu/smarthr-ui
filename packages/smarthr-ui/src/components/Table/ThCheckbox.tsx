@@ -10,12 +10,13 @@ import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 
 import { Th } from './Th'
 
-type Props = {
+type AbstractProps = {
   // HINT: checkColumnName は aria-label属性に設定されるため、型をstringのみに絞ります
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
     checkColumnName?: (text: string) => string
   }
 } & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -35,7 +36,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
+export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
   ({ vAlign, fixed, decorators, className, ...others }, ref) => {
     const { localize } = useIntl()
 

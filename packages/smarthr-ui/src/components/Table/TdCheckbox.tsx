@@ -6,15 +6,17 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** 値を特定するための行 id */
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed'>
+type Props = Omit<CheckboxProps, keyof AbstractProps> & AbstractProps
 
 const classNameGenerator = tv({
   slots: {
     inner: [
+      'shr-relative',
       'shr-flex shr-justify-center shr-px-1 shr-py-0.75',
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
@@ -23,7 +25,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckboxProps, keyof Props> & Props>(
+export const TdCheckbox = forwardRef<HTMLInputElement, Props>(
   ({ vAlign, fixed, children, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner, checkbox } = classNameGenerator()

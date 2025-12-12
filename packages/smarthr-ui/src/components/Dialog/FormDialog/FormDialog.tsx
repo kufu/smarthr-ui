@@ -9,10 +9,10 @@ import { FormDialogContentInner, type FormDialogContentInnerProps } from './Form
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type AbstractProps = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const FormDialog: FC<Props & ElementProps> = ({
+export const FormDialog: FC<Props> = ({
   children,
   title,
   subtitle,

@@ -49,7 +49,7 @@ export const baseClassNameGenerator = tv({
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
-type Props = PropsWithChildren<
+type AbstractProps = PropsWithChildren<
   Omit<
     VariantProps<typeof baseClassNameGenerator>,
     'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
@@ -61,15 +61,15 @@ type Props = PropsWithChildren<
     as?: string | ComponentType<any>
   }
 >
+export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 type SeparatePadding = {
   block?: Gap
   inline?: Gap
 }
 
-export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
-
-export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
+export const Base = forwardRef<HTMLDivElement, Props>(
   ({ padding, radius, overflow, layer, as: Component = 'div', className, ...props }, ref) => {
     const actualClassName = useMemo(() => {
       const actualPadding =

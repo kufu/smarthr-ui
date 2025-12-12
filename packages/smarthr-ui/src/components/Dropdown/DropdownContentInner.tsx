@@ -26,12 +26,13 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   triggerRect: Rect
   controllable: boolean
 }>
 
-export type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+export type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 type DropdownContentInnerContextType = {
   maxHeight: string
@@ -41,7 +42,7 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
   maxHeight: '',
 })
 
-export const DropdownContentInner: FC<Props & ElementProps> = ({
+export const DropdownContentInner: FC<Props> = ({
   triggerRect,
   children,
   className,

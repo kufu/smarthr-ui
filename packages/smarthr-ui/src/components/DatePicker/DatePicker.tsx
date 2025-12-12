@@ -21,14 +21,14 @@ import { tv } from 'tailwind-variants'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { textColor } from '../../themes'
 import { Calendar } from '../Calendar'
-import { FaCalendarAltIcon } from '../Icon'
+import { FaCalendarDaysIcon } from '../Icon'
 import { Input } from '../Input'
 
 import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
 import { useGlobalKeyDown } from './useGlobalKeyDown'
 
-type Props = {
+type AbstractProps = {
   /** input 要素の `value` 属性の値 */
   value?: string | null
   /** input 要素の `name` 属性の値 */
@@ -56,16 +56,18 @@ type Props = {
   /** 選択された日付が変わった時に発火するコールバック関数 */
   onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
 }
-type OmitInputAttributes =
-  | keyof Props
-  | 'type'
-  | 'onChange'
-  | 'onKeyPress'
-  | 'onFocus'
-  | 'aria-expanded'
-  | 'aria-controls'
-  | 'aria-haspopup'
-type InputAttributes = Omit<ComponentPropsWithRef<'input'>, OmitInputAttributes>
+type Props = AbstractProps &
+  Omit<
+    ComponentPropsWithRef<'input'>,
+    | keyof AbstractProps
+    | 'type'
+    | 'onChange'
+    | 'onKeyPress'
+    | 'onFocus'
+    | 'aria-expanded'
+    | 'aria-controls'
+    | 'aria-haspopup'
+  >
 
 export const DEFAULT_FROM = new Date(1900, 0, 1)
 
@@ -86,7 +88,7 @@ const RETURN_NULL = () => null
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
-export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
+export const DatePicker = forwardRef<HTMLInputElement, Props>(
   (
     {
       value,
@@ -401,12 +403,12 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
 const InputSuffixIcon = memo<{
   classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
   alternativeFormat: null | ReactNode
-  caretIconColor: ComponentProps<typeof FaCalendarAltIcon>['color']
+  caretIconColor: ComponentProps<typeof FaCalendarDaysIcon>['color']
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
   <span className={classNames.inputSuffixLayout}>
     <span className={classNames.inputSuffixWrapper}>
       {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
-      <FaCalendarAltIcon color={caretIconColor} />
+      <FaCalendarDaysIcon color={caretIconColor} />
     </span>
   </span>
 ))

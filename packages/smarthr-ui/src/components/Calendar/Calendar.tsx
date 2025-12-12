@@ -24,7 +24,7 @@ import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getMonthArray, getToDate, isBetween, minDate } from './calendarHelper'
 
-type Props = {
+type AbstractProps = {
   /** 選択可能な開始日 */
   from?: Date
   /** 選択可能な終了日 */
@@ -34,7 +34,8 @@ type Props = {
   /** 選択された日付 */
   value?: Date
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
 type DayJsType = ReturnType<typeof dayjs>
 
 const classNameGenerator = tv({
@@ -50,7 +51,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
+export const Calendar = forwardRef<HTMLDivElement, Props>(
   ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
     const { formatDate, getWeekStartDay } = useIntl()
 

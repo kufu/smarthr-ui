@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { LoaderSpinner } from './LoaderSpinner'
 
-type Props = {
+type AbstractProps = {
   /** ローダーの大きさ */
   size?: 's' | 'm'
   /** 代替テキスト */
@@ -13,7 +13,7 @@ type Props = {
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
 }
-type ElementProps = Omit<ComponentProps<'span'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'span'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -32,7 +32,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Loader = memo<Props & ElementProps>(
+export const Loader = memo<Props>(
   ({ size = 'm', alt, text, type = 'primary', role = 'status', className, ...props }) => {
     const classNames = useMemo(() => {
       const { wrapper, textSlot } = classNameGenerator({

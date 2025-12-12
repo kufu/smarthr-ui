@@ -24,7 +24,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'
 
-type Props = {
+type AbstractProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
   /** コンポーネントの幅 */
@@ -46,7 +46,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<ComponentPropsWithRef<'textarea'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {
@@ -112,7 +112,7 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
   (
     {
       autoFocus,
@@ -339,7 +339,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
 
     return maxLetters ? (
-      <span>
+      <span className="shr-relative">
         {body}
         <VisuallyHiddenText id={maxLettersNoticeId}>
           {buildScreenReaderMaxLettersDescription(maxLetters)}

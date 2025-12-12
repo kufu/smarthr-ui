@@ -11,14 +11,15 @@ import {
 
 import { LevelContext } from './levelContext'
 
-type BaseProps = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
   as?: 'article' | 'aside' | 'nav' | 'section'
   baseLevel?: number
 }>
-type SectioningContentProps = Omit<ComponentPropsWithRef<'section'>, keyof BaseProps> & BaseProps
+type PropsWithAs = AbstractProps & Omit<ComponentPropsWithRef<'section'>, keyof AbstractProps>
+type Props = Omit<ComponentProps<typeof SectioningContent>, 'as'>
 
-const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
+const SectioningContent = forwardRef<HTMLElement, PropsWithAs>(
   ({ children, baseLevel, as: Wrapper = 'section', ...props }, ref) => (
     <Wrapper {...props} ref={ref}>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
@@ -26,8 +27,6 @@ const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
     </Wrapper>
   ),
 )
-
-type Props = Omit<ComponentProps<typeof SectioningContent>, 'as'>
 
 export const Section: FC<Props> = SectioningContent
 export const Article: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (

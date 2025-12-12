@@ -36,7 +36,7 @@ type ArgsOnApply = {
   newfields: SortFieldType[]
 }
 
-type Props = {
+type AbstractProps = {
   /** 並び替え項目 */
   sortFields: SortFieldType[]
   /** 並び順の初期値 */
@@ -47,13 +47,13 @@ type Props = {
   onCancel?: MouseEventHandler<HTMLButtonElement>
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }
-type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'button'>, keyof AbstractProps>
 
 const ON_SUBMIT = (e: FormEvent) => {
   e.preventDefault()
 }
 
-export const SortDropdown: FC<Props & ElementProps> = ({
+export const SortDropdown: FC<Props> = ({
   sortFields,
   defaultOrder,
   onApply,
