@@ -31,11 +31,11 @@ const classNameGenerator = tv({
   ],
 })
 
-export const SpreadsheetTable: FC<Props> = ({ data, className, children, ...props }) => {
+export const SpreadsheetTable: FC<Props> = ({ data, className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <table {...props} className={actualClassName}>
+    <table {...rest} className={actualClassName}>
       {data && (
         <>
           <MemoizedThead cols={data[0].length} />

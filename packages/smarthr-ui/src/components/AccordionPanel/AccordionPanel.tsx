@@ -54,7 +54,7 @@ export const AccordionPanel: FC<Props> = ({
   defaultExpanded = [],
   className,
   onClick: onClickProps,
-  ...props
+  ...rest
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
@@ -82,7 +82,7 @@ export const AccordionPanel: FC<Props> = ({
         parentRef,
       }}
     >
-      <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
+      <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )
 }

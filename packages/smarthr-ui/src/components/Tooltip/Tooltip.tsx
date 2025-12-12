@@ -80,7 +80,7 @@ export const Tooltip: FC<Props> = ({
   onTouchEnd,
   onFocus,
   onBlur,
-  ...props
+  ...rest
 }) => {
   const [portalRoot, setPortalRoot] = useState<Element | null>(null)
   const [isVisible, setIsVisible] = useState(false)
@@ -202,7 +202,7 @@ export const Tooltip: FC<Props> = ({
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
     <span
-      {...props}
+      {...rest}
       ref={ref}
       tabIndex={tabIndex}
       aria-describedby={isInnerTarget ? undefined : messageId}

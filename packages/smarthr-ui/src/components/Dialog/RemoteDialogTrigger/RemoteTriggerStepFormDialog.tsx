@@ -15,7 +15,7 @@ export const RemoteTriggerStepFormDialog: FC<Props> = ({
   onOpen,
   onClose,
   onPressEscape,
-  ...props
+  ...rest
 }) => {
   const {
     isOpen,
@@ -32,7 +32,7 @@ export const RemoteTriggerStepFormDialog: FC<Props> = ({
 
   return (
     <StepFormDialog
-      {...props}
+      {...rest}
       id={id}
       isOpen={isOpen}
       onClickClose={actualOnClickClose}

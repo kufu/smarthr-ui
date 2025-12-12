@@ -49,7 +49,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
   releaseNote,
   features,
   locale: localeProps,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, appsButton } = classNameGenerator()
@@ -76,7 +76,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
   return (
     <>
       <Header
-        {...props}
+        {...rest}
         enableNew={enableNew}
         className={classNames.wrapper}
         featureName={appName}

@@ -38,7 +38,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       disabled = false,
       error,
       decorators,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -149,7 +149,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         <span className={classNames.inputWrapper}>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
-            {...props}
+            {...rest}
             data-smarthr-ui-input="true"
             type="file"
             onChange={handleChange}

@@ -30,7 +30,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelContent: FC<Props> = ({ className, ...props }) => {
+export const AccordionPanelContent: FC<Props> = ({ className, ...rest }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
   const visible = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
@@ -41,7 +41,7 @@ export const AccordionPanelContent: FC<Props> = ({ className, ...props }) => {
     <Transition in={visible} timeout={150} nodeRef={wrapperRef}>
       {(status) => (
         <div
-          {...props}
+          {...rest}
           ref={wrapperRef}
           id={`${name}-content`}
           aria-labelledby={`${name}-trigger`}

@@ -52,7 +52,7 @@ const classNameGenerator = tv({
 })
 
 export const Calendar = forwardRef<HTMLDivElement, Props>(
-  ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
+  ({ from = minDate, to, onSelectDate, value, className, ...rest }, ref) => {
     const { formatDate, getWeekStartDay } = useIntl()
 
     const classNames = useMemo(() => {
@@ -154,7 +154,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
     }, [])
 
     return (
-      <div {...props} ref={ref} className={classNames.container}>
+      <div {...rest} ref={ref} className={classNames.container}>
         <header className={classNames.header}>
           <YearMonthRender className={classNames.yearMonth}>
             {calculatedCurrentMonth.yearMonthText}

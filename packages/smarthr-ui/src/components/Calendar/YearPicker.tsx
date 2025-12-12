@@ -54,7 +54,7 @@ const ActualYearPicker: FC<ActualProps> = ({
   toYear,
   onSelectYear,
   id,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
@@ -90,7 +90,7 @@ const ActualYearPicker: FC<ActualProps> = ({
   }, [])
 
   return (
-    <div {...props} id={id} className={classNames.overlay}>
+    <div {...rest} id={id} className={classNames.overlay}>
       <div className={classNames.container}>
         {yearArray.map((year) => (
           <YearButton

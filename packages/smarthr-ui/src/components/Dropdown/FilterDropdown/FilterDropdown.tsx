@@ -85,7 +85,7 @@ export const FilterDropdown: FC<Props> = ({
   responseStatus,
   triggerSize,
   onlyIconTrigger = false,
-  ...props
+  ...rest
 }) => {
   const { localize } = useIntl()
 
@@ -183,7 +183,7 @@ export const FilterDropdown: FC<Props> = ({
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: decorated.triggerButton }}>
-        <Button {...props} suffix={buttonSuffix} size={triggerSize}>
+        <Button {...rest} suffix={buttonSuffix} size={triggerSize}>
           {buttonContent}
         </Button>
       </DropdownTrigger>

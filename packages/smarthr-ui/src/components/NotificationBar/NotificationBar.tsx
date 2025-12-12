@@ -182,7 +182,7 @@ export const NotificationBar: FC<Props> = ({
   base,
   layer,
   className,
-  ...props
+  ...rest
 }) => {
   const actualRole = useMemo(() => {
     if (role) {
@@ -226,7 +226,7 @@ export const NotificationBar: FC<Props> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...props} className={classNames.wrapper} role={actualRole}>
+      <div {...rest} className={classNames.wrapper} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
           <MessageArea bold={bold} type={type} classNames={classNames}>
             {children}

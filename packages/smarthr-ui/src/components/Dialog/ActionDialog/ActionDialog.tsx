@@ -36,7 +36,7 @@ export const ActionDialog: FC<Props> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
@@ -55,7 +55,7 @@ export const ActionDialog: FC<Props> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}

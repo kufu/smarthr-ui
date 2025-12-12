@@ -27,7 +27,7 @@ export const MobileHeader: FC<HeaderProps> = ({
   onTenantSelect,
   mobileAdditionalContent,
   locale,
-  ...props
+  ...rest
 }) => {
   const [isAppLauncherSelected, setIsAppLauncherSelected] = useState(false)
   const [isReleaseNoteSelected, setIsReleaseNoteSelected] = useState(false)
@@ -61,7 +61,7 @@ export const MobileHeader: FC<HeaderProps> = ({
           }}
         >
           <Header
-            {...props}
+            {...rest}
             className={`${className} min-[752px]:!shr-hidden`}
             tenants={isMenuAvailable ? undefined : tenants}
           >

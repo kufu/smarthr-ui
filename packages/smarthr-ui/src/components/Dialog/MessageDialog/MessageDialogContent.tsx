@@ -23,7 +23,7 @@ export const MessageDialogContent: FC<Props> = ({
   contentBgColor,
   contentPadding,
   decorators,
-  ...props
+  ...rest
 }) => {
   const { onClickClose, active } = useContext(DialogContext)
   const { createPortal } = useDialogPortal(portalParent)
@@ -37,7 +37,7 @@ export const MessageDialogContent: FC<Props> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}

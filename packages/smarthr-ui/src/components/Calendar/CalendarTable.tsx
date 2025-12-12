@@ -59,7 +59,7 @@ export const CalendarTable: FC<Props> = ({
   onSelectDate,
   selectedDayText,
   className,
-  ...props
+  ...rest
 }) => {
   const { formatDate, getWeekStartDay } = useIntl()
 
@@ -101,7 +101,7 @@ export const CalendarTable: FC<Props> = ({
 
   return (
     <div className={classNames.wrapper}>
-      <table {...props} className={classNames.table}>
+      <table {...rest} className={classNames.table}>
         <MemoizedThead thStyle={classNames.th} daysInWeek={daysInWeek} />
         <tbody>
           {current.months.map((week, weekIndex) => (

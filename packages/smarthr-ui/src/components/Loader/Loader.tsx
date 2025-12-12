@@ -33,7 +33,7 @@ const classNameGenerator = tv({
 })
 
 export const Loader = memo<Props>(
-  ({ size = 'm', alt, text, type = 'primary', role = 'status', className, ...props }) => {
+  ({ size = 'm', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
     const classNames = useMemo(() => {
       const { wrapper, textSlot } = classNameGenerator({
         type,
@@ -46,7 +46,7 @@ export const Loader = memo<Props>(
     }, [type, className])
 
     return (
-      <span {...props} role={role} className={classNames.wrapper}>
+      <span {...rest} role={role} className={classNames.wrapper}>
         <LoaderSpinner type={type} size={size} alt={alt} />
         {text && <span className={classNames.text}>{text}</span>}
       </span>

@@ -74,7 +74,7 @@ const tdClassNameGenerator = tv({
   },
 })
 
-export const EmptyTableBody: FC<Props> = ({ children, padding, ...props }) => {
+export const EmptyTableBody: FC<Props> = ({ children, padding, ...rest }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
   const tdClassName = useMemo(() => {
@@ -85,7 +85,7 @@ export const EmptyTableBody: FC<Props> = ({ children, padding, ...props }) => {
   }, [padding])
 
   return (
-    <tbody {...props} ref={countHeadCellRef}>
+    <tbody {...rest} ref={countHeadCellRef}>
       <tr>
         <Td colSpan={count} className={tdClassName}>
           {children}

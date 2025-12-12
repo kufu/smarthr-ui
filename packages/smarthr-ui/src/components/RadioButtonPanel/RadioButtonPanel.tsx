@@ -56,7 +56,7 @@ export const RadioButtonPanel: FC<Props> = ({
   children,
   label,
   'aria-describedby': ariaDescribedby,
-  ...props
+  ...rest
 }) => {
   const hasDescription = !!children
   const classNames = useMemo(() => {
@@ -84,7 +84,7 @@ export const RadioButtonPanel: FC<Props> = ({
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={classNames.base}>
       <RadioButton
-        {...props}
+        {...rest}
         ref={innerRef}
         aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
         className={classNames.radio}

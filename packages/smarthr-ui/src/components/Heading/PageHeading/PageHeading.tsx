@@ -48,7 +48,7 @@ export const PageHeading = memo<Props>(
     pageTitleSuffix = 'SmartHR（スマートHR）',
     pageTitle,
     children,
-    ...props
+    ...rest
   }) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ visuallyHidden, className }),
@@ -98,7 +98,7 @@ export const PageHeading = memo<Props>(
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
     return (
-      <Component {...props} {...actualTypography} as="h1" className={actualClassName}>
+      <Component {...rest} {...actualTypography} as="h1" className={actualClassName}>
         {children}
       </Component>
     )
