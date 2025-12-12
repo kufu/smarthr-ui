@@ -97,16 +97,12 @@ describe('SectioningContent', () => {
 
   it('SectioningContent に含まれる見出し要素は、見出しレベルが6を超えると span になり、role と aria-level が設定される', async () => {
     const { container } = render(
+      /* eslint-disable smarthr/a11y-heading-in-sectioning-content */
       <Section>
-        <Heading>level 2</Heading>
         <Section>
-          <Heading>level 3</Heading>
           <Section>
-            <Heading>level 4</Heading>
             <Section>
-              <Heading>level 5</Heading>
               <Section>
-                <Heading>level 6</Heading>
                 <Section>
                   <Heading>level 7</Heading>
                 </Section>
@@ -115,6 +111,7 @@ describe('SectioningContent', () => {
           </Section>
         </Section>
       </Section>,
+      /* eslint-enable smarthr/a11y-heading-in-sectioning-content */
     )
     expect(container.querySelector('span')).toHaveTextContent('level 7')
     expect(container.querySelector('span')).toHaveAttribute('role', 'heading')
