@@ -7,9 +7,10 @@ import { InputFileNative } from './InputFileNative'
 
 import type { Props } from './types'
 
-export const InputFile = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  if (props.multiple && props.multiplyAppendable) {
-    return <InputFileMultiplyAppendable {...props} ref={ref} />
+export const InputFile = forwardRef<HTMLInputElement, Props>(({ multiple, ...rest }, ref) => {
+  if (typeof multiple === 'object' && multiple.appendable) {
+    return <InputFileMultiplyAppendable {...rest} ref={ref} />
   }
-  return <InputFileNative {...props} ref={ref} />
+
+  return <InputFileNative {...rest} multiple={multiple as boolean | undefined} ref={ref} />
 })
