@@ -12,16 +12,15 @@ type MediaQueryMatches<T> = {
 }
 
 export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQueryMatches<T> => {
-  const mediaQueryLists = useMemo(
-    () =>
-      fromEntries(entries(queries).map(([key, query]) => [key, window.matchMedia(query)] as const)),
+  const matchMediaList = useMemo(
+    () => entries(queries).map(([key, query]) => [key, window.matchMedia(query)] as const),
     [queries],
   )
   const lastSnapshotRef = useRef<MediaQueryMatches<T> | null>(null)
 
   const getServerSnapshot = useCallback(
-    (): MediaQueryMatches<T> => fromEntries(entries(queries).map(([key]) => [key, false] as const)),
-    [queries],
+    (): MediaQueryMatches<T> => fromEntries(matchMediaList.map(([key]) => [key, false] as const)),
+    [matchMediaList],
   ) satisfies () => MediaQueryMatches<T>
 
   const getSnapshot = useCallback((): MediaQueryMatches<T> => {
@@ -29,33 +28,29 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
       return getServerSnapshot()
     }
 
-    if (lastSnapshotRef.current && shallowEquali(lastSnapshotRef.current, mediaQueryLists)) {
+    const ret = fromEntries(matchMediaList.map(([key, m]) => [key, m.matches] as const))
+    if (lastSnapshotRef.current && shallowEquali(lastSnapshotRef.current, ret)) {
       return lastSnapshotRef.current
     }
-
-    lastSnapshotRef.current = mediaQueryLists
-    return mediaQueryLists
-  }, [mediaQueryLists, getServerSnapshot])
+    lastSnapshotRef.current = ret
+    return ret
+  }, [matchMediaList, getServerSnapshot])
 
   const subscribe = useCallback(
-    (callback: () => void) => {
+    (f: () => void) => {
       if (typeof window === 'undefined' || !window.matchMedia) {
         return () => {}
       }
-
-      // const matchMediaList = Object.values(queries).map((query) => window.matchMedia(query))
-
-      entries(mediaQueryLists).forEach(([, v]) => {
-        v.addEventListener('change', callback)
+      matchMediaList.forEach(([, m]) => {
+        m.addEventListener('change', f)
       })
-
       return () => {
-        entries(mediaQueryLists).forEach(([, mql]) => {
-          mql.removeEventListener('change', callback)
+        matchMediaList.forEach(([, m]) => {
+          m.removeEventListener('change', f)
         })
       }
     },
-    [mediaQueryLists],
+    [matchMediaList],
   )
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
