@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+import { OpenInNewTabIcon } from '../Icon'
 
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
