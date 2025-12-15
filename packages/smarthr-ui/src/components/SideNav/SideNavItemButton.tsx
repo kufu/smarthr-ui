@@ -44,6 +44,7 @@ const classNameGenerator = tv({
     button: [
       'shr-w-full shr-leading-none [&]:shr-box-border',
       'focus-visible:shr-focus-indicator',
+      '[[data-current=true]_&:focus-visible]:shr-focus-indicator--inverse',
       'shr-inline-flex shr-items-center',
       'shr-no-underline',
     ],
