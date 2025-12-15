@@ -44,7 +44,7 @@ describe('InputFile', () => {
     expect(onChange).toHaveBeenCalledWith([file1, file2])
   })
 
-  // TODO: テストでコケてしまうためコメントアウトしています
+  // FIXME: DataTransferで落ちるので修正が必要
   // it('multiple.appendableでファイル選択時にonChangeが発火すること', async () => {
   //   const onChange = vi.fn()
   //   await render(
