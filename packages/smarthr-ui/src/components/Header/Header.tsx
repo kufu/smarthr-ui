@@ -170,7 +170,7 @@ const TenantSwitcher = memo<
       <div className={classNames.tenantInfo}>
         {tenants && tenants.length > 1 ? (
           <MultiTenantDropdownMenuButton
-            label={currentTenantName}
+            trigger={currentTenantName}
             tenants={tenants}
             onTenantSelect={onTenantSelect}
           />
@@ -185,8 +185,8 @@ const TenantSwitcher = memo<
 })
 
 const MultiTenantDropdownMenuButton = memo<
-  Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { label: ReactNode }
->(({ label, tenants, onTenantSelect }) => {
+  Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { trigger: ReactNode }
+>(({ trigger, tenants, onTenantSelect }) => {
   const onClick = useMemo(
     () =>
       onTenantSelect
@@ -198,7 +198,7 @@ const MultiTenantDropdownMenuButton = memo<
   )
 
   return (
-    <HeaderDropdownMenuButton label={label}>
+    <HeaderDropdownMenuButton trigger={trigger}>
       {tenants.map(({ id, name }) => (
         <Button key={id} value={id} onClick={onClick}>
           {name}

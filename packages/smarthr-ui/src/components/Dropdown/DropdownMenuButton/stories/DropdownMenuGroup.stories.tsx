@@ -8,7 +8,7 @@ export default {
   title: 'Components/Dropdown/DropdownMenuButton/DropdownMenuGroup',
   component: DropdownMenuGroup,
   render: (args) => (
-    <DropdownMenuButton label="その他の操作">
+    <DropdownMenuButton trigger="その他の操作">
       <DropdownMenuGroup {...args} name="グループ1">
         <Button>操作1</Button>
         <Button>操作2</Button>
@@ -38,7 +38,7 @@ export const Playground: StoryObj<typeof DropdownMenuGroup> = {}
 export const Name: StoryObj<typeof DropdownMenuGroup> = {
   name: 'name',
   render: (args) => (
-    <DropdownMenuButton label="その他の操作">
+    <DropdownMenuButton trigger="その他の操作">
       <Button>操作1</Button>
       <Button>操作2</Button>
       <DropdownMenuGroup {...args}>
