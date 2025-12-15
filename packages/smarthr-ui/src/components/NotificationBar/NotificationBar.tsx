@@ -110,7 +110,7 @@ const classNameGenerator = tv({
         wrapper: 'shr-bg-main shr-text-white',
         icon: 'shr-text-white',
         closeButton:
-          'shr-text-white hover:[&]:shr-bg-main-darken focus-visible:[&]:shr-bg-main-darken',
+          'shr-text-white focus-visible:[&]:shr-focus-indicator--inverse hover:[&]:shr-bg-main-darken focus-visible:[&]:shr-bg-main-darken',
       },
     },
     {
