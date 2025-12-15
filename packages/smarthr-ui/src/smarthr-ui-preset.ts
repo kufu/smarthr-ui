@@ -64,7 +64,11 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
+<<<<<<< HEAD
     focus: ['focus-indicator', 'focus-indicator--inner', 'focus-indicator-none'],
+=======
+    focus: ['focus-indicator', 'focus-indicator--inverse', 'focus-indicator--outer'],
+>>>>>>> 346ad2399 (feat: outlineのinner化)
   },
 }
 
