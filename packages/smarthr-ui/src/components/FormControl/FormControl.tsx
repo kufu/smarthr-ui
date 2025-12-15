@@ -5,7 +5,6 @@ import {
   type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
-  Fragment,
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
@@ -21,14 +20,13 @@ import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
-import { StatusLabel } from '../StatusLabel'
 import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
+import type { StatusLabel } from '../StatusLabel'
 
-type StatusLabelProps = ComponentProps<typeof StatusLabel>
-type StatusLabelType = FunctionComponentElement<StatusLabelProps>
+type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 
 type ObjectLabelType = {
   text: ReactNode
@@ -50,11 +48,6 @@ type AbstractProps = PropsWithChildren<{
   subActionArea?: ReactNode
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
-  /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
-  /**
-   * @deprecated statusLabelProps属性は非推奨です。statusLabelsを使ってください。
-   */
-  statusLabelProps?: StatusLabelProps | StatusLabelProps[]
   /** タイトルの隣に表示する `StatusLabel` の配列 */
   statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
@@ -152,7 +145,6 @@ export const ActualFormControl: FC<Props> = ({
   subActionArea,
   innerMargin,
   statusLabels,
-  statusLabelProps,
   helpMessage,
   exampleMessage,
   errorMessages,
@@ -199,21 +191,10 @@ export const ActualFormControl: FC<Props> = ({
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
 
-  const actualStatusLabels = useMemo(() => {
-    if (statusLabels) {
-      return (Array.isArray(statusLabels) ? statusLabels : [statusLabels]).map(
-        (statusLabel, index) => <Fragment key={index}>{statusLabel}</Fragment>,
-      )
-    }
-
-    if (!statusLabelProps) {
-      return []
-    }
-
-    const labelProps = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-
-    return labelProps.map((prop, index) => <StatusLabel {...prop} key={index} />)
-  }, [statusLabels, statusLabelProps])
+  const actualStatusLabels = useMemo(
+    () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
+    [statusLabels],
+  )
 
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {

@@ -2,6 +2,7 @@ import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { FaAddressBookIcon } from '../../Icon'
 import { FormControl } from '../FormControl'
+import { StatusLabel } from '../../StatusLabel'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -27,7 +28,7 @@ export default {
       text: 'フォームコントロール',
       icon: <FaAddressBookIcon />,
     },
-    statusLabelProps: { type: 'grey', children: '任意' },
+    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
     subActionArea: (
       <Cluster justify="space-between">
         <div>サブアクションエリア（start)</div>

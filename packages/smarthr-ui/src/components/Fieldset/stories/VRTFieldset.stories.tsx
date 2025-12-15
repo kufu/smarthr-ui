@@ -1,6 +1,7 @@
 import { Cluster, Stack } from '../../Layout'
 import { FaAddressBookIcon } from '../../Icon'
 import { Fieldset } from '../Fieldset'
+import { StatusLabel } from '../../StatusLabel'
 
 import { _childrenOptions } from './Fieldset.stories'
 
@@ -42,7 +43,7 @@ export default {
       text: 'フィールドセットタイトル',
       icon: <FaAddressBookIcon />,
     },
-    statusLabelProps: { type: 'grey', children: '任意' },
+    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
     subActionArea: (
       <Cluster justify="space-between">
         <div>サブアクションエリア（start)</div>
