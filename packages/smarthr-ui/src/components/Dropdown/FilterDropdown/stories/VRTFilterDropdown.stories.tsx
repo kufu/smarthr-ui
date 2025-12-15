@@ -21,11 +21,11 @@ const _cases: Array<
     'isFiltered' | 'triggerSize' | 'disabled' | 'onlyIconTrigger'
   >
 > = [
-  { onlyIconTrigger: true },
-  { triggerSize: 's', isFiltered: true, disabled: true },
-  { triggerSize: 's' },
-  { isFiltered: false, disabled: true },
-  { isFiltered: true },
+  { trigger: { onlyIcon: true } },
+  { trigger: { size: 's' }, filtered: true, disabled: true },
+  { trigger: { size: 's' } },
+  { filtered: false, disabled: true },
+  { filtered: true },
 ]
 
 export default {
