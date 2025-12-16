@@ -73,6 +73,18 @@ export type FormatTimeProps = {
   options?: Intl.DateTimeFormatOptions
 }
 
+export type FormatTimestampProps = {
+  /**
+   * フォーマット対象の日付
+   */
+  date: Date
+
+  /**
+   * 表示する時刻のパーツ。指定しない場合は ['hour', 'minute'] がデフォルト
+   */
+  timeParts?: readonly [TimePart, ...TimePart[]]
+}
+
 /**
  * useIntlフックの戻り値の型定義
  */
@@ -135,6 +147,22 @@ export type UseIntlReturn = {
    * formatTime({ date: new Date(), options: { hour12: true } }) // "午前10:30" (ja)
    */
   formatTime(props: FormatTimeProps): string
+
+  /**
+   * タイムスタンプ（日付＋時刻）をフォーマットする関数
+   * 日付はスラッシュ形式、時刻は24時間形式で表示されます
+   * @param props - フォーマットのオプション
+   * @param props.date - フォーマット対象の日付
+   * @param props.timeParts - 表示する時刻のパーツ。デフォルトは ['hour', 'minute']
+   * @returns フォーマットされたタイムスタンプ文字列
+   * @example
+   * // 基本的な使用法
+   * formatTimestamp({ date: new Date() }) // "2024/01/15 10:30" (ja)
+   *
+   * // 秒を含めて表示
+   * formatTimestamp({ date: new Date(), timeParts: ['hour', 'minute', 'second'] }) // "2024/01/15 10:30:45" (ja)
+   */
+  formatTimestamp(props: FormatTimestampProps): string
 
   /**
    * 現在のロケールに基づいて週の開始日を決定する関数
@@ -428,7 +456,24 @@ export const useIntl = (): UseIntlReturn => {
     [intl, locale],
   )
 
+  const formatTimestamp = useCallback(
+    ({ date, timeParts = ['hour', 'minute'] }: FormatTimestampProps): string => {
+      const formattedDate = formatDate({ date, parts: ['year', 'month', 'day'] })
+      const formattedTime = formatTime({ date, parts: timeParts })
+      return `${formattedDate} ${formattedTime}`
+    },
+    [formatDate, formatTime],
+  )
+
   const getWeekStartDay = (): number => DATE_FORMATS[locale].weekStartDay
 
-  return { availableLocales, localize, formatDate, formatTime, locale, getWeekStartDay }
+  return {
+    availableLocales,
+    localize,
+    formatDate,
+    formatTime,
+    formatTimestamp,
+    locale,
+    getWeekStartDay,
+  }
 }

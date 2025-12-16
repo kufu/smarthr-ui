@@ -412,6 +412,58 @@ describe('intl', () => {
       })
     })
 
+    describe('formatTimestamp', () => {
+      const testDate = new Date(2025, 1 - 1, 1, 14, 30, 45) // 2025年1月1日 14:30:45
+
+      describe('locale variations with default time parts (hour and minute)', () => {
+        it('formats timestamp in ja locale', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTimestamp({ date: testDate })).toBe('2025/01/01 14:30')
+        })
+
+        it('formats timestamp in en-us locale', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="en-us">{children}</IntlProvider>
+          )
+          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTimestamp({ date: testDate })).toBe('Jan 01, 2025 14:30')
+        })
+
+        it('formats timestamp in non-colon format locale (id-id)', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="id-id">{children}</IntlProvider>
+          )
+          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTimestamp({ date: testDate })).toBe('01 Jan 2025 14.30')
+        })
+      })
+
+      describe('time parts', () => {
+        it('formats timestamp with seconds in 24-hour format', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="ja">{children}</IntlProvider>
+          )
+          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTimestamp({ date: testDate, timeParts: ['hour', 'minute', 'second'] })).toBe(
+            '2025/01/01 14:30:45',
+          )
+        })
+
+        it('formats timestamp with seconds in non-colon format (id-id)', () => {
+          const wrapper: FC<PropsWithChildren> = ({ children }) => (
+            <IntlProvider locale="id-id">{children}</IntlProvider>
+          )
+          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          expect(formatTimestamp({ date: testDate, timeParts: ['hour', 'minute', 'second'] })).toBe(
+            '01 Jan 2025 14.30.45',
+          )
+        })
+      })
+    })
+
     describe('getWeekStartDay', () => {
       it('returns 0 (Sunday) for Sunday-start locales', () => {
         const sundayStartLocales = ['en-us', 'ja', 'ja-easy', 'ko', 'zh-cn', 'zh-tw'] as const
