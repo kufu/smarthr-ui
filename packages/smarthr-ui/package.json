@@ -31,7 +31,7 @@
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-typescript": "^12.1.4",
     "@storybook/addon-docs": "9.0.18",
-    "@storybook/addon-styling-webpack": "^2.0.0",
+    "@storybook/addon-styling-webpack": "^3.0.0",
     "@storybook/addon-webpack5-compiler-babel": "^3.0.6",
     "@storybook/cli": "9.0.18",
     "@storybook/react": "9.0.18",
