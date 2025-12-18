@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { DateFormatter } from '../DateFormatter'
 
-const testDate = new Date(2025, 0, 1) // 2025年1月1日
+const testDate = '2025-01-01T12:00:00+09:00' // 2025年1月1日
 
 export default {
   title: 'Internal/DateFormatter',
@@ -23,6 +23,13 @@ export const Default: Story = {
   name: 'デフォルト（曜日なしの表示）',
   args: {
     date: testDate,
+  },
+}
+
+export const DateInstance: Story = {
+  name: 'date（Dateインスタンスで指定）',
+  args: {
+    date: new Date(2025, 0, 1), // 2025年1月1日
   },
 }
 
