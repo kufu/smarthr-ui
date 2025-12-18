@@ -12,7 +12,7 @@ const logoOptions = {
 const titleOptions = {
   なし: undefined,
   文字列: 'エラーが発生しました',
-  ReactNode: <ResponseMessage type="error">エラーが発生しました</ResponseMessage>,
+  ReactNode: <ResponseMessage icon="error">エラーが発生しました</ResponseMessage>,
 }
 
 const linksOptions = {
