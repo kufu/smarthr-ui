@@ -23,7 +23,7 @@ import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
 import { Text, type TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
 
@@ -43,7 +43,7 @@ type ObjectLabelType = {
   /** ラベルに適用する `id` 値 */
   id?: string
 }
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** グループのラベル名 */
   label: ReactNode | ObjectLabelType
   /** タイトル右の領域 */
@@ -71,7 +71,8 @@ type Props = PropsWithChildren<{
   disabled?: boolean
   as?: string | ComponentType<any>
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
+type Props = AbstractProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'aria-labelledby'>
 
 const classNameGenerator = tv({
   slots: {
@@ -146,7 +147,7 @@ const classNameGenerator = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: FC<Props & ElementProps> = ({
+export const ActualFormControl: FC<Props> = ({
   label: orgLabel,
   subActionArea,
   innerMargin,
@@ -160,7 +161,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   as = 'div',
   className,
   children,
-  ...props
+  ...rest
 }) => {
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
@@ -230,7 +231,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     return {
       wrapper: generators.wrapper({ className }),
       label: generators.label({
-        className: label.dangerouslyHide ? visuallyHiddenTextClassNameGenerator() : '',
+        className: label.dangerouslyHide ? visuallyHiddenTextClassName : '',
       }),
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
@@ -373,7 +374,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
   return (
     <Stack
-      {...props}
+      {...rest}
       as={as}
       gap={actualInnerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
@@ -565,4 +566,4 @@ const SupplementaryMessageText = memo<
   ) : null,
 )
 
-export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl
+export const FormControl: FC<Omit<Props, 'as' | 'disabled'>> = ActualFormControl

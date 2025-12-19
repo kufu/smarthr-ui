@@ -39,7 +39,7 @@ type StylingProps =
       size?: never
     }
 
-export type Props = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
    * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
    */
@@ -54,8 +54,9 @@ export type Props = PropsWithChildren<{
 
 export type ElementProps = Omit<
   ComponentProps<'h1'>,
-  keyof Props | keyof TextProps | 'role' | 'aria-level'
+  keyof AbstractProps | keyof TextProps | 'role' | 'aria-level'
 >
+type Props = AbstractProps & ElementProps
 
 const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   let role = undefined
@@ -86,8 +87,8 @@ const classNameGenerator = tv({
   },
 })
 
-export const Heading = memo<Props & ElementProps>(
-  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...props }) => {
+export const Heading = memo<Props>(
+  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest }) => {
     const level = useContext(LevelContext)
     const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
     const actualClassName = useMemo(
@@ -105,7 +106,7 @@ export const Heading = memo<Props & ElementProps>(
     }, [type, size])
 
     const commonProps = {
-      ...props,
+      ...rest,
       ...actualTypography,
       ...tagProps,
       className: actualClassName,

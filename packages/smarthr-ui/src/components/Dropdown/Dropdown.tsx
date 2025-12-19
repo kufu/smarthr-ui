@@ -20,10 +20,10 @@ import { usePortal } from '../../hooks/usePortal'
 
 import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
-type Props = {
+type Props = PropsWithChildren<{
   onOpen?: () => void
   onClose?: () => void
-}
+}>
 
 type DropdownContextType = {
   active: boolean
@@ -53,7 +53,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   contentId: '',
 })
 
-export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, children }) => {
+export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 

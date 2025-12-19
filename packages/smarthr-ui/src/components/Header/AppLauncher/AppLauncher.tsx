@@ -22,13 +22,13 @@ type AppItem = {
   url: string
   target?: string
 }
-type Props = {
+type AbstractProps = {
   apps: Category[]
   urlToShowAll?: string | null
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<DecoratorKeyTypes>
 } & VariantProps<typeof classNameGenerator>
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
 
 type DecoratorKeyTypes = 'triggerLabel'
 
@@ -63,13 +63,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncher: FC<Props & ElementProps> = ({
-  apps,
-  urlToShowAll,
-  decorators,
-  enableNew,
-  ...props
-}) => {
+export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableNew, ...rest }) => {
   const calculatedApps = useMemo(() => {
     const result: {
       base: Props['apps'][number] | undefined
@@ -103,7 +97,7 @@ export const AppLauncher: FC<Props & ElementProps> = ({
   }, [enableNew])
 
   return (
-    <Dropdown {...props}>
+    <Dropdown {...rest}>
       <MemoizedDropdownTrigger
         enableNew={enableNew}
         decorators={decorators}
