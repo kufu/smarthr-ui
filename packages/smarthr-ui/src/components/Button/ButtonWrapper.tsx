@@ -17,7 +17,7 @@ import { Loader } from '../Loader'
 
 import type { Variant } from './types'
 
-type BaseProps = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   size: 'default' | 's'
   wide: boolean
   variant: Variant
@@ -28,11 +28,11 @@ type BaseProps = PropsWithChildren<{
   suffix?: ReactNode
 }>
 
-type ButtonProps = BaseProps & {
+type ButtonProps = AbstractProps & {
   isAnchor?: never
   buttonRef?: ForwardedRef<HTMLButtonElement>
 }
-type AnchorProps = BaseProps & {
+type AnchorProps = AbstractProps & {
   isAnchor: true
   anchorRef?: ForwardedRef<HTMLAnchorElement>
 }

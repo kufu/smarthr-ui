@@ -4,27 +4,25 @@ import { tv } from 'tailwind-variants'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-type Props = {
+type AbstractProps = {
   start: number
   end: number
   total?: number
 }
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({ base: 'shr-text-base' })
 
-export const PageCounter = memo<Props & ElementProps>(
-  ({ start, end, total, className, ...props }) => {
-    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+export const PageCounter = memo<Props>(({ start, end, total, className, ...rest }) => {
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-    return (
-      <Cluster {...props} gap={0.25} inline align="baseline" className={actualClassName}>
-        <BoldNumber>{start}</BoldNumber>–<BoldNumber>{end}</BoldNumber>
-        <Total>{total}</Total>
-      </Cluster>
-    )
-  },
-)
+  return (
+    <Cluster {...rest} gap={0.25} inline align="baseline" className={actualClassName}>
+      <BoldNumber>{start}</BoldNumber>–<BoldNumber>{end}</BoldNumber>
+      <Total>{total}</Total>
+    </Cluster>
+  )
+})
 
 const BoldNumber = memo<{ children: number }>(({ children }) => (
   <Text weight="bold" as="b">

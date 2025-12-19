@@ -41,7 +41,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
@@ -60,16 +60,10 @@ type Props = PropsWithChildren<{
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
 }>
-type ElementProps = Omit<
-  ComponentProps<typeof UnstyledButton>,
-  keyof Props | 'aria-selected' | 'type'
->
+type Props = AbstractProps &
+  Omit<ComponentProps<typeof UnstyledButton>, keyof AbstractProps | 'aria-selected' | 'type'>
 
-export const TabItem: FC<Props & ElementProps> = ({
-  selected = false,
-  disabledReason,
-  ...rest
-}) => {
+export const TabItem: FC<Props> = ({ selected = false, disabledReason, ...rest }) => {
   const tabAttrs = {
     role: 'tab',
     'aria-selected': selected,
@@ -94,14 +88,7 @@ export const TabItem: FC<Props & ElementProps> = ({
   return <TabButton {...rest} {...tabAttrs} />
 }
 
-const TabButton: FC<Props & ElementProps> = ({
-  id,
-  children,
-  suffix,
-  onClick,
-  className,
-  ...rest
-}) => {
+const TabButton: FC<Props> = ({ id, children, suffix, onClick, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = classNameGenerator()
 

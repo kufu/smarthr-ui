@@ -1,7 +1,7 @@
 import { within } from 'storybook/test'
 import { ComponentProps } from 'react'
 
-import { FaCircleQuestionIcon, FaUpRightFromSquareIcon } from '../../Icon'
+import { FaCircleQuestionIcon, OpenInNewTabIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { TextLink } from '../TextLink'
 
@@ -34,7 +34,7 @@ const _cases: Array<
     href: '#',
     size: undefined,
     prefix: undefined,
-    suffix: <FaUpRightFromSquareIcon />,
+    suffix: <OpenInNewTabIcon />,
     target: undefined,
   },
   { href: '#', size: 'M', prefix: <FaCircleQuestionIcon />, suffix: undefined, target: undefined },
@@ -51,14 +51,14 @@ const _cases: Array<
     href: undefined,
     size: 'S',
     prefix: undefined,
-    suffix: <FaUpRightFromSquareIcon />,
+    suffix: <OpenInNewTabIcon />,
     target: undefined,
   },
   {
     href: undefined,
     size: 'M',
     prefix: undefined,
-    suffix: <FaUpRightFromSquareIcon />,
+    suffix: <OpenInNewTabIcon />,
     target: undefined,
   },
   { href: undefined, size: 'M', prefix: undefined, suffix: undefined, target: '_blank' },

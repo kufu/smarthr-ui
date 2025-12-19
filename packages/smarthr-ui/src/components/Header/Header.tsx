@@ -50,7 +50,7 @@ type Tenant = PropsWithChildren<{
   name: ReactNode
 }>
 
-type Props = {
+type AbstractProps = PropsWithChildren<{
   /** ロゴ */
   logo?: ReactElement
   /** ロゴリンク */
@@ -67,14 +67,14 @@ type Props = {
   onTenantSelect?: (id: string) => void
   /** @deprecated internal-ui から利用するので使わないでください。 */
   enableNew?: boolean
-} & VariantProps<typeof classNameGenerator>
-
-type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
+}> &
+  VariantProps<typeof classNameGenerator>
+type Props = AbstractProps & Omit<ComponentProps<'header'>, keyof AbstractProps>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const
 const CHILDREN_GAP = { column: 0.5, row: 0.25 } as const
 
-export const Header: FC<PropsWithChildren<Props> & ElementProps> = ({
+export const Header: FC<Props> = ({
   enableNew,
   logo,
   logoHref,

@@ -1,5 +1,9 @@
 import { Cluster, Stack } from '../../Layout'
-import * as Icons from '../Icon'
+import * as Icons from '../FaIcon'
+import { WarningIcon } from '../WarningIcon'
+import { SparklesIcon } from '../SparklesIcon'
+import { LanguageIcon } from '../LanguageIcon'
+import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
 import { colorSet } from '../generateIcon'
 
 import type { Meta, StoryObj } from '@storybook/react'
@@ -32,7 +36,13 @@ export default {
 export const All: StoryObj<typeof FaAddressBookIcon> = {
   render: (args) => (
     <Stack gap={0.75} as="ul" className="shr-list-none">
-      {Object.entries(Icons).map(([name, Icon]) => (
+      {[
+        ...Object.entries(Icons),
+        ['WarningIcon', WarningIcon],
+        ['SparklesIcon', SparklesIcon],
+        ['LanguageIcon', LanguageIcon],
+        ['OpenInNewTabIcon', OpenInNewTabIcon],
+      ].map(([name, Icon]) => (
         <li key={name}>
           <Icon {...args} text={args.text || name} />
         </li>

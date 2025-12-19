@@ -20,7 +20,7 @@ import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../I
 
 import type { Locale } from '../../../intl/localeMap'
 
-export type Props = {
+export type AbstractProps = {
   narrow?: boolean
   localeMap: Partial<Record<Locale, string>>
   locale?: string
@@ -31,7 +31,7 @@ export type Props = {
   onLanguageSelect?: (code: string) => void
 } & VariantProps<typeof classNameGenerator>
 
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
 
 // トリガーはどの言語でも英語のままLanguageと表示するのが好ましいため、intlにはおかない。decoratorは一旦そのままにしている。
 const DECORATOR_DEFAULT_TEXTS = {
@@ -98,7 +98,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const LanguageSwitcher: FC<Props & ElementProps> = ({
+export const LanguageSwitcher: FC<Props> = ({
   narrow,
   enableNew,
   invert = enableNew,

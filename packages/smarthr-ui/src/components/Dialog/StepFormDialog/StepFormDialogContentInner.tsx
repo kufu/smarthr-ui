@@ -23,7 +23,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
-export type BaseProps = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
       /** アクションボタンのラベル */
@@ -50,7 +50,7 @@ export type BaseProps = PropsWithChildren<
     }
 >
 
-export type StepFormDialogContentInnerProps = BaseProps & {
+export type StepFormDialogContentInnerProps = AbstractProps & {
   firstStep: StepItem
   onClickClose: () => void
   responseStatus?: ResponseStatus

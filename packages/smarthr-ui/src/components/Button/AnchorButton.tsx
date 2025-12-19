@@ -12,26 +12,26 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+import { OpenInNewTabIcon } from '../Icon'
 
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
 
-import type { BaseProps } from './types'
+import type { AbstractProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
 
-type ElementProps<T extends ElementType> = Omit<
-  ComponentPropsWithoutRef<T>,
-  keyof Props<T> & ElementRefProps<T>
->
-
-type Props<T extends ElementType> = Omit<BaseProps, 'variant' | 'disabledReason'> & {
+type AbstractProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disabledReason'> & {
   /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
   // tertiaryはAnchorButtonでは使用不可
-  variant?: Exclude<BaseProps['variant'], 'tertiary'>
-  inactiveReason?: BaseProps['disabledReason']
+  variant?: Exclude<ButtonProps['variant'], 'tertiary'>
+  inactiveReason?: ButtonProps['disabledReason']
 }
+
+type ElementProps<T extends ElementType> = Omit<
+  ComponentPropsWithoutRef<T>,
+  keyof AbstractProps<T> & ElementRefProps<T>
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-AnchorButton',
@@ -51,8 +51,8 @@ const AnchorButton = forwardRef(
       elementAs,
       className,
       children,
-      ...props
-    }: PropsWithoutRef<Props<T>> & ElementProps<T>,
+      ...rest
+    }: PropsWithoutRef<AbstractProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
@@ -68,7 +68,7 @@ const AnchorButton = forwardRef(
 
     const button = (
       <ButtonWrapper
-        {...props}
+        {...rest}
         size={size}
         wide={wide}
         variant={variant}
@@ -85,7 +85,7 @@ const AnchorButton = forwardRef(
       </ButtonWrapper>
     )
 
-    if (!props.href && inactiveReason) {
+    if (!rest.href && inactiveReason) {
       return <DisabledReason button={button} disabledReason={inactiveReason} />
     }
 
@@ -95,7 +95,7 @@ const AnchorButton = forwardRef(
 
 // 型キャストなしで ForwardRefExoticComponent に合わせた型をエクスポートするための処理
 type AnchorButtonType = <T extends ElementType = 'a'>(
-  props: Props<T> & ElementProps<T> & ElementRefProps<T>,
+  props: AbstractProps<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
 const ForwardedAnchorButton = AnchorButton as unknown as AnchorButtonType & {

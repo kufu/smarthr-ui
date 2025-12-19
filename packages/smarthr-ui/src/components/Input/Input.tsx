@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../themes'
 
-type Props = {
+type AbstractProps = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -35,7 +35,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps>
 
 export const bgColors = {
   BACKGROUND: 'background',
@@ -87,7 +87,7 @@ const innerClassNameGenerator = tv({
   },
 })
 
-export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
+export const Input = forwardRef<HTMLInputElement, Props>(
   (
     {
       onFocus,
@@ -101,7 +101,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       error,
       readOnly,
       bgColor,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -113,8 +113,8 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const handleWheel = useMemo(
-      () => (props.type === 'number' ? disableWheel : undefined),
-      [props.type],
+      () => (rest.type === 'number' ? disableWheel : undefined),
+      [rest.type],
     )
 
     const onClickFocus = useCallback(() => innerRef.current?.focus(), [])
@@ -162,7 +162,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       >
         {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
         <input
-          {...props}
+          {...rest}
           data-smarthr-ui-input="true"
           onFocus={onFocus}
           onBlur={onBlur}

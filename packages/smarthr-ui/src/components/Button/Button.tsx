@@ -10,9 +10,9 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
 
-import type { BaseProps } from './types'
+import type { AbstractProps } from './types'
 
-type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
+type Props = AbstractProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -20,7 +20,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
+export const Button = forwardRef<HTMLButtonElement, Props>(
   (
     {
       type = 'button',
@@ -34,7 +34,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       className,
       children,
       loading = false,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -48,7 +48,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
 
     const button = (
       <ButtonWrapper
-        {...props}
+        {...rest}
         buttonRef={ref}
         type={type}
         size={size}

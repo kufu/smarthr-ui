@@ -6,7 +6,7 @@ import { Cluster } from '../Layout'
 
 export type SideNavSizeType = 'default' | 's'
 
-type Props = {
+type AbstractProps = {
   /** アイテムの識別子 */
   id: string
   /** アイテムのタイトル
@@ -22,8 +22,7 @@ type Props = {
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -52,7 +51,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideNavItemButton: FC<Props & ElementProps> = ({
+export const SideNavItemButton: FC<Props> = ({
   id,
   title,
   prefix,

@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [81.0.0](https://github.com/kufu/smarthr-ui/compare/v80.0.0...v81.0.0) (2025-12-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Icon:** FaUpRightFromSquareIconを削除し、OpenInNewTabIconとしてaltのデフォルト値が設定されている状態でexportする (#5991)
+* remove ErrorScreen (#5978)
+* **RadioButtonPanel:** labelSuffix属性を削除し、Clusterを利用してもらう方式に変更 (#5982)
+* **Icon:** 非推奨など利用してほしくないアイコンを削除する (#5972)
+
+### Features
+
+* FaLocationDot, FaMugHot, FaPersonWalkingArrowLoopLeft アイコンを追加 ([#5973](https://github.com/kufu/smarthr-ui/issues/5973)) ([4a2c219](https://github.com/kufu/smarthr-ui/commit/4a2c219ad86393687fc4ecfab25b240c22a79cc5))
+* **Icon:** FaUpRightFromSquareIconを削除し、OpenInNewTabIconとしてaltのデフォルト値が設定されている状態でexportする ([#5991](https://github.com/kufu/smarthr-ui/issues/5991)) ([5e51885](https://github.com/kufu/smarthr-ui/commit/5e51885b79a63d53529fb6231d8ea1bc74f7e2c8))
+* **RadioButtonPanel:** labelSuffix属性を削除し、Clusterを利用してもらう方式に変更 ([#5982](https://github.com/kufu/smarthr-ui/issues/5982)) ([0140e67](https://github.com/kufu/smarthr-ui/commit/0140e6703afcee95e8fbf019f9e65d0b060bc832))
+* remove ErrorScreen ([#5978](https://github.com/kufu/smarthr-ui/issues/5978)) ([b0a39ce](https://github.com/kufu/smarthr-ui/commit/b0a39ce46bba98a1642b20ccaeaf20704a5805d4))
+
+
+### Bug Fixes
+
+* **BulkActionRow:** colSpanを初期表示時999にすることで横幅がTableと揃うようにする ([#5974](https://github.com/kufu/smarthr-ui/issues/5974)) ([9ca8ec0](https://github.com/kufu/smarthr-ui/commit/9ca8ec00df4d7e03578ff0eae4b17db5c2c26251))
+* **Icon:** 非推奨など利用してほしくないアイコンを削除する ([#5972](https://github.com/kufu/smarthr-ui/issues/5972)) ([448c21c](https://github.com/kufu/smarthr-ui/commit/448c21c007723621a8eb880431289b33e8b83647))
+
 ## [80.0.0](https://github.com/kufu/smarthr-ui/compare/v79.2.0...v80.0.0) (2025-12-04)
 
 

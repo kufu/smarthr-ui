@@ -32,10 +32,10 @@ export const classNameGenerator = tv({
   },
 })
 
-export const Chip: FC<Props> = ({ size, color, disabled, className, ...props }) => {
+export const Chip: FC<Props> = ({ size, color, disabled, className, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ size, color, disabled, className }),
     [size, color, disabled, className],
   )
-  return <span {...props} className={actualClassName} />
+  return <span {...rest} className={actualClassName} />
 }

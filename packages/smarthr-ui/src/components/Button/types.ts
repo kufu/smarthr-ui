@@ -1,6 +1,6 @@
 import type { FunctionComponent, PropsWithChildren, ReactNode } from 'react'
 
-export type BaseProps = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
    * ボタンの大きさ
    */

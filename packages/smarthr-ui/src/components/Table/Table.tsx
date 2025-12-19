@@ -3,10 +3,11 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 
+import { TableFixedHead } from './TableFixedHead'
 import { TableReel } from './TableReel'
 
-type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type ElementProps = Omit<ComponentProps<'table'>, keyof Props>
+type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type Props = AbstractProps & Omit<ComponentProps<'table'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -104,7 +105,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Table: FC<Props & ElementProps> = ({
+export const Table: FC<Props> = ({
   borderType,
   borderStyle,
   fixedHead,
@@ -125,8 +126,13 @@ export const Table: FC<Props & ElementProps> = ({
     return { table: table({ className }), wrapper: wrapper() }
   }, [borderType, borderStyle, className, fixedHead, layout, rounded])
   const [Wrapper, wrapperProps] = useMemo(
-    () => (rounded ? [RoundedWrapper, { className: classNames.wrapper }] : [Fragment]),
-    [rounded, classNames.wrapper],
+    () =>
+      rounded
+        ? [RoundedWrapper, { className: classNames.wrapper }]
+        : fixedHead
+          ? [FixedHeadWrapper]
+          : [Fragment],
+    [rounded, classNames.wrapper, fixedHead],
   )
 
   return (
@@ -135,6 +141,10 @@ export const Table: FC<Props & ElementProps> = ({
     </Wrapper>
   )
 }
+
+const FixedHeadWrapper = ({ children }: PropsWithChildren<{ className?: string }>) => (
+  <TableFixedHead>{children}</TableFixedHead>
+)
 
 const RoundedWrapper = ({ children, className }: PropsWithChildren<{ className?: string }>) => (
   <Base className={className} overflow="hidden" layer={0}>

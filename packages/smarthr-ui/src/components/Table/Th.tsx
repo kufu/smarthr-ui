@@ -12,7 +12,7 @@ import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-export type Props = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   {
     /** 並び替え状態 */
     sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
@@ -25,7 +25,7 @@ export type Props = PropsWithChildren<
     contentWidth?: CellContentWidth
   } & VariantProps<typeof classNameGenerator>
 >
-type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'th'>, keyof AbstractProps | 'onClick'>
 
 const classNameGenerator = tv({
   base: [
@@ -64,9 +64,7 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
   return contentWidth
 }
 
-type ActualProps = Props & ElementProps
-
-export const Th = memo<ActualProps>(
+export const Th = memo<Props>(
   ({
     children,
     sort,
@@ -78,7 +76,7 @@ export const Th = memo<ActualProps>(
     contentWidth,
     className,
     style,
-    ...props
+    ...rest
   }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ className, align, vAlign })
@@ -106,7 +104,7 @@ export const Th = memo<ActualProps>(
 
     return (
       <th
-        {...props}
+        {...rest}
         aria-sort={ariaSort}
         data-fixed={fixed}
         className={actualClassName}

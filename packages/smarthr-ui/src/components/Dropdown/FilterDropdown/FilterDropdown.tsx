@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { useIntl } from '../../../intl'
-import { Button, type BaseProps as ButtonProps } from '../../Button'
+import { Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -23,7 +23,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-type Props = {
+type AbstractProps = {
   isFiltered?: boolean
   onApply: MouseEventHandler<HTMLButtonElement>
   onCancel?: MouseEventHandler<HTMLButtonElement>
@@ -38,7 +38,7 @@ type Props = {
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIconTrigger?: boolean
 }
-type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'button'>, keyof AbstractProps>
 
 type DecoratorKeyTypes = 'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
 
@@ -73,7 +73,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const FilterDropdown: FC<Props & ElementProps> = ({
+export const FilterDropdown: FC<Props> = ({
   isFiltered,
   onApply,
   onCancel,
@@ -85,8 +85,8 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   responseStatus,
   triggerSize,
   onlyIconTrigger = false,
-  ...props
-}: Props) => {
+  ...rest
+}) => {
   const { localize } = useIntl()
 
   const decoratorDefaultTexts = useMemo(
@@ -183,7 +183,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: decorated.triggerButton }}>
-        <Button {...props} suffix={buttonSuffix} size={triggerSize}>
+        <Button {...rest} suffix={buttonSuffix} size={triggerSize}>
           {buttonContent}
         </Button>
       </DropdownTrigger>

@@ -175,7 +175,7 @@ const ActualText = <T extends ElementType = 'span'>({
   whiteSpace,
   className,
   children,
-  ...props
+  ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
   const icon: undefined | ObjectLabelType = useMemo(
     () =>
@@ -212,7 +212,7 @@ const ActualText = <T extends ElementType = 'span'>({
   )
 
   return (
-    <Component {...props} className={actualClassName}>
+    <Component {...rest} className={actualClassName}>
       {icon ? (
         <span className={wrapperClassName}>
           {icon.prefix}

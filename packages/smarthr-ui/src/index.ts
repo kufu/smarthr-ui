@@ -64,7 +64,7 @@ export {
 export { InformationPanel } from './components/InformationPanel'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
-export { ErrorScreen, MessageScreen } from './components/ErrorScreen'
+export { ErrorScreen } from './components/ErrorScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, type SegmentedControlOption } from './components/SegmentedControl'

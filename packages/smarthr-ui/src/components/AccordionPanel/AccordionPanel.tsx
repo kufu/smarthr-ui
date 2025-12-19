@@ -18,7 +18,7 @@ import { flatArrayToMap } from '../../libs/map'
 
 import { getNewExpandedItems } from './accordionPanelHelper'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** アイコンの左右位置 */
   iconPosition?: 'left' | 'right'
   /** 複数のパネルを同時に開くことを許容するかどうか */
@@ -28,7 +28,7 @@ type Props = PropsWithChildren<{
   /** トリガのクリックイベントを処理するハンドラ */
   onClick?: (expandedItems: string[]) => void
 }>
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
@@ -48,13 +48,13 @@ const classNameGenerator = tv({
   base: 'smarthr-ui-AccordionPanel',
 })
 
-export const AccordionPanel: FC<Props & ElementProps> = ({
+export const AccordionPanel: FC<Props> = ({
   iconPosition = 'left',
   expandableMultiply = true,
   defaultExpanded = [],
   className,
   onClick: onClickProps,
-  ...props
+  ...rest
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
@@ -82,7 +82,7 @@ export const AccordionPanel: FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
+      <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )
 }
