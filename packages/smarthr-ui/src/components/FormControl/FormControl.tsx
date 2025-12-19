@@ -23,7 +23,7 @@ import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
 import { Text, type TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
 
@@ -43,7 +43,7 @@ type ObjectLabelType = {
   /** ラベルに適用する `id` 値 */
   id?: string
 }
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** グループのラベル名 */
   label: ReactNode | ObjectLabelType
   /** タイトル右の領域 */
@@ -71,7 +71,8 @@ type Props = PropsWithChildren<{
   disabled?: boolean
   as?: string | ComponentType<any>
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
+type Props = AbstractProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'aria-labelledby'>
 
 const classNameGenerator = tv({
   slots: {
@@ -81,13 +82,14 @@ const classNameGenerator = tv({
       'disabled:shr-text-disabled',
       '[&:disabled_.smarthr-ui-FormControl-label_>_span]:shr-text-disabled',
       '[&:disabled_.smarthr-ui-FormControl-exampleMessage]:shr-text-color-inherit',
-      '[&:disabled_.smarthr-ui-FormControl-errorMessage]:shr-text-color-inherit',
+      '[&:disabled_.smarthr-ui-FormControl-errorMessage-Icon]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
     label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
-    errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
+    errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
+    errorMessage: ['smarthr-ui-FormControl-errorMessage'],
     underLabelStack: ['[&&&]:shr-mt-0'],
     childrenWrapper: [],
   },
@@ -145,7 +147,7 @@ const classNameGenerator = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: FC<Props & ElementProps> = ({
+export const ActualFormControl: FC<Props> = ({
   label: orgLabel,
   subActionArea,
   innerMargin,
@@ -159,7 +161,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   as = 'div',
   className,
   children,
-  ...props
+  ...rest
 }) => {
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
@@ -229,10 +231,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     return {
       wrapper: generators.wrapper({ className }),
       label: generators.label({
-        className: label.dangerouslyHide ? visuallyHiddenTextClassNameGenerator() : '',
+        className: label.dangerouslyHide ? visuallyHiddenTextClassName : '',
       }),
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
+      errorMessage: generators.errorMessage(),
       underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
     }
@@ -371,7 +374,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
   return (
     <Stack
-      {...props}
+      {...rest}
       as={as}
       gap={actualInnerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
@@ -528,13 +531,19 @@ const ErrorMessageList = memo<{
   classNames: {
     errorList: string
     errorIcon: string
+    errorMessage: string
   }
 }>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
     <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <FaCircleExclamationIcon text={message} className={classNames.errorIcon} />
+          <Text
+            className={classNames.errorMessage}
+            prefixIcon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
+          >
+            {message}
+          </Text>
         </p>
       ))}
     </div>
@@ -557,4 +566,4 @@ const SupplementaryMessageText = memo<
   ) : null,
 )
 
-export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl
+export const FormControl: FC<Omit<Props, 'as' | 'disabled'>> = ActualFormControl

@@ -23,9 +23,9 @@ const classNameGenerator = tv({
 })
 
 type StatusProps = { status?: Step['status'] }
-type BaseProps = ComponentProps<typeof FaCircleCheckIcon>
-type Props = BaseProps & StatusProps
-type ActualProps = BaseProps & Required<StatusProps>
+type AbstractProps = ComponentProps<typeof FaCircleCheckIcon>
+type Props = AbstractProps & StatusProps
+type ActualProps = AbstractProps & Required<StatusProps>
 
 export const StepStatusIcon: FC<Props> = (props) =>
   props.status ? <ActualStepStatusIcon {...(props as ActualProps)} /> : null

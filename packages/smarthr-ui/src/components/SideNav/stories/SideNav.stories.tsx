@@ -35,11 +35,11 @@ export default {
     },
   },
   render: (args) => {
-    const { items, ...props } = args
+    const { items, ...rest } = args
     return items ? (
-      <SideNav {...props} items={items} />
+      <SideNav {...rest} items={items} />
     ) : (
-      <SideNav {...props}>
+      <SideNav {...rest}>
         {_sideNavItems.map((item) => (
           <SideNavItemButton key={item.id} id={item.id} current={item.current} prefix={item.prefix}>
             {item.children}
