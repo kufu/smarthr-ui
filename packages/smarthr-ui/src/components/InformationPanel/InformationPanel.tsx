@@ -122,7 +122,7 @@ export const InformationPanel: FC<Props> = ({
   children,
   onClickTrigger,
   decorators,
-  ...props
+  ...rest
 }) => {
   const [active, setActive] = useState(activeProps)
   const id = useId()
@@ -168,7 +168,7 @@ export const InformationPanel: FC<Props> = ({
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
+    <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>

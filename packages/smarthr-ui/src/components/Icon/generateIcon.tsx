@@ -141,7 +141,7 @@ export const generateIcon = (SvgIcon: IconType) => {
       iconGap = 0.25,
       right,
       size,
-      ...props
+      ...rest
     }) => {
       const actualAriaHidden = useMemo(() => {
         if (ariaHidden !== undefined) {
@@ -182,7 +182,7 @@ export const generateIcon = (SvgIcon: IconType) => {
       const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
-          {...props}
+          {...rest}
           stroke="currentColor"
           fill="currentColor"
           strokeWidth="0"

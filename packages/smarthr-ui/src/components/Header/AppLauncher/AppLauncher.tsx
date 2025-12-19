@@ -63,7 +63,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableNew, ...props }) => {
+export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableNew, ...rest }) => {
   const calculatedApps = useMemo(() => {
     const result: {
       base: Props['apps'][number] | undefined
@@ -97,7 +97,7 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
   }, [enableNew])
 
   return (
-    <Dropdown {...props}>
+    <Dropdown {...rest}>
       <MemoizedDropdownTrigger
         enableNew={enableNew}
         decorators={decorators}

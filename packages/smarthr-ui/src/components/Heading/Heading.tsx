@@ -81,7 +81,7 @@ const classNameGenerator = tv({
 })
 
 export const Heading = memo<Props>(
-  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...props }) => {
+  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest }) => {
     const level = useContext(LevelContext)
     const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
     const actualClassName = useMemo(
@@ -99,7 +99,7 @@ export const Heading = memo<Props>(
     }, [type, size])
 
     const commonProps = {
-      ...props,
+      ...rest,
       ...actualTypography,
       ...tagProps,
       className: actualClassName,

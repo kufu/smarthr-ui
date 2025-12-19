@@ -74,7 +74,7 @@ export const BottomFixedArea: FC<Props> = ({
   tertiaryLinks,
   zIndex,
   className,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, tertiaryButton } = classNameGenerator()
@@ -91,7 +91,7 @@ export const BottomFixedArea: FC<Props> = ({
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base {...props} className={classNames.wrapper} style={style}>
+    <Base {...rest} className={classNames.wrapper} style={style}>
       <Stack>
         <Description>{description}</Description>
         <Stack gap={0.25}>

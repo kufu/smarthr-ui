@@ -9,8 +9,8 @@ import type { ComponentProps, FC } from 'react'
 type AbstractProps = DialogProps & DirectChildren
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const Dialog: FC<Props> = ({ className, portalParent, id, ...props }) => {
+export const Dialog: FC<Props> = ({ className, portalParent, id, ...rest }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
 
-  return createPortal(<DialogContentInner {...props} className={className} />)
+  return createPortal(<DialogContentInner {...rest} className={className} />)
 }

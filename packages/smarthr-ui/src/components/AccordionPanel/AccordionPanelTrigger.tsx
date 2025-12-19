@@ -69,7 +69,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
   className,
   headingType = 'blockTitle',
   headingTag,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { title, titleWrapper, button, leftIcon, rightIcon } = classNameGenerator()
@@ -174,7 +174,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={headingTag} type={headingType}>
       <button
-        {...props}
+        {...rest}
         type="button"
         value={name}
         id={`${name}-trigger`}
