@@ -30,7 +30,7 @@ import {
 
 import type { TextProps } from '../Text'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
   headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
@@ -38,7 +38,7 @@ type Props = PropsWithChildren<{
    */
   headingTag?: HeadingTagTypes
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'button'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -64,12 +64,12 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
+export const AccordionPanelTrigger: FC<Props> = ({
   children,
   className,
   headingType = 'blockTitle',
   headingTag,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { title, titleWrapper, button, leftIcon, rightIcon } = classNameGenerator()
@@ -174,7 +174,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={headingTag} type={headingType}>
       <button
-        {...props}
+        {...rest}
         type="button"
         value={name}
         id={`${name}-trigger`}
