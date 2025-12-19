@@ -101,7 +101,7 @@ const ActualSelect = <T extends string>(
     className,
     disabled,
     required,
-    ...props
+    ...rest
   }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
@@ -160,7 +160,7 @@ const ActualSelect = <T extends string>(
   return (
     <span className={classNames.wrapper} style={wrapperStyle}>
       <select
-        {...props}
+        {...rest}
         data-smarthr-ui-input="true"
         onChange={handleChange}
         aria-invalid={error || undefined}

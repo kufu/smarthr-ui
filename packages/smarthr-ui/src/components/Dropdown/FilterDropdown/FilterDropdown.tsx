@@ -94,7 +94,7 @@ export const FilterDropdown: FC<Props> = ({
   onReset,
   onOpen,
   onClose,
-  ...props
+  ...rest
 }) => {
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
@@ -211,7 +211,7 @@ export const FilterDropdown: FC<Props> = ({
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: decorated.trigger }}>
-        <Button {...props} suffix={buttonSuffix} size={trigger.size}>
+        <Button {...rest} suffix={buttonSuffix} size={trigger.size}>
           {buttonContent}
         </Button>
       </DropdownTrigger>

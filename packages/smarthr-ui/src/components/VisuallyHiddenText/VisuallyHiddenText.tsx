@@ -15,14 +15,14 @@ type Props<T extends ElementType> = PropsWithChildren<{
 const ActualVisuallyHiddenText = <T extends ElementType = 'span'>({
   as: Component = 'span',
   className,
-  ...props
+  ...rest
 }: Props<T>) => {
   const actualClassName = useMemo(
     () => visuallyHiddenTextClassNameGenerator({ className }),
     [className],
   )
 
-  return <Component {...props} className={`smarthr-ui-VisuallyHiddenText ${actualClassName}`} />
+  return <Component {...rest} className={`smarthr-ui-VisuallyHiddenText ${actualClassName}`} />
 }
 
 export const VisuallyHiddenText = memo(ActualVisuallyHiddenText) as typeof ActualVisuallyHiddenText

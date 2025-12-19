@@ -39,7 +39,7 @@ export const SideNav: FC<Props> = ({
   onClick,
   className,
   children,
-  ...props
+  ...rest
 }) => {
   const actualOnClick = useMemo(
     () =>
@@ -52,7 +52,7 @@ export const SideNav: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <ul {...props} className={actualClassName}>
+    <ul {...rest} className={actualClassName}>
       {items
         ? items.map((item) => (
             <SideNavItemButton

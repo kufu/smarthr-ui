@@ -26,7 +26,7 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   tag: Tag,
   icon: Icon,
   current,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, icon } = classNameGenerator({ active: current })
@@ -38,7 +38,7 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   }, [current])
 
   return (
-    <Tag {...props} aria-current={current ? 'page' : undefined} className={classNames.wrapper}>
+    <Tag {...rest} aria-current={current ? 'page' : undefined} className={classNames.wrapper}>
       {Icon && <Icon className={classNames.icon} />}
       {children}
     </Tag>

@@ -48,7 +48,7 @@ const classNameGenerator = tv({
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, required, ...props }, ref) => {
+  ({ onChange, children, className, required, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
@@ -62,13 +62,13 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     const defaultId = useId()
-    const radioButtonId = props.id || defaultId
+    const radioButtonId = rest.id || defaultId
 
     return (
-      <span data-disabled={props.disabled} className={classNames.wrapper}>
+      <span data-disabled={rest.disabled} className={classNames.wrapper}>
         <span className={classNames.innerWrapper}>
           <input
-            {...props}
+            {...rest}
             ref={ref}
             type="radio"
             id={radioButtonId}
