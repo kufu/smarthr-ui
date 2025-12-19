@@ -38,7 +38,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       disabled = false,
       error,
       decorators,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -166,7 +166,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         <span className={classNames.inputWrapper}>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
-            {...props}
+            {...rest}
             multiple
             data-smarthr-ui-input="true"
             type="file"

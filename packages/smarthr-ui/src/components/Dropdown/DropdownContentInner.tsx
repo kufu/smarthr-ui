@@ -47,7 +47,7 @@ export const DropdownContentInner: FC<Props> = ({
   children,
   className,
   controllable,
-  ...props
+  ...rest
 }) => {
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
@@ -114,7 +114,7 @@ export const DropdownContentInner: FC<Props> = ({
   useKeyboardNavigation(wrapperRef, focusTargetRef)
 
   return (
-    <div {...props} ref={wrapperRef} className={actualClassName} style={style}>
+    <div {...rest} ref={wrapperRef} className={actualClassName} style={style}>
       {/* dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (

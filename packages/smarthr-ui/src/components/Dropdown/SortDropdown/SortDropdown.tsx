@@ -67,7 +67,7 @@ export const SortDropdown: FC<Props> = ({
   cancelText,
   onApply,
   onCancel,
-  ...props
+  ...rest
 }) => {
   const {
     texts,
@@ -91,7 +91,7 @@ export const SortDropdown: FC<Props> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button {...props} suffix={<SortIcon />}>
+        <Button {...rest} suffix={<SortIcon />}>
           {texts.triggerLabel}
         </Button>
       </DropdownTrigger>
