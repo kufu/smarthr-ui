@@ -2,7 +2,7 @@ import { type FC, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
-import { FaUpRightFromSquareIcon } from '../../../Icon'
+import { OpenInNewTabIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
@@ -80,7 +80,7 @@ const ActualReleaseNote: FC<{
                 className={classNames.anchor}
               >
                 {link.title}
-                <FaUpRightFromSquareIcon className={classNames.icon} />
+                <OpenInNewTabIcon className={classNames.icon} />
               </a>
             </div>
           ))}
@@ -95,7 +95,7 @@ const ActualReleaseNote: FC<{
           className={classNames.indexLinkAnchor}
         >
           <Translate>{translated.seeAll}</Translate>
-          <FaUpRightFromSquareIcon className={classNames.icon} />
+          <OpenInNewTabIcon className={classNames.icon} />
         </a>
       </div>
     </div>

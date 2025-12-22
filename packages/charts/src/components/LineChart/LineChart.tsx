@@ -4,7 +4,8 @@ import { useId, useMemo, useRef } from 'react'
 import { Line } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
-import { createLineChartOptions, getChartColors, registerChartComponents } from '../../config'
+import { createLineChartOptions, registerChartComponents } from '../../config'
+import { getLineChartColors } from '../../helper'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
@@ -21,7 +22,10 @@ type Props = {
 export const LineChart: React.FC<Props> = ({ data, title }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'line'>>(null)
-  const chartColors = getChartColors<'line'>(data.datasets.length)
+  const chartColors = useMemo(
+    () => getLineChartColors(data.datasets.length),
+    [data.datasets.length],
+  )
 
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length

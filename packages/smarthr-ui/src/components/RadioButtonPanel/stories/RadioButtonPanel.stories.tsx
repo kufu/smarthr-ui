@@ -64,10 +64,3 @@ export const Children: StoryObj<typeof RadioButtonPanel> = {
     children: '説明のテキストです。',
   },
 }
-
-export const LabelSuffix: StoryObj<typeof RadioButtonPanel> = {
-  name: 'labelSuffix',
-  args: {
-    labelSuffix: <StatusLabel>ステータスラベル</StatusLabel>,
-  },
-}

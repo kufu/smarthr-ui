@@ -69,9 +69,9 @@ export const HrefTemplate: StoryObj<typeof Pagination> = {
 const CustomLink = ({
   href,
   children,
-  ...props
+  ...rest
 }: { href: string; children: ReactNode } & HTMLAttributes<HTMLElement>) => (
-  <a href={href} style={{ textDecoration: 'underline' }} {...props}>
+  <a href={href} style={{ textDecoration: 'underline' }} {...rest}>
     {children}
   </a>
 )

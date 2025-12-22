@@ -19,13 +19,13 @@ import {
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<ActionDialogContentInnerProps, 'heading'> &
+type AbstractProps = Omit<ActionDialogContentInnerProps, 'heading'> &
   DialogProps & {
     heading: ReactNode | Omit<ActionDialogContentInnerProps['heading'], 'id'>
   }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const ActionDialog: FC<Props & ElementProps> = ({
+export const ActionDialog: FC<Props> = ({
   children,
   heading: orgHeading,
   contentBgColor,
@@ -44,7 +44,7 @@ export const ActionDialog: FC<Props & ElementProps> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
@@ -73,7 +73,7 @@ export const ActionDialog: FC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}

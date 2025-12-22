@@ -35,14 +35,15 @@
     "watch:css": "tailwindcss -i ./src/styles/index.css -o ./lib/styles.css --watch"
   },
   "peerDependencies": {
-    "react": "^19.0.1",
-    "react-dom": "^19.0.1",
+    "react": "^19.0.3",
+    "react-dom": "^19.0.3",
     "react-intl": "^7.0.4",
     "smarthr-ui": "^74.0.0",
     "styled-components": "^5.0.1"
   },
   "dependencies": {
-    "chart.js": "^4.5.0",
+    "chart.js": "^4.5.1",
+    "@smarthr/patternomaly": "^2.0.0",
     "react-chartjs-2": "^5.2.0"
   },
   "devDependencies": {
@@ -63,8 +64,8 @@
     "glob": "11.0.3",
     "npm-run-all2": "^8.0.4",
     "postcss": "^8.5.6",
-    "react": "^19.1.2",
-    "react-dom": "^19.1.2",
+    "react": "^19.1.4",
+    "react-dom": "^19.1.4",
     "react-intl": "^7.1.14",
     "rimraf": "^6.0.1",
     "rollup": "^4.44.2",

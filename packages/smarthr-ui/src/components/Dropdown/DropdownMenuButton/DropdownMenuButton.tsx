@@ -21,7 +21,7 @@ import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { useIntl } from '../../../intl'
-import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
+import { type AnchorButton, Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { DropdownContext } from '../Dropdown'
 
@@ -38,7 +38,7 @@ type ActionItem =
   | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
   | ReactNode
 
-type Props = {
+type AbstractProps = {
   /** 引き金となるボタンラベル */
   label: ReactNode
   /** 操作群 */
@@ -54,7 +54,8 @@ type Props = {
   /** ドロップダウンメニューが閉じられた際のイベント */
   onClose?: () => void
 }
-type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 const classNameGenerator = tv({
   slots: {
@@ -80,7 +81,7 @@ const classNameGenerator = tv({
 
 const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
 
-export const DropdownMenuButton: FC<Props & ElementProps> = ({
+export const DropdownMenuButton: FC<Props> = ({
   label,
   children,
   triggerSize,

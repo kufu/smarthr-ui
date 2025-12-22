@@ -20,7 +20,7 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type BaseProps = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
@@ -44,7 +44,7 @@ export type BaseProps = PropsWithChildren<
   }
 >
 
-export type FormDialogContentInnerProps = BaseProps & {
+export type FormDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
   responseStatus?: ResponseStatus
 }

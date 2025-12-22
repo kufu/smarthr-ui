@@ -17,13 +17,13 @@ import { FormDialogContentInner, type FormDialogContentInnerProps } from './Form
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<FormDialogContentInnerProps, 'heading'> &
+type AbstractProps = Omit<FormDialogContentInnerProps, 'heading'> &
   DialogProps & {
     heading: ReactNode | Omit<FormDialogContentInnerProps['heading'], 'id'>
   }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const FormDialog: FC<Props & ElementProps> = ({
+export const FormDialog: FC<Props> = ({
   children,
   heading: orgHeading,
   contentBgColor,
@@ -42,7 +42,7 @@ export const FormDialog: FC<Props & ElementProps> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
@@ -75,7 +75,7 @@ export const FormDialog: FC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}

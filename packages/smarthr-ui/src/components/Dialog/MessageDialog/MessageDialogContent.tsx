@@ -12,18 +12,21 @@ import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { type BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
+import {
+  type AbstractProps as ContentInnerProps,
+  MessageDialogContentInner,
+} from './MessageDialogContentInner'
 
 import type { UncontrolledDialogProps } from '../types'
 
-type Props = Omit<BaseProps, 'heading'> &
+type AbstractProps = Omit<ContentInnerProps, 'heading'> &
   UncontrolledDialogProps & {
     heading: ReactNode | Omit<BaseProps['heading'], 'id'>
   }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 /** @deprecated */
-export const MessageDialogContent: FC<Props & ElementProps> = ({
+export const MessageDialogContent: FC<Props> = ({
   heading: orgHeading,
   description,
   portalParent,
@@ -31,7 +34,7 @@ export const MessageDialogContent: FC<Props & ElementProps> = ({
   contentBgColor,
   contentPadding,
   decorators,
-  ...props
+  ...rest
 }) => {
   const { onClickClose, active } = useContext(DialogContext)
   const { createPortal } = useDialogPortal(portalParent)
@@ -55,7 +58,7 @@ export const MessageDialogContent: FC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}

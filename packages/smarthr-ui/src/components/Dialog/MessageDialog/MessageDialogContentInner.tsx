@@ -9,7 +9,7 @@ import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type BaseProps = DialogBodyProps & {
+export type AbstractProps = DialogBodyProps & {
   /** ダイアログタイトル */
   heading: DialogHeadingProps
   /** ダイアログの説明 */
@@ -18,7 +18,7 @@ export type BaseProps = DialogBodyProps & {
   decorators?: DecoratorsType<'closeButtonLabel'>
 }
 
-export type MessageDialogContentInnerProps = BaseProps & {
+export type MessageDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
 }
 

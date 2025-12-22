@@ -19,11 +19,11 @@ import {
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<MessageDialogContentInnerProps, 'heading'> &
+type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading'> &
   DialogProps & {
     heading: ReactNode | Omit<MessageDialogContentInnerProps['heading'], 'id'>
   }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 export const MessageDialog: FC<Props & ElementProps> = ({
   heading: orgHeading,
@@ -36,15 +36,15 @@ export const MessageDialog: FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
+    if (!rest.isOpen) {
       return
     }
     onClickClose()
-  }, [onClickClose, props.isOpen])
+  }, [onClickClose, rest.isOpen])
   const titleId = useId()
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
@@ -59,7 +59,7 @@ export const MessageDialog: FC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}
