@@ -6,7 +6,7 @@ export default {
   component: ModelessDialog,
   args: {
     isOpen: true,
-    title: 'モードレスダイアログタイトル',
+    heading: 'モードレスダイアログタイトル',
     children: 'ダイアログコンテンツ',
     footer: 'ダイアログフッター',
     top: 10,

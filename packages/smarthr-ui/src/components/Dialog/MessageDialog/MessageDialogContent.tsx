@@ -1,4 +1,12 @@
-import { type ComponentProps, type FC, useCallback, useContext, useId } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type ReactNode,
+  isValidElement,
+  useCallback,
+  useContext,
+  useId,
+} from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
@@ -11,12 +19,15 @@ import {
 
 import type { UncontrolledDialogProps } from '../types'
 
-type AbstractProps = Omit<ContentInnerProps, 'titleId'> & UncontrolledDialogProps
+type AbstractProps = Omit<ContentInnerProps, 'heading'> &
+  UncontrolledDialogProps & {
+    heading: ReactNode | Omit<BaseProps['heading'], 'id'>
+  }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 /** @deprecated */
 export const MessageDialogContent: FC<Props> = ({
-  title,
+  heading: orgHeading,
   description,
   portalParent,
   className,
@@ -34,6 +45,16 @@ export const MessageDialogContent: FC<Props> = ({
     }
   }, [active, onClickClose])
   const titleId = useId()
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const heading: BaseProps['heading'] =
+    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
+      ? {
+          text: orgHeading as ReactNode,
+          id: titleId,
+        }
+      : ({ ...orgHeading, id: titleId } as BaseProps['heading'])
 
   return createPortal(
     <DialogContentInner
@@ -44,8 +65,7 @@ export const MessageDialogContent: FC<Props> = ({
       ariaLabelledby={titleId}
     >
       <MessageDialogContentInner
-        title={title}
-        titleId={titleId}
+        heading={heading}
         description={description}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}

@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type FC, useCallback, useId } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type ReactNode,
+  isValidElement,
+  useCallback,
+  useId,
+} from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -12,13 +19,14 @@ import {
 
 import type { DialogProps } from '../types'
 
-type AbstractProps = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
+type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading'> &
+  DialogProps & {
+    heading: ReactNode | Omit<MessageDialogContentInnerProps['heading'], 'id'>
+  }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const MessageDialog: FC<Props> = ({
-  title,
-  subtitle,
-  titleTag,
+export const MessageDialog: FC<Props & ElementProps> = ({
+  heading: orgHeading,
   description,
   onClickClose,
   onPressEscape = onClickClose,
@@ -38,6 +46,16 @@ export const MessageDialog: FC<Props> = ({
     onClickClose()
   }, [onClickClose, rest.isOpen])
   const titleId = useId()
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const heading: MessageDialogContentInnerProps['heading'] =
+    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
+      ? {
+          text: orgHeading as ReactNode,
+          id: titleId,
+        }
+      : ({ ...orgHeading, id: titleId } as MessageDialogContentInnerProps['heading'])
 
   return createPortal(
     <DialogContentInner
@@ -47,10 +65,7 @@ export const MessageDialog: FC<Props> = ({
       onPressEscape={onPressEscape}
     >
       <MessageDialogContentInner
-        title={title}
-        titleTag={titleTag}
-        titleId={titleId}
-        subtitle={subtitle}
+        heading={heading}
         description={description}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}

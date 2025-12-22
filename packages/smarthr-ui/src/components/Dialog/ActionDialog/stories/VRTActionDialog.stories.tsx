@@ -10,8 +10,10 @@ export default {
     width: '40em',
     size: 'M',
     isOpen: true,
-    title: 'アクションダイアログタイトル',
-    subtitle: 'アクションダイアログのサブタイトル',
+    heading: {
+      text: 'アクションダイアログタイトル',
+      sub: 'アクションダイアログのサブタイトル',
+    },
     actionText: '保存',
     subActionArea: <Button>サブアクション</Button>,
     contentBgColor: 'BACKGROUND',
