@@ -55,9 +55,17 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({
       onClick: actualOnClick,
       'aria-expanded': expanded.toString(),
       'aria-controls': targetId,
+      // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
       ...rest,
     })
-  }, [expanded, children, actualOnClick, targetId, rest])
+  }, [
+    expanded,
+    children,
+    actualOnClick,
+    targetId,
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+    rest,
+  ])
 
   return actualTrigger
 }

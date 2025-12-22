@@ -78,11 +78,12 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
         className={classNames.wrapper}
         aria-label={decorated.checkColumnName as string}
       >
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+        {}
         <label className={classNames.inner}>
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
             <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
           </Balloon>
+          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...others} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>

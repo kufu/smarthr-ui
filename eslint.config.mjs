@@ -42,7 +42,8 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
-      'smarthr/a11y-prohibit-sectioning-content-in-form': 'error',
+      'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
+      'smarthr/best-practice-for-rest-parameters': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {

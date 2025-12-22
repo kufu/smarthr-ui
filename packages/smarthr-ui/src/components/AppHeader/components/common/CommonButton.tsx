@@ -38,7 +38,7 @@ type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & Bu
 }
 
 export const CommonButton = memo<Props>(
-  ({ elementAs, prefix, current, boldWhenCurrent, className, ...rest }) => {
+  ({ elementAs, prefix, current, boldWhenCurrent, className, children, ...rest }) => {
     const actualClassName = useMemo(
       () =>
         commonButtonClassNameGenerator({
@@ -53,17 +53,18 @@ export const CommonButton = memo<Props>(
     switch (elementAs) {
       case 'a':
         return (
+          // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
           <a {...(rest as AnchorProps)} className={actualClassName}>
             {prefix}
-            {rest.children}
+            {children}
           </a>
         )
       case 'button':
         return (
-          // eslint-disable-next-line smarthr/best-practice-for-button-element
+          // eslint-disable-next-line smarthr/best-practice-for-button-element, smarthr/best-practice-for-rest-parameters
           <button {...(rest as ButtonProps)} className={actualClassName}>
             {prefix}
-            {rest.children}
+            {children}
           </button>
         )
     }

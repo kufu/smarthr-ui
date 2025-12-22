@@ -1,3 +1,5 @@
+/* eslint-disable smarthr/require-i18n-text */
+
 import { render, screen, within } from '@testing-library/react'
 import { type ComponentProps, act } from 'react'
 import { userEvent } from 'storybook/test'

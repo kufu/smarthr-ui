@@ -28,7 +28,11 @@ export const useSingleOptions = <T>({
     [selected],
   )
 
-  return useOptions<T>(rest, isSelected)
+  return useOptions<T>(
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+    rest,
+    isSelected,
+  )
 }
 
 export const useMultiOptions = <T>({
@@ -44,7 +48,11 @@ export const useMultiOptions = <T>({
     [selected, isItemSelected],
   )
 
-  return useOptions<T>(rest, isSelected)
+  return useOptions<T>(
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+    rest,
+    isSelected,
+  )
 }
 
 function useOptions<T>(

@@ -86,13 +86,27 @@ export function ButtonWrapper({
       wide,
     })
 
+    // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
+    // 自動型づけできなくなってしまう
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
     const wrapper = rest.isAnchor ? anchor : button
 
     return {
       wrapper: wrapper({ className }),
       loader: loader(),
     }
-  }, [$loading, size, square, variant, wide, className, rest.isAnchor])
+  }, [
+    $loading,
+    size,
+    square,
+    variant,
+    wide,
+    className,
+    // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
+    // 自動型づけできなくなってしまう
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+    rest.isAnchor,
+  ])
   const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
 
   let actualPrefix = prefix
@@ -117,7 +131,9 @@ export function ButtonWrapper({
 
   // HINT: 型の関係でisAnchorをrestから展開してしまうとa要素であることを
   // 自動型づけできなくなってしまう
+  // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
   if (rest.isAnchor) {
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
     const { anchorRef, elementAs, isAnchor: _, ...others } = rest
     const Component = elementAs || 'a'
 
@@ -131,6 +147,7 @@ export function ButtonWrapper({
       </Component>
     )
   } else {
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
     const { buttonRef, disabled, onClick, ...others } = rest
 
     const disabledOnLoading = $loading || disabled
