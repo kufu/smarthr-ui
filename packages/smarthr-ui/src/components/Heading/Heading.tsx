@@ -99,7 +99,6 @@ export const Heading = memo<Props>(
     }, [type, size])
 
     const commonProps = {
-      // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
       ...rest,
       ...actualTypography,
       ...tagProps,

@@ -46,16 +46,10 @@ export const RemoteDialogTrigger: FC<{
         onClick: actualOnClick,
         'aria-haspopup': 'dialog',
         'aria-controls': targetId,
-        // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+
         ...rest,
       }),
-    [
-      children,
-      actualOnClick,
-      targetId,
-      // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
-      rest,
-    ],
+    [children, actualOnClick, targetId, rest],
   )
 
   return actualTrigger

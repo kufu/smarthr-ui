@@ -53,7 +53,6 @@ export const CommonButton = memo<Props>(
     switch (elementAs) {
       case 'a':
         return (
-          // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
           <a {...(rest as AnchorProps)} className={actualClassName}>
             {prefix}
             {children}
@@ -61,7 +60,7 @@ export const CommonButton = memo<Props>(
         )
       case 'button':
         return (
-          // eslint-disable-next-line smarthr/best-practice-for-button-element, smarthr/best-practice-for-rest-parameters
+          // eslint-disable-next-line smarthr/best-practice-for-button-element
           <button {...(rest as ButtonProps)} className={actualClassName}>
             {prefix}
             {children}

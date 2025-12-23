@@ -9,13 +9,16 @@
  * @example
  * const debouncedFunction = debounce(() => console.log('Called!'), 200);
  */
-export const debounce = <T extends (...args: any[]) => void>(
+export const debounce = <T extends (...rest: any[]) => void>(
   func: T,
   wait: number,
-): ((...args: Parameters<T>) => void) => {
+): ((...rest: Parameters<T>) => void) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-  return function (...args: Parameters<T>) {
+  return function (
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+    ...args: Parameters<T>
+  ) {
     if (timeoutId !== null) {
       clearTimeout(timeoutId)
     }

@@ -199,10 +199,10 @@ const Option = memo<Props<string>['options'][number]>((option) => {
     return <option {...option}>{option.label}</option>
   }
 
-  const { options: groupedOptions, ...optgroup } = option
+  const { options: groupedOptions, label, ...rest } = option
 
   return (
-    <optgroup {...optgroup} key={optgroup.label}>
+    <optgroup {...rest} key={label} label={label}>
       {groupedOptions.map((groupedOption) => (
         <option {...groupedOption} key={groupedOption.value}>
           {groupedOption.label}

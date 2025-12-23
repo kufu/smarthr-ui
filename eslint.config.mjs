@@ -54,6 +54,8 @@ export default [
     },
   },
   {
+    // TODO: storybookなどに対してautofixerが効かず、formatが揃わないのでignoreではなく
+    // 対象ファイルに対してルールを個別にoffにする方法に変更する
     ignores: [
       '**/*.{mjs,js}',
       '**/*.stories.tsx',

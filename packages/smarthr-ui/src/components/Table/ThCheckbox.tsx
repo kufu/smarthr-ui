@@ -37,7 +37,7 @@ const classNameGenerator = tv({
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, decorators, className, ...others }, ref) => {
+  ({ vAlign, fixed, decorators, className, ...rest }, ref) => {
     const { localize } = useIntl()
 
     const decoratorDefaultTexts = useMemo(
@@ -84,7 +84,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
             <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
           </Balloon>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
-          <Checkbox {...others} ref={ref} className={classNames.checkbox} />
+          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>
     )
