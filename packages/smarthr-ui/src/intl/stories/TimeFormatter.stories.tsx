@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TimeFormatter } from '../TimeFormatter'
 
-const testTime = new Date(2025, 0, 1, 22, 40, 30) // 2025年1月1日 22:40:30
+const testTime = '2025-01-01T22:40:30+09:00' // 2025年1月1日 22:40:30
 
 export default {
   title: 'Internal/TimeFormatter',
@@ -62,27 +62,34 @@ export const Hour24: Story = {
   },
 }
 
+export const DateInstance: Story = {
+  name: 'date（Dateインスタンスで指定）',
+  args: {
+    date: new Date(2025, 0, 1, 22, 40, 30), // 2025年1月1日 22:40:30
+  },
+}
+
 export const DifferentTimes: Story = {
   name: '異なる時刻',
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div>
-        <strong>00:00:00:</strong> <TimeFormatter date={new Date(2025, 0, 1, 0, 0, 0)} />
+        <strong>00:00:00:</strong> <TimeFormatter date="2025-01-01T00:00:00+09:00" />
       </div>
       <div>
-        <strong>09:30:00:</strong> <TimeFormatter date={new Date(2025, 0, 1, 9, 30, 0)} />
+        <strong>09:30:00:</strong> <TimeFormatter date="2025-01-01T09:30:00+09:00" />
       </div>
       <div>
-        <strong>12:00:00:</strong> <TimeFormatter date={new Date(2025, 0, 1, 12, 0, 0)} />
+        <strong>12:00:00:</strong> <TimeFormatter date="2025-01-01T12:00:00+09:00" />
       </div>
       <div>
-        <strong>15:45:00:</strong> <TimeFormatter date={new Date(2025, 0, 1, 15, 45, 0)} />
+        <strong>15:45:00:</strong> <TimeFormatter date="2025-01-01T15:45:00+09:00" />
       </div>
       <div>
-        <strong>22:40:30:</strong> <TimeFormatter date={new Date(2025, 0, 1, 22, 40, 30)} />
+        <strong>22:40:30:</strong> <TimeFormatter date="2025-01-01T22:40:30+09:00" />
       </div>
       <div>
-        <strong>23:59:59:</strong> <TimeFormatter date={new Date(2025, 0, 1, 23, 59, 59)} />
+        <strong>23:59:59:</strong> <TimeFormatter date="2025-01-01T23:59:59+09:00" />
       </div>
     </div>
   ),
