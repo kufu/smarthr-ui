@@ -429,7 +429,7 @@ describe('intl', () => {
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
           const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
-          expect(formatTimestamp({ date: testDate })).toBe('Jan 01, 2025 14:30')
+          expect(formatTimestamp({ date: testDate })).toBe('Jan 01, 2025 2:30 PM')
         })
 
         it('formats timestamp in non-colon format locale (id-id)', () => {
