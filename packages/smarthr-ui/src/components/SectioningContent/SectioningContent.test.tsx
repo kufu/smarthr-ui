@@ -1,4 +1,3 @@
-/* eslint-disable smarthr/require-i18n-text */
 import { render } from '@testing-library/react'
 import { createRef } from 'react'
 

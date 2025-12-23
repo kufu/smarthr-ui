@@ -1,5 +1,3 @@
-/* eslint-disable smarthr/require-i18n-text */
-
 import { render, screen } from '@testing-library/react'
 
 import { FormControl } from '../FormControl'

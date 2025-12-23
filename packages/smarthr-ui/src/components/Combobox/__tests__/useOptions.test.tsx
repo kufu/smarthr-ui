@@ -1,5 +1,3 @@
-/* eslint-disable smarthr/require-i18n-text */
-
 import { renderHook } from '@testing-library/react'
 
 import { useMultiOptions } from '../useOptions'

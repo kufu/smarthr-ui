@@ -1,5 +1,3 @@
-/* eslint-disable smarthr/require-i18n-text */
-
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { type FC, useState } from 'react'
 import { userEvent } from 'storybook/test'
