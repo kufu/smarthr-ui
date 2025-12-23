@@ -24,7 +24,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'
 
-type Props = {
+type AbstractProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
   /** コンポーネントの幅 */
@@ -46,7 +46,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<ComponentPropsWithRef<'textarea'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {
@@ -112,7 +112,7 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
   (
     {
       autoFocus,
@@ -126,7 +126,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       error,
       onChange,
       value,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -135,7 +135,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const currentValue = props.defaultValue || value
+    const currentValue = rest.defaultValue || value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
@@ -325,7 +325,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     const body = (
       <textarea
-        {...props}
+        {...rest}
         {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
         value={value}
@@ -339,7 +339,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     )
 
     return maxLetters ? (
-      <span>
+      <span className="shr-relative">
         {body}
         <VisuallyHiddenText id={maxLettersNoticeId}>
           {buildScreenReaderMaxLettersDescription(maxLetters)}

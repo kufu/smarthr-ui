@@ -12,10 +12,10 @@ import {
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type AbstractProps = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const MessageDialog: FC<Props & ElementProps> = ({
+export const MessageDialog: FC<Props> = ({
   title,
   subtitle,
   titleTag,
@@ -28,20 +28,20 @@ export const MessageDialog: FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
+    if (!rest.isOpen) {
       return
     }
     onClickClose()
-  }, [onClickClose, props.isOpen])
+  }, [onClickClose, rest.isOpen])
   const titleId = useId()
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}

@@ -2,6 +2,90 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [81.0.0](https://github.com/kufu/smarthr-ui/compare/v80.0.0...v81.0.0) (2025-12-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Icon:** FaUpRightFromSquareIconを削除し、OpenInNewTabIconとしてaltのデフォルト値が設定されている状態でexportする (#5991)
+* remove ErrorScreen (#5978)
+* **RadioButtonPanel:** labelSuffix属性を削除し、Clusterを利用してもらう方式に変更 (#5982)
+* **Icon:** 非推奨など利用してほしくないアイコンを削除する (#5972)
+
+### Features
+
+* FaLocationDot, FaMugHot, FaPersonWalkingArrowLoopLeft アイコンを追加 ([#5973](https://github.com/kufu/smarthr-ui/issues/5973)) ([4a2c219](https://github.com/kufu/smarthr-ui/commit/4a2c219ad86393687fc4ecfab25b240c22a79cc5))
+* **Icon:** FaUpRightFromSquareIconを削除し、OpenInNewTabIconとしてaltのデフォルト値が設定されている状態でexportする ([#5991](https://github.com/kufu/smarthr-ui/issues/5991)) ([5e51885](https://github.com/kufu/smarthr-ui/commit/5e51885b79a63d53529fb6231d8ea1bc74f7e2c8))
+* **RadioButtonPanel:** labelSuffix属性を削除し、Clusterを利用してもらう方式に変更 ([#5982](https://github.com/kufu/smarthr-ui/issues/5982)) ([0140e67](https://github.com/kufu/smarthr-ui/commit/0140e6703afcee95e8fbf019f9e65d0b060bc832))
+* remove ErrorScreen ([#5978](https://github.com/kufu/smarthr-ui/issues/5978)) ([b0a39ce](https://github.com/kufu/smarthr-ui/commit/b0a39ce46bba98a1642b20ccaeaf20704a5805d4))
+
+
+### Bug Fixes
+
+* **BulkActionRow:** colSpanを初期表示時999にすることで横幅がTableと揃うようにする ([#5974](https://github.com/kufu/smarthr-ui/issues/5974)) ([9ca8ec0](https://github.com/kufu/smarthr-ui/commit/9ca8ec00df4d7e03578ff0eae4b17db5c2c26251))
+* **Icon:** 非推奨など利用してほしくないアイコンを削除する ([#5972](https://github.com/kufu/smarthr-ui/issues/5972)) ([448c21c](https://github.com/kufu/smarthr-ui/commit/448c21c007723621a8eb880431289b33e8b83647))
+
+## [80.0.0](https://github.com/kufu/smarthr-ui/compare/v79.2.0...v80.0.0) (2025-12-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* InformationPanelのtogglable属性をtoggleableに変更 (#5956)
+
+### Bug Fixes
+
+* InformationPanelのtogglable属性をtoggleableに変更 ([#5956](https://github.com/kufu/smarthr-ui/issues/5956)) ([7cd6c94](https://github.com/kufu/smarthr-ui/commit/7cd6c94cddb6b38277c4bd110013af1ad5b4fc75))
+* NotificationBar において iconGap が適用されていない箇所を修正 ([#5955](https://github.com/kufu/smarthr-ui/issues/5955)) ([786532a](https://github.com/kufu/smarthr-ui/commit/786532a6af691e67f170e7d0d5014acd179ee52b))
+
+## [79.2.0](https://github.com/kufu/smarthr-ui/compare/v79.1.0...v79.2.0) (2025-11-20)
+
+
+### Features
+
+* PageHeadingを利用時、自動的にtitle要素のテキストを設定する ([#5855](https://github.com/kufu/smarthr-ui/issues/5855)) ([2db4e0e](https://github.com/kufu/smarthr-ui/commit/2db4e0e2581fc3edef215e5e71a477ab16624ddd))
+
+## [79.1.0](https://github.com/kufu/smarthr-ui/compare/v79.0.0...v79.1.0) (2025-11-13)
+
+
+### Features
+
+* smarthr-ui-charts のリリースワークフローを追加 ([#5923](https://github.com/kufu/smarthr-ui/issues/5923)) ([379c6de](https://github.com/kufu/smarthr-ui/commit/379c6deaa7b08397790b1a79bec2212366ee7b9b))
+
+
+### Bug Fixes
+
+* **AnchorButton,TextLink:** suffix=nullの場合にexternalIconを出さないようにした ([#5930](https://github.com/kufu/smarthr-ui/issues/5930)) ([12d96a5](https://github.com/kufu/smarthr-ui/commit/12d96a55cf5ccf90db93749f8c8706de0fa797c6))
+* NotificationBarのsubActionArea属性をoptionalに修正する ([#5926](https://github.com/kufu/smarthr-ui/issues/5926)) ([1871460](https://github.com/kufu/smarthr-ui/commit/1871460c2569a998e18a2585f56e9bac4ceb3f0d))
+
+## [79.0.0](https://github.com/kufu/smarthr-ui/compare/v78.1.0...v79.0.0) (2025-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Button, AnchorButton, TabItem:** disabledDetail属性をButton[disabledReason],AnchorButton[inactiveReason]に変更 (#5908)
+* **NotificationBar:** children -> subActionArea属性、message属性 -> childrenに変更 (#5905)
+
+### Bug Fixes
+
+* Comboboxにgroupロールを追加し、削除ボタンとの関係を明らかにする ([#5901](https://github.com/kufu/smarthr-ui/issues/5901)) ([a414885](https://github.com/kufu/smarthr-ui/commit/a4148857df9163a1e519697caf2d4fdbcdbdd685))
+
+
+* **Button, AnchorButton, TabItem:** disabledDetail属性をButton[disabledReason],AnchorButton[inactiveReason]に変更 ([#5908](https://github.com/kufu/smarthr-ui/issues/5908)) ([cc39d9f](https://github.com/kufu/smarthr-ui/commit/cc39d9f12e4f6fe366011ed9965ed1ca398ddae0))
+* **NotificationBar:** children -> subActionArea属性、message属性 -> childrenに変更 ([#5905](https://github.com/kufu/smarthr-ui/issues/5905)) ([7254c29](https://github.com/kufu/smarthr-ui/commit/7254c29fb4e9eee09079c9073e67fa65920eaccf))
+
+## [78.1.0](https://github.com/kufu/smarthr-ui/compare/v78.0.0...v78.1.0) (2025-10-30)
+
+
+### Features
+
+* add new icons: FaLinkSlash ([#5912](https://github.com/kufu/smarthr-ui/issues/5912)) ([38d1d23](https://github.com/kufu/smarthr-ui/commit/38d1d23168f747af4e0070f1a0a8d2570e57c3ae))
+
+
+### Bug Fixes
+
+* **FileViewer:** pdf回転時にハイパーリンクが正常に動作しないのを修正 ([#5915](https://github.com/kufu/smarthr-ui/issues/5915)) ([cba4a35](https://github.com/kufu/smarthr-ui/commit/cba4a358710a6252ea4e0332a5494994cfdf8fbb))
+* target="_blank"を指定していてもprefixがあればOpenInNewTabIconを表示しない ([#5916](https://github.com/kufu/smarthr-ui/issues/5916)) ([0006f50](https://github.com/kufu/smarthr-ui/commit/0006f50751380fce5c3ce9c643e862f6e8043cd8))
+
 ## [78.0.0](https://github.com/kufu/smarthr-ui/compare/v77.0.0...v78.0.0) (2025-10-23)
 
 

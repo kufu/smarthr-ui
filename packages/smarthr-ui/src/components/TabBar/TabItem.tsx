@@ -41,7 +41,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
@@ -53,35 +53,29 @@ type Props = PropsWithChildren<{
   /**
    * 無効な理由
    */
-  disabledDetail?: {
+  disabledReason?: {
     icon?: ReactNode
     message: ReactNode
   }
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
 }>
-type ElementProps = Omit<
-  ComponentProps<typeof UnstyledButton>,
-  keyof Props | 'aria-selected' | 'type'
->
+type Props = AbstractProps &
+  Omit<ComponentProps<typeof UnstyledButton>, keyof AbstractProps | 'aria-selected' | 'type'>
 
-export const TabItem: FC<Props & ElementProps> = ({
-  selected = false,
-  disabledDetail,
-  ...rest
-}) => {
+export const TabItem: FC<Props> = ({ selected = false, disabledReason, ...rest }) => {
   const tabAttrs = {
     role: 'tab',
     'aria-selected': selected,
   }
 
-  if (rest.disabled && disabledDetail) {
-    const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+  if (rest.disabled && disabledReason) {
+    const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
 
     return (
       <Tooltip
         {...tabAttrs}
-        message={disabledDetail.message}
+        message={disabledReason.message}
         ariaDescribedbyTarget="inner"
         aria-disabled={rest.disabled}
         className="focus-visible:shr-focus-indicator--inner"
@@ -94,14 +88,7 @@ export const TabItem: FC<Props & ElementProps> = ({
   return <TabButton {...rest} {...tabAttrs} />
 }
 
-const TabButton: FC<Props & ElementProps> = ({
-  id,
-  children,
-  suffix,
-  onClick,
-  className,
-  ...rest
-}) => {
+const TabButton: FC<Props> = ({ id, children, suffix, onClick, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = classNameGenerator()
 

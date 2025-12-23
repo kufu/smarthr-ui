@@ -19,7 +19,7 @@ type ItemType = ComponentProps<typeof DefinitionListItem>
 // TODO: maxColumns, termStyleTypeはDefinitionListItemに引きつかず、
 // DefinitionListにdata属性として設定することでDefinitionListItemから参照できるようにするほうが良いかも？
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** 定義リストのアイテムの配列
    * @deprecated DefinitionListItem を使ってください
    */
@@ -29,13 +29,13 @@ type Props = PropsWithChildren<{
   /** 用語の見た目の種類 */
   termStyleType?: ItemType['termStyleType']
 }>
-type ElementProps = Omit<ComponentProps<'dl'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'dl'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-DefinitionList shr-my-[initial]',
 })
 
-export const DefinitionList: FC<Props & ElementProps> = ({
+export const DefinitionList: FC<Props> = ({
   items,
   maxColumns,
   termStyleType,

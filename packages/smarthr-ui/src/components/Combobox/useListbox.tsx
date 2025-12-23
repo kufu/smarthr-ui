@@ -16,8 +16,9 @@ import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { useIntl } from '../../intl'
 import { spacing } from '../../themes'
-import { FaInfoCircleIcon } from '../Icon'
+import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
+import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
@@ -304,9 +305,13 @@ export const useListbox = <T,>({
             style={dropdownListStyle}
           >
             {dropdownHelpMessage && (
-              <p className={classNames.helpMessage}>
-                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-              </p>
+              <Text
+                className={classNames.helpMessage}
+                prefixIcon={<FaCircleInfoIcon color="TEXT_GREY" />}
+                as="p"
+              >
+                {dropdownHelpMessage}
+              </Text>
             )}
             {isExpanded ? (
               isLoading ? (

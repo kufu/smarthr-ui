@@ -28,9 +28,9 @@ import { Input } from '../../Input'
 import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { BaseProps, ComboboxItem } from '../types'
+import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
-type Props<T> = BaseProps<T> & {
+type AbstractProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -70,8 +70,8 @@ type Props<T> = BaseProps<T> & {
    */
   decorators?: DecoratorsType<DecoratorKeyTypes | 'noResultText' | 'loadingText'>
 }
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
+type Props<T> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
 
 type DecoratorKeyTypes = 'destroyButtonIconAlt'
 
@@ -147,7 +147,7 @@ const ActualSingleCombobox = <T,>(
     decorators,
     style,
     ...rest
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const { localize } = useIntl()
@@ -375,7 +375,7 @@ const ActualSingleCombobox = <T,>(
     () => ({
       destroyButtonIconAlt: localize({
         id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
-        defaultText: '削除',
+        defaultText: 'クリア',
       }),
     }),
     [localize],
@@ -384,7 +384,7 @@ const ActualSingleCombobox = <T,>(
   const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
-    <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
+    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
         {...rest}
         ref={inputRef}

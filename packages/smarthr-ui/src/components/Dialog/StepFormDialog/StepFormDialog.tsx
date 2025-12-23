@@ -14,11 +14,10 @@ import { StepFormDialogProvider } from './StepFormDialogProvider'
 import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 
-type Props = Omit<StepFormDialogContentInnerProps, 'titleId' | 'activeStep'> & DialogProps
+type AbstractProps = Omit<StepFormDialogContentInnerProps, 'titleId' | 'activeStep'> & DialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
-
-export const StepFormDialog: FC<Props & ElementProps> = ({
+export const StepFormDialog: FC<Props> = ({
   children,
   title,
   subtitle,
@@ -41,7 +40,7 @@ export const StepFormDialog: FC<Props & ElementProps> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
@@ -74,7 +73,7 @@ export const StepFormDialog: FC<Props & ElementProps> = ({
   return createPortal(
     <StepFormDialogProvider firstStep={firstStep}>
       <DialogContentInner
-        {...props}
+        {...rest}
         isOpen={isOpen}
         ariaLabelledby={titleId}
         className={className}

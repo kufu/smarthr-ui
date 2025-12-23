@@ -22,9 +22,10 @@ export default {
 } as Meta<typeof AnchorButton>
 
 const childrens = { 文字列: 'ボタン', アイコン: <FaCirclePlusIcon /> }
-const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
-const suffixes = { なし: '', あり: <FaCaretDownIcon /> }
-const disabledDetails = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
+const prefixes = { なし: undefined, あり: <FaCirclePlusIcon /> }
+const suffixes = { なし: undefined, あり: <FaCaretDownIcon />, null: null }
+const disabledReasons = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
+const targets = { なし: undefined, _blank: '_blank' }
 
 export const ButtonControl: StoryObj<typeof AnchorButton> = {
   name: 'Playground',
@@ -44,10 +45,15 @@ export const ButtonControl: StoryObj<typeof AnchorButton> = {
       options: Object.keys(suffixes),
       mapping: suffixes,
     },
-    disabledDetail: {
+    disabledReason: {
       control: { type: 'radio' },
-      options: Object.keys(disabledDetails),
-      mapping: disabledDetails,
+      options: Object.keys(disabledReasons),
+      mapping: disabledReasons,
+    },
+    target: {
+      control: { type: 'radio' },
+      options: Object.keys(targets),
+      mapping: targets,
     },
   },
   args: {
@@ -85,18 +91,18 @@ export const Size: StoryObj<typeof AnchorButton> = {
   },
 }
 
-export const Disabled: StoryObj<typeof AnchorButton> = {
-  name: 'disabled',
+export const NotSpecifiedHrefAttribute: StoryObj<typeof AnchorButton> = {
+  name: 'hrefを未指定の場合(inactive, disabled相当)',
   args: {
     href: undefined,
   },
 }
 
-export const DisabledDetail: StoryObj<typeof AnchorButton> = {
-  name: 'disabledDetail',
+export const InactiveReason: StoryObj<typeof AnchorButton> = {
+  name: 'inactiveReason',
   args: {
     href: undefined,
-    disabledDetail: { message: 'ボタンが無効な理由' },
+    inactiveReason: { message: 'ボタンが無効な理由' },
   },
 }
 
