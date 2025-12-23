@@ -1,9 +1,10 @@
-import { Meta, StoryObj } from '@storybook/react'
 
 import { Stack } from '..'
-import { Gap } from '../../../../types'
 import { Cluster } from '../../Cluster'
 import { ColorBox } from '../../ComponentsForStories'
+
+import type { Gap } from '../../../../types'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Layout/Stack',

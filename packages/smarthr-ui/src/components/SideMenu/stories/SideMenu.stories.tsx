@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react'
 
 import { SideMenu, SideMenuGroup, SideMenuItem } from '..'
 import { Stack } from '../../Layout'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const meta = {
   title: 'Components/SideMenu',

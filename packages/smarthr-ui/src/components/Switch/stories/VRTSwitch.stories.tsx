@@ -1,9 +1,9 @@
-import { ComponentProps } from 'react'
 
 import { Stack } from '../../Layout'
 import { Switch } from '../Switch'
 
-import type { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict switch.pict

@@ -1,9 +1,10 @@
-import { Meta, StoryObj } from '@storybook/react'
 
 import { Reel } from '..'
-import { Gap } from '../../../../types'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
+
+import type { Gap } from '../../../../types'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const meta = {
   title: 'Components/Layout/Reel',

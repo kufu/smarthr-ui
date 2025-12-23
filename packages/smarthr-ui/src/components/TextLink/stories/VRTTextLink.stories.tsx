@@ -1,11 +1,11 @@
 import { within } from 'storybook/test'
-import { ComponentProps } from 'react'
 
 import { FaCircleQuestionIcon, OpenInNewTabIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { TextLink } from '../TextLink'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict text-link.pict

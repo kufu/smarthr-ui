@@ -1,8 +1,9 @@
-import { StoryFn } from '@storybook/react/*'
-import { FC } from 'react'
-
 import { DeviceProvider } from './DeviceProvider'
 import { useDevice } from './useDevice'
+
+import type { StoryFn } from '@storybook/react-webpack5/*'
+import type { FC } from 'react'
+
 
 export default {
   title: 'Hooks/useDevice',

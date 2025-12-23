@@ -1,10 +1,10 @@
-import { userEvent, within } from 'storybook/test'
 import dayjs from 'dayjs'
+import { userEvent, within } from 'storybook/test'
 
 import { Cluster } from '../../Layout'
 import { WarekiPicker } from '../WarekiPicker'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/WarekiPicker/VRT',
@@ -26,11 +26,11 @@ export default {
       <Cluster>
         {matrices.map((m) => (
           <>
-            <WarekiPicker {...args} error={m.error} disabled={m.disabled} />
-            <WarekiPicker error={m.error} disabled={m.disabled} placeholder={placeholder} />
-            <WarekiPicker error={m.error} disabled={m.disabled} value={value} />
-            <WarekiPicker error={m.error} disabled={m.disabled} width={width} />
+            <WarekiPicker {...args} name="vrt_wareki_disabled" error={m.error} disabled={m.disabled}/>
+            <WarekiPicker name="vrt_wareki_value" error={m.error} disabled={m.disabled} value={value} />
+            <WarekiPicker name="vrt_wareki_width" error={m.error} disabled={m.disabled} width={width} />
             <WarekiPicker
+              name="vrt_wareki_formdate"
               error={m.error}
               disabled={m.disabled}
               value={value}

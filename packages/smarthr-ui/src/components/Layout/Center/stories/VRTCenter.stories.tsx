@@ -1,8 +1,9 @@
-import { Meta } from '@storybook/react'
 
 import { Center } from '../../../..'
 
 import { Padding } from './Center.stories'
+
+import type { Meta } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Layout/Center/VRT',

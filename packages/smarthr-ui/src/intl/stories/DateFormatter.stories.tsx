@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { DateFormatter } from '../DateFormatter'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const testDate = new Date(2025, 0, 1) // 2025年1月1日
 

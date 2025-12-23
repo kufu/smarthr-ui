@@ -9,7 +9,7 @@ import { DialogContent } from '../DialogContent'
 import { DialogTrigger } from '../DialogTrigger'
 import { DialogWrapper } from '../DialogWrapper'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _widthOptions = {
   string: '30em',
@@ -82,7 +82,7 @@ export const FirstFocusTarget: StoryObj<typeof Dialog> = {
         <Dialog {...args} firstFocusTarget={inputRef} isOpen={open} onPressEscape={handleClose}>
           <label>
             入力要素
-            <Input ref={inputRef} />
+            <Input name="dialog_input" ref={inputRef} />
           </label>
         </Dialog>
       </>
@@ -97,7 +97,7 @@ export const IsOpen: StoryObj<typeof Dialog> = {
     const renderCheckbox = (
       <>
         <p>isOpen: {String(open)}</p>
-        <Checkbox checked={open} onChange={() => setOpen(!open)}>
+        <Checkbox name="dialog_input" checked={open} onChange={() => setOpen(!open)}>
           isOpen
         </Checkbox>
       </>

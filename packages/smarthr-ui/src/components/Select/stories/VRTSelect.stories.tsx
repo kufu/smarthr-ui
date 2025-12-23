@@ -1,9 +1,9 @@
-import { ComponentProps } from 'react'
 
 import { Stack } from '../../Layout'
 import { Select } from '../Select'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * pict select.pict

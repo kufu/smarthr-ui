@@ -7,7 +7,7 @@ import { DialogContent } from '../DialogContent'
 import { DialogTrigger } from '../DialogTrigger'
 import { DialogWrapper } from '../DialogWrapper'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _widthOptions = {
   string: '30em',
@@ -79,7 +79,7 @@ export const FirstFocusTarget: StoryObj<typeof DialogContent> = {
         <DialogContent {...args} firstFocusTarget={inputRef}>
           <label>
             入力要素
-            <Input ref={inputRef} />
+            <Input name="dialog_content_input" ref={inputRef} />
           </label>
           <DialogCloser>
             <Button>閉じる</Button>

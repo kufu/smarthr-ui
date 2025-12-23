@@ -6,7 +6,7 @@ import { FaGearIcon } from '../../../Icon'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _sampleTriggerIcons = {
   undefined,

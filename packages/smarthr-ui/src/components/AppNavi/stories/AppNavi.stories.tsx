@@ -1,4 +1,3 @@
-import { ReactNode, FC } from 'react'
 
 import { AnchorButton, Button } from '../../Button'
 import { DropdownMenuGroup } from '../../Dropdown'
@@ -11,7 +10,8 @@ import { AppNaviButton } from '../AppNaviButton'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { FC, ReactNode } from 'react'
 
 const Link: FC<{
   to: string

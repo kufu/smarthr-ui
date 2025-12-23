@@ -1,11 +1,11 @@
-import { ComponentProps } from 'react'
 
 import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
 
-import type { StoryFn, StoryObj } from '@storybook/react'
+import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 type Variant = ComponentProps<typeof AnchorButton>['variant']
 

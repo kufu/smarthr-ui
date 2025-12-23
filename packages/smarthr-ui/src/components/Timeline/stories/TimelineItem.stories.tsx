@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react'
-
-import { TimelineItem } from '../TimelineItem'
 import { Stack } from '../../Layout'
+import { TimelineItem } from '../TimelineItem'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+
 
 export default {
   title: 'Components/Timeline/TimelineItem',

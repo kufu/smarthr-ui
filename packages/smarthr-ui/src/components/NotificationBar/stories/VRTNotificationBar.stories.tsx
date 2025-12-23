@@ -5,11 +5,11 @@ import { NotificationBar } from '../NotificationBar'
 
 import {
   sampleChildrens,
-  sampleSubActionAreas,
   sampleOnCloseHandlers,
+  sampleSubActionAreas,
 } from './NotificationBar.stories'
 
-import type { StoryObj } from '@storybook/react'
+import type { StoryObj } from '@storybook/react-webpack5'
 
 /* ペアワイズ法による網羅
 base  bold   type     children   subActionArea  layer      onClose  */
@@ -68,8 +68,8 @@ export default {
   title: 'Components/NotificationBar/VRT',
   render: (args: any) => (
     <Stack {...args}>
-      {pairwisePatterns.map((args) => (
-        <NotificationBar {...args} />
+      {pairwisePatterns.map((as, index) => (
+        <NotificationBar {...as} key={index} />
       ))}
     </Stack>
   ),

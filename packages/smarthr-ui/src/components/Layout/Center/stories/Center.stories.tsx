@@ -1,10 +1,11 @@
-import { Meta, StoryObj } from '@storybook/react'
 
 import { Center } from '..'
-import { Gap as GapType } from '../../../../types'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
 import { centerClassNameGenerator } from '../Center'
+
+import type { Gap as GapType } from '../../../../types'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const centerPadding = Object.keys(centerClassNameGenerator.variants.padding)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない

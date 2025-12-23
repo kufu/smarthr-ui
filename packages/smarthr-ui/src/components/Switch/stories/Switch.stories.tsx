@@ -1,6 +1,7 @@
-import { Meta, StoryObj } from '@storybook/react'
-
 import { Switch } from '..'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+
 
 export default {
   title: 'Components/Switch',

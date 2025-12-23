@@ -1,7 +1,7 @@
-import { FileViewer } from '../'
-
-import type { Meta, StoryObj } from '@storybook/react'
+import { FileViewer } from ".."
 import { Stack } from '../../Layout'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/FileViewer/VRT',

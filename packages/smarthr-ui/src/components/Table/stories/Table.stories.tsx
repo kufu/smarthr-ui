@@ -9,7 +9,7 @@ import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof Table> = (args) => (
   <Table {...args}>
@@ -56,7 +56,7 @@ export const BorderType: StoryObj<typeof Table> = {
   render: (args) => (
     <Stack>
       {[undefined, 'vertical', 'horizontal', 'both', 'outer', 'all'].map((borderType) => (
-        <Template {...args} borderType={borderType as any} />
+        <Template {...args} key={layout || 'undefined'} borderType={borderType as any} />
       ))}
     </Stack>
   ),
@@ -67,7 +67,7 @@ export const BorderStyle: StoryObj<typeof Table> = {
   render: (args) => (
     <Stack>
       {[undefined, 'solid', 'dashed', 'dotted'].map((borderStyle) => (
-        <Template {...args} borderStyle={borderStyle as any} />
+        <Template {...args} key={layout || 'undefined'} borderStyle={borderStyle as any} />
       ))}
     </Stack>
   ),
@@ -83,7 +83,7 @@ export const Layout: StoryObj<typeof Table> = {
   render: (args) => (
     <Stack>
       {[undefined, 'auto', 'fixed'].map((layout) => (
-        <Template {...args} layout={layout as any} />
+        <Template {...args} key={layout || 'undefined'} layout={layout as any} />
       ))}
     </Stack>
   ),

@@ -1,6 +1,6 @@
 import { FileViewer } from '..'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/FileViewer',
@@ -53,7 +53,7 @@ export const Playground: Story = {
   args: {},
 }
 
-export const width: Story = {
+export const Width: Story = {
   name: 'width',
   args: {
     width: 80,
