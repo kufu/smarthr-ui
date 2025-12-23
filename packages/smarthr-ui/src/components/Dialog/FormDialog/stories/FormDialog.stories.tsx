@@ -33,6 +33,39 @@ export default {
           <FormControl label="名前">
             <Input name="name" />
           </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
+          <FormControl label="名前">
+            <Input name="name" />
+          </FormControl>
         </FormDialog>
       </>
     )
