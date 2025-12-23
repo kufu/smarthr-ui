@@ -1,5 +1,7 @@
 'use client'
 
+import dayjs from 'dayjs'
+
 import { useIntl } from './useIntl'
 
 import type { FormatTimestampProps } from './useIntl'
@@ -22,7 +24,13 @@ import type { FormatTimestampProps } from './useIntl'
  * <TimestampFormatter date={new Date()} timeParts={['hour', 'minute', 'second']} />
  * // <time datetime="2024-01-15T10:30:45.000Z">2024/01/15 10:30:45</time>
  */
-export const TimestampFormatter = ({ date, timeParts }: FormatTimestampProps) => {
+export const TimestampFormatter = ({
+  date: orgDate,
+  ...rest
+}: Omit<FormatTimestampProps, 'date'> & {
+  date: string | Date
+}) => {
+  const date = dayjs(orgDate).toDate()
   const { formatTimestamp } = useIntl()
-  return <time dateTime={date.toISOString()}>{formatTimestamp({ date, timeParts })}</time>
+  return <time dateTime={date.toISOString()}>{formatTimestamp({ ...rest, date })}</time>
 }

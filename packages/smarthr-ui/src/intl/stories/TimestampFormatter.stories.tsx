@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TimestampFormatter } from '../TimestampFormatter'
 
-const testTimestamp = new Date(2025, 0, 1, 22, 40, 30) // 2025年1月1日 22:40:30
+const testTimestamp = '2025-01-01T22:40:30+09:00' // 2025年1月1日 22:40:30
 
 export default {
   title: 'Internal/TimestampFormatter',
@@ -34,37 +34,44 @@ export const WithSeconds: Story = {
   },
 }
 
+export const DateInstance: Story = {
+  name: 'date（Dateインスタンスで指定）',
+  args: {
+    date: new Date(2025, 0, 1, 22, 40, 30), // 2025年1月1日 22:40:30
+  },
+}
+
 export const DifferentTimestamps: Story = {
   name: '異なるタイムスタンプ',
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div>
         <strong>2024年11月15日 00:00:00:</strong>{' '}
-        <TimestampFormatter date={new Date(2024, 10, 15, 0, 0, 0)} />
+        <TimestampFormatter date="2024-11-15T00:00:00+09:00" />
       </div>
       <div>
         <strong>2024年11月15日 09:30:00:</strong>{' '}
-        <TimestampFormatter date={new Date(2024, 10, 15, 9, 30, 0)} />
+        <TimestampFormatter date="2024-11-15T09:30:00+09:00" />
       </div>
       <div>
         <strong>2024年11月15日 12:00:00:</strong>{' '}
-        <TimestampFormatter date={new Date(2024, 10, 15, 12, 0, 0)} />
+        <TimestampFormatter date="2024-11-15T12:00:00+09:00" />
       </div>
       <div>
         <strong>2024年11月15日 15:45:00:</strong>{' '}
-        <TimestampFormatter date={new Date(2024, 10, 15, 15, 45, 0)} />
+        <TimestampFormatter date="2024-11-15T15:45:00+09:00" />
       </div>
       <div>
         <strong>2024年11月15日 22:40:30:</strong>{' '}
         <TimestampFormatter
-          date={new Date(2024, 10, 15, 22, 40, 30)}
+          date="2024-11-15T22:40:30+09:00"
           timeParts={['hour', 'minute', 'second']}
         />
       </div>
       <div>
         <strong>2024年11月15日 23:59:59:</strong>{' '}
         <TimestampFormatter
-          date={new Date(2024, 10, 15, 23, 59, 59)}
+          date="2024-11-15T23:59:59+09:00"
           timeParts={['hour', 'minute', 'second']}
         />
       </div>
