@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { FaAddressBookIcon, WarningIcon } from '../Icon'
+import { FaAddressBookIcon, WarningIcon } from '../index'
 
 import type { StoryObj } from '@storybook/react'
 

@@ -26,7 +26,7 @@ const initialPosition = {
   left: '0px',
 }
 
-export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }, ref) => {
+export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest }, ref) => {
   const { isPortalRootMounted, createPortal } = usePortal()
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -47,5 +47,5 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }
 
   const className = useMemo(() => classNameGenerator(), [])
 
-  return createPortal(<div {...props} ref={containerRef} className={className} style={style} />)
+  return createPortal(<div {...rest} ref={containerRef} className={className} style={style} />)
 })

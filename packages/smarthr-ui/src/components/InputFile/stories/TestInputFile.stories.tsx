@@ -67,7 +67,7 @@ export const ManualTest2 = () => {
   const [result, setResult] = useState<string>('')
   return (
     <Stack>
-      <InformationPanel type="info" title="multiplyAppendableかつsubmitのテスト">
+      <InformationPanel type="info" title="multiple.appendableかつsubmitのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>「送信」ボタンを押してください。</li>
@@ -96,8 +96,7 @@ export const ManualTest2 = () => {
             <InputFile
               label="ファイルを選択"
               name="files"
-              multiple
-              multiplyAppendable
+              multiple={{ appendable: true }}
               hasFileList
             />
           </FormControl>
@@ -159,7 +158,7 @@ export const ManualTest4 = () => {
   const [value, setValue] = useState<File[]>([])
   return (
     <Stack>
-      <InformationPanel type="info" title="multiplyAppendableかつonChangeのテスト">
+      <InformationPanel type="info" title="multiple.appendableかつonChangeのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>送信結果に選択したファイル名が追加されていることを確認してください。</li>
@@ -183,8 +182,7 @@ export const ManualTest4 = () => {
               }}
               label="ファイルを選択"
               name="files"
-              multiple
-              multiplyAppendable
+              multiple={{ appendable: true }}
               hasFileList
             />
           </FormControl>
