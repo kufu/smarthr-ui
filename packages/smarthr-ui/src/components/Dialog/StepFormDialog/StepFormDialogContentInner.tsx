@@ -23,6 +23,15 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
+type StepFormHelpers = {
+  /** 指定したステップに移動する関数 */
+  goto: (nextStep: StepItem) => void
+  /** ダイアログを閉じる関数 */
+  close: () => void
+  /** 現在のステップ情報 */
+  currentStep: StepItem
+}
+
 export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
@@ -32,15 +41,10 @@ export type AbstractProps = PropsWithChildren<
       actionTheme?: 'primary' | 'secondary' | 'danger'
       /**
        * アクションボタンをクリックした時に発火するコールバック関数
-       * @param closeDialog ダイアログを閉じる関数
-       * @param currentStep onSubmitが発火した時のステップ
-       * @returns 次のステップに遷移する場合は次のステップ、遷移しない場合はundefined
+       * @param e フォームイベント
+       * @param helpers ステップ操作用のヘルパー関数群
        */
-      onSubmit: (
-        closeDialog: () => void,
-        e: FormEvent<HTMLFormElement>,
-        currentStep: StepItem,
-      ) => StepItem | undefined
+      onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
       /** アクションボタンを無効にするかどうか */
       actionDisabled?: boolean
       /** 閉じるボタンを無効にするかどうか */
@@ -118,12 +122,16 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
 
-      const next = onSubmit(handleCloseAction, e, currentStep)
-
-      if (next) {
-        stepQueue.current.push(currentStep)
-        changeCurrentStep(next)
+      const helpers: StepFormHelpers = {
+        goto: (nextStep: StepItem) => {
+          stepQueue.current.push(currentStep)
+          changeCurrentStep(nextStep)
+        },
+        close: handleCloseAction,
+        currentStep,
       }
+
+      onSubmit(e, helpers)
     },
     [currentStep, stepQueue, onSubmit, handleCloseAction, changeCurrentStep],
   )
