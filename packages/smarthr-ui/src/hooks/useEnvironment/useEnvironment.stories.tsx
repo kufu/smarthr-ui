@@ -1,15 +1,16 @@
-import { Meta, StoryObj } from '@storybook/react/*'
-import { FC, PropsWithChildren } from 'react'
+import { BaseColumn } from '../../components/Base'
+import { DefinitionList, DefinitionListItem } from '../../components/DefinitionList'
+import { Heading } from '../../components/Heading'
+import { Stack } from '../../components/Layout'
+import { defaultMediaQuery } from '../../themes'
+import { ThemeProvider } from '../../themes/ThemeProvider'
+import { createTheme } from '../../themes/createTheme'
 
 import { EnvironmentProvider } from './EnvironmentProvider'
 import { useEnvironment } from './useEnvironment'
-import { DefinitionList, DefinitionListItem } from '../../components/DefinitionList'
-import { Stack } from '../../components/Layout'
-import { Heading } from '../../components/Heading'
-import { BaseColumn } from '../../components/Base'
-import { ThemeProvider } from '../../themes/ThemeProvider'
-import { defaultMediaQuery } from '../../themes'
-import { createTheme } from '../../themes/createTheme'
+
+import type { Meta, StoryObj } from '@storybook/react/*'
+import type { FC, PropsWithChildren } from 'react'
 
 const Content = () => {
   const { mobile, matches } = useEnvironment()
