@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { BarChart } from './BarChart'
+
+import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof BarChart> = {
   title: 'BarChart',
