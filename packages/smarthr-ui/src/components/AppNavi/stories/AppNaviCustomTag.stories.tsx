@@ -1,8 +1,6 @@
-
 import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
-
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 import type { FC, ReactNode } from 'react'

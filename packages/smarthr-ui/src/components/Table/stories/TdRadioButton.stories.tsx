@@ -56,9 +56,9 @@ export const VAlign: StoryObj<typeof TdRadioButton> = {
     <Table>
       <tbody>
         <tr className="shr-h-[4em]">
-          <TdRadioButton {...args} name="vAlign-group"/>
-          <TdRadioButton {...args} name="vAlign-group" vAlign="middle"/>
-          <TdRadioButton {...args} name="vAlign-group" vAlign="baseline"/>
+          <TdRadioButton {...args} name="vAlign-group" />
+          <TdRadioButton {...args} name="vAlign-group" vAlign="middle" />
+          <TdRadioButton {...args} name="vAlign-group" vAlign="baseline" />
         </tr>
       </tbody>
     </Table>

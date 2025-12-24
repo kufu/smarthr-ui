@@ -1,4 +1,3 @@
-
 import { Cluster } from '../../../..'
 
 import { Gap } from './Cluster.stories'

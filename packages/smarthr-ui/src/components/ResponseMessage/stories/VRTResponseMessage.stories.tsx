@@ -61,7 +61,7 @@ export const VRT: StoryObj<typeof ResponseMessage> = {
   render: (args: ResponseMessageProps) => (
     <Stack align="flex-start">
       {testCases.map((testCase, index) => (
-        <ResponseMessage {...testCase} {...args} key={index}/>
+        <ResponseMessage {...testCase} {...args} key={index} />
       ))}
     </Stack>
   ),

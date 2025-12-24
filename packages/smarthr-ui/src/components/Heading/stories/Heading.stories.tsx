@@ -1,4 +1,3 @@
-
 import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Heading } from '../Heading'

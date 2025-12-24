@@ -1,4 +1,3 @@
-
 import { Stack } from '../../Layout'
 import { InformationPanel } from '../InformationPanel'
 

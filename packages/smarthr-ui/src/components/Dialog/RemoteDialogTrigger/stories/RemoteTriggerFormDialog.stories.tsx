@@ -11,21 +11,21 @@ export default {
   title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerFormDialog',
   component: RemoteTriggerFormDialog,
   render: (args) => (
-      <>
-        <RemoteDialogTrigger targetId="remote-dialog">
-          <Button>ダイアログを開く</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerFormDialog
-          {...args}
-          id="remote-dialog"
-          title="リモートトリガーフォームダイアログ"
-          actionText="アクション"
-          onSubmit={action('onSubmit')}
-        >
-          <p>リモートトリガーフォームダイアログです。</p>
-        </RemoteTriggerFormDialog>
-      </>
-    ),
+    <>
+      <RemoteDialogTrigger targetId="remote-dialog">
+        <Button>ダイアログを開く</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerFormDialog
+        {...args}
+        id="remote-dialog"
+        title="リモートトリガーフォームダイアログ"
+        actionText="アクション"
+        onSubmit={action('onSubmit')}
+      >
+        <p>リモートトリガーフォームダイアログです。</p>
+      </RemoteTriggerFormDialog>
+    </>
+  ),
   parameters: {
     chromatic: { disableSnapshot: true },
   },

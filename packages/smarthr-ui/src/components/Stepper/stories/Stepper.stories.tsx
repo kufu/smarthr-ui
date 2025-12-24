@@ -1,4 +1,3 @@
-
 import { Stepper } from '..'
 import { Stack } from '../../Layout'
 
@@ -24,7 +23,7 @@ export const Type: StoryObj<typeof Stepper> = {
   render: (args) => (
     <Stack>
       {['horizontal', 'vertical'].map((type) => (
-        <Stepper {...args} key={type} type={type as any}/>
+        <Stepper {...args} key={type} type={type as any} />
       ))}
     </Stack>
   ),
@@ -52,7 +51,12 @@ export const Steps: StoryObj<typeof Stepper> = {
   render: (args) => (
     <Stack>
       {['horizontal', 'vertical'].map((type) => (
-        <Stepper {...args} key={type} type={type as any} steps={_steps[type as 'horizontal' | 'vertical'] as any}/>
+        <Stepper
+          {...args}
+          key={type}
+          type={type as any}
+          steps={_steps[type as 'horizontal' | 'vertical'] as any}
+        />
       ))}
     </Stack>
   ),
@@ -66,7 +70,12 @@ export const ActiveIndex: StoryObj<typeof Stepper> = {
   render: (args) => (
     <Stack>
       {['horizontal', 'vertical'].map((type) => (
-        <Stepper {...args} key={type} type={type as any} steps={_steps[type as 'horizontal' | 'vertical'] as any}/>
+        <Stepper
+          {...args}
+          key={type}
+          type={type as any}
+          steps={_steps[type as 'horizontal' | 'vertical'] as any}
+        />
       ))}
     </Stack>
   ),

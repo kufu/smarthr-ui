@@ -26,9 +26,24 @@ export default {
       <Cluster>
         {matrices.map((m) => (
           <>
-            <WarekiPicker {...args} name="vrt_wareki_disabled" error={m.error} disabled={m.disabled}/>
-            <WarekiPicker name="vrt_wareki_value" error={m.error} disabled={m.disabled} value={value} />
-            <WarekiPicker name="vrt_wareki_width" error={m.error} disabled={m.disabled} width={width} />
+            <WarekiPicker
+              {...args}
+              name="vrt_wareki_disabled"
+              error={m.error}
+              disabled={m.disabled}
+            />
+            <WarekiPicker
+              name="vrt_wareki_value"
+              error={m.error}
+              disabled={m.disabled}
+              value={value}
+            />
+            <WarekiPicker
+              name="vrt_wareki_width"
+              error={m.error}
+              disabled={m.disabled}
+              width={width}
+            />
             <WarekiPicker
               name="vrt_wareki_formdate"
               error={m.error}

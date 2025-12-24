@@ -11,21 +11,21 @@ export default {
   title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerActionDialog',
   component: RemoteTriggerActionDialog,
   render: (args) => (
-      <>
-        <RemoteDialogTrigger targetId="remote-dialog">
-          <Button>ダイアログを開く</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerActionDialog
-          {...args}
-          id="remote-dialog"
-          title="リモートトリガーアクションダイアログ"
-          actionText="アクション"
-          onClickAction={action('onClickAction')}
-        >
-          <p>リモートトリガーアクションダイアログです。</p>
-        </RemoteTriggerActionDialog>
-      </>
-    ),
+    <>
+      <RemoteDialogTrigger targetId="remote-dialog">
+        <Button>ダイアログを開く</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerActionDialog
+        {...args}
+        id="remote-dialog"
+        title="リモートトリガーアクションダイアログ"
+        actionText="アクション"
+        onClickAction={action('onClickAction')}
+      >
+        <p>リモートトリガーアクションダイアログです。</p>
+      </RemoteTriggerActionDialog>
+    </>
+  ),
   parameters: {
     chromatic: { disableSnapshot: true },
   },

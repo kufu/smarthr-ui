@@ -1,4 +1,3 @@
-
 import { Stack } from '../../Layout'
 import { Base, baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'

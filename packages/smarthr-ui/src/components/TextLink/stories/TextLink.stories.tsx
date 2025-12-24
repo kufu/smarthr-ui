@@ -25,7 +25,11 @@ const _elementAsOptions = {
     ...rest
   }: Omit<ComponentPropsWithoutRef<'a'>, 'href'> & {
     to: ComponentPropsWithoutRef<'a'>['href']
-  }) => <a {...rest} href={to}>{children}</a>,
+  }) => (
+    <a {...rest} href={to}>
+      {children}
+    </a>
+  ),
 }
 
 export default {

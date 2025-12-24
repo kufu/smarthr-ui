@@ -1,4 +1,3 @@
-
 import { Stack } from '..'
 import { Cluster } from '../../Cluster'
 import { ColorBox } from '../../ComponentsForStories'

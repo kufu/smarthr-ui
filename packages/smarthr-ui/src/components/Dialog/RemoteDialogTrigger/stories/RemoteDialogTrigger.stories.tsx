@@ -11,17 +11,17 @@ export default {
     targetId: 'remote-dialog',
   },
   render: (args) => (
-      <>
-        <RemoteDialogTrigger {...args}>
-          <Button>ダイアログを開く</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerMessageDialog
-          id="remote-dialog"
-          title="リモートトリガーメッセージダイアログ"
-          description="RemoteDialogTrigger で開かれた MessageDialog です。"
-        />
-      </>
-    ),
+    <>
+      <RemoteDialogTrigger {...args}>
+        <Button>ダイアログを開く</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerMessageDialog
+        id="remote-dialog"
+        title="リモートトリガーメッセージダイアログ"
+        description="RemoteDialogTrigger で開かれた MessageDialog です。"
+      />
+    </>
+  ),
   parameters: {
     chromatic: { disableSnapshot: true },
   },

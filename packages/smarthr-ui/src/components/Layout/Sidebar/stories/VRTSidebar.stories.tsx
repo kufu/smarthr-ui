@@ -1,4 +1,3 @@
-
 import { Sidebar, Stack } from '../../../..'
 
 import { Align as AlignStory, GapStory } from './Sidebar.stories'
