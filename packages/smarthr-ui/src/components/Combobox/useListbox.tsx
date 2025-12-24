@@ -25,7 +25,7 @@ import { ItemButton } from './ItemButton'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 
-import type { ComboboxItem, ComboboxOption } from './types'
+import type { ComboboxItem, ComboboxOption, AbstractProps as ComboboxProps } from './types'
 
 type Props<T> = {
   options: Array<ComboboxOption<T>>
@@ -37,6 +37,7 @@ type Props<T> = {
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
   decorators?: DecoratorsType<DecoratorKeyTypes>
+  variant: ComboboxProps<T>['variant']
 }
 
 type Rect = {
@@ -78,6 +79,7 @@ export const useListbox = <T,>({
   isLoading,
   triggerRef,
   decorators,
+  variant,
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
@@ -325,6 +327,7 @@ export const useListbox = <T,>({
               ) : (
                 partialOptions.map((option) => (
                   <ItemButton
+                    variant={variant}
                     key={option.id}
                     option={option}
                     onAdd={handleAdd}
@@ -356,6 +359,7 @@ export const useListbox = <T,>({
       dropdownListStyle,
       wrapperStyle,
       createPortal,
+      variant,
     ],
   )
 

@@ -46,7 +46,7 @@ const classNameGenerator = tv({
       'focus-visible:shr-shadow-[unset]',
     ],
     deleteButtonIcon:
-      'group-focus-visible/deleteButton:shr-focus-indicator group-focus-visible/deleteButton:shr-rounded-full',
+      'shr-text-base group-focus-visible/deleteButton:shr-focus-indicator group-focus-visible/deleteButton:shr-rounded-full',
   },
   variants: {
     enableEllipsis: {
