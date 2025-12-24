@@ -1,6 +1,6 @@
 import { UnstyledButton } from '../UnstyledButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Button/UnstyledButton',
@@ -13,6 +13,4 @@ export default {
   },
 } satisfies Meta<typeof UnstyledButton>
 
-export const Playground: StoryObj<typeof UnstyledButton> = {
-  name: 'Playground',
-}
+export const Playground: StoryObj<typeof UnstyledButton> = {}

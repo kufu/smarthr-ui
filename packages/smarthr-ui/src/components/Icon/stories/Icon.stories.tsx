@@ -1,12 +1,12 @@
 import { Cluster, Stack } from '../../Layout'
 import * as Icons from '../FaIcon'
-import { WarningIcon } from '../WarningIcon'
-import { SparklesIcon } from '../SparklesIcon'
 import { LanguageIcon } from '../LanguageIcon'
 import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+import { SparklesIcon } from '../SparklesIcon'
+import { WarningIcon } from '../WarningIcon'
 import { colorSet } from '../generateIcon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const FaAddressBookIcon = Icons.FaAddressBookIcon
 

@@ -10,7 +10,7 @@ import {
 import { Stack } from '../../Layout'
 import { SegmentedControl } from '../SegmentedControl'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const tableIcon = <FaTableIcon />
 const chartBarIcon = <FaChartBarIcon />

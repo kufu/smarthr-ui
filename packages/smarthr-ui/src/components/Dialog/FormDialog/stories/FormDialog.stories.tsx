@@ -1,13 +1,14 @@
+import { type ComponentProps, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { FormDialog } from '../FormDialog'
-import { ComponentProps, useRef, useState } from 'react'
 import { Button } from '../../../Button'
-import { RadioButton } from '../../../RadioButton'
-import { Cluster } from '../../../Layout'
-import { Input } from '../../../Input'
 import { FormControl } from '../../../FormControl'
+import { Input } from '../../../Input'
+import { Cluster } from '../../../Layout'
+import { RadioButton } from '../../../RadioButton'
+import { FormDialog } from '../FormDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _widthOptions = {
   string: '30em',
@@ -20,7 +21,12 @@ export default {
   render: ({ onSubmit, onClickClose, ...args }) => {
     const [open, setOpen] = useState(false)
     const handleSubmit = (close: () => void, e: React.FormEvent<HTMLFormElement>) => {
-      onSubmit ? onSubmit(close, e) : action('onSubmit')(e)
+      if (onSubmit) {
+        onSubmit(close, e)
+      } else {
+        action('onSubmit')(e)
+      }
+
       // デフォルトのストーリーではフォーム送信後にダイアログを閉じる
       close()
     }
@@ -123,7 +129,7 @@ export const OnClickClose: StoryObj<typeof FormDialog> = {
   },
 }
 
-export const onPressEscape: StoryObj<typeof FormDialog> = {
+export const OnPressEscape: StoryObj<typeof FormDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),

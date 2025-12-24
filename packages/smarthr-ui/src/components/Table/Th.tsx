@@ -76,7 +76,7 @@ export const Th = memo<Props>(
     contentWidth,
     className,
     style,
-    ...props
+    ...rest
   }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ className, align, vAlign })
@@ -104,7 +104,7 @@ export const Th = memo<Props>(
 
     return (
       <th
-        {...props}
+        {...rest}
         aria-sort={ariaSort}
         data-fixed={fixed}
         className={actualClassName}

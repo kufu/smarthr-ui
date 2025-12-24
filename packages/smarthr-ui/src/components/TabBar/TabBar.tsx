@@ -26,7 +26,7 @@ type AbstractProps = PropsWithChildren<{
 }>
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'role'>
 
-export const TabBar: FC<Props> = ({ className, bordered, children, ...props }) => {
+export const TabBar: FC<Props> = ({ className, bordered, children, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator()
 
@@ -37,7 +37,7 @@ export const TabBar: FC<Props> = ({ className, bordered, children, ...props }) =
   }, [bordered, className])
 
   return (
-    <Reel {...props} role="tablist" className={classNames.wrapper}>
+    <Reel {...rest} role="tablist" className={classNames.wrapper}>
       <div className={classNames.inner}>{children}</div>
     </Reel>
   )

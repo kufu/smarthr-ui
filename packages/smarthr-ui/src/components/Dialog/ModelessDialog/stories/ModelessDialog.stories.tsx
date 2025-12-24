@@ -1,8 +1,10 @@
+import { useRef, useState } from 'react'
 import { action } from 'storybook/actions'
-import type { Meta, StoryObj } from '@storybook/react'
-import { useState, useRef } from 'react'
+
 import { Button } from '../../../Button'
 import { ModelessDialog } from '../ModelessDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/ModelessDialog',

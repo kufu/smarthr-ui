@@ -20,8 +20,8 @@ type PropsWithAs = AbstractProps & Omit<ComponentPropsWithRef<'section'>, keyof 
 type Props = Omit<ComponentProps<typeof SectioningContent>, 'as'>
 
 const SectioningContent = forwardRef<HTMLElement, PropsWithAs>(
-  ({ children, baseLevel, as: Wrapper = 'section', ...props }, ref) => (
-    <Wrapper {...props} ref={ref}>
+  ({ children, baseLevel, as: Wrapper = 'section', ...rest }, ref) => (
+    <Wrapper {...rest} ref={ref}>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
     </Wrapper>
