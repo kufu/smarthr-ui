@@ -17,13 +17,13 @@ export const debounce = <T extends (...rest: any[]) => void>(
 
   return function (
     // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
-    ...args: Parameters<T>
+    ...timeoutRest: Parameters<T>
   ) {
     if (timeoutId !== null) {
       clearTimeout(timeoutId)
     }
     timeoutId = setTimeout(() => {
-      func(...args)
+      func(...timeoutRest)
     }, wait)
   }
 }
