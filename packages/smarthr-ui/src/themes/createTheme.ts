@@ -29,32 +29,32 @@ import {
 import { type CreatedZindexTheme, type ZIndexProperty, createZIndex } from './createZIndex'
 
 type ThemeProperty = {
+  border?: BorderProperty
+  breakpoint?: BreakpointProperty
   color?: ColorProperty
   fontSize?: FontSizeProperty
-  leading?: LeadingProperty
-  spacing?: SpacingProperty
-  breakpoint?: BreakpointProperty
-  mediaQuery?: MediaQueryProperty
-  border?: BorderProperty
-  radius?: RadiusProperty
   interaction?: InteractionProperty
+  leading?: LeadingProperty
+  mediaQuery?: MediaQueryProperty
+  radius?: RadiusProperty
   shadow?: ShadowProperty
+  spacing?: SpacingProperty
   zIndex?: ZIndexProperty
 }
 
 export type CreatedTheme = {
+  border: CreatedBorderTheme
+  breakpoint: CreatedBreakpointTheme
   color: CreatedColorTheme
   fontSize: CreatedFontSizeTheme
+  interaction: CreatedInteractionTheme
   leading: CreatedLeading
+  mediaQuery: CreatedMediaQueryTheme
+  radius: CreatedRadiusTheme
+  shadow: CreatedShadowTheme
+  space: CreatedSpacingByCharTheme
   spacing: CreatedSpacingTheme
   spacingByChar: CreatedSpacingByCharTheme
-  space: CreatedSpacingByCharTheme
-  breakpoint: CreatedBreakpointTheme
-  mediaQuery: CreatedMediaQueryTheme
-  border: CreatedBorderTheme
-  radius: CreatedRadiusTheme
-  interaction: CreatedInteractionTheme
-  shadow: CreatedShadowTheme
   zIndex: CreatedZindexTheme
 }
 
@@ -64,18 +64,18 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
   const spacingByChar = createSpacingByChar(baseSize)
 
   return {
+    border: createBorder(theme.border, colorProperty),
+    breakpoint: createBreakpoint(theme.breakpoint),
     color: createColor(colorProperty),
     fontSize: createFontSize(theme.fontSize),
+    interaction: createInteraction(theme.interaction),
+    leading: createLeading(theme.leading),
+    mediaQuery: createMediaQuery(theme.mediaQuery),
+    radius: createRadius(theme.radius),
+    shadow: createShadow(theme.shadow, colorProperty),
+    space: spacingByChar,
     spacing: createSpacing(baseSize),
     spacingByChar,
-    space: spacingByChar,
-    leading: createLeading(theme.leading),
-    breakpoint: createBreakpoint(theme.breakpoint),
-    mediaQuery: createMediaQuery(theme.mediaQuery),
-    border: createBorder(theme.border, colorProperty),
-    radius: createRadius(theme.radius),
-    interaction: createInteraction(theme.interaction),
-    shadow: createShadow(theme.shadow, colorProperty),
     zIndex: createZIndex(theme.zIndex),
   }
 }

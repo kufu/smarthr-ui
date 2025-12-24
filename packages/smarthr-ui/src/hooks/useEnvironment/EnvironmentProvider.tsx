@@ -3,7 +3,7 @@
 import { type FC, type ReactNode, useContext } from 'react'
 
 import { defaultMediaQuery } from '../../themes/createMediaQuery'
-import { useMediaQueries } from '../useMediaQuery'
+import { useMediaQueries } from '../useMediaQueries'
 import { useTheme } from '../useTheme'
 
 import { type Environment, EnvironmentContext } from './useEnvironment'
@@ -16,8 +16,8 @@ type Props = {
 export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
   const theme = useTheme()
   const inheritedEnvironment = useContext(EnvironmentContext)
-  const mediaQueries = theme?.mediaQuery ?? defaultMediaQuery
-  const matches = useMediaQueries(mediaQueries)
+  const mediaQuery = theme?.mediaQuery ?? defaultMediaQuery
+  const matches = useMediaQueries(mediaQuery)
   const state: Environment = {
     mobile: matches.SCREEN_SMALL,
     matches,

@@ -1,13 +1,9 @@
-export const shallowEquali = <A = any, B = any>(a: A, b: B): boolean => {
+export const shallowEqual = <A = any, B = any>(a: A, b: B): boolean => {
   if (Object.is(a, b)) {
     return true
   }
 
-  if (!a || !b) {
-    return false
-  }
-
-  if (typeof a !== 'object' || typeof b !== 'object') {
+  if (!a || !b || (typeof a !== 'object' && typeof b !== 'object')) {
     return false
   }
 
@@ -18,12 +14,13 @@ export const shallowEquali = <A = any, B = any>(a: A, b: B): boolean => {
     return false
   }
 
-  for (const key of keysA) {
-    if (!Object.prototype.hasOwnProperty.call(b, key)) {
-      return false
-    }
-    // @ts-expect-error key should be in keyof a and b
-    if (!Object.is(a[key], b[key])) {
+  for (let i = 0; i < keysA.length; i++) {
+    const key = keysA[i]
+    if (
+      !Object.prototype.hasOwnProperty.call(b, key) ||
+      // @ts-expect-error key should be in keyof a and b
+      !Object.is(a[key], b[key])
+    ) {
       return false
     }
   }
