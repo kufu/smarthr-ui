@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react'
-
 import { Stepper } from '..'
 import { Stack } from '../../Layout'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Stepper',
@@ -23,7 +23,7 @@ export const Type: StoryObj<typeof Stepper> = {
   render: (args) => (
     <Stack>
       {['horizontal', 'vertical'].map((type) => (
-        <Stepper key={type} {...args} type={type as any} />
+        <Stepper {...args} key={type} type={type as any} />
       ))}
     </Stack>
   ),
@@ -52,8 +52,8 @@ export const Steps: StoryObj<typeof Stepper> = {
     <Stack>
       {['horizontal', 'vertical'].map((type) => (
         <Stepper
-          key={type}
           {...args}
+          key={type}
           type={type as any}
           steps={_steps[type as 'horizontal' | 'vertical'] as any}
         />
@@ -71,8 +71,8 @@ export const ActiveIndex: StoryObj<typeof Stepper> = {
     <Stack>
       {['horizontal', 'vertical'].map((type) => (
         <Stepper
-          key={type}
           {...args}
+          key={type}
           type={type as any}
           steps={_steps[type as 'horizontal' | 'vertical'] as any}
         />

@@ -1,9 +1,10 @@
-import { Button } from '../../Button'
-import { DisclosureTrigger } from '../DisclosureTrigger'
-import { DisclosureContent } from '../DisclosureContent'
-
-import type { Meta, StoryObj } from '@storybook/react'
 import { action } from 'storybook/actions'
+
+import { Button } from '../../Button'
+import { DisclosureContent } from '../DisclosureContent'
+import { DisclosureTrigger } from '../DisclosureTrigger'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Disclosure/DisclosureTrigger',

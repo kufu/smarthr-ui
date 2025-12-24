@@ -1,11 +1,12 @@
-import { Meta, StoryObj } from '@storybook/react'
 import { userEvent, within } from 'storybook/test'
-import { backgroundColor } from '../../../../themes'
 
-import { Stack, Cluster } from '../../../Layout'
+import { backgroundColor } from '../../../../themes'
+import { Cluster, Stack } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 
 import { defaultItems, prefixes } from './SingleCombobox.stories'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 /* pict singleCombobox.pict
  * disabled        error   width   prefix  selectedItem

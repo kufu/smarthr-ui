@@ -1,7 +1,7 @@
 import { Table } from '../Table'
 import { ThCheckbox } from '../ThCheckbox'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof ThCheckbox> = (args) => (
   <Table>

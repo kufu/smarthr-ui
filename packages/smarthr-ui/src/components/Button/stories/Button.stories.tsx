@@ -4,7 +4,7 @@ import { AnchorButton } from '../AnchorButton'
 import { Button } from '../Button'
 import { UnstyledButton } from '../UnstyledButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Button',
