@@ -1,7 +1,7 @@
 import { DeviceProvider } from './DeviceProvider'
 import { useDevice } from './useDevice'
 
-import type { StoryFn } from '@storybook/react-webpack5/*'
+import type { StoryFn } from '@storybook/react-webpack5'
 import type { FC } from 'react'
 
 export default {

@@ -26,6 +26,7 @@ export default {
       } else {
         action('onSubmit')(e)
       }
+
       // デフォルトのストーリーではフォーム送信後にダイアログを閉じる
       close()
     }

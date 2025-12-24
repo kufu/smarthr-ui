@@ -56,7 +56,7 @@ export const BorderType: StoryObj<typeof Table> = {
   render: (args) => (
     <Stack>
       {[undefined, 'vertical', 'horizontal', 'both', 'outer', 'all'].map((borderType) => (
-        <Template {...args} key={layout || 'undefined'} borderType={borderType as any} />
+        <Template {...args} key={borderStyle || 'undefined'} borderType={borderType as any} />
       ))}
     </Stack>
   ),
@@ -67,7 +67,7 @@ export const BorderStyle: StoryObj<typeof Table> = {
   render: (args) => (
     <Stack>
       {[undefined, 'solid', 'dashed', 'dotted'].map((borderStyle) => (
-        <Template {...args} key={layout || 'undefined'} borderStyle={borderStyle as any} />
+        <Template {...args} key={borderStyle || 'undefined'} borderStyle={borderStyle as any} />
       ))}
     </Stack>
   ),

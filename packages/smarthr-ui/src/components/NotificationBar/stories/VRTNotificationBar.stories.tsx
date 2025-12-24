@@ -68,8 +68,8 @@ export default {
   title: 'Components/NotificationBar/VRT',
   render: (args: any) => (
     <Stack {...args}>
-      {pairwisePatterns.map((as, index) => (
-        <NotificationBar {...as} key={index} />
+      {pairwisePatterns.map((ars, index) => (
+        <NotificationBar {...ars} key={index} />
       ))}
     </Stack>
   ),

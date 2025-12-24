@@ -97,7 +97,7 @@ export const IsOpen: StoryObj<typeof Dialog> = {
     const renderCheckbox = (
       <>
         <p>isOpen: {String(open)}</p>
-        <Checkbox name="dialog_input" checked={open} onChange={() => setOpen(!open)}>
+        <Checkbox name="dialog_checkbox" checked={open} onChange={() => setOpen(!open)}>
           isOpen
         </Checkbox>
       </>

@@ -27,12 +27,7 @@ export default {
       <Cluster>
         {matrices.map((m) => (
           <>
-            <DatePicker
-              {...args}
-              name="datepicker_disabled"
-              error={m.error}
-              disabled={m.disabled}
-            />
+            <DatePicker {...args} name="datepicker_default" error={m.error} disabled={m.disabled} />
             <DatePicker
               name="datepicker_value"
               error={m.error}

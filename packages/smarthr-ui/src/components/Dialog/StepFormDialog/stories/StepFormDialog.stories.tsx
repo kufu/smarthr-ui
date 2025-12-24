@@ -255,7 +255,9 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
       } else {
         action('onSubmit')(e)
       }
+
       closeDialog()
+
       return currentStep
     }
     const handleClose = onClickClose ?? (() => setOpen(false))

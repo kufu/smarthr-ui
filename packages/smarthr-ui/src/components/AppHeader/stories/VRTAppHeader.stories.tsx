@@ -4,7 +4,7 @@ import { AppHeader } from '../AppHeader'
 
 import { args } from './args'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5/*'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const meta = {
   title: 'Components/AppHeader/VRT',

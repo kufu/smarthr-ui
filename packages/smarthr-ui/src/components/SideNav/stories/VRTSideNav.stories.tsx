@@ -6,7 +6,7 @@ import { SideNavItemButton } from '../SideNavItemButton'
 
 import { _sideNavItems } from './SideNav.stories'
 
-import type { Meta } from '@storybook/react-webpack5/*'
+import type { Meta } from '@storybook/react-webpack5'
 
 const _casse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
 

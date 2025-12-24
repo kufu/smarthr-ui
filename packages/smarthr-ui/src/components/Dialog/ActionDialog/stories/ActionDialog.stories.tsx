@@ -2,7 +2,6 @@ import { type ComponentProps, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
-import { Input } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
 import { ActionDialog } from '../ActionDialog'
@@ -240,7 +239,7 @@ export const Size: StoryObj<typeof ActionDialog> = {
 export const FirstFocusTarget: StoryObj<typeof ActionDialog> = {
   name: 'firstFocusTarget',
   render: (args) => {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const buttonRef = useRef<HTMLButtonElement>(null)
     const [open, setOpen] = useState(false)
     const handleClose = () => setOpen(false)
     return (
@@ -248,14 +247,11 @@ export const FirstFocusTarget: StoryObj<typeof ActionDialog> = {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ActionDialog
           {...args}
-          firstFocusTarget={inputRef}
+          firstFocusTarget={buttonRef}
           isOpen={open}
           onPressEscape={handleClose}
         >
-          <label>
-            入力要素
-            <Input name="actiondialog_input" ref={inputRef} />
-          </label>
+          <Button ref={buttonRef}>button要素</Button>
         </ActionDialog>
       </>
     )
