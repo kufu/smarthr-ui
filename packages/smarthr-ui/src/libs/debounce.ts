@@ -15,10 +15,7 @@ export const debounce = <T extends (...rest: any[]) => void>(
 ): ((...rest: Parameters<T>) => void) => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-  return function (
-    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
-    ...timeoutRest: Parameters<T>
-  ) {
+  return function (...timeoutRest: Parameters<T>) {
     if (timeoutId !== null) {
       clearTimeout(timeoutId)
     }

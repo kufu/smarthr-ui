@@ -112,7 +112,7 @@ export const BottomFixedArea: FC<Props> = ({
                   {
                     text,
                     icon: Icon,
-                    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+
                     ...tertiaryRest
                   },
                   index,
