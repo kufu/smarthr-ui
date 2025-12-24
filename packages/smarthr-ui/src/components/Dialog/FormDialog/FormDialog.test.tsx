@@ -20,8 +20,8 @@ describe('FormDialog', () => {
           isOpen={isOpen}
           title="FormDialog"
           actionText="保存"
-          onSubmit={(closeDialog) => {
-            closeDialog()
+          onSubmit={(_, { close }) => {
+            close()
           }}
           onClickClose={() => {
             setIsOpen(false)
@@ -64,8 +64,8 @@ describe('FormDialog', () => {
             isOpen
             title="開いた状態で投入されたダイアログ"
             actionText="実行"
-            onSubmit={(closeDialog) => {
-              closeDialog()
+            onSubmit={(_, { close }) => {
+              close()
             }}
             onClickClose={() => {
               setIsOpen(false)

@@ -8,6 +8,7 @@ import { useDialogPortal } from '../useDialogPortal'
 import {
   ActionDialogContentInner,
   type ActionDialogContentInnerProps,
+  type ActionDialogHelpers,
 } from './ActionDialogContentInner'
 
 import type { DialogProps } from '../types'
@@ -47,11 +48,14 @@ export const ActionDialog: FC<Props> = ({
     }
   }, [isOpen, onClickClose])
 
-  const actualOnClickAction = useCallback(() => {
-    if (isOpen) {
-      onClickAction(onClickClose)
-    }
-  }, [isOpen, onClickAction, onClickClose])
+  const actualOnClickAction = useCallback(
+    (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
+      if (isOpen) {
+        onClickAction(e, helpers)
+      }
+    },
+    [isOpen, onClickAction],
+  )
 
   return createPortal(
     <DialogContentInner

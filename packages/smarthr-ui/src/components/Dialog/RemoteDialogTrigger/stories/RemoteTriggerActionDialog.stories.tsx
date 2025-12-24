@@ -20,7 +20,10 @@ export default {
           id="remote-dialog"
           title="リモートトリガーアクションダイアログ"
           actionText="アクション"
-          onClickAction={action('onClickAction')}
+          onClickAction={(e, { close }) => {
+            action('onClickAction')(e)
+            close()
+          }}
         >
           <p>リモートトリガーアクションダイアログです。</p>
         </RemoteTriggerActionDialog>
