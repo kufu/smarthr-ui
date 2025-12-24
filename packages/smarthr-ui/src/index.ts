@@ -123,6 +123,3 @@ export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
-
-// libs
-export { defineSV, useSV } from './hooks/useSV'
