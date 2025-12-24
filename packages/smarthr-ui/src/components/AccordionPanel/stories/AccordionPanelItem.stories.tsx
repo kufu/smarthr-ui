@@ -3,7 +3,7 @@ import { AccordionPanelContent } from '../AccordionPanelContent'
 import { AccordionPanelItem } from '../AccordionPanelItem'
 import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/AccordionPanel/AccordionPanelItem',

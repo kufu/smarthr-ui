@@ -1,9 +1,9 @@
-import { userEvent, within } from 'storybook/test'
 import dayjs from 'dayjs'
+import { userEvent, within } from 'storybook/test'
 
 import { WarekiPicker } from '../WarekiPicker'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/WarekiPicker',

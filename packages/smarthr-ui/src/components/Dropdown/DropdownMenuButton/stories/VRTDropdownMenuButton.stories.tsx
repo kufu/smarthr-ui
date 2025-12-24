@@ -1,5 +1,4 @@
 import { userEvent, within } from 'storybook/test'
-import { ComponentProps } from 'react'
 
 import { AnchorButton, Button } from '../../../Button'
 import { RemoteDialogTrigger } from '../../../Dialog'
@@ -8,7 +7,8 @@ import { Cluster } from '../../../Layout'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict dropdown-menu-button.pict

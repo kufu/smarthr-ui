@@ -1,13 +1,14 @@
+import { type ComponentProps, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { StepFormDialog } from '../StepFormDialog'
-import { ComponentProps, useRef, useState } from 'react'
 import { Button } from '../../../Button'
-import { RadioButton } from '../../../RadioButton'
-import { Cluster } from '../../../Layout'
 import { Input } from '../../../Input'
+import { Cluster } from '../../../Layout'
+import { RadioButton } from '../../../RadioButton'
+import { StepFormDialog } from '../StepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _widthOptions = {
   string: '30em',
@@ -25,8 +26,14 @@ export default {
       e,
       currentStep,
     ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
+      if (onSubmit) {
+        onSubmit(closeDialog, e, currentStep)
+      } else {
+        action('onSubmit')(e)
+      }
+
       closeDialog()
+
       return currentStep
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
@@ -175,8 +182,14 @@ export const ResponseStatus: StoryObj<typeof StepFormDialog> = {
       e,
       currentStep,
     ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
+      if (onSubmit) {
+        onSubmit(closeDialog, e, currentStep)
+      } else {
+        action('onSubmit')(e)
+      }
+
       closeDialog()
+
       return currentStep
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
@@ -237,8 +250,14 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
       e,
       currentStep,
     ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
+      if (onSubmit) {
+        onSubmit(closeDialog, e, currentStep)
+      } else {
+        action('onSubmit')(e)
+      }
+
       closeDialog()
+
       return currentStep
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
@@ -255,7 +274,7 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
         >
           <label>
             入力要素
-            <Input ref={inputRef} />
+            <Input name="stepformdialog_input" ref={inputRef} />
           </label>
         </StepFormDialog>
       </>
@@ -263,7 +282,7 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
   },
 }
 
-export const onPressEscape: StoryObj<typeof StepFormDialog> = {
+export const OnPressEscape: StoryObj<typeof StepFormDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),
@@ -287,7 +306,12 @@ export const PortalParent: StoryObj<typeof StepFormDialog> = {
       e,
       currentStep,
     ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
+      if (onSubmit) {
+        onSubmit(closeDialog, e, currentStep)
+      } else {
+        action('onSubmit')(e)
+      }
+
       closeDialog()
       return currentStep
     }

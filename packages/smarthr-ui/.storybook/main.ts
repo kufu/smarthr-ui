@@ -1,6 +1,8 @@
 import path from 'path'
-import { StorybookConfig } from '@storybook/react-webpack5'
+
 import { DefinePlugin, ProvidePlugin } from 'webpack'
+
+import type { StorybookConfig } from '@storybook/react-webpack5'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
@@ -61,8 +63,8 @@ const config: StorybookConfig = {
   typescript: {
     reactDocgen: 'react-docgen-typescript',
   },
-  webpackFinal: async (config) => {
-    const resolve = config.resolve || {}
+  webpackFinal: async (c) => {
+    const resolve = c.resolve || {}
     resolve.alias = {
       ...resolve.alias,
       '@': path.resolve(__dirname, '../src'),
@@ -74,7 +76,7 @@ const config: StorybookConfig = {
       process: require.resolve('process/browser'),
     }
 
-    const plugins = config.plugins || []
+    const plugins = c.plugins || []
     plugins.push(
       new DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
@@ -86,7 +88,7 @@ const config: StorybookConfig = {
     )
 
     return {
-      ...config,
+      ...c,
       resolve,
       plugins,
     }

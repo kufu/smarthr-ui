@@ -1,8 +1,8 @@
-import { Meta, StoryObj } from '@storybook/react'
-
 import { Reel } from '../../../..'
 
 import { GapStory, Padding } from './Reel.stories'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Layout/Reel/VRT',

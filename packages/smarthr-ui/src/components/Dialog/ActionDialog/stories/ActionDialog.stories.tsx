@@ -1,12 +1,12 @@
+import { type ComponentProps, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { ActionDialog } from '../ActionDialog'
-import { ComponentProps, useRef, useState } from 'react'
 import { Button } from '../../../Button'
-import { RadioButton } from '../../../RadioButton'
 import { Cluster } from '../../../Layout'
-import { Input } from '../../../Input'
+import { RadioButton } from '../../../RadioButton'
+import { ActionDialog } from '../ActionDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _widthOptions = {
   string: '30em',
@@ -122,7 +122,7 @@ export const OnClickClose: StoryObj<typeof ActionDialog> = {
   },
 }
 
-export const onPressEscape: StoryObj<typeof ActionDialog> = {
+export const OnPressEscape: StoryObj<typeof ActionDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),
@@ -239,7 +239,7 @@ export const Size: StoryObj<typeof ActionDialog> = {
 export const FirstFocusTarget: StoryObj<typeof ActionDialog> = {
   name: 'firstFocusTarget',
   render: (args) => {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const buttonRef = useRef<HTMLButtonElement>(null)
     const [open, setOpen] = useState(false)
     const handleClose = () => setOpen(false)
     return (
@@ -247,14 +247,11 @@ export const FirstFocusTarget: StoryObj<typeof ActionDialog> = {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ActionDialog
           {...args}
-          firstFocusTarget={inputRef}
+          firstFocusTarget={buttonRef}
           isOpen={open}
           onPressEscape={handleClose}
         >
-          <label>
-            入力要素
-            <Input ref={inputRef} />
-          </label>
+          <Button ref={buttonRef}>button要素</Button>
         </ActionDialog>
       </>
     )

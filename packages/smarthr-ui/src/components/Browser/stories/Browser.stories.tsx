@@ -1,9 +1,9 @@
 import { useState } from 'react'
+import { action } from 'storybook/actions'
 
 import { Browser } from '../Browser'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { action } from 'storybook/actions'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Browser',
@@ -41,7 +41,7 @@ export default {
 
 export const Playground: StoryObj<typeof Browser> = {}
 
-export const items: StoryObj<typeof Browser> = {
+export const Items: StoryObj<typeof Browser> = {
   name: 'items',
   args: {
     items: [

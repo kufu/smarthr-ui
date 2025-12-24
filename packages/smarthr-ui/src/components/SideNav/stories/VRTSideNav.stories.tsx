@@ -1,11 +1,12 @@
-import { Meta } from '@storybook/react/*'
-import React, { ComponentProps } from 'react'
+import { type ComponentProps, Fragment } from 'react'
 
 import { Stack } from '../../Layout'
 import { SideNav } from '../SideNav'
 import { SideNavItemButton } from '../SideNavItemButton'
 
 import { _sideNavItems } from './SideNav.stories'
+
+import type { Meta } from '@storybook/react-webpack5'
 
 const _casse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
 
@@ -20,7 +21,7 @@ export default {
   render: (args) => (
     <Stack gap={2} className="shr-p-1">
       {[undefined, 'hover', 'focus-visible'].map((id, index) => (
-        <React.Fragment key={index}>
+        <Fragment key={index}>
           {_casse.map((size, i) => (
             <SideNav {...args} key={`${index}-${i}`} size={size} id={id}>
               {_sideNavItems.map((item) => (
@@ -35,7 +36,7 @@ export default {
               ))}
             </SideNav>
           ))}
-        </React.Fragment>
+        </Fragment>
       ))}
     </Stack>
   ),

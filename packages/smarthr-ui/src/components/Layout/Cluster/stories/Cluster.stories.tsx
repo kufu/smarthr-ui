@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from '@storybook/react'
-
 import { Cluster } from '..'
-import { Gap as GapType } from '../../../../types'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
 import { clusterClassNameGenerator } from '../Cluster'
+
+import type { Gap as GapType } from '../../../../types'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const clusterGap = Object.keys(clusterClassNameGenerator.variants.rowGap)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない

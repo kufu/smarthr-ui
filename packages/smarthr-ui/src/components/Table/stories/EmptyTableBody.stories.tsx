@@ -3,7 +3,7 @@ import { EmptyTableBody } from '../EmptyTableBody'
 import { Table } from '../Table'
 import { Th } from '../Th'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof EmptyTableBody> = ({ children, ...args }) => (
   <Table>
