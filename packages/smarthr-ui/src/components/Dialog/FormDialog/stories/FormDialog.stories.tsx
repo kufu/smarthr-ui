@@ -18,7 +18,7 @@ const _widthOptions = {
 export default {
   title: 'Components/Dialog/FormDialog',
   component: FormDialog,
-  render: ({ onSubmit, onClickClose, ...args }) => {
+  render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleSubmit = (close: () => void, e: React.FormEvent<HTMLFormElement>) => {
       if (onSubmit) {
@@ -35,7 +35,7 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <FormDialog {...args} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
+        <FormDialog {...rest} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
           <FormControl label="名前">
             <Input name="name" />
           </FormControl>

@@ -11,14 +11,14 @@ export default {
   title: 'Components/Dialog/MessageDialog',
   component: MessageDialog,
   subcomponents: { MessageDialogContent },
-  render: ({ onClickClose, ...args }) => {
+  render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleClose = onClickClose ?? (() => setOpen(false))
 
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <MessageDialog {...args} onClickClose={handleClose} isOpen={open} />
+        <MessageDialog {...rest} onClickClose={handleClose} isOpen={open} />
       </>
     )
   },

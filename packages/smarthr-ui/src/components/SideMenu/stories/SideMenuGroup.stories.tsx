@@ -5,9 +5,9 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5'
 export default {
   title: 'Components/SideMenu/SideMenuGroup',
   component: SideMenuGroup,
-  render: ({ title, ...args }) => (
+  render: ({ title, ...rest }) => (
     <SideMenu>
-      <SideMenuGroup {...args} title={title || 'グループタイトル'}>
+      <SideMenuGroup {...rest} title={title || 'グループタイトル'}>
         <SideMenuItem href="#">メニュー1</SideMenuItem>
         <SideMenuItem href="#">メニュー2</SideMenuItem>
       </SideMenuGroup>

@@ -104,7 +104,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       showAlternative,
       onChangeDate,
       onBlur,
-      ...inputAttrs
+      ...rest
     },
     ref,
   ) => {
@@ -360,7 +360,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       >
         <div ref={inputWrapperRef}>
           <Input
-            {...inputAttrs}
+            {...rest}
             data-smarthr-ui-input="true"
             width="100%"
             name={name}

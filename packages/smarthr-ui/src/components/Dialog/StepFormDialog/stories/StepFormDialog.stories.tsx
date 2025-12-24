@@ -19,7 +19,7 @@ export default {
   title: 'Components/Dialog/StepFormDialog',
   component: StepFormDialog,
   subcomponents: { StepFormDialogItem },
-  render: ({ onSubmit, onClickClose, children, ...args }) => {
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (
       closeDialog,
@@ -41,7 +41,7 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <StepFormDialog {...args} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
+        <StepFormDialog {...rest} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
           {children || 'ダイアログコンテンツ'}
         </StepFormDialog>
       </>
@@ -173,7 +173,7 @@ export const OnClickBack: StoryObj<typeof StepFormDialog> = {
 
 export const ResponseStatus: StoryObj<typeof StepFormDialog> = {
   name: 'responseStatus',
-  render: ({ onSubmit, onClickClose, ...args }) => {
+  render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
       useState<ComponentProps<typeof StepFormDialog>['responseStatus']>()
@@ -198,7 +198,7 @@ export const ResponseStatus: StoryObj<typeof StepFormDialog> = {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <StepFormDialog
-          {...args}
+          {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
           isOpen={open}
@@ -242,7 +242,7 @@ export const Width: StoryObj<typeof StepFormDialog> = {
 
 export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
   name: 'firstFocusTarget',
-  render: ({ onSubmit, onClickClose, children, ...args }) => {
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (
@@ -266,7 +266,7 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <StepFormDialog
-          {...args}
+          {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
           isOpen={open}
@@ -298,7 +298,7 @@ export const OnClickOverlay: StoryObj<typeof StepFormDialog> = {
 
 export const PortalParent: StoryObj<typeof StepFormDialog> = {
   name: 'portalParent',
-  render: ({ onSubmit, onClickClose, children, ...args }) => {
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (
@@ -313,6 +313,7 @@ export const PortalParent: StoryObj<typeof StepFormDialog> = {
       }
 
       closeDialog()
+
       return currentStep
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
@@ -323,7 +324,7 @@ export const PortalParent: StoryObj<typeof StepFormDialog> = {
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <StepFormDialog
-          {...args}
+          {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
           isOpen={open}

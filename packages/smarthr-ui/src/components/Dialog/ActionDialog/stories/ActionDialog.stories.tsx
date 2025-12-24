@@ -16,7 +16,7 @@ const _widthOptions = {
 export default {
   title: 'Components/Dialog/ActionDialog',
   component: ActionDialog,
-  render: ({ onClickAction, onClickClose, ...args }) => {
+  render: ({ onClickAction, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleAction = onClickAction
       ? () => onClickAction(() => setOpen(false))
@@ -27,7 +27,7 @@ export default {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ActionDialog
-          {...args}
+          {...rest}
           onClickClose={handleClose}
           onClickAction={handleAction}
           isOpen={open}

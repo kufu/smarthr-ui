@@ -5,8 +5,8 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5'
 export default {
   title: 'Components/Button/UnstyledButton',
   component: UnstyledButton,
-  render: ({ children, ...args }) => (
-    <UnstyledButton {...args}>{children || 'ボタン'}</UnstyledButton>
+  render: ({ children, ...rest }) => (
+    <UnstyledButton {...rest}>{children || 'ボタン'}</UnstyledButton>
   ),
   parameters: {
     chromatic: { disableSnapshot: true },

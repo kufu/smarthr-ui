@@ -1,7 +1,9 @@
-import { Meta, StoryFn } from '@storybook/react'
-import { defineSV, useSV, VariantProps } from './useSV'
 import { EnvironmentProvider } from '../useEnvironment'
-import { FC } from 'react'
+
+import { type VariantProps, defineSV, useSV } from './useSV'
+
+import type { Meta, StoryFn } from '@storybook/react-webpack5'
+import type { FC } from 'react'
 
 const sv = defineSV(({ mobile }) => ({
   base: {
