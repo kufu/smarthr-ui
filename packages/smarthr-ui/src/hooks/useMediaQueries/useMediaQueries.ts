@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useSyncExternalStore } from 'react'
 
 import { entries, fromEntries } from '../../libs/object'
-import { shallowEquali } from '../../libs/shallowEqual'
+import { shallowEqual } from '../../libs/shallowEqual'
 
 type MediaQueryListMap = {
   [key: string]: string
@@ -29,7 +29,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
     }
 
     const ret = fromEntries(matchMediaList.map(([key, m]) => [key, m.matches] as const))
-    if (lastSnapshotRef.current && shallowEquali(lastSnapshotRef.current, ret)) {
+    if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
       return lastSnapshotRef.current
     }
     lastSnapshotRef.current = ret
