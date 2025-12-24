@@ -5,7 +5,7 @@ import { Th } from '../Th'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
-const Template: StoryFn<typeof EmptyTableBody> = ({ children, ...args }) => (
+const Template: StoryFn<typeof EmptyTableBody> = ({ children, ...rest }) => (
   <Table>
     <thead>
       <tr>
@@ -14,7 +14,7 @@ const Template: StoryFn<typeof EmptyTableBody> = ({ children, ...args }) => (
         <Th>表頭3</Th>
       </tr>
     </thead>
-    <EmptyTableBody {...args}>
+    <EmptyTableBody {...rest}>
       {children ?? (
         <>
           <p>該当するオブジェクトはありません。</p>

@@ -8,11 +8,11 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5'
 export default {
   title: 'Components/Browser',
   component: Browser,
-  render: ({ value, onSelectItem, ...args }) => {
+  render: ({ value, onSelectItem, ...rest }) => {
     const [selectedValue, setSelectedValue] = useState<string | undefined>(value)
     return (
       <Browser
-        {...args}
+        {...rest}
         value={value ?? selectedValue}
         onSelectItem={onSelectItem ?? setSelectedValue}
       />

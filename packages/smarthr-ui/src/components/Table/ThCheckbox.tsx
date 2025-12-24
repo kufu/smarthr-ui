@@ -37,7 +37,7 @@ const classNameGenerator = tv({
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, decorators, className, ...others }, ref) => {
+  ({ vAlign, fixed, decorators, className, ...rest }, ref) => {
     const { localize } = useIntl()
 
     const decoratorDefaultTexts = useMemo(
@@ -83,7 +83,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
             <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
           </Balloon>
-          <Checkbox {...others} ref={ref} className={classNames.checkbox} />
+          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>
     )
