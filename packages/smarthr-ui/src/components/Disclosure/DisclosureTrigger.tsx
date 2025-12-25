@@ -55,7 +55,6 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({
       onClick: actualOnClick,
       'aria-expanded': expanded.toString(),
       'aria-controls': targetId,
-
       ...rest,
     })
   }, [expanded, children, actualOnClick, targetId, rest])

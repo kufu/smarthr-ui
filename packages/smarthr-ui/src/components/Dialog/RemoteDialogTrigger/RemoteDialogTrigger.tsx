@@ -46,7 +46,6 @@ export const RemoteDialogTrigger: FC<{
         onClick: actualOnClick,
         'aria-haspopup': 'dialog',
         'aria-controls': targetId,
-
         ...rest,
       }),
     [children, actualOnClick, targetId, rest],

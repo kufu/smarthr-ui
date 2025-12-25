@@ -78,7 +78,6 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
         className={classNames.wrapper}
         aria-label={decorated.checkColumnName as string}
       >
-        {}
         <label className={classNames.inner}>
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
             <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>

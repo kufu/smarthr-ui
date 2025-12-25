@@ -33,11 +33,10 @@ export const MessageDialog: FC<Props> = ({
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const handleClickClose = useCallback(() => {
-    if (!isOpen) {
-      return
+    if (isOpen) {
+      onClickClose()
     }
-    onClickClose()
-  }, [onClickClose, isOpen])
+  }, [isOpen, onClickClose])
   const titleId = useId()
 
   return createPortal(
