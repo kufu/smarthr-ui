@@ -109,7 +109,7 @@ const ActualSelect = <T extends string>(
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
-      if (onChange) onChange(e)
+      onChange?.(e)
 
       if (onChangeValue) {
         const flattenOptions = options.reduce(

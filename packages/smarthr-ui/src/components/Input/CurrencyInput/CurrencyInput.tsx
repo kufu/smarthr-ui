@@ -42,9 +42,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
         innerRef.current.value = formatted
 
-        if (onFormatValue) {
-          onFormatValue(formatted)
-        }
+        onFormatValue?.(formatted)
       },
       [onFormatValue],
     )
@@ -78,9 +76,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           formatValue(commaExcluded)
         }
 
-        if (onFocus) {
-          onFocus(e)
-        }
+        onFocus?.(e)
       },
       [formatValue, onFocus],
     )
@@ -89,9 +85,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       (e: FocusEvent<HTMLInputElement>) => {
         setIsFocused(false)
 
-        if (onBlur) {
-          onBlur(e)
-        }
+        onBlur?.(e)
       },
       [onBlur],
     )
