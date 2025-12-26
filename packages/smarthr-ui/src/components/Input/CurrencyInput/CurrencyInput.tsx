@@ -36,14 +36,9 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
     const formatValue = useCallback(
       (formatted = '') => {
-        if (!innerRef.current || formatted === innerRef.current.value) {
-          return
-        }
-
-        innerRef.current.value = formatted
-
-        if (onFormatValue) {
-          onFormatValue(formatted)
+        if (innerRef.current && formatted !== innerRef.current.value) {
+          innerRef.current.value = formatted
+          onFormatValue?.(formatted)
         }
       },
       [onFormatValue],
@@ -78,9 +73,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           formatValue(commaExcluded)
         }
 
-        if (onFocus) {
-          onFocus(e)
-        }
+        onFocus?.(e)
       },
       [formatValue, onFocus],
     )
@@ -89,9 +82,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       (e: FocusEvent<HTMLInputElement>) => {
         setIsFocused(false)
 
-        if (onBlur) {
-          onBlur(e)
-        }
+        onBlur?.(e)
       },
       [onBlur],
     )
