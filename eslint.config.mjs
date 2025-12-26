@@ -1,6 +1,12 @@
 import smarthr from 'eslint-config-smarthr'
 import storybook from 'eslint-plugin-storybook'
 
+import eslint_custom from './eslint_custom.js'
+
+const customRules = {
+  eslint_custom,
+}
+
 /**
  * @type {import('eslint').Linter.Config[]}
  */
@@ -8,6 +14,11 @@ export default [
   ...smarthr,
   ...storybook.configs['flat/recommended'],
   {
+    plugins: {
+      rulesdir: {
+        rules: customRules,
+      },
+    },
     rules: {
       'jsx-a11y/anchor-is-valid': 'error',
       'jsx-a11y/click-events-have-key-events': 'error',
@@ -50,6 +61,8 @@ export default [
         },
       ],
       '@typescript-eslint/no-import-type-side-effects': 'error',
+
+      'rulesdir/eslint_custom': 'error',
     },
   },
   {
