@@ -36,13 +36,10 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
     const formatValue = useCallback(
       (formatted = '') => {
-        if (!innerRef.current || formatted === innerRef.current.value) {
-          return
+        if (innerRef.current && formatted !== innerRef.current.value) {
+          innerRef.current.value = formatted
+          onFormatValue?.(formatted)
         }
-
-        innerRef.current.value = formatted
-
-        onFormatValue?.(formatted)
       },
       [onFormatValue],
     )
