@@ -136,7 +136,7 @@ const classNameGenerator = tv({
 })
 
 type StyleVariants = VariantProps<typeof classNameGenerator>
-type Props = PropsWithChildren<
+type AbstractProps = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** コンポーネント右の領域 */
@@ -147,9 +147,10 @@ type Props = PropsWithChildren<
       role?: 'alert' | 'status'
     }
 >
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
-type ActualProps = Props & ElementProps & BaseProps
+type Props = AbstractProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps> &
+  Omit<BaseProps, keyof AbstractProps>
 
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
@@ -170,7 +171,7 @@ const ICON_MAPPER = {
 
 const ROLE_STATUS_TYPE_REGEX = /^(info|sync)$/
 
-export const NotificationBar: FC<ActualProps> = ({
+export const NotificationBar: FC<Props> = ({
   type,
   bold,
   animate,
@@ -181,7 +182,7 @@ export const NotificationBar: FC<ActualProps> = ({
   base,
   layer,
   className,
-  ...props
+  ...rest
 }) => {
   const actualRole = useMemo(() => {
     if (role) {
@@ -225,7 +226,7 @@ export const NotificationBar: FC<ActualProps> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...props} className={classNames.wrapper} role={actualRole}>
+      <div {...rest} className={classNames.wrapper} role={actualRole}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
           <MessageArea bold={bold} type={type} classNames={classNames}>
             {children}
@@ -243,7 +244,7 @@ export const NotificationBar: FC<ActualProps> = ({
 }
 
 const MessageArea = memo<
-  Pick<ActualProps, 'children' | 'bold' | 'type'> & {
+  Pick<Props, 'children' | 'bold' | 'type'> & {
     classNames: { messageArea: string; icon: string }
   }
 >(({ children, bold, type, classNames }) => {
@@ -261,7 +262,7 @@ const MessageArea = memo<
   )
 })
 
-const CloseButton = memo<Pick<ActualProps, 'onClose'> & { className: string }>(
+const CloseButton = memo<Pick<Props, 'onClose'> & { className: string }>(
   ({ onClose, className }) =>
     onClose && (
       <Button variant="text" size="s" onClick={onClose} className={className}>

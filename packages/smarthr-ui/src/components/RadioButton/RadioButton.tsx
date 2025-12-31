@@ -48,7 +48,7 @@ const classNameGenerator = tv({
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, required, ...props }, ref) => {
+  ({ onChange, children, className, required, id, disabled, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
@@ -62,13 +62,13 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     const defaultId = useId()
-    const radioButtonId = props.id || defaultId
+    const radioButtonId = id || defaultId
 
     return (
-      <span data-disabled={props.disabled} className={classNames.wrapper}>
+      <span data-disabled={disabled} className={classNames.wrapper}>
         <span className={classNames.innerWrapper}>
           <input
-            {...props}
+            {...rest}
             ref={ref}
             type="radio"
             id={radioButtonId}
@@ -79,6 +79,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
             // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
             required={isIOS ? undefined : required}
+            disabled={disabled}
             onChange={onChange}
             className={classNames.input}
             data-smarthr-ui-input="true"

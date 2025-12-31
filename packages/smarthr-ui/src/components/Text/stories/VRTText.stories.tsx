@@ -1,8 +1,8 @@
-import { Stack } from '../../Layout'
 import { FaAddressBookIcon } from '../../Icon'
+import { Stack } from '../../Layout'
 import { STYLE_TYPE_MAP, Text } from '../Text'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 // $ pict text.pict
 const pict = [

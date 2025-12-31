@@ -171,7 +171,7 @@ const ActualText = <T extends ElementType = 'span'>({
   whiteSpace,
   className,
   children,
-  ...props
+  ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
   const actualClassName = useMemo(() => {
     const styleTypeValues = styleType
@@ -194,7 +194,7 @@ const ActualText = <T extends ElementType = 'span'>({
   )
 
   return (
-    <Component {...props} className={actualClassName}>
+    <Component {...rest} className={actualClassName}>
       {prefixIcon || suffixIcon ? (
         <span className={wrapperClassName}>
           {prefixIcon}

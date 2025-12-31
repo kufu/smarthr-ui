@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "80.0.0",
+  "version": "82.0.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -19,7 +19,7 @@
     "react-transition-group": "^4.4.5",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^3.4.18",
-    "typescript-eslint": "^8.46.2"
+    "typescript-eslint": "^8.48.1"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
@@ -67,9 +67,9 @@
     "postcss-styled-syntax": "^0.7.1",
     "postcss-syntax": "^0.36.2",
     "process": "^0.11.10",
-    "react": "^19.1.2",
+    "react": "^19.1.4",
     "react-docgen-typescript": "^2.4.0",
-    "react-dom": "^19.1.2",
+    "react-dom": "^19.1.4",
     "react-ga4": "^2.1.0",
     "react-intl": "^7.1.14",
     "rimraf": "^6.0.1",

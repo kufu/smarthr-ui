@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react'
-
 import { SideMenu, SideMenuGroup, SideMenuItem } from '..'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/SideMenu/SideMenuGroup',
   component: SideMenuGroup,
-  render: ({ heading, ...args }) => (
+  render: ({ heading, ...rest }) => (
     <SideMenu>
-      <SideMenuGroup {...args} heading={heading || 'グループタイトル'}>
+      <SideMenuGroup {...rest} heading={heading || 'グループタイトル'}>
         <SideMenuItem href="#">メニュー1</SideMenuItem>
         <SideMenuItem href="#">メニュー2</SideMenuItem>
       </SideMenuGroup>

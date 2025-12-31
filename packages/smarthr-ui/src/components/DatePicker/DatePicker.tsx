@@ -28,7 +28,7 @@ import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
 import { useGlobalKeyDown } from './useGlobalKeyDown'
 
-type Props = {
+type AbstractProps = {
   /** input 要素の `value` 属性の値 */
   value?: string | null
   /** input 要素の `name` 属性の値 */
@@ -56,16 +56,18 @@ type Props = {
   /** 選択された日付が変わった時に発火するコールバック関数 */
   onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
 }
-type OmitInputAttributes =
-  | keyof Props
-  | 'type'
-  | 'onChange'
-  | 'onKeyPress'
-  | 'onFocus'
-  | 'aria-expanded'
-  | 'aria-controls'
-  | 'aria-haspopup'
-type InputAttributes = Omit<ComponentPropsWithRef<'input'>, OmitInputAttributes>
+type Props = AbstractProps &
+  Omit<
+    ComponentPropsWithRef<'input'>,
+    | keyof AbstractProps
+    | 'type'
+    | 'onChange'
+    | 'onKeyPress'
+    | 'onFocus'
+    | 'aria-expanded'
+    | 'aria-controls'
+    | 'aria-haspopup'
+  >
 
 export const DEFAULT_FROM = new Date(1900, 0, 1)
 
@@ -86,7 +88,7 @@ const RETURN_NULL = () => null
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
-export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
+export const DatePicker = forwardRef<HTMLInputElement, Props>(
   (
     {
       value,
@@ -102,7 +104,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       showAlternative,
       onChangeDate,
       onBlur,
-      ...inputAttrs
+      ...rest
     },
     ref,
   ) => {
@@ -358,7 +360,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       >
         <div ref={inputWrapperRef}>
           <Input
-            {...inputAttrs}
+            {...rest}
             data-smarthr-ui-input="true"
             width="100%"
             name={name}

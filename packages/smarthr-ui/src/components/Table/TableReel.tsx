@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants'
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 import { useReelCells } from './useReelCells'
 
-type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
+type Props = PropsWithChildren & Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
 
 const classNameGenerator = tv({
   slots: {
@@ -15,11 +15,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableReel: FC<PropsWithChildren & ElementProps> = ({
-  className,
-  children,
-  ...props
-}) => {
+export const TableReel: FC<Props> = ({ className, children, ...rest }) => {
   const { showShadow, tableWrapperRef } = useReelCells(children)
 
   const classNames = useMemo(() => {
@@ -33,7 +29,7 @@ export const TableReel: FC<PropsWithChildren & ElementProps> = ({
 
   return (
     <div className={classNames.wrapper}>
-      <div {...props} ref={tableWrapperRef} className={classNames.inner}>
+      <div {...rest} ref={tableWrapperRef} className={classNames.inner}>
         {children}
       </div>
     </div>

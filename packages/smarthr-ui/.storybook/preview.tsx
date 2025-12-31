@@ -1,20 +1,21 @@
-import { useEffect } from 'react'
-import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 import {
-  Title,
-  Subtitle,
+  Controls,
   Description,
   Primary,
   Stories,
-  Controls,
+  Subtitle,
+  Title,
 } from '@storybook/addon-docs/blocks'
-import type { Preview } from '@storybook/react-webpack5'
+import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
+import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 
 import '../src/styles/index.css'
-import { backgroundColor } from '../src/themes'
-import { IntlProvider } from '../src'
+import { EnvironmentProvider, IntlProvider } from '../src'
 import * as locales from '../src/intl/locales'
+import { backgroundColor } from '../src/themes'
+
+import type { Preview } from '@storybook/react-webpack5'
 
 const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 
@@ -91,7 +92,9 @@ const preview: Preview = {
       const locale = context.globals?.locale
       return (
         <IntlProvider locale={locale}>
-          <Story />
+          <EnvironmentProvider>
+            <Story />
+          </EnvironmentProvider>
         </IntlProvider>
       )
     },
