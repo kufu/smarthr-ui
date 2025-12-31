@@ -1,8 +1,8 @@
-import { Meta } from '@storybook/react'
-
 import { Cluster } from '../../../..'
 
 import { Gap } from './Cluster.stories'
+
+import type { Meta } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Layout/Cluster/VRT',

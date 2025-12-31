@@ -1,19 +1,21 @@
+import { useRef, useState } from 'react'
 import { action } from 'storybook/actions'
-import type { Meta, StoryObj } from '@storybook/react'
-import { useState, useRef } from 'react'
+
 import { Button } from '../../../Button'
 import { ModelessDialog } from '../ModelessDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/ModelessDialog',
   component: ModelessDialog,
-  render: ({ title, onClickClose, ...args }) => {
+  render: ({ title, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ModelessDialog
-          {...args}
+          {...rest}
           title={title || 'モードレスダイアログ'}
           isOpen={open}
           onClickClose={onClickClose ?? (() => setOpen(false))}

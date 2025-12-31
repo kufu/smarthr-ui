@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
@@ -12,7 +13,7 @@ import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Table/VRT',

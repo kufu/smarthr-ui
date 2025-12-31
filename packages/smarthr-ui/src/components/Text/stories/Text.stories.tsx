@@ -1,8 +1,8 @@
+import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Text } from '../Text'
-import { FaAddressBookIcon } from '../../Icon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
