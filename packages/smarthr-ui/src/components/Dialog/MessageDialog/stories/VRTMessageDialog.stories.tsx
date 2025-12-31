@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { MessageDialog } from '../MessageDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/MessageDialog/VRT',

@@ -46,11 +46,11 @@ export const ResponseMessage: FC<Props> = ({
   iconGap,
   right,
   children,
-  ...other
+  ...rest
 }) => {
   const className = useMemo(() => classNameGenerator({ type }), [type])
   const Icon = ICON_MAPPER[type]
-  const icon = <Icon {...other} className={className} />
+  const icon = <Icon {...rest} className={className} />
   const textIconAttributes = {
     iconGap,
     prefixIcon: right ? undefined : icon,

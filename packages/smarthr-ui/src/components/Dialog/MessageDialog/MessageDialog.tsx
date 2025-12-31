@@ -36,15 +36,15 @@ export const MessageDialog: FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
+  isOpen,
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const handleClickClose = useCallback(() => {
-    if (!rest.isOpen) {
-      return
+    if (isOpen) {
+      onClickClose()
     }
-    onClickClose()
-  }, [onClickClose, rest.isOpen])
+  }, [isOpen, onClickClose])
   const titleId = useId()
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
@@ -60,6 +60,7 @@ export const MessageDialog: FC<Props & ElementProps> = ({
   return createPortal(
     <DialogContentInner
       {...rest}
+      isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}

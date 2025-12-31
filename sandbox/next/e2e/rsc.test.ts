@@ -47,7 +47,6 @@ const SERVER_COMPONENTS = [
   'Th',
   'TimePicker',
   'UnstyledButton',
-  'UpwardLink',
   'VisuallyHiddenText',
   'WakuWakuButton',
 ]
@@ -112,6 +111,7 @@ const CLIENT_COMPONENTS: string[] = [
   'ThCheckbox',     // 多言語化対応のため
   'Tooltip',        // 開閉状態の管理
   'DateFormatter',  // 多言語化対応のため
+  'UpwardLink',     // モバイル対応のため
 ]
 
 /**

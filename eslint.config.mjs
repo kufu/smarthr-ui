@@ -54,13 +54,24 @@ export default [
   },
   {
     ignores: [
-      '**/*.{mjs,js}',
-      '**/*.stories.tsx',
       'sandbox/',
       'storybook-static/',
       'packages/smarthr-ui/esm/',
       'packages/smarthr-ui/lib/',
-      'packages/smarthr-ui/.storybook',
     ],
+  },
+  {
+    files: ['**/*.test.tsx', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    rules: {
+      'smarthr/require-i18n-text': 'off',
+    },
+  },
+  {
+    files: ['**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    rules: {
+      'smarthr/a11y-form-control-in-form': 'off',
+      'smarthr/a11y-heading-in-sectioning-content': 'off',
+      'smarthr/a11y-input-in-form-control': 'off',
+    },
   },
 ]

@@ -1,9 +1,9 @@
 import { Button } from '../../../Button'
-import { FormDialog } from '../FormDialog'
 import { FormControl } from '../../../FormControl'
 import { Input } from '../../../Input'
+import { FormDialog } from '../FormDialog'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/FormDialog/VRT',

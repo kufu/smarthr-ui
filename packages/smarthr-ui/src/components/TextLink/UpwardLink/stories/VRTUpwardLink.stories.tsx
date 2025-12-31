@@ -1,7 +1,7 @@
 import { Stack } from '../../../Layout'
 import { UpwardLink } from '../UpwardLink'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/TextLink/UpwardLink/VRT',

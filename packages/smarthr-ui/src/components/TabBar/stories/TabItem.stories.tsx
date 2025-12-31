@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Badge } from '../../Badge'
 import { TabItem } from '../TabItem'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/TabBar/TabItem',
