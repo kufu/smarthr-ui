@@ -205,7 +205,7 @@ const YearSelectButton = memo<{
   'aria-controls': string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>(({ ...rest }) => {
+}>((props) => {
   const { localize } = useIntl()
   const selectYearAltText = useMemo(
     () =>
@@ -217,7 +217,7 @@ const YearSelectButton = memo<{
   )
 
   return (
-    <Button {...rest} size="s">
+    <Button {...props} size="s">
       <FaCaretDownIcon alt={selectYearAltText} />
     </Button>
   )

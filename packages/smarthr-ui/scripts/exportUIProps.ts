@@ -25,7 +25,7 @@ glob(SRC_PATH).then(
         },
       },
     )
-    const docs = fileParser.parse(targets).map(({ props, ...other }) => {
+    const docs = fileParser.parse(targets).map(({ props, ...rest }) => {
       const filteredProps = Object.keys(props).flatMap((name) => {
         const propItem = props[name]
         const declarations = propItem.declarations
@@ -42,7 +42,7 @@ glob(SRC_PATH).then(
       })
 
       return {
-        ...other,
+        ...rest,
         props: filteredProps,
       }
     })

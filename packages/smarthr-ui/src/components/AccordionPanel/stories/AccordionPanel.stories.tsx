@@ -1,5 +1,4 @@
 import { action } from 'storybook/actions'
-import { ComponentProps } from 'react'
 
 import { Stack } from '../../Layout'
 import { AccordionPanel } from '../AccordionPanel'
@@ -7,7 +6,8 @@ import { AccordionPanelContent } from '../AccordionPanelContent'
 import { AccordionPanelItem } from '../AccordionPanelItem'
 import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 const _defaultExpandedOptions = {
   あり: ['accordion-panel-2'],

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [82.0.0](https://github.com/kufu/smarthr-ui/compare/v81.0.0...v82.0.0) (2025-12-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **InputFile:** multipleAppendableを multiple={{ appendable: true }}という形式で指定するように修正 (#5992)
+
+### Features
+
+* **InputFile:** multipleAppendableを multiple={{ appendable: true }}という形式で指定するように修正 ([#5992](https://github.com/kufu/smarthr-ui/issues/5992)) ([917267d](https://github.com/kufu/smarthr-ui/commit/917267d3f30310165d2c99a132e146ae23dc3002))
+
+
+### Bug Fixes
+
+* **Table:** fixedHeadのPropsがある場合、キーボード操作の逆タブ操作でフォーカス中のエレメントが被ってしまう ([#6009](https://github.com/kufu/smarthr-ui/issues/6009)) ([02e7f4b](https://github.com/kufu/smarthr-ui/commit/02e7f4bf4f74b063a28c9a28559c8208cf843341))
+
 ## [81.0.0](https://github.com/kufu/smarthr-ui/compare/v80.0.0...v81.0.0) (2025-12-12)
 
 

@@ -1,5 +1,7 @@
 'use client'
 
+import dayjs from 'dayjs'
+
 import { useIntl } from './useIntl'
 
 import type { FormatDateProps } from './useIntl'
@@ -47,7 +49,13 @@ import type { FormatDateProps } from './useIntl'
  * />
  * // <time datetime="2024-01-15T10:30:00.000Z">Seg.</time> (pt)（指定しなければ "seg."）
  */
-export const DateFormatter = ({ date, parts, options }: FormatDateProps) => {
+export const DateFormatter = ({
+  date: orgDate,
+  ...rest
+}: Omit<FormatDateProps, 'date'> & {
+  date: string | Date
+}) => {
+  const date = dayjs(orgDate).toDate()
   const { formatDate } = useIntl()
-  return <time dateTime={date.toISOString()}>{formatDate({ date, parts, options })}</time>
+  return <time dateTime={date.toISOString()}>{formatDate({ ...rest, date })}</time>
 }
