@@ -52,6 +52,10 @@ export default [
       'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
+      'smarthr/best-practice-for-spread-syntax': [
+        'error',
+        { checkType: 'always', fix: true },
+      ],
       'smarthr/require-barrel-import': 'off',
     },
   },
