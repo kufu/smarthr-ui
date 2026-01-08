@@ -21,32 +21,26 @@ type DisclosureTriggerProps = {
   /** DisclosureContentのidと紐づける文字列 */
   targetId: string
   /** 開閉時のハンドラー */
-  onClick?: (open: () => void, e: MouseEvent<HTMLButtonElement>) => void
+  onClick?: (e: MouseEvent<HTMLButtonElement>, open: () => void) => void
   children: DisclosureTriggerNodeChildren | DisclosureTriggerFuncChildren
 }
 
-export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({
-  targetId,
-  children,
-  onClick,
-  ...rest
-}) => {
+export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, children, onClick }) => {
   const [expanded, setExpanded] = useDisclosure(targetId)
 
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      const toggleExpanded = () => {
-        setExpanded((current) => !current)
-      }
+  const actualOnClick = useMemo(() => {
+    const toggleExpanded = () => {
+      setExpanded((current) => !current)
+    }
 
-      if (onClick) {
-        return onClick(toggleExpanded, e)
+    if (onClick) {
+      return (e: MouseEvent<HTMLButtonElement>) => {
+        onClick(e, toggleExpanded)
       }
+    }
 
-      toggleExpanded()
-    },
-    [onClick, setExpanded],
-  )
+    return toggleExpanded
+  }, [onClick, setExpanded])
 
   const actualTrigger = useMemo(() => {
     const actualChildren = children instanceof Function ? children({ expanded }) : children
@@ -55,9 +49,8 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({
       onClick: actualOnClick,
       'aria-expanded': expanded.toString(),
       'aria-controls': targetId,
-      ...rest,
     })
-  }, [expanded, children, actualOnClick, targetId, rest])
+  }, [expanded, children, actualOnClick, targetId])
 
   return actualTrigger
 }
