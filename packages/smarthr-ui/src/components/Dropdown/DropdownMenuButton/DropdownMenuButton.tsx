@@ -205,7 +205,7 @@ export const renderButtonList = (children: Actions) =>
   })
 
 const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
     if (!ref.current) {
