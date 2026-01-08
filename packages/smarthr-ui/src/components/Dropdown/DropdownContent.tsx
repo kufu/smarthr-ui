@@ -28,13 +28,13 @@ type AbstractProps = PropsWithChildren<{
 
 type Props = AbstractProps & Omit<InnerElementProps, keyof AbstractProps>
 
-export const DropdownContent: FC<Props> = ({ controllable = false, ...props }) => {
+export const DropdownContent: FC<Props> = ({ controllable = false, ...rest }) => {
   const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
 
   return (
     <DropdownContentRoot>
       <DropdownContentContext.Provider value={{ onClickCloser, controllable }}>
-        <DropdownContentInner {...props} triggerRect={triggerRect} controllable={controllable} />
+        <DropdownContentInner {...rest} triggerRect={triggerRect} controllable={controllable} />
       </DropdownContentContext.Provider>
     </DropdownContentRoot>
   )

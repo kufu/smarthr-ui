@@ -101,7 +101,7 @@ const ActualSelect = <T extends string>(
     className,
     disabled,
     required,
-    ...props
+    ...rest
   }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
@@ -109,7 +109,7 @@ const ActualSelect = <T extends string>(
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
-      if (onChange) onChange(e)
+      onChange?.(e)
 
       if (onChangeValue) {
         const flattenOptions = options.reduce(
@@ -160,7 +160,7 @@ const ActualSelect = <T extends string>(
   return (
     <span className={classNames.wrapper} style={wrapperStyle}>
       <select
-        {...props}
+        {...rest}
         data-smarthr-ui-input="true"
         onChange={handleChange}
         aria-invalid={error || undefined}
@@ -199,10 +199,10 @@ const Option = memo<Props<string>['options'][number]>((option) => {
     return <option {...option}>{option.label}</option>
   }
 
-  const { options: groupedOptions, ...optgroup } = option
+  const { options: groupedOptions, label, ...rest } = option
 
   return (
-    <optgroup {...optgroup} key={optgroup.label}>
+    <optgroup {...rest} key={label} label={label}>
       {groupedOptions.map((groupedOption) => (
         <option {...groupedOption} key={groupedOption.value}>
           {groupedOption.label}

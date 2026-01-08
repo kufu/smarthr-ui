@@ -1,10 +1,10 @@
 import { action } from 'storybook/actions'
 
+import { localeMap } from '../../../intl/localeMap'
 import { backgroundColor } from '../../../themes'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { localeMap } from '../../../intl/localeMap'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Header/LanguageSwitcher',

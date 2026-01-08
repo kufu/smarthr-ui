@@ -101,7 +101,8 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       error,
       readOnly,
       bgColor,
-      ...props
+      type,
+      ...rest
     },
     ref,
   ) => {
@@ -112,10 +113,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const handleWheel = useMemo(
-      () => (props.type === 'number' ? disableWheel : undefined),
-      [props.type],
-    )
+    const handleWheel = useMemo(() => (type === 'number' ? disableWheel : undefined), [type])
 
     const onClickFocus = useCallback(() => innerRef.current?.focus(), [])
 
@@ -162,7 +160,8 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       >
         {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
         <input
-          {...props}
+          {...rest}
+          type={type}
           data-smarthr-ui-input="true"
           onFocus={onFocus}
           onBlur={onBlur}

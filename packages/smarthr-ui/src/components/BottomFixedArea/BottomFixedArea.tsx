@@ -74,7 +74,7 @@ export const BottomFixedArea: FC<Props> = ({
   tertiaryLinks,
   zIndex,
   className,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, tertiaryButton } = classNameGenerator()
@@ -91,7 +91,7 @@ export const BottomFixedArea: FC<Props> = ({
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base {...props} className={classNames.wrapper} style={style}>
+    <Base {...rest} className={classNames.wrapper} style={style}>
       <Stack>
         <Description>{description}</Description>
         <Stack gap={0.25}>
@@ -107,18 +107,28 @@ export const BottomFixedArea: FC<Props> = ({
           )}
           {tertiaryLinks && tertiaryLinks.length > 0 && (
             <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 0 }}>
-              {tertiaryLinks.map(({ text, icon: Icon, ...tertiaryRest }, index) => (
-                <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
-                  <Button
-                    {...tertiaryRest}
-                    variant="text"
-                    prefix={Icon && <Icon />}
-                    className={classNames.tertiaryButton}
-                  >
-                    {text}
-                  </Button>
-                </li>
-              ))}
+              {tertiaryLinks.map(
+                (
+                  {
+                    text,
+                    icon: Icon,
+
+                    ...tertiaryRest
+                  },
+                  index,
+                ) => (
+                  <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
+                    <Button
+                      {...tertiaryRest}
+                      variant="text"
+                      prefix={Icon && <Icon />}
+                      className={classNames.tertiaryButton}
+                    >
+                      {text}
+                    </Button>
+                  </li>
+                ),
+              )}
             </Cluster>
           )}
         </Stack>

@@ -21,7 +21,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableFixedHead: FC<Props> = ({ className, children, ...props }) => {
+export const TableFixedHead: FC<Props> = ({ className, children, ...rest }) => {
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const classNames = useMemo(() => {
     const { wrapper } = classNameGenerator()
@@ -43,7 +43,7 @@ export const TableFixedHead: FC<Props> = ({ className, children, ...props }) => 
   }, [])
 
   return (
-    <div {...props} ref={tableWrapperRef} className={classNames.wrapper}>
+    <div {...rest} ref={tableWrapperRef} className={classNames.wrapper}>
       {children}
     </div>
   )

@@ -2,7 +2,7 @@ import { Button } from '../../../Button'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 import { RemoteTriggerMessageDialog } from '../RemoteTriggerMessageDialog'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/RemoteDialogTrigger',
@@ -10,20 +10,18 @@ export default {
   args: {
     targetId: 'remote-dialog',
   },
-  render: (args) => {
-    return (
-      <>
-        <RemoteDialogTrigger {...args}>
-          <Button>ダイアログを開く</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerMessageDialog
-          id="remote-dialog"
-          title="リモートトリガーメッセージダイアログ"
-          description="RemoteDialogTrigger で開かれた MessageDialog です。"
-        />
-      </>
-    )
-  },
+  render: (args) => (
+    <>
+      <RemoteDialogTrigger {...args}>
+        <Button>ダイアログを開く</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerMessageDialog
+        id="remote-dialog"
+        title="リモートトリガーメッセージダイアログ"
+        description="RemoteDialogTrigger で開かれた MessageDialog です。"
+      />
+    </>
+  ),
   parameters: {
     chromatic: { disableSnapshot: true },
   },

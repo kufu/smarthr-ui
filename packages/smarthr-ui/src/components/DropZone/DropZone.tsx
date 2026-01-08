@@ -85,7 +85,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, Props>(
-  ({ children, onSelectFiles, multiple = true, disabled, error, decorators, ...props }, ref) => {
+  ({ children, onSelectFiles, multiple = true, disabled, error, decorators, ...rest }, ref) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
     const classNames = useMemo(() => {
@@ -154,7 +154,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         <VisuallyHiddenText>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
-            {...props}
+            {...rest}
             data-smarthr-ui-input="true"
             ref={fileRef}
             type="file"

@@ -159,7 +159,7 @@ export const ModelessDialog: FC<Props> = ({
   decorators,
   id,
   onClickClose,
-  ...props
+  ...rest
 }) => {
   const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
@@ -405,7 +405,7 @@ export const ModelessDialog: FC<Props> = ({
         nodeRef={wrapperRef}
       >
         <Base
-          {...props}
+          {...rest}
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}

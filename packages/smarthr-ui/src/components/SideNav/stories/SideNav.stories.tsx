@@ -5,7 +5,7 @@ import { StatusLabel } from '../../StatusLabel'
 import { SideNav, type SideNavItemButtonProps } from '../SideNav'
 import { SideNavItemButton, type SideNavSizeType } from '../SideNavItemButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export const _sideNavItems: SideNavItemButtonProps[] = [
   {
@@ -35,11 +35,11 @@ export default {
     },
   },
   render: (args) => {
-    const { items, ...props } = args
+    const { items, ...rest } = args
     return items ? (
-      <SideNav {...props} items={items} />
+      <SideNav {...rest} items={items} />
     ) : (
-      <SideNav {...props}>
+      <SideNav {...rest}>
         {_sideNavItems.map((item) => (
           <SideNavItemButton key={item.id} id={item.id} current={item.current} prefix={item.prefix}>
             {item.children}

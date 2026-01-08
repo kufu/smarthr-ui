@@ -1,12 +1,13 @@
-import { Meta, StoryObj } from '@storybook/react'
-import { userEvent, within } from 'storybook/test'
 import { useState } from 'react'
+import { userEvent, within } from 'storybook/test'
 
 import { Stack } from '../../../Layout'
-import { ComboboxItem } from '../../types'
 import { MultiCombobox } from '../MultiCombobox'
 
 import { defaultItems } from './MultiCombobox.stories'
+
+import type { ComboboxItem } from '../../types'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 /*
  * pict multiCombobox.pict

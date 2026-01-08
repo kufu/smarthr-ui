@@ -151,7 +151,6 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           </BaseColumn>
         )}
         <span className={classNames.inputWrapper}>
-          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
             data-smarthr-ui-input="true"

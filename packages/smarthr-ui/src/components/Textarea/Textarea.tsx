@@ -126,7 +126,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       error,
       onChange,
       value,
-      ...props
+      defaultValue,
+      ...rest
     },
     ref,
   ) => {
@@ -135,7 +136,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const currentValue = props.defaultValue || value
+    const currentValue = defaultValue || value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
@@ -325,10 +326,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
     const body = (
       <textarea
-        {...props}
+        {...rest}
         {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
         value={value}
+        defaultValue={defaultValue}
         onChange={handleChange}
         ref={textareaRef}
         aria-invalid={error || countError || undefined}

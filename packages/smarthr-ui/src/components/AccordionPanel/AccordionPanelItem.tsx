@@ -25,7 +25,7 @@ const classNameGenerator = tv({
   base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
 })
 
-export const AccordionPanelItem: FC<Props> = ({ name, className, ...props }) => {
+export const AccordionPanelItem: FC<Props> = ({ name, className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
@@ -34,7 +34,7 @@ export const AccordionPanelItem: FC<Props> = ({ name, className, ...props }) => 
         name,
       }}
     >
-      <Section {...props} className={actualClassName} />
+      <Section {...rest} className={actualClassName} />
     </AccordionPanelItemContext.Provider>
   )
 }

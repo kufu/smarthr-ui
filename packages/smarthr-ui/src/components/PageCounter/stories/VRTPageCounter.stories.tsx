@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { PageCounter } from '../PageCounter'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const cases = [
   { start: 1, end: 50 },

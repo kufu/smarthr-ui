@@ -28,20 +28,21 @@ export const MessageDialog: FC<Props> = ({
   portalParent,
   decorators,
   id,
-  ...props
+  isOpen,
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const handleClickClose = useCallback(() => {
-    if (!props.isOpen) {
-      return
+    if (isOpen) {
+      onClickClose()
     }
-    onClickClose()
-  }, [onClickClose, props.isOpen])
+  }, [isOpen, onClickClose])
   const titleId = useId()
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
+      isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}

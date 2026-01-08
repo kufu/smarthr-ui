@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { DropZone } from '../DropZone'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/DropZone/VRT',

@@ -1,8 +1,7 @@
-import { UnstyledButton } from '../UnstyledButton'
-
-import type { Meta, StoryObj } from '@storybook/react'
-
 import Story from './UnstyledButton.stories'
+
+import type { UnstyledButton } from '../UnstyledButton'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Button/UnstyledButton/VRT',
