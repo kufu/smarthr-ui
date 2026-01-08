@@ -9,10 +9,10 @@ import {
   Fragment,
   type ReactElement,
   type ReactNode,
-  cloneElement,
   isValidElement,
   memo,
   useContext,
+  useEffect,
   useMemo,
   useRef,
 } from 'react'
@@ -73,7 +73,7 @@ const classNameGenerator = tv({
       ],
     ],
     actionListItemButton: [
-      'shr-justify-start shr-rounded-none shr-border-none shr-py-0.5 shr-font-normal',
+      '[&&&]:shr-w-full [&&&]:shr-justify-start [&&&]:shr-rounded-none [&&&]:shr-border-none [&&&]:shr-py-0.5 [&&&]:shr-font-normal',
       'focus-visible:shr-focus-indicator--inner',
     ],
   },
@@ -201,15 +201,31 @@ export const renderButtonList = (children: Actions) =>
         return item
     }
 
-    return (
-      <li role="presentation">
-        <DropdownCloser>
-          {cloneElement(item as ReactElement, {
-            wide: true,
-            role: 'menuitem',
-            className: actionListItemButton({ className: item.props.className }),
-          })}
-        </DropdownCloser>
-      </li>
-    )
+    return <ButtonListItem>{item}</ButtonListItem>
   })
+
+const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
+  const ref = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    const button = ref.current.querySelector('button,a')
+
+    if (button) {
+      button.setAttribute('role', 'menuitem')
+      button.setAttribute(
+        'class',
+        actionListItemButton({ className: button.getAttribute('class') }),
+      )
+    }
+  }, [children])
+
+  return (
+    <li role="presentation" ref={ref}>
+      <DropdownCloser>{children}</DropdownCloser>
+    </li>
+  )
+}
