@@ -66,7 +66,7 @@ export default {
     // import.meta.env等に置き換えるほうが本当は好ましいが、あまり良い方法がない
     replace({
       values: {
-        'process.env.NODE_ENV': JSON.stringify('production'),
+        'process.env.NODE_ENV': `'production'`,
       },
       preventAssignment: true,
     }),
