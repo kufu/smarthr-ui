@@ -123,6 +123,17 @@ export const HtmlFor: StoryObj<typeof FormControl> = {
   },
 }
 
+export const AutoRelation: StoryObj<typeof FormControl> = {
+  name: '子要素にidを指定した場合でもlabelと正しく紐づく',
+  args: {
+    label: {
+      text: '子要素にidを指定した場合でもlabelと正しく紐づく',
+    },
+    children: <Input name="formcontrol_input" id="auto-relation-test" />,
+    supplementaryMessage: '入力要素に紐づく補足メッセージ',
+  },
+}
+
 export const LabelId: StoryObj<typeof FormControl> = {
   name: 'label.id',
   args: {
