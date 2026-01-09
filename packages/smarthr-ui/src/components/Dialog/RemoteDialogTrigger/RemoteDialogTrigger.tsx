@@ -23,7 +23,7 @@ export const RemoteDialogTrigger: FC<{
   targetId: string
   onClick?: (open: () => void) => void
   children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
-}> = ({ targetId, children, onClick, ...rest }) => {
+}> = ({ targetId, children, onClick }) => {
   const actualOnClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
       // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
@@ -46,9 +46,8 @@ export const RemoteDialogTrigger: FC<{
         onClick: actualOnClick,
         'aria-haspopup': 'dialog',
         'aria-controls': targetId,
-        ...rest,
       }),
-    [children, actualOnClick, targetId, rest],
+    [children, actualOnClick, targetId],
   )
 
   return actualTrigger

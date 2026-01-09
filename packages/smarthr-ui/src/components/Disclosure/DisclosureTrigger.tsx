@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  type FC,
-  type MouseEvent,
-  type ReactElement,
-  cloneElement,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, type MouseEvent, type ReactElement, cloneElement, useMemo } from 'react'
 
 import { useDisclosure } from './useDisclosure'
 
