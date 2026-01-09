@@ -1,10 +1,8 @@
 'use client'
 
 import {
-  Children,
   type ComponentProps,
   type FC,
-  type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   useContext,
@@ -70,18 +68,20 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     const button = triggerElementRef.current.querySelector<HTMLButtonElement>('button')
 
     // 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する
-    if (button && !button.disabled && button.getAttribute('aria-disabled') !== 'true') {
-      // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
-      // そのためcaptureで開く処理を実行する
-      const callback = (e: MouseEvent) => {
-        onClickTrigger(e.currentTarget.getBoundingClientRect())
-      }
+    if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+      return
+    }
 
-      button.addEventListener('click', callback, CAPTURE_OPTION)
+    // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
+    // そのためcaptureで開く処理を実行する
+    const callback = (e: MouseEvent) => {
+      onClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
+    }
 
-      return () => {
-        button.removeEventListener('click', callback, CAPTURE_OPTION)
-      }
+    button.addEventListener('click', callback, CAPTURE_OPTION)
+
+    return () => {
+      button.removeEventListener('click', callback, CAPTURE_OPTION)
     }
   }, [children, onClickTrigger, triggerElementRef])
 
