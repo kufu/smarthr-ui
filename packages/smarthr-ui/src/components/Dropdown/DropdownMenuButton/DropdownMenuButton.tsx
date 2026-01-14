@@ -38,17 +38,24 @@ type ActionItem =
   | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
   | ReactNode
 
-type AbstractProps = {
+type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
-  label: ReactNode
+  children: ReactNode
+  /** 引き金となるボタンの大きさ */
+  size?: ButtonProps['size']
+  /** 引き金となるボタンをアイコンのみとするかどうか */
+  onlyIcon?:
+    | boolean
+    | {
+        /** 引き金となるアイコンを差し替えたい場合（onlyIcon=true の場合のみ有効） */
+        component?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
+      }
+}
+type AbstractProps = {
+  /** 引き金となるボタン */
+  trigger: ReactNode | ObjectTriggerType
   /** 操作群 */
   children: Actions
-  /** 引き金となるボタンの大きさ */
-  triggerSize?: ButtonProps['size']
-  /** 引き金となるボタンをアイコンのみとするかどうか */
-  onlyIconTrigger?: boolean
-  /** 引き金となるアイコンを差し替えたい場合（onlyIconTrigger=true の場合のみ有効） */
-  triggerIcon?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
   /** ドロップダウンメニューが開かれた際のイベント */
   onOpen?: () => void
   /** ドロップダウンメニューが閉じられた際のイベント */
@@ -82,16 +89,26 @@ const classNameGenerator = tv({
 const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
 
 export const DropdownMenuButton: FC<Props> = ({
-  label,
+  trigger,
   children,
-  triggerSize,
-  onlyIconTrigger,
-  triggerIcon,
   onOpen,
   onClose,
   className,
   ...rest
 }) => {
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const {
+    children: triggerChildren,
+    size: triggerSize,
+    onlyIcon: onlyIconTrigger,
+  }: ObjectTriggerType = !trigger || typeof trigger !== 'object' || isValidElement(trigger)
+    ? {
+        children: trigger as ReactNode,
+      }
+    : (trigger as ObjectTriggerType)
+
   const containerRef = useRef<HTMLUListElement>(null)
 
   useKeyboardNavigation(containerRef)
@@ -109,9 +126,8 @@ export const DropdownMenuButton: FC<Props> = ({
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
         {...rest}
-        label={label}
+        children={triggerChildren}
         onlyIconTrigger={onlyIconTrigger}
-        triggerIcon={triggerIcon}
         triggerSize={triggerSize}
         classNames={classNames}
       />
@@ -125,22 +141,22 @@ export const DropdownMenuButton: FC<Props> = ({
 }
 
 const MemoizedTriggerButton = memo<
-  Pick<Props, 'onlyIconTrigger' | 'triggerSize' | 'label' | 'triggerIcon'> &
-    ElementProps & {
-      classNames: {
-        triggerWrapper: string
-        triggerButton: string
-      }
+  ElementProps & {
+    onlyIconTrigger: ObjectTriggerType['onlyIcon']
+    triggerSize: ObjectTriggerType['size']
+    children: ObjectTriggerType['children']
+    classNames: {
+      triggerWrapper: string
+      triggerButton: string
     }
->(({ onlyIconTrigger, triggerSize, label, triggerIcon, classNames, ...rest }) => {
+  }
+>(({ onlyIconTrigger, triggerSize, children, classNames, ...rest }) => {
   const { localize } = useIntl()
 
   const { active } = useContext(DropdownContext)
 
-  const tooltip = useMemo(
-    () => ({ show: onlyIconTrigger, message: label }),
-    [label, onlyIconTrigger],
-  )
+  const showTooltip = !!onlyIconTrigger
+  const tooltip = useMemo(() => ({ show: showTooltip, message: children }), [children, showTooltip])
 
   return (
     <DropdownTrigger className={classNames.triggerWrapper} tooltip={tooltip}>
@@ -166,27 +182,24 @@ const MemoizedTriggerButton = memo<
         size={triggerSize}
         className={classNames.triggerButton}
       >
-        <TriggerLabelText
-          label={label}
-          onlyIconTrigger={onlyIconTrigger}
-          triggerIcon={triggerIcon}
-        />
+        <TriggerLabelText children={children} onlyIconTrigger={onlyIconTrigger} />
       </Button>
     </DropdownTrigger>
   )
 })
 
-const TriggerLabelText = memo<Pick<Props, 'label' | 'onlyIconTrigger' | 'triggerIcon'>>(
-  ({ label, onlyIconTrigger, triggerIcon }) => {
-    if (!onlyIconTrigger) {
-      return label
-    }
+const TriggerLabelText = memo<{
+  onlyIconTrigger: ObjectTriggerType['onlyIcon']
+  children: ObjectTriggerType['children']
+}>(({ children, onlyIconTrigger }) => {
+  if (!onlyIconTrigger) {
+    return children
+  }
 
-    const Icon = triggerIcon || FaEllipsisIcon
+  const Icon = (typeof onlyIconTrigger === 'object' && onlyIconTrigger.component) || FaEllipsisIcon
 
-    return <Icon alt={typeof label === 'string' ? label : innerText(label)} />
-  },
-)
+  return <Icon alt={typeof children === 'string' ? children : innerText(children)} />
+})
 
 export const renderButtonList = (children: Actions) =>
   Children.map(children, (item): ReactNode => {

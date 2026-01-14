@@ -48,7 +48,6 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
-      'smarthr/best-practice-for-optional-chaining': 'error',
       'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',

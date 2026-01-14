@@ -43,6 +43,7 @@ export const RemoteDialogTrigger: FC<{
   const actualTrigger = useMemo(
     () =>
       cloneElement(children as ReactElement, {
+        ...rest,
         onClick: actualOnClick,
         'aria-haspopup': 'dialog',
         'aria-controls': targetId,
