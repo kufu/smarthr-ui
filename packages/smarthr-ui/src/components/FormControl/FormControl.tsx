@@ -14,6 +14,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { useId } from 'react'
 import innerText from 'react-innertext'
@@ -175,7 +176,8 @@ export const ActualFormControl: FC<Props> = ({
 
   const defaultHtmlFor = useId()
   const defaultLabelId = useId()
-  const managedHtmlFor = label.htmlFor || defaultHtmlFor
+  const [childInputId, setChildInputId] = useState<string>('')
+  const managedHtmlFor = label.htmlFor || childInputId || defaultHtmlFor
   const managedLabelId = label.id || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isFieldset = as === 'fieldset'
@@ -257,7 +259,11 @@ export const ActualFormControl: FC<Props> = ({
       return
     }
 
-    if (!input.getAttribute('id')) {
+    const inputId = input.getAttribute('id')
+
+    if (inputId) {
+      setChildInputId(inputId)
+    } else {
       input.setAttribute('id', managedHtmlFor)
     }
 
