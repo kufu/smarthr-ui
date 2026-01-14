@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Chip, classNameGenerator } from '../Chip'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Chip',

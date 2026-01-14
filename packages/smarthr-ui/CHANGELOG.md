@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [82.1.0](https://github.com/kufu/smarthr-ui/compare/v82.0.0...v82.1.0) (2026-01-08)
+
+
+### Features
+
+* **DateFormatter:** date属性にstring型で日付を指定できるように修正 ([#6019](https://github.com/kufu/smarthr-ui/issues/6019)) ([aee6509](https://github.com/kufu/smarthr-ui/commit/aee65095eeed982254e7ed99b137f7ba9609f7a1))
+* **FormControl:** 内部の入力要素に対してidを指定した場合でもlabelと正しく紐づくように修正 ([#6034](https://github.com/kufu/smarthr-ui/issues/6034)) ([d0a45d2](https://github.com/kufu/smarthr-ui/commit/d0a45d2c6d66d3f708fff81fa3049ffd0c58533c))
+* **UpwardLink:** モバイル対応 ([#6032](https://github.com/kufu/smarthr-ui/issues/6032)) ([3db7656](https://github.com/kufu/smarthr-ui/commit/3db76560b228a2b98c4bd34cdff2a2484ec1bf8f))
+* useEnvironment/EnvironmentProviderとmediaQueryトークンを追加 ([#5954](https://github.com/kufu/smarthr-ui/issues/5954)) ([65761dd](https://github.com/kufu/smarthr-ui/commit/65761dd5cabd0a340be045b2db10650e29fba93a))
+
+## [82.0.0](https://github.com/kufu/smarthr-ui/compare/v81.0.0...v82.0.0) (2025-12-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **InputFile:** multipleAppendableを multiple={{ appendable: true }}という形式で指定するように修正 (#5992)
+
+### Features
+
+* **InputFile:** multipleAppendableを multiple={{ appendable: true }}という形式で指定するように修正 ([#5992](https://github.com/kufu/smarthr-ui/issues/5992)) ([917267d](https://github.com/kufu/smarthr-ui/commit/917267d3f30310165d2c99a132e146ae23dc3002))
+
+
+### Bug Fixes
+
+* **Table:** fixedHeadのPropsがある場合、キーボード操作の逆タブ操作でフォーカス中のエレメントが被ってしまう ([#6009](https://github.com/kufu/smarthr-ui/issues/6009)) ([02e7f4b](https://github.com/kufu/smarthr-ui/commit/02e7f4bf4f74b063a28c9a28559c8208cf843341))
+
 ## [81.0.0](https://github.com/kufu/smarthr-ui/compare/v80.0.0...v81.0.0) (2025-12-12)
 
 

@@ -25,7 +25,7 @@ type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
-  ({ onFormatValue, onFocus, onBlur, className = '', ...rest }, ref) => {
+  ({ onFormatValue, onFocus, onBlur, value, defaultValue, className = '', ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
@@ -36,22 +36,17 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
     const formatValue = useCallback(
       (formatted = '') => {
-        if (!innerRef.current || formatted === innerRef.current.value) {
-          return
-        }
-
-        innerRef.current.value = formatted
-
-        if (onFormatValue) {
-          onFormatValue(formatted)
+        if (innerRef.current && formatted !== innerRef.current.value) {
+          innerRef.current.value = formatted
+          onFormatValue?.(formatted)
         }
       },
       [onFormatValue],
     )
 
     useEffect(() => {
-      if (rest.value === undefined && rest.defaultValue !== undefined) {
-        formatValue(formatCurrency(rest.defaultValue))
+      if (value === undefined && defaultValue !== undefined) {
+        formatValue(formatCurrency(defaultValue))
       }
       // when component did mount
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,15 +54,15 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
     useEffect(() => {
       if (!isFocused) {
-        if (rest.value !== undefined) {
+        if (value !== undefined) {
           // for controlled component
-          formatValue(formatCurrency(rest.value))
+          formatValue(formatCurrency(value))
         } else if (innerRef.current) {
           // for uncontrolled component
           formatValue(formatCurrency(innerRef.current.value))
         }
       }
-    }, [isFocused, rest.value, formatValue])
+    }, [isFocused, value, formatValue])
 
     const handleFocus = useCallback(
       (e: FocusEvent<HTMLInputElement>) => {
@@ -78,9 +73,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           formatValue(commaExcluded)
         }
 
-        if (onFocus) {
-          onFocus(e)
-        }
+        onFocus?.(e)
       },
       [formatValue, onFocus],
     )
@@ -89,9 +82,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       (e: FocusEvent<HTMLInputElement>) => {
         setIsFocused(false)
 
-        if (onBlur) {
-          onBlur(e)
-        }
+        onBlur?.(e)
       },
       [onBlur],
     )
@@ -100,6 +91,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       <Input
         {...rest}
         type="text"
+        value={value}
+        defaultValue={defaultValue}
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={innerRef}

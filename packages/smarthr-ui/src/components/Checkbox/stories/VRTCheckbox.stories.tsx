@@ -1,9 +1,10 @@
 import { Heading } from '@storybook/addon-docs/blocks'
+
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { Checkbox } from '../Checkbox'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 // ペアワイズ法は使わずに総当りする
 const mixed = [true, false]

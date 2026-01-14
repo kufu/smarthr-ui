@@ -160,8 +160,8 @@ export const useSortDropdown = ({
   return {
     onChangeSortOrderRadio,
     texts: {
-      triggerLabel,
       ...texts,
+      triggerLabel,
     },
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },

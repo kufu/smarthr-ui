@@ -75,7 +75,7 @@ const renderItemList = (children: ReactNode) =>
 
 export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, children }) => (
   <DropdownMenuButton
-    label={
+    trigger={
       <>
         {label}
         {/* has([aria-current="page"]) を書くために複製 */}
