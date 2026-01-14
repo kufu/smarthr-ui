@@ -73,7 +73,7 @@ const classNameGenerator = tv({
       ],
     ],
     actionListItemButton: [
-      '[&&&]:shr-w-full [&&&]:shr-justify-start [&&&]:shr-rounded-none [&&&]:shr-border-none [&&&]:shr-py-0.5 [&&&]:shr-font-normal',
+      '[&&]:shr-w-full [&&]:shr-justify-start [&&]:shr-rounded-none [&&]:shr-border-none [&&]:shr-py-0.5 [&&]:shr-font-normal',
       'focus-visible:shr-focus-indicator--inner',
     ],
   },
