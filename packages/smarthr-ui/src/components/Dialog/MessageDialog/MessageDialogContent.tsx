@@ -19,9 +19,10 @@ import {
 
 import type { UncontrolledDialogProps } from '../types'
 
+type HeadingType = ContentInnerProps['heading']
 type AbstractProps = Omit<ContentInnerProps, 'heading'> &
   UncontrolledDialogProps & {
-    heading: ReactNode | Omit<BaseProps['heading'], 'id'>
+    heading: ReactNode | Omit<HeadingType, 'id'>
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
@@ -48,13 +49,13 @@ export const MessageDialogContent: FC<Props> = ({
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
   // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const heading: BaseProps['heading'] =
+  const heading: HeadingType =
     !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
       ? {
           text: orgHeading as ReactNode,
           id: titleId,
         }
-      : ({ ...orgHeading, id: titleId } as BaseProps['heading'])
+      : ({ ...orgHeading, id: titleId } as HeadingType)
 
   return createPortal(
     <DialogContentInner

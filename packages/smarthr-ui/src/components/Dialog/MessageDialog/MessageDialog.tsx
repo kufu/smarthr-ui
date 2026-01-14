@@ -25,7 +25,7 @@ type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading'> &
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const MessageDialog: FC<Props & ElementProps> = ({
+export const MessageDialog: FC<Props> = ({
   heading: orgHeading,
   description,
   onClickClose,
