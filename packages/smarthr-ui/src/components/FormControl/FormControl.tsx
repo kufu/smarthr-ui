@@ -36,7 +36,7 @@ type ObjectLabelType = {
   /** ラベルの表示タイプ */
   styleType?: TextProps['styleType']
   /** ラベル左に設置するアイコン */
-  icon?: TextProps['prefixIcon']
+  icon?: ReactNode
   /** ラベルを視覚的に隠すかどうか */
   dangerouslyHide?: boolean
   /** ラベルを紐づける入力要素のID属性と同じ値 */
@@ -430,7 +430,7 @@ const LabelCluster = memo<
   }) => {
     const body = (
       <>
-        <Text styleType={labelType} prefixIcon={labelIcon}>
+        <Text styleType={labelType} icon={labelIcon}>
           {label}
         </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
@@ -546,7 +546,7 @@ const ErrorMessageList = memo<{
         <p key={index}>
           <Text
             className={classNames.errorMessage}
-            prefixIcon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
+            icon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
           >
             {message}
           </Text>
