@@ -40,7 +40,7 @@ const classNameGenerator = tv({
       'shr-inline-flex shr-items-center',
     ],
     buttonBody: 'shr-w-full',
-    buttonTitle: 'smarthr-ui-SideNav-itemTitle shr-grow-[2]',
+    buttonTitle: 'smarthr-ui-SideNav-itemTitle shr-grow',
   },
   variants: {
     size: {
