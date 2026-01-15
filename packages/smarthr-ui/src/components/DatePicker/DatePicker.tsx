@@ -2,9 +2,11 @@
 
 import dayjs from 'dayjs'
 import {
+  type ChangeEvent,
   type ComponentProps,
   type ComponentPropsWithRef,
   type FocusEventHandler,
+  type MouseEvent,
   type ReactNode,
   forwardRef,
   memo,
@@ -28,6 +30,7 @@ import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
 import { useGlobalKeyDown } from './useGlobalKeyDown'
 
+type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
 type AbstractProps = {
   /** input 要素の `value` 属性の値 */
   value?: string | null
@@ -53,8 +56,13 @@ type AbstractProps = {
   formatDate?: (date: Date | null) => string
   /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
   showAlternative?: (date: Date | null) => ReactNode
-  /** 選択された日付が変わった時に発火するコールバック関数 */
+  /** @deprecated onChangeDate は非推奨です。onChange を使ってください。 */
   onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
+  /** 選択された日付が変わった時に発火するコールバック関数 */
+  onChange?: (
+    e: ChangeEvent<HTMLInputElement>,
+    other: { date: Date | null; formatValue: string; errors: string[] },
+  ) => void
 }
 type Props = AbstractProps &
   Omit<
@@ -103,6 +111,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       formatDate,
       showAlternative,
       onChangeDate,
+      onChange,
       onBlur,
       ...rest
     },
@@ -174,31 +183,63 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
 
         const nextDate = isValid ? newDate : null
-        const currentValue = dateToString(nextDate)
+        const formatValue = dateToString(nextDate)
 
-        inputRef.current.value = currentValue
+        inputRef.current.value = formatValue
         setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
-        return [nextDate, currentValue, errors] as [Date | null, string, string[]]
+        return [nextDate, formatValue, errors] as [Date | null, string, string[]]
       },
       [selectedDate, dateToString, dateToAlternativeFormat],
     )
-    const updateDate = useMemo(
-      () =>
-        onChangeDate
-          ? (newDate: Date | null) => {
-              const result = baseUpdateDate(newDate)
+    const updateDate = useMemo(() => {
+      if (onChange) {
+        return (e: ChangeLikeEvent, newDate: Date | null) => {
+          const result = baseUpdateDate(newDate)
 
-              if (result) {
-                const [nextDate, currentValue, errors] = result
+          if (result) {
+            e.preventDefault()
+            e.stopPropagation()
 
-                onChangeDate(nextDate, currentValue, { errors })
-              }
+            const [nextDate, formatValue, errors] = result
+            const event = new Event('change', { bubbles: true })
+            // HINT: resultが存在する時点でinputRef.currentは必ず存在する
+            const input = inputRef.current as HTMLInputElement
+
+            input.dispatchEvent(event)
+            onChange(
+              // HINT: 型問題のため別途オブジェクトをイベントに見立てる
+              {
+                stopPropagation: () => {
+                  event.stopPropagation()
+                },
+                preventDefault: () => {
+                  event.preventDefault()
+                },
+                target: input,
+                currentTarget: input,
+              } as ChangeEvent<HTMLInputElement>,
+              { date: nextDate, formatValue, errors },
+            )
+          }
+        }
+      }
+
+      return onChangeDate
+        ? (_e: ChangeLikeEvent, newDate: Date | null) => {
+            const result = baseUpdateDate(newDate)
+
+            if (result) {
+              const [nextDate, formatValue, errors] = result
+
+              onChangeDate(nextDate, formatValue, { errors })
             }
-          : baseUpdateDate,
-      [onChangeDate, baseUpdateDate],
-    )
+          }
+        : (_e: ChangeLikeEvent, newDate: Date | null) => {
+            baseUpdateDate(newDate)
+          }
+    }, [onChange, onChangeDate, baseUpdateDate])
 
     const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
     const openCalendar = useCallback(() => {
@@ -290,7 +331,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const baseHandleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
       (e) => {
         setIsInputFocused(false)
-        updateDate(e.target.value ? stringToDate(e.target.value) : null)
+        updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
       },
       [stringToDate, updateDate],
     )
@@ -330,7 +371,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
           ;(isCalendarShown ? openCalendar : closeCalendar)()
-          updateDate(stringToDate(e.currentTarget.value))
+          updateDate(e, stringToDate(e.currentTarget.value))
         }
       },
       [isCalendarShown, updateDate, closeCalendar, openCalendar, stringToDate],
@@ -340,8 +381,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       openCalendar()
     }, [openCalendar])
     const onSelectDateCalendar = useCallback(
-      (_: any, selected: Date | null) => {
-        updateDate(selected)
+      (e: ChangeLikeEvent, selected: Date | null) => {
+        updateDate(e, selected)
         // delay hiding calendar because calendar will be displayed when input is focused
         requestAnimationFrame(closeCalendar)
 
