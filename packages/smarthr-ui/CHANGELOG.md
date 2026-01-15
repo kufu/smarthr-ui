@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [83.0.0](https://github.com/kufu/smarthr-ui/compare/v82.1.0...v83.0.0) (2026-01-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **DropdownMenuButton:** label, trigger関連の属性をtrigger属性一つにまとめる (#6008)
+
+### Features
+
+* DatePickerを内部的に利用する用になるため、onChangeDateを非推奨にし、onChangeを追加する ([#5936](https://github.com/kufu/smarthr-ui/issues/5936)) ([ad34993](https://github.com/kufu/smarthr-ui/commit/ad3499362bef42b951bedbb265b5658ac6f19214))
+* **DropdownMenuButton:** label, trigger関連の属性をtrigger属性一つにまとめる ([#6008](https://github.com/kufu/smarthr-ui/issues/6008)) ([9d91934](https://github.com/kufu/smarthr-ui/commit/9d919340ae717da8c3aee79176f93bdd88a36690))
+* **SideNavItemButton:** suffix属性を実装 ([#6043](https://github.com/kufu/smarthr-ui/issues/6043)) ([6a6db3c](https://github.com/kufu/smarthr-ui/commit/6a6db3cccd63df4929b5e11df3243e1511b44763))
+
+
+### Bug Fixes
+
+* AppHeaderの言語切替ボタンでの矢印キーの動作を修正 ([#6041](https://github.com/kufu/smarthr-ui/issues/6041)) ([f623792](https://github.com/kufu/smarthr-ui/commit/f6237921fa5162802b028fcb425be0596253fdac))
+* AppHeader内のAppNaviCustomTagのスタイル修正 ([#6042](https://github.com/kufu/smarthr-ui/issues/6042)) ([298ae9b](https://github.com/kufu/smarthr-ui/commit/298ae9b8129c8eae3e362c6205b0c44b3b86ba9e))
+
 ## [82.1.0](https://github.com/kufu/smarthr-ui/compare/v82.0.0...v82.1.0) (2026-01-08)
 
 
