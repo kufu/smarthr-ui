@@ -13,8 +13,10 @@ type AbstractProps = {
    * @deprecated SideNav で items を使う時の props です。children を使ってください。
    */
   title?: ReactNode
-  /** タイトルのプレフィックスの内容。通常、StatusLabel の配置に用います。 */
+  /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
   prefix?: ReactNode
+  /** タイトルのサフィックスの内容。通常、Prefixを使用済みの場合にStatusLabelやChipの配置に用います。 */
+  suffix?: ReactNode
   /** 選択されているアイテムかどうか */
   current?: boolean
   /** アイテムの大きさ */
@@ -37,7 +39,8 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
       'shr-inline-flex shr-items-center',
     ],
-    buttonInner: 'smarthr-ui-SideNav-itemTitle',
+    buttonBody: 'shr-w-full',
+    buttonTitle: 'smarthr-ui-SideNav-itemTitle shr-grow',
   },
   variants: {
     size: {
@@ -55,6 +58,7 @@ export const SideNavItemButton: FC<Props> = ({
   id,
   title,
   prefix,
+  suffix,
   current,
   size,
   onClick,
@@ -62,12 +66,13 @@ export const SideNavItemButton: FC<Props> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, button, buttonInner } = classNameGenerator()
+    const { wrapper, button, buttonBody, buttonTitle } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
       button: button({ size: size ?? 'default' }),
-      buttonInner: buttonInner(),
+      buttonBody: buttonBody(),
+      buttonTitle: buttonTitle(),
     }
   }, [size])
 
@@ -76,19 +81,23 @@ export const SideNavItemButton: FC<Props> = ({
       <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
         <ButtonBodyCluster
           prefix={prefix}
+          suffix={suffix}
           title={children ?? title}
-          titleClassName={classNames.buttonInner}
+          classNames={classNames}
         />
       </UnstyledButton>
     </li>
   )
 }
 
-const ButtonBodyCluster = memo<Pick<Props, 'prefix' | 'title'> & { titleClassName: string }>(
-  ({ prefix, title, titleClassName }) => (
-    <Cluster inline align="center" as="span">
-      {prefix}
-      <span className={titleClassName}>{title}</span>
-    </Cluster>
-  ),
-)
+const ButtonBodyCluster = memo<
+  Pick<Props, 'prefix' | 'suffix' | 'title'> & {
+    classNames: { buttonBody: string; buttonTitle: string }
+  }
+>(({ prefix, suffix, title, classNames }) => (
+  <Cluster inline align="center" className={classNames.buttonBody} as="span">
+    {prefix}
+    <span className={classNames.buttonTitle}>{title}</span>
+    {suffix}
+  </Cluster>
+))
