@@ -3,6 +3,7 @@ import {
   type ElementType,
   type PropsWithChildren,
   type ReactNode,
+  isValidElement,
   memo,
   useMemo,
 } from 'react'
@@ -140,6 +141,15 @@ const wrapperClassNameGenerator = tv({
   },
 })
 
+type ObjectLabelType = {
+  /** テキスト左に設置するアイコン */
+  prefix?: ReactNode
+  /** テキスト右に設置するアイコン */
+  suffix?: ReactNode
+  /** アイコンと並べるテキストとの溝 */
+  gap?: CharRelativeSize | AbstractSize
+}
+
 // VariantProps を使うとコメントが書けない〜🥹
 export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
@@ -148,20 +158,14 @@ export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof clas
   emphasis?: boolean
   /** 見た目の種類 */
   styleType?: StyleType
-  /** テキスト左に設置するアイコン */
-  prefixIcon?: ReactNode
-  /** テキスト右に設置するアイコン */
-  suffixIcon?: ReactNode
-  /** アイコンと並べるテキストとの溝 */
-  iconGap?: CharRelativeSize | AbstractSize
+  /** 設置するアイコン */
+  icon?: ReactNode | ObjectLabelType
 }
 
 const ActualText = <T extends ElementType = 'span'>({
   emphasis,
   styleType,
-  prefixIcon,
-  suffixIcon,
-  iconGap,
+  icon: orgIcon,
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
   size,
@@ -173,6 +177,20 @@ const ActualText = <T extends ElementType = 'span'>({
   children,
   ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
+  const icon: undefined | ObjectLabelType = useMemo(
+    () =>
+      // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+      !orgIcon
+        ? undefined
+        : // HINT: ReactNodeとObjectのどちらかを判定
+          // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+          typeof orgIcon !== 'object' || isValidElement(orgIcon)
+          ? {
+              prefix: orgIcon as ReactNode,
+            }
+          : (orgIcon as ObjectLabelType),
+    [orgIcon],
+  )
   const actualClassName = useMemo(() => {
     const styleTypeValues = styleType
       ? STYLE_TYPE_MAP[styleType as StyleType]
@@ -189,17 +207,17 @@ const ActualText = <T extends ElementType = 'span'>({
     })
   }, [size, weight, italic, color, leading, whiteSpace, className, styleType])
   const wrapperClassName = useMemo(
-    () => (prefixIcon || suffixIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
-    [prefixIcon, suffixIcon, iconGap],
+    () => (icon ? wrapperClassNameGenerator({ gap: icon.gap || 0.25 }) : ''),
+    [icon],
   )
 
   return (
     <Component {...rest} className={actualClassName}>
-      {prefixIcon || suffixIcon ? (
+      {icon ? (
         <span className={wrapperClassName}>
-          {prefixIcon}
+          {icon.prefix}
           {children}
-          {suffixIcon}
+          {icon.suffix}
         </span>
       ) : (
         children
