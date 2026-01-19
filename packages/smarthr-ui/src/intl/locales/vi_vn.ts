@@ -80,6 +80,7 @@ export const locale = {
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
   'smarthr-ui/SearchInput/iconAlt': 'Tìm',
   'smarthr-ui/Select/blankLabel': 'Hãy chọn',
+  'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': 'Xóa',
   'smarthr-ui/SortDropdown/applyButtonLabel': 'Áp dụng',
   'smarthr-ui/SortDropdown/ascLabel': 'Tăng dần',
