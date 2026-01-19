@@ -13,6 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useEnvironment } from '../../hooks/useEnvironment'
 import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
@@ -20,6 +21,8 @@ import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
+
+import type { Environment } from '../../hooks/useEnvironment/useEnvironment'
 
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
@@ -35,88 +38,91 @@ type AbstractProps = PropsWithChildren<{
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }> &
-  VariantProps<typeof classNameGenerator>
+  VariantProps<ReturnType<typeof classNameGenerator>>
 
 type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
-export const classNameGenerator = tv({
-  slots: {
-    wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
-    header: 'shr-p-1.5',
-    heading: 'smarthr-ui-InformationPanel-title',
-    toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
-    content: [
-      'smarthr-ui-InformationPanel-content',
-      'shr-p-1.5 shr-pt-0 shr-text-base aria-hidden:shr-hidden',
+export const classNameGenerator = ({ mobile }: Environment) =>
+  tv({
+    slots: {
+      wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
+      header: mobile ? 'shr-p-1' : 'shr-p-1.5',
+      heading: 'smarthr-ui-InformationPanel-title',
+      toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
+      content: [
+        'smarthr-ui-InformationPanel-content',
+        'shr-text-base aria-hidden:shr-hidden',
+        mobile ? 'shr-p-1 shr-pt-0' : 'shr-p-1.5 shr-pt-0',
+      ],
+    },
+    variants: {
+      type: {
+        success: {},
+        info: {},
+        warning: {},
+        error: {},
+        sync: {},
+      },
+      active: {
+        true: {},
+        false: {
+          header: 'shr-py-1',
+        },
+      },
+      bold: {
+        true: {
+          header: 'shr-py-1',
+          content: 'shr-pt-1',
+        },
+        false: {},
+      },
+    },
+    compoundVariants: [
+      {
+        type: ['success', 'warning', 'error'],
+        bold: true,
+        className: {
+          header: 'shr-text-white',
+          heading: '[&_.smarthr-ui-Icon]:shr-fill-white',
+        },
+      },
+      {
+        type: 'success',
+        bold: true,
+        className: {
+          header: 'shr-bg-main',
+        },
+      },
+      {
+        type: 'warning',
+        bold: true,
+        className: {
+          header: 'shr-bg-warning-yellow shr-text-black',
+          heading: [
+            '[&_.smarthr-ui-WarningIcon-wrapper]:shr-fill-black',
+            '[&_.smarthr-ui-WarningIcon-mark]:shr-fill-warning-yellow',
+          ],
+        },
+      },
+      {
+        type: 'error',
+        bold: true,
+        className: {
+          header: 'shr-bg-danger',
+        },
+      },
     ],
-  },
-  variants: {
-    type: {
-      success: {},
-      info: {},
-      warning: {},
-      error: {},
-      sync: {},
-    },
-    active: {
-      true: {},
-      false: {
-        header: 'shr-py-1',
-      },
-    },
-    bold: {
-      true: {
-        header: 'shr-py-1',
-        content: 'shr-pt-1',
-      },
-      false: {},
-    },
-  },
-  compoundVariants: [
-    {
-      type: ['success', 'warning', 'error'],
-      bold: true,
-      className: {
-        header: 'shr-text-white',
-        heading: '[&_.smarthr-ui-Icon]:shr-fill-white',
-      },
-    },
-    {
-      type: 'success',
-      bold: true,
-      className: {
-        header: 'shr-bg-main',
-      },
-    },
-    {
-      type: 'warning',
-      bold: true,
-      className: {
-        header: 'shr-bg-warning-yellow shr-text-black',
-        heading: [
-          '[&_.smarthr-ui-WarningIcon-wrapper]:shr-fill-black',
-          '[&_.smarthr-ui-WarningIcon-mark]:shr-fill-warning-yellow',
-        ],
-      },
-    },
-    {
-      type: 'error',
-      bold: true,
-      className: {
-        header: 'shr-bg-danger',
-      },
-    },
-  ],
-})
+  })
 
+// Disclosureで書き直したい
 export const InformationPanel: FC<Props> = ({
   title,
-  titleTag,
+  titleTag, // asにしたい
   type = 'info',
   toggleable,
-  active: activeProps = true,
+  active: activeProps = true, // openにしたい
   bold,
   className,
   children,
@@ -128,18 +134,22 @@ export const InformationPanel: FC<Props> = ({
   const id = useId()
   const titleId = `${id}-title`
   const contentId = `${id}-content`
+  const environment = useEnvironment()
 
+  // このeffectを消したい
   useEffect(() => {
     setActive(activeProps)
   }, [activeProps])
 
   const classNamesMapper = useMemo(() => {
-    const withActive = classNameGenerator({
+    const _classNameGenerator = classNameGenerator(environment)
+    // 2つ生成したくない
+    const withActive = _classNameGenerator({
       type,
       active: true,
       bold,
     })
-    const withInactive = classNameGenerator({
+    const withInactive = _classNameGenerator({
       type,
       active: false,
       bold,
@@ -163,13 +173,13 @@ export const InformationPanel: FC<Props> = ({
         content: withInactive.content(),
       },
     }
-  }, [bold, type, className])
+  }, [bold, type, className, environment])
 
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
     <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
-      <Sidebar align="baseline" right className={classNames.header}>
+      <Sidebar align="center" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
           {title}
@@ -216,6 +226,7 @@ const ToggleableButton: FC<
   }
 > = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
   const { localize } = useIntl()
+  const { mobile } = useEnvironment()
 
   const decoratorDefaultTexts = useMemo(
     () => ({
@@ -243,11 +254,19 @@ const ToggleableButton: FC<
       aria-expanded={active}
       aria-controls={contentId}
       onClick={onClick}
-      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+      suffix={mobile ? null : active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
       size="s"
       className={className}
     >
-      {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
+      {mobile ? (
+        active ? (
+          <FaCaretUpIcon alt={decorated.closeButtonLabel} />
+        ) : (
+          <FaCaretDownIcon alt={decorated.openButtonLabel} />
+        )
+      ) : (
+        decorated[active ? 'closeButtonLabel' : 'openButtonLabel']
+      )}
     </Button>
   )
 }
