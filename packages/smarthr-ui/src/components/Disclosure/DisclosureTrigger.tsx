@@ -52,10 +52,10 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({
     const actualChildren = children instanceof Function ? children({ expanded }) : children
 
     return cloneElement(actualChildren as ReactElement, {
+      ...rest,
       onClick: actualOnClick,
       'aria-expanded': expanded.toString(),
       'aria-controls': targetId,
-      ...rest,
     })
   }, [expanded, children, actualOnClick, targetId, rest])
 

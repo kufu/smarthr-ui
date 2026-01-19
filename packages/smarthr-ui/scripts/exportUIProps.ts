@@ -1,10 +1,10 @@
-import fs from 'fs/promises'
-import path from 'path'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 import { glob } from 'glob'
 import * as docgen from 'react-docgen-typescript'
 
-const relativePath = path.relative(process.cwd(), __dirname)
+const relativePath = path.relative(process.cwd(), import.meta.dirname)
 const SRC_PATH = path.join(relativePath, '../lib/**/**.d.ts')
 const IGNORE_FILE_WORDS = ['test', 'libs', 'use', 'index.d.ts', 'hocs', 'setupTests']
 const excludeFilesRegExp = new RegExp(`^(?!.*(${IGNORE_FILE_WORDS.join('|')})).*$`)
@@ -25,7 +25,7 @@ glob(SRC_PATH).then(
         },
       },
     )
-    const docs = fileParser.parse(targets).map(({ props, ...other }) => {
+    const docs = fileParser.parse(targets).map(({ props, ...rest }) => {
       const filteredProps = Object.keys(props).flatMap((name) => {
         const propItem = props[name]
         const declarations = propItem.declarations
@@ -42,12 +42,12 @@ glob(SRC_PATH).then(
       })
 
       return {
-        ...other,
+        ...rest,
         props: filteredProps,
       }
     })
     await fs.writeFile(
-      path.join(__dirname, '../public/exports/smarthr-ui-props.json'),
+      path.join(import.meta.dirname, '../public/exports/smarthr-ui-props.json'),
       JSON.stringify(docs),
     )
   },

@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+import { OpenInNewTabIcon } from '../Icon'
 
 import type { ElementRef, ElementRefProps } from '../../types'
 
@@ -78,18 +78,19 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       suffix,
       className,
       size,
-      ...others
+      ...rest
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
     const Anchor = elementAs || 'a'
     const actualSuffix = useMemo(() => {
-      if (target === '_blank' && !suffix) {
+      // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
+      if (target === '_blank' && !prefix && suffix === undefined) {
         return <OpenInNewTabIcon />
       }
 
       return suffix
-    }, [suffix, target])
+    }, [prefix, suffix, target])
     const actualHref = useMemo(() => {
       if (href) {
         return href
@@ -124,7 +125,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
 
     return (
       <Anchor
-        {...others}
+        {...rest}
         ref={ref}
         href={actualHref}
         target={target}

@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { InputFile } from '../InputFile'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/InputFile',
@@ -46,9 +46,9 @@ export const Multiple: StoryObj<typeof InputFile> = {
   args: { multiple: true },
 }
 
-export const MultiplyAppendable: StoryObj<typeof InputFile> = {
-  name: 'multiplyAppendable',
-  args: { multiplyAppendable: true },
+export const MultipleAppendable: StoryObj<typeof InputFile> = {
+  name: 'multiple.appendable',
+  args: { multiple: { appendable: true } },
 }
 
 export const Disabled: StoryObj<typeof InputFile> = {

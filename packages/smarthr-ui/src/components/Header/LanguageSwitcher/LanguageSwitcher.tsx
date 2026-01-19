@@ -20,7 +20,7 @@ import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../I
 
 import type { Locale } from '../../../intl/localeMap'
 
-export type Props = {
+export type AbstractProps = {
   narrow?: boolean
   localeMap: Partial<Record<Locale, string>>
   locale?: string
@@ -31,7 +31,7 @@ export type Props = {
   onLanguageSelect?: (code: string) => void
 } & VariantProps<typeof classNameGenerator>
 
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
 
 // トリガーはどの言語でも英語のままLanguageと表示するのが好ましいため、intlにはおかない。decoratorは一旦そのままにしている。
 const DECORATOR_DEFAULT_TEXTS = {
@@ -43,6 +43,16 @@ type DecoratorKeyTypes = 'checkIconAlt' | keyof typeof DECORATOR_DEFAULT_TEXTS
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
 
+// 配列のインデックスを循環的に移動する（最初→最後、最後→最初）
+const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayLength: number) => {
+  if (direction === 'up') {
+    // 負の数を避けるため arrayLength を加算してから剰余を取る
+    return (currentIndex - 1 + arrayLength) % arrayLength
+  }
+  // 次の要素へ移動（最後の場合は 0 に戻る）
+  return (currentIndex + 1) % arrayLength
+}
+
 const onKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
@@ -51,16 +61,11 @@ const onKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   e.preventDefault()
 
   const buttons = tabbable(e.currentTarget)
-  const i = buttons.indexOf(e.target as HTMLElement)
-  let buttonAt = 0
+  const currentIndex = buttons.indexOf(e.target as HTMLElement)
+  const direction = ARROW_UPS_REGEX.test(e.key) ? 'up' : 'down'
+  const nextIndex = getCircularIndex(currentIndex, direction, buttons.length)
 
-  if (ARROW_UPS_REGEX.test(e.key)) {
-    buttonAt = i - 1
-  } else if (i + 1 === buttons.length) {
-    buttonAt = i + 1
-  }
-
-  buttons.at(buttonAt)?.focus()
+  buttons[nextIndex]?.focus()
 }
 
 const classNameGenerator = tv({
@@ -98,7 +103,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const LanguageSwitcher: FC<Props & ElementProps> = ({
+export const LanguageSwitcher: FC<Props> = ({
   narrow,
   enableNew,
   invert = enableNew,

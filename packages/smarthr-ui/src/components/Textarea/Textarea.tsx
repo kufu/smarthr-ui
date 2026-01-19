@@ -24,7 +24,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'
 
-type Props = {
+type AbstractProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
   /** コンポーネントの幅 */
@@ -46,7 +46,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<ComponentPropsWithRef<'textarea'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {
@@ -112,7 +112,7 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
   (
     {
       autoFocus,
@@ -122,12 +122,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       autoResize = false,
       maxRows = Infinity,
       rows = 2,
-      onInput,
       decorators,
       error,
       onChange,
       value,
-      ...props
+      defaultValue,
+      ...rest
     },
     ref,
   ) => {
@@ -136,7 +136,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const currentValue = props.defaultValue || value
+    const currentValue = defaultValue || value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
@@ -272,9 +272,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         const newValue = e.target.value
         debouncedUpdateCount?.(newValue)
         debouncedUpdateSrCounterMessage?.(newValue)
+
+        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
+        e.target.rows = rows
+
+        if (autoResize) {
+          const currentRows = calculateIdealRows(e.target, maxRows)
+          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
+          e.target.rows = currentRows
+          setInterimRows(currentRows)
+        }
+
         onChange?.(e)
       },
-      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage],
+      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage, autoResize, maxRows, rows],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -299,23 +310,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       }
     }, [maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage, value])
 
-    const handleInput = useCallback(
-      (e: ChangeEvent<HTMLTextAreaElement>) => {
-        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = rows
-
-        if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows)
-          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
-          e.target.rows = currentRows
-          setInterimRows(currentRows)
-        }
-
-        onInput?.(e)
-      },
-      [autoResize, maxRows, onInput, rows],
-    )
-
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
       [width],
@@ -332,22 +326,22 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     const body = (
       <textarea
-        {...props}
+        {...rest}
         {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
         data-smarthr-ui-input="true"
         value={value}
+        defaultValue={defaultValue}
         onChange={handleChange}
         ref={textareaRef}
         aria-invalid={error || countError || undefined}
         rows={interimRows}
-        onInput={handleInput}
         className={classNames.textarea}
         style={textareaStyle}
       />
     )
 
     return maxLetters ? (
-      <span>
+      <span className="shr-relative">
         {body}
         <VisuallyHiddenText id={maxLettersNoticeId}>
           {buildScreenReaderMaxLettersDescription(maxLetters)}

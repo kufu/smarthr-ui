@@ -2,7 +2,7 @@ import { backgroundColor } from '../../../themes'
 import { Stack } from '../../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/SmartHRLogo',
@@ -45,7 +45,7 @@ export const Fill: StoryObj<typeof SmartHRLogo> = {
   render: (args) => (
     <Stack className="shr-bg-background" inline>
       {[undefined, 'white', 'brand', 'black'].map((fill) => (
-        <SmartHRLogo {...args} fill={fill as any} />
+        <SmartHRLogo {...args} key={fill || 'undefined'} fill={fill as any} />
       ))}
     </Stack>
   ),

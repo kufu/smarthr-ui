@@ -23,8 +23,6 @@ describe('Fieldset', () => {
   it('子要素が可視ラベルを持たないaria-labelを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
     render(
       <form>
-        {/* アクセシブルネームを付けるのにtitleは最適ではないためルール修正まで一時的にdisableにしている */}
-        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <Fieldset legend="fieldset-legend">
           <Input name="test1" aria-label="input-accessible-name-1" />
           <Input name="test2" aria-label="input-accessible-name-2" />
@@ -60,5 +58,27 @@ describe('Fieldset', () => {
     expect(
       screen.getByRole('textbox', { name: 'form-control-label2 fieldset-legend' }),
     ).toBeInTheDocument()
+  })
+
+  it('子要素が可視ラベルを持たないaria-labelを持つフォームコントロール要素であってもラベルが重複する内容の場合、アクセシブルネームにlegend文言を追加しない', async () => {
+    render(
+      <form>
+        <Fieldset legend="追加されないラベル1">
+          <FormControl label={{ text: '追加されないラベル1の子ラベル', dangerouslyHide: true }}>
+            <Input name="test1" />
+          </FormControl>
+        </Fieldset>
+        <Fieldset legend="追加されないラベル2の親ラベル">
+          <FormControl label={{ text: '追加されないラベル2', dangerouslyHide: true }}>
+            <Input name="test1" />
+          </FormControl>
+        </Fieldset>
+      </form>,
+    )
+
+    expect(
+      screen.getByRole('textbox', { name: '追加されないラベル1の子ラベル' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: '追加されないラベル2' })).toBeInTheDocument()
   })
 })

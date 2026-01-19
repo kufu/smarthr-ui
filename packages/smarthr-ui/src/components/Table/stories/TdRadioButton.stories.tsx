@@ -2,7 +2,7 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdRadioButton } from '../TdRadioButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof TdRadioButton> = (args) => (
   <Table>
@@ -56,9 +56,9 @@ export const VAlign: StoryObj<typeof TdRadioButton> = {
     <Table>
       <tbody>
         <tr className="shr-h-[4em]">
-          <TdRadioButton name="vAlign-group" {...args} />
-          <TdRadioButton name="vAlign-group" {...args} vAlign="middle" />
-          <TdRadioButton name="vAlign-group" {...args} vAlign="baseline" />
+          <TdRadioButton {...args} name="vAlign_group" />
+          <TdRadioButton {...args} name="vAlign_group" vAlign="middle" />
+          <TdRadioButton {...args} name="vAlign_group" vAlign="baseline" />
         </tr>
       </tbody>
     </Table>

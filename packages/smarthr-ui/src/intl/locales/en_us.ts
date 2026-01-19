@@ -81,7 +81,7 @@ export const locale = {
   'smarthr-ui/SearchInput/iconAlt': 'Search',
   'smarthr-ui/Select/blankLabel': 'Select',
   'smarthr-ui/SideMenu/navigationLabel': '',
-  'smarthr-ui/SingleCombobox/destroyButtonIconAlt': 'Delete',
+  'smarthr-ui/SingleCombobox/destroyButtonIconAlt': 'Clear',
   'smarthr-ui/SortDropdown/applyButtonLabel': 'Apply',
   'smarthr-ui/SortDropdown/ascLabel': 'Ascending',
   'smarthr-ui/SortDropdown/cancelButtonLabel': 'Cancel',

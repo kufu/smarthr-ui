@@ -17,12 +17,12 @@ export const Localizer = <ID extends keyof Messages>({
   values,
   id,
   defaultText,
-  ...props
+  ...rest
 }: Props<ID>) => (
   <ReactIntlFormattedMessage
-    {...props}
+    {...rest}
     id={id}
     defaultMessage={defaultText}
-    values={{ break: <br />, ...values }}
+    values={{ ...values, break: values?.break ?? <br /> }}
   />
 )

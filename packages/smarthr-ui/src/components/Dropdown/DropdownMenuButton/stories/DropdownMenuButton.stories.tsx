@@ -6,7 +6,7 @@ import { FaGearIcon } from '../../../Icon'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _sampleTriggerIcons = {
   undefined,
@@ -24,20 +24,13 @@ export default {
       <RemoteDialogTrigger targetId="remoteDialog" onClick={action('open-remote-dialog')}>
         <Button>操作3</Button>
       </RemoteDialogTrigger>
-      <Button onClick={action('action4')} disabled={true} disabledDetail={{ message: 'disabled.' }}>
+      <Button onClick={action('action4')} disabled={true} disabledReason={{ message: 'disabled.' }}>
         操作4
       </Button>
     </DropdownMenuButton>
   ),
-  argTypes: {
-    triggerIcon: {
-      control: 'radio',
-      options: Object.keys(_sampleTriggerIcons),
-      mapping: _sampleTriggerIcons,
-    },
-  },
   args: {
-    label: 'その他の操作',
+    trigger: 'その他の操作',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -46,37 +39,49 @@ export default {
 
 export const Playground: StoryObj<typeof DropdownMenuButton> = {
   args: {
-    triggerSize: 'default',
-    onlyIconTrigger: false,
+    trigger: {
+      children: 'その他の操作',
+      size: 'default',
+    },
   },
 }
 
-export const Label: StoryObj<typeof DropdownMenuButton> = {
-  name: 'label',
+export const Trigger: StoryObj<typeof DropdownMenuButton> = {
+  name: 'trigger',
   args: {
-    label: 'ドロップダウンメニューボタンラベル',
+    trigger: 'ドロップダウンメニューボタンラベル',
   },
 }
 
 export const TriggerSize: StoryObj<typeof DropdownMenuButton> = {
-  name: 'triggerSize',
+  name: 'trigger.size',
   args: {
-    triggerSize: 's',
+    trigger: {
+      children: 'ドロップダウンメニューボタンラベル',
+      size: 's',
+    },
   },
 }
 
-export const OnlyIconTrigger: StoryObj<typeof DropdownMenuButton> = {
-  name: 'onlyIconTrigger',
+export const TriggerOnlyIcon: StoryObj<typeof DropdownMenuButton> = {
+  name: 'trigger.onlyIcon',
   args: {
-    onlyIconTrigger: true,
+    trigger: {
+      children: 'ドロップダウンメニューボタンラベル',
+      // onlyIcon が falsy の時は、開閉を示唆する FaCaretDownIcon が表示されます
+      onlyIcon: true,
+    },
   },
 }
 
-export const TriggerIcon: StoryObj<typeof DropdownMenuButton> = {
-  name: 'triggerIcon',
+export const TriggerOnlyIconComponent: StoryObj<typeof DropdownMenuButton> = {
+  name: 'trigger.onlyIcon.component',
   args: {
-    // onlyIconTrigger が false の時は、開閉を示唆する FaCaretDownIcon が表示されます
-    onlyIconTrigger: true,
-    triggerIcon: FaGearIcon,
+    trigger: {
+      children: 'ドロップダウンメニューボタンラベル',
+      onlyIcon: {
+        component: FaGearIcon,
+      },
+    },
   },
 }

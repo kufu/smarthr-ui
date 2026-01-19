@@ -1,8 +1,7 @@
-import { Container } from '../Container'
-
 import { Size } from './Container.stories'
 
-import type { Meta } from '@storybook/react'
+import type { Container } from '../Container'
+import type { Meta } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Layout/Container/VRT',

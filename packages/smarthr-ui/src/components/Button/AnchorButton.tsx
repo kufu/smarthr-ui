@@ -12,27 +12,26 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+import { OpenInNewTabIcon } from '../Icon'
 
 import { ButtonWrapper } from './ButtonWrapper'
-import { DisabledDetail } from './DisabledDetail'
+import { DisabledReason } from './DisabledReason'
 
-import type { BaseProps } from './types'
+import type { AbstractProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
 
-// tertiaryはAnchorButtonでは使用不可
-type AnchorButtonVariant = Exclude<BaseProps['variant'], 'tertiary'>
+type AbstractProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disabledReason'> & {
+  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  elementAs?: T
+  // tertiaryはAnchorButtonでは使用不可
+  variant?: Exclude<ButtonProps['variant'], 'tertiary'>
+  inactiveReason?: ButtonProps['disabledReason']
+}
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
-  keyof Props<T> & ElementRefProps<T>
+  keyof AbstractProps<T> & ElementRefProps<T>
 >
-
-type Props<T extends ElementType> = Omit<BaseProps, 'variant'> & {
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  elementAs?: T
-  variant?: AnchorButtonVariant
-}
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-AnchorButton',
@@ -46,29 +45,32 @@ const AnchorButton = forwardRef(
       suffix,
       wide = false,
       variant = 'secondary',
-      disabledDetail,
+      inactiveReason,
       target,
       rel,
       elementAs,
       className,
       children,
-      ...props
-    }: PropsWithoutRef<Props<T>> & ElementProps<T>,
+      href,
+      ...rest
+    }: PropsWithoutRef<AbstractProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     const actualSuffix = useMemo(() => {
-      if (target === '_blank' && !suffix) {
+      // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
+      if (target === '_blank' && !prefix && suffix === undefined) {
         return <OpenInNewTabIcon />
       }
 
       return suffix
-    }, [suffix, target])
+    }, [prefix, suffix, target])
 
     const button = (
       <ButtonWrapper
-        {...props}
+        {...rest}
+        href={href}
         size={size}
         wide={wide}
         variant={variant}
@@ -85,8 +87,8 @@ const AnchorButton = forwardRef(
       </ButtonWrapper>
     )
 
-    if (!props.href && disabledDetail) {
-      return <DisabledDetail button={button} disabledDetail={disabledDetail} />
+    if (!href && inactiveReason) {
+      return <DisabledReason button={button} disabledReason={inactiveReason} />
     }
 
     return button
@@ -95,7 +97,7 @@ const AnchorButton = forwardRef(
 
 // 型キャストなしで ForwardRefExoticComponent に合わせた型をエクスポートするための処理
 type AnchorButtonType = <T extends ElementType = 'a'>(
-  props: Props<T> & ElementProps<T> & ElementRefProps<T>,
+  props: AbstractProps<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
 const ForwardedAnchorButton = AnchorButton as unknown as AnchorButtonType & {

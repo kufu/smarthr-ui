@@ -11,12 +11,11 @@ import { tv } from 'tailwind-variants'
 
 import { Section } from '../SectioningContent'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** アイテムを識別するための名前 */
   name: string
 }>
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'section'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'section'>, keyof AbstractProps>
 
 export const AccordionPanelItemContext = createContext<{ name: string }>({
   name: '',
@@ -26,7 +25,7 @@ const classNameGenerator = tv({
   base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
 })
 
-export const AccordionPanelItem: FC<Props & ElementProps> = ({ name, className, ...props }) => {
+export const AccordionPanelItem: FC<Props> = ({ name, className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
@@ -35,7 +34,7 @@ export const AccordionPanelItem: FC<Props & ElementProps> = ({ name, className, 
         name,
       }}
     >
-      <Section {...props} className={actualClassName} />
+      <Section {...rest} className={actualClassName} />
     </AccordionPanelItemContext.Provider>
   )
 }

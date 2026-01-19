@@ -16,6 +16,7 @@ type Props = PropsWithChildren<{
 const classNameGenerator = tv({
   slots: {
     inner: [
+      'shr-relative',
       'shr-flex shr-justify-center shr-px-1 shr-py-0.75',
       '[&:not(:has([disabled]))]:shr-cursor-pointer',
     ],
@@ -40,6 +41,7 @@ export const TdRadioButton = forwardRef<HTMLInputElement, Props>(
       // Td に必要な属性やイベントは不要
       <Td vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
+          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <RadioButton {...rest} ref={ref} className={classNames.radio} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>

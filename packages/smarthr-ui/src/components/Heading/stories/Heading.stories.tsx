@@ -1,9 +1,9 @@
-import { ComponentPropsWithoutRef } from 'react'
+import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Heading } from '../Heading'
-import { FaAddressBookIcon } from '../../Icon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentPropsWithoutRef } from 'react'
 
 export default {
   title: 'Components/Heading',

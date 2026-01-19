@@ -1,9 +1,10 @@
 import { useArgs } from 'storybook/preview-api'
-import { Meta, StoryObj } from '@storybook/react'
 
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { MultiCombobox } from '../MultiCombobox'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export const defaultItems = {
   'option 1': {

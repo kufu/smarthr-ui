@@ -75,8 +75,10 @@ export const FileViewer: FC<Props> = ({
   }, [internalScaleStep])
 
   const rotate = useCallback(() => {
-    setRotation((currentRotation) => currentRotation - 90)
-  }, [])
+    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+    const newRotation = rotation === 0 ? 270 : rotation - 90
+    setRotation(newRotation)
+  }, [rotation])
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
@@ -184,7 +186,7 @@ const Controller: FC<ControllerProps> = memo(
             />
           </Button>
           <DropdownMenuButton
-            label={
+            trigger={
               <Text>
                 <VisuallyHiddenText>
                   <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />

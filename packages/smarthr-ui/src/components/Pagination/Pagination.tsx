@@ -72,8 +72,7 @@ type AnchorProps = CommonProps & {
 }
 
 type AbstractProps = ButtonProps | AnchorProps
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
 
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i
@@ -93,7 +92,7 @@ const ActualPagination: FC<Props> = ({
   withoutNumbers,
   hrefTemplate,
   linkAs,
-  ...props
+  ...rest
 }) => {
   const { localize } = useIntl()
   const classNames = useMemo(() => {
@@ -151,7 +150,7 @@ const ActualPagination: FC<Props> = ({
   )
 
   return (
-    <Nav {...props} className={classNames.wrapper} aria-label={navigationLabel}>
+    <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
       <Reel onClick={actualOnClick} role="presentation">
         <ItemButtons
           total={total}

@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
-import { FaAddressBookIcon, WarningIcon } from '../Icon'
+import { FaAddressBookIcon, WarningIcon } from '../index'
 
-import type { StoryObj } from '@storybook/react'
+import type { StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Icon/VRT',

@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { InformationPanel, classNameGenerator } from '../InformationPanel'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/InformationPanel',
@@ -58,16 +58,16 @@ export const TitleTag: StoryObj<typeof InformationPanel> = {
   },
 }
 
-export const Togglable: StoryObj<typeof InformationPanel> = {
-  name: 'togglable',
+export const Toggleable: StoryObj<typeof InformationPanel> = {
+  name: 'toggleable',
   render: (args) => (
     <Stack>
-      {[undefined, false, true].map((togglable) => (
+      {[undefined, false, true].map((toggleable) => (
         <InformationPanel
           {...args}
-          title={`togglable: ${togglable}`}
-          togglable={togglable}
-          key={String(togglable)}
+          title={`toggleable: ${toggleable}`}
+          toggleable={toggleable}
+          key={String(toggleable)}
         />
       ))}
     </Stack>

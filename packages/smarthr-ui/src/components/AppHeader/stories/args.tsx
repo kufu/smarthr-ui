@@ -1,11 +1,18 @@
+/* eslint-disable smarthr/require-i18n-text */
+
 import { action } from 'storybook/actions'
 
 import type { AppHeader } from '../AppHeader'
 import type { ComponentProps, FC, PropsWithChildren } from 'react'
 
-const CustomLink: FC<PropsWithChildren<{ to: string; className?: string }>> = (props) => (
-  <a {...props} href={props.to} className={props.className ?? ''}>
-    {props.children}
+const CustomLink: FC<PropsWithChildren<{ to: string; className?: string }>> = ({
+  to,
+  className,
+  children,
+  ...rest
+}) => (
+  <a {...rest} href={to} className={className ?? ''}>
+    {children}
   </a>
 )
 
