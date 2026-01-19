@@ -44,7 +44,7 @@ const classNameGenerator = tv({
       ],
     ],
     actionItem: [
-      'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
+      '[&&]:aria-current-page:shr-bg-grey-9 [&&]:aria-current-page:shr-font-bold',
       // aria-current-page より詳細度を確実に上げる
       '[&&]:hover:shr-bg-head-darken',
     ],
