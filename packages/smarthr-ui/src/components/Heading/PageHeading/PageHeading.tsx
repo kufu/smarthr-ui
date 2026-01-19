@@ -4,6 +4,7 @@ import { type PropsWithChildren, memo, useEffect, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { isNextjs } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
 
@@ -72,6 +73,14 @@ export const PageHeading = memo<Props>(
 
     useEffect(() => {
       if (titleText) {
+        document.title = titleText
+      }
+
+      return undefined
+    }, [titleText])
+
+    useEffect(() => {
+      if (titleText && !isNextjs()) {
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
         const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
@@ -82,9 +91,8 @@ export const PageHeading = memo<Props>(
         pseudoTitle.setAttribute('aria-live', 'polite')
         document.body.prepend(pseudoTitle)
 
-        document.title = titleText
         requestAnimationFrame(() => {
-          pseudoTitle.innerText = titleText
+          pseudoTitle.textContent = titleText
         })
 
         return () => {
