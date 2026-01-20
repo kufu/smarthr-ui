@@ -44,8 +44,8 @@ const classNameGenerator = tv({
       ],
     ],
     actionItem: [
+      // HINT: DropdownMenuButton内で設定されるclassNameより優先度を上げる必要がある
       '[&&]:aria-current-page:shr-bg-grey-9 [&&]:aria-current-page:shr-font-bold',
-      // aria-current-page より詳細度を確実に上げる
       '[&&]:hover:shr-bg-head-darken',
     ],
   },
