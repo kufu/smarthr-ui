@@ -27,7 +27,7 @@ export default {
 
 export const Playground: StoryObj<typeof Switch> = {}
 
-export const unrecommendedLabelHidden: StoryObj<typeof Switch> = {
+export const UnrecommendedLabelHidden: StoryObj<typeof Switch> = {
   name: 'unrecommendedLabelHidden',
   args: {
     unrecommendedLabelHidden: true,

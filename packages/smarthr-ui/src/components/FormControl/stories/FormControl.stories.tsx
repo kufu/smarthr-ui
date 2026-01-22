@@ -103,7 +103,7 @@ export const LabelStyleType: StoryObj<typeof FormControl> = {
   ),
 }
 
-export const unrecommendedTitleHidden: StoryObj<typeof FormControl> = {
+export const UnrecommendedTitleHidden: StoryObj<typeof FormControl> = {
   name: 'label.unrecommendedHide（利用注意）',
   args: {
     label: {
