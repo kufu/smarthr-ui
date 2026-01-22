@@ -63,18 +63,19 @@ export const SideNavItemButton: FC<Props> = ({
   size,
   onClick,
   children,
+  className,
   ...rest
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, button, buttonBody, buttonTitle } = classNameGenerator()
 
     return {
-      wrapper: wrapper(),
+      wrapper: wrapper({ className }),
       button: button({ size: size ?? 'default' }),
       buttonBody: buttonBody(),
       buttonTitle: buttonTitle(),
     }
-  }, [size])
+  }, [className, size])
 
   return (
     <li {...rest} data-current={!!current} className={classNames.wrapper}>
