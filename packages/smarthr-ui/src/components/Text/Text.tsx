@@ -93,6 +93,14 @@ const classNameGenerator = tv({
       'pre-line': 'shr-whitespace-pre-line',
       'pre-wrap': 'shr-whitespace-pre-wrap',
     },
+    maxLines: {
+      1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+      2: 'shr-line-clamp-[2]',
+      3: 'shr-line-clamp-[3]',
+      4: 'shr-line-clamp-[4]',
+      5: 'shr-line-clamp-[5]',
+      6: 'shr-line-clamp-[6]',
+    },
   },
 })
 
@@ -169,10 +177,15 @@ const ActualText = <T extends ElementType = 'span'>({
   color,
   leading,
   whiteSpace,
+  maxLines,
   className,
   children,
   ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
+  if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
+    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+  }
+
   const actualClassName = useMemo(() => {
     const styleTypeValues = styleType
       ? STYLE_TYPE_MAP[styleType as StyleType]
@@ -185,9 +198,10 @@ const ActualText = <T extends ElementType = 'span'>({
       leading: leading || styleTypeValues.leading,
       italic,
       whiteSpace,
+      maxLines,
       className,
     })
-  }, [size, weight, italic, color, leading, whiteSpace, className, styleType])
+  }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
   const wrapperClassName = useMemo(
     () => (prefixIcon || suffixIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
     [prefixIcon, suffixIcon, iconGap],
