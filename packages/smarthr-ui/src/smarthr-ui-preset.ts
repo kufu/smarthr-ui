@@ -411,8 +411,10 @@ export default {
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
         '.focus-indicator': {
-          outline: `3px solid ${theme('colors.outline')}`,
-          outlineOffset: '-6px',
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '-2px',
+          boxShadow: `inset 0 0 0 3px ${theme('colors.white')}`,
+          isolation: 'isolate',
         },
         '.focus-indicator--inverse': {
           outline: `3px solid ${theme('colors.white')}`,
