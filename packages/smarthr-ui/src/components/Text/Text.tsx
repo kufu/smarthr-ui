@@ -3,11 +3,12 @@ import {
   type ElementType,
   type PropsWithChildren,
   type ReactNode,
-  isValidElement,
   memo,
   useMemo,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
+
+import { convertObjectAttributes } from '../../libs/convertObjectAttributes'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import type { Gap } from '../../types'
@@ -150,6 +151,9 @@ type ObjectLabelType = {
   gap?: CharRelativeSize | AbstractSize
 }
 
+type ActualIconType = undefined | ObjectLabelType
+type IconType = ActualIconType | ReactNode
+
 // VariantProps を使うとコメントが書けない〜🥹
 export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
@@ -159,7 +163,7 @@ export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof clas
   /** 見た目の種類 */
   styleType?: StyleType
   /** 設置するアイコン */
-  icon?: ReactNode | ObjectLabelType
+  icon?: IconType
 }
 
 const ActualText = <T extends ElementType = 'span'>({
@@ -177,18 +181,11 @@ const ActualText = <T extends ElementType = 'span'>({
   children,
   ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const icon: undefined | ObjectLabelType = useMemo(
+  const icon = useMemo(
     () =>
-      // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-      !orgIcon
-        ? undefined
-        : // HINT: ReactNodeとObjectのどちらかを判定
-          // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-          typeof orgIcon !== 'object' || isValidElement(orgIcon)
-          ? {
-              prefix: orgIcon as ReactNode,
-            }
-          : (orgIcon as ObjectLabelType),
+      convertObjectAttributes<IconType, ActualIconType>(orgIcon, (org) =>
+        org ? { prefix: org } : undefined,
+      ),
     [orgIcon],
   )
   const actualClassName = useMemo(() => {
