@@ -194,13 +194,13 @@ export default {
       DEFAULT: defaultColor.OUTLINE,
     },
     spacing: {
-      px: '1px',
-      em: '1em',
       ...(spacingSizes
         .map((size) => ({
           [size]: spacingByChar(size),
         }))
         .reduce((a, c) => Object.assign(a, c), {}) as Spacing),
+      px: '1px',
+      em: '1em',
     },
     stroke: {
       black: defaultColor.GREY_100,
