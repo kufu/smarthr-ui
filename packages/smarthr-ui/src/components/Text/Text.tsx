@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { convertObjectAttributes } from '../../libs/convertObjectAttributes'
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import type { Gap } from '../../types'
@@ -166,6 +166,8 @@ export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof clas
   icon?: IconType
 }
 
+const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
+
 const ActualText = <T extends ElementType = 'span'>({
   emphasis,
   styleType,
@@ -181,13 +183,7 @@ const ActualText = <T extends ElementType = 'span'>({
   children,
   ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const icon = useMemo(
-    () =>
-      convertObjectAttributes<IconType, ActualIconType>(orgIcon, (org) =>
-        org ? { prefix: org } : undefined,
-      ),
-    [orgIcon],
-  )
+  const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
   const actualClassName = useMemo(() => {
     const styleTypeValues = styleType
       ? STYLE_TYPE_MAP[styleType as StyleType]

@@ -9,7 +9,6 @@ import {
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
-  isValidElement,
   memo,
   useEffect,
   useMemo,
@@ -20,6 +19,7 @@ import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
@@ -74,6 +74,8 @@ type AbstractProps = PropsWithChildren<{
 }>
 type Props = AbstractProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'aria-labelledby'>
+
+const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
 const classNameGenerator = tv({
   slots: {
@@ -164,16 +166,10 @@ export const ActualFormControl: FC<Props> = ({
   children,
   ...rest
 }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const label: ObjectLabelType =
-    !orgLabel || typeof orgLabel !== 'object' || isValidElement(orgLabel)
-      ? {
-          text: orgLabel as ReactNode,
-        }
-      : (orgLabel as ObjectLabelType)
-
+  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
+    orgLabel,
+    labelObjectConverter,
+  )
   const defaultHtmlFor = useId()
   const defaultLabelId = useId()
   const [childInputId, setChildInputId] = useState<string>('')
