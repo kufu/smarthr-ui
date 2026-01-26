@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [83.0.1](https://github.com/kufu/smarthr-ui/compare/v83.0.0...v83.0.1) (2026-01-22)
+
+
+### Bug Fixes
+
+* **SideNavItemButton:** classNameを指定しても設定されないバグを修正する ([#6049](https://github.com/kufu/smarthr-ui/issues/6049)) ([dc31c01](https://github.com/kufu/smarthr-ui/commit/dc31c0171a5106bdf7e50ea81f34449e82d9569d))
+* **Table:** Revert "fixedHeadのPropsがある場合、キーボード操作の逆タブ操作でフォーカス中のエレメントが被ってしまう ([#6051](https://github.com/kufu/smarthr-ui/issues/6051)) ([3b4395c](https://github.com/kufu/smarthr-ui/commit/3b4395cb8df69e7a982c2bbc726bdc673b91afb0))
+
 ## [83.0.0](https://github.com/kufu/smarthr-ui/compare/v82.1.0...v83.0.0) (2026-01-15)
 
 
