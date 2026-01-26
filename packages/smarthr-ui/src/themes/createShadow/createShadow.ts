@@ -30,6 +30,7 @@ export type CreatedShadowTheme = {
 
 const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
 
+// 将来的になんらか別のデザイントークンに移行したい
 const createFocusIndicatorStyles = (outlineColor: string) => css`
   /* stylelint-disable no-invalid-position-declaration */
   isolation: isolate;
