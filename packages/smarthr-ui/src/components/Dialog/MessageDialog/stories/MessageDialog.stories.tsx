@@ -22,13 +22,8 @@ export default {
       </>
     )
   },
-  argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
-    },
-  },
   args: {
-    title: 'メッセージダイアログタイトル',
+    heading: 'メッセージダイアログタイトル',
     description: 'メッセージダイアログ本文',
   },
   parameters: {
@@ -38,24 +33,20 @@ export default {
 
 export const Playground: StoryObj<typeof MessageDialog> = {}
 
-export const Title: StoryObj<typeof MessageDialog> = {
-  name: 'title',
+export const Heading: StoryObj<typeof MessageDialog> = {
+  name: 'heading',
   args: {
-    title: 'メッセージダイアログタイトル',
+    heading: 'メッセージダイアログタイトル',
   },
 }
 
-export const Subtitle: StoryObj<typeof MessageDialog> = {
-  name: 'subtitle',
+export const HeadingSub: StoryObj<typeof MessageDialog> = {
+  name: 'heading.sub',
   args: {
-    subtitle: 'メッセージダイアログサブタイトル',
-  },
-}
-
-export const TitleTag: StoryObj<typeof MessageDialog> = {
-  name: 'titleTag（非推奨）',
-  args: {
-    titleTag: 'h3',
+    heading: {
+      text: 'メッセージダイアログタイトル',
+      sub: 'メッセージダイアログサブタイトル',
+    },
   },
 }
 
