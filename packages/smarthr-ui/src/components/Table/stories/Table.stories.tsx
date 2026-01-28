@@ -91,6 +91,13 @@ export const Layout: StoryObj<typeof Table> = {
 
 export const FixedHead: StoryObj<typeof Table> = {
   name: 'fixedHead',
+  decorators: [
+    (Story) => (
+      <div style={{ height: 'calc(100vh - 32px)' }}>
+        <Story />
+      </div>
+    ),
+  ],
   render: (args) => (
     <Table {...args}>
       <thead>
