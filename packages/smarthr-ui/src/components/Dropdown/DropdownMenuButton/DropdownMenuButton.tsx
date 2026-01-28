@@ -127,11 +127,12 @@ export const DropdownMenuButton: FC<Props> = ({
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
         {...rest}
-        children={triggerChildren}
         onlyIconTrigger={onlyIconTrigger}
         triggerSize={triggerSize}
         classNames={classNames}
-      />
+      >
+        {triggerChildren}
+      </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
         <menu ref={containerRef} role="menu" className={classNames.actionList}>
           {renderButtonList(children)}
@@ -183,7 +184,7 @@ const MemoizedTriggerButton = memo<
         size={triggerSize}
         className={classNames.triggerButton}
       >
-        <TriggerLabelText children={children} onlyIconTrigger={onlyIconTrigger} />
+        <TriggerLabelText onlyIconTrigger={onlyIconTrigger}>{children}</TriggerLabelText>
       </Button>
     </DropdownTrigger>
   )
