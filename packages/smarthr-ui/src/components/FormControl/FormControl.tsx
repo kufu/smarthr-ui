@@ -173,6 +173,19 @@ export const ActualFormControl: FC<Props> = ({
           text: orgLabel as ReactNode,
         }
       : (orgLabel as ObjectLabelType)
+  const isFieldset = as === 'fieldset'
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!label.text) {
+      const names = isFieldset
+        ? { component: 'Fieldset', attr: 'legend' }
+        : { component: 'FormControl', attr: 'label' }
+      // HINT: CIなどで強制停止させたいためthrow Errorではなくalertを使っています
+      window.alert(
+        `${names.component}の${names.attr}、${names.attr}.textは必須です。空文字なども許容されません。\nUI上に表示したくない場合、${names.attr}に{ text: '入力要素${isFieldset ? '群' : ''}を表す名前', dangerouslyHide: true }のように指定してください`,
+      )
+    }
+  }
 
   const defaultHtmlFor = useId()
   const defaultLabelId = useId()
@@ -180,7 +193,6 @@ export const ActualFormControl: FC<Props> = ({
   const managedHtmlFor = label.htmlFor || childInputId || defaultHtmlFor
   const managedLabelId = label.id || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
-  const isFieldset = as === 'fieldset'
 
   const describedbyIds = useMemo(() => {
     const temp = []
