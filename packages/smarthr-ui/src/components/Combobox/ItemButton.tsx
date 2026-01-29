@@ -81,6 +81,7 @@ const AddButton = <T,>({
   )
 
   return (
+    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <button
       ref={activeRef}
       type="button"
@@ -127,6 +128,7 @@ const SelectButton = <T,>({
   }, [onSelect, option])
 
   return (
+    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <button
       ref={activeRef}
       type="button"
