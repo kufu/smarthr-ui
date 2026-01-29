@@ -390,11 +390,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       },
       [updateDate, closeCalendar],
     )
+    const onDelegateClick = !isCalendarShown && !disabled ? openCalendar : undefined
+    const onDelegateKeyDown = isCalendarShown ? onDelegateKeyDown : undefined
 
     return (
       <div
-        onClick={!isCalendarShown && !disabled ? openCalendar : undefined}
-        onKeyDown={isCalendarShown ? onDelegateKeyDown : undefined}
+        onClick={onDelegateClick}
+        onKeyDown={onDelegateKeyDown}
         role="presentation"
         className={classNames.container}
         style={containerStyle}
