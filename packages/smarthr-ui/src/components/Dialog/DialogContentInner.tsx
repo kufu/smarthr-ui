@@ -156,12 +156,12 @@ export const DialogContentInner: FC<Props> = ({
 
 const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: string }>(
   ({ onClickOverlay, isOpen, className }) => {
-    const handleClickOverlay = useMemo(
+    const onClick = useMemo(
       () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
       [isOpen, onClickOverlay],
     )
 
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    return <div onClick={handleClickOverlay} className={className} role="presentation" />
+    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
+    return <div onClick={onClick} className={className} role="presentation" />
   },
 )
