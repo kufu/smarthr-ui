@@ -82,8 +82,8 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [className, size])
 
-  const onFocus = useCallback(() => setIsFocused(true), [])
-  const onBlur = useCallback(() => setIsFocused(false), [])
+  const onDelegateFocus = useCallback(() => setIsFocused(true), [])
+  const onDelegateBlur = useCallback(() => setIsFocused(false), [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -159,8 +159,8 @@ export const SegmentedControl: FC<Props> = ({
     <div
       {...rest}
       className={classNames.container}
-      onFocus={onFocus}
-      onBlur={onBlur}
+      onFocus={onDelegateFocus}
+      onBlur={onDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
@@ -215,6 +215,7 @@ const SegmentedControlButton: FC<
   }, [excludesSelected, isFocused, attrs.checked, index])
 
   return (
+    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <Button
       value={option.value}
       disabled={option.disabled}
