@@ -154,7 +154,6 @@ const OptionButton = memo<
     className: string
   }>
 >(({ value, selected, selectedAlt, onClick, children, className }) => (
-  // eslint-disable-next-line smarthr/best-practice-for-interactive-element
   <Button
     value={value}
     role="option"

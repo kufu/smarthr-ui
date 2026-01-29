@@ -386,7 +386,6 @@ const ActualSingleCombobox = <T,>(
 
   return (
     <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
-      {/* eslint-disable-next-line smarthr/best-practice-for-interactive-element */}
       <Input
         {...rest}
         ref={inputRef}

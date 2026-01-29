@@ -515,7 +515,6 @@ const ActualMultiCombobox = <T,>(
         </ul>
 
         <div className={classNames.inputWrapper}>
-          {/* eslint-disable-next-line smarthr/best-practice-for-interactive-element */}
           <input
             {...rest}
             data-smarthr-ui-input="true"

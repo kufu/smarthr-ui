@@ -83,7 +83,6 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
           {children}
         </MemoizedLabel>
         <span className={classNames.wrapper}>
-          {/* eslint-disable-next-line smarthr/best-practice-for-interactive-element */}
           <input
             {...rest}
             type="checkbox"
