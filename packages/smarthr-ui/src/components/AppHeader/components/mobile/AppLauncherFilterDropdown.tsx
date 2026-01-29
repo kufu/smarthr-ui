@@ -110,6 +110,7 @@ const ContentBody = memo<
 
   return (
     <div role="listbox" className={className}>
+      {/* eslint-disable-next-line smarthr/best-practice-for-interactive-element */}
       <Button
         value="favorite"
         role="option"
@@ -120,6 +121,7 @@ const ContentBody = memo<
       >
         <Translate>{translated.favorite}</Translate>
       </Button>
+      {/* eslint-disable-next-line smarthr/best-practice-for-interactive-element */}
       <Button
         value="all"
         role="option"
