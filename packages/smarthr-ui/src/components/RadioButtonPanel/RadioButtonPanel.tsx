@@ -74,15 +74,14 @@ export const RadioButtonPanel: FC<Props> = ({
 
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
-  const handleOuterClick = useCallback(() => {
+  const onDelegateClick = useCallback(() => {
     innerRef.current?.click()
   }, [])
 
   const descriptionId = useId()
 
   return (
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={classNames.base}>
+    <Base padding={1} role={role} onClick={onDelegateClick} as={as} className={classNames.base}>
       <RadioButton
         {...rest}
         ref={innerRef}

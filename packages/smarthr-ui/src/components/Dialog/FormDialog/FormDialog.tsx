@@ -44,7 +44,7 @@ export const FormDialog: FC<Props> = ({
     }
   }, [isOpen, onClickClose])
 
-  const actualOnSubmitAction = useCallback(
+  const onDelegateSubmit = useCallback(
     (close: () => void, e: FormEvent<HTMLFormElement>) => {
       if (isOpen) {
         onSubmit(close, e)
@@ -61,7 +61,6 @@ export const FormDialog: FC<Props> = ({
       className={className}
       onPressEscape={closeDisabled ? undefined : onPressEscape}
     >
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <FormDialogContentInner
         title={title}
         titleId={titleId}
@@ -75,7 +74,7 @@ export const FormDialog: FC<Props> = ({
         closeDisabled={closeDisabled}
         subActionArea={subActionArea}
         onClickClose={actualOnClickClose}
-        onSubmit={actualOnSubmitAction}
+        onSubmit={onDelegateSubmit}
         responseStatus={responseStatus}
         decorators={decorators}
       >
