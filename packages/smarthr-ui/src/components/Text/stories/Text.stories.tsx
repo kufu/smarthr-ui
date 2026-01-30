@@ -201,3 +201,29 @@ export const IconGap: StoryObj<typeof Text> = {
     </Stack>
   ),
 }
+
+export const MaxLines: StoryObj<typeof Text> = {
+  name: 'maxLines',
+  render: ({ children, ...rest }) => (
+    <Stack>
+      {[undefined, 1, 2, 3, 4, 5, 6].map((maxLines) => (
+        <div key={maxLines}>
+          <b>maxLines: {maxLines || '未指定'}</b>
+          <br />
+          <Text {...rest} maxLines={maxLines}>
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+          </Text>
+        </div>
+      ))}
+    </Stack>
+  ),
+}

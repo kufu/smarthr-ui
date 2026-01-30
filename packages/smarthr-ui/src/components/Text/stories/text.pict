@@ -1,13 +1,14 @@
-size: undefined (10), XXS, XS, S, M, L, XL, XXL
-weight: undefined (10), normal, bold
+size: undefined (8), XXS, XS, S, M, L, XL, XXL
+weight: undefined (3), normal, bold
 # italic は自分たちで定義した値ではないので除外
-color: undefined (10), TEXT_BLACK, TEXT_WHITE, TEXT_GREY, TEXT_DISABLED, TEXT_LINK, inherit
-leading: undefined (10), NONE, TIGHT, NORMAL, LOOSE
-emphasis: false (10), true
+color: undefined (7), TEXT_BLACK, TEXT_WHITE, TEXT_GREY, TEXT_DISABLED, TEXT_LINK, inherit
+leading: undefined (5), NONE, TIGHT, NORMAL, LOOSE
+emphasis: false (2), true
 # whiteSpace も自分たちで定義した値ではないので除外
 # styleType は styleType ごとに展開するので除外
-prefixIcon: undefined (10), <FaAddressBookIcon />
-suffixIcon: undefined (10), <FaAddressBookIcon />
+prefixIcon: undefined (2), <FaAddressBookIcon />
+suffixIcon: undefined (2), <FaAddressBookIcon />
+maxLines: undefined (7), 1, 2, 3, 4, 5, 6
 
 IF [emphasis] = "true" THEN [weight] = "bold";
 IF [prefixIcon] = "<FaAddressBookIcon />" THEN [suffixIcon] = "undefined";
