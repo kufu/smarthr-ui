@@ -20,6 +20,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useIntl } from '../../../intl'
 import { type AnchorButton, Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
@@ -64,6 +65,10 @@ type AbstractProps = {
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof AbstractProps>
 type Props = AbstractProps & ElementProps
 
+const triggerObjectConverter = (trigger: ReactNode) => ({
+  children: trigger,
+})
+
 const classNameGenerator = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
@@ -97,18 +102,14 @@ export const DropdownMenuButton: FC<Props> = ({
   className,
   ...rest
 }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
   const {
     children: triggerChildren,
     size: triggerSize,
     onlyIcon: onlyIconTrigger,
-  }: ObjectTriggerType = !trigger || typeof trigger !== 'object' || isValidElement(trigger)
-    ? {
-        children: trigger as ReactNode,
-      }
-    : (trigger as ObjectTriggerType)
+  } = useObjectAttributes<ReactNode | ObjectTriggerType, ObjectTriggerType>(
+    trigger,
+    triggerObjectConverter,
+  )
 
   const containerRef = useRef<HTMLUListElement>(null)
 
