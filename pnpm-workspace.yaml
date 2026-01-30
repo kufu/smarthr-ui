@@ -3,3 +3,6 @@ packages:
   - sandbox/*
 
 minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  # Renovate security update: next@16.0.10
+  - next@16.0.10
