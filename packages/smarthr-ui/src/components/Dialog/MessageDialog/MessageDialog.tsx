@@ -18,7 +18,7 @@ type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 export const MessageDialog: FC<Props> = ({
   title,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   description,
   onClickClose,
   onPressEscape = onClickClose,
@@ -49,7 +49,7 @@ export const MessageDialog: FC<Props> = ({
     >
       <MessageDialogContentInner
         title={title}
-        titleTag={titleTag}
+        unrecommendedTitleTag={unrecommendedTitleTag}
         titleId={titleId}
         subtitle={subtitle}
         description={description}

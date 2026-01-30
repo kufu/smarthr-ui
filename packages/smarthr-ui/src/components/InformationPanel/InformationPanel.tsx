@@ -25,9 +25,9 @@ type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
   title: ReactNode
   /**
-   * @deprecated titleTagは非推奨です
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
-  titleTag?: HeadingTagTypes
+  unrecommendedTitleTag?: HeadingTagTypes
   /** `true` のとき、開閉ボタンを表示する */
   toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
@@ -113,7 +113,7 @@ export const classNameGenerator = tv({
 
 export const InformationPanel: FC<Props> = ({
   title,
-  titleTag,
+  unrecommendedTitleTag,
   type = 'info',
   toggleable,
   active: activeProps = true,
@@ -170,8 +170,12 @@ export const InformationPanel: FC<Props> = ({
   return (
     <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
+        <MemoizedHeading
+          unrecommendedTag={unrecommendedTitleTag}
+          id={titleId}
+          className={classNames.heading}
+          type={type}
+        >
           {title}
         </MemoizedHeading>
         {toggleable && (
@@ -194,7 +198,7 @@ export const InformationPanel: FC<Props> = ({
 
 const MemoizedHeading = memo<
   Pick<Props, 'type'> & {
-    tag: Props['titleTag']
+    unrecommendedTag: Props['unrecommendedTitleTag']
     id: string
     className: string
     children: Props['title']

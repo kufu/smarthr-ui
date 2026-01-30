@@ -38,7 +38,7 @@ type ObjectLabelType = {
   /** ラベル左に設置するアイコン */
   icon?: TextProps['prefixIcon']
   /** ラベルを視覚的に隠すかどうか */
-  dangerouslyHide?: boolean
+  unrecommendedHide?: boolean
   /** ラベルを紐づける入力要素のID属性と同じ値 */
   htmlFor?: string
   /** ラベルに適用する `id` 値 */
@@ -233,7 +233,7 @@ export const ActualFormControl: FC<Props> = ({
     return {
       wrapper: generators.wrapper({ className }),
       label: generators.label({
-        className: label.dangerouslyHide ? visuallyHiddenTextClassName : '',
+        className: label.unrecommendedHide ? visuallyHiddenTextClassName : '',
       }),
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
@@ -241,7 +241,7 @@ export const ActualFormControl: FC<Props> = ({
       underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
     }
-  }, [innerMargin, isFieldset, label.dangerouslyHide, className])
+  }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
   useEffect(() => {
     if (
@@ -367,10 +367,10 @@ export const ActualFormControl: FC<Props> = ({
     </>
   )
 
-  // HINT: label.dangerouslyHideの場合、body以下の余白の計算を簡略化するため
+  // HINT: label.unrecommendedHideの場合、body以下の余白の計算を簡略化するため
   // Stackをネストし、そのStackに対してmargin-top: 0を指定する
   // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
-  if (label.dangerouslyHide) {
+  if (label.unrecommendedHide) {
     body = (
       <Stack gap={actualInnerMargin} className={classNames.underLabelStack}>
         {body}
@@ -390,7 +390,7 @@ export const ActualFormControl: FC<Props> = ({
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        dangerouslyHideLabel={label.dangerouslyHide}
+        unrecommendedHideLabel={label.unrecommendedHide}
         labelType={label.styleType}
         label={label.text}
         labelIcon={label.icon}
@@ -408,7 +408,7 @@ const LabelCluster = memo<
     label: ReactNode
     labelType: TextProps['styleType']
     labelIcon?: ReactNode
-    dangerouslyHideLabel?: boolean
+    unrecommendedHideLabel?: boolean
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
@@ -420,7 +420,7 @@ const LabelCluster = memo<
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    dangerouslyHideLabel,
+    unrecommendedHideLabel,
     labelType = 'blockTitle',
     label,
     labelIcon,
@@ -438,7 +438,7 @@ const LabelCluster = memo<
     )
 
     const attrs = useMemo(() => {
-      if (dangerouslyHideLabel) {
+      if (unrecommendedHideLabel) {
         return {
           label: null,
           visuallyHidden: isFieldset
@@ -468,7 +468,7 @@ const LabelCluster = memo<
         },
         visuallyHidden: null,
       }
-    }, [managedLabelId, managedHtmlFor, dangerouslyHideLabel, isFieldset])
+    }, [managedLabelId, managedHtmlFor, unrecommendedHideLabel, isFieldset])
 
     return (
       <>
