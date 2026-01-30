@@ -5,7 +5,11 @@ import { type ComponentProps, type FC, type FormEvent, useCallback, useId } from
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 
-import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
+import {
+  FormDialogContentInner,
+  type FormDialogContentInnerProps,
+  type FormDialogHelpers,
+} from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
@@ -45,9 +49,9 @@ export const FormDialog: FC<Props> = ({
   }, [isOpen, onClickClose])
 
   const actualOnSubmitAction = useCallback(
-    (close: () => void, e: FormEvent<HTMLFormElement>) => {
+    (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => {
       if (isOpen) {
-        onSubmit(close, e)
+        onSubmit(e, helpers)
       }
     },
     [isOpen, onSubmit],

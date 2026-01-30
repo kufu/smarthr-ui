@@ -19,8 +19,8 @@ export default {
   render: ({ onClickAction, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleAction = onClickAction
-      ? () => onClickAction(() => setOpen(false))
-      : () => setOpen(false)
+      ? (e: React.MouseEvent, helpers: { close: () => void }) => onClickAction(e, helpers)
+      : (_: React.MouseEvent, { close }: { close: () => void }) => close()
     const handleClose = onClickClose ?? (() => setOpen(false))
 
     return (
@@ -108,9 +108,9 @@ export const ActionTheme: StoryObj<typeof ActionDialog> = {
 export const OnClickAction: StoryObj<typeof ActionDialog> = {
   name: 'onClickAction',
   args: {
-    onClickAction: (closeDialog) => {
-      action('onClickAction')
-      closeDialog()
+    onClickAction: (e, { close }) => {
+      action('onClickAction')(e)
+      close()
     },
   },
 }
