@@ -50,7 +50,7 @@
     "autoprefixer": "^10.4.21",
     "babel-loader": "^10.0.0",
     "babel-plugin-polyfill-corejs2": "^0.4.14",
-    "babel-plugin-polyfill-regenerator": "^0.6.5",
+    "babel-plugin-polyfill-regenerator": "^0.6.6",
     "chromatic": "^13.1.5",
     "css-loader": "^7.1.2",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
