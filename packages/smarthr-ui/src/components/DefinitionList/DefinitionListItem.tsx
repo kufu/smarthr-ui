@@ -3,6 +3,7 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
+  isValidElement,
   memo,
   useMemo,
 } from 'react'
@@ -12,11 +13,12 @@ import { spacing } from '../../themes'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
+type ObjectDtType = {
+  text: ReactNode
+  styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
+}
 type AbstractProps = PropsWithChildren<{
-  term: ReactNode
-  termStyleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
-  /** @deprecated DefinitionList で items を使う時の props です。children を使ってください。 */
-  description?: ReactNode
+  dt: ReactNode | ObjectDtType
   fullWidth?: boolean
   maxColumns?: number
 }>
@@ -28,9 +30,8 @@ const classNameGenerator = tv({
       'smarthr-ui-DefinitionListItem shr-border-b-shorthand shr-min-w-[12em] shr-grow shr-border-dotted',
       'contrast-more:shr-border-b-high-contrast',
     ],
-    termEl: 'smarthr-ui-DefinitionListItem-term',
-    descriptionEl:
-      'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-min-h-[calc(1em*theme(lineHeight.normal))] shr-pb-0.25',
+    dt: 'smarthr-ui-DefinitionListItem-term',
+    dd: 'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-min-h-[calc(1em*theme(lineHeight.normal))] shr-pb-0.25',
   },
   variants: {
     fullWidth: {
@@ -42,21 +43,29 @@ const classNameGenerator = tv({
 })
 
 export const DefinitionListItem: FC<Props> = ({
+  dt: orgDt,
+  children,
   maxColumns,
   fullWidth,
-  term,
-  termStyleType = 'subBlockTitle',
-  description,
-  children,
   className,
 }) => {
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const dt: ObjectDtType =
+    !orgDt || typeof orgDt !== 'object' || isValidElement(orgDt)
+      ? {
+          text: orgDt as ReactNode,
+        }
+      : (orgDt as ObjectDtType)
+
   const classNames = useMemo(() => {
-    const { wrapper, termEl, descriptionEl } = classNameGenerator()
+    const cs = classNameGenerator()
 
     return {
-      wrapper: wrapper({ fullWidth, className }),
-      term: termEl(),
-      description: descriptionEl(),
+      wrapper: cs.wrapper({ fullWidth, className }),
+      dt: cs.dt(),
+      dd: cs.dd(),
     }
   }, [className, fullWidth])
   const style = useMemo(
@@ -72,19 +81,19 @@ export const DefinitionListItem: FC<Props> = ({
 
   return (
     <Stack gap={0.25} className={classNames.wrapper} style={style}>
-      <DefinitionTerm styleType={termStyleType} className={classNames.term}>
-        {term}
+      <DefinitionTerm styleType={dt.styleType} className={classNames.dt}>
+        {dt.text}
       </DefinitionTerm>
-      <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.description}>
-        {children ?? description}
+      <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.dd}>
+        {children}
       </Text>
     </Stack>
   )
 }
 
 const DefinitionTerm = memo<
-  PropsWithChildren<{ styleType: Required<Props>['termStyleType']; className: string }>
->(({ styleType, className, children }) => (
+  PropsWithChildren<{ styleType: ObjectDtType['styleType']; className: string }>
+>(({ styleType = 'subBlockTitle', className, children }) => (
   <Text as="dt" leading="TIGHT" styleType={styleType} className={className}>
     {children}
   </Text>
