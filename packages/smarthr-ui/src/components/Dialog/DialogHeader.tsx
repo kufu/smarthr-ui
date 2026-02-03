@@ -12,7 +12,7 @@ export type Props = {
   subtitle?: ReactNode
   /**
    * ダイアログヘッダーの HTML タグ
-   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってDialog全体を囲むことで、Dialogのheadingのレベルを調整する方法を検討してください
    */
   unrecommendedTitleTag?: HeadingTagTypes
   titleId: string

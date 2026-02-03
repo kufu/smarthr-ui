@@ -25,7 +25,7 @@ type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
   title: ReactNode
   /**
-   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
   unrecommendedTitleTag?: HeadingTagTypes
   /** `true` のとき、開閉ボタンを表示する */
