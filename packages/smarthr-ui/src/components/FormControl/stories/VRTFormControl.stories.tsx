@@ -9,14 +9,14 @@ export default {
   title: 'Components/FormControl/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyHide) => (
+      {[false, true].map((unrecommendedHide) => (
         <FormControl
           {...args}
           label={{
             ...args.label,
-            dangerouslyHide,
+            unrecommendedHide,
           }}
-          key={dangerouslyHide.toString()}
+          key={unrecommendedHide.toString()}
         />
       ))}
     </Stack>
