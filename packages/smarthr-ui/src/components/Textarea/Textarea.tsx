@@ -42,7 +42,7 @@ type AbstractProps = {
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<DecoratorKeyTypes>
   /**
-   * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
+   * placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
   placeholder?: string
 }

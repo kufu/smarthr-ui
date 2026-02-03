@@ -39,7 +39,7 @@ export const IntlProvider = <AvailableLocales extends Locale[] = typeof allLocal
 
   return (
     <AvailableLocalesContext.Provider value={convertedAvailableLocales ?? allLocaleKeys}>
-      <ReactIntlProvider locale={convertedLocale} messages={actualMessages}>
+      <ReactIntlProvider {...intl} locale={convertedLocale} messages={actualMessages}>
         {children}
       </ReactIntlProvider>
     </AvailableLocalesContext.Provider>

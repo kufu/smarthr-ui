@@ -103,12 +103,12 @@ export const LabelStyleType: StoryObj<typeof FormControl> = {
   ),
 }
 
-export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'label.dangerouslyHide（利用注意）',
+export const UnrecommendedTitleHidden: StoryObj<typeof FormControl> = {
+  name: 'label.unrecommendedHide（利用注意）',
   args: {
     label: {
       text: 'フォームコントロール',
-      dangerouslyHide: true,
+      unrecommendedHide: true,
     },
   },
 }
