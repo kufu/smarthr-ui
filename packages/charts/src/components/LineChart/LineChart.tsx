@@ -48,6 +48,7 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
   const chartOptions: ChartOptions<'line'> = useMemo(
     () =>
       createLineChartOptions({
+        ...externalOptions,
         plugins: {
           title: {
             display: true,
@@ -57,13 +58,12 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
             liveRegionId: chartId,
           },
         },
-        ...externalOptions,
       }),
     [title, chartId, externalOptions],
   )
 
   return (
-    <div className="shr-relative">
+    <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Line
         tabIndex={0}

@@ -45,6 +45,7 @@ export const BarChart: React.FC<Props> = ({ data, title, options: externalOption
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
+        ...externalOptions,
         plugins: {
           title: {
             display: true,
@@ -54,13 +55,12 @@ export const BarChart: React.FC<Props> = ({ data, title, options: externalOption
             liveRegionId: chartId,
           },
         },
-        ...externalOptions,
       }),
     [title, chartId, externalOptions],
   )
 
   return (
-    <div className="shr-relative">
+    <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Bar
         tabIndex={0}

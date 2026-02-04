@@ -75,7 +75,7 @@ export const WithCustomOptions: Story = {
       datasets: [
         {
           label: '人数',
-          data: [95, 48, 138, 138, 138, 138, 138, 138, 138, 88, 42],
+          data: [0.5, 48, 99, 99, 99, 98, 90, 77, 13, 88, 42],
         },
       ],
     },
@@ -91,7 +91,8 @@ export const WithCustomOptions: Story = {
       },
       datasets: {
         bar: {
-          barThickness: 40,
+          barPercentage: 0.8,
+          categoryPercentage: 0.9,
         },
       },
     },
