@@ -55,3 +55,40 @@ export const MultipleDatasets: Story = {
     title: '複数データの線グラフ',
   },
 }
+
+export const WithCustomOptions: Story = {
+  args: {
+    data: {
+      labels: [
+        'レベル1',
+        'レベル2',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル4',
+        'レベル5',
+      ],
+      datasets: [
+        {
+          label: '人数',
+          data: [95, 48, 138, 138, 138, 138, 138, 138, 138, 88, 42],
+        },
+      ],
+    },
+    title: 'レベル分布',
+    options: {
+      scales: {
+        y: {
+          ticks: {
+            stepSize: 50,
+          },
+          suggestedMax: 150,
+        },
+      },
+    },
+  },
+}

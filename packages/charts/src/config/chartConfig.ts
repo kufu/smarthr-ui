@@ -14,6 +14,8 @@ import {
   Tooltip,
 } from 'chart.js'
 
+import deepmerge from 'deepmerge'
+
 import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'
 import { keyboardNavigationPlugin } from '../plugins'
 
@@ -73,67 +75,110 @@ type CreateBaseChartOptionsReturn<T extends ChartType> = T extends 'line'
 const createBaseChartOptions = <T extends ChartType>({
   plugins,
   chartType,
+  externalOptions = {},
 }: {
-  plugins: ChartOptions<T>['plugins']
+  plugins?: ChartOptions<T>['plugins']
   chartType: T
-}): CreateBaseChartOptionsReturn<T> => ({
-  animation: false,
-  responsive: true,
-  maintainAspectRatio: false,
-  events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
-  plugins: {
-    ...plugins,
-    legend: {
-      position: 'bottom',
-      labels: generateLegendOptions(chartType),
+  externalOptions?: Partial<ChartOptions<T>>
+}): CreateBaseChartOptionsReturn<T> => {
+  const baseDefaults = {
+    animation: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
+    plugins: {
+      ...plugins,
+      legend: {
+        position: 'bottom' as const,
+        labels: generateLegendOptions(chartType),
+      },
+      tooltip: {
+        backgroundColor: SMARTHR_DEFAULT_COLORS.BACKGROUND,
+        titleColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+        bodyColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+        borderColor: SMARTHR_DEFAULT_COLORS.BORDER,
+        borderWidth: 1,
+        cornerRadius: 4,
+      },
     },
-    tooltip: {
-      backgroundColor: SMARTHR_DEFAULT_COLORS.BACKGROUND,
-      titleColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
-      bodyColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
-      borderColor: SMARTHR_DEFAULT_COLORS.BORDER,
-      borderWidth: 1,
-      cornerRadius: 4,
-    },
-  },
-})
+  }
 
-// TODO: plugins 以外も受け取ってdeepmergeする
-export const createBarChartOptions = ({
-  plugins,
-}: ChartOptions<'bar'>): Partial<ChartOptions<'bar'>> => ({
-  ...createBaseChartOptions({ plugins, chartType: 'bar' }),
-  elements: {},
-  scales: {
-    x: {
-      grid: {
-        color: SMARTHR_DEFAULT_COLORS.BORDER,
-      },
+  // 外部オプションとベースデフォルトをマージ
+  // 外部オプションが先、内部デフォルトが後なので内部が優先される
+  return deepmerge(externalOptions, baseDefaults, {
+    // tooltip と generateLabels は完全に内部設定を優先
+    customMerge: (key) => {
+      if (key === 'tooltip' || key === 'generateLabels') {
+        return (_, internal) => internal
+      }
+      return undefined
     },
-    y: {
-      beginAtZero: true,
-      grid: {
-        color: SMARTHR_DEFAULT_COLORS.BORDER,
-      },
-    },
-  },
-})
+  }) as CreateBaseChartOptionsReturn<T>
+}
 
-// TODO: plugins 以外も受け取ってdeepmergeする
-export const createLineChartOptions = ({
-  plugins,
-}: ChartOptions<'line'>): Partial<ChartOptions<'line'>> => ({
-  ...createBaseChartOptions({ plugins, chartType: 'line' }),
-  scales: {
-    x: {
-      grid: {
-        color: SMARTHR_DEFAULT_COLORS.BORDER,
+export const createBarChartOptions = (
+  options: Partial<ChartOptions<'bar'>> = {},
+): Partial<ChartOptions<'bar'>> => {
+  const { plugins, ...restOptions } = options
+
+  const baseOptions = createBaseChartOptions({
+    plugins,
+    chartType: 'bar',
+    externalOptions: restOptions,
+  })
+
+  const scalesDefaults = {
+    scales: {
+      x: {
+        ...restOptions.scales?.x,
+        grid: {
+          ...restOptions.scales?.x?.grid,
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ...restOptions.scales?.y,
+        grid: {
+          ...restOptions.scales?.y?.grid,
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
       },
     },
-    y: {
-      grid: {
-        color: SMARTHR_DEFAULT_COLORS.BORDER,
+  }
+
+  return deepmerge(baseOptions, scalesDefaults) as Partial<ChartOptions<'bar'>>
+}
+
+export const createLineChartOptions = (
+  options: Partial<ChartOptions<'line'>> = {},
+): Partial<ChartOptions<'line'>> => {
+  const { plugins, ...restOptions } = options
+
+  const baseOptions = createBaseChartOptions({
+    plugins,
+    chartType: 'line',
+    externalOptions: restOptions,
+  })
+
+  const scalesDefaults = {
+    scales: {
+      x: {
+        ...restOptions.scales?.x,
+        grid: {
+          ...restOptions.scales?.x?.grid,
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
+      },
+      y: {
+        ...restOptions.scales?.y,
+        grid: {
+          ...restOptions.scales?.y?.grid,
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
       },
     },
-  },
-})
+  }
+
+  return deepmerge(baseOptions, scalesDefaults) as Partial<ChartOptions<'line'>>
+}

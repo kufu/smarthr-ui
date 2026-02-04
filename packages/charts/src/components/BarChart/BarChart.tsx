@@ -17,9 +17,10 @@ type Props = {
   // TODO:もっと簡単なデータの型を作る
   data: ChartData<'bar'>
   title: string
+  options?: Partial<ChartOptions<'bar'>>
 }
 
-export const BarChart: React.FC<Props> = ({ data, title }) => {
+export const BarChart: React.FC<Props> = ({ data, title, options: externalOptions }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
   const chartColors = useMemo(() => getChartColors(data.datasets.length), [data.datasets.length])
@@ -53,8 +54,9 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
             liveRegionId: chartId,
           },
         },
+        ...externalOptions,
       }),
-    [title, chartId],
+    [title, chartId, externalOptions],
   )
 
   return (
