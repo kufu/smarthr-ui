@@ -10,3 +10,6 @@ auditConfig:
     - GHSA-h25m-26qc-wcjf
     - GHSA-9g9p-9gw9-jx7f
     - GHSA-5f7q-jpqc-wp7h
+minimumReleaseAgeExclude:
+  # Renovate security update: glob@13.0.1
+  - glob@13.0.1
