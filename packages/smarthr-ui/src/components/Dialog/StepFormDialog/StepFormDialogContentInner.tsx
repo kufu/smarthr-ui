@@ -71,7 +71,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   title,
   titleId,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   submitLabel,
@@ -176,7 +176,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <DialogHeader
             title={subtitle ? title : `${title}${stepText}`}
             subtitle={subtitle ? `${subtitle}${stepText}` : undefined}
-            titleTag={titleTag}
+            unrecommendedTitleTag={unrecommendedTitleTag}
             titleId={titleId}
           />
           <DialogBody

@@ -102,12 +102,12 @@ export const LegendStyleType: StoryObj<typeof Fieldset> = {
   ),
 }
 
-export const DangerouslyHideLegend: StoryObj<typeof Fieldset> = {
-  name: 'legend.dangerouslyHide（非推奨）',
+export const UnrecommendedHideLegend: StoryObj<typeof Fieldset> = {
+  name: 'legend.unrecommendedHide（非推奨）',
   args: {
     legend: {
       text: '入力要素に紐づく名前',
-      dangerouslyHide: true,
+      unrecommendedHide: true,
     },
   },
 }
