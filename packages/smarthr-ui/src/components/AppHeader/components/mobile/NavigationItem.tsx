@@ -54,24 +54,32 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 
 const NavigationCustomTag = memo<
   NavigationCustomTag & Pick<Props, 'onClickNavigation'> & { className: string }
->(({ children, elementAs: Tag, current, className, onClickNavigation, ...rest }) => {
-  const actualClassName = useMemo(
-    () =>
-      commonButtonClassNameGenerator({
-        current,
-        boldWhenCurrent: true,
-        className,
-      }),
-    [current, className],
-  )
+>(
+  ({
+    children,
+    elementAs: Tag,
+    current,
+    className,
+    onClickNavigation: onDelegateClick,
+    ...rest
+  }) => {
+    const actualClassName = useMemo(
+      () =>
+        commonButtonClassNameGenerator({
+          current,
+          boldWhenCurrent: true,
+          className,
+        }),
+      [current, className],
+    )
 
-  return (
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <Tag {...rest} onClick={onClickNavigation} className={actualClassName}>
-      <Translate>{children}</Translate>
-    </Tag>
-  )
-})
+    return (
+      <Tag {...rest} onClick={onDelegateClick} className={actualClassName}>
+        <Translate>{children}</Translate>
+      </Tag>
+    )
+  },
+)
 
 const NavigationLink = memo<NavigationLink & { className: string }>(
   ({ href, current, children, className }) => (

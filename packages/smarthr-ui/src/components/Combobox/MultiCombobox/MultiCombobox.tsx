@@ -319,7 +319,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
 
-  const onKeyDown = useMemo(
+  const onDelegateKeyDown = useMemo(
     () =>
       isComposing
         ? undefined
@@ -378,7 +378,7 @@ const ActualMultiCombobox = <T,>(
     ],
   )
 
-  const onClick = useMemo(
+  const onDelegateClick = useMemo(
     () =>
       disabled || isFocused
         ? undefined
@@ -426,7 +426,7 @@ const ActualMultiCombobox = <T,>(
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const actualOnKeyPress = useMemo(
+  const onDelegateKeyPress = useMemo(
     () =>
       onKeyPress
         ? (e: KeyboardEvent<HTMLInputElement>) => {
@@ -492,9 +492,9 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={outerRef}
       role="group"
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-      onKeyPress={actualOnKeyPress}
+      onClick={onDelegateClick}
+      onKeyDown={onDelegateKeyDown}
+      onKeyPress={onDelegateKeyPress}
       className={classNames.wrapper}
       style={wrapperStyle}
     >

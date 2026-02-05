@@ -267,6 +267,7 @@ const ActualSingleCombobox = <T,>(
     },
     [disabled, readOnly, inputRef, isExpanded],
   )
+  const onDelegateClickIcon = onClickInput
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange?.(e)
@@ -425,8 +426,11 @@ const ActualSingleCombobox = <T,>(
                 className={classNames.clearButtonIcon}
               />
             </UnstyledButton>
-            {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-            <span onClick={onClickInput} role="presentation" className={classNames.caretDownLayout}>
+            <span
+              role="presentation"
+              onClick={onDelegateClickIcon}
+              className={classNames.caretDownLayout}
+            >
               <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
             </span>
           </>

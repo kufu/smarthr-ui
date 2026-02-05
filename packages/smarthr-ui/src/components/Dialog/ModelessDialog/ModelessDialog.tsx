@@ -453,9 +453,9 @@ const Handler = memo<{
   'aria-valuetext': string | undefined
   className: string
   onArrowKeyDown: (e: KeyboardEvent) => void
-}>(({ onArrowKeyDown, ...rest }) => (
+}>(({ onArrowKeyDown: onDelegateKeyDown, ...rest }) => (
   // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
-  <div {...rest} tabIndex={0} role="slider" onKeyDown={onArrowKeyDown}>
+  <div {...rest} tabIndex={0} role="slider" onKeyDown={onDelegateKeyDown}>
     <FaGripIcon />
   </div>
 ))

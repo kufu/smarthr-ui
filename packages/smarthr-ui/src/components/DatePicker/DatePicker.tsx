@@ -355,8 +355,12 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       return textColor.grey
     }, [isInputFocused, isCalendarShown, disabled])
 
-    const onDelegateKeyDown = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const onDelegateKeyDown = useMemo(() => {
+      if (!isCalendarShown) {
+        return undefined
+      }
+
+      return (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (ESCAPE_KEY_REGEX.test(e.key)) {
           e.stopPropagation()
           // delay hiding calendar because calendar will be displayed when input is focused
@@ -364,9 +368,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
           if (inputRef.current) inputRef.current.focus()
         }
-      },
-      [closeCalendar],
-    )
+      }
+    }, [isCalendarShown, closeCalendar])
     const onKeyPressInput = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -390,11 +393,12 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       },
       [updateDate, closeCalendar],
     )
+    const onDelegateClick = !isCalendarShown && !disabled ? openCalendar : undefined
 
     return (
       <div
-        onClick={!isCalendarShown && !disabled ? openCalendar : undefined}
-        onKeyDown={isCalendarShown ? onDelegateKeyDown : undefined}
+        onClick={onDelegateClick}
+        onKeyDown={onDelegateKeyDown}
         role="presentation"
         className={classNames.container}
         style={containerStyle}
