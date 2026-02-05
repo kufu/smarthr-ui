@@ -19,7 +19,7 @@ export const ActionDialog: FC<Props> = ({
   children,
   title,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   actionText,
@@ -65,7 +65,7 @@ export const ActionDialog: FC<Props> = ({
         title={title}
         titleId={titleId}
         subtitle={subtitle}
-        titleTag={titleTag}
+        unrecommendedTitleTag={unrecommendedTitleTag}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         actionText={actionText}
