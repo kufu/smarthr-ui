@@ -35,7 +35,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps | 'onWheel'>
 
 export const bgColors = {
   BACKGROUND: 'background',
@@ -102,6 +102,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       readOnly,
       bgColor,
       type,
+      max,
       ...rest
     },
     ref,
@@ -113,7 +114,31 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const handleWheel = useMemo(() => (type === 'number' ? disableWheel : undefined), [type])
+    const attrsByType = useMemo(() => {
+      switch (type) {
+        case 'number':
+          return {
+            max,
+            onWheel: disableWheel,
+          }
+        // HINT: PC版ブラウザで年が6桁入力できる場合、コピー&ペーストが正常に動作しないなど、UI上の問題が発生する場合がある
+        // 回避のためmaxで年四桁を指定する
+        case 'date':
+          return {
+            max: max || '9999-12-31',
+          }
+        case 'datetime-local':
+          return {
+            max: max || '9999-12-31T23:59',
+          }
+        case 'month':
+          return {
+            max: max || '9999-12',
+          }
+      }
+
+      return { max }
+    }, [max, type])
 
     const onClickFocus = useCallback(() => innerRef.current?.focus(), [])
 
@@ -161,11 +186,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
         <input
           {...rest}
+          {...attrsByType}
           type={type}
           data-smarthr-ui-input="true"
           onFocus={onFocus}
           onBlur={onBlur}
-          onWheel={handleWheel}
           disabled={disabled}
           readOnly={readOnly}
           ref={innerRef}
