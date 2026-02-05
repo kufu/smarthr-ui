@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [84.0.0](https://github.com/kufu/smarthr-ui/compare/v83.0.1...v84.0.0) (2026-02-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* 基本的に使ってほしくはないが利用することは可能という属性は、unrecommendedXxxという形式にリネーム (#6057)
+* **PageHeading:** Next.js環境ではページの自動設定を無効にするよう修正 (#6047)
+
+### Features
+
+* FaBookmarkIconを追加 ([#6071](https://github.com/kufu/smarthr-ui/issues/6071)) ([6bba6fa](https://github.com/kufu/smarthr-ui/commit/6bba6fa1ad1b6300341fcd89f0827fbe097dccae))
+
+
+### Bug Fixes
+
+* **Calendar:** Dropdown 内に DatePicker を設置した場合に、年を切り替えることが出来ない問題を修正する ([#6056](https://github.com/kufu/smarthr-ui/issues/6056)) ([65f2c7e](https://github.com/kufu/smarthr-ui/commit/65f2c7e9b151a7d5faba40ad4a5ce572a814cfea))
+* DropdownMenuButtonの内部処理でclassNameを受け取れない拡張が施されたButtonを設置するとstyle崩れが起きる問題を修正する ([#6038](https://github.com/kufu/smarthr-ui/issues/6038)) ([a1f6395](https://github.com/kufu/smarthr-ui/commit/a1f63953bc058bf7581f0b9fe77889fb53b956c9))
+* **PageHeading:** Next.js環境ではページの自動設定を無効にするよう修正 ([#6047](https://github.com/kufu/smarthr-ui/issues/6047)) ([41f67d3](https://github.com/kufu/smarthr-ui/commit/41f67d3e324b53791ed1d0476bc47ab0ce7b2bda))
+* ReactIntlProvider が アプリケーション側の onError などを引き継げるようにした ([#6014](https://github.com/kufu/smarthr-ui/issues/6014)) ([8ebb699](https://github.com/kufu/smarthr-ui/commit/8ebb699528557fdf56376a7b74fa10c87536c34d))
+
+
+* 基本的に使ってほしくはないが利用することは可能という属性は、unrecommendedXxxという形式にリネーム ([#6057](https://github.com/kufu/smarthr-ui/issues/6057)) ([2823d11](https://github.com/kufu/smarthr-ui/commit/2823d117a88acfa2a7f811b9d2a1fe1c30157aaf))
+
 ### [83.0.1](https://github.com/kufu/smarthr-ui/compare/v83.0.0...v83.0.1) (2026-01-22)
 
 
