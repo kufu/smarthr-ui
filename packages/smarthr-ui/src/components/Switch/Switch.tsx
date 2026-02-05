@@ -58,11 +58,11 @@ const classNameGenerator = tv({
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   children: ReactNode
   /** ラベルを視覚的に隠すかどうか */
-  dangerouslyLabelHidden?: boolean
+  unrecommendedLabelHidden?: boolean
 }
 
 export const Switch = forwardRef<HTMLInputElement, Props>(
-  ({ children, dangerouslyLabelHidden, className, id, ...rest }, ref) => {
+  ({ children, unrecommendedLabelHidden, className, id, ...rest }, ref) => {
     const defaultId = useId()
     const inputId = id || defaultId
 
@@ -79,7 +79,7 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Cluster align="center" className="shr-relative">
-        <MemoizedLabel htmlFor={inputId} dangerouslyLabelHidden={dangerouslyLabelHidden}>
+        <MemoizedLabel htmlFor={inputId} unrecommendedLabelHidden={unrecommendedLabelHidden}>
           {children}
         </MemoizedLabel>
         <span className={classNames.wrapper}>
@@ -99,9 +99,9 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
 )
 
 const MemoizedLabel = memo<
-  Pick<Props, 'dangerouslyLabelHidden'> & PropsWithChildren<{ htmlFor: string }>
->(({ dangerouslyLabelHidden, htmlFor, children }) => {
-  const Component = dangerouslyLabelHidden ? VisuallyHiddenText : Text
+  Pick<Props, 'unrecommendedLabelHidden'> & PropsWithChildren<{ htmlFor: string }>
+>(({ unrecommendedLabelHidden, htmlFor, children }) => {
+  const Component = unrecommendedLabelHidden ? VisuallyHiddenText : Text
 
   return (
     <Component as="label" htmlFor={htmlFor}>
