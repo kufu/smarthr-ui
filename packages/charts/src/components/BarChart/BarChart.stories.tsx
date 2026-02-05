@@ -75,12 +75,24 @@ export const WithCustomOptions: Story = {
       datasets: [
         {
           label: '人数',
-          data: [0.5, 48, 99, 99, 99, 98, 90, 77, 13, 88, 42],
+          data: [95, 48, 138, 138, 138, 138, 138, 138, 138, 88, 42],
         },
       ],
     },
     title: 'レベル分布',
     options: {
+      plugins: {
+        datalabels: {
+          display: true,
+          anchor: 'end',
+          align: 'end',
+          color: '#333',
+          font: {
+            weight: 'bold',
+            size: 12,
+          },
+        },
+      },
       scales: {
         y: {
           ticks: {
@@ -96,5 +108,32 @@ export const WithCustomOptions: Story = {
         },
       },
     },
+  },
+}
+
+export const WithDataLabels: Story = {
+  args: {
+    data: sampleData,
+    title: 'データラベル付き棒グラフ',
+    options: {
+      plugins: {
+        datalabels: {
+          display: true,
+          anchor: 'end',
+          align: 'end',
+          color: '#333',
+          font: {
+            weight: 'bold',
+            size: 12,
+          },
+        },
+      },
+    },
+  },
+}
+
+export const WithoutTitle: Story = {
+  args: {
+    data: sampleData,
   },
 }

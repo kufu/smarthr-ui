@@ -13,6 +13,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 import deepmerge from 'deepmerge'
 
@@ -36,6 +37,7 @@ export const registerChartComponents = () => {
     Tooltip,
     Legend,
     Filler,
+    ChartDataLabels,
     keyboardNavigationPlugin,
   )
 }
@@ -87,7 +89,6 @@ const createBaseChartOptions = <T extends ChartType>({
     maintainAspectRatio: false,
     events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
     plugins: {
-      ...plugins,
       legend: {
         position: 'bottom' as const,
         labels: generateLegendOptions(chartType),
@@ -100,16 +101,17 @@ const createBaseChartOptions = <T extends ChartType>({
         borderWidth: 1,
         cornerRadius: 4,
       },
+      ...plugins,
     },
   }
 
   // 外部オプションとベースデフォルトをマージ
-  // 外部オプションが先、内部デフォルトが後なので内部が優先される
-  return deepmerge(externalOptions, baseDefaults, {
+  // ベースデフォルトが先、外部オプションが後なので外部が優先される
+  return deepmerge(baseDefaults, externalOptions, {
     // tooltip と generateLabels は完全に内部設定を優先
     customMerge: (key) => {
       if (key === 'tooltip' || key === 'generateLabels') {
-        return (_, internal) => internal
+        return (internal, _) => internal
       }
       return undefined
     },

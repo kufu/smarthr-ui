@@ -16,7 +16,7 @@ type Props = {
   // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
   data: ChartData<'line'>
-  title: string
+  title?: string
   options?: Partial<ChartOptions<'line'>>
 }
 
@@ -31,7 +31,8 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length
     const pointCount = data.datasets[0].data.length
-    return `${title} 線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
+    const prefix = title ? `${title} ` : ''
+    return `${prefix}線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
   }, [title, data])
 
   const enhancedData: ChartData<'line'> = useMemo(
@@ -50,10 +51,15 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
       createLineChartOptions({
         ...externalOptions,
         plugins: {
-          title: {
-            display: true,
-            text: title,
-          },
+          ...externalOptions?.plugins,
+          title: title
+            ? {
+                display: true,
+                text: title,
+              }
+            : {
+                display: false,
+              },
           keyboardNavigation: {
             liveRegionId: chartId,
           },

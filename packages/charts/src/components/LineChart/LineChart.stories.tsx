@@ -92,3 +92,33 @@ export const WithCustomOptions: Story = {
     },
   },
 }
+
+export const WithDataLabels: Story = {
+  args: {
+    data: sampleData,
+    title: 'データラベル付き線グラフ',
+    options: {
+      plugins: {
+        datalabels: {
+          display: true,
+          backgroundColor: '#fff',
+          borderColor: '#333',
+          borderWidth: 1,
+          borderRadius: 4,
+          color: '#333',
+          font: {
+            weight: 'bold',
+            size: 12,
+          },
+          padding: 4,
+        },
+      },
+    },
+  },
+}
+
+export const WithoutTitle: Story = {
+  args: {
+    data: sampleData,
+  },
+}
