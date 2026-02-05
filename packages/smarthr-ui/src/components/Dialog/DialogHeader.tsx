@@ -12,9 +12,9 @@ export type Props = {
   subtitle?: ReactNode
   /**
    * ダイアログヘッダーの HTML タグ
-   * @deprecated SectioningContent(Article, Aside, Nav, Section)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってDialog全体を囲むことで、Dialogのheadingのレベルを調整する方法を検討してください
    */
-  titleTag?: HeadingTagTypes
+  unrecommendedTitleTag?: HeadingTagTypes
   titleId: string
 }
 
@@ -25,12 +25,12 @@ const classNameGenerator = tv({
   ],
 })
 
-export const DialogHeader = memo<Props>(({ title, subtitle, titleTag, titleId }) => {
+export const DialogHeader = memo<Props>(({ title, subtitle, unrecommendedTitleTag, titleId }) => {
   const className = useMemo(() => classNameGenerator(), [])
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Heading tag={titleTag} className={className}>
+    <Heading unrecommendedTag={unrecommendedTitleTag} className={className}>
       <Stack gap={0.25} as="span">
         {subtitle && (
           <Text size="S" leading="TIGHT" color="TEXT_GREY" className="smarthr-ui-Dialog-subtitle">
