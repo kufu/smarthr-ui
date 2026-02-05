@@ -10,16 +10,16 @@ export default {
   title: 'Components/Fieldset/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyHide) =>
+      {[false, true].map((unrecommendedHide) =>
         [false, true].map((disabled) => (
           <Fieldset
             {...args}
             legend={{
               ...args.legend,
-              dangerouslyHide,
+              unrecommendedHide,
             }}
             disabled={disabled}
-            key={`${dangerouslyHide}${disabled}`}
+            key={`${unrecommendedHide}${disabled}`}
           >
             <Stack>
               <Fieldset
