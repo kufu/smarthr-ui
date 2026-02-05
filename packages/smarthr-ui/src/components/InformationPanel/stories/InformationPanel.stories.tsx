@@ -51,10 +51,10 @@ export const Title: StoryObj<typeof InformationPanel> = {
   name: 'title',
 }
 
-export const TitleTag: StoryObj<typeof InformationPanel> = {
-  name: 'titleTag（非推奨）',
+export const UnrecommendedTitleTag: StoryObj<typeof InformationPanel> = {
+  name: 'unrecommendedTitleTag（非推奨）',
   args: {
-    titleTag: 'h3',
+    unrecommendedTitleTag: 'h3',
   },
 }
 

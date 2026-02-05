@@ -38,8 +38,8 @@ export default {
     )
   },
   argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
+    unrecommendedTitleTag: {
+      name: 'unrecommendedTitleTag（非推奨）',
     },
   },
   args: {
@@ -67,10 +67,10 @@ export const Subtitle: StoryObj<typeof ActionDialog> = {
   },
 }
 
-export const TitleTag: StoryObj<typeof ActionDialog> = {
-  name: 'titleTag（非推奨）',
+export const UnrecommendedTitleTag: StoryObj<typeof ActionDialog> = {
+  name: 'unrecommendedTitleTag（非推奨）',
   args: {
-    titleTag: 'h3',
+    unrecommendedTitleTag: 'h3',
   },
 }
 
