@@ -432,8 +432,8 @@ importers:
   sandbox/next:
     dependencies:
       next:
-        specifier: 15.5.9
-        version: 15.5.9(@playwright/test@1.56.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: 15.5.10
+        version: 15.5.10(@playwright/test@1.56.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -1829,8 +1829,8 @@ packages:
       '@types/react': ^18.3.27
       react: ^19.2.4
 
-  '@next/env@15.5.9':
-    resolution: {integrity: sha512-4GlTZ+EJM7WaW2HEZcyU317tIQDjkQIyENDLxYJfSWlfqguN+dHkZgyQTV/7ykvobU7yEH5gKvreNrH4B6QgIg==}
+  '@next/env@15.5.10':
+    resolution: {integrity: sha512-plg+9A/KoZcTS26fe15LHg+QxReTazrIOoKKUC3Uz4leGGeNPgLHdevVraAAOX0snnUs3WkRx3eUQpj9mreG6A==}
 
   '@next/swc-darwin-arm64@15.5.7':
     resolution: {integrity: sha512-IZwtxCEpI91HVU/rAUOOobWSZv4P2DeTtNaCdHqLcTJU4wdNXgAySvKa/qJCgR5m6KI8UsKDXtO2B31jcaw1Yw==}
@@ -4969,8 +4969,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  next@15.5.9:
-    resolution: {integrity: sha512-agNLK89seZEtC5zUHwtut0+tNrc0Xw4FT/Dg+B/VLEo9pAcS9rtTKpek3V6kVcVwsB2YlqMaHdfZL4eLEVYuCg==}
+  next@15.5.10:
+    resolution: {integrity: sha512-r0X65PNwyDDyOrWNKpQoZvOatw7BcsTPRKdwEqtc9cj3wv7mbBIk9tKed4klRaFXJdX0rugpuMTHslDrAU1bBg==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
     hasBin: true
     peerDependencies:
@@ -8244,7 +8244,7 @@ snapshots:
       '@types/react': 18.3.27
       react: 19.2.4
 
-  '@next/env@15.5.9': {}
+  '@next/env@15.5.10': {}
 
   '@next/swc-darwin-arm64@15.5.7':
     optional: true
@@ -11742,9 +11742,9 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@15.5.9(@playwright/test@1.56.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next@15.5.10(@playwright/test@1.56.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@next/env': 15.5.9
+      '@next/env': 15.5.10
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001766
       postcss: 8.4.31
