@@ -49,7 +49,7 @@
     "@types/styled-components": "^5.1.36",
     "autoprefixer": "^10.4.23",
     "babel-loader": "^10.0.0",
-    "babel-plugin-polyfill-corejs2": "^0.4.14",
+    "babel-plugin-polyfill-corejs2": "^0.4.15",
     "babel-plugin-polyfill-regenerator": "^0.6.6",
     "chromatic": "^13.3.5",
     "css-loader": "^7.1.3",

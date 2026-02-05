@@ -315,8 +315,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(@babel/core@7.28.6)(webpack@5.100.2(@swc/core@1.15.11))
       babel-plugin-polyfill-corejs2:
-        specifier: ^0.4.14
-        version: 0.4.14(@babel/core@7.28.6)
+        specifier: ^0.4.15
+        version: 0.4.15(@babel/core@7.28.6)
       babel-plugin-polyfill-regenerator:
         specifier: ^0.6.6
         version: 0.6.6(@babel/core@7.28.6)
@@ -2828,8 +2828,8 @@ packages:
       '@babel/core': ^7.12.0
       webpack: '>=5'
 
-  babel-plugin-polyfill-corejs2@0.4.14:
-    resolution: {integrity: sha512-Co2Y9wX854ts6U8gAAPXfn0GmAyctHuK8n0Yhfjd6t30g7yvKjspvvOo9yG+z52PZRgFErt7Ka2pYnXCjLKEpg==}
+  babel-plugin-polyfill-corejs2@0.4.15:
+    resolution: {integrity: sha512-hR3GwrRwHUfYwGfrisXPIDP3JcYfBrW7wKE7+Au6wDYl7fm/ka1NEII6kORzxNU556JjfidZeBsO10kYvtV1aw==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
@@ -7565,7 +7565,7 @@ snapshots:
       '@babel/plugin-transform-unicode-regex': 7.27.1(@babel/core@7.28.6)
       '@babel/plugin-transform-unicode-sets-regex': 7.28.6(@babel/core@7.28.6)
       '@babel/preset-modules': 0.1.6-no-external-plugins(@babel/core@7.28.6)
-      babel-plugin-polyfill-corejs2: 0.4.14(@babel/core@7.28.6)
+      babel-plugin-polyfill-corejs2: 0.4.15(@babel/core@7.28.6)
       babel-plugin-polyfill-corejs3: 0.13.0(@babel/core@7.28.6)
       babel-plugin-polyfill-regenerator: 0.6.6(@babel/core@7.28.6)
       core-js-compat: 3.44.0
@@ -9311,7 +9311,7 @@ snapshots:
       schema-utils: 4.3.2
       webpack: 5.100.2(@swc/core@1.15.11)
 
-  babel-plugin-polyfill-corejs2@0.4.14(@babel/core@7.28.6):
+  babel-plugin-polyfill-corejs2@0.4.15(@babel/core@7.28.6):
     dependencies:
       '@babel/compat-data': 7.28.6
       '@babel/core': 7.28.6
