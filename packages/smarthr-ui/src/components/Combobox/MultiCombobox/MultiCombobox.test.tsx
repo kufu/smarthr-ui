@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/react'
-import { type ComponentProps, act } from 'react'
-import { userEvent } from 'storybook/test'
+import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../../intl'
 import { FormControl } from '../../FormControl'
 
 import { MultiCombobox } from './MultiCombobox'
+
+import type { ComponentProps } from 'react'
 
 describe('SingleCombobox', () => {
   beforeEach(() => {
@@ -56,14 +57,14 @@ describe('SingleCombobox', () => {
     render(template({ onSelect }))
 
     // コンボボックスをクリックしてリストボックスを表示
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(combobox()).toHaveFocus()
     expect(screen.queryByRole('listbox')).toBeInTheDocument()
 
     // リストボックスからアイテムを2種続けて選択して、選択イベントの発火を確認
-    await act(() => userEvent.click(screen.getByRole('option', { name: 'option 2' })))
+    await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
-    await act(() => userEvent.click(screen.getByRole('option', { name: 'option 4' })))
+    await userEvent.click(screen.getByRole('option', { name: 'option 4' }))
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 4', value: 'value-4' })
 
     // リストボックスは開かれたままになっている
@@ -83,9 +84,9 @@ describe('SingleCombobox', () => {
     )
 
     // 削除ボタンをクリックすると、クリックしたアイテムが onDelete で渡される
-    await act(() => userEvent.click(deleteButtons()[0]))
+    await userEvent.click(deleteButtons()[0])
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 1', value: 'value-1' })
-    await act(() => userEvent.click(deleteButtons()[1]))
+    await userEvent.click(deleteButtons()[1])
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 3', value: 'value-3' })
   })
 
@@ -93,19 +94,19 @@ describe('SingleCombobox', () => {
     render(template({}))
 
     // クリックで開く
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).toBeInTheDocument()
 
     // 外側クリックで閉じる
-    await act(() => userEvent.click(document.body))
+    await userEvent.click(document.body)
     expect(listbox()).not.toBeInTheDocument()
 
     // 再度クリックで開く
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).toBeInTheDocument()
 
     // ESCで閉じる
-    await act(() => userEvent.keyboard('{escape}'))
+    await userEvent.keyboard('{escape}')
     expect(listbox()).not.toBeInTheDocument()
   })
 
@@ -114,7 +115,7 @@ describe('SingleCombobox', () => {
     render(template({ onDelete }))
 
     // 選択解除ボタンをクリックしてもリストボックスが表示されないことを確認
-    await act(() => userEvent.click(deleteButtons()[0]))
+    await userEvent.click(deleteButtons()[0])
     expect(listbox()).not.toBeInTheDocument()
   })
 
@@ -123,17 +124,15 @@ describe('SingleCombobox', () => {
     render(template({ onAdd, creatable: true, selectedItems: [] }))
 
     // コンボボックスをクリックしてリストボックスを表示
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).toBeInTheDocument()
 
     // 新しいアイテムを入力する
-    await act(() => userEvent.type(combobox(), '新しいアイテム'))
+    await userEvent.type(combobox(), '新しいアイテム')
     expect(listbox()).toHaveTextContent('「新しいアイテム」を追加')
 
     // 新しいアイテムをクリックして、追加イベントの発火を確認
-    await act(() =>
-      userEvent.click(screen.getByRole('option', { name: '「新しいアイテム」を追加' })),
-    )
+    await userEvent.click(screen.getByRole('option', { name: '「新しいアイテム」を追加' }))
     expect(onAdd).toHaveBeenCalledWith('新しいアイテム')
   })
 
@@ -154,7 +153,7 @@ describe('SingleCombobox', () => {
     expect(deleteButtons()).toHaveLength(1)
 
     // その1つをクリックした場合、deletable なアイテムで onDelete が呼ばれる
-    await act(() => userEvent.click(deleteButtons()[0]))
+    await userEvent.click(deleteButtons()[0])
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2', deletable: true })
   })
 
@@ -163,11 +162,11 @@ describe('SingleCombobox', () => {
     render(template({ onDelete, disabled: true }))
 
     // コンボボックスをクリックしてもリストボックスが表示されないことを確認
-    await act(() => userEvent.click(combobox()))
+    await userEvent.click(combobox())
     expect(listbox()).not.toBeInTheDocument()
 
     // 選択解除ボタンをクリックしても onDelete が呼ばれないことを確認
-    await act(() => userEvent.click(deleteButtons()[0]))
+    await userEvent.click(deleteButtons()[0])
     expect(onDelete).not.toHaveBeenCalled()
   })
 
@@ -175,18 +174,18 @@ describe('SingleCombobox', () => {
     const onSelect = vi.fn()
     render(template({ onSelect, selectedItems: [] }))
 
-    await act(() => userEvent.keyboard('{tab}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.keyboard('{tab}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{enter}')
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 3', value: 'value-3' })
 
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{arrowup}'))
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{arrowup}')
+    await userEvent.keyboard('{enter}')
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 4', value: 'value-4' })
   })
 
@@ -204,15 +203,15 @@ describe('SingleCombobox', () => {
     )
 
     // リストボックスを開く
-    await act(() => userEvent.keyboard('{tab}'))
+    await userEvent.keyboard('{tab}')
 
     // 下矢印キーで選択中アイテムに移動し、Enter キーで削除できること
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{enter}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{enter}'))
-    await act(() => userEvent.keyboard('{arrowdown}'))
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{enter}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{enter}')
+    await userEvent.keyboard('{arrowdown}')
+    await userEvent.keyboard('{enter}')
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 1', value: 'value-1' })
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 3', value: 'value-3' })
@@ -230,37 +229,37 @@ describe('SingleCombobox', () => {
     )
 
     // リストボックスを開く
-    await act(() => userEvent.keyboard('{tab}'))
+    await userEvent.keyboard('{tab}')
 
     // 適当にキー入力
-    await act(() => userEvent.keyboard('ops'))
+    await userEvent.keyboard('ops')
 
     // カーソルを左に移動をしても、キャレットがテキストの先頭にない間は削除ボタンにフォーカスが移動しないこと
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[2]).not.toHaveFocus()
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[2]).not.toHaveFocus()
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[2]).not.toHaveFocus()
 
     // キャレットが先頭にある状態でカーソルを左に移動すると、末尾の削除ボタンにフォーカスが移動すること
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[2]).toHaveFocus()
 
     // 削除ボタンにフォーカスがある状態でさらに手前の削除ボタンに移動できること
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[1]).toHaveFocus()
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[0]).toHaveFocus()
 
     // 一番手前の削除ボタンにフォーカスがある場合は、左矢印キーを押下してもこれ以上フォーカス移動できないこと
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[0]).toHaveFocus()
 
     // 末尾日の削除ボタンにフォーカスがある場合、右矢印キーを押下すると input いフォーカスが移動すること
-    await act(() => userEvent.keyboard('{arrowright}'))
-    await act(() => userEvent.keyboard('{arrowright}'))
-    await act(() => userEvent.keyboard('{arrowright}'))
+    await userEvent.keyboard('{arrowright}')
+    await userEvent.keyboard('{arrowright}')
+    await userEvent.keyboard('{arrowright}')
     expect(deleteButtons()[2]).not.toHaveFocus()
     expect(combobox()).toHaveFocus()
   })
@@ -278,14 +277,14 @@ describe('SingleCombobox', () => {
     )
 
     // リストボックスを開く
-    await act(() => userEvent.keyboard('{tab}'))
+    await userEvent.keyboard('{tab}')
 
     // 選択中のアイテムにフォーカスを移動
-    await act(() => userEvent.keyboard('{arrowleft}'))
+    await userEvent.keyboard('{arrowleft}')
     expect(deleteButtons()[1]).toHaveFocus()
 
     // Enter キーで削除
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.keyboard('{enter}')
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
   })
 
@@ -302,10 +301,10 @@ describe('SingleCombobox', () => {
     )
 
     // リストボックスを開く
-    await act(() => userEvent.keyboard('{tab}'))
+    await userEvent.keyboard('{tab}')
 
     // Backspace キーで末尾のアイテムが削除されること
-    await act(() => userEvent.keyboard('{backspace}'))
+    await userEvent.keyboard('{backspace}')
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
 
     // Backspace によって削除した末尾アイテムはテキスト化されること

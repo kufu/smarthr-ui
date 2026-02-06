@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 import { act } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { Button } from '../Button'
 import { Stack } from '../Layout'

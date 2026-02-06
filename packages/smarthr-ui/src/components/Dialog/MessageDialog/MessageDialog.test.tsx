@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
@@ -26,12 +26,12 @@ describe('MessageDialog', () => {
     render(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'MessageDialog' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'MessageDialog' })).toBeVisible()
 
-    await act(() => userEvent.tab({ shift: true }))
-    await act(() => userEvent.keyboard('{ }'))
+    await userEvent.tab({ shift: true })
+    await userEvent.keyboard('{ }')
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'MessageDialog' })).toBeNull()
