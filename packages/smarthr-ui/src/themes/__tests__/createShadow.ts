@@ -15,9 +15,10 @@ describe('createShadow', () => {
     const actualFocusIndicator = replaceSpaces(actual.focusIndicatorStyles)
     const expectedFocusIndicator = replaceSpaces(css`
       /* stylelint-disable no-invalid-position-declaration */
-      outline: none;
       isolation: isolate;
-      box-shadow: ${expectedOutline};
+      box-shadow: 0 0 0 2px white;
+      outline: 2px solid ${userOutlineColor};
+      outline-offset: 2px;
       /* stylelint-enable no-invalid-position-declaration */
     `)
 

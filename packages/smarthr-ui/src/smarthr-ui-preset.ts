@@ -64,7 +64,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-    focus: ['focus-indicator', 'focus-indicator--inner'],
+    focus: ['focus-indicator', 'focus-indicator--inner', 'focus-indicator-none'],
   },
 }
 
@@ -410,15 +410,21 @@ export default {
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
-        '.focus-indicator': {
-          outline: 'none',
+        ':where(.focus-indicator)': {
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
         },
-        '.focus-indicator--inner': {
-          outline: 'none',
+        ':where(.focus-indicator--inner)': {
           isolation: 'isolate',
-          boxShadow: `inset 0 0 0 2px ${theme('colors.outline')}, inset 0 0 0 4px ${theme('colors.white')}`,
+          boxShadow: `inset 0 0 0 4px ${theme('colors.white')}`,
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '-2px',
+        },
+        '.focus-indicator-none': {
+          boxShadow: 'none',
+          outline: 'none',
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),
