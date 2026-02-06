@@ -13,6 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
@@ -21,13 +22,18 @@ import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-type AbstractProps = PropsWithChildren<{
-  /** パネルのタイトル */
-  title: ReactNode
+type ObjectHeadingType = {
+  text: ReactNode
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
-  unrecommendedTitleTag?: HeadingTagTypes
+  unrecommendedTag?: HeadingTagTypes
+}
+type HeadingType = ReactNode | ObjectHeadingType
+type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
+type AbstractProps = PropsWithChildren<{
+  /** パネルのタイトル */
+  heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
   toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
@@ -37,15 +43,15 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
-
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({ text })
 
 export const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: 'shr-p-1.5',
-    heading: 'smarthr-ui-InformationPanel-title',
+    heading: 'smarthr-ui-InformationPanel-heading',
     toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
       'smarthr-ui-InformationPanel-content',
@@ -112,8 +118,7 @@ export const classNameGenerator = tv({
 })
 
 export const InformationPanel: FC<Props> = ({
-  title,
-  unrecommendedTitleTag,
+  heading,
   type = 'info',
   toggleable,
   active: activeProps = true,
@@ -126,7 +131,6 @@ export const InformationPanel: FC<Props> = ({
 }) => {
   const [active, setActive] = useState(activeProps)
   const id = useId()
-  const titleId = `${id}-title`
   const contentId = `${id}-content`
 
   useEffect(() => {
@@ -171,13 +175,11 @@ export const InformationPanel: FC<Props> = ({
     <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         <MemoizedHeading
-          unrecommendedTag={unrecommendedTitleTag}
-          id={titleId}
+          heading={heading}
+          id={`${id}-heading`}
           className={classNames.heading}
           type={type}
-        >
-          {title}
-        </MemoizedHeading>
+        />
         {toggleable && (
           <ToggleableButton
             active={active}
@@ -198,18 +200,24 @@ export const InformationPanel: FC<Props> = ({
 
 const MemoizedHeading = memo<
   Pick<Props, 'type'> & {
-    unrecommendedTag: Props['unrecommendedTitleTag']
+    heading: Props['heading']
     id: string
     className: string
-    children: Props['title']
   }
->(({ type, children, ...rest }) => (
-  <Heading {...rest} type="blockTitle">
-    <ResponseMessage type={type} iconGap={0.5}>
-      {children}
-    </ResponseMessage>
-  </Heading>
-))
+>(({ type, heading: orgHeading, ...rest }) => {
+  const heading = useObjectAttributes<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
+
+  return (
+    <Heading {...rest} unrecommendedTag={heading.unrecommendedTag} type="blockTitle">
+      <ResponseMessage type={type} iconGap={0.5}>
+        {heading.text}
+      </ResponseMessage>
+    </Heading>
+  )
+})
 
 const ToggleableButton: FC<
   Pick<Props, 'onClickTrigger' | 'decorators'> & {
