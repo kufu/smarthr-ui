@@ -17,7 +17,7 @@ type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 /** @deprecated */
 export const MessageDialogContent: FC<Props> = ({
   title,
-  description,
+  children,
   portalParent,
   className,
   contentBgColor,
@@ -46,12 +46,13 @@ export const MessageDialogContent: FC<Props> = ({
       <MessageDialogContentInner
         title={title}
         titleId={titleId}
-        description={description}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
         decorators={decorators}
-      />
+      >
+        {children}
+      </MessageDialogContentInner>
     </DialogContentInner>,
   )
 }
