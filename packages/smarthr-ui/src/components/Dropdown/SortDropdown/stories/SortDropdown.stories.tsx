@@ -41,3 +41,45 @@ export const Disabled: StoryObj<typeof SortDropdown> = {
     disabled: true,
   },
 }
+
+export const SortFieldLabel: StoryObj<typeof SortDropdown> = {
+  name: 'sortFieldLabel',
+  args: {
+    sortFieldLabel: 'sortFieldLabel',
+  },
+}
+
+export const SortOrderLegend: StoryObj<typeof SortDropdown> = {
+  name: 'sortOrderLegend',
+  args: {
+    sortOrderLegend: 'sortOrderLegend',
+  },
+}
+
+export const AscLabel: StoryObj<typeof SortDropdown> = {
+  name: 'ascLabel',
+  args: {
+    ascLabel: 'ascLabel',
+  },
+}
+
+export const DescLabel: StoryObj<typeof SortDropdown> = {
+  name: 'descLabel',
+  args: {
+    descLabel: 'descLabel',
+  },
+}
+
+export const ApplyText: StoryObj<typeof SortDropdown> = {
+  name: 'applyText',
+  args: {
+    applyText: 'applyText',
+  },
+}
+
+export const CancelText: StoryObj<typeof SortDropdown> = {
+  name: 'cancelText',
+  args: {
+    cancelText: 'cancelText',
+  },
+}
