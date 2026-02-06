@@ -16,10 +16,11 @@ type Props = {
   // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
   data: ChartData<'line'>
-  title: string
+  title?: string
+  options?: Partial<ChartOptions<'line'>>
 }
 
-export const LineChart: React.FC<Props> = ({ data, title }) => {
+export const LineChart: React.FC<Props> = ({ data, title, options: externalOptions }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'line'>>(null)
   const chartColors = useMemo(
@@ -30,7 +31,8 @@ export const LineChart: React.FC<Props> = ({ data, title }) => {
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length
     const pointCount = data.datasets[0].data.length
-    return `${title} 線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
+    const prefix = title ? `${title} ` : ''
+    return `${prefix}線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
   }, [title, data])
 
   const enhancedData: ChartData<'line'> = useMemo(
@@ -47,21 +49,27 @@ export const LineChart: React.FC<Props> = ({ data, title }) => {
   const chartOptions: ChartOptions<'line'> = useMemo(
     () =>
       createLineChartOptions({
+        ...externalOptions,
         plugins: {
-          title: {
-            display: true,
-            text: title,
-          },
+          ...externalOptions?.plugins,
+          title: title
+            ? {
+                display: true,
+                text: title,
+              }
+            : {
+                display: false,
+              },
           keyboardNavigation: {
             liveRegionId: chartId,
           },
         },
       }),
-    [title, chartId],
+    [title, chartId, externalOptions],
   )
 
   return (
-    <div className="shr-relative">
+    <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Line
         tabIndex={0}
