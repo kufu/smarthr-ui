@@ -20,15 +20,14 @@ export default {
   component: FormDialog,
   render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
-    const handleSubmit = (close: () => void, e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>, helpers: { close: () => void }) => {
       if (onSubmit) {
-        onSubmit(close, e)
+        onSubmit(e, helpers)
       } else {
         action('onSubmit')(e)
       }
-
       // デフォルトのストーリーではフォーム送信後にダイアログを閉じる
-      close()
+      helpers.close()
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
 
@@ -114,10 +113,10 @@ export const ActionTheme: StoryObj<typeof FormDialog> = {
 export const OnSubmit: StoryObj<typeof FormDialog> = {
   name: 'onSubmit',
   args: {
-    onSubmit: (closeDialog, e) => {
+    onSubmit: (e, { close }) => {
       e.preventDefault()
       action('onSubmit')(e)
-      closeDialog()
+      close()
     },
   },
 }
@@ -151,7 +150,7 @@ export const ResponseStatus: StoryObj<typeof FormDialog> = {
           responseStatus={responseStatus}
           isOpen={open}
           onClickClose={() => setOpen(false)}
-          onSubmit={(close, e) => {
+          onSubmit={(e, { close }) => {
             e.preventDefault()
             action('onSubmit')(e)
             close()
@@ -226,7 +225,7 @@ export const PortalParent: StoryObj<typeof FormDialog> = {
           portalParent={parentRef}
           isOpen={open}
           onClickClose={() => setOpen(false)}
-          onSubmit={(close, e) => {
+          onSubmit={(e, { close }) => {
             e.preventDefault()
             action('onSubmit')(e)
             close()
@@ -273,7 +272,7 @@ export const FirstFocusTarget: StoryObj<typeof FormDialog> = {
           isOpen={open}
           onPressEscape={handleClose}
           onClickClose={handleClose}
-          onSubmit={(close, e) => {
+          onSubmit={(e, { close }) => {
             e.preventDefault()
             action('onSubmit')(e)
             close()

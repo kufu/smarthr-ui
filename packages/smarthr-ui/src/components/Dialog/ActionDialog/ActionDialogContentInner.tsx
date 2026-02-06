@@ -1,6 +1,14 @@
 'use client'
 
-import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
+import {
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -13,6 +21,10 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
+export type ActionDialogHelpers = {
+  close: () => void
+}
+
 export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
@@ -22,9 +34,10 @@ export type AbstractProps = PropsWithChildren<
       actionTheme?: 'primary' | 'secondary' | 'danger'
       /**
        * アクションボタンをクリックした時に発火するコールバック関数
-       * @param closeDialog - ダイアログを閉じる関数
+       * @param e マウスイベント
+       * @param helpers ダイアログ操作のためのヘルパー関数
        */
-      onClickAction: (closeDialog: () => void) => void
+      onClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
       /** アクションボタンを無効にするかどうか */
       actionDisabled?: boolean
       /** 閉じるボタンを無効にするかどうか */
@@ -133,9 +146,12 @@ const ActionAreaCluster = memo<
     actionText,
     className,
   }) => {
-    const handleClickAction = useCallback(() => {
-      onClickAction(onClickClose)
-    }, [onClickAction, onClickClose])
+    const handleClickAction = useCallback(
+      (e: MouseEvent<Element>) => {
+        onClickAction(e, { close: onClickClose })
+      },
+      [onClickAction, onClickClose],
+    )
 
     return (
       <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
@@ -162,7 +178,7 @@ const ActionButton = memo<
     variant: ActionDialogContentInnerProps['actionTheme']
     disabled: ActionDialogContentInnerProps['actionDisabled']
     loading: boolean
-    onClick: () => void
+    onClick: (e: MouseEvent<HTMLButtonElement>) => void
   }>
 >(({ variant = 'primary', disabled, loading, onClick, children }) => (
   <Button
