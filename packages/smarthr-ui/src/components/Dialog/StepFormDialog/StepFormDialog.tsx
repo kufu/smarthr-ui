@@ -5,14 +5,13 @@ import {
   type FC,
   type FormEvent,
   type ReactNode,
-  isValidElement,
   useCallback,
-  useId,
   useRef,
 } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
 import {
   StepFormDialogContentInner,
@@ -23,11 +22,16 @@ import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
 import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 
+type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
 type AbstractProps = Omit<StepFormDialogContentInnerProps, 'heading' | 'activeStep'> &
   DialogProps & {
-    heading: ReactNode | Omit<StepFormDialogContentInnerProps['heading'], 'id'>
+    heading: HeadingType
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({ text })
 
 export const StepFormDialog: FC<Props> = ({
   children,
@@ -53,18 +57,10 @@ export const StepFormDialog: FC<Props> = ({
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
-  const titleId = useId()
-
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const heading: StepFormDialogContentInnerProps['heading'] =
-    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
-      ? {
-          text: orgHeading as ReactNode,
-          id: titleId,
-        }
-      : ({ ...orgHeading, id: titleId } as StepFormDialogContentInnerProps['heading'])
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   const focusTrapRef = useRef<FocusTrapRef>(null)
 
@@ -100,7 +96,7 @@ export const StepFormDialog: FC<Props> = ({
       <DialogContentInner
         {...rest}
         isOpen={isOpen}
-        ariaLabelledby={titleId}
+        ariaLabelledby={heading.id}
         className={className}
         onPressEscape={closeDisabled ? undefined : onPressEscape}
         focusTrapRef={focusTrapRef}

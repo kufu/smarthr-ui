@@ -1,16 +1,9 @@
-import {
-  type ComponentProps,
-  type FC,
-  type ReactNode,
-  isValidElement,
-  useCallback,
-  useContext,
-  useId,
-} from 'react'
+import { type ComponentProps, type FC, type ReactNode, useCallback, useContext } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
 import {
   type AbstractProps as ContentInnerProps,
@@ -19,12 +12,18 @@ import {
 
 import type { UncontrolledDialogProps } from '../types'
 
-type HeadingType = ContentInnerProps['heading']
+type ObjectHeadingType = Omit<ContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
 type AbstractProps = Omit<ContentInnerProps, 'heading'> &
   UncontrolledDialogProps & {
-    heading: ReactNode | Omit<HeadingType, 'id'>
+    heading: HeadingType
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({
+  text,
+})
 
 /** @deprecated */
 export const MessageDialogContent: FC<Props> = ({
@@ -45,17 +44,10 @@ export const MessageDialogContent: FC<Props> = ({
       onClickClose()
     }
   }, [active, onClickClose])
-  const titleId = useId()
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const heading: HeadingType =
-    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
-      ? {
-          text: orgHeading as ReactNode,
-          id: titleId,
-        }
-      : ({ ...orgHeading, id: titleId } as HeadingType)
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   return createPortal(
     <DialogContentInner
@@ -63,7 +55,7 @@ export const MessageDialogContent: FC<Props> = ({
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}
-      ariaLabelledby={titleId}
+      ariaLabelledby={heading.id}
     >
       <MessageDialogContentInner
         heading={heading}

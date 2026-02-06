@@ -1,27 +1,27 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type FormEvent,
-  type ReactNode,
-  isValidElement,
-  useCallback,
-  useId,
-} from 'react'
+import { type ComponentProps, type FC, type FormEvent, type ReactNode, useCallback } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
 import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
+type ObjectHeadingType = Omit<FormDialogContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
 type AbstractProps = Omit<FormDialogContentInnerProps, 'heading'> &
   DialogProps & {
-    heading: ReactNode | Omit<FormDialogContentInnerProps['heading'], 'id'>
+    heading: HeadingType
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({
+  text,
+})
 
 export const FormDialog: FC<Props> = ({
   children,
@@ -45,18 +45,10 @@ export const FormDialog: FC<Props> = ({
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
-  const titleId = useId()
-
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const heading: FormDialogContentInnerProps['heading'] =
-    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
-      ? {
-          text: orgHeading as ReactNode,
-          id: titleId,
-        }
-      : ({ ...orgHeading, id: titleId } as FormDialogContentInnerProps['heading'])
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   const actualOnClickClose = useCallback(() => {
     if (isOpen) {
@@ -77,7 +69,7 @@ export const FormDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      ariaLabelledby={titleId}
+      ariaLabelledby={heading.id}
       className={className}
       onPressEscape={closeDisabled ? undefined : onPressEscape}
     >

@@ -1,16 +1,10 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type ReactNode,
-  isValidElement,
-  useCallback,
-  useId,
-} from 'react'
+import { type ComponentProps, type FC, type ReactNode, useCallback } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
 import {
   MessageDialogContentInner,
@@ -19,11 +13,18 @@ import {
 
 import type { DialogProps } from '../types'
 
+type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
 type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading'> &
   DialogProps & {
-    heading: ReactNode | Omit<MessageDialogContentInnerProps['heading'], 'id'>
+    heading: HeadingType
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({
+  text,
+})
 
 export const MessageDialog: FC<Props> = ({
   heading: orgHeading,
@@ -45,23 +46,16 @@ export const MessageDialog: FC<Props> = ({
       onClickClose()
     }
   }, [isOpen, onClickClose])
-  const titleId = useId()
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const heading: MessageDialogContentInnerProps['heading'] =
-    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
-      ? {
-          text: orgHeading as ReactNode,
-          id: titleId,
-        }
-      : ({ ...orgHeading, id: titleId } as MessageDialogContentInnerProps['heading'])
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   return createPortal(
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      ariaLabelledby={titleId}
+      ariaLabelledby={heading.id}
       className={className}
       onPressEscape={onPressEscape}
     >
