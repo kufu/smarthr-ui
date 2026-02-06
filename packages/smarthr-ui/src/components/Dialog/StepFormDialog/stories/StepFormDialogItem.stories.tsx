@@ -21,7 +21,7 @@ export default {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <StepFormDialog
-          title="ステップダイアログ"
+          heading="ステップダイアログ"
           stepLength={2}
           submitLabel="保存"
           firstStep={{ id: 'step-1', stepNumber: 1 }}

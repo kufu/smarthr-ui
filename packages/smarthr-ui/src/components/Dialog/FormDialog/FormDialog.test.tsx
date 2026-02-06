@@ -18,7 +18,7 @@ describe('FormDialog', () => {
         <Button onClick={() => setIsOpen(true)}>FormDialog</Button>
         <FormDialog
           isOpen={isOpen}
-          title="FormDialog"
+          heading="FormDialog"
           actionText="保存"
           onSubmit={(closeDialog) => {
             closeDialog()
@@ -62,7 +62,7 @@ describe('FormDialog', () => {
         {isOpen && (
           <FormDialog
             isOpen
-            title="開いた状態で投入されたダイアログ"
+            heading="開いた状態で投入されたダイアログ"
             actionText="実行"
             onSubmit={(closeDialog) => {
               closeDialog()

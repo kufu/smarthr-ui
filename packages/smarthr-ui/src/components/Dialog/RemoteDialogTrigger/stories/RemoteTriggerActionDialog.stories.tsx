@@ -18,7 +18,7 @@ export default {
       <RemoteTriggerActionDialog
         {...args}
         id="remote-dialog"
-        title="リモートトリガーアクションダイアログ"
+        heading="リモートトリガーアクションダイアログ"
         actionText="アクション"
         onClickAction={action('onClickAction')}
       >

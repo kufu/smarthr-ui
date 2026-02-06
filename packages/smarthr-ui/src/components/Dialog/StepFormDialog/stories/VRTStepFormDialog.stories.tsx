@@ -9,8 +9,10 @@ export default {
     width: '30em',
     size: 'M',
     isOpen: true,
-    title: 'アクションダイアログタイトル',
-    subtitle: 'アクションダイアログのサブタイトル',
+    heading: {
+      text: 'アクションダイアログタイトル',
+      sub: 'アクションダイアログのサブタイトル',
+    },
     submitLabel: '保存',
     contentBgColor: 'BACKGROUND',
     responseStatus: {
