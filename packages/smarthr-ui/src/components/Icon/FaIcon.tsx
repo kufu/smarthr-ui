@@ -29,6 +29,7 @@ import {
   FaBolt,
   FaBook,
   FaBookOpen,
+  FaBookmark,
   FaBoxArchive,
   FaBuilding,
   FaBullhorn,
@@ -234,6 +235,7 @@ export const FaBellSlashIcon = /*#__PURE__*/ generateIcon(FaBellSlash)
 export const FaBoltIcon = /*#__PURE__*/ generateIcon(FaBolt)
 export const FaBookIcon = /*#__PURE__*/ generateIcon(FaBook)
 export const FaBookOpenIcon = /*#__PURE__*/ generateIcon(FaBookOpen)
+export const FaBookmarkIcon = /*#__PURE__*/ generateIcon(FaBookmark)
 export const FaBoxArchiveIcon = /*#__PURE__*/ generateIcon(FaBoxArchive)
 export const FaBuildingIcon = /*#__PURE__*/ generateIcon(FaBuilding)
 export const FaBullhornIcon = /*#__PURE__*/ generateIcon(FaBullhorn)
