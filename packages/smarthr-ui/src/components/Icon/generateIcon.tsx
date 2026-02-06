@@ -5,8 +5,6 @@ import { colors, fontSize, textColor } from '../../themes'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { FontSizes } from '../../themes/createFontSize'
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import type { Gap } from '../../types'
 import type { IconType } from 'react-icons'
 
 /**
@@ -55,19 +53,6 @@ type IconProps = {
 type AbstractProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
-  /**
-   * @deprecated この属性は指定した場合の挙動が想像しにくく、コードもわかりづらくなってしまうため、他の方法を利用してください
-   *  - Textコンポーネントのicon
-   *  - Headingコンポーネントのicon
-   *  - FormControlのlabel.icon
-   *  - Fieldsetのlegend.icon
-   */
-  /** アイコンと並べるテキスト */
-  text?: ReactNode
-  /** アイコンと並べるテキストとの溝 */
-  iconGap?: CharRelativeSize | AbstractSize
-  /** `true` のとき、アイコンを右側に表示する */
-  right?: boolean
 }
 export type Props = AbstractProps &
   Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
@@ -82,50 +67,6 @@ const classNameGenerator = tv({
   },
 })
 
-const wrapperClassNameGenerator = tv({
-  base: [
-    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-relative shr-inline-flex shr-items-baseline',
-  ],
-  variants: {
-    gap: {
-      0: 'shr-gap-x-0',
-      0.25: 'shr-gap-x-0.25',
-      0.5: 'shr-gap-x-0.5',
-      0.75: 'shr-gap-x-0.75',
-      1: 'shr-gap-x-1',
-      1.25: 'shr-gap-x-1.25',
-      1.5: 'shr-gap-x-1.5',
-      2: 'shr-gap-x-2',
-      2.5: 'shr-gap-x-2.5',
-      3: 'shr-gap-x-3',
-      3.5: 'shr-gap-x-3.5',
-      4: 'shr-gap-x-4',
-      8: 'shr-gap-x-8',
-      '-0.25': '-shr-gap-x-0.25',
-      '-0.5': '-shr-gap-x-0.5',
-      '-0.75': '-shr-gap-x-0.75',
-      '-1': '-shr-gap-x-1',
-      '-1.25': '-shr-gap-x-1.25',
-      '-1.5': '-shr-gap-x-1.5',
-      '-2': '-shr-gap-x-2',
-      '-2.5': '-shr-gap-x-2.5',
-      '-3': '-shr-gap-x-3',
-      '-3.5': '-shr-gap-x-3.5',
-      '-4': '-shr-gap-x-4',
-      '-8': '-shr-gap-x-8',
-      X3S: 'shr-gap-x-0.25',
-      XXS: 'shr-gap-x-0.5',
-      XS: 'shr-gap-x-1',
-      S: 'shr-gap-x-1.5',
-      M: 'shr-gap-x-2',
-      L: 'shr-gap-x-2.5',
-      XL: 'shr-gap-x-3',
-      XXL: 'shr-gap-x-3.5',
-      X3L: 'shr-gap-x-4',
-    } as { [key in Gap]: string },
-  },
-})
-
 export const generateIcon = (SvgIcon: IconType) => {
   const Icon = memo<Props>(
     ({
@@ -137,9 +78,6 @@ export const generateIcon = (SvgIcon: IconType) => {
       'aria-label': ariaLabel,
       'aria-labelledby': ariaLabelledby,
       focusable = false,
-      text,
-      iconGap = 0.25,
-      right,
       size,
       ...rest
     }) => {
@@ -163,7 +101,6 @@ export const generateIcon = (SvgIcon: IconType) => {
           wrapperWithAlt: wrapperWithAlt(),
         }
       }, [className])
-      const wrapperClassName = useMemo(() => wrapperClassNameGenerator({ gap: iconGap }), [iconGap])
 
       const replacedColor = useMemo(() => {
         if (color && existsColor(color)) {
@@ -199,26 +136,14 @@ export const generateIcon = (SvgIcon: IconType) => {
           focusable={focusable}
         />
       )
-      const visuallyHiddenAlt = alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>
 
-      if (text) {
+      if (alt) {
         return (
-          <span className={wrapperClassName}>
-            {right && text}
-            {visuallyHiddenAlt}
-            {svgIcon}
-            {!right && text}
-          </span>
-        )
-      }
-
-      if (visuallyHiddenAlt) {
-        return (
-          // HINT: visuallyが存在すると、アイコンなのに2つの要素がある状態になってしまい
+          // HINT: VisuallyHiddenTextが存在すると、アイコンなのに2つの要素がある状態になってしまい
           // styleなどを記述する際、意図しない状態になる場合がある
           // 回避するため、spanでラップし、開発者のメンタルモデルに合わせる
           <span className={classNames.wrapperWithAlt}>
-            {visuallyHiddenAlt}
+            <VisuallyHiddenText>{alt}</VisuallyHiddenText>
             {svgIcon}
           </span>
         )

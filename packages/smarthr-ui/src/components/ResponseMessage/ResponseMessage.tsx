@@ -14,9 +14,10 @@ import { Text } from '../Text'
 import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
-  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> & {
+  Omit<IconProps, 'size' | 'alt'> & {
     size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
     iconGap?: CharRelativeSize | AbstractSize
+    right?: boolean
   }
 
 export const classNameGenerator = tv({
