@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+import { OpenInNewTabIcon } from '../Icon'
 
 import type { ElementRef, ElementRefProps } from '../../types'
 
@@ -78,7 +78,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       suffix,
       className,
       size,
-      ...others
+      ...rest
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
@@ -125,7 +125,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
 
     return (
       <Anchor
-        {...others}
+        {...rest}
         ref={ref}
         href={actualHref}
         target={target}

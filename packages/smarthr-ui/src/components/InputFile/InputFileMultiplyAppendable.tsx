@@ -23,14 +23,11 @@ import { Stack } from '../Layout'
 
 import { classNameGenerator } from './style'
 
-import type { DecoratorKeyTypes, ElementProps, Props } from './types'
+import type { DecoratorKeyTypes, Props } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileMultiplyAppendable = forwardRef<
-  HTMLInputElement,
-  Omit<Props, 'multiplyAppendable'> & Omit<ElementProps, 'multiple'>
->(
+export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
   (
     {
       className,
@@ -41,7 +38,7 @@ export const InputFileMultiplyAppendable = forwardRef<
       disabled = false,
       error,
       decorators,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -167,9 +164,8 @@ export const InputFileMultiplyAppendable = forwardRef<
           </BaseColumn>
         )}
         <span className={classNames.inputWrapper}>
-          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
-            {...props}
+            {...rest}
             multiple
             data-smarthr-ui-input="true"
             type="file"

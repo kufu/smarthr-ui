@@ -23,7 +23,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
-export type BaseProps = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
       /** アクションボタンのラベル */
@@ -50,7 +50,7 @@ export type BaseProps = PropsWithChildren<
     }
 >
 
-export type StepFormDialogContentInnerProps = BaseProps & {
+export type StepFormDialogContentInnerProps = AbstractProps & {
   firstStep: StepItem
   onClickClose: () => void
   responseStatus?: ResponseStatus
@@ -71,7 +71,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   title,
   titleId,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   submitLabel,
@@ -176,7 +176,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <DialogHeader
             title={subtitle ? title : `${title}${stepText}`}
             subtitle={subtitle ? `${subtitle}${stepText}` : undefined}
-            titleTag={titleTag}
+            unrecommendedTitleTag={unrecommendedTitleTag}
             titleId={titleId}
           />
           <DialogBody

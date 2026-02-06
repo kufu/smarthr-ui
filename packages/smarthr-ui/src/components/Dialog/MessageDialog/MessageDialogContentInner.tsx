@@ -9,7 +9,7 @@ import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type BaseProps = DialogHeaderProps &
+export type AbstractProps = DialogHeaderProps &
   DialogBodyProps & {
     /** ダイアログの説明 */
     description: ReactNode
@@ -17,14 +17,14 @@ export type BaseProps = DialogHeaderProps &
     decorators?: DecoratorsType<'closeButtonLabel'>
   }
 
-export type MessageDialogContentInnerProps = BaseProps & {
+export type MessageDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
 }
 
 export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   title,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   titleId,
   contentBgColor,
   contentPadding,
@@ -44,7 +44,12 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Section className={styles.wrapper}>
-      <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
+      <DialogHeader
+        title={title}
+        subtitle={subtitle}
+        unrecommendedTitleTag={unrecommendedTitleTag}
+        titleId={titleId}
+      />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {description}
       </DialogBody>

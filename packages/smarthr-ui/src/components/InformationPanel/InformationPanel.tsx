@@ -4,7 +4,6 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
-  isValidElement,
   memo,
   useEffect,
   useId,
@@ -14,6 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
@@ -25,14 +25,15 @@ import { ResponseMessage } from '../ResponseMessage'
 type ObjectHeadingType = {
   text: ReactNode
   /**
-   * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
-  tag?: HeadingTagTypes
+  unrecommendedTag?: HeadingTagTypes
 }
+type HeadingType = ReactNode | ObjectHeadingType
 type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
-  heading: ReactNode | ObjectHeadingType
+  heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
   toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
@@ -43,6 +44,8 @@ type AbstractProps = PropsWithChildren<{
   VariantProps<typeof classNameGenerator>
 
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({ text })
 
 export const classNameGenerator = tv({
   slots: {
@@ -124,7 +127,7 @@ export const InformationPanel: FC<Props> = ({
   children,
   onClickTrigger,
   decorators,
-  ...props
+  ...rest
 }) => {
   const [active, setActive] = useState(activeProps)
   const id = useId()
@@ -169,7 +172,7 @@ export const InformationPanel: FC<Props> = ({
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
+    <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         <MemoizedHeading
           heading={heading}
@@ -202,19 +205,13 @@ const MemoizedHeading = memo<
     className: string
   }
 >(({ type, heading: orgHeading, ...rest }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const heading: ObjectHeadingType =
-    !orgHeading || typeof orgHeading !== 'object' || isValidElement(orgHeading)
-      ? {
-          text: orgHeading as ReactNode,
-        }
-      : (orgHeading as ObjectHeadingType)
+  const heading = useObjectAttributes<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Heading {...rest} tag={heading.tag} type="blockTitle">
+    <Heading {...rest} unrecommendedTag={heading.unrecommendedTag} type="blockTitle">
       <ResponseMessage type={type} iconGap={0.5}>
         {heading.text}
       </ResponseMessage>

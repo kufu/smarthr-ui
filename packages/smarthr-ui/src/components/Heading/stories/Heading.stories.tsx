@@ -1,9 +1,9 @@
-import { ComponentPropsWithoutRef } from 'react'
+import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Heading } from '../Heading'
-import { FaAddressBookIcon } from '../../Icon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentPropsWithoutRef } from 'react'
 
 export default {
   title: 'Components/Heading',
@@ -61,27 +61,27 @@ export const Size: StoryObj<typeof Heading> = {
   ),
 }
 
-export const Tag: StoryObj<typeof Heading> = {
-  name: 'tag(非推奨)',
+export const UnrecommendedTag: StoryObj<typeof Heading> = {
+  name: 'unrecommendedTag(非推奨)',
   render: (args) => (
     <Stack>
       <Heading {...args}>未指定(推奨)</Heading>
-      <Heading {...args} tag="h1">
+      <Heading {...args} unrecommendedTag="h1">
         h1
       </Heading>
-      <Heading {...args} tag="h2">
+      <Heading {...args} unrecommendedTag="h2">
         h2
       </Heading>
-      <Heading {...args} tag="h3">
+      <Heading {...args} unrecommendedTag="h3">
         h3
       </Heading>
-      <Heading {...args} tag="h4">
+      <Heading {...args} unrecommendedTag="h4">
         h4
       </Heading>
-      <Heading {...args} tag="h5">
+      <Heading {...args} unrecommendedTag="h5">
         h5
       </Heading>
-      <Heading {...args} tag="h6">
+      <Heading {...args} unrecommendedTag="h6">
         h6
       </Heading>
     </Stack>

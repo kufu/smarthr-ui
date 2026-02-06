@@ -9,14 +9,14 @@ import { FormDialogContentInner, type FormDialogContentInnerProps } from './Form
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type AbstractProps = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const FormDialog: FC<Props & ElementProps> = ({
+export const FormDialog: FC<Props> = ({
   children,
   title,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   actionText,
@@ -33,7 +33,7 @@ export const FormDialog: FC<Props & ElementProps> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
@@ -55,7 +55,7 @@ export const FormDialog: FC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}
@@ -66,7 +66,7 @@ export const FormDialog: FC<Props & ElementProps> = ({
         title={title}
         titleId={titleId}
         subtitle={subtitle}
-        titleTag={titleTag}
+        unrecommendedTitleTag={unrecommendedTitleTag}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         actionText={actionText}

@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { InformationPanel, classNameGenerator } from '../InformationPanel'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/InformationPanel',
@@ -52,11 +52,11 @@ export const Heading: StoryObj<typeof InformationPanel> = {
 }
 
 export const HeadingTag: StoryObj<typeof InformationPanel> = {
-  name: 'heading.tag（非推奨）',
+  name: 'heading.unrecommendedTag（非推奨）',
   args: {
     heading: {
       text: 'インフォメーションパネルタイトル',
-      tag: 'h3',
+      unrecommendedTag: 'h3',
     },
   },
 }

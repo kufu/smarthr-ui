@@ -8,4 +8,4 @@ export const Fieldset: FC<
   Omit<FormControlType, 'as' | 'label'> & {
     legend: Omit<Exclude<FormControlType['label'], ReactNode>, 'htmlFor'> | ReactNode
   }
-> = ({ legend, ...props }) => <ActualFormControl {...props} label={legend} as="fieldset" />
+> = ({ legend, ...rest }) => <ActualFormControl {...rest} label={legend} as="fieldset" />

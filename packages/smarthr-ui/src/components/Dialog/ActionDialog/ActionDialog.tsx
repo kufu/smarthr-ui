@@ -12,14 +12,14 @@ import {
 
 import type { DialogProps } from '../types'
 
-type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type AbstractProps = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const ActionDialog: FC<Props & ElementProps> = ({
+export const ActionDialog: FC<Props> = ({
   children,
   title,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   actionText,
@@ -36,7 +36,7 @@ export const ActionDialog: FC<Props & ElementProps> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
@@ -55,7 +55,7 @@ export const ActionDialog: FC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}
@@ -65,7 +65,7 @@ export const ActionDialog: FC<Props & ElementProps> = ({
         title={title}
         titleId={titleId}
         subtitle={subtitle}
-        titleTag={titleTag}
+        unrecommendedTitleTag={unrecommendedTitleTag}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         actionText={actionText}

@@ -1,9 +1,8 @@
-import { ComponentProps } from 'react'
-
 import { Stack } from '../../Layout'
 import { InformationPanel } from '../InformationPanel'
 
-import type { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict information-panel.pict

@@ -1,39 +1,38 @@
-import { ComponentProps } from 'react'
-
 import { Stack } from '../../Layout'
 import { Switch } from '../Switch'
 
-import type { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict switch.pict
- * dangerouslyLabelHidden  defaultChecked  disabled
- * true                    true            true
- * true                    false           false
- * false                   false           true
- * false                   true            false
+ * unrecommendedLabelHidden  defaultChecked  disabled
+ * true                      true            true
+ * true                      false           false
+ * false                     false           true
+ * false                     true            false
  */
 const _cases: Array<ComponentProps<typeof Switch>> = [
   {
-    dangerouslyLabelHidden: true,
+    unrecommendedLabelHidden: true,
     defaultChecked: true,
     disabled: true,
     children: 'ラベル',
   },
   {
-    dangerouslyLabelHidden: true,
+    unrecommendedLabelHidden: true,
     defaultChecked: false,
     disabled: undefined,
     children: 'ラベル',
   },
   {
-    dangerouslyLabelHidden: false,
+    unrecommendedLabelHidden: false,
     defaultChecked: undefined,
     disabled: true,
     children: 'ラベル',
   },
   {
-    dangerouslyLabelHidden: undefined,
+    unrecommendedLabelHidden: undefined,
     defaultChecked: true,
     disabled: false,
     children: 'ラベル',

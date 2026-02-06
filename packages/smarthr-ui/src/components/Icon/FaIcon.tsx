@@ -29,6 +29,7 @@ import {
   FaBolt,
   FaBook,
   FaBookOpen,
+  FaBookmark,
   FaBoxArchive,
   FaBuilding,
   FaBullhorn,
@@ -188,7 +189,6 @@ import {
   FaTruckRampBox,
   FaUpDown,
   FaUpRightAndDownLeftFromCenter,
-  FaUpRightFromSquare,
   FaUser,
   FaUserCheck,
   FaUserClock,
@@ -235,6 +235,7 @@ export const FaBellSlashIcon = /*#__PURE__*/ generateIcon(FaBellSlash)
 export const FaBoltIcon = /*#__PURE__*/ generateIcon(FaBolt)
 export const FaBookIcon = /*#__PURE__*/ generateIcon(FaBook)
 export const FaBookOpenIcon = /*#__PURE__*/ generateIcon(FaBookOpen)
+export const FaBookmarkIcon = /*#__PURE__*/ generateIcon(FaBookmark)
 export const FaBoxArchiveIcon = /*#__PURE__*/ generateIcon(FaBoxArchive)
 export const FaBuildingIcon = /*#__PURE__*/ generateIcon(FaBuilding)
 export const FaBullhornIcon = /*#__PURE__*/ generateIcon(FaBullhorn)
@@ -400,7 +401,6 @@ export const FaUpDownIcon = /*#__PURE__*/ generateIcon(FaUpDown)
 export const FaUpRightAndDownLeftFromCenterIcon = /*#__PURE__*/ generateIcon(
   FaUpRightAndDownLeftFromCenter,
 )
-export const FaUpRightFromSquareIcon = /*#__PURE__*/ generateIcon(FaUpRightFromSquare)
 export const FaUserCheckIcon = /*#__PURE__*/ generateIcon(FaUserCheck)
 export const FaUserClockIcon = /*#__PURE__*/ generateIcon(FaUserClock)
 export const FaUserIcon = /*#__PURE__*/ generateIcon(FaUser)
@@ -413,7 +413,3 @@ export const FaWindowMinimizeIcon = /*#__PURE__*/ generateIcon(FaWindowMinimize)
 export const FaWindowRestoreIcon = /*#__PURE__*/ generateIcon(FaWindowRestore)
 export const FaXmarkIcon = /*#__PURE__*/ generateIcon(FaXmark)
 export const FaYenSignIcon = /*#__PURE__*/ generateIcon(FaYenSign)
-
-export { WarningIcon } from './WarningIcon'
-export { SparklesIcon } from './SparklesIcon'
-export { LanguageIcon } from './LanguageIcon'
