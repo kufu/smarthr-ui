@@ -1,5 +1,4 @@
 import { userEvent, within } from 'storybook/test'
-import { ComponentProps } from 'react'
 
 import { AnchorButton, Button } from '../../../Button'
 import { RemoteDialogTrigger } from '../../../Dialog'
@@ -8,7 +7,8 @@ import { Cluster } from '../../../Layout'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict dropdown-menu-button.pict
@@ -20,15 +20,13 @@ import type { Meta, StoryObj } from '@storybook/react'
  * default     false           undefined
  * default     true            指定あり
  */
-const _cases: Array<
-  Pick<ComponentProps<typeof DropdownMenuButton>, 'triggerSize' | 'onlyIconTrigger' | 'triggerIcon'>
-> = [
-  { triggerSize: 's', onlyIconTrigger: true, triggerIcon: undefined },
-  { triggerSize: 's', onlyIconTrigger: false, triggerIcon: undefined },
-  { triggerSize: 'default', onlyIconTrigger: true, triggerIcon: undefined },
-  { triggerSize: 's', onlyIconTrigger: true, triggerIcon: FaGearIcon },
-  { triggerSize: 'default', onlyIconTrigger: false, triggerIcon: undefined },
-  { triggerSize: 'default', onlyIconTrigger: true, triggerIcon: FaGearIcon },
+const _cases: Array<Pick<ComponentProps<typeof DropdownMenuButton>, 'trigger'>> = [
+  { trigger: { children: 'その他の操作', size: 's', onlyIcon: true } },
+  { trigger: { children: 'その他の操作', size: 's' } },
+  { trigger: { children: 'その他の操作', onlyIcon: true } },
+  { trigger: { children: 'その他の操作', size: 's', onlyIcon: { component: FaGearIcon } } },
+  { trigger: 'その他の操作' },
+  { trigger: { children: 'その他の操作', onlyIcon: { component: FaGearIcon } } },
 ]
 
 export default {
@@ -55,9 +53,6 @@ export default {
       ))}
     </Cluster>
   ),
-  args: {
-    label: 'その他の操作',
-  },
   parameters: {
     chromatic: { disableSnapshot: false },
   },

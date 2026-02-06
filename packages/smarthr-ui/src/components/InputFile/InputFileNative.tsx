@@ -23,11 +23,15 @@ import { Stack } from '../Layout'
 
 import { classNameGenerator } from './style'
 
-import type { DecoratorKeyTypes, ElementProps, Props } from './types'
+import type { Props as CommonProps, DecoratorKeyTypes } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileNative = forwardRef<HTMLInputElement, Props & ElementProps>(
+type Props = Omit<CommonProps, 'multiple'> & {
+  multiple?: boolean
+}
+
+export const InputFileNative = forwardRef<HTMLInputElement, Props>(
   (
     {
       className,
@@ -38,7 +42,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props & ElementProps
       disabled = false,
       error,
       decorators,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -147,9 +151,8 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props & ElementProps
           </BaseColumn>
         )}
         <span className={classNames.inputWrapper}>
-          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
-            {...props}
+            {...rest}
             data-smarthr-ui-input="true"
             type="file"
             onChange={handleChange}

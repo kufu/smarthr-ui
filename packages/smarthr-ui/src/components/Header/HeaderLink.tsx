@@ -21,11 +21,11 @@ const classNameGenerator = tv({
   },
 })
 
-export const HeaderLink = memo<Props>(({ enableNew, className, ...props }) => {
+export const HeaderLink = memo<Props>(({ enableNew, className, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ enableNew, className }),
     [enableNew, className],
   )
 
-  return <TextLink {...props} target="_blank" className={actualClassName} />
+  return <TextLink {...rest} target="_blank" className={actualClassName} />
 })

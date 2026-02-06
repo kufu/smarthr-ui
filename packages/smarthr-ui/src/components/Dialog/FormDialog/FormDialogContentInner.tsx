@@ -20,7 +20,7 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type BaseProps = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
       /** アクションボタンのラベル */
@@ -43,7 +43,7 @@ export type BaseProps = PropsWithChildren<
     }
 >
 
-export type FormDialogContentInnerProps = BaseProps & {
+export type FormDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
   responseStatus?: ResponseStatus
 }
@@ -62,7 +62,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   title,
   titleId,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   actionText,
@@ -103,7 +103,12 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={styles.wrapper}>
-      <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
+      <DialogHeader
+        title={title}
+        subtitle={subtitle}
+        unrecommendedTitleTag={unrecommendedTitleTag}
+        titleId={titleId}
+      />
       <form onSubmit={handleSubmitAction} className={styles.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}

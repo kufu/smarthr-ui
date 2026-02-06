@@ -1,13 +1,14 @@
+import { type ComponentProps, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { FormDialog } from '../FormDialog'
-import { ComponentProps, useRef, useState } from 'react'
 import { Button } from '../../../Button'
-import { RadioButton } from '../../../RadioButton'
-import { Cluster } from '../../../Layout'
-import { Input } from '../../../Input'
 import { FormControl } from '../../../FormControl'
+import { Input } from '../../../Input'
+import { Cluster } from '../../../Layout'
+import { RadioButton } from '../../../RadioButton'
+import { FormDialog } from '../FormDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _widthOptions = {
   string: '30em',
@@ -17,10 +18,15 @@ const _widthOptions = {
 export default {
   title: 'Components/Dialog/FormDialog',
   component: FormDialog,
-  render: ({ onSubmit, onClickClose, ...args }) => {
+  render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleSubmit = (close: () => void, e: React.FormEvent<HTMLFormElement>) => {
-      onSubmit ? onSubmit(close, e) : action('onSubmit')(e)
+      if (onSubmit) {
+        onSubmit(close, e)
+      } else {
+        action('onSubmit')(e)
+      }
+
       // デフォルトのストーリーではフォーム送信後にダイアログを閉じる
       close()
     }
@@ -29,7 +35,7 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <FormDialog {...args} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
+        <FormDialog {...rest} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
           <FormControl label="名前">
             <Input name="name" />
           </FormControl>
@@ -38,8 +44,8 @@ export default {
     )
   },
   argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
+    unrecommendedTitleTag: {
+      name: 'unrecommendedTitleTag（非推奨）',
     },
   },
   args: {
@@ -67,10 +73,10 @@ export const Subtitle: StoryObj<typeof FormDialog> = {
   },
 }
 
-export const TitleTag: StoryObj<typeof FormDialog> = {
-  name: 'titleTag（非推奨）',
+export const UnrecommendedTitleTag: StoryObj<typeof FormDialog> = {
+  name: 'unrecommendedTitleTag（非推奨）',
   args: {
-    titleTag: 'h3',
+    unrecommendedTitleTag: 'h3',
   },
 }
 
@@ -123,7 +129,7 @@ export const OnClickClose: StoryObj<typeof FormDialog> = {
   },
 }
 
-export const onPressEscape: StoryObj<typeof FormDialog> = {
+export const OnPressEscape: StoryObj<typeof FormDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),

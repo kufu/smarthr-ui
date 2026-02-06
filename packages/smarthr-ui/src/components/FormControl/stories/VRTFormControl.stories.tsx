@@ -1,28 +1,28 @@
+import { FaAddressBookIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
-import { FaAddressBookIcon } from '../../Icon'
 import { FormControl } from '../FormControl'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/FormControl/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyHide) => (
+      {[false, true].map((unrecommendedHide) => (
         <FormControl
           {...args}
           label={{
             ...args.label,
-            dangerouslyHide: dangerouslyHide,
+            unrecommendedHide,
           }}
-          key={dangerouslyHide.toString()}
+          key={unrecommendedHide.toString()}
         />
       ))}
     </Stack>
   ),
   args: {
-    children: <Input />,
+    children: <Input name="formcontrol_input" />,
     label: {
       text: 'フォームコントロール',
       icon: <FaAddressBookIcon />,

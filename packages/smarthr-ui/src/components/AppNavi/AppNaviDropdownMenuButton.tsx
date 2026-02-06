@@ -44,8 +44,8 @@ const classNameGenerator = tv({
       ],
     ],
     actionItem: [
-      'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
-      // aria-current-page より詳細度を確実に上げる
+      // HINT: DropdownMenuButton内で設定されるclassNameより優先度を上げる必要がある
+      '[&&]:aria-current-page:shr-bg-grey-9 [&&]:aria-current-page:shr-font-bold',
       '[&&]:hover:shr-bg-head-darken',
     ],
   },
@@ -75,7 +75,7 @@ const renderItemList = (children: ReactNode) =>
 
 export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, children }) => (
   <DropdownMenuButton
-    label={
+    trigger={
       <>
         {label}
         {/* has([aria-current="page"]) を書くために複製 */}

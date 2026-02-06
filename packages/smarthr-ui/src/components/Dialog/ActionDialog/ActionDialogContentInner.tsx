@@ -13,7 +13,7 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type BaseProps = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   DialogHeaderProps &
     DialogBodyProps & {
       /** アクションボタンのラベル */
@@ -36,7 +36,7 @@ export type BaseProps = PropsWithChildren<
     }
 >
 
-export type ActionDialogContentInnerProps = BaseProps & {
+export type ActionDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
   responseStatus?: ResponseStatus
 }
@@ -48,7 +48,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   title,
   titleId,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   actionText,
@@ -77,7 +77,12 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Section className={styles.wrapper}>
-      <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
+      <DialogHeader
+        title={title}
+        subtitle={subtitle}
+        unrecommendedTitleTag={unrecommendedTitleTag}
+        titleId={titleId}
+      />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>

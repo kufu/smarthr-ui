@@ -52,14 +52,12 @@ type IconProps = {
   size?: FontSizes
 }
 
-type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
-
-type BaseComponentProps = {
+type AbstractProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
   /**
    * @deprecated この属性は指定した場合の挙動が想像しにくく、コードもわかりづらくなってしまうため、他の方法を利用してください
-   *  - TextコンポーネントのprefixIcon, suffixIcon
+   *  - Textコンポーネントのicon
    *  - Headingコンポーネントのicon
    *  - FormControlのlabel.icon
    *  - Fieldsetのlegend.icon
@@ -71,7 +69,8 @@ type BaseComponentProps = {
   /** `true` のとき、アイコンを右側に表示する */
   right?: boolean
 }
-export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
+export type Props = AbstractProps &
+  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
@@ -142,7 +141,7 @@ export const generateIcon = (SvgIcon: IconType) => {
       iconGap = 0.25,
       right,
       size,
-      ...props
+      ...rest
     }) => {
       const actualAriaHidden = useMemo(() => {
         if (ariaHidden !== undefined) {
@@ -183,7 +182,7 @@ export const generateIcon = (SvgIcon: IconType) => {
       const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
-          {...props}
+          {...rest}
           stroke="currentColor"
           fill="currentColor"
           strokeWidth="0"

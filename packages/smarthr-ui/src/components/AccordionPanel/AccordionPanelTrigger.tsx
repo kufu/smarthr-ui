@@ -30,15 +30,15 @@ import {
 
 import type { TextProps } from '../Text'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
   headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
-   * @deprecated headingTag属性は非推奨です
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
-  headingTag?: HeadingTagTypes
+  unrecommendedHeadingTag?: HeadingTagTypes
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'button'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -64,12 +64,12 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
+export const AccordionPanelTrigger: FC<Props> = ({
   children,
   className,
   headingType = 'blockTitle',
-  headingTag,
-  ...props
+  unrecommendedHeadingTag,
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { title, titleWrapper, button, leftIcon, rightIcon } = classNameGenerator()
@@ -172,9 +172,9 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Heading tag={headingTag} type={headingType}>
+    <Heading unrecommendedTag={unrecommendedHeadingTag} type={headingType}>
       <button
-        {...props}
+        {...rest}
         type="button"
         value={name}
         id={`${name}-trigger`}

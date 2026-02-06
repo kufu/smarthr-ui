@@ -116,6 +116,7 @@ const DropdownCustomTag = memo<NavigationCustomTag>(
         commonButtonClassNameGenerator({
           current,
           className,
+          rounded: false,
         }),
       [current, className],
     )

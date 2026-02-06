@@ -12,7 +12,7 @@ import { spacing } from '../../themes'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   term: ReactNode
   termStyleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
   /** @deprecated DefinitionList で items を使う時の props です。children を使ってください。 */
@@ -20,7 +20,7 @@ type Props = PropsWithChildren<{
   fullWidth?: boolean
   maxColumns?: number
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -41,7 +41,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DefinitionListItem: FC<Props & ElementProps> = ({
+export const DefinitionListItem: FC<Props> = ({
   maxColumns,
   fullWidth,
   term,
