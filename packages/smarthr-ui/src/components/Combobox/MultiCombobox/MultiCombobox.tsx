@@ -177,6 +177,7 @@ const ActualMultiCombobox = <T,>(
     decorators,
     isItemSelected,
     style,
+    variant,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -249,6 +250,7 @@ const ActualMultiCombobox = <T,>(
     isLoading,
     triggerRef: outerRef,
     decorators,
+    variant,
   })
 
   const {
