@@ -1,5 +1,6 @@
 import { action } from 'storybook/actions'
 
+import { FaGearIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
 import { SideNav, type SideNavItemButtonProps } from '../SideNav'
@@ -23,6 +24,13 @@ export const _sideNavItems: SideNavItemButtonProps[] = [
     children: 'サイドナビ3',
     current: false,
     prefix: <StatusLabel>ラベル</StatusLabel>,
+  },
+  {
+    id: 'id-4',
+    children: 'サイドナビ3',
+    current: false,
+    prefix: <FaGearIcon />,
+    suffix: <StatusLabel>ラベル</StatusLabel>,
   },
 ]
 

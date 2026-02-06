@@ -48,8 +48,8 @@ export default {
     )
   },
   argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
+    unrecommendedTitleTag: {
+      name: 'unrecommendedTitleTag（非推奨）',
     },
   },
   args: {
@@ -85,10 +85,10 @@ export const SubmitLabel: StoryObj<typeof StepFormDialog> = {
   },
 }
 
-export const TitleTag: StoryObj<typeof StepFormDialog> = {
-  name: 'titleTag（非推奨）',
+export const UnrecommendedTitleTag: StoryObj<typeof StepFormDialog> = {
+  name: 'unrecommendedTitleTag（非推奨）',
   args: {
-    titleTag: 'h3',
+    unrecommendedTitleTag: 'h3',
   },
 }
 
