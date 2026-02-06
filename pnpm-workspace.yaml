@@ -10,3 +10,6 @@ auditConfig:
     - GHSA-h25m-26qc-wcjf
     - GHSA-9g9p-9gw9-jx7f
     - GHSA-5f7q-jpqc-wp7h
+minimumReleaseAgeExclude:
+  # Renovate security update: next@15.5.10
+  - next@15.5.10
