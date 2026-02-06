@@ -64,7 +64,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-    focus: ['focus-indicator', 'focus-indicator--inner'],
+    focus: ['focus-indicator', 'focus-indicator--inverse', 'focus-indicator--outer'],
   },
 }
 
@@ -411,14 +411,20 @@ export default {
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
         '.focus-indicator': {
-          outline: 'none',
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '-2px',
+          boxShadow: `inset 0 0 0 3px ${theme('colors.white')}`,
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
         },
-        '.focus-indicator--inner': {
-          outline: 'none',
+        '.focus-indicator--inverse': {
+          outline: `3px solid ${theme('colors.white')}`,
+          outlineOffset: '-6px',
+        },
+        '.focus-indicator--outer': {
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
           isolation: 'isolate',
-          boxShadow: `inset 0 0 0 2px ${theme('colors.outline')}, inset 0 0 0 4px ${theme('colors.white')}`,
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),

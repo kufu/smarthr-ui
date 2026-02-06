@@ -39,6 +39,7 @@ const classNameGenerator = tv({
           'shr-bg-main shr-text-white',
           'hover:shr-bg-main-darken',
           'forced-colors:shr-bg-[Highlight]',
+          'has-[:focus-visible]:shr-focus-indicator--inverse',
         ],
       },
     },
