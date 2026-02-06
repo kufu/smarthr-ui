@@ -53,7 +53,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Select shr-relative shr-inline-block',
     select: [
-      'shr-peer shr-border-shorthand shr-w-full shr-cursor-pointer shr-appearance-none shr-rounded-m shr-bg-white shr-text-base shr-leading-tight shr-text-black shr-outline-none',
+      'shr-peer shr-border-shorthand shr-w-full shr-cursor-pointer shr-appearance-none shr-rounded-m shr-bg-white shr-text-base shr-leading-tight shr-text-black',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
       'disabled:shr-pointer-events-none disabled:shr-bg-white-darken disabled:shr-text-disabled disabled:shr-opacity-100',
