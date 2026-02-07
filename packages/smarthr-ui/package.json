@@ -86,7 +86,7 @@
     "tsx": "^4.20.6",
     "vitest": "^4.0.18",
     "wait-on": "^8.0.5",
-    "webpack": "^5.100.2"
+    "webpack": "^5.104.1"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
