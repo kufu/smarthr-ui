@@ -22,7 +22,7 @@ export const StepFormDialog: FC<Props> = ({
   title,
   subtitle,
   stepLength,
-  titleTag,
+  unrecommendedTitleTag,
   contentBgColor,
   contentPadding,
   actionTheme,
@@ -88,7 +88,7 @@ export const StepFormDialog: FC<Props> = ({
           title={title}
           titleId={titleId}
           subtitle={subtitle}
-          titleTag={titleTag}
+          unrecommendedTitleTag={unrecommendedTitleTag}
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
           firstStep={firstStep}

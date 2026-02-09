@@ -13,6 +13,8 @@ const _sampleTriggerIcons = {
   'FaGearIcon（onlyIconTrigger の時のみ動作）': FaGearIcon,
 }
 
+const WrappedButton = () => <Button>操作5</Button>
+
 export default {
   title: 'Components/Dropdown/DropdownMenuButton',
   component: DropdownMenuButton,
@@ -27,6 +29,7 @@ export default {
       <Button onClick={action('action4')} disabled={true} disabledReason={{ message: 'disabled.' }}>
         操作4
       </Button>
+      <WrappedButton />
     </DropdownMenuButton>
   ),
   args: {

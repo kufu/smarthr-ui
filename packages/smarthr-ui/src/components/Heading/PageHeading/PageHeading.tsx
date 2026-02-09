@@ -4,6 +4,7 @@ import { type PropsWithChildren, memo, useEffect, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
 
@@ -18,7 +19,11 @@ export type AbstractProps = PropsWithChildren<{
   size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
-  /** title要素の自動生成フラグ */
+  /**
+   * title要素の自動生成フラグ
+   *
+   * Next.js 環境ではこの値にかかわらずtitleは自動生成されません。metadataなどの方法を利用してください。
+   */
   autoPageTitle?: boolean
   /** title要素のprefix */
   pageTitle?: string
@@ -65,13 +70,19 @@ export const PageHeading = memo<Props>(
     }, [size])
 
     const pseudoTitleId = useId()
-    const titleText = useMemo(
-      () => (autoPageTitle ? `${pageTitle || innerText(children)}｜${pageTitleSuffix}` : ''),
+
+    const autoTitleText = useMemo(
+      () =>
+        autoPageTitle && !IS_NEXT_JS
+          ? `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
+          : '',
       [children, pageTitle, pageTitleSuffix, autoPageTitle],
     )
 
     useEffect(() => {
-      if (titleText) {
+      if (autoTitleText) {
+        document.title = autoTitleText
+
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
         const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
@@ -82,9 +93,8 @@ export const PageHeading = memo<Props>(
         pseudoTitle.setAttribute('aria-live', 'polite')
         document.body.prepend(pseudoTitle)
 
-        document.title = titleText
         requestAnimationFrame(() => {
-          pseudoTitle.innerText = titleText
+          pseudoTitle.textContent = autoTitleText
         })
 
         return () => {
@@ -93,7 +103,7 @@ export const PageHeading = memo<Props>(
       }
 
       return undefined
-    }, [titleText, pseudoTitleId])
+    }, [autoTitleText, pseudoTitleId])
 
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 

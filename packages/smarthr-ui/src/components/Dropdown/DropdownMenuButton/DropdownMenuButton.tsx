@@ -9,10 +9,10 @@ import {
   Fragment,
   type ReactElement,
   type ReactNode,
-  cloneElement,
   isValidElement,
   memo,
   useContext,
+  useEffect,
   useMemo,
   useRef,
 } from 'react'
@@ -20,6 +20,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useIntl } from '../../../intl'
 import { type AnchorButton, Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
@@ -64,6 +65,10 @@ type AbstractProps = {
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof AbstractProps>
 type Props = AbstractProps & ElementProps
 
+const triggerObjectConverter = (trigger: ReactNode) => ({
+  children: trigger,
+})
+
 const classNameGenerator = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
@@ -80,8 +85,9 @@ const classNameGenerator = tv({
       ],
     ],
     actionListItemButton: [
-      'shr-justify-start shr-rounded-none shr-border-none shr-py-0.5 shr-font-normal',
-      'focus-visible:shr-focus-indicator--inner',
+      // HINT: 実際にレンダリングされた要素のclassに対して追加されるため、優先度を上げる必要がある
+      '[&&]:shr-w-full [&&]:shr-justify-start [&&]:shr-rounded-none [&&]:shr-border-none [&&]:shr-py-0.5 [&&]:shr-font-normal',
+      '[&&]:focus-visible:shr-focus-indicator--inner',
     ],
   },
 })
@@ -96,18 +102,14 @@ export const DropdownMenuButton: FC<Props> = ({
   className,
   ...rest
 }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
   const {
     children: triggerChildren,
     size: triggerSize,
     onlyIcon: onlyIconTrigger,
-  }: ObjectTriggerType = !trigger || typeof trigger !== 'object' || isValidElement(trigger)
-    ? {
-        children: trigger as ReactNode,
-      }
-    : (trigger as ObjectTriggerType)
+  } = useObjectAttributes<ReactNode | ObjectTriggerType, ObjectTriggerType>(
+    trigger,
+    triggerObjectConverter,
+  )
 
   const containerRef = useRef<HTMLUListElement>(null)
 
@@ -126,11 +128,12 @@ export const DropdownMenuButton: FC<Props> = ({
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
         {...rest}
-        children={triggerChildren}
         onlyIconTrigger={onlyIconTrigger}
         triggerSize={triggerSize}
         classNames={classNames}
-      />
+      >
+        {triggerChildren}
+      </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
         <menu ref={containerRef} role="menu" className={classNames.actionList}>
           {renderButtonList(children)}
@@ -182,7 +185,7 @@ const MemoizedTriggerButton = memo<
         size={triggerSize}
         className={classNames.triggerButton}
       >
-        <TriggerLabelText children={children} onlyIconTrigger={onlyIconTrigger} />
+        <TriggerLabelText onlyIconTrigger={onlyIconTrigger}>{children}</TriggerLabelText>
       </Button>
     </DropdownTrigger>
   )
@@ -214,15 +217,31 @@ export const renderButtonList = (children: Actions) =>
         return item
     }
 
-    return (
-      <li role="presentation">
-        <DropdownCloser>
-          {cloneElement(item as ReactElement, {
-            wide: true,
-            role: 'menuitem',
-            className: actionListItemButton({ className: item.props.className }),
-          })}
-        </DropdownCloser>
-      </li>
-    )
+    return <ButtonListItem>{item}</ButtonListItem>
   })
+
+const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
+  const ref = useRef<HTMLLIElement>(null)
+
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    const button = ref.current.querySelector('button,a')
+
+    if (button) {
+      button.setAttribute('role', 'menuitem')
+      button.setAttribute(
+        'class',
+        actionListItemButton({ className: button.getAttribute('class') }),
+      )
+    }
+  }, [children])
+
+  return (
+    <li role="presentation" ref={ref}>
+      <DropdownCloser>{children}</DropdownCloser>
+    </li>
+  )
+}
