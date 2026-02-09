@@ -3,11 +3,12 @@ import {
   type ElementType,
   type PropsWithChildren,
   type ReactNode,
-  isValidElement,
   memo,
   useMemo,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
+
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import type { Gap } from '../../types'
@@ -141,14 +142,17 @@ const wrapperClassNameGenerator = tv({
   },
 })
 
-type ObjectLabelType = {
-  /** テキスト左に設置するアイコン */
-  prefix?: ReactNode
-  /** テキスト右に設置するアイコン */
-  suffix?: ReactNode
-  /** アイコンと並べるテキストとの溝 */
-  gap?: CharRelativeSize | AbstractSize
-}
+type ActualIconType =
+  | undefined
+  | {
+      /** テキスト左に設置するアイコン */
+      prefix?: ReactNode
+      /** テキスト右に設置するアイコン */
+      suffix?: ReactNode
+      /** アイコンと並べるテキストとの溝 */
+      gap?: CharRelativeSize | AbstractSize
+    }
+type IconType = ActualIconType | ReactNode
 
 // VariantProps を使うとコメントが書けない〜🥹
 export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
@@ -159,8 +163,10 @@ export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof clas
   /** 見た目の種類 */
   styleType?: StyleType
   /** 設置するアイコン */
-  icon?: ReactNode | ObjectLabelType
+  icon?: IconType
 }
+
+const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 
 const ActualText = <T extends ElementType = 'span'>({
   emphasis,
@@ -177,20 +183,7 @@ const ActualText = <T extends ElementType = 'span'>({
   children,
   ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  const icon: undefined | ObjectLabelType = useMemo(
-    () =>
-      // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-      !orgIcon
-        ? undefined
-        : // HINT: ReactNodeとObjectのどちらかを判定
-          // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-          typeof orgIcon !== 'object' || isValidElement(orgIcon)
-          ? {
-              prefix: orgIcon as ReactNode,
-            }
-          : (orgIcon as ObjectLabelType),
-    [orgIcon],
-  )
+  const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
   const actualClassName = useMemo(() => {
     const styleTypeValues = styleType
       ? STYLE_TYPE_MAP[styleType as StyleType]

@@ -78,7 +78,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
       suffix,
       className,
       size,
-      ...others
+      ...rest
     }: PropsWithoutRef<Props<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
@@ -125,7 +125,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
 
     return (
       <Anchor
-        {...others}
+        {...rest}
         ref={ref}
         href={actualHref}
         target={target}

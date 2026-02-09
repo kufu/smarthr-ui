@@ -7,6 +7,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import {
   FaCircleCheckIcon,
   FaCircleExclamationIcon,
@@ -24,10 +25,14 @@ type ObjectIconType = {
   type: IconType
   gap?: CharRelativeSize | AbstractSize
 }
-type Props = PropsWithChildren<Omit<IconProps, 'right' | 'text' | 'size' | 'alt' | 'iconGap'>> & {
+type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
   icon?: IconType | ObjectIconType
 }
+
+const iconObjectConverter = (iconType: IconType): ObjectIconType => ({
+  type: iconType,
+})
 
 export const classNameGenerator = tv({
   base: '',
@@ -50,23 +55,17 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ icon, size, children, ...other }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const actualIcon: ObjectIconType =
-    !icon || typeof icon !== 'object' || isValidElement(icon)
-      ? {
-          type: icon as IconType,
-        }
-      : (icon as ObjectIconType)
-
-  const className = useMemo(() => classNameGenerator({ type: actualIcon.type }), [actualIcon.type])
-  const TextIcon = ICON_MAPPER[actualIcon.type || 'info']
+export const ResponseMessage: FC<Props> = ({ icon: orgIcon, size, children, ...rest }) => {
+  const icon = useObjectAttributes<IconType | ObjectIconType, ObjectIconType>(
+    orgIcon,
+    iconObjectConverter,
+  )
+  const className = useMemo(() => classNameGenerator({ type: icon.type }), [icon.type])
+  const TextIcon = ICON_MAPPER[icon.type || 'info']
 
   return (
     <Text
-      icon={{ prefix: <TextIcon {...other} className={className} />, gap: actualIcon.gap }}
+      icon={{ prefix: <TextIcon {...rest} className={className} />, gap: icon.gap }}
       size={size}
     >
       {children}

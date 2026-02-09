@@ -1,7 +1,7 @@
 import { Cluster } from '../../Layout'
 import { Balloon } from '../Balloon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Balloon/VRT',

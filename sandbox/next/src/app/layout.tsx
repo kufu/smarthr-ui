@@ -1,4 +1,4 @@
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import './global.css'
 
 export default function RootLayout({
@@ -8,9 +8,11 @@ export default function RootLayout({
 }>) {
   return (
     <IntlProvider locale="ja">
-      <html lang="en">
-        <body>{children}</body>
-      </html>
+      <EnvironmentProvider>
+        <html lang="en">
+          <body>{children}</body>
+        </html>
+      </EnvironmentProvider>
     </IntlProvider>
   )
 }

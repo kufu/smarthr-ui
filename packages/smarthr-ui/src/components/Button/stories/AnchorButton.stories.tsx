@@ -2,7 +2,7 @@ import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Button/AnchorButton',

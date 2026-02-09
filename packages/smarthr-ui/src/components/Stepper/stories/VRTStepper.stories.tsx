@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react'
-
 import { Stepper } from '..'
 import { Stack } from '../../Layout'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _steps = {
   horizontal: [

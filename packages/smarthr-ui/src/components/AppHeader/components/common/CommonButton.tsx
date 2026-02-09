@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 export const commonButtonClassNameGenerator = tv({
   base: [
-    '[&&]:shr-box-border [&&]:shr-flex [&&]:shr-w-full [&&]:shr-cursor-pointer [&&]:shr-items-center [&&]:shr-rounded-m [&&]:shr-border-none [&&]:shr-bg-transparent [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-text-base [&&]:shr-leading-normal [&&]:shr-text-black [&&]:shr-no-underline',
+    '[&&]:shr-box-border [&&]:shr-flex [&&]:shr-w-full [&&]:shr-cursor-pointer [&&]:shr-items-center [&&]:shr-border-none [&&]:shr-bg-transparent [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-text-base [&&]:shr-leading-normal [&&]:shr-text-black [&&]:shr-no-underline',
     '[&&]:hover:shr-bg-white-darken',
     '[&&]:focus-visible:shr-bg-white-darken',
   ],
@@ -18,6 +18,10 @@ export const commonButtonClassNameGenerator = tv({
       true: null,
       false: ['[&&]:shr-font-normal'],
     },
+    rounded: {
+      true: ['[&&]:shr-rounded-m'],
+      false: ['[&&]:shr-rounded-none'],
+    },
   },
   compoundVariants: [
     {
@@ -26,6 +30,9 @@ export const commonButtonClassNameGenerator = tv({
       className: ['[&&]:shr-font-bold'],
     },
   ],
+  defaultVariants: {
+    rounded: true,
+  },
 })
 
 type AnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'prefix'>
@@ -38,7 +45,7 @@ type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & Bu
 }
 
 export const CommonButton = memo<Props>(
-  ({ elementAs, prefix, current, boldWhenCurrent, className, ...rest }) => {
+  ({ elementAs, prefix, current, boldWhenCurrent, className, children, ...rest }) => {
     const actualClassName = useMemo(
       () =>
         commonButtonClassNameGenerator({
@@ -55,7 +62,7 @@ export const CommonButton = memo<Props>(
         return (
           <a {...(rest as AnchorProps)} className={actualClassName}>
             {prefix}
-            {rest.children}
+            {children}
           </a>
         )
       case 'button':
@@ -63,7 +70,7 @@ export const CommonButton = memo<Props>(
           // eslint-disable-next-line smarthr/best-practice-for-button-element
           <button {...(rest as ButtonProps)} className={actualClassName}>
             {prefix}
-            {rest.children}
+            {children}
           </button>
         )
     }

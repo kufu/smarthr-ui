@@ -41,6 +41,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Props>(
       // Td に必要な属性やイベントは不要
       <Td vAlign={vAlign} fixed={fixed} className={classNames.wrapper}>
         <label className={classNames.inner}>
+          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>

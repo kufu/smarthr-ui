@@ -7,7 +7,7 @@ import { Table } from '../Table'
 import { TableReel } from '../TableReel'
 import { Th } from '../Th'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof Th> = (args) => (
   <Table>

@@ -18,7 +18,7 @@ type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 export const MessageDialog: FC<Props> = ({
   title,
   subtitle,
-  titleTag,
+  unrecommendedTitleTag,
   description,
   onClickClose,
   onPressEscape = onClickClose,
@@ -28,27 +28,28 @@ export const MessageDialog: FC<Props> = ({
   portalParent,
   decorators,
   id,
+  isOpen,
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const handleClickClose = useCallback(() => {
-    if (!rest.isOpen) {
-      return
+    if (isOpen) {
+      onClickClose()
     }
-    onClickClose()
-  }, [onClickClose, rest.isOpen])
+  }, [isOpen, onClickClose])
   const titleId = useId()
 
   return createPortal(
     <DialogContentInner
       {...rest}
+      isOpen={isOpen}
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}
     >
       <MessageDialogContentInner
         title={title}
-        titleTag={titleTag}
+        unrecommendedTitleTag={unrecommendedTitleTag}
         titleId={titleId}
         subtitle={subtitle}
         description={description}

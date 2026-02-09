@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 import type { ComponentProps } from 'react'
 
 type ResponseMessageProps = ComponentProps<typeof ResponseMessage>
@@ -98,7 +98,7 @@ export const VRT: StoryObj<typeof ResponseMessage> = {
   render: (args: ResponseMessageProps) => (
     <Stack align="flex-start">
       {testCases.map((testCase, index) => (
-        <ResponseMessage key={index} {...args} {...testCase} />
+        <ResponseMessage {...testCase} {...args} key={index} />
       ))}
     </Stack>
   ),

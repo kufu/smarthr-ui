@@ -6,7 +6,7 @@ import { Text } from '../../Text'
 import { TextLink } from '../../TextLink'
 import { NotificationBar } from '../NotificationBar'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export const sampleChildrens = {
   String: 'NotificationBar が表示されました',
@@ -139,9 +139,7 @@ export const Children: StoryObj<typeof NotificationBar> = {
 export const SubActionArea: StoryObj<typeof NotificationBar> = {
   name: 'subActionArea',
   render: (args) => (
-    <Stack>
-      <NotificationBar {...args} subActionArea={<Text>任意のReactNodeを設定できます</Text>} />
-    </Stack>
+    <NotificationBar {...args} subActionArea={<Text>任意のReactNodeを設定できます</Text>} />
   ),
 }
 

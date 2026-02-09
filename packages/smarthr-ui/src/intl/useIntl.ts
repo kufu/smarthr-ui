@@ -256,7 +256,11 @@ export const useIntl = (): UseIntlReturn => {
       const {
         disableSlashInJa = false,
         capitalizeFirstLetter = false,
-        ...formatOptions
+        year,
+        month,
+        day,
+        weekday,
+        ...rest
       } = options || {}
 
       // パーツの存在を事前に計算
@@ -275,15 +279,17 @@ export const useIntl = (): UseIntlReturn => {
 
       // ロケールのデフォルト形式を取得
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
-        year: hasPart.year ? DATE_FORMATS[locale].year : undefined,
-        month: hasPart.month
-          ? disableSlashInJa && locale === 'ja'
-            ? 'long'
-            : DATE_FORMATS[locale].month
-          : undefined,
-        day: hasPart.day ? DATE_FORMATS[locale].day : undefined,
-        weekday: hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined,
-        ...formatOptions,
+        ...rest,
+        year: year ?? (hasPart.year ? DATE_FORMATS[locale].year : undefined),
+        month:
+          month ??
+          (hasPart.month
+            ? disableSlashInJa && locale === 'ja'
+              ? 'long'
+              : DATE_FORMATS[locale].month
+            : undefined),
+        day: day ?? (hasPart.day ? DATE_FORMATS[locale].day : undefined),
+        weekday: weekday ?? (hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined),
       }
 
       const formattedDate = intl.formatDate(date, actualFormatOptions)

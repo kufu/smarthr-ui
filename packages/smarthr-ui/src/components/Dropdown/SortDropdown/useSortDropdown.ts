@@ -149,8 +149,8 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   return {
     onChangeSortOrderRadio,
     labels: {
-      triggerLabel,
       ...decorated,
+      triggerLabel,
     },
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
