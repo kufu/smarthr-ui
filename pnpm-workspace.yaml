@@ -13,3 +13,5 @@ auditConfig:
 minimumReleaseAgeExclude:
   # Renovate security update: next@15.5.10
   - next@15.5.10
+  # Renovate security update: webpack@5.104.1
+  - webpack@5.104.1
