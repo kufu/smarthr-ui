@@ -1,4 +1,11 @@
-import { type ComponentProps, type FC, Fragment, type PropsWithChildren, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  Fragment,
+  type PropsWithChildren,
+  useMemo,
+  useRef,
+} from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
@@ -6,11 +13,17 @@ import { Base } from '../Base'
 import { TableFixedHead } from './TableFixedHead'
 import { TableReel } from './TableReel'
 
-type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type AbstractProps = PropsWithChildren<
+  VariantProps<typeof classNameGenerator> & {
+    reel?: boolean
+  }
+>
 type Props = AbstractProps & Omit<ComponentProps<'table'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
+    reelWrapper: ['smarthr-ui-TableReel', 'shr-relative'],
+    inner: ['smarthr-ui-TableReel-inner', 'shr-relative'],
     wrapper: '',
     table: [
       'smarthr-ui-Table',
@@ -71,6 +84,13 @@ const classNameGenerator = tv({
       },
     },
     {
+      rounded: true,
+      fixedHead: true,
+      className: {
+        wrapper: ['shr-h-[inherit]', 'shr-max-h-[inherit]'],
+      },
+    },
+    {
       borderType: ['vertical', 'both', 'all'],
       className: {
         table: [
@@ -112,8 +132,10 @@ export const Table: FC<Props> = ({
   layout,
   rounded,
   className,
+  reel = true,
   ...rest
 }) => {
+  const tableWrapperRef = useRef<HTMLDivElement>(null)
   const classNames = useMemo(() => {
     const { table, wrapper } = classNameGenerator({
       borderType,
@@ -126,28 +148,27 @@ export const Table: FC<Props> = ({
     return { table: table({ className }), wrapper: wrapper() }
   }, [borderType, borderStyle, className, fixedHead, layout, rounded])
   const [Wrapper, wrapperProps] = useMemo(
-    () =>
-      rounded
-        ? [RoundedWrapper, { className: classNames.wrapper }]
-        : fixedHead
-          ? [FixedHeadWrapper]
-          : [Fragment],
-    [rounded, classNames.wrapper, fixedHead],
+    () => (rounded ? [RoundedWrapper, { className: classNames.wrapper }] : [Fragment]),
+    [rounded, classNames.wrapper],
   )
 
   return (
     <Wrapper {...wrapperProps}>
-      <table {...rest} className={classNames.table} />
+      <TableFixedHead ref={tableWrapperRef}>
+        {reel ? (
+          <TableReel tableWrapperRef={tableWrapperRef}>
+            <table {...rest} className={classNames.table} />
+          </TableReel>
+        ) : (
+          <table {...rest} className={classNames.table} />
+        )}
+      </TableFixedHead>
     </Wrapper>
   )
 }
 
-const FixedHeadWrapper = ({ children }: PropsWithChildren<{ className?: string }>) => (
-  <TableFixedHead>{children}</TableFixedHead>
-)
-
 const RoundedWrapper = ({ children, className }: PropsWithChildren<{ className?: string }>) => (
   <Base className={className} overflow="hidden" layer={0}>
-    <TableReel>{children}</TableReel>
+    {children}
   </Base>
 )
