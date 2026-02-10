@@ -2,7 +2,6 @@
 
 import {
   type ComponentPropsWithRef,
-  type FC,
   type ForwardedRef,
   type PropsWithChildren,
   forwardRef,
