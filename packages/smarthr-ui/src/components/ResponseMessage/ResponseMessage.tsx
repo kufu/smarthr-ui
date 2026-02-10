@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  isValidElement,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -55,19 +49,16 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ icon: orgIcon, size, children, ...rest }) => {
-  const icon = useObjectAttributes<IconType | ObjectIconType, ObjectIconType>(
+export const ResponseMessage: FC<Props> = ({ icon: orgIcon = 'info', size, children, ...rest }) => {
+  const { type, gap } = useObjectAttributes<IconType | ObjectIconType, ObjectIconType>(
     orgIcon,
     iconObjectConverter,
   )
-  const className = useMemo(() => classNameGenerator({ type: icon.type }), [icon.type])
-  const TextIcon = ICON_MAPPER[icon.type || 'info']
+  const className = useMemo(() => classNameGenerator({ type }), [type])
+  const TextIcon = ICON_MAPPER[type]
 
   return (
-    <Text
-      icon={{ prefix: <TextIcon {...rest} className={className} />, gap: icon.gap }}
-      size={size}
-    >
+    <Text icon={{ prefix: <TextIcon {...rest} className={className} />, gap }} size={size}>
       {children}
     </Text>
   )

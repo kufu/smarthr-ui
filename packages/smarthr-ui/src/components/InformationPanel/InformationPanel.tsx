@@ -197,7 +197,7 @@ export const InformationPanel: FC<Props> = ({
 }
 
 const MemoizedHeading = memo<
-  Pick<Props, 'type'> & {
+  Required<Pick<Props, 'type'>> & {
     unrecommendedTag: Props['unrecommendedTitleTag']
     id: string
     className: string
