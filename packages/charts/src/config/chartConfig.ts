@@ -75,14 +75,33 @@ type CreateBaseChartOptionsReturn<T extends ChartType> = T extends 'line'
 
 // FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
 const createBaseChartOptions = <T extends ChartType>({
-  plugins,
   chartType,
-  externalOptions = {},
+  options = {},
 }: {
-  plugins?: ChartOptions<T>['plugins']
   chartType: T
-  externalOptions?: Partial<ChartOptions<T>>
+  options?: Partial<ChartOptions<T>>
 }): CreateBaseChartOptionsReturn<T> => {
+  // 内部で保護する設定を定義
+  const internalTooltipConfig = {
+    backgroundColor: SMARTHR_DEFAULT_COLORS.BACKGROUND,
+    titleColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+    bodyColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+    borderColor: SMARTHR_DEFAULT_COLORS.BORDER,
+    borderWidth: 1,
+    cornerRadius: 4,
+  }
+
+  const internalLegendLabels = generateLegendOptions(chartType)
+
+  // 外部pluginsからtooltipを除外（内部設定を保護するため）
+  const { tooltip: _tooltip, ...safeExternalPlugins } = options.plugins || {}
+
+  // 外部オプションからplugins.tooltipを除外したオプションを作成
+  const safeExternalOptions = {
+    ...options,
+    plugins: safeExternalPlugins,
+  }
+
   const baseDefaults = {
     animation: false,
     responsive: true,
@@ -91,96 +110,68 @@ const createBaseChartOptions = <T extends ChartType>({
     plugins: {
       legend: {
         position: 'bottom' as const,
-        labels: generateLegendOptions(chartType),
+        labels: internalLegendLabels,
       },
-      tooltip: {
-        backgroundColor: SMARTHR_DEFAULT_COLORS.BACKGROUND,
-        titleColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
-        bodyColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
-        borderColor: SMARTHR_DEFAULT_COLORS.BORDER,
-        borderWidth: 1,
-        cornerRadius: 4,
-      },
-      ...plugins,
+      tooltip: internalTooltipConfig,
+      ...safeExternalPlugins,
     },
   }
 
   // 外部オプションとベースデフォルトをマージ
-  // ベースデフォルトが先、外部オプションが後なので外部が優先される
-  return deepmerge(baseDefaults, externalOptions, {
-    // tooltip と generateLabels は完全に内部設定を優先
-    customMerge: (key) => {
-      if (key === 'tooltip' || key === 'generateLabels') {
-        return (internal, _) => internal
-      }
-      return undefined
-    },
-  }) as CreateBaseChartOptionsReturn<T>
+  return deepmerge(baseDefaults, safeExternalOptions) as CreateBaseChartOptionsReturn<T>
 }
 
 export const createBarChartOptions = (
   options: Partial<ChartOptions<'bar'>> = {},
 ): Partial<ChartOptions<'bar'>> => {
-  const { plugins, ...restOptions } = options
-
   const baseOptions = createBaseChartOptions({
-    plugins,
     chartType: 'bar',
-    externalOptions: restOptions,
+    options,
   })
 
   const scalesDefaults = {
     scales: {
       x: {
-        ...restOptions.scales?.x,
         grid: {
-          ...restOptions.scales?.x?.grid,
           color: SMARTHR_DEFAULT_COLORS.BORDER,
         },
       },
       y: {
         beginAtZero: true,
-        ...restOptions.scales?.y,
         grid: {
-          ...restOptions.scales?.y?.grid,
           color: SMARTHR_DEFAULT_COLORS.BORDER,
         },
       },
     },
   }
 
-  return deepmerge(baseOptions, scalesDefaults) as Partial<ChartOptions<'bar'>>
+  // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
+  return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'bar'>>
 }
 
 export const createLineChartOptions = (
   options: Partial<ChartOptions<'line'>> = {},
 ): Partial<ChartOptions<'line'>> => {
-  const { plugins, ...restOptions } = options
-
   const baseOptions = createBaseChartOptions({
-    plugins,
     chartType: 'line',
-    externalOptions: restOptions,
+    options,
   })
 
   const scalesDefaults = {
     scales: {
       x: {
-        ...restOptions.scales?.x,
         grid: {
-          ...restOptions.scales?.x?.grid,
           color: SMARTHR_DEFAULT_COLORS.BORDER,
         },
       },
       y: {
-        ...restOptions.scales?.y,
         grid: {
-          ...restOptions.scales?.y?.grid,
           color: SMARTHR_DEFAULT_COLORS.BORDER,
         },
       },
     },
   }
 
-  return deepmerge(baseOptions, scalesDefaults) as Partial<ChartOptions<'line'>>
+  // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
+  return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'line'>>
 }

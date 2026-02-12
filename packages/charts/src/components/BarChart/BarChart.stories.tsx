@@ -137,3 +137,24 @@ export const WithoutTitle: Story = {
     data: sampleData,
   },
 }
+
+export const WithOverriddenTooltipAttempt: Story = {
+  name: 'Tooltip上書き試行（内部設定が保護される）',
+  args: {
+    data: sampleData,
+    title: 'Tooltip上書きテスト',
+    options: {
+      plugins: {
+        tooltip: {
+          // これらの設定は無視され、内部のスタイルが使われる
+          backgroundColor: '#ff0000',
+          titleColor: '#00ff00',
+          bodyColor: '#0000ff',
+          borderColor: '#ff00ff',
+          borderWidth: 10,
+          cornerRadius: 20,
+        },
+      },
+    },
+  },
+}
