@@ -116,28 +116,28 @@
       "stylelint --fix"
     ]
   },
-  "main": "lib/index.js",
-  "module": "esm/index.js",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     },
     "./types": {
       "types": "./lib/types/index.d.ts",
-      "import": "./esm/types/index.js",
-      "require": "./lib/types/index.js"
+      "import": "./lib/types/index.js",
+      "require": "./lib/types/index.cjs"
     },
     "./lib/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js",
-      "import": "./esm/*.js"
+      "import": "./lib/*.js",
+      "require": "./lib/*.cjs"
     },
     "./esm/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js",
-      "import": "./esm/*.js"
+      "import": "./lib/*.js",
+      "require": "./lib/*.cjs"
     },
     "./smarthr-ui.css": "./smarthr-ui.css",
     "./package.json": "./package.json"
