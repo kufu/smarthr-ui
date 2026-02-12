@@ -18,6 +18,7 @@ export const PageCounter = memo<Props>(({ start, end, total, className, ...rest 
 
   return (
     <Cluster {...rest} gap={0.25} inline align="baseline" className={actualClassName}>
+      {/* eslint-disable-next-line smarthr/require-i18n-text */}
       <BoldNumber>{start}</BoldNumber>–<BoldNumber>{end}</BoldNumber>
       <Total>{total}</Total>
     </Cluster>
