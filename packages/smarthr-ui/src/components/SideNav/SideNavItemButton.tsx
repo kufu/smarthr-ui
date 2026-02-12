@@ -22,7 +22,7 @@ type AbstractProps = {
   /** アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) => void
 }
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractProps>
 
@@ -38,9 +38,10 @@ const classNameGenerator = tv({
       'shr-w-full shr-leading-none [&]:shr-box-border',
       'focus-visible:shr-focus-indicator',
       'shr-inline-flex shr-items-center',
+      'shr-no-underline',
     ],
-    buttonBody: 'shr-w-full',
-    buttonTitle: 'smarthr-ui-SideNav-itemTitle shr-grow',
+    body: 'shr-w-full',
+    bodyText: 'smarthr-ui-SideNav-itemBodyText shr-grow',
   },
   variants: {
     size: {
@@ -54,33 +55,26 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideNavItemButton: FC<Props> = ({
-  id,
-  title,
-  prefix,
-  suffix,
-  current,
-  size,
-  onClick,
-  children,
-  className,
-  ...rest
-}) => {
+export const SideNavItemButton: FC<
+  Omit<Props, 'onClick'> & {
+    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  }
+> = ({ id, title, prefix, suffix, current, size, onClick, children, className, ...rest }) => {
   const classNames = useMemo(() => {
-    const { wrapper, button, buttonBody, buttonTitle } = classNameGenerator()
+    const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
       button: button({ size: size ?? 'default' }),
-      buttonBody: buttonBody(),
-      buttonTitle: buttonTitle(),
+      body: body(),
+      bodyText: bodyText(),
     }
   }, [className, size])
 
   return (
     <li {...rest} data-current={!!current} className={classNames.wrapper}>
       <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
-        <ButtonBodyCluster
+        <BodyCluster
           prefix={prefix}
           suffix={suffix}
           title={children ?? title}
@@ -91,14 +85,45 @@ export const SideNavItemButton: FC<Props> = ({
   )
 }
 
-const ButtonBodyCluster = memo<
+export const SideNavItemAnchor: FC<
+  Omit<Props, 'onClick'> & {
+    onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+    href: string | undefined
+  }
+> = ({ id, title, prefix, suffix, current, size, onClick, children, className, href, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, button, body, bodyText } = classNameGenerator()
+
+    return {
+      wrapper: wrapper({ className }),
+      button: button({ size: size ?? 'default' }),
+      body: body(),
+      bodyText: bodyText(),
+    }
+  }, [className, size])
+
+  return (
+    <li {...rest} data-current={!!current} className={classNames.wrapper}>
+      <a className={classNames.button} href={href} onClick={onClick} data-value={id}>
+        <BodyCluster
+          prefix={prefix}
+          suffix={suffix}
+          title={children ?? title}
+          classNames={classNames}
+        />
+      </a>
+    </li>
+  )
+}
+
+const BodyCluster = memo<
   Pick<Props, 'prefix' | 'suffix' | 'title'> & {
-    classNames: { buttonBody: string; buttonTitle: string }
+    classNames: { body: string; bodyText: string }
   }
 >(({ prefix, suffix, title, classNames }) => (
-  <Cluster inline align="center" className={classNames.buttonBody} as="span">
+  <Cluster inline align="center" className={classNames.body} as="span">
     {prefix}
-    <span className={classNames.buttonTitle}>{title}</span>
+    <span className={classNames.bodyText}>{title}</span>
     {suffix}
   </Cluster>
 ))
