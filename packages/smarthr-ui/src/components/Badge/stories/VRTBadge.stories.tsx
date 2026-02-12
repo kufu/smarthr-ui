@@ -3,7 +3,7 @@ import { fireEvent, within } from 'storybook/test'
 import { Cluster, Stack } from '../../Layout'
 import { Badge } from '../Badge'
 
-import type { StoryObj } from '@storybook/react'
+import type { StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Badge/VRT',

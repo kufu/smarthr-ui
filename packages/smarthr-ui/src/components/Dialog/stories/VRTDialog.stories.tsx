@@ -1,8 +1,7 @@
-import { Dialog } from '../Dialog'
-
 import { IsOpen } from './Dialog.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Dialog } from '../Dialog'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/VRT',

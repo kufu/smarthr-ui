@@ -1,9 +1,10 @@
 'use client'
 
-import { type ComponentProps, type FC, useCallback, useId } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useCallback } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
 import {
   ActionDialogContentInner,
@@ -12,14 +13,22 @@ import {
 
 import type { DialogProps } from '../types'
 
-type AbstractProps = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
+type ObjectHeadingType = Omit<ActionDialogContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
+type AbstractProps = Omit<ActionDialogContentInnerProps, 'heading'> &
+  DialogProps & {
+    heading: HeadingType
+  }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({
+  text,
+})
 
 export const ActionDialog: FC<Props> = ({
   children,
-  title,
-  subtitle,
-  titleTag,
+  heading: orgHeading,
   contentBgColor,
   contentPadding,
   actionText,
@@ -36,10 +45,13 @@ export const ActionDialog: FC<Props> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
-  const titleId = useId()
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   const actualOnClickClose = useCallback(() => {
     if (isOpen) {
@@ -55,17 +67,14 @@ export const ActionDialog: FC<Props> = ({
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       isOpen={isOpen}
-      ariaLabelledby={titleId}
+      ariaLabelledby={heading.id}
       className={className}
       onPressEscape={closeDisabled ? undefined : onPressEscape}
     >
       <ActionDialogContentInner
-        title={title}
-        titleId={titleId}
-        subtitle={subtitle}
-        titleTag={titleTag}
+        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         actionText={actionText}

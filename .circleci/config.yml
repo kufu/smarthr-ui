@@ -46,27 +46,29 @@ commands:
     steps:
       - run: pnpm ui test
       - run: pnpm ui test:build-assets
-  run-e2e-test:
-    steps:
-      - run:
-          name: build and store smarthr-ui package
-          working_directory: packages/smarthr-ui
-          command: npx yalc publish
-      - run:
-          name: Setup Next.js sandbox
-          working_directory: sandbox/next
-          command: npx yalc add smarthr-ui
-      - run:
-          name: Start Next.js sandbox
-          working_directory: sandbox/next
-          command: pnpm dev
-          background: true
-      - run:
-          name: Run E2E Test
-          working_directory: sandbox/next
-          command: |
-            pnpm playwright install chromium
-            pnpm playwright test
+  # SCとしてつかえるかどうかのテストを行っているが、費用対効果が薄いためoffにしています
+  # 良いテスト方法を発見した場合置き換えます 2026/02/05
+  # run-e2e-test:
+  #   steps:
+  #     - run:
+  #         name: build and store smarthr-ui package
+  #         working_directory: packages/smarthr-ui
+  #         command: npx yalc publish
+  #     - run:
+  #         name: Setup Next.js sandbox
+  #         working_directory: sandbox/next
+  #         command: npx yalc add smarthr-ui
+  #     - run:
+  #         name: Start Next.js sandbox
+  #         working_directory: sandbox/next
+  #         command: pnpm dev
+  #         background: true
+  #     - run:
+  #         name: Run E2E Test
+  #         working_directory: sandbox/next
+  #         command: |
+  #           pnpm playwright install chromium
+  #           pnpm playwright test
   run-chromatic:
     steps:
       - checkout
@@ -104,13 +106,13 @@ jobs:
       - setup-for-test
       - check-source
       - run-npm-test
-  e2e-test:
-    executor: node-active-lts-browsers
-    working_directory: ~/repo
-    resource_class: medium+
-    steps:
-      - setup-for-test
-      - run-e2e-test
+  # e2e-test:
+  #   executor: node-active-lts-browsers
+  #   working_directory: ~/repo
+  #   resource_class: medium+
+  #   steps:
+  #     - setup-for-test
+  #     - run-e2e-test
   chromatic-deployment:
     executor: node-active-lts
     resource_class: medium+
@@ -130,8 +132,8 @@ workflows:
           context: smarthr-dockerhub
       - node-active-lts:
           context: smarthr-dockerhub
-      - e2e-test:
-          context: smarthr-dockerhub
+      # - e2e-test:
+      #     context: smarthr-dockerhub
       - chromatic-deployment:
           filters:
             tags:

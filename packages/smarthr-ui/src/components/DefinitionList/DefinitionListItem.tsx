@@ -13,12 +13,12 @@ import { spacing } from '../../themes'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
-type ObjectDtType = {
+type ObjectTermType = {
   text: ReactNode
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
 type AbstractProps = PropsWithChildren<{
-  dt: ReactNode | ObjectDtType
+  term: ReactNode | ObjectTermType
   fullWidth?: boolean
   maxColumns?: number
 }>
@@ -30,8 +30,9 @@ const classNameGenerator = tv({
       'smarthr-ui-DefinitionListItem shr-border-b-shorthand shr-min-w-[12em] shr-grow shr-border-dotted',
       'contrast-more:shr-border-b-high-contrast',
     ],
-    dt: 'smarthr-ui-DefinitionListItem-term',
-    dd: 'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-min-h-[calc(1em*theme(lineHeight.normal))] shr-pb-0.25',
+    term: 'smarthr-ui-DefinitionListItem-term',
+    description:
+      'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-min-h-[calc(1em*theme(lineHeight.normal))] shr-pb-0.25',
   },
   variants: {
     fullWidth: {
@@ -43,7 +44,7 @@ const classNameGenerator = tv({
 })
 
 export const DefinitionListItem: FC<Props> = ({
-  dt: orgDt,
+  term: orgTerm,
   children,
   maxColumns,
   fullWidth,
@@ -52,20 +53,20 @@ export const DefinitionListItem: FC<Props> = ({
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
   // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const dt: ObjectDtType =
-    !orgDt || typeof orgDt !== 'object' || isValidElement(orgDt)
+  const term: ObjectTermType =
+    !orgTerm || typeof orgTerm !== 'object' || isValidElement(orgTerm)
       ? {
-          text: orgDt as ReactNode,
+          text: orgTerm as ReactNode,
         }
-      : (orgDt as ObjectDtType)
+      : (orgTerm as ObjectTermType)
 
   const classNames = useMemo(() => {
     const cs = classNameGenerator()
 
     return {
       wrapper: cs.wrapper({ fullWidth, className }),
-      dt: cs.dt(),
-      dd: cs.dd(),
+      term: cs.term(),
+      description: cs.description(),
     }
   }, [className, fullWidth])
   const style = useMemo(
@@ -81,10 +82,10 @@ export const DefinitionListItem: FC<Props> = ({
 
   return (
     <Stack gap={0.25} className={classNames.wrapper} style={style}>
-      <DefinitionTerm styleType={dt.styleType} className={classNames.dt}>
-        {dt.text}
+      <DefinitionTerm styleType={term.styleType} className={classNames.term}>
+        {term.text}
       </DefinitionTerm>
-      <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.dd}>
+      <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.description}>
         {children}
       </Text>
     </Stack>
@@ -92,7 +93,7 @@ export const DefinitionListItem: FC<Props> = ({
 }
 
 const DefinitionTerm = memo<
-  PropsWithChildren<{ styleType: ObjectDtType['styleType']; className: string }>
+  PropsWithChildren<{ styleType: ObjectTermType['styleType']; className: string }>
 >(({ styleType = 'subBlockTitle', className, children }) => (
   <Text as="dt" leading="TIGHT" styleType={styleType} className={className}>
     {children}

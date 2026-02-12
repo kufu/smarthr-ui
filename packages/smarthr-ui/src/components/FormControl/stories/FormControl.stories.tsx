@@ -1,6 +1,7 @@
 import { MultiCombobox, SingleCombobox } from '../../Combobox'
 import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
+import { FaAddressBookIcon } from '../../Icon'
 import { CurrencyInput, Input } from '../../Input'
 import { InputFile } from '../../InputFile'
 import { Cluster, Stack } from '../../Layout'
@@ -10,22 +11,23 @@ import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
-import { FaAddressBookIcon } from '../../Icon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _childrenOptions = {
-  '<Input />': <Input />,
-  '<DatePicker />': <DatePicker />,
-  '<TimePicker />': <TimePicker />,
-  '<MonthPicker />': <MonthPicker />,
-  '<CurrencyInput />': <CurrencyInput />,
-  '<Textarea />': <Textarea />,
-  '<Select />': <Select options={[]} hasBlank />,
-  '<SingleCombobox />': <SingleCombobox items={[]} selectedItem={null} />,
-  '<MultiCombobox />': <MultiCombobox items={[]} selectedItems={[]} />,
-  '<InputFile />': <InputFile label="ファイルを選択" />,
-  '<DropZone />': <DropZone onSelectFiles={() => null} />,
+  '<Input />': <Input name="formcontrol_input" />,
+  '<DatePicker />': <DatePicker name="formcontrol_datepicker" />,
+  '<CurrencyInput />': <CurrencyInput name="formcontrol_currencyinput" />,
+  '<Textarea />': <Textarea name="formcontrol_textarea" />,
+  '<Select />': <Select name="formcontrol_select" options={[]} hasBlank />,
+  '<SingleCombobox />': (
+    <SingleCombobox name="formcontrol_singlecombobox" items={[]} selectedItem={null} />
+  ),
+  '<MultiCombobox />': (
+    <MultiCombobox name="formcontrol_multicombobox" items={[]} selectedItems={[]} />
+  ),
+  '<InputFile />': <InputFile name="formcontrol_inputfile" label="ファイルを選択" />,
+  '<DropZone />': <DropZone name="formcontrol_dropzone" onSelectFiles={() => null} />,
 }
 const _errorMessages = {
   単一: 'エラーメッセージ',
@@ -52,7 +54,7 @@ export default {
   },
   args: {
     label: 'フォームコントロール',
-    children: <Input />,
+    children: <Input name="formcontrol_input" />,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -101,12 +103,12 @@ export const LabelStyleType: StoryObj<typeof FormControl> = {
   ),
 }
 
-export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'label.dangerouslyHide（利用注意）',
+export const UnrecommendedTitleHidden: StoryObj<typeof FormControl> = {
+  name: 'label.unrecommendedHide（利用注意）',
   args: {
     label: {
       text: 'フォームコントロール',
-      dangerouslyHide: true,
+      unrecommendedHide: true,
     },
   },
 }

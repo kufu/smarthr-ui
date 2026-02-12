@@ -1,8 +1,8 @@
-import { Stack } from '../../Layout'
 import { FaAddressBookIcon } from '../../Icon'
+import { Stack } from '../../Layout'
 import { STYLE_TYPE_MAP, Text } from '../Text'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 // $ pict text.pict
 const pict = [
@@ -12,8 +12,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: undefined,
@@ -21,8 +20,9 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: 'NONE',
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: {
+      suffix: <FaAddressBookIcon />,
+    },
   },
   {
     size: undefined,
@@ -30,8 +30,7 @@ const pict = [
     color: undefined,
     leading: undefined,
     emphasis: true,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'L',
@@ -39,8 +38,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: 'LOOSE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XL',
@@ -48,8 +46,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: 'NORMAL',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: undefined,
@@ -57,8 +54,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: 'TIGHT',
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XL',
@@ -66,8 +62,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: undefined,
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'L',
@@ -75,8 +70,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: 'NORMAL',
     emphasis: true,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'XXL',
@@ -84,8 +78,7 @@ const pict = [
     color: 'inherit',
     leading: 'LOOSE',
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'M',
@@ -93,8 +86,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: 'NONE',
     emphasis: false,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'XXS',
@@ -102,8 +94,7 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: 'LOOSE',
     emphasis: false,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'S',
@@ -111,8 +102,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XXL',
@@ -120,8 +110,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: 'NORMAL',
     emphasis: true,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'XS',
@@ -129,8 +118,7 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: 'NORMAL',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XL',
@@ -138,8 +126,7 @@ const pict = [
     color: 'inherit',
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'XS',
@@ -147,8 +134,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: undefined,
     emphasis: true,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'S',
@@ -156,8 +142,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: 'LOOSE',
     emphasis: true,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'M',
@@ -165,8 +150,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XL',
@@ -174,8 +158,7 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: undefined,
@@ -183,8 +166,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: 'LOOSE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XL',
@@ -192,8 +174,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: 'NONE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XXL',
@@ -201,8 +182,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: 'NONE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: undefined,
@@ -210,8 +190,7 @@ const pict = [
     color: 'inherit',
     leading: 'NORMAL',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'L',
@@ -219,8 +198,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: 'NONE',
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'L',
@@ -228,8 +206,7 @@ const pict = [
     color: 'inherit',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: undefined,
@@ -237,8 +214,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XS',
@@ -246,8 +222,7 @@ const pict = [
     color: 'inherit',
     leading: 'NONE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XXS',
@@ -255,8 +230,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: undefined,
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'S',
@@ -264,8 +238,7 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XS',
@@ -273,8 +246,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: 'LOOSE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'M',
@@ -282,8 +254,7 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: 'NORMAL',
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'S',
@@ -291,8 +262,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: 'NORMAL',
     emphasis: false,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'M',
@@ -300,8 +270,7 @@ const pict = [
     color: undefined,
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'S',
@@ -309,8 +278,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: 'NONE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XL',
@@ -318,8 +286,7 @@ const pict = [
     color: undefined,
     leading: 'LOOSE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XXL',
@@ -327,8 +294,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XXS',
@@ -336,8 +302,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: 'TIGHT',
     emphasis: true,
-    prefixIcon: <FaAddressBookIcon />,
-    suffixIcon: undefined,
+    icon: <FaAddressBookIcon />,
   },
   {
     size: 'XXS',
@@ -345,8 +310,7 @@ const pict = [
     color: undefined,
     leading: 'NONE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'M',
@@ -354,8 +318,7 @@ const pict = [
     color: 'inherit',
     leading: 'LOOSE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'M',
@@ -363,8 +326,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XXS',
@@ -372,8 +334,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: 'NONE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'M',
@@ -381,8 +342,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'S',
@@ -390,8 +350,7 @@ const pict = [
     color: undefined,
     leading: 'NORMAL',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XXS',
@@ -399,8 +358,7 @@ const pict = [
     color: 'inherit',
     leading: 'NORMAL',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'L',
@@ -408,8 +366,7 @@ const pict = [
     color: undefined,
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XS',
@@ -417,8 +374,7 @@ const pict = [
     color: undefined,
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XS',
@@ -426,8 +382,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XXL',
@@ -435,8 +390,7 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'XXL',
@@ -444,8 +398,7 @@ const pict = [
     color: undefined,
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: undefined,
@@ -453,8 +406,7 @@ const pict = [
     color: 'TEXT_LINK',
     leading: 'LOOSE',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: <FaAddressBookIcon />,
+    icon: { suffix: <FaAddressBookIcon /> },
   },
   {
     size: 'S',
@@ -462,8 +414,7 @@ const pict = [
     color: 'inherit',
     leading: 'TIGHT',
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XS',
@@ -471,8 +422,7 @@ const pict = [
     color: 'TEXT_DISABLED',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XXS',
@@ -480,8 +430,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'L',
@@ -489,8 +438,7 @@ const pict = [
     color: 'TEXT_BLACK',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'XL',
@@ -498,8 +446,7 @@ const pict = [
     color: 'TEXT_GREY',
     leading: undefined,
     emphasis: false,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
   {
     size: 'L',
@@ -507,8 +454,7 @@ const pict = [
     color: 'TEXT_WHITE',
     leading: undefined,
     emphasis: true,
-    prefixIcon: undefined,
-    suffixIcon: undefined,
+    icon: undefined,
   },
 ]
 

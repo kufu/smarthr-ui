@@ -1,9 +1,17 @@
 'use client'
 
-import { type ComponentProps, type FC, type FormEvent, useCallback, useId, useRef } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type FormEvent,
+  type ReactNode,
+  useCallback,
+  useRef,
+} from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
 import {
   StepFormDialogContentInner,
@@ -14,15 +22,21 @@ import { StepFormDialogProvider, type StepItem } from './StepFormDialogProvider'
 import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 
-type AbstractProps = Omit<StepFormDialogContentInnerProps, 'titleId' | 'activeStep'> & DialogProps
+type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
+type AbstractProps = Omit<StepFormDialogContentInnerProps, 'heading' | 'activeStep'> &
+  DialogProps & {
+    heading: HeadingType
+  }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({ text })
 
 export const StepFormDialog: FC<Props> = ({
   children,
-  title,
-  subtitle,
+  heading: orgHeading,
   stepLength,
-  titleTag,
   contentBgColor,
   contentPadding,
   actionTheme,
@@ -40,10 +54,14 @@ export const StepFormDialog: FC<Props> = ({
   decorators,
   id,
   isOpen,
-  ...props
+  ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
-  const titleId = useId()
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
+
   const focusTrapRef = useRef<FocusTrapRef>(null)
 
   const actualOnClickClose = useCallback(() => {
@@ -76,19 +94,16 @@ export const StepFormDialog: FC<Props> = ({
   return createPortal(
     <StepFormDialogProvider firstStep={firstStep}>
       <DialogContentInner
-        {...props}
+        {...rest}
         isOpen={isOpen}
-        ariaLabelledby={titleId}
+        ariaLabelledby={heading.id}
         className={className}
         onPressEscape={closeDisabled ? undefined : onPressEscape}
         focusTrapRef={focusTrapRef}
       >
         {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
         <StepFormDialogContentInner
-          title={title}
-          titleId={titleId}
-          subtitle={subtitle}
-          titleTag={titleTag}
+          heading={heading}
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
           firstStep={firstStep}

@@ -4,7 +4,7 @@ import { AnchorButton } from '../AnchorButton'
 import { Button } from '../Button'
 import { UnstyledButton } from '../UnstyledButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Button',
@@ -131,5 +131,45 @@ export const Suffix: StoryObj<typeof Button> = {
   name: 'suffix',
   args: {
     suffix: <FaCaretDownIcon />,
+  },
+}
+
+export const FocusIndicatorNone_VerifyRemoval: StoryObj<typeof Button> = {
+  name: '🔍 focus-indicator-none 動作確認用（マージ前に削除）',
+  render: () => (
+    <Stack gap={2}>
+      <div className="shr-mb-1">
+        <p className="shr-text-sm shr-text-grey">
+          ※ 各ボタンをクリックしてフォーカスインジケータを確認してください
+        </p>
+      </div>
+      <div>
+        <p className="shr-mb-0.5 shr-text-xs shr-font-bold">通常（focus-indicatorあり）</p>
+        <Button>フォーカスインジケータが表示される</Button>
+      </div>
+      <div>
+        <p className="shr-mb-0.5 shr-text-xs shr-font-bold">focus-indicator-none適用</p>
+        <Button className="focus:shr-focus-indicator-none">
+          フォーカスインジケータが消える（box-shadow / outline両方なし）
+        </Button>
+      </div>
+      <div>
+        <p className="shr-mb-0.5 shr-text-xs shr-font-bold">
+          focus-indicator + focus-indicator-none 両方適用
+        </p>
+        <Button className="focus:shr-focus-indicator focus:shr-focus-indicator-none">
+          フォーカスインジケータが消える（noneが優先）
+        </Button>
+      </div>
+      <div>
+        <p className="shr-mb-0.5 shr-text-xs shr-font-bold">カスタムフォーカススタイル例</p>
+        <Button className="focus:shr-outline-black focus:shr-focus-indicator-none focus:shr-outline-dashed focus:shr-outline-[3px] focus:shr-outline-offset-2">
+          カスタムフォーカススタイル（黒い破線）
+        </Button>
+      </div>
+    </Stack>
+  ),
+  parameters: {
+    chromatic: { disableSnapshot: true },
   },
 }

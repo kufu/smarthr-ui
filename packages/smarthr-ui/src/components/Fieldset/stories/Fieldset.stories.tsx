@@ -1,13 +1,13 @@
 import { FormControl } from '../../FormControl'
+import { FaAddressBookIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
-import { FaAddressBookIcon } from '../../Icon'
 import { Fieldset } from '../Fieldset'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export const _childrenOptions = {
   radio: (
@@ -102,12 +102,12 @@ export const LegendStyleType: StoryObj<typeof Fieldset> = {
   ),
 }
 
-export const DangerouslyHideLegend: StoryObj<typeof Fieldset> = {
-  name: 'legend.dangerouslyHide（非推奨）',
+export const UnrecommendedHideLegend: StoryObj<typeof Fieldset> = {
+  name: 'legend.unrecommendedHide（非推奨）',
   args: {
     legend: {
       text: '入力要素に紐づく名前',
-      dangerouslyHide: true,
+      unrecommendedHide: true,
     },
   },
 }

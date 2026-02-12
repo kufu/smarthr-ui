@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 import { DefinitionList } from '../DefinitionList'
 import { DefinitionListItem } from '../DefinitionListItem'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/DefinitionList',
@@ -11,8 +11,8 @@ export default {
   args: {
     children: (
       <>
-        <DefinitionListItem dt="定義リストアイテム1">定義リストアイテム1説明</DefinitionListItem>
-        <DefinitionListItem dt="定義リストアイテム2">定義リストアイテム2説明</DefinitionListItem>
+        <DefinitionListItem term="定義リストアイテム1">定義リストアイテム1説明</DefinitionListItem>
+        <DefinitionListItem term="定義リストアイテム2">定義リストアイテム2説明</DefinitionListItem>
       </>
     ),
   },

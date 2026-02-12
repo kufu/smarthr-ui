@@ -61,7 +61,7 @@ export const centerClassNameGenerator = tv({
 
 export const Center = forwardRef<HTMLDivElement, Props>(
   (
-    { minHeight, maxWidth, padding, verticalCentering, as: Component = 'div', className, ...props },
+    { minHeight, maxWidth, padding, verticalCentering, as: Component = 'div', className, ...rest },
     ref,
   ) => {
     const style = useMemo(
@@ -77,7 +77,7 @@ export const Center = forwardRef<HTMLDivElement, Props>(
     )
 
     const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...props} ref={ref} className={actualClassName} style={style} />
+    const body = <Component {...rest} ref={ref} className={actualClassName} style={style} />
 
     if (Wrapper) {
       return <Wrapper>{body}</Wrapper>

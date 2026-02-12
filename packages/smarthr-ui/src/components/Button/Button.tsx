@@ -34,7 +34,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       className,
       children,
       loading = false,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -48,7 +48,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
 
     const button = (
       <ButtonWrapper
-        {...props}
+        {...rest}
         buttonRef={ref}
         type={type}
         size={size}

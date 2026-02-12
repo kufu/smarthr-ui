@@ -17,7 +17,7 @@ export type AbstractProps = PropsWithChildren<
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'td'>, keyof AbstractProps>
 
 export const Td = memo<Props>(
-  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...props }) => {
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
@@ -45,7 +45,7 @@ export const Td = memo<Props>(
       }
     }, [style, contentWidth])
 
-    return <td {...props} data-fixed={fixed} className={actualClassName} style={actualStyle} />
+    return <td {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle} />
   },
 )
 

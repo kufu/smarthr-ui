@@ -52,7 +52,7 @@ const classNameGenerator = tv({
 })
 
 export const Calendar = forwardRef<HTMLDivElement, Props>(
-  ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
+  ({ from = minDate, to, onSelectDate, value, className, ...rest }, ref) => {
     const { formatDate, getWeekStartDay } = useIntl()
 
     const classNames = useMemo(() => {
@@ -142,6 +142,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
 
     const onSelectYear = useCallback(
       (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
         setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
         setIsSelectingYear(false)
       },
@@ -154,7 +155,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
     }, [])
 
     return (
-      <div {...props} ref={ref} className={classNames.container}>
+      <div {...rest} ref={ref} className={classNames.container}>
         <header className={classNames.header}>
           <YearMonthRender className={classNames.yearMonth}>
             {calculatedCurrentMonth.yearMonthText}
@@ -205,7 +206,7 @@ const YearSelectButton = memo<{
   'aria-controls': string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>(({ ...rest }) => {
+}>((props) => {
   const { localize } = useIntl()
   const selectYearAltText = useMemo(
     () =>
@@ -217,7 +218,7 @@ const YearSelectButton = memo<{
   )
 
   return (
-    <Button {...rest} size="s">
+    <Button {...props} size="s">
       <FaCaretDownIcon alt={selectYearAltText} />
     </Button>
   )

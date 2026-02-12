@@ -1,10 +1,9 @@
-import { ComponentProps } from 'react'
-
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Input } from '../Input'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict input.pict

@@ -13,11 +13,12 @@ type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof Abstrac
 
 const classNameGenerator = tv({ base: 'shr-text-base' })
 
-export const PageCounter = memo<Props>(({ start, end, total, className, ...props }) => {
+export const PageCounter = memo<Props>(({ start, end, total, className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Cluster {...props} gap={0.25} inline align="baseline" className={actualClassName}>
+    <Cluster {...rest} gap={0.25} inline align="baseline" className={actualClassName}>
+      {/* eslint-disable-next-line smarthr/require-i18n-text */}
       <BoldNumber>{start}</BoldNumber>–<BoldNumber>{end}</BoldNumber>
       <Total>{total}</Total>
     </Cluster>

@@ -158,7 +158,7 @@ export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayN
     return (
       <DropdownMenuButton
         className={classNames.dropdownMenuButton}
-        label={
+        trigger={
           <DropdownMenuLabel
             firstName={firstName}
             lastName={lastName}

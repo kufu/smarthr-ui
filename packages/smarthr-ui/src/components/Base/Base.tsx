@@ -70,7 +70,7 @@ type SeparatePadding = {
 }
 
 export const Base = forwardRef<HTMLDivElement, Props>(
-  ({ padding, radius, overflow, layer, as: Component = 'div', className, ...props }, ref) => {
+  ({ padding, radius, overflow, layer, as: Component = 'div', className, ...rest }, ref) => {
     const actualClassName = useMemo(() => {
       const actualPadding =
         padding instanceof Object ? padding : { block: padding, inline: padding }
@@ -88,7 +88,7 @@ export const Base = forwardRef<HTMLDivElement, Props>(
     }, [layer, overflow, padding, radius, className])
 
     const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...props} ref={ref} className={actualClassName} />
+    const body = <Component {...rest} ref={ref} className={actualClassName} />
 
     if (Wrapper) {
       return <Wrapper>{body}</Wrapper>

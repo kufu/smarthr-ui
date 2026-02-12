@@ -68,7 +68,7 @@ export const SegmentedControl: FC<Props> = ({
   onClickOption,
   size = 'default',
   className,
-  ...props
+  ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -157,7 +157,7 @@ export const SegmentedControl: FC<Props> = ({
 
   return (
     <div
-      {...props}
+      {...rest}
       className={classNames.container}
       onFocus={onFocus}
       onBlur={onBlur}

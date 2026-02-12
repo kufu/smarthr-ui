@@ -186,7 +186,7 @@ const Controller: FC<ControllerProps> = memo(
             />
           </Button>
           <DropdownMenuButton
-            label={
+            trigger={
               <Text>
                 <VisuallyHiddenText>
                   <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />

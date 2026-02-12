@@ -1,25 +1,26 @@
-import { Cluster, Stack } from '../../Layout'
 import { FaAddressBookIcon } from '../../Icon'
+import { Cluster, Stack } from '../../Layout'
+import { StatusLabel } from '../../StatusLabel'
 import { Fieldset } from '../Fieldset'
 
 import { _childrenOptions } from './Fieldset.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Fieldset/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyHide) =>
+      {[false, true].map((unrecommendedHide) =>
         [false, true].map((disabled) => (
           <Fieldset
             {...args}
             legend={{
               ...args.legend,
-              dangerouslyHide,
+              unrecommendedHide,
             }}
             disabled={disabled}
-            key={`${dangerouslyHide}${disabled}`}
+            key={`${unrecommendedHide}${disabled}`}
           >
             <Stack>
               <Fieldset
@@ -42,7 +43,7 @@ export default {
       text: 'フィールドセットタイトル',
       icon: <FaAddressBookIcon />,
     },
-    statusLabelProps: { type: 'grey', children: '任意' },
+    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
     subActionArea: (
       <Cluster justify="space-between">
         <div>サブアクションエリア（start)</div>

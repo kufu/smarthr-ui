@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { InputFile } from '../InputFile'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/InputFile',
