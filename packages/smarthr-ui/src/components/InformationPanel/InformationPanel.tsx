@@ -171,6 +171,7 @@ export const InformationPanel: FC<Props> = ({
     <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         <MemoizedHeading
+          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
           unrecommendedTag={unrecommendedTitleTag}
           id={titleId}
           className={classNames.heading}
