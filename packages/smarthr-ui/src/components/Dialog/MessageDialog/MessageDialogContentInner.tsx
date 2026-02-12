@@ -12,7 +12,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 export type AbstractProps = DialogHeaderProps &
   DialogBodyProps & {
     /** ダイアログの説明 */
-    description: ReactNode
+    children: ReactNode
     /** コンポーネント内の文言を変更するための関数を設定 */
     decorators?: DecoratorsType<'closeButtonLabel'>
   }
@@ -28,7 +28,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   titleId,
   contentBgColor,
   contentPadding,
-  description,
+  children,
   onClickClose,
   decorators,
 }) => {
@@ -51,7 +51,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
         titleId={titleId}
       />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-        {description}
+        {children}
       </DialogBody>
       <FooterCluster
         onClickClose={onClickClose}
