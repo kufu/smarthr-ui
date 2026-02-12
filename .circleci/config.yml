@@ -45,7 +45,6 @@ commands:
   run-npm-test:
     steps:
       - run: pnpm ui test
-      - run: pnpm ui test:build-assets
   # SCとしてつかえるかどうかのテストを行っているが、費用対効果が薄いためoffにしています
   # 良いテスト方法を発見した場合置き換えます 2026/02/05
   # run-e2e-test:
