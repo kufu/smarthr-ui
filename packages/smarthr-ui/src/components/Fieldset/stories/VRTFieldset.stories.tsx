@@ -1,7 +1,7 @@
 import { FaAddressBookIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
-import { Fieldset } from '../Fieldset'
 import { StatusLabel } from '../../StatusLabel'
+import { Fieldset } from '../Fieldset'
 
 import { _childrenOptions } from './Fieldset.stories'
 
