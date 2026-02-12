@@ -264,8 +264,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(storybook@9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2))(webpack@5.104.1(@swc/core@1.15.11))
       '@storybook/addon-webpack5-compiler-babel':
-        specifier: ^3.0.6
-        version: 3.0.6(webpack@5.104.1(@swc/core@1.15.11))
+        specifier: ^4.0.0
+        version: 4.0.0(webpack@5.104.1(@swc/core@1.15.11))
       '@storybook/cli':
         specifier: 9.0.18
         version: 9.0.18(@babel/preset-env@7.28.6(@babel/core@7.28.6))(@testing-library/dom@10.4.0)(prettier@3.6.2)
@@ -2085,9 +2085,8 @@ packages:
       storybook: ^9.0.0
       webpack: ^5.0.0
 
-  '@storybook/addon-webpack5-compiler-babel@3.0.6':
-    resolution: {integrity: sha512-J4uVxEfkd2iAxPxcT90iebt5wuLSd0EYuMJa94t1jVUGlvZZAvnmqXAqscRITNU37nOr0c9yZ2YVS/sFOZyOVw==}
-    engines: {node: '>=18'}
+  '@storybook/addon-webpack5-compiler-babel@4.0.0':
+    resolution: {integrity: sha512-dNcFCBPX1FO2TvUrAoDim8vekVVTivIAi5lo3lFF3BwDK29dNi0TF805XXWu+7LMauPq8sf51DQVSE3lrwCcnw==}
 
   '@storybook/builder-vite@9.0.18':
     resolution: {integrity: sha512-lfbrozA6UPVizDrgbPEe04WMtxIraESwUkmwW3+Lxh8rKEUj5cXngcrJUW+meQNNaggdZZWEqeEtweuaLIR+Hg==}
@@ -2809,13 +2808,6 @@ packages:
       '@babel/core': ^7.12.0
       webpack: '>=5.61.0'
 
-  babel-loader@9.2.1:
-    resolution: {integrity: sha512-fqe8naHt46e0yIdkjUZYqddSXfej3AHajX+CSO5X7oy0EmPc6o5Xh+RClNoHjnieWz9AW4kZxW9yyFMhVB1QLA==}
-    engines: {node: '>= 14.15.0'}
-    peerDependencies:
-      '@babel/core': ^7.12.0
-      webpack: '>=5'
-
   babel-plugin-polyfill-corejs2@0.4.15:
     resolution: {integrity: sha512-hR3GwrRwHUfYwGfrisXPIDP3JcYfBrW7wKE7+Au6wDYl7fm/ka1NEII6kORzxNU556JjfidZeBsO10kYvtV1aw==}
     peerDependencies:
@@ -3087,9 +3079,6 @@ packages:
   commander@8.3.0:
     resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
     engines: {node: '>= 12'}
-
-  common-path-prefix@3.0.0:
-    resolution: {integrity: sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==}
 
   commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
@@ -3823,10 +3812,6 @@ packages:
     resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
     engines: {node: '>=8'}
 
-  find-cache-dir@4.0.0:
-    resolution: {integrity: sha512-9ZonPT4ZAK4a+1pUPVPZJapbi7O5qbbJPdYw/NOQWZZbVLdDTYM3A4R9z/DpAM08IDaFGsvPgiGZ82WEwUDWjg==}
-    engines: {node: '>=14.16'}
-
   find-up@2.1.0:
     resolution: {integrity: sha512-NWzkk0jSJtTt08+FBFMvXoeZnOJD+jTtsRmBYbAIzJdX6l7dLgR7CTubCM5/eDdPUBvLCeVasP1brfVR/9/EZQ==}
     engines: {node: '>=4'}
@@ -3842,10 +3827,6 @@ packages:
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
-
-  find-up@6.3.0:
-    resolution: {integrity: sha512-v2ZsoEuVHYy8ZIlYqwPe/39Cy+cFDzp4dXPaxNvkEuouymu+2Jbz0PxpKarJHYJTmv2HWT3O382qY8l4jMWthw==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   find-up@7.0.0:
     resolution: {integrity: sha512-YyZM99iHrqLKjmt4LJDj58KI+fYyufRLBSYcqycxf//KpBk9FoewoGX0450m9nB44qrZnovzC2oeP5hUibxc/g==}
@@ -5306,10 +5287,6 @@ packages:
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
-
-  pkg-dir@7.0.0:
-    resolution: {integrity: sha512-Ie9z/WINcxxLp27BKOCHGde4ITq9UklYKDzVo1nhk5sqGEXU3FpkwP5GM2voTGJkGd9B3Otl+Q4uwSOeSUtOBA==}
-    engines: {node: '>=14.16'}
 
   playwright-core@1.56.0:
     resolution: {integrity: sha512-1SXl7pMfemAMSDn5rkPeZljxOCYAmQnYLBTExuh6E8USHXGSX3dx6lYZN/xPpTz1vimXmPA9CDnILvmJaB8aSQ==}
@@ -8424,10 +8401,10 @@ snapshots:
       storybook: 9.0.18(@testing-library/dom@10.4.0)(prettier@3.6.2)
       webpack: 5.104.1(@swc/core@1.15.11)
 
-  '@storybook/addon-webpack5-compiler-babel@3.0.6(webpack@5.104.1(@swc/core@1.15.11))':
+  '@storybook/addon-webpack5-compiler-babel@4.0.0(webpack@5.104.1(@swc/core@1.15.11))':
     dependencies:
       '@babel/core': 7.28.6
-      babel-loader: 9.2.1(@babel/core@7.28.6)(webpack@5.104.1(@swc/core@1.15.11))
+      babel-loader: 10.0.0(@babel/core@7.28.6)(webpack@5.104.1(@swc/core@1.15.11))
     transitivePeerDependencies:
       - supports-color
       - webpack
@@ -9301,13 +9278,6 @@ snapshots:
       find-up: 5.0.0
       webpack: 5.104.1(@swc/core@1.15.11)
 
-  babel-loader@9.2.1(@babel/core@7.28.6)(webpack@5.104.1(@swc/core@1.15.11)):
-    dependencies:
-      '@babel/core': 7.28.6
-      find-cache-dir: 4.0.0
-      schema-utils: 4.3.3
-      webpack: 5.104.1(@swc/core@1.15.11)
-
   babel-plugin-polyfill-corejs2@0.4.15(@babel/core@7.28.6):
     dependencies:
       '@babel/compat-data': 7.28.6
@@ -9574,8 +9544,6 @@ snapshots:
   commander@4.1.1: {}
 
   commander@8.3.0: {}
-
-  common-path-prefix@3.0.0: {}
 
   commondir@1.0.1: {}
 
@@ -10520,11 +10488,6 @@ snapshots:
       make-dir: 3.1.0
       pkg-dir: 4.2.0
 
-  find-cache-dir@4.0.0:
-    dependencies:
-      common-path-prefix: 3.0.0
-      pkg-dir: 7.0.0
-
   find-up@2.1.0:
     dependencies:
       locate-path: 2.0.0
@@ -10542,11 +10505,6 @@ snapshots:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
-
-  find-up@6.3.0:
-    dependencies:
-      locate-path: 7.2.0
-      path-exists: 5.0.0
 
   find-up@7.0.0:
     dependencies:
@@ -12099,10 +12057,6 @@ snapshots:
   pkg-dir@4.2.0:
     dependencies:
       find-up: 4.1.0
-
-  pkg-dir@7.0.0:
-    dependencies:
-      find-up: 6.3.0
 
   playwright-core@1.56.0: {}
 
