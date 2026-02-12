@@ -16,9 +16,10 @@ describe('MessageDialog', () => {
         <MessageDialog
           isOpen={isOpen}
           heading="MessageDialog"
-          description={<p>説明です</p>}
           onClickClose={() => setIsOpen(false)}
-        />
+        >
+          <p>説明です</p>
+        </MessageDialog>
       </IntlProvider>
     )
   }

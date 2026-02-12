@@ -13,7 +13,7 @@ export type AbstractProps = DialogBodyProps & {
   /** ダイアログタイトル */
   heading: DialogHeadingProps
   /** ダイアログの説明 */
-  description: ReactNode
+  children: ReactNode
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonLabel'>
 }
@@ -26,7 +26,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   heading,
   contentBgColor,
   contentPadding,
-  description,
+  children,
   onClickClose,
   decorators,
 }) => {
@@ -43,7 +43,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
     <Section className={styles.wrapper}>
       <DialogHeading {...heading} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-        {description}
+        {children}
       </DialogBody>
       <FooterCluster
         onClickClose={onClickClose}

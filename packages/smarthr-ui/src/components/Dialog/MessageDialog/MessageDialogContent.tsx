@@ -28,7 +28,7 @@ const headingObjectConverter = (text: ReactNode) => ({
 /** @deprecated */
 export const MessageDialogContent: FC<Props> = ({
   heading: orgHeading,
-  description,
+  children,
   portalParent,
   className,
   contentBgColor,
@@ -59,12 +59,13 @@ export const MessageDialogContent: FC<Props> = ({
     >
       <MessageDialogContentInner
         heading={heading}
-        description={description}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
         decorators={decorators}
-      />
+      >
+        {children}
+      </MessageDialogContentInner>
     </DialogContentInner>,
   )
 }

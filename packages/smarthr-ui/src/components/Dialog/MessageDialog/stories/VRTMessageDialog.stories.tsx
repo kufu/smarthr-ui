@@ -13,7 +13,7 @@ export default {
       text: 'メッセージダイアログタイトル',
       sub: 'メッセージダイアログのサブタイトル',
     },
-    description: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
+    children: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
     contentBgColor: 'BACKGROUND',
     contentPadding: 1.5,
   },

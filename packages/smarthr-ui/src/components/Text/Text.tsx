@@ -142,16 +142,16 @@ const wrapperClassNameGenerator = tv({
   },
 })
 
-type ObjectLabelType = {
-  /** テキスト左に設置するアイコン */
-  prefix?: ReactNode
-  /** テキスト右に設置するアイコン */
-  suffix?: ReactNode
-  /** アイコンと並べるテキストとの溝 */
-  gap?: CharRelativeSize | AbstractSize
-}
-
-type ActualIconType = undefined | ObjectLabelType
+type ActualIconType =
+  | undefined
+  | {
+      /** テキスト左に設置するアイコン */
+      prefix?: ReactNode
+      /** テキスト右に設置するアイコン */
+      suffix?: ReactNode
+      /** アイコンと並べるテキストとの溝 */
+      gap?: CharRelativeSize | AbstractSize
+    }
 type IconType = ActualIconType | ReactNode
 
 // VariantProps を使うとコメントが書けない〜🥹

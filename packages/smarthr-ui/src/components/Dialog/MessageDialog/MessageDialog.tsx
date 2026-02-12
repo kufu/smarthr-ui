@@ -28,7 +28,7 @@ const headingObjectConverter = (text: ReactNode) => ({
 
 export const MessageDialog: FC<Props> = ({
   heading: orgHeading,
-  description,
+  children,
   onClickClose,
   onPressEscape = onClickClose,
   contentBgColor,
@@ -61,12 +61,13 @@ export const MessageDialog: FC<Props> = ({
     >
       <MessageDialogContentInner
         heading={heading}
-        description={description}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
         decorators={decorators}
-      />
+      >
+        {children}
+      </MessageDialogContentInner>
     </DialogContentInner>,
   )
 }
