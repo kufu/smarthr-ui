@@ -83,6 +83,7 @@
     "styled-components": "^5.3.11",
     "tailwind-merge": "^3.3.1",
     "ts-loader": "^9.5.4",
+    "tslib": "^2.8.1",
     "tsx": "^4.20.6",
     "vitest": "^4.0.18",
     "wait-on": "^8.0.5",
@@ -154,7 +155,9 @@
   "scripts": {
     "build": "run-p build:*",
     "build:lib": "tsc -p tsconfig.build.json",
+    "build:cjs": "rollup --config rollup.cjs.config.js",
     "build:esm": "rollup --config rollup.esm.config.js",
+    "build:types": "tsc -p tsconfig.build.json",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet",
     "clean": "rimraf ./lib ./esm ./smarthr-ui.css",

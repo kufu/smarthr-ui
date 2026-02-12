@@ -1,8 +1,8 @@
 import { FaAddressBookIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
-import { FormControl } from '../FormControl'
 import { StatusLabel } from '../../StatusLabel'
+import { FormControl } from '../FormControl'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

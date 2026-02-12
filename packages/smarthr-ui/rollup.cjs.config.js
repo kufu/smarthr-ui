@@ -37,12 +37,12 @@ export default {
     ]),
   ),
   output: {
-    format: 'es',
+    format: 'cjs',
     sourcemap: true,
-    inlineSources: true,
     dir: 'lib',
     preserveModules: true,
     preserveModulesRoot: 'src',
+    entryFileNames: '[name].cjs',
   },
   external: [
     // peerDependenciesにreactが入っているが、jsx-runtimeは明示的に指定しないとbundleされてしまうのでベタ書きしている
@@ -53,7 +53,7 @@ export default {
   preserveSymlinks: false,
   plugins: [
     typescript({
-      tsconfig: './tsconfig.esm.build.json',
+      tsconfig: './tsconfig.build.json',
       noEmit: true,
     }),
     preserveDirectives(),
