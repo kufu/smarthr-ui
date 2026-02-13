@@ -46,10 +46,7 @@ glob(SRC_PATH).then(
         props: filteredProps,
       }
     })
-    await fs.writeFile(
-      path.join(import.meta.dirname, '../public/exports/smarthr-ui-props.json'),
-      JSON.stringify(docs),
-    )
+    await fs.writeFile(path.join(import.meta.dirname, '../metadata.json'), JSON.stringify(docs))
   },
   (err) => {
     console.error(err)

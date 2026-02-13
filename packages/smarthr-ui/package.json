@@ -100,7 +100,8 @@
   "files": [
     "esm",
     "lib",
-    "smarthr-ui.css"
+    "smarthr-ui.css",
+    "metadata.json"
   ],
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "keywords": [
@@ -141,7 +142,8 @@
       "import": "./esm/*.js"
     },
     "./smarthr-ui.css": "./smarthr-ui.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./metadata.json": "./metadata.json"
   },
   "publishConfig": {
     "access": "public",
@@ -175,17 +177,11 @@
     "test": "vitest",
     "test:build-assets": "tsx scripts/build-test.ts",
     "chromatic": "chromatic",
-    "write:ui-props": "tsx scripts/exportUIProps.ts",
-    "export:ui-props": "run-s build:lib write:ui-props",
+    "build:metadata": "tsx scripts/generateMetadata.ts",
     "scaffold:storybook": "plop"
   },
   "sideEffects": [
     "*.css"
   ],
-  "typings": "lib/index.d.ts",
-  "standard-version": {
-    "scripts": {
-      "prerelease": "run-s build:lib write:ui-props && git add public/exports/smarthr-ui-props.json"
-    }
-  }
+  "typings": "lib/index.d.ts"
 }
