@@ -18,7 +18,7 @@ export default {
       <RemoteTriggerFormDialog
         {...args}
         id="remote-dialog"
-        title="リモートトリガーフォームダイアログ"
+        heading="リモートトリガーフォームダイアログ"
         actionText="アクション"
         onSubmit={action('onSubmit')}
       >

@@ -17,15 +17,17 @@ const Content = () => {
 
   return (
     <Stack gap={1.5}>
-      <DefinitionList maxColumns={1}>
-        <DefinitionListItem term="mobile">{mobile.toString()}</DefinitionListItem>
+      <DefinitionList>
+        <DefinitionListItem maxColumns={1} term="mobile">
+          {mobile.toString()}
+        </DefinitionListItem>
       </DefinitionList>
       <Stack>
         <Heading>matches</Heading>
         <BaseColumn>
-          <DefinitionList maxColumns={1}>
+          <DefinitionList>
             {Object.entries(matches).map(([key, value]) => (
-              <DefinitionListItem key={key} term={key}>
+              <DefinitionListItem key={key} maxColumns={1} term={key}>
                 {value.toString()}
               </DefinitionListItem>
             ))}

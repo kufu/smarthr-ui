@@ -30,11 +30,13 @@ export type CreatedShadowTheme = {
 
 const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
 
-const createFocusIndicatorStyles = (outline: string) => css`
+// 将来的になんらか別のデザイントークンに移行したい
+const createFocusIndicatorStyles = (outlineColor: string) => css`
   /* stylelint-disable no-invalid-position-declaration */
-  outline: none;
   isolation: isolate;
-  box-shadow: ${outline};
+  box-shadow: 0 0 0 2px white;
+  outline: 2px solid ${outlineColor};
+  outline-offset: 2px;
   /* stylelint-enable no-invalid-position-declaration */
 `
 
@@ -42,11 +44,12 @@ export const createShadow = (
   userShadow?: ShadowProperty,
   userColor?: ColorProperty,
 ): CreatedShadowTheme => {
-  const outline = createOutline(userColor?.OUTLINE || defaultColor.OUTLINE)
+  const outlineColor = userColor?.OUTLINE || defaultColor.OUTLINE
+  const outline = createOutline(outlineColor)
   const shadows = {
     ...defaultShadow,
     OUTLINE: outline,
-    focusIndicatorStyles: createFocusIndicatorStyles(outline),
+    focusIndicatorStyles: createFocusIndicatorStyles(outlineColor),
   }
 
   if (!userShadow) {
