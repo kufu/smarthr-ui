@@ -29,7 +29,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@10.29.2",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.28.6",
@@ -40,7 +40,7 @@
       "micromatch@<4.0.8": ">=4.0.8",
       "cross-spawn@<7.0.5": ">=7.0.6",
       "nanoid": "3.3.11",
-      "esbuild@<=0.24.2": ">=0.27.2",
+      "esbuild@<=0.24.2": ">=0.27.3",
       "@babel/runtime@<7.26.10": ">=7.28.6",
       "@babel/helpers@<7.26.10": ">=7.28.6",
       "brace-expansion@<1.1.12": "^4.0.1",
@@ -49,7 +49,7 @@
       "tmp@<=0.2.3": ">=0.2.5",
       "vite@>=6.0.0 <=6.4.0": ">=6.4.1",
       "js-yaml@>=4.0.0 <4.1.1": ">=4.1.1",
-      "glob@>=11.0.0 <11.1.0": ">=11.1.0",
+      "glob@>=11.0.0 <11.1.0": ">=13.0.1",
       "diff@<8.0.3": ">=8.0.3",
       "lodash@>=4.0.0 <=4.17.22": ">=4.17.23"
     }

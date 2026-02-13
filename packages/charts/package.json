@@ -61,7 +61,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/styled-components": "^5.1.36",
     "autoprefixer": "^10.4.23",
-    "glob": "11.0.3",
+    "glob": "13.0.1",
     "npm-run-all2": "^8.0.4",
     "postcss": "^8.5.6",
     "react": "^19.1.5",
