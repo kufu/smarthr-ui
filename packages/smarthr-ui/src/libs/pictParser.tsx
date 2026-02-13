@@ -1,9 +1,14 @@
 import { FaAddressBookIcon } from '../components/Icon'
 
-export const pictParser = <T,>(pict: string, formatter: (vs: { [key: string]: any }) => T) => {
+type AnyObjectType = { [key: string]: any }
+
+export const pictParser = <T extends AnyObjectType>(
+  pict: string,
+  formatter: (vs: { [key: string]: any }) => T,
+) => {
   const lines = pict.split('\n')
   const header = lines.shift()!.split('\t')
-  const reducer = (prev: T, c: string, i: number) => {
+  const reducer = (prev: AnyObjectType, c: string, i: number) => {
     prev[header[i]] = valueConverter(i === 0 ? c.replace(/^(\s|\t)+/, '') : c)
 
     return prev

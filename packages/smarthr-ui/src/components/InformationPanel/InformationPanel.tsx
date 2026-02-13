@@ -212,9 +212,7 @@ const MemoizedHeading = memo<
 
   return (
     <Heading {...rest} unrecommendedTag={heading.unrecommendedTag} type="blockTitle">
-      <ResponseMessage type={type} iconGap={0.5}>
-        {heading.text}
-      </ResponseMessage>
+      <ResponseMessage icon={{ type, gap: 0.5 }}>{heading.text}</ResponseMessage>
     </Heading>
   )
 })
