@@ -25,14 +25,7 @@ export default {
           {_casse.map((size, i) => (
             <SideNav {...args} key={`${index}-${i}`} size={size} id={id}>
               {_sideNavItems.map((item) => (
-                <SideNavItemButton
-                  key={item.id}
-                  id={item.id}
-                  current={item.current}
-                  prefix={item.prefix}
-                >
-                  {item.children}
-                </SideNavItemButton>
+                <SideNavItemButton {...item} key={item.id} />
               ))}
             </SideNav>
           ))}

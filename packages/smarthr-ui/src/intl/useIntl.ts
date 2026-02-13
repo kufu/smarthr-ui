@@ -253,7 +253,15 @@ export const useIntl = (): UseIntlReturn => {
 
   const formatDate = useCallback(
     ({ date, parts = ['year', 'month', 'day'], options }: FormatDateProps): string => {
-      const { disableSlashInJa = false, capitalizeFirstLetter = false, ...rest } = options || {}
+      const {
+        disableSlashInJa = false,
+        capitalizeFirstLetter = false,
+        year,
+        month,
+        day,
+        weekday,
+        ...rest
+      } = options || {}
 
       // パーツの存在を事前に計算
       const hasPart = parts.reduce(
@@ -271,15 +279,17 @@ export const useIntl = (): UseIntlReturn => {
 
       // ロケールのデフォルト形式を取得
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
-        year: hasPart.year ? DATE_FORMATS[locale].year : undefined,
-        month: hasPart.month
-          ? disableSlashInJa && locale === 'ja'
-            ? 'long'
-            : DATE_FORMATS[locale].month
-          : undefined,
-        day: hasPart.day ? DATE_FORMATS[locale].day : undefined,
-        weekday: hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined,
         ...rest,
+        year: year ?? (hasPart.year ? DATE_FORMATS[locale].year : undefined),
+        month:
+          month ??
+          (hasPart.month
+            ? disableSlashInJa && locale === 'ja'
+              ? 'long'
+              : DATE_FORMATS[locale].month
+            : undefined),
+        day: day ?? (hasPart.day ? DATE_FORMATS[locale].day : undefined),
+        weekday: weekday ?? (hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined),
       }
 
       const formattedDate = intl.formatDate(date, actualFormatOptions)

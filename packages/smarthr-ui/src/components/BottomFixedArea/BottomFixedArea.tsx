@@ -107,18 +107,28 @@ export const BottomFixedArea: FC<Props> = ({
           )}
           {tertiaryLinks && tertiaryLinks.length > 0 && (
             <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 0 }}>
-              {tertiaryLinks.map(({ text, icon: Icon, ...tertiaryRest }, index) => (
-                <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
-                  <Button
-                    {...tertiaryRest}
-                    variant="text"
-                    prefix={Icon && <Icon />}
-                    className={classNames.tertiaryButton}
-                  >
-                    {text}
-                  </Button>
-                </li>
-              ))}
+              {tertiaryLinks.map(
+                (
+                  {
+                    text,
+                    icon: Icon,
+
+                    ...tertiaryRest
+                  },
+                  index,
+                ) => (
+                  <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
+                    <Button
+                      {...tertiaryRest}
+                      variant="text"
+                      prefix={Icon && <Icon />}
+                      className={classNames.tertiaryButton}
+                    >
+                      {text}
+                    </Button>
+                  </li>
+                ),
+              )}
             </Cluster>
           )}
         </Stack>

@@ -23,7 +23,6 @@ describe('Fieldset', () => {
   it('子要素が可視ラベルを持たないaria-labelを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
     render(
       <form>
-        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <Fieldset legend="fieldset-legend">
           <Input name="test1" aria-label="input-accessible-name-1" />
           <Input name="test2" aria-label="input-accessible-name-2" />
@@ -39,14 +38,14 @@ describe('Fieldset', () => {
     ).toBeInTheDocument()
   })
 
-  it('子要素がlabel.dangerouslyHide:trueを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
+  it('子要素がlabel.unrecommendedHide:trueを持つフォームコントロール要素の場合、アクセシブルネームにlegend文言を追加する', async () => {
     render(
       <form>
         <Fieldset legend="fieldset-legend">
-          <FormControl label={{ text: 'form-control-label1', dangerouslyHide: true }}>
+          <FormControl label={{ text: 'form-control-label1', unrecommendedHide: true }}>
             <Input name="test1" />
           </FormControl>
-          <FormControl label={{ text: 'form-control-label2', dangerouslyHide: true }}>
+          <FormControl label={{ text: 'form-control-label2', unrecommendedHide: true }}>
             <Input name="test2" />
           </FormControl>
         </Fieldset>
@@ -65,12 +64,12 @@ describe('Fieldset', () => {
     render(
       <form>
         <Fieldset legend="追加されないラベル1">
-          <FormControl label={{ text: '追加されないラベル1の子ラベル', dangerouslyHide: true }}>
+          <FormControl label={{ text: '追加されないラベル1の子ラベル', unrecommendedHide: true }}>
             <Input name="test1" />
           </FormControl>
         </Fieldset>
         <Fieldset legend="追加されないラベル2の親ラベル">
-          <FormControl label={{ text: '追加されないラベル2', dangerouslyHide: true }}>
+          <FormControl label={{ text: '追加されないラベル2', unrecommendedHide: true }}>
             <Input name="test1" />
           </FormControl>
         </Fieldset>

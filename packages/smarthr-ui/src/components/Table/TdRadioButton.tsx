@@ -41,6 +41,7 @@ export const TdRadioButton = forwardRef<HTMLInputElement, Props>(
       // Td に必要な属性やイベントは不要
       <Td vAlign={vAlign} className={classNames.wrapper}>
         <label className={classNames.inner}>
+          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <RadioButton {...rest} ref={ref} className={classNames.radio} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
         </label>

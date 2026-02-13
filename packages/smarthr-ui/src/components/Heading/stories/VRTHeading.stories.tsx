@@ -15,24 +15,39 @@ export default {
       'sectionTitle',
       'subSubBlockTitle',
     ] as const
-    const tags = [undefined, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
+    const unrecommendedTags = [undefined, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const
     const sizes = [undefined, 'XXL', 'XL', 'L'] as const
     return (
       <Stack {...args}>
         {types.map((type) =>
-          tags.map((tag) =>
+          unrecommendedTags.map((unrecommendedTag) =>
             sizes.map((size) => (
               <>
                 {/* @ts-expect-error */}
-                <Heading type={type} size={size} tag={tag} visuallyHidden={true}>
+                <Heading
+                  type={type}
+                  size={size}
+                  unrecommendedTag={unrecommendedTag}
+                  visuallyHidden={true}
+                >
                   {type ? type : 'undefined'}
                 </Heading>
                 {/* @ts-expect-error */}
-                <Heading type={type} size={size} tag={tag} visuallyHidden={false}>
+                <Heading
+                  type={type}
+                  size={size}
+                  unrecommendedTag={unrecommendedTag}
+                  visuallyHidden={false}
+                >
                   {type ? type : 'undefined'}
                 </Heading>
                 {/* @ts-expect-error */}
-                <Heading type={type} size={size} tag={tag} icon={<FaAddressBookIcon />}>
+                <Heading
+                  type={type}
+                  size={size}
+                  unrecommendedTag={unrecommendedTag}
+                  icon={<FaAddressBookIcon />}
+                >
                   {type ? type : 'undefined'}
                 </Heading>
               </>

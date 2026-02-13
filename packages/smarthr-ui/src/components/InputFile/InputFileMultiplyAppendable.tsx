@@ -164,7 +164,6 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
           </BaseColumn>
         )}
         <span className={classNames.inputWrapper}>
-          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
             multiple
