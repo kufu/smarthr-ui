@@ -5,11 +5,9 @@ import {
   type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
-  Fragment,
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
-  isValidElement,
   memo,
   useEffect,
   useMemo,
@@ -20,25 +18,25 @@ import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
-import { StatusLabel } from '../StatusLabel'
 import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
+import type { StatusLabel } from '../StatusLabel'
 
-type StatusLabelProps = ComponentProps<typeof StatusLabel>
-type StatusLabelType = FunctionComponentElement<StatusLabelProps>
+type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 
 type ObjectLabelType = {
   text: ReactNode
   /** ラベルの表示タイプ */
   styleType?: TextProps['styleType']
   /** ラベル左に設置するアイコン */
-  icon?: TextProps['prefixIcon']
+  icon?: ReactNode
   /** ラベルを視覚的に隠すかどうか */
-  dangerouslyHide?: boolean
+  unrecommendedHide?: boolean
   /** ラベルを紐づける入力要素のID属性と同じ値 */
   htmlFor?: string
   /** ラベルに適用する `id` 値 */
@@ -51,11 +49,6 @@ type AbstractProps = PropsWithChildren<{
   subActionArea?: ReactNode
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
-  /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
-  /**
-   * @deprecated statusLabelProps属性は非推奨です。statusLabelsを使ってください。
-   */
-  statusLabelProps?: StatusLabelProps | StatusLabelProps[]
   /** タイトルの隣に表示する `StatusLabel` の配列 */
   statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
@@ -74,6 +67,8 @@ type AbstractProps = PropsWithChildren<{
 }>
 type Props = AbstractProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'aria-labelledby'>
+
+const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
 const classNameGenerator = tv({
   slots: {
@@ -153,7 +148,6 @@ export const ActualFormControl: FC<Props> = ({
   subActionArea,
   innerMargin,
   statusLabels,
-  statusLabelProps,
   helpMessage,
   exampleMessage,
   errorMessages,
@@ -164,16 +158,10 @@ export const ActualFormControl: FC<Props> = ({
   children,
   ...rest
 }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const label: ObjectLabelType =
-    !orgLabel || typeof orgLabel !== 'object' || isValidElement(orgLabel)
-      ? {
-          text: orgLabel as ReactNode,
-        }
-      : (orgLabel as ObjectLabelType)
-
+  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
+    orgLabel,
+    labelObjectConverter,
+  )
   const defaultHtmlFor = useId()
   const defaultLabelId = useId()
   const [childInputId, setChildInputId] = useState<string>('')
@@ -201,21 +189,10 @@ export const ActualFormControl: FC<Props> = ({
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
 
-  const actualStatusLabels = useMemo(() => {
-    if (statusLabels) {
-      return (Array.isArray(statusLabels) ? statusLabels : [statusLabels]).map(
-        (statusLabel, index) => <Fragment key={index}>{statusLabel}</Fragment>,
-      )
-    }
-
-    if (!statusLabelProps) {
-      return []
-    }
-
-    const labelProps = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-
-    return labelProps.map((prop, index) => <StatusLabel {...prop} key={index} />)
-  }, [statusLabels, statusLabelProps])
+  const actualStatusLabels = useMemo(
+    () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
+    [statusLabels],
+  )
 
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
@@ -233,7 +210,7 @@ export const ActualFormControl: FC<Props> = ({
     return {
       wrapper: generators.wrapper({ className }),
       label: generators.label({
-        className: label.dangerouslyHide ? visuallyHiddenTextClassName : '',
+        className: label.unrecommendedHide ? visuallyHiddenTextClassName : '',
       }),
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
@@ -241,7 +218,7 @@ export const ActualFormControl: FC<Props> = ({
       underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
     }
-  }, [innerMargin, isFieldset, label.dangerouslyHide, className])
+  }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
   useEffect(() => {
     if (
@@ -367,10 +344,10 @@ export const ActualFormControl: FC<Props> = ({
     </>
   )
 
-  // HINT: label.dangerouslyHideの場合、body以下の余白の計算を簡略化するため
+  // HINT: label.unrecommendedHideの場合、body以下の余白の計算を簡略化するため
   // Stackをネストし、そのStackに対してmargin-top: 0を指定する
   // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
-  if (label.dangerouslyHide) {
+  if (label.unrecommendedHide) {
     body = (
       <Stack gap={actualInnerMargin} className={classNames.underLabelStack}>
         {body}
@@ -390,7 +367,7 @@ export const ActualFormControl: FC<Props> = ({
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        dangerouslyHideLabel={label.dangerouslyHide}
+        unrecommendedHideLabel={label.unrecommendedHide}
         labelType={label.styleType}
         label={label.text}
         labelIcon={label.icon}
@@ -408,7 +385,7 @@ const LabelCluster = memo<
     label: ReactNode
     labelType: TextProps['styleType']
     labelIcon?: ReactNode
-    dangerouslyHideLabel?: boolean
+    unrecommendedHideLabel?: boolean
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
@@ -420,7 +397,7 @@ const LabelCluster = memo<
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    dangerouslyHideLabel,
+    unrecommendedHideLabel,
     labelType = 'blockTitle',
     label,
     labelIcon,
@@ -430,7 +407,7 @@ const LabelCluster = memo<
   }) => {
     const body = (
       <>
-        <Text styleType={labelType} prefixIcon={labelIcon}>
+        <Text styleType={labelType} icon={labelIcon}>
           {label}
         </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
@@ -438,7 +415,7 @@ const LabelCluster = memo<
     )
 
     const attrs = useMemo(() => {
-      if (dangerouslyHideLabel) {
+      if (unrecommendedHideLabel) {
         return {
           label: null,
           visuallyHidden: isFieldset
@@ -468,7 +445,7 @@ const LabelCluster = memo<
         },
         visuallyHidden: null,
       }
-    }, [managedLabelId, managedHtmlFor, dangerouslyHideLabel, isFieldset])
+    }, [managedLabelId, managedHtmlFor, unrecommendedHideLabel, isFieldset])
 
     return (
       <>
@@ -546,7 +523,7 @@ const ErrorMessageList = memo<{
         <p key={index}>
           <Text
             className={classNames.errorMessage}
-            prefixIcon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
+            icon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
           >
             {message}
           </Text>

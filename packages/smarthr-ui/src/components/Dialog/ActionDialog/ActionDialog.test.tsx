@@ -15,7 +15,7 @@ describe('ActionDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ActionDialog</Button>
         <ActionDialog
           isOpen={isOpen}
-          title="ActionDialog"
+          heading="ActionDialog"
           actionText="保存"
           onClickClose={() => setIsOpen(false)}
           onClickAction={(closeDialog) => {

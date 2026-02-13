@@ -9,7 +9,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useDecorators } from '../../../hooks/useDecorators'
 import { useIntl } from '../../../intl'
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
@@ -25,48 +24,60 @@ const classNameGenerator = tv({
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
-export type DecoratorKeyTypes =
-  | 'sortFieldLabel'
-  | 'sortOrderLabel'
-  | 'ascLabel'
-  | 'descLabel'
-  | 'applyButtonLabel'
-  | 'cancelButtonLabel'
-
-export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators }: Props) => {
+export const useSortDropdown = ({
+  sortFields,
+  defaultOrder,
+  onApply,
+  sortFieldLabel,
+  sortOrderLegend,
+  ascLabel,
+  descLabel,
+  applyText,
+  cancelText,
+}: Props) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
+  const texts = useMemo(
     () => ({
-      sortFieldLabel: localize({
-        id: 'smarthr-ui/SortDropdown/sortFieldLabel',
-        defaultText: '並べ替え項目',
-      }),
-      sortOrderLabel: localize({
-        id: 'smarthr-ui/SortDropdown/sortOrderLabel',
-        defaultText: '並び順',
-      }),
-      ascLabel: localize({
-        id: 'smarthr-ui/SortDropdown/ascLabel',
-        defaultText: '昇順',
-      }),
-      descLabel: localize({
-        id: 'smarthr-ui/SortDropdown/descLabel',
-        defaultText: '降順',
-      }),
-      applyButtonLabel: localize({
-        id: 'smarthr-ui/SortDropdown/applyButtonLabel',
-        defaultText: '適用',
-      }),
-      cancelButtonLabel: localize({
-        id: 'smarthr-ui/SortDropdown/cancelButtonLabel',
-        defaultText: 'キャンセル',
-      }),
+      sortFieldLabel:
+        sortFieldLabel ||
+        localize({
+          id: 'smarthr-ui/SortDropdown/sortFieldLabel',
+          defaultText: '並べ替え項目',
+        }),
+      sortOrderLegend:
+        sortOrderLegend ||
+        localize({
+          id: 'smarthr-ui/SortDropdown/sortOrderLegend',
+          defaultText: '並び順',
+        }),
+      ascLabel:
+        ascLabel ||
+        localize({
+          id: 'smarthr-ui/SortDropdown/ascLabel',
+          defaultText: '昇順',
+        }),
+      descLabel:
+        descLabel ||
+        localize({
+          id: 'smarthr-ui/SortDropdown/descLabel',
+          defaultText: '降順',
+        }),
+      applyText:
+        applyText ||
+        localize({
+          id: 'smarthr-ui/SortDropdown/applyText',
+          defaultText: '適用',
+        }),
+      cancelText:
+        cancelText ||
+        localize({
+          id: 'smarthr-ui/SortDropdown/cancelText',
+          defaultText: 'キャンセル',
+        }),
     }),
-    [localize],
+    [sortFieldLabel, sortOrderLegend, ascLabel, descLabel, applyText, cancelText, localize],
   )
-
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   // 外向きの値
   const [selectedLabel, setSelectedLabel] = useState<string>()
@@ -81,19 +92,17 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     if (selectedLabel) return
 
     // 初期値は option に紛れているので、選択されている項目を取得
-    const defaultField =
-      sortFields.find((field) => 'selected' in field && field.selected) || sortFields[0]
+    const defaultField = sortFields.find((field) => field.selected) || sortFields[0]
 
     setSelectedLabel(defaultField.label)
     setInnerSelectedField(defaultField.label)
   }, [selectedLabel, sortFields])
 
   // 外向きな値で構成
-  const triggerLabel = useMemo(() => {
-    const sortLabel = checkedOrder === 'asc' ? decorated.ascLabel : decorated.descLabel
-
-    return `${selectedLabel}（${sortLabel}）`
-  }, [decorated.ascLabel, decorated.descLabel, selectedLabel, checkedOrder])
+  const triggerLabel = useMemo(
+    () => `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
+    [texts.ascLabel, texts.descLabel, selectedLabel, checkedOrder],
+  )
 
   const SortIcon = useMemo(
     () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
@@ -104,24 +113,26 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     (e) => {
       const select = e.currentTarget
       const newLabel = select.options[select.selectedIndex].label
-      const newFields = innerFields.map((field) => {
-        if (field.label !== newLabel && field.selected) {
-          return {
-            ...field,
-            selected: false,
-          }
-        }
-        if (field.label === newLabel && !field.selected) {
-          return {
-            ...field,
-            selected: true,
-          }
-        }
 
-        return field
-      })
+      setInnerFields(
+        innerFields.map((field) => {
+          if (field.label === newLabel) {
+            if (!field.selected) {
+              return {
+                ...field,
+                selected: true,
+              }
+            }
+          } else if (field.selected) {
+            return {
+              ...field,
+              selected: false,
+            }
+          }
 
-      setInnerFields(newFields)
+          return field
+        }),
+      )
       setInnerSelectedField(newLabel)
     },
     [innerFields],
@@ -148,8 +159,8 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
 
   return {
     onChangeSortOrderRadio,
-    labels: {
-      ...decorated,
+    texts: {
+      ...texts,
       triggerLabel,
     },
     handler: { handleApply, handleChange },
