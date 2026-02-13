@@ -13,7 +13,10 @@ import { tv } from 'tailwind-variants'
 
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 
-type Props = PropsWithChildren & Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
+type Props = PropsWithChildren &
+  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
+    fixedHead?: boolean
+  }
 
 const classNameGenerator = tv({
   slots: {
@@ -22,8 +25,8 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableFixedHead = forwardRef<HTMLDivElement, Props>(
-  ({ className, children, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
+export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
+  ({ className, children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
     const innerRef = useRef<HTMLDivElement | null>(null)
     const classNames = useMemo(() => {
       const { wrapper } = classNameGenerator()
@@ -46,13 +49,13 @@ export const TableFixedHead = forwardRef<HTMLDivElement, Props>(
 
     // fixedHead 時に thead の高さ分だけ scroll-padding-top を正しい高さをに設定できるように、Tableのtheadがある場合のみで計算する
     useLayoutEffect(() => {
-      if (!innerRef.current) return
+      if (!innerRef.current || !fixedHead) return
       const thead = innerRef.current.querySelector('thead')
       if (thead) {
         const { height } = thead.getBoundingClientRect()
         innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
       }
-    }, [])
+    }, [fixedHead])
 
     return (
       <div {...rest} ref={setRefs} className={classNames.wrapper}>

@@ -10,8 +10,8 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Base } from '../Base'
 
-import { TableFixedHead } from './TableFixedHead'
 import { TableReel } from './TableReel'
+import { TableScrollContext } from './TableScrollContext'
 
 type AbstractProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
@@ -154,7 +154,7 @@ export const Table: FC<Props> = ({
 
   return (
     <Wrapper {...wrapperProps}>
-      <TableFixedHead ref={tableWrapperRef}>
+      <TableScrollContext ref={tableWrapperRef} fixedHead={fixedHead}>
         {reel ? (
           <TableReel tableWrapperRef={tableWrapperRef}>
             <table {...rest} className={classNames.table} />
@@ -162,7 +162,7 @@ export const Table: FC<Props> = ({
         ) : (
           <table {...rest} className={classNames.table} />
         )}
-      </TableFixedHead>
+      </TableScrollContext>
     </Wrapper>
   )
 }
