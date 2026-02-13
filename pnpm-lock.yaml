@@ -97,7 +97,7 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(chart.js@4.5.1)(react@19.2.4)
       smarthr-ui:
-        specifier: ^74.0.0
+        specifier: ^74.0.0 || ^84.0.0
         version: 74.2.0(@types/react@18.3.28)(eslint@9.39.2(jiti@2.4.1))(react-dom@19.2.4(react@19.2.4))(react-intl@7.1.14(react@19.2.4)(typescript@5.9.3))(react@19.2.4)(styled-components@5.3.11(react-dom@19.2.4(react@19.2.4))(react-is@19.2.0)(react@19.2.4))(ts-node@10.9.2(@swc/core@1.15.11)(@types/node@20.19.30)(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
       '@rollup/plugin-commonjs':
