@@ -1,4 +1,11 @@
-import { type ComponentPropsWithoutRef, type FC, type ReactNode, memo, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type FC,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -85,12 +92,25 @@ export const SideNavItemButton: FC<
   )
 }
 
-export const SideNavItemAnchor: FC<
-  Omit<Props, 'onClick'> & {
-    onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
-    href: string | undefined
-  }
-> = ({ id, title, prefix, suffix, current, size, onClick, children, className, href, ...rest }) => {
+export const SideNavItemAnchor = <T extends ElementType = 'a'>({
+  id,
+  title,
+  prefix,
+  suffix,
+  current,
+  size,
+  onClick,
+  children,
+  className,
+  href,
+  elementAs,
+  ...rest
+}: Omit<Props, 'onClick'> & {
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+  href: string | undefined
+  /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  elementAs?: T
+}) => {
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
@@ -102,16 +122,18 @@ export const SideNavItemAnchor: FC<
     }
   }, [className, size])
 
+  const Anchor = elementAs || 'a'
+
   return (
     <li {...rest} data-current={!!current} className={classNames.wrapper}>
-      <a className={classNames.button} href={href} onClick={onClick} data-value={id}>
+      <Anchor className={classNames.button} href={href} onClick={onClick} data-value={id}>
         <BodyCluster
           prefix={prefix}
           suffix={suffix}
           title={children ?? title}
           classNames={classNames}
         />
-      </a>
+      </Anchor>
     </li>
   )
 }
