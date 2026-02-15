@@ -7,7 +7,7 @@ import { registerChartComponents } from '../../config'
 import { BarChart } from '../BarChart'
 import { LineChart } from '../LineChart'
 
-import type { ChartData } from 'chart.js'
+import type { ChartData, ChartOptions } from 'chart.js'
 
 registerChartComponents()
 
@@ -17,8 +17,9 @@ type Props = {
   [K in ChartType]: {
     type: K
     data: ChartData<K>
-    title: string
+    title?: string
     className?: string
+    options?: Partial<ChartOptions<K>>
   }
 }[ChartType]
 
@@ -35,12 +36,12 @@ export const Chart: React.FC<Props> = ({ className, ...props }) => {
     </div>
   )
 }
-const InnerChart: React.FC<Props> = ({ type, data, ...props }) => {
-  switch (type) {
+const InnerChart: React.FC<Props> = (props) => {
+  switch (props.type) {
     case 'bar':
-      return <BarChart {...props} data={data} />
+      return <BarChart data={props.data} title={props.title} options={props.options} />
     case 'line':
-      return <LineChart {...props} data={data} />
+      return <LineChart data={props.data} title={props.title} options={props.options} />
     default:
       return null
   }
