@@ -151,7 +151,7 @@ const ActualPagination: FC<Props> = ({
 
   return (
     <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={onDelegateClick} role="presentation">
+      <Reel onClick={onDelegateClick}>
         <ItemButtons
           total={total}
           current={current}
