@@ -154,12 +154,13 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "run-p build:*",
-    "build:lib": "tsc -p tsconfig.build.json",
+    "build": "npm-run-all -p build:esm build:lib build:css -s build:metadata",
     "build:esm": "rollup --config rollup.esm.config.js",
+    "build:lib": "tsc -p tsconfig.build.json",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
+    "build:metadata": "tsx scripts/generateMetadata.ts",
     "build-storybook": "storybook build --quiet",
-    "clean": "rimraf ./lib ./esm ./smarthr-ui.css",
+    "clean": "rimraf ./lib ./esm ./smarthr-ui.css ./metadata.json",
     "format": "run-s -c format:*",
     "format:eslint": "eslint --fix './**/*.ts{,x}'",
     "format:prettier": "prettier --write './src/**/*.ts{,x}'",
@@ -177,7 +178,6 @@
     "test": "vitest",
     "test:build-assets": "tsx scripts/build-test.ts",
     "chromatic": "chromatic",
-    "build:metadata": "tsx scripts/generateMetadata.ts",
     "scaffold:storybook": "plop"
   },
   "sideEffects": [
