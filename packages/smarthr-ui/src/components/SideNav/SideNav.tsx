@@ -23,7 +23,10 @@ type AbstractProps = PropsWithChildren<{
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>,
+    id: string,
+  ) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
 }>
@@ -44,7 +47,12 @@ export const SideNav: FC<Props> = ({
   const actualOnClick = useMemo(
     () =>
       onClick
-        ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)
+        ? (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) =>
+            onClick(
+              e,
+              ((e as React.MouseEvent<HTMLButtonElement, MouseEvent>).currentTarget.value ||
+                e.currentTarget.getAttribute('data-value')) as string,
+            )
         : undefined,
     [onClick],
   )
