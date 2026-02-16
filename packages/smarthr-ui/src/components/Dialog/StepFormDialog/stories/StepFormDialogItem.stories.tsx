@@ -1,10 +1,11 @@
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import { Button } from '../../../Button'
 import { StepFormDialog } from '../StepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
-import { useState } from 'react'
-import { Button } from '../../../Button'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/StepFormDialog/StepFormDialogItem',
@@ -20,7 +21,7 @@ export default {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <StepFormDialog
-          title="ステップダイアログ"
+          heading="ステップダイアログ"
           stepLength={2}
           submitLabel="保存"
           firstStep={{ id: 'step-1', stepNumber: 1 }}

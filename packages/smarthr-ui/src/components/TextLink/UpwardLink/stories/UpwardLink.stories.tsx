@@ -1,18 +1,22 @@
-import { ComponentPropsWithoutRef } from 'react'
-
 import { Stack } from '../../../Layout'
 import { UpwardLink } from '../UpwardLink'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentPropsWithoutRef } from 'react'
 
 const _elementAsOptions = {
   なし: undefined,
   あり: ({
     to,
+    children,
     ...rest
   }: Omit<ComponentPropsWithoutRef<'a'>, 'href'> & {
     to: ComponentPropsWithoutRef<'a'>['href']
-  }) => <a {...rest} href={to} />,
+  }) => (
+    <a {...rest} href={to}>
+      {children}
+    </a>
+  ),
 }
 
 export default {

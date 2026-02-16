@@ -1,12 +1,12 @@
 import { action } from 'storybook/actions'
-import { ComponentPropsWithoutRef } from 'react'
 
-import { FaCircleQuestionIcon, OpenInNewTabIcon, FaArrowRightIcon } from '../../Icon'
-import { UpwardLink } from '../UpwardLink'
-import { TextLink } from '../TextLink'
+import { FaArrowRightIcon, FaCircleQuestionIcon, OpenInNewTabIcon } from '../../Icon'
 import { Table, Th } from '../../Table'
+import { TextLink } from '../TextLink'
+import { UpwardLink } from '../UpwardLink'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentPropsWithoutRef } from 'react'
 
 const _prefixOptions = {
   なし: undefined,
@@ -21,10 +21,15 @@ const _elementAsOptions = {
   なし: undefined,
   あり: ({
     to,
+    children,
     ...rest
   }: Omit<ComponentPropsWithoutRef<'a'>, 'href'> & {
     to: ComponentPropsWithoutRef<'a'>['href']
-  }) => <a {...rest} href={to} />,
+  }) => (
+    <a {...rest} href={to}>
+      {children}
+    </a>
+  ),
 }
 
 export default {
@@ -100,7 +105,7 @@ export const Size: StoryObj<typeof TextLink> = {
   render: (args) => (
     <>
       {([undefined, 'M', 'S', 'XS'] as const).map((size) => (
-        <p>
+        <p key={size || 'undefined'}>
           <TextLink {...args} size={size}>
             {size || 'size未指定'}
           </TextLink>

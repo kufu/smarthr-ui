@@ -98,20 +98,28 @@ const classNameGenerator = tv({
   ],
 })
 
-export const Badge = memo<Props>(({ count, showZero, ...rest }) => {
+export const Badge = memo<Props>(({ count, showZero, dot, children, ...rest }) => {
   // ドット表示の場合、数値表示は無いため、早期returnする
-  if (rest.dot) {
-    return <ActualBadge {...rest} />
+  if (dot) {
+    return (
+      <ActualBadge {...rest} dot={dot}>
+        {children}
+      </ActualBadge>
+    )
   }
 
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
 
   // 0値を表示するでもない場合は何も表示しない
-  if (actualCount === undefined && !rest.children) {
+  if (actualCount === undefined && !children) {
     return null
   }
 
-  return <ActualBadge {...rest} count={actualCount} />
+  return (
+    <ActualBadge {...rest} count={actualCount}>
+      {children}
+    </ActualBadge>
+  )
 })
 
 const ActualBadge: FC<Omit<Props, 'showZero'>> = ({

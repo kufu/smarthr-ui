@@ -57,10 +57,9 @@ export const PDFViewer: FC<ViewerProps> = memo(
 
       return (page) => {
         // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (page.pageNumber !== pdfNumPages) {
-          return
+        if (page.pageNumber === pdfNumPages) {
+          onLoad()
         }
-        onLoad()
       }
     }, [pdfNumPages, onLoad])
 

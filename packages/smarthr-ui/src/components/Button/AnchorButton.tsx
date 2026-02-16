@@ -51,6 +51,7 @@ const AnchorButton = forwardRef(
       elementAs,
       className,
       children,
+      href,
       ...rest
     }: PropsWithoutRef<AbstractProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
@@ -69,6 +70,7 @@ const AnchorButton = forwardRef(
     const button = (
       <ButtonWrapper
         {...rest}
+        href={href}
         size={size}
         wide={wide}
         variant={variant}
@@ -85,7 +87,7 @@ const AnchorButton = forwardRef(
       </ButtonWrapper>
     )
 
-    if (!rest.href && inactiveReason) {
+    if (!href && inactiveReason) {
       return <DisabledReason button={button} disabledReason={inactiveReason} />
     }
 

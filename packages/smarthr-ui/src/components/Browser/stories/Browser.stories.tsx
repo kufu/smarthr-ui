@@ -1,18 +1,18 @@
 import { useState } from 'react'
+import { action } from 'storybook/actions'
 
 import { Browser } from '../Browser'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { action } from 'storybook/actions'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Browser',
   component: Browser,
-  render: ({ value, onSelectItem, ...args }) => {
+  render: ({ value, onSelectItem, ...rest }) => {
     const [selectedValue, setSelectedValue] = useState<string | undefined>(value)
     return (
       <Browser
-        {...args}
+        {...rest}
         value={value ?? selectedValue}
         onSelectItem={onSelectItem ?? setSelectedValue}
       />
@@ -41,7 +41,7 @@ export default {
 
 export const Playground: StoryObj<typeof Browser> = {}
 
-export const items: StoryObj<typeof Browser> = {
+export const Items: StoryObj<typeof Browser> = {
   name: 'items',
   args: {
     items: [

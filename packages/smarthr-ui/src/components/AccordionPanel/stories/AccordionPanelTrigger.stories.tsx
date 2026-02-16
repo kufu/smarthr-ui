@@ -1,11 +1,10 @@
-import { ComponentProps } from 'react'
-
 import { AccordionPanel } from '../AccordionPanel'
 import { AccordionPanelContent } from '../AccordionPanelContent'
 import { AccordionPanelItem } from '../AccordionPanelItem'
 import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 export default {
   title: 'Components/AccordionPanel/AccordionPanelTrigger',
@@ -59,18 +58,21 @@ export const HeadingType: StoryObj<typeof AccordionPanelTrigger> = {
   ),
 }
 
-export const HeadingTag: StoryObj<typeof AccordionPanelTrigger> = {
-  name: 'headingTag（非推奨）',
+export const UnrecommendedHeadingTag: StoryObj<typeof AccordionPanelTrigger> = {
+  name: 'unrecommendedHeadingTag（非推奨）',
   render: (args) => (
     <AccordionPanel>
       {(
         [undefined, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as Array<
-          ComponentProps<typeof AccordionPanelTrigger>['headingTag']
+          ComponentProps<typeof AccordionPanelTrigger>['unrecommendedHeadingTag']
         >
-      ).map((headingTag) => (
-        <AccordionPanelItem name={`accorion-panel-item-${headingTag}`} key={headingTag}>
-          <AccordionPanelTrigger {...args} headingTag={headingTag}>
-            {headingTag ?? '未指定'}
+      ).map((unrecommendedHeadingTag) => (
+        <AccordionPanelItem
+          name={`accorion-panel-item-${unrecommendedHeadingTag}`}
+          key={unrecommendedHeadingTag}
+        >
+          <AccordionPanelTrigger {...args} unrecommendedHeadingTag={unrecommendedHeadingTag}>
+            {unrecommendedHeadingTag ?? '未指定'}
           </AccordionPanelTrigger>
           <AccordionPanelContent>アコーディオンパネルコンテンツ</AccordionPanelContent>
         </AccordionPanelItem>

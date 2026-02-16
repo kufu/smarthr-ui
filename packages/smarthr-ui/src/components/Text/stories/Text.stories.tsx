@@ -1,8 +1,8 @@
+import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Text } from '../Text'
-import { FaAddressBookIcon } from '../../Icon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
@@ -140,8 +140,8 @@ export const As: StoryObj<typeof Text> = {
   ),
 }
 
-export const PrefixIcon: StoryObj<typeof Text> = {
-  name: 'prefixIcon',
+export const Icon: StoryObj<typeof Text> = {
+  name: 'icon',
   render: (args) => (
     <Stack>
       <Text {...args} size="XXS" />
@@ -154,12 +154,12 @@ export const PrefixIcon: StoryObj<typeof Text> = {
     </Stack>
   ),
   args: {
-    prefixIcon: <FaAddressBookIcon />,
+    icon: <FaAddressBookIcon />,
   },
 }
 
-export const SuffixIcon: StoryObj<typeof Text> = {
-  name: 'suffixIcon',
+export const IconSuffix: StoryObj<typeof Text> = {
+  name: 'icon.suffix',
   render: (args) => (
     <Stack>
       <Text {...args} size="XXS" />
@@ -172,30 +172,32 @@ export const SuffixIcon: StoryObj<typeof Text> = {
     </Stack>
   ),
   args: {
-    suffixIcon: <FaAddressBookIcon />,
+    icon: {
+      suffix: <FaAddressBookIcon />,
+    },
   },
 }
 
 export const IconGap: StoryObj<typeof Text> = {
-  name: 'iconGap',
+  name: 'icon.gap',
   render: (args) => (
     <Stack>
-      <Text {...args} prefixIcon={<FaAddressBookIcon />}>
+      <Text {...args} icon={{ prefix: <FaAddressBookIcon /> }}>
         default 0.25
       </Text>
-      <Text {...args} prefixIcon={<FaAddressBookIcon />} iconGap={0.5}>
+      <Text {...args} icon={{ prefix: <FaAddressBookIcon />, gap: 0.5 }}>
         0.5
       </Text>
-      <Text {...args} prefixIcon={<FaAddressBookIcon />} iconGap={1}>
+      <Text {...args} icon={{ prefix: <FaAddressBookIcon />, gap: 1 }}>
         1
       </Text>
-      <Text {...args} suffixIcon={<FaAddressBookIcon />}>
+      <Text {...args} icon={{ suffix: <FaAddressBookIcon /> }}>
         default 0.25
       </Text>
-      <Text {...args} suffixIcon={<FaAddressBookIcon />} iconGap={0.5}>
+      <Text {...args} icon={{ suffix: <FaAddressBookIcon />, gap: 0.5 }}>
         0.5
       </Text>
-      <Text {...args} suffixIcon={<FaAddressBookIcon />} iconGap={1}>
+      <Text {...args} icon={{ suffix: <FaAddressBookIcon />, gap: 1 }}>
         1
       </Text>
     </Stack>

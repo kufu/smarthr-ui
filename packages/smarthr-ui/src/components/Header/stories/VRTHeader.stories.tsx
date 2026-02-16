@@ -8,7 +8,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import { _appsOptions } from './Header.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Header/VRT',
@@ -19,7 +19,7 @@ export default {
           {[false, true].map((enableNew) => (
             <Header {...args} enableNew={enableNew} key={String(enableNew)}>
               <HeaderLink
-                href="https://support.smarthr.jp"
+                href="https://smarthr.design/"
                 prefix={<FaRegCircleQuestionIcon />}
                 enableNew={enableNew}
               >

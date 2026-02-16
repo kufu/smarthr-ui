@@ -92,7 +92,7 @@ const ActualPagination: FC<Props> = ({
   withoutNumbers,
   hrefTemplate,
   linkAs,
-  ...props
+  ...rest
 }) => {
   const { localize } = useIntl()
   const classNames = useMemo(() => {
@@ -150,7 +150,7 @@ const ActualPagination: FC<Props> = ({
   )
 
   return (
-    <Nav {...props} className={classNames.wrapper} aria-label={navigationLabel}>
+    <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
       <Reel onClick={actualOnClick} role="presentation">
         <ItemButtons
           total={total}

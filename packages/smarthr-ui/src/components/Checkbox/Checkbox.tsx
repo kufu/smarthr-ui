@@ -64,7 +64,7 @@ const classNameGenerator = tv({
 })
 
 export const Checkbox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed, error, className, children, disabled, ...rest }, ref) => {
+  ({ checked, mixed, error, className, children, disabled, id, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
@@ -93,7 +93,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     }, [checked, mixed])
 
     const defaultId = useId()
-    const checkBoxId = rest.id || defaultId
+    const checkBoxId = id || defaultId
 
     return (
       <span data-disabled={disabled} className={classNames.wrapper}>
