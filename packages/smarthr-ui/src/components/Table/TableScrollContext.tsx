@@ -21,7 +21,7 @@ type Props = PropsWithChildren &
 const classNameGenerator = tv({
   slots: {
     // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
-    wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-overflow-y-auto',
+    wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5 shr-overflow-y-auto',
   },
 })
 

@@ -92,7 +92,7 @@ export const FixedHead: StoryObj<typeof Table> = {
   name: 'fixedHead',
   decorators: [
     (Story) => (
-      <div style={{ height: '50vh' }}>
+      <div style={{ height: '60vh' }}>
         <Story />
       </div>
     ),
@@ -101,6 +101,7 @@ export const FixedHead: StoryObj<typeof Table> = {
     <Table {...args}>
       <thead>
         <tr>
+          <ThCheckbox name="check" key={0} />
           <Th>
             <Text whiteSpace="nowrap">オブジェクト名</Text>
           </Th>
@@ -115,6 +116,7 @@ export const FixedHead: StoryObj<typeof Table> = {
       <tbody>
         {[...Array(20)].map((_, i) => (
           <tr key={i}>
+            <TdCheckbox name={`test-check${i + 1}`} aria-labelledby="check" key={0} />
             <Td>
               <Text whiteSpace="nowrap">オブジェクト{i + 1}</Text>
             </Td>
