@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [85.0.0](https://github.com/kufu/smarthr-ui/compare/v84.0.0...v85.0.0) (2026-02-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **MessageDialog:** description属性をchildrenに変更 (#5976)
+* **FilterDropdown:** 属性のフォーマットを変更する (#6011)
+* **SortDropdown:** decoratorsを廃止し、個別にテキスト指定を行うように修正 (#6012)
+* **FormControl,Fieldset:** deprecatedであるstatusLabelProps属性を削除する (#6007)
+* **Icon:** text,iconGap,right属性を削除する (#5971)
+* **Text:** prefixIcon, suffixIcon, iconGap属性をicon属性にまとめる  (#5970)
+
+### Features
+
+* **FilterDropdown:** 属性のフォーマットを変更する ([#6011](https://github.com/kufu/smarthr-ui/issues/6011)) ([c58d3af](https://github.com/kufu/smarthr-ui/commit/c58d3af65386cdccea41b2f5d57fa6178db4e21b))
+* **FormControl,Fieldset:** deprecatedであるstatusLabelProps属性を削除する ([#6007](https://github.com/kufu/smarthr-ui/issues/6007)) ([c7acc5b](https://github.com/kufu/smarthr-ui/commit/c7acc5b63b5a7c3bab11fd80a36a1c6d6f469787))
+* **Icon:** text,iconGap,right属性を削除する ([#5971](https://github.com/kufu/smarthr-ui/issues/5971)) ([76133f0](https://github.com/kufu/smarthr-ui/commit/76133f04036d9c71a044ec2315bc745afdcf2c34))
+* **Input:** 日付入力のUIの挙動改善のため、max属性をデフォルトで設定する ([#6082](https://github.com/kufu/smarthr-ui/issues/6082)) ([b4e948b](https://github.com/kufu/smarthr-ui/commit/b4e948b87b56db33915e7e2bb1dfdc6c70c88c97))
+* **SortDropdown:** decoratorsを廃止し、個別にテキスト指定を行うように修正 ([#6012](https://github.com/kufu/smarthr-ui/issues/6012)) ([3429b1c](https://github.com/kufu/smarthr-ui/commit/3429b1c08fecd26a2613a95366c654501159bf77))
+* フォーカスインジケータをoutlineベースの実装に変更 ([#6050](https://github.com/kufu/smarthr-ui/issues/6050)) ([1bbac85](https://github.com/kufu/smarthr-ui/commit/1bbac858f7fab2f7eb52a0bfb86db9a5ae7b23fc))
+
+
+### Bug Fixes
+
+* **charts:** strictモードでキーボード操作時にエラーが発生する問題を修正 ([#6083](https://github.com/kufu/smarthr-ui/issues/6083)) ([4c61843](https://github.com/kufu/smarthr-ui/commit/4c61843bf236692ea5c5175afed84e10c93af81f))
+* **Text:** prefixIcon, suffixIcon, iconGap属性をicon属性にまとめる  ([#5970](https://github.com/kufu/smarthr-ui/issues/5970)) ([77d1053](https://github.com/kufu/smarthr-ui/commit/77d10538400c4c81e5332c8c7d607eb99b0eac14))
+
+
+* **MessageDialog:** description属性をchildrenに変更 ([#5976](https://github.com/kufu/smarthr-ui/issues/5976)) ([ca27d5d](https://github.com/kufu/smarthr-ui/commit/ca27d5dbb11f3348ef02dc59a853a8d55463ed47))
+
 ## [84.0.0](https://github.com/kufu/smarthr-ui/compare/v83.0.1...v84.0.0) (2026-02-05)
 
 

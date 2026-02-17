@@ -9,8 +9,10 @@ export default {
     width: '40em',
     size: 'M',
     isOpen: true,
-    title: 'メッセージダイアログタイトル',
-    subtitle: 'メッセージダイアログのサブタイトル',
+    heading: {
+      text: 'メッセージダイアログタイトル',
+      sub: 'メッセージダイアログのサブタイトル',
+    },
     children: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
     contentBgColor: 'BACKGROUND',
     contentPadding: 1.5,

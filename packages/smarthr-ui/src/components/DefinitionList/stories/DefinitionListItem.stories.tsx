@@ -9,7 +9,6 @@ export default {
   render: (args) => <DefinitionListItem {...args} />,
   argTypes: {
     term: { control: 'text' },
-    description: { control: 'text' },
     children: { control: 'text' },
     termStyleType: {
       description: 'DefinitionListItem に指定せず、DefinitionList に指定してください。',
@@ -38,6 +37,17 @@ export const Term: StoryObj<typeof DefinitionListItem> = {
   },
 }
 
+export const TermStyleType: StoryObj<typeof DefinitionListItem> = {
+  name: 'term.styleType',
+  args: {
+    term: {
+      text: '定義リストアイテム',
+      styleType: 'blockTitle',
+    },
+    children: undefined,
+  },
+}
+
 export const Children: StoryObj<typeof DefinitionListItem> = {
   name: 'children',
   args: {
@@ -45,23 +55,35 @@ export const Children: StoryObj<typeof DefinitionListItem> = {
   },
 }
 
-export const FullWidth: StoryObj<typeof DefinitionListItem> = {
-  name: 'fullWidth',
+export const MaxColumns: StoryObj<typeof DefinitionListItem> = {
+  name: 'maxColumns',
   render: (args) => (
-    <DefinitionList maxColumns={2}>
-      <DefinitionListItem {...args} term="定義リストアイテム1" />
-      <DefinitionListItem {...args} term="定義リストアイテム2" />
-      <DefinitionListItem {...args} fullWidth term="定義リストアイテム3（fullwidth）" />
-      <DefinitionListItem {...args} term="定義リストアイテム4" />
-      <DefinitionListItem {...args} term="定義リストアイテム5" />
+    <DefinitionList>
+      <DefinitionListItem {...args} maxColumns={1} term="定義リストアイテム1" />
+      <DefinitionListItem {...args} maxColumns={2} term="定義リストアイテム2" />
+      <DefinitionListItem {...args} maxColumns={2} term="定義リストアイテム3" />
+      <DefinitionListItem {...args} maxColumns={3} term="定義リストアイテム4" />
+      <DefinitionListItem {...args} maxColumns={3} term="定義リストアイテム5" />
+      <DefinitionListItem {...args} maxColumns={3} term="定義リストアイテム6" />
     </DefinitionList>
   ),
 }
 
-export const Description: StoryObj<typeof DefinitionListItem> = {
-  name: 'description（非推奨）',
-  args: {
-    description: '定義リストアイテム説明',
-    children: undefined,
-  },
+export const FullWidth: StoryObj<typeof DefinitionListItem> = {
+  name: 'fullWidth',
+  render: (args) => (
+    <DefinitionList>
+      <DefinitionListItem {...args} maxColumns={1} term="定義リストアイテム1" />
+      <DefinitionListItem {...args} maxColumns={2} term="定義リストアイテム2" />
+      <DefinitionListItem
+        {...args}
+        maxColumns={2}
+        term="定義リストアイテム3（fullwidth）"
+        fullWidth
+      />
+      <DefinitionListItem {...args} maxColumns={3} term="定義リストアイテム4" />
+      <DefinitionListItem {...args} maxColumns={3} term="定義リストアイテム5" />
+      <DefinitionListItem {...args} maxColumns={3} term="定義リストアイテム6" />
+    </DefinitionList>
+  ),
 }

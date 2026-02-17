@@ -13,7 +13,11 @@ describe('MessageDialog', () => {
     return (
       <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>MessageDialog</Button>
-        <MessageDialog isOpen={isOpen} title="MessageDialog" onClickClose={() => setIsOpen(false)}>
+        <MessageDialog
+          isOpen={isOpen}
+          heading="MessageDialog"
+          onClickClose={() => setIsOpen(false)}
+        >
           <p>説明です</p>
         </MessageDialog>
       </IntlProvider>

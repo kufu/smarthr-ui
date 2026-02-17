@@ -1,8 +1,9 @@
-import { type ComponentProps, type FC, useCallback, useContext, useId } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useCallback, useContext } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
 import {
   type AbstractProps as ContentInnerProps,
@@ -11,12 +12,22 @@ import {
 
 import type { UncontrolledDialogProps } from '../types'
 
-type AbstractProps = Omit<ContentInnerProps, 'titleId'> & UncontrolledDialogProps
+type ObjectHeadingType = Omit<ContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
+type AbstractProps = Omit<ContentInnerProps, 'heading'> &
+  UncontrolledDialogProps & {
+    heading: HeadingType
+  }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({
+  text,
+})
 
 /** @deprecated */
 export const MessageDialogContent: FC<Props> = ({
-  title,
+  heading: orgHeading,
   children,
   portalParent,
   className,
@@ -33,7 +44,10 @@ export const MessageDialogContent: FC<Props> = ({
       onClickClose()
     }
   }, [active, onClickClose])
-  const titleId = useId()
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   return createPortal(
     <DialogContentInner
@@ -41,11 +55,10 @@ export const MessageDialogContent: FC<Props> = ({
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}
-      ariaLabelledby={titleId}
+      ariaLabelledby={heading.id}
     >
       <MessageDialogContentInner
-        title={title}
-        titleId={titleId}
+        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
