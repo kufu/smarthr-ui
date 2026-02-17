@@ -79,4 +79,13 @@ export default {
       preventAssignment: true,
     }),
   ],
+  onwarn(warning, warn) {
+    // 'use client'がついていると警告が出るが問題ないため、無視する
+    if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+      // 他にもルールが追加される可能性があるため
+      // eslint-disable-next-line smarthr/best-practice-for-unnesessary-early-return
+      return
+    }
+    warn(warning)
+  },
 }

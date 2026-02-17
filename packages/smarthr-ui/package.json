@@ -154,8 +154,8 @@
   },
   "scripts": {
     "build": "npm-run-all -p build:esm build:cjs build:types build:css -s build:metadata",
-    "build:cjs": "rollup --config rollup.cjs.config.js",
-    "build:esm": "rollup --config rollup.esm.config.js",
+    "build:cjs": "rollup --config rollup.cjs.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
+    "build:esm": "rollup --config rollup.esm.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
     "build:types": "tsc -p tsconfig.build.json",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build:metadata": "tsx scripts/generateMetadata.ts",
