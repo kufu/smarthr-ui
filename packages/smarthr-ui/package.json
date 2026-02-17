@@ -100,7 +100,8 @@
   "files": [
     "esm",
     "lib",
-    "smarthr-ui.css"
+    "smarthr-ui.css",
+    "metadata.json"
   ],
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "keywords": [
@@ -141,7 +142,8 @@
       "import": "./esm/*.js"
     },
     "./smarthr-ui.css": "./smarthr-ui.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./metadata.json": "./metadata.json"
   },
   "publishConfig": {
     "access": "public",
@@ -152,12 +154,13 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "run-p build:*",
-    "build:lib": "tsc -p tsconfig.build.json",
+    "build": "npm-run-all -p build:esm build:lib build:css -s build:metadata",
     "build:esm": "rollup --config rollup.esm.config.js",
+    "build:lib": "tsc -p tsconfig.build.json",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
+    "build:metadata": "tsx scripts/generateMetadata.ts",
     "build-storybook": "storybook build --quiet",
-    "clean": "rimraf ./lib ./esm ./smarthr-ui.css",
+    "clean": "rimraf ./lib ./esm ./smarthr-ui.css ./metadata.json",
     "format": "run-s -c format:*",
     "format:eslint": "eslint --fix './**/*.ts{,x}'",
     "format:prettier": "prettier --write './src/**/*.ts{,x}'",
@@ -175,17 +178,10 @@
     "test": "vitest",
     "test:build-assets": "tsx scripts/build-test.ts",
     "chromatic": "chromatic",
-    "write:ui-props": "tsx scripts/exportUIProps.ts",
-    "export:ui-props": "run-s build:lib write:ui-props",
     "scaffold:storybook": "plop"
   },
   "sideEffects": [
     "*.css"
   ],
-  "typings": "lib/index.d.ts",
-  "standard-version": {
-    "scripts": {
-      "prerelease": "run-s build:lib write:ui-props && git add public/exports/smarthr-ui-props.json"
-    }
-  }
+  "typings": "lib/index.d.ts"
 }
