@@ -152,15 +152,15 @@ export const Table: FC<Props> = ({
     [rounded, classNames.wrapper],
   )
 
+  const renderedTable = <table {...rest} className={classNames.table} />
+
   return (
     <Wrapper {...wrapperProps}>
       <TableScrollContext ref={tableWrapperRef} fixedHead={fixedHead}>
         {reel ? (
-          <TableReel tableWrapperRef={tableWrapperRef}>
-            <table {...rest} className={classNames.table} />
-          </TableReel>
+          <TableReel tableWrapperRef={tableWrapperRef}>{renderedTable}</TableReel>
         ) : (
-          <table {...rest} className={classNames.table} />
+          renderedTable
         )}
       </TableScrollContext>
     </Wrapper>

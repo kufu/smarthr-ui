@@ -155,7 +155,7 @@ export const Reel: StoryObj<typeof Table> = {
               <Text whiteSpace="nowrap">表頭{i + 1}</Text>
             </Th>
           ))}
-          <Th key={9} fixed="right">
+          <Th key={10} fixed="right">
             <Text whiteSpace="nowrap">表頭{10}</Text>
           </Th>
         </tr>
@@ -170,7 +170,7 @@ export const Reel: StoryObj<typeof Table> = {
               <Text whiteSpace="nowrap">表データ{i + 1}</Text>
             </Td>
           ))}
-          <Td fixed="right" key={9}>
+          <Td fixed="right" key={10}>
             <Text whiteSpace="nowrap">表データ{10}</Text>
           </Td>
         </tr>
