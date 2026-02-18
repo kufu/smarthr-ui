@@ -30,11 +30,6 @@ export const ReleaseNote = memo(() => {
   return releaseNote ? <ActualReleaseNote data={releaseNote} /> : null
 })
 
-// HelpLinkではなく<a>タグ（TextLinkに相当）を使用する理由:
-// - リリースノートは典型的なヘルプコンテンツではない
-// - rel="help"はW3C定義で「親要素とその子要素のための追加のヘルプ情報」を指すが、
-//   AppHeaderからのリリースノートは現在のページと直接関連するとは限らない
-// 参考: https://www.w3.org/TR/2010/WD-html5-20100624/links.html#link-type-help
 const ActualReleaseNote: FC<{
   data: Exclude<Required<HeaderProps>['releaseNote'], null>
 }> = ({ data }) => {
@@ -81,7 +76,7 @@ const ActualReleaseNote: FC<{
               <a
                 href={link.url}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 referrerPolicy="no-referrer-when-downgrade"
                 className={classNames.anchor}
               >
@@ -97,7 +92,7 @@ const ActualReleaseNote: FC<{
         <a
           href={data.indexUrl}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           referrerPolicy="no-referrer-when-downgrade"
           className={classNames.indexLinkAnchor}
         >
