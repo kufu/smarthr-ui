@@ -81,7 +81,7 @@ const ActualReleaseNote: FC<{
               <a
                 href={link.url}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
                 referrerPolicy="no-referrer-when-downgrade"
                 className={classNames.anchor}
               >
@@ -97,7 +97,7 @@ const ActualReleaseNote: FC<{
         <a
           href={data.indexUrl}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           referrerPolicy="no-referrer-when-downgrade"
           className={classNames.indexLinkAnchor}
         >
