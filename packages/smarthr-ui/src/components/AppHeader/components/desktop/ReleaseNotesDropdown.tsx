@@ -105,7 +105,8 @@ const ArticleLink = memo<PropsWithChildren<{ href: string }>>(({ href, children 
     <TextLink
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
+      referrerPolicy="no-referrer-when-downgrade"
       className="shr-leading-normal [&&]:shr-underline"
       style={BOX_SHADOW_STYLE}
     >
@@ -119,7 +120,8 @@ const SeeAllTextLink = memo<PropsWithChildren<{ href: string }>>(({ href, childr
     <TextLink
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
+      referrerPolicy="no-referrer-when-downgrade"
       className="shr-leading-normal [&&]:shr-underline"
       style={BOX_SHADOW_STYLE}
     >
