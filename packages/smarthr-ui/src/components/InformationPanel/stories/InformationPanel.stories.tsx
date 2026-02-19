@@ -10,7 +10,7 @@ export default {
   component: InformationPanel,
   render: (args) => <InformationPanel {...args} />,
   args: {
-    title: 'インフォメーションパネルタイトル',
+    heading: 'インフォメーションパネルタイトル',
     children: 'インフォメーションパネルボディ',
   },
   parameters: {
@@ -47,14 +47,17 @@ export const Bold: StoryObj<typeof InformationPanel> = {
   },
 }
 
-export const Title: StoryObj<typeof InformationPanel> = {
-  name: 'title',
+export const Heading: StoryObj<typeof InformationPanel> = {
+  name: 'heading',
 }
 
-export const UnrecommendedTitleTag: StoryObj<typeof InformationPanel> = {
-  name: 'unrecommendedTitleTag（非推奨）',
+export const HeadingTag: StoryObj<typeof InformationPanel> = {
+  name: 'heading.unrecommendedTag（非推奨）',
   args: {
-    unrecommendedTitleTag: 'h3',
+    heading: {
+      text: 'インフォメーションパネルタイトル',
+      unrecommendedTag: 'h3',
+    },
   },
 }
 
@@ -65,7 +68,7 @@ export const Toggleable: StoryObj<typeof InformationPanel> = {
       {[undefined, false, true].map((toggleable) => (
         <InformationPanel
           {...args}
-          title={`toggleable: ${toggleable}`}
+          heading={`toggleable: ${toggleable}`}
           toggleable={toggleable}
           key={String(toggleable)}
         />
@@ -81,7 +84,7 @@ export const Active: StoryObj<typeof InformationPanel> = {
       {[undefined, false, true].map((active) => (
         <InformationPanel
           {...args}
-          title={`active: ${active}`}
+          heading={`active: ${active}`}
           active={active}
           key={String(active)}
         />

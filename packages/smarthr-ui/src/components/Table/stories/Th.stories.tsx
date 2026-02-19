@@ -4,7 +4,6 @@ import { Chip } from '../../Chip'
 import { Stack } from '../../Layout'
 import { Text } from '../../Text'
 import { Table } from '../Table'
-import { TableReel } from '../TableReel'
 import { Th } from '../Th'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
@@ -117,8 +116,8 @@ export const VAlign: StoryObj<typeof Th> = {
 export const Fixed: StoryObj<typeof Th> = {
   name: 'fixed',
   render: (args) => (
-    <TableReel className="shr-w-[50vw]">
-      <Table>
+    <div className="shr-w-[50vw]">
+      <Table reel>
         <thead>
           <tr>
             <Th {...args} fixed="left">
@@ -141,6 +140,6 @@ export const Fixed: StoryObj<typeof Th> = {
           </tr>
         </thead>
       </Table>
-    </TableReel>
+    </div>
   ),
 }

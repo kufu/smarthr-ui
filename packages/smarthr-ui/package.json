@@ -8,7 +8,7 @@
     "@smarthr/wareki": "^1.3.0",
     "dayjs": "^1.11.18",
     "decimal.js": "^10.6.0",
-    "intl-messageformat": "^10.7.18",
+    "intl-messageformat": "^11.1.2",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.3.0",
@@ -19,7 +19,7 @@
     "react-transition-group": "^4.4.5",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^3.4.19",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.55.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.6",
@@ -36,29 +36,27 @@
     "@storybook/cli": "9.0.18",
     "@storybook/react": "9.0.18",
     "@storybook/react-webpack5": "9.0.18",
-    "@swc/core": "^1.13.21",
+    "@swc/core": "^1.15.11",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.range": "^3.2.9",
-    "@types/node": "^20.19.30",
-    "@types/react": "^18.3.27",
+    "@types/node": "^20.19.33",
+    "@types/react": "^18.3.28",
     "@types/react-dom": "^19.2.3",
     "@types/react-transition-group": "^4.4.12",
     "@types/styled-components": "^5.1.36",
-    "autoprefixer": "^10.4.23",
+    "autoprefixer": "^10.4.24",
     "babel-loader": "^10.0.0",
     "babel-plugin-polyfill-corejs2": "^0.4.15",
     "babel-plugin-polyfill-regenerator": "^0.6.6",
     "chromatic": "^15.0.0",
     "css-loader": "^7.1.3",
-    "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint-plugin-storybook": "9.0.18",
-    "glob": "11.0.3",
+    "glob": "13.0.3",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
-    "memory-fs": "^0.5.0",
     "npm-run-all2": "^8.0.4",
     "playwright": "^1.54.2",
     "plop": "^4.0.5",
@@ -67,11 +65,11 @@
     "postcss-styled-syntax": "^0.7.1",
     "postcss-syntax": "^0.36.2",
     "process": "^0.11.10",
-    "react": "^19.1.5",
+    "react": "^19.2.4",
     "react-docgen-typescript": "^2.4.0",
-    "react-dom": "^19.1.5",
+    "react-dom": "^19.2.4",
     "react-ga4": "^2.1.0",
-    "react-intl": "^7.1.14",
+    "react-intl": "^8.1.3",
     "rimraf": "^6.0.1",
     "rollup": "^4.45.3",
     "rollup-plugin-preserve-directives": "^0.4.0",
@@ -83,6 +81,7 @@
     "styled-components": "^5.3.11",
     "tailwind-merge": "^3.3.1",
     "ts-loader": "^9.5.4",
+    "tslib": "^2.8.1",
     "tsx": "^4.20.6",
     "vitest": "^4.0.18",
     "wait-on": "^8.0.5",
@@ -91,7 +90,7 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "react-intl": "^7.0.4",
+    "react-intl": "^7.0.4 || ^8.0.0",
     "styled-components": "^5.0.1"
   },
   "bugs": {
@@ -100,7 +99,8 @@
   "files": [
     "esm",
     "lib",
-    "smarthr-ui.css"
+    "smarthr-ui.css",
+    "metadata.json"
   ],
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "keywords": [
@@ -117,31 +117,32 @@
       "stylelint --fix"
     ]
   },
-  "main": "lib/index.js",
-  "module": "esm/index.js",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     },
     "./types": {
       "types": "./lib/types/index.d.ts",
-      "import": "./esm/types/index.js",
-      "require": "./lib/types/index.js"
+      "import": "./lib/types/index.js",
+      "require": "./lib/types/index.cjs"
     },
     "./lib/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js",
-      "import": "./esm/*.js"
+      "import": "./lib/*.js",
+      "require": "./lib/*.cjs"
     },
     "./esm/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js",
-      "import": "./esm/*.js"
+      "import": "./lib/*.js",
+      "require": "./lib/*.cjs"
     },
     "./smarthr-ui.css": "./smarthr-ui.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./metadata.json": "./metadata.json"
   },
   "publishConfig": {
     "access": "public",
@@ -152,12 +153,14 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "run-p build:*",
-    "build:lib": "tsc -p tsconfig.build.json",
-    "build:esm": "rollup --config rollup.esm.config.js",
+    "build": "npm-run-all -p build:esm build:cjs build:types build:css -s build:metadata",
+    "build:cjs": "rollup --config rollup.cjs.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
+    "build:esm": "rollup --config rollup.esm.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
+    "build:types": "tsc -p tsconfig.build.json",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
+    "build:metadata": "tsx scripts/generateMetadata.ts",
     "build-storybook": "storybook build --quiet",
-    "clean": "rimraf ./lib ./esm ./smarthr-ui.css",
+    "clean": "rimraf ./lib ./esm ./smarthr-ui.css ./metadata.json",
     "format": "run-s -c format:*",
     "format:eslint": "eslint --fix './**/*.ts{,x}'",
     "format:prettier": "prettier --write './src/**/*.ts{,x}'",
@@ -173,19 +176,11 @@
     "storybook": "storybook dev -p 6006",
     "dev": "run-s storybook",
     "test": "vitest",
-    "test:build-assets": "tsx scripts/build-test.ts",
     "chromatic": "chromatic",
-    "write:ui-props": "tsx scripts/exportUIProps.ts",
-    "export:ui-props": "run-s build:lib write:ui-props",
     "scaffold:storybook": "plop"
   },
   "sideEffects": [
     "*.css"
   ],
-  "typings": "lib/index.d.ts",
-  "standard-version": {
-    "scripts": {
-      "prerelease": "run-s build:lib write:ui-props && git add public/exports/smarthr-ui-props.json"
-    }
-  }
+  "typings": "lib/index.d.ts"
 }
