@@ -64,11 +64,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-<<<<<<< HEAD
-    focus: ['focus-indicator', 'focus-indicator--inner', 'focus-indicator-none'],
-=======
-    focus: ['focus-indicator', 'focus-indicator--inverse', 'focus-indicator--outer'],
->>>>>>> 346ad2399 (feat: outlineのinner化)
+    focus: ['focus-indicator', 'focus-indicator--outer', 'focus-indicator-none'],
   },
 }
 
@@ -416,15 +412,24 @@ export default {
          */
         ':where(.focus-indicator)': {
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
-          outline: `2px solid ${theme('colors.outline')}`,
-          outlineOffset: '2px',
-        },
-        ':where(.focus-indicator--inner)': {
-          isolation: 'isolate',
           boxShadow: `inset 0 0 0 4px ${theme('colors.white')}`,
           outline: `2px solid ${theme('colors.outline')}`,
           outlineOffset: '-2px',
+
+          '& .shr-border-shorthand': {
+            // boxShadow: `inset 0 0 0 calc(4px + ${theme('borderWidth.DEFAULT')}) ${theme('colors.white')}`,
+          },
+        },
+        '.focus-indicator': {
+          '&.border-shorthand': {
+            boxShadow: `inset 0 0 0 calc(4px - ${theme('borderWidth.DEFAULT')}) ${theme('colors.white')}`,
+          },
+        },
+        ':where(.focus-indicator--outer)': {
+          isolation: 'isolate',
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
         },
         '.focus-indicator-none': {
           boxShadow: 'none',
