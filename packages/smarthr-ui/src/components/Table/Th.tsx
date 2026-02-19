@@ -48,6 +48,9 @@ const classNameGenerator = tv({
       baseline: 'shr-align-baseline',
       bottom: 'shr-align-bottom',
     },
+    whiteSpace: {
+      nowrap: 'shr-whitespace-nowrap',
+    },
   },
   defaultVariants: {
     align: 'left',
@@ -72,6 +75,7 @@ export const Th = memo<Props>(
     decorators,
     align,
     vAlign,
+    whiteSpace,
     fixed,
     contentWidth,
     className,
@@ -79,7 +83,7 @@ export const Th = memo<Props>(
     ...rest
   }) => {
     const actualClassName = useMemo(() => {
-      const base = classNameGenerator({ className, align, vAlign })
+      const base = classNameGenerator({ className, align, vAlign, whiteSpace })
 
       if (!fixed) {
         return base
@@ -88,7 +92,7 @@ export const Th = memo<Props>(
       const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: fixed })
 
       return `${base} ${shadow}`
-    }, [align, className, fixed, vAlign])
+    }, [align, className, fixed, vAlign, whiteSpace])
     const actualStyle = useMemo(
       () => ({
         ...style,

@@ -114,6 +114,22 @@ export const VAlign: StoryObj<typeof Th> = {
   ),
 }
 
+export const WhiteSpace: StoryObj<typeof Th> = {
+  name: 'whiteSpace',
+  render: (args) => (
+    <Table>
+      <thead>
+        <tr className="shr-h-[4em]">
+          <Th {...args}>whiteSpace: undefined</Th>
+          <Th {...args} whiteSpace="nowrap">
+            whiteSpace: <Chip>nowrap</Chip>
+          </Th>
+        </tr>
+      </thead>
+    </Table>
+  ),
+}
+
 export const Fixed: StoryObj<typeof Th> = {
   name: 'fixed',
   render: (args) => (

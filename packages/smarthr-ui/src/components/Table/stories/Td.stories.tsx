@@ -71,6 +71,21 @@ export const VAlign: StoryObj<typeof Td> = {
     </Table>
   ),
 }
+export const WhiteSpace: StoryObj<typeof Th> = {
+  name: 'whiteSpace',
+  render: (args) => (
+    <Table>
+      <tbody>
+        <tr className="shr-h-[4em]">
+          <Td {...args}>whiteSpace: undefined</Td>
+          <Td {...args} whiteSpace="nowrap">
+            whiteSpace: <Chip>nowrap</Chip>
+          </Td>
+        </tr>
+      </tbody>
+    </Table>
+  ),
+}
 
 export const Nullable: StoryObj<typeof Td> = {
   name: 'nullable',
