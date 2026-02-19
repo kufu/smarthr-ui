@@ -1,8 +1,10 @@
 import path from 'path'
 
-import { DefinePlugin, ProvidePlugin } from 'webpack'
+import webpack from 'webpack';
 
 import type { StorybookConfig } from '@storybook/react-webpack5'
+
+const { DefinePlugin, ProvidePlugin } = webpack;
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
