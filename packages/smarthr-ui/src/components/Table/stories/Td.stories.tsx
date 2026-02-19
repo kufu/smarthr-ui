@@ -1,7 +1,6 @@
 import { Chip } from '../../Chip'
 import { Text } from '../../Text'
 import { Table } from '../Table'
-import { TableReel } from '../TableReel'
 import { Td } from '../Td'
 import { Th } from '../Th'
 
@@ -80,8 +79,8 @@ export const Nullable: StoryObj<typeof Td> = {
 export const Fixed: StoryObj<typeof Td> = {
   name: 'fixed',
   render: (args) => (
-    <TableReel className="shr-w-[50vw]" style={{ height: '5rem' }}>
-      <Table fixedHead>
+    <div className="shr-w-[50vw]" style={{ height: '5rem' }}>
+      <Table fixedHead reel>
         <thead>
           <tr>
             <Th {...args} fixed="left">
@@ -144,7 +143,7 @@ export const Fixed: StoryObj<typeof Td> = {
           </tr>
         </tbody>
       </Table>
-    </TableReel>
+    </div>
   ),
 }
 
