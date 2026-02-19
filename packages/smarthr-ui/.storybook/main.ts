@@ -15,7 +15,7 @@ const config: StorybookConfig = {
       options: {
         rule: {
           test: [/\.stories\.jsx?$/],
-          include: [path.resolve(__dirname, '../src')],
+          include: [path.resolve(import.meta.dirname, '../src')],
         },
         loaderOptions: {
           prettierConfig: {
@@ -69,7 +69,7 @@ const config: StorybookConfig = {
     const resolve = c.resolve || {}
     resolve.alias = {
       ...resolve.alias,
-      '@': path.resolve(__dirname, '../src'),
+      '@': path.resolve(import.meta.dirname, '../src'),
     }
 
     // Storybook 9でprocess polyfillが必要
