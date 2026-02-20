@@ -140,6 +140,8 @@ workflows:
           context: smarthr-dockerhub
       # - e2e-test:
       #     context: smarthr-dockerhub
+      - audit:
+          context: smarthr-dockerhub
       - chromatic-deployment:
           filters:
             tags:
