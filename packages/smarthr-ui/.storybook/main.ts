@@ -7,7 +7,21 @@ import type { StorybookConfig } from '@storybook/react-vite'
 
 export default {
   stories: ['../src/**/*.stories.tsx'],
-  addons: ['@storybook/addon-docs', 'storybook-addon-pseudo-states'],
+  addons: [
+    '@storybook/addon-docs',
+    'storybook-addon-pseudo-states',
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        loaderOptions: {
+          prettierConfig: {
+            printWidth: 80,
+            singleQuote: false,
+          },
+        },
+      },
+    },
+  ],
   refs: {
     'smarthr-patterns': {
       title: 'SmartHR Patterns',
