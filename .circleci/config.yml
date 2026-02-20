@@ -43,6 +43,7 @@ commands:
       - run: pnpm ui lint
   audit:
     steps:
+      - checkout
       - run: pnpm audit --prod
   run-npm-test:
     steps:
@@ -130,6 +131,7 @@ jobs:
     executor: node-active-lts
     resource_class: medium
     steps:
+      - setup-for-test
       - audit
 workflows:
   multiple_builds:
