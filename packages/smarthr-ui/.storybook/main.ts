@@ -1,15 +1,13 @@
-import { join, dirname } from 'path'
+import { join } from 'path'
+
 import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 
 import type { StorybookConfig } from '@storybook/react-vite'
 
-const config: StorybookConfig = {
+export default {
   stories: ['../src/**/*.stories.tsx'],
-  addons: [
-    '@storybook/addon-docs',
-    'storybook-addon-pseudo-states',
-  ],
+  addons: ['@storybook/addon-docs', 'storybook-addon-pseudo-states'],
   refs: {
     'smarthr-patterns': {
       title: 'SmartHR Patterns',
@@ -24,28 +22,24 @@ const config: StorybookConfig = {
   typescript: {
     reactDocgen: 'react-docgen-typescript',
   },
-  viteFinal: async (config) => {
-    return {
-      ...config,
-      resolve: {
-        ...config.resolve,
-        alias: {
-          ...config.resolve?.alias,
-          '@': join(__dirname, '../src'),
-        },
+  viteFinal: async (config) => ({
+    ...config,
+    resolve: {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+        '@': join(__dirname, '../src'),
       },
-      define: {
-        ...config.define,
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.STORYBOOK_NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    },
+    define: {
+      ...config.define,
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.STORYBOOK_NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    },
+    css: {
+      postcss: {
+        plugins: [tailwindcss, autoprefixer],
       },
-      css: {
-        postcss: {
-          plugins: [tailwindcss, autoprefixer],
-        },
-      },
-    }
-  },
-}
-
-export default config
+    },
+  }),
+} satisfies StorybookConfig

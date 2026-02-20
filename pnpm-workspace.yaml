@@ -10,6 +10,7 @@ auditConfig:
     - GHSA-h25m-26qc-wcjf
     - GHSA-9g9p-9gw9-jx7f
     - GHSA-5f7q-jpqc-wp7h
+    - GHSA-2g4f-4pwh-qvx6 # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20508
 minimumReleaseAgeExclude:
   # Renovate security update: next@15.5.10
   - next@15.5.10
