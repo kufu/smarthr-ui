@@ -40,8 +40,10 @@ commands:
           key: dependencies-test-{{ checksum "package.json" }}-{{ checksum "pnpm-lock.yaml" }}
   check-source:
     steps:
-      - run: pnpm audit --prod
       - run: pnpm ui lint
+  audit:
+    steps:
+      - run: pnpm audit --prod
   run-npm-test:
     steps:
       - run: pnpm ui test
@@ -124,6 +126,11 @@ jobs:
     steps:
       - setup-for-test
       - run-chromatic-master
+  audit:
+    executor: node-active-lts
+    resource_class: medium
+    steps:
+      - audit
 workflows:
   multiple_builds:
     jobs:
