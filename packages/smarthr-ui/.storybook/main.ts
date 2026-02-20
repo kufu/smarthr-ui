@@ -1,55 +1,14 @@
-import path from 'path'
+import { join, dirname } from 'path'
+import autoprefixer from 'autoprefixer'
+import tailwindcss from 'tailwindcss'
 
-import webpack from 'webpack';
-
-import type { StorybookConfig } from '@storybook/react-webpack5'
-
-const { DefinePlugin, ProvidePlugin } = webpack;
+import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
     '@storybook/addon-docs',
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        rule: {
-          test: [/\.stories\.jsx?$/],
-          include: [path.resolve(import.meta.dirname, '../src')],
-        },
-        loaderOptions: {
-          prettierConfig: {
-            printWidth: 80,
-            singleQuote: false,
-          },
-        },
-      },
-    },
-    {
-      name: '@storybook/addon-styling-webpack',
-      options: {
-        rules: [
-          // Replaces existing CSS rules to support PostCSS
-          {
-            test: /\.css$/,
-            use: [
-              'style-loader',
-              {
-                loader: 'css-loader',
-                options: { importLoaders: 1 },
-              },
-              {
-                // Gets options from `postcss.config.js` in your project root
-                loader: 'postcss-loader',
-                options: { implementation: require.resolve('postcss') },
-              },
-            ],
-          },
-        ],
-      },
-    },
     'storybook-addon-pseudo-states',
-    '@storybook/addon-webpack5-compiler-babel',
   ],
   refs: {
     'smarthr-patterns': {
@@ -58,41 +17,33 @@ const config: StorybookConfig = {
     },
   },
   framework: {
-    name: '@storybook/react-webpack5',
+    name: '@storybook/react-vite',
     options: {},
   },
   staticDirs: ['../public'],
   typescript: {
     reactDocgen: 'react-docgen-typescript',
   },
-  webpackFinal: async (c) => {
-    const resolve = c.resolve || {}
-    resolve.alias = {
-      ...resolve.alias,
-      '@': path.resolve(import.meta.dirname, '../src'),
-    }
-
-    // Storybook 9でprocess polyfillが必要
-    resolve.fallback = {
-      ...resolve.fallback,
-      process: require.resolve('process/browser'),
-    }
-
-    const plugins = c.plugins || []
-    plugins.push(
-      new DefinePlugin({
+  viteFinal: async (config) => {
+    return {
+      ...config,
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve?.alias,
+          '@': join(__dirname, '../src'),
+        },
+      },
+      define: {
+        ...config.define,
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
         'process.env.STORYBOOK_NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-      }),
-      new ProvidePlugin({
-        process: 'process/browser',
-      }),
-    )
-
-    return {
-      ...c,
-      resolve,
-      plugins,
+      },
+      css: {
+        postcss: {
+          plugins: [tailwindcss, autoprefixer],
+        },
+      },
     }
   },
 }
