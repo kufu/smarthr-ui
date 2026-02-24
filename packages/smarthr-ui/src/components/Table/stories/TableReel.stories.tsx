@@ -12,18 +12,14 @@ const Template: StoryFn<typeof TableReel> = (args) => (
       <thead>
         <tr>
           {[...Array(10)].map((_, i) => (
-            <Th key={i}>
-              <Text whiteSpace="nowrap">表頭{i + 1}</Text>
-            </Th>
+            <Th key={i}>表頭{i + 1}</Th>
           ))}
         </tr>
       </thead>
       <tbody>
         <tr>
           {[...Array(10)].map((_, i) => (
-            <Td key={i}>
-              <Text whiteSpace="nowrap">表データ{i + 1}</Text>
-            </Td>
+            <Td key={i}>表データ{i + 1}</Td>
           ))}
         </tr>
       </tbody>

@@ -17,9 +17,9 @@ export type AbstractProps = PropsWithChildren<
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'td'>, keyof AbstractProps>
 
 export const Td = memo<Props>(
-  ({ align, vAlign, whiteSpace, nullable, fixed, contentWidth, className, style, ...rest }) => {
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
-      const base = classNameGenerator({ align, vAlign, whiteSpace, nullable, className })
+      const base = classNameGenerator({ align, vAlign, nullable, className })
 
       if (!fixed) {
         return base
@@ -28,7 +28,7 @@ export const Td = memo<Props>(
       const shadow = reelShadowClassNameGenerator({ direction: fixed })
 
       return `${base} ${shadow}`
-    }, [align, className, fixed, nullable, vAlign, whiteSpace])
+    }, [align, className, fixed, nullable, vAlign])
     const actualStyle = useMemo(() => {
       if (typeof contentWidth === 'object') {
         return {
@@ -63,9 +63,6 @@ const classNameGenerator = tv({
     vAlign: {
       middle: '',
       baseline: 'shr-align-baseline',
-    },
-    whiteSpace: {
-      nowrap: 'shr-whitespace-nowrap',
     },
     nullable: {
       true: "empty:after:shr-content-['-----']",

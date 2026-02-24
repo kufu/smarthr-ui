@@ -30,7 +30,7 @@ type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'th'>, keyof Abstract
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-Th',
-    'shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
+    'shr-whitespace-nowrap shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
     'aria-[sort]:shr-cursor-pointer',
     'hover:aria-[sort]:shr-bg-head-darken',
     '[&:has(:focus-visible)]:aria-[sort]:shr-focus-indicator',
@@ -47,9 +47,6 @@ const classNameGenerator = tv({
       middle: '',
       baseline: 'shr-align-baseline',
       bottom: 'shr-align-bottom',
-    },
-    whiteSpace: {
-      nowrap: 'shr-whitespace-nowrap',
     },
   },
   defaultVariants: {
@@ -75,7 +72,6 @@ export const Th = memo<Props>(
     decorators,
     align,
     vAlign,
-    whiteSpace,
     fixed,
     contentWidth,
     className,
@@ -83,7 +79,7 @@ export const Th = memo<Props>(
     ...rest
   }) => {
     const actualClassName = useMemo(() => {
-      const base = classNameGenerator({ className, align, vAlign, whiteSpace })
+      const base = classNameGenerator({ className, align, vAlign })
 
       if (!fixed) {
         return base
@@ -92,7 +88,7 @@ export const Th = memo<Props>(
       const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: fixed })
 
       return `${base} ${shadow}`
-    }, [align, className, fixed, vAlign, whiteSpace])
+    }, [align, className, fixed, vAlign])
     const actualStyle = useMemo(
       () => ({
         ...style,

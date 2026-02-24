@@ -71,21 +71,6 @@ export const VAlign: StoryObj<typeof Td> = {
     </Table>
   ),
 }
-export const WhiteSpace: StoryObj<typeof Th> = {
-  name: 'whiteSpace',
-  render: (args) => (
-    <Table>
-      <tbody>
-        <tr className="shr-h-[4em]">
-          <Td {...args}>whiteSpace: undefined</Td>
-          <Td {...args} whiteSpace="nowrap">
-            whiteSpace: <Chip>nowrap</Chip>
-          </Td>
-        </tr>
-      </tbody>
-    </Table>
-  ),
-}
 
 export const Nullable: StoryObj<typeof Td> = {
   name: 'nullable',
@@ -100,61 +85,61 @@ export const Fixed: StoryObj<typeof Td> = {
         <thead>
           <tr>
             <Th {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
             <Th {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
             {[...Array(20)].map((_, i) => (
               <Th {...args} key={i}>
-                <Text whiteSpace="nowrap">表カラム{i + 1}</Text>
+                表カラム{i + 1}
               </Th>
             ))}
             <Th {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
             <Th {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <Td {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Td>
             <Td {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Td>
             {[...Array(20)].map((_, i) => (
               <Td {...args} key={i}>
-                <Text whiteSpace="nowrap">表データ{i + 1}</Text>
+                表データ{i + 1}
               </Td>
             ))}
             <Td {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Td>
             <Td {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Td>
           </tr>
           <tr>
             <Td {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Td>
             <Td {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Td>
             {[...Array(20)].map((_, i) => (
               <Td {...args} key={i}>
-                <Text whiteSpace="nowrap">表データ{i + 1}</Text>
+                表データ{i + 1}
               </Td>
             ))}
             <Td {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Td>
             <Td {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Td>
           </tr>
         </tbody>
