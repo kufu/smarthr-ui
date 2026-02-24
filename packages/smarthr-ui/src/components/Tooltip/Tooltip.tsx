@@ -122,7 +122,7 @@ export const Tooltip: FC<Props> = ({
     },
     [ellipsisOnly],
   )
-  const actualOnPointerEnter = useMemo(
+  const onDelegatePointerEnter = useMemo(
     () =>
       onPointerEnter
         ? (e: PointerEvent<HTMLSpanElement>) => {
@@ -132,7 +132,7 @@ export const Tooltip: FC<Props> = ({
         : toShowAction,
     [onPointerEnter, toShowAction],
   )
-  const actualOnTouchStart = useMemo(
+  const onDelegateTouchStart = useMemo(
     () =>
       onTouchStart
         ? (e: TouchEvent<HTMLSpanElement>) => {
@@ -142,7 +142,7 @@ export const Tooltip: FC<Props> = ({
         : toShowAction,
     [onTouchStart, toShowAction],
   )
-  const actualOnFocus = useMemo(
+  const onDelegateFocus = useMemo(
     () =>
       onFocus
         ? (e: FocusEvent<HTMLSpanElement>) => {
@@ -154,7 +154,7 @@ export const Tooltip: FC<Props> = ({
   )
 
   const toCloseAction = useCallback(() => setIsVisible(false), [])
-  const actualOnPointerLeave = useMemo(
+  const onDelegatePointerLeave = useMemo(
     () =>
       onPointerLeave
         ? (e: PointerEvent<HTMLSpanElement>) => {
@@ -164,7 +164,7 @@ export const Tooltip: FC<Props> = ({
         : toCloseAction,
     [onPointerLeave, toCloseAction],
   )
-  const actualOnTouchEnd = useMemo(
+  const onDelegateTouchEnd = useMemo(
     () =>
       onTouchEnd
         ? (e: TouchEvent<HTMLSpanElement>) => {
@@ -174,7 +174,7 @@ export const Tooltip: FC<Props> = ({
         : toCloseAction,
     [onTouchEnd, toCloseAction],
   )
-  const actualOnBlur = useMemo(
+  const onDelegateBlur = useMemo(
     () =>
       onBlur
         ? (e: FocusEvent<HTMLSpanElement>) => {
@@ -200,18 +200,18 @@ export const Tooltip: FC<Props> = ({
   )
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       {...rest}
       ref={ref}
       tabIndex={tabIndex}
       aria-describedby={isInnerTarget ? undefined : messageId}
-      onPointerEnter={actualOnPointerEnter}
-      onTouchStart={actualOnTouchStart}
-      onFocus={actualOnFocus}
-      onPointerLeave={actualOnPointerLeave}
-      onTouchEnd={actualOnTouchEnd}
-      onBlur={actualOnBlur}
+      onPointerEnter={onDelegatePointerEnter}
+      onTouchStart={onDelegateTouchStart}
+      onFocus={onDelegateFocus}
+      onPointerLeave={onDelegatePointerLeave}
+      onTouchEnd={onDelegateTouchEnd}
+      onBlur={onDelegateBlur}
       className={actualClassName}
     >
       {portalRoot &&

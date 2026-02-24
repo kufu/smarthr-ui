@@ -108,6 +108,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
                   type="button"
                   onClick={dialogOpen}
                   prefix={<FaGlobeIcon />}
+                  // eslint-disable-next-line smarthr/require-i18n-text
                 >
                   Language
                 </CommonButton>

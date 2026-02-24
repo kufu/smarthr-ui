@@ -25,13 +25,23 @@ const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => (
   </Dropdown>
 )
 
-const MemoizedDropdownTrigger = memo(() => (
-  <DropdownTrigger>
-    <Button variant="skeleton" size="s" className="[&&&]:shr-border-transparent">
-      <FaCircleQuestionIcon alt="ヘルプ" />
-    </Button>
-  </DropdownTrigger>
-))
+const MemoizedDropdownTrigger = memo(() => {
+  const { localize } = useIntl()
+  const translated = useMemo(
+    () => ({
+      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
+    }),
+    [localize],
+  )
+
+  return (
+    <DropdownTrigger>
+      <Button variant="skeleton" size="s" className="[&&&]:shr-border-transparent">
+        <FaCircleQuestionIcon alt={translated.help} />
+      </Button>
+    </DropdownTrigger>
+  )
+})
 
 const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
   const { localize } = useIntl()

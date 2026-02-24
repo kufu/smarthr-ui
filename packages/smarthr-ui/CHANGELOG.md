@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [86.0.0](https://github.com/kufu/smarthr-ui/compare/v85.0.0...v86.0.0) (2026-02-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Table:** SHRUI-1393: TableReelとTableのコンポネントを合併し、a11y問題を解決する修正で入ってしまった不具合をなくす (#6106)
+* SideNavItemAnchorを追加 (#6094)
+* **DefinitionList:** DefinitionListItemに対する指定をDefinitionListで行わない形式に変更する (#6015)
+* **InformationPanel:** title関連の属性をheading属性にobjectとしてまとめる (#5979)
+* **Dialog:** title関連の属性をheading属性に変更する (#5975)
+
+### Features
+
+* **charts:** グラフコンポーネントのオプション拡張とデータラベル機能の追加 ([#6072](https://github.com/kufu/smarthr-ui/issues/6072)) ([7387e3b](https://github.com/kufu/smarthr-ui/commit/7387e3b6d9b2bd1395ad93efd8dd676ca76bf182))
+* **DefinitionList:** DefinitionListItemに対する指定をDefinitionListで行わない形式に変更する ([#6015](https://github.com/kufu/smarthr-ui/issues/6015)) ([0cc3bf7](https://github.com/kufu/smarthr-ui/commit/0cc3bf72fc20ba39fbb4285f61d7e53dfef61a52))
+* **InformationPanel:** title関連の属性をheading属性にobjectとしてまとめる ([#5979](https://github.com/kufu/smarthr-ui/issues/5979)) ([6116631](https://github.com/kufu/smarthr-ui/commit/61166317e8f67c2fad56ce3c768aebfa827bacc7))
+* SideNavItemAnchorを追加 ([#6094](https://github.com/kufu/smarthr-ui/issues/6094)) ([92d72bc](https://github.com/kufu/smarthr-ui/commit/92d72bc3a01533b6d8ebd87133ec07de15d5c7b1))
+
+
+### Bug Fixes
+
+* CommonJS向けのビルドをrollupで行うように修正 ([#6096](https://github.com/kufu/smarthr-ui/issues/6096)) ([d06b539](https://github.com/kufu/smarthr-ui/commit/d06b53982d6efbd0c536e38feb30764bd90fd4c2))
+* **Table:** SHRUI-1393: TableReelとTableのコンポネントを合併し、a11y問題を解決する修正で入ってしまった不具合をなくす ([#6106](https://github.com/kufu/smarthr-ui/issues/6106)) ([1d5a4b0](https://github.com/kufu/smarthr-ui/commit/1d5a4b06aa4cffabac735f3471d63486fb2c0931))
+
+
+* **Dialog:** title関連の属性をheading属性に変更する ([#5975](https://github.com/kufu/smarthr-ui/issues/5975)) ([92a7e76](https://github.com/kufu/smarthr-ui/commit/92a7e76364c7b94bba46936b660dc3e254ec8277))
+
+## [85.0.0](https://github.com/kufu/smarthr-ui/compare/v84.0.0...v85.0.0) (2026-02-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **MessageDialog:** description属性をchildrenに変更 (#5976)
+* **FilterDropdown:** 属性のフォーマットを変更する (#6011)
+* **SortDropdown:** decoratorsを廃止し、個別にテキスト指定を行うように修正 (#6012)
+* **FormControl,Fieldset:** deprecatedであるstatusLabelProps属性を削除する (#6007)
+* **Icon:** text,iconGap,right属性を削除する (#5971)
+* **Text:** prefixIcon, suffixIcon, iconGap属性をicon属性にまとめる  (#5970)
+
+### Features
+
+* **FilterDropdown:** 属性のフォーマットを変更する ([#6011](https://github.com/kufu/smarthr-ui/issues/6011)) ([c58d3af](https://github.com/kufu/smarthr-ui/commit/c58d3af65386cdccea41b2f5d57fa6178db4e21b))
+* **FormControl,Fieldset:** deprecatedであるstatusLabelProps属性を削除する ([#6007](https://github.com/kufu/smarthr-ui/issues/6007)) ([c7acc5b](https://github.com/kufu/smarthr-ui/commit/c7acc5b63b5a7c3bab11fd80a36a1c6d6f469787))
+* **Icon:** text,iconGap,right属性を削除する ([#5971](https://github.com/kufu/smarthr-ui/issues/5971)) ([76133f0](https://github.com/kufu/smarthr-ui/commit/76133f04036d9c71a044ec2315bc745afdcf2c34))
+* **Input:** 日付入力のUIの挙動改善のため、max属性をデフォルトで設定する ([#6082](https://github.com/kufu/smarthr-ui/issues/6082)) ([b4e948b](https://github.com/kufu/smarthr-ui/commit/b4e948b87b56db33915e7e2bb1dfdc6c70c88c97))
+* **SortDropdown:** decoratorsを廃止し、個別にテキスト指定を行うように修正 ([#6012](https://github.com/kufu/smarthr-ui/issues/6012)) ([3429b1c](https://github.com/kufu/smarthr-ui/commit/3429b1c08fecd26a2613a95366c654501159bf77))
+* フォーカスインジケータをoutlineベースの実装に変更 ([#6050](https://github.com/kufu/smarthr-ui/issues/6050)) ([1bbac85](https://github.com/kufu/smarthr-ui/commit/1bbac858f7fab2f7eb52a0bfb86db9a5ae7b23fc))
+
+
+### Bug Fixes
+
+* **charts:** strictモードでキーボード操作時にエラーが発生する問題を修正 ([#6083](https://github.com/kufu/smarthr-ui/issues/6083)) ([4c61843](https://github.com/kufu/smarthr-ui/commit/4c61843bf236692ea5c5175afed84e10c93af81f))
+* **Text:** prefixIcon, suffixIcon, iconGap属性をicon属性にまとめる  ([#5970](https://github.com/kufu/smarthr-ui/issues/5970)) ([77d1053](https://github.com/kufu/smarthr-ui/commit/77d10538400c4c81e5332c8c7d607eb99b0eac14))
+
+
+* **MessageDialog:** description属性をchildrenに変更 ([#5976](https://github.com/kufu/smarthr-ui/issues/5976)) ([ca27d5d](https://github.com/kufu/smarthr-ui/commit/ca27d5dbb11f3348ef02dc59a853a8d55463ed47))
+
 ## [84.0.0](https://github.com/kufu/smarthr-ui/compare/v83.0.1...v84.0.0) (2026-02-05)
 
 
