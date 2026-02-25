@@ -17,3 +17,5 @@ minimumReleaseAgeExclude:
   - webpack@5.104.1
   # Renovate security update: glob@13.0.1
   - glob@13.0.1
+  # Renovate security update: storybook@9.1.17
+  - storybook@9.1.17
