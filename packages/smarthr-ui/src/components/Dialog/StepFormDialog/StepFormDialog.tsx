@@ -71,7 +71,7 @@ export const StepFormDialog: FC<Props> = ({
     }
   }, [isOpen, onClickClose])
 
-  const actualOnSubmitAction = useCallback(
+  const onDelegateSubmit = useCallback(
     (close: () => void, e: FormEvent<HTMLFormElement>, currentStep: StepItem) => {
       if (isOpen) {
         focusTrapRef.current?.focus()
@@ -101,7 +101,6 @@ export const StepFormDialog: FC<Props> = ({
         onPressEscape={closeDisabled ? undefined : onPressEscape}
         focusTrapRef={focusTrapRef}
       >
-        {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
         <StepFormDialogContentInner
           heading={heading}
           contentBgColor={contentBgColor}
@@ -113,7 +112,7 @@ export const StepFormDialog: FC<Props> = ({
           closeDisabled={closeDisabled}
           submitLabel={submitLabel}
           onClickClose={actualOnClickClose}
-          onSubmit={actualOnSubmitAction}
+          onSubmit={onDelegateSubmit}
           onClickBack={actualOnClickBack}
           responseStatus={responseStatus}
           decorators={decorators}

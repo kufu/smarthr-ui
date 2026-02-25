@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [86.0.0](https://github.com/kufu/smarthr-ui/compare/v85.0.0...v86.0.0) (2026-02-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Table:** SHRUI-1393: TableReelとTableのコンポネントを合併し、a11y問題を解決する修正で入ってしまった不具合をなくす (#6106)
+* SideNavItemAnchorを追加 (#6094)
+* **DefinitionList:** DefinitionListItemに対する指定をDefinitionListで行わない形式に変更する (#6015)
+* **InformationPanel:** title関連の属性をheading属性にobjectとしてまとめる (#5979)
+* **Dialog:** title関連の属性をheading属性に変更する (#5975)
+
+### Features
+
+* **charts:** グラフコンポーネントのオプション拡張とデータラベル機能の追加 ([#6072](https://github.com/kufu/smarthr-ui/issues/6072)) ([7387e3b](https://github.com/kufu/smarthr-ui/commit/7387e3b6d9b2bd1395ad93efd8dd676ca76bf182))
+* **DefinitionList:** DefinitionListItemに対する指定をDefinitionListで行わない形式に変更する ([#6015](https://github.com/kufu/smarthr-ui/issues/6015)) ([0cc3bf7](https://github.com/kufu/smarthr-ui/commit/0cc3bf72fc20ba39fbb4285f61d7e53dfef61a52))
+* **InformationPanel:** title関連の属性をheading属性にobjectとしてまとめる ([#5979](https://github.com/kufu/smarthr-ui/issues/5979)) ([6116631](https://github.com/kufu/smarthr-ui/commit/61166317e8f67c2fad56ce3c768aebfa827bacc7))
+* SideNavItemAnchorを追加 ([#6094](https://github.com/kufu/smarthr-ui/issues/6094)) ([92d72bc](https://github.com/kufu/smarthr-ui/commit/92d72bc3a01533b6d8ebd87133ec07de15d5c7b1))
+
+
+### Bug Fixes
+
+* CommonJS向けのビルドをrollupで行うように修正 ([#6096](https://github.com/kufu/smarthr-ui/issues/6096)) ([d06b539](https://github.com/kufu/smarthr-ui/commit/d06b53982d6efbd0c536e38feb30764bd90fd4c2))
+* **Table:** SHRUI-1393: TableReelとTableのコンポネントを合併し、a11y問題を解決する修正で入ってしまった不具合をなくす ([#6106](https://github.com/kufu/smarthr-ui/issues/6106)) ([1d5a4b0](https://github.com/kufu/smarthr-ui/commit/1d5a4b06aa4cffabac735f3471d63486fb2c0931))
+
+
+* **Dialog:** title関連の属性をheading属性に変更する ([#5975](https://github.com/kufu/smarthr-ui/issues/5975)) ([92a7e76](https://github.com/kufu/smarthr-ui/commit/92a7e76364c7b94bba46936b660dc3e254ec8277))
+
 ## [85.0.0](https://github.com/kufu/smarthr-ui/compare/v84.0.0...v85.0.0) (2026-02-12)
 
 
