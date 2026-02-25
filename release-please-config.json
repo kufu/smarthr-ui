@@ -6,7 +6,7 @@
   "bump-patch-for-minor-pre-major": true,
   "packages": {
     "packages/smarthr-ui": {
-      "initial-version": "85.0.0"
+      "initial-version": "86.0.0"
     },
     "packages/charts": {
       "initial-version": "0.1.0"
