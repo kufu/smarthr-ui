@@ -18,3 +18,5 @@ minimumReleaseAgeExclude:
   - webpack@5.104.1
   # Renovate security update: glob@13.0.1
   - glob@13.0.1
+  # Renovate security update: rollup@4.59.0
+  - rollup@4.59.0
