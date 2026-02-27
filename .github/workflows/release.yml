@@ -42,7 +42,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm -r publish --no-git-checks --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.KUFU_NPM_RELEASE_TOKEN}}
       # Trusted Package Publishingに移行したら以下に変更する
       # - run: pnpm -r publish --no-git-checks --access public --provenance
       #   env:
