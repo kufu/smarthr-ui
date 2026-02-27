@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [87.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.0.0...smarthr-ui-v87.1.0) (2026-02-27)
+
+
+### Features
+
+* **Text:** maxLines属性を追加する ([#6058](https://github.com/kufu/smarthr-ui/issues/6058)) ([1209cbe](https://github.com/kufu/smarthr-ui/commit/1209cbe73c9d7f046de63a0154c0ca75ceadc352))
+
 ## [87.0.0](https://github.com/kufu/smarthr-ui/compare/v86.0.0...v87.0.0) (2026-02-26)
 
 
