@@ -1,0 +1,49 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release_please:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      releases_created: ${{ steps.release_please.outputs.releases_created }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release_please
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    needs: release_please
+    if: ${{ needs.release_please.outputs.releases_created }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: 'package.json'
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.node-version'
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r publish --if-present --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      # Trusted Package Publishingに移行したら以下に変更する
+      # - run: pnpm -r publish --no-git-checks --access public --provenance
+      #   env:
+      #     NPM_CONFIG_PROVENANCE: true
