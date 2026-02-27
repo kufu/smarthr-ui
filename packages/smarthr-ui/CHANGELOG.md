@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [87.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.0...smarthr-ui-v87.1.1) (2026-02-27)
+
+
+### Bug Fixes
+
+* READMEにIntlProviderを追加 ([#6145](https://github.com/kufu/smarthr-ui/issues/6145)) ([323778b](https://github.com/kufu/smarthr-ui/commit/323778b2fefae364d4b7f0446bd404baa194c8d1))
+
 ## [87.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.0.0...smarthr-ui-v87.1.0) (2026-02-27)
 
 
