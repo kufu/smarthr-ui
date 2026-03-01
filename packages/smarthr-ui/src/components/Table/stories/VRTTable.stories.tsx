@@ -63,9 +63,7 @@ export default {
                           id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
                         >
-                          <Text whiteSpace="nowrap">
-                            表データ{i + 1}-{j + 1}
-                          </Text>
+                          表データ{i + 1}-{j + 1}
                         </Td>
                       ))}
                       {fixed === 'right' && (
@@ -93,9 +91,7 @@ export default {
                           id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
                         >
-                          <Text whiteSpace="nowrap">
-                            表データ{i + 1}-{j + 1}
-                          </Text>
+                          表データ{i + 1}-{j + 1}
                         </Td>
                       ))}
                       {fixed === 'right' && (
