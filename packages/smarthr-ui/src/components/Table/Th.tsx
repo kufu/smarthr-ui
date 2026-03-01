@@ -30,7 +30,7 @@ type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'th'>, keyof Abstract
 const classNameGenerator = tv({
   base: [
     'smarthr-ui-Th',
-    'shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
+    'shr-whitespace-nowrap shr-border-0 shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
     'aria-[sort]:shr-cursor-pointer',
     'hover:aria-[sort]:shr-bg-head-darken',
     '[&:has(:focus-visible)]:aria-[sort]:shr-focus-indicator',
