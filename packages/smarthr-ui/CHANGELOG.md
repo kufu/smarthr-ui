@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [87.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.0...smarthr-ui-v87.1.1) (2026-02-27)
+
+
+### Bug Fixes
+
+* READMEにIntlProviderを追加 ([#6145](https://github.com/kufu/smarthr-ui/issues/6145)) ([323778b](https://github.com/kufu/smarthr-ui/commit/323778b2fefae364d4b7f0446bd404baa194c8d1))
+
+## [87.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.0.0...smarthr-ui-v87.1.0) (2026-02-27)
+
+
+### Features
+
+* **Text:** maxLines属性を追加する ([#6058](https://github.com/kufu/smarthr-ui/issues/6058)) ([1209cbe](https://github.com/kufu/smarthr-ui/commit/1209cbe73c9d7f046de63a0154c0ca75ceadc352))
+
+## [87.0.0](https://github.com/kufu/smarthr-ui/compare/v86.0.0...v87.0.0) (2026-02-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **SideMenuGroup:** title関連の属性を整理し、heading属性に変更 (#5980)
+
+### Features
+
+* **SideMenuGroup:** title関連の属性を整理し、heading属性に変更 ([#5980](https://github.com/kufu/smarthr-ui/issues/5980)) ([a27dd7b](https://github.com/kufu/smarthr-ui/commit/a27dd7b463b7ab70e213e49b56b75f5673a4af6d))
+
+
+### Bug Fixes
+
+* **Container:** useEnvironmentに対応する ([#6128](https://github.com/kufu/smarthr-ui/issues/6128)) ([9846bc0](https://github.com/kufu/smarthr-ui/commit/9846bc041065aa5a2f5b4ed1f455e7ed44414822))
+* useMediaQueries起因でEnvironmentProviderがSSRエラーが出るため、SSR時にwindowを使わないようにした  ([#6125](https://github.com/kufu/smarthr-ui/issues/6125)) ([03276d7](https://github.com/kufu/smarthr-ui/commit/03276d7e3124ef3302069f84cc93c312d7c064ce))
+
 ## [86.0.0](https://github.com/kufu/smarthr-ui/compare/v85.0.0...v86.0.0) (2026-02-19)
 
 

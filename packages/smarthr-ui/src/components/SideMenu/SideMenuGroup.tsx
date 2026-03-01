@@ -1,6 +1,5 @@
 import {
   type ComponentPropsWithoutRef,
-  type ElementType,
   type PropsWithChildren,
   type ReactNode,
   memo,
@@ -11,60 +10,47 @@ import { tv } from 'tailwind-variants'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-type Props<TitleElement extends ElementType> = PropsWithChildren<{
-  title: ReactNode
-  titleElementAs?: TitleElement
-
-  /**
-   * @default ul
-   */
-  listElementAs?: 'ul' | 'ol'
-}> &
-  ComponentPropsWithoutRef<TitleElement>
+type AbstractProps = PropsWithChildren<{
+  heading: ReactNode
+}>
+type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-mt-1'],
     list: 'shr-list-none',
-    groupTitle: 'shr-px-1 shr-py-0.5 shr-text-sm',
+    groupHeading: 'shr-px-1 shr-py-0.5 shr-text-sm',
   },
 })
 
-export const SideMenuGroup = <TitleElement extends ElementType = 'span'>({
-  title,
-  titleElementAs,
-  listElementAs,
+export const SideMenuGroup = ({
+  heading,
   children,
   className,
-}: Props<TitleElement>) => {
+  ...rest
+}: AbstractProps & ElementProps) => {
   const classNames = useMemo(() => {
-    const { wrapper, list, groupTitle } = classNameGenerator()
+    const { wrapper, list, groupHeading } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
       list: list(),
-      groupTitle: groupTitle(),
+      groupHeading: groupHeading(),
     }
   }, [className])
 
-  const ListComponent = listElementAs ?? 'ul'
-
   return (
-    <li className={classNames.wrapper}>
+    <li {...rest} className={classNames.wrapper}>
       <Section>
-        <GroupHeading titleElementAs={titleElementAs} className={classNames.groupTitle}>
-          {title}
-        </GroupHeading>
-        <ListComponent className={classNames.list}>{children}</ListComponent>
+        <GroupHeading className={classNames.groupHeading}>{heading}</GroupHeading>
+        <ul className={classNames.list}>{children}</ul>
       </Section>
     </li>
   )
 }
 
-const GroupHeading = memo<PropsWithChildren<{ titleElementAs?: ElementType; className: string }>>(
-  ({ titleElementAs: Inner, children, className }) => (
-    <Heading type="subBlockTitle" className={className}>
-      {Inner ? <Inner>{children}</Inner> : children}
-    </Heading>
-  ),
-)
+const GroupHeading = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <Heading type="subBlockTitle" className={className}>
+    {children}
+  </Heading>
+))

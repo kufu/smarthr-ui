@@ -80,3 +80,4 @@ smarthr-ui.css
 .idea
 .vscode
 packages/smarthr-ui/metadata.json
+public/exports/smarthr-ui-props.json
