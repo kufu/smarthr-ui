@@ -11,7 +11,7 @@ describe('useTableHeadCellCount', () => {
     const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
     return (
-      <Table>
+      <Table reel={false}>
         <thead>
           <tr>
             <Th>表頭1</Th>
@@ -43,7 +43,7 @@ describe('useTableHeadCellCount', () => {
       const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
       return (
-        <Table>
+        <Table reel={false}>
           <thead>
             <tr>
               <Th rowSpan={2}>氏名</Th>
@@ -79,7 +79,7 @@ describe('useTableHeadCellCount', () => {
       const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
       return (
-        <Table>
+        <Table reel={false}>
           <thead>
             <tr>
               <Th>表頭1</Th>
@@ -110,7 +110,7 @@ describe('useTableHeadCellCount', () => {
       const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
       return (
-        <Table>
+        <Table reel={false}>
           <thead>
             <tr>
               <Th rowSpan={2}>氏名</Th>
@@ -145,7 +145,7 @@ describe('useTableHeadCellCount', () => {
       const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
       return (
-        <Table>
+        <Table reel={false}>
           <tbody ref={countHeadCellRef}>
             <tr>
               <td data-testid="cell">カラム数: {count}</td>

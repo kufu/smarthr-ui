@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  type FC,
-  type MouseEvent,
-  type ReactElement,
-  cloneElement,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, type ReactElement, useEffect, useMemo, useRef } from 'react'
 
 import { useDisclosure } from './useDisclosure'
 
@@ -21,43 +14,54 @@ type DisclosureTriggerProps = {
   /** DisclosureContentのidと紐づける文字列 */
   targetId: string
   /** 開閉時のハンドラー */
-  onClick?: (open: () => void, e: MouseEvent<HTMLButtonElement>) => void
+  onClick?: (open: () => void, e: MouseEvent) => void
   children: DisclosureTriggerNodeChildren | DisclosureTriggerFuncChildren
 }
 
-export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({
-  targetId,
-  children,
-  onClick,
-  ...rest
-}) => {
+export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, children, onClick }) => {
   const [expanded, setExpanded] = useDisclosure(targetId)
+  const ref = useRef<HTMLSpanElement | null>(null)
 
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      const toggleExpanded = () => {
-        setExpanded((current) => !current)
+  const actualOnClick = useMemo(() => {
+    const toggleExpanded = () => {
+      setExpanded((current) => !current)
+    }
+
+    if (onClick) {
+      return (e: MouseEvent) => {
+        onClick(toggleExpanded, e)
       }
+    }
 
-      if (onClick) {
-        return onClick(toggleExpanded, e)
-      }
+    return toggleExpanded
+  }, [onClick, setExpanded])
 
-      toggleExpanded()
-    },
-    [onClick, setExpanded],
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    const button = ref.current.querySelector('button')
+
+    if (!button) {
+      throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
+    }
+
+    button.setAttribute('aria-expanded', expanded.toString())
+    button.setAttribute('aria-controls', targetId)
+    button.addEventListener('click', actualOnClick)
+
+    return () => {
+      button.removeEventListener('click', actualOnClick)
+    }
+  }, [expanded, children, actualOnClick, targetId])
+
+  // HINT: 念の為spanに対して外部からstyleを当てられるようにしておく。
+  // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる
+  // TODO: 将来的にspan -> Fragmentに変更する
+  return (
+    <span className="smarthr-ui-DisclosureTriggerWrapper" ref={ref}>
+      {children instanceof Function ? children({ expanded }) : children}
+    </span>
   )
-
-  const actualTrigger = useMemo(() => {
-    const actualChildren = children instanceof Function ? children({ expanded }) : children
-
-    return cloneElement(actualChildren as ReactElement, {
-      ...rest,
-      onClick: actualOnClick,
-      'aria-expanded': expanded.toString(),
-      'aria-controls': targetId,
-    })
-  }, [expanded, children, actualOnClick, targetId, rest])
-
-  return actualTrigger
 }

@@ -12,35 +12,42 @@ type MediaQueryMatches<T> = {
 }
 
 export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQueryMatches<T> => {
-  const matchMediaList = useMemo(
+  const getMatchMediaList = useCallback(
     () => entries(queries).map(([key, query]) => [key, window.matchMedia(query)] as const),
     [queries],
   )
   const lastSnapshotRef = useRef<MediaQueryMatches<T> | null>(null)
 
+  const serverSnapshot = useMemo(
+    () =>
+      fromEntries(entries(queries).map(([key]) => [key, false] as const)) as MediaQueryMatches<T>,
+    [queries],
+  )
+
   const getServerSnapshot = useCallback(
-    (): MediaQueryMatches<T> => fromEntries(matchMediaList.map(([key]) => [key, false] as const)),
-    [matchMediaList],
+    () => serverSnapshot,
+    [serverSnapshot],
   ) satisfies () => MediaQueryMatches<T>
 
   const getSnapshot = useCallback((): MediaQueryMatches<T> => {
     if (typeof window === 'undefined' || !window.matchMedia) {
-      return getServerSnapshot()
+      return serverSnapshot
     }
 
-    const ret = fromEntries(matchMediaList.map(([key, m]) => [key, m.matches] as const))
+    const ret = fromEntries(getMatchMediaList().map(([key, m]) => [key, m.matches] as const))
     if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
       return lastSnapshotRef.current
     }
     lastSnapshotRef.current = ret
     return ret
-  }, [matchMediaList, getServerSnapshot])
+  }, [getMatchMediaList, serverSnapshot])
 
   const subscribe = useCallback(
     (f: () => void) => {
       if (typeof window === 'undefined' || !window.matchMedia) {
         return () => {}
       }
+      const matchMediaList = getMatchMediaList()
       matchMediaList.forEach(([, m]) => {
         m.addEventListener('change', f)
       })
@@ -50,7 +57,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
         })
       }
     },
-    [matchMediaList],
+    [getMatchMediaList],
   )
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)

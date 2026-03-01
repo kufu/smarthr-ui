@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5'
 export default {
   title: 'Components/Dialog/ModelessDialog',
   component: ModelessDialog,
-  render: ({ title, onClickClose, ...rest }) => {
+  render: ({ heading, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     return (
       <>
