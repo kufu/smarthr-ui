@@ -18,7 +18,7 @@ import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
-import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon, FaCircleInfoIcon } from '../Icon'
 import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
@@ -211,8 +211,17 @@ const MemoizedHeading = memo<
   )
 
   return (
-    <Heading {...rest} unrecommendedTag={heading.unrecommendedTag} type="blockTitle">
-      <ResponseMessage icon={{ type, gap: 0.5 }}>{heading.text}</ResponseMessage>
+    <Heading
+      {...rest}
+      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+      unrecommendedTag={heading.unrecommendedTag}
+      icon={{
+        prefix: <FaCircleInfoIcon color="TEXT_GREY" />,
+        gap: 0.5,
+      }}
+      type="blockTitle"
+    >
+      {heading.text}
     </Heading>
   )
 })
