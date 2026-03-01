@@ -121,21 +121,21 @@ export const Fixed: StoryObj<typeof Th> = {
         <thead>
           <tr>
             <Th {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
             <Th {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
             {[...Array(20)].map((_, i) => (
               <Th {...args} key={i}>
-                <Text whiteSpace="nowrap">表頭{i + 1}</Text>
+                表頭{i + 1}
               </Th>
             ))}
             <Th {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Th>
             <Th {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Th>
           </tr>
         </thead>
