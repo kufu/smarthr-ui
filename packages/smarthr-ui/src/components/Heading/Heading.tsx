@@ -47,7 +47,7 @@ export type AbstractProps = PropsWithChildren<{
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
   /** テキスト左に設置するアイコン */
-  icon?: ReactNode
+  icon?: ComponentProps<typeof Text>['icon']
 }> &
   StylingProps
 
