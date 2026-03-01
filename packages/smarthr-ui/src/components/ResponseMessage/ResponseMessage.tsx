@@ -13,13 +13,13 @@ import { Text } from '../Text'
 
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-  type?: keyof typeof STATUS_ICON_MAPPER
+  status?: keyof typeof STATUS_ICON_MAPPER
 }
 
 export const classNameGenerator = tv({
   base: '',
   variants: {
-    type: {
+    status: {
       info: 'shr-fill-grey',
       success: 'shr-fill-main',
       warning: '',
@@ -37,9 +37,9 @@ const STATUS_ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ type = 'info', size, children, ...rest }) => {
-  const className = useMemo(() => classNameGenerator({ type }), [type])
-  const TextIcon = STATUS_ICON_MAPPER[type]
+export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ...rest }) => {
+  const className = useMemo(() => classNameGenerator({ status }), [status])
+  const TextIcon = STATUS_ICON_MAPPER[status]
 
   return (
     <Text icon={<TextIcon {...rest} className={className} />} size={size}>

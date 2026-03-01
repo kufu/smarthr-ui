@@ -9,16 +9,16 @@ export default {
   render: (args) => <ResponseMessage {...args} />,
   argTypes: {
     alt: { control: 'text' },
-    type: {
+    status: {
       control: 'select',
-      options: Object.keys(classNameGenerator.variants.type),
+      options: Object.keys(classNameGenerator.variants.status),
     },
     size: { name: 'size' },
     color: { table: { disable: true } },
   },
   args: {
     children: 'レスポンスメッセージ',
-    type: 'info',
+    status: 'info',
     alt: '',
   },
   parameters: {
@@ -28,12 +28,12 @@ export default {
 
 export const Playground: StoryObj<typeof ResponseMessage> = {}
 
-export const Type: StoryObj<typeof ResponseMessage> = {
-  name: 'type',
+export const Status: StoryObj<typeof ResponseMessage> = {
+  name: 'status',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
-        <ResponseMessage {...args} key={type} type={type as any} />
+      {[undefined, ...Object.keys(classNameGenerator.variants.status)].map((status) => (
+        <ResponseMessage {...args} key={status} status={status as any} />
       ))}
     </Stack>
   ),

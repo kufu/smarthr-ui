@@ -8,7 +8,7 @@ import type { ComponentProps } from 'react'
 type ResponseMessageProps = ComponentProps<typeof ResponseMessage>
 
 const testCases = pictParser<Array<Partial<ResponseMessageProps>>>(
-  `type	size
+  `status	size
    info	XXS
    warning	L
    error	XXS
