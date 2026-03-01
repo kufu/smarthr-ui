@@ -140,7 +140,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       return { max }
     }, [max, type])
 
-    const onClickFocus = useCallback(() => innerRef.current?.focus(), [])
+    const onDelegateClickFocus = useCallback(() => innerRef.current?.focus(), [])
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
@@ -179,7 +179,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={onClickFocus}
+        onClick={onDelegateClickFocus}
         className={wrapperClassName}
         style={wrapperStyle}
       >
