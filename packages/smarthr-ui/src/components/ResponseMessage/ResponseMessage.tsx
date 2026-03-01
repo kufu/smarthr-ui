@@ -1,7 +1,6 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import {
   FaCircleCheckIcon,
   FaCircleExclamationIcon,
@@ -12,21 +11,10 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-
-type IconType = keyof typeof ICON_MAPPER
-type ObjectIconType = {
-  type: IconType
-  gap?: CharRelativeSize | AbstractSize
-}
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-  icon?: IconType | ObjectIconType
+  type?: keyof typeof STATUS_ICON_MAPPER
 }
-
-const iconObjectConverter = (iconType: IconType): ObjectIconType => ({
-  type: iconType,
-})
 
 export const classNameGenerator = tv({
   base: '',
@@ -41,7 +29,7 @@ export const classNameGenerator = tv({
   },
 })
 
-const ICON_MAPPER = {
+const STATUS_ICON_MAPPER = {
   info: FaCircleInfoIcon,
   success: FaCircleCheckIcon,
   warning: WarningIcon,
@@ -49,16 +37,12 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ icon: orgIcon = 'info', size, children, ...rest }) => {
-  const { type, gap } = useObjectAttributes<IconType | ObjectIconType, ObjectIconType>(
-    orgIcon,
-    iconObjectConverter,
-  )
+export const ResponseMessage: FC<Props> = ({ type = 'info', size, children, ...rest }) => {
   const className = useMemo(() => classNameGenerator({ type }), [type])
-  const TextIcon = ICON_MAPPER[type]
+  const TextIcon = STATUS_ICON_MAPPER[type]
 
   return (
-    <Text icon={{ prefix: <TextIcon {...rest} className={className} />, gap }} size={size}>
+    <Text icon={<TextIcon {...rest} className={className} />} size={size}>
       {children}
     </Text>
   )

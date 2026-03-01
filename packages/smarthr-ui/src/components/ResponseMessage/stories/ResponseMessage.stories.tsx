@@ -18,10 +18,7 @@ export default {
   },
   args: {
     children: 'レスポンスメッセージ',
-    icon: {
-      type: 'info',
-      gap: 0.25,
-    },
+    type: 'info',
     alt: '',
   },
   parameters: {
@@ -31,19 +28,12 @@ export default {
 
 export const Playground: StoryObj<typeof ResponseMessage> = {}
 
-export const IconType: StoryObj<typeof ResponseMessage> = {
-  name: 'icon.type',
+export const Type: StoryObj<typeof ResponseMessage> = {
+  name: 'type',
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
-        <ResponseMessage
-          {...args}
-          key={type}
-          icon={{
-            ...args.icon,
-            type: type as any,
-          }}
-        />
+        <ResponseMessage {...args} key={type} type={type as any} />
       ))}
     </Stack>
   ),
@@ -58,16 +48,6 @@ export const Size: StoryObj<typeof ResponseMessage> = {
           {size || 'size未指定はMと同サイズ'}
         </ResponseMessage>
       ))}
-    </Stack>
-  ),
-}
-
-export const IconGap: StoryObj<typeof ResponseMessage> = {
-  name: 'icon.gap',
-  render: (args) => (
-    <Stack align="flex-start">
-      <ResponseMessage {...args} icon={{ ...args.icon, gap: 0.25 }} />
-      <ResponseMessage {...args} icon={{ ...args.icon, gap: 0.5 }} />
     </Stack>
   ),
 }

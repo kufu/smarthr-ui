@@ -20,7 +20,6 @@ import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon, FaCircleInfoIcon } from '../Icon'
 import { Sidebar } from '../Layout'
-import { ResponseMessage } from '../ResponseMessage'
 
 type ObjectHeadingType = {
   text: ReactNode
