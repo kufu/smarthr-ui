@@ -1,9 +1,9 @@
 import { Button } from '../../../Button'
-import { FormDialog } from '../FormDialog'
 import { FormControl } from '../../../FormControl'
 import { Input } from '../../../Input'
+import { FormDialog } from '../FormDialog'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/FormDialog/VRT',
@@ -12,8 +12,10 @@ export default {
     width: '40em',
     size: 'M',
     isOpen: true,
-    title: 'フォームダイアログタイトル',
-    subtitle: 'フォームダイアログのサブタイトル',
+    heading: {
+      text: 'フォームダイアログタイトル',
+      sub: 'フォームダイアログのサブタイトル',
+    },
     actionText: '送信',
     subActionArea: <Button>サブアクション</Button>,
     contentBgColor: 'BACKGROUND',

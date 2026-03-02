@@ -36,7 +36,7 @@ const classNameGenerator = tv({
   ],
 })
 
-type Props = {
+type AbstractProps = {
   /** 表示する item の配列 */
   items: ItemNodeLike[]
   /** 選択中の item の値 */
@@ -44,15 +44,9 @@ type Props = {
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
-export const Browser: FC<Props & ElementProps> = ({
-  value,
-  items,
-  onSelectItem,
-  className,
-  ...rest
-}) => {
+export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
@@ -80,7 +74,7 @@ export const Browser: FC<Props & ElementProps> = ({
 
   // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
-  const handleKeyDown: KeyboardEventHandler = useCallback(
+  const onDelegateKeyDown: KeyboardEventHandler = useCallback(
     (e) => {
       if (!selectedNode) {
         return
@@ -135,8 +129,8 @@ export const Browser: FC<Props & ElementProps> = ({
   )
 
   return (
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
-    <div {...rest} role="application" onKeyDown={handleKeyDown} className={classNames.wrapper}>
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <div {...rest} role="application" onKeyDown={onDelegateKeyDown} className={classNames.wrapper}>
       {columns.map((colItems, index) => (
         <BrowserColumn
           key={index}

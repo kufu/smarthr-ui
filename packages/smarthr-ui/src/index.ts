@@ -64,7 +64,7 @@ export {
 export { InformationPanel } from './components/InformationPanel'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
-export { ErrorScreen, MessageScreen } from './components/ErrorScreen'
+export { ErrorScreen } from './components/ErrorScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, type SegmentedControlOption } from './components/SegmentedControl'
@@ -103,10 +103,12 @@ export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/L
 // hooks
 export { useTheme } from './hooks/useTheme'
 export { useDevice, DeviceProvider } from './hooks/useDevice'
+export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
 
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
+export { createMediaQuery, defaultMediaQuery } from './themes/createMediaQuery'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
 export { defaultBorder } from './themes/createBorder'

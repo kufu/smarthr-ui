@@ -26,7 +26,7 @@ export type Option = {
   disabled?: boolean
 }
 
-type Props = {
+type AbstractProps = {
   /** 選択肢の配列 */
   options: Option[]
   /** 選択中の値 */
@@ -36,7 +36,7 @@ type Props = {
   /** 各ボタンの大きさ */
   size?: 'default' | 's'
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -62,13 +62,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const SegmentedControl: FC<Props & ElementProps> = ({
+export const SegmentedControl: FC<Props> = ({
   options,
   value,
   onClickOption,
   size = 'default',
   className,
-  ...props
+  ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -82,8 +82,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     }
   }, [className, size])
 
-  const onFocus = useCallback(() => setIsFocused(true), [])
-  const onBlur = useCallback(() => setIsFocused(false), [])
+  const onDelegateFocus = useCallback(() => setIsFocused(true), [])
+  const onDelegateBlur = useCallback(() => setIsFocused(false), [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -157,10 +157,10 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 
   return (
     <div
-      {...props}
+      {...rest}
       className={classNames.container}
-      onFocus={onFocus}
-      onBlur={onBlur}
+      onFocus={onDelegateFocus}
+      onBlur={onDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
@@ -215,6 +215,7 @@ const SegmentedControlButton: FC<
   }, [excludesSelected, isFocused, attrs.checked, index])
 
   return (
+    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <Button
       value={option.value}
       disabled={option.disabled}

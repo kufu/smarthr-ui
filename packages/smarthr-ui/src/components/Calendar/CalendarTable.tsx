@@ -14,7 +14,7 @@ import { UnstyledButton } from '../Button'
 
 import { isBetween } from './calendarHelper'
 
-type Props = {
+type AbstractProps = {
   /** 現在の日付 */
   current: {
     day: DayJsType
@@ -29,7 +29,7 @@ type Props = {
   /** 選択された日付 */
   selectedDayText: string
 }
-type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'table'>, keyof AbstractProps>
 
 type DayJsType = ReturnType<typeof dayjs>
 
@@ -52,14 +52,14 @@ const classNameGenerator = tv({
   },
 })
 
-export const CalendarTable: FC<Props & ElementProps> = ({
+export const CalendarTable: FC<Props> = ({
   current,
   from,
   to,
   onSelectDate,
   selectedDayText,
   className,
-  ...props
+  ...rest
 }) => {
   const { formatDate, getWeekStartDay } = useIntl()
 
@@ -101,7 +101,7 @@ export const CalendarTable: FC<Props & ElementProps> = ({
 
   return (
     <div className={classNames.wrapper}>
-      <table {...props} className={classNames.table}>
+      <table {...rest} className={classNames.table}>
         <MemoizedThead thStyle={classNames.th} daysInWeek={daysInWeek} />
         <tbody>
           {current.months.map((week, weekIndex) => (

@@ -1,5 +1,3 @@
-import { ReactNode, FC } from 'react'
-
 import { AnchorButton, Button } from '../../Button'
 import { DropdownMenuGroup } from '../../Dropdown'
 import { FaArrowsRotateIcon } from '../../Icon'
@@ -11,15 +9,16 @@ import { AppNaviButton } from '../AppNaviButton'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { FC, ReactNode } from 'react'
 
 const Link: FC<{
   to: string
   children: ReactNode
   disabled?: boolean
   className?: string
-}> = ({ to, children, disabled = false, className = '', ...props }) => (
-  <a {...props} {...(disabled ? {} : { href: to })} className={className}>
+}> = ({ to, children, disabled = false, className = '', ...rest }) => (
+  <a {...rest} {...(disabled ? {} : { href: to })} className={className}>
     {children}
   </a>
 )

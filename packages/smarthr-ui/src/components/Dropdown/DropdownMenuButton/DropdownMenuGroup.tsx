@@ -16,8 +16,7 @@ import { renderButtonList } from './DropdownMenuButton'
 type AbstractProps = PropsWithChildren<{
   name?: ReactNode
 }>
-type ElementProps = Omit<ComponentProps<'li'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+type Props = AbstractProps & Omit<ComponentProps<'li'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {

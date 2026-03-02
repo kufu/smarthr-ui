@@ -1,7 +1,7 @@
 import { FaMoneyCheckDollarIcon } from '../../../Icon'
 import { CurrencyInput } from '../CurrencyInput'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _prefixOptions = {
   なし: undefined,

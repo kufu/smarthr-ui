@@ -90,7 +90,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = {
+type AbstractProps = {
   /** 表示する `Button` または `AnchorButton` コンポーネント */
   primaryButton: ReactNode
   /** 表示する `Button` または `AnchorButton` コンポーネント */
@@ -104,9 +104,9 @@ type Props = {
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
-export const FloatArea: FC<Props & ElementProps> = ({
+export const FloatArea: FC<Props> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,

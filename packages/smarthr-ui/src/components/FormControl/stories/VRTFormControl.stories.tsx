@@ -1,26 +1,34 @@
+import { FaAddressBookIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
+import { StatusLabel } from '../../StatusLabel'
 import { FormControl } from '../FormControl'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/FormControl/VRT',
   render: (args) => (
     <Stack gap={4}>
-      {[false, true].map((dangerouslyHideLabel) => (
+      {[false, true].map((unrecommendedHide) => (
         <FormControl
           {...args}
-          key={dangerouslyHideLabel.toString()}
-          dangerouslyHideLabel={dangerouslyHideLabel}
+          label={{
+            ...args.label,
+            unrecommendedHide,
+          }}
+          key={unrecommendedHide.toString()}
         />
       ))}
     </Stack>
   ),
   args: {
-    children: <Input />,
-    label: 'フォームコントロール',
-    statusLabelProps: { type: 'grey', children: '任意' },
+    children: <Input name="formcontrol_input" />,
+    label: {
+      text: 'フォームコントロール',
+      icon: <FaAddressBookIcon />,
+    },
+    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
     subActionArea: (
       <Cluster justify="space-between">
         <div>サブアクションエリア（start)</div>

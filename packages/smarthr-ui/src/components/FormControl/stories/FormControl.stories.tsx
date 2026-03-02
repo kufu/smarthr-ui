@@ -1,6 +1,7 @@
 import { MultiCombobox, SingleCombobox } from '../../Combobox'
 import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
+import { FaAddressBookIcon } from '../../Icon'
 import { CurrencyInput, Input } from '../../Input'
 import { InputFile } from '../../InputFile'
 import { Cluster, Stack } from '../../Layout'
@@ -11,20 +12,22 @@ import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _childrenOptions = {
-  '<Input />': <Input />,
-  '<DatePicker />': <DatePicker />,
-  '<TimePicker />': <TimePicker />,
-  '<MonthPicker />': <MonthPicker />,
-  '<CurrencyInput />': <CurrencyInput />,
-  '<Textarea />': <Textarea />,
-  '<Select />': <Select options={[]} hasBlank />,
-  '<SingleCombobox />': <SingleCombobox items={[]} selectedItem={null} />,
-  '<MultiCombobox />': <MultiCombobox items={[]} selectedItems={[]} />,
-  '<InputFile />': <InputFile label="ファイルを選択" />,
-  '<DropZone />': <DropZone onSelectFiles={() => null} />,
+  '<Input />': <Input name="formcontrol_input" />,
+  '<DatePicker />': <DatePicker name="formcontrol_datepicker" />,
+  '<CurrencyInput />': <CurrencyInput name="formcontrol_currencyinput" />,
+  '<Textarea />': <Textarea name="formcontrol_textarea" />,
+  '<Select />': <Select name="formcontrol_select" options={[]} hasBlank />,
+  '<SingleCombobox />': (
+    <SingleCombobox name="formcontrol_singlecombobox" items={[]} selectedItem={null} />
+  ),
+  '<MultiCombobox />': (
+    <MultiCombobox name="formcontrol_multicombobox" items={[]} selectedItems={[]} />
+  ),
+  '<InputFile />': <InputFile name="formcontrol_inputfile" label="ファイルを選択" />,
+  '<DropZone />': <DropZone name="formcontrol_dropzone" onSelectFiles={() => null} />,
 }
 const _errorMessages = {
   単一: 'エラーメッセージ',
@@ -51,7 +54,7 @@ export default {
   },
   args: {
     label: 'フォームコントロール',
-    children: <Input />,
+    children: <Input name="formcontrol_input" />,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -78,20 +81,66 @@ export const Label: StoryObj<typeof FormControl> = {
   },
 }
 
-export const LabelType: StoryObj<typeof FormControl> = {
-  name: 'labelType',
+export const LabelStyleType: StoryObj<typeof FormControl> = {
+  name: 'label.styleType',
   render: (args) => (
     <Stack>
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((labelType) => (
         <FormControl
           {...args}
-          label={labelType ?? 'undefined'}
-          labelType={labelType as any}
+          label={
+            labelType
+              ? {
+                  text: labelType,
+                  styleType: labelType,
+                }
+              : 'undefined'
+          }
           key={labelType}
         />
       ))}
     </Stack>
   ),
+}
+
+export const UnrecommendedTitleHidden: StoryObj<typeof FormControl> = {
+  name: 'label.unrecommendedHide（利用注意）',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      unrecommendedHide: true,
+    },
+  },
+}
+
+export const HtmlFor: StoryObj<typeof FormControl> = {
+  name: 'label.htmlFor',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      htmlFor: 'input-id',
+    },
+  },
+}
+
+export const LabelId: StoryObj<typeof FormControl> = {
+  name: 'label.id',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      id: 'label-id',
+    },
+  },
+}
+
+export const LabelIcon: StoryObj<typeof FormControl> = {
+  name: 'label.icon',
+  args: {
+    label: {
+      text: 'フォームコントロール',
+      icon: <FaAddressBookIcon />,
+    },
+  },
 }
 
 export const SubActionArea: StoryObj<typeof FormControl> = {
@@ -103,27 +152,6 @@ export const SubActionArea: StoryObj<typeof FormControl> = {
         <div>サブアクションエリア（end)</div>
       </Cluster>
     ),
-  },
-}
-
-export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'dangerouslyHideLabel（利用注意）',
-  args: {
-    dangerouslyHideLabel: true,
-  },
-}
-
-export const HtmlFor: StoryObj<typeof FormControl> = {
-  name: 'htmlFor',
-  args: {
-    htmlFor: 'input-id',
-  },
-}
-
-export const LabelId: StoryObj<typeof FormControl> = {
-  name: 'labelId',
-  args: {
-    labelId: 'label-id',
   },
 }
 

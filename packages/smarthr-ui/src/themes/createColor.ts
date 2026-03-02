@@ -74,9 +74,9 @@ export type CreatedColorTheme = Palette & {
 
 export const createColor = (userColor?: ColorProperty): CreatedColorTheme => {
   const colors = {
+    ...defaultColor,
     hoverColor: (value: string): string => darken(0.05, value),
     disableColor: (value: string): string => rgba(value, 0.5),
-    ...defaultColor,
   }
 
   if (!userColor) {

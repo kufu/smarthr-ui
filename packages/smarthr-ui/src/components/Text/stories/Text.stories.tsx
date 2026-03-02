@@ -1,7 +1,8 @@
+import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Text } from '../Text'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
@@ -24,8 +25,8 @@ export default {
     },
   },
   args: {
-    children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる。',
-    italic: 'なし',
+    children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
+    italic: false,
     emphasis: false,
     as: 'なし',
   },
@@ -109,7 +110,7 @@ export const WhiteSpace: StoryObj<typeof Text> = {
   ),
   args: {
     children:
-      'well-working\n\n労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる。',
+      'well-working\n\n労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
   },
 }
 
@@ -142,6 +143,96 @@ export const As: StoryObj<typeof Text> = {
     <Stack>
       <Text {...args} as="h1" />
       <Text {...args} as="p" />
+    </Stack>
+  ),
+}
+
+export const Icon: StoryObj<typeof Text> = {
+  name: 'icon',
+  render: (args) => (
+    <Stack>
+      <Text {...args} size="XXS" />
+      <Text {...args} size="XS" />
+      <Text {...args} size="S" />
+      <Text {...args} size="M" />
+      <Text {...args} size="L" />
+      <Text {...args} size="XL" />
+      <Text {...args} size="XXL" />
+    </Stack>
+  ),
+  args: {
+    icon: <FaAddressBookIcon />,
+  },
+}
+
+export const IconSuffix: StoryObj<typeof Text> = {
+  name: 'icon.suffix',
+  render: (args) => (
+    <Stack>
+      <Text {...args} size="XXS" />
+      <Text {...args} size="XS" />
+      <Text {...args} size="S" />
+      <Text {...args} size="M" />
+      <Text {...args} size="L" />
+      <Text {...args} size="XL" />
+      <Text {...args} size="XXL" />
+    </Stack>
+  ),
+  args: {
+    icon: {
+      suffix: <FaAddressBookIcon />,
+    },
+  },
+}
+
+export const IconGap: StoryObj<typeof Text> = {
+  name: 'icon.gap',
+  render: (args) => (
+    <Stack>
+      <Text {...args} icon={{ prefix: <FaAddressBookIcon /> }}>
+        default 0.25
+      </Text>
+      <Text {...args} icon={{ prefix: <FaAddressBookIcon />, gap: 0.5 }}>
+        0.5
+      </Text>
+      <Text {...args} icon={{ prefix: <FaAddressBookIcon />, gap: 1 }}>
+        1
+      </Text>
+      <Text {...args} icon={{ suffix: <FaAddressBookIcon /> }}>
+        default 0.25
+      </Text>
+      <Text {...args} icon={{ suffix: <FaAddressBookIcon />, gap: 0.5 }}>
+        0.5
+      </Text>
+      <Text {...args} icon={{ suffix: <FaAddressBookIcon />, gap: 1 }}>
+        1
+      </Text>
+    </Stack>
+  ),
+}
+
+export const MaxLines: StoryObj<typeof Text> = {
+  name: 'maxLines',
+  render: ({ children, ...rest }) => (
+    <Stack>
+      {[undefined, 1, 2, 3, 4, 5, 6].map((maxLines) => (
+        <div key={maxLines}>
+          <b>maxLines: {maxLines || '未指定'}</b>
+          <br />
+          <Text {...rest} maxLines={maxLines}>
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+            {children}
+          </Text>
+        </div>
+      ))}
     </Stack>
   ),
 }

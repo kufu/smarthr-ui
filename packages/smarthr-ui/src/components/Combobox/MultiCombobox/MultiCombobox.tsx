@@ -32,9 +32,9 @@ import { useMultiOptions } from '../useOptions'
 import { MultiSelectedItem } from './MultiSelectedItem'
 
 import type { DecoratorsType } from '../../../hooks/useDecorators'
-import type { BaseProps, ComboboxItem } from '../types'
+import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
-type Props<T> = BaseProps<T> & {
+type AbstractProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテムのリスト
    */
@@ -76,8 +76,8 @@ type Props<T> = BaseProps<T> & {
    */
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
+type Props<T> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
 
 const NOOP = () => undefined
 
@@ -178,7 +178,7 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     style,
     ...rest
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const { localize } = useIntl()
@@ -319,7 +319,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
 
-  const onKeyDown = useMemo(
+  const onDelegateKeyDown = useMemo(
     () =>
       isComposing
         ? undefined
@@ -378,7 +378,7 @@ const ActualMultiCombobox = <T,>(
     ],
   )
 
-  const onClick = useMemo(
+  const onDelegateClick = useMemo(
     () =>
       disabled || isFocused
         ? undefined
@@ -426,7 +426,7 @@ const ActualMultiCombobox = <T,>(
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const actualOnKeyPress = useMemo(
+  const onDelegateKeyPress = useMemo(
     () =>
       onKeyPress
         ? (e: KeyboardEvent<HTMLInputElement>) => {
@@ -492,9 +492,9 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={outerRef}
       role="group"
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-      onKeyPress={actualOnKeyPress}
+      onClick={onDelegateClick}
+      onKeyDown={onDelegateKeyDown}
+      onKeyPress={onDelegateKeyPress}
       className={classNames.wrapper}
       style={wrapperStyle}
     >

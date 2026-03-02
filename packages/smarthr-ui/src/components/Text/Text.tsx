@@ -1,5 +1,17 @@
-import { type ComponentProps, type ElementType, type PropsWithChildren, memo, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type ElementType,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
+
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
+
+import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { Gap } from '../../types'
 
 type StyleType =
   | 'screenTitle'
@@ -88,11 +100,75 @@ const classNameGenerator = tv({
       'pre-line': 'shr-whitespace-pre-line',
       'pre-wrap': 'shr-whitespace-pre-wrap',
     },
+    maxLines: {
+      1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+      2: 'shr-line-clamp-[2]',
+      3: 'shr-line-clamp-[3]',
+      4: 'shr-line-clamp-[4]',
+      5: 'shr-line-clamp-[5]',
+      6: 'shr-line-clamp-[6]',
+    },
   },
   defaultVariants: {
     italic: 'undefined',
   },
 })
+
+const wrapperClassNameGenerator = tv({
+  base: [
+    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline',
+  ],
+  variants: {
+    gap: {
+      0: 'shr-gap-x-0',
+      0.25: 'shr-gap-x-0.25',
+      0.5: 'shr-gap-x-0.5',
+      0.75: 'shr-gap-x-0.75',
+      1: 'shr-gap-x-1',
+      1.25: 'shr-gap-x-1.25',
+      1.5: 'shr-gap-x-1.5',
+      2: 'shr-gap-x-2',
+      2.5: 'shr-gap-x-2.5',
+      3: 'shr-gap-x-3',
+      3.5: 'shr-gap-x-3.5',
+      4: 'shr-gap-x-4',
+      8: 'shr-gap-x-8',
+      '-0.25': '-shr-gap-x-0.25',
+      '-0.5': '-shr-gap-x-0.5',
+      '-0.75': '-shr-gap-x-0.75',
+      '-1': '-shr-gap-x-1',
+      '-1.25': '-shr-gap-x-1.25',
+      '-1.5': '-shr-gap-x-1.5',
+      '-2': '-shr-gap-x-2',
+      '-2.5': '-shr-gap-x-2.5',
+      '-3': '-shr-gap-x-3',
+      '-3.5': '-shr-gap-x-3.5',
+      '-4': '-shr-gap-x-4',
+      '-8': '-shr-gap-x-8',
+      X3S: 'shr-gap-x-0.25',
+      XXS: 'shr-gap-x-0.5',
+      XS: 'shr-gap-x-1',
+      S: 'shr-gap-x-1.5',
+      M: 'shr-gap-x-2',
+      L: 'shr-gap-x-2.5',
+      XL: 'shr-gap-x-3',
+      XXL: 'shr-gap-x-3.5',
+      X3L: 'shr-gap-x-4',
+    } as { [key in Gap]: string },
+  },
+})
+
+type ActualIconType =
+  | undefined
+  | {
+      /** テキスト左に設置するアイコン */
+      prefix?: ReactNode
+      /** テキスト右に設置するアイコン */
+      suffix?: ReactNode
+      /** アイコンと並べるテキストとの溝 */
+      gap?: CharRelativeSize | AbstractSize
+    }
+type IconType = ActualIconType | ReactNode
 
 // VariantProps を使うとコメントが書けない〜🥹
 // italicはtailwind-variantsの仕様でundefinedがfalseとして扱われるのを回避するワークアラウンドの都合でTextPropsで再定義している
@@ -108,11 +184,16 @@ export type TextProps<T extends ElementType = 'span'> = Omit<
   styleType?: StyleType
   /** 斜体にするかどうかの真偽値 */
   italic?: boolean
+  /** 設置するアイコン */
+  icon?: IconType
 }
+
+const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 
 const ActualText = <T extends ElementType = 'span'>({
   emphasis,
   styleType,
+  icon: orgIcon,
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
   size,
@@ -120,9 +201,16 @@ const ActualText = <T extends ElementType = 'span'>({
   color,
   leading,
   whiteSpace,
+  maxLines,
   className,
-  ...props
+  children,
+  ...rest
 }: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
+  if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
+    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+  }
+
+  const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
   const actualClassName = useMemo(() => {
     const styleTypeValues = styleType
       ? STYLE_TYPE_MAP[styleType as StyleType]
@@ -135,11 +223,28 @@ const ActualText = <T extends ElementType = 'span'>({
       leading: leading || styleTypeValues.leading,
       italic: italic ?? 'undefined',
       whiteSpace,
+      maxLines,
       className,
     })
-  }, [size, weight, italic, color, leading, whiteSpace, className, styleType])
+  }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
+  const wrapperClassName = useMemo(
+    () => (icon ? wrapperClassNameGenerator({ gap: icon.gap || 0.25 }) : ''),
+    [icon],
+  )
 
-  return <Component {...props} className={actualClassName} />
+  return (
+    <Component {...rest} className={actualClassName}>
+      {icon ? (
+        <span className={wrapperClassName}>
+          {icon.prefix}
+          {children}
+          {icon.suffix}
+        </span>
+      ) : (
+        children
+      )}
+    </Component>
+  )
 }
 
 export const Text = memo(ActualText) as typeof ActualText

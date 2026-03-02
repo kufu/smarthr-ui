@@ -2,7 +2,7 @@ import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
 import { Badge } from '../Badge'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Badge',

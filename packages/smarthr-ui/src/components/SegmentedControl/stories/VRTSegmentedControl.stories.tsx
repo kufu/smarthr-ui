@@ -2,9 +2,9 @@ import { fireEvent, userEvent, within } from 'storybook/test'
 
 import { FaChartAreaIcon, FaChartBarIcon, FaChartLineIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Option, SegmentedControl } from '../SegmentedControl'
+import { type Option, SegmentedControl } from '../SegmentedControl'
 
-import type { StoryObj } from '@storybook/react'
+import type { StoryObj } from '@storybook/react-webpack5'
 
 const chartBarIcon = <FaChartBarIcon />
 const chartAreaIcon = <FaChartAreaIcon />

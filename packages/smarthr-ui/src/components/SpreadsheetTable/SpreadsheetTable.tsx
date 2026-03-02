@@ -10,10 +10,10 @@ import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   data?: ReactNode[][]
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'table'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: [
@@ -31,16 +31,11 @@ const classNameGenerator = tv({
   ],
 })
 
-export const SpreadsheetTable: FC<Props & ElementProps> = ({
-  data,
-  className,
-  children,
-  ...props
-}) => {
+export const SpreadsheetTable: FC<Props> = ({ data, className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <table {...props} className={actualClassName}>
+    <table {...rest} className={actualClassName}>
       {data && (
         <>
           <MemoizedThead cols={data[0].length} />

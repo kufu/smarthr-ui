@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react'
-
 import { Base } from '../../Base'
+import { Button } from '../../Button'
+import { Cluster } from '../../Layout'
+import { TextLink } from '../../TextLink'
 import { Timeline } from '../Timeline'
 import { TimelineItem } from '../TimelineItem'
-import { Button } from '../../Button'
-import { TextLink } from '../../TextLink'
-import { Cluster } from '../../Layout'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Timeline/VRT',
@@ -23,7 +23,7 @@ export default {
             <Button size="s" variant="text">
               ボタン
             </Button>
-            <TextLink href="#" size="S">
+            <TextLink href="https://smarthr.design/" size="S">
               リンク
             </TextLink>
           </Cluster>
@@ -42,7 +42,7 @@ export default {
             <Button size="s" variant="text">
               ボタン
             </Button>
-            <TextLink href="#" size="S">
+            <TextLink href="https://smarthr.design/" size="S">
               リンク
             </TextLink>
           </Cluster>

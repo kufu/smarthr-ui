@@ -15,7 +15,7 @@ export type SideNavItemButtonProps = Omit<
   'size' | 'onClick'
 >
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** 各アイテムのデータの配列
    * @deprecated SideNavItemButton を使ってください
    */
@@ -23,28 +23,36 @@ type Props = PropsWithChildren<{
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>,
+    id: string,
+  ) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-SideNav', 'shr-list-none shr-bg-column'],
 })
 
-export const SideNav: FC<Props & ElementProps> = ({
+export const SideNav: FC<Props> = ({
   items,
   size = 'default',
   onClick,
   className,
   children,
-  ...props
+  ...rest
 }) => {
   const actualOnClick = useMemo(
     () =>
       onClick
-        ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, e.currentTarget.value)
+        ? (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) =>
+            onClick(
+              e,
+              ((e as React.MouseEvent<HTMLButtonElement, MouseEvent>).currentTarget.value ||
+                e.currentTarget.getAttribute('data-value')) as string,
+            )
         : undefined,
     [onClick],
   )
@@ -52,7 +60,7 @@ export const SideNav: FC<Props & ElementProps> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <ul {...props} className={actualClassName}>
+    <ul {...rest} className={actualClassName}>
       {items
         ? items.map((item) => (
             <SideNavItemButton

@@ -5,7 +5,6 @@ import {
   type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
-  Fragment,
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
@@ -13,42 +12,43 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
-import { StatusLabel } from '../StatusLabel'
 import { Text, type TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from '../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { Gap } from '../../types'
+import type { StatusLabel } from '../StatusLabel'
 
-type StatusLabelProps = ComponentProps<typeof StatusLabel>
-type StatusLabelType = FunctionComponentElement<StatusLabelProps>
+type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 
-type Props = PropsWithChildren<{
-  /** グループのタイトル名 */
-  label: ReactNode
-  /** タイトルの見出しのタイプ */
-  labelType?: TextProps['styleType']
+type ObjectLabelType = {
+  text: ReactNode
+  /** ラベルの表示タイプ */
+  styleType?: TextProps['styleType']
+  /** ラベル左に設置するアイコン */
+  icon?: ReactNode
+  /** ラベルを視覚的に隠すかどうか */
+  unrecommendedHide?: boolean
+  /** ラベルを紐づける入力要素のID属性と同じ値 */
+  htmlFor?: string
+  /** ラベルに適用する `id` 値 */
+  id?: string
+}
+type AbstractProps = PropsWithChildren<{
+  /** グループのラベル名 */
+  label: ReactNode | ObjectLabelType
   /** タイトル右の領域 */
   subActionArea?: ReactNode
-  /** タイトルの見出しを視覚的に隠すかどうか */
-  dangerouslyHideLabel?: boolean
-  /** label 要素に適用する `htmlFor` 値 */
-  htmlFor?: string
-  /** label 要素に適用する `id` 値 */
-  labelId?: string
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
   innerMargin?: Gap
-  /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
-  /**
-   * @deprecated statusLabelProps属性は非推奨です。statusLabelsを使ってください。
-   */
-  statusLabelProps?: StatusLabelProps | StatusLabelProps[]
   /** タイトルの隣に表示する `StatusLabel` の配列 */
   statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
@@ -65,7 +65,10 @@ type Props = PropsWithChildren<{
   disabled?: boolean
   as?: string | ComponentType<any>
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
+type Props = AbstractProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'aria-labelledby'>
+
+const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
 const classNameGenerator = tv({
   slots: {
@@ -75,13 +78,14 @@ const classNameGenerator = tv({
       'disabled:shr-text-disabled',
       '[&:disabled_.smarthr-ui-FormControl-label_>_span]:shr-text-disabled',
       '[&:disabled_.smarthr-ui-FormControl-exampleMessage]:shr-text-color-inherit',
-      '[&:disabled_.smarthr-ui-FormControl-errorMessage]:shr-text-color-inherit',
+      '[&:disabled_.smarthr-ui-FormControl-errorMessage-Icon]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
     label: ['smarthr-ui-FormControl-label'],
     errorList: ['shr-list-none'],
-    errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
+    errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
+    errorMessage: ['smarthr-ui-FormControl-errorMessage'],
     underLabelStack: ['[&&&]:shr-mt-0'],
     childrenWrapper: [],
   },
@@ -139,16 +143,11 @@ const classNameGenerator = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: FC<Props & ElementProps> = ({
-  label,
-  labelType = 'blockTitle',
+export const ActualFormControl: FC<Props> = ({
+  label: orgLabel,
   subActionArea,
-  dangerouslyHideLabel = false,
-  htmlFor,
-  labelId,
   innerMargin,
   statusLabels,
-  statusLabelProps,
   helpMessage,
   exampleMessage,
   errorMessages,
@@ -157,12 +156,17 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   as = 'div',
   className,
   children,
-  ...props
+  ...rest
 }) => {
+  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
+    orgLabel,
+    labelObjectConverter,
+  )
   const defaultHtmlFor = useId()
   const defaultLabelId = useId()
-  const managedHtmlFor = htmlFor || defaultHtmlFor
-  const managedLabelId = labelId || defaultLabelId
+  const [childInputId, setChildInputId] = useState<string>('')
+  const managedHtmlFor = label.htmlFor || childInputId || defaultHtmlFor
+  const managedLabelId = label.id || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isFieldset = as === 'fieldset'
 
@@ -185,21 +189,10 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
 
-  const actualStatusLabels = useMemo(() => {
-    if (statusLabels) {
-      return (Array.isArray(statusLabels) ? statusLabels : [statusLabels]).map(
-        (statusLabel, index) => <Fragment key={index}>{statusLabel}</Fragment>,
-      )
-    }
-
-    if (!statusLabelProps) {
-      return []
-    }
-
-    const labelProps = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
-
-    return labelProps.map((prop, index) => <StatusLabel {...prop} key={index} />)
-  }, [statusLabels, statusLabelProps])
+  const actualStatusLabels = useMemo(
+    () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
+    [statusLabels],
+  )
 
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
@@ -217,14 +210,15 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     return {
       wrapper: generators.wrapper({ className }),
       label: generators.label({
-        className: dangerouslyHideLabel ? visuallyHiddenTextClassNameGenerator() : '',
+        className: label.unrecommendedHide ? visuallyHiddenTextClassName : '',
       }),
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
+      errorMessage: generators.errorMessage(),
       underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
     }
-  }, [innerMargin, isFieldset, dangerouslyHideLabel, className])
+  }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
   useEffect(() => {
     if (
@@ -242,7 +236,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
       return
     }
 
-    if (!input.getAttribute('id')) {
+    const inputId = input.getAttribute('id')
+
+    if (inputId) {
+      setChildInputId(inputId)
+    } else {
       input.setAttribute('id', managedHtmlFor)
     }
 
@@ -301,38 +299,31 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
   useEffect(() => {
     if (!isFieldset || !inputWrapperRef.current) return
 
-    const inputs = inputWrapperRef.current.querySelectorAll(SMARTHR_UI_INPUT_SELECTOR)
+    const inputs =
+      inputWrapperRef.current.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!inputs.length) return
 
-    const legendText = innerText(label)
+    const legendText = innerText(label.text)
 
     if (!legendText) return
 
-    const labelMap = new Map(
-      Array.from(document.querySelectorAll('label[for]')).map((l) => [l.getAttribute('for'), l]),
-    )
+    inputs.forEach((input: HTMLInputElement) => {
+      const accessibleName =
+        input.getAttribute('aria-label') ||
+        (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
+          ? input.labels![0].textContent
+          : '')
 
-    inputs.forEach((input) => {
-      const inputId = input.getAttribute('id')
-      let accessibleName = input.getAttribute('aria-label')
-
-      if (!accessibleName) {
-        const l = labelMap.get(inputId)
-
-        if (!l?.closest('.smarthr-ui-VisuallyHiddenText')) {
-          // HINT: <label> があり、かつ <VisuallyHiddenText> でラップされていない場合
-          return
-        }
-
-        accessibleName = l.textContent || ''
-      }
-
-      if (accessibleName && !accessibleName.includes(legendText)) {
-        input.setAttribute('aria-label', `${accessibleName} ${legendText}`.trim())
+      if (
+        accessibleName &&
+        !accessibleName.includes(legendText) &&
+        !legendText.includes(accessibleName)
+      ) {
+        input.setAttribute('aria-label', `${accessibleName} ${legendText}`)
       }
     })
-  }, [isFieldset, label])
+  }, [isFieldset, label.text])
 
   let body = (
     <>
@@ -353,10 +344,10 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
     </>
   )
 
-  // HINT: dangerouslyHideLabelの場合、body以下の余白の計算を簡略化するため
+  // HINT: label.unrecommendedHideの場合、body以下の余白の計算を簡略化するため
   // Stackをネストし、そのStackに対してmargin-top: 0を指定する
   // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
-  if (dangerouslyHideLabel) {
+  if (label.unrecommendedHide) {
     body = (
       <Stack gap={actualInnerMargin} className={classNames.underLabelStack}>
         {body}
@@ -366,7 +357,7 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 
   return (
     <Stack
-      {...props}
+      {...rest}
       as={as}
       gap={actualInnerMargin}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
@@ -376,9 +367,10 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
-        dangerouslyHideLabel={dangerouslyHideLabel}
-        labelType={labelType}
-        label={label}
+        unrecommendedHideLabel={label.unrecommendedHide}
+        labelType={label.styleType}
+        label={label.text}
+        labelIcon={label.icon}
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
         labelClassName={classNames.label}
@@ -389,8 +381,11 @@ export const ActualFormControl: FC<Props & ElementProps> = ({
 }
 
 const LabelCluster = memo<
-  Pick<Props, 'dangerouslyHideLabel' | 'label' | 'subActionArea'> & {
+  Pick<Props, 'subActionArea'> & {
+    label: ReactNode
     labelType: TextProps['styleType']
+    labelIcon?: ReactNode
+    unrecommendedHideLabel?: boolean
     isFieldset: boolean
     managedHtmlFor: string
     managedLabelId: string
@@ -402,22 +397,25 @@ const LabelCluster = memo<
     isFieldset,
     managedHtmlFor,
     managedLabelId,
-    dangerouslyHideLabel,
-    labelType,
+    unrecommendedHideLabel,
+    labelType = 'blockTitle',
     label,
+    labelIcon,
     subActionArea,
     labelClassName,
     statusLabels,
   }) => {
     const body = (
       <>
-        <Text styleType={labelType}>{label}</Text>
+        <Text styleType={labelType} icon={labelIcon}>
+          {label}
+        </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
 
     const attrs = useMemo(() => {
-      if (dangerouslyHideLabel) {
+      if (unrecommendedHideLabel) {
         return {
           label: null,
           visuallyHidden: isFieldset
@@ -447,7 +445,7 @@ const LabelCluster = memo<
         },
         visuallyHidden: null,
       }
-    }, [managedLabelId, managedHtmlFor, dangerouslyHideLabel, isFieldset])
+    }, [managedLabelId, managedHtmlFor, unrecommendedHideLabel, isFieldset])
 
     return (
       <>
@@ -517,13 +515,19 @@ const ErrorMessageList = memo<{
   classNames: {
     errorList: string
     errorIcon: string
+    errorMessage: string
   }
 }>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
     <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
-          <FaCircleExclamationIcon text={message} className={classNames.errorIcon} />
+          <Text
+            className={classNames.errorMessage}
+            icon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
+          >
+            {message}
+          </Text>
         </p>
       ))}
     </div>
@@ -546,4 +550,4 @@ const SupplementaryMessageText = memo<
   ) : null,
 )
 
-export const FormControl: FC<Omit<Props & ElementProps, 'as' | 'disabled'>> = ActualFormControl
+export const FormControl: FC<Omit<Props, 'as' | 'disabled'>> = ActualFormControl

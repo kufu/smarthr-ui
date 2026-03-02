@@ -82,14 +82,14 @@ const classNameGenerator = tv({
 })
 
 export const Reel = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...props }, ref) => {
+  ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...rest }, ref) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ gap, padding, className }),
       [className, gap, padding],
     )
 
     const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...props} ref={ref} className={actualClassName} />
+    const body = <Component {...rest} ref={ref} className={actualClassName} />
 
     if (Wrapper) {
       return <Wrapper>{body}</Wrapper>

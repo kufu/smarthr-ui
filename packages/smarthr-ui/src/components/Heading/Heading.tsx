@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type PropsWithChildren, memo, useContext, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useContext,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
@@ -32,34 +39,36 @@ type StylingProps =
       size?: never
     }
 
-export type Props = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
-   * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
-  tag?: HeadingTagTypes
-
+  unrecommendedTag?: HeadingTagTypes
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
+  /** テキスト左に設置するアイコン */
+  icon?: ReactNode
 }> &
   StylingProps
 
 export type ElementProps = Omit<
   ComponentProps<'h1'>,
-  keyof Props | keyof TextProps | 'role' | 'aria-level'
+  keyof AbstractProps | keyof TextProps | 'role' | 'aria-level'
 >
+type Props = AbstractProps & ElementProps
 
-const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
+const generateTagProps = (level: number, unrecommendedTag?: HeadingTagTypes) => {
   let role = undefined
   let ariaLevel = undefined
 
   // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
-  if (!tag && level > 6) {
+  if (!unrecommendedTag && level > 6) {
     role = 'heading'
     ariaLevel = level
   }
 
   return {
-    as: tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
+    as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
     role,
     'aria-level': ariaLevel,
   }
@@ -77,23 +86,38 @@ const classNameGenerator = tv({
   },
 })
 
-export const Heading = memo<Props & ElementProps>(
-  ({ tag, type = 'sectionTitle', size, className, visuallyHidden, ...props }) => {
+export const Heading = memo<Props>(
+  ({ unrecommendedTag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest }) => {
     const level = useContext(LevelContext)
-    const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
+    const tagProps = useMemo(
+      () => generateTagProps(level, unrecommendedTag),
+      [level, unrecommendedTag],
+    )
     const actualClassName = useMemo(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
     const actualTypography = useMemo(() => {
       const defaultTypography = STYLE_TYPE_MAP[type]
+
       if (type === 'sectionTitle' && size) {
         return { ...defaultTypography, size }
       }
+
       return defaultTypography
     }, [type, size])
-    const Component = visuallyHidden ? VisuallyHiddenText : Text
 
-    return <Component {...props} {...actualTypography} {...tagProps} className={actualClassName} />
+    const commonProps = {
+      ...rest,
+      ...actualTypography,
+      ...tagProps,
+      className: actualClassName,
+    }
+
+    if (visuallyHidden) {
+      return <VisuallyHiddenText {...commonProps} />
+    }
+
+    return <Text {...commonProps} icon={icon} />
   },
 )

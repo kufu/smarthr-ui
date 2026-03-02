@@ -6,7 +6,7 @@ import { Center, Stack } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
 
-type Props = {
+type AbstractProps = {
   /** ロゴ */
   logo?: ReactNode
   /** コンテンツの上に表示されるタイトル */
@@ -25,25 +25,17 @@ type Props = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-ErrorScreen shr-bg-background',
 })
 
-export const ErrorScreen: FC<Props & ElementProps> = ({
-  logo,
-  title,
-  links,
-  children,
-  className,
-  ...props
-}) => {
+export const ErrorScreen: FC<Props> = ({ logo, title, links, children, className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Center {...props} minHeight="100vh" verticalCentering className={actualClassName}>
+    <Center {...rest} minHeight="100vh" verticalCentering className={actualClassName}>
       <Stack gap={1.5} align="center" className="[&&&]:shr-my-auto">
         <div className="smarthr-ui-ErrorScreen-logo">
           {logo || <SmartHRLogo fill="brand" className="shr-p-0.75" />}

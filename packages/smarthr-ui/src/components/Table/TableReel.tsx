@@ -6,21 +6,20 @@ import { tv } from 'tailwind-variants'
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 import { useReelCells } from './useReelCells'
 
-type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
+type Props = PropsWithChildren &
+  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
+    tableWrapperRef: React.RefObject<HTMLDivElement>
+  }
 
 const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-TableReel', 'shr-relative'],
-    inner: ['smarthr-ui-TableReel-inner', 'shr-relative shr-overflow-auto'],
+    inner: ['smarthr-ui-TableReel-inner', 'shr-relative'],
   },
 })
 
-export const TableReel: FC<PropsWithChildren & ElementProps> = ({
-  className,
-  children,
-  ...props
-}) => {
-  const { showShadow, tableWrapperRef } = useReelCells(children)
+export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...rest }) => {
+  const { showShadow } = useReelCells(children, tableWrapperRef)
 
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator()
@@ -33,7 +32,7 @@ export const TableReel: FC<PropsWithChildren & ElementProps> = ({
 
   return (
     <div className={classNames.wrapper}>
-      <div {...props} ref={tableWrapperRef} className={classNames.inner}>
+      <div {...rest} className={classNames.inner}>
         {children}
       </div>
     </div>

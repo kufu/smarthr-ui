@@ -7,10 +7,11 @@
     "declarationMap": true,
     "sourceMap": true,
     "target": "ES2020",
+    "module": "ES2020",
     "lib": ["ES2020", "DOM", "ES2021.Intl"],
     "moduleResolution": "bundler",
     "skipLibCheck": true
   },
-  "include": ["src/**/*", ".storybook/**/*"],
+  "include": ["src/**/*", ".storybook/**/*", "scripts/**/*"],
   "exclude": ["node_modules"]
 }

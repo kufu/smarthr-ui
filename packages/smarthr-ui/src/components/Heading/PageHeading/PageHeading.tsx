@@ -1,24 +1,36 @@
 'use client'
 
-import { type PropsWithChildren, memo, useMemo } from 'react'
+import { type PropsWithChildren, memo, useEffect, useId, useMemo } from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
-import { VisuallyHiddenText } from '../../VisuallyHiddenText'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
 
 import type { ElementProps } from '../Heading'
 
-export type Props = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
    * テキストのサイズ
    *
    * @default 'XL'
    */
   size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
-
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
+  /**
+   * title要素の自動生成フラグ
+   *
+   * Next.js 環境ではこの値にかかわらずtitleは自動生成されません。metadataなどの方法を利用してください。
+   */
+  autoPageTitle?: boolean
+  /** title要素のprefix */
+  pageTitle?: string
+  /** title要素のsuffix */
+  pageTitleSuffix?: string
 }>
+type Props = AbstractProps & Omit<ElementProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -32,21 +44,73 @@ const classNameGenerator = tv({
   },
 })
 
-export const PageHeading = memo<Props & ElementProps>(
-  ({ size, className, visuallyHidden, ...props }) => {
+export const PageHeading = memo<Props>(
+  ({
+    size,
+    className,
+    visuallyHidden,
+    autoPageTitle = true,
+    pageTitleSuffix = 'SmartHR（スマートHR）',
+    pageTitle,
+    children,
+    ...rest
+  }) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
     const actualTypography = useMemo(() => {
       const defaultTypography = STYLE_TYPE_MAP.screenTitle
+
       if (size) {
         return { ...defaultTypography, size }
       }
+
       return defaultTypography
     }, [size])
+
+    const pseudoTitleId = useId()
+
+    const autoTitleText = useMemo(
+      () =>
+        autoPageTitle && !IS_NEXT_JS
+          ? `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
+          : '',
+      [children, pageTitle, pageTitleSuffix, autoPageTitle],
+    )
+
+    useEffect(() => {
+      if (autoTitleText) {
+        document.title = autoTitleText
+
+        // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
+        // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
+        const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
+          document.createElement('div')) as HTMLDivElement
+
+        pseudoTitle.setAttribute('id', pseudoTitleId)
+        pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
+        pseudoTitle.setAttribute('aria-live', 'polite')
+        document.body.prepend(pseudoTitle)
+
+        requestAnimationFrame(() => {
+          pseudoTitle.textContent = autoTitleText
+        })
+
+        return () => {
+          pseudoTitle.remove()
+        }
+      }
+
+      return undefined
+    }, [autoTitleText, pseudoTitleId])
+
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
-    return <Component {...props} {...actualTypography} as="h1" className={actualClassName} />
+    return (
+      <Component {...rest} {...actualTypography} as="h1" className={actualClassName}>
+        {children}
+      </Component>
+    )
   },
 )

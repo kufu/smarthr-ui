@@ -4,10 +4,9 @@ import { Chip } from '../../Chip'
 import { Stack } from '../../Layout'
 import { Text } from '../../Text'
 import { Table } from '../Table'
-import { TableReel } from '../TableReel'
 import { Th } from '../Th'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof Th> = (args) => (
   <Table>
@@ -117,30 +116,30 @@ export const VAlign: StoryObj<typeof Th> = {
 export const Fixed: StoryObj<typeof Th> = {
   name: 'fixed',
   render: (args) => (
-    <TableReel className="shr-w-[50vw]">
-      <Table>
+    <div className="shr-w-[50vw]">
+      <Table reel>
         <thead>
           <tr>
             <Th {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
             <Th {...args} fixed="left">
-              <Text whiteSpace="nowrap">fixed: left</Text>
+              fixed: left
             </Th>
             {[...Array(20)].map((_, i) => (
               <Th {...args} key={i}>
-                <Text whiteSpace="nowrap">表頭{i + 1}</Text>
+                表頭{i + 1}
               </Th>
             ))}
             <Th {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Th>
             <Th {...args} fixed="right">
-              <Text whiteSpace="nowrap">fixed: right</Text>
+              fixed: right
             </Th>
           </tr>
         </thead>
       </Table>
-    </TableReel>
+    </div>
   ),
 }

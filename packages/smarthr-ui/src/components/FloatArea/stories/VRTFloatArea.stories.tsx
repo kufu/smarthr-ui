@@ -3,7 +3,7 @@ import { Button } from '../../Button'
 import { Stack } from '../../Layout'
 import { FloatArea } from '../FloatArea'
 
-import type { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/FloatArea/VRT',

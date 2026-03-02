@@ -9,7 +9,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type BaseProps = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** 件数 */
   count?: number
   /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
@@ -21,7 +21,7 @@ type BaseProps = PropsWithChildren<{
   /** ドット表示するかどうか */
   dot?: boolean
 }>
-type BadgeProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps> & BaseProps
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -98,23 +98,31 @@ const classNameGenerator = tv({
   ],
 })
 
-export const Badge = memo<BadgeProps>(({ count, showZero, ...rest }) => {
+export const Badge = memo<Props>(({ count, showZero, dot, children, ...rest }) => {
   // ドット表示の場合、数値表示は無いため、早期returnする
-  if (rest.dot) {
-    return <ActualBadge {...rest} />
+  if (dot) {
+    return (
+      <ActualBadge {...rest} dot={dot}>
+        {children}
+      </ActualBadge>
+    )
   }
 
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
 
   // 0値を表示するでもない場合は何も表示しない
-  if (actualCount === undefined && !rest.children) {
+  if (actualCount === undefined && !children) {
     return null
   }
 
-  return <ActualBadge {...rest} count={actualCount} />
+  return (
+    <ActualBadge {...rest} count={actualCount}>
+      {children}
+    </ActualBadge>
+  )
 })
 
-const ActualBadge: FC<Omit<BadgeProps, 'showZero'>> = ({
+const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   count,
   overflowCount,
   type,
@@ -152,7 +160,7 @@ const ActualBadge: FC<Omit<BadgeProps, 'showZero'>> = ({
 
 const Dot = memo<{ className: string }>(({ className }) => <span className={className} />)
 
-const CountText = memo<Pick<BadgeProps, 'count' | 'overflowCount'> & { className: string }>(
+const CountText = memo<Pick<Props, 'count' | 'overflowCount'> & { className: string }>(
   ({ count, overflowCount = 99, className }) =>
     count !== undefined && (
       <Text size="XS" className={className}>

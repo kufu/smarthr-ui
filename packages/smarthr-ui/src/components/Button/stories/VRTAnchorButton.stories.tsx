@@ -1,17 +1,16 @@
-import { ComponentProps } from 'react'
-
 import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
 
-import type { StoryFn, StoryObj } from '@storybook/react'
+import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 type Variant = ComponentProps<typeof AnchorButton>['variant']
 
 /**
  * $ pict anchor-button.txt
- * size    disabled disabledDetail prefix suffix wide
+ * size    disabled inactiveReason prefix suffix wide
  * s       true     なし           なし   なし   true
  * default false    なし           なし   あり   false
  * s       false    なし           あり   なし   false
@@ -25,7 +24,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 's',
     href: undefined,
-    disabledDetail: undefined,
+    inactiveReason: undefined,
     prefix: undefined,
     suffix: undefined,
     wide: true,
@@ -33,7 +32,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 'default',
     href: '#',
-    disabledDetail: undefined,
+    inactiveReason: undefined,
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
     wide: false,
@@ -41,7 +40,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 's',
     href: '#',
-    disabledDetail: undefined,
+    inactiveReason: undefined,
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: false,
@@ -49,7 +48,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 'default',
     href: undefined,
-    disabledDetail: { message: 'ボタンが無効な理由' },
+    inactiveReason: { message: 'ボタンが無効な理由' },
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
     wide: false,
@@ -57,7 +56,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 's',
     href: '#',
-    disabledDetail: undefined,
+    inactiveReason: undefined,
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
     wide: true,
@@ -65,7 +64,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 'default',
     href: undefined,
-    disabledDetail: { message: 'ボタンが無効な理由' },
+    inactiveReason: { message: 'ボタンが無効な理由' },
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: false,
@@ -73,7 +72,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 's',
     href: undefined,
-    disabledDetail: { message: 'ボタンが無効な理由' },
+    inactiveReason: { message: 'ボタンが無効な理由' },
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: false,
@@ -81,7 +80,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
     size: 'default',
     href: undefined,
-    disabledDetail: undefined,
+    inactiveReason: undefined,
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: true,
