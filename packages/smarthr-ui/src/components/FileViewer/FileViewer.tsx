@@ -179,7 +179,7 @@ const Controller: FC<ControllerProps> = memo(
           <Button
             onClick={onClickScaleDownButton}
             disabled={scale <= scaleSteps[0]}
-            className="shr-rounded-none shr-border-none"
+            className="shr-rounded-r-none shr-border-none"
           >
             <FaMagnifyingGlassMinusIcon
               alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
@@ -206,7 +206,7 @@ const Controller: FC<ControllerProps> = memo(
               </Button>
             ))}
           </DropdownMenuButton>
-          <Button onClick={onClickScaleUpButton} className="shr-rounded-none shr-border-0">
+          <Button onClick={onClickScaleUpButton} className="shr-rounded-l-none shr-border-0">
             <FaMagnifyingGlassPlusIcon
               alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
             />
