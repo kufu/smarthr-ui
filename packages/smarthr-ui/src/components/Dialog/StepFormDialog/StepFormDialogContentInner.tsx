@@ -23,14 +23,19 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
+type ActionThemeType = 'primary' | 'secondary' | 'danger'
+type DecoratorKeyTypes = 'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel'
+
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
     /** アクションボタンのラベル */
-    submitLabel: ReactNode
+    submitLabel:
+      | ReactNode
+      | ((currentStep: StepItem, decorated: Record<DecoratorKeyTypes, ReactNode>) => ReactNode)
     /** アクションボタンのスタイル */
-    actionTheme?: 'primary' | 'secondary' | 'danger'
+    actionTheme?: ActionThemeType | ((currentStep: StepItem) => ActionThemeType)
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param closeDialog ダイアログを閉じる関数
@@ -59,8 +64,6 @@ export type StepFormDialogContentInnerProps = AbstractProps & {
   stepLength: number
   onClickBack?: () => void
 }
-
-type DecoratorKeyTypes = 'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel'
 
 const BUTTON_COLUMN_GAP = {
   row: 0.5,
@@ -161,7 +164,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   )
 
   const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
-  const actionText = activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
+  const actionText = useMemo(() => {
+    if (typeof submitLabel === 'function') {
+      return submitLabel(currentStep, decorated)
+    }
+
+    return activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
+  }, [activeStep, currentStep, submitLabel, stepLength, decorated])
+  const actualActionTheme = useMemo(
+    () => (typeof actionTheme === 'function' ? actionTheme(currentStep) : actionTheme),
+    [currentStep, actionTheme],
+  )
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
@@ -204,7 +217,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                 </Button>
                 <Button
                   type="submit"
-                  variant={actionTheme}
+                  variant={actualActionTheme}
                   disabled={actionDisabled}
                   loading={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-actionButton"
