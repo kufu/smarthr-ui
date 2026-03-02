@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "85.0.0",
+  "version": "87.1.1",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -19,10 +19,10 @@
     "react-transition-group": "^4.4.5",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^3.4.19",
-    "typescript-eslint": "^8.55.0"
+    "typescript-eslint": "^8.56.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.6",
+    "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.28.6",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
@@ -31,62 +31,53 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@rollup/plugin-typescript": "^12.1.4",
     "@storybook/addon-docs": "9.0.18",
-    "@storybook/addon-styling-webpack": "^2.0.0",
-    "@storybook/addon-webpack5-compiler-babel": "^3.0.6",
     "@storybook/cli": "9.0.18",
     "@storybook/react": "9.0.18",
-    "@storybook/react-webpack5": "9.0.18",
-    "@swc/core": "^1.15.11",
-    "@testing-library/jest-dom": "^6.6.4",
+    "@storybook/react-vite": "9.0.18",
+    "@vitejs/plugin-react": "^5.1.4",
+    "@swc/core": "^1.15.17",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.range": "^3.2.9",
-    "@types/node": "^20.19.33",
+    "@types/node": "^20.19.35",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^19.2.3",
     "@types/react-transition-group": "^4.4.12",
     "@types/styled-components": "^5.1.36",
-    "autoprefixer": "^10.4.24",
-    "babel-loader": "^10.0.0",
+    "autoprefixer": "^10.4.27",
     "babel-plugin-polyfill-corejs2": "^0.4.15",
     "babel-plugin-polyfill-regenerator": "^0.6.6",
     "chromatic": "^15.0.0",
-    "css-loader": "^7.1.3",
-    "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint-plugin-storybook": "9.0.18",
-    "glob": "13.0.3",
+    "glob": "13.0.6",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
-    "memory-fs": "^0.5.0",
     "npm-run-all2": "^8.0.4",
     "playwright": "^1.54.2",
     "plop": "^4.0.5",
     "postcss": "^8.5.6",
-    "postcss-loader": "^8.1.1",
     "postcss-styled-syntax": "^0.7.1",
     "postcss-syntax": "^0.36.2",
-    "process": "^0.11.10",
     "react": "^19.2.4",
     "react-docgen-typescript": "^2.4.0",
     "react-dom": "^19.2.4",
     "react-ga4": "^2.1.0",
     "react-intl": "^8.1.3",
     "rimraf": "^6.0.1",
-    "rollup": "^4.45.3",
+    "rollup": "^4.59.0",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "rollup-plugin-rename-node-modules": "^1.3.1",
     "standard-version": "^9.3.2",
-    "storybook": "9.0.18",
+    "storybook": "10.2.10",
     "storybook-addon-pseudo-states": "9.0.18",
-    "style-loader": "^4.0.0",
     "styled-components": "^5.3.11",
     "tailwind-merge": "^3.3.1",
-    "ts-loader": "^9.5.4",
+    "tslib": "^2.8.1",
     "tsx": "^4.20.6",
     "vitest": "^4.0.18",
-    "wait-on": "^8.0.5",
-    "webpack": "^5.100.2"
+    "wait-on": "^8.0.5"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -118,28 +109,28 @@
       "stylelint --fix"
     ]
   },
-  "main": "lib/index.js",
-  "module": "esm/index.js",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     },
     "./types": {
       "types": "./lib/types/index.d.ts",
-      "import": "./esm/types/index.js",
-      "require": "./lib/types/index.js"
+      "import": "./lib/types/index.js",
+      "require": "./lib/types/index.cjs"
     },
     "./lib/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js",
-      "import": "./esm/*.js"
+      "import": "./lib/*.js",
+      "require": "./lib/*.cjs"
     },
     "./esm/*": {
       "types": "./lib/*.d.ts",
-      "require": "./lib/*.js",
-      "import": "./esm/*.js"
+      "import": "./lib/*.js",
+      "require": "./lib/*.cjs"
     },
     "./smarthr-ui.css": "./smarthr-ui.css",
     "./package.json": "./package.json",
@@ -154,9 +145,10 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "npm-run-all -p build:esm build:lib build:css -s build:metadata",
-    "build:esm": "rollup --config rollup.esm.config.js",
-    "build:lib": "tsc -p tsconfig.build.json",
+    "build": "npm-run-all -p build:esm build:cjs build:types build:css -s build:metadata",
+    "build:cjs": "rollup --config rollup.cjs.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
+    "build:esm": "rollup --config rollup.esm.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
+    "build:types": "tsc -p tsconfig.build.json",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build:metadata": "tsx scripts/generateMetadata.ts",
     "build-storybook": "storybook build --quiet",
@@ -171,12 +163,11 @@
     "lint:style": "stylelint './**/*.ts{,x}'",
     "lint:tsc": "tsc --noEmit -p tsconfig.build.json",
     "prepublishOnly": "run-s clean lint build",
-    "release": "standard-version -a",
-    "release:dryrun": "standard-version --dry-run",
+    "_release": "standard-version -a",
+    "_release:dryrun": "standard-version --dry-run",
     "storybook": "storybook dev -p 6006",
     "dev": "run-s storybook",
     "test": "vitest",
-    "test:build-assets": "tsx scripts/build-test.ts",
     "chromatic": "chromatic",
     "scaffold:storybook": "plop"
   },
