@@ -6,8 +6,6 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
-const italicOptions = { なし: undefined, true: true, false: false }
-
 export default {
   title: 'Components/Text',
   component: Text,
@@ -18,15 +16,9 @@ export default {
       options: Object.keys(asOptions),
       mapping: asOptions,
     },
-    italic: {
-      control: 'radio',
-      options: Object.keys(italicOptions),
-      mapping: italicOptions,
-    },
   },
   args: {
     children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
-    italic: false,
     emphasis: false,
     as: 'なし',
   },
@@ -76,13 +68,6 @@ export const Color: StoryObj<typeof Text> = {
       <Text {...args} color="inherit" />
     </Stack>
   ),
-}
-
-export const Italic: StoryObj<typeof Text> = {
-  name: 'italic',
-  args: {
-    italic: true,
-  },
 }
 
 export const Leading: StoryObj<typeof Text> = {
