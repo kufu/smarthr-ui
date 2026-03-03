@@ -77,10 +77,10 @@ importers:
         version: 9.0.5(stylelint@17.3.0(typescript@5.9.3))
       stylelint-config-smarthr:
         specifier: ^3.0.2
-        version: 3.0.2(postcss-styled-syntax@0.7.1(postcss@8.5.6))(stylelint-config-standard@39.0.1(stylelint@17.3.0(typescript@5.9.3)))(stylelint@17.3.0(typescript@5.9.3))
+        version: 3.0.2(postcss-styled-syntax@0.7.1(postcss@8.5.6))(stylelint-config-standard@40.0.0(stylelint@17.3.0(typescript@5.9.3)))(stylelint@17.3.0(typescript@5.9.3))
       stylelint-config-standard:
-        specifier: ^39.0.1
-        version: 39.0.1(stylelint@17.3.0(typescript@5.9.3))
+        specifier: ^40.0.0
+        version: 40.0.0(stylelint@17.3.0(typescript@5.9.3))
       stylelint-config-styled-components:
         specifier: ^0.1.1
         version: 0.1.1
@@ -5275,6 +5275,7 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qified@0.6.0:
@@ -5862,11 +5863,11 @@ packages:
     peerDependencies:
       stylelint: '>= 11.x < 15'
 
-  stylelint-config-recommended@17.0.0:
-    resolution: {integrity: sha512-WaMSdEiPfZTSFVoYmJbxorJfA610O0tlYuU2aEwY33UQhSPgFbClrVJYWvy3jGJx+XW37O+LyNLiZOEXhKhJmA==}
-    engines: {node: '>=18.12.0'}
+  stylelint-config-recommended@18.0.0:
+    resolution: {integrity: sha512-mxgT2XY6YZ3HWWe3Di8umG6aBmWmHTblTgu/f10rqFXnyWxjKWwNdjSWkgkwCtxIKnqjSJzvFmPT5yabVIRxZg==}
+    engines: {node: '>=20.19.0'}
     peerDependencies:
-      stylelint: ^16.23.0
+      stylelint: ^17.0.0
 
   stylelint-config-smarthr@3.0.2:
     resolution: {integrity: sha512-xTRiSejyNDLpsCaM/tDUSHvf8fp/IU+xE12S2S4hJJs/B1CCt5Pi67Nhr2s1vijxlYcRnXg9Bqqae5Hdt+lNeA==}
@@ -5875,11 +5876,11 @@ packages:
       stylelint: ^16.0.0
       stylelint-config-standard: ^33.0.0 || ^34.0.0 || ^35.0.0 || ^36.0.0
 
-  stylelint-config-standard@39.0.1:
-    resolution: {integrity: sha512-b7Fja59EYHRNOTa3aXiuWnhUWXFU2Nfg6h61bLfAb5GS5fX3LMUD0U5t4S8N/4tpHQg3Acs2UVPR9jy2l1g/3A==}
-    engines: {node: '>=18.12.0'}
+  stylelint-config-standard@40.0.0:
+    resolution: {integrity: sha512-EznGJxOUhtWck2r6dJpbgAdPATIzvpLdK9+i5qPd4Lx70es66TkBPljSg4wN3Qnc6c4h2n+WbUrUynQ3fanjHw==}
+    engines: {node: '>=20.19.0'}
     peerDependencies:
-      stylelint: ^16.23.0
+      stylelint: ^17.0.0
 
   stylelint-config-styled-components@0.1.1:
     resolution: {integrity: sha512-z5Xz/9GmvxO6e/DLzBMwkB85zHxEEjN6K7Cj80Bi+o/9vR9eS3GX3E9VuMnX9WLFYulqbqLtTapGGY28JBiy9Q==}
@@ -12314,20 +12315,20 @@ snapshots:
     dependencies:
       stylelint: 17.3.0(typescript@5.9.3)
 
-  stylelint-config-recommended@17.0.0(stylelint@17.3.0(typescript@5.9.3)):
+  stylelint-config-recommended@18.0.0(stylelint@17.3.0(typescript@5.9.3)):
     dependencies:
       stylelint: 17.3.0(typescript@5.9.3)
 
-  stylelint-config-smarthr@3.0.2(postcss-styled-syntax@0.7.1(postcss@8.5.6))(stylelint-config-standard@39.0.1(stylelint@17.3.0(typescript@5.9.3)))(stylelint@17.3.0(typescript@5.9.3)):
+  stylelint-config-smarthr@3.0.2(postcss-styled-syntax@0.7.1(postcss@8.5.6))(stylelint-config-standard@40.0.0(stylelint@17.3.0(typescript@5.9.3)))(stylelint@17.3.0(typescript@5.9.3)):
     dependencies:
       postcss-styled-syntax: 0.7.1(postcss@8.5.6)
       stylelint: 17.3.0(typescript@5.9.3)
-      stylelint-config-standard: 39.0.1(stylelint@17.3.0(typescript@5.9.3))
+      stylelint-config-standard: 40.0.0(stylelint@17.3.0(typescript@5.9.3))
 
-  stylelint-config-standard@39.0.1(stylelint@17.3.0(typescript@5.9.3)):
+  stylelint-config-standard@40.0.0(stylelint@17.3.0(typescript@5.9.3)):
     dependencies:
       stylelint: 17.3.0(typescript@5.9.3)
-      stylelint-config-recommended: 17.0.0(stylelint@17.3.0(typescript@5.9.3))
+      stylelint-config-recommended: 18.0.0(stylelint@17.3.0(typescript@5.9.3))
 
   stylelint-config-styled-components@0.1.1: {}
 
