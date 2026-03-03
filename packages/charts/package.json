@@ -65,7 +65,7 @@
     "@types/styled-components": "^5.1.36",
     "autoprefixer": "^10.4.27",
     "glob": "13.0.6",
-    "jsdom": "^26.1.0",
+    "jsdom": "^28.1.0",
     "npm-run-all2": "^8.0.4",
     "postcss": "^8.5.6",
     "react": "^19.2.4",
