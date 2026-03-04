@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [87.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.1...smarthr-ui-v87.2.0) (2026-03-04)
+
+
+### Features
+
+* **Th:** デフォルトでwhite-space: nowrapを設定する ([#6119](https://github.com/kufu/smarthr-ui/issues/6119)) ([49d7664](https://github.com/kufu/smarthr-ui/commit/49d766483d52481ad1e30bfe4f0644c83b1f998b))
+
 ## [87.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.0...smarthr-ui-v87.1.1) (2026-02-27)
 
 
