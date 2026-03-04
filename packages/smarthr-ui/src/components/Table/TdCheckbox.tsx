@@ -7,7 +7,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { Td } from './Td'
 
 type AbstractProps = PropsWithChildren<{
-  /** RadioButtonのa11y nameとして設定するテキストを持つ同じ親Tr以下のTd,Th,もしくはそれらの子孫にある要素のid属性。複数要素を指定する場合は空白区切りでつなぐ */
+  /** Checkboxのaccessible nameとして設定するテキストを持つ同じ親Tr配下のTd,Th,もしくはそれらの子孫にある要素のid属性値。複数要素を指定する場合は空白区切りでつなぐ */
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed'>
