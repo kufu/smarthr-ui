@@ -7,7 +7,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { Td } from './Td'
 
 type AbstractProps = PropsWithChildren<{
-  /** 値を特定するための行 id */
+  /** RadioButtonのa11y nameとして設定するテキストを持つ同じ親Tr以下のTd,Th,もしくはそれらの子孫にある要素のid属性。複数要素を指定する場合は空白区切りでつなぐ */
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed'>
