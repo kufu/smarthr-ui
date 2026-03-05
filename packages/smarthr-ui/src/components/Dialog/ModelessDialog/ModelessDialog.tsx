@@ -105,14 +105,10 @@ const classNameGenerator = tv({
     headerEl:
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
     dialogHandler: [
-      'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
+      'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-border-none shr-bg-inherit shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
       'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
     ],
-    headingEl: [
-      'shr-my-1 shr-me-1',
-      /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
-      '[.smarthr-ui-ModelessDialog-handle:focus-visible_+_&]:shr-relative',
-    ],
+    headingEl: ['shr-relative shr-my-1 shr-me-1'],
     closeButtonLayout: [
       'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
       'shr-ml-auto shr-shrink-0',
@@ -420,7 +416,6 @@ export const ModelessDialog: FC<Props> = ({
           <div className={classNames.header}>
             <Handler
               aria-label={decorated.dialogHandlerAriaLabel}
-              aria-valuetext={decorated.dialogHandlerAriaValuetext}
               onArrowKeyDown={handleArrowKey}
               className={classNames.dialogHandler}
             />
@@ -442,6 +437,7 @@ export const ModelessDialog: FC<Props> = ({
             {children}
           </DialogBody>
           {footer && <div className={classNames.footer}>{footer}</div>}
+          <LiveRegion ariaText={decorated.dialogHandlerAriaValuetext} />
         </Base>
       </Draggable>
     </DialogOverlap>,
@@ -450,15 +446,30 @@ export const ModelessDialog: FC<Props> = ({
 
 const Handler = memo<{
   'aria-label': string
-  'aria-valuetext': string | undefined
   className: string
   onArrowKeyDown: (e: KeyboardEvent) => void
 }>(({ onArrowKeyDown: onDelegateKeyDown, ...rest }) => (
-  // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
-  <div {...rest} tabIndex={0} role="slider" onKeyDown={onDelegateKeyDown}>
+  <button
+    {...rest}
+    type="button"
+    tabIndex={0}
+    aria-roledescription="draggable"
+    onKeyDown={onDelegateKeyDown}
+  >
     <FaGripIcon />
-  </div>
+  </button>
 ))
+
+const LiveRegion = ({ ariaText }: { ariaText: string | undefined }) => (
+  <div
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    className="shr-fixed -shr-m-px shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap"
+  >
+    {ariaText}
+  </div>
+)
 
 const CloseButton = memo<{
   className: string
