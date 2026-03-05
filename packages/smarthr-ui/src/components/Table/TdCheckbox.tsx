@@ -7,7 +7,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { Td } from './Td'
 
 type AbstractProps = PropsWithChildren<{
-  /** Checkboxのaccessible nameとして設定するテキストを持つ同じ親Tr配下のTd,Th,もしくはそれらの子孫にある要素のid属性値。複数要素を指定する場合は空白区切りでつなぐ */
+  /** Checkboxのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed'>
