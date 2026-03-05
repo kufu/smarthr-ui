@@ -2,7 +2,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { SmartHRLogo } from '../../SmartHRLogo'
 import { ErrorScreen } from '../ErrorScreen'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const logoOptions = {
   デフォルト: undefined,

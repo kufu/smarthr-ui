@@ -63,13 +63,13 @@ type AbstractProps = PropsWithChildren<{
 type Props = AbstractProps &
   Omit<ComponentProps<typeof UnstyledButton>, keyof AbstractProps | 'aria-selected' | 'type'>
 
-export const TabItem: FC<Props> = ({ selected = false, disabledReason, ...rest }) => {
+export const TabItem: FC<Props> = ({ selected = false, disabled, disabledReason, ...rest }) => {
   const tabAttrs = {
     role: 'tab',
     'aria-selected': selected,
   }
 
-  if (rest.disabled && disabledReason) {
+  if (disabled && disabledReason) {
     const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
 
     return (
@@ -77,15 +77,15 @@ export const TabItem: FC<Props> = ({ selected = false, disabledReason, ...rest }
         {...tabAttrs}
         message={disabledReason.message}
         ariaDescribedbyTarget="inner"
-        aria-disabled={rest.disabled}
+        aria-disabled={disabled}
         className="focus-visible:shr-focus-indicator--inner"
       >
-        <TabButton {...rest} suffix={Icon} />
+        <TabButton {...rest} disabled={disabled} suffix={Icon} />
       </Tooltip>
     )
   }
 
-  return <TabButton {...rest} {...tabAttrs} />
+  return <TabButton {...rest} {...tabAttrs} disabled={disabled} />
 }
 
 const TabButton: FC<Props> = ({ id, children, suffix, onClick, className, ...rest }) => {

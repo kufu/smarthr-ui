@@ -1,8 +1,8 @@
-import { ComponentPropsWithoutRef } from 'react'
 import { Stack } from '../../../Layout'
 import { PageHeading } from '../PageHeading'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentPropsWithoutRef } from 'react'
 
 export default {
   title: 'Components/Heading/PageHeading',
@@ -55,21 +55,17 @@ export const VisuallyHidden: StoryObj<typeof PageHeading> = {
 export const PageTitle: StoryObj<typeof PageHeading> = {
   name: 'pageTitle',
   render: (args) => (
-    <Stack>
-      <PageHeading {...args} pageTitle="h1">
-        PageHeading
-      </PageHeading>
-    </Stack>
+    <PageHeading {...args} pageTitle="h1">
+      PageHeading
+    </PageHeading>
   ),
 }
 
 export const PageTitleSuffix: StoryObj<typeof PageHeading> = {
   name: 'pageTitleSuffix',
   render: (args) => (
-    <Stack>
-      <PageHeading {...args} pageTitleSuffix="smarthr-ui stories">
-        PageHeading
-      </PageHeading>
-    </Stack>
+    <PageHeading {...args} pageTitleSuffix="smarthr-ui stories">
+      PageHeading
+    </PageHeading>
   ),
 }

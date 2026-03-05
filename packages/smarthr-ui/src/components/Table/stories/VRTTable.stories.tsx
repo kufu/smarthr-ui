@@ -1,10 +1,8 @@
-import { Fragment } from 'react'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
-import { TableReel } from '../TableReel'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { TdRadioButton } from '../TdRadioButton'
@@ -12,7 +10,7 @@ import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Table/VRT',
@@ -20,10 +18,9 @@ export default {
     <Stack>
       {[undefined, 'left', 'right'].map((fixed) =>
         [undefined, 'both'].map((borderType) => {
-          const Wrapper = fixed ? TableReel : Fragment
           const wrapperProps = fixed ? { className: 'shr-w-[50vw]' } : {}
           return (
-            <Wrapper {...wrapperProps} key={String(fixed)}>
+            <div {...wrapperProps} key={String(fixed)}>
               <Table {...args} borderType={borderType as any}>
                 <thead>
                   <tr>
@@ -66,9 +63,7 @@ export default {
                           id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
                         >
-                          <Text whiteSpace="nowrap">
-                            表データ{i + 1}-{j + 1}
-                          </Text>
+                          表データ{i + 1}-{j + 1}
                         </Td>
                       ))}
                       {fixed === 'right' && (
@@ -96,9 +91,7 @@ export default {
                           id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
                         >
-                          <Text whiteSpace="nowrap">
-                            表データ{i + 1}-{j + 1}
-                          </Text>
+                          表データ{i + 1}-{j + 1}
                         </Td>
                       ))}
                       {fixed === 'right' && (
@@ -110,7 +103,7 @@ export default {
                   ))}
                 </tbody>
               </Table>
-            </Wrapper>
+            </div>
           )
         }),
       )}

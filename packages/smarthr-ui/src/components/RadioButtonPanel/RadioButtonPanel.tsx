@@ -20,8 +20,6 @@ type Props = ComponentProps<typeof RadioButton> & {
   label: ReactNode
 }
 
-const NONE_ROLE_TAG_REGEX = /^(div|span)$/
-
 const classNameGenerator = tv({
   slots: {
     base: [
@@ -67,22 +65,17 @@ export const RadioButtonPanel: FC<Props> = ({
 
     return { base: base(), description: description(), radio: radio() }
   }, [className, hasDescription])
-  const role = useMemo(
-    () => (typeof as === 'string' && NONE_ROLE_TAG_REGEX.test(as) ? 'presentation' : undefined),
-    [as],
-  )
 
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
-  const handleOuterClick = useCallback(() => {
+  const onDelegateClick = useCallback(() => {
     innerRef.current?.click()
   }, [])
 
   const descriptionId = useId()
 
   return (
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <Base padding={1} role={role} onClick={handleOuterClick} as={as} className={classNames.base}>
+    <Base padding={1} onClick={onDelegateClick} as={as} className={classNames.base}>
       <RadioButton
         {...rest}
         ref={innerRef}

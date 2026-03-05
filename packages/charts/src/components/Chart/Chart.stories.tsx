@@ -1,5 +1,7 @@
-import { Meta, StoryObj } from '@storybook/react'
 import { Chart } from './Chart'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+
 
 const meta: Meta<typeof Chart> = {
   title: 'Chart',
@@ -166,6 +168,84 @@ export const ManyDatasetsLine: Story = {
         {
           label: 'データJ',
           data: [12, 18, 22, 16, 28, 24],
+        },
+      ],
+    },
+  },
+}
+
+export const BarChartWithDataLabels: Story = {
+  args: {
+    type: 'bar',
+    title: 'データラベル付き棒グラフ',
+    data: {
+      labels: ['1月', '2月', '3月', '4月', '5月'],
+      datasets: [
+        {
+          label: '売上',
+          data: [65, 59, 80, 81, 56],
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          display: true,
+          anchor: 'end',
+          align: 'end',
+          color: '#333',
+          font: {
+            weight: 'bold',
+            size: 12,
+          },
+        },
+      },
+    },
+  },
+}
+
+export const LineChartWithDataLabels: Story = {
+  args: {
+    type: 'line',
+    title: 'データラベル付き線グラフ',
+    data: {
+      labels: ['1月', '2月', '3月', '4月', '5月'],
+      datasets: [
+        {
+          label: '売上',
+          data: [65, 59, 80, 81, 56],
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          display: true,
+          backgroundColor: '#fff',
+          borderColor: '#333',
+          borderWidth: 1,
+          borderRadius: 4,
+          color: '#333',
+          font: {
+            weight: 'bold',
+            size: 12,
+          },
+          padding: 4,
+        },
+      },
+    },
+  },
+}
+
+export const BarChartWithoutTitle: Story = {
+  args: {
+    type: 'bar',
+    data: {
+      labels: ['1月', '2月', '3月', '4月', '5月'],
+      datasets: [
+        {
+          label: '売上',
+          data: [65, 59, 80, 81, 56],
         },
       ],
     },

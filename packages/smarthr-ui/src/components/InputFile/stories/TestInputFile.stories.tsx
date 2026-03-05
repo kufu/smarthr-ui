@@ -1,14 +1,15 @@
 import { useState } from 'react'
+
 import { BaseColumn } from '../../Base'
 import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
+import { Heading } from '../../Heading'
+import { InformationPanel } from '../../InformationPanel'
 import { Stack } from '../../Layout'
 import { Text } from '../../Text'
 import { InputFile } from '../InputFile'
-import { InformationPanel } from '../../InformationPanel'
 
-import type { Meta } from '@storybook/react'
-import { Heading } from '../../Heading'
+import type { Meta } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/InputFile/Test',
@@ -130,19 +131,17 @@ export const ManualTest3 = () => {
           e.preventDefault()
         }}
       >
-        <Stack>
-          <FormControl title="ファイル">
-            <InputFile
-              onChange={(files) => {
-                setValue(files)
-              }}
-              label="ファイルを選択"
-              name="files"
-              multiple
-              hasFileList
-            />
-          </FormControl>
-        </Stack>
+        <FormControl title="ファイル">
+          <InputFile
+            onChange={(files) => {
+              setValue(files)
+            }}
+            label="ファイルを選択"
+            name="files"
+            multiple
+            hasFileList
+          />
+        </FormControl>
       </form>
       <Heading>onChange</Heading>
       <BaseColumn>
@@ -174,19 +173,17 @@ export const ManualTest4 = () => {
           e.preventDefault()
         }}
       >
-        <Stack>
-          <FormControl title="ファイル">
-            <InputFile
-              onChange={(files) => {
-                setValue(files)
-              }}
-              label="ファイルを選択"
-              name="files"
-              multiple={{ appendable: true }}
-              hasFileList
-            />
-          </FormControl>
-        </Stack>
+        <FormControl title="ファイル">
+          <InputFile
+            onChange={(files) => {
+              setValue(files)
+            }}
+            label="ファイルを選択"
+            name="files"
+            multiple={{ appendable: true }}
+            hasFileList
+          />
+        </FormControl>
       </form>
       <Heading>onChange</Heading>
       <BaseColumn>

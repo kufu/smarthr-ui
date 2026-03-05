@@ -1,11 +1,12 @@
 import { action } from 'storybook/actions'
 
+import { FaGearIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
 import { SideNav, type SideNavItemButtonProps } from '../SideNav'
-import { SideNavItemButton, type SideNavSizeType } from '../SideNavItemButton'
+import { SideNavItemAnchor, SideNavItemButton, type SideNavSizeType } from '../SideNavItemButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export const _sideNavItems: SideNavItemButtonProps[] = [
   {
@@ -24,6 +25,13 @@ export const _sideNavItems: SideNavItemButtonProps[] = [
     current: false,
     prefix: <StatusLabel>ラベル</StatusLabel>,
   },
+  {
+    id: 'id-4',
+    children: 'サイドナビ3',
+    current: false,
+    prefix: <FaGearIcon />,
+    suffix: <StatusLabel>ラベル</StatusLabel>,
+  },
 ]
 
 export default {
@@ -40,11 +48,21 @@ export default {
       <SideNav {...rest} items={items} />
     ) : (
       <SideNav {...rest}>
-        {_sideNavItems.map((item) => (
-          <SideNavItemButton key={item.id} id={item.id} current={item.current} prefix={item.prefix}>
-            {item.children}
-          </SideNavItemButton>
-        ))}
+        {_sideNavItems.map((item, index) => {
+          const commonAttrs = {
+            key: item.id,
+            id: item.id,
+            current: item.current,
+            prefix: item.prefix,
+            children: item.children,
+          }
+
+          return index % 2 === 0 ? (
+            <SideNavItemButton {...commonAttrs} />
+          ) : (
+            <SideNavItemAnchor {...commonAttrs} href={`#${index}`} />
+          )
+        })}
       </SideNav>
     )
   },

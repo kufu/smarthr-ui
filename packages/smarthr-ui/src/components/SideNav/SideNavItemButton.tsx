@@ -1,4 +1,11 @@
-import { type ComponentPropsWithoutRef, type FC, type ReactNode, memo, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type FC,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
@@ -13,14 +20,16 @@ type AbstractProps = {
    * @deprecated SideNav で items を使う時の props です。children を使ってください。
    */
   title?: ReactNode
-  /** タイトルのプレフィックスの内容。通常、StatusLabel の配置に用います。 */
+  /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
   prefix?: ReactNode
+  /** タイトルのサフィックスの内容。通常、Prefixを使用済みの場合にStatusLabelやChipの配置に用います。 */
+  suffix?: ReactNode
   /** 選択されているアイテムかどうか */
   current?: boolean
   /** アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) => void
 }
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractProps>
 
@@ -36,8 +45,10 @@ const classNameGenerator = tv({
       'shr-w-full shr-leading-none [&]:shr-box-border',
       'focus-visible:shr-focus-indicator',
       'shr-inline-flex shr-items-center',
+      'shr-no-underline',
     ],
-    buttonInner: 'smarthr-ui-SideNav-itemTitle',
+    body: 'shr-w-full',
+    bodyText: 'smarthr-ui-SideNav-itemBodyText shr-grow',
   },
   variants: {
     size: {
@@ -51,44 +62,90 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideNavItemButton: FC<Props> = ({
-  id,
-  title,
-  prefix,
-  current,
-  size,
-  onClick,
-  children,
-  ...rest
-}) => {
+export const SideNavItemButton: FC<
+  Omit<Props, 'onClick'> & {
+    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  }
+> = ({ id, title, prefix, suffix, current, size, onClick, children, className, ...rest }) => {
   const classNames = useMemo(() => {
-    const { wrapper, button, buttonInner } = classNameGenerator()
+    const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
-      wrapper: wrapper(),
+      wrapper: wrapper({ className }),
       button: button({ size: size ?? 'default' }),
-      buttonInner: buttonInner(),
+      body: body(),
+      bodyText: bodyText(),
     }
-  }, [size])
+  }, [className, size])
 
   return (
     <li {...rest} data-current={!!current} className={classNames.wrapper}>
       <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
-        <ButtonBodyCluster
+        <BodyCluster
           prefix={prefix}
+          suffix={suffix}
           title={children ?? title}
-          titleClassName={classNames.buttonInner}
+          classNames={classNames}
         />
       </UnstyledButton>
     </li>
   )
 }
 
-const ButtonBodyCluster = memo<Pick<Props, 'prefix' | 'title'> & { titleClassName: string }>(
-  ({ prefix, title, titleClassName }) => (
-    <Cluster inline align="center" as="span">
-      {prefix}
-      <span className={titleClassName}>{title}</span>
-    </Cluster>
-  ),
-)
+export const SideNavItemAnchor = <T extends ElementType = 'a'>({
+  id,
+  title,
+  prefix,
+  suffix,
+  current,
+  size,
+  onClick,
+  children,
+  className,
+  href,
+  elementAs,
+  ...rest
+}: Omit<Props, 'onClick'> & {
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+  href: string | undefined
+  /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  elementAs?: T
+}) => {
+  const classNames = useMemo(() => {
+    const { wrapper, button, body, bodyText } = classNameGenerator()
+
+    return {
+      wrapper: wrapper({ className }),
+      button: button({ size: size ?? 'default' }),
+      body: body(),
+      bodyText: bodyText(),
+    }
+  }, [className, size])
+
+  const Anchor = elementAs || 'a'
+
+  return (
+    <li {...rest} data-current={!!current} className={classNames.wrapper}>
+      <Anchor className={classNames.button} href={href} onClick={onClick} data-value={id}>
+        <BodyCluster
+          prefix={prefix}
+          suffix={suffix}
+          title={children ?? title}
+          classNames={classNames}
+        />
+      </Anchor>
+    </li>
+  )
+}
+
+const BodyCluster = memo<
+  Pick<Props, 'prefix' | 'suffix' | 'title'> & {
+    classNames: { body: string; bodyText: string }
+  }
+>(({ prefix, suffix, title, classNames }) => (
+  <Cluster inline align="center" className={classNames.body} as="span">
+    {prefix}
+    <span className={classNames.bodyText}>{title}</span>
+    {suffix}
+  </Cluster>
+))

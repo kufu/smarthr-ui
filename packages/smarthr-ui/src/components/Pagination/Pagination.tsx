@@ -92,7 +92,7 @@ const ActualPagination: FC<Props> = ({
   withoutNumbers,
   hrefTemplate,
   linkAs,
-  ...props
+  ...rest
 }) => {
   const { localize } = useIntl()
   const classNames = useMemo(() => {
@@ -110,7 +110,7 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const actualOnClick = useMemo(() => {
+  const onDelegateClick = useMemo(() => {
     if (!onClick) {
       return undefined
     }
@@ -150,8 +150,8 @@ const ActualPagination: FC<Props> = ({
   )
 
   return (
-    <Nav {...props} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={actualOnClick} role="presentation">
+    <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
+      <Reel onClick={onDelegateClick}>
         <ItemButtons
           total={total}
           current={current}

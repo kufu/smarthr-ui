@@ -4,6 +4,12 @@ import path from 'node:path'
 import { glob } from 'glob'
 import * as docgen from 'react-docgen-typescript'
 
+/*
+ * react-docgen-typescript を使用し型定義ファイルからコンポーネントの Props 情報を抽出し、metadata.json に保存するスクリプト
+ * - 型定義ファイルの生成後に実行する
+ * - デザインシステムサイトでpropsの一覧テーブルを生成するために使用している
+ */
+
 const relativePath = path.relative(process.cwd(), import.meta.dirname)
 const SRC_PATH = path.join(relativePath, '../lib/**/**.d.ts')
 const IGNORE_FILE_WORDS = ['test', 'libs', 'use', 'index.d.ts', 'hocs', 'setupTests']
@@ -25,7 +31,7 @@ glob(SRC_PATH).then(
         },
       },
     )
-    const docs = fileParser.parse(targets).map(({ props, ...other }) => {
+    const docs = fileParser.parse(targets).map(({ props, ...rest }) => {
       const filteredProps = Object.keys(props).flatMap((name) => {
         const propItem = props[name]
         const declarations = propItem.declarations
@@ -42,14 +48,11 @@ glob(SRC_PATH).then(
       })
 
       return {
-        ...other,
+        ...rest,
         props: filteredProps,
       }
     })
-    await fs.writeFile(
-      path.join(import.meta.dirname, '../public/exports/smarthr-ui-props.json'),
-      JSON.stringify(docs),
-    )
+    await fs.writeFile(path.join(import.meta.dirname, '../metadata.json'), JSON.stringify(docs))
   },
   (err) => {
     console.error(err)

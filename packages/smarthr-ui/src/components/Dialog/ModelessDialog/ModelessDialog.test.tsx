@@ -13,7 +13,11 @@ describe('ModelessDialog', () => {
     return (
       <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>ModelessDialog</Button>
-        <ModelessDialog isOpen={isOpen} title="座標指定表示" onClickClose={() => setIsOpen(false)}>
+        <ModelessDialog
+          isOpen={isOpen}
+          heading="座標指定表示"
+          onClickClose={() => setIsOpen(false)}
+        >
           <p>ダイアログの中身</p>
         </ModelessDialog>
       </IntlProvider>

@@ -1,12 +1,14 @@
-import typescript from '@rollup/plugin-typescript'
-import preserveDirectives from 'rollup-plugin-preserve-directives'
-import renameNodeModules from 'rollup-plugin-rename-node-modules'
-import replace from '@rollup/plugin-replace'
-import commonjs from '@rollup/plugin-commonjs'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import { globSync } from 'glob'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import commonjs from '@rollup/plugin-commonjs'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
+import typescript from '@rollup/plugin-typescript'
+import { globSync } from 'glob'
+import preserveDirectives from 'rollup-plugin-preserve-directives'
+import renameNodeModules from 'rollup-plugin-rename-node-modules'
+
 import packageJson from './package.json' with { type: 'json' }
 
 const peerDependencies = packageJson.peerDependencies
@@ -38,7 +40,7 @@ export default {
     format: 'es',
     sourcemap: true,
     inlineSources: true,
-    dir: 'esm',
+    dir: 'lib',
     preserveModules: true,
     preserveModulesRoot: 'src',
   },
@@ -77,4 +79,13 @@ export default {
       preventAssignment: true,
     }),
   ],
+  onwarn(warning, warn) {
+    // 'use client'がついていると警告が出るが問題ないため、無視する
+    if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+      // 他にもルールが追加される可能性があるため
+      // eslint-disable-next-line smarthr/best-practice-for-unnesessary-early-return
+      return
+    }
+    warn(warning)
+  },
 }
