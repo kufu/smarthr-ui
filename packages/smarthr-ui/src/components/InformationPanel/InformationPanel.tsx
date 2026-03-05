@@ -13,7 +13,9 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useEnvironment } from '../../hooks/useEnvironment'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
+import { defineSV, useSV } from '../../hooks/useSV'
 import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
@@ -21,6 +23,8 @@ import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
+
+import type { Environment } from '../../hooks/useEnvironment/useEnvironment'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -41,87 +45,92 @@ type AbstractProps = PropsWithChildren<{
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<DecoratorKeyTypes>
 }> &
-  VariantProps<typeof classNameGenerator>
+  VariantProps<ReturnType<typeof classNameGenerator>>
 
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
-export const classNameGenerator = tv({
-  slots: {
-    wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
-    header: 'shr-p-1.5',
-    heading: 'smarthr-ui-InformationPanel-heading',
-    toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
-    content: [
-      'smarthr-ui-InformationPanel-content',
-      'shr-p-1.5 shr-pt-0 shr-text-base aria-hidden:shr-hidden',
+export const sv = defineSV(({ mobile }: Environment) =>
+  tv({
+    slots: {
+      wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
+      header: mobile ? 'shr-p-1' : 'shr-p-1.5',
+      heading: 'smarthr-ui-InformationPanel-title',
+      toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
+      content: [
+        'smarthr-ui-InformationPanel-content',
+        'shr-text-base aria-hidden:shr-hidden',
+        mobile ? 'shr-p-1 shr-pt-0' : 'shr-p-1.5 shr-pt-0',
+      ],
+    },
+    variants: {
+      type: {
+        success: {},
+        info: {},
+        warning: {},
+        error: {},
+        sync: {},
+      },
+      active: {
+        true: {},
+        false: {
+          header: 'shr-py-1',
+        },
+      },
+      bold: {
+        true: {
+          header: 'shr-py-1',
+          content: 'shr-pt-1',
+        },
+        false: {},
+      },
+    },
+    compoundVariants: [
+      {
+        type: ['success', 'warning', 'error'],
+        bold: true,
+        className: {
+          header: 'shr-text-white',
+          heading: '[&_.smarthr-ui-Icon]:shr-fill-white',
+        },
+      },
+      {
+        type: 'success',
+        bold: true,
+        className: {
+          header: 'shr-bg-main',
+        },
+      },
+      {
+        type: 'warning',
+        bold: true,
+        className: {
+          header: 'shr-bg-warning-yellow shr-text-black',
+          heading: [
+            '[&_.smarthr-ui-WarningIcon-wrapper]:shr-fill-black',
+            '[&_.smarthr-ui-WarningIcon-mark]:shr-fill-warning-yellow',
+          ],
+        },
+      },
+      {
+        type: 'error',
+        bold: true,
+        className: {
+          header: 'shr-bg-danger',
+        },
+      },
     ],
-  },
-  variants: {
-    type: {
-      success: {},
-      info: {},
-      warning: {},
-      error: {},
-      sync: {},
-    },
-    active: {
-      true: {},
-      false: {
-        header: 'shr-py-1',
-      },
-    },
-    bold: {
-      true: {
-        header: 'shr-py-1',
-        content: 'shr-pt-1',
-      },
-      false: {},
-    },
-  },
-  compoundVariants: [
-    {
-      type: ['success', 'warning', 'error'],
-      bold: true,
-      className: {
-        header: 'shr-text-white',
-        heading: '[&_.smarthr-ui-Icon]:shr-fill-white',
-      },
-    },
-    {
-      type: 'success',
-      bold: true,
-      className: {
-        header: 'shr-bg-main',
-      },
-    },
-    {
-      type: 'warning',
-      bold: true,
-      className: {
-        header: 'shr-bg-warning-yellow shr-text-black',
-        heading: [
-          '[&_.smarthr-ui-WarningIcon-wrapper]:shr-fill-black',
-          '[&_.smarthr-ui-WarningIcon-mark]:shr-fill-warning-yellow',
-        ],
-      },
-    },
-    {
-      type: 'error',
-      bold: true,
-      className: {
-        header: 'shr-bg-danger',
-      },
-    },
-  ],
-})
+  }),
+)
 
+// Disclosureで書き直したい
 export const InformationPanel: FC<Props> = ({
+  title,
   heading,
   type = 'info',
   toggleable,
-  active: activeProps = true,
+  active: activeProps = true, // openにしたい
   bold,
   className,
   children,
@@ -133,47 +142,15 @@ export const InformationPanel: FC<Props> = ({
   const id = useId()
   const contentId = `${id}-content`
 
+  // このeffectを消したい
   useEffect(() => {
     setActive(activeProps)
   }, [activeProps])
 
-  const classNamesMapper = useMemo(() => {
-    const withActive = classNameGenerator({
-      type,
-      active: true,
-      bold,
-    })
-    const withInactive = classNameGenerator({
-      type,
-      active: false,
-      bold,
-    })
-
-    const wrapperProps = { className }
-
-    return {
-      active: {
-        wrapper: withActive.wrapper(wrapperProps),
-        header: withActive.header(),
-        heading: withActive.heading(),
-        toggleableButton: withActive.toggleableButton(),
-        content: withActive.content(),
-      },
-      inactive: {
-        wrapper: withInactive.wrapper(wrapperProps),
-        header: withInactive.header(),
-        heading: withInactive.heading(),
-        toggleableButton: withInactive.toggleableButton(),
-        content: withInactive.content(),
-      },
-    }
-  }, [bold, type, className])
-
-  const classNames = classNamesMapper[active ? 'active' : 'inactive']
-
+  const classNames = useSV(sv, { bold, active, type })
   return (
     <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
-      <Sidebar align="baseline" right className={classNames.header}>
+      <Sidebar align="center" right className={classNames.header}>
         <MemoizedHeading
           heading={heading}
           id={`${id}-heading`}
@@ -233,6 +210,7 @@ const ToggleableButton: FC<
   }
 > = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
   const { localize } = useIntl()
+  const { mobile } = useEnvironment()
 
   const decoratorDefaultTexts = useMemo(
     () => ({
@@ -260,11 +238,19 @@ const ToggleableButton: FC<
       aria-expanded={active}
       aria-controls={contentId}
       onClick={onClick}
-      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+      suffix={mobile ? null : active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
       size="s"
       className={className}
     >
-      {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
+      {mobile ? (
+        active ? (
+          <FaCaretUpIcon alt={decorated.closeButtonLabel} />
+        ) : (
+          <FaCaretDownIcon alt={decorated.openButtonLabel} />
+        )
+      ) : (
+        decorated[active ? 'closeButtonLabel' : 'openButtonLabel']
+      )}
     </Button>
   )
 }
