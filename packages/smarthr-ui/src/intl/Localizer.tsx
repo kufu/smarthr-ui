@@ -23,6 +23,6 @@ export const Localizer = <ID extends keyof Messages>({
     {...rest}
     id={id}
     defaultMessage={defaultText}
-    values={{ break: <br />, ...values }}
+    values={{ ...values, break: values?.break ?? <br /> }}
   />
 )

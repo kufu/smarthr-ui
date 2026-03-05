@@ -6,29 +6,27 @@ import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
-import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
+import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type AbstractProps = DialogHeaderProps &
-  DialogBodyProps & {
-    /** ダイアログの説明 */
-    description: ReactNode
-    /** コンポーネント内の文言を変更するための関数を設定 */
-    decorators?: DecoratorsType<'closeButtonLabel'>
-  }
+export type AbstractProps = DialogBodyProps & {
+  /** ダイアログタイトル */
+  heading: DialogHeadingProps
+  /** ダイアログの説明 */
+  children: ReactNode
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'closeButtonLabel'>
+}
 
 export type MessageDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
 }
 
 export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
-  title,
-  subtitle,
-  titleTag,
-  titleId,
+  heading,
   contentBgColor,
   contentPadding,
-  description,
+  children,
   onClickClose,
   decorators,
 }) => {
@@ -42,11 +40,10 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Section className={styles.wrapper}>
-      <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
+      <DialogHeading {...heading} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-        {description}
+        {children}
       </DialogBody>
       <FooterCluster
         onClickClose={onClickClose}

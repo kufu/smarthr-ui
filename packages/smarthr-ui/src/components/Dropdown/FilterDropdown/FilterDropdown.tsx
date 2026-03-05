@@ -6,12 +6,12 @@ import {
   type FormEvent,
   type MouseEventHandler,
   type ReactNode,
+  isValidElement,
   useMemo,
 } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { useIntl } from '../../../intl'
 import { Button, type AbstractProps as ButtonProps } from '../../Button'
@@ -23,27 +23,35 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
+type ObjectTriggerType = {
+  text?: ReactNode
+  /** 引き金となるボタンの大きさ */
+  size?: ButtonProps['size']
+  /** 引き金となるボタンをアイコンのみとするかどうか */
+  onlyIcon?: boolean
+}
 type AbstractProps = {
-  isFiltered?: boolean
+  /** 引き金となるボタン */
+  trigger?: ReactNode | ObjectTriggerType
+  applyText?: ReactNode
+  cancelText?: ReactNode
+  resetText?: ReactNode
+  children: ReactNode
+  filtered?:
+    | boolean
+    | {
+        iconAlt?: ReactNode
+      }
+  responseStatus?: ResponseStatus
   onApply: MouseEventHandler<HTMLButtonElement>
   onCancel?: MouseEventHandler<HTMLButtonElement>
   onReset?: MouseEventHandler<HTMLButtonElement>
   onOpen?: () => void
   onClose?: () => void
-  children: ReactNode
-  decorators?: DecoratorsType<DecoratorKeyTypes>
-  responseStatus?: ResponseStatus
-  /** 引き金となるボタンの大きさ */
-  triggerSize?: ButtonProps['size']
-  /** 引き金となるボタンをアイコンのみとするかどうか */
-  onlyIconTrigger?: boolean
 }
 type Props = AbstractProps & Omit<ComponentProps<'button'>, keyof AbstractProps>
 
-type DecoratorKeyTypes = 'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
-
 const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
-
 const ON_SUBMIT = (e: FormEvent) => {
   e.preventDefault()
 }
@@ -74,49 +82,71 @@ const classNameGenerator = tv({
 })
 
 export const FilterDropdown: FC<Props> = ({
-  isFiltered,
+  trigger: orgTrigger,
+  applyText,
+  cancelText,
+  resetText,
+  children,
+  filtered,
+  responseStatus,
   onApply,
   onCancel,
   onReset,
   onOpen,
   onClose,
-  children,
-  decorators,
-  responseStatus,
-  triggerSize,
-  onlyIconTrigger = false,
   ...rest
 }) => {
+  // HINT: ReactNodeとObjectのどちらかを判定
+  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
+  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
+  const trigger: ObjectTriggerType =
+    !orgTrigger || typeof orgTrigger !== 'object' || isValidElement(orgTrigger)
+      ? {
+          text: orgTrigger as ReactNode,
+        }
+      : (orgTrigger as ObjectTriggerType)
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
+  const decorated = useMemo(
     () => ({
-      status: localize({
-        id: 'smarthr-ui/FilterDropdown/status',
-        defaultText: '適用中',
-      }),
-      triggerButton: localize({
-        id: 'smarthr-ui/FilterDropdown/triggerButton',
-        defaultText: '絞り込み',
-      }),
-      applyButton: localize({
-        id: 'smarthr-ui/FilterDropdown/applyButton',
-        defaultText: '適用',
-      }),
-      cancelButton: localize({
-        id: 'smarthr-ui/FilterDropdown/cancelButton',
-        defaultText: 'キャンセル',
-      }),
-      resetButton: localize({
-        id: 'smarthr-ui/FilterDropdown/resetButton',
-        defaultText: '絞り込み条件を解除',
-      }),
+      filteredIconAlt:
+        (typeof filtered === 'object' && filtered.iconAlt) ||
+        localize({
+          id: 'smarthr-ui/FilterDropdown/status',
+          defaultText: '適用中',
+        }),
+      trigger:
+        trigger.text ||
+        localize({
+          id: 'smarthr-ui/FilterDropdown/triggerText',
+          defaultText: '絞り込み',
+        }),
+      applyText:
+        applyText ||
+        localize({
+          id: 'smarthr-ui/FilterDropdown/applyText',
+          defaultText: '適用',
+        }),
+      cancelText:
+        cancelText ||
+        localize({
+          id: 'smarthr-ui/FilterDropdown/cancelText',
+          defaultText: 'キャンセル',
+        }),
+      resetText:
+        resetText ||
+        localize({
+          id: 'smarthr-ui/FilterDropdown/resetText',
+          defaultText: '絞り込み条件を解除',
+        }),
     }),
-    [localize],
+    [filtered, trigger.text, applyText, cancelText, resetText, localize],
   )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
-  const filteredIconAriaLabel = useMemo(() => innerText(decorated.status), [decorated.status])
+  const filteredIconAlt = useMemo(
+    () => innerText(decorated.filteredIconAlt),
+    [decorated.filteredIconAlt],
+  )
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
   const classNamesMapper = useMemo(() => {
@@ -142,32 +172,30 @@ export const FilterDropdown: FC<Props> = ({
     return {
       filtered: {
         ...commonStyles,
-        iconWrapper: iconWrapper({ filtered: true, triggerSize }),
+        iconWrapper: iconWrapper({ filtered: true, triggerSize: trigger.size }),
       },
       unfiltered: {
         ...commonStyles,
-        iconWrapper: iconWrapper({ filtered: false, triggerSize }),
+        iconWrapper: iconWrapper({ filtered: false, triggerSize: trigger.size }),
       },
     }
-  }, [triggerSize])
+  }, [trigger.size])
 
-  const classNames = classNamesMapper[isFiltered ? 'filtered' : 'unfiltered']
+  const classNames = classNamesMapper[filtered ? 'filtered' : 'unfiltered']
 
   const { buttonSuffix, buttonContent } = useMemo(() => {
     const FilterIcon = (
       <span className={classNames.iconWrapper}>
-        <FaFilterIcon alt={onlyIconTrigger ? decorated.triggerButton : undefined} />
+        <FaFilterIcon alt={trigger.onlyIcon ? decorated.trigger : undefined} />
 
-        {isFiltered && (
-          <FaCircleCheckIcon
-            aria-label={filteredIconAriaLabel}
-            className={classNames.filteredIcon}
-          />
+        {filtered && (
+          // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
+          <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
         )}
       </span>
     )
 
-    if (onlyIconTrigger) {
+    if (trigger.onlyIcon) {
       return {
         buttonSuffix: undefined,
         buttonContent: FilterIcon,
@@ -176,14 +204,14 @@ export const FilterDropdown: FC<Props> = ({
 
     return {
       buttonSuffix: FilterIcon,
-      buttonContent: decorated.triggerButton,
+      buttonContent: decorated.trigger,
     }
-  }, [isFiltered, decorated.triggerButton, onlyIconTrigger, filteredIconAriaLabel, classNames])
+  }, [filtered, decorated.trigger, trigger.onlyIcon, filteredIconAlt, classNames])
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger tooltip={{ show: onlyIconTrigger, message: decorated.triggerButton }}>
-        <Button {...rest} suffix={buttonSuffix} size={triggerSize}>
+      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: decorated.trigger }}>
+        <Button {...rest} suffix={buttonSuffix} size={trigger.size}>
           {buttonContent}
         </Button>
       </DropdownTrigger>
@@ -201,7 +229,7 @@ export const FilterDropdown: FC<Props> = ({
                     onClick={onReset}
                     disabled={calcedResponseStatus.isProcessing}
                   >
-                    {decorated.resetButton}
+                    {decorated.resetText}
                   </Button>
                 </div>
               )}
@@ -213,7 +241,7 @@ export const FilterDropdown: FC<Props> = ({
               >
                 <DropdownCloser>
                   <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
-                    {decorated.cancelButton}
+                    {decorated.cancelText}
                   </Button>
                 </DropdownCloser>
                 <DropdownCloser>
@@ -222,7 +250,7 @@ export const FilterDropdown: FC<Props> = ({
                     onClick={onApply}
                     loading={calcedResponseStatus.isProcessing}
                   >
-                    {decorated.applyButton}
+                    {decorated.applyText}
                   </Button>
                 </DropdownCloser>
               </Cluster>

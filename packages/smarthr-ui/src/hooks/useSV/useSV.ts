@@ -49,9 +49,10 @@ export const useSV = <T extends Omit<Parameters<typeof tv>[0], 'base'>>(
     // config.base がオブジェクトの場合は slots として扱う
     if ('base' in config && typeof config.base === 'object' && !Array.isArray(config.base)) {
       const { base, ...rest } = config
+
       return tv({
-        slots: base,
         ...rest,
+        slots: base,
       })
     }
     return tv(config)

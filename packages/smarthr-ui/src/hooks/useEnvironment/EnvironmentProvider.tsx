@@ -16,13 +16,17 @@ type Props = {
 export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
   const theme = useTheme()
   const inheritedEnvironment = useContext(EnvironmentContext)
-  const mediaQuery = theme?.mediaQuery ?? defaultMediaQuery
-  const matches = useMediaQueries(mediaQuery)
-  const state: Environment = {
-    mobile: matches.SCREEN_SMALL,
-    matches,
+  const matches = useMediaQueries(theme?.mediaQuery ?? defaultMediaQuery)
+
+  const baseEnvironment = {
     ...inheritedEnvironment,
     ...environment,
+  }
+
+  const state: Environment = {
+    ...baseEnvironment,
+    mobile: baseEnvironment.mobile ?? matches.SCREEN_SMALL,
+    matches: baseEnvironment.matches ?? matches,
   }
 
   return <EnvironmentContext.Provider value={state}>{children}</EnvironmentContext.Provider>

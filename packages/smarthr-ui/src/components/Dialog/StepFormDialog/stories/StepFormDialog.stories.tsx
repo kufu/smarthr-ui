@@ -47,13 +47,8 @@ export default {
       </>
     )
   },
-  argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
-    },
-  },
   args: {
-    title: 'フォームダイアログ',
+    heading: 'フォームダイアログ',
     stepLength: 1,
     submitLabel: '保存',
   },
@@ -64,10 +59,20 @@ export default {
 
 export const Playground: StoryObj<typeof StepFormDialog> = {}
 
-export const Title: StoryObj<typeof StepFormDialog> = {
-  name: 'title',
+export const Heading: StoryObj<typeof StepFormDialog> = {
+  name: 'heading',
   args: {
-    title: 'フォームダイアログタイトル',
+    heading: 'フォームダイアログタイトル',
+  },
+}
+
+export const HeadingSub: StoryObj<typeof StepFormDialog> = {
+  name: 'heading.sub',
+  args: {
+    heading: {
+      text: 'フォームダイアログタイトル',
+      sub: 'フォームダイアログサブタイトル',
+    },
   },
 }
 
@@ -82,20 +87,6 @@ export const SubmitLabel: StoryObj<typeof StepFormDialog> = {
   name: 'submitLabel',
   args: {
     submitLabel: '取り込む',
-  },
-}
-
-export const TitleTag: StoryObj<typeof StepFormDialog> = {
-  name: 'titleTag（非推奨）',
-  args: {
-    titleTag: 'h3',
-  },
-}
-
-export const Subtitle: StoryObj<typeof StepFormDialog> = {
-  name: 'subtitle',
-  args: {
-    subtitle: 'フォームダイアログサブタイトル',
   },
 }
 

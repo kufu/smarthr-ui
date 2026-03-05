@@ -103,12 +103,12 @@ export const LabelStyleType: StoryObj<typeof FormControl> = {
   ),
 }
 
-export const DangerouslyTitleHidden: StoryObj<typeof FormControl> = {
-  name: 'label.dangerouslyHide（利用注意）',
+export const UnrecommendedTitleHidden: StoryObj<typeof FormControl> = {
+  name: 'label.unrecommendedHide（利用注意）',
   args: {
     label: {
       text: 'フォームコントロール',
-      dangerouslyHide: true,
+      unrecommendedHide: true,
     },
   },
 }
@@ -120,17 +120,6 @@ export const HtmlFor: StoryObj<typeof FormControl> = {
       text: 'フォームコントロール',
       htmlFor: 'input-id',
     },
-  },
-}
-
-export const AutoRelation: StoryObj<typeof FormControl> = {
-  name: '子要素にidを指定した場合でもlabelと正しく紐づく',
-  args: {
-    label: {
-      text: '子要素にidを指定した場合でもlabelと正しく紐づく',
-    },
-    children: <Input name="formcontrol_input" id="auto-relation-test" />,
-    supplementaryMessage: '入力要素に紐づく補足メッセージ',
   },
 }
 

@@ -16,10 +16,11 @@ type Props = {
   // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
   data: ChartData<'bar'>
-  title: string
+  title?: string
+  options?: Partial<ChartOptions<'bar'>>
 }
 
-export const BarChart: React.FC<Props> = ({ data, title }) => {
+export const BarChart: React.FC<Props> = ({ data, title, options: externalOptions }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
   const chartColors = useMemo(() => getChartColors(data.datasets.length), [data.datasets.length])
@@ -27,7 +28,8 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length
     const barCount = data.datasets[0].data.length
-    return `${title} 棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
+    const prefix = title ? `${title} ` : ''
+    return `${prefix}棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
   }, [title, data])
 
   const enhancedData: ChartData<'bar'> = useMemo(
@@ -44,21 +46,27 @@ export const BarChart: React.FC<Props> = ({ data, title }) => {
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
+        ...externalOptions,
         plugins: {
-          title: {
-            display: true,
-            text: title,
-          },
+          ...externalOptions?.plugins,
+          title: title
+            ? {
+                display: true,
+                text: title,
+              }
+            : {
+                display: false,
+              },
           keyboardNavigation: {
             liveRegionId: chartId,
           },
         },
       }),
-    [title, chartId],
+    [title, chartId, externalOptions],
   )
 
   return (
-    <div className="shr-relative">
+    <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
       <Bar
         tabIndex={0}

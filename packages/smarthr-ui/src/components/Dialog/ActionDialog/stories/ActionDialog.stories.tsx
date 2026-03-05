@@ -37,13 +37,8 @@ export default {
       </>
     )
   },
-  argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
-    },
-  },
   args: {
-    title: 'ダイアログタイトル',
+    heading: 'ダイアログタイトル',
     actionText: 'アクションボタンラベル',
   },
   parameters: {
@@ -53,24 +48,20 @@ export default {
 
 export const Playground: StoryObj<typeof ActionDialog> = {}
 
-export const Title: StoryObj<typeof ActionDialog> = {
-  name: 'title',
+export const Heading: StoryObj<typeof ActionDialog> = {
+  name: 'heading',
   args: {
-    title: 'ダイアログタイトル',
+    heading: 'ダイアログタイトル',
   },
 }
 
-export const Subtitle: StoryObj<typeof ActionDialog> = {
-  name: 'subtitle',
+export const HeadingSub: StoryObj<typeof ActionDialog> = {
+  name: 'Heading.sub',
   args: {
-    subtitle: 'ダイアログサブタイトル',
-  },
-}
-
-export const TitleTag: StoryObj<typeof ActionDialog> = {
-  name: 'titleTag（非推奨）',
-  args: {
-    titleTag: 'h3',
+    heading: {
+      text: 'ダイアログタイトル',
+      sub: 'ダイアログサブタイトル',
+    },
   },
 }
 

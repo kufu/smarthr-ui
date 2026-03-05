@@ -200,7 +200,7 @@ const WEEKDAY_FORMATS: Record<keyof typeof locales, { replacer: (base: string) =
   'id-id': { replacer: (base) => base.replace(/^([A-Za-z]{3}), (.+)$/, '$2 ($1)') },
   ko: { replacer: (base) => base.replace(/(.+?)([월화수목금토일])$/, '$1 ($2)') },
   pt: { replacer: (base) => base.replace(/^([A-Za-z]{3}\.), (.+)$/, '$2 ($1)') },
-  vi: { replacer: (base) => base.replace(/^([A-Za-z]{2} \d+), (.+)$/, '$2 ($1)') },
+  vi: { replacer: (base) => base.replace(/^(\S+ \d+), (.+)$/, '$2 ($1)') },
   'zh-cn': { replacer: (base) => base.replace(/(.+?)\s*([周][一二三四五六日])$/, '$1（$2）') },
   'zh-tw': { replacer: (base) => base.replace(/(.+?)\s*([週][一二三四五六日])$/, '$1（$2）') },
 } as const
@@ -253,7 +253,15 @@ export const useIntl = (): UseIntlReturn => {
 
   const formatDate = useCallback(
     ({ date, parts = ['year', 'month', 'day'], options }: FormatDateProps): string => {
-      const { disableSlashInJa = false, capitalizeFirstLetter = false, ...rest } = options || {}
+      const {
+        disableSlashInJa = false,
+        capitalizeFirstLetter = false,
+        year,
+        month,
+        day,
+        weekday,
+        ...rest
+      } = options || {}
 
       // パーツの存在を事前に計算
       const hasPart = parts.reduce(
@@ -271,15 +279,17 @@ export const useIntl = (): UseIntlReturn => {
 
       // ロケールのデフォルト形式を取得
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
-        year: hasPart.year ? DATE_FORMATS[locale].year : undefined,
-        month: hasPart.month
-          ? disableSlashInJa && locale === 'ja'
-            ? 'long'
-            : DATE_FORMATS[locale].month
-          : undefined,
-        day: hasPart.day ? DATE_FORMATS[locale].day : undefined,
-        weekday: hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined,
         ...rest,
+        year: year ?? (hasPart.year ? DATE_FORMATS[locale].year : undefined),
+        month:
+          month ??
+          (hasPart.month
+            ? disableSlashInJa && locale === 'ja'
+              ? 'long'
+              : DATE_FORMATS[locale].month
+            : undefined),
+        day: day ?? (hasPart.day ? DATE_FORMATS[locale].day : undefined),
+        weekday: weekday ?? (hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined),
       }
 
       const formattedDate = intl.formatDate(date, actualFormatOptions)
