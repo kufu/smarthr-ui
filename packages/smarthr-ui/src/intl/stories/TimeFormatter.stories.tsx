@@ -1,14 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { TimeFormatter } from '../TimeFormatter'
 
-const testTime = '2025-01-01T22:40:30+09:00' // 2025年1月1日 22:40:30
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Internal/TimeFormatter',
   component: TimeFormatter,
   render: (args) => <TimeFormatter {...args} />,
   args: {
-    date: testTime,
+    date: '2025-01-01T22:40:30+09:00',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -22,14 +21,14 @@ export const Playground: Story = {}
 export const Default: Story = {
   name: 'デフォルト（時分の表示）',
   args: {
-    date: testTime,
+    date: '2025-01-01T22:40:30+09:00',
   },
 }
 
 export const HourMinuteSecond: Story = {
   name: '時分秒の表示',
   args: {
-    date: testTime,
+    date: '2025-01-01T22:40:30+09:00',
     parts: ['hour', 'minute', 'second'],
   },
 }
@@ -37,7 +36,7 @@ export const HourMinuteSecond: Story = {
 export const HourOnly: Story = {
   name: '時のみ表示',
   args: {
-    date: testTime,
+    date: '2025-01-01T22:40:30+09:00',
     parts: ['hour'],
   },
 }
@@ -45,7 +44,7 @@ export const HourOnly: Story = {
 export const Hour12: Story = {
   name: '12時間形式で表示',
   args: {
-    date: testTime,
+    date: '2025-01-01T22:40:30+09:00',
     options: {
       hour12: true,
     },
@@ -55,7 +54,7 @@ export const Hour12: Story = {
 export const Hour24: Story = {
   name: '24時間形式で表示',
   args: {
-    date: testTime,
+    date: '2025-01-01T22:40:30+09:00',
     options: {
       hour12: false,
     },
