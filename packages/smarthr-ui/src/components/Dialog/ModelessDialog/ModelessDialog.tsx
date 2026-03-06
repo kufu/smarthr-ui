@@ -21,6 +21,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useIntl } from '../../../intl'
+import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../themes/tailwind'
 import { Base, type BaseElementProps } from '../../Base'
 import { Button } from '../../Button'
@@ -90,7 +91,7 @@ type AbstractProps = PropsWithChildren<{
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonIconAlt'> & {
     dialogHandlerAriaLabel?: (txt: string) => string
-    dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
+    dialogHandlerLiveRegionText?: (txt: string, data: DOMRect | undefined) => string
   }
 }>
 type Props = AbstractProps &
@@ -181,6 +182,7 @@ export const ModelessDialog: FC<Props> = ({
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
+  const [debouncedAriaText, setDebouncedAriaText] = useState<string>('')
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -191,9 +193,26 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
+  const updateDebouncedAriaText = useMemo(() => debounce(setDebouncedAriaText, 600), [])
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
+  const decoratorDefaultTexts = useMemo(() => {
+    const ariaValuetext = wrapperPosition
+      ? localize(
+          {
+            id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
+            defaultText: '上から{top}px、左から{left}px',
+          },
+          {
+            top: Math.trunc(wrapperPosition.top).toString(),
+            left: Math.trunc(wrapperPosition.left).toString(),
+          },
+        )
+      : ''
+    if (ariaValuetext) {
+      updateDebouncedAriaText(ariaValuetext)
+    }
+
+    return {
       closeButtonIconAlt: localize({
         id: 'smarthr-ui/ModelessDialog/closeButtonIconAlt',
         defaultText: '閉じる',
@@ -202,28 +221,20 @@ export const ModelessDialog: FC<Props> = ({
         id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel',
         defaultText: 'ダイアログの位置',
       }),
-      dialogHandlerAriaValuetext: wrapperPosition
-        ? localize(
-            {
-              id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaValuetext',
-              defaultText: '上から{top}px、左から{left}px',
-            },
-            {
-              top: Math.trunc(wrapperPosition.top).toString(),
-              left: Math.trunc(wrapperPosition.left).toString(),
-            },
-          )
-        : '',
-    }),
-    [localize, wrapperPosition],
-  )
+      dialogHandlerLiveRegionText: debouncedAriaText, // Use debounced text
+      dialogHandlerAriaRoleDescription: localize({
+        id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaRoleDescription',
+        defaultText: 'ドラッグ可能',
+      }),
+    }
+  }, [localize, wrapperPosition, debouncedAriaText, updateDebouncedAriaText])
 
   const decorated = useMemo(() => {
     if (!decorators) {
       return {
         dialogHandlerAriaLabel: decoratorDefaultTexts.dialogHandlerAriaLabel,
         closeButtonIconAlt: decoratorDefaultTexts.closeButtonIconAlt,
-        dialogHandlerAriaValuetext: decoratorDefaultTexts.dialogHandlerAriaValuetext,
+        dialogHandlerLiveRegionText: decoratorDefaultTexts.dialogHandlerLiveRegionText,
       }
     }
 
@@ -234,8 +245,8 @@ export const ModelessDialog: FC<Props> = ({
       closeButtonIconAlt:
         decorators.closeButtonIconAlt?.(decoratorDefaultTexts.closeButtonIconAlt) ||
         decoratorDefaultTexts.closeButtonIconAlt,
-      dialogHandlerAriaValuetext: decorators.dialogHandlerAriaValuetext?.(
-        decoratorDefaultTexts.dialogHandlerAriaValuetext,
+      dialogHandlerLiveRegionText: decorators.dialogHandlerLiveRegionText?.(
+        decoratorDefaultTexts.dialogHandlerLiveRegionText,
         wrapperPosition,
       ),
     }
@@ -437,7 +448,7 @@ export const ModelessDialog: FC<Props> = ({
             {children}
           </DialogBody>
           {footer && <div className={classNames.footer}>{footer}</div>}
-          <LiveRegion ariaText={decorated.dialogHandlerAriaValuetext} />
+          <LiveRegion ariaText={decorated.dialogHandlerLiveRegionText} />
         </Base>
       </Draggable>
     </DialogOverlap>,
@@ -448,17 +459,39 @@ const Handler = memo<{
   'aria-label': string
   className: string
   onArrowKeyDown: (e: KeyboardEvent) => void
-}>(({ onArrowKeyDown: onDelegateKeyDown, ...rest }) => (
-  <button
-    {...rest}
-    type="button"
-    tabIndex={0}
-    aria-roledescription="draggable"
-    onKeyDown={onDelegateKeyDown}
-  >
-    <FaGripIcon />
-  </button>
-))
+}>(({ onArrowKeyDown: onDelegateKeyDown, ...rest }) => {
+  const { localize } = useIntl()
+  const accessibleDefaultTexts = useMemo(
+    () => ({
+      dialogHandlerAriaRoleDescription: localize({
+        id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaRoleDescription',
+        defaultText: 'ドラッグ可能',
+      }),
+      dialogHandlerDescription: localize({
+        id: 'smarthr-ui/ModelessDialog/dialogHandlerDescription',
+        defaultText: '矢印キーを押して上下左右に移動できます',
+      }),
+    }),
+    [localize],
+  )
+
+  return (
+    <>
+      <button
+        {...rest}
+        type="button"
+        aria-roledescription={accessibleDefaultTexts.dialogHandlerAriaRoleDescription}
+        aria-describedby="handler-description"
+        onKeyDown={onDelegateKeyDown}
+      >
+        <FaGripIcon />
+      </button>
+      <div className="shr-hidden" id="handler-description">
+        {accessibleDefaultTexts.dialogHandlerDescription}
+      </div>
+    </>
+  )
+})
 
 const LiveRegion = ({ ariaText }: { ariaText: string | undefined }) => (
   <div
