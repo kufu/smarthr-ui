@@ -14,7 +14,6 @@ import {
   Tooltip,
 } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-
 import deepmerge from 'deepmerge'
 
 import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'
@@ -108,12 +107,12 @@ const createBaseChartOptions = <T extends ChartType>({
     maintainAspectRatio: false,
     events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
     plugins: {
+      ...safeExternalPlugins,
       legend: {
         position: 'bottom' as const,
         labels: internalLegendLabels,
       },
       tooltip: internalTooltipConfig,
-      ...safeExternalPlugins,
     },
   }
 

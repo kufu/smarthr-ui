@@ -10,7 +10,8 @@
     "module": "ES2020",
     "lib": ["ES2020", "DOM", "ES2021.Intl"],
     "moduleResolution": "bundler",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {}
   },
   "include": ["src/**/*", ".storybook/**/*", "scripts/**/*"],
   "exclude": ["node_modules"]
