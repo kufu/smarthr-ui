@@ -15,7 +15,7 @@ import { EnvironmentProvider, IntlProvider } from '../src'
 import * as locales from '../src/intl/locales'
 import { backgroundColor } from '../src/themes'
 
-import type { Preview } from '@storybook/react-webpack5'
+import type { Preview } from '@storybook/react-vite'
 
 const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 

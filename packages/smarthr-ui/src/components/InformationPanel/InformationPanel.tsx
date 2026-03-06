@@ -211,7 +211,12 @@ const MemoizedHeading = memo<
   )
 
   return (
-    <Heading {...rest} unrecommendedTag={heading.unrecommendedTag} type="blockTitle">
+    <Heading
+      {...rest}
+      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+      unrecommendedTag={heading.unrecommendedTag}
+      type="blockTitle"
+    >
       <ResponseMessage type={type} iconGap={0.5}>
         {heading.text}
       </ResponseMessage>

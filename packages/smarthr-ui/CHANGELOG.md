@@ -2,6 +2,89 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [88.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.2.0...smarthr-ui-v88.0.0) (2026-03-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **FormDialog,ActionDialog:** onSubmit/onClickActionのコールバックインターフェースを変更 ([#6024](https://github.com/kufu/smarthr-ui/issues/6024))
+* **StepFormDialog:** onSubmitの内部の自由度を向上 ([#5914](https://github.com/kufu/smarthr-ui/issues/5914))
+
+### Features
+
+* **FormDialog,ActionDialog:** onSubmit/onClickActionのコールバックインターフェースを変更 ([#6024](https://github.com/kufu/smarthr-ui/issues/6024)) ([fd7a303](https://github.com/kufu/smarthr-ui/commit/fd7a303d8cd5dd39717c8c662eb9d25b65e2d99c))
+* **StepFormDialog:** onSubmitの内部の自由度を向上 ([#5914](https://github.com/kufu/smarthr-ui/issues/5914)) ([e11f684](https://github.com/kufu/smarthr-ui/commit/e11f68456209c145de26564d2ed2604e1ccd1f81))
+
+
+### Bug Fixes
+
+* **DisclosureTrigger:** なんの要素も出力していないかのように扱えるように調整する ([#6165](https://github.com/kufu/smarthr-ui/issues/6165)) ([ecfa172](https://github.com/kufu/smarthr-ui/commit/ecfa17226cf48d24465ea910031d8ad104160ef5))
+
+## [87.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.1...smarthr-ui-v87.2.0) (2026-03-04)
+
+
+### Features
+
+* **Th:** デフォルトでwhite-space: nowrapを設定する ([#6119](https://github.com/kufu/smarthr-ui/issues/6119)) ([49d7664](https://github.com/kufu/smarthr-ui/commit/49d766483d52481ad1e30bfe4f0644c83b1f998b))
+
+## [87.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.0...smarthr-ui-v87.1.1) (2026-02-27)
+
+
+### Bug Fixes
+
+* READMEにIntlProviderを追加 ([#6145](https://github.com/kufu/smarthr-ui/issues/6145)) ([323778b](https://github.com/kufu/smarthr-ui/commit/323778b2fefae364d4b7f0446bd404baa194c8d1))
+
+## [87.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.0.0...smarthr-ui-v87.1.0) (2026-02-27)
+
+
+### Features
+
+* **Text:** maxLines属性を追加する ([#6058](https://github.com/kufu/smarthr-ui/issues/6058)) ([1209cbe](https://github.com/kufu/smarthr-ui/commit/1209cbe73c9d7f046de63a0154c0ca75ceadc352))
+
+## [87.0.0](https://github.com/kufu/smarthr-ui/compare/v86.0.0...v87.0.0) (2026-02-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **SideMenuGroup:** title関連の属性を整理し、heading属性に変更 (#5980)
+
+### Features
+
+* **SideMenuGroup:** title関連の属性を整理し、heading属性に変更 ([#5980](https://github.com/kufu/smarthr-ui/issues/5980)) ([a27dd7b](https://github.com/kufu/smarthr-ui/commit/a27dd7b463b7ab70e213e49b56b75f5673a4af6d))
+
+
+### Bug Fixes
+
+* **Container:** useEnvironmentに対応する ([#6128](https://github.com/kufu/smarthr-ui/issues/6128)) ([9846bc0](https://github.com/kufu/smarthr-ui/commit/9846bc041065aa5a2f5b4ed1f455e7ed44414822))
+* useMediaQueries起因でEnvironmentProviderがSSRエラーが出るため、SSR時にwindowを使わないようにした  ([#6125](https://github.com/kufu/smarthr-ui/issues/6125)) ([03276d7](https://github.com/kufu/smarthr-ui/commit/03276d7e3124ef3302069f84cc93c312d7c064ce))
+
+## [86.0.0](https://github.com/kufu/smarthr-ui/compare/v85.0.0...v86.0.0) (2026-02-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Table:** SHRUI-1393: TableReelとTableのコンポネントを合併し、a11y問題を解決する修正で入ってしまった不具合をなくす (#6106)
+* SideNavItemAnchorを追加 (#6094)
+* **DefinitionList:** DefinitionListItemに対する指定をDefinitionListで行わない形式に変更する (#6015)
+* **InformationPanel:** title関連の属性をheading属性にobjectとしてまとめる (#5979)
+* **Dialog:** title関連の属性をheading属性に変更する (#5975)
+
+### Features
+
+* **charts:** グラフコンポーネントのオプション拡張とデータラベル機能の追加 ([#6072](https://github.com/kufu/smarthr-ui/issues/6072)) ([7387e3b](https://github.com/kufu/smarthr-ui/commit/7387e3b6d9b2bd1395ad93efd8dd676ca76bf182))
+* **DefinitionList:** DefinitionListItemに対する指定をDefinitionListで行わない形式に変更する ([#6015](https://github.com/kufu/smarthr-ui/issues/6015)) ([0cc3bf7](https://github.com/kufu/smarthr-ui/commit/0cc3bf72fc20ba39fbb4285f61d7e53dfef61a52))
+* **InformationPanel:** title関連の属性をheading属性にobjectとしてまとめる ([#5979](https://github.com/kufu/smarthr-ui/issues/5979)) ([6116631](https://github.com/kufu/smarthr-ui/commit/61166317e8f67c2fad56ce3c768aebfa827bacc7))
+* SideNavItemAnchorを追加 ([#6094](https://github.com/kufu/smarthr-ui/issues/6094)) ([92d72bc](https://github.com/kufu/smarthr-ui/commit/92d72bc3a01533b6d8ebd87133ec07de15d5c7b1))
+
+
+### Bug Fixes
+
+* CommonJS向けのビルドをrollupで行うように修正 ([#6096](https://github.com/kufu/smarthr-ui/issues/6096)) ([d06b539](https://github.com/kufu/smarthr-ui/commit/d06b53982d6efbd0c536e38feb30764bd90fd4c2))
+* **Table:** SHRUI-1393: TableReelとTableのコンポネントを合併し、a11y問題を解決する修正で入ってしまった不具合をなくす ([#6106](https://github.com/kufu/smarthr-ui/issues/6106)) ([1d5a4b0](https://github.com/kufu/smarthr-ui/commit/1d5a4b06aa4cffabac735f3471d63486fb2c0931))
+
+
+* **Dialog:** title関連の属性をheading属性に変更する ([#5975](https://github.com/kufu/smarthr-ui/issues/5975)) ([92a7e76](https://github.com/kufu/smarthr-ui/commit/92a7e76364c7b94bba46936b660dc3e254ec8277))
+
 ## [85.0.0](https://github.com/kufu/smarthr-ui/compare/v84.0.0...v85.0.0) (2026-02-12)
 
 

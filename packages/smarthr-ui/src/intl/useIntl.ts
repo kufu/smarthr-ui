@@ -269,7 +269,7 @@ const WEEKDAY_FORMATS: Record<keyof typeof locales, { replacer: (base: string) =
   'id-id': { replacer: (base) => base.replace(/^([A-Za-z]{3}), (.+)$/, '$2 ($1)') },
   ko: { replacer: (base) => base.replace(/(.+?)([월화수목금토일])$/, '$1 ($2)') },
   pt: { replacer: (base) => base.replace(/^([A-Za-z]{3}\.), (.+)$/, '$2 ($1)') },
-  vi: { replacer: (base) => base.replace(/^([A-Za-z]{2} \d+), (.+)$/, '$2 ($1)') },
+  vi: { replacer: (base) => base.replace(/^(\S+ \d+), (.+)$/, '$2 ($1)') },
   'zh-cn': { replacer: (base) => base.replace(/(.+?)\s*([周][一二三四五六日])$/, '$1（$2）') },
   'zh-tw': { replacer: (base) => base.replace(/(.+?)\s*([週][一二三四五六日])$/, '$1（$2）') },
 } as const

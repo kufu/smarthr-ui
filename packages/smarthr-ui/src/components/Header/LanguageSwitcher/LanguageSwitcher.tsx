@@ -53,7 +53,7 @@ const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayL
   return (currentIndex + 1) % arrayLength
 }
 
-const onKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
+const onDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
   }
@@ -165,7 +165,7 @@ export const LanguageSwitcher: FC<Props> = ({
         className={classNames.switchButton}
         label={decorated.triggerLabel}
       />
-      <DropdownContent role="presentation" onKeyDown={onKeyDownContent}>
+      <DropdownContent onKeyDown={onDelegateKeyDownContent}>
         <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton

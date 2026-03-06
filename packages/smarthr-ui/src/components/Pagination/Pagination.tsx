@@ -110,7 +110,7 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const actualOnClick = useMemo(() => {
+  const onDelegateClick = useMemo(() => {
     if (!onClick) {
       return undefined
     }
@@ -151,7 +151,7 @@ const ActualPagination: FC<Props> = ({
 
   return (
     <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={actualOnClick} role="presentation">
+      <Reel onClick={onDelegateClick}>
         <ItemButtons
           total={total}
           current={current}

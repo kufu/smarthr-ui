@@ -6,7 +6,11 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
+import {
+  FormDialogContentInner,
+  type FormDialogContentInnerProps,
+  type FormDialogHelpers,
+} from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
@@ -56,10 +60,10 @@ export const FormDialog: FC<Props> = ({
     }
   }, [isOpen, onClickClose])
 
-  const actualOnSubmitAction = useCallback(
-    (close: () => void, e: FormEvent<HTMLFormElement>) => {
+  const onDelegateSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => {
       if (isOpen) {
-        onSubmit(close, e)
+        onSubmit(e, helpers)
       }
     },
     [isOpen, onSubmit],
@@ -73,7 +77,6 @@ export const FormDialog: FC<Props> = ({
       className={className}
       onPressEscape={closeDisabled ? undefined : onPressEscape}
     >
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <FormDialogContentInner
         heading={heading}
         contentBgColor={contentBgColor}
@@ -84,7 +87,7 @@ export const FormDialog: FC<Props> = ({
         closeDisabled={closeDisabled}
         subActionArea={subActionArea}
         onClickClose={actualOnClickClose}
-        onSubmit={actualOnSubmitAction}
+        onSubmit={onDelegateSubmit}
         responseStatus={responseStatus}
         decorators={decorators}
       >

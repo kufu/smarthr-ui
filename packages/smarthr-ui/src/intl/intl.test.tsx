@@ -134,8 +134,9 @@ describe('intl', () => {
             <IntlProvider locale="vi">{children}</IntlProvider>
           )
           const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-          expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
-            '01 tháng 1, 2025 (Th 4)',
+          // 環境によって "Th 4" または "Thứ 4" が返される
+          expect(formatDate({ date: testDate, parts: fullParts })).toMatch(
+            /^01 tháng 1, 2025 \(Thứ? 4\)$/,
           )
         })
 
