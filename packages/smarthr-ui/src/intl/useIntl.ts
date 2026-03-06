@@ -267,7 +267,9 @@ const WEEKDAY_FORMATS: Record<keyof typeof locales, { replacer: (base: string) =
   'ja-easy': { replacer: (base) => base.replace(/(.+?)\(([月火水木金土日])\)$/, '$1（$2）') },
   'en-us': { replacer: (base) => base.replace(/^([A-Za-z]{3}), (.+)$/, '$2 ($1)') },
   'id-id': { replacer: (base) => base.replace(/^([A-Za-z]{3}), (.+)$/, '$2 ($1)') },
-  ko: { replacer: (base) => base.replace(/(.+?)([월화수목금토일])$/, '$1 ($2)') },
+  ko: {
+    replacer: (base) => base.replace(/\s{2,}/g, ' ').replace(/([월화수목금토일])$/, '($1)'),
+  },
   pt: { replacer: (base) => base.replace(/^([A-Za-z]{3}\.), (.+)$/, '$2 ($1)') },
   vi: { replacer: (base) => base.replace(/^(\S+ \d+), (.+)$/, '$2 ($1)') },
   'zh-cn': { replacer: (base) => base.replace(/(.+?)\s*([周][一二三四五六日])$/, '$1（$2）') },
