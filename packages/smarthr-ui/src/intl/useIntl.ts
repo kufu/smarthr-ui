@@ -274,52 +274,26 @@ const WEEKDAY_FORMATS: Record<keyof typeof locales, { replacer: (base: string) =
   'zh-tw': { replacer: (base) => base.replace(/(.+?)\s*([週][一二三四五六日])$/, '$1（$2）') },
 } as const
 
+const COMMON_TIME_FORMAT: Intl.DateTimeFormatOptions = {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+}
+
 const TIME_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions> = {
-  ja: {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
-  'ja-easy': {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
+  ja: COMMON_TIME_FORMAT,
+  'ja-easy': COMMON_TIME_FORMAT,
   'en-us': {
+    ...COMMON_TIME_FORMAT,
     hour: 'numeric',
-    minute: '2-digit',
     hour12: true,
   },
-  'id-id': {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
-  ko: {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
-  pt: {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
-  vi: {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
-  'zh-cn': {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
-  'zh-tw': {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  },
+  'id-id': COMMON_TIME_FORMAT,
+  ko: COMMON_TIME_FORMAT,
+  pt: COMMON_TIME_FORMAT,
+  vi: COMMON_TIME_FORMAT,
+  'zh-cn': COMMON_TIME_FORMAT,
+  'zh-tw': COMMON_TIME_FORMAT,
 } as const
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
