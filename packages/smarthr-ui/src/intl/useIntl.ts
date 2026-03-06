@@ -434,7 +434,7 @@ export const useIntl = (): UseIntlReturn => {
 
   const formatTime = useCallback(
     ({ date, parts = ['hour', 'minute'], options }: FormatTimeProps): string => {
-      const { ...formatOptions } = options || {}
+      const formatOptions = options || {}
 
       const hasPart = parts.reduce(
         (prev, part) => {
@@ -449,12 +449,11 @@ export const useIntl = (): UseIntlReturn => {
       )
 
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
-        hour: hasPart.hour ? TIME_FORMATS[locale].hour : undefined,
-        minute: hasPart.minute ? TIME_FORMATS[locale].minute : undefined,
-        second: hasPart.second ? '2-digit' : undefined,
-        hour12:
-          formatOptions.hour12 !== undefined ? formatOptions.hour12 : TIME_FORMATS[locale].hour12,
         ...formatOptions,
+        hour: formatOptions.hour ?? (hasPart.hour ? TIME_FORMATS[locale].hour : undefined),
+        minute: formatOptions.minute ?? (hasPart.minute ? TIME_FORMATS[locale].minute : undefined),
+        second: formatOptions.second ?? (hasPart.second ? '2-digit' : undefined),
+        hour12: formatOptions.hour12 ?? TIME_FORMATS[locale].hour12,
       }
 
       return intl.formatDate(date, actualFormatOptions)
