@@ -93,8 +93,8 @@ const classNameGenerator = tv({
     clearButton: [
       'smarthr-ui-SingleCombobox-clearButton',
       'shr-group/clearButton',
-      'shr-me-0.5',
       'focus-visible:shr-shadow-none',
+      'shr-p-0.5',
     ],
     clearButtonIcon: [
       'shr-block',
@@ -146,6 +146,7 @@ const ActualSingleCombobox = <T,>(
     onKeyPress,
     decorators,
     style,
+    variant,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -194,6 +195,7 @@ const ActualSingleCombobox = <T,>(
     isLoading,
     triggerRef: outerRef,
     decorators,
+    variant,
   })
 
   const selectDefaultItem = useMemo(

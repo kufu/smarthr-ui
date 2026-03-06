@@ -80,4 +80,9 @@ export type AbstractProps<T> = {
    * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
    */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+
+  /**
+   * add variant for demo
+   */
+  variant?: 'outline' | 'solid' | 'github'
 }
