@@ -24,7 +24,7 @@ const classNameGenerator = tv({
     wrapper: [
       'smarthr-ui-SideMenu-item',
       '[&>a]:shr-block [&>a]:shr-no-underline',
-      '[&>*:focus-visible]:shr-focus-indicator',
+      '[&>a:focus-visible]:shr-focus-indicator [&>button:focus-visible]:shr-focus-indicator',
     ],
     content: [
       'shr-flex shr-items-baseline shr-gap-0.5 shr-p-0.75',
