@@ -20,6 +20,10 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
+export type FormDialogHelpers = {
+  close: () => void
+}
+
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
@@ -30,9 +34,10 @@ export type AbstractProps = PropsWithChildren<
     actionTheme?: 'primary' | 'secondary' | 'danger'
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
-     * @param closeDialog ダイアログを閉じる関数
+     * @param e フォームイベント
+     * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>) => void
+    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
     /** アクションボタンを無効にするかどうか */
     actionDisabled?: boolean
     /** 閉じるボタンを無効にするかどうか */
@@ -79,7 +84,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
       // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
-      onSubmit(onClickClose, e)
+      onSubmit(e, { close: onClickClose })
     },
     [onSubmit, onClickClose],
   )

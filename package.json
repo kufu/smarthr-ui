@@ -17,7 +17,7 @@
     "stylelint": "^17.3.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.2",
-    "stylelint-config-standard": "^39.0.1",
+    "stylelint-config-standard": "^40.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
@@ -29,7 +29,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.30.3",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.28.6",
@@ -43,7 +43,7 @@
       "esbuild@<=0.24.2": ">=0.27.3",
       "@babel/runtime@<7.26.10": ">=7.28.6",
       "@babel/helpers@<7.26.10": ">=7.28.6",
-      "brace-expansion@<1.1.12": "^4.0.1",
+      "brace-expansion@<1.1.12": "^5.0.4",
       "brace-expansion@<2.0.2": "^2.0.2",
       "tar-fs@>=3.1.1": ">=3.1.1",
       "tmp@<=0.2.3": ">=0.2.5",
@@ -57,7 +57,7 @@
       "tar@<=7.5.2": ">=7.5.9",
       "tar@<=7.5.3": ">=7.5.9",
       "tar@<7.5.7": ">=7.5.9",
-      "axios@<=1.13.4": ">=1.13.5",
+      "axios@<=1.13.4": ">=1.13.6",
       "qs@<6.14.1": ">=6.15.0",
       "qs@>=6.7.0 <=6.14.1": ">=6.15.0",
       "tar@<7.5.8": ">=7.5.9"

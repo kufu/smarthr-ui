@@ -2,7 +2,6 @@ import { Chart } from './Chart'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
-
 const meta: Meta<typeof Chart> = {
   title: 'Chart',
   component: Chart,

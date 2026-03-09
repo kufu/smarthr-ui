@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [88.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.2.0...smarthr-ui-v88.0.0) (2026-03-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **FormDialog,ActionDialog:** onSubmit/onClickActionのコールバックインターフェースを変更 ([#6024](https://github.com/kufu/smarthr-ui/issues/6024))
+* **StepFormDialog:** onSubmitの内部の自由度を向上 ([#5914](https://github.com/kufu/smarthr-ui/issues/5914))
+
+### Features
+
+* **FormDialog,ActionDialog:** onSubmit/onClickActionのコールバックインターフェースを変更 ([#6024](https://github.com/kufu/smarthr-ui/issues/6024)) ([fd7a303](https://github.com/kufu/smarthr-ui/commit/fd7a303d8cd5dd39717c8c662eb9d25b65e2d99c))
+* **StepFormDialog:** onSubmitの内部の自由度を向上 ([#5914](https://github.com/kufu/smarthr-ui/issues/5914)) ([e11f684](https://github.com/kufu/smarthr-ui/commit/e11f68456209c145de26564d2ed2604e1ccd1f81))
+
+
+### Bug Fixes
+
+* **DisclosureTrigger:** なんの要素も出力していないかのように扱えるように調整する ([#6165](https://github.com/kufu/smarthr-ui/issues/6165)) ([ecfa172](https://github.com/kufu/smarthr-ui/commit/ecfa17226cf48d24465ea910031d8ad104160ef5))
+
+## [87.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.1...smarthr-ui-v87.2.0) (2026-03-04)
+
+
+### Features
+
+* **Th:** デフォルトでwhite-space: nowrapを設定する ([#6119](https://github.com/kufu/smarthr-ui/issues/6119)) ([49d7664](https://github.com/kufu/smarthr-ui/commit/49d766483d52481ad1e30bfe4f0644c83b1f998b))
+
 ## [87.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.1.0...smarthr-ui-v87.1.1) (2026-02-27)
 
 

@@ -87,7 +87,7 @@ const classNameGenerator = tv({
     actionListItemButton: [
       // HINT: 実際にレンダリングされた要素のclassに対して追加されるため、優先度を上げる必要がある
       '[&&]:shr-w-full [&&]:shr-justify-start [&&]:shr-rounded-none [&&]:shr-border-none [&&]:shr-py-0.5 [&&]:shr-font-normal',
-      '[&&]:focus-visible:shr-focus-indicator--inner',
+      '[&&]:focus-visible:shr-focus-indicator',
     ],
   },
 })

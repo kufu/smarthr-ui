@@ -20,7 +20,10 @@ export default {
         id="remote-dialog"
         heading="リモートトリガーフォームダイアログ"
         actionText="アクション"
-        onSubmit={action('onSubmit')}
+        onSubmit={(e, { close }) => {
+          action('onSubmit')(e)
+          close()
+        }}
       >
         <p>リモートトリガーフォームダイアログです。</p>
       </RemoteTriggerFormDialog>
