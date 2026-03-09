@@ -448,7 +448,7 @@ export const ModelessDialog: FC<Props> = ({
             {children}
           </DialogBody>
           {footer && <div className={classNames.footer}>{footer}</div>}
-          <LiveRegion ariaText={decorated.dialogHandlerLiveRegionText} />
+          <LiveRegion regionText={decorated.dialogHandlerLiveRegionText} />
         </Base>
       </Draggable>
     </DialogOverlap>,
@@ -493,14 +493,12 @@ const Handler = memo<{
   )
 })
 
-const LiveRegion = ({ ariaText }: { ariaText: string | undefined }) => (
+const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
   <div
     role="status"
-    aria-live="polite"
-    aria-atomic="true"
     className="shr-fixed -shr-m-px shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap"
   >
-    {ariaText}
+    {regionText}
   </div>
 )
 
