@@ -106,10 +106,14 @@ const classNameGenerator = tv({
     headerEl:
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
     dialogHandler: [
-      'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-border-none shr-bg-inherit shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
-      'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
+      'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-border-none shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
+      'shr-cursor-[inherit] shr-bg-[unset] focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
     ],
-    headingEl: ['shr-relative shr-my-1 shr-me-1'],
+    headingEl: [
+      'shr-my-1 shr-me-1',
+      /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
+      '[.smarthr-ui-ModelessDialog-handle:focus-visible_+_&]:shr-relative',
+    ],
     closeButtonLayout: [
       'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
       'shr-ml-auto shr-shrink-0',
