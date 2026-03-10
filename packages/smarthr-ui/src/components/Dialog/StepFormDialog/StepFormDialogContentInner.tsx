@@ -40,21 +40,21 @@ type StepFormHelpers = {
 type ButtonArgType =
   | ReactNode
   | ((currentStep: StepItem, defaultTexts: DefaultTextsType) => ReactNode)
-type ObjectSubmitType = {
+type ObjectButtonBaseType = {
   text: ButtonArgType
+  visible: boolean
+}
+type ObjectSubmitType = ObjectButtonBaseType & {
   /** submitボタンを無効にするかどうか */
   disabled?: boolean
   /** submitボタンのスタイル */
   theme?: ActionThemeType | ((currentStep: StepItem) => ActionThemeType)
 }
-type ObjectCloseButtonType = {
-  text: ButtonArgType
+type ObjectCloseButtonType = ObjectButtonBaseType & {
   /** キャンセルボタンを無効にするかどうか */
   disabled?: boolean
 }
-type ObjectBackButtonType = {
-  text: ButtonArgType
-}
+type ObjectBackButtonType = ObjectButtonBaseType
 
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
@@ -88,13 +88,16 @@ const submitButtonObjectConverter = (text: ButtonArgType) => ({
   text,
   theme: 'primary',
   disabled: false,
+  visible: true,
 })
 const closeButtonObjectConverter = (text: ButtonArgType) => ({
   text,
   disabled: false,
+  visible: true,
 })
 const backButtonObjectConverter = (text: ButtonArgType) => ({
   text,
+  visible: true,
 })
 
 const BUTTON_COLUMN_GAP = {
@@ -120,17 +123,22 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 }) => {
   const {
     text: submitButton,
+    visible: submitVisible,
     theme: submitTheme,
     disabled: submitDisabled,
   } = useObjectAttributes<ReactNode | ObjectSubmitType, ObjectSubmitType>(
     originalSubmitButton,
     submitButtonObjectConverter,
   )
-  const { text: closeButton, disabled: closeDisabled } = useObjectAttributes<
-    ReactNode | ObjectCloseButtonType,
-    ObjectCloseButtonType
-  >(originalCloseButton, closeButtonObjectConverter)
-  const { text: backButton } = useObjectAttributes<
+  const {
+    text: closeButton,
+    visible: closeVisible,
+    disabled: closeDisabled,
+  } = useObjectAttributes<ReactNode | ObjectCloseButtonType, ObjectCloseButtonType>(
+    originalCloseButton,
+    closeButtonObjectConverter,
+  )
+  const { text: backButton, visible: backVisible } = useObjectAttributes<
     ReactNode | ObjectBackButtonType,
     ObjectBackButtonType
   >(originalBackButton, backButtonObjectConverter)
@@ -264,7 +272,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
-              {activeStep > 1 && (
+              {backVisible && activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
                   disabled={calcedResponseStatus.isProcessing}
@@ -274,22 +282,26 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                 </Button>
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
-                <Button
-                  onClick={handleCloseAction}
-                  disabled={closeDisabled || calcedResponseStatus.isProcessing}
-                  className="smarthr-ui-Dialog-closeButton"
-                >
-                  {closeText}
-                </Button>
-                <Button
-                  type="submit"
-                  variant={actualSubmitTheme}
-                  disabled={submitDisabled}
-                  loading={calcedResponseStatus.isProcessing}
-                  className="smarthr-ui-Dialog-actionButton"
-                >
-                  {submitText}
-                </Button>
+                {closeVisible && (
+                  <Button
+                    onClick={handleCloseAction}
+                    disabled={closeDisabled || calcedResponseStatus.isProcessing}
+                    className="smarthr-ui-Dialog-closeButton"
+                  >
+                    {closeText}
+                  </Button>
+                )}
+                {submitVisible && (
+                  <Button
+                    type="submit"
+                    variant={actualSubmitTheme}
+                    disabled={submitDisabled}
+                    loading={calcedResponseStatus.isProcessing}
+                    className="smarthr-ui-Dialog-actionButton"
+                  >
+                    {submitText}
+                  </Button>
+                )}
               </Cluster>
             </Cluster>
             <DialogContentResponseStatusMessage

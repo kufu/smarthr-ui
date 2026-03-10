@@ -149,20 +149,12 @@ export const SubmitButtonDisabled: StoryObj<typeof StepFormDialog> = {
     },
   },
 }
-
-export const ContentBgColor: StoryObj<typeof StepFormDialog> = {
-  name: 'contentBgColor',
+export const SubmitButtonVisible: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.visible',
   args: {
-    contentBgColor: 'BACKGROUND',
-  },
-}
-
-export const ContentPadding: StoryObj<typeof StepFormDialog> = {
-  name: 'contentPadding',
-  args: {
-    contentPadding: {
-      block: 1,
-      inline: 1.5,
+    submitButton: {
+      text: '保存',
+      visible: false,
     },
   },
 }
@@ -182,11 +174,46 @@ export const CloseButtonDisabled: StoryObj<typeof StepFormDialog> = {
     },
   },
 }
+export const CloseButtonVisible: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton.visible',
+  args: {
+    closeButton: {
+      text: '閉じる',
+      visible: false,
+    },
+  },
+}
 
 export const BackButton: StoryObj<typeof StepFormDialog> = {
   name: 'backButton',
   args: {
     backButton: 'back',
+  },
+}
+export const BackButtonVisible: StoryObj<typeof StepFormDialog> = {
+  name: 'backButton.visible',
+  args: {
+    backButton: {
+      text: 'back',
+      visible: false,
+    },
+  },
+}
+
+export const ContentBgColor: StoryObj<typeof StepFormDialog> = {
+  name: 'contentBgColor',
+  args: {
+    contentBgColor: 'BACKGROUND',
+  },
+}
+
+export const ContentPadding: StoryObj<typeof StepFormDialog> = {
+  name: 'contentPadding',
+  args: {
+    contentPadding: {
+      block: 1,
+      inline: 1.5,
+    },
   },
 }
 
