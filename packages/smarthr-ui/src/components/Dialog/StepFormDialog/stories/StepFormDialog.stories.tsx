@@ -24,18 +24,21 @@ export default {
     const [open, setOpen] = useState(false)
     const handleClose = onClickClose ?? (() => setOpen(false))
 
+    console.log(rest)
+
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <StepFormDialog
           {...rest}
           firstStep={{ id: 'step-1', stepNumber: 1 }}
-          onSubmit={(closeDialog, e, currentStep) => {
+          onSubmit={(e, { currentStep, goto, close }) => {
             action('onSubmit')(e)
+
             if (currentStep.id === 'step-2') {
-              closeDialog()
+              close()
             } else {
-              return { id: 'step-2', stepNumber: 2 }
+              goto({ id: 'step-2', stepNumber: 2 })
             }
           }}
           onClickClose={handleClose}
@@ -54,7 +57,7 @@ export default {
   args: {
     heading: 'フォームダイアログ',
     stepLength: 2,
-    submitLabel: '保存',
+    submitButton: '保存',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -87,23 +90,62 @@ export const StepLength: StoryObj<typeof StepFormDialog> = {
   },
 }
 
-export const SubmitLabel: StoryObj<typeof StepFormDialog> = {
-  name: 'submitLabel',
+export const SubmitButton: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton',
   args: {
-    submitLabel: '取り込む',
+    submitButton: '取り込む',
   },
 }
 
-export const SubmitLabelWithFunction: StoryObj<typeof StepFormDialog> = {
-  name: 'submitLabel(StepItem毎に切り替える方法)',
+export const SubmitButtonWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton(StepItem毎に切り替える方法)',
   args: {
-    submitLabel: (currentStep: StepItem) => {
+    submitButton: (currentStep: StepItem) => {
       switch (currentStep.id) {
         case 'step-1':
           return 'step2へ'
       }
 
       return '完了'
+    },
+  },
+}
+
+export const SubmitButtonTheme: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.theme',
+  args: {
+    submitButton: {
+      text: '保存',
+      theme: 'danger',
+    },
+  },
+}
+
+export const SubmitButtonThemeWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.theme(StepItem毎に切り替える方法)',
+  args: {
+    submitButton: {
+      text: '保存',
+      theme: (currentStep: StepItem) => {
+        switch (currentStep.id) {
+          case 'step-1':
+            return 'danger'
+          case 'step-2':
+            return 'primary'
+        }
+
+        return 'secondary'
+      },
+    },
+  },
+}
+
+export const SubmitButtonDisabled: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.disabled',
+  args: {
+    submitButton: {
+      text: '保存',
+      disabled: true,
     },
   },
 }
@@ -122,37 +164,6 @@ export const ContentPadding: StoryObj<typeof StepFormDialog> = {
       block: 1,
       inline: 1.5,
     },
-  },
-}
-
-export const ActionTheme: StoryObj<typeof StepFormDialog> = {
-  name: 'actionTheme',
-  args: {
-    actionTheme: 'danger',
-  },
-}
-
-export const ActionThemeWithFunction: StoryObj<typeof StepFormDialog> = {
-  name: 'actionTheme(StepItem毎に切り替える方法)',
-  args: {
-    actionTheme: (currentStep: StepItem) => {
-      console.log(currentStep)
-      switch (currentStep.id) {
-        case 'step-1':
-          return 'danger'
-        case 'step-2':
-          return 'primary'
-      }
-
-      return 'secondary'
-    },
-  },
-}
-
-export const ActionDisabled: StoryObj<typeof StepFormDialog> = {
-  name: 'actionDisabled',
-  args: {
-    actionDisabled: true,
   },
 }
 

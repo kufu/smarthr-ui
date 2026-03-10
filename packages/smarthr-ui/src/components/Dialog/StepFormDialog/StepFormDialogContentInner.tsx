@@ -11,6 +11,7 @@ import {
 } from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
@@ -34,24 +35,29 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
+type SubmitType =
+  | ReactNode
+  | ((currentStep: StepItem, decorated: Record<DecoratorKeyTypes, ReactNode>) => ReactNode)
+type ObjectSubmitType = {
+  text: SubmitType
+  /** submitボタンを無効にするかどうか */
+  disabled?: boolean
+  /** submitボタンのスタイル */
+  theme?: ActionThemeType | ((currentStep: StepItem) => ActionThemeType)
+}
+
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
-    /** アクションボタンのラベル */
-    submitLabel:
-      | ReactNode
-      | ((currentStep: StepItem, decorated: Record<DecoratorKeyTypes, ReactNode>) => ReactNode)
-    /** アクションボタンのスタイル */
-    actionTheme?: ActionThemeType | ((currentStep: StepItem) => ActionThemeType)
+    /** submitボタン */
+    submitButton: SubmitType | ObjectSubmitType
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
      * @param helpers ステップ操作用のヘルパー関数群
      */
     onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
-    /** アクションボタンを無効にするかどうか */
-    actionDisabled?: boolean
     /** 閉じるボタンを無効にするかどうか */
     closeDisabled?: boolean
     /** コンポーネント内の文言を変更するための関数を設定 */
@@ -68,6 +74,12 @@ export type StepFormDialogContentInnerProps = AbstractProps & {
   onClickBack?: () => void
 }
 
+const submitButtonObjectConverter = (text: SubmitType) => ({
+  text,
+  theme: 'primary',
+  disabled: false,
+})
+
 const BUTTON_COLUMN_GAP = {
   row: 0.5,
   column: 1,
@@ -78,18 +90,26 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   heading,
   contentBgColor,
   contentPadding,
-  submitLabel,
-  actionTheme = 'primary',
+  submitButton: originalSubmitButton,
   stepLength,
   firstStep,
   onSubmit,
   onClickClose,
   responseStatus,
-  actionDisabled,
   closeDisabled,
   decorators,
   onClickBack,
 }) => {
+  const {
+    text: submitButton,
+    theme: submitTheme,
+    disabled: submitDisabled,
+  } = useObjectAttributes<ReactNode | ObjectSubmitType, ObjectSubmitType>(
+    originalSubmitButton,
+    submitButtonObjectConverter,
+  )
+  console.log(originalSubmitButton, submitButton)
+
   const { localize } = useIntl()
   const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
   const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
@@ -172,15 +192,15 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
   const actionText = useMemo(() => {
-    if (typeof submitLabel === 'function') {
-      return submitLabel(currentStep, decorated)
+    if (typeof submitButton === 'function') {
+      return submitButton(currentStep, decorated)
     }
 
-    return activeStep === stepLength ? submitLabel : decorated.nextButtonLabel
-  }, [activeStep, currentStep, submitLabel, stepLength, decorated])
+    return activeStep === stepLength ? submitButton : decorated.nextButtonLabel
+  }, [activeStep, currentStep, submitButton, stepLength, decorated])
   const actualActionTheme = useMemo(
-    () => (typeof actionTheme === 'function' ? actionTheme(currentStep) : actionTheme),
-    [currentStep, actionTheme],
+    () => (typeof submitTheme === 'function' ? submitTheme(currentStep) : submitTheme),
+    [currentStep, submitTheme],
   )
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
@@ -225,7 +245,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                 <Button
                   type="submit"
                   variant={actualActionTheme}
-                  disabled={actionDisabled}
+                  disabled={submitDisabled}
                   loading={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-actionButton"
                 >

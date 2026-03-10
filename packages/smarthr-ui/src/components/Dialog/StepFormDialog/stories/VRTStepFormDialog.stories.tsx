@@ -13,7 +13,7 @@ export default {
       text: 'アクションダイアログタイトル',
       sub: 'アクションダイアログのサブタイトル',
     },
-    submitLabel: '保存',
+    submitButton: '保存',
     contentBgColor: 'BACKGROUND',
     responseStatus: {
       status: 'success',

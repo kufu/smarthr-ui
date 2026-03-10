@@ -39,15 +39,13 @@ export const StepFormDialog: FC<Props> = ({
   stepLength,
   contentBgColor,
   contentPadding,
-  actionTheme,
-  submitLabel,
+  submitButton,
   firstStep,
   onSubmit,
   onClickClose,
   onClickBack,
   onPressEscape = onClickClose,
   responseStatus,
-  actionDisabled = false,
   closeDisabled,
   className,
   portalParent,
@@ -104,10 +102,8 @@ export const StepFormDialog: FC<Props> = ({
           contentPadding={contentPadding}
           firstStep={firstStep}
           stepLength={stepLength}
-          actionTheme={actionTheme}
-          actionDisabled={actionDisabled}
           closeDisabled={closeDisabled}
-          submitLabel={submitLabel}
+          submitButton={submitButton}
           onClickClose={actualOnClickClose}
           onSubmit={onDelegateSubmit}
           onClickBack={actualOnClickBack}
