@@ -167,10 +167,19 @@ export const ContentPadding: StoryObj<typeof StepFormDialog> = {
   },
 }
 
-export const CloseDisabled: StoryObj<typeof StepFormDialog> = {
-  name: 'closeDisabled',
+export const CloseButton: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton',
   args: {
-    closeDisabled: true,
+    closeButton: '閉じる',
+  },
+}
+export const CloseButtonDisabled: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton.disabled',
+  args: {
+    closeButton: {
+      text: '閉じる',
+      disabled: true,
+    },
   },
 }
 

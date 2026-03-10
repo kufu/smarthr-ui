@@ -40,13 +40,13 @@ export const StepFormDialog: FC<Props> = ({
   contentBgColor,
   contentPadding,
   submitButton,
+  closeButton,
   firstStep,
   onSubmit,
   onClickClose,
   onClickBack,
   onPressEscape = onClickClose,
   responseStatus,
-  closeDisabled,
   className,
   portalParent,
   decorators,
@@ -93,7 +93,7 @@ export const StepFormDialog: FC<Props> = ({
         isOpen={isOpen}
         ariaLabelledby={heading.id}
         className={className}
-        onPressEscape={closeDisabled ? undefined : onPressEscape}
+        onPressEscape={closeButton?.disabled ? undefined : onPressEscape}
         focusTrapRef={focusTrapRef}
       >
         <StepFormDialogContentInner
@@ -102,8 +102,8 @@ export const StepFormDialog: FC<Props> = ({
           contentPadding={contentPadding}
           firstStep={firstStep}
           stepLength={stepLength}
-          closeDisabled={closeDisabled}
           submitButton={submitButton}
+          closeButton={closeButton}
           onClickClose={actualOnClickClose}
           onSubmit={onDelegateSubmit}
           onClickBack={actualOnClickBack}
