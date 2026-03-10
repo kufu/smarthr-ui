@@ -115,24 +115,66 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   responseStatus,
   onClickBack,
 }) => {
-  const {
-    text: submitButton,
-    visible: submitVisible,
-    theme: submitTheme,
-    disabled: submitDisabled,
-  } = useObjectAttributes<ButtonArgType | ObjectSubmitType, ObjectSubmitType>(
+  const { localize } = useIntl()
+  const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
+  const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
+
+  const defaultTexts: DefaultTextsType = useMemo(
+    () => ({
+      closeButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
+        defaultText: 'キャンセル',
+      }),
+      nextButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
+        defaultText: '次へ',
+      }),
+      backButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/backButtonLabel',
+        defaultText: '戻る',
+      }),
+    }),
+    [localize],
+  )
+
+  const submitButton = useObjectAttributes<ButtonArgType | ObjectSubmitType, ObjectSubmitType>(
     originalSubmitButton,
     submitButtonObjectConverter,
   )
-  const { text: closeButton, visible: closeVisible, disabled: closeDisabled } = originalCloseButton
-  const { text: backButton, visible: backVisible } = useObjectAttributes<
+  const closeButton = originalCloseButton
+  const backButton = useObjectAttributes<
     ButtonArgType | ObjectBackButtonType,
     ObjectBackButtonType
   >(originalBackButton, backButtonObjectConverter)
 
-  const { localize } = useIntl()
-  const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
-  const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
+  const submitText = useMemo(() => {
+    if (typeof submitButton.text === 'function') {
+      return submitButton.text(currentStep, defaultTexts)
+    }
+
+    return activeStep === stepLength ? submitButton.text : defaultTexts.nextButtonLabel
+  }, [activeStep, currentStep, submitButton, stepLength, defaultTexts])
+  const actualSubmitTheme = useMemo(
+    () =>
+      typeof submitButton.theme === 'function'
+        ? submitButton.theme(currentStep)
+        : submitButton.theme,
+    [currentStep, submitButton],
+  )
+  const closeText = useMemo(() => {
+    if (typeof closeButton.text === 'function') {
+      return closeButton.text(currentStep, defaultTexts)
+    }
+
+    return closeButton.text || defaultTexts.closeButtonLabel
+  }, [currentStep, closeButton, defaultTexts])
+  const backText = useMemo(() => {
+    if (typeof backButton.text === 'function') {
+      return backButton.text(currentStep, defaultTexts)
+    }
+
+    return backButton.text || defaultTexts.backButtonLabel
+  }, [currentStep, backButton, defaultTexts])
 
   const handleCloseAction = useCallback(() => {
     onClickClose()
@@ -192,50 +234,6 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     }
   }, [])
 
-  const defaultTexts: DefaultTextsType = useMemo(
-    () => ({
-      closeButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
-        defaultText: 'キャンセル',
-      }),
-      nextButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
-        defaultText: '次へ',
-      }),
-      backButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/backButtonLabel',
-        defaultText: '戻る',
-      }),
-    }),
-    [localize],
-  )
-
-  const submitText = useMemo(() => {
-    if (typeof submitButton === 'function') {
-      return submitButton(currentStep, defaultTexts)
-    }
-
-    return activeStep === stepLength ? submitButton : defaultTexts.nextButtonLabel
-  }, [activeStep, currentStep, submitButton, stepLength, defaultTexts])
-  const actualSubmitTheme = useMemo(
-    () => (typeof submitTheme === 'function' ? submitTheme(currentStep) : submitTheme),
-    [currentStep, submitTheme],
-  )
-  const closeText = useMemo(() => {
-    if (typeof closeButton === 'function') {
-      return closeButton(currentStep, defaultTexts)
-    }
-
-    return closeButton || defaultTexts.closeButtonLabel
-  }, [currentStep, closeButton, defaultTexts])
-  const backText = useMemo(() => {
-    if (typeof backButton === 'function') {
-      return backButton(currentStep, defaultTexts)
-    }
-
-    return backButton || defaultTexts.backButtonLabel
-  }, [currentStep, backButton, defaultTexts])
-
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
@@ -259,7 +257,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
-              {backVisible && activeStep > 1 && (
+              {backButton.visible && activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
                   disabled={calcedResponseStatus.isProcessing}
@@ -269,20 +267,20 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                 </Button>
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
-                {closeVisible && (
+                {closeButton.visible && (
                   <Button
                     onClick={handleCloseAction}
-                    disabled={closeDisabled || calcedResponseStatus.isProcessing}
+                    disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
                     className="smarthr-ui-Dialog-closeButton"
                   >
                     {closeText}
                   </Button>
                 )}
-                {submitVisible && (
+                {submitButton.visible && (
                   <Button
                     type="submit"
                     variant={actualSubmitTheme}
-                    disabled={submitDisabled}
+                    disabled={submitButton.Disabled}
                     loading={calcedResponseStatus.isProcessing}
                     className="smarthr-ui-Dialog-actionButton"
                   >
