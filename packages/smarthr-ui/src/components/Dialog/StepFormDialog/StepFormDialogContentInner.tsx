@@ -37,7 +37,7 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
-type ButtonArgType =
+export type ButtonArgType =
   | ReactNode
   | ((currentStep: StepItem, defaultTexts: DefaultTextsType) => ReactNode)
 type ObjectButtonBaseType = {
@@ -50,7 +50,7 @@ type ObjectSubmitType = ObjectButtonBaseType & {
   /** submitボタンのスタイル */
   theme?: ActionThemeType | ((currentStep: StepItem) => ActionThemeType)
 }
-type ObjectCloseButtonType = ObjectButtonBaseType & {
+export type ObjectCloseButtonType = ObjectButtonBaseType & {
   /** キャンセルボタンを無効にするかどうか */
   disabled?: boolean
 }
@@ -69,7 +69,7 @@ export type AbstractProps = PropsWithChildren<
      */
     onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
     /** キャンセルボタン */
-    closeButton?: ButtonArgType | ObjectCloseButtonType
+    closeButton: ObjectCloseButtonType
     /** 戻るボタン */
     backButton?: ButtonArgType | ObjectBackButtonType
   }
@@ -84,18 +84,13 @@ export type StepFormDialogContentInnerProps = AbstractProps & {
   onClickBack?: () => void
 }
 
-const submitButtonObjectConverter = (text: ButtonArgType) => ({
+const submitButtonObjectConverter = (text: ButtonArgType): ObjectSubmitType => ({
   text,
   theme: 'primary',
   disabled: false,
   visible: true,
 })
-const closeButtonObjectConverter = (text: ButtonArgType) => ({
-  text,
-  disabled: false,
-  visible: true,
-})
-const backButtonObjectConverter = (text: ButtonArgType) => ({
+const backButtonObjectConverter = (text: ButtonArgType): ObjectBackButtonType => ({
   text,
   visible: true,
 })
@@ -118,7 +113,6 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   onSubmit,
   onClickClose,
   responseStatus,
-  decorators,
   onClickBack,
 }) => {
   const {
@@ -126,20 +120,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     visible: submitVisible,
     theme: submitTheme,
     disabled: submitDisabled,
-  } = useObjectAttributes<ReactNode | ObjectSubmitType, ObjectSubmitType>(
+  } = useObjectAttributes<ButtonArgType | ObjectSubmitType, ObjectSubmitType>(
     originalSubmitButton,
     submitButtonObjectConverter,
   )
-  const {
-    text: closeButton,
-    visible: closeVisible,
-    disabled: closeDisabled,
-  } = useObjectAttributes<ReactNode | ObjectCloseButtonType, ObjectCloseButtonType>(
-    originalCloseButton,
-    closeButtonObjectConverter,
-  )
+  const { text: closeButton, visible: closeVisible, disabled: closeDisabled } = originalCloseButton
   const { text: backButton, visible: backVisible } = useObjectAttributes<
-    ReactNode | ObjectBackButtonType,
+    ButtonArgType | ObjectBackButtonType,
     ObjectBackButtonType
   >(originalBackButton, backButtonObjectConverter)
 

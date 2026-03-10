@@ -9,11 +9,14 @@ import {
   useRef,
 } from 'react'
 
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
 import {
+  type ButtonArgType,
+  type ObjectCloseButtonType,
   StepFormDialogContentInner,
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
@@ -32,6 +35,11 @@ type AbstractProps = Omit<StepFormDialogContentInnerProps, 'heading' | 'activeSt
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
+const closeButtonObjectConverter = (text: ButtonArgType): ObjectCloseButtonType => ({
+  text,
+  disabled: false,
+  visible: true,
+})
 
 export const StepFormDialog: FC<Props> = ({
   children,
@@ -40,7 +48,7 @@ export const StepFormDialog: FC<Props> = ({
   contentBgColor,
   contentPadding,
   submitButton,
-  closeButton,
+  closeButton: originalCloseButton,
   backButton,
   firstStep,
   onSubmit,
@@ -50,7 +58,6 @@ export const StepFormDialog: FC<Props> = ({
   responseStatus,
   className,
   portalParent,
-  decorators,
   id,
   isOpen,
   ...rest
@@ -60,6 +67,10 @@ export const StepFormDialog: FC<Props> = ({
     orgHeading,
     headingObjectConverter,
   )
+  const closeButton = useObjectAttributes<
+    ButtonArgType | ObjectCloseButtonType,
+    ObjectCloseButtonType
+  >(originalCloseButton, closeButtonObjectConverter)
 
   const focusTrapRef = useRef<FocusTrapRef>(null)
 
@@ -94,7 +105,7 @@ export const StepFormDialog: FC<Props> = ({
         isOpen={isOpen}
         ariaLabelledby={heading.id}
         className={className}
-        onPressEscape={closeButton?.disabled ? undefined : onPressEscape}
+        onPressEscape={closeButton.disabled ? undefined : onPressEscape}
         focusTrapRef={focusTrapRef}
       >
         <StepFormDialogContentInner
@@ -110,7 +121,6 @@ export const StepFormDialog: FC<Props> = ({
           onSubmit={onDelegateSubmit}
           onClickBack={actualOnClickBack}
           responseStatus={responseStatus}
-          decorators={decorators}
         >
           {children}
         </StepFormDialogContentInner>
