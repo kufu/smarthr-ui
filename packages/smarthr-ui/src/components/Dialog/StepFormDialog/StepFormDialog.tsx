@@ -41,6 +41,7 @@ export const StepFormDialog: FC<Props> = ({
   contentPadding,
   submitButton,
   closeButton,
+  backButton,
   firstStep,
   onSubmit,
   onClickClose,
@@ -104,6 +105,7 @@ export const StepFormDialog: FC<Props> = ({
           stepLength={stepLength}
           submitButton={submitButton}
           closeButton={closeButton}
+          backButton={backButton}
           onClickClose={actualOnClickClose}
           onSubmit={onDelegateSubmit}
           onClickBack={actualOnClickBack}

@@ -49,8 +49,11 @@ type ObjectSubmitType = {
 }
 type ObjectCloseButtonType = {
   text: ButtonArgType
-  /** 閉じるボタンを無効にするかどうか */
+  /** キャンセルボタンを無効にするかどうか */
   disabled?: boolean
+}
+type ObjectBackButtonType = {
+  text: ButtonArgType
 }
 
 export type AbstractProps = PropsWithChildren<
@@ -65,8 +68,10 @@ export type AbstractProps = PropsWithChildren<
      * @param helpers ステップ操作用のヘルパー関数群
      */
     onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
-    /** 閉じるボタン */
+    /** キャンセルボタン */
     closeButton?: ButtonArgType | ObjectCloseButtonType
+    /** 戻るボタン */
+    backButton?: ButtonArgType | ObjectBackButtonType
   }
 >
 
@@ -88,6 +93,9 @@ const closeButtonObjectConverter = (text: ButtonArgType) => ({
   text,
   disabled: false,
 })
+const backButtonObjectConverter = (text: ButtonArgType) => ({
+  text,
+})
 
 const BUTTON_COLUMN_GAP = {
   row: 0.5,
@@ -101,6 +109,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   contentPadding,
   submitButton: originalSubmitButton,
   closeButton: originalCloseButton,
+  backButton: originalBackButton,
   stepLength,
   firstStep,
   onSubmit,
@@ -118,9 +127,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     submitButtonObjectConverter,
   )
   const { text: closeButton, disabled: closeDisabled } = useObjectAttributes<
-    ReactNode | ObjectSubmitType,
-    ObjectSubmitType
+    ReactNode | ObjectCloseButtonType,
+    ObjectCloseButtonType
   >(originalCloseButton, closeButtonObjectConverter)
+  const { text: backButton } = useObjectAttributes<
+    ReactNode | ObjectBackButtonType,
+    ObjectBackButtonType
+  >(originalBackButton, backButtonObjectConverter)
 
   const { localize } = useIntl()
   const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
@@ -220,6 +233,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
     return closeButton || defaultTexts.closeButtonLabel
   }, [currentStep, closeButton, defaultTexts])
+  const backText = useMemo(() => {
+    if (typeof backButton === 'function') {
+      return backButton(currentStep, defaultTexts)
+    }
+
+    return backButton || defaultTexts.backButtonLabel
+  }, [currentStep, backButton, defaultTexts])
 
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
@@ -250,7 +270,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   disabled={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-backButton"
                 >
-                  {defaultTexts.backButtonLabel}
+                  {backText}
                 </Button>
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>

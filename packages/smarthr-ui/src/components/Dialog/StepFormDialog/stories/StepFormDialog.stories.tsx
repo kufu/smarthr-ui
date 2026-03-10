@@ -183,6 +183,13 @@ export const CloseButtonDisabled: StoryObj<typeof StepFormDialog> = {
   },
 }
 
+export const BackButton: StoryObj<typeof StepFormDialog> = {
+  name: 'backButton',
+  args: {
+    backButton: 'back',
+  },
+}
+
 export const FirstStep: StoryObj<typeof StepFormDialog> = {
   name: 'firstStep',
   args: {
