@@ -1,14 +1,5 @@
-import {
-  type ComponentProps,
-  type FC,
-  Fragment,
-  type PropsWithChildren,
-  useMemo,
-  useRef,
-} from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useMemo, useRef } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
-
-import { Base } from '../Base'
 
 import { TableReel } from './TableReel'
 import { TableScrollContext } from './TableScrollContext'
@@ -20,11 +11,18 @@ type AbstractProps = PropsWithChildren<
 >
 type Props = AbstractProps & Omit<ComponentProps<'table'>, keyof AbstractProps>
 
+const ROUNDED = {
+  t_l: '[&>thead:first-child>tr:first-child>th:first-child]:shr-rounded-tl-l [&>thead:first-child>tr:first-child>td:first-child]:shr-rounded-tl-l',
+  t_r: '[&>thead:first-child>tr:first-child>th:last-child]:shr-rounded-tr-l [&>thead:first-child>tr:first-child>td:last-child]:shr-rounded-tr-l',
+  b_l: '[&>tbody:last-child>tr:last-child>th:first-child]:shr-rounded-bl-l [&>tbody:last-child>tr:last-child>td:first-child]:shr-rounded-bl-l',
+  b_r: '[&>tbody:last-child>tr:last-child>th:last-child]:shr-rounded-br-l [&>tbody:last-child>tr:last-child>td:last-child]:shr-rounded-br-l',
+}
+const ROUNDED_ALL = [ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
+
 const classNameGenerator = tv({
   slots: {
     reelWrapper: ['smarthr-ui-TableReel', 'shr-relative'],
     inner: ['smarthr-ui-TableReel-inner', 'shr-relative'],
-    wrapper: '',
     table: [
       'smarthr-ui-Table',
       'shr-w-full shr-border-collapse',
@@ -58,7 +56,24 @@ const classNameGenerator = tv({
       },
     },
     rounded: {
-      true: {},
+      true: {
+        table: ROUNDED_ALL,
+      },
+      all: {
+        table: ROUNDED_ALL,
+      },
+      top: {
+        table: [ROUNDED.t_l, ROUNDED.t_r],
+      },
+      right: {
+        table: [ROUNDED.t_r, ROUNDED.b_r],
+      },
+      bottom: {
+        table: [ROUNDED.b_l, ROUNDED.b_r],
+      },
+      left: {
+        table: [ROUNDED.t_l, ROUNDED.b_l],
+      },
     },
     layout: {
       auto: {},
@@ -74,22 +89,6 @@ const classNameGenerator = tv({
     },
   },
   compoundVariants: [
-    {
-      // rounded のとき Wrapper である Base に装飾するため、Table には装飾しない
-      borderType: ['outer', 'all'],
-      rounded: true,
-      className: {
-        table: 'shr-border-none',
-        wrapper: 'shr-border-shorthand',
-      },
-    },
-    {
-      rounded: true,
-      fixedHead: true,
-      className: {
-        wrapper: ['shr-h-[inherit]', 'shr-max-h-[inherit]'],
-      },
-    },
     {
       borderType: ['vertical', 'both', 'all'],
       className: {
@@ -137,7 +136,7 @@ export const Table: FC<Props> = ({
 }) => {
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const classNames = useMemo(() => {
-    const { table, wrapper } = classNameGenerator({
+    const { table } = classNameGenerator({
       borderType,
       borderStyle,
       fixedHead,
@@ -145,30 +144,18 @@ export const Table: FC<Props> = ({
       rounded,
       className,
     })
-    return { table: table({ className }), wrapper: wrapper() }
+    return { table: table({ className }) }
   }, [borderType, borderStyle, className, fixedHead, layout, rounded])
-  const [Wrapper, wrapperProps] = useMemo(
-    () => (rounded ? [RoundedWrapper, { className: classNames.wrapper }] : [Fragment]),
-    [rounded, classNames.wrapper],
-  )
 
   const renderedTable = <table {...rest} className={classNames.table} />
 
   return (
-    <Wrapper {...wrapperProps}>
-      <TableScrollContext ref={tableWrapperRef} fixedHead={fixedHead}>
-        {reel ? (
-          <TableReel tableWrapperRef={tableWrapperRef}>{renderedTable}</TableReel>
-        ) : (
-          renderedTable
-        )}
-      </TableScrollContext>
-    </Wrapper>
+    <TableScrollContext ref={tableWrapperRef} fixedHead={fixedHead}>
+      {reel ? (
+        <TableReel tableWrapperRef={tableWrapperRef}>{renderedTable}</TableReel>
+      ) : (
+        renderedTable
+      )}
+    </TableScrollContext>
   )
 }
-
-const RoundedWrapper = ({ children, className }: PropsWithChildren<{ className?: string }>) => (
-  <Base className={className} overflow="hidden" layer={0}>
-    {children}
-  </Base>
-)

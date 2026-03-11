@@ -8,7 +8,7 @@ import { _sideNavItems } from './SideNav.stories'
 
 import type { Meta } from '@storybook/react-webpack5'
 
-const _casse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
+const sizeCasse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
 
 export default {
   title: 'Components/SideNav/VRT',
@@ -22,7 +22,7 @@ export default {
     <Stack gap={2} className="shr-p-1">
       {[undefined, 'hover', 'focus-visible'].map((id, index) => (
         <Fragment key={index}>
-          {_casse.map((size, i) => (
+          {sizeCasse.map((size, i) => (
             <SideNav {...args} key={`${index}-${i}`} size={size} id={id}>
               {_sideNavItems.map((item) =>
                 i % 2 === 0 ? (
@@ -35,6 +35,11 @@ export default {
           ))}
         </Fragment>
       ))}
+      <SideNav {...args} rounded="all">
+        {_sideNavItems.map((item) => (
+          <SideNavItemButton {...item} key={item.id} />
+        ))}
+      </SideNav>
     </Stack>
   ),
   parameters: {
