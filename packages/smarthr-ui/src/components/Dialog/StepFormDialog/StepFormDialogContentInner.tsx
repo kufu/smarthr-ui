@@ -4,15 +4,12 @@ import {
   type FC,
   type FormEvent,
   type PropsWithChildren,
-  type ReactNode,
   useCallback,
   useContext,
   useMemo,
 } from 'react'
 
-import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
@@ -23,11 +20,12 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
-type ActionThemeType = 'primary' | 'secondary' | 'danger'
-type DefaultTextsType = Record<
-  'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel',
-  ReactNode
->
+import type {
+  ButtonArgType,
+  ObjectButtonType,
+  useStepFormDialogButton,
+} from './useStepFormDialogButton'
+
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
   goto: (nextStep: StepItem) => void
@@ -37,31 +35,16 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
-export type ButtonArgType =
-  | ReactNode
-  | ((currentStep: StepItem, defaultTexts: DefaultTextsType) => ReactNode)
-type ObjectButtonBaseType = {
-  text: ButtonArgType
-  hidden: boolean | ((currentStep: StepItem) => boolean)
-}
-type ObjectSubmitType = ObjectButtonBaseType & {
-  /** submitボタンを無効にするかどうか */
-  disabled?: boolean
-  /** submitボタンのスタイル */
-  theme?: ActionThemeType | ((currentStep: StepItem) => ActionThemeType)
-}
-export type ObjectCloseButtonType = ObjectButtonBaseType & {
-  /** キャンセルボタンを無効にするかどうか */
-  disabled?: boolean
-}
-type ObjectBackButtonType = ObjectButtonBaseType
+type CommonButtonType = ReturnType<typeof useStepFormDialogButton>
 
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
+    /** 現在のStepNo */
+    activeStep: number
     /** submitボタン */
-    submitButton: ButtonArgType | ObjectSubmitType
+    submitButton: CommonButtonType
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
@@ -69,9 +52,9 @@ export type AbstractProps = PropsWithChildren<
      */
     onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
     /** キャンセルボタン */
-    closeButton: ObjectCloseButtonType
+    closeButton: CommonButtonType
     /** 戻るボタン */
-    backButton?: ButtonArgType | ObjectBackButtonType
+    backButton: CommonButtonType
   }
 >
 
@@ -84,15 +67,8 @@ export type StepFormDialogContentInnerProps = AbstractProps & {
   onClickBack?: () => void
 }
 
-const submitButtonObjectConverter = (text: ButtonArgType): ObjectSubmitType => ({
+export const buttonObjectConverter = (text: ButtonArgType): ObjectButtonType => ({
   text,
-  theme: 'primary',
-  disabled: false,
-  hidden: false,
-})
-const backButtonObjectConverter = (text: ButtonArgType): ObjectBackButtonType => ({
-  text,
-  hidden: false,
 })
 
 const BUTTON_COLUMN_GAP = {
@@ -103,11 +79,12 @@ const BUTTON_COLUMN_GAP = {
 export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
   children,
   heading,
+  activeStep,
   contentBgColor,
   contentPadding,
-  submitButton: originalSubmitButton,
-  closeButton: originalCloseButton,
-  backButton: originalBackButton,
+  submitButton,
+  closeButton,
+  backButton,
   stepLength,
   firstStep,
   onSubmit,
@@ -115,94 +92,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   responseStatus,
   onClickBack,
 }) => {
-  const { localize } = useIntl()
   const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
-  const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
-
-  const defaultTexts: DefaultTextsType = useMemo(
-    () => ({
-      closeButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
-        defaultText: 'キャンセル',
-      }),
-      nextButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
-        defaultText: '次へ',
-      }),
-      backButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/backButtonLabel',
-        defaultText: '戻る',
-      }),
-    }),
-    [localize],
-  )
-
-  const tempSubmitButton = useObjectAttributes<ButtonArgType | ObjectSubmitType, ObjectSubmitType>(
-    originalSubmitButton,
-    submitButtonObjectConverter,
-  )
-  const submitButton = useMemo(() => {
-    const text =
-      typeof tempSubmitButton.text === 'function'
-        ? tempSubmitButton.text(currentStep, defaultTexts)
-        : activeStep === stepLength
-          ? tempSubmitButton.text
-          : defaultTexts.nextButtonLabel
-    const hidden =
-      typeof tempSubmitButton.hidden === 'function'
-        ? tempSubmitButton.hidden(currentStep)
-        : tempSubmitButton.hidden
-
-    const theme =
-      typeof tempSubmitButton.theme === 'function'
-        ? tempSubmitButton.theme(currentStep)
-        : tempSubmitButton.theme || 'primary'
-
-    return {
-      ...tempSubmitButton,
-      text,
-      hidden,
-      theme,
-    }
-  }, [activeStep, currentStep, tempSubmitButton, stepLength, defaultTexts])
-
-  const closeButton = useMemo(() => {
-    const text =
-      typeof originalCloseButton.text === 'function'
-        ? originalCloseButton.text(currentStep, defaultTexts)
-        : originalCloseButton.text || defaultTexts.closeButtonLabel
-    const hidden =
-      typeof originalCloseButton.hidden === 'function'
-        ? originalCloseButton.hidden(currentStep)
-        : originalCloseButton.hidden
-
-    return {
-      ...originalCloseButton,
-      text,
-      hidden,
-    }
-  }, [currentStep, originalCloseButton, defaultTexts])
-
-  const tempBackButton = useObjectAttributes<
-    ButtonArgType | ObjectBackButtonType,
-    ObjectBackButtonType
-  >(originalBackButton, backButtonObjectConverter)
-  const backButton = useMemo(() => {
-    const text =
-      typeof tempBackButton.text === 'function'
-        ? tempBackButton.text(currentStep, defaultTexts)
-        : tempBackButton.text || defaultTexts.backButtonLabel
-    const hidden =
-      typeof tempBackButton.hidden === 'function'
-        ? tempBackButton.hidden(currentStep)
-        : tempBackButton.hidden
-
-    return {
-      ...tempBackButton,
-      text,
-      hidden,
-    }
-  }, [currentStep, tempBackButton, defaultTexts])
 
   const handleCloseAction = useCallback(() => {
     onClickClose()
@@ -288,7 +178,8 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               {!backButton.hidden && activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
-                  disabled={calcedResponseStatus.isProcessing}
+                  variant={backButton.theme}
+                  disabled={backButton.disabled || calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-backButton"
                 >
                   {backButton.text}
@@ -298,6 +189,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                 {!closeButton.hidden && (
                   <Button
                     onClick={handleCloseAction}
+                    variant={closeButton.theme}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
                     className="smarthr-ui-Dialog-closeButton"
                   >
