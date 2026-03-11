@@ -24,8 +24,6 @@ export default {
     const [open, setOpen] = useState(false)
     const handleClose = onClickClose ?? (() => setOpen(false))
 
-    console.log(rest)
-
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
@@ -149,12 +147,21 @@ export const SubmitButtonDisabled: StoryObj<typeof StepFormDialog> = {
     },
   },
 }
-export const SubmitButtonVisible: StoryObj<typeof StepFormDialog> = {
-  name: 'submitButton.visible',
+export const SubmitButtonHidden: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.hidden',
   args: {
     submitButton: {
       text: '保存',
-      visible: false,
+      hidden: true,
+    },
+  },
+}
+export const SubmitButtonHiddenWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.hidden(StepItem毎に切り替える方法)',
+  args: {
+    submitButton: {
+      text: '保存',
+      hidden: (currentStep: StepItem) => currentStep.id === 'step-2',
     },
   },
 }
@@ -174,12 +181,21 @@ export const CloseButtonDisabled: StoryObj<typeof StepFormDialog> = {
     },
   },
 }
-export const CloseButtonVisible: StoryObj<typeof StepFormDialog> = {
-  name: 'closeButton.visible',
+export const CloseButtonHidden: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton.hidden',
   args: {
     closeButton: {
       text: '閉じる',
-      visible: false,
+      hidden: true,
+    },
+  },
+}
+export const CloseButtonHiddenWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton.hidden(StepItem毎に切り替える方法)',
+  args: {
+    closeButton: {
+      text: '閉じる',
+      hidden: (currentStep: StepItem) => currentStep.id === 'step-2',
     },
   },
 }
@@ -190,12 +206,21 @@ export const BackButton: StoryObj<typeof StepFormDialog> = {
     backButton: 'back',
   },
 }
-export const BackButtonVisible: StoryObj<typeof StepFormDialog> = {
-  name: 'backButton.visible',
+export const BackButtonHidden: StoryObj<typeof StepFormDialog> = {
+  name: 'backButton.hidden',
   args: {
     backButton: {
       text: 'back',
-      visible: false,
+      hidden: true,
+    },
+  },
+}
+export const BackButtonHiddenWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'backButton.hidden(StepItem毎に切り替える方法)',
+  args: {
+    backButton: {
+      text: 'back',
+      hidden: (currentStep: StepItem) => currentStep.id === 'step-2',
     },
   },
 }

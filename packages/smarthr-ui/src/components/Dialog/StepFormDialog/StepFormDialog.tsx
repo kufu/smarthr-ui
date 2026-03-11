@@ -38,7 +38,7 @@ const headingObjectConverter = (text: ReactNode) => ({ text })
 const closeButtonObjectConverter = (text: ButtonArgType): ObjectCloseButtonType => ({
   text,
   disabled: false,
-  visible: true,
+  hidden: false,
 })
 
 export const StepFormDialog: FC<Props> = ({

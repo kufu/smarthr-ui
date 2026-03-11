@@ -42,7 +42,7 @@ export type ButtonArgType =
   | ((currentStep: StepItem, defaultTexts: DefaultTextsType) => ReactNode)
 type ObjectButtonBaseType = {
   text: ButtonArgType
-  visible: boolean
+  hidden: boolean | ((currentStep: StepItem) => boolean)
 }
 type ObjectSubmitType = ObjectButtonBaseType & {
   /** submitボタンを無効にするかどうか */
@@ -88,11 +88,11 @@ const submitButtonObjectConverter = (text: ButtonArgType): ObjectSubmitType => (
   text,
   theme: 'primary',
   disabled: false,
-  visible: true,
+  hidden: false,
 })
 const backButtonObjectConverter = (text: ButtonArgType): ObjectBackButtonType => ({
   text,
-  visible: true,
+  hidden: false,
 })
 
 const BUTTON_COLUMN_GAP = {
@@ -137,44 +137,72 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     [localize],
   )
 
-  const submitButton = useObjectAttributes<ButtonArgType | ObjectSubmitType, ObjectSubmitType>(
+  const tempSubmitButton = useObjectAttributes<ButtonArgType | ObjectSubmitType, ObjectSubmitType>(
     originalSubmitButton,
     submitButtonObjectConverter,
   )
-  const closeButton = originalCloseButton
-  const backButton = useObjectAttributes<
+  const submitButton = useMemo(() => {
+    const text =
+      typeof tempSubmitButton.text === 'function'
+        ? tempSubmitButton.text(currentStep, defaultTexts)
+        : activeStep === stepLength
+          ? tempSubmitButton.text
+          : defaultTexts.nextButtonLabel
+    const hidden =
+      typeof tempSubmitButton.hidden === 'function'
+        ? tempSubmitButton.hidden(currentStep)
+        : tempSubmitButton.hidden
+
+    const theme =
+      typeof tempSubmitButton.theme === 'function'
+        ? tempSubmitButton.theme(currentStep)
+        : tempSubmitButton.theme || 'primary'
+
+    return {
+      ...tempSubmitButton,
+      text,
+      hidden,
+      theme,
+    }
+  }, [activeStep, currentStep, tempSubmitButton, stepLength, defaultTexts])
+
+  const closeButton = useMemo(() => {
+    const text =
+      typeof originalCloseButton.text === 'function'
+        ? originalCloseButton.text(currentStep, defaultTexts)
+        : originalCloseButton.text || defaultTexts.closeButtonLabel
+    const hidden =
+      typeof originalCloseButton.hidden === 'function'
+        ? originalCloseButton.hidden(currentStep)
+        : originalCloseButton.hidden
+
+    return {
+      ...originalCloseButton,
+      text,
+      hidden,
+    }
+  }, [currentStep, originalCloseButton, defaultTexts])
+
+  const tempBackButton = useObjectAttributes<
     ButtonArgType | ObjectBackButtonType,
     ObjectBackButtonType
   >(originalBackButton, backButtonObjectConverter)
+  const backButton = useMemo(() => {
+    const text =
+      typeof tempBackButton.text === 'function'
+        ? tempBackButton.text(currentStep, defaultTexts)
+        : tempBackButton.text || defaultTexts.backButtonLabel
+    const hidden =
+      typeof tempBackButton.hidden === 'function'
+        ? tempBackButton.hidden(currentStep)
+        : tempBackButton.hidden
 
-  const submitText = useMemo(() => {
-    if (typeof submitButton.text === 'function') {
-      return submitButton.text(currentStep, defaultTexts)
+    return {
+      ...tempBackButton,
+      text,
+      hidden,
     }
-
-    return activeStep === stepLength ? submitButton.text : defaultTexts.nextButtonLabel
-  }, [activeStep, currentStep, submitButton, stepLength, defaultTexts])
-  const actualSubmitTheme = useMemo(
-    () =>
-      typeof submitButton.theme === 'function'
-        ? submitButton.theme(currentStep)
-        : submitButton.theme,
-    [currentStep, submitButton],
-  )
-  const closeText = useMemo(() => {
-    if (typeof closeButton.text === 'function') {
-      return closeButton.text(currentStep, defaultTexts)
-    }
-
-    return closeButton.text || defaultTexts.closeButtonLabel
-  }, [currentStep, closeButton, defaultTexts])
-  const backText = useMemo(() => {
-    if (typeof backButton.text === 'function') {
-      return backButton.text(currentStep, defaultTexts)
-    }
-
-    return backButton.text || defaultTexts.backButtonLabel
-  }, [currentStep, backButton, defaultTexts])
+  }, [currentStep, tempBackButton, defaultTexts])
 
   const handleCloseAction = useCallback(() => {
     onClickClose()
@@ -257,34 +285,34 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
-              {backButton.visible && activeStep > 1 && (
+              {!backButton.hidden && activeStep > 1 && (
                 <Button
                   onClick={handleBackAction}
                   disabled={calcedResponseStatus.isProcessing}
                   className="smarthr-ui-Dialog-backButton"
                 >
-                  {backText}
+                  {backButton.text}
                 </Button>
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
-                {closeButton.visible && (
+                {!closeButton.hidden && (
                   <Button
                     onClick={handleCloseAction}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
                     className="smarthr-ui-Dialog-closeButton"
                   >
-                    {closeText}
+                    {closeButton.text}
                   </Button>
                 )}
-                {submitButton.visible && (
+                {!submitButton.hidden && (
                   <Button
                     type="submit"
-                    variant={actualSubmitTheme}
-                    disabled={submitButton.Disabled}
+                    variant={submitButton.theme}
+                    disabled={submitButton.disabled}
                     loading={calcedResponseStatus.isProcessing}
                     className="smarthr-ui-Dialog-actionButton"
                   >
-                    {submitText}
+                    {submitButton.text}
                   </Button>
                 )}
               </Cluster>
