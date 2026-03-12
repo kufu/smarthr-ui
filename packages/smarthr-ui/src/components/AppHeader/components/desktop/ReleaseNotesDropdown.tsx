@@ -100,12 +100,18 @@ const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
   </div>
 ))
 
+// HelpLinkではなくTextLinkを使用する理由:
+// - リリースノートは典型的なヘルプコンテンツではない
+// - rel="help"はW3C定義で「親要素とその子要素のための追加のヘルプ情報」を指すが、
+//   AppHeaderからのリリースノートは現在のページと直接関連するとは限らない
+// 参考: https://www.w3.org/TR/2010/WD-html5-20100624/links.html#link-type-help
 const ArticleLink = memo<PropsWithChildren<{ href: string }>>(({ href, children }) => (
   <div className="shr-border-b-shorthand shr-border-dashed shr-p-0.75">
     <TextLink
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
+      referrerPolicy="no-referrer-when-downgrade"
       className="shr-leading-normal [&&]:shr-underline"
       style={BOX_SHADOW_STYLE}
     >
@@ -119,7 +125,8 @@ const SeeAllTextLink = memo<PropsWithChildren<{ href: string }>>(({ href, childr
     <TextLink
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
+      referrerPolicy="no-referrer-when-downgrade"
       className="shr-leading-normal [&&]:shr-underline"
       style={BOX_SHADOW_STYLE}
     >
