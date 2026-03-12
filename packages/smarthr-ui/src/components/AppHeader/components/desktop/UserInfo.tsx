@@ -61,7 +61,6 @@ type Props = UserInfoProps &
   Pick<HeaderProps, 'desktopAdditionalContent' | 'tenants' | 'currentTenantId'>
 
 export const UserInfo: FC<Props> = ({
-  arbitraryDisplayName,
   email,
   empCode,
   firstName,
@@ -72,14 +71,13 @@ export const UserInfo: FC<Props> = ({
 }) => {
   const displayName = useMemo(
     () =>
-      arbitraryDisplayName ??
       buildDisplayName({
         email,
         empCode,
         firstName,
         lastName,
       }),
-    [arbitraryDisplayName, email, empCode, firstName, lastName],
+    [email, empCode, firstName, lastName],
   )
 
   if (!displayName) {
@@ -104,7 +102,7 @@ export const UserInfo: FC<Props> = ({
   )
 }
 
-export const ActualUserInfo: FC<Omit<Props, 'arbitraryDisplayName'> & { displayName: string }> = ({
+export const ActualUserInfo: FC<Props & { displayName: string }> = ({
   email,
   empCode,
   firstName,
