@@ -1,6 +1,6 @@
 import { Stack } from '../../Layout'
 
-import { BgColor, Padding } from './BaseColumn.stories'
+import { BgColor, Padding, Rounded } from './BaseColumn.stories'
 
 import type { Base } from '../Base'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -11,6 +11,7 @@ export default {
     <Stack>
       {Padding.render && Padding.render(args, context)}
       {BgColor.render && BgColor.render(args, context)}
+      {Rounded.render && Rounded.render(args, context)}
     </Stack>
   ),
   parameters: {

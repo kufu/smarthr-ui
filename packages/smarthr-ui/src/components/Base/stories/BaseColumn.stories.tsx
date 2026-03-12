@@ -66,6 +66,32 @@ export const BgColor: StoryObj<typeof BaseColumn> = {
     </Stack>
   ),
 }
+export const Rounded: StoryObj<typeof BaseColumn> = {
+  name: 'rounded',
+  render: (args) => (
+    <Stack>
+      <BaseColumn {...args}>rounded未指定</BaseColumn>
+      <BaseColumn {...args} rounded={true}>
+        rounded: true
+      </BaseColumn>
+      <BaseColumn {...args} rounded="all">
+        rounded: all
+      </BaseColumn>
+      <BaseColumn {...args} rounded="top">
+        rounded: top
+      </BaseColumn>
+      <BaseColumn {...args} rounded="right">
+        rounded: right
+      </BaseColumn>
+      <BaseColumn {...args} rounded="bottom">
+        rounded: bottom
+      </BaseColumn>
+      <BaseColumn {...args} rounded="left">
+        rounded: left
+      </BaseColumn>
+    </Stack>
+  ),
+}
 
 export const As: StoryObj<typeof BaseColumn> = {
   name: 'as',

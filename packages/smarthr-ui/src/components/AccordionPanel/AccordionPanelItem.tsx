@@ -22,7 +22,7 @@ export const AccordionPanelItemContext = createContext<{ name: string }>({
 })
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
+  base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand', 'shr-bg-[#F00]]'],
 })
 
 export const AccordionPanelItem: FC<Props> = ({ name, className, ...rest }) => {
