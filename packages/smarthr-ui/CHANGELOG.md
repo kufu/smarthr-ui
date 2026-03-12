@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [89.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v88.0.0...smarthr-ui-v89.0.0) (2026-03-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* フォーカスインジケータをデフォルト内側に表示する ([#6010](https://github.com/kufu/smarthr-ui/issues/6010))
+
+### Features
+
+* リリースノートリンクからReferrer情報を送信できるように修正 ([#6115](https://github.com/kufu/smarthr-ui/issues/6115)) ([11f7f9b](https://github.com/kufu/smarthr-ui/commit/11f7f9b0544f572abf2b1a8ad84d7f93fae279f7))
+
+
+### Bug Fixes
+
+* フォーカスインジケータをデフォルト内側に表示する ([#6010](https://github.com/kufu/smarthr-ui/issues/6010)) ([7abf656](https://github.com/kufu/smarthr-ui/commit/7abf65677e5224e993017991a9e013d8efc44cbe))
+
 ## [88.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.2.0...smarthr-ui-v88.0.0) (2026-03-05)
 
 
