@@ -499,11 +499,10 @@ const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor
       <Text
         as="p"
         color="TEXT_GREY"
-        italic
         id={`${managedHtmlFor}_exampleMessage`}
         className="smarthr-ui-FormControl-exampleMessage"
       >
-        {exampleMessage}
+        <Text as="i">{exampleMessage}</Text>
       </Text>
     ) : null,
 )

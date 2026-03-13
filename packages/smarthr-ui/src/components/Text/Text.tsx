@@ -57,6 +57,7 @@ const UNDEFINED_STYLE_VALUES = {
 }
 
 const classNameGenerator = tv({
+  base: 'shr-not-italic',
   variants: {
     size: {
       XXS: 'shr-text-2xs',
@@ -70,9 +71,6 @@ const classNameGenerator = tv({
     weight: {
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
-    },
-    italic: {
-      true: 'shr-italic',
     },
     color: {
       TEXT_BLACK: 'shr-text-black',
@@ -183,7 +181,6 @@ const ActualText = <T extends ElementType = 'span'>({
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
   size,
-  italic,
   color,
   leading,
   whiteSpace,
@@ -207,12 +204,11 @@ const ActualText = <T extends ElementType = 'span'>({
       weight: weight || styleTypeValues.weight,
       color: color || styleTypeValues.color,
       leading: leading || styleTypeValues.leading,
-      italic,
       whiteSpace,
       maxLines,
       className,
     })
-  }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
+  }, [size, weight, color, leading, whiteSpace, maxLines, className, styleType])
   const wrapperClassName = useMemo(
     () => (icon ? wrapperClassNameGenerator({ gap: icon.gap || 0.25 }) : ''),
     [icon],
