@@ -18,9 +18,8 @@ import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
-import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon, FaCircleInfoIcon } from '../Icon'
 import { Sidebar } from '../Layout'
-import { ResponseMessage } from '../ResponseMessage'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -199,7 +198,7 @@ export const InformationPanel: FC<Props> = ({
 }
 
 const MemoizedHeading = memo<
-  Pick<Props, 'type'> & {
+  Required<Pick<Props, 'type'>> & {
     heading: Props['heading']
     id: string
     className: string
@@ -215,11 +214,13 @@ const MemoizedHeading = memo<
       {...rest}
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
+      icon={{
+        prefix: <FaCircleInfoIcon color="TEXT_GREY" />,
+        gap: 0.5,
+      }}
       type="blockTitle"
     >
-      <ResponseMessage type={type} iconGap={0.5}>
-        {heading.text}
-      </ResponseMessage>
+      {heading.text}
     </Heading>
   )
 })
