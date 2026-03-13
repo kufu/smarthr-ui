@@ -89,7 +89,7 @@ export const StepFormDialog: FC<Props> = ({
   }, [isOpen, onClickBack])
 
   return createPortal(
-    <StepFormDialogProvider firstStep={firstStep}>
+    <StepFormDialogProvider firstStep={firstStep} isOpen={isOpen}>
       <DialogContentInner
         {...rest}
         isOpen={isOpen}
