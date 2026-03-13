@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [90.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v89.0.0...smarthr-ui-v90.0.0) (2026-03-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ModelessDialog:** VOがドラッグハンドルを読み上げる時、適切じゃない案内をされます ([#6173](https://github.com/kufu/smarthr-ui/issues/6173))
+
+### Bug Fixes
+
+* Launcher の position を optional に変更 ([#6185](https://github.com/kufu/smarthr-ui/issues/6185)) ([1439b67](https://github.com/kufu/smarthr-ui/commit/1439b6744ac60352b59e18b5766dbb4e6358cdbb))
+* **ModelessDialog:** VOがドラッグハンドルを読み上げる時、適切じゃない案内をされます ([#6173](https://github.com/kufu/smarthr-ui/issues/6173)) ([80f6327](https://github.com/kufu/smarthr-ui/commit/80f63270062cf25e63eec624c4747a25031c8a52))
+
 ## [89.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v88.0.0...smarthr-ui-v89.0.0) (2026-03-12)
 
 
