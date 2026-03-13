@@ -420,8 +420,8 @@ importers:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@20.19.35)(jiti@2.4.1)(jsdom@26.1.0(canvas@3.1.0))(less@4.2.0)(terser@5.46.0)(tsx@4.20.6)(yaml@2.8.1)
       wait-on:
-        specifier: ^8.0.5
-        version: 8.0.5
+        specifier: ^9.0.4
+        version: 9.0.4
 
   sandbox/next:
     dependencies:
@@ -4300,8 +4300,8 @@ packages:
     resolution: {integrity: sha512-yPBThwecp1wS9DmoA4x4KR2h3QoslacnDR8ypuFM962kI4/456Iy1oHx2RAgh4jfZNdn0bctsdadceiBUgpU1g==}
     hasBin: true
 
-  joi@18.0.1:
-    resolution: {integrity: sha512-IiQpRyypSnLisQf3PwuN2eIHAsAIGZIrLZkd4zdvIar2bDyhM91ubRjy8a3eYablXsh9BeI/c7dmPYHca5qtoA==}
+  joi@18.0.2:
+    resolution: {integrity: sha512-RuCOQMIt78LWnktPoeBL0GErkNaJPTBGcYuyaBvUOQSpcpcLfWrHPPihYdOGbV5pam9VTWbeoF7TsGiHugcjGA==}
     engines: {node: '>= 20'}
 
   js-tokens@4.0.0:
@@ -6238,9 +6238,9 @@ packages:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
     engines: {node: '>=18'}
 
-  wait-on@8.0.5:
-    resolution: {integrity: sha512-J3WlS0txVHkhLRb2FsmRg3dkMTCV1+M6Xra3Ho7HzZDHpE7DCOnoSoCJsZotrmW3uRMhvIJGSKUKrh/MeF4iag==}
-    engines: {node: '>=12.0.0'}
+  wait-on@9.0.4:
+    resolution: {integrity: sha512-k8qrgfwrPVJXTeFY8tl6BxVHiclK11u72DVKhpybHfUL/K6KM4bdyK9EhIVYGytB5MJe/3lq4Tf0hrjM+pvJZQ==}
+    engines: {node: '>=20.0.0'}
     hasBin: true
 
   warning@4.0.3:
@@ -10527,7 +10527,7 @@ snapshots:
 
   jiti@2.4.1: {}
 
-  joi@18.0.1:
+  joi@18.0.2:
     dependencies:
       '@hapi/address': 5.1.1
       '@hapi/formula': 3.0.2
@@ -12682,10 +12682,10 @@ snapshots:
     dependencies:
       xml-name-validator: 5.0.0
 
-  wait-on@8.0.5:
+  wait-on@9.0.4:
     dependencies:
       axios: 1.13.6
-      joi: 18.0.1
+      joi: 18.0.2
       lodash: 4.17.23
       minimist: 1.2.8
       rxjs: 7.8.2

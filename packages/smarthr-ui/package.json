@@ -77,7 +77,7 @@
     "tslib": "^2.8.1",
     "tsx": "^4.20.6",
     "vitest": "^4.0.18",
-    "wait-on": "^8.0.5"
+    "wait-on": "^9.0.4"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
