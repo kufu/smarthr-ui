@@ -23,7 +23,7 @@ export default {
         <StepFormDialog
           heading="ステップダイアログ"
           stepLength={2}
-          submitLabel="保存"
+          submitButton="保存"
           firstStep={{ id: 'step-1', stepNumber: 1 }}
           onSubmit={(e, { goto, close, currentStep }) => {
             action('onSubmit')(e)
