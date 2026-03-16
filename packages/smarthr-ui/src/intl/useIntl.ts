@@ -281,7 +281,7 @@ export const useIntl = (): UseIntlReturn => {
       const isJaKanjiFormat = disableSlashInJa && locale === 'ja'
       const defaultFormats = DATE_FORMATS[locale]
 
-      // 漢字表記への上書きを考慮し、先にデフォルト値を決定する
+      // local が 'ja' で漢字表記の場合はゼロ埋めをしないようにする
       const defaultMonth = isJaKanjiFormat ? 'long' : defaultFormats.month
       const defaultDay = isJaKanjiFormat ? 'numeric' : defaultFormats.day
 
