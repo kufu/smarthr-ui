@@ -1,26 +1,40 @@
-import { type ComponentProps, type FC, useCallback, useContext, useId } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useCallback, useContext } from 'react'
 
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
 import { useDialogPortal } from '../useDialogPortal'
+import { useObjectHeading } from '../useObjectHeading'
 
-import { type BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
+import {
+  type AbstractProps as ContentInnerProps,
+  MessageDialogContentInner,
+} from './MessageDialogContentInner'
 
 import type { UncontrolledDialogProps } from '../types'
 
-type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type ObjectHeadingType = Omit<ContentInnerProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+
+type AbstractProps = Omit<ContentInnerProps, 'heading'> &
+  UncontrolledDialogProps & {
+    heading: HeadingType
+  }
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({
+  text,
+})
 
 /** @deprecated */
-export const MessageDialogContent: FC<Props & ElementProps> = ({
-  title,
-  description,
+export const MessageDialogContent: FC<Props> = ({
+  heading: orgHeading,
+  children,
   portalParent,
   className,
   contentBgColor,
   contentPadding,
   decorators,
-  ...props
+  ...rest
 }) => {
   const { onClickClose, active } = useContext(DialogContext)
   const { createPortal } = useDialogPortal(portalParent)
@@ -30,25 +44,28 @@ export const MessageDialogContent: FC<Props & ElementProps> = ({
       onClickClose()
     }
   }, [active, onClickClose])
-  const titleId = useId()
+  const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
   return createPortal(
     <DialogContentInner
-      {...props}
+      {...rest}
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}
-      ariaLabelledby={titleId}
+      ariaLabelledby={heading.id}
     >
       <MessageDialogContentInner
-        title={title}
-        titleId={titleId}
-        description={description}
+        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
         decorators={decorators}
-      />
+      >
+        {children}
+      </MessageDialogContentInner>
     </DialogContentInner>,
   )
 }

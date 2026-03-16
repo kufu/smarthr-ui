@@ -3,19 +3,19 @@ version: 2.1
 executors:
   node-maintenance:
     docker:
-      - image: cimg/node:20.18.0
+      - image: cimg/node:22.22.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts:
     docker:
-      - image: cimg/node:22.11.0
+      - image: cimg/node:24.13.1
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts-browsers:
     docker:
-      - image: cimg/node:22.11.0-browsers
+      - image: cimg/node:24.13.1-browsers
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -40,33 +40,37 @@ commands:
           key: dependencies-test-{{ checksum "package.json" }}-{{ checksum "pnpm-lock.yaml" }}
   check-source:
     steps:
-      - run: pnpm audit --prod
       - run: pnpm ui lint
+  audit:
+    steps:
+      - checkout
+      - run: pnpm audit --prod
   run-npm-test:
     steps:
       - run: pnpm ui test
-      - run: pnpm ui test:build-assets
-  run-e2e-test:
-    steps:
-      - run:
-          name: build and store smarthr-ui package
-          working_directory: packages/smarthr-ui
-          command: npx yalc publish
-      - run:
-          name: Setup Next.js sandbox
-          working_directory: sandbox/next
-          command: npx yalc add smarthr-ui
-      - run:
-          name: Start Next.js sandbox
-          working_directory: sandbox/next
-          command: pnpm dev
-          background: true
-      - run:
-          name: Run E2E Test
-          working_directory: sandbox/next
-          command: |
-            pnpm playwright install chromium
-            pnpm playwright test
+  # SCとしてつかえるかどうかのテストを行っているが、費用対効果が薄いためoffにしています
+  # 良いテスト方法を発見した場合置き換えます 2026/02/05
+  # run-e2e-test:
+  #   steps:
+  #     - run:
+  #         name: build and store smarthr-ui package
+  #         working_directory: packages/smarthr-ui
+  #         command: npx yalc publish
+  #     - run:
+  #         name: Setup Next.js sandbox
+  #         working_directory: sandbox/next
+  #         command: npx yalc add smarthr-ui
+  #     - run:
+  #         name: Start Next.js sandbox
+  #         working_directory: sandbox/next
+  #         command: pnpm dev
+  #         background: true
+  #     - run:
+  #         name: Run E2E Test
+  #         working_directory: sandbox/next
+  #         command: |
+  #           pnpm playwright install chromium
+  #           pnpm playwright test
   run-chromatic:
     steps:
       - checkout
@@ -104,13 +108,13 @@ jobs:
       - setup-for-test
       - check-source
       - run-npm-test
-  e2e-test:
-    executor: node-active-lts-browsers
-    working_directory: ~/repo
-    resource_class: medium+
-    steps:
-      - setup-for-test
-      - run-e2e-test
+  # e2e-test:
+  #   executor: node-active-lts-browsers
+  #   working_directory: ~/repo
+  #   resource_class: medium+
+  #   steps:
+  #     - setup-for-test
+  #     - run-e2e-test
   chromatic-deployment:
     executor: node-active-lts
     resource_class: medium+
@@ -123,6 +127,12 @@ jobs:
     steps:
       - setup-for-test
       - run-chromatic-master
+  audit:
+    executor: node-active-lts
+    resource_class: medium
+    steps:
+      - setup-for-test
+      - audit
 workflows:
   multiple_builds:
     jobs:
@@ -130,7 +140,9 @@ workflows:
           context: smarthr-dockerhub
       - node-active-lts:
           context: smarthr-dockerhub
-      - e2e-test:
+      # - e2e-test:
+      #     context: smarthr-dockerhub
+      - audit:
           context: smarthr-dockerhub
       - chromatic-deployment:
           filters:

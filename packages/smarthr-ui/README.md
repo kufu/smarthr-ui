@@ -56,9 +56,11 @@ import 'smarthr-ui/smarthr-ui.css'
 const theme = createTheme()
 
 const App: React.FC = () => (
-  <ThemeProvider theme={theme}>
-    <Button variant="primary">Hello World</Button>
-  </ThemeProvider>
+  <IntlProvider locale="ja">
+    <ThemeProvider theme={theme}>
+      <Button variant="primary">Hello World</Button>
+    </ThemeProvider>
+  </IntlProvider>
 )
 
 const container = document.getElementById('app')

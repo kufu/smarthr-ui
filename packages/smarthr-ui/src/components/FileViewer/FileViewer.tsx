@@ -75,8 +75,10 @@ export const FileViewer: FC<Props> = ({
   }, [internalScaleStep])
 
   const rotate = useCallback(() => {
-    setRotation((currentRotation) => currentRotation - 90)
-  }, [])
+    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+    const newRotation = rotation === 0 ? 270 : rotation - 90
+    setRotation(newRotation)
+  }, [rotation])
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
@@ -177,14 +179,14 @@ const Controller: FC<ControllerProps> = memo(
           <Button
             onClick={onClickScaleDownButton}
             disabled={scale <= scaleSteps[0]}
-            className="shr-rounded-none shr-border-none"
+            className="shr-rounded-r-none shr-border-none"
           >
             <FaMagnifyingGlassMinusIcon
               alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
             />
           </Button>
           <DropdownMenuButton
-            label={
+            trigger={
               <Text>
                 <VisuallyHiddenText>
                   <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
@@ -204,7 +206,7 @@ const Controller: FC<ControllerProps> = memo(
               </Button>
             ))}
           </DropdownMenuButton>
-          <Button onClick={onClickScaleUpButton} className="shr-rounded-none shr-border-0">
+          <Button onClick={onClickScaleUpButton} className="shr-rounded-l-none shr-border-0">
             <FaMagnifyingGlassPlusIcon
               alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
             />

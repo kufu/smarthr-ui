@@ -10,12 +10,13 @@ import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 
 import { Th } from './Th'
 
-type Props = {
+type AbstractProps = {
   // HINT: checkColumnName は aria-label属性に設定されるため、型をstringのみに絞ります
   decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
     checkColumnName?: (text: string) => string
   }
 } & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -35,8 +36,8 @@ const classNameGenerator = tv({
   },
 })
 
-export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
-  ({ vAlign, fixed, decorators, className, ...others }, ref) => {
+export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
+  ({ vAlign, fixed, decorators, className, ...rest }, ref) => {
     const { localize } = useIntl()
 
     const decoratorDefaultTexts = useMemo(
@@ -77,12 +78,12 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
         className={classNames.wrapper}
         aria-label={decorated.checkColumnName as string}
       >
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={classNames.inner}>
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
             <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
           </Balloon>
-          <Checkbox {...others} ref={ref} className={classNames.checkbox} />
+          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
+          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>
     )

@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from '@storybook/react'
-
 import { Switch } from '..'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Switch',
@@ -10,7 +10,7 @@ export default {
     children: 'ラベル',
   },
   argTypes: {
-    dangerouslyLabelHidden: {
+    unrecommendedLabelHidden: {
       control: 'boolean',
     },
     defaultChecked: {
@@ -27,10 +27,10 @@ export default {
 
 export const Playground: StoryObj<typeof Switch> = {}
 
-export const DangerouslyLabelHidden: StoryObj<typeof Switch> = {
-  name: 'dangerouslyLabelHidden',
+export const UnrecommendedLabelHidden: StoryObj<typeof Switch> = {
+  name: 'unrecommendedLabelHidden',
   args: {
-    dangerouslyLabelHidden: true,
+    unrecommendedLabelHidden: true,
   },
 }
 

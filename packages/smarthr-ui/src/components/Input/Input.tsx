@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../themes'
 
-type Props = {
+type AbstractProps = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -35,7 +35,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps | 'onWheel'>
 
 export const bgColors = {
   BACKGROUND: 'background',
@@ -87,7 +87,7 @@ const innerClassNameGenerator = tv({
   },
 })
 
-export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
+export const Input = forwardRef<HTMLInputElement, Props>(
   (
     {
       onFocus,
@@ -101,7 +101,9 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       error,
       readOnly,
       bgColor,
-      ...props
+      type,
+      max,
+      ...rest
     },
     ref,
   ) => {
@@ -112,12 +114,33 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       () => innerRef.current,
     )
 
-    const handleWheel = useMemo(
-      () => (props.type === 'number' ? disableWheel : undefined),
-      [props.type],
-    )
+    const attrsByType = useMemo(() => {
+      switch (type) {
+        case 'number':
+          return {
+            max,
+            onWheel: disableWheel,
+          }
+        // HINT: PC版ブラウザで年が6桁入力できる場合、コピー&ペーストが正常に動作しないなど、UI上の問題が発生する場合がある
+        // 回避のためmaxで年四桁を指定する
+        case 'date':
+          return {
+            max: max || '9999-12-31',
+          }
+        case 'datetime-local':
+          return {
+            max: max || '9999-12-31T23:59',
+          }
+        case 'month':
+          return {
+            max: max || '9999-12',
+          }
+      }
 
-    const onClickFocus = useCallback(() => innerRef.current?.focus(), [])
+      return { max }
+    }, [max, type])
+
+    const onDelegateClickFocus = useCallback(() => innerRef.current?.focus(), [])
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
@@ -156,17 +179,18 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     return (
       <span
         role="presentation"
-        onClick={onClickFocus}
+        onClick={onDelegateClickFocus}
         className={wrapperClassName}
         style={wrapperStyle}
       >
         {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
         <input
-          {...props}
+          {...rest}
+          {...attrsByType}
+          type={type}
           data-smarthr-ui-input="true"
           onFocus={onFocus}
           onBlur={onBlur}
-          onWheel={handleWheel}
           disabled={disabled}
           readOnly={readOnly}
           ref={innerRef}

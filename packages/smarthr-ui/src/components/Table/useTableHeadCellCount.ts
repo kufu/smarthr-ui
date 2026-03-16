@@ -1,7 +1,10 @@
 import { useCallback, useState } from 'react'
 
+// HINT: 初期表示のタイミングでBulkActionRowも表示している場合、潰れてみえないよう初期値を大きめに設定しておく
+const INITIAL_COUNT = 999
+
 export const useTableHeadCellCount = <T extends HTMLElement>() => {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(INITIAL_COUNT)
 
   const countHeadCellRef = useCallback((node: T) => {
     if (node !== null) {
@@ -9,7 +12,7 @@ export const useTableHeadCellCount = <T extends HTMLElement>() => {
       const rows = parentTable?.querySelectorAll('thead > tr')
 
       if (!rows?.length) {
-        setCount(0)
+        setCount(INITIAL_COUNT)
         return
       }
 

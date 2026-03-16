@@ -62,12 +62,11 @@ export const classNameGenerator = tv({
   ],
 })
 
-type BaseProps = VariantProps<typeof classNameGenerator>
-type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
-type Props = PropsWithChildren<BaseProps & ElementProps>
+type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps>
 
 export const StatusLabel = memo<Props>(
-  ({ type = 'grey', bold = false, className, children, ...props }) => {
+  ({ type = 'grey', bold = false, className, children, ...rest }) => {
     const actualClassName = useMemo(
       () =>
         classNameGenerator({
@@ -79,7 +78,7 @@ export const StatusLabel = memo<Props>(
     )
 
     return (
-      <span {...props} className={actualClassName}>
+      <span {...rest} className={actualClassName}>
         <Icon type={type} bold={bold} />
         {children}
       </span>

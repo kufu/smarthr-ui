@@ -21,7 +21,7 @@ const classNameGenerator = tv({
       'shr-group/tabitem',
       'shr-relative shr-inline-flex shr-items-center shr-gap-0.5 shr-px-1 shr-py-0.75',
       'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator--inner focus-visible:shr-z-1',
+      'focus-visible:shr-focus-indicator focus-visible:shr-z-1',
       'disabled:shr-cursor-not-allowed disabled:shr-bg-transparent',
       'aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-z-1 aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-content-[""]',
       'forced-colors:aria-selected:before:shr-bg-[Highlight]',
@@ -41,7 +41,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
@@ -53,55 +53,42 @@ type Props = PropsWithChildren<{
   /**
    * 無効な理由
    */
-  disabledDetail?: {
+  disabledReason?: {
     icon?: ReactNode
     message: ReactNode
   }
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
 }>
-type ElementProps = Omit<
-  ComponentProps<typeof UnstyledButton>,
-  keyof Props | 'aria-selected' | 'type'
->
+type Props = AbstractProps &
+  Omit<ComponentProps<typeof UnstyledButton>, keyof AbstractProps | 'aria-selected' | 'type'>
 
-export const TabItem: FC<Props & ElementProps> = ({
-  selected = false,
-  disabledDetail,
-  ...rest
-}) => {
+export const TabItem: FC<Props> = ({ selected = false, disabled, disabledReason, ...rest }) => {
   const tabAttrs = {
     role: 'tab',
     'aria-selected': selected,
   }
 
-  if (rest.disabled && disabledDetail) {
-    const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+  if (disabled && disabledReason) {
+    const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
 
     return (
       <Tooltip
         {...tabAttrs}
-        message={disabledDetail.message}
+        message={disabledReason.message}
         ariaDescribedbyTarget="inner"
-        aria-disabled={rest.disabled}
-        className="focus-visible:shr-focus-indicator--inner"
+        aria-disabled={disabled}
+        className="focus-visible:shr-focus-indicator"
       >
-        <TabButton {...rest} suffix={Icon} />
+        <TabButton {...rest} disabled={disabled} suffix={Icon} />
       </Tooltip>
     )
   }
 
-  return <TabButton {...rest} {...tabAttrs} />
+  return <TabButton {...rest} {...tabAttrs} disabled={disabled} />
 }
 
-const TabButton: FC<Props & ElementProps> = ({
-  id,
-  children,
-  suffix,
-  onClick,
-  className,
-  ...rest
-}) => {
+const TabButton: FC<Props> = ({ id, children, suffix, onClick, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = classNameGenerator()
 

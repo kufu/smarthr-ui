@@ -15,10 +15,11 @@ describe('MessageDialog', () => {
         <Button onClick={() => setIsOpen(true)}>MessageDialog</Button>
         <MessageDialog
           isOpen={isOpen}
-          title="MessageDialog"
-          description={<p>説明です</p>}
+          heading="MessageDialog"
           onClickClose={() => setIsOpen(false)}
-        />
+        >
+          <p>説明です</p>
+        </MessageDialog>
       </IntlProvider>
     )
   }

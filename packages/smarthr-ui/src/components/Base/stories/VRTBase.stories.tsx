@@ -1,9 +1,9 @@
 import { Stack } from '../../Layout'
-import { Base } from '../Base'
 
 import { Layer, Overflow, Padding, Radius } from './Base.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Base } from '../Base'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Base/VRT',

@@ -1,6 +1,6 @@
 import { StepFormDialog } from '../StepFormDialog'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/StepFormDialog/VRT',
@@ -9,8 +9,10 @@ export default {
     width: '30em',
     size: 'M',
     isOpen: true,
-    title: 'アクションダイアログタイトル',
-    subtitle: 'アクションダイアログのサブタイトル',
+    heading: {
+      text: 'アクションダイアログタイトル',
+      sub: 'アクションダイアログのサブタイトル',
+    },
     submitLabel: '保存',
     contentBgColor: 'BACKGROUND',
     responseStatus: {

@@ -37,7 +37,7 @@ const classNameGenerator = tv({
       'peer-disabled:shr-border-disabled peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border',
       'peer-disabled:peer-indeterminate:shr-border-default peer-disabled:peer-indeterminate:shr-bg-border',
-      'peer-focus-visible:shr-focus-indicator',
+      'peer-focus-visible:shr-focus-indicator--outer',
       'peer-hover:shr-shadow-input-hover',
       'shr-border-default',
       'peer-[[aria-invalid]]:shr-border-danger',
@@ -64,7 +64,7 @@ const classNameGenerator = tv({
 })
 
 export const Checkbox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed, error, className, children, disabled, ...props }, ref) => {
+  ({ checked, mixed, error, className, children, disabled, id, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
@@ -93,13 +93,13 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     }, [checked, mixed])
 
     const defaultId = useId()
-    const checkBoxId = props.id || defaultId
+    const checkBoxId = id || defaultId
 
     return (
       <span data-disabled={disabled} className={classNames.wrapper}>
         <span className={classNames.innerWrapper}>
           <input
-            {...props}
+            {...rest}
             ref={inputRef}
             type="checkbox"
             id={checkBoxId}

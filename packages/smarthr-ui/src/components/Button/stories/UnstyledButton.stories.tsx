@@ -1,18 +1,16 @@
 import { UnstyledButton } from '../UnstyledButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Button/UnstyledButton',
   component: UnstyledButton,
-  render: ({ children, ...args }) => (
-    <UnstyledButton {...args}>{children || 'ボタン'}</UnstyledButton>
+  render: ({ children, ...rest }) => (
+    <UnstyledButton {...rest}>{children || 'ボタン'}</UnstyledButton>
   ),
   parameters: {
     chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof UnstyledButton>
 
-export const Playground: StoryObj<typeof UnstyledButton> = {
-  name: 'Playground',
-}
+export const Playground: StoryObj<typeof UnstyledButton> = {}

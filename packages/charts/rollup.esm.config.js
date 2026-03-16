@@ -1,10 +1,13 @@
-import typescript from '@rollup/plugin-typescript'
-import replace from '@rollup/plugin-replace'
-import commonjs from '@rollup/plugin-commonjs'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import { globSync } from 'glob'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import commonjs from '@rollup/plugin-commonjs'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
+import typescript from '@rollup/plugin-typescript'
+import { globSync } from 'glob'
+
+
 import packageJson from './package.json' with { type: 'json' }
 
 const peerDependencies = packageJson.peerDependencies

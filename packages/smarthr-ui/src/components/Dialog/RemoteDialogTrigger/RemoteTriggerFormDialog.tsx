@@ -15,7 +15,7 @@ export const RemoteTriggerFormDialog: FC<Props> = ({
   onOpen,
   onClose,
   onPressEscape,
-  ...props
+  ...rest
 }) => {
   const {
     isOpen,
@@ -32,7 +32,7 @@ export const RemoteTriggerFormDialog: FC<Props> = ({
 
   return (
     <FormDialog
-      {...props}
+      {...rest}
       id={id}
       isOpen={isOpen}
       onClickClose={actualOnClickClose}

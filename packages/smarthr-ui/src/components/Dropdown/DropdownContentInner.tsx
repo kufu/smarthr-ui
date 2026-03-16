@@ -26,12 +26,13 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   triggerRect: Rect
   controllable: boolean
 }>
 
-export type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+export type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 type DropdownContentInnerContextType = {
   maxHeight: string
@@ -41,12 +42,12 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
   maxHeight: '',
 })
 
-export const DropdownContentInner: FC<Props & ElementProps> = ({
+export const DropdownContentInner: FC<Props> = ({
   triggerRect,
   children,
   className,
   controllable,
-  ...props
+  ...rest
 }) => {
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
@@ -113,7 +114,7 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   useKeyboardNavigation(wrapperRef, focusTargetRef)
 
   return (
-    <div {...props} ref={wrapperRef} className={actualClassName} style={style}>
+    <div {...rest} ref={wrapperRef} className={actualClassName} style={style}>
       {/* dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (

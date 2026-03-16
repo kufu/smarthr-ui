@@ -1,12 +1,13 @@
+import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Heading, PageHeading } from '../Heading'
+import { Heading } from '../Heading'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentPropsWithoutRef } from 'react'
 
 export default {
   title: 'Components/Heading',
   component: Heading,
-  subcomponents: { PageHeading },
   render: (args) => <Heading {...args}>Heading</Heading>,
   args: {},
   parameters: {
@@ -21,11 +22,9 @@ export const HeadingControl: StoryObj<typeof Heading> = {
 
 export const Type: StoryObj<typeof Heading> = {
   name: 'type',
-  render: (args) => (
+  render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'size'>) => (
     <Stack>
-      <Heading {...args} type="screenTitle">
-        ScreenTitle
-      </Heading>
+      <Heading {...args}>type未指定</Heading>
       <Heading {...args} type="sectionTitle">
         SectionTitle
       </Heading>
@@ -42,27 +41,47 @@ export const Type: StoryObj<typeof Heading> = {
   ),
 }
 
-export const Tag: StoryObj<typeof Heading> = {
-  name: 'tag(非推奨)',
+export const Size: StoryObj<typeof Heading> = {
+  name: 'size',
+  render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'type'>) => (
+    <Stack>
+      <Heading {...args} type="sectionTitle">
+        SectionTitle (size未指定)
+      </Heading>
+      <Heading {...args} type="sectionTitle" size="XXL">
+        SectionTitle XXL
+      </Heading>
+      <Heading {...args} type="sectionTitle" size="XL">
+        SectionTitle XL
+      </Heading>
+      <Heading {...args} type="sectionTitle" size="L">
+        SectionTitle L
+      </Heading>
+    </Stack>
+  ),
+}
+
+export const UnrecommendedTag: StoryObj<typeof Heading> = {
+  name: 'unrecommendedTag(非推奨)',
   render: (args) => (
     <Stack>
       <Heading {...args}>未指定(推奨)</Heading>
-      <Heading {...args} tag="h1">
+      <Heading {...args} unrecommendedTag="h1">
         h1
       </Heading>
-      <Heading {...args} tag="h2">
+      <Heading {...args} unrecommendedTag="h2">
         h2
       </Heading>
-      <Heading {...args} tag="h3">
+      <Heading {...args} unrecommendedTag="h3">
         h3
       </Heading>
-      <Heading {...args} tag="h4">
+      <Heading {...args} unrecommendedTag="h4">
         h4
       </Heading>
-      <Heading {...args} tag="h5">
+      <Heading {...args} unrecommendedTag="h5">
         h5
       </Heading>
-      <Heading {...args} tag="h6">
+      <Heading {...args} unrecommendedTag="h6">
         h6
       </Heading>
     </Stack>
@@ -73,12 +92,22 @@ export const VisuallyHidden: StoryObj<typeof Heading> = {
   name: 'visuallyHidden',
   render: (args) => (
     <Stack>
+      <Heading {...args}>visuallyHidden未指定</Heading>
       <Heading {...args} visuallyHidden={true}>
-        visuallyHidden={true}
+        visuallyHidden=true
       </Heading>
       <Heading {...args} visuallyHidden={false}>
         visuallyHidden=false:
       </Heading>
     </Stack>
+  ),
+}
+
+export const Icon: StoryObj<typeof Heading> = {
+  name: 'icon',
+  render: (args) => (
+    <Heading {...args} icon={<FaAddressBookIcon />}>
+      icon
+    </Heading>
   ),
 }

@@ -18,7 +18,7 @@ const classNameGenerator = tv({
 type Props = PropsWithChildren<ComponentProps<'div'>>
 
 export const DropdownCloser: FC<Props> = ({ children, className }) => {
-  const { onClickCloser, controllable } = useContext(DropdownContentContext)
+  const { onClickCloser: onDelegateClick, controllable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
   const actualClassName = useMemo(
@@ -33,8 +33,7 @@ export const DropdownCloser: FC<Props> = ({ children, className }) => {
   )
 
   return (
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
-    <div role="presentation" onClick={onClickCloser} className={actualClassName} style={style}>
+    <div role="presentation" onClick={onDelegateClick} className={actualClassName} style={style}>
       {children}
     </div>
   )

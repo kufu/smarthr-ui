@@ -5,7 +5,7 @@ import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-export type Props = PropsWithChildren<
+export type AbstractProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
     /** 横スクロール時、カラムを左右いずれかに固定 */
     fixed?: 'left' | 'right'
@@ -14,10 +14,10 @@ export type Props = PropsWithChildren<
       | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
   }
 >
-type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'td'>, keyof AbstractProps>
 
-export const Td = memo<Props & ElementProps>(
-  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...props }) => {
+export const Td = memo<Props>(
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
@@ -45,7 +45,7 @@ export const Td = memo<Props & ElementProps>(
       }
     }, [style, contentWidth])
 
-    return <td {...props} data-fixed={fixed} className={actualClassName} style={actualStyle} />
+    return <td {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle} />
   },
 )
 

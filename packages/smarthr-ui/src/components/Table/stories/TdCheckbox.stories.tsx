@@ -2,7 +2,7 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof TdCheckbox> = (args) => (
   <Table>

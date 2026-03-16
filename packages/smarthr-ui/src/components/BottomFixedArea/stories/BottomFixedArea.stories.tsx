@@ -1,9 +1,10 @@
 import { action } from 'storybook/actions'
+
 import { Button } from '../../Button'
 import { FaThumbtackIcon } from '../../Icon'
 import { BottomFixedArea } from '../BottomFixedArea'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export const _primaryButtonOptions = {
   なし: undefined,

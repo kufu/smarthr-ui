@@ -13,6 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
@@ -21,15 +22,20 @@ import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Sidebar } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
+type ObjectHeadingType = {
+  text: ReactNode
+  /**
+   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
+   */
+  unrecommendedTag?: HeadingTagTypes
+}
+type HeadingType = ReactNode | ObjectHeadingType
+type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
-  title: ReactNode
-  /**
-   * @deprecated titleTagは非推奨です
-   */
-  titleTag?: HeadingTagTypes
+  heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
-  togglable?: boolean
+  toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
@@ -37,16 +43,16 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
-
 type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+
+const headingObjectConverter = (text: ReactNode) => ({ text })
 
 export const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: 'shr-p-1.5',
-    heading: 'smarthr-ui-InformationPanel-title',
-    togglableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
+    heading: 'smarthr-ui-InformationPanel-heading',
+    toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
       'smarthr-ui-InformationPanel-content',
       'shr-p-1.5 shr-pt-0 shr-text-base aria-hidden:shr-hidden',
@@ -112,21 +118,19 @@ export const classNameGenerator = tv({
 })
 
 export const InformationPanel: FC<Props> = ({
-  title,
-  titleTag,
+  heading,
   type = 'info',
-  togglable,
+  toggleable,
   active: activeProps = true,
   bold,
   className,
   children,
   onClickTrigger,
   decorators,
-  ...props
+  ...rest
 }) => {
   const [active, setActive] = useState(activeProps)
   const id = useId()
-  const titleId = `${id}-title`
   const contentId = `${id}-content`
 
   useEffect(() => {
@@ -152,14 +156,14 @@ export const InformationPanel: FC<Props> = ({
         wrapper: withActive.wrapper(wrapperProps),
         header: withActive.header(),
         heading: withActive.heading(),
-        togglableButton: withActive.togglableButton(),
+        toggleableButton: withActive.toggleableButton(),
         content: withActive.content(),
       },
       inactive: {
         wrapper: withInactive.wrapper(wrapperProps),
         header: withInactive.header(),
         heading: withInactive.heading(),
-        togglableButton: withInactive.togglableButton(),
+        toggleableButton: withInactive.toggleableButton(),
         content: withInactive.content(),
       },
     }
@@ -168,19 +172,21 @@ export const InformationPanel: FC<Props> = ({
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...props} overflow="hidden" as="section" className={classNames.wrapper}>
+    <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <MemoizedHeading tag={titleTag} id={titleId} className={classNames.heading} type={type}>
-          {title}
-        </MemoizedHeading>
-        {togglable && (
-          <TogglableButton
+        <MemoizedHeading
+          heading={heading}
+          id={`${id}-heading`}
+          className={classNames.heading}
+          type={type}
+        />
+        {toggleable && (
+          <ToggleableButton
             active={active}
             onClickTrigger={onClickTrigger}
             setActive={setActive}
             contentId={contentId}
-            className={classNames.togglableButton}
+            className={classNames.toggleableButton}
             decorators={decorators}
           />
         )}
@@ -194,20 +200,31 @@ export const InformationPanel: FC<Props> = ({
 
 const MemoizedHeading = memo<
   Pick<Props, 'type'> & {
-    tag: Props['titleTag']
+    heading: Props['heading']
     id: string
     className: string
-    children: Props['title']
   }
->(({ type, children, ...rest }) => (
-  <Heading {...rest} type="blockTitle">
-    <ResponseMessage type={type} iconGap={0.5}>
-      {children}
-    </ResponseMessage>
-  </Heading>
-))
+>(({ type, heading: orgHeading, ...rest }) => {
+  const heading = useObjectAttributes<HeadingType, ObjectHeadingType>(
+    orgHeading,
+    headingObjectConverter,
+  )
 
-const TogglableButton: FC<
+  return (
+    <Heading
+      {...rest}
+      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+      unrecommendedTag={heading.unrecommendedTag}
+      type="blockTitle"
+    >
+      <ResponseMessage type={type} iconGap={0.5}>
+        {heading.text}
+      </ResponseMessage>
+    </Heading>
+  )
+})
+
+const ToggleableButton: FC<
   Pick<Props, 'onClickTrigger' | 'decorators'> & {
     active: boolean
     setActive: (flg: boolean) => void

@@ -1,17 +1,16 @@
-import { ComponentProps } from 'react'
-
 import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { Button } from '../Button'
 
-import type { StoryFn, StoryObj } from '@storybook/react'
+import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 type Variant = ComponentProps<typeof Button>['variant']
 
 /**
  * $ pict button.pict.txt /e:button-seeds.pict.txt
- * size    disabled disabledDetail loading prefix suffix wide
+ * size    disabled disabledReason loading prefix suffix wide
  * default false    なし           false   あり   なし   false
  * default false    なし           false   なし   なし   false
  * s       false    なし           false   なし   あり   true
@@ -40,7 +39,7 @@ const Template: StoryFn = (args) => (
             <Button
               variant={variant}
               disabled
-              disabledDetail={{ message: 'ボタンが無効な理由' }}
+              disabledReason={{ message: 'ボタンが無効な理由' }}
               suffix={<FaCaretDownIcon />}
             >
               ボタン
@@ -61,7 +60,7 @@ const Template: StoryFn = (args) => (
               variant={variant}
               size="s"
               disabled
-              disabledDetail={{ message: 'ボタンが無効な理由' }}
+              disabledReason={{ message: 'ボタンが無効な理由' }}
               prefix={<FaCirclePlusIcon />}
             >
               ボタン

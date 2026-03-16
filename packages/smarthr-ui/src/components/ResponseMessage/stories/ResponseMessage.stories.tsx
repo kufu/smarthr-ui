@@ -1,6 +1,7 @@
 import { Stack } from '../../Layout'
 import { ResponseMessage, classNameGenerator } from '../ResponseMessage'
-import type { Meta, StoryObj } from '@storybook/react'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/ResponseMessage',
@@ -45,7 +46,7 @@ export const Size: StoryObj<typeof ResponseMessage> = {
   render: (args) => (
     <Stack align="flex-start">
       {([undefined, 'M', 'S', 'XS'] as const).map((size) => (
-        <ResponseMessage {...args} size={size}>
+        <ResponseMessage {...args} key={size || 'undefined'} size={size}>
           {size || 'size未指定はMと同サイズ'}
         </ResponseMessage>
       ))}

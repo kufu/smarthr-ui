@@ -1,34 +1,30 @@
+import { useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { useRef, useState } from 'react'
 import { Button } from '../../../Button'
 import { MessageDialog } from '../MessageDialog'
 import { MessageDialogContent } from '../MessageDialogContent'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/MessageDialog',
   component: MessageDialog,
   subcomponents: { MessageDialogContent },
-  render: ({ onClickClose, ...args }) => {
+  render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleClose = onClickClose ?? (() => setOpen(false))
 
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <MessageDialog {...args} onClickClose={handleClose} isOpen={open} />
+        <MessageDialog {...rest} onClickClose={handleClose} isOpen={open} />
       </>
     )
   },
-  argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
-    },
-  },
   args: {
-    title: 'メッセージダイアログタイトル',
-    description: 'メッセージダイアログ本文',
+    heading: 'メッセージダイアログタイトル',
+    children: 'メッセージダイアログ本文',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -37,31 +33,27 @@ export default {
 
 export const Playground: StoryObj<typeof MessageDialog> = {}
 
-export const Title: StoryObj<typeof MessageDialog> = {
-  name: 'title',
+export const Heading: StoryObj<typeof MessageDialog> = {
+  name: 'heading',
   args: {
-    title: 'メッセージダイアログタイトル',
+    heading: 'メッセージダイアログタイトル',
   },
 }
 
-export const Subtitle: StoryObj<typeof MessageDialog> = {
-  name: 'subtitle',
+export const HeadingSub: StoryObj<typeof MessageDialog> = {
+  name: 'heading.sub',
   args: {
-    subtitle: 'メッセージダイアログサブタイトル',
+    heading: {
+      text: 'メッセージダイアログタイトル',
+      sub: 'メッセージダイアログサブタイトル',
+    },
   },
 }
 
-export const TitleTag: StoryObj<typeof MessageDialog> = {
-  name: 'titleTag（非推奨）',
+export const Children: StoryObj<typeof MessageDialog> = {
+  name: 'children',
   args: {
-    titleTag: 'h3',
-  },
-}
-
-export const Description: StoryObj<typeof MessageDialog> = {
-  name: 'description',
-  args: {
-    description: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
+    children: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
   },
 }
 

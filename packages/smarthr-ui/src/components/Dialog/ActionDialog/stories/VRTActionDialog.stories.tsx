@@ -1,7 +1,7 @@
 import { Button } from '../../../Button'
 import { ActionDialog } from '../ActionDialog'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/ActionDialog/VRT',
@@ -10,8 +10,10 @@ export default {
     width: '40em',
     size: 'M',
     isOpen: true,
-    title: 'アクションダイアログタイトル',
-    subtitle: 'アクションダイアログのサブタイトル',
+    heading: {
+      text: 'アクションダイアログタイトル',
+      sub: 'アクションダイアログのサブタイトル',
+    },
     actionText: '保存',
     subActionArea: <Button>サブアクション</Button>,
     contentBgColor: 'BACKGROUND',

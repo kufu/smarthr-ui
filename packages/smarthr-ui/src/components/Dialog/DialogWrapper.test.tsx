@@ -20,9 +20,9 @@ describe('DialogWrapper', () => {
           <DialogTrigger>
             <Button>Dialog</Button>
           </DialogTrigger>
-          <DialogContent ariaLabelledby="dialog-title">
+          <DialogContent ariaLabelledby="dialog-heading">
             <Section>
-              <Heading id="dialog-title">DialogContent</Heading>
+              <Heading id="dialog-heading">DialogContent</Heading>
               <p>Uncontrolled Dialog.</p>
               <DialogCloser>
                 <Button>Close</Button>
@@ -83,7 +83,7 @@ describe('DialogWrapper', () => {
             <Button>MessageDialog</Button>
           </DialogTrigger>
           <MessageDialogContent
-            title="Uncontrolled Message Dialog"
+            heading="Uncontrolled Message Dialog"
             description={
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor

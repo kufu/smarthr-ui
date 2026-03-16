@@ -24,7 +24,12 @@ describe('Dialog', () => {
         <Button onClick={() => setIsOpen(true)}>Dialog</Button>
         <Dialog isOpen={isOpen} ariaLabel="Dialog">
           <form>
-            <Fieldset legend="Dialog" legendType="sectionTitle">
+            <Fieldset
+              legend={{
+                text: 'Dialog',
+                styleType: 'sectionTitle',
+              }}
+            >
               <p>
                 The value of isOpen must be managed by you, but you can customize content freely.
               </p>

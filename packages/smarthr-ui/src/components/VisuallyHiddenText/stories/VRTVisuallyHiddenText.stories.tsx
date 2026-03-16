@@ -1,7 +1,7 @@
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { Stack } from '../../Layout'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/VisuallyHiddenText/VRT',

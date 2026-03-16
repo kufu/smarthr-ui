@@ -1,10 +1,10 @@
 import { userEvent, within } from 'storybook/test'
-import { ComponentProps } from 'react'
 
 import { Cluster } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * $ pict filter-dropdown.pict
@@ -21,11 +21,11 @@ const _cases: Array<
     'isFiltered' | 'triggerSize' | 'disabled' | 'onlyIconTrigger'
   >
 > = [
-  { onlyIconTrigger: true },
-  { triggerSize: 's', isFiltered: true, disabled: true },
-  { triggerSize: 's' },
-  { isFiltered: false, disabled: true },
-  { isFiltered: true },
+  { trigger: { onlyIcon: true } },
+  { trigger: { size: 's' }, filtered: true, disabled: true },
+  { trigger: { size: 's' } },
+  { filtered: false, disabled: true },
+  { filtered: true },
 ]
 
 export default {

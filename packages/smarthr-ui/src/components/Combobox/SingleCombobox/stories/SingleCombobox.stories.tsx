@@ -1,12 +1,13 @@
-import { useArgs } from 'storybook/preview-api'
-import { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import { backgroundColor } from '../../../../themes'
+import { useArgs } from 'storybook/preview-api'
 
+import { backgroundColor } from '../../../../themes'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { SingleCombobox } from '../SingleCombobox'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export const defaultItems = {
   'option 1': {

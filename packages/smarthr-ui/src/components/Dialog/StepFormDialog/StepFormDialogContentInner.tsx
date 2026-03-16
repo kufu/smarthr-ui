@@ -18,39 +18,44 @@ import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
+import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
-export type BaseProps = PropsWithChildren<
-  DialogHeaderProps &
-    DialogBodyProps & {
-      /** アクションボタンのラベル */
-      submitLabel: ReactNode
-      /** アクションボタンのスタイル */
-      actionTheme?: 'primary' | 'secondary' | 'danger'
-      /**
-       * アクションボタンをクリックした時に発火するコールバック関数
-       * @param closeDialog ダイアログを閉じる関数
-       * @param currentStep onSubmitが発火した時のステップ
-       * @returns 次のステップに遷移する場合は次のステップ、遷移しない場合はundefined
-       */
-      onSubmit: (
-        closeDialog: () => void,
-        e: FormEvent<HTMLFormElement>,
-        currentStep: StepItem,
-      ) => StepItem | undefined
-      /** アクションボタンを無効にするかどうか */
-      actionDisabled?: boolean
-      /** 閉じるボタンを無効にするかどうか */
-      closeDisabled?: boolean
-      /** コンポーネント内の文言を変更するための関数を設定 */
-      decorators?: DecoratorsType<DecoratorKeyTypes>
-    }
+type StepFormHelpers = {
+  /** 指定したステップに移動する関数 */
+  goto: (nextStep: StepItem) => void
+  /** ダイアログを閉じる関数 */
+  close: () => void
+  /** 現在のステップ情報 */
+  currentStep: StepItem
+}
+
+export type AbstractProps = PropsWithChildren<
+  DialogBodyProps & {
+    /** ダイアログタイトル */
+    heading: DialogHeadingProps
+    /** アクションボタンのラベル */
+    submitLabel: ReactNode
+    /** アクションボタンのスタイル */
+    actionTheme?: 'primary' | 'secondary' | 'danger'
+    /**
+     * アクションボタンをクリックした時に発火するコールバック関数
+     * @param e フォームイベント
+     * @param helpers ステップ操作用のヘルパー関数群
+     */
+    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
+    /** アクションボタンを無効にするかどうか */
+    actionDisabled?: boolean
+    /** 閉じるボタンを無効にするかどうか */
+    closeDisabled?: boolean
+    /** コンポーネント内の文言を変更するための関数を設定 */
+    decorators?: DecoratorsType<DecoratorKeyTypes>
+  }
 >
 
-export type StepFormDialogContentInnerProps = BaseProps & {
+export type StepFormDialogContentInnerProps = AbstractProps & {
   firstStep: StepItem
   onClickClose: () => void
   responseStatus?: ResponseStatus
@@ -68,10 +73,7 @@ const BUTTON_COLUMN_GAP = {
 
 export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
   children,
-  title,
-  titleId,
-  subtitle,
-  titleTag,
+  heading,
   contentBgColor,
   contentPadding,
   submitLabel,
@@ -118,12 +120,16 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
 
-      const next = onSubmit(handleCloseAction, e, currentStep)
-
-      if (next) {
-        stepQueue.current.push(currentStep)
-        changeCurrentStep(next)
+      const helpers: StepFormHelpers = {
+        goto: (nextStep: StepItem) => {
+          stepQueue.current.push(currentStep)
+          changeCurrentStep(nextStep)
+        },
+        close: handleCloseAction,
+        currentStep,
       }
+
+      onSubmit(e, helpers)
     },
     [currentStep, stepQueue, onSubmit, handleCloseAction, changeCurrentStep],
   )
@@ -169,15 +175,14 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
+    // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
       <form onSubmit={handleSubmitAction}>
         <div className={classNames.wrapper}>
-          <DialogHeader
-            title={subtitle ? title : `${title}${stepText}`}
-            subtitle={subtitle ? `${subtitle}${stepText}` : undefined}
-            titleTag={titleTag}
-            titleId={titleId}
+          <DialogHeading
+            id={heading.id}
+            sub={heading.sub ? `${heading.sub}${stepText}` : undefined}
+            text={heading.sub ? heading.text : `${heading.text}${stepText}`}
           />
           <DialogBody
             contentPadding={contentPadding}

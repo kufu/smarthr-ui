@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { MessageDialog } from '../MessageDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/MessageDialog/VRT',
@@ -8,9 +9,11 @@ export default {
     width: '40em',
     size: 'M',
     isOpen: true,
-    title: 'メッセージダイアログタイトル',
-    subtitle: 'メッセージダイアログのサブタイトル',
-    description: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
+    heading: {
+      text: 'メッセージダイアログタイトル',
+      sub: 'メッセージダイアログのサブタイトル',
+    },
+    children: <p>メッセージダイアログの本文です。React ノードを渡せます。</p>,
     contentBgColor: 'BACKGROUND',
     contentPadding: 1.5,
   },

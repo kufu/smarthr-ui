@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { SmartHRAILogo } from '../SmartHRAILogo'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/SmartHRAILogo',
@@ -12,21 +13,21 @@ export default {
 
 export const Playground: StoryObj<typeof SmartHRAILogo> = {}
 
-export const alt: StoryObj<typeof SmartHRAILogo> = {
+export const Alt: StoryObj<typeof SmartHRAILogo> = {
   name: 'alt',
   args: {
     alt: 'SmartHR（スマートHR） AIロゴ',
   },
 }
 
-export const width: StoryObj<typeof SmartHRAILogo> = {
+export const Width: StoryObj<typeof SmartHRAILogo> = {
   name: 'width',
   args: {
     width: '5em',
   },
 }
 
-export const height: StoryObj<typeof SmartHRAILogo> = {
+export const Height: StoryObj<typeof SmartHRAILogo> = {
   name: 'height',
   args: {
     height: '2em',

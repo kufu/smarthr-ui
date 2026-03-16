@@ -3,14 +3,14 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { InformationPanel, classNameGenerator } from '../InformationPanel'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/InformationPanel',
   component: InformationPanel,
   render: (args) => <InformationPanel {...args} />,
   args: {
-    title: 'インフォメーションパネルタイトル',
+    heading: 'インフォメーションパネルタイトル',
     children: 'インフォメーションパネルボディ',
   },
   parameters: {
@@ -47,27 +47,30 @@ export const Bold: StoryObj<typeof InformationPanel> = {
   },
 }
 
-export const Title: StoryObj<typeof InformationPanel> = {
-  name: 'title',
+export const Heading: StoryObj<typeof InformationPanel> = {
+  name: 'heading',
 }
 
-export const TitleTag: StoryObj<typeof InformationPanel> = {
-  name: 'titleTag（非推奨）',
+export const HeadingTag: StoryObj<typeof InformationPanel> = {
+  name: 'heading.unrecommendedTag（非推奨）',
   args: {
-    titleTag: 'h3',
+    heading: {
+      text: 'インフォメーションパネルタイトル',
+      unrecommendedTag: 'h3',
+    },
   },
 }
 
-export const Togglable: StoryObj<typeof InformationPanel> = {
-  name: 'togglable',
+export const Toggleable: StoryObj<typeof InformationPanel> = {
+  name: 'toggleable',
   render: (args) => (
     <Stack>
-      {[undefined, false, true].map((togglable) => (
+      {[undefined, false, true].map((toggleable) => (
         <InformationPanel
           {...args}
-          title={`togglable: ${togglable}`}
-          togglable={togglable}
-          key={String(togglable)}
+          heading={`toggleable: ${toggleable}`}
+          toggleable={toggleable}
+          key={String(toggleable)}
         />
       ))}
     </Stack>
@@ -81,7 +84,7 @@ export const Active: StoryObj<typeof InformationPanel> = {
       {[undefined, false, true].map((active) => (
         <InformationPanel
           {...args}
-          title={`active: ${active}`}
+          heading={`active: ${active}`}
           active={active}
           key={String(active)}
         />

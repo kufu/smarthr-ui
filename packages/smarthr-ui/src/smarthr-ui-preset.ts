@@ -64,7 +64,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-    focus: ['focus-indicator', 'focus-indicator--inner'],
+    focus: ['focus-indicator', 'focus-indicator--outer', 'focus-indicator-none'],
   },
 }
 
@@ -194,13 +194,13 @@ export default {
       DEFAULT: defaultColor.OUTLINE,
     },
     spacing: {
-      px: '1px',
-      em: '1em',
       ...(spacingSizes
         .map((size) => ({
           [size]: spacingByChar(size),
         }))
         .reduce((a, c) => Object.assign(a, c), {}) as Spacing),
+      px: '1px',
+      em: '1em',
     },
     stroke: {
       black: defaultColor.GREY_100,
@@ -410,15 +410,29 @@ export default {
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
-        '.focus-indicator': {
-          outline: 'none',
+        ':where(.focus-indicator)': {
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+          boxShadow: `inset 0 0 0 4px ${theme('colors.white')}`,
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '-2px',
+
+          /**
+           * outline と box-shadow がそれぞれ border の内側と外側から生えるため、borderがある場合 box-shadow の幅が小さくなってしまうため幅を増やしている
+          /* FIXME: :not() が効かなくて border-shorthand が適用されていて border-none されているコンポーネントで box-shadow が少し細くなっている 
+          */
+          '&.border-shorthand:not(.border-none)': {
+            boxShadow: `inset 0 0 0 calc(4px - ${theme('borderWidth.DEFAULT')}) ${theme('colors.white')}`,
+          },
         },
-        '.focus-indicator--inner': {
-          outline: 'none',
+        ':where(.focus-indicator--outer)': {
           isolation: 'isolate',
-          boxShadow: `inset 0 0 0 2px ${theme('colors.outline')}, inset 0 0 0 4px ${theme('colors.white')}`,
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
+        },
+        '.focus-indicator-none': {
+          boxShadow: 'none',
+          outline: 'none',
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),

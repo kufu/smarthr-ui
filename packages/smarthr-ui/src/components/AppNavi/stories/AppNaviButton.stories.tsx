@@ -4,7 +4,7 @@ import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviButton } from '../AppNaviButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _iconOptions = {
   なし: undefined,

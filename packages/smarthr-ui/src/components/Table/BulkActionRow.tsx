@@ -18,7 +18,7 @@ const classNameGenerator = tv({
 export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> = ({
   children,
   className,
-  ...props
+  ...rest
 }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
@@ -32,7 +32,7 @@ export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> =
   }, [className])
 
   return (
-    <tr {...props} ref={countHeadCellRef} className={classNames.wrapper}>
+    <tr {...rest} ref={countHeadCellRef} className={classNames.wrapper}>
       <td colSpan={count} className={classNames.cell}>
         {children}
       </td>

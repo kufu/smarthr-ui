@@ -1,7 +1,10 @@
+'use client'
+
 import { type ComponentProps, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { TextLink } from '..'
+import { useEnvironment } from '../../../hooks/useEnvironment'
 import { FaArrowLeftIcon } from '../../Icon'
 
 const classNameGenerator = tv({
@@ -21,9 +24,10 @@ type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> &
   }
 
 export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
+  const { mobile } = useEnvironment()
   const actualClassName = useMemo(
-    () => classNameGenerator({ indent: indent ?? true, className }),
-    [indent, className],
+    () => classNameGenerator({ indent: indent ?? !mobile, className }),
+    [indent, mobile, className],
   )
 
   return (

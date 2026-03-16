@@ -2,7 +2,7 @@ import { Stack } from '../../../Layout'
 import InputStory from '../../stories/Input.stories'
 import { SearchInput } from '../SearchInput'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Input/SearchInput',

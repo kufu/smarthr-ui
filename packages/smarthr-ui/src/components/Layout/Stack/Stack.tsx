@@ -63,14 +63,14 @@ type Props = VariantProps<typeof classNameGenerator> &
   ComponentPropsWithRef<'div'>
 
 export const Stack = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', inline = false, gap = 1, align, className, ...props }, ref) => {
+  ({ as: Component = 'div', inline = false, gap = 1, align, className, ...rest }, ref) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ inline, align, gap, className }),
       [align, className, gap, inline],
     )
 
     const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...props} ref={ref} className={actualClassName} />
+    const body = <Component {...rest} ref={ref} className={actualClassName} />
 
     if (Wrapper) {
       return <Wrapper>{body}</Wrapper>

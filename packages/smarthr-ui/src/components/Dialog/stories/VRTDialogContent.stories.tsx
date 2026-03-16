@@ -1,10 +1,9 @@
 import { userEvent, within } from 'storybook/test'
 
-import { Dialog } from '../Dialog'
-
 import DialogContentStory from './DialogContent.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Dialog } from '../Dialog'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   ...DialogContentStory,

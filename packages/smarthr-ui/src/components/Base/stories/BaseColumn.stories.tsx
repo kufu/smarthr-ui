@@ -1,10 +1,10 @@
 import { backgroundColor, bgColors } from '../../../themes'
-import { Gap } from '../../../types'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Gap } from '../../../types'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない

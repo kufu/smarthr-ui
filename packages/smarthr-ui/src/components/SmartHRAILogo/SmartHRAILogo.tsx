@@ -1,13 +1,13 @@
 import { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
 
-type Props = {
+type AbstractProps = {
   alt?: string
   width?: number | string
   height?: number | string
 }
-type ElementProps = Omit<ComponentPropsWithoutRef<'svg'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof AbstractProps>
 
-export const SmartHRAILogo = memo<Props & ElementProps>(
+export const SmartHRAILogo = memo<Props>(
   ({ alt = 'SmartHR（スマートHR） AI', width, height, fill, ...rest }) => {
     const style = useMemo(
       () => ({

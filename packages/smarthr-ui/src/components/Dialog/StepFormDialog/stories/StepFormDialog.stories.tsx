@@ -1,13 +1,14 @@
+import { type ComponentProps, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { StepFormDialog } from '../StepFormDialog'
-import { ComponentProps, useRef, useState } from 'react'
 import { Button } from '../../../Button'
-import { RadioButton } from '../../../RadioButton'
-import { Cluster } from '../../../Layout'
 import { Input } from '../../../Input'
+import { Cluster } from '../../../Layout'
+import { RadioButton } from '../../../RadioButton'
+import { StepFormDialog } from '../StepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
+
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
   string: '30em',
@@ -18,35 +19,29 @@ export default {
   title: 'Components/Dialog/StepFormDialog',
   component: StepFormDialog,
   subcomponents: { StepFormDialogItem },
-  render: ({ onSubmit, onClickClose, children, ...args }) => {
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (
-      closeDialog,
-      e,
-      currentStep,
-    ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
-      closeDialog()
-      return currentStep
+    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (e, helpers) => {
+      if (onSubmit) {
+        onSubmit(e, helpers)
+      } else {
+        action('onSubmit')(e)
+      }
+      helpers.close()
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
 
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <StepFormDialog {...args} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
+        <StepFormDialog {...rest} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
           {children || 'ダイアログコンテンツ'}
         </StepFormDialog>
       </>
     )
   },
-  argTypes: {
-    titleTag: {
-      name: 'titleTag（非推奨）',
-    },
-  },
   args: {
-    title: 'フォームダイアログ',
+    heading: 'フォームダイアログ',
     stepLength: 1,
     submitLabel: '保存',
   },
@@ -57,10 +52,20 @@ export default {
 
 export const Playground: StoryObj<typeof StepFormDialog> = {}
 
-export const Title: StoryObj<typeof StepFormDialog> = {
-  name: 'title',
+export const Heading: StoryObj<typeof StepFormDialog> = {
+  name: 'heading',
   args: {
-    title: 'フォームダイアログタイトル',
+    heading: 'フォームダイアログタイトル',
+  },
+}
+
+export const HeadingSub: StoryObj<typeof StepFormDialog> = {
+  name: 'heading.sub',
+  args: {
+    heading: {
+      text: 'フォームダイアログタイトル',
+      sub: 'フォームダイアログサブタイトル',
+    },
   },
 }
 
@@ -75,20 +80,6 @@ export const SubmitLabel: StoryObj<typeof StepFormDialog> = {
   name: 'submitLabel',
   args: {
     submitLabel: '取り込む',
-  },
-}
-
-export const TitleTag: StoryObj<typeof StepFormDialog> = {
-  name: 'titleTag（非推奨）',
-  args: {
-    titleTag: 'h3',
-  },
-}
-
-export const Subtitle: StoryObj<typeof StepFormDialog> = {
-  name: 'subtitle',
-  args: {
-    subtitle: 'フォームダイアログサブタイトル',
   },
 }
 
@@ -140,10 +131,9 @@ export const FirstStep: StoryObj<typeof StepFormDialog> = {
 export const OnSubmit: StoryObj<typeof StepFormDialog> = {
   name: 'onSubmit',
   args: {
-    onSubmit: (closeDialog, e, currentStep) => {
+    onSubmit: (e, { close }) => {
       action('onSubmit')(e)
-      closeDialog()
-      return currentStep
+      close()
     },
   },
 }
@@ -166,18 +156,17 @@ export const OnClickBack: StoryObj<typeof StepFormDialog> = {
 
 export const ResponseStatus: StoryObj<typeof StepFormDialog> = {
   name: 'responseStatus',
-  render: ({ onSubmit, onClickClose, ...args }) => {
+  render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
       useState<ComponentProps<typeof StepFormDialog>['responseStatus']>()
-    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (
-      closeDialog,
-      e,
-      currentStep,
-    ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
-      closeDialog()
-      return currentStep
+    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (e, helpers) => {
+      if (onSubmit) {
+        onSubmit(e, helpers)
+      } else {
+        action('onSubmit')(e)
+      }
+      helpers.close()
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
 
@@ -185,7 +174,7 @@ export const ResponseStatus: StoryObj<typeof StepFormDialog> = {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <StepFormDialog
-          {...args}
+          {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
           isOpen={open}
@@ -229,17 +218,16 @@ export const Width: StoryObj<typeof StepFormDialog> = {
 
 export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
   name: 'firstFocusTarget',
-  render: ({ onSubmit, onClickClose, children, ...args }) => {
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (
-      closeDialog,
-      e,
-      currentStep,
-    ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
-      closeDialog()
-      return currentStep
+    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (e, helpers) => {
+      if (onSubmit) {
+        onSubmit(e, helpers)
+      } else {
+        action('onSubmit')(e)
+      }
+      helpers.close()
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
 
@@ -247,7 +235,7 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <StepFormDialog
-          {...args}
+          {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
           isOpen={open}
@@ -255,7 +243,7 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
         >
           <label>
             入力要素
-            <Input ref={inputRef} />
+            <Input name="stepformdialog_input" ref={inputRef} />
           </label>
         </StepFormDialog>
       </>
@@ -263,7 +251,7 @@ export const FirstFocusTarget: StoryObj<typeof StepFormDialog> = {
   },
 }
 
-export const onPressEscape: StoryObj<typeof StepFormDialog> = {
+export const OnPressEscape: StoryObj<typeof StepFormDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),
@@ -279,17 +267,16 @@ export const OnClickOverlay: StoryObj<typeof StepFormDialog> = {
 
 export const PortalParent: StoryObj<typeof StepFormDialog> = {
   name: 'portalParent',
-  render: ({ onSubmit, onClickClose, children, ...args }) => {
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (
-      closeDialog,
-      e,
-      currentStep,
-    ) => {
-      onSubmit ? onSubmit(closeDialog, e, currentStep) : action('onSubmit')(e)
-      closeDialog()
-      return currentStep
+    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (e, helpers) => {
+      if (onSubmit) {
+        onSubmit(e, helpers)
+      } else {
+        action('onSubmit')(e)
+      }
+      helpers.close()
     }
     const handleClose = onClickClose ?? (() => setOpen(false))
 
@@ -299,7 +286,7 @@ export const PortalParent: StoryObj<typeof StepFormDialog> = {
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <StepFormDialog
-          {...args}
+          {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
           isOpen={open}
@@ -312,5 +299,132 @@ export const PortalParent: StoryObj<typeof StepFormDialog> = {
   },
   parameters: {
     layout: 'fullscreen',
+  },
+}
+
+export const AsyncSubmitSuccess: StoryObj<typeof StepFormDialog> = {
+  name: 'asyncSubmit（Promise対応・成功パターン）',
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
+    const [open, setOpen] = useState(false)
+    const [responseStatus, setResponseStatus] =
+      useState<ComponentProps<typeof StepFormDialog>['responseStatus']>()
+
+    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = async (
+      _e,
+      { goto, close, currentStep },
+    ) => {
+      setResponseStatus({ status: 'processing' })
+      // APIコールをシミュレート（成功パターン）
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          setResponseStatus({ status: 'success', text: 'APIコールが成功しました' })
+
+          // ステップに応じて遷移を制御
+          if (currentStep.stepNumber === 1) {
+            // ステップ1 → ステップ2へ遷移
+            goto({ id: 'step-2', stepNumber: 2 })
+          } else if (currentStep.stepNumber === 2) {
+            // ステップ2 → ステップ3へ遷移
+            goto({ id: 'step-3', stepNumber: 3 })
+          } else {
+            // 最終ステップ → ダイアログを閉じる
+            close()
+          }
+
+          resolve()
+        }, 500) // 0.5秒待機
+      })
+    }
+
+    const handleClose =
+      onClickClose ??
+      (() => {
+        setOpen(false)
+        setResponseStatus(undefined)
+      })
+
+    const handleBack = () => {
+      setResponseStatus(undefined)
+    }
+
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>非同期処理ダイアログを開く（成功）</Button>
+        <StepFormDialog
+          {...rest}
+          stepLength={3}
+          firstStep={{ id: 'step-1', stepNumber: 1 }}
+          onClickClose={handleClose}
+          onClickBack={handleBack}
+          onSubmit={handleSubmit}
+          isOpen={open}
+          responseStatus={responseStatus}
+        >
+          <StepFormDialogItem id="step-1" stepNumber={1}>
+            <p>「次へ」ボタンを押すと、0.5秒後にAPIコールが実行され、次のステップに進みます。</p>
+          </StepFormDialogItem>
+
+          <StepFormDialogItem id="step-2" stepNumber={2}>
+            <p>引き続き「次へ」ボタンを押すと、さらに次のステップに進みます。</p>
+          </StepFormDialogItem>
+
+          <StepFormDialogItem id="step-3" stepNumber={3}>
+            <p>「保存」ボタンを押すと、最終的な処理が実行されダイアログが閉じます。</p>
+          </StepFormDialogItem>
+        </StepFormDialog>
+      </>
+    )
+  },
+}
+
+export const AsyncSubmitError: StoryObj<typeof StepFormDialog> = {
+  name: 'asyncSubmit（Promise対応・エラーパターン）',
+  render: ({ onSubmit, onClickClose, children, ...rest }) => {
+    const [open, setOpen] = useState(false)
+    const [responseStatus, setResponseStatus] =
+      useState<ComponentProps<typeof StepFormDialog>['responseStatus']>()
+
+    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = async (
+      _e,
+      _helpers,
+    ) => {
+      setResponseStatus({ status: 'processing' })
+      // APIコールをシミュレート（エラーパターン）
+      await new Promise<void>((_resolve, reject) => {
+        setTimeout(() => {
+          setResponseStatus({ status: 'error', text: 'バリデーションエラーが発生しました' })
+          // エラー時は現在のステップを維持（エラーをスロー）
+          reject(new Error('Validation error'))
+        }, 500) // 0.5秒待機
+      })
+    }
+
+    const handleClose =
+      onClickClose ??
+      (() => {
+        setOpen(false)
+        setResponseStatus(undefined)
+      })
+
+    const handleBack = () => {
+      setResponseStatus(undefined)
+    }
+
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>非同期処理ダイアログを開く（エラー）</Button>
+        <StepFormDialog
+          {...rest}
+          onClickClose={handleClose}
+          onClickBack={handleBack}
+          onSubmit={handleSubmit}
+          isOpen={open}
+          responseStatus={responseStatus}
+        >
+          <p>「次へ」ボタンを押すと、0.5秒後にエラーメッセージが表示されます。</p>
+          <p>現在のページが維持されます。</p>
+        </StepFormDialog>
+      </>
+    )
   },
 }

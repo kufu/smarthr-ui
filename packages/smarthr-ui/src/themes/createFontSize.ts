@@ -46,13 +46,13 @@ export const createFontSize = (userFontSize?: FontSizeProperty): CreatedFontSize
     return defaultFontSize
   }
 
-  const { scaleFactor, ...userTokens } = userFontSize
+  const { scaleFactor, ...rest } = userFontSize
 
   return merge(
     {
       ...defaultFontSize,
     },
     scaleFactor ? getSizes(scaleFactor) : {},
-    userTokens,
+    rest,
   )
 }

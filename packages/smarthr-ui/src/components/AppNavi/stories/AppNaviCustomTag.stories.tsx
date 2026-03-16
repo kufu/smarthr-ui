@@ -2,9 +2,8 @@ import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 
-import { ReactNode, FC } from 'react'
-
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { FC, ReactNode } from 'react'
 
 const _iconOptions = {
   なし: undefined,
@@ -16,8 +15,8 @@ const Link: FC<{
   children: ReactNode
   disabled?: boolean
   className?: string
-}> = ({ to, children, disabled = false, className = '', ...props }) => (
-  <a {...props} {...(disabled ? {} : { href: to })} className={className}>
+}> = ({ to, children, disabled = false, className = '', ...rest }) => (
+  <a {...rest} {...(disabled ? {} : { href: to })} className={className}>
     {children}
   </a>
 )

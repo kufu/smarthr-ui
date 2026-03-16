@@ -51,7 +51,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
       icon: Icon,
       current,
       elementAs,
-      ...others
+      ...rest
     }: PropsWithoutRef<AppNaviAnchorProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
@@ -68,7 +68,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
 
     return (
       <Component
-        {...others}
+        {...rest}
         ref={ref}
         href={href}
         aria-current={current ? 'page' : undefined}

@@ -1,6 +1,14 @@
 'use client'
 
-import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
+import {
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -10,33 +18,39 @@ import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
+import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type BaseProps = PropsWithChildren<
-  DialogHeaderProps &
-    DialogBodyProps & {
-      /** アクションボタンのラベル */
-      actionText: ReactNode
-      /** アクションボタンのスタイル */
-      actionTheme?: 'primary' | 'secondary' | 'danger'
-      /**
-       * アクションボタンをクリックした時に発火するコールバック関数
-       * @param closeDialog - ダイアログを閉じる関数
-       */
-      onClickAction: (closeDialog: () => void) => void
-      /** アクションボタンを無効にするかどうか */
-      actionDisabled?: boolean
-      /** 閉じるボタンを無効にするかどうか */
-      closeDisabled?: boolean
-      /** ダイアログフッターの左端操作領域 */
-      subActionArea?: ReactNode
-      /** コンポーネント内の文言を変更するための関数を設定 */
-      decorators?: DecoratorsType<'closeButtonLabel'>
-    }
+export type ActionDialogHelpers = {
+  close: () => void
+}
+
+export type AbstractProps = PropsWithChildren<
+  DialogBodyProps & {
+    /** ダイアログタイトル */
+    heading: DialogHeadingProps
+    /** アクションボタンのラベル */
+    actionText: ReactNode
+    /** アクションボタンのスタイル */
+    actionTheme?: 'primary' | 'secondary' | 'danger'
+    /**
+     * アクションボタンをクリックした時に発火するコールバック関数
+     * @param e マウスイベント
+     * @param helpers ダイアログ操作のためのヘルパー関数
+     */
+    onClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
+    /** アクションボタンを無効にするかどうか */
+    actionDisabled?: boolean
+    /** 閉じるボタンを無効にするかどうか */
+    closeDisabled?: boolean
+    /** ダイアログフッターの左端操作領域 */
+    subActionArea?: ReactNode
+    /** コンポーネント内の文言を変更するための関数を設定 */
+    decorators?: DecoratorsType<'closeButtonLabel'>
+  }
 >
 
-export type ActionDialogContentInnerProps = BaseProps & {
+export type ActionDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
   responseStatus?: ResponseStatus
 }
@@ -45,10 +59,7 @@ const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
-  title,
-  titleId,
-  subtitle,
-  titleTag,
+  heading,
   contentBgColor,
   contentPadding,
   actionText,
@@ -75,9 +86,8 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Section className={styles.wrapper}>
-      <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
+      <DialogHeading {...heading} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
@@ -128,9 +138,12 @@ const ActionAreaCluster = memo<
     actionText,
     className,
   }) => {
-    const handleClickAction = useCallback(() => {
-      onClickAction(onClickClose)
-    }, [onClickAction, onClickClose])
+    const handleClickAction = useCallback(
+      (e: MouseEvent<Element>) => {
+        onClickAction(e, { close: onClickClose })
+      },
+      [onClickAction, onClickClose],
+    )
 
     return (
       <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
@@ -157,7 +170,7 @@ const ActionButton = memo<
     variant: ActionDialogContentInnerProps['actionTheme']
     disabled: ActionDialogContentInnerProps['actionDisabled']
     loading: boolean
-    onClick: () => void
+    onClick: (e: MouseEvent<HTMLButtonElement>) => void
   }>
 >(({ variant = 'primary', disabled, loading, onClick, children }) => (
   <Button

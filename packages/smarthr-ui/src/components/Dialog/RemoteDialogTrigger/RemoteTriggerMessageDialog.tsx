@@ -14,7 +14,7 @@ export const RemoteTriggerMessageDialog: FC<Props> = ({
   onToggle,
   onOpen,
   onClose,
-  ...props
+  ...rest
 }) => {
   const { isOpen, onClickClose: actualOnClickClose } = useRemoteTrigger({
     id,
@@ -24,5 +24,5 @@ export const RemoteTriggerMessageDialog: FC<Props> = ({
     onClose,
   })
 
-  return <MessageDialog {...props} id={id} isOpen={isOpen} onClickClose={actualOnClickClose} />
+  return <MessageDialog {...rest} id={id} isOpen={isOpen} onClickClose={actualOnClickClose} />
 }

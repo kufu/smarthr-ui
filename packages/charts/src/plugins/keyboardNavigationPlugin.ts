@@ -4,12 +4,16 @@ export type KeyboardNavigationOptions = {
   liveRegionId?: string
 }
 
+type ChartWithKeyboardHandler = {
+  _keyboardNavigationHandler?: (event: KeyboardEvent) => void
+} & Chart
+
 export const keyboardNavigationPlugin = {
   id: 'keyboardNavigation',
   defaults: {
     liveRegionId: undefined,
   },
-  afterInit: (chart: Chart, args: any, options: KeyboardNavigationOptions) => {
+  afterInit: (chart: ChartWithKeyboardHandler, args: any, options: KeyboardNavigationOptions) => {
     const { canvas } = chart
 
     let liveRegionElement: HTMLElement | null = null
@@ -95,5 +99,14 @@ export const keyboardNavigationPlugin = {
     }
 
     canvas.addEventListener('keydown', handleKeyDown)
+
+    chart._keyboardNavigationHandler = handleKeyDown
+  },
+
+  beforeDestroy: (chart: ChartWithKeyboardHandler) => {
+    const { canvas } = chart
+    if (chart._keyboardNavigationHandler && canvas) {
+      canvas.removeEventListener('keydown', chart._keyboardNavigationHandler)
+    }
   },
 }

@@ -125,22 +125,21 @@ const classNameGenerator = tv({
   ],
 })
 
-type Props = PropsWithChildren<
+type AbstractProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
     /** レンダリングするタグ */
     as?: 'div' | 'span'
   }
 >
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
-
-export const Balloon = memo<Props & ElementProps>(
-  ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...props }) => {
+export const Balloon = memo<Props>(
+  ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...rest }) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ horizontal, vertical, triggerIcon, className }),
       [horizontal, vertical, className, triggerIcon],
     )
 
-    return <Component {...props} className={actualClassName} />
+    return <Component {...rest} className={actualClassName} />
   },
 )

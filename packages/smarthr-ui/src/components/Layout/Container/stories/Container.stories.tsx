@@ -1,10 +1,11 @@
+import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
+
+import { DeviceProvider } from '../../../..'
 import { Base } from '../../../Base'
+import { Stack } from '../../Stack'
 import { Container, classNameGenerator } from '../Container'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
-import { ComponentProps, useLayoutEffect, useRef, useState } from 'react'
-import { Stack } from '../../Stack'
-import { DeviceProvider } from '../../../..'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof Container> = ({ size, children, ...rest }) => (
   <Container {...rest} size={size}>

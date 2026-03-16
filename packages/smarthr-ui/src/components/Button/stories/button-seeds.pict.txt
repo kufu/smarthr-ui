@@ -1,4 +1,4 @@
-size	disabled	disabledDetail	loading	prefix	suffix	wide
+size	disabled	disabledReason	loading	prefix	suffix	wide
 default	false	なし	false	あり	なし	false
 default	false	なし	false	なし	なし	false
 s	false	なし	false	なし	あり	true

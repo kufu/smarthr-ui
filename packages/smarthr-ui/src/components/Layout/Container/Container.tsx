@@ -4,16 +4,17 @@ import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'r
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useDevice } from '../../../hooks/useDevice'
+import { useEnvironment } from '../../../hooks/useEnvironment'
 import { paddingBlock, paddingInline } from '../../../themes/tailwind'
 
 import type { Gap } from '../../../types'
 
-type Props = PropsWithChildren<
+type AbstractProps = PropsWithChildren<
   Omit<VariantProps<typeof classNameGenerator>, 'paddingBlock' | 'paddingInline'> & {
     padding?: Gap | SeparatePadding
   }
 >
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 type SeparatePadding = {
   block?: Gap
@@ -88,13 +89,15 @@ export const classNameGenerator = tv({
   ],
 })
 
-export const Container: FC<Props & ElementProps> = ({
+export const Container: FC<Props> = ({
   size = 'DEFAULT',
   padding = { block: 2, inline: 2, narrowModeBlock: 1.5, narrowModeInline: 1 },
   className,
   ...rest
 }) => {
   const { isNarrowView } = useDevice()
+  const environment = useEnvironment()
+  const mobile = isNarrowView || environment.mobile
   const actualClassName = useMemo(() => {
     const actualPadding =
       padding instanceof Object
@@ -102,10 +105,10 @@ export const Container: FC<Props & ElementProps> = ({
         : { block: padding, inline: padding, narrowModeBlock: padding, narrowModeInline: padding }
     return classNameGenerator({
       size,
-      paddingBlock: isNarrowView ? actualPadding.narrowModeBlock : actualPadding.block,
-      paddingInline: isNarrowView ? actualPadding.narrowModeInline : actualPadding.inline,
+      paddingBlock: mobile ? actualPadding.narrowModeBlock : actualPadding.block,
+      paddingInline: mobile ? actualPadding.narrowModeInline : actualPadding.inline,
       className,
     })
-  }, [size, className, padding, isNarrowView])
+  }, [size, className, padding, mobile])
   return <div {...rest} className={actualClassName} />
 }

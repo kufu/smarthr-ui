@@ -17,33 +17,39 @@ import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeader, type Props as DialogHeaderProps } from '../DialogHeader'
+import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type BaseProps = PropsWithChildren<
-  DialogHeaderProps &
-    DialogBodyProps & {
-      /** アクションボタンのラベル */
-      actionText: ReactNode
-      /** アクションボタンのスタイル */
-      actionTheme?: 'primary' | 'secondary' | 'danger'
-      /**
-       * アクションボタンをクリックした時に発火するコールバック関数
-       * @param closeDialog ダイアログを閉じる関数
-       */
-      onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>) => void
-      /** アクションボタンを無効にするかどうか */
-      actionDisabled?: boolean
-      /** 閉じるボタンを無効にするかどうか */
-      closeDisabled?: boolean
-      /** ダイアログフッターの左端操作領域 */
-      subActionArea?: ReactNode
-      /** コンポーネント内の文言を変更するための関数を設定 */
-      decorators?: DecoratorsType<'closeButtonLabel'>
-    }
+export type FormDialogHelpers = {
+  close: () => void
+}
+
+export type AbstractProps = PropsWithChildren<
+  DialogBodyProps & {
+    /** ダイアログタイトル */
+    heading: DialogHeadingProps
+    /** アクションボタンのラベル */
+    actionText: ReactNode
+    /** アクションボタンのスタイル */
+    actionTheme?: 'primary' | 'secondary' | 'danger'
+    /**
+     * アクションボタンをクリックした時に発火するコールバック関数
+     * @param e フォームイベント
+     * @param helpers ダイアログ操作のためのヘルパー関数
+     */
+    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
+    /** アクションボタンを無効にするかどうか */
+    actionDisabled?: boolean
+    /** 閉じるボタンを無効にするかどうか */
+    closeDisabled?: boolean
+    /** ダイアログフッターの左端操作領域 */
+    subActionArea?: ReactNode
+    /** コンポーネント内の文言を変更するための関数を設定 */
+    decorators?: DecoratorsType<'closeButtonLabel'>
+  }
 >
 
-export type FormDialogContentInnerProps = BaseProps & {
+export type FormDialogContentInnerProps = AbstractProps & {
   onClickClose: () => void
   responseStatus?: ResponseStatus
 }
@@ -59,10 +65,7 @@ const formDialogContentInner = tv({
 
 export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   children,
-  title,
-  titleId,
-  subtitle,
-  titleTag,
+  heading,
   contentBgColor,
   contentPadding,
   actionText,
@@ -81,7 +84,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
       // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
-      onSubmit(onClickClose, e)
+      onSubmit(e, { close: onClickClose })
     },
     [onSubmit, onClickClose],
   )
@@ -101,9 +104,9 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   }, [])
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-sectioning-content-in-form
+    // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={styles.wrapper}>
-      <DialogHeader title={title} subtitle={subtitle} titleTag={titleTag} titleId={titleId} />
+      <DialogHeading {...heading} />
       <form onSubmit={handleSubmitAction} className={styles.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
