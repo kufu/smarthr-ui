@@ -279,16 +279,18 @@ export const useIntl = (): UseIntlReturn => {
 
       // ロケールのデフォルト形式を取得
       const isJaKanjiFormat = disableSlashInJa && locale === 'ja'
+      const defaultFormats = DATE_FORMATS[locale]
+
+      // 漢字表記への上書きを考慮し、先にデフォルト値を決定する
+      const defaultMonth = isJaKanjiFormat ? 'long' : defaultFormats.month
+      const defaultDay = isJaKanjiFormat ? 'numeric' : defaultFormats.day
+
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
         ...rest,
-        year: year ?? (hasPart.year ? DATE_FORMATS[locale].year : undefined),
-        month:
-          month ??
-          (hasPart.month ? (isJaKanjiFormat ? 'long' : DATE_FORMATS[locale].month) : undefined),
-        day:
-          day ??
-          (hasPart.day ? (isJaKanjiFormat ? 'numeric' : DATE_FORMATS[locale].day) : undefined),
-        weekday: weekday ?? (hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined),
+        year: year ?? (hasPart.year ? defaultFormats.year : undefined),
+        month: month ?? (hasPart.month ? defaultMonth : undefined),
+        day: day ?? (hasPart.day ? defaultDay : undefined),
+        weekday: weekday ?? (hasPart.weekday ? defaultFormats.weekday : undefined),
       }
 
       const formattedDate = intl.formatDate(date, actualFormatOptions)
