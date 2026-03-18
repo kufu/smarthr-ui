@@ -81,7 +81,6 @@ export const locale = {
   'smarthr-ui/Pagination/navigationLabel': 'Navigasi halaman',
   'smarthr-ui/RequiredLabel/text': 'Wajib',
   'smarthr-ui/SearchInput/iconAlt': 'Cari',
-  'smarthr-ui/Select/blankLabel': 'Silakan pilih',
   'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': 'Bersihkan',
   'smarthr-ui/SortDropdown/applyText': 'Terapkan',

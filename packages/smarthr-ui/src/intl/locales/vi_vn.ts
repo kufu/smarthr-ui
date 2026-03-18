@@ -81,7 +81,6 @@ export const locale = {
   'smarthr-ui/Pagination/navigationLabel': 'Phân trang',
   'smarthr-ui/RequiredLabel/text': 'Bắt buộc',
   'smarthr-ui/SearchInput/iconAlt': 'Tìm',
-  'smarthr-ui/Select/blankLabel': 'Hãy chọn',
   'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': 'Xóa',
   'smarthr-ui/SortDropdown/applyText': 'Áp dụng',

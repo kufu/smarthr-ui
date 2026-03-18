@@ -79,7 +79,6 @@ export const locale = {
   'smarthr-ui/Pagination/navigationLabel': 'ページネーション',
   'smarthr-ui/RequiredLabel/text': '必須',
   'smarthr-ui/SearchInput/iconAlt': '検索',
-  'smarthr-ui/Select/blankLabel': '選択してください',
   'smarthr-ui/SideMenu/navigationLabel': 'サイドメニュー',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': 'クリア',
   'smarthr-ui/SortDropdown/applyText': '適用',
