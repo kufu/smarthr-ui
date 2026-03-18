@@ -81,7 +81,6 @@ export const locale = {
   'smarthr-ui/Pagination/navigationLabel': '페이지네이션',
   'smarthr-ui/RequiredLabel/text': '필수',
   'smarthr-ui/SearchInput/iconAlt': '검색',
-  'smarthr-ui/Select/blankLabel': '선택해 주세요',
   'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '지우기',
   'smarthr-ui/SortDropdown/applyText': '적용',

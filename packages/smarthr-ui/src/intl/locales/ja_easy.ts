@@ -81,7 +81,6 @@ export const locale = {
   'smarthr-ui/Pagination/navigationLabel': '',
   'smarthr-ui/RequiredLabel/text': '',
   'smarthr-ui/SearchInput/iconAlt': '',
-  'smarthr-ui/Select/blankLabel': '',
   'smarthr-ui/SideMenu/navigationLabel': '',
   'smarthr-ui/SingleCombobox/destroyButtonIconAlt': '',
   'smarthr-ui/SortDropdown/applyText': '',
