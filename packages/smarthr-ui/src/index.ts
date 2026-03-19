@@ -96,6 +96,7 @@ export * from './components/Browser'
 export * from './components/WarekiPicker'
 export { AppHeader } from './components/AppHeader'
 export * from './components/Timeline'
+export { Scroller } from './components/Scroller'
 
 // layout components
 export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
