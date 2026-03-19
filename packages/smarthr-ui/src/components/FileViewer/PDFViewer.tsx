@@ -3,6 +3,8 @@
 import { type ComponentProps, type FC, memo, useCallback, useMemo, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
+import { Scroller } from '../Scroller'
+
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
@@ -67,29 +69,31 @@ export const PDFViewer: FC<ViewerProps> = memo(
       <>
         {/* TODO: 外部CSSをsmarthr-uiから読み込んでもらえるようにする機構ができたら消す */}
         <ReactPDFStyle />
-        <Document
-          options={options}
-          file={file.url}
-          onLoadSuccess={onDocumentLoadSuccess}
-          onLoadError={onLoadError}
-          rotate={rotation}
-          className="shr-flex shr-h-full shr-w-fit shr-flex-col shr-items-center shr-gap-1 shr-overflow-auto"
-          externalLinkTarget="_blank"
-          loading={null}
-          onPassword={onPassword}
-        >
-          {Array.from({ length: pdfNumPages }).map((_, i) => (
-            <Page
-              key={`page_${i}`}
-              pageNumber={i + 1}
-              width={width}
-              scale={scale}
-              className="shr-w-full"
-              onLoadSuccess={onPageLoad}
-              loading={null}
-            />
-          ))}
-        </Document>
+        <Scroller direction="both" className="shr-h-full">
+          <Document
+            options={options}
+            file={file.url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={onLoadError}
+            rotate={rotation}
+            className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
+            externalLinkTarget="_blank"
+            loading={null}
+            onPassword={onPassword}
+          >
+            {Array.from({ length: pdfNumPages }).map((_, i) => (
+              <Page
+                key={`page_${i}`}
+                pageNumber={i + 1}
+                width={width}
+                scale={scale}
+                className="shr-w-full"
+                onLoadSuccess={onPageLoad}
+                loading={null}
+              />
+            ))}
+          </Document>
+        </Scroller>
       </>
     )
   },
