@@ -134,7 +134,7 @@ const DATE_FORMATS: Record<
   'ja-easy': {
     year: 'numeric',
     month: 'long',
-    day: '2-digit',
+    day: 'numeric',
     weekday: 'short',
     weekStartDay: WEEK_START_DAYS.SUNDAY,
   },
@@ -278,18 +278,19 @@ export const useIntl = (): UseIntlReturn => {
       )
 
       // ロケールのデフォルト形式を取得
+      const isJaKanjiFormat = disableSlashInJa && locale === 'ja'
+      const defaultFormats = DATE_FORMATS[locale]
+
+      // local が 'ja' で漢字表記の場合はゼロ埋めをしないようにする
+      const defaultMonth = isJaKanjiFormat ? 'long' : defaultFormats.month
+      const defaultDay = isJaKanjiFormat ? 'numeric' : defaultFormats.day
+
       const actualFormatOptions: Intl.DateTimeFormatOptions = {
         ...rest,
-        year: year ?? (hasPart.year ? DATE_FORMATS[locale].year : undefined),
-        month:
-          month ??
-          (hasPart.month
-            ? disableSlashInJa && locale === 'ja'
-              ? 'long'
-              : DATE_FORMATS[locale].month
-            : undefined),
-        day: day ?? (hasPart.day ? DATE_FORMATS[locale].day : undefined),
-        weekday: weekday ?? (hasPart.weekday ? DATE_FORMATS[locale].weekday : undefined),
+        year: year ?? (hasPart.year ? defaultFormats.year : undefined),
+        month: month ?? (hasPart.month ? defaultMonth : undefined),
+        day: day ?? (hasPart.day ? defaultDay : undefined),
+        weekday: weekday ?? (hasPart.weekday ? defaultFormats.weekday : undefined),
       }
 
       const formattedDate = intl.formatDate(date, actualFormatOptions)

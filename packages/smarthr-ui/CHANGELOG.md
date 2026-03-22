@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [90.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v89.0.0...smarthr-ui-v90.0.0) (2026-03-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Select:** hasBlankのデフォルトの選択肢を空にする ([#6189](https://github.com/kufu/smarthr-ui/issues/6189))
+* **ModelessDialog:** VOがドラッグハンドルを読み上げる時、適切じゃない案内をされます ([#6173](https://github.com/kufu/smarthr-ui/issues/6173))
+
+### Bug Fixes
+
+* **intl:** 日本語ロケールでdisableSlashInJa使用時のゼロ埋め問題を修正 ([#6186](https://github.com/kufu/smarthr-ui/issues/6186)) ([139bc44](https://github.com/kufu/smarthr-ui/commit/139bc44acee97ef890bbb45756492227b38a9dad))
+* Launcher の position を optional に変更 ([#6185](https://github.com/kufu/smarthr-ui/issues/6185)) ([1439b67](https://github.com/kufu/smarthr-ui/commit/1439b6744ac60352b59e18b5766dbb4e6358cdbb))
+* **ModelessDialog:** VOがドラッグハンドルを読み上げる時、適切じゃない案内をされます ([#6173](https://github.com/kufu/smarthr-ui/issues/6173)) ([80f6327](https://github.com/kufu/smarthr-ui/commit/80f63270062cf25e63eec624c4747a25031c8a52))
+* **Select:** hasBlankのデフォルトの選択肢を空にする ([#6189](https://github.com/kufu/smarthr-ui/issues/6189)) ([e05e712](https://github.com/kufu/smarthr-ui/commit/e05e712945961d5917331989d6aad6e88e031944))
+
+## [89.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v88.0.0...smarthr-ui-v89.0.0) (2026-03-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* フォーカスインジケータをデフォルト内側に表示する ([#6010](https://github.com/kufu/smarthr-ui/issues/6010))
+
+### Features
+
+* リリースノートリンクからReferrer情報を送信できるように修正 ([#6115](https://github.com/kufu/smarthr-ui/issues/6115)) ([11f7f9b](https://github.com/kufu/smarthr-ui/commit/11f7f9b0544f572abf2b1a8ad84d7f93fae279f7))
+
+
+### Bug Fixes
+
+* フォーカスインジケータをデフォルト内側に表示する ([#6010](https://github.com/kufu/smarthr-ui/issues/6010)) ([7abf656](https://github.com/kufu/smarthr-ui/commit/7abf65677e5224e993017991a9e013d8efc44cbe))
+
 ## [88.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v87.2.0...smarthr-ui-v88.0.0) (2026-03-05)
 
 
