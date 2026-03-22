@@ -13,8 +13,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
-import { useIntl } from '../../intl'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
@@ -40,14 +38,12 @@ type AbstractProps<T extends string> = {
   size?: 'default' | 's'
   /** 空の選択肢を表示するかどうか */
   hasBlank?: boolean
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
+  /** 空の選択肢のラベル */
+  blankLabel?: string
 }
 
 type Props<T extends string> = AbstractProps<T> &
   Omit<ComponentPropsWithoutRef<'select'>, keyof AbstractProps<string> | 'children'>
-
-type DecoratorKeyTypes = 'blankLabel'
 
 const classNameGenerator = tv({
   slots: {
@@ -96,7 +92,7 @@ const ActualSelect = <T extends string>(
     error,
     width,
     hasBlank,
-    decorators,
+    blankLabel,
     size,
     className,
     disabled,
@@ -105,8 +101,6 @@ const ActualSelect = <T extends string>(
   }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
-  const { localize } = useIntl()
-
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       onChange?.(e)
@@ -145,17 +139,8 @@ const ActualSelect = <T extends string>(
     }),
     [width],
   )
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      blankLabel: localize({
-        id: 'smarthr-ui/Select/blankLabel',
-        defaultText: '選択してください',
-      }),
-    }),
-    [localize],
-  )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
+  const actualBlankLabel = blankLabel ?? ''
 
   return (
     <span className={classNames.wrapper} style={wrapperStyle}>
@@ -175,7 +160,7 @@ const ActualSelect = <T extends string>(
         ref={ref}
         className={classNames.select}
       >
-        <BlankOption hasBlank={hasBlank}>{decorated.blankLabel}</BlankOption>
+        <BlankOption hasBlank={hasBlank}>{actualBlankLabel}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}

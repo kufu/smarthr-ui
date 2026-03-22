@@ -88,7 +88,7 @@ export type Launcher = {
     name: string
     url: string
     favorite: boolean
-    position: number | null
+    position?: number | null
   }
   page: (typeof launcher)['pages'][number]
   mode: (typeof launcher)['modes'][number]
