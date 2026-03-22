@@ -44,9 +44,7 @@ type AbstractProps = Omit<
 > &
   DialogProps & {
     heading: HeadingType
-    submitButton:
-      | ButtonArgType
-      | (Omit<ObjectButtonType, 'text'> & Pick<Required<ObjectButtonType>, 'text'>)
+    submitButton: ButtonArgType | ObjectButtonType
     closeButton?: ButtonArgType | ObjectButtonType
     backButton?: ButtonArgType | ObjectButtonType
   }
