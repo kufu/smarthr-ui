@@ -43,7 +43,7 @@ export const useStepFormDialogButton = ({
   )
 
   const actualButton = useMemo(() => {
-    let text = temp.text || defaultText
+    let text = temp.text ?? defaultText
     let textFunc = false
 
     if (typeof text === 'function') {

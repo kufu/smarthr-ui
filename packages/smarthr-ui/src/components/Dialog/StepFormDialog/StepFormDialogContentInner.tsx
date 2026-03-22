@@ -67,10 +67,6 @@ export type StepFormDialogContentInnerProps = AbstractProps & {
   onClickBack?: () => void
 }
 
-export const buttonObjectConverter = (text: ButtonArgType): ObjectButtonType => ({
-  text,
-})
-
 const BUTTON_COLUMN_GAP = {
   row: 0.5,
   column: 1,
