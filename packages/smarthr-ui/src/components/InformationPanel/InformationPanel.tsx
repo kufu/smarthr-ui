@@ -18,7 +18,15 @@ import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
-import { FaCaretDownIcon, FaCaretUpIcon, FaCircleInfoIcon } from '../Icon'
+import {
+  FaCaretDownIcon,
+  FaCaretUpIcon,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
+  FaCircleInfoIcon,
+  FaRotateIcon,
+  WarningIcon,
+} from '../Icon'
 import { Sidebar } from '../Layout'
 
 type ObjectHeadingType = {
@@ -209,13 +217,28 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
+  const icon = useMemo(() => {
+    switch (type) {
+      case 'info':
+        return <FaCircleInfoIcon color="TEXT_GREY" />
+      case 'success':
+        return <FaCircleCheckIcon color="MAIN" />
+      case 'warning':
+        return <WarningIcon />
+      case 'error':
+        return <FaCircleExclamationIcon color="DANGER" />
+      case 'sync':
+        return <FaRotateIcon color="MAIN" />
+    }
+  }, [type])
+
   return (
     <Heading
       {...rest}
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: <FaCircleInfoIcon color="TEXT_GREY" />,
+        prefix: icon,
         gap: 0.5,
       }}
       type="blockTitle"
