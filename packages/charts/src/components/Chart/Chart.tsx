@@ -27,12 +27,12 @@ const classNameGenerator = tv({
   base: 'shr-h-[500px]',
 })
 
-export const Chart: React.FC<Props> = ({ className, ...props }) => {
+export const Chart: React.FC<Props> = ({ className, ...rest }) => {
   const classNames = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     <div className={classNames}>
-      <InnerChart {...props} />
+      <InnerChart {...rest} />
     </div>
   )
 }

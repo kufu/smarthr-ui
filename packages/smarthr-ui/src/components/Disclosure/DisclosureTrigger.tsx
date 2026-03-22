@@ -60,7 +60,7 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる
   // TODO: 将来的にspan -> Fragmentに変更する
   return (
-    <span className="smarthr-ui-DisclosureTriggerWrapper" ref={ref}>
+    <span className="smarthr-ui-DisclosureTriggerWrapper shr-contents" ref={ref}>
       {children instanceof Function ? children({ expanded }) : children}
     </span>
   )

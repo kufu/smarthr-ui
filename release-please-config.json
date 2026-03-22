@@ -4,6 +4,9 @@
   "last-release-sha": "",
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
+  "pull-request-title-pattern": "chore: リリース",
+  "draft-pull-request": true,
+  "pull-request-header": "リリース内容",
   "packages": {
     "packages/smarthr-ui": {
       "initial-version": "87.0.0"

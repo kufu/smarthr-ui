@@ -6,7 +6,11 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
+import {
+  FormDialogContentInner,
+  type FormDialogContentInnerProps,
+  type FormDialogHelpers,
+} from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
@@ -57,9 +61,9 @@ export const FormDialog: FC<Props> = ({
   }, [isOpen, onClickClose])
 
   const onDelegateSubmit = useCallback(
-    (close: () => void, e: FormEvent<HTMLFormElement>) => {
+    (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => {
       if (isOpen) {
-        onSubmit(close, e)
+        onSubmit(e, helpers)
       }
     },
     [isOpen, onSubmit],

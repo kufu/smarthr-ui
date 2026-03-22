@@ -18,8 +18,8 @@ describe('ActionDialog', () => {
           heading="ActionDialog"
           actionText="保存"
           onClickClose={() => setIsOpen(false)}
-          onClickAction={(closeDialog) => {
-            closeDialog()
+          onClickAction={(_, { close }) => {
+            close()
           }}
         >
           <p>ActionDialog の本文です。</p>

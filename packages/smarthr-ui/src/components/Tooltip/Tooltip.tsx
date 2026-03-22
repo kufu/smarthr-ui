@@ -57,7 +57,7 @@ const classNameGenerator = tv({
     'smarthr-ui-Tooltip',
     'shr-relative',
     'shr-inline-block shr-max-w-full shr-align-bottom',
-    'focus-visible:shr-focus-indicator',
+    'focus-visible:shr-focus-indicator--outer',
   ],
   variants: {
     isIcon: {

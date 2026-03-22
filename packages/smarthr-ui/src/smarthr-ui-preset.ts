@@ -64,7 +64,7 @@ defaultConfig.twMergeConfig = {
         ],
       },
     ],
-    focus: ['focus-indicator', 'focus-indicator--inner', 'focus-indicator-none'],
+    focus: ['focus-indicator', 'focus-indicator--outer', 'focus-indicator-none'],
   },
 }
 
@@ -412,15 +412,23 @@ export default {
          */
         ':where(.focus-indicator)': {
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
-          outline: `2px solid ${theme('colors.outline')}`,
-          outlineOffset: '2px',
-        },
-        ':where(.focus-indicator--inner)': {
-          isolation: 'isolate',
           boxShadow: `inset 0 0 0 4px ${theme('colors.white')}`,
           outline: `2px solid ${theme('colors.outline')}`,
           outlineOffset: '-2px',
+
+          /**
+           * outline と box-shadow がそれぞれ border の内側と外側から生えるため、borderがある場合 box-shadow の幅が小さくなってしまうため幅を増やしている
+          /* FIXME: :not() が効かなくて border-shorthand が適用されていて border-none されているコンポーネントで box-shadow が少し細くなっている 
+          */
+          '&.border-shorthand:not(.border-none)': {
+            boxShadow: `inset 0 0 0 calc(4px - ${theme('borderWidth.DEFAULT')}) ${theme('colors.white')}`,
+          },
+        },
+        ':where(.focus-indicator--outer)': {
+          isolation: 'isolate',
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
         },
         '.focus-indicator-none': {
           boxShadow: 'none',
