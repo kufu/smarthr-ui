@@ -5,8 +5,8 @@ import { Button } from '../../../Button'
 import { Input } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
+import { StepFormDialogItem } from '../StepFormDialogItem'
 import { UnrecommendedStepFormDialog } from '../UnrecommendedStepFormDialog'
-import { UnrecommendedStepFormDialogItem } from '../UnrecommendedStepFormDialogItem'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -18,7 +18,7 @@ const _widthOptions = {
 export default {
   title: 'Components/Dialog/UnrecommendedStepFormDialog',
   component: UnrecommendedStepFormDialog,
-  subcomponents: { UnrecommendedStepFormDialogItem },
+  subcomponents: { StepFormDialogItem },
   render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof UnrecommendedStepFormDialog>['onSubmit'] = (
@@ -377,17 +377,17 @@ export const AsyncSubmitSuccess: StoryObj<typeof UnrecommendedStepFormDialog> = 
           isOpen={open}
           responseStatus={responseStatus}
         >
-          <UnrecommendedStepFormDialogItem id="step-1" stepNumber={1}>
+          <StepFormDialogItem id="step-1" stepNumber={1}>
             <p>「次へ」ボタンを押すと、0.5秒後にAPIコールが実行され、次のステップに進みます。</p>
-          </UnrecommendedStepFormDialogItem>
+          </StepFormDialogItem>
 
-          <UnrecommendedStepFormDialogItem id="step-2" stepNumber={2}>
+          <StepFormDialogItem id="step-2" stepNumber={2}>
             <p>引き続き「次へ」ボタンを押すと、さらに次のステップに進みます。</p>
-          </UnrecommendedStepFormDialogItem>
+          </StepFormDialogItem>
 
-          <UnrecommendedStepFormDialogItem id="step-3" stepNumber={3}>
+          <StepFormDialogItem id="step-3" stepNumber={3}>
             <p>「保存」ボタンを押すと、最終的な処理が実行されダイアログが閉じます。</p>
-          </UnrecommendedStepFormDialogItem>
+          </StepFormDialogItem>
         </UnrecommendedStepFormDialog>
       </>
     )
