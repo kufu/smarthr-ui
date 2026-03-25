@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
+import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
-import { UnrecommendedStepFormDialog } from '../UnrecommendedStepFormDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/UnrecommendedStepFormDialog/StepFormDialogItem',
+  title: 'Components/Dialog/ControlledStepFormDialog/StepFormDialogItem',
   component: StepFormDialogItem,
   argTypes: {
     id: { control: false },
@@ -20,7 +20,7 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedStepFormDialog
+        <ControlledStepFormDialog
           heading="ステップダイアログ"
           stepLength={2}
           submitLabel="保存"
@@ -42,7 +42,7 @@ export default {
           <StepFormDialogItem id="step-2" stepNumber={2}>
             ダイアログコンテンツ2
           </StepFormDialogItem>
-        </UnrecommendedStepFormDialog>
+        </ControlledStepFormDialog>
       </>
     )
   },

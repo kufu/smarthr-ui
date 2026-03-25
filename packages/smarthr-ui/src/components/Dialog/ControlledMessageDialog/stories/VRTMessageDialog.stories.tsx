@@ -1,10 +1,10 @@
-import { UnrecommendedMessageDialog } from '../UnrecommendedMessageDialog'
+import { ControlledMessageDialog } from '../ControlledMessageDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/UnrecommendedMessageDialog/VRT',
-  component: UnrecommendedMessageDialog,
+  title: 'Components/Dialog/ControlledMessageDialog/VRT',
+  component: ControlledMessageDialog,
   args: {
     width: '40em',
     size: 'M',
@@ -21,11 +21,11 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof UnrecommendedMessageDialog>
+} satisfies Meta<typeof ControlledMessageDialog>
 
 export const VRT = {}
 
-export const VRTForcedColors: StoryObj<typeof UnrecommendedMessageDialog> = {
+export const VRTForcedColors: StoryObj<typeof ControlledMessageDialog> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

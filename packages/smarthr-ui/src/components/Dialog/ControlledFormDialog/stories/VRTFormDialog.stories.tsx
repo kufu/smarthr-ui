@@ -1,13 +1,13 @@
 import { Button } from '../../../Button'
 import { FormControl } from '../../../FormControl'
 import { Input } from '../../../Input'
-import { UnrecommendedFormDialog } from '../UnrecommendedFormDialog'
+import { ControlledFormDialog } from '../ControlledFormDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/UnrecommendedFormDialog/VRT',
-  component: UnrecommendedFormDialog,
+  title: 'Components/Dialog/ControlledFormDialog/VRT',
+  component: ControlledFormDialog,
   args: {
     width: '40em',
     size: 'M',
@@ -35,11 +35,11 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof UnrecommendedFormDialog>
+} satisfies Meta<typeof ControlledFormDialog>
 
 export const VRT = {}
 
-export const VRTForcedColors: StoryObj<typeof UnrecommendedFormDialog> = {
+export const VRTForcedColors: StoryObj<typeof ControlledFormDialog> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

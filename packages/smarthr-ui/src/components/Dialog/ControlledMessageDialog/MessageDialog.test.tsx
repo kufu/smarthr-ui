@@ -5,46 +5,42 @@ import { userEvent } from 'storybook/test'
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
 
-import { UnrecommendedActionDialog } from './UnrecommendedActionDialog'
+import { ControlledMessageDialog } from './ControlledMessageDialog'
 
-describe('UnrecommendedActionDialog', () => {
+describe('ControlledMessageDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <IntlProvider locale="ja">
-        <Button onClick={() => setIsOpen(true)}>UnrecommendedActionDialog</Button>
-        <UnrecommendedActionDialog
+        <Button onClick={() => setIsOpen(true)}>ControlledMessageDialog</Button>
+        <ControlledMessageDialog
           isOpen={isOpen}
-          heading="UnrecommendedActionDialog"
-          actionText="保存"
+          heading="ControlledMessageDialog"
           onClickClose={() => setIsOpen(false)}
-          onClickAction={(_, { close }) => {
-            close()
-          }}
         >
-          <p>UnrecommendedActionDialog の本文です。</p>
-        </UnrecommendedActionDialog>
+          <p>説明です</p>
+        </ControlledMessageDialog>
       </IntlProvider>
     )
   }
   it('ダイアログが開閉できること', async () => {
     render(<DialogTemplate />)
 
-    expect(screen.queryByRole('dialog', { name: 'UnrecommendedActionDialog' })).toBeNull()
+    expect(screen.queryByRole('dialog', { name: 'ControlledMessageDialog' })).toBeNull()
     await act(() => userEvent.tab())
     await act(() => userEvent.keyboard('{enter}'))
-    expect(screen.getByRole('dialog', { name: 'UnrecommendedActionDialog' })).toBeVisible()
+    expect(screen.getByRole('dialog', { name: 'ControlledMessageDialog' })).toBeVisible()
 
     await act(() => userEvent.tab({ shift: true }))
     await act(() => userEvent.keyboard('{ }'))
     await waitFor(
       () => {
-        expect(screen.queryByRole('dialog', { name: 'UnrecommendedActionDialog' })).toBeNull()
+        expect(screen.queryByRole('dialog', { name: 'ControlledMessageDialog' })).toBeNull()
       },
       { timeout: 1000 },
     )
 
     // ダイアログを閉じた後、トリガがフォーカスされることを確認
-    expect(screen.getByRole('button', { name: 'UnrecommendedActionDialog' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'ControlledMessageDialog' })).toHaveFocus()
   })
 })

@@ -26,7 +26,7 @@ const headingObjectConverter = (text: ReactNode) => ({
   text,
 })
 
-export const UnrecommendedMessageDialog: FC<Props> = ({
+export const ControlledMessageDialog: FC<Props> = ({
   heading: orgHeading,
   children,
   onClickClose,

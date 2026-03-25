@@ -27,7 +27,7 @@ const headingObjectConverter = (text: ReactNode) => ({
   text,
 })
 
-export const UnrecommendedFormDialog: FC<Props> = ({
+export const ControlledFormDialog: FC<Props> = ({
   children,
   heading: orgHeading,
   contentBgColor,

@@ -1,11 +1,11 @@
 import { Button } from '../../../Button'
-import { UnrecommendedActionDialog } from '../UnrecommendedActionDialog'
+import { ControlledActionDialog } from '../ControlledActionDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/UnrecommendedActionDialog/VRT',
-  component: UnrecommendedActionDialog,
+  title: 'Components/Dialog/ControlledActionDialog/VRT',
+  component: ControlledActionDialog,
   args: {
     width: '40em',
     size: 'M',
@@ -27,11 +27,11 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof UnrecommendedActionDialog>
+} satisfies Meta<typeof ControlledActionDialog>
 
 export const VRT = {}
 
-export const VRTForcedColors: StoryObj<typeof UnrecommendedActionDialog> = {
+export const VRTForcedColors: StoryObj<typeof ControlledActionDialog> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

@@ -1,14 +1,11 @@
 'use client'
 
-import { UnrecommendedFormDialog } from '../UnrecommendedFormDialog'
+import { ControlledFormDialog } from '../ControlledFormDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
-type Props = Omit<
-  ComponentProps<typeof UnrecommendedFormDialog>,
-  'isOpen' | 'onClickClose' | 'id'
-> &
+type Props = Omit<ComponentProps<typeof ControlledFormDialog>, 'isOpen' | 'onClickClose' | 'id'> &
   Parameters<typeof useRemoteTrigger>[0]
 
 export const RemoteTriggerFormDialog: FC<Props> = ({
@@ -34,7 +31,7 @@ export const RemoteTriggerFormDialog: FC<Props> = ({
   })
 
   return (
-    <UnrecommendedFormDialog
+    <ControlledFormDialog
       {...rest}
       id={id}
       isOpen={isOpen}

@@ -1,10 +1,10 @@
-import { UnrecommendedStepFormDialog } from '../UnrecommendedStepFormDialog'
+import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/UnrecommendedStepFormDialog/VRT',
-  component: UnrecommendedStepFormDialog,
+  title: 'Components/Dialog/ControlledStepFormDialog/VRT',
+  component: ControlledStepFormDialog,
   args: {
     width: '30em',
     size: 'M',
@@ -30,11 +30,11 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof UnrecommendedStepFormDialog>
+} satisfies Meta<typeof ControlledStepFormDialog>
 
 export const VRT = {}
 
-export const VRTForcedColors: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const VRTForcedColors: StoryObj<typeof ControlledStepFormDialog> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

@@ -4,7 +4,7 @@ import { action } from 'storybook/actions'
 import { Button } from '../../../Button'
 import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
-import { UnrecommendedActionDialog } from '../UnrecommendedActionDialog'
+import { ControlledActionDialog } from '../ControlledActionDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -14,8 +14,8 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Components/Dialog/UnrecommendedActionDialog',
-  component: UnrecommendedActionDialog,
+  title: 'Components/Dialog/ControlledActionDialog',
+  component: ControlledActionDialog,
   render: ({ onClickAction, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleAction = onClickAction
@@ -26,14 +26,14 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedActionDialog
+        <ControlledActionDialog
           {...rest}
           onClickClose={handleClose}
           onClickAction={handleAction}
           isOpen={open}
         >
           ダイアログコンテンツ
-        </UnrecommendedActionDialog>
+        </ControlledActionDialog>
       </>
     )
   },
@@ -44,18 +44,18 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} satisfies Meta<typeof UnrecommendedActionDialog>
+} satisfies Meta<typeof ControlledActionDialog>
 
-export const Playground: StoryObj<typeof UnrecommendedActionDialog> = {}
+export const Playground: StoryObj<typeof ControlledActionDialog> = {}
 
-export const Heading: StoryObj<typeof UnrecommendedActionDialog> = {
+export const Heading: StoryObj<typeof ControlledActionDialog> = {
   name: 'heading',
   args: {
     heading: 'ダイアログタイトル',
   },
 }
 
-export const HeadingSub: StoryObj<typeof UnrecommendedActionDialog> = {
+export const HeadingSub: StoryObj<typeof ControlledActionDialog> = {
   name: 'Heading.sub',
   args: {
     heading: {
@@ -65,14 +65,14 @@ export const HeadingSub: StoryObj<typeof UnrecommendedActionDialog> = {
   },
 }
 
-export const ContentBgColor: StoryObj<typeof UnrecommendedActionDialog> = {
+export const ContentBgColor: StoryObj<typeof ControlledActionDialog> = {
   name: 'contentBgColor',
   args: {
     contentBgColor: 'BACKGROUND',
   },
 }
 
-export const ContentPadding: StoryObj<typeof UnrecommendedActionDialog> = {
+export const ContentPadding: StoryObj<typeof ControlledActionDialog> = {
   name: 'contentPadding',
   args: {
     contentPadding: {
@@ -82,21 +82,21 @@ export const ContentPadding: StoryObj<typeof UnrecommendedActionDialog> = {
   },
 }
 
-export const ActionText: StoryObj<typeof UnrecommendedActionDialog> = {
+export const ActionText: StoryObj<typeof ControlledActionDialog> = {
   name: 'actionText',
   args: {
     actionText: '保存',
   },
 }
 
-export const ActionTheme: StoryObj<typeof UnrecommendedActionDialog> = {
+export const ActionTheme: StoryObj<typeof ControlledActionDialog> = {
   name: 'actionTheme',
   args: {
     actionTheme: 'danger',
   },
 }
 
-export const OnClickAction: StoryObj<typeof UnrecommendedActionDialog> = {
+export const OnClickAction: StoryObj<typeof ControlledActionDialog> = {
   name: 'onClickAction',
   args: {
     onClickAction: (e, { close }) => {
@@ -106,31 +106,31 @@ export const OnClickAction: StoryObj<typeof UnrecommendedActionDialog> = {
   },
 }
 
-export const OnClickClose: StoryObj<typeof UnrecommendedActionDialog> = {
+export const OnClickClose: StoryObj<typeof ControlledActionDialog> = {
   name: 'onClickClose',
   args: {
     onClickClose: action('onClickClose'),
   },
 }
 
-export const OnPressEscape: StoryObj<typeof UnrecommendedActionDialog> = {
+export const OnPressEscape: StoryObj<typeof ControlledActionDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),
   },
 }
 
-export const ResponseStatus: StoryObj<typeof UnrecommendedActionDialog> = {
+export const ResponseStatus: StoryObj<typeof ControlledActionDialog> = {
   name: 'responseStatus',
   render: (args) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof UnrecommendedActionDialog>['responseStatus']>()
+      useState<ComponentProps<typeof ControlledActionDialog>['responseStatus']>()
 
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedActionDialog
+        <ControlledActionDialog
           {...args}
           responseStatus={responseStatus}
           isOpen={open}
@@ -159,27 +159,27 @@ export const ResponseStatus: StoryObj<typeof UnrecommendedActionDialog> = {
               processing
             </RadioButton>
           </Cluster>
-        </UnrecommendedActionDialog>
+        </ControlledActionDialog>
       </>
     )
   },
 }
 
-export const ActionDisabled: StoryObj<typeof UnrecommendedActionDialog> = {
+export const ActionDisabled: StoryObj<typeof ControlledActionDialog> = {
   name: 'actionDisabled',
   args: {
     actionDisabled: true,
   },
 }
 
-export const CloseDisabled: StoryObj<typeof UnrecommendedActionDialog> = {
+export const CloseDisabled: StoryObj<typeof ControlledActionDialog> = {
   name: 'closeDisabled',
   args: {
     closeDisabled: true,
   },
 }
 
-export const SubActionArea: StoryObj<typeof UnrecommendedActionDialog> = {
+export const SubActionArea: StoryObj<typeof ControlledActionDialog> = {
   name: 'subActionArea',
   args: {
     subActionArea: <Button onClick={action('subActionArea')}>サブアクション</Button>,
@@ -187,7 +187,7 @@ export const SubActionArea: StoryObj<typeof UnrecommendedActionDialog> = {
   },
 }
 
-export const PortalParent: StoryObj<typeof UnrecommendedActionDialog> = {
+export const PortalParent: StoryObj<typeof ControlledActionDialog> = {
   name: 'portalParent',
   render: (args) => {
     const parentRef = useRef<HTMLDivElement>(null)
@@ -197,14 +197,14 @@ export const PortalParent: StoryObj<typeof UnrecommendedActionDialog> = {
         <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
-        <UnrecommendedActionDialog
+        <ControlledActionDialog
           {...args}
           portalParent={parentRef}
           isOpen={open}
           onClickClose={() => setOpen(false)}
         >
           ダイアログコンテンツ
-        </UnrecommendedActionDialog>
+        </ControlledActionDialog>
       </>
     )
   },
@@ -213,21 +213,21 @@ export const PortalParent: StoryObj<typeof UnrecommendedActionDialog> = {
   },
 }
 
-export const Width: StoryObj<typeof UnrecommendedActionDialog> = {
+export const Width: StoryObj<typeof ControlledActionDialog> = {
   name: 'width（非推奨）',
   args: {
     width: _widthOptions.string,
   },
 }
 
-export const Size: StoryObj<typeof UnrecommendedActionDialog> = {
+export const Size: StoryObj<typeof ControlledActionDialog> = {
   name: 'size',
   args: {
     size: 'M',
   },
 }
 
-export const FirstFocusTarget: StoryObj<typeof UnrecommendedActionDialog> = {
+export const FirstFocusTarget: StoryObj<typeof ControlledActionDialog> = {
   name: 'firstFocusTarget',
   render: (args) => {
     const buttonRef = useRef<HTMLButtonElement>(null)
@@ -236,14 +236,14 @@ export const FirstFocusTarget: StoryObj<typeof UnrecommendedActionDialog> = {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedActionDialog
+        <ControlledActionDialog
           {...args}
           firstFocusTarget={buttonRef}
           isOpen={open}
           onPressEscape={handleClose}
         >
           <Button ref={buttonRef}>button要素</Button>
-        </UnrecommendedActionDialog>
+        </ControlledActionDialog>
       </>
     )
   },

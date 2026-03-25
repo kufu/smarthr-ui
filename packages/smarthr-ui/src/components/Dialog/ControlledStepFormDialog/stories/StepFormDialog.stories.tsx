@@ -5,8 +5,8 @@ import { Button } from '../../../Button'
 import { Input } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
+import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
-import { UnrecommendedStepFormDialog } from '../UnrecommendedStepFormDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -16,12 +16,12 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Components/Dialog/UnrecommendedStepFormDialog',
-  component: UnrecommendedStepFormDialog,
+  title: 'Components/Dialog/ControlledStepFormDialog',
+  component: ControlledStepFormDialog,
   subcomponents: { StepFormDialogItem },
   render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof UnrecommendedStepFormDialog>['onSubmit'] = (
+    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
       helpers,
     ) => {
@@ -37,14 +37,14 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedStepFormDialog
+        <ControlledStepFormDialog
           {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
           isOpen={open}
         >
           {children || 'ダイアログコンテンツ'}
-        </UnrecommendedStepFormDialog>
+        </ControlledStepFormDialog>
       </>
     )
   },
@@ -56,18 +56,18 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof UnrecommendedStepFormDialog>
+} as Meta<typeof ControlledStepFormDialog>
 
-export const Playground: StoryObj<typeof UnrecommendedStepFormDialog> = {}
+export const Playground: StoryObj<typeof ControlledStepFormDialog> = {}
 
-export const Heading: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const Heading: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'heading',
   args: {
     heading: 'フォームダイアログタイトル',
   },
 }
 
-export const HeadingSub: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const HeadingSub: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'heading.sub',
   args: {
     heading: {
@@ -77,28 +77,28 @@ export const HeadingSub: StoryObj<typeof UnrecommendedStepFormDialog> = {
   },
 }
 
-export const StepLength: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const StepLength: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'stepLength',
   args: {
     stepLength: 2,
   },
 }
 
-export const SubmitLabel: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const SubmitLabel: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'submitLabel',
   args: {
     submitLabel: '取り込む',
   },
 }
 
-export const ContentBgColor: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const ContentBgColor: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'contentBgColor',
   args: {
     contentBgColor: 'BACKGROUND',
   },
 }
 
-export const ContentPadding: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const ContentPadding: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'contentPadding',
   args: {
     contentPadding: {
@@ -108,35 +108,35 @@ export const ContentPadding: StoryObj<typeof UnrecommendedStepFormDialog> = {
   },
 }
 
-export const ActionTheme: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const ActionTheme: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'actionTheme',
   args: {
     actionTheme: 'danger',
   },
 }
 
-export const ActionDisabled: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const ActionDisabled: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'actionDisabled',
   args: {
     actionDisabled: true,
   },
 }
 
-export const CloseDisabled: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const CloseDisabled: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'closeDisabled',
   args: {
     closeDisabled: true,
   },
 }
 
-export const FirstStep: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const FirstStep: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'firstStep',
   args: {
     firstStep: { id: 'a', stepNumber: 1 },
   },
 }
 
-export const OnSubmit: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const OnSubmit: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'onSubmit',
   args: {
     onSubmit: (e, { close }) => {
@@ -146,14 +146,14 @@ export const OnSubmit: StoryObj<typeof UnrecommendedStepFormDialog> = {
   },
 }
 
-export const OnClickClose: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const OnClickClose: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'onClickClose',
   args: {
     onClickClose: action('onClickClose'),
   },
 }
 
-export const OnClickBack: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const OnClickBack: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'onClickBack',
   args: {
     stepLength: 2,
@@ -162,13 +162,13 @@ export const OnClickBack: StoryObj<typeof UnrecommendedStepFormDialog> = {
   },
 }
 
-export const ResponseStatus: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const ResponseStatus: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'responseStatus',
   render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof UnrecommendedStepFormDialog>['responseStatus']>()
-    const handleSubmit: ComponentProps<typeof UnrecommendedStepFormDialog>['onSubmit'] = (
+      useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
+    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
       helpers,
     ) => {
@@ -184,7 +184,7 @@ export const ResponseStatus: StoryObj<typeof UnrecommendedStepFormDialog> = {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedStepFormDialog
+        <ControlledStepFormDialog
           {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
@@ -214,25 +214,25 @@ export const ResponseStatus: StoryObj<typeof UnrecommendedStepFormDialog> = {
               processing
             </RadioButton>
           </Cluster>
-        </UnrecommendedStepFormDialog>
+        </ControlledStepFormDialog>
       </>
     )
   },
 }
 
-export const Width: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const Width: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'width',
   args: {
     width: _widthOptions.string,
   },
 }
 
-export const FirstFocusTarget: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const FirstFocusTarget: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'firstFocusTarget',
   render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof UnrecommendedStepFormDialog>['onSubmit'] = (
+    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
       helpers,
     ) => {
@@ -248,7 +248,7 @@ export const FirstFocusTarget: StoryObj<typeof UnrecommendedStepFormDialog> = {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedStepFormDialog
+        <ControlledStepFormDialog
           {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
@@ -259,32 +259,32 @@ export const FirstFocusTarget: StoryObj<typeof UnrecommendedStepFormDialog> = {
             入力要素
             <Input name="stepformdialog_input" ref={inputRef} />
           </label>
-        </UnrecommendedStepFormDialog>
+        </ControlledStepFormDialog>
       </>
     )
   },
 }
 
-export const OnPressEscape: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const OnPressEscape: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),
   },
 }
 
-export const OnClickOverlay: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const OnClickOverlay: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'onClickOverlay',
   args: {
     onClickOverlay: action('onClickOverlay'),
   },
 }
 
-export const PortalParent: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'portalParent',
   render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof UnrecommendedStepFormDialog>['onSubmit'] = (
+    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
       helpers,
     ) => {
@@ -302,7 +302,7 @@ export const PortalParent: StoryObj<typeof UnrecommendedStepFormDialog> = {
         <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
-        <UnrecommendedStepFormDialog
+        <ControlledStepFormDialog
           {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
@@ -310,7 +310,7 @@ export const PortalParent: StoryObj<typeof UnrecommendedStepFormDialog> = {
           portalParent={parentRef}
         >
           ダイアログコンテンツ
-        </UnrecommendedStepFormDialog>
+        </ControlledStepFormDialog>
       </>
     )
   },
@@ -319,14 +319,14 @@ export const PortalParent: StoryObj<typeof UnrecommendedStepFormDialog> = {
   },
 }
 
-export const AsyncSubmitSuccess: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const AsyncSubmitSuccess: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'asyncSubmit（Promise対応・成功パターン）',
   render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof UnrecommendedStepFormDialog>['responseStatus']>()
+      useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
 
-    const handleSubmit: ComponentProps<typeof UnrecommendedStepFormDialog>['onSubmit'] = async (
+    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = async (
       _e,
       { goto, close, currentStep },
     ) => {
@@ -367,7 +367,7 @@ export const AsyncSubmitSuccess: StoryObj<typeof UnrecommendedStepFormDialog> = 
     return (
       <>
         <Button onClick={() => setOpen(true)}>非同期処理ダイアログを開く（成功）</Button>
-        <UnrecommendedStepFormDialog
+        <ControlledStepFormDialog
           {...rest}
           stepLength={3}
           firstStep={{ id: 'step-1', stepNumber: 1 }}
@@ -388,20 +388,20 @@ export const AsyncSubmitSuccess: StoryObj<typeof UnrecommendedStepFormDialog> = 
           <StepFormDialogItem id="step-3" stepNumber={3}>
             <p>「保存」ボタンを押すと、最終的な処理が実行されダイアログが閉じます。</p>
           </StepFormDialogItem>
-        </UnrecommendedStepFormDialog>
+        </ControlledStepFormDialog>
       </>
     )
   },
 }
 
-export const AsyncSubmitError: StoryObj<typeof UnrecommendedStepFormDialog> = {
+export const AsyncSubmitError: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'asyncSubmit（Promise対応・エラーパターン）',
   render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof UnrecommendedStepFormDialog>['responseStatus']>()
+      useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
 
-    const handleSubmit: ComponentProps<typeof UnrecommendedStepFormDialog>['onSubmit'] = async (
+    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = async (
       _e,
       _helpers,
     ) => {
@@ -430,7 +430,7 @@ export const AsyncSubmitError: StoryObj<typeof UnrecommendedStepFormDialog> = {
     return (
       <>
         <Button onClick={() => setOpen(true)}>非同期処理ダイアログを開く（エラー）</Button>
-        <UnrecommendedStepFormDialog
+        <ControlledStepFormDialog
           {...rest}
           onClickClose={handleClose}
           onClickBack={handleBack}
@@ -440,7 +440,7 @@ export const AsyncSubmitError: StoryObj<typeof UnrecommendedStepFormDialog> = {
         >
           <p>「次へ」ボタンを押すと、0.5秒後にエラーメッセージが表示されます。</p>
           <p>現在のページが維持されます。</p>
-        </UnrecommendedStepFormDialog>
+        </ControlledStepFormDialog>
       </>
     )
   },

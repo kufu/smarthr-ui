@@ -33,7 +33,7 @@ type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
-export const UnrecommendedStepFormDialog: FC<Props> = ({
+export const ControlledStepFormDialog: FC<Props> = ({
   children,
   heading: orgHeading,
   stepLength,

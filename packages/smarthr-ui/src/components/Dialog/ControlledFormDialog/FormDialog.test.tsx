@@ -8,17 +8,17 @@ import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
 import { Text } from '../../Text'
 
-import { UnrecommendedFormDialog } from './UnrecommendedFormDialog'
+import { ControlledFormDialog } from './ControlledFormDialog'
 
-describe('UnrecommendedFormDialog', () => {
+describe('ControlledFormDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
       <IntlProvider locale="ja">
-        <Button onClick={() => setIsOpen(true)}>UnrecommendedFormDialog</Button>
-        <UnrecommendedFormDialog
+        <Button onClick={() => setIsOpen(true)}>ControlledFormDialog</Button>
+        <ControlledFormDialog
           isOpen={isOpen}
-          heading="UnrecommendedFormDialog"
+          heading="ControlledFormDialog"
           actionText="保存"
           onSubmit={(_, { close }) => {
             close()
@@ -28,29 +28,29 @@ describe('UnrecommendedFormDialog', () => {
           }}
         >
           <Text>ダイアログの中身です</Text>
-        </UnrecommendedFormDialog>
+        </ControlledFormDialog>
       </IntlProvider>
     )
   }
   it('ダイアログが開閉できること', async () => {
     render(<DialogTemplate />)
 
-    expect(screen.queryByRole('dialog', { name: 'UnrecommendedFormDialog' })).toBeNull()
+    expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
     await act(() => userEvent.tab())
     await act(() => userEvent.keyboard('{enter}'))
-    expect(screen.getByRole('dialog', { name: 'UnrecommendedFormDialog' })).toBeVisible()
+    expect(screen.getByRole('dialog', { name: 'ControlledFormDialog' })).toBeVisible()
 
     await act(() => userEvent.tab({ shift: true }))
     await act(() => userEvent.keyboard('{ }'))
     await waitFor(
       () => {
-        expect(screen.queryByRole('dialog', { name: 'UnrecommendedFormDialog' })).toBeNull()
+        expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
       },
       { timeout: 1000 },
     )
 
     // ダイアログを閉じた後、トリガがフォーカスされることを確認
-    expect(screen.getByRole('button', { name: 'UnrecommendedFormDialog' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'ControlledFormDialog' })).toHaveFocus()
   })
 
   const DialogTemplateWithFocusTrap: FC = () => {
@@ -60,7 +60,7 @@ describe('UnrecommendedFormDialog', () => {
       <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>開いた状態で DOM に投入</Button>
         {isOpen && (
-          <UnrecommendedFormDialog
+          <ControlledFormDialog
             isOpen
             heading="開いた状態で投入されたダイアログ"
             actionText="実行"
@@ -81,7 +81,7 @@ describe('UnrecommendedFormDialog', () => {
             >
               <Input ref={openedFocusRef} name="opened_dialog_focus_target" />
             </FormControl>
-          </UnrecommendedFormDialog>
+          </ControlledFormDialog>
         )}
       </IntlProvider>
     )
@@ -102,7 +102,7 @@ describe('UnrecommendedFormDialog', () => {
     await act(() => userEvent.keyboard('{ }'))
     await waitFor(
       () => {
-        expect(screen.queryByRole('dialog', { name: 'UnrecommendedFormDialog' })).toBeNull()
+        expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
       },
       { timeout: 1000 },
     )

@@ -6,7 +6,7 @@ import { FormControl } from '../../../FormControl'
 import { Input } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
-import { UnrecommendedFormDialog } from '../UnrecommendedFormDialog'
+import { ControlledFormDialog } from '../ControlledFormDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -16,8 +16,8 @@ const _widthOptions = {
 }
 
 export default {
-  title: 'Components/Dialog/UnrecommendedFormDialog',
-  component: UnrecommendedFormDialog,
+  title: 'Components/Dialog/ControlledFormDialog',
+  component: ControlledFormDialog,
   render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>, helpers: { close: () => void }) => {
@@ -34,7 +34,7 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedFormDialog
+        <ControlledFormDialog
           {...rest}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
@@ -43,7 +43,7 @@ export default {
           <FormControl label="名前">
             <Input name="name" />
           </FormControl>
-        </UnrecommendedFormDialog>
+        </ControlledFormDialog>
       </>
     )
   },
@@ -54,18 +54,18 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} satisfies Meta<typeof UnrecommendedFormDialog>
+} satisfies Meta<typeof ControlledFormDialog>
 
-export const Playground: StoryObj<typeof UnrecommendedFormDialog> = {}
+export const Playground: StoryObj<typeof ControlledFormDialog> = {}
 
-export const Heading: StoryObj<typeof UnrecommendedFormDialog> = {
+export const Heading: StoryObj<typeof ControlledFormDialog> = {
   name: 'heading',
   args: {
     heading: 'フォームダイアログタイトル',
   },
 }
 
-export const HeadingSub: StoryObj<typeof UnrecommendedFormDialog> = {
+export const HeadingSub: StoryObj<typeof ControlledFormDialog> = {
   name: 'heading.sub',
   args: {
     heading: {
@@ -75,14 +75,14 @@ export const HeadingSub: StoryObj<typeof UnrecommendedFormDialog> = {
   },
 }
 
-export const ContentBgColor: StoryObj<typeof UnrecommendedFormDialog> = {
+export const ContentBgColor: StoryObj<typeof ControlledFormDialog> = {
   name: 'contentBgColor',
   args: {
     contentBgColor: 'BACKGROUND',
   },
 }
 
-export const ContentPadding: StoryObj<typeof UnrecommendedFormDialog> = {
+export const ContentPadding: StoryObj<typeof ControlledFormDialog> = {
   name: 'contentPadding',
   args: {
     contentPadding: {
@@ -92,21 +92,21 @@ export const ContentPadding: StoryObj<typeof UnrecommendedFormDialog> = {
   },
 }
 
-export const ActionText: StoryObj<typeof UnrecommendedFormDialog> = {
+export const ActionText: StoryObj<typeof ControlledFormDialog> = {
   name: 'actionText',
   args: {
     actionText: '保存',
   },
 }
 
-export const ActionTheme: StoryObj<typeof UnrecommendedFormDialog> = {
+export const ActionTheme: StoryObj<typeof ControlledFormDialog> = {
   name: 'actionTheme',
   args: {
     actionTheme: 'danger',
   },
 }
 
-export const OnSubmit: StoryObj<typeof UnrecommendedFormDialog> = {
+export const OnSubmit: StoryObj<typeof ControlledFormDialog> = {
   name: 'onSubmit',
   args: {
     onSubmit: (e, { close }) => {
@@ -117,31 +117,31 @@ export const OnSubmit: StoryObj<typeof UnrecommendedFormDialog> = {
   },
 }
 
-export const OnClickClose: StoryObj<typeof UnrecommendedFormDialog> = {
+export const OnClickClose: StoryObj<typeof ControlledFormDialog> = {
   name: 'onClickClose',
   args: {
     onClickClose: action('onClickClose'),
   },
 }
 
-export const OnPressEscape: StoryObj<typeof UnrecommendedFormDialog> = {
+export const OnPressEscape: StoryObj<typeof ControlledFormDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),
   },
 }
 
-export const ResponseStatus: StoryObj<typeof UnrecommendedFormDialog> = {
+export const ResponseStatus: StoryObj<typeof ControlledFormDialog> = {
   name: 'responseStatus',
   render: (args) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof UnrecommendedFormDialog>['responseStatus']>()
+      useState<ComponentProps<typeof ControlledFormDialog>['responseStatus']>()
 
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedFormDialog
+        <ControlledFormDialog
           {...args}
           responseStatus={responseStatus}
           isOpen={open}
@@ -178,27 +178,27 @@ export const ResponseStatus: StoryObj<typeof UnrecommendedFormDialog> = {
               processing
             </RadioButton>
           </Cluster>
-        </UnrecommendedFormDialog>
+        </ControlledFormDialog>
       </>
     )
   },
 }
 
-export const ActionDisabled: StoryObj<typeof UnrecommendedFormDialog> = {
+export const ActionDisabled: StoryObj<typeof ControlledFormDialog> = {
   name: 'actionDisabled',
   args: {
     actionDisabled: true,
   },
 }
 
-export const CloseDisabled: StoryObj<typeof UnrecommendedFormDialog> = {
+export const CloseDisabled: StoryObj<typeof ControlledFormDialog> = {
   name: 'closeDisabled',
   args: {
     closeDisabled: true,
   },
 }
 
-export const SubActionArea: StoryObj<typeof UnrecommendedFormDialog> = {
+export const SubActionArea: StoryObj<typeof ControlledFormDialog> = {
   name: 'subActionArea',
   args: {
     subActionArea: <Button onClick={action('subActionArea')}>サブアクション</Button>,
@@ -206,7 +206,7 @@ export const SubActionArea: StoryObj<typeof UnrecommendedFormDialog> = {
   },
 }
 
-export const PortalParent: StoryObj<typeof UnrecommendedFormDialog> = {
+export const PortalParent: StoryObj<typeof ControlledFormDialog> = {
   name: 'portalParent',
   render: (args) => {
     const parentRef = useRef<HTMLDivElement>(null)
@@ -216,7 +216,7 @@ export const PortalParent: StoryObj<typeof UnrecommendedFormDialog> = {
         <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
-        <UnrecommendedFormDialog
+        <ControlledFormDialog
           {...args}
           portalParent={parentRef}
           isOpen={open}
@@ -230,7 +230,7 @@ export const PortalParent: StoryObj<typeof UnrecommendedFormDialog> = {
           <FormControl label="名前">
             <Input name="name" />
           </FormControl>
-        </UnrecommendedFormDialog>
+        </ControlledFormDialog>
       </>
     )
   },
@@ -239,21 +239,21 @@ export const PortalParent: StoryObj<typeof UnrecommendedFormDialog> = {
   },
 }
 
-export const Width: StoryObj<typeof UnrecommendedFormDialog> = {
+export const Width: StoryObj<typeof ControlledFormDialog> = {
   name: 'width（非推奨）',
   args: {
     width: _widthOptions.string,
   },
 }
 
-export const Size: StoryObj<typeof UnrecommendedFormDialog> = {
+export const Size: StoryObj<typeof ControlledFormDialog> = {
   name: 'size',
   args: {
     size: 'M',
   },
 }
 
-export const FirstFocusTarget: StoryObj<typeof UnrecommendedFormDialog> = {
+export const FirstFocusTarget: StoryObj<typeof ControlledFormDialog> = {
   name: 'firstFocusTarget',
   render: (args) => {
     const inputRef = useRef<HTMLInputElement>(null)
@@ -262,7 +262,7 @@ export const FirstFocusTarget: StoryObj<typeof UnrecommendedFormDialog> = {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <UnrecommendedFormDialog
+        <ControlledFormDialog
           {...args}
           firstFocusTarget={inputRef}
           isOpen={open}
@@ -277,7 +277,7 @@ export const FirstFocusTarget: StoryObj<typeof UnrecommendedFormDialog> = {
           <FormControl label="名前">
             <Input ref={inputRef} name="name" />
           </FormControl>
-        </UnrecommendedFormDialog>
+        </ControlledFormDialog>
       </>
     )
   },
