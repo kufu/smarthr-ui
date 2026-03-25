@@ -2,15 +2,15 @@ import { useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
+import { MessageDialogContent } from '../MessageDialogContent'
 import { UnrecommendedMessageDialog } from '../UnrecommendedMessageDialog'
-import { UnrecommendedMessageDialogContent } from '../UnrecommendedMessageDialogContent'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/UnrecommendedMessageDialog',
   component: UnrecommendedMessageDialog,
-  subcomponents: { UnrecommendedMessageDialogContent },
+  subcomponents: { MessageDialogContent },
   render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleClose = onClickClose ?? (() => setOpen(false))
