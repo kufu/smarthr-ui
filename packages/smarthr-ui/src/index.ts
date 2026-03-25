@@ -21,14 +21,14 @@ export { Textarea } from './components/Textarea'
 export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
-  ActionDialog,
-  FormDialog,
+  UnrecommendedActionDialog,
+  UnrecommendedFormDialog,
   Dialog,
   DialogCloser,
   DialogContent,
   DialogTrigger,
   DialogWrapper,
-  MessageDialog,
+  UnrecommendedMessageDialog,
   MessageDialogContent,
   ModelessDialog,
   RemoteDialogTrigger,
@@ -36,7 +36,7 @@ export {
   RemoteTriggerFormDialog,
   RemoteTriggerStepFormDialog,
   RemoteTriggerMessageDialog,
-  StepFormDialog,
+  UnrecommendedStepFormDialog,
   StepFormDialogItem,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
