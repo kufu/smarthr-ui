@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  Fragment,
-  type PropsWithChildren,
-  useMemo,
-  useRef,
-} from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useMemo, useRef } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { TableReel } from './TableReel'
