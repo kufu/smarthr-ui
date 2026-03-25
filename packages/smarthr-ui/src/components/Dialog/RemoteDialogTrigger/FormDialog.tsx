@@ -1,17 +1,17 @@
 'use client'
 
-import { UnrecommendedActionDialog } from '../UnrecommendedActionDialog'
+import { UnrecommendedFormDialog } from '../UnrecommendedFormDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
 type Props = Omit<
-  ComponentProps<typeof UnrecommendedActionDialog>,
+  ComponentProps<typeof UnrecommendedFormDialog>,
   'isOpen' | 'onClickClose' | 'id'
 > &
   Parameters<typeof useRemoteTrigger>[0]
 
-export const RemoteTriggerActionDialog: FC<Props> = ({
+export const FormDialog: FC<Props> = ({
   id,
   onClickClose,
   onToggle,
@@ -24,10 +24,17 @@ export const RemoteTriggerActionDialog: FC<Props> = ({
     isOpen,
     onClickClose: actualOnClickClose,
     onPressEscape: actualOnPressEscape,
-  } = useRemoteTrigger({ id, onClickClose, onPressEscape, onToggle, onOpen, onClose })
+  } = useRemoteTrigger({
+    id,
+    onClickClose,
+    onPressEscape,
+    onToggle,
+    onOpen,
+    onClose,
+  })
 
   return (
-    <UnrecommendedActionDialog
+    <UnrecommendedFormDialog
       {...rest}
       id={id}
       isOpen={isOpen}

@@ -1,17 +1,17 @@
 'use client'
 
-import { UnrecommendedStepFormDialog } from '../UnrecommendedStepFormDialog'
+import { UnrecommendedActionDialog } from '../UnrecommendedActionDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
 type Props = Omit<
-  ComponentProps<typeof UnrecommendedStepFormDialog>,
+  ComponentProps<typeof UnrecommendedActionDialog>,
   'isOpen' | 'onClickClose' | 'id'
 > &
   Parameters<typeof useRemoteTrigger>[0]
 
-export const RemoteTriggerStepFormDialog: FC<Props> = ({
+export const ActionDialog: FC<Props> = ({
   id,
   onClickClose,
   onToggle,
@@ -24,17 +24,10 @@ export const RemoteTriggerStepFormDialog: FC<Props> = ({
     isOpen,
     onClickClose: actualOnClickClose,
     onPressEscape: actualOnPressEscape,
-  } = useRemoteTrigger({
-    id,
-    onClickClose,
-    onPressEscape,
-    onToggle,
-    onOpen,
-    onClose,
-  })
+  } = useRemoteTrigger({ id, onClickClose, onPressEscape, onToggle, onOpen, onClose })
 
   return (
-    <UnrecommendedStepFormDialog
+    <UnrecommendedActionDialog
       {...rest}
       id={id}
       isOpen={isOpen}
