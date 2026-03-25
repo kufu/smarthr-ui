@@ -3,6 +3,7 @@ import path from 'node:path'
 
 import { glob } from 'glob'
 import * as docgen from 'react-docgen-typescript'
+import ts from 'typescript'
 
 /*
  * react-docgen-typescript を使用し型定義ファイルからコンポーネントの Props 情報を抽出し、metadata.json に保存するスクリプト
@@ -11,26 +12,97 @@ import * as docgen from 'react-docgen-typescript'
  */
 
 const relativePath = path.relative(process.cwd(), import.meta.dirname)
-const SRC_PATH = path.join(relativePath, '../lib/**/**.d.ts')
-const IGNORE_FILE_WORDS = ['test', 'libs', 'use', 'index.d.ts', 'hocs', 'setupTests']
+const SRC_PATH = path.join(relativePath, '../src/**/*.tsx')
+const IGNORE_FILE_WORDS = ['test', 'stories', 'libs', 'use', 'hocs', 'setupTests', '.test.']
 const excludeFilesRegExp = new RegExp(`^(?!.*(${IGNORE_FILE_WORDS.join('|')})).*$`)
 // Props を独自に実装したものに絞る
 const propsNameRegExp = /.*(?=Props|TypeLiteral$)/
 const IGNORE_DECLARATIONS = ['ElementProps', 'StyleProps']
 const excludeDeclarationsRegExp = new RegExp(`^(?!.*(${IGNORE_DECLARATIONS.join('|')})).*$`)
 
+// TypeScriptコンパイラを使って型エイリアスを展開する
+function expandTypeAliases(files: string[]) {
+  const program = ts.createProgram(files, {
+    target: ts.ScriptTarget.Latest,
+    module: ts.ModuleKind.ESNext,
+    jsx: ts.JsxEmit.React,
+    esModuleInterop: true,
+  })
+  const checker = program.getTypeChecker()
+  const typeCache = new Map<string, any>()
+
+  // ファイルから型エイリアスを抽出
+  for (const sourceFile of program.getSourceFiles()) {
+    if (sourceFile.isDeclarationFile || !files.includes(sourceFile.fileName)) continue
+
+    ts.forEachChild(sourceFile, (node) => {
+      if (ts.isTypeAliasDeclaration(node) && node.name) {
+        const symbol = checker.getSymbolAtLocation(node.name)
+        if (symbol) {
+          const type = checker.getDeclaredTypeOfSymbol(symbol)
+          const typeName = node.name.text
+          typeCache.set(
+            typeName,
+            checker.typeToString(type, undefined, ts.TypeFormatFlags.InTypeAlias),
+          )
+        }
+      }
+    })
+  }
+
+  return typeCache
+}
+
 glob(SRC_PATH).then(
   async (files) => {
     const targets = files.filter((file) => excludeFilesRegExp.test(file))
+
+    // 型エイリアスのキャッシュを作成
+    const typeAliasCache = expandTypeAliases(targets)
+
     const fileParser = docgen.withCompilerOptions(
       { esModuleInterop: true },
       {
-        shouldExtractValuesFromUnion: false,
+        shouldExtractValuesFromUnion: true,
+        shouldRemoveUndefinedFromOptional: true,
         propFilter: {
           skipPropsWithName: ['as', 'id', 'inputMode', 'is'],
         },
       },
     )
+
+    // 型情報の中の型エイリアスを展開する関数
+    function expandPropType(propType: any): any {
+      if (!propType) return propType
+
+      if (propType.name === 'enum' && propType.value) {
+        return {
+          ...propType,
+          value: propType.value.map((v: any) => {
+            if (typeAliasCache.has(v.value)) {
+              return {
+                ...v,
+                value: typeAliasCache.get(v.value),
+                expandedFrom: v.value,
+              }
+            }
+            return v
+          }),
+        }
+      }
+
+      // 単純な型名の場合
+      if (typeof propType.name === 'string' && typeAliasCache.has(propType.name)) {
+        return {
+          ...propType,
+          name: typeAliasCache.get(propType.name),
+          expandedFrom: propType.name,
+        }
+      }
+
+      return propType
+    }
+
     const docs = fileParser.parse(targets).map(({ props, ...rest }) => {
       const filteredProps = Object.keys(props).flatMap((name) => {
         const propItem = props[name]
@@ -41,10 +113,17 @@ glob(SRC_PATH).then(
         }
 
         const declarationName = declarations[0].name
-        return propsNameRegExp.test(declarationName) &&
+        if (
+          propsNameRegExp.test(declarationName) &&
           excludeDeclarationsRegExp.test(declarationName)
-          ? propItem
-          : []
+        ) {
+          // 型エイリアスを展開
+          return {
+            ...propItem,
+            type: expandPropType(propItem.type),
+          }
+        }
+        return []
       })
 
       return {
