@@ -29,7 +29,6 @@ export {
   DialogTrigger,
   DialogWrapper,
   MessageDialog,
-  MessageDialogContent,
   ModelessDialog,
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,

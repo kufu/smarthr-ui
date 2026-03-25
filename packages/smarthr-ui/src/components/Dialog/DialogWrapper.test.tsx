@@ -10,7 +10,7 @@ import { DialogCloser } from './DialogCloser'
 import { DialogContent } from './DialogContent'
 import { DialogTrigger } from './DialogTrigger'
 import { DialogWrapper } from './DialogWrapper'
-import { MessageDialogContent } from './MessageDialog'
+import { MessageDialogContent } from './MessageDialog/MessageDialogContent'
 
 describe('DialogWrapper', () => {
   describe('DialogContent', () => {

@@ -1,5 +1,5 @@
 export { Dialog } from './Dialog'
-export { MessageDialog, MessageDialogContent } from './MessageDialog'
+export { MessageDialog } from './MessageDialog'
 export { ActionDialog } from './ActionDialog'
 export { FormDialog } from './FormDialog'
 export { StepFormDialog, StepFormDialogItem } from './StepFormDialog'
