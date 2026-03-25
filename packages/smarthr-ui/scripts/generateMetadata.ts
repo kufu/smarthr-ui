@@ -25,7 +25,7 @@ glob(SRC_PATH).then(
     const fileParser = docgen.withCompilerOptions(
       { esModuleInterop: true },
       {
-        shouldExtractValuesFromUnion: true,
+        shouldExtractValuesFromUnion: false,
         propFilter: {
           skipPropsWithName: ['as', 'id', 'inputMode', 'is'],
         },
