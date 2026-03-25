@@ -1,11 +1,14 @@
 'use client'
 
-import { ActionDialog } from '../ActionDialog'
+import { UnrecommendedActionDialog } from '../UnrecommendedActionDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
-type Props = Omit<ComponentProps<typeof ActionDialog>, 'isOpen' | 'onClickClose' | 'id'> &
+type Props = Omit<
+  ComponentProps<typeof UnrecommendedActionDialog>,
+  'isOpen' | 'onClickClose' | 'id'
+> &
   Parameters<typeof useRemoteTrigger>[0]
 
 export const RemoteTriggerActionDialog: FC<Props> = ({
@@ -24,7 +27,7 @@ export const RemoteTriggerActionDialog: FC<Props> = ({
   } = useRemoteTrigger({ id, onClickClose, onPressEscape, onToggle, onOpen, onClose })
 
   return (
-    <ActionDialog
+    <UnrecommendedActionDialog
       {...rest}
       id={id}
       isOpen={isOpen}

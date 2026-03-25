@@ -1,11 +1,14 @@
 'use client'
 
-import { MessageDialog } from '../MessageDialog'
+import { UnrecommendedMessageDialog } from '../UnrecommendedMessageDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
-type Props = Omit<ComponentProps<typeof MessageDialog>, 'isOpen' | 'onClickClose' | 'id'> &
+type Props = Omit<
+  ComponentProps<typeof UnrecommendedMessageDialog>,
+  'isOpen' | 'onClickClose' | 'id'
+> &
   Parameters<typeof useRemoteTrigger>[0]
 
 export const RemoteTriggerMessageDialog: FC<Props> = ({
@@ -24,5 +27,12 @@ export const RemoteTriggerMessageDialog: FC<Props> = ({
     onClose,
   })
 
-  return <MessageDialog {...rest} id={id} isOpen={isOpen} onClickClose={actualOnClickClose} />
+  return (
+    <UnrecommendedMessageDialog
+      {...rest}
+      id={id}
+      isOpen={isOpen}
+      onClickClose={actualOnClickClose}
+    />
+  )
 }
