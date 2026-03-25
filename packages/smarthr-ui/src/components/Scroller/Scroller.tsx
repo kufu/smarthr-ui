@@ -15,7 +15,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { debounce } from '../../libs/debounce'
-import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
+import { useSectionWrapper } from '../SectioningContent'
 
 type AbstractProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
