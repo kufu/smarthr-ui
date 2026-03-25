@@ -2,7 +2,7 @@ packages:
   - packages/*
   - sandbox/*
 
-minimumReleaseAge: 4320
+# minimumReleaseAge: 4320
 
 auditConfig:
   # HINT: Next.jsに関するpatchだが、SCのチェックでしか利用していないためignoreする
@@ -11,6 +11,8 @@ auditConfig:
     - GHSA-9g9p-9gw9-jx7f
     - GHSA-5f7q-jpqc-wp7h
     - GHSA-2g4f-4pwh-qvx6 # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20508
+    - GHSA-7r86-cg39-jmmj # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20518
+    - GHSA-23c5-xmqv-rm74 # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20518
 minimumReleaseAgeExclude:
   # Renovate security update: next@15.5.10
   - next@15.5.10
