@@ -45,6 +45,7 @@ export const locale = {
   'smarthr-ui/Combobox/addItemButtonLabel': '',
   'smarthr-ui/Combobox/loadingText': '',
   'smarthr-ui/Combobox/noResultsText': '',
+  'smarthr-ui/Chip/delete': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': '',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '',
   'smarthr-ui/DropZone/selectButtonLabel': '',

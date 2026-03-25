@@ -45,6 +45,7 @@ export const locale = {
   'smarthr-ui/Combobox/addItemButtonLabel': '「{name}」를 추가',
   'smarthr-ui/Combobox/loadingText': '처리중',
   'smarthr-ui/Combobox/noResultsText': '일치하는 선택지가 없습니다.',
+  'smarthr-ui/Chip/delete': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': '후보를 닫기',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '후보를 열기',
   'smarthr-ui/DropZone/selectButtonLabel': '파일을 선택',

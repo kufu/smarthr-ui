@@ -45,6 +45,7 @@ export const locale = {
   'smarthr-ui/Combobox/addItemButtonLabel': '添加“{name}”',
   'smarthr-ui/Combobox/loadingText': '处理中',
   'smarthr-ui/Combobox/noResultsText': '暂无符合条件的选项。',
+  'smarthr-ui/Chip/delete': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': '收起选项',
   'smarthr-ui/DropdownMenuButton/triggerInactive': '展开选项',
   'smarthr-ui/DropZone/selectButtonLabel': '选择文件',

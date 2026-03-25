@@ -45,6 +45,7 @@ export const locale = {
   'smarthr-ui/Combobox/addItemButtonLabel': 'Acrescentar “{name}”',
   'smarthr-ui/Combobox/loadingText': 'Processando',
   'smarthr-ui/Combobox/noResultsText': 'Nenhum resultado correspondente encontrado.',
+  'smarthr-ui/Chip/delete': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': 'Fechar opções',
   'smarthr-ui/DropdownMenuButton/triggerInactive': 'Abrir opções',
   'smarthr-ui/DropZone/selectButtonLabel': 'Selecionar arquivo para upload',

@@ -45,6 +45,7 @@ export const locale = {
   'smarthr-ui/Combobox/addItemButtonLabel': 'Tambah “{name}”',
   'smarthr-ui/Combobox/loadingText': 'Sedang diproses',
   'smarthr-ui/Combobox/noResultsText': 'Tidak ada pilihan yang sesuai.',
+  'smarthr-ui/Chip/delete': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': 'Tutup pilihan',
   'smarthr-ui/DropdownMenuButton/triggerInactive': 'Buka pilihan',
   'smarthr-ui/DropZone/selectButtonLabel': 'Pilih file',

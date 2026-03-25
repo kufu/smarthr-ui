@@ -45,6 +45,7 @@ export const locale = {
   'smarthr-ui/Combobox/addItemButtonLabel': 'Thêm "{name}"',
   'smarthr-ui/Combobox/loadingText': 'Đang xử lý',
   'smarthr-ui/Combobox/noResultsText': 'Không có kết quả phù hợp.',
+  'smarthr-ui/Chip/delete': '',
   'smarthr-ui/DropdownMenuButton/triggerActive': 'Đóng danh sách gợi ý',
   'smarthr-ui/DropdownMenuButton/triggerInactive': 'Mở danh sách gợi ý',
   'smarthr-ui/DropZone/selectButtonLabel': 'Chọn tệp',

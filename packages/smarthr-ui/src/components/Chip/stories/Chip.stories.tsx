@@ -54,3 +54,10 @@ export const Disabled: StoryObj<typeof Chip> = {
     disabled: true,
   },
 }
+
+export const OnDelete: StoryObj<typeof Chip> = {
+  name: 'onDelete',
+  args: {
+    onDelete: () => {},
+  },
+}
