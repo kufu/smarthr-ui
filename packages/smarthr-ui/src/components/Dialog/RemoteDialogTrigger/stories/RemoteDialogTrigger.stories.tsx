@@ -1,6 +1,6 @@
 import { Button } from '../../../Button'
+import { MessageDialog } from '../MessageDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
-import { RemoteTriggerMessageDialog } from '../RemoteTriggerMessageDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -15,7 +15,7 @@ export default {
       <RemoteDialogTrigger {...args}>
         <Button>ダイアログを開く</Button>
       </RemoteDialogTrigger>
-      <RemoteTriggerMessageDialog
+      <MessageDialog
         id="remote-dialog"
         heading="リモートトリガーメッセージダイアログ"
         description="RemoteDialogTrigger で開かれた MessageDialog です。"

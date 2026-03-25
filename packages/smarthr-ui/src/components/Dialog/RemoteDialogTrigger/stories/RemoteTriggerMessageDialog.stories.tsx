@@ -1,19 +1,19 @@
 import { Button } from '../../../Button'
+import { MessageDialog } from '../MessageDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
-import { RemoteTriggerMessageDialog } from '../RemoteTriggerMessageDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 /** props は [MessageDialog](./?path=/docs/dialog（ダイアログ）-dialog-messagedialog--docs) を参照してください。 */
 export default {
-  title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerMessageDialog',
-  component: RemoteTriggerMessageDialog,
+  title: 'Components/Dialog/RemoteDialogTrigger/MessageDialog',
+  component: MessageDialog,
   render: (args) => (
     <>
       <RemoteDialogTrigger targetId="remote-dialog">
         <Button>ダイアログを開く</Button>
       </RemoteDialogTrigger>
-      <RemoteTriggerMessageDialog
+      <MessageDialog
         {...args}
         id="remote-dialog"
         heading="リモートトリガーメッセージダイアログ"
@@ -24,6 +24,6 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof RemoteTriggerMessageDialog>
+} as Meta<typeof MessageDialog>
 
-export const Playground: StoryObj<typeof RemoteTriggerMessageDialog> = {}
+export const Playground: StoryObj<typeof MessageDialog> = {}
