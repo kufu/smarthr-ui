@@ -15,6 +15,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { debounce } from '../../libs/debounce'
+import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
 
 type AbstractProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
@@ -131,10 +132,17 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       }
     }, [autoTabIndex])
 
-    return (
+    const Wrapper = useSectionWrapper(Component)
+    const body = (
       <Component {...rest} ref={wrapperRef} className={actualClassName} tabIndex={tabIndex}>
         {children}
       </Component>
     )
+
+    if (Wrapper) {
+      return <Wrapper>{body}</Wrapper>
+    }
+
+    return body
   },
 )
