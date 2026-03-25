@@ -20,11 +20,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
-import type {
-  ButtonArgType,
-  ObjectButtonType,
-  useStepFormDialogButton,
-} from './useStepFormDialogButton'
+import type { useStepFormDialogButton } from './useStepFormDialogButton'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
