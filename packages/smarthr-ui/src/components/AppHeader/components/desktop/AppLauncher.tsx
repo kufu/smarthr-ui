@@ -188,7 +188,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           translated={translated}
           classNames={classNames}
         />
-        <main className={classNames.main}>
+        <div className={classNames.main}>
           <Section className={classNames.mainInner}>
             <Cluster className={classNames.contentHead} align="center" justify="space-between">
               <MemoizedSubSubBlockHeading>
@@ -204,7 +204,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
               <AppLauncherFeatures features={features} page={page} />
             </Scroller>
           </Section>
-        </main>
+        </div>
       </div>
     </div>
   )
