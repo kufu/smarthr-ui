@@ -23,7 +23,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
       // 与えられたwidthに対する適切なscaleを算出
       const viewportScale = (width / img.naturalWidth) * scale
 
-      const rad = (rotation * Math.PI) / 180
+      const rad = ((rotation ?? 0) * Math.PI) / 180
       const sin = Math.abs(Math.sin(rad))
       const cos = Math.abs(Math.cos(rad))
 
@@ -63,7 +63,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
           src={file.url}
           alt={file.alt}
           style={{
-            rotate: `${rotation}deg`,
+            rotate: `${rotation ?? 0}deg`,
             scale: `${viewConfig.imgScale}`,
           }}
           onLoad={handleLoad}
