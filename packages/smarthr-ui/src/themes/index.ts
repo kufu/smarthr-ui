@@ -1,4 +1,16 @@
-export * from './tailwind'
+export {
+  colors,
+  textColor,
+  fontSize,
+  backgroundColor,
+  lineHeight,
+  boxShadow,
+  spacing,
+  bgColors,
+  paddingBlock,
+  paddingInline,
+  dialogSize,
+} from './tailwind'
 export {
   createMediaQuery,
   defaultMediaQuery,
