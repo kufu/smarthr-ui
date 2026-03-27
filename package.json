@@ -10,6 +10,7 @@
     "eslint-config-smarthr": "^13.3.0",
     "eslint-plugin-storybook": "^9.0.18",
     "husky": "^9.1.7",
+    "knip": "^6.0.5",
     "lint-staged": "^16.2.7",
     "prettier": "^3.6.2",
     "prettier-config-smarthr": "^1.0.1",
