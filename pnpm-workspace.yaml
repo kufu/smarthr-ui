@@ -18,3 +18,5 @@ minimumReleaseAgeExclude:
   - webpack@5.104.1
   # Renovate security update: glob@13.0.1
   - glob@13.0.1
+  # Renovate security update: brace-expansion@<1.1.12@5.0.5
+  - brace-expansion@<1.1.12@5.0.5
