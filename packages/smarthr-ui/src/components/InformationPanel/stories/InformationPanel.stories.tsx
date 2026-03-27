@@ -22,11 +22,13 @@ export const Playground: StoryObj<typeof InformationPanel> = {
   args: {},
 }
 
+const types = ['success', 'info', 'warning', 'error', 'sync'] as const
+
 export const Type: StoryObj<typeof InformationPanel> = {
   name: 'type',
   render: (args) => (
     <Stack>
-      {Object.keys(classNameGenerator.variants.type).map((type) => (
+      {types.map((type) => (
         <InformationPanel {...args} type={type as any} key={type} />
       ))}
     </Stack>
