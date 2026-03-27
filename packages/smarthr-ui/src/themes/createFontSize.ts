@@ -24,6 +24,8 @@ export type CreatedFontSizeTheme = {
   XXL: string
 }
 
+// Used in smarthr-design-system via deep import:
+// import type { FontSizes } from 'smarthr-ui/lib/themes/createFontSize'
 export type FontSizes = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
 
 const getFontSize = (scaleFactor: number, diff: number = 0) =>
