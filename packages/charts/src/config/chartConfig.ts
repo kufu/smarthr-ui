@@ -113,6 +113,9 @@ const createBaseChartOptions = <T extends ChartType>({
         labels: internalLegendLabels,
       },
       tooltip: internalTooltipConfig,
+      datalabels: {
+        display: false,
+      },
     },
   }
 
