@@ -31,9 +31,13 @@ function expandTypeAliases(files: string[]) {
   const checker = program.getTypeChecker()
   const typeCache = new Map<string, any>()
 
+  // 絶対パスのセットを作成
+  const absoluteFiles = new Set(files.map((f) => path.resolve(f)))
+
   // ファイルから型エイリアスを抽出
   for (const sourceFile of program.getSourceFiles()) {
-    if (sourceFile.isDeclarationFile || !files.includes(sourceFile.fileName)) continue
+    const absolutePath = path.resolve(sourceFile.fileName)
+    if (sourceFile.isDeclarationFile || !absoluteFiles.has(absolutePath)) continue
 
     ts.forEachChild(sourceFile, (node) => {
       if (ts.isTypeAliasDeclaration(node) && node.name) {
