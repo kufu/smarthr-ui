@@ -11,7 +11,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../themes'
+import { textColor } from '../../../../tailwind'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'

@@ -21,7 +21,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { textColor } from '../../themes'
+import { textColor } from '../../tailwind'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'
 import { Input } from '../Input'

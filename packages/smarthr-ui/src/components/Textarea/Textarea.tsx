@@ -18,7 +18,8 @@ import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
-import { defaultHtmlFontSize, lineHeight } from '../../themes'
+import { lineHeight } from '../../tailwind'
+import { defaultHtmlFontSize } from '../../themes'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'

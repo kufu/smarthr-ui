@@ -2,7 +2,7 @@ import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, use
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../themes'
+import { textColor } from '../../../../tailwind'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'

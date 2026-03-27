@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 
-import { ThemeContext } from '../themes'
+// eslint-disable-next-line smarthr/require-barrel-import
+import { ThemeContext } from '../themes/ThemeProvider'
 
 import type { CreatedTheme } from '../themes'
 

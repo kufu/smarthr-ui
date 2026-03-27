@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { spacing } from '../../themes'
+import { spacing } from '../../tailwind'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
