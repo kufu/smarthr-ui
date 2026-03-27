@@ -52,6 +52,14 @@ export default [
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
       'smarthr/require-barrel-import': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ExportAllDeclaration',
+          message:
+            'export * は使用できません。明示的なexportを使用してください。Icon関連のファイルの場合は eslint-disable-next-line を使用してください。',
+        },
+      ],
     },
   },
   {
