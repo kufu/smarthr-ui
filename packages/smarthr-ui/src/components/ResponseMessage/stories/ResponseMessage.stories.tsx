@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { ResponseMessage, classNameGenerator } from '../ResponseMessage'
+import { ResponseMessage } from '../ResponseMessage'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -11,7 +11,7 @@ export default {
     alt: { control: 'text' },
     type: {
       control: 'select',
-      options: Object.keys(classNameGenerator.variants.type),
+      options: ['info', 'success', 'warning', 'error', 'sync'],
     },
     size: { name: 'size' },
     color: { table: { disable: true } },
@@ -34,7 +34,7 @@ export const Type: StoryObj<typeof ResponseMessage> = {
   name: 'type',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
+      {[undefined, 'info', 'success', 'warning', 'error', 'sync'].map((type) => (
         <ResponseMessage {...args} type={type as any} key={type} />
       ))}
     </Stack>

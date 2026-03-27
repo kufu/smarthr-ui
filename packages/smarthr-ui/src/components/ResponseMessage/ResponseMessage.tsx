@@ -20,7 +20,7 @@ type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
     right?: boolean
   }
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   base: '',
   variants: {
     type: {
