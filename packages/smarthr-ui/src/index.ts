@@ -44,6 +44,7 @@ export { RadioButtonPanel } from './components/RadioButtonPanel'
 export { AnchorButton, Button, UnstyledButton } from './components/Button'
 export { StatusLabel, RequiredLabel } from './components/StatusLabel'
 export { Base, BaseColumn } from './components/Base'
+// eslint-disable-next-line no-restricted-syntax -- Icon exports all 200+ icons from FaIcon
 export * from './components/Icon'
 export { SmartHRAILogo } from './components/SmartHRAILogo'
 export { SmartHRLogo } from './components/SmartHRLogo'
