@@ -2,8 +2,7 @@
 
 import { type FC, type ReactNode, useSyncExternalStore } from 'react'
 
-// eslint-disable-next-line smarthr/require-barrel-import
-import { defaultBreakpoint } from '../../themes/createBreakpoint'
+import { defaultBreakpoint } from '../../themes'
 
 import { DeviceContext } from './useDevice'
 
