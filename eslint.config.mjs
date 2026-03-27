@@ -55,8 +55,7 @@ export default [
         'error',
         {
           selector: 'ExportAllDeclaration',
-          message:
-            'export * は使用できません。明示的なexportを使用してください。Icon関連のファイルの場合は eslint-disable-next-line を使用してください。',
+          message: 'export * は使用できません。明示的なexportを使用してください。',
         },
       ],
     },
