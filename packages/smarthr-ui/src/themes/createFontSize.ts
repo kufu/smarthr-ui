@@ -24,7 +24,7 @@ export type CreatedFontSizeTheme = {
   XXL: string
 }
 
-// Used in smarthr-design-system via deep import:
+// smarthr-design-systemでdeep importされています:
 // import type { FontSizes } from 'smarthr-ui/lib/themes/createFontSize'
 export type FontSizes = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
 
