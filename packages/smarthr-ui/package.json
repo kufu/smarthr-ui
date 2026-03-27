@@ -47,7 +47,7 @@
     "@types/react-transition-group": "^4.4.12",
     "@types/styled-components": "^5.1.36",
     "autoprefixer": "^10.4.27",
-    "babel-plugin-polyfill-corejs2": "^0.4.15",
+    "babel-plugin-polyfill-corejs2": "^0.4.17",
     "babel-plugin-polyfill-regenerator": "^0.6.6",
     "chromatic": "^15.0.0",
     "eslint-plugin-storybook": "9.0.18",
