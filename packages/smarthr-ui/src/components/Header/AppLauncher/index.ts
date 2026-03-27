@@ -1,1 +1,1 @@
-export * from './AppLauncher'
+export { AppLauncher } from './AppLauncher'

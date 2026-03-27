@@ -11,9 +11,8 @@ import ReactGA from 'react-ga4'
 import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 
 import '../src/styles/index.css'
-import { EnvironmentProvider, IntlProvider } from '../src'
-import * as locales from '../src/intl/locales'
-import { backgroundColor } from '../src/themes'
+import { EnvironmentProvider, IntlProvider, locales } from '../src'
+import { backgroundColor } from '../src/tailwind'
 
 import type { Preview } from '@storybook/react-vite'
 
