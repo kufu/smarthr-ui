@@ -5,7 +5,7 @@ import { IntlProvider } from '../../intl'
 
 import { Calendar } from './Calendar'
 
-import type * as locales from '../../intl'
+import type { locales } from '../../intl'
 
 describe('Calendar', () => {
   const renderWithIntl = (component: React.ReactElement, locale: keyof typeof locales = 'ja') =>
