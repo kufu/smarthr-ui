@@ -3,12 +3,16 @@ import { validators } from 'tailwind-merge'
 import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
-import { defaultColor } from './themes/createColor'
-import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
-import { defaultShadow } from './themes/createShadow/defaultShadow'
-import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/createSpacing'
-import { defaultWidth } from './themes/createWidth'
-import { defaultZIndex } from './themes/createZIndex'
+import {
+  createSpacingByChar,
+  defaultColor,
+  defaultFontSize,
+  defaultHtmlFontSize,
+  defaultShadow,
+  defaultWidth,
+  defaultZIndex,
+  primitiveTokens as spacingSizes,
+} from './themes'
 
 import type { Config } from 'tailwindcss'
 

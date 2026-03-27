@@ -13,7 +13,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { backgroundColor } from '../../themes'
+import { backgroundColor } from '../../tailwind'
 
 type AbstractProps = {
   /** input 要素の `type` 値 */
