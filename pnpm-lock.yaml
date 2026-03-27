@@ -218,7 +218,7 @@ importers:
         specifier: ^10.6.0
         version: 10.6.0
       intl-messageformat:
-        specifier: ^11.1.2
+        specifier: ^11.1.3
         version: 11.2.0
       lodash.merge:
         specifier: ^4.6.2
