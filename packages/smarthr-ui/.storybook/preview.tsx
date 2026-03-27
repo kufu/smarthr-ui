@@ -1,4 +1,3 @@
-/* eslint-disable smarthr/require-barrel-import */
 import {
   Controls,
   Description,
@@ -11,10 +10,11 @@ import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
 import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 
+// eslint-disable-next-line smarthr/require-barrel-import
 import '../src/styles/index.css'
-import { EnvironmentProvider, IntlProvider } from '../src'
-import * as locales from '../src/intl/locales'
-import { backgroundColor } from '../src/themes'
+import { EnvironmentProvider, IntlProvider, locales } from '../src'
+// eslint-disable-next-line smarthr/require-barrel-import
+import { backgroundColor } from '../src/tailwind'
 
 import type { Preview } from '@storybook/react-vite'
 

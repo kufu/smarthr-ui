@@ -9,4 +9,10 @@ export { DialogContent } from './DialogContent'
 export { DialogCloser } from './DialogCloser'
 export { ModelessDialog } from './ModelessDialog'
 export { FocusTrap } from './FocusTrap'
-export * from './RemoteDialogTrigger'
+export {
+  RemoteDialogTrigger,
+  RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
+  RemoteTriggerMessageDialog,
+  RemoteTriggerStepFormDialog,
+} from './RemoteDialogTrigger'
