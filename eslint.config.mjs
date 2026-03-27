@@ -58,6 +58,14 @@ export default [
           selector: 'ExportAllDeclaration',
           message: 'export * は使用できません。明示的なexportを使用してください。',
         },
+        {
+          selector: 'ExportNamedDeclaration[specifiers.0.type="ExportNamespaceSpecifier"]',
+          message: 'export * as は使用できません。個別にimportしてオブジェクトを構築してください。',
+        },
+        {
+          selector: 'ImportNamespaceSpecifier',
+          message: 'import * as は使用できません。個別にimportしてください。',
+        },
       ],
     },
   },
