@@ -11,7 +11,7 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { AbstractSize, CharRelativeSize } from '../../themes'
 
 type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
   Omit<IconProps, 'size' | 'alt'> & {

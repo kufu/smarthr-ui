@@ -10,8 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { DropdownMenuGroup } from '../Dropdown'
-import { DropdownMenuButton } from '../Dropdown/DropdownMenuButton/DropdownMenuButton'
+import { DropdownMenuButton, DropdownMenuGroup } from '../Dropdown'
 
 type Props = PropsWithChildren<{
   /** 引き金となるボタンラベル */

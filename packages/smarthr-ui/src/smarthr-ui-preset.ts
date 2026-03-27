@@ -3,12 +3,14 @@ import { validators } from 'tailwind-merge'
 import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
+/* eslint-disable smarthr/require-barrel-import */
 import { defaultColor } from './themes/createColor'
 import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
 import { defaultShadow } from './themes/createShadow/defaultShadow'
 import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/createSpacing'
 import { defaultWidth } from './themes/createWidth'
 import { defaultZIndex } from './themes/createZIndex'
+/* eslint-enable smarthr/require-barrel-import */
 
 import type { Config } from 'tailwindcss'
 

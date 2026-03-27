@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { localeMap } from '../../../intl/localeMap'
+import { localeMap } from '../../../intl'
 import { backgroundColor } from '../../../themes'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 

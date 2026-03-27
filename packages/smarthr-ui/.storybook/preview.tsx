@@ -1,3 +1,4 @@
+/* eslint-disable smarthr/require-barrel-import */
 import {
   Controls,
   Description,

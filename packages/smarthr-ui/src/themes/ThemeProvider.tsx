@@ -2,7 +2,7 @@
 
 import { type FC, type ReactNode, createContext } from 'react'
 
-import { type CreatedTheme, createTheme } from '../themes/createTheme'
+import { type CreatedTheme, createTheme } from './createTheme'
 
 export const ThemeContext = createContext<CreatedTheme>(createTheme())
 const { Provider } = ThemeContext

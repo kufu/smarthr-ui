@@ -1,7 +1,7 @@
 import { type ComponentProps, type FC, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { bgColors } from '../../../themes/tailwind'
+import { bgColors } from '../../../themes'
 import { Base } from '../Base'
 
 type AbstractProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'> &
