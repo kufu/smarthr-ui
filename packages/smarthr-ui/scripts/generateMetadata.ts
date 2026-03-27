@@ -76,18 +76,41 @@ glob(SRC_PATH).then(
       if (!propType) return propType
 
       if (propType.name === 'enum' && propType.value) {
+        const expandedValue = propType.value.map((v: any) => {
+          // 型エイリアスを展開
+          let expandedValueString = v.value
+          let wasExpanded = false
+
+          typeAliasCache.forEach((expandedType, aliasName) => {
+            const regex = new RegExp(`\\b${aliasName}\\b`, 'g')
+            if (regex.test(expandedValueString)) {
+              expandedValueString = expandedValueString.replace(regex, expandedType)
+              wasExpanded = true
+            }
+          })
+
+          if (wasExpanded) {
+            return {
+              ...v,
+              value: expandedValueString,
+              expandedFrom: v.value,
+            }
+          }
+          return v
+        })
+
+        // raw フィールドも型エイリアスを展開
+        let expandedRaw = propType.raw
+        if (expandedRaw) {
+          typeAliasCache.forEach((expandedType, aliasName) => {
+            expandedRaw = expandedRaw.replace(new RegExp(`\\b${aliasName}\\b`, 'g'), expandedType)
+          })
+        }
+
         return {
           ...propType,
-          value: propType.value.map((v: any) => {
-            if (typeAliasCache.has(v.value)) {
-              return {
-                ...v,
-                value: typeAliasCache.get(v.value),
-                expandedFrom: v.value,
-              }
-            }
-            return v
-          }),
+          raw: expandedRaw,
+          value: expandedValue,
         }
       }
 
