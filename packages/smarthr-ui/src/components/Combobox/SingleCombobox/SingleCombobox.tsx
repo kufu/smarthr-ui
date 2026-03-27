@@ -80,6 +80,11 @@ const NOOP = () => undefined
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
 
+const EMPTY_INPUT_CHANGE_EVENT = {
+  currentTarget: { value: '' },
+  target: { value: '' },
+} as ChangeEvent<HTMLInputElement>
+
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-SingleCombobox shr-inline-block',
@@ -180,6 +185,9 @@ const ActualSingleCombobox = <T,>(
         onSelect?.(selected)
         onChangeSelected?.(selected)
 
+        // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+        onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
         requestAnimationFrame(() => {
@@ -188,7 +196,7 @@ const ActualSingleCombobox = <T,>(
 
         setIsEditing(false)
       },
-      [onChangeSelected, onSelect],
+      [onChangeSelected, onSelect, onChangeInput],
     ),
     isExpanded,
     isLoading,
