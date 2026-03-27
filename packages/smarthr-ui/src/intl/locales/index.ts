@@ -8,17 +8,8 @@ import { locale as vi } from './vi_vn'
 import { locale as zhCn } from './zh_hans_cn'
 import { locale as zhTw } from './zh_hant_tw'
 
-export {
-  ja,
-  enUs as 'en-us',
-  idId as 'id-id',
-  pt,
-  vi,
-  ko,
-  zhCn as 'zh-cn',
-  zhTw as 'zh-tw',
-  jaEasy as 'ja-easy',
-}
+// 他のlocaleファイル（en_us.ts, id_id.ts等）が `import type { ja } from '.'` で型を参照するためにexport
+export { ja }
 
 export const locales = {
   ja,
