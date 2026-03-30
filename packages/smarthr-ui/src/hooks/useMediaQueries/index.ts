@@ -1,1 +1,1 @@
-export * from './useMediaQueries'
+export { useMediaQueries } from './useMediaQueries'

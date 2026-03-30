@@ -58,7 +58,7 @@ export const FileViewer: FC<Props> = ({
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
-  const [rotation, setRotation] = useState(0)
+  const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
 
   const internalScaleStep = useMemo(
@@ -76,12 +76,17 @@ export const FileViewer: FC<Props> = ({
 
   const rotate = useCallback(() => {
     // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
-    const newRotation = rotation === 0 ? 270 : rotation - 90
+    const currentRotation = rotation ?? 0
+    const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
     setRotation(newRotation)
   }, [rotation])
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
+  }, [])
+
+  const handlePDFLoaded = useCallback((defaultRotation: number) => {
+    setRotation(defaultRotation)
   }, [])
 
   useEffect(() => {
@@ -129,6 +134,7 @@ export const FileViewer: FC<Props> = ({
               file={file}
               width={width}
               onLoad={handleLoaded}
+              onPDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={onLoadError}
             />
