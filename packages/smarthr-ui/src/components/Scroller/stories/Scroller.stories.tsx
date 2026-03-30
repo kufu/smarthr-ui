@@ -105,17 +105,10 @@ export const StyleTypeScroll: StoryObj<typeof Scroller> = {
   render: (args) => (
     <Scroller {...args} style={{ height: '200px' }}>
       <Base padding={1.5}>
-        <p>スクロール可能なコンテンツです。</p>
         <p>
           styleType: scroll を指定すると、コンテンツが少なくてもスクロールバーが常に表示されます。
         </p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-        <p>Duis aute irure dolor in reprehenderit in voluptate velit.</p>
-        <p>Excepteur sint occaecat cupidatat non proident sunt in culpa.</p>
-        <p>Qui officia deserunt mollit anim id est laborum.</p>
-        <p>コンテンツの最終行です。</p>
+        <p>この例では、コンテンツが領域に収まっていますが、スクロールバーが表示されます。</p>
       </Base>
     </Scroller>
   ),
