@@ -1,4 +1,5 @@
 import { Cluster, Stack } from '../../Layout'
+// eslint-disable-next-line no-restricted-syntax -- 200個以上のアイコンを一覧表示するため
 import * as Icons from '../FaIcon'
 import { LanguageIcon } from '../LanguageIcon'
 import { OpenInNewTabIcon } from '../OpenInNewTabIcon'

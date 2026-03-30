@@ -52,6 +52,21 @@ export default [
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
       'smarthr/require-barrel-import': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ExportAllDeclaration',
+          message: 'export * は使用できません。明示的なexportを使用してください。',
+        },
+        {
+          selector: 'ExportNamedDeclaration[specifiers.0.type="ExportNamespaceSpecifier"]',
+          message: 'export * as は使用できません。個別にimportしてオブジェクトを構築してください。',
+        },
+        {
+          selector: 'ImportNamespaceSpecifier',
+          message: 'import * as は使用できません。個別にimportしてください。',
+        },
+      ],
     },
   },
   {
