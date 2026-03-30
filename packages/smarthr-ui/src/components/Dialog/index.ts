@@ -8,4 +8,11 @@ export { DialogTrigger } from './DialogTrigger'
 export { DialogContent } from './DialogContent'
 export { DialogCloser } from './DialogCloser'
 export { ModelessDialog } from './ModelessDialog'
-export * from './RemoteDialogTrigger'
+export { FocusTrap } from './FocusTrap'
+export {
+  RemoteDialogTrigger,
+  RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
+  RemoteTriggerMessageDialog,
+  RemoteTriggerStepFormDialog,
+} from './RemoteDialogTrigger'
