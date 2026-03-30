@@ -8,7 +8,7 @@ import {
 } from 'react-intl'
 
 import { useAvailableLocales } from './IntlProvider'
-import * as locales from './locales'
+import { locales } from './locales'
 
 import type { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
 

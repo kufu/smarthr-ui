@@ -3,14 +3,12 @@ import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
 import { ControlledMessageDialog } from '../ControlledMessageDialog'
-import { MessageDialogContent } from '../MessageDialogContent'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/ControlledMessageDialog',
   component: ControlledMessageDialog,
-  subcomponents: { MessageDialogContent },
   render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleClose = onClickClose ?? (() => setOpen(false))
