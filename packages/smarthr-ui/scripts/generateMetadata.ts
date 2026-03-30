@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { glob } from 'glob'
+// eslint-disable-next-line no-restricted-syntax -- react-docgen-typescriptの名前空間インポートが必要
 import * as docgen from 'react-docgen-typescript'
 
 /*
