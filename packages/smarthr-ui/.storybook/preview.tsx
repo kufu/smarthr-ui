@@ -12,7 +12,7 @@ import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 
 import '../src/styles/index.css'
 import { EnvironmentProvider, IntlProvider, locales } from '../src'
-import { backgroundColor } from '../src/tailwind'
+import { backgroundColor } from '../src/themes'
 
 import type { Preview } from '@storybook/react-vite'
 
