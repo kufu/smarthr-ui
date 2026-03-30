@@ -18,7 +18,7 @@ import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
 
-import type { Locale } from '../../../intl/localeMap'
+import type { Locale } from '../../../intl'
 
 export type AbstractProps = {
   narrow?: boolean

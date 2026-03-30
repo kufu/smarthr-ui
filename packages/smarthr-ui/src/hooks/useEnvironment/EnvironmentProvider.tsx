@@ -2,7 +2,7 @@
 
 import { type FC, type ReactNode, useContext } from 'react'
 
-import { defaultMediaQuery } from '../../themes/createMediaQuery'
+import { defaultMediaQuery } from '../../themes'
 import { useMediaQueries } from '../useMediaQueries'
 import { useTheme } from '../useTheme'
 

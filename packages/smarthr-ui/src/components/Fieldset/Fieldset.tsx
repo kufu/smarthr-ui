@@ -1,4 +1,4 @@
-import { ActualFormControl } from '../FormControl/FormControl'
+import { ActualFormControl } from '../FormControl'
 
 import type { ComponentProps, FC, ReactNode } from 'react'
 

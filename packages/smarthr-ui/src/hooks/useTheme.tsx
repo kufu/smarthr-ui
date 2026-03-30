@@ -2,7 +2,7 @@
 
 import { type FC, type ReactNode, createContext, useContext } from 'react'
 
-import { type CreatedTheme, createTheme } from '../themes/createTheme'
+import { type CreatedTheme, createTheme } from '../themes'
 
 export type Theme = CreatedTheme
 

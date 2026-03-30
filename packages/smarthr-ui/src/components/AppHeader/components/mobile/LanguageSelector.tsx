@@ -2,7 +2,7 @@ import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
-import { type Locale, localeMap } from '../../../../intl/localeMap'
+import { type Locale, localeMap } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'

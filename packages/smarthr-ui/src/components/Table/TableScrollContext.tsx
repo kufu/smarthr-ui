@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { defaultHtmlFontSize } from '../../themes/createFontSize'
+import { defaultHtmlFontSize } from '../../themes'
 
 type Props = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
