@@ -7,7 +7,8 @@ import { type CreatedTheme, createTheme } from '../themes'
 export type Theme = CreatedTheme
 
 export const ThemeContext = createContext<CreatedTheme>(createTheme())
-const { Provider } = ThemeContext
+
+export const useTheme = () => useContext(ThemeContext)
 
 type ThemeProviderProps = {
   theme: CreatedTheme
@@ -15,7 +16,5 @@ type ThemeProviderProps = {
 }
 
 export const ThemeProvider: FC<ThemeProviderProps> = ({ theme, children }) => (
-  <Provider value={theme}>{children}</Provider>
+  <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
 )
-
-export const useTheme = () => useContext(ThemeContext)
