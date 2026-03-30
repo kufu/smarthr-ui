@@ -3,8 +3,8 @@ import { DefinitionList, DefinitionListItem } from '../../components/DefinitionL
 import { Heading } from '../../components/Heading'
 import { Stack } from '../../components/Layout'
 import { defaultMediaQuery } from '../../themes'
-import { ThemeProvider } from '../../themes/ThemeProvider'
 import { createTheme } from '../../themes/createTheme'
+import { ThemeProvider } from '../useTheme'
 
 import { EnvironmentProvider } from './EnvironmentProvider'
 import { useEnvironment } from './useEnvironment'

@@ -124,7 +124,7 @@ export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
 
 // themes
 export { createTheme } from './themes/createTheme'
-export { ThemeProvider } from './themes/ThemeProvider'
+export { ThemeProvider, ThemeContext } from './hooks/useTheme'
 export { createMediaQuery, defaultMediaQuery } from './themes/createMediaQuery'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
