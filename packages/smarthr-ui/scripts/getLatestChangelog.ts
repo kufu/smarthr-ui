@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import fs from 'fs'
 
 const stream = fs.createReadStream(`${import.meta.dirname}/../CHANGELOG.md`, {
   encoding: 'utf8',
