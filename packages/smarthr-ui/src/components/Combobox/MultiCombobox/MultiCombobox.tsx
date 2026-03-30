@@ -93,6 +93,11 @@ const ARROW_LEFT_KEY_REGEX = /^(Arrow)?Left$/
 const ARROW_RIGHT_KEY_REGEX = /^(Arrow)?Right/
 const ARROW_UP_AND_DOWN_KEY_REGEX = /^(Arrow)?(Up|Down)$/
 
+const EMPTY_INPUT_CHANGE_EVENT = {
+  currentTarget: { value: '' },
+  target: { value: '' },
+} as ChangeEvent<HTMLInputElement>
+
 const classNameGenerator = tv({
   slots: {
     wrapper: [
@@ -232,12 +237,15 @@ const ActualMultiCombobox = <T,>(
         if (matchedSelectedItem === undefined) {
           onSelect?.(selected)
           onChangeSelected?.(selectedItems.concat(selected))
+
+          // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+          onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         } else if (matchedSelectedItem.deletable !== false) {
           actualOnDelete(selected)
         }
       })
     },
-    [selectedItems, actualOnDelete, onChangeSelected, onSelect],
+    [selectedItems, actualOnDelete, onChangeSelected, onSelect, onChangeInput],
   )
 
   const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-syntax -- 202 icons are exported from FaIcon
 export * from './FaIcon'
 export { generateIcon, type Props as ComponentProps } from './generateIcon'
 

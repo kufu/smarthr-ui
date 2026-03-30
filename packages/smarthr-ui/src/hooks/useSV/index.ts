@@ -1,1 +1,1 @@
-export * from './useSV'
+export { defineSV, useSV, type VariantProps } from './useSV'

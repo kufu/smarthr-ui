@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [90.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v90.0.0...smarthr-ui-v90.0.1) (2026-03-26)
+
+
+### Bug Fixes
+
+* AppLauncherのmain要素をdiv要素に置き換える ([#6190](https://github.com/kufu/smarthr-ui/issues/6190)) ([7c942ac](https://github.com/kufu/smarthr-ui/commit/7c942acacaae96144c77a7d5f62392902ade8e15))
+* **FileViewer:** PDFのrotateが考慮されないのを修正した ([#6202](https://github.com/kufu/smarthr-ui/issues/6202)) ([6036368](https://github.com/kufu/smarthr-ui/commit/6036368e355378b3dccd361c0521ebe0db6e6a51))
+* SideNavItemAnchorをエクスポートに追加 ([#6199](https://github.com/kufu/smarthr-ui/issues/6199)) ([235a93b](https://github.com/kufu/smarthr-ui/commit/235a93b39c3f5ea13abca1ae4a48af9f1039febf))
+* Tableコンポーネントにuse client を追加してサーバーコンポーネント内でも利用できるように修正 ([#6193](https://github.com/kufu/smarthr-ui/issues/6193)) ([b121a04](https://github.com/kufu/smarthr-ui/commit/b121a04f1db24bedf49dfd3f718cc8fd9fed126b))
+
 ## [90.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v89.0.0...smarthr-ui-v90.0.0) (2026-03-18)
 
 

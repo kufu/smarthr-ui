@@ -43,7 +43,7 @@ const options = {
 } satisfies ComponentProps<typeof Document>['options']
 
 export const PDFViewer: FC<ViewerProps> = memo(
-  ({ scale, rotation, file, width, onLoad, onPassword, onLoadError }) => {
+  ({ scale, rotation, file, width, onLoad, onPDFLoaded, onPassword, onLoadError }) => {
     const [pdfNumPages, setPdfNumPages] = useState(1)
 
     const onDocumentLoadSuccess = useCallback<
@@ -53,17 +53,20 @@ export const PDFViewer: FC<ViewerProps> = memo(
     }, [])
 
     const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!onLoad) {
+      if (!onLoad && !onPDFLoaded) {
         return undefined
       }
 
       return (page) => {
+        if (onPDFLoaded && rotation === undefined) {
+          onPDFLoaded(page.rotate)
+        }
         // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (page.pageNumber === pdfNumPages) {
+        if (onLoad && page.pageNumber === pdfNumPages) {
           onLoad()
         }
       }
-    }, [pdfNumPages, onLoad])
+    }, [onLoad, onPDFLoaded, pdfNumPages, rotation])
 
     return (
       <>
