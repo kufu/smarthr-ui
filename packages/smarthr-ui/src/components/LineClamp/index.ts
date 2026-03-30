@@ -1,1 +1,1 @@
-export * from './LineClamp'
+export { LineClamp } from './LineClamp'

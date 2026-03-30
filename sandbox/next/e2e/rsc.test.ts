@@ -124,7 +124,6 @@ const DISABLED_COMPONENTS = [
   'FilterDropdown',             // 必須のイベントハンドラをもつため
   'FormDialog',                 // 必須のイベントハンドラをもつため
   'MessageDialog',              // 必須のイベントハンドラをもつため
-  'MessageDialogContent',       // 必須のイベントハンドラを持つため
   'RemoteTriggerActionDialog',  // 必須のイベントハンドラをもつため
   'RemoteTriggerFormDialog',    // 必須のイベントハンドラをもつため
   'SortDropdown',               // 必須のイベントハンドラをもつため

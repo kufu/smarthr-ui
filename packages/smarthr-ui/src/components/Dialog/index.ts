@@ -1,5 +1,5 @@
 export { Dialog } from './Dialog'
-export { MessageDialog, MessageDialogContent } from './MessageDialog'
+export { MessageDialog } from './MessageDialog'
 export { ActionDialog } from './ActionDialog'
 export { FormDialog } from './FormDialog'
 export { StepFormDialog, StepFormDialogItem } from './StepFormDialog'
@@ -8,4 +8,11 @@ export { DialogTrigger } from './DialogTrigger'
 export { DialogContent } from './DialogContent'
 export { DialogCloser } from './DialogCloser'
 export { ModelessDialog } from './ModelessDialog'
-export * from './RemoteDialogTrigger'
+export { FocusTrap } from './FocusTrap'
+export {
+  RemoteDialogTrigger,
+  RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
+  RemoteTriggerMessageDialog,
+  RemoteTriggerStepFormDialog,
+} from './RemoteDialogTrigger'

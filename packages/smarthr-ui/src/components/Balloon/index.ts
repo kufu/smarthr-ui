@@ -1,1 +1,1 @@
-export * from './Balloon'
+export { Balloon } from './Balloon'
