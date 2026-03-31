@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { paddingBlockClasses, paddingInlineClasses } from '../../themes/createPadding'
+import { paddingBlockClasses, paddingInlineClasses } from '../../themes'
 import { useSectionWrapper } from '../SectioningContent'
 
 import type { Gap } from '../../types'

@@ -5,7 +5,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useDevice } from '../../../hooks/useDevice'
 import { useEnvironment } from '../../../hooks/useEnvironment'
-import { paddingBlockClasses, paddingInlineClasses } from '../../../themes/createPadding'
+import { paddingBlockClasses, paddingInlineClasses } from '../../../themes'
 
 import type { Gap } from '../../../types'
 

@@ -1,8 +1,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { backgroundColorClasses } from '../../themes/createBackgroundColor'
-import { paddingBlockClasses, paddingInlineClasses } from '../../themes/createPadding'
+import { backgroundColorClasses, paddingBlockClasses, paddingInlineClasses } from '../../themes'
 
 import type { Gap } from '../../types'
 

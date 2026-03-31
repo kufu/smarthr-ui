@@ -1,5 +1,4 @@
-import { bgColors } from '../../../themes/createBackgroundColor'
-import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
+import { backgroundColorClasses, backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
@@ -59,7 +58,7 @@ export const BgColor: StoryObj<typeof BaseColumn> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {Object.keys(bgColors).map((bgColor) => (
+      {Object.keys(backgroundColorClasses).map((bgColor) => (
         <BaseColumn {...args} bgColor={bgColor as any} key={bgColor}>
           {bgColor}
         </BaseColumn>

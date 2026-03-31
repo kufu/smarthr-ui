@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
+import { backgroundColorValue } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviButton } from '../AppNaviButton'
 

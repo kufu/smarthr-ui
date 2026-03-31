@@ -1,4 +1,4 @@
-import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
+import { backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 

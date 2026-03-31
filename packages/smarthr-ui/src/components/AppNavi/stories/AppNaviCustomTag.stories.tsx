@@ -1,4 +1,4 @@
-import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
+import { backgroundColorValue } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 

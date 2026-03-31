@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
+import { backgroundColorValue } from '../../../themes'
 import { AppLauncher } from '../AppLauncher'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
