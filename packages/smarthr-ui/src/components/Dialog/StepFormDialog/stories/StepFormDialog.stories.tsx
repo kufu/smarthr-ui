@@ -8,6 +8,7 @@ import { RadioButton } from '../../../RadioButton'
 import { StepFormDialog } from '../StepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
 
+import type { StepItem } from '../StepFormDialogProvider'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
@@ -21,29 +22,40 @@ export default {
   subcomponents: { StepFormDialogItem },
   render: ({ onSubmit, onClickClose, children, ...rest }) => {
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof StepFormDialog>['onSubmit'] = (e, helpers) => {
-      if (onSubmit) {
-        onSubmit(e, helpers)
-      } else {
-        action('onSubmit')(e)
-      }
-      helpers.close()
-    }
     const handleClose = onClickClose ?? (() => setOpen(false))
 
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <StepFormDialog {...rest} onClickClose={handleClose} onSubmit={handleSubmit} isOpen={open}>
-          {children || 'ダイアログコンテンツ'}
+        <StepFormDialog
+          {...rest}
+          firstStep={{ id: 'step-1', stepNumber: 1 }}
+          onSubmit={(e, { currentStep, goto, close }) => {
+            action('onSubmit')(e)
+
+            if (currentStep.id === 'step-2') {
+              close()
+            } else {
+              goto({ id: 'step-2', stepNumber: 2 })
+            }
+          }}
+          onClickClose={handleClose}
+          isOpen={open}
+        >
+          <StepFormDialogItem id="step-1" stepNumber={1}>
+            ダイアログコンテンツ1
+          </StepFormDialogItem>
+          <StepFormDialogItem id="step-2" stepNumber={2}>
+            ダイアログコンテンツ2
+          </StepFormDialogItem>
         </StepFormDialog>
       </>
     )
   },
   args: {
     heading: 'フォームダイアログ',
-    stepLength: 1,
-    submitLabel: '保存',
+    stepLength: 2,
+    submitButton: '保存',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -72,14 +84,144 @@ export const HeadingSub: StoryObj<typeof StepFormDialog> = {
 export const StepLength: StoryObj<typeof StepFormDialog> = {
   name: 'stepLength',
   args: {
-    stepLength: 2,
+    stepLength: 3,
   },
 }
 
-export const SubmitLabel: StoryObj<typeof StepFormDialog> = {
-  name: 'submitLabel',
+export const SubmitButton: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton',
   args: {
-    submitLabel: '取り込む',
+    submitButton: '取り込む',
+  },
+}
+
+export const SubmitButtonWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton(StepItem毎に切り替える方法)',
+  args: {
+    submitButton: (currentStep: StepItem) => {
+      switch (currentStep.id) {
+        case 'step-1':
+          return 'step2へ'
+      }
+
+      return '完了'
+    },
+  },
+}
+
+export const SubmitButtonTheme: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.theme',
+  args: {
+    submitButton: {
+      text: '保存',
+      theme: 'danger',
+    },
+  },
+}
+
+export const SubmitButtonThemeWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.theme(StepItem毎に切り替える方法)',
+  args: {
+    submitButton: {
+      text: '保存',
+      theme: (currentStep: StepItem) => {
+        switch (currentStep.id) {
+          case 'step-1':
+            return 'danger'
+          case 'step-2':
+            return 'primary'
+        }
+
+        return 'secondary'
+      },
+    },
+  },
+}
+
+export const SubmitButtonDisabled: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.disabled',
+  args: {
+    submitButton: {
+      text: '保存',
+      disabled: true,
+    },
+  },
+}
+export const SubmitButtonHidden: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.hidden',
+  args: {
+    submitButton: {
+      text: '保存',
+      hidden: true,
+    },
+  },
+}
+export const SubmitButtonHiddenWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'submitButton.hidden(StepItem毎に切り替える方法)',
+  args: {
+    submitButton: {
+      text: '保存',
+      hidden: (currentStep: StepItem) => currentStep.id === 'step-2',
+    },
+  },
+}
+
+export const CloseButton: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton',
+  args: {
+    closeButton: '閉じる',
+  },
+}
+export const CloseButtonDisabled: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton.disabled',
+  args: {
+    closeButton: {
+      text: '閉じる',
+      disabled: true,
+    },
+  },
+}
+export const CloseButtonHidden: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton.hidden',
+  args: {
+    closeButton: {
+      text: '閉じる',
+      hidden: true,
+    },
+  },
+}
+export const CloseButtonHiddenWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'closeButton.hidden(StepItem毎に切り替える方法)',
+  args: {
+    closeButton: {
+      text: '閉じる',
+      hidden: (currentStep: StepItem) => currentStep.id === 'step-2',
+    },
+  },
+}
+
+export const BackButton: StoryObj<typeof StepFormDialog> = {
+  name: 'backButton',
+  args: {
+    backButton: 'back',
+  },
+}
+export const BackButtonHidden: StoryObj<typeof StepFormDialog> = {
+  name: 'backButton.hidden',
+  args: {
+    backButton: {
+      text: 'back',
+      hidden: true,
+    },
+  },
+}
+export const BackButtonHiddenWithFunction: StoryObj<typeof StepFormDialog> = {
+  name: 'backButton.hidden(StepItem毎に切り替える方法)',
+  args: {
+    backButton: {
+      text: 'back',
+      hidden: (currentStep: StepItem) => currentStep.id === 'step-2',
+    },
   },
 }
 
@@ -97,27 +239,6 @@ export const ContentPadding: StoryObj<typeof StepFormDialog> = {
       block: 1,
       inline: 1.5,
     },
-  },
-}
-
-export const ActionTheme: StoryObj<typeof StepFormDialog> = {
-  name: 'actionTheme',
-  args: {
-    actionTheme: 'danger',
-  },
-}
-
-export const ActionDisabled: StoryObj<typeof StepFormDialog> = {
-  name: 'actionDisabled',
-  args: {
-    actionDisabled: true,
-  },
-}
-
-export const CloseDisabled: StoryObj<typeof StepFormDialog> = {
-  name: 'closeDisabled',
-  args: {
-    closeDisabled: true,
   },
 }
 
