@@ -14,8 +14,8 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
+import { useTheme } from '../../hooks/useTheme'
 import { useIntl } from '../../intl'
-import { spacing } from '../../tailwind'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Text } from '../Text'
@@ -79,6 +79,7 @@ export const useListbox = <T,>({
   triggerRef,
   decorators,
 }: Props<T>) => {
+  const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
   const { localize } = useIntl()
@@ -259,10 +260,10 @@ export const useListbox = <T,>({
 
     return {
       width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-      maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
+      maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
       height: height ? `${height}px` : undefined,
     }
-  }, [listBoxRect, triggerWidth, dropdownWidth])
+  }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
   const classNames = useMemo(() => {
     const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()

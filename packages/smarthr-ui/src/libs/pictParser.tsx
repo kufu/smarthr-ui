@@ -4,7 +4,7 @@ type AnyObjectType = { [key: string]: any }
 
 export const pictParser = <T extends AnyObjectType>(
   pict: string,
-  formatter: (vs: { [key: string]: any }) => T,
+  formatter?: (vs: { [key: string]: any }) => T,
 ) => {
   const lines = pict.split('\n')
   const header = lines.shift()!.split('\t')
@@ -14,7 +14,11 @@ export const pictParser = <T extends AnyObjectType>(
     return prev
   }
 
-  return lines.map((line) => formatter(line.split('\t').reduce(reducer, {} as T)))
+  return lines.map((line) => {
+    const result = line.split('\t').reduce(reducer, {} as T)
+
+    return formatter ? formatter(result) : result
+  })
 }
 
 const NUM_REGEX = /^([0-9]+|[0-9]+\.[0-9]+)$/

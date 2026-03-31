@@ -19,16 +19,16 @@ type Props = AbstractProps & Omit<ComponentPropsWithRef<'span'>, keyof AbstractP
 const classNameGenerator = tv({
   slots: {
     base: 'smarthr-ui-LineClamp shr-relative',
-    clampedLine: 'shr-w-full',
+    clampedLine: 'shr-max-w-full',
     shadowElementWrapper:
-      'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0',
-    shadowElement: 'shr-absolute shr-left-0 shr-top-0 shr-w-full',
+      'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-max-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0',
+    shadowElement: 'shr-absolute shr-left-0 shr-top-0 shr-max-w-full',
   },
   variants: {
     maxLines: {
       1: {
         clampedLine:
-          'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+          'shr-inline-block shr-max-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       },
       2: {
         clampedLine: 'shr-line-clamp-[2]',

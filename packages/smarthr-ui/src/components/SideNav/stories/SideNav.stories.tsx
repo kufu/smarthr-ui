@@ -129,6 +129,28 @@ export const Size: StoryObj<typeof SideNav> = {
   ),
 }
 
+export const Rounded: StoryObj<typeof SideNav> = {
+  name: 'rounded',
+  render: (args) => (
+    <Stack>
+      {[undefined, true, 'all', 'top', 'right', 'bottom', 'left'].map((rounded, i) => (
+        <SideNav {...args} key={i} rounded={rounded as any}>
+          {_sideNavItems.map((item) => (
+            <SideNavItemButton
+              key={item.id + i}
+              id={item.id + i}
+              current={item.current}
+              prefix={item.prefix}
+            >
+              {item.children}
+            </SideNavItemButton>
+          ))}
+        </SideNav>
+      ))}
+    </Stack>
+  ),
+}
+
 export const OnClick: StoryObj<typeof SideNav> = {
   name: 'onClick',
   args: {
