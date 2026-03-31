@@ -12,7 +12,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { flatArrayToMap } from '../../libs/map'
 
@@ -27,7 +27,8 @@ type AbstractProps = PropsWithChildren<{
   defaultExpanded?: string[]
   /** トリガのクリックイベントを処理するハンドラ */
   onClick?: (expandedItems: string[]) => void
-}>
+}> &
+  VariantProps<typeof classNameGenerator>
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 export const AccordionPanelContext = createContext<{
@@ -44,8 +45,33 @@ export const AccordionPanelContext = createContext<{
   parentRef: null,
 })
 
+const ITEM_SELECTOR = '&>.smarthr-ui-AccordionPanel-item'
+const TRIGGER_SELECTOR = '.smarthr-ui-AccordionPanel-trigger'
+const ROUNDED = {
+  t_l: `[${ITEM_SELECTOR}:first-child_${TRIGGER_SELECTOR}]:shr-rounded-tl-l`,
+  t_r: `[${ITEM_SELECTOR}:first-child_${TRIGGER_SELECTOR}]:shr-rounded-tr-l`,
+  b_l: `[${ITEM_SELECTOR}:last-child_${TRIGGER_SELECTOR}:not([aria-expanded="true"])]:shr-rounded-bl-l`,
+  b_r: `[${ITEM_SELECTOR}:last-child_${TRIGGER_SELECTOR}:not([aria-expanded="true"])]:shr-rounded-br-l`,
+}
+
+const ROUNDED_ALL = [ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
+
 const classNameGenerator = tv({
   base: 'smarthr-ui-AccordionPanel',
+  variants: {
+    rounded: {
+      true: ROUNDED_ALL,
+      false: '',
+      all: ROUNDED_ALL,
+      top: [ROUNDED.t_l, ROUNDED.t_r],
+      right: [ROUNDED.t_r, ROUNDED.b_r],
+      bottom: [ROUNDED.b_l, ROUNDED.b_r],
+      left: [ROUNDED.t_l, ROUNDED.b_l],
+    },
+  },
+  defaultVariants: {
+    rounded: false,
+  },
 })
 
 export const AccordionPanel: FC<Props> = ({
@@ -54,11 +80,15 @@ export const AccordionPanel: FC<Props> = ({
   defaultExpanded = [],
   className,
   onClick: onClickProps,
+  rounded,
   ...rest
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ className, rounded }),
+    [rounded, className],
+  )
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
