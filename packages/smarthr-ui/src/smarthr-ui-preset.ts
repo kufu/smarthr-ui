@@ -69,6 +69,20 @@ defaultConfig.twMergeConfig = {
       },
     ],
     focus: ['focus-indicator', 'focus-indicator--outer', 'focus-indicator-none'],
+    'bg-color': [
+      {
+        bg: [
+          'background',
+          'column',
+          'base-grey',
+          'over-background',
+          'head',
+          'action-background',
+          'white',
+          validators.isArbitraryValue,
+        ],
+      },
+    ],
   },
 }
 
