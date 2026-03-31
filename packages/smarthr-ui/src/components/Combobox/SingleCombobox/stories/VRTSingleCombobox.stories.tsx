@@ -1,6 +1,6 @@
 import { userEvent, within } from 'storybook/test'
 
-import { backgroundColor } from '../../../../tailwind'
+import { backgroundColor } from '../../../../themes'
 import { Cluster, Stack } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 

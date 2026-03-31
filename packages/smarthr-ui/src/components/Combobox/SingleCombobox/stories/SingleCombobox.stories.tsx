@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
-import { backgroundColor } from '../../../../tailwind'
+import { backgroundColor } from '../../../../themes'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'

@@ -1,4 +1,4 @@
-import { backgroundColor } from '../../../tailwind'
+import { backgroundColor } from '../../../themes'
 import { AnchorButton, Button } from '../../Button'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 

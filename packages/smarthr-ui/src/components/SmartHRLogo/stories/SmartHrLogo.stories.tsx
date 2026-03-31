@@ -1,4 +1,4 @@
-import { backgroundColor } from '../../../tailwind'
+import { backgroundColor } from '../../../themes'
 import { Stack } from '../../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 
