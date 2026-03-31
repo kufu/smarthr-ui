@@ -1,4 +1,4 @@
-import { backgroundColor, bgColors } from '../../../themes'
+import { backgroundColor, bgColors } from '../../../tailwind'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'

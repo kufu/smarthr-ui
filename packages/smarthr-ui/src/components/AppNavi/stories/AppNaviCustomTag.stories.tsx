@@ -1,4 +1,4 @@
-import { backgroundColor } from '../../../themes'
+import { backgroundColor } from '../../../tailwind'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 

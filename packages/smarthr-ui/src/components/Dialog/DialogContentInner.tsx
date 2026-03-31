@@ -12,7 +12,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { dialogSize } from '../../themes/tailwind'
+import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'

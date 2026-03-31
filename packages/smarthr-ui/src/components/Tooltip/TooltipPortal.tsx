@@ -2,7 +2,7 @@ import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'r
 import { tv } from 'tailwind-variants'
 
 import { debounce } from '../../libs/debounce'
-import { spacing } from '../../themes'
+import { spacing } from '../../tailwind'
 import { Balloon } from '../Balloon'
 
 type Props = {

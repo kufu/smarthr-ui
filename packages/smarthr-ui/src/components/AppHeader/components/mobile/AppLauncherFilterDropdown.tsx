@@ -2,7 +2,7 @@ import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } f
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../themes'
+import { textColor } from '../../../../tailwind'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'

@@ -2,7 +2,7 @@ import { useContext } from 'react'
 
 import { ThemeContext } from '../themes/ThemeProvider'
 
-import type { CreatedTheme } from '../themes/createTheme'
+import type { CreatedTheme } from '../themes'
 
 export type Theme = CreatedTheme
 
