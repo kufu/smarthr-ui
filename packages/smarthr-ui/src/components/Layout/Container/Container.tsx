@@ -5,7 +5,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useDevice } from '../../../hooks/useDevice'
 import { useEnvironment } from '../../../hooks/useEnvironment'
-import { paddingBlockClasses, paddingInlineClasses } from '../../../themes'
+import { paddingBlock, paddingInline } from '../../../themes'
 
 import type { Gap } from '../../../types'
 
@@ -34,8 +34,8 @@ export const classNameGenerator = tv({
       WIDE: 'shr-max-w-col9',
       FULL: '',
     },
-    paddingBlock: paddingBlockClasses,
-    paddingInline: paddingInlineClasses,
+    paddingBlock,
+    paddingInline,
   },
   compoundVariants: [
     {

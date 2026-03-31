@@ -1,4 +1,4 @@
-export const dialogSizeClasses = {
+export const dialogSize = {
   XS: 'shr-w-col3',
   S: 'shr-w-col4',
   M: 'shr-w-col5',
@@ -9,9 +9,9 @@ export const dialogSizeClasses = {
 } as const
 
 export type CreatedSizeTheme = {
-  dialog: typeof dialogSizeClasses
+  dialog: typeof dialogSize
 }
 
 export const createSize = (): CreatedSizeTheme => ({
-  dialog: dialogSizeClasses,
+  dialog: dialogSize,
 })

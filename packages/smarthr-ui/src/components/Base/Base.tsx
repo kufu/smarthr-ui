@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { paddingBlockClasses, paddingInlineClasses } from '../../themes'
+import { paddingBlock, paddingInline } from '../../themes'
 import { useSectionWrapper } from '../SectioningContent'
 
 import type { Gap } from '../../types'
@@ -17,8 +17,8 @@ import type { Gap } from '../../types'
 export const baseClassNameGenerator = tv({
   base: 'smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
-    paddingBlock: paddingBlockClasses,
-    paddingInline: paddingInlineClasses,
+    paddingBlock,
+    paddingInline,
     radius: {
       s: 'shr-rounded-m',
       m: 'shr-rounded-l',
@@ -52,7 +52,7 @@ type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 type AbstractProps = PropsWithChildren<
   Omit<
     VariantProps<typeof baseClassNameGenerator>,
-    'paddingBlockClasses' | 'paddingInlineClasses' | 'overflowBlock' | 'overflowInline'
+    'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
   > & {
     /** 境界とコンテンツの間の余白 */
     padding?: Gap | SeparatePadding

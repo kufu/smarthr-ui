@@ -1,6 +1,6 @@
 import type { Gap } from '../types'
 
-export const paddingBlockClasses = {
+export const paddingBlock = {
   0: 'shr-py-0',
   0.25: 'shr-py-0.25',
   0.5: 'shr-py-0.5',
@@ -25,7 +25,7 @@ export const paddingBlockClasses = {
   X3L: 'shr-py-4',
 } as { [key in Gap]: string }
 
-export const paddingInlineClasses = {
+export const paddingInline = {
   0: 'shr-px-0',
   0.25: 'shr-px-0.25',
   0.5: 'shr-px-0.5',
@@ -51,11 +51,11 @@ export const paddingInlineClasses = {
 } as { [key in Gap]: string }
 
 export type CreatedPaddingTheme = {
-  paddingBlock: typeof paddingBlockClasses
-  paddingInline: typeof paddingInlineClasses
+  paddingBlock: typeof paddingBlock
+  paddingInline: typeof paddingInline
 }
 
 export const createPadding = (): CreatedPaddingTheme => ({
-  paddingBlock: paddingBlockClasses,
-  paddingInline: paddingInlineClasses,
+  paddingBlock,
+  paddingInline,
 })
