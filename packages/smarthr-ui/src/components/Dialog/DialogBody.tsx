@@ -1,7 +1,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { backgroundColorClasses, paddingBlockClasses, paddingInlineClasses } from '../../themes'
+import { bgColors, paddingBlockClasses, paddingInlineClasses } from '../../themes'
 
 import type { Gap } from '../../types'
 
@@ -17,7 +17,7 @@ const classNameGenerator = tv({
   variants: {
     paddingBlock: paddingBlockClasses,
     paddingInline: paddingInlineClasses,
-    contentBgColor: backgroundColorClasses,
+    contentBgColor: bgColors,
   },
 })
 

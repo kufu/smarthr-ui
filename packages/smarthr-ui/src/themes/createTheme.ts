@@ -52,7 +52,7 @@ type ThemeProperty = {
 
 export type CreatedTheme = {
   backgroundColor: CreatedBackgroundColorValueTheme
-  backgroundColorClasses: CreatedBackgroundColorTheme
+  bgColors: CreatedBackgroundColorTheme
   border: CreatedBorderTheme
   breakpoint: CreatedBreakpointTheme
   color: CreatedColorTheme
@@ -78,7 +78,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
 
   return {
     backgroundColor: createBackgroundColorValue(colorProperty),
-    backgroundColorClasses: createBackgroundColor(),
+    bgColors: createBackgroundColor(),
     border: createBorder(theme.border, colorProperty),
     breakpoint: createBreakpoint(theme.breakpoint),
     color: createColor(colorProperty),
