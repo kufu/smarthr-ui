@@ -1,4 +1,2 @@
-type: info, success, warning, error, sync
+status: info, success, warning, error, sync
 size: XXS, XS, S, M, L, XL, XXL
-right: false, true
-iconGap: 0.25, 0.5
