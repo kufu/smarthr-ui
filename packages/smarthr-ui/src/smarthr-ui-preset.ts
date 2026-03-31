@@ -50,6 +50,26 @@ defaultConfig.twMergeConfig = {
         text: ['2xs', 'xs', 'sm', 'base', 'lg', 'xl', '2xl', 'inherit'],
       },
     ],
+    'text-color': [
+      {
+        text: [
+          'main',
+          'black',
+          'white',
+          'grey',
+          'disabled',
+          'link',
+          'link-darken',
+          'danger',
+          'warning-yellow',
+          'brand',
+          'green',
+          'color-inherit',
+          'transparent',
+          validators.isArbitraryValue,
+        ],
+      },
+    ],
     lineHeight: [
       {
         leading: ['none', 'tight', 'normal', 'loose', '[0]'],
