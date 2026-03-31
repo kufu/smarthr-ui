@@ -29,7 +29,7 @@ type AbstractProps = {
   /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
   /** 背景色。readOnly を下地の上に載せる場合に使う */
-  bgColor?: keyof typeof bgColors
+  bgColor?: keyof typeof backgroundColor
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
    */
@@ -37,7 +37,7 @@ type AbstractProps = {
 }
 type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps | 'onWheel'>
 
-export const bgColors = {
+export const backgroundColor = {
   BACKGROUND: 'background',
   COLUMN: 'column',
   BASE_GREY: 'base-grey',
@@ -154,7 +154,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       [disabled, readOnly, className],
     )
     const wrapperStyle = useMemo(() => {
-      const color = bgColor ? theme.backgroundColor[bgColors[bgColor]] : undefined
+      const color = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
       const maxWidth = typeof width === 'number' ? `${width}px` : width
 
       return {
