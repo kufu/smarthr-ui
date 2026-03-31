@@ -350,11 +350,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     useGlobalKeyDown(handleKeyDown)
 
     const caretIconColor = useMemo(() => {
-      const { black, disabled: disabledColor, grey } = theme.textColor
-      if (isInputFocused || isCalendarShown) return black
-      if (disabled) return disabledColor
+      if (isInputFocused || isCalendarShown) return theme.textColor.black
+      if (disabled) return theme.textColor.disabled
 
-      return grey
+      return theme.textColor.grey
     }, [isInputFocused, isCalendarShown, disabled, theme.textColor])
 
     const onDelegateKeyDown = useMemo(() => {

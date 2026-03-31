@@ -578,11 +578,10 @@ const MemoizedCaretDown = memo<{
 }>(({ className, iconStyle, disabled, isFocused }) => {
   const theme = useTheme()
   const caretIconColor = useMemo(() => {
-    const { black, disabled: disabledColor, grey } = theme.textColor
-    if (isFocused) return black
-    if (disabled) return disabledColor
+    if (isFocused) return theme.textColor.black
+    if (disabled) return theme.textColor.disabled
 
-    return grey
+    return theme.textColor.grey
   }, [disabled, isFocused, theme.textColor])
 
   return (
