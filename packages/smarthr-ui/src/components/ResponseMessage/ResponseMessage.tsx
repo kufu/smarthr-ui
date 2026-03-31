@@ -11,13 +11,9 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
-import type { AbstractSize, CharRelativeSize } from '../../themes'
-
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
   status?: keyof typeof STATUS_ICON_MAPPER
-  iconGap?: CharRelativeSize | AbstractSize
-  right?: boolean
 }
 
 export const classNameGenerator = tv({
