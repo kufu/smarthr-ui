@@ -26,6 +26,7 @@ import {
   createSpacing,
   createSpacingByChar,
 } from './createSpacing'
+import { type CreatedTextColorTheme, createTextColor } from './createTextColor'
 import { type CreatedZindexTheme, type ZIndexProperty, createZIndex } from './createZIndex'
 
 type ThemeProperty = {
@@ -55,6 +56,7 @@ export type CreatedTheme = {
   space: CreatedSpacingByCharTheme
   spacing: CreatedSpacingTheme
   spacingByChar: CreatedSpacingByCharTheme
+  textColor: CreatedTextColorTheme
   zIndex: CreatedZindexTheme
 }
 
@@ -76,6 +78,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
     space: spacingByChar,
     spacing: createSpacing(baseSize),
     spacingByChar,
+    textColor: createTextColor(colorProperty),
     zIndex: createZIndex(theme.zIndex),
   }
 }
