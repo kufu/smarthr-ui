@@ -13,7 +13,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { backgroundColor } from '../../tailwind'
+import { useTheme } from '../../hooks/useTheme'
 
 type AbstractProps = {
   /** input 要素の `type` 値 */
@@ -107,6 +107,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     },
     ref,
   ) => {
+    const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
@@ -153,9 +154,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       [disabled, readOnly, className],
     )
     const wrapperStyle = useMemo(() => {
-      const color = bgColor
-        ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
-        : undefined
+      const color = bgColor ? theme.backgroundColor[bgColors[bgColor]] : undefined
       const maxWidth = typeof width === 'number' ? `${width}px` : width
 
       return {
@@ -164,7 +163,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         maxWidth,
         width: maxWidth ? '100%' : undefined,
       }
-    }, [width, bgColor])
+    }, [width, bgColor, theme.backgroundColor])
 
     const innerClassNames = useMemo(() => {
       const { input, affix } = innerClassNameGenerator({ disabled })

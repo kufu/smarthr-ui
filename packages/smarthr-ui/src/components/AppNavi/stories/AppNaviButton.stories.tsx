@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColor } from '../../../tailwind'
+import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviButton } from '../AppNaviButton'
 
@@ -27,7 +27,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
+      values: [{ name: 'light', value: backgroundColorValue.white }],
     },
     chromatic: { disableSnapshot: true },
   },

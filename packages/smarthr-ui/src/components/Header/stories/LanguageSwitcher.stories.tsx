@@ -1,7 +1,7 @@
 import { action } from 'storybook/actions'
 
 import { localeMap } from '../../../intl'
-import { backgroundColor } from '../../../tailwind'
+import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -15,7 +15,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.brand }],
+      values: [{ name: 'light', value: backgroundColorValue.brand }],
     },
     chromatic: { disableSnapshot: true },
   },
@@ -65,7 +65,7 @@ export const Invert: StoryObj<typeof LanguageSwitcher> = {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.background }],
+      values: [{ name: 'light', value: backgroundColorValue.background }],
     },
   },
 }
@@ -78,7 +78,7 @@ export const EnableNew: StoryObj<typeof LanguageSwitcher> = {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
+      values: [{ name: 'light', value: backgroundColorValue.white }],
     },
   },
 }

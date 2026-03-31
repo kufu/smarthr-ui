@@ -1,4 +1,5 @@
-import { backgroundColor, bgColors } from '../../../tailwind'
+import { bgColors } from '../../../themes/createBackgroundColor'
+import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
@@ -27,7 +28,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
+      values: [{ name: 'light', value: backgroundColorValue.white }],
     },
     chromatic: { disableSnapshot: true },
   },

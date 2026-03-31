@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColor } from '../../../tailwind'
+import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
 import { AppLauncher } from '../AppLauncher'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -65,7 +65,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.brand }],
+      values: [{ name: 'light', value: backgroundColorValue.brand }],
     },
     chromatic: { disableSnapshot: true },
   },
@@ -87,7 +87,7 @@ export const EnableNew: StoryObj<typeof AppLauncher> = {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
+      values: [{ name: 'light', value: backgroundColorValue.white }],
     },
   },
 }

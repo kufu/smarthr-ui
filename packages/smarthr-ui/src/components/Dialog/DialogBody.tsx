@@ -1,7 +1,8 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { bgColors, paddingBlock, paddingInline } from '../../tailwind'
+import { backgroundColorClasses } from '../../themes/createBackgroundColor'
+import { paddingBlockClasses, paddingInlineClasses } from '../../themes/createPadding'
 
 import type { Gap } from '../../types'
 
@@ -15,9 +16,9 @@ export type Props = PropsWithChildren<
 const classNameGenerator = tv({
   base: ['smarthr-ui-Dialog-body', 'shr-flex-auto shr-overflow-auto'],
   variants: {
-    paddingBlock,
-    paddingInline,
-    contentBgColor: bgColors,
+    paddingBlock: paddingBlockClasses,
+    paddingInline: paddingInlineClasses,
+    contentBgColor: backgroundColorClasses,
   },
 })
 

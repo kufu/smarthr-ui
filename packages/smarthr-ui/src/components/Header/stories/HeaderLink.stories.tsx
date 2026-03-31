@@ -1,4 +1,4 @@
-import { backgroundColor } from '../../../tailwind'
+import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { HeaderLink } from '../HeaderLink'
 
@@ -13,7 +13,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.brand }],
+      values: [{ name: 'light', value: backgroundColorValue.brand }],
     },
     chromatic: { disableSnapshot: true },
   },
@@ -39,7 +39,7 @@ export const EnableNew: StoryObj<typeof HeaderLink> = {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
+      values: [{ name: 'light', value: backgroundColorValue.white }],
     },
   },
 }

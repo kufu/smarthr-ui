@@ -1,8 +1,8 @@
 import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/useTheme'
 import { debounce } from '../../libs/debounce'
-import { spacing } from '../../tailwind'
 import { Balloon } from '../Balloon'
 
 type Props = {
@@ -27,6 +27,7 @@ type HorizontalType = 'left' | 'center' | 'right'
 type VerticalType = 'top' | 'middle' | 'bottom'
 
 export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIcon }) => {
+  const theme = useTheme()
   const portalRef = useRef<HTMLDivElement>(null)
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
@@ -41,7 +42,7 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
 
     const action = () => {
       const vertical = calculateVertical(portal.offsetHeight, parentRect)
-      const horizontal = calculateHorizontal(portal.offsetWidth, parentRect)
+      const horizontal = calculateHorizontal(portal.offsetWidth, parentRect, theme)
 
       setStyle({
         insetBlockStart: vertical.insetBlockStart,
@@ -62,7 +63,7 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
     return () => {
       window.removeEventListener('resize', debouncedAction)
     }
-  }, [parentRect])
+  }, [parentRect, theme])
 
   const classNames = useMemo(() => {
     const { container, balloon, balloonText } = classNameGenerator()
@@ -144,6 +145,7 @@ type ReturnCalculateHorizontalType = {
 const calculateHorizontal = (
   portalWidth: number,
   parentRect: DOMRect,
+  theme: ReturnType<typeof useTheme>,
 ): ReturnCalculateHorizontalType => {
   const triggerAlignCenter = parentRect.left + parentRect.width / 2
   const portalHalfWidth = portalWidth / 2
@@ -158,7 +160,7 @@ const calculateHorizontal = (
     return {
       insetInlineStart,
       insetInlineEnd: undefined,
-      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${theme.spacingByChar(0.5)})`,
       alignment: 'center',
     }
   }
@@ -170,7 +172,7 @@ const calculateHorizontal = (
     return {
       insetInlineStart,
       insetInlineEnd: undefined,
-      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${spacing[0.5]})`,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${theme.spacingByChar(0.5)})`,
       alignment: 'left',
     }
   }
@@ -181,7 +183,7 @@ const calculateHorizontal = (
   return {
     insetInlineStart: undefined,
     insetInlineEnd,
-    maxWidth: `calc(100% - ${spacing[0.5]} - max(${insetInlineEnd}, 0px))`,
+    maxWidth: `calc(100% - ${theme.spacingByChar(0.5)} - max(${insetInlineEnd}, 0px))`,
     alignment: 'right',
   }
 }

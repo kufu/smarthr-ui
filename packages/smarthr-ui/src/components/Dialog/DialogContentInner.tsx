@@ -12,7 +12,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { dialogSize } from '../../tailwind'
+import { dialogSizeClasses } from '../../themes/createSize'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'
@@ -78,13 +78,13 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      XS: { layout: dialogSize.XS },
-      S: { layout: dialogSize.S },
-      M: { layout: dialogSize.M },
-      L: { layout: dialogSize.L },
-      XL: { layout: dialogSize.XL },
-      XXL: { layout: dialogSize.XXL },
-      FULL: { layout: dialogSize.FULL },
+      XS: { layout: dialogSizeClasses.XS },
+      S: { layout: dialogSizeClasses.S },
+      M: { layout: dialogSizeClasses.M },
+      L: { layout: dialogSizeClasses.L },
+      XL: { layout: dialogSizeClasses.XL },
+      XXL: { layout: dialogSizeClasses.XXL },
+      FULL: { layout: dialogSizeClasses.FULL },
     },
   },
 })

@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColor } from '../../../tailwind'
+import { backgroundColorValue } from '../../../themes/createBackgroundColorValue'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { CurrencyInput } from '../CurrencyInput'
@@ -122,7 +122,7 @@ export const ReadOnly: StoryObj<typeof Input> = {
     value: '読み取り専用',
   },
   parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
+    backgrounds: { values: [{ name: 'light', value: backgroundColorValue.white }] },
   },
 }
 
