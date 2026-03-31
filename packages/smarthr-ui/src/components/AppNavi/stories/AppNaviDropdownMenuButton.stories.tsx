@@ -1,4 +1,4 @@
-import { backgroundColorValue } from '../../../themes'
+import { backgroundColor } from '../../../themes'
 import { AnchorButton, Button } from '../../Button'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
@@ -18,7 +18,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColorValue.white }],
+      values: [{ name: 'light', value: backgroundColor.white }],
     },
     chromatic: { disableSnapshot: true },
   },

@@ -1,4 +1,4 @@
-import { backgroundColorValue } from '../../../themes'
+import { backgroundColor } from '../../../themes'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviAnchor } from '../AppNaviAnchor'
 
@@ -48,7 +48,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColorValue.white }],
+      values: [{ name: 'light', value: backgroundColor.white }],
     },
     chromatic: { disableSnapshot: true },
   },

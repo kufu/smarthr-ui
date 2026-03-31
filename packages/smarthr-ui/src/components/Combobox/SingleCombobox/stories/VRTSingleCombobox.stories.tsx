@@ -1,6 +1,6 @@
 import { userEvent, within } from 'storybook/test'
 
-import { backgroundColorValue } from '../../../../themes'
+import { backgroundColor } from '../../../../themes'
 import { Cluster, Stack } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 
@@ -148,7 +148,7 @@ export default {
 
 export const VRT: StoryObj<typeof SingleCombobox> = {
   parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColorValue.white }] },
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }
 
@@ -156,6 +156,6 @@ export const VRTForcedColors: StoryObj<typeof SingleCombobox> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
-    backgrounds: { values: [{ name: 'light', value: backgroundColorValue.white }] },
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }

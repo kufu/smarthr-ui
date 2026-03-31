@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
-import { backgroundColorValue } from '../../../../themes'
+import { backgroundColor } from '../../../../themes'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
@@ -171,7 +171,7 @@ export const ReadOnly: StoryObj<typeof SingleCombobox> = {
     readOnly: true,
   },
   parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColorValue.white }] },
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }
 

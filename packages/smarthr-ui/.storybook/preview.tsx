@@ -12,7 +12,7 @@ import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 
 import '../src/styles/index.css'
 import { EnvironmentProvider, IntlProvider, locales } from '../src'
-import { backgroundColorValue } from '../src/themes'
+import { backgroundColor } from '../src/themes'
 
 import type { Preview } from '@storybook/react-vite'
 
@@ -69,7 +69,7 @@ const preview: Preview = {
     },
     backgrounds: {
       default: 'light',
-      values: [{ name: 'light', value: backgroundColorValue.background }],
+      values: [{ name: 'light', value: backgroundColor.background }],
     },
   },
   globalTypes: {

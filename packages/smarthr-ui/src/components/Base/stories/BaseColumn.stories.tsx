@@ -1,4 +1,4 @@
-import { backgroundColorClasses, backgroundColorValue } from '../../../themes'
+import { backgroundColor, backgroundColorClasses } from '../../../themes'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
@@ -27,7 +27,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColorValue.white }],
+      values: [{ name: 'light', value: backgroundColor.white }],
     },
     chromatic: { disableSnapshot: true },
   },

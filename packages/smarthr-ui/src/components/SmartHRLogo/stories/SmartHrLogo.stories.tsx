@@ -1,4 +1,4 @@
-import { backgroundColorValue } from '../../../themes'
+import { backgroundColor } from '../../../themes'
 import { Stack } from '../../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 
@@ -11,7 +11,7 @@ export default {
   args: {},
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColorValue.brand }],
+      values: [{ name: 'light', value: backgroundColor.brand }],
     },
     chromatic: { disableSnapshot: true },
   },
@@ -51,7 +51,7 @@ export const Fill: StoryObj<typeof SmartHRLogo> = {
   ),
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColorValue.background }],
+      values: [{ name: 'light', value: backgroundColor.background }],
     },
   },
 }
