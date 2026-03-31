@@ -45,13 +45,11 @@ export const AccordionPanelContext = createContext<{
   parentRef: null,
 })
 
-const ITEM_SELECTOR = '&>.smarthr-ui-AccordionPanel-item'
-const TRIGGER_SELECTOR = '.smarthr-ui-AccordionPanel-trigger'
 const ROUNDED = {
-  t_l: `[${ITEM_SELECTOR}:first-child_${TRIGGER_SELECTOR}]:shr-rounded-tl-l`,
-  t_r: `[${ITEM_SELECTOR}:first-child_${TRIGGER_SELECTOR}]:shr-rounded-tr-l`,
-  b_l: `[${ITEM_SELECTOR}:last-child_${TRIGGER_SELECTOR}:not([aria-expanded="true"])]:shr-rounded-bl-l`,
-  b_r: `[${ITEM_SELECTOR}:last-child_${TRIGGER_SELECTOR}:not([aria-expanded="true"])]:shr-rounded-br-l`,
+  t_l: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tl-l',
+  t_r: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tr-l',
+  b_l: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-bl-l',
+  b_r: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-br-l',
 }
 
 const ROUNDED_ALL = [ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
