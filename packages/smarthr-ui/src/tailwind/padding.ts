@@ -49,13 +49,3 @@ export const paddingInline = {
   XXL: 'shr-px-3.5',
   X3L: 'shr-px-4',
 } as { [key in Gap]: string }
-
-export type CreatedPaddingTheme = {
-  paddingBlock: typeof paddingBlock
-  paddingInline: typeof paddingInline
-}
-
-export const createPadding = (): CreatedPaddingTheme => ({
-  paddingBlock,
-  paddingInline,
-})

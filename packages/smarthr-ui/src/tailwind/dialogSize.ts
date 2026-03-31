@@ -7,11 +7,3 @@ export const dialogSize = {
   XXL: 'shr-w-col8',
   FULL: 'shr-w-full',
 } as const
-
-export type CreatedSizeTheme = {
-  dialog: typeof dialogSize
-}
-
-export const createSize = (): CreatedSizeTheme => ({
-  dialog: dialogSize,
-})

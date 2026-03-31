@@ -1,4 +1,4 @@
-export const bgColors = {
+export const backgroundColor = {
   BACKGROUND: 'shr-bg-background',
   COLUMN: 'shr-bg-column',
   BASE_GREY: 'shr-bg-base-grey',
@@ -13,7 +13,3 @@ export const bgColors = {
   GREY_9: 'shr-bg-[theme(colors.grey.9)]',
   GREY_20: 'shr-bg-[theme(colors.grey.20)]',
 } as const
-
-export type CreatedBackgroundColorTheme = typeof bgColors
-
-export const createBackgroundColor = (): CreatedBackgroundColorTheme => bgColors

@@ -1,4 +1,3 @@
-import { type CreatedBackgroundColorTheme, createBackgroundColor } from './createBackgroundColor'
 import {
   type CreatedBackgroundColorValueTheme,
   createBackgroundColorValue,
@@ -22,10 +21,8 @@ import {
   type MediaQueryProperty,
   createMediaQuery,
 } from './createMediaQuery'
-import { type CreatedPaddingTheme, createPadding } from './createPadding'
 import { type CreatedRadiusTheme, type RadiusProperty, createRadius } from './createRadius'
 import { type CreatedShadowTheme, type ShadowProperty, createShadow } from './createShadow'
-import { type CreatedSizeTheme, createSize } from './createSize'
 import {
   type CreatedSpacingByCharTheme,
   type CreatedSpacingTheme,
@@ -52,7 +49,6 @@ type ThemeProperty = {
 
 export type CreatedTheme = {
   backgroundColor: CreatedBackgroundColorValueTheme
-  bgColors: CreatedBackgroundColorTheme
   border: CreatedBorderTheme
   breakpoint: CreatedBreakpointTheme
   color: CreatedColorTheme
@@ -60,10 +56,8 @@ export type CreatedTheme = {
   interaction: CreatedInteractionTheme
   leading: CreatedLeading
   mediaQuery: CreatedMediaQueryTheme
-  padding: CreatedPaddingTheme
   radius: CreatedRadiusTheme
   shadow: CreatedShadowTheme
-  size: CreatedSizeTheme
   space: CreatedSpacingByCharTheme
   spacing: CreatedSpacingTheme
   spacingByChar: CreatedSpacingByCharTheme
@@ -78,7 +72,6 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
 
   return {
     backgroundColor: createBackgroundColorValue(colorProperty),
-    bgColors: createBackgroundColor(),
     border: createBorder(theme.border, colorProperty),
     breakpoint: createBreakpoint(theme.breakpoint),
     color: createColor(colorProperty),
@@ -86,10 +79,8 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
     interaction: createInteraction(theme.interaction),
     leading: createLeading(theme.leading),
     mediaQuery: createMediaQuery(theme.mediaQuery),
-    padding: createPadding(),
     radius: createRadius(theme.radius),
     shadow: createShadow(theme.shadow, colorProperty),
-    size: createSize(),
     space: spacingByChar,
     spacing: createSpacing(baseSize),
     spacingByChar,
