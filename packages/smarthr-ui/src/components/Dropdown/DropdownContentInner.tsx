@@ -64,10 +64,11 @@ export const DropdownContentInner: FC<Props> = ({
   )
 
   const style = useMemo(() => {
+    const defaultMargin = theme.spacingByChar(0.5)
     const leftMargin =
-      contentBox.left === undefined ? theme.spacingByChar(0.5) : `max(${contentBox.left}, 0px)`
+      contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
     const rightMargin =
-      contentBox.right === undefined ? theme.spacingByChar(0.5) : `max(${contentBox.right}, 0px)`
+      contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
     const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
     return {

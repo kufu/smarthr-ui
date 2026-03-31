@@ -149,6 +149,7 @@ const calculateHorizontal = (
 ): ReturnCalculateHorizontalType => {
   const triggerAlignCenter = parentRect.left + parentRect.width / 2
   const portalHalfWidth = portalWidth / 2
+  const edgeSpacing = theme.spacingByChar(0.5)
 
   // トリガを中心に左右に十分な余白がある場合
   if (
@@ -160,7 +161,7 @@ const calculateHorizontal = (
     return {
       insetInlineStart,
       insetInlineEnd: undefined,
-      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${theme.spacingByChar(0.5)})`,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${edgeSpacing})`,
       alignment: 'center',
     }
   }
@@ -172,7 +173,7 @@ const calculateHorizontal = (
     return {
       insetInlineStart,
       insetInlineEnd: undefined,
-      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${theme.spacingByChar(0.5)})`,
+      maxWidth: `calc(100% - max(${insetInlineStart}, 0px) - ${edgeSpacing})`,
       alignment: 'left',
     }
   }
@@ -183,7 +184,7 @@ const calculateHorizontal = (
   return {
     insetInlineStart: undefined,
     insetInlineEnd,
-    maxWidth: `calc(100% - ${theme.spacingByChar(0.5)} - max(${insetInlineEnd}, 0px))`,
+    maxWidth: `calc(100% - ${edgeSpacing} - max(${insetInlineEnd}, 0px))`,
     alignment: 'right',
   }
 }
