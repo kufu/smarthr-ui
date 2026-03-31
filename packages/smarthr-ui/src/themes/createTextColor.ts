@@ -28,38 +28,28 @@ export type TextColorProperty = Partial<TextColorPalette>
 export type CreatedTextColorTheme = TextColorPalette
 
 export const createTextColor = (userColor?: ColorProperty): CreatedTextColorTheme => {
-  const textColor = { ...defaultTextColor }
-
   if (!userColor) {
-    return textColor
+    return defaultTextColor
   }
 
-  // userColorに基づいて対応するtextColorを更新
-  const overrides: Partial<TextColorPalette> = {}
+  // userColorでマージされた色パレットを取得
+  const color = merge(defaultColor, userColor)
 
-  if (userColor.MAIN) {
-    overrides.main = userColor.MAIN
+  // 更新された色からテキスト色を再生成
+  return {
+    main: color.MAIN,
+    black: color.TEXT_BLACK,
+    white: color.TEXT_WHITE,
+    'white-darken': darken(0.05, color.TEXT_WHITE),
+    disabled: color.TEXT_DISABLED,
+    link: color.TEXT_LINK,
+    'link-darken': darken(0.062, color.TEXT_LINK),
+    grey: color.TEXT_GREY,
+    danger: color.DANGER,
+    'warning-yellow': color.WARNING_YELLOW,
+    brand: color.BRAND,
+    green: '#0f7f85',
+    'color-inherit': 'inherit' as const,
+    transparent: 'transparent' as const,
   }
-  if (userColor.TEXT_BLACK) {
-    overrides.black = userColor.TEXT_BLACK
-  }
-  if (userColor.TEXT_WHITE) {
-    overrides.white = userColor.TEXT_WHITE
-    overrides['white-darken'] = darken(0.05, userColor.TEXT_WHITE)
-  }
-  if (userColor.TEXT_DISABLED) {
-    overrides.disabled = userColor.TEXT_DISABLED
-  }
-  if (userColor.TEXT_LINK) {
-    overrides.link = userColor.TEXT_LINK
-    overrides['link-darken'] = darken(0.062, userColor.TEXT_LINK)
-  }
-  if (userColor.TEXT_GREY) {
-    overrides.grey = userColor.TEXT_GREY
-  }
-  if (userColor.DANGER) {
-    overrides.danger = userColor.DANGER
-  }
-
-  return merge(textColor, overrides)
 }

@@ -41,72 +41,44 @@ type BackgroundColorPalette = typeof defaultBackgroundColor
 export type CreatedBackgroundColorTheme = BackgroundColorPalette
 
 export const createBackgroundColor = (userColor?: ColorProperty): CreatedBackgroundColorTheme => {
-  const backgroundColor = { ...defaultBackgroundColor }
-
   if (!userColor) {
-    return backgroundColor
+    return defaultBackgroundColor
   }
 
-  // userColorに基づいて対応するbackgroundColorを更新
-  const overrides: Partial<BackgroundColorPalette> = {}
+  // userColorでマージされた色パレットを取得
+  const color = merge(defaultColor, userColor)
 
-  if (userColor.MAIN) {
-    overrides.main = userColor.MAIN
-    overrides['main-darken'] = darken(0.05, userColor.MAIN)
-  }
-  if (userColor.WHITE) {
-    overrides.white = userColor.WHITE
-    overrides['white-darken'] = darken(0.05, userColor.WHITE)
-  }
-  if (userColor.GREY_100) {
-    overrides.black = userColor.GREY_100
-  }
-  if (userColor.BACKGROUND) {
-    overrides.background = userColor.BACKGROUND
-  }
-  if (userColor.GREY_20) {
-    overrides.border = userColor.GREY_20
-  }
-  if (userColor.BRAND) {
-    overrides.brand = userColor.BRAND
-  }
-  if (userColor.COLUMN) {
-    overrides.column = userColor.COLUMN
-    overrides['column-darken'] = darken(0.05, userColor.COLUMN)
-  }
-  if (userColor.BASE_GREY) {
-    overrides['base-grey'] = userColor.BASE_GREY
-  }
-  if (userColor.OVER_BACKGROUND) {
-    overrides['over-background'] = userColor.OVER_BACKGROUND
-  }
-  if (userColor.HEAD) {
-    overrides.head = userColor.HEAD
-    overrides['head-darken'] = darken(0.05, userColor.HEAD)
-  }
-  if (userColor.ACTION_BACKGROUND) {
-    overrides['action-background'] = userColor.ACTION_BACKGROUND
-  }
-  if (userColor.DANGER) {
-    overrides.danger = userColor.DANGER
-    overrides['danger-darken'] = darken(0.05, userColor.DANGER)
-  }
-  if (userColor.WARNING_YELLOW) {
-    overrides['warning-yellow'] = userColor.WARNING_YELLOW
-    overrides['warning-yellow-darken'] = darken(0.05, userColor.WARNING_YELLOW)
-  }
-  if (userColor.OVERLAY) {
-    overrides.overlay = userColor.OVERLAY
-  }
-  if (userColor.SCRIM) {
-    overrides.scrim = userColor.SCRIM
-  }
-  if (userColor.GREY_9) {
-    overrides.grey = {
-      9: userColor.GREY_9,
-      '9-darken': darken(0.05, userColor.GREY_9),
-    }
+  // 更新された色から背景色を再生成
+  const backgroundColor = {
+    black: color.GREY_100,
+    white: color.WHITE,
+    'white-darken': darken(0.05, color.WHITE),
+    background: color.BACKGROUND,
+    border: color.GREY_20,
+    brand: color.BRAND,
+    column: color.COLUMN,
+    'column-darken': darken(0.05, color.COLUMN),
+    'base-grey': color.BASE_GREY,
+    'over-background': color.OVER_BACKGROUND,
+    head: color.HEAD,
+    'head-darken': darken(0.05, color.HEAD),
+    'action-background': color.ACTION_BACKGROUND,
+    main: color.MAIN,
+    'main-darken': darken(0.05, color.MAIN),
+    danger: color.DANGER,
+    'danger-darken': darken(0.05, color.DANGER),
+    'warning-yellow': color.WARNING_YELLOW,
+    'warning-yellow-darken': darken(0.05, color.WARNING_YELLOW),
+    overlay: color.OVERLAY,
+    scrim: color.SCRIM,
+    green: '#0f7f85',
+    grey: {
+      9: color.GREY_9,
+      '9-darken': darken(0.05, color.GREY_9),
+    },
+    inherit: 'inherit' as const,
+    transparent: 'transparent' as const,
   }
 
-  return merge(backgroundColor, overrides)
+  return backgroundColor
 }
