@@ -1,7 +1,7 @@
 import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { colors, fontSize, textColor } from '../../themes'
+import { colors, fontSize, textColor } from '../../tailwind'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { FontSizes } from '../../themes/createFontSize'

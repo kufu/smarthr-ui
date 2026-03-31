@@ -10,7 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { spacing } from '../../themes'
+import { spacing } from '../../tailwind'
 
 import { DropdownCloser } from './DropdownCloser'
 import { type ContentBoxStyle, type Rect, getContentBoxStyle } from './dropdownHelper'
