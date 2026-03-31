@@ -38,11 +38,9 @@ const semanticBackgroundColorTokens = {
 export const defaultBackgroundColor = semanticBackgroundColorTokens
 
 type BackgroundColorPalette = typeof defaultBackgroundColor
-export type CreatedBackgroundColorValueTheme = BackgroundColorPalette
+export type CreatedBackgroundColorTheme = BackgroundColorPalette
 
-export const createBackgroundColorValue = (
-  userColor?: ColorProperty,
-): CreatedBackgroundColorValueTheme => {
+export const createBackgroundColor = (userColor?: ColorProperty): CreatedBackgroundColorTheme => {
   const backgroundColor = { ...defaultBackgroundColor }
 
   if (!userColor) {

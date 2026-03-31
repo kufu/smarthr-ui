@@ -1,7 +1,4 @@
-import {
-  type CreatedBackgroundColorValueTheme,
-  createBackgroundColorValue,
-} from './createBackgroundColorValue'
+import { type CreatedBackgroundColorTheme, createBackgroundColor } from './createBackgroundColor'
 import { type BorderProperty, type CreatedBorderTheme, createBorder } from './createBorder'
 import {
   type BreakpointProperty,
@@ -48,7 +45,7 @@ type ThemeProperty = {
 }
 
 export type CreatedTheme = {
-  backgroundColor: CreatedBackgroundColorValueTheme
+  backgroundColor: CreatedBackgroundColorTheme
   border: CreatedBorderTheme
   breakpoint: CreatedBreakpointTheme
   color: CreatedColorTheme
@@ -71,7 +68,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
   const spacingByChar = createSpacingByChar(baseSize)
 
   return {
-    backgroundColor: createBackgroundColorValue(colorProperty),
+    backgroundColor: createBackgroundColor(colorProperty),
     border: createBorder(theme.border, colorProperty),
     breakpoint: createBreakpoint(theme.breakpoint),
     color: createColor(colorProperty),

@@ -1,5 +1,5 @@
 import { backgroundColor } from '../../../tailwind'
-import { backgroundColor as backgroundColorValue } from '../../../themes'
+import { defaultBackgroundColor as backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
