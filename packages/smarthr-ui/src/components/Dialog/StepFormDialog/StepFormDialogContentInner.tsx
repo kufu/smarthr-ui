@@ -94,12 +94,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const handleCloseAction = useCallback(() => {
     onClickClose()
-    setTimeout(() => {
-      // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
-      stepQueue.current = []
-      setCurrentStep(firstStep)
-    }, 300)
-  }, [firstStep, stepQueue, setCurrentStep, onClickClose])
+  }, [onClickClose])
 
   const changeCurrentStep = useCallback(
     (step: Parameters<typeof setCurrentStep>[0]) => {
