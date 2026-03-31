@@ -4,7 +4,7 @@ import { merge } from '../libs/lodash'
 
 import { type ColorProperty, defaultColor } from './createColor'
 
-const semanticBackgroundColorTokens = {
+export const defaultBackgroundColor = {
   black: defaultColor.GREY_100,
   white: defaultColor.WHITE,
   'white-darken': darken(0.05, defaultColor.WHITE),
@@ -35,21 +35,17 @@ const semanticBackgroundColorTokens = {
   transparent: 'transparent',
 }
 
-export const defaultBackgroundColor = semanticBackgroundColorTokens
-
-type BackgroundColorPalette = typeof defaultBackgroundColor
-export type CreatedBackgroundColorTheme = BackgroundColorPalette
+export type CreatedBackgroundColorTheme = typeof defaultBackgroundColor
 
 export const createBackgroundColor = (userColor?: ColorProperty): CreatedBackgroundColorTheme => {
   if (!userColor) {
     return defaultBackgroundColor
   }
 
-  // userColorでマージされた色パレットを取得
+  // userColorでマージされた色パレットを取得し、背景色を再生成
   const color = merge(defaultColor, userColor)
 
-  // 更新された色から背景色を再生成
-  const backgroundColor = {
+  return {
     black: color.GREY_100,
     white: color.WHITE,
     'white-darken': darken(0.05, color.WHITE),
@@ -79,6 +75,4 @@ export const createBackgroundColor = (userColor?: ColorProperty): CreatedBackgro
     inherit: 'inherit' as const,
     transparent: 'transparent' as const,
   }
-
-  return backgroundColor
 }

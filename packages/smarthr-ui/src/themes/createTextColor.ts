@@ -4,7 +4,7 @@ import { merge } from '../libs/lodash'
 
 import { type ColorProperty, defaultColor } from './createColor'
 
-const semanticTextColorTokens = {
+export const defaultTextColor = {
   main: defaultColor.MAIN,
   black: defaultColor.TEXT_BLACK,
   white: defaultColor.TEXT_WHITE,
@@ -20,8 +20,6 @@ const semanticTextColorTokens = {
   'color-inherit': 'inherit',
   transparent: 'transparent',
 }
-
-export const defaultTextColor = semanticTextColorTokens
 
 type TextColorPalette = typeof defaultTextColor
 export type TextColorProperty = Partial<TextColorPalette>
