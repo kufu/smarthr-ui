@@ -4,7 +4,24 @@ import { merge } from '../libs/lodash'
 
 import { type ColorProperty, defaultColor } from './createColor'
 
-export const defaultTextColor = {
+export type CreatedTextColorTheme = {
+  main: string
+  black: string
+  white: string
+  'white-darken': string
+  disabled: string
+  link: string
+  'link-darken': string
+  grey: string
+  danger: string
+  'warning-yellow': string
+  brand: string
+  green: string
+  'color-inherit': 'inherit'
+  transparent: 'transparent'
+}
+
+export const defaultTextColor: CreatedTextColorTheme = {
   main: defaultColor.MAIN,
   black: defaultColor.TEXT_BLACK,
   white: defaultColor.TEXT_WHITE,
@@ -20,10 +37,6 @@ export const defaultTextColor = {
   'color-inherit': 'inherit',
   transparent: 'transparent',
 }
-
-type TextColorPalette = typeof defaultTextColor
-export type TextColorProperty = Partial<TextColorPalette>
-export type CreatedTextColorTheme = TextColorPalette
 
 export const createTextColor = (userColor?: ColorProperty): CreatedTextColorTheme => {
   if (!userColor) {

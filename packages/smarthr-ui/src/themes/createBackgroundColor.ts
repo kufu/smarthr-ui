@@ -4,7 +4,38 @@ import { merge } from '../libs/lodash'
 
 import { type ColorProperty, defaultColor } from './createColor'
 
-export const defaultBackgroundColor = {
+export type CreatedBackgroundColorTheme = {
+  black: string
+  white: string
+  'white-darken': string
+  background: string
+  border: string
+  brand: string
+  column: string
+  'column-darken': string
+  'base-grey': string
+  'over-background': string
+  head: string
+  'head-darken': string
+  'action-background': string
+  main: string
+  'main-darken': string
+  danger: string
+  'danger-darken': string
+  'warning-yellow': string
+  'warning-yellow-darken': string
+  overlay: string
+  scrim: string
+  green: string
+  grey: {
+    9: string
+    '9-darken': string
+  }
+  inherit: 'inherit'
+  transparent: 'transparent'
+}
+
+export const defaultBackgroundColor: CreatedBackgroundColorTheme = {
   black: defaultColor.GREY_100,
   white: defaultColor.WHITE,
   'white-darken': darken(0.05, defaultColor.WHITE),
@@ -34,8 +65,6 @@ export const defaultBackgroundColor = {
   inherit: 'inherit',
   transparent: 'transparent',
 }
-
-export type CreatedBackgroundColorTheme = typeof defaultBackgroundColor
 
 export const createBackgroundColor = (userColor?: ColorProperty): CreatedBackgroundColorTheme => {
   if (!userColor) {
