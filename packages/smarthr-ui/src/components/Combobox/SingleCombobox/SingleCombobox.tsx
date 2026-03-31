@@ -339,10 +339,11 @@ const ActualSingleCombobox = <T,>(
   )
 
   const caretIconColor = useMemo(() => {
-    if (isFocused) return theme.textColor.black
-    if (disabled || readOnly) return theme.textColor.disabled
+    const { black, disabled: disabledColor, grey } = theme.textColor
+    if (isFocused) return black
+    if (disabled || readOnly) return disabledColor
 
-    return theme.textColor.grey
+    return grey
   }, [disabled, readOnly, isFocused, theme.textColor])
 
   useClick(

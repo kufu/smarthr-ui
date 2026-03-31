@@ -98,14 +98,10 @@ export const generateIcon = (SvgIcon: IconType) => {
           const colorName = colorSet[color]
 
           if (colorName in theme.textColor) {
-            const textColorValue = theme.textColor[colorName as keyof typeof theme.textColor]
-            // textColorの全てのプロパティはstring型
-            return typeof textColorValue === 'string' ? textColorValue : undefined
+            return theme.textColor[colorName as keyof typeof theme.textColor]
           }
 
-          const colorsValue = theme.color[colorName as keyof typeof theme.color]
-          // colorの一部のプロパティはネストされたオブジェクト（grey, transparencyなど）
-          return typeof colorsValue === 'string' ? colorsValue : undefined
+          return theme.color[colorName as keyof typeof theme.color] as string
         }
 
         return color
