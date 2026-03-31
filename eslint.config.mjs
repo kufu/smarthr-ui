@@ -67,6 +67,24 @@ export default [
           message: 'import * as は使用できません。個別にimportしてください。',
         },
       ],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/tailwind', '**/tailwind/*'],
+              message:
+                'コンポーネントとストーリーは themes からimportしてください。tailwind からの直接importは .storybook/preview.tsx のみ許可されています。',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['**/.storybook/preview.tsx'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
   {
