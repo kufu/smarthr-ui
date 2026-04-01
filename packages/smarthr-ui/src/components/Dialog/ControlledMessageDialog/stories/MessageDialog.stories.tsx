@@ -86,10 +86,10 @@ export const OnPressEscape: StoryObj<typeof ControlledMessageDialog> = {
   },
 }
 
-export const CloseButtonLabel: StoryObj<typeof ControlledMessageDialog> = {
-  name: 'closeButtonLabel',
+export const CloseButton: StoryObj<typeof ControlledMessageDialog> = {
+  name: 'closeButton',
   args: {
-    closeButtonLabel: '閉じる',
+    closeButton: '閉じる',
   },
 }
 

@@ -13,8 +13,8 @@ export type AbstractProps = DialogBodyProps & {
   heading: DialogHeadingProps
   /** ダイアログの説明 */
   children: ReactNode
-  /** 閉じるボタンのラベル */
-  closeButtonLabel?: ReactNode
+  /** 閉じるボタン */
+  closeButton?: ReactNode
 }
 
 export type MessageDialogContentInnerProps = AbstractProps & {
@@ -27,7 +27,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   contentPadding,
   children,
   onClickClose,
-  closeButtonLabel,
+  closeButton,
 }) => {
   const styles = useMemo(() => {
     const { wrapper, actionArea } = dialogContentInner()
@@ -46,7 +46,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
       </DialogBody>
       <FooterCluster
         onClickClose={onClickClose}
-        closeButtonLabel={closeButtonLabel}
+        closeButton={closeButton}
         className={styles.actionArea}
       />
     </Section>
@@ -54,8 +54,8 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
 }
 
 const FooterCluster = memo<
-  Pick<MessageDialogContentInnerProps, 'onClickClose' | 'closeButtonLabel'> & { className: string }
->(({ onClickClose, closeButtonLabel, className }) => {
+  Pick<MessageDialogContentInnerProps, 'onClickClose' | 'closeButton'> & { className: string }
+>(({ onClickClose, closeButton, className }) => {
   const { localize } = useIntl()
 
   const defaultText = useMemo(
@@ -70,7 +70,7 @@ const FooterCluster = memo<
   return (
     <Cluster as="footer" justify="flex-end" className={className}>
       <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
-        {closeButtonLabel ?? defaultText}
+        {closeButton ?? defaultText}
       </Button>
     </Cluster>
   )
