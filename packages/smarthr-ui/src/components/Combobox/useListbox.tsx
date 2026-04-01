@@ -14,10 +14,11 @@ import { tv } from 'tailwind-variants'
 import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
+import { useTheme } from '../../hooks/useTheme'
 import { useIntl } from '../../intl'
-import { spacing } from '../../tailwind'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
+import { Scroller } from '../Scroller'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -55,7 +56,7 @@ const classNameGenerator = tv({
     wrapper: 'shr-absolute',
     dropdownList: [
       'smarthr-ui-Combobox-dropdownList',
-      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
       /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
       = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
       'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
@@ -79,6 +80,7 @@ export const useListbox = <T,>({
   triggerRef,
   decorators,
 }: Props<T>) => {
+  const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
   const { localize } = useIntl()
@@ -259,10 +261,10 @@ export const useListbox = <T,>({
 
     return {
       width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-      maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
+      maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
       height: height ? `${height}px` : undefined,
     }
-  }, [listBoxRect, triggerWidth, dropdownWidth])
+  }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
   const classNames = useMemo(() => {
     const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
@@ -296,7 +298,7 @@ export const useListbox = <T,>({
           {isExpanded && isLoading && (
             <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
           )}
-          <div
+          <Scroller
             id={listBoxId}
             ref={listBoxRef}
             role="listbox"
@@ -336,7 +338,7 @@ export const useListbox = <T,>({
               )
             ) : null}
             {renderIntersection()}
-          </div>
+          </Scroller>
         </div>,
       ),
     [

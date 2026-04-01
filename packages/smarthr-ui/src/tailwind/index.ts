@@ -1,12 +1,3 @@
-export {
-  colors,
-  textColor,
-  fontSize,
-  backgroundColor,
-  lineHeight,
-  boxShadow,
-  spacing,
-} from './TailwindConfig'
-export { bgColors } from './bgColors'
+export { backgroundColor } from './backgroundColor'
 export { paddingBlock, paddingInline } from './padding'
-export { dialogSize } from './size'
+export { dialogSize } from './dialogSize'

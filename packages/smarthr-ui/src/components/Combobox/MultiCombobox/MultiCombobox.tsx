@@ -20,10 +20,11 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../../hooks/useOuterClick'
+import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
-import { textColor } from '../../../tailwind'
 import { FaCaretDownIcon } from '../../Icon'
+import { Scroller } from '../../Scroller'
 import { areItemsEqual } from '../helper'
 import { useFocusControl } from '../useFocusControl'
 import { useListbox } from '../useListbox'
@@ -105,7 +106,7 @@ const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'has-[[aria-invalid]]:shr-border-danger',
     ],
-    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
+    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5',
     selectedList:
       'smarthr-ui-MultiCombobox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
     inputWrapper: 'shr-flex shr-flex-1 shr-items-center',
@@ -506,7 +507,7 @@ const ActualMultiCombobox = <T,>(
       className={classNames.wrapper}
       style={wrapperStyle}
     >
-      <div className={classNames.inputArea}>
+      <Scroller className={classNames.inputArea}>
         <ul id={selectedListId} aria-label={decoratedAriaLabel} className={classNames.selectedList}>
           {selectedItems.map((selectedItem, i) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
@@ -554,7 +555,7 @@ const ActualMultiCombobox = <T,>(
         {selectedItems.length === 0 && placeholder && !isFocused && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
-      </div>
+      </Scroller>
 
       <MemoizedCaretDown
         disabled={disabled}
@@ -576,12 +577,13 @@ const MemoizedCaretDown = memo<{
   disabled: boolean
   isFocused: boolean
 }>(({ className, iconStyle, disabled, isFocused }) => {
+  const theme = useTheme()
   const caretIconColor = useMemo(() => {
-    if (isFocused) return textColor.black
-    if (disabled) return textColor.disabled
+    if (isFocused) return theme.textColor.black
+    if (disabled) return theme.textColor.disabled
 
-    return textColor.grey
-  }, [disabled, isFocused])
+    return theme.textColor.grey
+  }, [disabled, isFocused, theme.textColor])
 
   return (
     <div className={className}>

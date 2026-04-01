@@ -9,12 +9,17 @@ import {
 import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
 import { INITIAL_VIEWPORTS } from 'storybook/viewport'
+import resolveConfig from 'tailwindcss/resolveConfig'
 
+// eslint-disable-next-line smarthr/require-barrel-import
 import '../src/styles/index.css'
 import { EnvironmentProvider, IntlProvider, locales } from '../src'
-import { backgroundColor } from '../src/tailwind'
+// eslint-disable-next-line smarthr/require-barrel-import
+import presetConfig from '../src/smarthr-ui-preset'
 
 import type { Preview } from '@storybook/react-vite'
+
+const { backgroundColor } = resolveConfig(presetConfig).theme
 
 const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 

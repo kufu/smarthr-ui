@@ -113,6 +113,7 @@ export { Browser } from './components/Browser'
 export { WarekiPicker } from './components/WarekiPicker'
 export { AppHeader } from './components/AppHeader'
 export { Timeline, TimelineItem } from './components/Timeline'
+export { Scroller } from './components/Scroller'
 
 // layout components
 export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
@@ -124,7 +125,7 @@ export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
 
 // themes
 export { createTheme } from './themes/createTheme'
-export { ThemeProvider } from './themes/ThemeProvider'
+export { ThemeProvider } from './hooks/useTheme'
 export { createMediaQuery, defaultMediaQuery } from './themes/createMediaQuery'
 export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'

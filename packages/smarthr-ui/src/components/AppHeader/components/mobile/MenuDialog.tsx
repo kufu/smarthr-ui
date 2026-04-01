@@ -15,9 +15,10 @@ import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
-import { FocusTrap } from '../../../Dialog/FocusTrap'
+import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
+import { Scroller } from '../../../Scroller'
 import { Section } from '../../../SectioningContent'
 
 import { AppLauncher } from './AppLauncher'
@@ -39,7 +40,7 @@ const classNameGenerator = tv({
       '[&&.shr-sp-menu-exit-done]:shr-opacity-0',
     ],
     header: 'shr-border-b-shorthand shr-sticky shr-top-0 shr-px-0.75 shr-py-0.5',
-    content: 'shr-overflow-auto shr-p-1',
+    content: 'shr-p-1',
   },
 })
 
@@ -162,7 +163,7 @@ export const Content: FC<
       {isAppLauncherSelected && features && features.length > 0 ? (
         <AppLauncher features={features} />
       ) : (
-        <div className={classNames.content}>
+        <Scroller direction="vertical" className={classNames.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (
@@ -173,7 +174,7 @@ export const Content: FC<
           ) : (
             children
           )}
-        </div>
+        </Scroller>
       )}
     </Section>
   )

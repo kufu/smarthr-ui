@@ -19,9 +19,9 @@ import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
 import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
-import { textColor } from '../../../tailwind'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
@@ -155,6 +155,7 @@ const ActualSingleCombobox = <T,>(
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
+  const theme = useTheme()
   const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -338,11 +339,11 @@ const ActualSingleCombobox = <T,>(
   )
 
   const caretIconColor = useMemo(() => {
-    if (isFocused) return textColor.black
-    if (disabled || readOnly) return textColor.disabled
+    if (isFocused) return theme.textColor.black
+    if (disabled || readOnly) return theme.textColor.disabled
 
-    return textColor.grey
-  }, [disabled, readOnly, isFocused])
+    return theme.textColor.grey
+  }, [disabled, readOnly, isFocused, theme.textColor])
 
   useClick(
     useMemo(() => [outerRef, listBoxRef, clearButtonRef], [outerRef, listBoxRef, clearButtonRef]),
