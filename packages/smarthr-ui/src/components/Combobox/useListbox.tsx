@@ -11,7 +11,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
@@ -36,7 +35,6 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
 
 type Rect = {
@@ -44,8 +42,6 @@ type Rect = {
   left: number
   height?: number
 }
-
-type DecoratorKeyTypes = 'loadingText' | 'noResultText'
 
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
@@ -77,7 +73,6 @@ export const useListbox = <T,>({
   isExpanded,
   isLoading,
   triggerRef,
-  decorators,
 }: Props<T>) => {
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
@@ -277,25 +272,26 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
-      noResultText: localize({
-        id: 'smarthr-ui/Combobox/noResultsText',
-        defaultText: '一致する選択肢がありません。',
-      }),
-    }),
+  const loadingText = useMemo(
+    () => localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
     [localize],
   )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
+  const noResultText = useMemo(
+    () =>
+      localize({
+        id: 'smarthr-ui/Combobox/noResultsText',
+        defaultText: '一致する選択肢がありません。',
+      }),
+    [localize],
+  )
 
   const renderListBox = useCallback(
     () =>
       createPortal(
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
+            <VisuallyHiddenText role="status">{loadingText}</VisuallyHiddenText>
           )}
           <div
             id={listBoxId}
@@ -321,7 +317,7 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {decorated.noResultText}
+                  {noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -349,7 +345,8 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      decorated,
+      loadingText,
+      noResultText,
       handleAdd,
       handleHoverOption,
       handleSelect,

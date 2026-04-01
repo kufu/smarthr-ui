@@ -18,7 +18,6 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -64,16 +63,9 @@ type AbstractProps<T> = ComboboxProps<T> & {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
-  // HINT: useListbox内でnoResultText, loadingTextは実行される
-  /**
-   * コンポーネント内のテキストを変更する関数/
-   */
-  decorators?: DecoratorsType<DecoratorKeyTypes | 'noResultText' | 'loadingText'>
 }
 type Props<T> = AbstractProps<T> &
   Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
-
-type DecoratorKeyTypes = 'destroyButtonIconAlt'
 
 const NOOP = () => undefined
 
@@ -149,7 +141,6 @@ const ActualSingleCombobox = <T,>(
     onFocus,
     onBlur,
     onKeyPress,
-    decorators,
     style,
     ...rest
   }: Props<T>,
@@ -202,7 +193,6 @@ const ActualSingleCombobox = <T,>(
     isExpanded,
     isLoading,
     triggerRef: outerRef,
-    decorators,
   })
 
   const selectDefaultItem = useMemo(
@@ -381,17 +371,14 @@ const ActualSingleCombobox = <T,>(
     }
   }, [notSelected, disabled, readOnly, className])
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      destroyButtonIconAlt: localize({
+  const destroyButtonIconAlt = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
         defaultText: 'クリア',
       }),
-    }),
     [localize],
   )
-
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
     <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
@@ -431,7 +418,7 @@ const ActualSingleCombobox = <T,>(
             >
               <FaCircleXmarkIcon
                 color="TEXT_BLACK"
-                alt={decorated.destroyButtonIconAlt}
+                alt={destroyButtonIconAlt}
                 className={classNames.clearButtonIcon}
               />
             </UnstyledButton>
