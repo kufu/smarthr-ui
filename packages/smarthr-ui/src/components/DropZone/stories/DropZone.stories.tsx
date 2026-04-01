@@ -49,13 +49,3 @@ export const Error: StoryObj<typeof DropZone> = {
     error: true,
   },
 }
-
-export const Decorators: StoryObj<typeof DropZone> = {
-  name: 'decorators',
-  args: {
-    decorators: {
-      selectButtonLabel: (txt) => `select file.(${txt})`,
-    },
-    children: 'ボタンのテキストを変更',
-  },
-}
