@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 import { useTheme } from '../../hooks/useTheme'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { FontSizes } from '../../themes/createFontSize'
+import type { FontSizes } from '../../themes'
 import type { IconType } from 'react-icons'
 
 /**

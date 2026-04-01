@@ -1,4 +1,4 @@
-import type { Locale } from '../../intl/localeMap'
+import type { Locale } from '../../intl'
 import type { Header } from '../Header'
 import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
 

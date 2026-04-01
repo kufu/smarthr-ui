@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
-import { FocusTrap } from '../../../Dialog/FocusTrap'
+import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'

@@ -10,7 +10,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { genericsForwardRef } from '../../../libs/util'
-import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+import { useSectionWrapper } from '../../SectioningContent'
 
 import type { Gap, SeparateGap } from '../../../types'
 
