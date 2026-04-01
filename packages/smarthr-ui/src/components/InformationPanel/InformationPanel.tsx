@@ -12,7 +12,6 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
@@ -37,7 +36,6 @@ type ObjectHeadingType = {
   unrecommendedTag?: HeadingTagTypes
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
   heading: HeadingType
@@ -45,8 +43,6 @@ type AbstractProps = PropsWithChildren<{
   toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
 }> &
   VariantProps<typeof classNameGenerator>
 
@@ -133,7 +129,6 @@ export const InformationPanel: FC<Props> = ({
   className,
   children,
   onClickTrigger,
-  decorators,
   ...rest
 }) => {
   const [active, setActive] = useState(activeProps)
@@ -194,7 +189,6 @@ export const InformationPanel: FC<Props> = ({
             setActive={setActive}
             contentId={contentId}
             className={classNames.toggleableButton}
-            decorators={decorators}
           />
         )}
       </Sidebar>
@@ -249,30 +243,28 @@ const MemoizedHeading = memo<
 })
 
 const ToggleableButton: FC<
-  Pick<Props, 'onClickTrigger' | 'decorators'> & {
+  Pick<Props, 'onClickTrigger'> & {
     active: boolean
     setActive: (flg: boolean) => void
     contentId: string
     className: string
   }
-> = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
+> = ({ active, onClickTrigger, setActive, contentId, className }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
+  const buttonLabels = useMemo(
     () => ({
-      openButtonLabel: localize({
+      open: localize({
         id: 'smarthr-ui/InformationPanel/openButtonLabel',
         defaultText: '開く',
       }),
-      closeButtonLabel: localize({
+      close: localize({
         id: 'smarthr-ui/InformationPanel/closeButtonLabel',
         defaultText: '閉じる',
       }),
     }),
     [localize],
   )
-
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   const onClick = useMemo(
     () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
@@ -288,7 +280,7 @@ const ToggleableButton: FC<
       size="s"
       className={className}
     >
-      {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
+      {active ? buttonLabels.close : buttonLabels.open}
     </Button>
   )
 }
