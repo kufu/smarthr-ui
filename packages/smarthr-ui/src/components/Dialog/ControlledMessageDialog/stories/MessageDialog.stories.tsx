@@ -86,6 +86,13 @@ export const OnPressEscape: StoryObj<typeof ControlledMessageDialog> = {
   },
 }
 
+export const CloseButtonLabel: StoryObj<typeof ControlledMessageDialog> = {
+  name: 'closeButtonLabel',
+  args: {
+    closeButtonLabel: '閉じる',
+  },
+}
+
 export const PortalParent: StoryObj<typeof ControlledMessageDialog> = {
   name: 'portalParent',
   render: (args) => {
