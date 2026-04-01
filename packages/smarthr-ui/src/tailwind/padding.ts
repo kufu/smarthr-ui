@@ -1,4 +1,4 @@
-import type { Gap } from '../../types'
+import type { Gap } from '../types'
 
 export const paddingBlock = {
   0: 'shr-py-0',

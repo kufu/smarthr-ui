@@ -9,8 +9,8 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { paddingBlock, paddingInline } from '../../themes/tailwind'
-import { useSectionWrapper } from '../SectioningContent/useSectioningWrapper'
+import { paddingBlock, paddingInline } from '../../tailwind'
+import { useSectionWrapper } from '../SectioningContent'
 
 import type { Gap } from '../../types'
 
