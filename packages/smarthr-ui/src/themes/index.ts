@@ -1,17 +1,4 @@
 export {
-  colors,
-  textColor,
-  fontSize,
-  backgroundColor,
-  lineHeight,
-  boxShadow,
-  spacing,
-  bgColors,
-  paddingBlock,
-  paddingInline,
-  dialogSize,
-} from './tailwind'
-export {
   createMediaQuery,
   defaultMediaQuery,
   type CreatedMediaQueryTheme,
@@ -19,5 +6,11 @@ export {
 export type { AbstractSize, CharRelativeSize } from './createSpacing'
 export { createSpacingByChar, primitiveTokens } from './createSpacing'
 export type { FontSizes } from './createFontSize'
-export { defaultHtmlFontSize } from './createFontSize'
+export { defaultHtmlFontSize, defaultFontSize } from './createFontSize'
+export { defaultColor } from './createColor'
+export { defaultShadow } from './createShadow/defaultShadow'
+export { defaultWidth } from './createWidth'
+export { defaultZIndex } from './createZIndex'
 export { defaultBreakpoint } from './createBreakpoint'
+export { createTheme, type CreatedTheme } from './createTheme'
+export { defaultBackgroundColor } from './createBackgroundColor'

@@ -10,7 +10,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { Gap } from '../../types'
 
 type StyleType =

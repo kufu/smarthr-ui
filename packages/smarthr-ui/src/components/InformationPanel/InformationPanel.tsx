@@ -18,9 +18,16 @@ import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
-import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
+import {
+  FaCaretDownIcon,
+  FaCaretUpIcon,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
+  FaCircleInfoIcon,
+  FaRotateIcon,
+  WarningIcon,
+} from '../Icon'
 import { Sidebar } from '../Layout'
-import { ResponseMessage } from '../ResponseMessage'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -199,7 +206,7 @@ export const InformationPanel: FC<Props> = ({
 }
 
 const MemoizedHeading = memo<
-  Pick<Props, 'type'> & {
+  Required<Pick<Props, 'type'>> & {
     heading: Props['heading']
     id: string
     className: string
@@ -210,16 +217,33 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
+  const icon = useMemo(() => {
+    switch (type) {
+      case 'info':
+        return <FaCircleInfoIcon color="TEXT_GREY" />
+      case 'success':
+        return <FaCircleCheckIcon color="MAIN" />
+      case 'warning':
+        return <WarningIcon />
+      case 'error':
+        return <FaCircleExclamationIcon color="DANGER" />
+      case 'sync':
+        return <FaRotateIcon color="MAIN" />
+    }
+  }, [type])
+
   return (
     <Heading
       {...rest}
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
+      icon={{
+        prefix: icon,
+        gap: 0.5,
+      }}
       type="blockTitle"
     >
-      <ResponseMessage type={type} iconGap={0.5}>
-        {heading.text}
-      </ResponseMessage>
+      {heading.text}
     </Heading>
   )
 })

@@ -1,8 +1,8 @@
 import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../../../hooks/useTheme'
 import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../themes'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
@@ -228,6 +228,7 @@ const SideNavs = memo<
     }
   }
 >(({ mode, page, changePage, translated, classNames }) => {
+  const theme = useTheme()
   const isNotSearch = mode !== 'search'
   const isFavorite = isNotSearch && page === 'favorite'
   const isAll = isNotSearch && page === 'all'
@@ -237,11 +238,11 @@ const SideNavs = memo<
       {
         id: 'favorite',
         title: translated.favorite,
-        prefix: <FaStarIcon color={isFavorite ? textColor.white : undefined} />,
+        prefix: <FaStarIcon color={isFavorite ? theme.textColor.white : undefined} />,
         current: isFavorite,
       },
     ],
-    [isFavorite, translated],
+    [isFavorite, translated, theme.textColor.white],
   )
   const selectedItems = useMemo(
     () => [

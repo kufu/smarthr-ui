@@ -2,7 +2,7 @@ import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
-import { Section } from '../SectioningContent/SectioningContent'
+import { Section } from '../SectioningContent'
 
 import { StepCounter } from './StepCounter'
 

@@ -1,8 +1,8 @@
 import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../../../hooks/useTheme'
 import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../themes'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
@@ -95,6 +95,7 @@ const ContentBody = memo<
     buttonClassName: string
   }
 >(({ page, onSelectPage, translated, className, buttonClassName }) => {
+  const theme = useTheme()
   const isFavorite = page === 'favorite'
 
   const onClickButton = useCallback(
@@ -105,7 +106,10 @@ const ContentBody = memo<
   )
 
   const buttonPrefix = (
-    <FaCheckIcon color={textColor.main} alt={<Translate>{translated.checkIconAlt}</Translate>} />
+    <FaCheckIcon
+      color={theme.textColor.main}
+      alt={<Translate>{translated.checkIconAlt}</Translate>}
+    />
   )
 
   return (

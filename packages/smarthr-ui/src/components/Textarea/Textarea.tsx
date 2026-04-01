@@ -16,10 +16,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
-import { lineHeight } from '../../themes'
-import { defaultHtmlFontSize } from '../../themes/createFontSize'
+import { defaultHtmlFontSize } from '../../themes'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorsType } from '../../hooks/useDecorators'
@@ -97,8 +97,9 @@ const classNameGenerator = tv({
 })
 
 const calculateIdealRows = (
-  element?: HTMLTextAreaElement | null,
-  maxRows: number = Number.MAX_SAFE_INTEGER,
+  element: HTMLTextAreaElement | null | undefined,
+  maxRows: number,
+  lineHeightNormal: number,
 ): number => {
   if (!element) {
     return 0
@@ -106,7 +107,7 @@ const calculateIdealRows = (
 
   // 現在の入力値に応じた行数
   const currentInputValueRows = Math.floor(
-    element.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
+    element.scrollHeight / (defaultHtmlFontSize * lineHeightNormal),
   )
 
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
@@ -131,6 +132,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     },
     ref,
   ) => {
+    const theme = useTheme()
     const maxLettersId = useId()
     const maxLettersNoticeId = `${maxLettersId}-notice`
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
@@ -277,7 +279,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         e.target.rows = rows
 
         if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows)
+          const currentRows = calculateIdealRows(e.target, maxRows, theme.leading.NORMAL)
           // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
           e.target.rows = currentRows
           setInterimRows(currentRows)
@@ -285,7 +287,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
         onChange?.(e)
       },
-      [onChange, debouncedUpdateCount, debouncedUpdateSrCounterMessage, autoResize, maxRows, rows],
+      [
+        onChange,
+        debouncedUpdateCount,
+        debouncedUpdateSrCounterMessage,
+        autoResize,
+        maxRows,
+        rows,
+        theme.leading.NORMAL,
+      ],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -298,9 +308,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     // autoResize時に、初期値での高さを指定
     useEffect(() => {
       if (autoResize && textareaRef.current) {
-        setInterimRows(calculateIdealRows(textareaRef.current, maxRows))
+        setInterimRows(calculateIdealRows(textareaRef.current, maxRows, theme.leading.NORMAL))
       }
-    }, [setInterimRows, maxRows, autoResize])
+    }, [setInterimRows, maxRows, autoResize, theme.leading.NORMAL])
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
