@@ -6,6 +6,7 @@ import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
+import { MessageDialogContent } from './ControlledMessageDialog'
 import { DialogCloser } from './DialogCloser'
 import { DialogContent } from './DialogContent'
 import { DialogTrigger } from './DialogTrigger'
