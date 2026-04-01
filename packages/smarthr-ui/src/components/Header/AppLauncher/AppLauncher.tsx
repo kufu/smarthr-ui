@@ -3,7 +3,6 @@
 import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -25,12 +24,8 @@ type AppItem = {
 type AbstractProps = {
   apps: Category[]
   urlToShowAll?: string | null
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
 } & VariantProps<typeof classNameGenerator>
 type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
-
-type DecoratorKeyTypes = 'triggerLabel'
 
 const classNameGenerator = tv({
   slots: {
@@ -63,7 +58,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableNew, ...rest }) => {
+export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, enableNew, ...rest }) => {
   const calculatedApps = useMemo(() => {
     const result: {
       base: Props['apps'][number] | undefined
@@ -98,11 +93,7 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
 
   return (
     <Dropdown {...rest}>
-      <MemoizedDropdownTrigger
-        enableNew={enableNew}
-        decorators={decorators}
-        className={classNames.appsButton}
-      />
+      <MemoizedDropdownTrigger enableNew={enableNew} className={classNames.appsButton} />
       <DropdownContent controllable>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Stack as="nav" gap={1.5} className={classNames.contentWrapper}>
@@ -151,35 +142,32 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
   )
 }
 
-const MemoizedDropdownTrigger = memo<
-  Pick<Props, 'enableNew' | 'decorators'> & { className: string }
->(({ enableNew, className, decorators }) => {
-  const { localize } = useIntl()
+const MemoizedDropdownTrigger = memo<Pick<Props, 'enableNew'> & { className: string }>(
+  ({ enableNew, className }) => {
+    const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      triggerLabel: localize({
-        id: 'smarthr-ui/AppLauncher/triggerLabel',
-        defaultText: 'アプリ',
-      }),
-    }),
-    [localize],
-  )
+    const triggerLabel = useMemo(
+      () =>
+        localize({
+          id: 'smarthr-ui/AppLauncher/triggerLabel',
+          defaultText: 'アプリ',
+        }),
+      [localize],
+    )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
-
-  return (
-    <DropdownTrigger>
-      <Button
-        prefix={enableNew ?? <FaToolboxIcon />}
-        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-        className={className}
-      >
-        {decorated.triggerLabel}
-      </Button>
-    </DropdownTrigger>
-  )
-})
+    return (
+      <DropdownTrigger>
+        <Button
+          prefix={enableNew ?? <FaToolboxIcon />}
+          suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+          className={className}
+        >
+          {triggerLabel}
+        </Button>
+      </DropdownTrigger>
+    )
+  },
+)
 
 const TextLinkToShowAll = memo<{ href: Props['urlToShowAll']; className: string }>(
   ({ href, className }) => {
