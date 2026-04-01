@@ -11,16 +11,12 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
-import type { AbstractSize, CharRelativeSize } from '../../themes'
-
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
   status?: keyof typeof STATUS_ICON_MAPPER
-  iconGap?: CharRelativeSize | AbstractSize
-  right?: boolean
 }
 
-const classNameGenerator = tv({
+export const classNameGenerator = tv({
   base: '',
   variants: {
     status: {
@@ -41,25 +37,12 @@ const STATUS_ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({
-  status = 'info',
-  size,
-  iconGap,
-  right,
-  children,
-  ...rest
-}) => {
+export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ...rest }) => {
   const className = useMemo(() => classNameGenerator({ status }), [status])
-  const Icon = STATUS_ICON_MAPPER[status]
-  const icon = <Icon {...rest} className={className} />
-  const iconAttrs = {
-    prefix: right ? undefined : icon,
-    suffix: right ? icon : undefined,
-    gap: iconGap,
-  }
+  const TextIcon = STATUS_ICON_MAPPER[status]
 
   return (
-    <Text icon={iconAttrs} size={size}>
+    <Text icon={<TextIcon {...rest} className={className} />} size={size}>
       {children}
     </Text>
   )
