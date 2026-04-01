@@ -12,12 +12,12 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Scroller/VRT',
-  render: (args, context) => (
+  render: (_args, context) => (
     <Stack>
-      {DirectionVertical.render && DirectionVertical.render(args, context)}
-      {DirectionHorizontal.render && DirectionHorizontal.render(args, context)}
-      {DirectionBoth.render && DirectionBoth.render(args, context)}
-      {StyleTypeScroll.render && StyleTypeScroll.render(args, context)}
+      {DirectionVertical.render && DirectionVertical.render(DirectionVertical.args!, context)}
+      {DirectionHorizontal.render && DirectionHorizontal.render(DirectionHorizontal.args!, context)}
+      {DirectionBoth.render && DirectionBoth.render(DirectionBoth.args!, context)}
+      {StyleTypeScroll.render && StyleTypeScroll.render(StyleTypeScroll.args!, context)}
     </Stack>
   ),
   parameters: {
