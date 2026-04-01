@@ -81,7 +81,7 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
 const MemoizedDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => (
     <DropdownTrigger>
-      <Button className={className} size="s" suffix={<FaCaretDownIcon />}>
+      <Button className={className} size="S" suffix={<FaCaretDownIcon />}>
         <Translate>{children}</Translate>
       </Button>
     </DropdownTrigger>

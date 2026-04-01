@@ -1,6 +1,6 @@
 base: base (10), none
 bold: true, false
-type: error, warning, info, success, sync
+type: error, warning, info, Success, Sync
 children: String (10), ReactNode
 subActionArea: ReactNode, undefined (10)
 layer: 0, 1, 2, 3, 4, undefined

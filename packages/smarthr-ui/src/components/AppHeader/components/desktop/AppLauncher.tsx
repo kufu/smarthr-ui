@@ -265,7 +265,7 @@ const SideNavs = memo<
     <div className={classNames.side}>
       <SideNav
         className={classNames.unselectedSideNav}
-        size="s"
+        size="S"
         items={unselectedItems}
         onClick={onClick}
       />
@@ -278,7 +278,7 @@ const SideNavs = memo<
         </MemoizedSubSubBlockHeading>
         <SideNav
           className={classNames.selectedSideNav}
-          size="s"
+          size="S"
           items={selectedItems}
           onClick={onClick}
         />

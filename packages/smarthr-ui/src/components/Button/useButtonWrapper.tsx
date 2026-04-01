@@ -25,7 +25,7 @@ const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', '.smarthr-ui-Icon-extended', '
 )
 
 type AbstractProps = PropsWithChildren<{
-  size: 'default' | 's'
+  size: 'M' | 'S'
   wide: boolean
   variant: Variant
   $loading?: boolean
@@ -107,7 +107,7 @@ export const useButtonWrapper = ({
 
   if ($loading) {
     actualPrefix = undefined
-    const loader = <Loader size="s" className={classNames.loader} role="presentation" />
+    const loader = <Loader size="S" className={classNames.loader} role="presentation" />
 
     // HINT: squareは null | boolean のため、switchで判定する
     // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
@@ -176,8 +176,8 @@ const wrapperClassNameGenerator = tv({
       tertiary: {},
     },
     size: {
-      default: {},
-      s: {},
+      M: {},
+      S: {},
     },
     square: {
       true: {},
@@ -219,7 +219,7 @@ const wrapperClassNameGenerator = tv({
     },
     {
       slots: ['button', 'anchor'],
-      size: 's',
+      size: 'S',
       className: [
         'shr-p-0.5',
         'shr-text-sm',
@@ -229,18 +229,18 @@ const wrapperClassNameGenerator = tv({
     },
     {
       slots: ['button', 'anchor'],
-      size: 'default',
+      size: 'M',
       className: ['shr-text-base'],
     },
     {
       slots: ['button', 'anchor'],
-      size: 'default',
+      size: 'M',
       square: false,
       className: 'shr-px-1 shr-py-0.75',
     },
     {
       slots: ['button', 'anchor'],
-      size: 'default',
+      size: 'M',
       square: true,
       className: 'shr-p-0.75',
     },
@@ -454,8 +454,8 @@ const innerClassNameGenerator = tv({
   ],
   variants: {
     size: {
-      default: '',
-      s: [
+      M: '',
+      S: [
         /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
         'shr-leading-[0]',
       ],

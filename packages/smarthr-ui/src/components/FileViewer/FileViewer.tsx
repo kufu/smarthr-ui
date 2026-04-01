@@ -123,7 +123,7 @@ export const FileViewer: FC<Props> = ({
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
         {!loaded && (
           <div className="shr-pointer-events-none shr-fixed shr-inset-0 shr-flex shr-h-full shr-w-full shr-items-center shr-justify-center">
-            <Loader type="light" size="m" />
+            <Loader type="light" size="M" />
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>

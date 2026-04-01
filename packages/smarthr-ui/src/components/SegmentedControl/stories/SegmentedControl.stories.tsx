@@ -30,7 +30,7 @@ export default {
     ],
     value: 'departments',
     onClickOption: (value) => action('onClickOption')(value),
-    size: 'default',
+    size: 'M',
     className: '',
   },
   parameters: {
@@ -93,8 +93,8 @@ export const Size: StoryObj<typeof SegmentedControl> = {
   name: 'size',
   render: (args) => (
     <Stack>
-      <SegmentedControl {...args} size="default" />
-      <SegmentedControl {...args} size="s" />
+      <SegmentedControl {...args} size="M" />
+      <SegmentedControl {...args} size="S" />
     </Stack>
   ),
 }

@@ -153,7 +153,7 @@ export const Content: FC<
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="s" onClick={dialogClose}>
+          <Button variant="secondary" size="S" onClick={dialogClose}>
             <FaXmarkIcon alt={translated.closeMenu} />
           </Button>
         </Cluster>

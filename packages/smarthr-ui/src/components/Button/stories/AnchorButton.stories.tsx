@@ -10,7 +10,7 @@ export default {
   render: (args) => <AnchorButton {...args} />,
   args: {
     href: '#',
-    size: 'default',
+    size: 'M',
     children: 'ボタン',
     variant: 'secondary',
     wide: false,
@@ -87,7 +87,7 @@ export const Variant: StoryObj<typeof AnchorButton> = {
 export const Size: StoryObj<typeof AnchorButton> = {
   name: 'size',
   args: {
-    size: 's',
+    size: 'S',
   },
 }
 

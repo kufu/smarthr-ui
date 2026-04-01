@@ -20,7 +20,7 @@ export const MenuSubHeading = memo<Props>(({ title, onClickBack }) => {
 
   return (
     <>
-      <Button size="s" onClick={onClickBack}>
+      <Button size="S" onClick={onClickBack}>
         <FaArrowLeftIcon alt={backButtonAriaLabel} />
       </Button>
       <Heading type="blockTitle">

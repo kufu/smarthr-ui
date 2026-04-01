@@ -13,10 +13,10 @@ import type { ComponentProps } from 'react'
  * s    なし  primary
  */
 const _cases: Array<ComponentProps<typeof Loader>> = [
-  { size: 'm', text: undefined, type: 'light' },
-  { size: 'm', text: '読込中', type: 'primary' },
-  { size: 's', text: '読込中', type: 'light' },
-  { size: 's', text: undefined, type: 'primary' },
+  { size: 'M', text: undefined, type: 'light' },
+  { size: 'M', text: '読込中', type: 'primary' },
+  { size: 'S', text: '読込中', type: 'light' },
+  { size: 'S', text: undefined, type: 'primary' },
 ]
 
 export default {

@@ -13,7 +13,7 @@ export const sampleChildrens = {
   ReactNode: (
     <>
       <Text>任意の ReactNode を設定できます</Text>
-      <Button size="s">編集</Button>
+      <Button size="S">編集</Button>
       <TextLink href="#top">
         <Text size="S">ヘルプ</Text>
       </TextLink>
@@ -22,7 +22,7 @@ export const sampleChildrens = {
 }
 export const sampleSubActionAreas = {
   なし: undefined,
-  ReactNode: <Button size="s">編集</Button>,
+  ReactNode: <Button size="S">編集</Button>,
 }
 export const sampleOnCloseHandlers = {
   あり: () => {

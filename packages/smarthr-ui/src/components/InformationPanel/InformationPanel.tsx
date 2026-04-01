@@ -285,7 +285,7 @@ const ToggleableButton: FC<
       aria-controls={contentId}
       onClick={onClick}
       suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-      size="s"
+      size="S"
       className={className}
     >
       {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
