@@ -113,6 +113,7 @@ export { Browser } from './components/Browser'
 export { WarekiPicker } from './components/WarekiPicker'
 export { AppHeader } from './components/AppHeader'
 export { Timeline, TimelineItem } from './components/Timeline'
+export { Scroller } from './components/Scroller'
 
 // layout components
 export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
