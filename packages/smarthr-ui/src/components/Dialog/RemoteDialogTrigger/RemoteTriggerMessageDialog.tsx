@@ -1,11 +1,14 @@
 'use client'
 
-import { MessageDialog } from '../MessageDialog'
+import { ControlledMessageDialog } from '../ControlledMessageDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
-type Props = Omit<ComponentProps<typeof MessageDialog>, 'isOpen' | 'onClickClose' | 'id'> &
+type Props = Omit<
+  ComponentProps<typeof ControlledMessageDialog>,
+  'isOpen' | 'onClickClose' | 'id'
+> &
   Parameters<typeof useRemoteTrigger>[0]
 
 export const RemoteTriggerMessageDialog: FC<Props> = ({
@@ -24,5 +27,7 @@ export const RemoteTriggerMessageDialog: FC<Props> = ({
     onClose,
   })
 
-  return <MessageDialog {...rest} id={id} isOpen={isOpen} onClickClose={actualOnClickClose} />
+  return (
+    <ControlledMessageDialog {...rest} id={id} isOpen={isOpen} onClickClose={actualOnClickClose} />
+  )
 }
