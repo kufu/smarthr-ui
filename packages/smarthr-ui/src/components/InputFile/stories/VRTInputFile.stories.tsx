@@ -9,7 +9,7 @@ export default {
     <Stack>
       {[undefined, 'hover', 'focus-within'].map((id) => (
         <Stack id={id} key={id}>
-          {[undefined, 'default', 's'].map((size) =>
+          {[undefined, 'M', 'S'].map((size) =>
             [false, true].map((disabled) =>
               [false, true].map((error) => (
                 <InputFile
