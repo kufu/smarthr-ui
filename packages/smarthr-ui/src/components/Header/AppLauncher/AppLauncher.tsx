@@ -24,6 +24,8 @@ type AppItem = {
 type AbstractProps = {
   apps: Category[]
   urlToShowAll?: string | null
+  /** トリガーボタンのラベル。指定しない場合はIntlProviderから取得 */
+  triggerLabel?: ReactNode
 } & VariantProps<typeof classNameGenerator>
 type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
 
@@ -58,7 +60,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, enableNew, ...rest }) => {
+export const AppLauncher: FC<Props> = ({
+  apps,
+  urlToShowAll,
+  triggerLabel,
+  enableNew,
+  ...rest
+}) => {
   const calculatedApps = useMemo(() => {
     const result: {
       base: Props['apps'][number] | undefined
@@ -93,7 +101,11 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, enableNew, ...rest 
 
   return (
     <Dropdown {...rest}>
-      <MemoizedDropdownTrigger enableNew={enableNew} className={classNames.appsButton} />
+      <MemoizedDropdownTrigger
+        enableNew={enableNew}
+        triggerLabel={triggerLabel}
+        className={classNames.appsButton}
+      />
       <DropdownContent controllable>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Stack as="nav" gap={1.5} className={classNames.contentWrapper}>
@@ -142,32 +154,33 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, enableNew, ...rest 
   )
 }
 
-const MemoizedDropdownTrigger = memo<Pick<Props, 'enableNew'> & { className: string }>(
-  ({ enableNew, className }) => {
-    const { localize } = useIntl()
+const MemoizedDropdownTrigger = memo<
+  Pick<Props, 'enableNew' | 'triggerLabel'> & { className: string }
+>(({ enableNew, triggerLabel, className }) => {
+  const { localize } = useIntl()
 
-    const triggerLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/AppLauncher/triggerLabel',
-          defaultText: 'アプリ',
-        }),
-      [localize],
-    )
+  const actualTriggerLabel = useMemo(
+    () =>
+      triggerLabel ??
+      localize({
+        id: 'smarthr-ui/AppLauncher/triggerLabel',
+        defaultText: 'アプリ',
+      }),
+    [triggerLabel, localize],
+  )
 
-    return (
-      <DropdownTrigger>
-        <Button
-          prefix={enableNew ?? <FaToolboxIcon />}
-          suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-          className={className}
-        >
-          {triggerLabel}
-        </Button>
-      </DropdownTrigger>
-    )
-  },
-)
+  return (
+    <DropdownTrigger>
+      <Button
+        prefix={enableNew ?? <FaToolboxIcon />}
+        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+        className={className}
+      >
+        {actualTriggerLabel}
+      </Button>
+    </DropdownTrigger>
+  )
+})
 
 const TextLinkToShowAll = memo<{ href: Props['urlToShowAll']; className: string }>(
   ({ href, className }) => {

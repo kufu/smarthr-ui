@@ -137,17 +137,8 @@ const Logo = memo<
 ))
 
 const MemoizedAppLauncher = memo<Pick<Props, 'featureName' | 'apps' | 'enableNew'>>(
-  ({ featureName, apps = [], enableNew }) => {
-    const decorators = useMemo(() => {
-      if (!featureName) {
-        return undefined
-      }
-
-      return { triggerLabel: () => featureName }
-    }, [featureName])
-
-    return featureName && <AppLauncher apps={apps} enableNew={enableNew} decorators={decorators} />
-  },
+  ({ featureName, apps = [], enableNew }) =>
+    featureName && <AppLauncher apps={apps} enableNew={enableNew} triggerLabel={featureName} />,
 )
 
 const TenantSwitcher = memo<
