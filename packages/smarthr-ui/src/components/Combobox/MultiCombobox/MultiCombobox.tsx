@@ -20,9 +20,9 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../../hooks/useOuterClick'
+import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
-import { textColor } from '../../../tailwind'
 import { FaCaretDownIcon } from '../../Icon'
 import { areItemsEqual } from '../helper'
 import { useFocusControl } from '../useFocusControl'
@@ -576,12 +576,13 @@ const MemoizedCaretDown = memo<{
   disabled: boolean
   isFocused: boolean
 }>(({ className, iconStyle, disabled, isFocused }) => {
+  const theme = useTheme()
   const caretIconColor = useMemo(() => {
-    if (isFocused) return textColor.black
-    if (disabled) return textColor.disabled
+    if (isFocused) return theme.textColor.black
+    if (disabled) return theme.textColor.disabled
 
-    return textColor.grey
-  }, [disabled, isFocused])
+    return theme.textColor.grey
+  }, [disabled, isFocused, theme.textColor])
 
   return (
     <div className={className}>
