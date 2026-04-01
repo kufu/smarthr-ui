@@ -18,14 +18,14 @@ export default {
       <FormDialog
         {...args}
         id="remote-dialog"
-        heading="リモートトリガーフォームダイアログ"
+        heading="フォームダイアログ"
         actionText="アクション"
         onSubmit={(e, { close }) => {
           action('onSubmit')(e)
           close()
         }}
       >
-        <p>リモートトリガーフォームダイアログです。</p>
+        <p>フォームダイアログです。</p>
       </FormDialog>
     </>
   ),
