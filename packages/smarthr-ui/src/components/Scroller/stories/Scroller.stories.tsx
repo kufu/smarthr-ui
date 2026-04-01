@@ -49,6 +49,7 @@ export const DirectionVertical: StoryObj<typeof Scroller> = {
   ),
   args: {
     direction: 'vertical',
+    styleType: 'auto',
   },
 }
 
@@ -65,6 +66,7 @@ export const DirectionHorizontal: StoryObj<typeof Scroller> = {
   ),
   args: {
     direction: 'horizontal',
+    styleType: 'auto',
   },
 }
 
@@ -90,12 +92,6 @@ export const DirectionBoth: StoryObj<typeof Scroller> = {
   ),
   args: {
     direction: 'both',
-  },
-}
-
-export const StyleTypeAuto: StoryObj<typeof Scroller> = {
-  name: 'styleType (auto)',
-  args: {
     styleType: 'auto',
   },
 }
