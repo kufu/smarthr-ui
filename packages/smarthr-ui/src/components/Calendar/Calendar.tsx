@@ -42,32 +42,31 @@ const classNameGenerator = tv({
   slots: {
     container:
       'smarthr-ui-Calendar shr-inline-block shr-overflow-hidden shr-rounded-m shr-bg-white shr-text-black shr-shadow-layer-3 forced-colors:shr-border-shorthand forced-colors:shr-shadow-none',
-    header: 'smarthr-ui-Calendar-header shr-border-b-shorthand shr-flex shr-items-center shr-p-1',
+    header: 'smarthr-ui-Calendar-header shr-flex shr-items-center shr-p-1',
     yearMonth: 'smarthr-ui-Calendar-yearMonth shr-me-0.5 shr-text-base shr-font-bold',
     monthButtons: 'smarthr-ui-Calendar-monthButtons shr-ms-auto shr-flex',
     tableLayout: 'shr-relative',
     yearSelectButton:
       'smarthr-ui-Calendar-selectingYear [&[aria-expanded="true"]_.smarthr-ui-Icon]:shr-rotate-180',
   },
+  variants: {
+    isSelectingYear: {
+      true: {
+        header: 'shr-border-b-0',
+      },
+      false: {
+        header: 'shr-border-b-shorthand',
+      },
+    },
+  },
+  defaultVariants: {
+    isSelectingYear: false,
+  },
 })
 
 export const Calendar = forwardRef<HTMLDivElement, Props>(
   ({ from = minDate, to, onSelectDate, value, className, ...rest }, ref) => {
     const { formatDate, getWeekStartDay } = useIntl()
-
-    const classNames = useMemo(() => {
-      const { container, yearMonth, header, monthButtons, tableLayout, yearSelectButton } =
-        classNameGenerator()
-
-      return {
-        container: container({ className }),
-        header: header(),
-        yearMonth: yearMonth(),
-        monthButtons: monthButtons(),
-        tableLayout: tableLayout(),
-        yearSelectButton: yearSelectButton(),
-      }
-    }, [className])
 
     const formattedFrom = useMemo(() => {
       const date = getFromDate(from)
@@ -113,6 +112,20 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
     const [isSelectingYear, setIsSelectingYear] = useState(false)
 
     const yearPickerId = useId()
+
+    const classNames = useMemo(() => {
+      const { container, yearMonth, header, monthButtons, tableLayout, yearSelectButton } =
+        classNameGenerator({ isSelectingYear })
+
+      return {
+        container: container({ className }),
+        header: header(),
+        yearMonth: yearMonth(),
+        monthButtons: monthButtons(),
+        tableLayout: tableLayout(),
+        yearSelectButton: yearSelectButton(),
+      }
+    }, [className, isSelectingYear])
 
     useEffect(() => {
       if (isValidValue) {
@@ -166,14 +179,15 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
             onClick={onClickSelectYear}
             className={classNames.yearSelectButton}
           />
-          <MonthDirectionCluster
-            isSelectingYear={isSelectingYear}
-            directionMonth={calculatedCurrentMonth}
-            from={formattedFrom.day}
-            to={formattedTo.day}
-            setCurrentMonth={setCurrentMonth}
-            className={classNames.monthButtons}
-          />
+          {!isSelectingYear && (
+            <MonthDirectionCluster
+              directionMonth={calculatedCurrentMonth}
+              from={formattedFrom.day}
+              to={formattedTo.day}
+              setCurrentMonth={setCurrentMonth}
+              className={classNames.monthButtons}
+            />
+          )}
         </header>
         <div className={classNames.tableLayout}>
           <YearPicker
@@ -225,7 +239,6 @@ const YearSelectButton = memo<{
 })
 
 const MonthDirectionCluster = memo<{
-  isSelectingYear: boolean
   directionMonth: {
     prev: DayJsType
     next: DayJsType
@@ -234,7 +247,7 @@ const MonthDirectionCluster = memo<{
   to: DayJsType
   setCurrentMonth: (day: DayJsType) => void
   className: string
-}>(({ isSelectingYear, directionMonth: { prev, next }, from, to, setCurrentMonth, className }) => {
+}>(({ directionMonth: { prev, next }, from, to, setCurrentMonth, className }) => {
   const { localize } = useIntl()
   const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
   const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
@@ -260,7 +273,7 @@ const MonthDirectionCluster = memo<{
   return (
     <Cluster gap={0.5} className={className}>
       <Button
-        disabled={isSelectingYear || prev.isBefore(from, 'month')}
+        disabled={prev.isBefore(from, 'month')}
         onClick={onClickMonthPrev}
         size="s"
         className="smarthr-ui-Calendar-monthButtonPrev"
@@ -268,7 +281,7 @@ const MonthDirectionCluster = memo<{
         <FaChevronLeftIcon alt={previousMonthAltText} />
       </Button>
       <Button
-        disabled={isSelectingYear || next.isAfter(to, 'month')}
+        disabled={next.isAfter(to, 'month')}
         onClick={onClickMonthNext}
         size="s"
         className="smarthr-ui-Calendar-monthButtonNext"
