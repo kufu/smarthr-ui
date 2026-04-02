@@ -160,6 +160,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             type="file"
             multiple={multiple}
             disabled={disabled}
+            tabIndex={-1}
             aria-invalid={error || undefined}
             onChange={onChange}
           />
