@@ -472,7 +472,7 @@ const CloseButton = memo<{
     <div className={className}>
       <Button
         type="button"
-        size="s"
+        size="S"
         onClick={onClick}
         className="smarthr-ui-ModelessDialog-closeButton"
       >

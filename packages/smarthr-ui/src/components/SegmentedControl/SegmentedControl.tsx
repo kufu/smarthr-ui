@@ -34,7 +34,7 @@ type AbstractProps = {
   /** 選択肢を押下したときに発火するコールバック関数 */
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
-  size?: 'default' | 's'
+  size?: 'M' | 'S'
 }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
@@ -52,10 +52,10 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      default: {
+      M: {
         button: '[&:has(>_span_>_.smarthr-ui-Icon:only-child)]:shr-p-0.75',
       },
-      s: {
+      S: {
         button: 'shr-p-0.5',
       },
     },
@@ -66,7 +66,7 @@ export const SegmentedControl: FC<Props> = ({
   options,
   value,
   onClickOption,
-  size = 'default',
+  size = 'M',
   className,
   ...rest
 }) => {

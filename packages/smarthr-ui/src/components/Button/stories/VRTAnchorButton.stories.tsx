@@ -22,7 +22,7 @@ type Variant = ComponentProps<typeof AnchorButton>['variant']
  */
 const _cases: Array<ComponentProps<typeof AnchorButton>> = [
   {
-    size: 's',
+    size: 'S',
     href: undefined,
     inactiveReason: undefined,
     prefix: undefined,
@@ -30,7 +30,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     wide: true,
   },
   {
-    size: 'default',
+    size: 'M',
     href: '#',
     inactiveReason: undefined,
     prefix: undefined,
@@ -38,7 +38,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     wide: false,
   },
   {
-    size: 's',
+    size: 'S',
     href: '#',
     inactiveReason: undefined,
     prefix: <FaCirclePlusIcon />,
@@ -46,7 +46,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     wide: false,
   },
   {
-    size: 'default',
+    size: 'M',
     href: undefined,
     inactiveReason: { message: 'ボタンが無効な理由' },
     prefix: undefined,
@@ -54,7 +54,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     wide: false,
   },
   {
-    size: 's',
+    size: 'S',
     href: '#',
     inactiveReason: undefined,
     prefix: undefined,
@@ -62,7 +62,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     wide: true,
   },
   {
-    size: 'default',
+    size: 'M',
     href: undefined,
     inactiveReason: { message: 'ボタンが無効な理由' },
     prefix: <FaCirclePlusIcon />,
@@ -70,7 +70,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     wide: false,
   },
   {
-    size: 's',
+    size: 'S',
     href: undefined,
     inactiveReason: { message: 'ボタンが無効な理由' },
     prefix: <FaCirclePlusIcon />,
@@ -78,7 +78,7 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     wide: false,
   },
   {
-    size: 'default',
+    size: 'M',
     href: undefined,
     inactiveReason: undefined,
     prefix: <FaCirclePlusIcon />,

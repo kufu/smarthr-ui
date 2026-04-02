@@ -36,7 +36,7 @@ const MemoizedDropdownTrigger = memo(() => {
 
   return (
     <DropdownTrigger>
-      <Button variant="skeleton" size="s" className="[&&&]:shr-border-transparent">
+      <Button variant="skeleton" size="S" className="[&&&]:shr-border-transparent">
         <FaCircleQuestionIcon alt={translated.help} />
       </Button>
     </DropdownTrigger>
