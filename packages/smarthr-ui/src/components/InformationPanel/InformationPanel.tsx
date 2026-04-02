@@ -54,7 +54,7 @@ type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: 'shr-p-1.5',

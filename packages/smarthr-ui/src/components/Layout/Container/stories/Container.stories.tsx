@@ -3,7 +3,7 @@ import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 import { DeviceProvider } from '../../../..'
 import { Base } from '../../../Base'
 import { Stack } from '../../Stack'
-import { Container, classNameGenerator } from '../Container'
+import { Container } from '../Container'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
@@ -37,7 +37,7 @@ export const Size: StoryObj<typeof Container> = {
   name: 'size',
   render: (args, context) => (
     <Stack>
-      {[undefined, ...Object.keys(classNameGenerator.variants.size)].map((size) =>
+      {[undefined, 'NARROW', 'DEFAULT', 'WIDE', 'FULL'].map((size) =>
         Template({ ...args, size: size as any }, context),
       )}
     </Stack>

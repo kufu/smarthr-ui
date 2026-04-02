@@ -5,7 +5,7 @@ type Props = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & ComponentPropsWithoutRef<'span'>
 >
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Chip',
     'shr-border-shorthand shr-rounded-full shr-bg-white shr-leading-none shr-text-black',

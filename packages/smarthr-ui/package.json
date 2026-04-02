@@ -158,6 +158,7 @@
     "format:stylelint": "stylelint --fix './src/**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint './**/*.ts{,x}'",
+    "lint:knip": "knip --exclude duplicates",
     "lint:prettier": "prettier --check './src/**/*.ts{,x}'",
     "lint:style": "stylelint './**/*.ts{,x}'",
     "lint:tsc": "tsc --noEmit -p tsconfig.build.json",
