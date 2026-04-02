@@ -52,7 +52,7 @@ const classNameGenerator = tv({
   variants: {
     isSelectingYear: {
       true: {
-        header: 'shr-border-b-0',
+        header: 'shr-border-b-0 shr-shadow-layer-1',
       },
       false: {
         header: 'shr-border-b-shorthand',
