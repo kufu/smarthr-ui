@@ -7,6 +7,7 @@ const classNameGenerator = tv({
   base: [
     'smarthr-ui-Balloon',
     'shr-relative',
+    'shr-z-1',
     'shr-inline-block',
     'shr-text-sm',
     'shr-rounded-s',
