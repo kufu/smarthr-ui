@@ -1,6 +1,7 @@
-import { type ComponentPropsWithoutRef, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+// Shared className generator for AppHeader button styling
+// Used to maintain consistent styling across dropdown menus and navigation items
 export const commonButtonClassNameGenerator = tv({
   base: [
     '[&&]:shr-box-border [&&]:shr-flex [&&]:shr-w-full [&&]:shr-cursor-pointer [&&]:shr-items-center [&&]:shr-border-none [&&]:shr-bg-transparent [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-text-base [&&]:shr-leading-normal [&&]:shr-text-black [&&]:shr-no-underline',
@@ -34,47 +35,3 @@ export const commonButtonClassNameGenerator = tv({
     rounded: true,
   },
 })
-
-type AnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'prefix'>
-type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'prefix'>
-
-type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & ButtonProps)) & {
-  prefix?: ReactNode
-  current?: boolean
-  boldWhenCurrent?: boolean
-}
-
-export const CommonButton = memo<Props>(
-  ({ elementAs, prefix, current, boldWhenCurrent, className, children, ...rest }) => {
-    const actualClassName = useMemo(
-      () =>
-        commonButtonClassNameGenerator({
-          prefix: !!prefix,
-          current,
-          boldWhenCurrent,
-          className,
-        }),
-      [current, prefix, boldWhenCurrent, className],
-    )
-
-    switch (elementAs) {
-      case 'a':
-        return (
-          <a {...(rest as AnchorProps)} className={actualClassName}>
-            {prefix}
-            {children}
-          </a>
-        )
-      case 'button':
-        return (
-          // eslint-disable-next-line smarthr/best-practice-for-button-element
-          <button {...(rest as ButtonProps)} className={actualClassName}>
-            {prefix}
-            {children}
-          </button>
-        )
-    }
-
-    throw new Error(elementAs satisfies never)
-  },
-)

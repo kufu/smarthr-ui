@@ -1,8 +1,9 @@
 import { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { AnchorButton, Button } from '../../../Button'
 import { isChildNavigation } from '../../utils'
-import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
@@ -10,10 +11,10 @@ import { NavigationContext } from './NavigationContext'
 
 import type {
   Navigation,
-  NavigationButton,
+  NavigationButton as NavigationButtonType,
   NavigationCustomTag,
   NavigationGroup,
-  NavigationLink,
+  NavigationLink as NavigationLinkType,
 } from '../../types'
 
 const classNameGenerator = tv({
@@ -81,16 +82,23 @@ const NavigationCustomTag = memo<
   },
 )
 
-const NavigationLink = memo<NavigationLink & { className: string }>(
-  ({ href, current, children, className }) => (
-    <CommonButton elementAs="a" href={href} current={current} boldWhenCurrent className={className}>
-      <Translate>{children}</Translate>
-    </CommonButton>
-  ),
+const NavigationLink = memo<NavigationLinkType & { className: string }>(
+  ({ href, current, children, className }) => {
+    const buttonClassName = useMemo(
+      () => commonButtonClassNameGenerator({ current, boldWhenCurrent: true, className }),
+      [current, className],
+    )
+
+    return (
+      <AnchorButton href={href} className={buttonClassName}>
+        <Translate>{children}</Translate>
+      </AnchorButton>
+    )
+  },
 )
 
 const NavigationButton: FC<
-  Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }
+  Pick<Props, 'onClickNavigation'> & { navigation: NavigationButtonType; className: string }
 > = ({ navigation, onClickNavigation, className }) => {
   const onClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -100,17 +108,15 @@ const NavigationButton: FC<
     [navigation, onClickNavigation],
   )
 
+  const buttonClassName = useMemo(
+    () => commonButtonClassNameGenerator({ current: navigation.current, boldWhenCurrent: true, className }),
+    [navigation.current, className],
+  )
+
   return (
-    <CommonButton
-      elementAs="button"
-      type="button"
-      onClick={onClick}
-      current={navigation.current}
-      boldWhenCurrent
-      className={className}
-    >
+    <Button type="button" onClick={onClick} className={buttonClassName}>
       <Translate>{navigation.children}</Translate>
-    </CommonButton>
+    </Button>
   )
 }
 

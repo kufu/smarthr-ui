@@ -2,12 +2,12 @@ import { type FC, memo, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
-import { Button } from '../../../Button'
+import { AnchorButton, Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
 import { buildDisplayName } from '../../utils'
-import { CommonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import { LanguageSelector } from './LanguageSelector'
@@ -80,6 +80,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
       iconButtonInner: iconButtonInner(),
       dropdownUserName: dropdownUserName(),
       dropdownButtonArea: dropdownButtonArea(),
+      menuButton: commonButtonClassNameGenerator(),
     }
   }, [])
 
@@ -102,27 +103,27 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
           {(locale || accountUrl) && (
             <div className={classNames.dropdownButtonArea}>
               {locale && (
-                <CommonButton
-                  elementAs="button"
+                <Button
                   type="button"
                   onClick={dialogOpen}
                   prefix={<FaGlobeIcon />}
+                  className={classNames.menuButton}
                   // eslint-disable-next-line smarthr/require-i18n-text
                 >
                   Language
-                </CommonButton>
+                </Button>
               )}
 
               {accountUrl && (
-                <CommonButton
-                  elementAs="a"
+                <AnchorButton
                   href={accountUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   prefix={<FaGearIcon />}
+                  className={classNames.menuButton}
                 >
                   <Translate>{translated.userSetting}</Translate>
-                </CommonButton>
+                </AnchorButton>
               )}
             </div>
           )}
