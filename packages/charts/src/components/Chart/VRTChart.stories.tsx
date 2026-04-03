@@ -1,13 +1,12 @@
+// eslint-disable-next-line smarthr/require-barrel-import
 import { Stack } from '../../../../smarthr-ui/src/components/Layout'
 import { multiSmall, singleSmall } from '../__stories__/testData'
 
 import { Chart } from './Chart'
 
-import type { StoryObj } from '@storybook/react-webpack5'
-
 export default {
-  title: 'Chart/VRT',
-  render: (args: any) => (
+  title: 'Charts/Chart/VRT',
+  render: (args) => (
     <Stack {...args}>
       {/* Bar型 パターン1: 単一データセット、タイトルあり、標準サイズ */}
       <div className="shr-h-[400px]">
@@ -38,7 +37,7 @@ export default {
 
 export const VRT = {}
 
-export const VRTForcedColors: StoryObj = {
+export const VRTForcedColors = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

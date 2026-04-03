@@ -2,10 +2,10 @@ import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/
 
 import { BarChart } from './BarChart'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta<typeof BarChart> = {
-  title: 'BarChart',
+  title: 'Charts/BarChart',
   component: BarChart,
   decorators: [
     (Story) => (
