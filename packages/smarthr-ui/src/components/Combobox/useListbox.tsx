@@ -75,7 +75,7 @@ export const useListbox = <T,>({
   isExpanded,
   isLoading,
   triggerRef,
-  noResultText: propsNoResultText,
+  noResultText: orgNoResultText,
 }: Props<T>) => {
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
@@ -275,19 +275,17 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const loadingText = useMemo(
-    () => localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
-    [localize],
-  )
-
-  const noResultText = useMemo(
-    () =>
-      propsNoResultText ??
-      localize({
-        id: 'smarthr-ui/Combobox/noResultsText',
-        defaultText: '一致する選択肢がありません。',
-      }),
-    [propsNoResultText, localize],
+  const { loadingText, noResultText } = useMemo(
+    () => ({
+      loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
+      noResultText:
+        orgNoResultText ??
+        localize({
+          id: 'smarthr-ui/Combobox/noResultsText',
+          defaultText: '一致する選択肢がありません。',
+        }),
+    }),
+    [orgNoResultText, localize],
   )
 
   const renderListBox = useCallback(
