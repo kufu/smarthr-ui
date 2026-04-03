@@ -5,7 +5,7 @@ import { LoaderSpinner } from './LoaderSpinner'
 
 type AbstractProps = {
   /** ローダーの大きさ */
-  size?: 's' | 'm'
+  size?: 'S' | 'M'
   /** 代替テキスト */
   alt?: ReactNode
   /** 表示するメッセージ */
@@ -33,7 +33,7 @@ const classNameGenerator = tv({
 })
 
 export const Loader = memo<Props>(
-  ({ size = 'm', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
+  ({ size = 'M', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
     const classNames = useMemo(() => {
       const { wrapper, textSlot } = classNameGenerator({
         type,

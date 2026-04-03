@@ -60,7 +60,7 @@ const classNameGenerator = tv({
 
 export const SideNav: FC<Props> = ({
   items,
-  size = 'default',
+  size = 'M',
   onClick,
   className,
   rounded,
@@ -107,11 +107,14 @@ export const SideNav: FC<Props> = ({
               'type' in child &&
               child.type === SideNavItemButton
             ) {
-              return cloneElement(child as React.ReactElement, {
-                // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
-                size,
-                onClick: actualOnClick,
-              })
+              return cloneElement(
+                child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
+                {
+                  // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
+                  size,
+                  onClick: actualOnClick,
+                },
+              )
             }
 
             return child

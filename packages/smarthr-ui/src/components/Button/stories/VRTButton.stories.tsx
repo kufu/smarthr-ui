@@ -33,7 +33,7 @@ const Template: StoryFn = (args) => (
             <Button variant={variant}>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" suffix={<FaCaretDownIcon />} wide>
+            <Button variant={variant} size="S" suffix={<FaCaretDownIcon />} wide>
               ボタン
             </Button>
             <Button
@@ -47,18 +47,18 @@ const Template: StoryFn = (args) => (
             <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
               ボタン
             </Button>
-            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />} wide>
+            <Button variant={variant} size="S" loading prefix={<FaCirclePlusIcon />} wide>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" disabled prefix={<FaCirclePlusIcon />} wide>
+            <Button variant={variant} size="S" disabled prefix={<FaCirclePlusIcon />} wide>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />}>
+            <Button variant={variant} size="S" loading prefix={<FaCirclePlusIcon />}>
               ボタン
             </Button>
             <Button
               variant={variant}
-              size="s"
+              size="S"
               disabled
               disabledReason={{ message: 'ボタンが無効な理由' }}
               prefix={<FaCirclePlusIcon />}
