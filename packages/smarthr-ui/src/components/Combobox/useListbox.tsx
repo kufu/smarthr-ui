@@ -35,6 +35,8 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
+  /** 検索結果が0件の時に表示するコンテンツ */
+  noResultText?: ReactNode
 }
 
 type Rect = {
@@ -73,6 +75,7 @@ export const useListbox = <T,>({
   isExpanded,
   isLoading,
   triggerRef,
+  noResultText: propsNoResultText,
 }: Props<T>) => {
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
@@ -279,11 +282,12 @@ export const useListbox = <T,>({
 
   const noResultText = useMemo(
     () =>
+      propsNoResultText ??
       localize({
         id: 'smarthr-ui/Combobox/noResultsText',
         defaultText: '一致する選択肢がありません。',
       }),
-    [localize],
+    [propsNoResultText, localize],
   )
 
   const renderListBox = useCallback(

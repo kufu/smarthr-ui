@@ -63,6 +63,10 @@ type AbstractProps<T> = ComboboxProps<T> & {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
+  /**
+   * 検索結果が0件の時に表示するコンテンツ
+   */
+  noResultText?: ReactNode
 }
 type Props<T> = AbstractProps<T> &
   Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
@@ -141,6 +145,7 @@ const ActualSingleCombobox = <T,>(
     onFocus,
     onBlur,
     onKeyPress,
+    noResultText,
     style,
     ...rest
   }: Props<T>,
@@ -193,6 +198,7 @@ const ActualSingleCombobox = <T,>(
     isExpanded,
     isLoading,
     triggerRef: outerRef,
+    noResultText,
   })
 
   const selectDefaultItem = useMemo(

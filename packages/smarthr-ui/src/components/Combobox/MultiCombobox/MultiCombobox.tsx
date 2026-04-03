@@ -5,6 +5,7 @@ import {
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   type Ref,
   memo,
   useCallback,
@@ -66,6 +67,10 @@ type AbstractProps<T> = ComboboxProps<T> & {
    * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
    */
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
+  /**
+   * 検索結果が0件の時に表示するコンテンツ
+   */
+  noResultText?: ReactNode
 }
 type Props<T> = AbstractProps<T> &
   Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
@@ -171,6 +176,7 @@ const ActualMultiCombobox = <T,>(
     onBlur,
     onKeyPress,
     isItemSelected,
+    noResultText,
     style,
     ...rest
   }: Props<T>,
@@ -246,6 +252,7 @@ const ActualMultiCombobox = <T,>(
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
+    noResultText,
   })
 
   const {
