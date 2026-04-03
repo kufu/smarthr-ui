@@ -275,7 +275,7 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const { loadingText, noResultText } = useMemo(
+  const texts = useMemo(
     () => ({
       loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
       noResultText:
@@ -293,7 +293,7 @@ export const useListbox = <T,>({
       createPortal(
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{loadingText}</VisuallyHiddenText>
+            <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
           )}
           <div
             id={listBoxId}
@@ -319,7 +319,7 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {noResultText}
+                  {texts.noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -347,8 +347,7 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      loadingText,
-      noResultText,
+      texts,
       handleAdd,
       handleHoverOption,
       handleSelect,
