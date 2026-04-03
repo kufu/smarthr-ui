@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "90.0.1",
+  "version": "91.0.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -158,6 +158,7 @@
     "format:stylelint": "stylelint --fix './src/**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint './**/*.ts{,x}'",
+    "lint:knip": "knip --exclude duplicates",
     "lint:prettier": "prettier --check './src/**/*.ts{,x}'",
     "lint:style": "stylelint './**/*.ts{,x}'",
     "lint:tsc": "tsc --noEmit -p tsconfig.build.json",

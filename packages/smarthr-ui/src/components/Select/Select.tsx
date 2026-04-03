@@ -35,7 +35,7 @@ type AbstractProps<T extends string> = {
   /** コンポーネントの幅 */
   width?: number | string
   /** コンポーネントの大きさ */
-  size?: 'default' | 's'
+  size?: 'M' | 'S'
   /** 空の選択肢を表示するかどうか */
   hasBlank?: boolean
   /** 空の選択肢のラベル */
@@ -67,12 +67,12 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      default: {
+      M: {
         select: 'shr-py-0.5 shr-pe-2 shr-ps-0.5',
         // ((右 padding - アイコン幅) / 2) + 右 border
         iconWrap: 'shr-end-[calc(theme(spacing[0.5])_+_theme(spacing.px))]',
       },
-      s: {
+      S: {
         select: [
           'shr-px-0.5 shr-py-0.25 shr-pe-1.5 shr-text-sm',
           /* padding に依る積み上げでは文字が見切れてしまうため */
@@ -123,7 +123,7 @@ const ActualSelect = <T extends string>(
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap, blankOptgroup } = classNameGenerator()
     const sizeProps = {
-      size: size || 'default',
+      size: size || 'M',
     }
 
     return {

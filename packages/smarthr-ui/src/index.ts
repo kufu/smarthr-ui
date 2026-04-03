@@ -21,21 +21,21 @@ export { Textarea } from './components/Textarea'
 export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
-  ActionDialog,
-  FormDialog,
+  ControlledActionDialog,
+  ControlledFormDialog,
   Dialog,
   DialogCloser,
   DialogContent,
   DialogTrigger,
   DialogWrapper,
-  MessageDialog,
+  ControlledMessageDialog,
   ModelessDialog,
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
   RemoteTriggerFormDialog,
   RemoteTriggerStepFormDialog,
   RemoteTriggerMessageDialog,
-  StepFormDialog,
+  ControlledStepFormDialog,
   StepFormDialogItem,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
@@ -44,7 +44,7 @@ export { RadioButtonPanel } from './components/RadioButtonPanel'
 export { AnchorButton, Button, UnstyledButton } from './components/Button'
 export { StatusLabel, RequiredLabel } from './components/StatusLabel'
 export { Base, BaseColumn } from './components/Base'
-// eslint-disable-next-line no-restricted-syntax -- Icon exports all 200+ icons from FaIcon
+// eslint-disable-next-line no-restricted-syntax -- Iconから200以上のアイコンをexport
 export * from './components/Icon'
 export { SmartHRAILogo } from './components/SmartHRAILogo'
 export { SmartHRLogo } from './components/SmartHRLogo'
@@ -113,6 +113,7 @@ export { Browser } from './components/Browser'
 export { WarekiPicker } from './components/WarekiPicker'
 export { AppHeader } from './components/AppHeader'
 export { Timeline, TimelineItem } from './components/Timeline'
+export { Scroller } from './components/Scroller'
 
 // layout components
 export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'

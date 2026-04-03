@@ -20,6 +20,7 @@ import {
   FaMagnifyingGlassMinusIcon,
   FaMagnifyingGlassPlusIcon,
   Loader,
+  Scroller,
   Text,
   VisuallyHiddenText,
 } from '../..'
@@ -106,8 +107,9 @@ export const FileViewer: FC<Props> = ({
   }, [fixedWidth])
 
   return (
-    <div
-      className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-overflow-auto shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
+    <Scroller
+      direction="both"
+      className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
       ref={ref}
     >
       <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
@@ -123,7 +125,7 @@ export const FileViewer: FC<Props> = ({
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
         {!loaded && (
           <div className="shr-pointer-events-none shr-fixed shr-inset-0 shr-flex shr-h-full shr-w-full shr-items-center shr-justify-center">
-            <Loader type="light" size="m" />
+            <Loader type="light" size="M" />
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
@@ -157,7 +159,7 @@ export const FileViewer: FC<Props> = ({
           )}
         </div>
       </div>
-    </div>
+    </Scroller>
   )
 }
 

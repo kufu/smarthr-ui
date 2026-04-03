@@ -69,7 +69,7 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
         </Heading>
 
         <Button
-          size="s"
+          size="S"
           aria-expanded={isOpen}
           aria-controls={id}
           className="[&&]:shr-min-h-0 [&&]:shr-p-0.25"

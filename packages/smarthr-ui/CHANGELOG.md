@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [91.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v90.0.1...smarthr-ui-v91.0.0) (2026-04-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* Dialog* コンポーネントを ControlledDialog* に変更 ([#6195](https://github.com/kufu/smarthr-ui/issues/6195))
+* **StepFormDialog:** キャンセル・次へ・戻る・submitボタンの設定をstep毎に分岐できるようにする ([#6157](https://github.com/kufu/smarthr-ui/issues/6157))
+* **ResponseMessage,Heading,FormControl,Fieldset:** ResponseMessageの意図外の利用を阻止するため、iconGap属性を削除 & 必要な箇所でiconとテキストの間隔を調整できるようにする ([#5981](https://github.com/kufu/smarthr-ui/issues/5981))
+* barrel fileの明示的export化 ([#6217](https://github.com/kufu/smarthr-ui/issues/6217))
+* AppHeader から arbitraryDisplayName props を削除 ([#6183](https://github.com/kufu/smarthr-ui/issues/6183))
+
+### Features
+
+* Base[overflow="hidden"]を使わずとも角丸を実現できるよう、各コンポーネントにrounded属性を追加する ([#6181](https://github.com/kufu/smarthr-ui/issues/6181)) ([28d1227](https://github.com/kufu/smarthr-ui/commit/28d122745ca76c828e60570365cff49921f2ad94))
+* export/import パターンの制限ルール追加 ([#6219](https://github.com/kufu/smarthr-ui/issues/6219)) ([d2d8229](https://github.com/kufu/smarthr-ui/commit/d2d82299089619b8a57576b8015fa305cf1ed584))
+* **ResponseMessage,Heading,FormControl,Fieldset:** ResponseMessageの意図外の利用を阻止するため、iconGap属性を削除 & 必要な箇所でiconとテキストの間隔を調整できるようにする ([#5981](https://github.com/kufu/smarthr-ui/issues/5981)) ([a7d03d9](https://github.com/kufu/smarthr-ui/commit/a7d03d9dfb9e7cfa66bfc0d57fb5c390f8d3905c))
+* Scrollerコンポーネントを定義 ([#6187](https://github.com/kufu/smarthr-ui/issues/6187)) ([bb10eea](https://github.com/kufu/smarthr-ui/commit/bb10eeae52b5214bee91eefbde42b6181977a963))
+* **SingleCombobox, MultipleCombobox:** 選択肢を選んだ際、onChangeInputを空文字で発火する処理を追加 ([#6191](https://github.com/kufu/smarthr-ui/issues/6191)) ([e964ad4](https://github.com/kufu/smarthr-ui/commit/e964ad4b1183ed63d35d07739d10e7d6652b5841))
+* **StepFormDialog:** キャンセル・次へ・戻る・submitボタンの設定をstep毎に分岐できるようにする ([#6157](https://github.com/kufu/smarthr-ui/issues/6157)) ([2c2731d](https://github.com/kufu/smarthr-ui/commit/2c2731dc97f179de9da572e4d7632f4d5a0db6b7))
+
+
+### Bug Fixes
+
+* AccordionPanelのrounded cornersが表示されない問題を修正 ([#6227](https://github.com/kufu/smarthr-ui/issues/6227)) ([6accfc6](https://github.com/kufu/smarthr-ui/commit/6accfc6a0c8307684b150ca078af337c9c1c9561))
+* AppHeader から arbitraryDisplayName props を削除 ([#6183](https://github.com/kufu/smarthr-ui/issues/6183)) ([596659f](https://github.com/kufu/smarthr-ui/commit/596659f49a69d8eb1798e215a50f9751beadd9ce))
+* LineClampで短いテキストがw-fullによって意図せず引き伸ばされる問題を修正 ([#6220](https://github.com/kufu/smarthr-ui/issues/6220)) ([d36f908](https://github.com/kufu/smarthr-ui/commit/d36f908560f86059109be73a6b863bd0a83eaf40))
+
+
+### Code Refactoring
+
+* barrel fileの明示的export化 ([#6217](https://github.com/kufu/smarthr-ui/issues/6217)) ([52fcd4f](https://github.com/kufu/smarthr-ui/commit/52fcd4f43043b21da2a750f4bcb2dedfd9d7f5d4))
+* Dialog* コンポーネントを ControlledDialog* に変更 ([#6195](https://github.com/kufu/smarthr-ui/issues/6195)) ([50c33b9](https://github.com/kufu/smarthr-ui/commit/50c33b90992e7a0f7a83ea7dbb5a2a8ff0efe64b))
+
 ## [90.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v90.0.0...smarthr-ui-v90.0.1) (2026-03-26)
 
 

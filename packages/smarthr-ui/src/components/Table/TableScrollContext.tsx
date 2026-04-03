@@ -12,6 +12,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { defaultHtmlFontSize } from '../../themes'
+import { Scroller } from '../Scroller'
 
 type Props = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
@@ -21,7 +22,7 @@ type Props = PropsWithChildren &
 const classNameGenerator = tv({
   slots: {
     // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
-    wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5 shr-overflow-y-auto',
+    wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
   },
 })
 
@@ -58,9 +59,9 @@ export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
     }, [fixedHead])
 
     return (
-      <div {...rest} ref={setRefs} className={classNames.wrapper}>
+      <Scroller {...rest} ref={setRefs} direction="horizontal" className={classNames.wrapper}>
         {children}
-      </div>
+      </Scroller>
     )
   },
 )

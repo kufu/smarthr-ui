@@ -49,7 +49,7 @@ export default {
                     <tr key={i}>
                       {fixed === 'left' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                       <TdCheckbox
@@ -68,7 +68,7 @@ export default {
                       ))}
                       {fixed === 'right' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                     </tr>
@@ -77,7 +77,7 @@ export default {
                     <tr key={i}>
                       {fixed === 'left' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                       <TdRadioButton
@@ -96,7 +96,7 @@ export default {
                       ))}
                       {fixed === 'right' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                     </tr>

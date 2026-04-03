@@ -83,7 +83,7 @@ const SelectorHeading = memo<
   <div className={wrapperClassName}>
     {/* eslint-disable-next-line smarthr/require-i18n-text */}
     <Heading className={className}>Language</Heading>
-    <Button type="button" size="s" onClick={onClickClose}>
+    <Button type="button" size="S" onClick={onClickClose}>
       {/* eslint-disable-next-line smarthr/require-i18n-text */}
       <FaXmarkIcon alt="close" />
     </Button>

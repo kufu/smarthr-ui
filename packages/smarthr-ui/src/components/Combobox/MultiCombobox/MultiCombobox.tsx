@@ -24,6 +24,7 @@ import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
+import { Scroller } from '../../Scroller'
 import { areItemsEqual } from '../helper'
 import { useFocusControl } from '../useFocusControl'
 import { useListbox } from '../useListbox'
@@ -101,7 +102,7 @@ const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'has-[[aria-invalid]]:shr-border-danger',
     ],
-    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
+    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5',
     selectedList:
       'smarthr-ui-MultiCombobox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
     inputWrapper: 'shr-flex shr-flex-1 shr-items-center',
@@ -494,7 +495,7 @@ const ActualMultiCombobox = <T,>(
       className={classNames.wrapper}
       style={wrapperStyle}
     >
-      <div className={classNames.inputArea}>
+      <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
           aria-label={selectedListAriaLabel}
@@ -545,7 +546,7 @@ const ActualMultiCombobox = <T,>(
         {selectedItems.length === 0 && placeholder && !isFocused && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
-      </div>
+      </Scroller>
 
       <MemoizedCaretDown
         disabled={disabled}

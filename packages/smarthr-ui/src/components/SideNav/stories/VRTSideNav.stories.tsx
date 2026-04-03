@@ -8,7 +8,7 @@ import { _sideNavItems } from './SideNav.stories'
 
 import type { Meta } from '@storybook/react-webpack5'
 
-const sizeCasse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
+const sizeCasse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'M', 'S']
 
 export default {
   title: 'Components/SideNav/VRT',
