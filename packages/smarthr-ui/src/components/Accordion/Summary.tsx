@@ -18,15 +18,15 @@ import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 
-import { AccordionPanelContext } from './AccordionPanel'
-import { AccordionPanelItemContext } from './AccordionPanelItem'
+import { DetailsContext } from './Details'
+import { DetailsItemContext } from './DetailsItem'
 import {
   focusFirstSibling,
   focusLastSibling,
   focusNextSibling,
   focusPreviousSibling,
   getNewExpandedItems,
-} from './accordionPanelHelper'
+} from './detailsHelper'
 
 import type { TextProps } from '../Text'
 
@@ -45,13 +45,13 @@ const classNameGenerator = tv({
     title: 'shr-grow shr-leading-tight',
     titleWrapper: 'shr-flex-nowrap',
     button: [
-      'smarthr-ui-AccordionPanel-trigger',
+      'smarthr-ui-Details-trigger',
       'shr-group shr-w-full shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0.75 shr-text-left shr-text-inherit shr-text-color-inherit',
       'disabled:shr-cursor-not-allowed disabled:shr-bg-white-darken disabled:shr-text-disabled',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
-      // Base 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Base に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
-      '[.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
+      // Panel 直下に Details がある場合、背景が付き抜けないように角丸を指定（Panel に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
+      '[.smarthr-ui-Panel_>_.smarthr-ui-Details_.smarthr-ui-Details-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Panel_>_.smarthr-ui-Details_.smarthr-ui-Details-item:last-child_&]:shr-rounded-b-l',
     ],
     leftIcon: 'shr-transition-transform shr-duration-100 group-aria-expanded:shr-rotate-90',
     rightIcon: 'group-aria-expanded:-shr-rotate-180',
@@ -64,7 +64,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelTrigger: FC<Props> = ({
+export const Summary: FC<Props> = ({
   children,
   className,
   headingType = 'blockTitle',
@@ -83,7 +83,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
     }
   }, [className])
 
-  const { name } = useContext(AccordionPanelItemContext)
+  const { name } = useContext(DetailsItemContext)
   const {
     iconPosition,
     expandedItems,
@@ -91,7 +91,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
     onClickProps,
     expandableMultiply,
     parentRef,
-  } = useContext(AccordionPanelContext)
+  } = useContext(DetailsContext)
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
@@ -183,7 +183,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         className={classNames.button}
-        data-component="AccordionHeaderButton"
+        data-component="SummaryButton"
       >
         <MemoizedTitle iconPosition={iconPosition} classNames={classNames}>
           {children}

@@ -21,24 +21,24 @@ export const getNewExpandedItems = (
   return newState
 }
 
-const getSiblingButtons = (parent: HTMLDivElement): HTMLElement[] =>
-  Array.from(parent.querySelectorAll('[data-component="AccordionHeaderButton"]'))
+const getSiblingButtons = (parent: HTMLUListElement): HTMLElement[] =>
+  Array.from(parent.querySelectorAll('[data-component="SummaryButton"]'))
 
-export const focusFirstSibling = (parent: HTMLDivElement): void => {
+export const focusFirstSibling = (parent: HTMLUListElement): void => {
   const siblings = getSiblingButtons(parent)
   const first = siblings[0]
 
   first.focus()
 }
 
-export const focusLastSibling = (parent: HTMLDivElement): void => {
+export const focusLastSibling = (parent: HTMLUListElement): void => {
   const siblings = getSiblingButtons(parent)
   const last = siblings[siblings.length - 1]
 
   last.focus()
 }
 
-export const focusNextSibling = (item: HTMLElement, parent: HTMLDivElement): void => {
+export const focusNextSibling = (item: HTMLElement, parent: HTMLUListElement): void => {
   const siblings = getSiblingButtons(parent)
   const current = siblings.indexOf(item)
 
@@ -53,7 +53,7 @@ export const focusNextSibling = (item: HTMLElement, parent: HTMLDivElement): voi
   }
 }
 
-export const focusPreviousSibling = (item: HTMLElement, parent: HTMLDivElement): void => {
+export const focusPreviousSibling = (item: HTMLElement, parent: HTMLUListElement): void => {
   const siblings = getSiblingButtons(parent)
   const current = siblings.indexOf(item)
 

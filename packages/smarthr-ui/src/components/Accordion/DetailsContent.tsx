@@ -13,15 +13,15 @@ import { tv } from 'tailwind-variants'
 
 import { getIsInclude } from '../../libs/map'
 
-import { AccordionPanelContext } from './AccordionPanel'
-import { AccordionPanelItemContext } from './AccordionPanelItem'
+import { DetailsContext } from './Details'
+import { DetailsItemContext } from './DetailsItem'
 
 type AbstractProps = PropsWithChildren
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: [
-    'smarthr-ui-AccordionPanel-content',
+    'smarthr-ui-Details-content',
     'shr-invisible shr-max-h-0 shr-opacity-0 shr-transition-[max-height,_visible,_opacity] shr-duration-150 shr-ease-in-out',
     '[&.entered]:shr-visible [&.entered]:shr-max-h-[revert] [&.entered]:shr-opacity-100',
     // HINT: flexなどで囲まれると、非表示だが内容分高さが出てしまい、スクロール領域が不自然に伸びてしまう現象が起きる場合がある
@@ -30,9 +30,9 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelContent: FC<Props> = ({ className, ...rest }) => {
-  const { name } = useContext(AccordionPanelItemContext)
-  const { expandedItems } = useContext(AccordionPanelContext)
+export const DetailsContent: FC<Props> = ({ className, ...rest }) => {
+  const { name } = useContext(DetailsItemContext)
+  const { expandedItems } = useContext(DetailsContext)
   const visible = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
   const wrapperRef = useRef<HTMLDivElement>(null)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])

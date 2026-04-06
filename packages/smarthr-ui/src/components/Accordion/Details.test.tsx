@@ -5,12 +5,12 @@ import { userEvent } from 'storybook/test'
 import { Fieldset } from '../Fieldset'
 import { RadioButton } from '../RadioButton'
 
-import { AccordionPanel } from './AccordionPanel'
-import { AccordionPanelContent } from './AccordionPanelContent'
-import { AccordionPanelItem } from './AccordionPanelItem'
-import { AccordionPanelTrigger } from './AccordionPanelTrigger'
+import { Details } from './Details'
+import { DetailsContent } from './DetailsContent'
+import { DetailsItem } from './DetailsItem'
+import { Summary } from './Summary'
 
-describe('AccordionPanel', () => {
+describe('Details', () => {
   beforeAll(() => {
     config.disabled = true
   })
@@ -22,27 +22,27 @@ describe('AccordionPanel', () => {
   test('アコーディオン内に配置したラジオボタンをキーボード操作できる', async () => {
     render(
       <form>
-        <AccordionPanel>
-          <AccordionPanelItem name="accordion-panel-1">
-            <AccordionPanelTrigger>アコーディオンパネル1</AccordionPanelTrigger>
-            <AccordionPanelContent>
+        <Details>
+          <DetailsItem name="accordion-panel-1">
+            <Summary>アコーディオンパネル1</Summary>
+            <DetailsContent>
               <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio1">ラジオボタン1-1</RadioButton>
                 <RadioButton name="radio1">ラジオボタン1-2</RadioButton>
               </Fieldset>
-            </AccordionPanelContent>
-          </AccordionPanelItem>
+            </DetailsContent>
+          </DetailsItem>
 
-          <AccordionPanelItem name="accordion-panel-2">
-            <AccordionPanelTrigger>アコーディオンパネル2</AccordionPanelTrigger>
-            <AccordionPanelContent>
+          <DetailsItem name="accordion-panel-2">
+            <Summary>アコーディオンパネル2</Summary>
+            <DetailsContent>
               <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio2">ラジオボタン2-1</RadioButton>
                 <RadioButton name="radio2">ラジオボタン2-2</RadioButton>
               </Fieldset>
-            </AccordionPanelContent>
-          </AccordionPanelItem>
-        </AccordionPanel>
+            </DetailsContent>
+          </DetailsItem>
+        </Details>
       </form>,
     )
 
@@ -66,30 +66,30 @@ describe('AccordionPanel', () => {
     expect(screen.getByRole('radio', { name: 'ラジオボタン1-1' })).toBeChecked()
   })
 
-  test('矢印キーでAccordionPanelItem間を移動できる', async () => {
+  test('矢印キーでDetailsItem間を移動できる', async () => {
     render(
       <form>
-        <AccordionPanel>
-          <AccordionPanelItem name="accordion-panel-1">
-            <AccordionPanelTrigger>アコーディオンパネル1</AccordionPanelTrigger>
-            <AccordionPanelContent>
+        <Details>
+          <DetailsItem name="accordion-panel-1">
+            <Summary>アコーディオンパネル1</Summary>
+            <DetailsContent>
               <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio1">ラジオボタン1-1</RadioButton>
                 <RadioButton name="radio1">ラジオボタン1-2</RadioButton>
               </Fieldset>
-            </AccordionPanelContent>
-          </AccordionPanelItem>
+            </DetailsContent>
+          </DetailsItem>
 
-          <AccordionPanelItem name="accordion-panel-2">
-            <AccordionPanelTrigger>アコーディオンパネル2</AccordionPanelTrigger>
-            <AccordionPanelContent>
+          <DetailsItem name="accordion-panel-2">
+            <Summary>アコーディオンパネル2</Summary>
+            <DetailsContent>
               <Fieldset legend="ラジオボタン" innerMargin={0.5}>
                 <RadioButton name="radio2">ラジオボタン2-1</RadioButton>
                 <RadioButton name="radio2">ラジオボタン2-2</RadioButton>
               </Fieldset>
-            </AccordionPanelContent>
-          </AccordionPanelItem>
-        </AccordionPanel>
+            </DetailsContent>
+          </DetailsItem>
+        </Details>
       </form>,
     )
 
