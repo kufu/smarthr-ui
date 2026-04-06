@@ -1,7 +1,7 @@
 import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
 import { DeviceProvider } from '../../../..'
-import { Base } from '../../../Base'
+import { Panel } from '../../../Base'
 import { Stack } from '../../Stack'
 import { Container } from '../Container'
 
@@ -89,8 +89,8 @@ const DisplayDimensionsBase: React.FC<
   })
 
   return (
-    <Base {...rest} ref={target}>
+    <Panel {...rest} ref={target}>
       コンテナ{size}: {dimensions.width}px
-    </Base>
+    </Panel>
   )
 }

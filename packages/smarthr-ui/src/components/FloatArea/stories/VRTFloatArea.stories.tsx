@@ -1,4 +1,4 @@
-import { Base } from '../../Base'
+import { Panel } from '../../Base'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
 import { FloatArea } from '../FloatArea'
@@ -11,9 +11,9 @@ export default {
     <Stack gap={1.5}>
       <Stack>
         {[...Array(15)].map((_, index) => (
-          <Base padding={1.5} key={index}>
+          <Panel padding={1.5} key={index}>
             <div className="shr-h-2" />
-          </Base>
+          </Panel>
         ))}
       </Stack>
       <FloatArea

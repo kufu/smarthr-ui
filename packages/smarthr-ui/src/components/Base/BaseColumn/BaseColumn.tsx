@@ -2,9 +2,9 @@ import { type ComponentProps, type FC, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../../tailwind'
-import { Base } from '../Base'
+import { Panel } from '../Panel'
 
-type AbstractProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'> &
+type AbstractProps = Omit<ComponentProps<typeof Panel>, 'radius' | 'layer'> &
   VariantProps<typeof classNameGenerator>
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
@@ -33,5 +33,5 @@ export const BaseColumn: FC<Props> = ({ bgColor, rounded, padding = 1, className
     [bgColor, rounded, className],
   )
 
-  return <Base {...rest} padding={padding} layer={0} className={actualClassName} />
+  return <Panel {...rest} padding={padding} layer={0} className={actualClassName} />
 }

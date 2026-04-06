@@ -1,4 +1,4 @@
-import { Base } from '../../Base'
+import { Panel } from '../../Base'
 import { Stack } from '../../Layout'
 import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
@@ -77,24 +77,24 @@ export const Rounded: StoryObj<typeof Table> = {
   name: 'rounded',
   render: (args) => (
     <Stack>
-      <Base>
+      <Panel>
         <Template {...args} rounded />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="all" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="top" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="right" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="bottom" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="left" />
-      </Base>
+      </Panel>
     </Stack>
   ),
 }

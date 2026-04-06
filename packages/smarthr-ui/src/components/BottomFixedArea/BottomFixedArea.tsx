@@ -15,7 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
+import { Panel } from '../Base'
 import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
 
@@ -91,7 +91,7 @@ export const BottomFixedArea: FC<Props> = ({
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base {...rest} className={classNames.wrapper} style={style}>
+    <Panel {...rest} className={classNames.wrapper} style={style}>
       <Stack>
         <Description>{description}</Description>
         <Stack gap={0.25}>
@@ -133,7 +133,7 @@ export const BottomFixedArea: FC<Props> = ({
           )}
         </Stack>
       </Stack>
-    </Base>
+    </Panel>
   )
 }
 

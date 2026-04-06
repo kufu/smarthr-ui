@@ -1,3 +1,3 @@
-export { Base } from './Base'
-export type { ElementProps as BaseElementProps } from './Base'
+export { Panel } from './Panel'
+export type { ElementProps as PanelElementProps } from './Panel'
 export { BaseColumn } from './BaseColumn'

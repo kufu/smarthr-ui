@@ -14,8 +14,8 @@ import { useSectionWrapper } from '../SectioningContent'
 
 import type { Gap } from '../../types'
 
-export const baseClassNameGenerator = tv({
-  base: 'smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
+export const panelClassNameGenerator = tv({
+  base: 'smarthr-ui-Panel shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock,
     paddingInline,
@@ -51,7 +51,7 @@ type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
 type AbstractProps = PropsWithChildren<
   Omit<
-    VariantProps<typeof baseClassNameGenerator>,
+    VariantProps<typeof panelClassNameGenerator>,
     'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
   > & {
     /** 境界とコンテンツの間の余白 */
@@ -69,14 +69,14 @@ type SeparatePadding = {
   inline?: Gap
 }
 
-export const Base = forwardRef<HTMLDivElement, Props>(
+export const Panel = forwardRef<HTMLDivElement, Props>(
   ({ padding, radius, overflow, layer, as: Component = 'div', className, ...rest }, ref) => {
     const actualClassName = useMemo(() => {
       const actualPadding =
         padding instanceof Object ? padding : { block: padding, inline: padding }
       const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
-      return baseClassNameGenerator({
+      return panelClassNameGenerator({
         paddingBlock: actualPadding.block,
         paddingInline: actualPadding.inline,
         radius: radius ?? 'm',
