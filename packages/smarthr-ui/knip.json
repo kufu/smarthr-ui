@@ -2,7 +2,12 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "vitest": false,
   "storybook": {
-    "entry": [".storybook/main.ts", ".storybook/preview.tsx", ".storybook/manager.ts"]
+    "entry": [
+      ".storybook/main.ts",
+      ".storybook/preview.tsx",
+      ".storybook/manager.ts",
+      ".storybook/tailwind.storybook.config.ts"
+    ]
   },
   "entry": ["scripts/**/*.ts"],
   "ignore": ["**/*.stories.tsx", "rollup.*.config.js", "vitest.config.ts", "vitest-setup.js"],
