@@ -11,6 +11,7 @@ export default {
       <DropZone {...args}>children あり</DropZone>
       <DropZone {...args} disabled />
       <DropZone {...args} error />
+      <DropZone {...args} selectButtonLabel="Choose File" />
     </Stack>
   ),
   parameters: {
