@@ -11,6 +11,9 @@ import ReactGA from 'react-ga4'
 import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 import resolveConfig from 'tailwindcss/resolveConfig'
 
+// twMergeConfig を最初に設定する（他のモジュールの tv() より先に実行する必要がある）
+// eslint-disable-next-line smarthr/require-barrel-import
+import '../src/configureTwMerge'
 // eslint-disable-next-line smarthr/require-barrel-import
 import '../src/styles/index.css'
 import { EnvironmentProvider, IntlProvider, locales } from '../src'

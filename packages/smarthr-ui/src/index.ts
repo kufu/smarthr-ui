@@ -1,3 +1,5 @@
+import './configureTwMerge'
+
 // components
 export { DisclosureTrigger, DisclosureContent } from './components/Disclosure'
 export { Balloon } from './components/Balloon'
