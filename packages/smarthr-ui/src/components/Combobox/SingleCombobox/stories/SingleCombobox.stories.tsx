@@ -217,3 +217,11 @@ export const DropdownWidth: StoryObj<typeof SingleCombobox> = {
     dropdownWidth: '30rem',
   },
 }
+
+export const NoResultText: StoryObj<typeof SingleCombobox> = {
+  name: 'noResultText',
+  args: {
+    items: [],
+    noResultText: '該当する商品が見つかりません',
+  },
+}
