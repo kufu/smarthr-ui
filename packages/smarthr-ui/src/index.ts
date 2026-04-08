@@ -23,21 +23,21 @@ export { Textarea } from './components/Textarea'
 export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
+  ActionDialog,
   ControlledActionDialog,
   ControlledFormDialog,
+  ControlledMessageDialog,
+  ControlledStepFormDialog,
   Dialog,
   DialogCloser,
   DialogContent,
   DialogTrigger,
   DialogWrapper,
-  ControlledMessageDialog,
+  FormDialog,
+  MessageDialog,
   ModelessDialog,
   RemoteDialogTrigger,
-  RemoteTriggerActionDialog,
-  RemoteTriggerFormDialog,
-  RemoteTriggerStepFormDialog,
-  RemoteTriggerMessageDialog,
-  ControlledStepFormDialog,
+  StepFormDialog,
   StepFormDialogItem,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'

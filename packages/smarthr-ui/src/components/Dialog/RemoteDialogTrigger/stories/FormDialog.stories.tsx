@@ -1,37 +1,37 @@
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
+import { FormDialog } from '../FormDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
-import { RemoteTriggerFormDialog } from '../RemoteTriggerFormDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 /** props は [FormDialog](./?path=/docs/dialog（ダイアログ）-dialog-formdialog--docs) を参照してください。 */
 export default {
-  title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerFormDialog',
-  component: RemoteTriggerFormDialog,
+  title: 'Components/Dialog/RemoteDialogTrigger/FormDialog',
+  component: FormDialog,
   render: (args) => (
     <>
       <RemoteDialogTrigger targetId="remote-dialog">
         <Button>ダイアログを開く</Button>
       </RemoteDialogTrigger>
-      <RemoteTriggerFormDialog
+      <FormDialog
         {...args}
         id="remote-dialog"
-        heading="リモートトリガーフォームダイアログ"
+        heading="フォームダイアログ"
         actionText="アクション"
         onSubmit={(e, { close }) => {
           action('onSubmit')(e)
           close()
         }}
       >
-        <p>リモートトリガーフォームダイアログです。</p>
-      </RemoteTriggerFormDialog>
+        <p>フォームダイアログです。</p>
+      </FormDialog>
     </>
   ),
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof RemoteTriggerFormDialog>
+} as Meta<typeof FormDialog>
 
-export const Playground: StoryObj<typeof RemoteTriggerFormDialog> = {}
+export const Playground: StoryObj<typeof FormDialog> = {}

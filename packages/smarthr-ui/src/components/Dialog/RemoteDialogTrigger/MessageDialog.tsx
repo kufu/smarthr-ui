@@ -11,7 +11,7 @@ type Props = Omit<
 > &
   Parameters<typeof useRemoteTrigger>[0]
 
-export const RemoteTriggerMessageDialog: FC<Props> = ({
+export const MessageDialog: FC<Props> = ({
   id,
   onClickClose,
   onToggle,
