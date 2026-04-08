@@ -71,6 +71,8 @@ type AbstractProps = PropsWithChildren<{
   disabled?: boolean
   /** フォームにエラーがあるかどうか */
   error?: boolean
+  /** ファイル選択ボタンのラベル */
+  selectButtonLabel?: string
 }>
 type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
 
@@ -80,7 +82,10 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, Props>(
-  ({ children, onSelectFiles, multiple = true, disabled, error, ...rest }, ref) => {
+  (
+    { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
+    ref,
+  ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
     const classNames = useMemo(() => {
@@ -140,7 +145,12 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         className={classNames.wrapper}
       >
         {children}
-        <SelectButton onClick={onClickButton} disabled={disabled} className={classNames.button} />
+        <SelectButton
+          onClick={onClickButton}
+          disabled={disabled}
+          className={classNames.button}
+          label={selectButtonLabel}
+        />
         <VisuallyHiddenText>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
@@ -159,23 +169,24 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
   },
 )
 
-const SelectButton = memo<ComponentPropsWithoutRef<typeof Button> & { onClick: () => void }>(
-  ({ onClick, ...rest }) => {
-    const { localize } = useIntl()
+const SelectButton = memo<
+  ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
+>(({ onClick, label, ...rest }) => {
+  const { localize } = useIntl()
 
-    const selectButtonLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/DropZone/selectButtonLabel',
-          defaultText: 'ファイルを選択',
-        }),
-      [localize],
-    )
+  const buttonLabel = useMemo(
+    () =>
+      label ||
+      localize({
+        id: 'smarthr-ui/DropZone/selectButtonLabel',
+        defaultText: 'ファイルを選択',
+      }),
+    [label, localize],
+  )
 
-    return (
-      <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
-        {selectButtonLabel}
-      </Button>
-    )
-  },
-)
+  return (
+    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
+      {buttonLabel}
+    </Button>
+  )
+})

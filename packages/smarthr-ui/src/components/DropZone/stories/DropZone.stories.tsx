@@ -49,3 +49,11 @@ export const Error: StoryObj<typeof DropZone> = {
     error: true,
   },
 }
+
+export const SelectButtonLabel: StoryObj<typeof DropZone> = {
+  name: 'selectButtonLabel',
+  args: {
+    selectButtonLabel: 'Choose File',
+    children: 'カスタムラベルのボタン',
+  },
+}
