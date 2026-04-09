@@ -93,3 +93,24 @@ export const WithChartJsOptions: Story = {
     options: chartJsOptionsExamples.comprehensive,
   },
 }
+
+export const WithAnnotations: Story = {
+  args: {
+    data: singleSmall,
+    options: {
+      plugins: {
+        annotation: {
+          annotations: {
+            average: {
+              type: 'line',
+              yMin: 10,
+              yMax: 10,
+              borderColor: 'rgb(255, 99, 132)',
+              borderWidth: 2,
+            }
+          }
+        }
+      }
+    }
+  },
+}
