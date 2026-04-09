@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [92.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v91.0.0...smarthr-ui-v92.0.0) (2026-04-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Combobox:** decorators属性を削除しIntlProviderのみを使用 ([#6238](https://github.com/kufu/smarthr-ui/issues/6238))
+* RemoteTriggerダイアログのプレフィックスを削除して推奨版として提供 ([#6196](https://github.com/kufu/smarthr-ui/issues/6196))
+* **SearchInput:** decorators属性を削除しIntlProviderのみを使用 ([#6237](https://github.com/kufu/smarthr-ui/issues/6237))
+* **Textarea:** decorators属性を削除 ([#6232](https://github.com/kufu/smarthr-ui/issues/6232))
+* コンポーネントサイズ指定を大文字に統一 ([#6239](https://github.com/kufu/smarthr-ui/issues/6239))
+* **InformationPanel:** decorators属性を削除 ([#6231](https://github.com/kufu/smarthr-ui/issues/6231))
+
+### Bug Fixes
+
+* **Balloon:** Tooltipの表示が他の要素の後ろにいかないように修正 ([#6243](https://github.com/kufu/smarthr-ui/issues/6243)) ([b859cf0](https://github.com/kufu/smarthr-ui/commit/b859cf0cf0bdac2fd03f0bc01e74c91c118ecb86))
+* **DropZone:** inputとButtonの両方にフォーカスが当たってしまうのを解消 ([#6242](https://github.com/kufu/smarthr-ui/issues/6242)) ([c411761](https://github.com/kufu/smarthr-ui/commit/c4117611a74a9f2dbdc7612d16c6722fc8963461))
+* **Input,Picker:** BACKGROUNDの間違った使い方を修正 ([#6259](https://github.com/kufu/smarthr-ui/issues/6259)) ([12a2312](https://github.com/kufu/smarthr-ui/commit/12a23128f5a7771ade0855c228cb8772434c57b2))
+* **ModelessDialog:** ダイアログヘッダのフォーカスリング修正 ([#6250](https://github.com/kufu/smarthr-ui/issues/6250)) ([e630fc3](https://github.com/kufu/smarthr-ui/commit/e630fc332d22c60550c3deca60250856c7589ed1))
+* twMergeConfigの副作用がランタイムで実行されない問題を修正 ([#6254](https://github.com/kufu/smarthr-ui/issues/6254)) ([c78e5fd](https://github.com/kufu/smarthr-ui/commit/c78e5fdf36f332bd68cb981e0394cedfaceaca20))
+
+
+### Code Refactoring
+
+* **Combobox:** decorators属性を削除しIntlProviderのみを使用 ([#6238](https://github.com/kufu/smarthr-ui/issues/6238)) ([bedf2b3](https://github.com/kufu/smarthr-ui/commit/bedf2b3b978ee4ba091590a94805d4875487da58))
+* **InformationPanel:** decorators属性を削除 ([#6231](https://github.com/kufu/smarthr-ui/issues/6231)) ([ca621c8](https://github.com/kufu/smarthr-ui/commit/ca621c865bf605abbc70e68de50a5bf266e4d1cf))
+* RemoteTriggerダイアログのプレフィックスを削除して推奨版として提供 ([#6196](https://github.com/kufu/smarthr-ui/issues/6196)) ([c652930](https://github.com/kufu/smarthr-ui/commit/c652930ce59060e5437dca8654d37a5b49cda8d1))
+* **SearchInput:** decorators属性を削除しIntlProviderのみを使用 ([#6237](https://github.com/kufu/smarthr-ui/issues/6237)) ([2637cfd](https://github.com/kufu/smarthr-ui/commit/2637cfd68121da047e5335b526fd0c5431d3d0a0))
+* **Textarea:** decorators属性を削除 ([#6232](https://github.com/kufu/smarthr-ui/issues/6232)) ([d37c904](https://github.com/kufu/smarthr-ui/commit/d37c904cecf1080ba351d912e6ae5c98eebd1890))
+* コンポーネントサイズ指定を大文字に統一 ([#6239](https://github.com/kufu/smarthr-ui/issues/6239)) ([502409b](https://github.com/kufu/smarthr-ui/commit/502409bc942ad7ed6129f32ce741a6727d4cf1cb))
+
 ## [91.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v90.0.1...smarthr-ui-v91.0.0) (2026-04-02)
 
 
