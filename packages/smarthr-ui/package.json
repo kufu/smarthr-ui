@@ -75,8 +75,7 @@
     "tailwind-merge": "^3.3.1",
     "tslib": "^2.8.1",
     "tsx": "^4.20.6",
-    "vitest": "^4.0.18",
-    "wait-on": "^9.0.4"
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
