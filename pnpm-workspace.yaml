@@ -23,3 +23,5 @@ minimumReleaseAgeExclude:
   - webpack@5.104.1
   # Renovate security update: glob@13.0.1
   - glob@13.0.1
+  # Renovate security update: next@>=10.0.0 <16.1.7@16.2.3
+  - next@>=10.0.0 <16.1.7@16.2.3
