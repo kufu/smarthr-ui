@@ -95,6 +95,7 @@ export const WithChartJsOptions: Story = {
 }
 
 export const WithAnnotations: Story = {
+  name: 'with chartjs-plugin-annotation options',
   args: {
     data: singleSmall,
     options: {
@@ -107,10 +108,10 @@ export const WithAnnotations: Story = {
               yMax: 10,
               borderColor: 'rgb(255, 99, 132)',
               borderWidth: 2,
-            }
-          }
-        }
-      }
-    }
+            },
+          },
+        },
+      },
+    },
   },
 }
