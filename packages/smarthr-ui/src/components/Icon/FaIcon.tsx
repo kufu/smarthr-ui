@@ -26,6 +26,7 @@ import {
   FaBarsStaggered,
   FaBell,
   FaBellSlash,
+  FaBold,
   FaBolt,
   FaBook,
   FaBookOpen,
@@ -114,6 +115,7 @@ import {
   FaGripLines,
   FaGripLinesVertical,
   FaGripVertical,
+  FaHeading,
   FaHourglassHalf,
   FaHouse,
   FaIdBadge,
@@ -122,6 +124,7 @@ import {
   FaImages,
   FaInbox,
   FaIntercom,
+  FaItalic,
   FaKey,
   FaLeftLong,
   FaLeftRight,
@@ -153,6 +156,7 @@ import {
   FaPlus,
   FaPowerOff,
   FaPrint,
+  FaQuoteLeft,
   FaRegCircleQuestion,
   FaRegLightbulb,
   FaReply,
@@ -164,6 +168,7 @@ import {
   FaRocket,
   FaRotate,
   FaRotateLeft,
+  FaRulerHorizontal,
   FaShareNodes,
   FaShieldHalved,
   FaSliders,
@@ -175,6 +180,7 @@ import {
   FaSquarePlus,
   FaSquarePollVertical,
   FaStar,
+  FaStrikethrough,
   FaSuitcaseMedical,
   FaTable,
   FaTableColumns,
@@ -187,6 +193,7 @@ import {
   FaTriangleExclamation,
   FaTruck,
   FaTruckRampBox,
+  FaUnderline,
   FaUpDown,
   FaUpRightAndDownLeftFromCenter,
   FaUser,
@@ -232,6 +239,7 @@ export const FaBarsIcon = /*#__PURE__*/ generateIcon(FaBars)
 export const FaBarsStaggeredIcon = /*#__PURE__*/ generateIcon(FaBarsStaggered)
 export const FaBellIcon = /*#__PURE__*/ generateIcon(FaBell)
 export const FaBellSlashIcon = /*#__PURE__*/ generateIcon(FaBellSlash)
+export const FaBoldIcon = /*#__PURE__*/ generateIcon(FaBold)
 export const FaBoltIcon = /*#__PURE__*/ generateIcon(FaBolt)
 export const FaBookIcon = /*#__PURE__*/ generateIcon(FaBook)
 export const FaBookOpenIcon = /*#__PURE__*/ generateIcon(FaBookOpen)
@@ -322,10 +330,12 @@ export const FaGripIcon = /*#__PURE__*/ generateIcon(FaGrip)
 export const FaGripLinesIcon = /*#__PURE__*/ generateIcon(FaGripLines)
 export const FaGripLinesVerticalIcon = /*#__PURE__*/ generateIcon(FaGripLinesVertical)
 export const FaGripVerticalIcon = /*#__PURE__*/ generateIcon(FaGripVertical)
+export const FaHeadingIcon = /*#__PURE__*/ generateIcon(FaHeading)
 export const FaHourglassHalfIcon = /*#__PURE__*/ generateIcon(FaHourglassHalf)
 export const FaHouseIcon = /*#__PURE__*/ generateIcon(FaHouse)
 export const FaIdBadgeIcon = /*#__PURE__*/ generateIcon(FaIdBadge)
 export const FaIdCardIcon = /*#__PURE__*/ generateIcon(FaIdCard)
+export const FaItalicIcon = /*#__PURE__*/ generateIcon(FaItalic)
 export const FaImageIcon = /*#__PURE__*/ generateIcon(FaImage)
 export const FaImagesIcon = /*#__PURE__*/ generateIcon(FaImages)
 export const FaInboxIcon = /*#__PURE__*/ generateIcon(FaInbox)
@@ -363,6 +373,7 @@ export const FaPiggyBankIcon = /*#__PURE__*/ generateIcon(FaPiggyBank)
 export const FaPlusIcon = /*#__PURE__*/ generateIcon(FaPlus)
 export const FaPowerOffIcon = /*#__PURE__*/ generateIcon(FaPowerOff)
 export const FaPrintIcon = /*#__PURE__*/ generateIcon(FaPrint)
+export const FaQuoteLeftIcon = /*#__PURE__*/ generateIcon(FaQuoteLeft)
 export const FaRegCircleQuestionIcon = /*#__PURE__*/ generateIcon(FaRegCircleQuestion)
 export const FaRegLightbulbIcon = /*#__PURE__*/ generateIcon(FaRegLightbulb)
 export const FaReplyIcon = /*#__PURE__*/ generateIcon(FaReply)
@@ -374,7 +385,9 @@ export const FaRobotIcon = /*#__PURE__*/ generateIcon(FaRobot)
 export const FaRocketIcon = /*#__PURE__*/ generateIcon(FaRocket)
 export const FaRotateIcon = /*#__PURE__*/ generateIcon(FaRotate)
 export const FaRotateLeftIcon = /*#__PURE__*/ generateIcon(FaRotateLeft)
+export const FaRulerHorizontalIcon = /*#__PURE__*/ generateIcon(FaRulerHorizontal)
 export const FaShareNodesIcon = /*#__PURE__*/ generateIcon(FaShareNodes)
+export const FaStrikethroughIcon = /*#__PURE__*/ generateIcon(FaStrikethrough)
 export const FaShieldHalvedIcon = /*#__PURE__*/ generateIcon(FaShieldHalved)
 export const FaSlidersIcon = /*#__PURE__*/ generateIcon(FaSliders)
 export const FaSortDownIcon = /*#__PURE__*/ generateIcon(FaSortDown)
@@ -397,6 +410,7 @@ export const FaTrashCanIcon = /*#__PURE__*/ generateIcon(FaTrashCan)
 export const FaTriangleExclamationIcon = /*#__PURE__*/ generateIcon(FaTriangleExclamation)
 export const FaTruckIcon = /*#__PURE__*/ generateIcon(FaTruck)
 export const FaTruckRampBoxIcon = /*#__PURE__*/ generateIcon(FaTruckRampBox)
+export const FaUnderlineIcon = /*#__PURE__*/ generateIcon(FaUnderline)
 export const FaUpDownIcon = /*#__PURE__*/ generateIcon(FaUpDown)
 export const FaUpRightAndDownLeftFromCenterIcon = /*#__PURE__*/ generateIcon(
   FaUpRightAndDownLeftFromCenter,
