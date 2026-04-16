@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [93.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v92.0.0...smarthr-ui-v93.0.0) (2026-04-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **DropZone:** decorators属性を削除しIntlProviderのみを使用 ([#6236](https://github.com/kufu/smarthr-ui/issues/6236))
+
+### Features
+
+* FaCirclePlayIconを追加 ([#6272](https://github.com/kufu/smarthr-ui/issues/6272)) ([0d96e81](https://github.com/kufu/smarthr-ui/commit/0d96e8191ef1b23f339530d432a2964806d733df))
+
+
+### Bug Fixes
+
+* sideEffectsにエントリポイントを追加しconfigureTwMergeが確実に実行されるようにする ([#6273](https://github.com/kufu/smarthr-ui/issues/6273)) ([89023ba](https://github.com/kufu/smarthr-ui/commit/89023ba0d8bfa801534a6693c769e9c714e26f7f))
+
+
+### Code Refactoring
+
+* **DropZone:** decorators属性を削除しIntlProviderのみを使用 ([#6236](https://github.com/kufu/smarthr-ui/issues/6236)) ([00d7ac8](https://github.com/kufu/smarthr-ui/commit/00d7ac8b8a905a77d0ac8d970569431bcb59d1f1))
+
 ## [92.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v91.0.0...smarthr-ui-v92.0.0) (2026-04-08)
 
 
