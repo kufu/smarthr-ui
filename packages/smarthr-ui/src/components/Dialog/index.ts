@@ -11,8 +11,8 @@ export { ModelessDialog } from './ModelessDialog'
 export { FocusTrap } from './FocusTrap'
 export {
   RemoteDialogTrigger,
-  RemoteTriggerActionDialog,
-  RemoteTriggerFormDialog,
-  RemoteTriggerMessageDialog,
-  RemoteTriggerStepFormDialog,
+  ActionDialog,
+  FormDialog,
+  MessageDialog,
+  StepFormDialog,
 } from './RemoteDialogTrigger'

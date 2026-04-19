@@ -59,7 +59,7 @@ export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
     }, [fixedHead])
 
     return (
-      <Scroller {...rest} ref={setRefs} direction="horizontal" className={classNames.wrapper}>
+      <Scroller {...rest} ref={setRefs} direction="both" className={classNames.wrapper}>
         {children}
       </Scroller>
     )

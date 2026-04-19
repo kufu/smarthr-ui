@@ -154,3 +154,11 @@ export const DropdownWidth: StoryObj<typeof MultiCombobox> = {
     dropdownWidth: '30rem',
   },
 }
+
+export const NoResultText: StoryObj<typeof MultiCombobox> = {
+  name: 'noResultText',
+  args: {
+    items: [],
+    noResultText: '該当するユーザーが見つかりません',
+  },
+}

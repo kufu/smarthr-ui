@@ -1,14 +1,17 @@
 'use client'
 
-import { ControlledActionDialog } from '../ControlledActionDialog'
+import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import { useRemoteTrigger } from '../useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
-type Props = Omit<ComponentProps<typeof ControlledActionDialog>, 'isOpen' | 'onClickClose' | 'id'> &
+type Props = Omit<
+  ComponentProps<typeof ControlledStepFormDialog>,
+  'isOpen' | 'onClickClose' | 'id'
+> &
   Parameters<typeof useRemoteTrigger>[0]
 
-export const RemoteTriggerActionDialog: FC<Props> = ({
+export const StepFormDialog: FC<Props> = ({
   id,
   onClickClose,
   onToggle,
@@ -21,10 +24,17 @@ export const RemoteTriggerActionDialog: FC<Props> = ({
     isOpen,
     onClickClose: actualOnClickClose,
     onPressEscape: actualOnPressEscape,
-  } = useRemoteTrigger({ id, onClickClose, onPressEscape, onToggle, onOpen, onClose })
+  } = useRemoteTrigger({
+    id,
+    onClickClose,
+    onPressEscape,
+    onToggle,
+    onOpen,
+    onClose,
+  })
 
   return (
-    <ControlledActionDialog
+    <ControlledStepFormDialog
       {...rest}
       id={id}
       isOpen={isOpen}

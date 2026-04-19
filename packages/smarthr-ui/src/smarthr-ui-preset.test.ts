@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants'
 
-// smarthr-ui-presetをimportして設定を適用
-import './smarthr-ui-preset'
+// configureTwMergeをimportして設定を適用
+import './configureTwMerge'
 
 describe('twMergeConfig', () => {
   describe('classGroups', () => {
