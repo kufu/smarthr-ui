@@ -23,7 +23,6 @@ import {
 import { Cluster } from '../Layout'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
-import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ImageViewer } from './ImageViewer'

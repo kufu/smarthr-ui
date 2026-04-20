@@ -12,7 +12,6 @@ import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
-import { Text } from '../../../Text'
 import { CommonButton } from '../common/CommonButton'
 
 import type { Header } from '../../../Header'
