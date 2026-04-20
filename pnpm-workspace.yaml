@@ -23,6 +23,3 @@ minimumReleaseAgeExclude:
   - webpack@5.104.1
   # Renovate security update: glob@13.0.1
   - glob@13.0.1
-  # eslint-config-smarthr 14.0.1
-  - eslint-config-smarthr@14.0.1
-  - eslint-plugin-smarthr@6.12.1
