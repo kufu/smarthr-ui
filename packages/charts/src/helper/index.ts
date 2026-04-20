@@ -1,4 +1,4 @@
-export { getChartColors, getLineChartColors } from './data'
+export { getChartColors, getLineChartColors, getRadarChartColors } from './data'
 export {
   BORDER_DASHES,
   POINT_STYLES,

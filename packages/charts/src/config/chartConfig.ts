@@ -10,11 +10,12 @@ import {
   LineElement,
   LinearScale,
   PointElement,
+  RadialLinearScale,
   Title,
   Tooltip,
 } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import deepmerge from 'deepmerge'
 
 import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'
@@ -29,6 +30,7 @@ export const registerChartComponents = () => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
+    RadialLinearScale,
     PointElement,
     LineElement,
     BarElement,
@@ -48,7 +50,7 @@ export const registerChartComponents = () => {
 const generateLegendOptions = <TType extends ChartType>(
   chartType: TType,
 ): Partial<LegendOptions<TType>['labels']> => {
-  if (chartType === 'line') {
+  if (chartType === 'line' || chartType === 'radar') {
     return {
       font: { family: FONT_FAMILY },
       usePointStyle: true,
@@ -56,10 +58,13 @@ const generateLegendOptions = <TType extends ChartType>(
       generateLabels: (chart) =>
         chart.data.datasets.map((dataset, index) => ({
           text: dataset.label,
+          fontColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
           strokeStyle: CHART_COLORS[index % CHART_COLORS.length],
           lineDash: BORDER_DASHES[index % BORDER_DASHES.length],
           lineWidth: 4,
           pointStyle: 'line',
+          datasetIndex: index,
+          hidden: !chart.isDatasetVisible(index),
         })),
     }
   }
@@ -72,7 +77,9 @@ const generateLegendOptions = <TType extends ChartType>(
 
 type CreateBaseChartOptionsReturn<T extends ChartType> = T extends 'line'
   ? Partial<ChartOptions<'line'>>
-  : Partial<ChartOptions<'bar'>>
+  : T extends 'radar'
+    ? Partial<ChartOptions<'radar'>>
+    : Partial<ChartOptions<'bar'>>
 
 // FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
 const createBaseChartOptions = <T extends ChartType>({
@@ -122,7 +129,7 @@ const createBaseChartOptions = <T extends ChartType>({
   }
 
   // 外部オプションとベースデフォルトをマージ
-  return deepmerge(baseDefaults, safeExternalOptions) as CreateBaseChartOptionsReturn<T>
+  return deepmerge(baseDefaults, safeExternalOptions) as unknown as CreateBaseChartOptionsReturn<T>
 }
 
 export const createBarChartOptions = (
@@ -178,4 +185,33 @@ export const createLineChartOptions = (
 
   // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
   return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'line'>>
+}
+
+export const createRadarChartOptions = (
+  options: Partial<ChartOptions<'radar'>> = {},
+): Partial<ChartOptions<'radar'>> => {
+  const baseOptions = createBaseChartOptions({
+    chartType: 'radar',
+    options,
+  })
+
+  const scalesDefaults = {
+    scales: {
+      r: {
+        beginAtZero: true,
+        grid: {
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
+        angleLines: {
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
+        pointLabels: {
+          font: { family: FONT_FAMILY },
+        },
+      },
+    },
+  }
+
+  // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
+  return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'radar'>>
 }
