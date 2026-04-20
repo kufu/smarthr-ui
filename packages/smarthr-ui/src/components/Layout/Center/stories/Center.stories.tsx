@@ -1,4 +1,4 @@
-import { Center } from '..'
+import { Center } from '../../../..'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
 import { centerClassNameGenerator } from '../Center'
