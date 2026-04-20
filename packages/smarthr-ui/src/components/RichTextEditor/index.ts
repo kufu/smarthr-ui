@@ -1,5 +1,4 @@
 export { RichTextEditor } from './RichTextEditor/RichTextEditor'
-export { FlexibleRichTextEditor } from './FlexibleRichTextEditor/FlexibleRichTextEditor'
 export { RichTextContent } from './RichTextContent/RichTextContent'
 
 export type {
@@ -9,6 +8,6 @@ export type {
   RichTextChangeMeta,
   RichTextEditorProps,
   RichTextEditorController,
-  FlexibleRichTextEditorProps,
   RichTextContentProps,
+  ImageUploadResult,
 } from './types'

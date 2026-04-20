@@ -88,4 +88,40 @@ describe('RichTextEditor', () => {
     const boldButton = screen.getByLabelText('太字')
     expect(boldButton).toHaveAttribute('aria-pressed', 'false')
   })
+
+  describe('content prop (旧 FlexibleRichTextEditor)', () => {
+    it('HTML content を受け取ってエディタを描画する', async () => {
+      render(<RichTextEditor content={{ format: 'html', content: '<p>HTMLコンテンツ</p>' }} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => {
+        expect(screen.getByText('HTMLコンテンツ')).toBeInTheDocument()
+      })
+    })
+
+    it('JSON content を受け取ってエディタを描画する', async () => {
+      render(
+        <RichTextEditor
+          content={{
+            format: 'json',
+            content: {
+              type: 'doc',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: 'JSONコンテンツ' }] }],
+            },
+          }}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => {
+        expect(screen.getByText('JSONコンテンツ')).toBeInTheDocument()
+      })
+    })
+
+    it('empty content で空のエディタを描画する', async () => {
+      render(<RichTextEditor content={{ format: 'empty' }} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('textbox')).toBeInTheDocument()
+      })
+    })
+  })
 })

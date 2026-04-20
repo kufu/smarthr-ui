@@ -1,17 +1,28 @@
+import { Color } from '@tiptap/extension-color'
+import { FileHandler } from '@tiptap/extension-file-handler'
+import { Image } from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
+import { TextStyle } from '@tiptap/extension-text-style'
+import { Youtube } from '@tiptap/extension-youtube'
 import StarterKit from '@tiptap/starter-kit'
 
-import type { RichTextFeature } from '../types'
+import type { ImageUploadResult, RichTextFeature } from '../types'
 import type { AnyExtension } from '@tiptap/react'
 
 type ConfigureExtensionsOptions = {
   features?: readonly RichTextFeature[]
   placeholder?: string
+  onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  acceptedMimeTypes?: string[]
 }
+
+const DEFAULT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
 export const configureExtensions = ({
   features = [],
   placeholder,
+  onImageUpload,
+  acceptedMimeTypes,
 }: ConfigureExtensionsOptions): AnyExtension[] => {
   const has = (f: RichTextFeature) => features.includes(f)
 
@@ -33,6 +44,67 @@ export const configureExtensions = ({
         : false,
     }),
   ]
+
+  if (has('image')) {
+    extensions.push(Image.configure({ allowBase64: false }))
+
+    if (onImageUpload) {
+      const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
+
+      extensions.push(
+        FileHandler.configure({
+          allowedMimeTypes: mimeTypes,
+          onDrop: (editor, files, pos) => {
+            for (const file of files) {
+              if (!mimeTypes.some((type) => file.type === type)) continue
+              const formData = new FormData()
+              formData.append('file', file)
+              onImageUpload(file, formData).then(({ src, alt }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .insertContentAt(pos, {
+                    type: 'image',
+                    attrs: { src, alt: alt ?? file.name },
+                  })
+                  .run()
+              })
+            }
+          },
+          onPaste: (editor, files) => {
+            for (const file of files) {
+              if (!mimeTypes.some((type) => file.type === type)) continue
+              const formData = new FormData()
+              formData.append('file', file)
+              onImageUpload(file, formData).then(({ src, alt }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .insertContent({
+                    type: 'image',
+                    attrs: { src, alt: alt ?? file.name },
+                  })
+                  .run()
+              })
+            }
+          },
+        }),
+      )
+    }
+  }
+
+  if (has('youtube')) {
+    extensions.push(
+      Youtube.configure({
+        nocookie: true,
+        allowFullscreen: true,
+      }),
+    )
+  }
+
+  if (has('color')) {
+    extensions.push(TextStyle.configure(), Color.configure())
+  }
 
   if (placeholder) {
     extensions.push(
@@ -59,4 +131,7 @@ export const ALL_FEATURES: readonly RichTextFeature[] = [
   'horizontalRule',
   'link',
   'heading',
+  'color',
+  'image',
+  'youtube',
 ] as const

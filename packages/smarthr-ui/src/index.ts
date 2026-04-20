@@ -20,11 +20,7 @@ export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
-export {
-  RichTextEditor,
-  FlexibleRichTextEditor,
-  RichTextContent,
-} from './components/RichTextEditor'
+export { RichTextEditor, RichTextContent } from './components/RichTextEditor'
 export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {

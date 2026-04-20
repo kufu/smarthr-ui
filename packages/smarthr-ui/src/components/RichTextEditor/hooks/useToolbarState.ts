@@ -36,7 +36,17 @@ export const useToolbarState = (editor: Editor) =>
       isHeading2: e.isActive('heading', { level: 2 }),
       isHeading3: e.isActive('heading', { level: 3 }),
       isHeading4: e.isActive('heading', { level: 4 }),
+      currentHeadingLevel: (e.isActive('heading', { level: 1 })
+        ? 1
+        : e.isActive('heading', { level: 2 })
+          ? 2
+          : e.isActive('heading', { level: 3 })
+            ? 3
+            : e.isActive('heading', { level: 4 })
+              ? 4
+              : null) as 1 | 2 | 3 | 4 | null,
       isLink: e.isActive('link'),
+      currentColor: (e.getAttributes('textStyle').color as string) ?? null,
 
       canBold: canRun(e, 'toggleBold'),
       canItalic: canRun(e, 'toggleItalic'),

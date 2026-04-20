@@ -30,6 +30,13 @@ export const editorContentClasses = [
   '[&_.ProseMirror_hr]:shr-my-1 [&_.ProseMirror_hr]:shr-border-t-shorthand',
   // link
   '[&_.ProseMirror_a]:shr-text-main [&_.ProseMirror_a]:shr-underline',
+  // image
+  '[&_.ProseMirror_img]:shr-my-0.5 [&_.ProseMirror_img]:shr-max-w-full [&_.ProseMirror_img]:shr-rounded-m',
+  '[&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-main [&_.ProseMirror_img.ProseMirror-selectednode]:shr-rounded-m',
+  // youtube iframe
+  '[&_.ProseMirror_iframe]:shr-my-0.5 [&_.ProseMirror_iframe]:shr-max-w-full [&_.ProseMirror_iframe]:shr-rounded-m',
+  '[&_.ProseMirror_div[data-youtube-video]]:shr-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rounded-m',
+  '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-main [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rounded-m',
   // paragraph
   '[&_.ProseMirror_p]:shr-my-0',
   // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ
@@ -63,6 +70,10 @@ export const staticContentClasses = [
   '[&_hr]:shr-my-1 [&_hr]:shr-border-t-shorthand',
   // link
   '[&_a]:shr-text-main [&_a]:shr-underline',
+  // image
+  '[&_img]:shr-block [&_img]:shr-my-0.5 [&_img]:shr-max-w-full [&_img]:shr-rounded-m',
+  // youtube iframe
+  '[&_iframe]:shr-my-0.5 [&_iframe]:shr-max-w-full [&_iframe]:shr-rounded-m',
   // paragraph
   '[&_p]:shr-my-0',
   // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ

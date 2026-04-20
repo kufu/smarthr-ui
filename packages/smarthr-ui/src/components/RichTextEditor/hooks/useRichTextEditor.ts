@@ -6,21 +6,21 @@ import { type RefObject, useEffect, useMemo } from 'react'
 import { configureExtensions } from '../extensions/configureExtensions'
 import { createChangeMeta } from '../serializers/createChangeMeta'
 
-import type { RichTextEditorProps, RichTextJSON } from '../types'
+import type { ImageUploadResult, RichTextFeature, RichTextJSON } from '../types'
 
-type UseRichTextEditorOptions = Pick<
-  RichTextEditorProps,
-  | 'value'
-  | 'defaultValue'
-  | 'onChange'
-  | 'onFocus'
-  | 'onBlur'
-  | 'features'
-  | 'disabled'
-  | 'readOnly'
-  | 'placeholder'
-> & {
+type UseRichTextEditorOptions = {
+  value?: RichTextJSON
+  defaultValue?: RichTextJSON
+  onChange?: (value: RichTextJSON, meta: ReturnType<typeof createChangeMeta>) => void
+  onFocus?: () => void
+  onBlur?: () => void
+  features?: readonly RichTextFeature[]
+  disabled?: boolean
+  readOnly?: boolean
+  placeholder?: string
   toolbarRef?: RefObject<HTMLDivElement | null>
+  onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  acceptedMimeTypes?: string[]
 }
 
 export const useRichTextEditor = ({
@@ -34,13 +34,15 @@ export const useRichTextEditor = ({
   readOnly,
   placeholder,
   toolbarRef,
+  onImageUpload,
+  acceptedMimeTypes,
 }: UseRichTextEditorOptions) => {
   const isControlled = value !== undefined
 
   const extensions = useMemo(
-    () => configureExtensions({ features, placeholder }),
+    () => configureExtensions({ features, placeholder, onImageUpload, acceptedMimeTypes }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [features.join(','), placeholder],
+    [features.join(','), placeholder, onImageUpload, acceptedMimeTypes],
   )
 
   const editor = useEditor({

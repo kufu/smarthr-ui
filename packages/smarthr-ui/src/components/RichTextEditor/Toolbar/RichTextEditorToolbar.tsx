@@ -21,11 +21,17 @@ import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useRovingToolbar } from '../hooks/useRovingToolbar'
 import { useToolbarState } from '../hooks/useToolbarState'
 
+import { ColorPickerButton } from './ColorPickerButton'
+import { HeadingDropdown } from './HeadingDropdown'
+import { ImageInsertButton } from './ImageInsertButton'
+import { LinkButton } from './LinkButton'
 import { ToolbarButton } from './ToolbarButton'
+import { YoutubeInsertButton } from './YoutubeInsertButton'
 
 import type { RichTextFeature } from '../types'
 
 type ButtonItem = {
+  type: 'button'
   key: string
   icon: ReactNode
   label: string
@@ -34,18 +40,27 @@ type ButtonItem = {
   action: () => void
 }
 
+type CustomItem = {
+  type: 'heading' | 'color' | 'image' | 'youtube' | 'link'
+  key: string
+  disabled: boolean
+}
+
+type ToolbarItem = ButtonItem | CustomItem
+
 export const RichTextEditorToolbar: FC = memo(() => {
   const { editor, features } = useRichTextEditorContext()
   const { localize } = useIntl()
   const state = useToolbarState(editor)
 
-  const buttons = useMemo(() => {
-    const items: ButtonItem[] = []
+  const items = useMemo(() => {
+    const toolbarItems: ToolbarItem[] = []
     const has = (f: RichTextFeature) => features.includes(f)
 
     // undo / redo（featuresに関係なく常に表示）
-    items.push(
+    toolbarItems.push(
       {
+        type: 'button',
         key: 'undo',
         icon: <FaArrowRotateLeftIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/undo', defaultText: '元に戻す' }),
@@ -54,6 +69,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         action: () => editor.chain().focus().undo().run(),
       },
       {
+        type: 'button',
         key: 'redo',
         icon: <FaArrowRotateRightIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/redo', defaultText: 'やり直す' }),
@@ -63,9 +79,15 @@ export const RichTextEditorToolbar: FC = memo(() => {
       },
     )
 
+    // 見出しドロップダウン
+    if (has('heading')) {
+      toolbarItems.push({ type: 'heading', key: 'heading-dropdown', disabled: false })
+    }
+
     // テキスト書式
     if (has('bold')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'bold',
         icon: <FaBoldIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/bold', defaultText: '太字' }),
@@ -75,7 +97,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('italic')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'italic',
         icon: <FaItalicIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/italic', defaultText: '斜体' }),
@@ -85,7 +108,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('underline')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'underline',
         icon: <FaUnderlineIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/underline', defaultText: '下線' }),
@@ -95,7 +119,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('strike')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'strike',
         icon: <FaStrikethroughIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/strike', defaultText: '打ち消し線' }),
@@ -105,7 +130,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('code')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'code',
         icon: <FaCodeIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/code', defaultText: 'インラインコード' }),
@@ -115,51 +141,20 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
 
-    // 見出し
-    if (has('heading')) {
-      items.push(
-        {
-          key: 'heading1',
-          // eslint-disable-next-line smarthr/require-i18n-text
-          icon: <span aria-hidden>H1</span>,
-          label: localize({ id: 'smarthr-ui/RichTextEditor/heading1', defaultText: '見出し1' }),
-          active: state.isHeading1,
-          disabled: false,
-          action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-        },
-        {
-          key: 'heading2',
-          // eslint-disable-next-line smarthr/require-i18n-text
-          icon: <span aria-hidden>H2</span>,
-          label: localize({ id: 'smarthr-ui/RichTextEditor/heading2', defaultText: '見出し2' }),
-          active: state.isHeading2,
-          disabled: false,
-          action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-        },
-        {
-          key: 'heading3',
-          // eslint-disable-next-line smarthr/require-i18n-text
-          icon: <span aria-hidden>H3</span>,
-          label: localize({ id: 'smarthr-ui/RichTextEditor/heading3', defaultText: '見出し3' }),
-          active: state.isHeading3,
-          disabled: false,
-          action: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
-        },
-        {
-          key: 'heading4',
-          // eslint-disable-next-line smarthr/require-i18n-text
-          icon: <span aria-hidden>H4</span>,
-          label: localize({ id: 'smarthr-ui/RichTextEditor/heading4', defaultText: '見出し4' }),
-          active: state.isHeading4,
-          disabled: false,
-          action: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
-        },
-      )
+    // 文字色
+    if (has('color')) {
+      toolbarItems.push({ type: 'color', key: 'color-picker', disabled: false })
+    }
+
+    // リンク
+    if (has('link')) {
+      toolbarItems.push({ type: 'link', key: 'link-button', disabled: false })
     }
 
     // リスト・ブロック
     if (has('bulletList')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'bulletList',
         icon: <FaListUlIcon />,
         label: localize({
@@ -172,7 +167,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('orderedList')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'orderedList',
         icon: <FaListOlIcon />,
         label: localize({
@@ -185,7 +181,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('blockquote')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'blockquote',
         icon: <FaQuoteLeftIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/blockquote', defaultText: '引用' }),
@@ -195,7 +192,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('codeBlock')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'codeBlock',
         icon: <FaFileCodeIcon />,
         label: localize({
@@ -208,7 +206,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
     if (has('horizontalRule')) {
-      items.push({
+      toolbarItems.push({
+        type: 'button',
         key: 'horizontalRule',
         icon: <FaRulerHorizontalIcon />,
         label: localize({
@@ -221,7 +220,17 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
 
-    return items
+    // 画像挿入
+    if (has('image')) {
+      toolbarItems.push({ type: 'image', key: 'image-insert', disabled: false })
+    }
+
+    // YouTube埋め込み
+    if (has('youtube')) {
+      toolbarItems.push({ type: 'youtube', key: 'youtube-insert', disabled: false })
+    }
+
+    return toolbarItems
   }, [features, state, editor, localize])
 
   const handleEscape = useCallback(() => {
@@ -229,12 +238,12 @@ export const RichTextEditorToolbar: FC = memo(() => {
   }, [editor])
 
   const disabledKeys = useMemo(
-    () => new Set(buttons.map((b, i) => (b.disabled ? i : -1)).filter((i) => i >= 0)),
-    [buttons],
+    () => new Set(items.map((item, i) => (item.disabled ? i : -1)).filter((i) => i >= 0)),
+    [items],
   )
 
   const { getButtonProps } = useRovingToolbar({ disabledKeys, onEscape: handleEscape })
-  const count = buttons.length
+  const count = items.length
 
   const toolbarLabel = localize({
     id: 'smarthr-ui/RichTextEditor/toolbarLabel',
@@ -248,17 +257,36 @@ export const RichTextEditorToolbar: FC = memo(() => {
       aria-orientation="horizontal"
       className="smarthr-ui-RichTextEditor-Toolbar shr-border-b-shorthand shr-flex shr-flex-wrap shr-items-center shr-gap-0.25 shr-px-0.5 shr-py-0.25"
     >
-      {buttons.map((button, index) => (
-        <ToolbarButton
-          {...getButtonProps(index, count)}
-          key={button.key}
-          icon={button.icon}
-          label={button.label}
-          active={button.active}
-          disabled={button.disabled}
-          onClick={button.action}
-        />
-      ))}
+      {items.map((item, index) => {
+        const rovingProps = getButtonProps(index, count)
+        if (item.type === 'heading') {
+          return <HeadingDropdown {...rovingProps} key={item.key} />
+        }
+        if (item.type === 'color') {
+          return <ColorPickerButton {...rovingProps} key={item.key} />
+        }
+        if (item.type === 'image') {
+          return <ImageInsertButton {...rovingProps} key={item.key} />
+        }
+        if (item.type === 'youtube') {
+          return <YoutubeInsertButton {...rovingProps} key={item.key} />
+        }
+        if (item.type === 'link') {
+          return <LinkButton {...rovingProps} key={item.key} />
+        }
+        const buttonItem = item as ButtonItem
+        return (
+          <ToolbarButton
+            {...rovingProps}
+            key={buttonItem.key}
+            icon={buttonItem.icon}
+            label={buttonItem.label}
+            active={buttonItem.active}
+            disabled={buttonItem.disabled}
+            onClick={buttonItem.action}
+          />
+        )
+      })}
     </div>
   )
 })

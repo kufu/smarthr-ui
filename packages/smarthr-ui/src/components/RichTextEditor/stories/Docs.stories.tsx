@@ -16,7 +16,6 @@ import {
 } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Text } from '../../Text'
-import { FlexibleRichTextEditor } from '../FlexibleRichTextEditor/FlexibleRichTextEditor'
 import { RichTextContent } from '../RichTextContent/RichTextContent'
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
@@ -36,6 +35,9 @@ const ALL_FEATURES = [
   'codeBlock',
   'horizontalRule',
   'link',
+  'color',
+  'image',
+  'youtube',
 ] as const
 
 const meta = {
@@ -82,7 +84,7 @@ export const Overview: Story = {
               <tr>
                 <td style={tdStyle}>既存のHTMLデータを編集したい / HTML出力がほしい</td>
                 <td style={tdStyle}>
-                  <code>FlexibleRichTextEditor</code>
+                  <code>RichTextEditor</code>（<code>content</code> + <code>outputFormat</code>）
                 </td>
               </tr>
               <tr>
@@ -390,13 +392,13 @@ const handleSave = () => {
 }
 
 export const HTMLIntegration: Story = {
-  name: 'HTMLデータとの連携（FlexibleRichTextEditor）',
+  name: 'HTMLデータとの連携（content + outputFormat）',
   parameters: {
     docs: {
       source: {
         language: 'tsx',
         code: `<FormControl label="本文">
-  <FlexibleRichTextEditor
+  <RichTextEditor
     content={{ format: 'html', content: existingHtml }}
     outputFormat="html"
     onChange={(html) => save(html)}
@@ -410,11 +412,11 @@ export const HTMLIntegration: Story = {
     return (
       <Stack gap={1.5}>
         <Text color="TEXT_GREY">
-          既存のHTMLデータを編集し、HTML形式で取得する場合は FlexibleRichTextEditor
-          を使います。content で初期データ、outputFormat で出力形式を指定します。
+          既存のHTMLデータを編集し、HTML形式で取得する場合は content で初期データ、outputFormat
+          で出力形式を指定します。
         </Text>
         <FormControl label="HTML入力 → HTML出力">
-          <FlexibleRichTextEditor
+          <RichTextEditor
             features={ALL_FEATURES}
             content={{
               format: 'html',
@@ -422,7 +424,7 @@ export const HTMLIntegration: Story = {
                 '<h2>既存のHTML</h2><p>このデータは<strong>HTML形式</strong>で保存されていました。</p><ul><li>項目1</li><li>項目2</li></ul>',
             }}
             outputFormat="html"
-            onChange={(value) => setOutput(value as string)}
+            onChange={(value) => setOutput(value)}
           />
         </FormControl>
         {output && (
@@ -475,6 +477,23 @@ export const StaticDisplay: Story = {
                 ],
               },
               {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: '文字色の例: ' },
+                  {
+                    type: 'text',
+                    marks: [{ type: 'textStyle', attrs: { color: '#e01e5a' } }],
+                    text: '赤いテキスト',
+                  },
+                  { type: 'text', text: 'と' },
+                  {
+                    type: 'text',
+                    marks: [{ type: 'textStyle', attrs: { color: '#0077c7' } }],
+                    text: '青いテキスト',
+                  },
+                ],
+              },
+              {
                 type: 'bulletList',
                 content: [
                   {
@@ -487,6 +506,21 @@ export const StaticDisplay: Story = {
                     ],
                   },
                 ],
+              },
+              {
+                type: 'image',
+                attrs: {
+                  src: 'https://placehold.co/400x200/e2e8f0/64748b?text=Sample+Image',
+                  alt: 'サンプル画像',
+                },
+              },
+              {
+                type: 'youtube',
+                attrs: {
+                  src: 'https://www.youtube-nocookie.com/embed/ZFwv6s7kXCQ',
+                  width: 480,
+                  height: 270,
+                },
               },
             ],
           }}

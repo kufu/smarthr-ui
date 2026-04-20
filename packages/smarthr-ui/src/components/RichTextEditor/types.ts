@@ -20,6 +20,9 @@ export type RichTextFeature =
   | 'horizontalRule'
   | 'link'
   | 'heading'
+  | 'color'
+  | 'image'
+  | 'youtube'
 
 export type RichTextChangeMeta = {
   json: RichTextJSON
@@ -29,28 +32,15 @@ export type RichTextChangeMeta = {
   characterCount: number
 }
 
-export type RichTextEditorProps = {
-  value?: RichTextJSON
-  defaultValue?: RichTextJSON
-  onChange?: (value: RichTextJSON, meta: RichTextChangeMeta) => void
-  onFocus?: () => void
-  onBlur?: () => void
-  features?: readonly RichTextFeature[]
-  hideToolbar?: boolean
-  disabled?: boolean
-  readOnly?: boolean
-  error?: boolean
-  placeholder?: string
-  className?: string
-  editorClassName?: string
+export type ImageUploadResult = {
+  src: string
+  alt?: string
 }
 
-export type FlexibleRichTextEditorProps = {
+type RichTextEditorBaseProps = {
   content?: ExternalRichTextValue
   value?: RichTextJSON
   defaultValue?: RichTextJSON
-  outputFormat?: 'json' | 'html'
-  onChange?: (value: RichTextJSON | string, meta: RichTextChangeMeta) => void
   onFocus?: () => void
   onBlur?: () => void
   features?: readonly RichTextFeature[]
@@ -61,7 +51,21 @@ export type FlexibleRichTextEditorProps = {
   placeholder?: string
   className?: string
   editorClassName?: string
+  onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  acceptedMimeTypes?: string[]
 }
+
+export type RichTextEditorProps = RichTextEditorBaseProps &
+  (
+    | {
+        outputFormat?: 'json'
+        onChange?: (value: RichTextJSON, meta: RichTextChangeMeta) => void
+      }
+    | {
+        outputFormat: 'html'
+        onChange?: (value: string, meta: RichTextChangeMeta) => void
+      }
+  )
 
 export type RichTextContentProps = {
   content: ExternalRichTextValue | RichTextJSON

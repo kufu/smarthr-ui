@@ -114,6 +114,44 @@ const sampleJSON = {
         },
       ],
     },
+    {
+      type: 'paragraph',
+      content: [
+        { type: 'text', text: '文字色の例: ' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#e01e5a' } }],
+          text: '赤いテキスト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#0077c7' } }],
+          text: '青いテキスト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#0f7f85' } }],
+          text: '緑のテキスト',
+        },
+      ],
+    },
+    {
+      type: 'image',
+      attrs: {
+        src: 'https://placehold.co/400x200/e2e8f0/64748b?text=Sample+Image',
+        alt: 'サンプル画像',
+      },
+    },
+    {
+      type: 'youtube',
+      attrs: {
+        src: 'https://www.youtube-nocookie.com/embed/ZFwv6s7kXCQ',
+        width: 480,
+        height: 270,
+      },
+    },
   ],
 }
 
@@ -127,8 +165,18 @@ export const HTMLPreview: Story = {
   args: {
     content: {
       format: 'html' as const,
-      content:
-        '<h1>HTML見出し1</h1><h2>HTML見出し2</h2><p>これは<strong>HTML</strong>から表示しています。</p><ul><li>項目1</li><li>項目2</li></ul><hr><p><code>コード</code>と<s>打ち消し線</s></p>',
+      content: [
+        '<h1>HTML見出し1</h1>',
+        '<h2>HTML見出し2</h2>',
+        '<p>これは<strong>HTML</strong>から表示しています。</p>',
+        '<ul><li>項目1</li><li>項目2</li></ul>',
+        '<hr>',
+        '<p><code>コード</code>と<s>打ち消し線</s></p>',
+        '<p><a href="https://smarthr.design" target="_blank" rel="noopener noreferrer">SmartHR Design System</a></p>',
+        '<p><span style="color: #e01e5a">赤いテキスト</span>・<span style="color: #0077c7">青いテキスト</span></p>',
+        '<img src="https://placehold.co/400x200/e2e8f0/64748b?text=Sample+Image" alt="サンプル画像">',
+        '<div data-youtube-video><iframe src="https://www.youtube-nocookie.com/embed/ZFwv6s7kXCQ" width="480" height="270" allowfullscreen></iframe></div>',
+      ].join(''),
     },
   },
 }

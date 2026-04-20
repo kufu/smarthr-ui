@@ -39,6 +39,36 @@ const renderNode = (node: JSONContent, key: number): ReactNode => {
       return createElement('pre', { key }, createElement('code', null, renderChildren(node)))
     case 'horizontalRule':
       return createElement('hr', { key })
+    case 'image': {
+      const src = typeof node.attrs?.src === 'string' ? node.attrs.src : ''
+      const isSafeSrc = /^https?:\/\//i.test(src)
+      return createElement('img', {
+        key,
+        src: isSafeSrc ? src : undefined,
+        alt: (node.attrs?.alt as string) ?? '',
+      })
+    }
+    case 'youtube': {
+      const src = typeof node.attrs?.src === 'string' ? node.attrs.src : ''
+      const isSafeYoutube =
+        /^https?:\/\/(www\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\//i.test(src)
+      const width = typeof node.attrs?.width === 'number' ? node.attrs.width : 640
+      const height = typeof node.attrs?.height === 'number' ? node.attrs.height : 480
+      return createElement(
+        'div',
+        { key },
+        createElement('iframe', {
+          src: isSafeYoutube ? src : undefined,
+          width,
+          height,
+          allowFullScreen: true,
+          allow:
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+          sandbox: 'allow-scripts allow-same-origin allow-popups',
+          style: { border: 0, maxWidth: '100%', aspectRatio: `${width} / ${height}` },
+        }),
+      )
+    }
     case 'hardBreak':
       return createElement('br', { key })
     case 'text':
@@ -90,6 +120,20 @@ const renderTextWithMarks = (
             href: isSafe ? href : undefined,
             target: mark.attrs?.target as string | undefined,
             rel: 'noopener noreferrer',
+          },
+          result,
+        )
+        break
+      }
+      case 'textStyle': {
+        const color = typeof mark.attrs?.color === 'string' ? mark.attrs.color : ''
+        const isSafeColor =
+          /^#[0-9a-f]{3,6}$/i.test(color) || /^rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)$/i.test(color)
+        result = createElement(
+          'span',
+          {
+            key: `${key}-textStyle`,
+            style: isSafeColor ? { color } : undefined,
           },
           result,
         )

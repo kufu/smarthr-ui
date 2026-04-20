@@ -1,15 +1,29 @@
 'use client'
 
 import { EditorContent } from '@tiptap/react'
-import { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
+import { normalizeToJSON } from '../serializers/normalizeToJSON'
 import { editorContentClasses } from '../styles'
 
-import type { RichTextEditorController, RichTextEditorProps, RichTextJSON } from '../types'
+import type {
+  RichTextChangeMeta,
+  RichTextEditorController,
+  RichTextEditorProps,
+  RichTextJSON,
+} from '../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -53,8 +67,10 @@ export const RichTextEditor = memo(
   forwardRef<RichTextEditorController, RichTextEditorProps>(
     (
       {
+        content,
         value,
         defaultValue,
+        outputFormat,
         onChange,
         onFocus,
         onBlur,
@@ -66,16 +82,38 @@ export const RichTextEditor = memo(
         placeholder,
         className,
         editorClassName,
-      },
+        onImageUpload,
+        acceptedMimeTypes,
+      }: RichTextEditorProps,
       ref,
     ) => {
       const toolbarRef = useRef<HTMLDivElement>(null)
       const contentRef = useRef<HTMLDivElement>(null)
 
+      const normalizedDefaultValue = useMemo(() => {
+        if (defaultValue) return defaultValue
+        if (content) return normalizeToJSON(content)
+        return undefined
+      }, [defaultValue, content])
+
+      const handleChange = useCallback(
+        (nextJson: RichTextJSON, meta: RichTextChangeMeta) => {
+          if (!onChange) return
+          if (outputFormat === 'html') {
+            ;(onChange as (value: string, meta: RichTextChangeMeta) => void)(meta.html, meta)
+            return
+          }
+          ;(onChange as (value: RichTextJSON, meta: RichTextChangeMeta) => void)(nextJson, meta)
+        },
+        [onChange, outputFormat],
+      )
+
       const editor = useRichTextEditor({
         value,
-        defaultValue,
-        onChange,
+        defaultValue: normalizedDefaultValue,
+        onChange: handleChange,
+        onImageUpload,
+        acceptedMimeTypes,
         onFocus,
         onBlur,
         features,
@@ -166,7 +204,12 @@ export const RichTextEditor = memo(
       // editorが未初期化でもwrapperは常に描画する
       // FormControlがdata-smarthr-ui-inputを初回mountで発見できるようにするため
       const toolbar = editor && !readOnly && !hideToolbar && (
-        <RichTextEditorProvider editor={editor} features={features}>
+        <RichTextEditorProvider
+          editor={editor}
+          features={features}
+          onImageUpload={onImageUpload}
+          acceptedMimeTypes={acceptedMimeTypes}
+        >
           <div ref={toolbarRef}>
             <RichTextEditorToolbar />
           </div>

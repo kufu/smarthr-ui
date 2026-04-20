@@ -52,6 +52,22 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      '@tiptap/extension-color':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/extension-text-style@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3)))
+      '@tiptap/extension-file-handler':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/extension-text-style@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3)))(@tiptap/pm@3.22.3)
+      '@tiptap/extension-image':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
+      '@tiptap/extension-text-style':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
+      '@tiptap/extension-youtube':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.3.1
@@ -231,9 +247,24 @@ importers:
       '@tiptap/core':
         specifier: ^3.22.1
         version: 3.22.3(@tiptap/pm@3.22.3)
+      '@tiptap/extension-color':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/extension-text-style@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3)))
+      '@tiptap/extension-file-handler':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/extension-text-style@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3)))(@tiptap/pm@3.22.3)
+      '@tiptap/extension-image':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
       '@tiptap/extension-placeholder':
         specifier: ^3.22.1
         version: 3.22.3(@tiptap/extensions@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3))
+      '@tiptap/extension-text-style':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
+      '@tiptap/extension-youtube':
+        specifier: ^3.22.3
+        version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
       '@tiptap/html':
         specifier: ^3.22.1
         version: 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)(happy-dom@20.9.0)
@@ -2653,6 +2684,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.22.3
 
+  '@tiptap/extension-color@3.22.3':
+    resolution: {integrity: sha512-eZtOc4Zp5jnlZh4+gvr3JmOa3kPlIU8IbTByDMgXEMdVGZ5cOk+H4TMIlhU0j7j1TMWm8+r1WYtrU9E9ooz9hQ==}
+    peerDependencies:
+      '@tiptap/extension-text-style': ^3.22.3
+
   '@tiptap/extension-document@3.22.3':
     resolution: {integrity: sha512-MCSr1PFPtTd++lA3H1RNgqAczAE59XXJ5wUFIQf2F+/0DPY5q2SU4g5QsNJVxPPft5mrNT4C6ty8xBPrALFEdA==}
     peerDependencies:
@@ -2662,6 +2698,13 @@ packages:
     resolution: {integrity: sha512-taXq9Tl5aybdFbptJtFRHX9LFJzbXphAbPp4/vutFyTrBu5meXDxuS+B9pEmE+Or0XcolTlW2nDZB0Tqnr18JQ==}
     peerDependencies:
       '@tiptap/extensions': ^3.22.3
+
+  '@tiptap/extension-file-handler@3.22.3':
+    resolution: {integrity: sha512-BPY1kX/yZHIMGc6T2LrmYa76UOtCQUDs0pmA/DaSBAXJ9g9rdp+9BvxbmsvyUWs+bgQj8//RtBquy9uhi2t7Yw==}
+    peerDependencies:
+      '@tiptap/core': ^3.22.3
+      '@tiptap/extension-text-style': ^3.22.3
+      '@tiptap/pm': ^3.22.3
 
   '@tiptap/extension-floating-menu@3.22.3':
     resolution: {integrity: sha512-0f8b4KZ3XKai8GXWseIYJGdOfQr3evtFbBo3U08zy2aYzMMXWG0zEF7qe5/oiYp2aZ95edjjITnEceviTsZkIg==}
@@ -2690,6 +2733,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.22.3
       '@tiptap/pm': ^3.22.3
+
+  '@tiptap/extension-image@3.22.3':
+    resolution: {integrity: sha512-Qpp8c5LOQaNpHrzjqZtoxtIR+8sSqJ7k8v+8anmYw3nxjvt2kpfT28Vd7aWMX55ZS43LaxMx+MkZqbmgUmMP0w==}
+    peerDependencies:
+      '@tiptap/core': ^3.22.3
 
   '@tiptap/extension-italic@3.22.3':
     resolution: {integrity: sha512-LteA4cb4EGCiUtrK2JHvDF/Zg0/YqV4DUyHhAAho+oGEQDupZlsS6m0ia5wQcclkiTLzsoPrwcSNu6RDGQ16wQ==}
@@ -2738,6 +2786,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.22.3
 
+  '@tiptap/extension-text-style@3.22.3':
+    resolution: {integrity: sha512-JKmWAogM/LX9ZJmXJQalpcR77wWVtVXdRFgvHGsFomW9WFhZqcnIEDWR2sbpZHWtu8dml6eBQGhdLppJmxeFfA==}
+    peerDependencies:
+      '@tiptap/core': ^3.22.3
+
   '@tiptap/extension-text@3.22.3':
     resolution: {integrity: sha512-Q9R7JsTdomP5uUjtPjNKxHT1xoh/i9OJZnmgJLe7FcgZEaPOQ3bWxmKZoLZQfDfZjyB8BtH+Hc7nUvhCMOePxw==}
     peerDependencies:
@@ -2745,6 +2798,11 @@ packages:
 
   '@tiptap/extension-underline@3.22.3':
     resolution: {integrity: sha512-Ch6CBWRa5w90yYSPUW6x9Py9JdrXMqk3pZ9OIlMYD8A7BqyZGfiHerX7XDMYDS09KjyK3U9XH60/zxYOzXdDLA==}
+    peerDependencies:
+      '@tiptap/core': ^3.22.3
+
+  '@tiptap/extension-youtube@3.22.3':
+    resolution: {integrity: sha512-Qk9u1E5vSAGuRbSjCp3spLVZ4JMRzx0XGtz4wCIv4Fr6RZE6zGnja5vnbGA72KzhOEZJ0bS2S5mcKyYPUUIXeg==}
     peerDependencies:
       '@tiptap/core': ^3.22.3
 
@@ -8656,6 +8714,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
 
+  '@tiptap/extension-color@3.22.3(@tiptap/extension-text-style@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3)))':
+    dependencies:
+      '@tiptap/extension-text-style': 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
+
   '@tiptap/extension-document@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))':
     dependencies:
       '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
@@ -8663,6 +8725,12 @@ snapshots:
   '@tiptap/extension-dropcursor@3.22.3(@tiptap/extensions@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3))':
     dependencies:
       '@tiptap/extensions': 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
+
+  '@tiptap/extension-file-handler@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/extension-text-style@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3)))(@tiptap/pm@3.22.3)':
+    dependencies:
+      '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
+      '@tiptap/extension-text-style': 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
+      '@tiptap/pm': 3.22.3
 
   '@tiptap/extension-floating-menu@3.22.3(@floating-ui/dom@1.7.6)(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)':
     dependencies:
@@ -8687,6 +8755,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
       '@tiptap/pm': 3.22.3
+
+  '@tiptap/extension-image@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))':
+    dependencies:
+      '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
 
   '@tiptap/extension-italic@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))':
     dependencies:
@@ -8727,11 +8799,19 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
 
+  '@tiptap/extension-text-style@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))':
+    dependencies:
+      '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
+
   '@tiptap/extension-text@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))':
     dependencies:
       '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
 
   '@tiptap/extension-underline@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))':
+    dependencies:
+      '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
+
+  '@tiptap/extension-youtube@3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))':
     dependencies:
       '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
 
