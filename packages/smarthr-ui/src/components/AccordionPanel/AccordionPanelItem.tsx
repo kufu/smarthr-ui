@@ -17,7 +17,11 @@ type AbstractProps = PropsWithChildren<{
 }>
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'section'>, keyof AbstractProps>
 
-export const AccordionPanelItemContext = createContext<{ name: string }>({
+export const AccordionPanelItemContext = createContext<{
+  name: string
+  triggerId: string
+  contentId: string
+}>({
   name: '',
   triggerId: '',
   contentId: '',
