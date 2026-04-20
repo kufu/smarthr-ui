@@ -60,7 +60,7 @@ const ActualTenantSelector: FC<ActualProps> = ({
   tenantName,
 }) => {
   if (tenants.length === 1 || !onTenantSelect) {
-    return <Text as="p">{tenantName}</Text>
+    return <p>{tenantName}</p>
   }
 
   return (

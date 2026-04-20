@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
