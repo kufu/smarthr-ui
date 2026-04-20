@@ -60,6 +60,29 @@ export default {
       <div className="shr-h-[400px]">
         <BarChart data={manyPoints} title="多データポイント" />
       </div>
+
+      {/* パターン9: chartjs-plugin-annotation options */}
+      <div className="shr-h-[400px]">
+        <BarChart
+          data={singleSmall}
+          title="chartjs-plugin-annotation options"
+          options={{
+            plugins: {
+              annotation: {
+                annotations: {
+                  average: {
+                    type: 'line',
+                    yMin: 10,
+                    yMax: 10,
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 2,
+                  },
+                },
+              },
+            },
+          }}
+        />
+      </div>
     </Stack>
   ),
   parameters: {
