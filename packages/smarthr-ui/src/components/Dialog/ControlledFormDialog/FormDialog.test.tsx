@@ -6,7 +6,6 @@ import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
-import { Text } from '../../Text'
 
 import { ControlledFormDialog } from './ControlledFormDialog'
 
@@ -27,7 +26,7 @@ describe('ControlledFormDialog', () => {
             setIsOpen(false)
           }}
         >
-          <Text>ダイアログの中身です</Text>
+          ダイアログの中身です
         </ControlledFormDialog>
       </IntlProvider>
     )

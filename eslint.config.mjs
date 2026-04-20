@@ -90,7 +90,6 @@ export default [
       'smarthr/a11y-form-control-in-form': 'off',
       'smarthr/a11y-heading-in-sectioning-content': 'off',
       'smarthr/a11y-input-in-form-control': 'off',
-      'smarthr/require-barrel-import': 'off',
     },
   },
 ]

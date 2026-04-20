@@ -12,19 +12,19 @@ import {
   useState,
 } from 'react'
 
+import { Localizer } from '../../intl'
+import { Button } from '../Button'
+import { DropdownMenuButton } from '../Dropdown'
 import {
-  Button,
-  Cluster,
-  DropdownMenuButton,
   FaArrowRotateLeftIcon,
   FaMagnifyingGlassMinusIcon,
   FaMagnifyingGlassPlusIcon,
-  Loader,
-  Scroller,
-  Text,
-  VisuallyHiddenText,
-} from '../..'
-import { Localizer } from '../../intl'
+} from '../Icon'
+import { Cluster } from '../Layout'
+import { Loader } from '../Loader'
+import { Scroller } from '../Scroller'
+import { Text } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ImageViewer } from './ImageViewer'
 import { PDFViewer } from './PDFViewer'
@@ -150,12 +150,10 @@ export const FileViewer: FC<Props> = ({
               onLoadError={onLoadError}
             />
           ) : (
-            <Text>
-              <Localizer
-                id="smarthr-ui/FileViewer/unsupportedFileText"
-                defaultText="サポートされていない形式のファイルです。"
-              />
-            </Text>
+            <Localizer
+              id="smarthr-ui/FileViewer/unsupportedFileText"
+              defaultText="サポートされていない形式のファイルです。"
+            />
           )}
         </div>
       </div>
@@ -195,12 +193,12 @@ const Controller: FC<ControllerProps> = memo(
           </Button>
           <DropdownMenuButton
             trigger={
-              <Text>
+              <>
                 <VisuallyHiddenText>
                   <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
                 </VisuallyHiddenText>
                 {`${(scale * 100).toFixed(0)}%`}
-              </Text>
+              </>
             }
             className="shr-border-y-0 shr-border-[theme(borderColor.default)] [&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-[transparent]"
           >

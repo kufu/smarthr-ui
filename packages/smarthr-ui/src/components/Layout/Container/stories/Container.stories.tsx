@@ -1,6 +1,6 @@
 import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
-import { DeviceProvider } from '../../../..'
+import { DeviceProvider } from '../../../../themes'
 import { Base } from '../../../Base'
 import { Stack } from '../../Stack'
 import { Container } from '../Container'

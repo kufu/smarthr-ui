@@ -9,7 +9,6 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Center } from '../../../Layout'
 import { Loader } from '../../../Loader'
-import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
 import { Translate } from '../common/Translate'
 
@@ -94,9 +93,7 @@ const StyledLoader = memo(() => (
 
 const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
   <div className="shr-whitespace-pre-wrap shr-p-0.75">
-    <Text>
-      <Translate>{children}</Translate>
-    </Text>
+    <Translate>{children}</Translate>
   </div>
 ))
 

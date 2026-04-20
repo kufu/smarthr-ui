@@ -25,6 +25,7 @@ export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     return (
+      // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
       <Tooltip
         message={tooltipMessage}
         tabIndex={-1}
