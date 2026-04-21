@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [93.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.0.0...smarthr-ui-v93.0.1) (2026-04-21)
+
+
+### Bug Fixes
+
+* **Table:** fixedHeadのテーブルコンポネントが縦スクロール出来なくなっている ([#6275](https://github.com/kufu/smarthr-ui/issues/6275)) ([2971884](https://github.com/kufu/smarthr-ui/commit/29718846b439da9af0fde195b6771d13ca394a21))
+
 ## [93.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v92.0.0...smarthr-ui-v93.0.0) (2026-04-16)
 
 
