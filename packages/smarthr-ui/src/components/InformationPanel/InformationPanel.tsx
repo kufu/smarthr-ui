@@ -72,7 +72,7 @@ const classNameGenerator = tv({
     active: {
       true: {},
       false: {
-        header: 'shr-py-1',
+        header: 'shr-rounded-b-l shr-py-1',
       },
     },
     bold: {
