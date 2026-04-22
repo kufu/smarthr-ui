@@ -22,6 +22,7 @@ type Props = PropsWithChildren &
 const classNameGenerator = tv({
   slots: {
     // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
+    // overflowはScrollerを利用します
     wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
   },
 })
@@ -59,6 +60,8 @@ export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
     }, [fixedHead])
 
     return (
+      // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さ指定とScrollerで対応
+      // 高さはclassNameで指定
       <Scroller {...rest} ref={setRefs} className={classNames.wrapper}>
         {children}
       </Scroller>
