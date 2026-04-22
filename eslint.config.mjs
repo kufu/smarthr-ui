@@ -51,8 +51,6 @@ export default [
       'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
-      // TODO: eslint-config-smarthr v14で追加されたルールを段階的に適用していく
-      'smarthr/require-barrel-import': 'warn',
       'no-restricted-syntax': [
         'error',
         {
