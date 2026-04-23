@@ -21,7 +21,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { textColor } from '../../themes'
+import { useTheme } from '../../hooks/useTheme'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'
 import { Input } from '../Input'
@@ -117,6 +117,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     },
     ref,
   ) => {
+    const theme = useTheme()
     const containerStyle = useMemo(
       () => ({
         width: typeof width === 'number' ? `${width}px` : width,
@@ -349,11 +350,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     useGlobalKeyDown(handleKeyDown)
 
     const caretIconColor = useMemo(() => {
-      if (isInputFocused || isCalendarShown) return textColor.black
-      if (disabled) return textColor.disabled
+      if (isInputFocused || isCalendarShown) return theme.textColor.black
+      if (disabled) return theme.textColor.disabled
 
-      return textColor.grey
-    }, [isInputFocused, isCalendarShown, disabled])
+      return theme.textColor.grey
+    }, [isInputFocused, isCalendarShown, disabled, theme.textColor])
 
     const onDelegateKeyDown = useMemo(() => {
       if (!isCalendarShown) {

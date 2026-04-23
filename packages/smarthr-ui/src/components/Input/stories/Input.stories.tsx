@@ -1,10 +1,10 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColor } from '../../../themes'
+import { backgroundColor as tailwindBackgroundColor } from '../../../tailwind'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { CurrencyInput } from '../CurrencyInput'
-import { Input, bgColors } from '../Input'
+import { Input, backgroundColor } from '../Input'
 import { SearchInput } from '../SearchInput'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -90,9 +90,11 @@ export const BgColor: StoryObj<typeof Input> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {([undefined, ...Object.keys(bgColors)] as Array<keyof typeof bgColors>).map((bgColor) => (
-        <Input {...args} bgColor={bgColor} key={bgColor} />
-      ))}
+      {([undefined, ...Object.keys(backgroundColor)] as Array<keyof typeof backgroundColor>).map(
+        (bgColor) => (
+          <Input {...args} bgColor={bgColor} key={bgColor} />
+        ),
+      )}
     </Stack>
   ),
 }

@@ -1,2 +1,2 @@
-export * from './createShadow'
-export * from './defaultShadow'
+export { createShadow, type CreatedShadowTheme, type ShadowProperty } from './createShadow'
+export { defaultShadow } from './defaultShadow'

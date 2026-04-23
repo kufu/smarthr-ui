@@ -1,8 +1,7 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
-import { localeMap } from '../../../../intl/localeMap'
+import { localeMap, useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'

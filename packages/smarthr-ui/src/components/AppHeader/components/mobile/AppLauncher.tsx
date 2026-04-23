@@ -6,6 +6,7 @@ import { UnstyledButton } from '../../../Button'
 import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
+import { Scroller } from '../../../Scroller'
 import { Text } from '../../../Text'
 import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
@@ -30,7 +31,7 @@ const classNameGenerator = tv({
       '[&_.smarthr-ui-Input]:shr-h-[42px]',
     ],
     headArea: 'shr-px-1 shr-py-0.75',
-    scrollArea: 'shr-flex-1 shr-basis-0 shr-overflow-y-scroll',
+    scrollArea: 'shr-flex-1 shr-basis-0',
     bottomArea: 'shr-border-t-shorthand shr-px-1 shr-py-0.75',
   },
 })
@@ -105,9 +106,9 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         )}
       </Cluster>
 
-      <div className={classNames.scrollArea}>
+      <Scroller className={classNames.scrollArea} styleType="scroll">
         <AppLauncherFeatures features={features} page={page} />
-      </div>
+      </Scroller>
 
       <BottomArea className={classNames.bottomArea}>{translated.helpText}</BottomArea>
     </div>

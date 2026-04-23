@@ -37,7 +37,7 @@ const classNameGenerator = tv({
       'peer-disabled:shr-border-disabled peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border',
       'peer-disabled:peer-indeterminate:shr-border-default peer-disabled:peer-indeterminate:shr-bg-border',
-      'peer-focus-visible:shr-focus-indicator',
+      'peer-focus-visible:shr-focus-indicator--outer',
       'peer-hover:shr-shadow-input-hover',
       'shr-border-default',
       'peer-[[aria-invalid]]:shr-border-danger',

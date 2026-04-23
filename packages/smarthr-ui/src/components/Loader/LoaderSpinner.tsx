@@ -8,7 +8,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type Props = {
   /** ローダーの大きさ */
-  size?: 's' | 'm'
+  size?: 'S' | 'M'
   /** 代替テキスト */
   alt?: ReactNode
   /** コンポーネントの色調 */
@@ -56,11 +56,11 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      s: {
+      S: {
         spinner: ['shr-w-1.5', 'shr-h-1.5'],
         cogInner: ['shr-border-2'],
       },
-      m: {
+      M: {
         spinner: ['shr-w-3', 'shr-h-3'],
         cogInner: ['shr-border-4'],
       },
@@ -116,7 +116,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const LoaderSpinner = memo<Props>(({ size = 'm', alt, type = 'primary' }) => {
+export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' }) => {
   const { localize } = useIntl()
 
   const classNames = useMemo(() => {

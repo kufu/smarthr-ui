@@ -6,7 +6,7 @@ import { Cluster, Stack } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { Gap } from '../../types'
 
 const classNameGenerator = tv({
@@ -140,7 +140,7 @@ export const FloatArea: FC<Props> = ({
         </Cluster>
         {responseStatus && (
           <p className={classNames.responseMessageWrapper}>
-            <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
+            <ResponseMessage status={responseStatus.status}>{responseStatus.text}</ResponseMessage>
           </p>
         )}
       </Stack>

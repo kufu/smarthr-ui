@@ -12,7 +12,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { useIntl } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
@@ -28,10 +27,7 @@ export type Props<T> = {
   onDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
-  decorators?: DecoratorsType<DecoratorKeyTypes>
 }
-
-type DecoratorKeyTypes = 'destroyButtonIconAltSuffix'
 
 const classNameGenerator = tv({
   slots: {
@@ -43,10 +39,10 @@ const classNameGenerator = tv({
       'shr-relative',
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
-      'focus-visible:shr-shadow-[unset]',
+      'focus-visible:shr-outline-none',
     ],
     deleteButtonIcon:
-      'group-focus-visible/deleteButton:shr-focus-indicator group-focus-visible/deleteButton:shr-rounded-full',
+      'group-focus-visible/deleteButton:shr-focus-indicator--outer group-focus-visible/deleteButton:shr-rounded-full',
   },
   variants: {
     enableEllipsis: {
@@ -69,7 +65,6 @@ export function MultiSelectedItem<T>({
   onDelete,
   enableEllipsis,
   buttonRef,
-  decorators,
 }: Props<T>) {
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
@@ -102,7 +97,6 @@ export function MultiSelectedItem<T>({
           onDelete={onDelete}
           disabled={disabled}
           buttonRef={buttonRef}
-          decorators={decorators}
           className={classNames.deleteButton}
           iconStyle={classNames.deleteButtonIcon}
         />
@@ -152,10 +146,9 @@ const BaseDestroyButton = <T,>({
   onDelete,
   disabled,
   buttonRef,
-  decorators,
   className,
   iconStyle,
-}: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'buttonRef' | 'decorators'> & {
+}: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'buttonRef'> & {
   labelId: string
   suffixTextId: string
   className: string
@@ -178,17 +171,14 @@ const BaseDestroyButton = <T,>({
     [onClick],
   )
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      destroyButtonIconAltSuffix: localize({
+  const destroyButtonIconAltSuffix = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix',
         defaultText: 'を削除',
       }),
-    }),
     [localize],
   )
-
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   return (
     <UnstyledButton
@@ -200,9 +190,7 @@ const BaseDestroyButton = <T,>({
       onKeyDown={onKeyDown}
       className={className}
     >
-      <VisuallyHiddenText id={suffixTextId}>
-        {decorated.destroyButtonIconAltSuffix}
-      </VisuallyHiddenText>
+      <VisuallyHiddenText id={suffixTextId}>{destroyButtonIconAltSuffix}</VisuallyHiddenText>
       <FaCircleXmarkIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
     </UnstyledButton>
   )

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "vitest": false,
+  "storybook": {
+    "entry": [
+      ".storybook/main.ts",
+      ".storybook/preview.tsx",
+      ".storybook/manager.ts",
+      ".storybook/tailwind.storybook.config.ts"
+    ]
+  },
+  "entry": ["scripts/**/*.ts"],
+  "ignore": ["**/*.stories.tsx", "rollup.*.config.js", "vitest.config.ts", "vitest-setup.js"],
+  "ignoreDependencies": [
+    "@rollup/plugin-commonjs",
+    "@rollup/plugin-node-resolve",
+    "@rollup/plugin-replace",
+    "@rollup/plugin-typescript",
+    "@storybook/addon-storysource",
+    "@storybook/cli",
+    "@swc/core",
+    "@testing-library/jest-dom",
+    "@vitejs/plugin-react",
+    "babel-plugin-polyfill-corejs2",
+    "babel-plugin-polyfill-regenerator",
+    "eslint-plugin-storybook",
+    "http-server",
+    "jsdom",
+    "playwright",
+    "postcss-styled-syntax",
+    "postcss-syntax",
+    "rollup-plugin-preserve-directives",
+    "rollup-plugin-rename-node-modules",
+    "tslib",
+    "typescript-eslint",
+    "vitest",
+    "wait-on"
+  ],
+  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "vitest", "knip"],
+  "ignoreExportsUsedInFile": true
+}

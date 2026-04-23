@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.1...smarthr-ui-charts-v0.1.2) (2026-04-16)
+
+
+### Features
+
+* **Chart:** chartjs-plugin-annotation を追加 ([#6263](https://github.com/kufu/smarthr-ui/issues/6263)) ([c65ddbd](https://github.com/kufu/smarthr-ui/commit/c65ddbd37b39521206ee5f82d5a6a49270e71d79))
+
+## [0.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.0...smarthr-ui-charts-v0.1.1) (2026-03-12)
+
+
+### Features
+
+* **charts:** lint/formatスクリプトを追加 ([#6178](https://github.com/kufu/smarthr-ui/issues/6178)) ([a9c767c](https://github.com/kufu/smarthr-ui/commit/a9c767ccc680c4db2a58c0c280a37e9cd6fb27c5))
+
 ## 0.1.0 (2025-11-20)
 
 

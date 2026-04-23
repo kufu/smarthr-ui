@@ -56,6 +56,7 @@ describe('intl', () => {
     })
 
     describe('formatDate', () => {
+      const testDate = new Date(2025, 1 - 1, 1) // 2025年1月1日
       const fullParts = ['year', 'month', 'day', 'weekday'] as const
 
       describe('locale variations with default parts (no weekday)', () => {
@@ -64,7 +65,7 @@ describe('intl', () => {
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
           const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-          expect(formatDate({ date: new Date(2025, 1 - 1, 1) })).toBe('2025/01/01')
+          expect(formatDate({ date: testDate })).toBe('2025/01/01')
         })
       })
 
@@ -94,9 +95,7 @@ describe('intl', () => {
             <IntlProvider locale="ja-easy">{children}</IntlProvider>
           )
           const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
-          expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
-            '2025年1月01日（水）',
-          )
+          expect(formatDate({ date: testDate, parts: fullParts })).toBe('2025年1月1日（水）')
         })
 
         it('formats date in id-id locale', () => {
@@ -220,11 +219,11 @@ describe('intl', () => {
           const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
           expect(
             formatDate({
-              date: new Date(2025, 1 - 1, 1),
-              parts: ['year', 'month'],
+              date: testDate,
+              parts: ['year', 'month', 'day'],
               options: { disableSlashInJa: true },
             }),
-          ).toBe('2025年1月')
+          ).toBe('2025年1月1日')
         })
 
         it('capitalizes first character with capitalizeFirstLetter option', () => {

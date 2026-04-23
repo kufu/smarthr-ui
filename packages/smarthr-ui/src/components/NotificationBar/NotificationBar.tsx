@@ -110,7 +110,7 @@ const classNameGenerator = tv({
         wrapper: 'shr-bg-main shr-text-white',
         icon: 'shr-text-white',
         closeButton:
-          'shr-text-white hover:[&]:shr-bg-main-darken focus-visible:[&]:shr-bg-main-darken',
+          'shr-text-white focus-visible:[&]:shr-focus-indicator hover:[&]:shr-bg-main-darken focus-visible:[&]:shr-bg-main-darken',
       },
     },
     {
@@ -267,7 +267,7 @@ const MessageArea = memo<
 const CloseButton = memo<Pick<Props, 'onClose'> & { className: string }>(
   ({ onClose, className }) =>
     onClose && (
-      <Button variant="text" size="s" onClick={onClose} className={className}>
+      <Button variant="text" size="S" onClick={onClose} className={className}>
         <FaXmarkIcon
           alt={
             <Localizer id="smarthr-ui/NotificationBar/closeButtonIconAlt" defaultText="閉じる" />

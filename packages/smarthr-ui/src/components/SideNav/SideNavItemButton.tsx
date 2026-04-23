@@ -11,7 +11,7 @@ import { tv } from 'tailwind-variants'
 import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
 
-export type SideNavSizeType = 'default' | 's'
+export type SideNavSizeType = 'M' | 'S'
 
 type AbstractProps = {
   /** アイテムの識別子 */
@@ -44,6 +44,7 @@ const classNameGenerator = tv({
     button: [
       'shr-w-full shr-leading-none [&]:shr-box-border',
       'focus-visible:shr-focus-indicator',
+      '[[data-current=true]_&:focus-visible]:shr-focus-indicator',
       'shr-inline-flex shr-items-center',
       'shr-no-underline',
     ],
@@ -52,10 +53,10 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      default: {
+      M: {
         button: 'shr-p-1 shr-text-base',
       },
-      s: {
+      S: {
         button: 'shr-px-1 shr-py-0.5 shr-text-sm',
       },
     },
@@ -72,7 +73,7 @@ export const SideNavItemButton: FC<
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: size ?? 'default' }),
+      button: button({ size: size ?? 'M' }),
       body: body(),
       bodyText: bodyText(),
     }
@@ -116,7 +117,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: size ?? 'default' }),
+      button: button({ size: size ?? 'M' }),
       body: body(),
       bodyText: bodyText(),
     }

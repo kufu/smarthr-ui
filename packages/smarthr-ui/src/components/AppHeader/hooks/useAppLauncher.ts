@@ -87,15 +87,15 @@ const sortFeatures = (
   if (mode !== 'search' && page === 'favorite') {
     const filtered = features.filter((item) => item.favorite)
 
-    // feature の position の数値の順に並び替える。position が null の場合は最後に並べる
+    // feature の position の数値の順に並び替える。position が null または undefined の場合は最後に並べる
     return filtered.sort((a, b) => {
-      if (a.position === null) {
-        if (b.position === null) {
+      if (a.position === null || a.position === undefined) {
+        if (b.position === null || b.position === undefined) {
           return 0
         }
 
         return 1
-      } else if (b.position === null) {
+      } else if (b.position === null || b.position === undefined) {
         return -1
       }
 

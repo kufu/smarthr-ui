@@ -6,6 +6,7 @@ import { OpenInNewTabIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
+import { TextLink } from '../../../TextLink'
 import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
@@ -14,11 +15,14 @@ import type { HeaderProps } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
-    anchor: ['shr-text-base shr-text-link [&&]:shr-underline', '[&&]:hover:shr-no-underline'],
+    anchor: [
+      'shr-text-base shr-text-link shr-shadow-none [&&]:shr-underline',
+      '[&&]:hover:shr-no-underline',
+    ],
     icon: ['shr-ms-0.5'],
     indexLinkWrapper: ['shr-mt-2 shr-text-end'],
     indexLinkAnchor: [
-      'shr-text-base shr-text-link [&&]:shr-no-underline',
+      'shr-text-base shr-text-link shr-shadow-none [&&]:shr-no-underline',
       '[&&]:hover:shr-underline',
     ],
   },
@@ -73,30 +77,32 @@ const ActualReleaseNote: FC<{
         <Stack>
           {data.links.slice(0, 5).map((link) => (
             <div key={link.url}>
-              <a
+              <TextLink
                 href={link.url}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
+                referrerPolicy="no-referrer-when-downgrade"
                 className={classNames.anchor}
+                suffix={<OpenInNewTabIcon className={classNames.icon} />}
               >
                 {link.title}
-                <OpenInNewTabIcon className={classNames.icon} />
-              </a>
+              </TextLink>
             </div>
           ))}
         </Stack>
       )}
 
       <div className={classNames.indexLinkWrapper}>
-        <a
+        <TextLink
           href={data.indexUrl}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
+          referrerPolicy="no-referrer-when-downgrade"
           className={classNames.indexLinkAnchor}
+          suffix={<OpenInNewTabIcon className={classNames.icon} />}
         >
           <Translate>{translated.seeAll}</Translate>
-          <OpenInNewTabIcon className={classNames.icon} />
-        </a>
+        </TextLink>
       </div>
     </div>
   )

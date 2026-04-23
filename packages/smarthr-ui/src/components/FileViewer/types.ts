@@ -10,9 +10,10 @@ export type FileForViewer = {
 export type ViewerProps = {
   file: FileForViewer
   scale: number
-  rotation: number
+  rotation: number | undefined
   width: number
   onLoad: () => void
+  onPDFLoaded?: (defaultRotation: number) => void
   /**
    * PDFファイルのパスワード入力を要求されたときに呼ばれるコールバック関数。PdfViewerでのみ使用されます。
    */

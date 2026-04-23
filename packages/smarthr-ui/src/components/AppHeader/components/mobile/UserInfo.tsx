@@ -28,17 +28,16 @@ const classNameGenerator = tv({
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
 
 export const UserInfo = memo<Props>(
-  ({ arbitraryDisplayName, email, empCode, firstName, lastName, accountUrl, locale }) => {
+  ({ email, empCode, firstName, lastName, accountUrl, locale }) => {
     const displayName = useMemo(
       () =>
-        arbitraryDisplayName ??
         buildDisplayName({
           email,
           empCode,
           firstName,
           lastName,
         }),
-      [arbitraryDisplayName, email, empCode, firstName, lastName],
+      [email, empCode, firstName, lastName],
     )
 
     return displayName ? (
@@ -88,7 +87,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
     <>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="skeleton" size="s" className={classNames.iconButton}>
+          <Button variant="skeleton" size="S" className={classNames.iconButton}>
             <span className={classNames.iconButtonInner}>
               <FaUserLargeIcon alt={translated.account} className="shr-fill-grey" />
             </span>

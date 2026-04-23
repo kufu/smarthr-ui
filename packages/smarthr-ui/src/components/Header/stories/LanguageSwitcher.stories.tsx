@@ -1,7 +1,7 @@
 import { action } from 'storybook/actions'
 
-import { localeMap } from '../../../intl/localeMap'
-import { backgroundColor } from '../../../themes'
+import { localeMap } from '../../../intl'
+import { defaultBackgroundColor as backgroundColor } from '../../../themes'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

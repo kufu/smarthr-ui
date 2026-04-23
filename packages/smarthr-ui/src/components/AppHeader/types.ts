@@ -1,4 +1,4 @@
-import type { Locale } from '../../intl/localeMap'
+import type { Locale } from '../../intl'
 import type { Header } from '../Header'
 import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
 
@@ -7,8 +7,6 @@ export type LocaleProps = {
 }
 
 export type UserInfoProps = {
-  /** @deprecated 書式の統一のために、可能な限り使用しないでください */
-  arbitraryDisplayName?: string | null
   email?: string | null
   empCode?: string | null
   firstName?: string | null
@@ -88,7 +86,7 @@ export type Launcher = {
     name: string
     url: string
     favorite: boolean
-    position: number | null
+    position?: number | null
   }
   page: (typeof launcher)['pages'][number]
   mode: (typeof launcher)['modes'][number]

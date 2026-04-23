@@ -2,10 +2,10 @@
 
 import {
   type ChangeEvent,
-  type ComponentProps,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   type Ref,
   memo,
   useCallback,
@@ -20,10 +20,11 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../../hooks/useOuterClick'
+import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
-import { textColor } from '../../../themes'
 import { FaCaretDownIcon } from '../../Icon'
+import { Scroller } from '../../Scroller'
 import { areItemsEqual } from '../helper'
 import { useFocusControl } from '../useFocusControl'
 import { useListbox } from '../useListbox'
@@ -31,7 +32,6 @@ import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 
-import type { DecoratorsType } from '../../../hooks/useDecorators'
 import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
 type AbstractProps<T> = ComboboxProps<T> & {
@@ -65,16 +65,13 @@ type AbstractProps<T> = ComboboxProps<T> & {
    */
   onBlur?: () => void
   /**
-   * コンポーネント内のテキストを変更する関数/
-   */
-  decorators?: DecoratorsType<'noResultText'> &
-    Exclude<ComponentProps<typeof MultiSelectedItem>['decorators'], undefined> & {
-      selectedListAriaLabel?: (text: string) => string
-    }
-  /**
    * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
    */
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
+  /**
+   * 検索結果が0件の時に表示するコンテンツ
+   */
+  noResultText?: ReactNode
 }
 type Props<T> = AbstractProps<T> &
   Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
@@ -92,6 +89,11 @@ const ARROW_LEFT_KEY_REGEX = /^(Arrow)?Left$/
 const ARROW_RIGHT_KEY_REGEX = /^(Arrow)?Right/
 const ARROW_UP_AND_DOWN_KEY_REGEX = /^(Arrow)?(Up|Down)$/
 
+const EMPTY_INPUT_CHANGE_EVENT = {
+  currentTarget: { value: '' },
+  target: { value: '' },
+} as ChangeEvent<HTMLInputElement>
+
 const classNameGenerator = tv({
   slots: {
     wrapper: [
@@ -100,7 +102,7 @@ const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'has-[[aria-invalid]]:shr-border-danger',
     ],
-    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
+    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5',
     selectedList:
       'smarthr-ui-MultiCombobox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
     inputWrapper: 'shr-flex shr-flex-1 shr-items-center',
@@ -174,8 +176,8 @@ const ActualMultiCombobox = <T,>(
     onFocus,
     onBlur,
     onKeyPress,
-    decorators,
     isItemSelected,
+    noResultText,
     style,
     ...rest
   }: Props<T>,
@@ -231,12 +233,15 @@ const ActualMultiCombobox = <T,>(
         if (matchedSelectedItem === undefined) {
           onSelect?.(selected)
           onChangeSelected?.(selectedItems.concat(selected))
+
+          // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+          onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         } else if (matchedSelectedItem.deletable !== false) {
           actualOnDelete(selected)
         }
       })
     },
-    [selectedItems, actualOnDelete, onChangeSelected, onSelect],
+    [selectedItems, actualOnDelete, onChangeSelected, onSelect, onChangeInput],
   )
 
   const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({
@@ -248,7 +253,7 @@ const ActualMultiCombobox = <T,>(
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
-    decorators,
+    noResultText,
   })
 
   const {
@@ -470,21 +475,13 @@ const ActualMultiCombobox = <T,>(
     }
   }, [isFocused, disabled, className])
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      selectedListAriaLabel: localize({
+  const selectedListAriaLabel = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
         defaultText: '選択済みアイテム',
       }),
-    }),
     [localize],
-  )
-
-  const decoratedAriaLabel = useMemo(
-    () =>
-      decorators?.selectedListAriaLabel?.(decoratorDefaultTexts.selectedListAriaLabel) ||
-      decoratorDefaultTexts.selectedListAriaLabel,
-    [decorators, decoratorDefaultTexts],
   )
 
   return (
@@ -498,8 +495,12 @@ const ActualMultiCombobox = <T,>(
       className={classNames.wrapper}
       style={wrapperStyle}
     >
-      <div className={classNames.inputArea}>
-        <ul id={selectedListId} aria-label={decoratedAriaLabel} className={classNames.selectedList}>
+      <Scroller className={classNames.inputArea}>
+        <ul
+          id={selectedListId}
+          aria-label={selectedListAriaLabel}
+          className={classNames.selectedList}
+        >
           {selectedItems.map((selectedItem, i) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
@@ -508,7 +509,6 @@ const ActualMultiCombobox = <T,>(
                 onDelete={actualOnDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
-                decorators={decorators}
               />
             </li>
           ))}
@@ -546,7 +546,7 @@ const ActualMultiCombobox = <T,>(
         {selectedItems.length === 0 && placeholder && !isFocused && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
-      </div>
+      </Scroller>
 
       <MemoizedCaretDown
         disabled={disabled}
@@ -568,12 +568,13 @@ const MemoizedCaretDown = memo<{
   disabled: boolean
   isFocused: boolean
 }>(({ className, iconStyle, disabled, isFocused }) => {
+  const theme = useTheme()
   const caretIconColor = useMemo(() => {
-    if (isFocused) return textColor.black
-    if (disabled) return textColor.disabled
+    if (isFocused) return theme.textColor.black
+    if (disabled) return theme.textColor.disabled
 
-    return textColor.grey
-  }, [disabled, isFocused])
+    return theme.textColor.grey
+  }, [disabled, isFocused, theme.textColor])
 
   return (
     <div className={className}>

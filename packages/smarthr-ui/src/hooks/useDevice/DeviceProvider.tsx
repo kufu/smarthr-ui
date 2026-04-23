@@ -2,7 +2,7 @@
 
 import { type FC, type ReactNode, useSyncExternalStore } from 'react'
 
-import { defaultBreakpoint } from '../../themes/createBreakpoint'
+import { defaultBreakpoint } from '../../themes'
 
 import { DeviceContext } from './useDevice'
 

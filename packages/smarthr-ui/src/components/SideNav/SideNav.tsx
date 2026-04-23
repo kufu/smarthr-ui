@@ -6,7 +6,7 @@ import {
   useMemo,
 } from 'react'
 import { Children, cloneElement } from 'react'
-import { tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
 
@@ -29,18 +29,41 @@ type AbstractProps = PropsWithChildren<{
   ) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
-}>
+}> &
+  VariantProps<typeof classNameGenerator>
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
+
+const ROUNDED = {
+  t_l: '[&>.smarthr-ui-SideNav-item:first-child]:shr-rounded-tl-l',
+  t_r: '[&>.smarthr-ui-SideNav-item:first-child]:shr-rounded-tr-l',
+  b_l: '[&>.smarthr-ui-SideNav-item:last-child]:shr-rounded-bl-l',
+  b_r: '[&>.smarthr-ui-SideNav-item:last-child]:shr-rounded-br-l',
+}
+const ROUNDED_ALL = ['shr-rounded-l', ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-SideNav', 'shr-list-none shr-bg-column'],
+  variants: {
+    rounded: {
+      true: ROUNDED_ALL,
+      all: ROUNDED_ALL,
+      top: ['shr-rounded-t-l', ROUNDED.t_l, ROUNDED.t_r],
+      right: ['shr-rounded-r-l', ROUNDED.t_r, ROUNDED.b_r],
+      bottom: ['shr-rounded-b-l', ROUNDED.b_l, ROUNDED.b_r],
+      left: ['shr-rounded-l-l', ROUNDED.t_l, ROUNDED.b_l],
+    },
+  },
+  defaultVariants: {
+    rounded: false,
+  },
 })
 
 export const SideNav: FC<Props> = ({
   items,
-  size = 'default',
+  size = 'M',
   onClick,
   className,
+  rounded,
   children,
   ...rest
 }) => {
@@ -57,7 +80,10 @@ export const SideNav: FC<Props> = ({
     [onClick],
   )
 
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ rounded, className }),
+    [rounded, className],
+  )
 
   return (
     <ul {...rest} className={actualClassName}>
@@ -81,11 +107,14 @@ export const SideNav: FC<Props> = ({
               'type' in child &&
               child.type === SideNavItemButton
             ) {
-              return cloneElement(child as React.ReactElement, {
-                // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
-                size,
-                onClick: actualOnClick,
-              })
+              return cloneElement(
+                child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
+                {
+                  // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
+                  size,
+                  onClick: actualOnClick,
+                },
+              )
             }
 
             return child

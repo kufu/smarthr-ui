@@ -31,7 +31,7 @@ const classNameGenerator = tv({
       '[&:has(:disabled)]:shr-text-disabled has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled',
     ],
     radio: [
-      '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
+      '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-focus-indicator-none',
       '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
     ],
     // RadioButtonPanel で指定している shr-ms-0.75 + RadioButton のボタンの shr-w-em を足して shr-ms-[1.75em] にしている

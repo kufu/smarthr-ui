@@ -6,7 +6,7 @@ import tailwindcss from 'tailwindcss'
 import type { StorybookConfig } from '@storybook/react-vite'
 
 export default {
-  stories: ['../src/**/*.stories.tsx'],
+  stories: ['../src/**/*.stories.tsx', '../../charts/src/**/*.stories.tsx'],
   addons: [
     '@storybook/addon-docs',
     'storybook-addon-pseudo-states',
@@ -52,7 +52,10 @@ export default {
     },
     css: {
       postcss: {
-        plugins: [tailwindcss, autoprefixer],
+        plugins: [
+          tailwindcss({ config: join(__dirname, 'tailwind.storybook.config.ts') }),
+          autoprefixer,
+        ],
       },
     },
   }),

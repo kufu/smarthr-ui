@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
-import { backgroundColor } from '../../../../themes'
+import { backgroundColor } from '../../../../tailwind'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { Text } from '../../../Text'
@@ -215,5 +215,13 @@ export const DropdownWidth: StoryObj<typeof SingleCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',
+  },
+}
+
+export const NoResultText: StoryObj<typeof SingleCombobox> = {
+  name: 'noResultText',
+  args: {
+    items: [],
+    noResultText: '該当する商品が見つかりません',
   },
 }

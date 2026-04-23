@@ -13,8 +13,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
-import { useIntl } from '../../intl'
 import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
@@ -37,17 +35,15 @@ type AbstractProps<T extends string> = {
   /** コンポーネントの幅 */
   width?: number | string
   /** コンポーネントの大きさ */
-  size?: 'default' | 's'
+  size?: 'M' | 'S'
   /** 空の選択肢を表示するかどうか */
   hasBlank?: boolean
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
+  /** 空の選択肢のラベル */
+  blankLabel?: string
 }
 
 type Props<T extends string> = AbstractProps<T> &
   Omit<ComponentPropsWithoutRef<'select'>, keyof AbstractProps<string> | 'children'>
-
-type DecoratorKeyTypes = 'blankLabel'
 
 const classNameGenerator = tv({
   slots: {
@@ -71,12 +67,12 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      default: {
+      M: {
         select: 'shr-py-0.5 shr-pe-2 shr-ps-0.5',
         // ((右 padding - アイコン幅) / 2) + 右 border
         iconWrap: 'shr-end-[calc(theme(spacing[0.5])_+_theme(spacing.px))]',
       },
-      s: {
+      S: {
         select: [
           'shr-px-0.5 shr-py-0.25 shr-pe-1.5 shr-text-sm',
           /* padding に依る積み上げでは文字が見切れてしまうため */
@@ -96,7 +92,7 @@ const ActualSelect = <T extends string>(
     error,
     width,
     hasBlank,
-    decorators,
+    blankLabel,
     size,
     className,
     disabled,
@@ -105,8 +101,6 @@ const ActualSelect = <T extends string>(
   }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
-  const { localize } = useIntl()
-
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       onChange?.(e)
@@ -129,7 +123,7 @@ const ActualSelect = <T extends string>(
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap, blankOptgroup } = classNameGenerator()
     const sizeProps = {
-      size: size || 'default',
+      size: size || 'M',
     }
 
     return {
@@ -145,17 +139,8 @@ const ActualSelect = <T extends string>(
     }),
     [width],
   )
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      blankLabel: localize({
-        id: 'smarthr-ui/Select/blankLabel',
-        defaultText: '選択してください',
-      }),
-    }),
-    [localize],
-  )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
+  const actualBlankLabel = blankLabel ?? ''
 
   return (
     <span className={classNames.wrapper} style={wrapperStyle}>
@@ -175,7 +160,7 @@ const ActualSelect = <T extends string>(
         ref={ref}
         className={classNames.select}
       >
-        <BlankOption hasBlank={hasBlank}>{decorated.blankLabel}</BlankOption>
+        <BlankOption hasBlank={hasBlank}>{actualBlankLabel}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}
