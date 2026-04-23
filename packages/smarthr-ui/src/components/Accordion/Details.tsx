@@ -16,7 +16,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { flatArrayToMap } from '../../libs/map'
 
-import { getNewExpandedItems } from './accordionPanelHelper'
+import { getNewExpandedItems } from './detailsHelper'
 
 type AbstractProps = PropsWithChildren<{
   /** アイコンの左右位置 */
@@ -29,13 +29,13 @@ type AbstractProps = PropsWithChildren<{
   onClick?: (expandedItems: string[]) => void
 }> &
   VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = AbstractProps & Omit<ComponentProps<'ul'>, keyof AbstractProps>
 
-export const AccordionPanelContext = createContext<{
+export const DetailsContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
   expandableMultiply: boolean
-  parentRef: RefObject<HTMLDivElement> | null
+  parentRef: RefObject<HTMLUListElement> | null
   onClickTrigger?: (itemName: string, isExpanded: boolean) => void
   onClickProps?: (expandedItems: string[]) => void
 }>({
@@ -46,16 +46,16 @@ export const AccordionPanelContext = createContext<{
 })
 
 const ROUNDED = {
-  t_l: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tl-l',
-  t_r: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tr-l',
-  b_l: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-bl-l',
-  b_r: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-br-l',
+  t_l: '[&>.smarthr-ui-Details-item:first-child_.smarthr-ui-Details-trigger]:shr-rounded-tl-l',
+  t_r: '[&>.smarthr-ui-Details-item:first-child_.smarthr-ui-Details-trigger]:shr-rounded-tr-l',
+  b_l: '[&>.smarthr-ui-Details-item:last-child_.smarthr-ui-Details-trigger:not([aria-expanded="true"])]:shr-rounded-bl-l',
+  b_r: '[&>.smarthr-ui-Details-item:last-child_.smarthr-ui-Details-trigger:not([aria-expanded="true"])]:shr-rounded-br-l',
 }
 
 const ROUNDED_ALL = [ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-AccordionPanel',
+  base: 'smarthr-ui-Details',
   variants: {
     rounded: {
       true: ROUNDED_ALL,
@@ -72,7 +72,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const AccordionPanel: FC<Props> = ({
+export const Details: FC<Props> = ({
   iconPosition = 'left',
   expandableMultiply = true,
   defaultExpanded = [],
@@ -82,7 +82,7 @@ export const AccordionPanel: FC<Props> = ({
   ...rest
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
-  const parentRef = useRef<HTMLDivElement>(null)
+  const parentRef = useRef<HTMLUListElement>(null)
   const actualClassName = useMemo(
     () => classNameGenerator({ className, rounded }),
     [rounded, className],
@@ -100,7 +100,7 @@ export const AccordionPanel: FC<Props> = ({
   }, [defaultExpanded])
 
   return (
-    <AccordionPanelContext.Provider
+    <DetailsContext.Provider
       value={{
         onClickTrigger,
         onClickProps,
@@ -110,7 +110,7 @@ export const AccordionPanel: FC<Props> = ({
         parentRef,
       }}
     >
-      <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
-    </AccordionPanelContext.Provider>
+      <ul {...rest} ref={parentRef} className={actualClassName} />
+    </DetailsContext.Provider>
   )
 }

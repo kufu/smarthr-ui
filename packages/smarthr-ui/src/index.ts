@@ -74,12 +74,7 @@ export { Heading, PageHeading } from './components/Heading'
 export { Select } from './components/Select'
 export { DropZone } from './components/DropZone'
 export { DefinitionList, DefinitionListItem } from './components/DefinitionList'
-export {
-  AccordionPanel,
-  AccordionPanelItem,
-  AccordionPanelContent,
-  AccordionPanelTrigger,
-} from './components/AccordionPanel'
+export { Details, DetailsItem, DetailsContent, Summary } from './components/Accordion'
 export { InformationPanel } from './components/InformationPanel'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
