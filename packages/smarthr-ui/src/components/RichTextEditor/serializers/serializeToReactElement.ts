@@ -8,6 +8,14 @@ type JSONMark = {
   attrs?: Record<string, unknown>
 }
 
+const SAFE_LINK_TARGETS = new Set(['_blank', '_self', '_parent', '_top'])
+
+const parseNumericAttr = (value: unknown): number | undefined => {
+  if (typeof value === 'number') return value
+  if (typeof value === 'string' && /^\d+(\.\d+)?$/.test(value)) return parseFloat(value)
+  return undefined
+}
+
 export const serializeToReactElement = (json: RichTextJSON): ReactNode => {
   if (!json.content) return null
   return json.content.map((node: JSONContent, i: number) => renderNode(node, i))
@@ -28,7 +36,7 @@ const renderNode = (node: JSONContent, key: number): ReactNode => {
     case 'orderedList':
       return createElement(
         'ol',
-        { key, start: (node.attrs?.start as number) ?? 1 },
+        { key, start: typeof node.attrs?.start === 'number' ? node.attrs.start : 1 },
         renderChildren(node),
       )
     case 'listItem':
@@ -42,10 +50,15 @@ const renderNode = (node: JSONContent, key: number): ReactNode => {
     case 'image': {
       const src = typeof node.attrs?.src === 'string' ? node.attrs.src : ''
       const isSafeSrc = /^https?:\/\//i.test(src)
+      const width = parseNumericAttr(node.attrs?.width)
+      const height = parseNumericAttr(node.attrs?.height)
       return createElement('img', {
         key,
         src: isSafeSrc ? src : undefined,
-        alt: (node.attrs?.alt as string) ?? '',
+        alt: typeof node.attrs?.alt === 'string' ? node.attrs.alt : '',
+        width,
+        height,
+        style: width ? { maxWidth: '100%', height: 'auto' } : undefined,
       })
     }
     case 'youtube': {
@@ -118,7 +131,9 @@ const renderTextWithMarks = (
           {
             key: `${key}-link`,
             href: isSafe ? href : undefined,
-            target: mark.attrs?.target as string | undefined,
+            target: SAFE_LINK_TARGETS.has(mark.attrs?.target as string)
+              ? (mark.attrs?.target as string)
+              : undefined,
             rel: 'noopener noreferrer',
           },
           result,
@@ -128,12 +143,18 @@ const renderTextWithMarks = (
       case 'textStyle': {
         const color = typeof mark.attrs?.color === 'string' ? mark.attrs.color : ''
         const isSafeColor =
-          /^#[0-9a-f]{3,6}$/i.test(color) || /^rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)$/i.test(color)
+          /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(color) ||
+          /^rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)$/i.test(color)
+        const fontSize = typeof mark.attrs?.fontSize === 'string' ? mark.attrs.fontSize : ''
+        const isSafeFontSize = /^\d+(\.\d+)?px$/.test(fontSize)
+        const style: Record<string, string> = {}
+        if (isSafeColor) style.color = color
+        if (isSafeFontSize) style.fontSize = fontSize
         result = createElement(
           'span',
           {
             key: `${key}-textStyle`,
-            style: isSafeColor ? { color } : undefined,
+            style: Object.keys(style).length > 0 ? style : undefined,
           },
           result,
         )

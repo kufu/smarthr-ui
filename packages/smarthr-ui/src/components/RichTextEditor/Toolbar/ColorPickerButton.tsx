@@ -157,7 +157,6 @@ export const ColorPickerButton: FC<Props> = memo(
           type="button"
           aria-label={colorLabel}
           aria-expanded={isOpen}
-          aria-haspopup="true"
           tabIndex={tabIndex}
           onKeyDown={handleTriggerKeyDown}
           onClick={() => setIsOpen((prev) => !prev)}

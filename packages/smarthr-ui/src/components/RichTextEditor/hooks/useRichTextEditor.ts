@@ -15,6 +15,7 @@ type UseRichTextEditorOptions = {
   onFocus?: () => void
   onBlur?: () => void
   features?: readonly RichTextFeature[]
+  headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   disabled?: boolean
   readOnly?: boolean
   placeholder?: string
@@ -30,6 +31,7 @@ export const useRichTextEditor = ({
   onFocus,
   onBlur,
   features = ['bold', 'italic', 'bulletList', 'orderedList', 'link'],
+  headingLevels,
   disabled,
   readOnly,
   placeholder,
@@ -39,10 +41,21 @@ export const useRichTextEditor = ({
 }: UseRichTextEditorOptions) => {
   const isControlled = value !== undefined
 
+  const featuresKey = features.join(',')
+  const headingLevelsKey = headingLevels?.join(',')
+  const mimeTypesKey = acceptedMimeTypes?.join(',')
+
   const extensions = useMemo(
-    () => configureExtensions({ features, placeholder, onImageUpload, acceptedMimeTypes }),
+    () =>
+      configureExtensions({
+        features,
+        headingLevels,
+        placeholder,
+        onImageUpload,
+        acceptedMimeTypes,
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [features.join(','), placeholder, onImageUpload, acceptedMimeTypes],
+    [featuresKey, headingLevelsKey, placeholder, onImageUpload, mimeTypesKey],
   )
 
   const editor = useEditor({

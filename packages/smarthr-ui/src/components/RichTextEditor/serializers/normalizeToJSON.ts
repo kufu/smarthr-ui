@@ -6,11 +6,6 @@ import type { ExternalRichTextValue } from '../types'
 import type { JSONContent } from '@tiptap/core'
 import type { AnyExtension } from '@tiptap/react'
 
-const EMPTY_DOC: JSONContent = {
-  type: 'doc',
-  content: [{ type: 'paragraph' }],
-}
-
 let cachedExtensions: AnyExtension[] | null = null
 
 const getOrCreateExtensions = () => {
@@ -21,7 +16,7 @@ const getOrCreateExtensions = () => {
 }
 
 export const normalizeToJSON = (value?: ExternalRichTextValue): JSONContent => {
-  if (!value || value.format === 'empty') return EMPTY_DOC
+  if (!value || value.format === 'empty') return { type: 'doc', content: [{ type: 'paragraph' }] }
   if (value.format === 'json') return value.content
   return generateJSON(value.content, getOrCreateExtensions())
 }

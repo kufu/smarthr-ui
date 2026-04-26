@@ -75,6 +75,7 @@ export const RichTextEditor = memo(
         onFocus,
         onBlur,
         features = ['bold', 'italic', 'bulletList', 'orderedList', 'link'] as const,
+        headingLevels,
         hideToolbar,
         disabled,
         readOnly,
@@ -117,6 +118,7 @@ export const RichTextEditor = memo(
         onFocus,
         onBlur,
         features,
+        headingLevels,
         disabled,
         readOnly,
         placeholder,
@@ -179,12 +181,14 @@ export const RichTextEditor = memo(
 
           if (describedBy) {
             proseMirrorEl.setAttribute('aria-describedby', describedBy)
-            wrapperEl.removeAttribute('aria-describedby')
+          } else {
+            proseMirrorEl.removeAttribute('aria-describedby')
           }
 
           if (ariaInvalid) {
             proseMirrorEl.setAttribute('aria-invalid', ariaInvalid)
-            wrapperEl.removeAttribute('aria-invalid')
+          } else {
+            proseMirrorEl.removeAttribute('aria-invalid')
           }
         }
 
@@ -199,6 +203,18 @@ export const RichTextEditor = memo(
         return () => observer.disconnect()
       }, [editor])
 
+      useEffect(() => {
+        if (!editor || !contentRef.current) return
+        const proseMirrorEl = contentRef.current.querySelector<HTMLElement>('.ProseMirror')
+        if (!proseMirrorEl) return
+
+        if (error) {
+          proseMirrorEl.setAttribute('aria-invalid', 'true')
+        } else if (!contentRef.current.getAttribute('aria-invalid')) {
+          proseMirrorEl.removeAttribute('aria-invalid')
+        }
+      }, [editor, error])
+
       const classNames = classNameGenerator({ disabled, readOnly, error })
 
       // editorが未初期化でもwrapperは常に描画する
@@ -207,6 +223,7 @@ export const RichTextEditor = memo(
         <RichTextEditorProvider
           editor={editor}
           features={features}
+          headingLevels={headingLevels}
           onImageUpload={onImageUpload}
           acceptedMimeTypes={acceptedMimeTypes}
         >

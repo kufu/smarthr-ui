@@ -113,6 +113,56 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(html).not.toContain('data:')
     })
 
+    it('空白文字で始まるjavascript: URLのhrefが除去される', () => {
+      const prefixes = ['  ', '\t', '\n', '\r\n', ' \t\n']
+      for (const prefix of prefixes) {
+        const json = {
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  marks: [{ type: 'link', attrs: { href: `${prefix}javascript:alert(1)` } }],
+                  text: 'click me',
+                },
+              ],
+            },
+          ],
+        }
+        const element = serializeToReactElement(json)
+        const html = renderToStaticMarkup(element as React.ReactElement)
+        expect(html).not.toContain('javascript:')
+      }
+    })
+
+    it('不正なtarget属性が除去される', () => {
+      const json = {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                marks: [
+                  {
+                    type: 'link',
+                    attrs: { href: 'https://example.com', target: 'evil_frame' },
+                  },
+                ],
+                text: 'click me',
+              },
+            ],
+          },
+        ],
+      }
+      const element = serializeToReactElement(json)
+      const html = renderToStaticMarkup(element as React.ReactElement)
+      expect(html).not.toContain('evil_frame')
+    })
+
     it('不正なheading levelがクランプされる', () => {
       const json = {
         type: 'doc',

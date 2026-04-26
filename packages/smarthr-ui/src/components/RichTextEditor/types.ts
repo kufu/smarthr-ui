@@ -21,6 +21,7 @@ export type RichTextFeature =
   | 'link'
   | 'heading'
   | 'color'
+  | 'fontSize'
   | 'image'
   | 'youtube'
 
@@ -51,6 +52,7 @@ type RichTextEditorBaseProps = {
   placeholder?: string
   className?: string
   editorClassName?: string
+  headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   acceptedMimeTypes?: string[]
 }

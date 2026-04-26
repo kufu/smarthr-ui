@@ -36,6 +36,7 @@ const ALL_FEATURES = [
   'horizontalRule',
   'link',
   'color',
+  'fontSize',
   'image',
   'youtube',
 ] as const
@@ -260,6 +261,15 @@ export const Overview: Story = {
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>URL入力で自動リンク</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>fontSize</code>
+                </td>
+                <td style={tdStyle}>フォントサイズ（12px〜72px）</td>
+                <td style={tdStyle}>サイズ選択ドロップダウン</td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
               </tr>
             </tbody>
           </table>
@@ -526,6 +536,41 @@ export const StaticDisplay: Story = {
           }}
         />
       </div>
+    </Stack>
+  ),
+}
+
+export const HeadingLevels: Story = {
+  name: '見出しレベルの制限（headingLevels）',
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        code: `// H1をオプトアウト（ページにh1がある場合など）
+<RichTextEditor
+  features={[..., 'heading']}
+  headingLevels={[2, 3, 4]}
+/>
+
+// デフォルトは [1, 2, 3, 4]
+<RichTextEditor features={[..., 'heading']} />`,
+      },
+    },
+  },
+  render: () => (
+    <Stack gap={1.5}>
+      <Text color="TEXT_GREY">
+        headingLevels propで使用可能な見出しレベルを制限できます。
+        ページ自体にh1がある場合など、エディタ内でh1を使わせたくないケースで有用です。 デフォルトは
+        [1, 2, 3, 4] で、全レベルが有効です。
+      </Text>
+      <FormControl label="H2〜H4のみ（headingLevels={[2, 3, 4]}）">
+        <RichTextEditor
+          features={['bold', 'italic', 'heading', 'bulletList', 'orderedList', 'link']}
+          headingLevels={[2, 3, 4]}
+          placeholder="見出しドロップダウンからH1が除外されます"
+        />
+      </FormControl>
     </Stack>
   ),
 }

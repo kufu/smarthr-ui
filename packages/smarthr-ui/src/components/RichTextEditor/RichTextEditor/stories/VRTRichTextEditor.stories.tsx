@@ -17,6 +17,10 @@ const ALL_FEATURES = [
   'codeBlock',
   'horizontalRule',
   'link',
+  'color',
+  'fontSize',
+  'image',
+  'youtube',
 ] as const
 
 const richContent = {

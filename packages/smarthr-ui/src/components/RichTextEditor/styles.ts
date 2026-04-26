@@ -31,8 +31,16 @@ export const editorContentClasses = [
   // link
   '[&_.ProseMirror_a]:shr-text-main [&_.ProseMirror_a]:shr-underline',
   // image
-  '[&_.ProseMirror_img]:shr-my-0.5 [&_.ProseMirror_img]:shr-max-w-full [&_.ProseMirror_img]:shr-rounded-m',
-  '[&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-main [&_.ProseMirror_img.ProseMirror-selectednode]:shr-rounded-m',
+  '[&_.ProseMirror_img]:shr-my-0.5 [&_.ProseMirror_img]:shr-max-w-full',
+  '[&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-main',
+  // image resize container
+  '[&_.ProseMirror_[data-resize-container]]:shr-w-fit [&_.ProseMirror_[data-resize-container]]:shr-max-w-full [&_.ProseMirror_[data-resize-container]]:shr-my-0.5',
+  '[&_.ProseMirror_[data-resize-container]_img]:shr-my-0',
+  '[&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-outline [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-outline-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-outline-offset-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-outline-main',
+  // image resize handles
+  '[&_.ProseMirror_[data-resize-handle]]:shr-size-[10px] [&_.ProseMirror_[data-resize-handle]]:shr-rounded-full [&_.ProseMirror_[data-resize-handle]]:shr-bg-main [&_.ProseMirror_[data-resize-handle]]:shr-border [&_.ProseMirror_[data-resize-handle]]:shr-border-solid [&_.ProseMirror_[data-resize-handle]]:shr-border-white [&_.ProseMirror_[data-resize-handle]]:shr-shadow-sm [&_.ProseMirror_[data-resize-handle]]:shr-opacity-0 [&_.ProseMirror_[data-resize-handle]]:shr-transition-opacity [&_.ProseMirror_[data-resize-handle]]:shr-z-1 [&_.ProseMirror_[data-resize-handle]]:shr-m-[-5px]',
+  '[&_.ProseMirror_[data-resize-wrapper]:hover_[data-resize-handle]]:shr-opacity-100',
+  '[&_.ProseMirror_[data-resize-container][data-resize-state=true]_[data-resize-handle]]:shr-opacity-100',
   // youtube iframe
   '[&_.ProseMirror_iframe]:shr-my-0.5 [&_.ProseMirror_iframe]:shr-max-w-full [&_.ProseMirror_iframe]:shr-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video]]:shr-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rounded-m',
@@ -71,7 +79,7 @@ export const staticContentClasses = [
   // link
   '[&_a]:shr-text-main [&_a]:shr-underline',
   // image
-  '[&_img]:shr-block [&_img]:shr-my-0.5 [&_img]:shr-max-w-full [&_img]:shr-rounded-m',
+  '[&_img]:shr-block [&_img]:shr-my-0.5 [&_img]:shr-max-w-full',
   // youtube iframe
   '[&_iframe]:shr-my-0.5 [&_iframe]:shr-max-w-full [&_iframe]:shr-rounded-m',
   // paragraph

@@ -8,15 +8,19 @@ import type { Editor } from '@tiptap/react'
 type RichTextEditorContextValue = {
   editor: Editor
   features: readonly RichTextFeature[]
+  headingLevels: ReadonlyArray<1 | 2 | 3 | 4>
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   acceptedMimeTypes?: string[]
 }
+
+const DEFAULT_HEADING_LEVELS: ReadonlyArray<1 | 2 | 3 | 4> = [1, 2, 3, 4]
 
 const RichTextEditorContext = createContext<RichTextEditorContextValue | null>(null)
 
 type ProviderProps = {
   editor: Editor
   features: readonly RichTextFeature[]
+  headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   acceptedMimeTypes?: string[]
   children: ReactNode
@@ -25,11 +29,14 @@ type ProviderProps = {
 export const RichTextEditorProvider: FC<ProviderProps> = ({
   editor,
   features,
+  headingLevels = DEFAULT_HEADING_LEVELS,
   onImageUpload,
   acceptedMimeTypes,
   children,
 }) => (
-  <RichTextEditorContext.Provider value={{ editor, features, onImageUpload, acceptedMimeTypes }}>
+  <RichTextEditorContext.Provider
+    value={{ editor, features, headingLevels, onImageUpload, acceptedMimeTypes }}
+  >
     {children}
   </RichTextEditorContext.Provider>
 )

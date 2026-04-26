@@ -22,6 +22,7 @@ import { useRovingToolbar } from '../hooks/useRovingToolbar'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ColorPickerButton } from './ColorPickerButton'
+import { FontSizeDropdown } from './FontSizeDropdown'
 import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
 import { LinkButton } from './LinkButton'
@@ -41,7 +42,7 @@ type ButtonItem = {
 }
 
 type CustomItem = {
-  type: 'heading' | 'color' | 'image' | 'youtube' | 'link'
+  type: 'heading' | 'fontSize' | 'color' | 'image' | 'youtube' | 'link'
   key: string
   disabled: boolean
 }
@@ -82,6 +83,15 @@ export const RichTextEditorToolbar: FC = memo(() => {
     // 見出しドロップダウン
     if (has('heading')) {
       toolbarItems.push({ type: 'heading', key: 'heading-dropdown', disabled: false })
+    }
+
+    // フォントサイズ
+    if (has('fontSize')) {
+      toolbarItems.push({
+        type: 'fontSize',
+        key: 'fontSize-dropdown',
+        disabled: state.isInHeading,
+      })
     }
 
     // テキスト書式
@@ -261,6 +271,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
         const rovingProps = getButtonProps(index, count)
         if (item.type === 'heading') {
           return <HeadingDropdown {...rovingProps} key={item.key} />
+        }
+        if (item.type === 'fontSize') {
+          return <FontSizeDropdown {...rovingProps} key={item.key} />
         }
         if (item.type === 'color') {
           return <ColorPickerButton {...rovingProps} key={item.key} />

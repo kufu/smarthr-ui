@@ -17,6 +17,8 @@ const getOrCreateSchema = () => {
 }
 
 export const serializeToHTML = (value: JSONContent): string => {
+  if (typeof document === 'undefined') return ''
+
   const { schema, serializer } = getOrCreateSchema()
   const doc = Node.fromJSON(schema, value)
   const div = document.createElement('div')

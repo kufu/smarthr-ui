@@ -2,7 +2,7 @@ import { Color } from '@tiptap/extension-color'
 import { FileHandler } from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
-import { TextStyle } from '@tiptap/extension-text-style'
+import { FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { Youtube } from '@tiptap/extension-youtube'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -11,6 +11,7 @@ import type { AnyExtension } from '@tiptap/react'
 
 type ConfigureExtensionsOptions = {
   features?: readonly RichTextFeature[]
+  headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   placeholder?: string
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   acceptedMimeTypes?: string[]
@@ -18,8 +19,11 @@ type ConfigureExtensionsOptions = {
 
 const DEFAULT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
+const DEFAULT_HEADING_LEVELS: ReadonlyArray<1 | 2 | 3 | 4> = [1, 2, 3, 4]
+
 export const configureExtensions = ({
   features = [],
+  headingLevels = DEFAULT_HEADING_LEVELS,
   placeholder,
   onImageUpload,
   acceptedMimeTypes,
@@ -28,7 +32,7 @@ export const configureExtensions = ({
 
   const extensions: AnyExtension[] = [
     StarterKit.configure({
-      heading: has('heading') ? { levels: [1, 2, 3, 4] } : false,
+      heading: has('heading') && headingLevels.length > 0 ? { levels: [...headingLevels] } : false,
       bold: has('bold') ? {} : false,
       italic: has('italic') ? {} : false,
       strike: has('strike') ? {} : false,
@@ -46,7 +50,17 @@ export const configureExtensions = ({
   ]
 
   if (has('image')) {
-    extensions.push(Image.configure({ allowBase64: false }))
+    extensions.push(
+      Image.configure({
+        allowBase64: false,
+        resize: {
+          enabled: true,
+          alwaysPreserveAspectRatio: true,
+          minWidth: 100,
+          minHeight: 100,
+        },
+      }),
+    )
 
     if (onImageUpload) {
       const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
@@ -102,8 +116,16 @@ export const configureExtensions = ({
     )
   }
 
+  if (has('color') || has('fontSize')) {
+    extensions.push(TextStyle.configure())
+  }
+
   if (has('color')) {
-    extensions.push(TextStyle.configure(), Color.configure())
+    extensions.push(Color.configure())
+  }
+
+  if (has('fontSize')) {
+    extensions.push(FontSize.configure())
   }
 
   if (placeholder) {
@@ -132,6 +154,7 @@ export const ALL_FEATURES: readonly RichTextFeature[] = [
   'link',
   'heading',
   'color',
+  'fontSize',
   'image',
   'youtube',
 ] as const

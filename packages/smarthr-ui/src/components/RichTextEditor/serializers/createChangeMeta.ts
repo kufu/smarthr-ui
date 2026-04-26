@@ -25,12 +25,15 @@ export const isEmptyDocument = (json: RichTextJSON): boolean => {
 }
 
 export const createChangeMeta = (json: RichTextJSON): RichTextChangeMeta => {
-  const html = serializeToHTML(json)
   const text = extractPlainText(json)
+  let _html: string | undefined
 
   return {
     json,
-    html,
+    get html() {
+      if (_html === undefined) _html = serializeToHTML(json)
+      return _html
+    },
     text,
     isEmpty: isEmptyDocument(json),
     characterCount: text.length,

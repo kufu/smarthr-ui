@@ -23,6 +23,7 @@ const ALL_FEATURES = [
   'color',
   'image',
   'youtube',
+  'fontSize',
 ] as const
 
 const mockImageUpload = async (file: File) => {
@@ -253,6 +254,28 @@ export const HTMLIntegration: Story = {
       </Stack>
     )
   },
+}
+
+export const CustomHeadingLevels: Story = {
+  name: '見出しレベル制限（headingLevels）',
+  render: () => (
+    <Stack gap={1.5}>
+      <FormControl label="H2〜H4のみ（H1なし）">
+        <RichTextEditor
+          features={['bold', 'italic', 'heading', 'bulletList', 'orderedList', 'link']}
+          headingLevels={[2, 3, 4]}
+          placeholder="見出しドロップダウンにH1が表示されません"
+        />
+      </FormControl>
+      <FormControl label="H1〜H2のみ">
+        <RichTextEditor
+          features={['bold', 'italic', 'heading', 'bulletList', 'orderedList', 'link']}
+          headingLevels={[1, 2]}
+          placeholder="見出しドロップダウンにH1とH2のみ表示されます"
+        />
+      </FormControl>
+    </Stack>
+  ),
 }
 
 export const FixedHeight: Story = {

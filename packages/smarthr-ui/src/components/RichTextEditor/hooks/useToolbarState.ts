@@ -47,6 +47,8 @@ export const useToolbarState = (editor: Editor) =>
               : null) as 1 | 2 | 3 | 4 | null,
       isLink: e.isActive('link'),
       currentColor: (e.getAttributes('textStyle').color as string) ?? null,
+      currentFontSize: (e.getAttributes('textStyle').fontSize as string) ?? null,
+      isInHeading: e.isActive('heading'),
 
       canBold: canRun(e, 'toggleBold'),
       canItalic: canRun(e, 'toggleItalic'),
