@@ -2,6 +2,7 @@ import { Color } from '@tiptap/extension-color'
 import { FileHandler } from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
+import { TextAlign } from '@tiptap/extension-text-align'
 import { FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { Youtube } from '@tiptap/extension-youtube'
 import StarterKit from '@tiptap/starter-kit'
@@ -48,6 +49,14 @@ export const configureExtensions = ({
         : false,
     }),
   ]
+
+  if (has('textAlign')) {
+    extensions.push(
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+    )
+  }
 
   if (has('image')) {
     extensions.push(
@@ -155,6 +164,7 @@ export const ALL_FEATURES: readonly RichTextFeature[] = [
   'heading',
   'color',
   'fontSize',
+  'textAlign',
   'image',
   'youtube',
 ] as const

@@ -3,10 +3,14 @@ import { useCallback, useRef, useState } from 'react'
 import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
 import {
+  FaAlignLeftIcon,
   FaBoldIcon,
+  FaCirclePlayIcon,
   FaCodeIcon,
   FaFileCodeIcon,
+  FaImageIcon,
   FaItalicIcon,
+  FaLinkIcon,
   FaListOlIcon,
   FaListUlIcon,
   FaQuoteLeftIcon,
@@ -37,6 +41,7 @@ const ALL_FEATURES = [
   'link',
   'color',
   'fontSize',
+  'textAlign',
   'image',
   'youtube',
 ] as const
@@ -182,7 +187,7 @@ export const Overview: Story = {
                   <code>heading</code>
                 </td>
                 <td style={tdStyle}>見出し（H1-H4）</td>
-                <td style={tdStyle}>H1 H2 H3 H4</td>
+                <td style={tdStyle}>見出しレベル選択ドロップダウン</td>
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>
                   <code># </code> <code>## </code> <code>### </code> <code>#### </code>
@@ -257,10 +262,21 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   <code>link</code>
                 </td>
-                <td style={tdStyle}>リンク（autolink）</td>
-                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>リンク</td>
+                <td style={tdStyle}>
+                  <FaLinkIcon />
+                </td>
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>URL入力で自動リンク</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>color</code>
+                </td>
+                <td style={tdStyle}>文字色</td>
+                <td style={tdStyle}>カラーピッカーボタン</td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
               </tr>
               <tr>
                 <td style={tdStyle}>
@@ -268,6 +284,39 @@ export const Overview: Story = {
                 </td>
                 <td style={tdStyle}>フォントサイズ（12px〜72px）</td>
                 <td style={tdStyle}>サイズ選択ドロップダウン</td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>textAlign</code>
+                </td>
+                <td style={tdStyle}>テキスト配置（左/中央/右/両端）</td>
+                <td style={tdStyle}>
+                  <FaAlignLeftIcon /> 配置ドロップダウン
+                </td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>image</code>
+                </td>
+                <td style={tdStyle}>画像挿入</td>
+                <td style={tdStyle}>
+                  <FaImageIcon />
+                </td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>youtube</code>
+                </td>
+                <td style={tdStyle}>YouTube埋め込み</td>
+                <td style={tdStyle}>
+                  <FaCirclePlayIcon />
+                </td>
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>なし</td>
               </tr>
@@ -292,7 +341,9 @@ export const BasicUsage: Story = {
     features={[
       'bold', 'italic', 'underline', 'strike', 'code',
       'heading', 'bulletList', 'orderedList',
-      'blockquote', 'codeBlock', 'horizontalRule', 'link',
+      'blockquote', 'codeBlock', 'horizontalRule',
+      'link', 'color', 'fontSize', 'textAlign',
+      'image', 'youtube',
     ]}
     onChange={(json) => setValue(json)}
     placeholder="ここに本文を入力してください"
@@ -504,6 +555,16 @@ export const StaticDisplay: Story = {
                 ],
               },
               {
+                type: 'paragraph',
+                attrs: { textAlign: 'center' },
+                content: [{ type: 'text', text: '中央揃えのテキスト' }],
+              },
+              {
+                type: 'paragraph',
+                attrs: { textAlign: 'right' },
+                content: [{ type: 'text', text: '右揃えのテキスト' }],
+              },
+              {
                 type: 'bulletList',
                 content: [
                   {
@@ -625,4 +686,33 @@ export const RefControl: Story = {
       </Stack>
     )
   },
+}
+
+export const FixedHeight: Story = {
+  name: '高さ固定（editorClassName）',
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        code: `<RichTextEditor
+  editorClassName="[&_.ProseMirror]:shr-h-[200px]"
+/>`,
+      },
+    },
+  },
+  render: () => (
+    <Stack gap={1.5}>
+      <Text color="TEXT_GREY">
+        editorClassName propで ProseMirror の高さを固定できます。
+        内容が溢れた場合はスクロールします。
+      </Text>
+      <FormControl label="高さ200px固定">
+        <RichTextEditor
+          features={ALL_FEATURES}
+          editorClassName="[&_.ProseMirror]:shr-h-[200px]"
+          placeholder="高さ200pxで固定。内容が溢れたらスクロールします"
+        />
+      </FormControl>
+    </Stack>
+  ),
 }

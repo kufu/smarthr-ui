@@ -48,6 +48,10 @@ export const useToolbarState = (editor: Editor) =>
       isLink: e.isActive('link'),
       currentColor: (e.getAttributes('textStyle').color as string) ?? null,
       currentFontSize: (e.getAttributes('textStyle').fontSize as string) ?? null,
+      currentTextAlign:
+        (e.getAttributes('paragraph').textAlign as string) ??
+        (e.getAttributes('heading').textAlign as string) ??
+        null,
       isInHeading: e.isActive('heading'),
 
       canBold: canRun(e, 'toggleBold'),

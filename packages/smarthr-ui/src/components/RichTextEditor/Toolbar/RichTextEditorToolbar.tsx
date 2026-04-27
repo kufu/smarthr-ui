@@ -26,6 +26,7 @@ import { FontSizeDropdown } from './FontSizeDropdown'
 import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
 import { LinkButton } from './LinkButton'
+import { TextAlignDropdown } from './TextAlignDropdown'
 import { ToolbarButton } from './ToolbarButton'
 import { YoutubeInsertButton } from './YoutubeInsertButton'
 
@@ -42,7 +43,7 @@ type ButtonItem = {
 }
 
 type CustomItem = {
-  type: 'heading' | 'fontSize' | 'color' | 'image' | 'youtube' | 'link'
+  type: 'heading' | 'fontSize' | 'color' | 'image' | 'youtube' | 'link' | 'textAlign'
   key: string
   disabled: boolean
 }
@@ -159,6 +160,11 @@ export const RichTextEditorToolbar: FC = memo(() => {
     // リンク
     if (has('link')) {
       toolbarItems.push({ type: 'link', key: 'link-button', disabled: false })
+    }
+
+    // テキスト配置
+    if (has('textAlign')) {
+      toolbarItems.push({ type: 'textAlign', key: 'textAlign-group', disabled: false })
     }
 
     // リスト・ブロック
@@ -286,6 +292,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
         }
         if (item.type === 'link') {
           return <LinkButton {...rovingProps} key={item.key} />
+        }
+        if (item.type === 'textAlign') {
+          return <TextAlignDropdown {...rovingProps} key={item.key} />
         }
         const buttonItem = item as ButtonItem
         return (

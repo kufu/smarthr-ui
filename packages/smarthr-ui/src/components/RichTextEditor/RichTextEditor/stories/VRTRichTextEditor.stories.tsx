@@ -19,6 +19,7 @@ const ALL_FEATURES = [
   'link',
   'color',
   'fontSize',
+  'textAlign',
   'image',
   'youtube',
 ] as const
@@ -103,6 +104,26 @@ const richContent = {
           type: 'text',
           marks: [{ type: 'link', attrs: { href: 'https://example.com' } }],
           text: 'リンク',
+        },
+      ],
+    },
+    {
+      type: 'paragraph',
+      attrs: { textAlign: 'center' },
+      content: [{ type: 'text', text: '中央揃えテキスト' }],
+    },
+    {
+      type: 'paragraph',
+      attrs: { textAlign: 'right' },
+      content: [{ type: 'text', text: '右揃えテキスト' }],
+    },
+    {
+      type: 'paragraph',
+      attrs: { textAlign: 'justify' },
+      content: [
+        {
+          type: 'text',
+          text: '両端揃えテキスト。テキスト配置の確認用に十分な長さのテキストを入れています。両端揃えでは行の左右が均等に揃います。',
         },
       ],
     },

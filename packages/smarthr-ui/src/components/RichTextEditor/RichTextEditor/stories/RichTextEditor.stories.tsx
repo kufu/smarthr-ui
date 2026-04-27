@@ -24,6 +24,7 @@ const ALL_FEATURES = [
   'image',
   'youtube',
   'fontSize',
+  'textAlign',
 ] as const
 
 const mockImageUpload = async (file: File) => {
@@ -34,8 +35,23 @@ const mockImageUpload = async (file: File) => {
 const meta = {
   title: 'Components/RichTextEditor/RichTextEditor',
   component: RichTextEditor,
+  render: ({ outputFormat: _, onChange: __, ...rest }) => (
+    <FormControl label="リッチテキストエディタ">
+      <RichTextEditor {...rest} />
+    </FormControl>
+  ),
+  args: {
+    features: ALL_FEATURES,
+  },
+  argTypes: {
+    disabled: { description: '非活性', type: 'boolean' },
+    readOnly: { description: '読み取り専用', type: 'boolean' },
+    error: { description: 'エラー状態', type: 'boolean' },
+    hideToolbar: { description: 'ツールバー非表示', type: 'boolean' },
+  },
   parameters: {
     layout: 'padded',
+    chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof RichTextEditor>
 
@@ -43,13 +59,13 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {
-  render: () => {
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
     const [value, setValue] = useState<RichTextJSON | undefined>()
     return (
       <Stack>
         <FormControl label="リッチテキストエディタ">
           <RichTextEditor
-            features={ALL_FEATURES}
+            {...rest}
             onChange={(json) => setValue(json)}
             onImageUpload={mockImageUpload}
             placeholder="ここに本文を入力してください"
@@ -65,20 +81,13 @@ export const Playground: Story = {
 }
 
 export const AllFeatures: Story = {
-  render: () => (
-    <FormControl
-      label={{
-        text: '全機能が有効です',
-        unrecommendedHide: true,
-      }}
-    >
-      <RichTextEditor features={ALL_FEATURES} placeholder="全機能が有効です" />
-    </FormControl>
-  ),
+  args: {
+    placeholder: '全機能が有効です',
+  },
 }
 
 export const Controlled: Story = {
-  render: () => {
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
     const [value, setValue] = useState<RichTextJSON>({
       type: 'doc',
       content: [
@@ -90,152 +99,83 @@ export const Controlled: Story = {
     })
     return (
       <FormControl label="Controlled">
-        <RichTextEditor value={value} onChange={(json) => setValue(json)} />
+        <RichTextEditor {...rest} value={value} onChange={(json) => setValue(json)} />
       </FormControl>
     )
   },
 }
 
 export const Uncontrolled: Story = {
-  render: () => (
-    <FormControl label="Uncontrolled">
-      <RichTextEditor
-        defaultValue={{
-          type: 'doc',
-          content: [
-            {
-              type: 'paragraph',
-              content: [{ type: 'text', text: 'Default content' }],
-            },
-          ],
-        }}
-      />
-    </FormControl>
-  ),
-}
-
-export const ReadOnly: Story = {
-  render: () => (
-    <FormControl label="ReadOnly">
-      <RichTextEditor
-        readOnly
-        defaultValue={{
-          type: 'doc',
-          content: [
-            {
-              type: 'paragraph',
-              content: [
-                { type: 'text', text: 'This is ' },
-                {
-                  type: 'text',
-                  marks: [{ type: 'bold' }],
-                  text: 'read only',
-                },
-                { type: 'text', text: ' content.' },
-              ],
-            },
-          ],
-        }}
-      />
-    </FormControl>
-  ),
-}
-
-export const Disabled: Story = {
-  render: () => (
-    <FormControl label="Disabled">
-      <RichTextEditor disabled placeholder="編集できません" />
-    </FormControl>
-  ),
-}
-
-export const WithError: Story = {
-  render: () => (
-    <FormControl label="エラー状態" errorMessages="入力内容にエラーがあります">
-      <RichTextEditor error placeholder="エラーがあります" />
-    </FormControl>
-  ),
-}
-
-export const MinimalFeatures: Story = {
-  render: () => (
-    <FormControl label="MinimalFeatures">
-      <RichTextEditor features={[]} placeholder="テキストを入力" />
-    </FormControl>
-  ),
-}
-
-export const WithColor: Story = {
-  name: '文字色',
-  render: () => {
-    const [value, setValue] = useState<RichTextJSON | undefined>()
-    return (
-      <Stack>
-        <FormControl label="文字色付きエディタ">
-          <RichTextEditor
-            features={['bold', 'italic', 'color']}
-            onChange={(json) => setValue(json)}
-            placeholder="テキストを選択して文字色を変更できます"
-          />
-        </FormControl>
-        {value && (
-          <details>
-            <summary>JSON出力</summary>
-            <pre style={{ fontSize: 12 }}>{JSON.stringify(value, null, 2)}</pre>
-          </details>
-        )}
-      </Stack>
-    )
+  args: {
+    defaultValue: {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text: 'Default content' }],
+        },
+      ],
+    },
   },
 }
 
-export const WithImageUpload: Story = {
-  name: '画像挿入',
-  render: () => (
-    <FormControl label="画像挿入付きエディタ">
-      <RichTextEditor
-        features={['bold', 'italic', 'image']}
-        onImageUpload={mockImageUpload}
-        placeholder="画像はツールバーボタン、ドラッグ&ドロップ、ペーストで挿入できます"
-      />
-    </FormControl>
-  ),
+export const ReadOnly: Story = {
+  name: 'readOnly',
+  args: {
+    readOnly: true,
+    defaultValue: {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            { type: 'text', text: 'This is ' },
+            { type: 'text', marks: [{ type: 'bold' }], text: 'read only' },
+            { type: 'text', text: ' content.' },
+          ],
+        },
+      ],
+    },
+  },
 }
 
-export const WithYoutube: Story = {
-  name: 'YouTube埋め込み',
-  render: () => (
-    <FormControl label="YouTube埋め込み付きエディタ">
-      <RichTextEditor
-        features={['bold', 'italic', 'youtube']}
-        defaultValue={{
-          type: 'doc',
-          content: [
-            {
-              type: 'paragraph',
-              content: [
-                {
-                  type: 'text',
-                  text: 'ツールバーのボタンからYouTube動画を埋め込めます。サンプルURL: https://youtu.be/ZFwv6s7kXCQ',
-                },
-              ],
-            },
-          ],
-        }}
-      />
+export const Disabled: Story = {
+  name: 'disabled',
+  args: {
+    disabled: true,
+    placeholder: '編集できません',
+  },
+}
+
+export const WithError: Story = {
+  name: 'error',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => (
+    <FormControl label="エラー状態" errorMessages="入力内容にエラーがあります">
+      <RichTextEditor {...rest} />
     </FormControl>
   ),
+  args: {
+    error: true,
+    placeholder: 'エラーがあります',
+  },
+}
+
+export const MinimalFeatures: Story = {
+  args: {
+    features: [],
+    placeholder: 'テキストを入力',
+  },
 }
 
 export const HTMLIntegration: Story = {
   name: 'HTML入出力',
-  render: () => {
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
     const [output, setOutput] = useState('')
     return (
       <Stack>
         <FormControl label="HTML入力 → HTML出力">
           <RichTextEditor
-            features={ALL_FEATURES}
+            {...rest}
             content={{
               format: 'html',
               content:
@@ -258,35 +198,25 @@ export const HTMLIntegration: Story = {
 
 export const CustomHeadingLevels: Story = {
   name: '見出しレベル制限（headingLevels）',
-  render: () => (
+  render: ({ outputFormat: _, onChange: __, ...rest }) => (
     <Stack gap={1.5}>
       <FormControl label="H2〜H4のみ（H1なし）">
         <RichTextEditor
-          features={['bold', 'italic', 'heading', 'bulletList', 'orderedList', 'link']}
+          {...rest}
           headingLevels={[2, 3, 4]}
           placeholder="見出しドロップダウンにH1が表示されません"
         />
       </FormControl>
       <FormControl label="H1〜H2のみ">
         <RichTextEditor
-          features={['bold', 'italic', 'heading', 'bulletList', 'orderedList', 'link']}
+          {...rest}
           headingLevels={[1, 2]}
           placeholder="見出しドロップダウンにH1とH2のみ表示されます"
         />
       </FormControl>
     </Stack>
   ),
-}
-
-export const FixedHeight: Story = {
-  name: '高さ固定（editorClassName）',
-  render: () => (
-    <FormControl label="高さ固定">
-      <RichTextEditor
-        features={ALL_FEATURES}
-        editorClassName="[&_.ProseMirror]:shr-h-[200px]"
-        placeholder="高さ200pxで固定。内容が溢れたらスクロールします"
-      />
-    </FormControl>
-  ),
+  args: {
+    features: ['bold', 'italic', 'heading', 'bulletList', 'orderedList', 'link'],
+  },
 }

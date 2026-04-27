@@ -9,6 +9,7 @@ type JSONMark = {
 }
 
 const SAFE_LINK_TARGETS = new Set(['_blank', '_self', '_parent', '_top'])
+const SAFE_TEXT_ALIGNS = new Set(['left', 'center', 'right', 'justify'])
 
 const parseNumericAttr = (value: unknown): number | undefined => {
   if (typeof value === 'number') return value
@@ -25,11 +26,16 @@ const renderNode = (node: JSONContent, key: number): ReactNode => {
   switch (node.type) {
     case 'doc':
       return serializeToReactElement(node)
-    case 'paragraph':
-      return createElement('p', { key }, renderChildren(node))
+    case 'paragraph': {
+      const pAlign = typeof node.attrs?.textAlign === 'string' ? node.attrs.textAlign : undefined
+      const pStyle = SAFE_TEXT_ALIGNS.has(pAlign as string) ? { textAlign: pAlign } : undefined
+      return createElement('p', { key, style: pStyle }, renderChildren(node))
+    }
     case 'heading': {
       const level = Math.min(Math.max(Number(node.attrs?.level) || 2, 1), 4)
-      return createElement(`h${level}`, { key }, renderChildren(node))
+      const hAlign = typeof node.attrs?.textAlign === 'string' ? node.attrs.textAlign : undefined
+      const hStyle = SAFE_TEXT_ALIGNS.has(hAlign as string) ? { textAlign: hAlign } : undefined
+      return createElement(`h${level}`, { key, style: hStyle }, renderChildren(node))
     }
     case 'bulletList':
       return createElement('ul', { key }, renderChildren(node))

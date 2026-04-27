@@ -1,6 +1,10 @@
 import {
   FaAddressBook,
   FaAddressCard,
+  FaAlignCenter,
+  FaAlignJustify,
+  FaAlignLeft,
+  FaAlignRight,
   FaAngleDown,
   FaAngleLeft,
   FaAngleRight,
@@ -215,6 +219,10 @@ import { generateIcon } from './generateIcon'
 
 export const FaAddressBookIcon = /*#__PURE__*/ generateIcon(FaAddressBook)
 export const FaAddressCardIcon = /*#__PURE__*/ generateIcon(FaAddressCard)
+export const FaAlignCenterIcon = /*#__PURE__*/ generateIcon(FaAlignCenter)
+export const FaAlignJustifyIcon = /*#__PURE__*/ generateIcon(FaAlignJustify)
+export const FaAlignLeftIcon = /*#__PURE__*/ generateIcon(FaAlignLeft)
+export const FaAlignRightIcon = /*#__PURE__*/ generateIcon(FaAlignRight)
 export const FaAngleDownIcon = /*#__PURE__*/ generateIcon(FaAngleDown)
 export const FaAngleLeftIcon = /*#__PURE__*/ generateIcon(FaAngleLeft)
 export const FaAngleRightIcon = /*#__PURE__*/ generateIcon(FaAngleRight)

@@ -22,6 +22,7 @@ export type RichTextFeature =
   | 'heading'
   | 'color'
   | 'fontSize'
+  | 'textAlign'
   | 'image'
   | 'youtube'
 

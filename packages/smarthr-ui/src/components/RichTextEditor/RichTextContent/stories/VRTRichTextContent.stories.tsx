@@ -86,6 +86,16 @@ const richContent = {
         },
       ],
     },
+    {
+      type: 'paragraph',
+      attrs: { textAlign: 'center' },
+      content: [{ type: 'text', text: '中央揃えテキスト' }],
+    },
+    {
+      type: 'paragraph',
+      attrs: { textAlign: 'right' },
+      content: [{ type: 'text', text: '右揃えテキスト' }],
+    },
   ],
 }
 

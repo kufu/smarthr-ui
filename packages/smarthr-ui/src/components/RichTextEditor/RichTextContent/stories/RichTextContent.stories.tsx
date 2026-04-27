@@ -138,6 +138,21 @@ const sampleJSON = {
       ],
     },
     {
+      type: 'paragraph',
+      attrs: { textAlign: 'center' },
+      content: [{ type: 'text', text: '中央揃えのテキスト' }],
+    },
+    {
+      type: 'paragraph',
+      attrs: { textAlign: 'right' },
+      content: [{ type: 'text', text: '右揃えのテキスト' }],
+    },
+    {
+      type: 'heading',
+      attrs: { level: 3, textAlign: 'center' },
+      content: [{ type: 'text', text: '中央揃えの見出し3' }],
+    },
+    {
       type: 'image',
       attrs: {
         src: 'https://placehold.co/400x200/e2e8f0/64748b?text=Sample+Image',
@@ -174,6 +189,8 @@ export const HTMLPreview: Story = {
         '<p><code>コード</code>と<s>打ち消し線</s></p>',
         '<p><a href="https://smarthr.design" target="_blank" rel="noopener noreferrer">SmartHR Design System</a></p>',
         '<p><span style="color: #e01e5a">赤いテキスト</span>・<span style="color: #0077c7">青いテキスト</span></p>',
+        '<p style="text-align: center">中央揃えのHTML</p>',
+        '<p style="text-align: right">右揃えのHTML</p>',
         '<img src="https://placehold.co/400x200/e2e8f0/64748b?text=Sample+Image" alt="サンプル画像">',
         '<div data-youtube-video><iframe src="https://www.youtube-nocookie.com/embed/ZFwv6s7kXCQ" width="480" height="270" allowfullscreen></iframe></div>',
       ].join(''),
