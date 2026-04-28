@@ -1,5 +1,3 @@
-import type { ja } from '.'
-
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
@@ -115,14 +113,14 @@ export const locale = {
   'smarthr-ui/UnauthorizedErrorScreen/description2': 'Để truy cập, bạn cần đăng nhập lại.',
   'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': 'Đăng nhập lại',
   'smarthr-ui/UnexpectedErrorScreen/title': 'Đã xảy ra lỗi không mong muốn.',
-  'smarthr-ui/UnexpectedErrorScreen/apology': '',
+  'smarthr-ui/UnexpectedErrorScreen/apology': 'Xin lỗi vì sự bất tiện này.',
   'smarthr-ui/UnexpectedErrorScreen/possibleCause': '',
   'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '',
   'smarthr-ui/UnexpectedErrorScreen/retryItem1': '',
   'smarthr-ui/UnexpectedErrorScreen/retryItem2': '',
   'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '',
   'smarthr-ui/UnexpectedErrorScreen/checkItem1': '',
-  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': ' Để xem thêm thông tin chi tiết, hãy tham khảo trang {cookieCacheLink}.',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
-} as const satisfies Record<keyof typeof ja, string>
+} as const

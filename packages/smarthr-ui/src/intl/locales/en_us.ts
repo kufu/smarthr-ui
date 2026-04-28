@@ -1,5 +1,3 @@
-import type { ja } from '.'
-
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
@@ -114,15 +112,15 @@ export const locale = {
   'smarthr-ui/UnauthorizedErrorScreen/description1': 'You have been automatically logged out due to inactivity.',
   'smarthr-ui/UnauthorizedErrorScreen/description2': 'Please log in again to access the requested page.',
   'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': 'Log in again',
-  'smarthr-ui/UnexpectedErrorScreen/title': 'An unexpected error occurred',
-  'smarthr-ui/UnexpectedErrorScreen/apology': '',
+  'smarthr-ui/UnexpectedErrorScreen/title': 'An unexpected error occurred.',
+  'smarthr-ui/UnexpectedErrorScreen/apology': 'We apologize for the inconvenience.',
   'smarthr-ui/UnexpectedErrorScreen/possibleCause': '',
   'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '',
   'smarthr-ui/UnexpectedErrorScreen/retryItem1': '',
   'smarthr-ui/UnexpectedErrorScreen/retryItem2': '',
   'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '',
   'smarthr-ui/UnexpectedErrorScreen/checkItem1': '',
-  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': ' For details, see {cookieCacheLink}.',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
-} as const satisfies Record<keyof typeof ja, string>
+} as const
