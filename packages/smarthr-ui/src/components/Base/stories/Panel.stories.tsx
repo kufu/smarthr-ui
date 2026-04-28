@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { Base, baseClassNameGenerator } from '../Base'
+import { Panel, baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
 
 import type { Gap } from '../../../types'
@@ -19,7 +19,7 @@ export default {
   title: 'Components/Base',
   component: Base,
   subcomponents: { BaseColumn },
-  render: (args) => <Base {...args} />,
+  render: (args) => <Panel {...args} />,
   argTypes: {
     padding: {
       options: basePadding,
@@ -47,12 +47,12 @@ export const Padding: StoryObj<typeof Base> = {
   render: (args) => (
     <Stack>
       {[undefined, ...basePadding].map((padding) => (
-        <Base {...args} padding={padding} key={padding}>
+        <Panel {...args} padding={padding} key={padding}>
           padding: {padding}
-        </Base>
+        </Panel>
       ))}
-      <Base padding={{ block: 1, inline: 1.5 }}>padding: {'{{ block: 1, inline: 1.5 }}'}</Base>
-      <Base padding={{ block: 1 }}>padding: {'{{ block: 1 }}'}</Base>
+      <Panel padding={{ block: 1, inline: 1.5 }}>padding: {'{{ block: 1, inline: 1.5 }}'}</Panel>
+      <Panel padding={{ block: 1 }}>padding: {'{{ block: 1 }}'}</Panel>
     </Stack>
   ),
 }
@@ -61,12 +61,12 @@ export const Radius: StoryObj<typeof Base> = {
   name: 'radius',
   render: (args) => (
     <Stack>
-      <Base {...args} radius="m">
+      <Panel {...args} radius="m">
         m
-      </Base>
-      <Base {...args} radius="s">
+      </Panel>
+      <Panel {...args} radius="s">
         s
-      </Base>
+      </Panel>
     </Stack>
   ),
 }
@@ -76,9 +76,9 @@ export const Overflow: StoryObj<typeof Base> = {
   render: (args) => (
     <Stack>
       {baseOverflow.map((overflow) => (
-        <Base {...args} overflow={overflow} key={overflow}>
+        <Panel {...args} overflow={overflow} key={overflow}>
           <p className="shr-bg-white">{overflow || 'undefined'}</p>
-        </Base>
+        </Panel>
       ))}
     </Stack>
   ),
@@ -89,9 +89,9 @@ export const Layer: StoryObj<typeof Base> = {
   render: (args) => (
     <Stack>
       {baseLayer.map((layer) => (
-        <Base {...args} layer={layer} key={layer}>
+        <Panel {...args} layer={layer} key={layer}>
           layer: {layer}
-        </Base>
+        </Panel>
       ))}
     </Stack>
   ),

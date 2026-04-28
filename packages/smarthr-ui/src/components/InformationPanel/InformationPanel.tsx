@@ -14,7 +14,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
-import { Base, type BaseElementProps } from '../Base'
+import { Panel, type PanelElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import {
@@ -46,7 +46,7 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+type Props = AbstractProps & Omit<PanelElementProps, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
@@ -174,8 +174,9 @@ export const InformationPanel: FC<Props> = ({
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
+    <Panel {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- Panel (Base) は as="section" で Section として扱われるため問題ない。eslint-plugin-smarthr の Panel 対応後に削除 */}
         <MemoizedHeading
           heading={heading}
           id={`${id}-heading`}
@@ -195,7 +196,7 @@ export const InformationPanel: FC<Props> = ({
       <div id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </div>
-    </Base>
+    </Panel>
   )
 }
 

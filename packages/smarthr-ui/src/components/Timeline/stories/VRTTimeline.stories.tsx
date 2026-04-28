@@ -1,4 +1,4 @@
-import { Base } from '../../Base'
+import { Panel } from '../../Base'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { TextLink } from '../../TextLink'
@@ -14,7 +14,7 @@ export default {
     <Timeline {...args}>
       <TimelineItem datetime="2030-01-01T00:00:00.000Z" />
       <TimelineItem datetime={new Date()} dateLabel="現在" timeFormat="none" current>
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
       <TimelineItem
         datetime="2025-06-09T00:00:00.000Z"
@@ -29,10 +29,10 @@ export default {
           </Cluster>
         }
       >
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
       <TimelineItem datetime="2024-06-10" sideActionArea={<Button size="S">ボタン</Button>}>
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
       <TimelineItem
         datetime="2023-06-11"
@@ -49,7 +49,7 @@ export default {
         }
         sideActionArea={<Button size="S">ボタン</Button>}
       >
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
     </Timeline>
   ),

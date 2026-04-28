@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 
 import { BgColor, Padding, Rounded } from './BaseColumn.stories'
 
-import type { Base } from '../Base'
+import type { Panel } from '../Base'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {

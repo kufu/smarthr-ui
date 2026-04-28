@@ -11,7 +11,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Base } from '../Base'
+import { Panel } from '../Base'
 import { Button } from '../Button'
 import {
   FaCircleCheckIcon,
@@ -147,10 +147,10 @@ type AbstractProps = PropsWithChildren<
       role?: 'alert' | 'status'
     }
 >
-type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
+type PanelProps = Pick<ComponentProps<typeof Panel>, 'layer'>
 type Props = AbstractProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps> &
-  Omit<BaseProps, keyof AbstractProps>
+  Omit<PanelProps, keyof AbstractProps>
 
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
@@ -195,10 +195,10 @@ export const NotificationBar: FC<Props> = ({
     () =>
       base === 'base'
         ? {
-            WrapBase: Base,
+            WrapBase: Panel,
             baseProps: {
               layer,
-              overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
+              overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
             },
           }
         : {

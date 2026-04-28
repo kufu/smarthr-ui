@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Base } from '../Base'
+import { Panel } from '../Base'
 import { Heading } from '../Heading'
 import { Nav } from '../SectioningContent'
 
@@ -11,7 +11,7 @@ const classNameGenerator = tv({
 })
 
 type Props = PropsWithChildren<
-  Pick<ComponentPropsWithoutRef<typeof Base>, 'radius' | 'layer' | 'className'>
+  Pick<ComponentPropsWithoutRef<typeof Panel>, 'radius' | 'layer' | 'className'>
 > & {
   /**
    * @default ul
@@ -27,7 +27,7 @@ export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, ...rest }) =>
       <Heading visuallyHidden={true}>
         <Localizer id="smarthr-ui/SideMenu/navigationLabel" defaultText="サイドメニュー" />
       </Heading>
-      <Base {...rest} as={elementAs} className={actualClassName} />
+      <Panel {...rest} as={elementAs} className={actualClassName} />
     </Nav>
   )
 }

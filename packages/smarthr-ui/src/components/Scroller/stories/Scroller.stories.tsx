@@ -1,5 +1,5 @@
 import { Scroller } from '..'
-import { Base } from '../../Base'
+import { Panel } from '../../Base'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -8,7 +8,7 @@ export default {
   component: Scroller,
   render: (args) => (
     <Scroller {...args} style={{ height: '200px' }}>
-      <Base padding={1.5}>
+      <Panel padding={1.5}>
         <p>スクロール可能なコンテンツです。</p>
         <p>この領域は縦方向にスクロールできます。</p>
         <p>コンテンツが領域を超える場合、スクロールバーが表示されます。</p>
@@ -19,7 +19,7 @@ export default {
         <p>Excepteur sint occaecat cupidatat non proident sunt in culpa.</p>
         <p>Qui officia deserunt mollit anim id est laborum.</p>
         <p>コンテンツの最終行です。</p>
-      </Base>
+      </Panel>
     </Scroller>
   ),
   parameters: {
@@ -33,7 +33,7 @@ export const DirectionVertical: StoryObj<typeof Scroller> = {
   name: 'direction (vertical)',
   render: (args) => (
     <Scroller {...args} style={{ height: '200px' }}>
-      <Base padding={1.5}>
+      <Panel padding={1.5}>
         <p>スクロール可能なコンテンツです。</p>
         <p>この領域は縦方向にスクロールできます。</p>
         <p>コンテンツが領域を超える場合、スクロールバーが表示されます。</p>
@@ -44,7 +44,7 @@ export const DirectionVertical: StoryObj<typeof Scroller> = {
         <p>Excepteur sint occaecat cupidatat non proident sunt in culpa.</p>
         <p>Qui officia deserunt mollit anim id est laborum.</p>
         <p>コンテンツの最終行です。</p>
-      </Base>
+      </Panel>
     </Scroller>
   ),
   args: {
@@ -57,11 +57,11 @@ export const DirectionHorizontal: StoryObj<typeof Scroller> = {
   name: 'direction (horizontal)',
   render: (args) => (
     <Scroller {...args} style={{ width: '300px' }}>
-      <Base padding={1.5}>
+      <Panel padding={1.5}>
         <div style={{ width: '800px' }}>
           <p>横方向にスクロール可能なコンテンツです。この領域は横方向にスクロールできます。</p>
         </div>
-      </Base>
+      </Panel>
     </Scroller>
   ),
   args: {
@@ -74,7 +74,7 @@ export const DirectionBoth: StoryObj<typeof Scroller> = {
   name: 'direction (both)',
   render: (args) => (
     <Scroller {...args} style={{ height: '200px', width: '300px' }}>
-      <Base padding={1.5}>
+      <Panel padding={1.5}>
         <div style={{ width: '800px' }}>
           <p>縦横両方向にスクロール可能なコンテンツです。</p>
           <p>この領域は縦横両方向にスクロールできます。</p>
@@ -87,7 +87,7 @@ export const DirectionBoth: StoryObj<typeof Scroller> = {
           <p>Qui officia deserunt mollit anim id est laborum.</p>
           <p>コンテンツの最終行です。</p>
         </div>
-      </Base>
+      </Panel>
     </Scroller>
   ),
   args: {
@@ -100,12 +100,12 @@ export const StyleTypeScroll: StoryObj<typeof Scroller> = {
   name: 'styleType (scroll)',
   render: (args) => (
     <Scroller {...args} style={{ height: '200px' }}>
-      <Base padding={1.5}>
+      <Panel padding={1.5}>
         <p>
           styleType: scroll を指定すると、コンテンツが少なくてもスクロールバーが常に表示されます。
         </p>
         <p>この例では、コンテンツが領域に収まっていますが、スクロールバーが表示されます。</p>
-      </Base>
+      </Panel>
     </Scroller>
   ),
   args: {
@@ -117,10 +117,10 @@ export const WithoutScroll: StoryObj<typeof Scroller> = {
   name: 'スクロールなし',
   render: (args) => (
     <Scroller {...args} style={{ height: '200px' }}>
-      <Base padding={1.5}>
+      <Panel padding={1.5}>
         <p>スクロールが不要なコンテンツです。</p>
         <p>コンテンツが領域内に収まっているため、スクロールバーは表示されません。</p>
-      </Base>
+      </Panel>
     </Scroller>
   ),
 }
