@@ -18,7 +18,13 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import deepmerge from 'deepmerge'
 
-import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'
+import {
+  BORDER_DASHES,
+  CHART_COLORS,
+  FONT_FAMILY,
+  RADAR_CHART_COLORS,
+  SMARTHR_DEFAULT_COLORS,
+} from '../helper'
 import { keyboardNavigationPlugin } from '../plugins'
 
 import type { ChartOptions, ChartType, LegendOptions } from 'chart.js'
@@ -51,6 +57,7 @@ const generateLegendOptions = <TType extends ChartType>(
   chartType: TType,
 ): Partial<LegendOptions<TType>['labels']> => {
   if (chartType === 'line' || chartType === 'radar') {
+    const colors = chartType === 'radar' ? RADAR_CHART_COLORS : CHART_COLORS
     return {
       font: { family: FONT_FAMILY },
       usePointStyle: true,
@@ -59,7 +66,7 @@ const generateLegendOptions = <TType extends ChartType>(
         chart.data.datasets.map((dataset, index) => ({
           text: dataset.label,
           fontColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
-          strokeStyle: CHART_COLORS[index % CHART_COLORS.length],
+          strokeStyle: colors[index % colors.length],
           lineDash: BORDER_DASHES[index % BORDER_DASHES.length],
           lineWidth: 4,
           pointStyle: 'line',

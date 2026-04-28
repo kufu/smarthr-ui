@@ -12,6 +12,16 @@ import type { ChartDataset, ChartType } from 'chart.js'
 
 const getColor = (index: number) => CHART_COLORS[index % CHART_COLORS.length]
 
+// コントラスト比が保てている色のみ（CHART_COLOR_4, 5, 6, 9, 10）
+export const RADAR_CHART_COLORS = [
+  CHART_COLORS[3],
+  CHART_COLORS[4],
+  CHART_COLORS[5],
+  CHART_COLORS[8],
+  CHART_COLORS[9],
+]
+const getRadarColor = (index: number) => RADAR_CHART_COLORS[index % RADAR_CHART_COLORS.length]
+
 export const getLineChartColors = (
   dataLength: number,
 ): Array<
@@ -77,7 +87,7 @@ type RadarChartColorConfig = Pick<
 export const getRadarChartColors = (dataLength: number): RadarChartColorConfig[] => {
   const colors: RadarChartColorConfig[] = []
   for (let i = 0; i < dataLength; i++) {
-    const color = getColor(i)
+    const color = getRadarColor(i)
     colors.push({
       backgroundColor: withAlpha(color, 0.2),
       borderColor: color,
