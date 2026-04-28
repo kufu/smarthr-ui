@@ -18,6 +18,7 @@
     "@tiptap/pm": "^3.22.1",
     "@tiptap/react": "^3.22.1",
     "@tiptap/starter-kit": "^3.22.1",
+    "@tiptap/static-renderer": "^3.22.1",
     "dayjs": "^1.11.18",
     "decimal.js": "^10.6.0",
     "intl-messageformat": "^11.2.0",

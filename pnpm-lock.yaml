@@ -264,6 +264,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^3.22.1
         version: 3.22.3
+      '@tiptap/static-renderer':
+        specifier: ^3.22.1
+        version: 3.22.4(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       dayjs:
         specifier: ^1.11.18
         version: 1.11.18
@@ -2826,6 +2829,14 @@ packages:
 
   '@tiptap/starter-kit@3.22.3':
     resolution: {integrity: sha512-vdW/Oo1fdwTL1VOQ5YYbTov00ANeHLquBVEZyL/EkV7Xv5io9rXQsCysJfTSHhiQlyr2MtWFB4+CPGuwXjQWOQ==}
+
+  '@tiptap/static-renderer@3.22.4':
+    resolution: {integrity: sha512-FiL7fyxQZiwbgQ0LCBSWImSCsh+TsZE3hgF8RJZt6xENAONdkldhBZ6a0st5aX/1iYKHQxtjEKN/qyxVOkvlLQ==}
+    peerDependencies:
+      '@tiptap/core': 3.22.4
+      '@tiptap/pm': 3.22.4
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   '@tsconfig/node10@1.0.8':
     resolution: {integrity: sha512-6XFfSQmMgq0CFLY1MslA/CPUfhIL919M1rMsa5lP2P097N2Wd1sSX0tx1u4olM16fLNhtHZpRhedZJphNJqmZg==}
@@ -8886,6 +8897,13 @@ snapshots:
       '@tiptap/extension-underline': 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))
       '@tiptap/extensions': 3.22.3(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)
       '@tiptap/pm': 3.22.3
+
+  '@tiptap/static-renderer@3.22.4(@tiptap/core@3.22.3(@tiptap/pm@3.22.3))(@tiptap/pm@3.22.3)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tiptap/core': 3.22.3(@tiptap/pm@3.22.3)
+      '@tiptap/pm': 3.22.3
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   '@tsconfig/node10@1.0.8': {}
 
