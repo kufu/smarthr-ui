@@ -10,10 +10,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Text } from '../../../Text'
-import { CommonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 
 import type { Header } from '../../../Header'
 
@@ -90,18 +91,21 @@ const TenantDropdown: FC<
         <div className="shr-p-0.5">
           {tenants.map((tenant) => {
             const isCurrent = tenant.id === currentTenantId
+            const buttonClassName = useMemo(
+              () => commonButtonClassNameGenerator({ current: isCurrent }),
+              [isCurrent],
+            )
 
             return (
-              <CommonButton
+              <Button
                 key={tenant.id}
-                elementAs="button"
                 type="button"
                 value={tenant.id}
-                current={isCurrent}
                 onClick={isCurrent ? undefined : onClickTenantName}
+                className={buttonClassName}
               >
                 {tenant.name}
-              </CommonButton>
+              </Button>
             )
           })}
         </div>

@@ -8,7 +8,7 @@ import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { buildDisplayName } from '../../utils'
-import { CommonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 import type { HeaderProps, UserInfoProps } from '../../types'
@@ -300,17 +300,20 @@ const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>
   ),
 )
 
-const AccountLink = memo<PropsWithChildren<{ href?: string | null }>>(
-  ({ href, children }) =>
+const AccountLink = memo<PropsWithChildren<{ href?: string | null }>>(({ href, children }) => {
+  const buttonClassName = useMemo(() => commonButtonClassNameGenerator(), [])
+
+  return (
     href && (
-      <CommonButton
-        elementAs="a"
+      <AnchorButton
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         prefix={<FaGearIcon />}
+        className={buttonClassName}
       >
         <Translate>{children}</Translate>
-      </CommonButton>
-    ),
-)
+      </AnchorButton>
+    )
+  )
+})

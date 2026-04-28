@@ -1,7 +1,8 @@
-import { type PropsWithChildren, memo } from 'react'
+import { type PropsWithChildren, memo, useMemo } from 'react'
 
+import { Button } from '../../../Button'
 import { FaAngleRightIcon } from '../../../Icon'
-import { CommonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 type Props = PropsWithChildren<{
@@ -9,16 +10,21 @@ type Props = PropsWithChildren<{
   isCurrent?: boolean
 }>
 
-export const MenuButton = memo<Props>(({ children, onClick, isCurrent }) => (
-  <CommonButton
-    elementAs="button"
-    type="button"
-    onClick={onClick}
-    current={isCurrent}
-    boldWhenCurrent
-    className="[&&]:shr-justify-between [&&]:shr-px-0.5"
-  >
-    <Translate>{children}</Translate>
-    <FaAngleRightIcon color="TEXT_BLACK" />
-  </CommonButton>
-))
+export const MenuButton = memo<Props>(({ children, onClick, isCurrent }) => {
+  const buttonClassName = useMemo(
+    () =>
+      commonButtonClassNameGenerator({
+        current: isCurrent,
+        boldWhenCurrent: true,
+        className: '[&&]:shr-justify-between [&&]:shr-px-0.5',
+      }),
+    [isCurrent],
+  )
+
+  return (
+    <Button type="button" onClick={onClick} className={buttonClassName}>
+      <Translate>{children}</Translate>
+      <FaAngleRightIcon color="TEXT_BLACK" />
+    </Button>
+  )
+})

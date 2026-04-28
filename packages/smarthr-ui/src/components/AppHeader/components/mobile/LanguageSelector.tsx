@@ -7,7 +7,7 @@ import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
 import { Section } from '../../../SectioningContent'
-import { CommonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 
 import type { LocaleProps } from '../../types'
 
@@ -96,15 +96,21 @@ const LocaleButton = memo<{
   className: string
   children: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ value, selected, className, children, onClick }) => (
-  <CommonButton
-    elementAs="button"
-    type="button"
-    value={value}
-    onClick={onClick}
-    prefix={selected && <FaCheckIcon color="MAIN" />}
-    className={className}
-  >
-    {children}
-  </CommonButton>
-))
+}>(({ value, selected, className, children, onClick }) => {
+  const buttonClassName = useMemo(
+    () => commonButtonClassNameGenerator({ className }),
+    [className],
+  )
+
+  return (
+    <Button
+      type="button"
+      value={value}
+      onClick={onClick}
+      prefix={selected ? <FaCheckIcon color="MAIN" /> : undefined}
+      className={buttonClassName}
+    >
+      {children}
+    </Button>
+  )
+})

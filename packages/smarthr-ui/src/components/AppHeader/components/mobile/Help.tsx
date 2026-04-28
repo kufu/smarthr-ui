@@ -1,10 +1,10 @@
 import { type FC, memo, useMemo } from 'react'
 
 import { useIntl } from '../../../../intl'
-import { Button } from '../../../Button'
+import { AnchorButton, Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
-import { CommonButton } from '../common/CommonButton'
+import { commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 type Props = {
@@ -53,29 +53,31 @@ const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
     [localize],
   )
 
+  const buttonClassName = useMemo(() => commonButtonClassNameGenerator(), [])
+
   return (
     <div className="shr-p-0.5">
       {helpPageUrl && (
-        <CommonButton
-          elementAs="a"
+        <AnchorButton
           href={helpPageUrl}
           target="_blank"
           rel="noopener noreferrer"
           prefix={<FaCircleQuestionIcon />}
+          className={buttonClassName}
         >
           <Translate>{translated.help}</Translate>
-        </CommonButton>
+        </AnchorButton>
       )}
       {schoolUrl && (
-        <CommonButton
-          elementAs="a"
+        <AnchorButton
           href={schoolUrl}
           target="_blank"
           rel="noopener noreferrer"
           prefix={<FaGraduationCapIcon />}
+          className={buttonClassName}
         >
           <Translate>{translated.school}</Translate>
-        </CommonButton>
+        </AnchorButton>
       )}
     </div>
   )
