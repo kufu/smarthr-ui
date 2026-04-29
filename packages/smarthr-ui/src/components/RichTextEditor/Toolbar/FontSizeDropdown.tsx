@@ -1,11 +1,12 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { type FC, type KeyboardEvent, memo, useCallback, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
 import { FaCheckIcon, FaChevronDownIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 const FONT_SIZES = [
@@ -33,7 +34,6 @@ const classNameGenerator = tv({
       'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
     ],
     listbox: [
-      'shr-absolute shr-left-0 shr-top-full shr-z-overlap shr-mt-0.25',
       'shr-border-shorthand shr-max-h-[20em] shr-min-w-[5em] shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
     ],
     option: [
@@ -69,10 +69,9 @@ export const FontSizeDropdown: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
-    const [isOpen, setIsOpen] = useState(false)
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const [isHovered, setIsHovered] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
-    const triggerRef = useRef<HTMLButtonElement | null>(null)
     const listboxRef = useRef<HTMLDivElement>(null)
 
     const currentValue = state.currentFontSize
@@ -99,7 +98,7 @@ export const FontSizeDropdown: FC<Props> = memo(
         setIsOpen(false)
         triggerRef.current?.focus()
       },
-      [editor],
+      [editor, setIsOpen, triggerRef],
     )
 
     const handleTriggerKeyDown = useCallback(
@@ -131,96 +130,85 @@ export const FontSizeDropdown: FC<Props> = memo(
             onKeyDownProp?.(e)
         }
       },
-      [currentValue, onKeyDownProp],
+      [currentValue, onKeyDownProp, setIsOpen],
     )
 
-    const handleOptionKeyDown = useCallback((e: KeyboardEvent) => {
-      const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-      if (!buttons) return
-      const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
+    const handleOptionKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+        if (!buttons) return
+        const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
 
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[(currentIndex + 1) % buttons.length]?.focus()
-          break
-        case 'ArrowUp':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
-          break
-        case 'Home':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[0]?.focus()
-          break
-        case 'End':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[buttons.length - 1]?.focus()
-          break
-        case 'Escape':
-          e.preventDefault()
-          e.stopPropagation()
-          setIsOpen(false)
-          triggerRef.current?.focus()
-          break
-        case 'Tab':
-          setIsOpen(false)
-          break
-      }
-    }, [])
-
-    useEffect(() => {
-      if (isOpen) {
-        const handleClickOutside = (e: MouseEvent) => {
-          if (
-            !triggerRef.current?.contains(e.target as Node) &&
-            !listboxRef.current?.contains(e.target as Node)
-          ) {
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(currentIndex + 1) % buttons.length]?.focus()
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
+            break
+          case 'Home':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[0]?.focus()
+            break
+          case 'End':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[buttons.length - 1]?.focus()
+            break
+          case 'Escape':
+            e.preventDefault()
+            e.stopPropagation()
             setIsOpen(false)
-          }
+            triggerRef.current?.focus()
+            break
+          case 'Tab':
+            setIsOpen(false)
+            break
         }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-      }
-      return undefined
-    }, [isOpen])
+      },
+      [setIsOpen, triggerRef],
+    )
 
     return (
-      <span
-        className="shr-relative shr-inline-block"
-        onPointerEnter={() => setIsHovered(true)}
-        onPointerLeave={() => setIsHovered(false)}
-      >
-        <button
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
-          type="button"
-          aria-expanded={isOpen}
-          aria-haspopup="listbox"
-          aria-label={`${dropdownLabel}: ${currentLabel}`}
-          tabIndex={tabIndex}
-          disabled={isDisabled}
-          onKeyDown={handleTriggerKeyDown}
-          onClick={() => setIsOpen((prev) => !prev)}
-          onFocus={() => {
-            setIsFocused(true)
-            onFocusProp?.()
-          }}
-          onBlur={() => setIsFocused(false)}
-          className={classNames.trigger()}
+      <>
+        <span
+          className="shr-relative shr-inline-block"
+          onPointerEnter={() => setIsHovered(true)}
+          onPointerLeave={() => setIsHovered(false)}
         >
-          <span className="shr-flex-1">{currentLabel}</span>
-          <FaChevronDownIcon className="shr-shrink-0 shr-text-xs" />
-        </button>
-        <span aria-hidden="true" className={classNames.tooltip()}>
-          {dropdownLabel}
+          <button
+            ref={(el) => {
+              triggerRef.current = el
+              refProp?.(el)
+            }}
+            type="button"
+            aria-expanded={isOpen}
+            aria-haspopup="listbox"
+            aria-label={`${dropdownLabel}: ${currentLabel}`}
+            tabIndex={tabIndex}
+            disabled={isDisabled}
+            onKeyDown={handleTriggerKeyDown}
+            onClick={() => setIsOpen((prev) => !prev)}
+            onFocus={() => {
+              setIsFocused(true)
+              onFocusProp?.()
+            }}
+            onBlur={() => setIsFocused(false)}
+            className={classNames.trigger()}
+          >
+            <span className="shr-flex-1">{currentLabel}</span>
+            <FaChevronDownIcon className="shr-shrink-0 shr-text-xs" />
+          </button>
+          <span aria-hidden="true" className={classNames.tooltip()}>
+            {dropdownLabel}
+          </span>
         </span>
-        {isOpen && (
+        {renderDropdown(
           <div
             ref={listboxRef}
             role="listbox"
@@ -247,9 +235,9 @@ export const FontSizeDropdown: FC<Props> = memo(
                 </button>
               )
             })}
-          </div>
+          </div>,
         )}
-      </span>
+      </>
     )
   },
 )

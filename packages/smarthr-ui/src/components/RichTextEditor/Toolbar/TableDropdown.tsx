@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { type FC, type KeyboardEvent, memo, useCallback, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
@@ -15,6 +15,7 @@ import {
   FaTrashCanIcon,
 } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { TableInsertDialog } from './TableInsertDialog'
@@ -22,10 +23,7 @@ import { ToolbarButton } from './ToolbarButton'
 
 const classNameGenerator = tv({
   slots: {
-    menu: [
-      'shr-absolute shr-left-0 shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr-border-shorthand shr-min-w-[22em] shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
-    ],
+    menu: ['shr-border-shorthand shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3'],
     section: 'shr-py-0.25',
     separator: 'shr-border-t-shorthand shr-mx-0.5',
     grid: 'shr-grid shr-grid-cols-2',
@@ -43,7 +41,7 @@ const classNameGenerator = tv({
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
     ],
-    checkIcon: 'shr-shrink-0 shr-text-base',
+    checkIcon: 'shr-shrink-0 shr-text-base shr-text-main',
     checkPlaceholder: 'shr-inline-block shr-w-[1em] shr-shrink-0 shr-text-base',
   },
 })
@@ -60,9 +58,8 @@ export const TableDropdown: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
-    const [isOpen, setIsOpen] = useState(false)
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const [showInsertDialog, setShowInsertDialog] = useState(false)
-    const triggerRef = useRef<HTMLButtonElement | null>(null)
     const menuRef = useRef<HTMLDivElement>(null)
 
     const classNames = classNameGenerator()
@@ -73,7 +70,7 @@ export const TableDropdown: FC<Props> = memo(
       } else {
         setShowInsertDialog(true)
       }
-    }, [state.isInTable])
+    }, [state.isInTable, setIsOpen])
 
     const handleTriggerKeyDown = useCallback(
       (e: KeyboardEvent) => {
@@ -103,46 +100,49 @@ export const TableDropdown: FC<Props> = memo(
             onKeyDownProp?.(e)
         }
       },
-      [handleTriggerClick, state.isInTable, onKeyDownProp],
+      [handleTriggerClick, state.isInTable, onKeyDownProp, setIsOpen],
     )
 
-    const handleMenuKeyDown = useCallback((e: KeyboardEvent) => {
-      const items = menuRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled)')
-      if (!items) return
-      const currentIndex = Array.from(items).indexOf(e.currentTarget as HTMLElement)
+    const handleMenuKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        const items = menuRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled)')
+        if (!items) return
+        const currentIndex = Array.from(items).indexOf(e.currentTarget as HTMLElement)
 
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault()
-          e.stopPropagation()
-          items[(currentIndex + 1) % items.length]?.focus()
-          break
-        case 'ArrowUp':
-          e.preventDefault()
-          e.stopPropagation()
-          items[(currentIndex - 1 + items.length) % items.length]?.focus()
-          break
-        case 'Home':
-          e.preventDefault()
-          e.stopPropagation()
-          items[0]?.focus()
-          break
-        case 'End':
-          e.preventDefault()
-          e.stopPropagation()
-          items[items.length - 1]?.focus()
-          break
-        case 'Escape':
-          e.preventDefault()
-          e.stopPropagation()
-          setIsOpen(false)
-          triggerRef.current?.focus()
-          break
-        case 'Tab':
-          setIsOpen(false)
-          break
-      }
-    }, [])
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault()
+            e.stopPropagation()
+            items[(currentIndex + 1) % items.length]?.focus()
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            e.stopPropagation()
+            items[(currentIndex - 1 + items.length) % items.length]?.focus()
+            break
+          case 'Home':
+            e.preventDefault()
+            e.stopPropagation()
+            items[0]?.focus()
+            break
+          case 'End':
+            e.preventDefault()
+            e.stopPropagation()
+            items[items.length - 1]?.focus()
+            break
+          case 'Escape':
+            e.preventDefault()
+            e.stopPropagation()
+            setIsOpen(false)
+            triggerRef.current?.focus()
+            break
+          case 'Tab':
+            setIsOpen(false)
+            break
+        }
+      },
+      [setIsOpen, triggerRef],
+    )
 
     const runCommand = useCallback(
       (command: string) => {
@@ -154,7 +154,7 @@ export const TableDropdown: FC<Props> = memo(
         setIsOpen(false)
         triggerRef.current?.focus()
       },
-      [editor],
+      [editor, setIsOpen, triggerRef],
     )
 
     const handleInsert = useCallback(
@@ -165,22 +165,6 @@ export const TableDropdown: FC<Props> = memo(
       [editor],
     )
 
-    useEffect(() => {
-      if (isOpen) {
-        const handleClickOutside = (e: MouseEvent) => {
-          if (
-            !triggerRef.current?.contains(e.target as Node) &&
-            !menuRef.current?.contains(e.target as Node)
-          ) {
-            setIsOpen(false)
-          }
-        }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-      }
-      return undefined
-    }, [isOpen])
-
     const tableLabel = localize({
       id: 'smarthr-ui/RichTextEditor/table',
       defaultText: 'テーブル',
@@ -188,23 +172,23 @@ export const TableDropdown: FC<Props> = memo(
 
     return (
       <>
-        <span className="shr-relative shr-inline-block">
-          <ToolbarButton
-            ref={(el) => {
-              triggerRef.current = el
-              refProp?.(el)
-            }}
-            icon={<FaTableIcon />}
-            label={tableLabel}
-            active={state.isInTable}
-            tabIndex={tabIndex}
-            aria-expanded={state.isInTable ? isOpen : undefined}
-            aria-haspopup={state.isInTable ? 'menu' : undefined}
-            onKeyDown={handleTriggerKeyDown}
-            onFocus={onFocusProp}
-            onClick={handleTriggerClick}
-          />
-          {isOpen && state.isInTable && (
+        <ToolbarButton
+          ref={(el) => {
+            triggerRef.current = el
+            refProp?.(el)
+          }}
+          icon={<FaTableIcon />}
+          label={tableLabel}
+          active={state.isInTable}
+          tabIndex={tabIndex}
+          aria-expanded={state.isInTable ? isOpen : undefined}
+          aria-haspopup={state.isInTable ? 'menu' : undefined}
+          onKeyDown={handleTriggerKeyDown}
+          onFocus={onFocusProp}
+          onClick={handleTriggerClick}
+        />
+        {state.isInTable &&
+          renderDropdown(
             <div ref={menuRef} role="menu" aria-label={tableLabel} className={classNames.menu()}>
               {/* ヘッダー設定 */}
               <div className={classNames.section()}>
@@ -405,9 +389,8 @@ export const TableDropdown: FC<Props> = memo(
                   })}
                 </button>
               </div>
-            </div>
+            </div>,
           )}
-        </span>
         {showInsertDialog && (
           <TableInsertDialog onInsert={handleInsert} onClose={() => setShowInsertDialog(false)} />
         )}

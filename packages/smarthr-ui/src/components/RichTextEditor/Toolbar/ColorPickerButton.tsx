@@ -1,11 +1,12 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { type FC, type KeyboardEvent, memo, useCallback, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
 import { FaCheckIcon, FaChevronDownIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { DEFAULT_COLOR, EDITOR_COLORS } from './colors'
@@ -21,7 +22,6 @@ const classNameGenerator = tv({
     ],
     colorIndicator: 'shr-h-[3px] shr-w-full shr-rounded-full',
     palette: [
-      'shr-absolute shr-left-0 shr-top-full shr-z-overlap shr-mt-0.25',
       'shr-border-shorthand shr-flex shr-flex-col shr-gap-0.5 shr-rounded-m shr-bg-white shr-p-0.75 shr-shadow-layer-3',
     ],
     swatchRow: 'shr-flex shr-gap-0.5',
@@ -51,8 +51,7 @@ export const ColorPickerButton: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
-    const [isOpen, setIsOpen] = useState(false)
-    const triggerRef = useRef<HTMLButtonElement | null>(null)
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const paletteRef = useRef<HTMLDivElement>(null)
 
     const currentColor = (state as Record<string, unknown>).currentColor as string | null
@@ -65,14 +64,14 @@ export const ColorPickerButton: FC<Props> = memo(
         setIsOpen(false)
         triggerRef.current?.focus()
       },
-      [editor],
+      [editor, setIsOpen, triggerRef],
     )
 
     const removeColor = useCallback(() => {
       editor.chain().focus().unsetColor().run()
       setIsOpen(false)
       triggerRef.current?.focus()
-    }, [editor])
+    }, [editor, setIsOpen, triggerRef])
 
     const handleTriggerKeyDown = useCallback(
       (e: KeyboardEvent) => {
@@ -91,52 +90,39 @@ export const ColorPickerButton: FC<Props> = memo(
             onKeyDownProp?.(e)
         }
       },
-      [onKeyDownProp],
+      [onKeyDownProp, setIsOpen],
     )
 
-    const handlePaletteKeyDown = useCallback((e: KeyboardEvent) => {
-      const buttons = paletteRef.current?.querySelectorAll<HTMLButtonElement>('button')
-      if (!buttons) return
-      const idx = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
+    const handlePaletteKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        const buttons = paletteRef.current?.querySelectorAll<HTMLButtonElement>('button')
+        if (!buttons) return
+        const idx = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
 
-      switch (e.key) {
-        case 'ArrowRight':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[(idx + 1) % buttons.length]?.focus()
-          break
-        case 'ArrowLeft':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
-          break
-        case 'Escape':
-          e.preventDefault()
-          e.stopPropagation()
-          setIsOpen(false)
-          triggerRef.current?.focus()
-          break
-        case 'Tab':
-          setIsOpen(false)
-          break
-      }
-    }, [])
-
-    useEffect(() => {
-      if (isOpen) {
-        const handleClickOutside = (e: MouseEvent) => {
-          if (
-            !triggerRef.current?.contains(e.target as Node) &&
-            !paletteRef.current?.contains(e.target as Node)
-          ) {
+        switch (e.key) {
+          case 'ArrowRight':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(idx + 1) % buttons.length]?.focus()
+            break
+          case 'ArrowLeft':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
+            break
+          case 'Escape':
+            e.preventDefault()
+            e.stopPropagation()
             setIsOpen(false)
-          }
+            triggerRef.current?.focus()
+            break
+          case 'Tab':
+            setIsOpen(false)
+            break
         }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-      }
-      return undefined
-    }, [isOpen])
+      },
+      [setIsOpen, triggerRef],
+    )
 
     const colorLabel = localize({
       id: 'smarthr-ui/RichTextEditor/color',
@@ -148,34 +134,36 @@ export const ColorPickerButton: FC<Props> = memo(
     })
 
     return (
-      <span className="shr-relative shr-inline-block">
-        <button
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
-          type="button"
-          aria-label={colorLabel}
-          aria-expanded={isOpen}
-          tabIndex={tabIndex}
-          onKeyDown={handleTriggerKeyDown}
-          onClick={() => setIsOpen((prev) => !prev)}
-          onFocus={onFocusProp}
-          className={classNames.trigger()}
-        >
-          <span className="shr-flex shr-flex-col shr-items-center shr-gap-[2px]">
-            {/* eslint-disable-next-line smarthr/require-i18n-text */}
-            <span aria-hidden className="shr-text-base shr-font-bold shr-leading-none">
-              A
+      <>
+        <span className="shr-relative shr-inline-block">
+          <button
+            ref={(el) => {
+              triggerRef.current = el
+              refProp?.(el)
+            }}
+            type="button"
+            aria-label={colorLabel}
+            aria-expanded={isOpen}
+            tabIndex={tabIndex}
+            onKeyDown={handleTriggerKeyDown}
+            onClick={() => setIsOpen((prev) => !prev)}
+            onFocus={onFocusProp}
+            className={classNames.trigger()}
+          >
+            <span className="shr-flex shr-flex-col shr-items-center shr-gap-[2px]">
+              {/* eslint-disable-next-line smarthr/require-i18n-text */}
+              <span aria-hidden className="shr-text-base shr-font-bold shr-leading-none">
+                A
+              </span>
+              <span
+                className={classNames.colorIndicator()}
+                style={{ backgroundColor: currentColor ?? '#23221e' }}
+              />
             </span>
-            <span
-              className={classNames.colorIndicator()}
-              style={{ backgroundColor: currentColor ?? '#23221e' }}
-            />
-          </span>
-          <FaChevronDownIcon className="shr-text-xs" />
-        </button>
-        {isOpen && (
+            <FaChevronDownIcon className="shr-text-xs" />
+          </button>
+        </span>
+        {renderDropdown(
           <div
             ref={paletteRef}
             role="group"
@@ -214,9 +202,9 @@ export const ColorPickerButton: FC<Props> = memo(
             >
               {resetLabel}
             </button>
-          </div>
+          </div>,
         )}
-      </span>
+      </>
     )
   },
 )

@@ -6,7 +6,6 @@ import {
   type KeyboardEvent,
   memo,
   useCallback,
-  useEffect,
   useRef,
   useState,
 } from 'react'
@@ -15,6 +14,7 @@ import { tv } from 'tailwind-variants'
 import { useIntl } from '../../../intl'
 import { FaImageIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { AltTextDialog } from './AltTextDialog'
 import { ImageUrlDialog } from './ImageUrlDialog'
@@ -27,7 +27,6 @@ const DEFAULT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'
 const classNameGenerator = tv({
   slots: {
     menu: [
-      'shr-absolute shr-left-0 shr-top-full shr-z-overlap shr-mt-0.25',
       'shr-border-shorthand shr-flex shr-flex-col shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
     ],
     menuItem: [
@@ -49,10 +48,9 @@ export const ImageInsertButton: FC<Props> = memo(
   ({ tabIndex = -1, onKeyDown, onFocus, ref: refProp }) => {
     const { editor, onImageUpload, acceptedMimeTypes } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const triggerRef = useRef<HTMLButtonElement | null>(null)
+    const { setIsOpen: setIsMenuOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const fileInputRef = useRef<HTMLInputElement>(null)
     const menuRef = useRef<HTMLDivElement>(null)
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [pendingFile, setPendingFile] = useState<File | null>(null)
     const [showUrlDialog, setShowUrlDialog] = useState(false)
 
@@ -61,17 +59,17 @@ export const ImageInsertButton: FC<Props> = memo(
 
     const handleClick = useCallback(() => {
       setIsMenuOpen((prev) => !prev)
-    }, [])
+    }, [setIsMenuOpen])
 
     const handleUploadClick = useCallback(() => {
       setIsMenuOpen(false)
       fileInputRef.current?.click()
-    }, [])
+    }, [setIsMenuOpen])
 
     const handleUrlClick = useCallback(() => {
       setIsMenuOpen(false)
       setShowUrlDialog(true)
-    }, [])
+    }, [setIsMenuOpen])
 
     const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
@@ -121,49 +119,36 @@ export const ImageInsertButton: FC<Props> = memo(
       setShowUrlDialog(false)
     }, [])
 
-    const handleMenuKeyDown = useCallback((e: KeyboardEvent) => {
-      const buttons = menuRef.current?.querySelectorAll<HTMLButtonElement>('button')
-      if (!buttons) return
-      const idx = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
+    const handleMenuKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        const buttons = menuRef.current?.querySelectorAll<HTMLButtonElement>('button')
+        if (!buttons) return
+        const idx = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
 
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[(idx + 1) % buttons.length]?.focus()
-          break
-        case 'ArrowUp':
-          e.preventDefault()
-          e.stopPropagation()
-          buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
-          break
-        case 'Escape':
-          e.preventDefault()
-          e.stopPropagation()
-          setIsMenuOpen(false)
-          triggerRef.current?.focus()
-          break
-        case 'Tab':
-          setIsMenuOpen(false)
-          break
-      }
-    }, [])
-
-    useEffect(() => {
-      if (isMenuOpen) {
-        const handleClickOutside = (e: MouseEvent) => {
-          if (
-            !triggerRef.current?.contains(e.target as Node) &&
-            !menuRef.current?.contains(e.target as Node)
-          ) {
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(idx + 1) % buttons.length]?.focus()
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
+            break
+          case 'Escape':
+            e.preventDefault()
+            e.stopPropagation()
             setIsMenuOpen(false)
-          }
+            triggerRef.current?.focus()
+            break
+          case 'Tab':
+            setIsMenuOpen(false)
+            break
         }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-      }
-      return undefined
-    }, [isMenuOpen])
+      },
+      [setIsMenuOpen, triggerRef],
+    )
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' })
     const uploadLabel = localize({
@@ -176,7 +161,7 @@ export const ImageInsertButton: FC<Props> = memo(
     })
 
     return (
-      <span className="shr-relative shr-inline-block">
+      <>
         <ToolbarButton
           ref={(el) => {
             triggerRef.current = el
@@ -200,7 +185,7 @@ export const ImageInsertButton: FC<Props> = memo(
           onFocus={onFocus}
           onClick={handleClick}
         />
-        {isMenuOpen && (
+        {renderDropdown(
           <div ref={menuRef} role="menu" aria-label={label} className={classNames.menu()}>
             {onImageUpload && (
               <button
@@ -222,7 +207,7 @@ export const ImageInsertButton: FC<Props> = memo(
             >
               {urlLabel}
             </button>
-          </div>
+          </div>,
         )}
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
@@ -244,7 +229,7 @@ export const ImageInsertButton: FC<Props> = memo(
           />
         )}
         {showUrlDialog && <ImageUrlDialog onInsert={handleUrlSubmit} onClose={handleUrlCancel} />}
-      </span>
+      </>
     )
   },
 )

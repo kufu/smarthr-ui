@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, type ReactNode, memo, useState } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type ReactNode,
+  memo,
+  useEffect,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 const classNameGenerator = tv({
@@ -41,10 +48,17 @@ type Props = {
 } & Omit<ComponentPropsWithRef<'button'>, 'children'>
 
 export const ToolbarButton: FC<Props> = memo(
-  ({ icon, label, active = false, className, ref, onFocus, onBlur, ...rest }) => {
+  ({ icon, label, active = false, className, ref, onFocus, onBlur, disabled, ...rest }) => {
     const [isHovered, setIsHovered] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const visible = isHovered || isFocused
+
+    useEffect(() => {
+      if (disabled) {
+        setIsHovered(false)
+        setIsFocused(false)
+      }
+    }, [disabled])
 
     const classNames = classNameGenerator({ active, visible })
 
@@ -58,6 +72,7 @@ export const ToolbarButton: FC<Props> = memo(
           {...rest}
           ref={ref}
           type="button"
+          disabled={disabled}
           aria-label={label}
           aria-pressed={active}
           onFocus={(e) => {
