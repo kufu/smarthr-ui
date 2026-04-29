@@ -16,6 +16,7 @@ import {
   FaQuoteLeftIcon,
   FaRulerHorizontalIcon,
   FaStrikethroughIcon,
+  FaTableIcon,
   FaUnderlineIcon,
 } from '../../Icon'
 import { Stack } from '../../Layout'
@@ -44,6 +45,7 @@ const ALL_FEATURES = [
   'textAlign',
   'image',
   'youtube',
+  'table',
 ] as const
 
 const meta = {
@@ -107,6 +109,9 @@ export const Overview: Story = {
           <Text styleType="blockTitle">features 一覧</Text>
           <Text color="TEXT_GREY">
             features propで有効にする書式を選択できます。undo / redo は常に表示されます。
+            <br />
+            Enter で段落分割（&lt;p&gt;）、Shift+Enter / Cmd+Enter
+            で同じ段落内の改行（&lt;br&gt;）です。
           </Text>
           <table style={tableStyle}>
             <thead>
@@ -188,7 +193,7 @@ export const Overview: Story = {
                 </td>
                 <td style={tdStyle}>見出し（H1-H4）</td>
                 <td style={tdStyle}>見出しレベル選択ドロップダウン</td>
-                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>Cmd+Alt+1〜4</td>
                 <td style={tdStyle}>
                   <code># </code> <code>## </code> <code>### </code> <code>#### </code>
                 </td>
@@ -295,7 +300,7 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   <FaAlignLeftIcon /> 配置ドロップダウン
                 </td>
-                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>Cmd+Shift+L / E / R / J</td>
                 <td style={tdStyle}>なし</td>
               </tr>
               <tr>
@@ -318,6 +323,17 @@ export const Overview: Story = {
                   <FaCirclePlayIcon />
                 </td>
                 <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>table</code>
+                </td>
+                <td style={tdStyle}>テーブル</td>
+                <td style={tdStyle}>
+                  <FaTableIcon /> テーブル操作ドロップダウン
+                </td>
+                <td style={tdStyle}>Tab / Shift+Tab（セル移動）</td>
                 <td style={tdStyle}>なし</td>
               </tr>
             </tbody>
@@ -343,7 +359,7 @@ export const BasicUsage: Story = {
       'heading', 'bulletList', 'orderedList',
       'blockquote', 'codeBlock', 'horizontalRule',
       'link', 'color', 'fontSize', 'textAlign',
-      'image', 'youtube',
+      'image', 'youtube', 'table',
     ]}
     onChange={(json) => setValue(json)}
     placeholder="ここに本文を入力してください"

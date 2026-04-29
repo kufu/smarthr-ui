@@ -49,7 +49,9 @@ const getOrCreateExtensions = () => {
 const nodeMapping: Record<string, ReactNodeMapping> = {
   heading: ({ node, children }) => {
     const level = Math.min(Math.max(Number(node.attrs.level) || 2, 1), 4) as 1 | 2 | 3 | 4
-    return createElement(`h${level}`, null, children)
+    const textAlign = node.attrs.textAlign as string | undefined
+    const style = textAlign && textAlign !== 'left' ? { textAlign } : undefined
+    return createElement(`h${level}`, { style }, children)
   },
   image: ({ node }) => {
     const src = node.attrs.src

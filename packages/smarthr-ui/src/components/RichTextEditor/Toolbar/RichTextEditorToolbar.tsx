@@ -26,6 +26,7 @@ import { FontSizeDropdown } from './FontSizeDropdown'
 import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
 import { LinkButton } from './LinkButton'
+import { TableDropdown } from './TableDropdown'
 import { TextAlignDropdown } from './TextAlignDropdown'
 import { ToolbarButton } from './ToolbarButton'
 import { YoutubeInsertButton } from './YoutubeInsertButton'
@@ -43,7 +44,7 @@ type ButtonItem = {
 }
 
 type CustomItem = {
-  type: 'heading' | 'fontSize' | 'color' | 'image' | 'youtube' | 'link' | 'textAlign'
+  type: 'heading' | 'fontSize' | 'color' | 'image' | 'youtube' | 'link' | 'textAlign' | 'table'
   key: string
   disabled: boolean
 }
@@ -236,6 +237,11 @@ export const RichTextEditorToolbar: FC = memo(() => {
       })
     }
 
+    // テーブル
+    if (has('table')) {
+      toolbarItems.push({ type: 'table', key: 'table-dropdown', disabled: false })
+    }
+
     // 画像挿入
     if (has('image')) {
       toolbarItems.push({ type: 'image', key: 'image-insert', disabled: false })
@@ -295,6 +301,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
         }
         if (item.type === 'textAlign') {
           return <TextAlignDropdown {...rovingProps} key={item.key} />
+        }
+        if (item.type === 'table') {
+          return <TableDropdown {...rovingProps} key={item.key} />
         }
         const buttonItem = item as ButtonItem
         return (

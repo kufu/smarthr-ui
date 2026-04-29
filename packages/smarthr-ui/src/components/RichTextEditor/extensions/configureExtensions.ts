@@ -2,6 +2,7 @@ import { Color } from '@tiptap/extension-color'
 import { FileHandler } from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
+import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { Youtube } from '@tiptap/extension-youtube'
@@ -125,6 +126,10 @@ export const configureExtensions = ({
     )
   }
 
+  if (has('table')) {
+    extensions.push(Table.configure({ resizable: true }), TableRow, TableHeader, TableCell)
+  }
+
   if (has('color') || has('fontSize')) {
     extensions.push(TextStyle.configure())
   }
@@ -167,4 +172,5 @@ export const ALL_FEATURES: readonly RichTextFeature[] = [
   'textAlign',
   'image',
   'youtube',
+  'table',
 ] as const

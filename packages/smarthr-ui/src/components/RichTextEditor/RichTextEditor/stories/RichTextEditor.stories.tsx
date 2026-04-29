@@ -25,6 +25,7 @@ const ALL_FEATURES = [
   'youtube',
   'fontSize',
   'textAlign',
+  'table',
 ] as const
 
 const mockImageUpload = async (file: File) => {

@@ -25,6 +25,7 @@ export type RichTextFeature =
   | 'textAlign'
   | 'image'
   | 'youtube'
+  | 'table'
 
 export type RichTextChangeMeta = {
   json: RichTextJSON

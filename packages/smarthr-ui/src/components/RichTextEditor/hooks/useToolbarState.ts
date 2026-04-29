@@ -2,6 +2,32 @@
 
 import { type Editor, useEditorState } from '@tiptap/react'
 
+const findTableNode = (e: Editor) => {
+  const { $from } = e.state.selection
+  for (let depth = $from.depth; depth > 0; depth--) {
+    const node = $from.node(depth)
+    if (node.type.name === 'table') return node
+  }
+  return null
+}
+
+const detectHeaderRow = (e: Editor): boolean => {
+  const table = findTableNode(e)
+  if (!table || table.childCount === 0) return false
+  const firstRow = table.child(0)
+  if (firstRow.childCount === 0) return false
+  const lastCell = firstRow.child(firstRow.childCount - 1)
+  return lastCell.type.name === 'tableHeader'
+}
+
+const detectHeaderColumn = (e: Editor): boolean => {
+  const table = findTableNode(e)
+  if (!table || table.childCount < 2) return false
+  const secondRow = table.child(1)
+  if (secondRow.childCount === 0) return false
+  return secondRow.child(0).type.name === 'tableHeader'
+}
+
 const canRun = (editor: Editor, command: string): boolean => {
   try {
     return (
@@ -65,5 +91,19 @@ export const useToolbarState = (editor: Editor) =>
       canBlockquote: canRun(e, 'toggleBlockquote'),
       canUndo: e.can().undo(),
       canRedo: e.can().redo(),
+
+      isInTable: e.isActive('table'),
+      hasHeaderRow: detectHeaderRow(e),
+      hasHeaderColumn: detectHeaderColumn(e),
+      canAddColumnBefore: canRun(e, 'addColumnBefore'),
+      canAddColumnAfter: canRun(e, 'addColumnAfter'),
+      canDeleteColumn: canRun(e, 'deleteColumn'),
+      canAddRowBefore: canRun(e, 'addRowBefore'),
+      canAddRowAfter: canRun(e, 'addRowAfter'),
+      canDeleteRow: canRun(e, 'deleteRow'),
+      canDeleteTable: canRun(e, 'deleteTable'),
+      canMergeCells: canRun(e, 'mergeCells'),
+      canSplitCell: canRun(e, 'splitCell'),
+      canToggleHeaderCell: canRun(e, 'toggleHeaderCell'),
     }),
   })

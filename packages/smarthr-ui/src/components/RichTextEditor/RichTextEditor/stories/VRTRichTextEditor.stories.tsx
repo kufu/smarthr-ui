@@ -22,6 +22,7 @@ const ALL_FEATURES = [
   'textAlign',
   'image',
   'youtube',
+  'table',
 ] as const
 
 const richContent = {
@@ -97,6 +98,37 @@ const richContent = {
       content: [{ type: 'text', text: 'const x = 1' }],
     },
     { type: 'horizontalRule' },
+    {
+      type: 'table',
+      content: [
+        {
+          type: 'tableRow',
+          content: [
+            {
+              type: 'tableHeader',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '列1' }] }],
+            },
+            {
+              type: 'tableHeader',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '列2' }] }],
+            },
+          ],
+        },
+        {
+          type: 'tableRow',
+          content: [
+            {
+              type: 'tableCell',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: 'セル1' }] }],
+            },
+            {
+              type: 'tableCell',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: 'セル2' }] }],
+            },
+          ],
+        },
+      ],
+    },
     {
       type: 'paragraph',
       content: [

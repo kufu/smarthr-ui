@@ -45,6 +45,20 @@ export const editorContentClasses = [
   '[&_.ProseMirror_iframe]:shr-my-0.5 [&_.ProseMirror_iframe]:shr-max-w-full [&_.ProseMirror_iframe]:shr-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video]]:shr-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-main [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rounded-m',
+  // table (resizable: tableWrapper で囲まれる)
+  '[&_.ProseMirror_.tableWrapper]:shr-my-0.5 [&_.ProseMirror_.tableWrapper]:shr-overflow-x-auto',
+  '[&_.ProseMirror_table]:shr-w-full [&_.ProseMirror_table]:shr-table-fixed [&_.ProseMirror_table]:shr-border-collapse [&_.ProseMirror_table]:shr-overflow-hidden',
+  '[&_.ProseMirror_td]:shr-border-shorthand [&_.ProseMirror_td]:shr-p-0.5 [&_.ProseMirror_td]:shr-align-top [&_.ProseMirror_td]:shr-min-w-[1em] [&_.ProseMirror_td]:shr-relative [&_.ProseMirror_td]:shr-box-border',
+  '[&_.ProseMirror_th]:shr-border-shorthand [&_.ProseMirror_th]:shr-p-0.5 [&_.ProseMirror_th]:shr-align-top [&_.ProseMirror_th]:shr-min-w-[1em] [&_.ProseMirror_th]:shr-bg-head [&_.ProseMirror_th]:shr-font-bold [&_.ProseMirror_th]:shr-relative [&_.ProseMirror_th]:shr-box-border',
+  // selectedCell: 疑似要素オーバーレイ
+  '[&_.ProseMirror_td.selectedCell::after]:shr-content-[""] [&_.ProseMirror_td.selectedCell::after]:shr-absolute [&_.ProseMirror_td.selectedCell::after]:shr-inset-0 [&_.ProseMirror_td.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_td.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_td.selectedCell::after]:shr-z-1',
+  '[&_.ProseMirror_th.selectedCell::after]:shr-content-[""] [&_.ProseMirror_th.selectedCell::after]:shr-absolute [&_.ProseMirror_th.selectedCell::after]:shr-inset-0 [&_.ProseMirror_th.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_th.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_th.selectedCell::after]:shr-z-1',
+  // column resize handle
+  '[&_.ProseMirror_.column-resize-handle]:shr-absolute [&_.ProseMirror_.column-resize-handle]:shr-top-0 [&_.ProseMirror_.column-resize-handle]:shr-right-[-2px] [&_.ProseMirror_.column-resize-handle]:shr-bottom-[-2px] [&_.ProseMirror_.column-resize-handle]:shr-w-[4px] [&_.ProseMirror_.column-resize-handle]:shr-bg-main [&_.ProseMirror_.column-resize-handle]:shr-pointer-events-none [&_.ProseMirror_.column-resize-handle]:shr-z-overlap',
+  // resize cursor (resize-cursor クラスは .ProseMirror 自身に付与される)
+  '[&_.ProseMirror.resize-cursor]:shr-cursor-col-resize',
+  '[&_.ProseMirror_td_p]:shr-my-0',
+  '[&_.ProseMirror_th_p]:shr-my-0',
   // paragraph
   '[&_.ProseMirror_p]:shr-my-0',
   // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ
@@ -82,6 +96,12 @@ export const staticContentClasses = [
   '[&_img]:shr-block [&_img]:shr-my-0.5 [&_img]:shr-max-w-full',
   // youtube iframe
   '[&_iframe]:shr-my-0.5 [&_iframe]:shr-max-w-full [&_iframe]:shr-rounded-m',
+  // table
+  '[&_table]:shr-my-0.5 [&_table]:shr-w-full [&_table]:shr-border-collapse',
+  '[&_td]:shr-border-shorthand [&_td]:shr-p-0.5 [&_td]:shr-align-top',
+  '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-align-top [&_th]:shr-bg-head [&_th]:shr-font-bold',
+  '[&_td_p]:shr-my-0',
+  '[&_th_p]:shr-my-0',
   // paragraph
   '[&_p]:shr-my-0',
   // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ

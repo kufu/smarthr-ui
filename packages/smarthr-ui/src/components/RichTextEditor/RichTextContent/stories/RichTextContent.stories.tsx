@@ -93,6 +93,37 @@ const sampleJSON = {
     },
     { type: 'horizontalRule' },
     {
+      type: 'table',
+      content: [
+        {
+          type: 'tableRow',
+          content: [
+            {
+              type: 'tableHeader',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目' }] }],
+            },
+            {
+              type: 'tableHeader',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '説明' }] }],
+            },
+          ],
+        },
+        {
+          type: 'tableRow',
+          content: [
+            {
+              type: 'tableCell',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: 'テーブル' }] }],
+            },
+            {
+              type: 'tableCell',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: 'サンプルデータ' }] }],
+            },
+          ],
+        },
+      ],
+    },
+    {
       type: 'paragraph',
       content: [
         { type: 'text', text: 'リンクの例: ' },
@@ -191,6 +222,7 @@ export const HTMLPreview: Story = {
         '<p><span style="color: #e01e5a">赤いテキスト</span>・<span style="color: #0077c7">青いテキスト</span></p>',
         '<p style="text-align: center">中央揃えのHTML</p>',
         '<p style="text-align: right">右揃えのHTML</p>',
+        '<table><tr><th>項目</th><th>説明</th></tr><tr><td>テーブル</td><td>サンプルデータ</td></tr></table>',
         '<img src="https://placehold.co/400x200/e2e8f0/64748b?text=Sample+Image" alt="サンプル画像">',
         '<div data-youtube-video><iframe src="https://www.youtube-nocookie.com/embed/ZFwv6s7kXCQ" width="480" height="270" allowfullscreen></iframe></div>',
       ].join(''),
