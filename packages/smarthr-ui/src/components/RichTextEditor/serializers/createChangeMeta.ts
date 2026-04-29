@@ -24,7 +24,10 @@ export const isEmptyDocument = (json: RichTextJSON): boolean => {
   return false
 }
 
-export const createChangeMeta = (json: RichTextJSON): RichTextChangeMeta => {
+export const createChangeMeta = (
+  json: RichTextJSON,
+  characterCount?: number,
+): RichTextChangeMeta => {
   const text = extractPlainText(json)
   let _html: string | undefined
 
@@ -36,6 +39,6 @@ export const createChangeMeta = (json: RichTextJSON): RichTextChangeMeta => {
     },
     text,
     isEmpty: isEmptyDocument(json),
-    characterCount: text.length,
+    characterCount: characterCount ?? text.replaceAll('\n', '').length,
   }
 }

@@ -727,6 +727,7 @@ export const FixedHeight: Story = {
           features={ALL_FEATURES}
           editorClassName="[&_.ProseMirror]:shr-h-[200px]"
           placeholder="高さ200pxで固定。内容が溢れたらスクロールします"
+          showCharacterCount
         />
       </FormControl>
     </Stack>

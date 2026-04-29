@@ -80,7 +80,8 @@ export const useRichTextEditor = ({
     },
     onUpdate: ({ editor: e }) => {
       const json = e.getJSON() as RichTextJSON
-      onChange?.(json, createChangeMeta(json))
+      const characterCount = e.getText({ blockSeparator: '' }).length
+      onChange?.(json, createChangeMeta(json, characterCount))
     },
     onFocus: () => onFocus?.(),
     onBlur: () => onBlur?.(),

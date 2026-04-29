@@ -181,6 +181,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/tableColsLabel': 'Colunas',
   'smarthr-ui/RichTextEditor/tableInsertButton': 'Inserir',
   'smarthr-ui/RichTextEditor/tableInvalidSize': 'Insira um número maior que 0',
+  'smarthr-ui/RichTextEditor/characterCount': 'Caracteres: {count}',
   'smarthr-ui/Th/sortDirectionNone': 'Sem ordenação',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'Selecionar/limpar tudo',
   'smarthr-ui/ThCheckbox/checkColumnName': 'Selecionar',

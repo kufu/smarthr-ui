@@ -181,6 +181,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/tableColsLabel': 'Jumlah kolom',
   'smarthr-ui/RichTextEditor/tableInsertButton': 'Sisipkan',
   'smarthr-ui/RichTextEditor/tableInvalidSize': 'Silakan masukkan angka lebih dari 0',
+  'smarthr-ui/RichTextEditor/characterCount': 'Jumlah karakter: {count}',
   'smarthr-ui/Th/sortDirectionNone': 'Tanpa pengurutan',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'Pilih/hapus semua item',
   'smarthr-ui/ThCheckbox/checkColumnName': 'Pilih',

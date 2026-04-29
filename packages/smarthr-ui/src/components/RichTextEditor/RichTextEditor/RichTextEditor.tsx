@@ -1,6 +1,6 @@
 'use client'
 
-import { EditorContent } from '@tiptap/react'
+import { EditorContent, useEditorState } from '@tiptap/react'
 import {
   forwardRef,
   memo,
@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../../intl'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
@@ -24,6 +25,7 @@ import type {
   RichTextEditorProps,
   RichTextJSON,
 } from '../types'
+import type { Editor } from '@tiptap/react'
 
 const classNameGenerator = tv({
   slots: {
@@ -43,6 +45,8 @@ const classNameGenerator = tv({
       // content styles (shared with RichTextContent)
       ...editorContentClasses,
     ],
+    characterCountArea:
+      'shr-border-t-shorthand shr-px-0.75 shr-py-0.5 shr-text-right shr-text-sm shr-text-grey',
   },
   variants: {
     disabled: {
@@ -83,6 +87,7 @@ export const RichTextEditor = memo(
         readOnly,
         error,
         placeholder,
+        showCharacterCount,
         className,
         editorClassName,
         onImageUpload,
@@ -245,8 +250,29 @@ export const RichTextEditor = memo(
           >
             {editor && <EditorContent editor={editor} />}
           </div>
+          {editor && showCharacterCount && !readOnly && (
+            <CharacterCount editor={editor} className={classNames.characterCountArea()} />
+          )}
         </div>
       )
     },
   ),
 )
+
+const CharacterCount = memo(({ editor, className }: { editor: Editor; className: string }) => {
+  const { localize } = useIntl()
+
+  const count = useEditorState({
+    editor,
+    selector: ({ editor: e }) => e.getText({ blockSeparator: '' }).length,
+  })
+
+  return (
+    <div className={className}>
+      {localize(
+        { id: 'smarthr-ui/RichTextEditor/characterCount', defaultText: '文字数：{count}' },
+        { count },
+      )}
+    </div>
+  )
+})

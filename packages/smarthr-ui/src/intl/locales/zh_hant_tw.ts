@@ -181,6 +181,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/tableColsLabel': '欄數',
   'smarthr-ui/RichTextEditor/tableInsertButton': '插入',
   'smarthr-ui/RichTextEditor/tableInvalidSize': '請輸入大於0的數字',
+  'smarthr-ui/RichTextEditor/characterCount': '字數：{count}',
   'smarthr-ui/Th/sortDirectionNone': '無排序',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '選擇/取消所有項目',
   'smarthr-ui/ThCheckbox/checkColumnName': '選擇',

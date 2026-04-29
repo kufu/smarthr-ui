@@ -181,6 +181,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/tableColsLabel': '열 수',
   'smarthr-ui/RichTextEditor/tableInsertButton': '삽입',
   'smarthr-ui/RichTextEditor/tableInvalidSize': '1 이상의 숫자를 입력해주세요',
+  'smarthr-ui/RichTextEditor/characterCount': '글자 수: {count}',
   'smarthr-ui/Th/sortDirectionNone': '정렬하지 않음',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '모든 항목을 선택/해제',
   'smarthr-ui/ThCheckbox/checkColumnName': '선택',

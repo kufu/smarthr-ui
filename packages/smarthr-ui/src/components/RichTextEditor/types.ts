@@ -55,6 +55,7 @@ type RichTextEditorBaseProps = {
   className?: string
   editorClassName?: string
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
+  showCharacterCount?: boolean
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   acceptedMimeTypes?: string[]
 }

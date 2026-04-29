@@ -181,6 +181,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/tableColsLabel': 'Số cột',
   'smarthr-ui/RichTextEditor/tableInsertButton': 'Chèn',
   'smarthr-ui/RichTextEditor/tableInvalidSize': 'Vui lòng nhập số lớn hơn 0',
+  'smarthr-ui/RichTextEditor/characterCount': 'Số ký tự: {count}',
   'smarthr-ui/Th/sortDirectionNone': 'Không sắp xếp',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'Chọn/Bỏ chọn tất cả các mục',
   'smarthr-ui/ThCheckbox/checkColumnName': 'Chọn',

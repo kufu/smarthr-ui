@@ -181,6 +181,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/tableColsLabel': '列数',
   'smarthr-ui/RichTextEditor/tableInsertButton': 'そうにゅう',
   'smarthr-ui/RichTextEditor/tableInvalidSize': '1いじょうの　すうじを　にゅうりょくしてください',
+  'smarthr-ui/RichTextEditor/characterCount': 'もじすう：{count}',
   'smarthr-ui/Th/sortDirectionNone': '並べかえなし',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'すべての　項目を　えらぶ/やめる',
   'smarthr-ui/ThCheckbox/checkColumnName': 'えらぶ',

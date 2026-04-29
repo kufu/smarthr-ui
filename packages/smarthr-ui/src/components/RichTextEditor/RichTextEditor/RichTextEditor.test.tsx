@@ -89,6 +89,40 @@ describe('RichTextEditor', () => {
     expect(boldButton).toHaveAttribute('aria-pressed', 'false')
   })
 
+  describe('showCharacterCount', () => {
+    it('shows character count when showCharacterCount is true', async () => {
+      render(
+        <RichTextEditor
+          showCharacterCount
+          defaultValue={{
+            type: 'doc',
+            content: [{ type: 'paragraph', content: [{ type: 'text', text: 'abc' }] }],
+          }}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => {
+        expect(screen.getByText('文字数：3')).toBeInTheDocument()
+      })
+    })
+
+    it('does not show character count by default', async () => {
+      render(<RichTextEditor />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('textbox')).toBeInTheDocument()
+      })
+      expect(screen.queryByText(/文字数：/)).not.toBeInTheDocument()
+    })
+
+    it('does not show character count when readOnly', async () => {
+      render(<RichTextEditor showCharacterCount readOnly />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('textbox')).toBeInTheDocument()
+      })
+      expect(screen.queryByText(/文字数：/)).not.toBeInTheDocument()
+    })
+  })
+
   describe('content prop (旧 FlexibleRichTextEditor)', () => {
     it('HTML content を受け取ってエディタを描画する', async () => {
       render(<RichTextEditor content={{ format: 'html', content: '<p>HTMLコンテンツ</p>' }} />, {

@@ -176,6 +176,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/tableColsLabel': '列数',
   'smarthr-ui/RichTextEditor/tableInsertButton': '挿入',
   'smarthr-ui/RichTextEditor/tableInvalidSize': '1以上の数値を入力してください',
+  'smarthr-ui/RichTextEditor/characterCount': '文字数：{count}',
   'smarthr-ui/OpenInNewTabIcon/openInNewTab': '別タブで開く',
   'smarthr-ui/Th/sortDirectionAsc': '昇順',
   'smarthr-ui/Th/sortDirectionDesc': '降順',

@@ -70,6 +70,7 @@ export const Playground: Story = {
             onChange={(json) => setValue(json)}
             onImageUpload={mockImageUpload}
             placeholder="ここに本文を入力してください"
+            showCharacterCount
           />
         </FormControl>
         <details>
@@ -194,6 +195,14 @@ export const HTMLIntegration: Story = {
         )}
       </Stack>
     )
+  },
+}
+
+export const WithCharacterCount: Story = {
+  name: '文字数カウント（showCharacterCount）',
+  args: {
+    showCharacterCount: true,
+    placeholder: '入力すると下部に文字数が表示されます',
   },
 }
 
