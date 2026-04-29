@@ -31,8 +31,9 @@ const classNameGenerator = tv({
       'smarthr-ui-RichTextEditor',
       'shr-border-shorthand shr-rounded-m',
       'contrast-more:shr-border-high-contrast',
-      'focus-within:shr-focus-indicator',
+      'focus-within:shr-focus-indicator--outer',
     ],
+    toolbarWrapper: 'shr-sticky shr-top-0 shr-rounded-t-[inherit] shr-bg-white',
     content: [
       'smarthr-ui-RichTextEditor-content',
       // editor area
@@ -47,6 +48,7 @@ const classNameGenerator = tv({
     disabled: {
       true: {
         wrapper: 'shr-pointer-events-none shr-border-default/50 shr-bg-white-darken',
+        toolbarWrapper: 'shr-bg-white-darken',
         content: '[&_.ProseMirror]:shr-text-disabled',
       },
     },
@@ -227,7 +229,7 @@ export const RichTextEditor = memo(
           onImageUpload={onImageUpload}
           acceptedMimeTypes={acceptedMimeTypes}
         >
-          <div ref={toolbarRef}>
+          <div ref={toolbarRef} className={classNames.toolbarWrapper()}>
             <RichTextEditorToolbar />
           </div>
         </RichTextEditorProvider>
