@@ -3,7 +3,11 @@ extend-exclude = [
   'CHANGELOG.md',
   'smarthr-ui-props.json',
   'packages/smarthr-ui/src/intl/locales/id_id.ts',
+  'packages/smarthr-ui/src/intl/locales/ko_kr.ts',
   'packages/smarthr-ui/src/intl/locales/pt_br.ts',
+  'packages/smarthr-ui/src/intl/locales/vi_vn.ts',
+  'packages/smarthr-ui/src/intl/locales/zh_hans_cn.ts',
+  'packages/smarthr-ui/src/intl/locales/zh_hant_tw.ts',
 ]
 
 [default.extend-words]
