@@ -25,3 +25,5 @@ minimumReleaseAgeExclude:
   - glob@13.0.1
   # Renovate security update: postcss@8.5.10
   - postcss@8.5.10
+  # Renovate security update: next@>=16.0.0-beta.0 <16.1.7@16.2.4
+  - next@>=16.0.0-beta.0 <16.1.7@16.2.4
