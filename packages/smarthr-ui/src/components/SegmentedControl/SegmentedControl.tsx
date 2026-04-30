@@ -46,7 +46,7 @@ const classNameGenerator = tv({
       'smarthr-ui-SegmentedControl-button',
       'shr-m-0 shr--ml-px shr-rounded-none',
       'focus-visible:shr-focus-indicator',
-      'first:shr-rounded-bl-m first:shr-rounded-tl-m',
+      'first:shr-ml-0 first:shr-rounded-bl-m first:shr-rounded-tl-m',
       'last:shr-rounded-br-m last:shr-rounded-tr-m',
 
       '[&:not([aria-checked="true"]):focus-visible]:shr-relative [&:not([aria-checked="true"]):focus-visible]:shr-border-x',
