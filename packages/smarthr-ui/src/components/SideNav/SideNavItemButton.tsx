@@ -36,10 +36,11 @@ type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'li'>, keyof Abstract
 const classNameGenerator = tv({
   slots: {
     wrapper: [
-      'smarthr-ui-SideNav-item',
-      'data-[current=true]:shr-relative data-[current=true]:shr-bg-main data-[current=true]:shr-text-white',
+      'smarthr-ui-SideNav-item shr-relative',
+      'data-[current=true]:shr-bg-main data-[current=true]:shr-text-white',
       'data-[current=true]:after:shr-absolute data-[current=true]:after:-shr-right-0.25 data-[current=true]:after:shr-top-1/2 data-[current=true]:after:-shr-translate-y-1/2 data-[current=true]:after:shr-translate-x-0 data-[current=true]:after:shr-border-b-4 data-[current=true]:after:shr-border-l-4 data-[current=true]:after:shr-border-r-0 data-[current=true]:after:shr-border-t-4 data-[current=true]:after:shr-border-solid data-[current=true]:after:shr-border-b-transparent data-[current=true]:after:shr-border-l-main data-[current=true]:after:shr-border-r-transparent data-[current=true]:after:shr-border-t-transparent data-[current=true]:after:shr-content-[""]',
       'data-[current=false]:hover:shr-bg-column-darken',
+      '[&:has(:focus-visible)]:shr-z-1', // pseudoエレメントがliの::afterと衝突しないために子要素に適用しますが、次のエレメントに被られるからz-indexを一時的に変更します
     ],
     button: [
       'shr-w-full shr-leading-none [&]:shr-box-border',
@@ -47,6 +48,12 @@ const classNameGenerator = tv({
       '[[data-current=true]_&:focus-visible]:shr-focus-indicator',
       'shr-inline-flex shr-items-center',
       'shr-no-underline',
+
+      'before:shr-absolute before:-shr-top-[1px] before:shr-left-0 before:shr-hidden before:shr-h-px before:shr-w-full before:shr-bg-border before:shr-content-[""]',
+      '[:first-child_&]:before:shr-hidden [[data-current=false]:not(:first-child)_&:focus-visible]:before:shr-block [[data-current=false]_&:focus-visible]:before:shr-absolute',
+
+      'after:shr-absolute after:-shr-bottom-[1px] after:shr-left-0 after:shr-hidden after:shr-h-px after:shr-w-full after:shr-bg-border after:shr-content-[""]',
+      '[:last-child_&]:after:shr-hidden [[data-current=false]:not(:last-child)_&:focus-visible]:after:shr-block [[data-current=false]_&:focus-visible]:after:shr-absolute',
     ],
     body: 'shr-w-full',
     bodyText: 'smarthr-ui-SideNav-itemBodyText shr-grow',

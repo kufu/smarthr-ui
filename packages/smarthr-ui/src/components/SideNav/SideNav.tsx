@@ -42,7 +42,7 @@ const ROUNDED = {
 const ROUNDED_ALL = ['shr-rounded-l', ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-SideNav', 'shr-list-none shr-bg-column'],
+  base: ['smarthr-ui-SideNav', 'shr-relative shr-list-none shr-bg-column'],
   variants: {
     rounded: {
       true: ROUNDED_ALL,
