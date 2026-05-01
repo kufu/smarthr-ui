@@ -48,7 +48,7 @@
     "@vitejs/plugin-react": "^5.1.4",
     "autoprefixer": "^10.4.27",
     "babel-plugin-polyfill-corejs2": "^0.4.17",
-    "babel-plugin-polyfill-regenerator": "^0.6.6",
+    "babel-plugin-polyfill-regenerator": "^0.6.8",
     "chromatic": "^16.2.0",
     "eslint-plugin-storybook": "9.1.19",
     "glob": "13.0.6",
