@@ -1,3 +1,5 @@
+import type { ja } from '.'
+
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
@@ -123,4 +125,4 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/checkItem2': '브라우저의 쿠키와 캐시 삭제를 시도해 주세요. 자세한 내용은 {cookieCacheLink}(을)를 참조해 주세요.',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '위의 내용을 확인해도 해결되지 않는 경우, 사내의 인사 담당자 등 SmartHR의 관리자 권한을 가진 분에게 {errorInfoLink}의 정보를 첨부하여 연락해 주세요.',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': 'SmartHR의 관리자 권한을 가진 분은 {errorInfoLink}의 정보를 첨부하여, 오른쪽 아래의 채팅 아이콘에서 문의해 주세요.',
-} as const
+} as const satisfies Record<keyof typeof ja, string>

@@ -1,3 +1,5 @@
+import type { ja } from '.'
+
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
 export const locale = {
@@ -123,4 +125,4 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/checkItem2': '请尝试删除浏览器的 Cookie 和缓存。详情请参阅{cookieCacheLink}。',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '如果问题仍未解决，请将{errorInfoLink}中的信息提供给贵公司的劳务负责人或其他拥有 SmartHR 管理员权限的负责人。',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': '如果您是 SmartHR 管理员，请将{errorInfoLink}中的信息一并发送给我们，并通过右下角的聊天图标联系我们。',
-} as const
+} as const satisfies Record<keyof typeof ja, string>
