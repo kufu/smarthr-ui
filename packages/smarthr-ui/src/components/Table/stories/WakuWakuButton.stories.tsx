@@ -5,7 +5,7 @@ import { WakuWakuButton } from '../WakuWakuButton'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
-// TODO: WakuWakuButtionは非推奨のため、完全に削除するまではストーリーを残す必要があるが、削除後はこのファイルも削除すること
+// TODO: WakuWakuButtonは非推奨のため、完全に削除するまではストーリーを残す必要があるが、削除後はこのファイルも削除すること
 export default {
   title: 'Components/Table/WakuWakuButton（非推奨）',
   component: WakuWakuButton,
