@@ -43,6 +43,7 @@ const classNameGenerator = tv({
       'shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
+      'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
     ],
     listbox: [
       'shr-border-shorthand shr-flex shr-items-center shr-gap-0.25 shr-rounded-m shr-bg-white shr-p-0.25 shr-shadow-layer-3',
@@ -75,13 +76,14 @@ const classNameGenerator = tv({
 
 type Props = {
   tabIndex?: number
+  disabled?: boolean
   onKeyDown?: (e: KeyboardEvent) => void
   onFocus?: () => void
   ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const TextAlignDropdown: FC<Props> = memo(
-  ({ tabIndex = -1, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
+  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
@@ -207,6 +209,7 @@ export const TextAlignDropdown: FC<Props> = memo(
             aria-haspopup="listbox"
             aria-label={`${dropdownLabel}: ${currentLabel}`}
             tabIndex={tabIndex}
+            disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={() => {

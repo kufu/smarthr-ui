@@ -1,5 +1,6 @@
 'use client'
 
+import { NodeSelection } from '@tiptap/pm/state'
 import { type Editor, useEditorState } from '@tiptap/react'
 
 const findTableNode = (e: Editor) => {
@@ -91,6 +92,8 @@ export const useToolbarState = (editor: Editor) =>
       canBlockquote: canRun(e, 'toggleBlockquote'),
       canUndo: e.can().undo(),
       canRedo: e.can().redo(),
+
+      isNodeSelected: e.state.selection instanceof NodeSelection,
 
       isInTable: e.isActive('table'),
       hasHeaderRow: detectHeaderRow(e),

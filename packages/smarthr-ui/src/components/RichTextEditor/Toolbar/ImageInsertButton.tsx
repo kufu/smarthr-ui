@@ -39,13 +39,14 @@ const classNameGenerator = tv({
 
 type Props = {
   tabIndex?: number
+  disabled?: boolean
   onKeyDown?: (e: KeyboardEvent) => void
   onFocus?: () => void
   ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const ImageInsertButton: FC<Props> = memo(
-  ({ tabIndex = -1, onKeyDown, onFocus, ref: refProp }) => {
+  ({ tabIndex = -1, disabled, onKeyDown, onFocus, ref: refProp }) => {
     const { editor, onImageUpload, acceptedMimeTypes } = useRichTextEditorContext()
     const { localize } = useIntl()
     const { setIsOpen: setIsMenuOpen, triggerRef, renderDropdown } = useToolbarDropdown()
@@ -169,6 +170,7 @@ export const ImageInsertButton: FC<Props> = memo(
           }}
           icon={<FaImageIcon />}
           label={label}
+          disabled={disabled}
           tabIndex={tabIndex}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {

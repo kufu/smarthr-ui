@@ -59,13 +59,14 @@ const classNameGenerator = tv({
 
 type Props = {
   tabIndex?: number
+  disabled?: boolean
   onKeyDown?: (e: KeyboardEvent) => void
   onFocus?: () => void
   ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const FontSizeDropdown: FC<Props> = memo(
-  ({ tabIndex = -1, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
+  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
@@ -78,7 +79,7 @@ export const FontSizeDropdown: FC<Props> = memo(
     const currentLabel =
       FONT_SIZES.find((s) => s.value === currentValue)?.label ??
       (currentValue === null ? '16' : currentValue.replace('px', ''))
-    const isDisabled = state.isInHeading
+    const isDisabled = disabled || state.isInHeading
 
     const tooltipVisible = (isHovered || isFocused) && !isOpen
     const classNames = classNameGenerator({ tooltipVisible })

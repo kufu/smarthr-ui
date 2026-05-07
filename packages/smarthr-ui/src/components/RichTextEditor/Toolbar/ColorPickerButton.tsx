@@ -19,6 +19,7 @@ const classNameGenerator = tv({
       'shr-rounded-m shr-border-none shr-bg-transparent shr-p-0.5',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
+      'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
     ],
     colorIndicator: 'shr-h-[3px] shr-w-full shr-rounded-full',
     palette: [
@@ -41,13 +42,14 @@ const classNameGenerator = tv({
 
 type Props = {
   tabIndex?: number
+  disabled?: boolean
   onKeyDown?: (e: KeyboardEvent) => void
   onFocus?: () => void
   ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const ColorPickerButton: FC<Props> = memo(
-  ({ tabIndex = -1, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
+  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
@@ -145,6 +147,7 @@ export const ColorPickerButton: FC<Props> = memo(
             aria-label={colorLabel}
             aria-expanded={isOpen}
             tabIndex={tabIndex}
+            disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}

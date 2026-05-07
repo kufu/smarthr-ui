@@ -11,13 +11,14 @@ import { YoutubeDialog } from './YoutubeDialog'
 
 type Props = {
   tabIndex?: number
+  disabled?: boolean
   onKeyDown?: (e: KeyboardEvent) => void
   onFocus?: () => void
   ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const YoutubeInsertButton: FC<Props> = memo(
-  ({ tabIndex = -1, onKeyDown, onFocus, ref: refProp }) => {
+  ({ tabIndex = -1, disabled, onKeyDown, onFocus, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const [showDialog, setShowDialog] = useState(false)
@@ -49,6 +50,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
           ref={refProp}
           icon={<FaCirclePlayIcon />}
           label={label}
+          disabled={disabled}
           tabIndex={tabIndex}
           onKeyDown={onKeyDown}
           onFocus={onFocus}

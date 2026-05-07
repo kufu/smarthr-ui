@@ -84,7 +84,11 @@ export const RichTextEditorToolbar: FC = memo(() => {
 
     // 見出しドロップダウン
     if (has('heading')) {
-      toolbarItems.push({ type: 'heading', key: 'heading-dropdown', disabled: false })
+      toolbarItems.push({
+        type: 'heading',
+        key: 'heading-dropdown',
+        disabled: state.isNodeSelected,
+      })
     }
 
     // フォントサイズ
@@ -92,7 +96,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
       toolbarItems.push({
         type: 'fontSize',
         key: 'fontSize-dropdown',
-        disabled: state.isInHeading,
+        disabled: state.isInHeading || state.isNodeSelected,
       })
     }
 
@@ -155,17 +159,21 @@ export const RichTextEditorToolbar: FC = memo(() => {
 
     // 文字色
     if (has('color')) {
-      toolbarItems.push({ type: 'color', key: 'color-picker', disabled: false })
+      toolbarItems.push({ type: 'color', key: 'color-picker', disabled: state.isNodeSelected })
     }
 
     // リンク
     if (has('link')) {
-      toolbarItems.push({ type: 'link', key: 'link-button', disabled: false })
+      toolbarItems.push({ type: 'link', key: 'link-button', disabled: state.isNodeSelected })
     }
 
     // テキスト配置
     if (has('textAlign')) {
-      toolbarItems.push({ type: 'textAlign', key: 'textAlign-group', disabled: false })
+      toolbarItems.push({
+        type: 'textAlign',
+        key: 'textAlign-group',
+        disabled: state.isNodeSelected,
+      })
     }
 
     // リスト・ブロック
@@ -179,7 +187,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
           defaultText: '箇条書きリスト',
         }),
         active: state.isBulletList,
-        disabled: !state.canBulletList,
+        disabled: !state.canBulletList || state.isNodeSelected,
         action: () => editor.chain().focus().toggleBulletList().run(),
       })
     }
@@ -193,7 +201,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
           defaultText: '番号付きリスト',
         }),
         active: state.isOrderedList,
-        disabled: !state.canOrderedList,
+        disabled: !state.canOrderedList || state.isNodeSelected,
         action: () => editor.chain().focus().toggleOrderedList().run(),
       })
     }
@@ -204,7 +212,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         icon: <FaQuoteLeftIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/blockquote', defaultText: '引用' }),
         active: state.isBlockquote,
-        disabled: !state.canBlockquote,
+        disabled: !state.canBlockquote || state.isNodeSelected,
         action: () => editor.chain().focus().toggleBlockquote().run(),
       })
     }
@@ -218,7 +226,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
           defaultText: 'コードブロック',
         }),
         active: state.isCodeBlock,
-        disabled: !state.canCodeBlock,
+        disabled: !state.canCodeBlock || state.isNodeSelected,
         action: () => editor.chain().focus().toggleCodeBlock().run(),
       })
     }
@@ -232,24 +240,24 @@ export const RichTextEditorToolbar: FC = memo(() => {
           defaultText: '水平線',
         }),
         active: false,
-        disabled: false,
+        disabled: state.isNodeSelected,
         action: () => editor.chain().focus().setHorizontalRule().run(),
       })
     }
 
     // テーブル
     if (has('table')) {
-      toolbarItems.push({ type: 'table', key: 'table-dropdown', disabled: false })
+      toolbarItems.push({ type: 'table', key: 'table-dropdown', disabled: state.isNodeSelected })
     }
 
     // 画像挿入
     if (has('image')) {
-      toolbarItems.push({ type: 'image', key: 'image-insert', disabled: false })
+      toolbarItems.push({ type: 'image', key: 'image-insert', disabled: state.isNodeSelected })
     }
 
     // YouTube埋め込み
     if (has('youtube')) {
-      toolbarItems.push({ type: 'youtube', key: 'youtube-insert', disabled: false })
+      toolbarItems.push({ type: 'youtube', key: 'youtube-insert', disabled: state.isNodeSelected })
     }
 
     return toolbarItems
@@ -282,28 +290,28 @@ export const RichTextEditorToolbar: FC = memo(() => {
       {items.map((item, index) => {
         const rovingProps = getButtonProps(index, count)
         if (item.type === 'heading') {
-          return <HeadingDropdown {...rovingProps} key={item.key} />
+          return <HeadingDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'fontSize') {
-          return <FontSizeDropdown {...rovingProps} key={item.key} />
+          return <FontSizeDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'color') {
-          return <ColorPickerButton {...rovingProps} key={item.key} />
+          return <ColorPickerButton {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'image') {
-          return <ImageInsertButton {...rovingProps} key={item.key} />
+          return <ImageInsertButton {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'youtube') {
-          return <YoutubeInsertButton {...rovingProps} key={item.key} />
+          return <YoutubeInsertButton {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'link') {
-          return <LinkButton {...rovingProps} key={item.key} />
+          return <LinkButton {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'textAlign') {
-          return <TextAlignDropdown {...rovingProps} key={item.key} />
+          return <TextAlignDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'table') {
-          return <TableDropdown {...rovingProps} key={item.key} />
+          return <TableDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         const buttonItem = item as ButtonItem
         return (

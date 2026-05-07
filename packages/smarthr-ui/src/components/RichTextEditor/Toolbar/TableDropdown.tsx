@@ -48,13 +48,14 @@ const classNameGenerator = tv({
 
 type Props = {
   tabIndex?: number
+  disabled?: boolean
   onKeyDown?: (e: KeyboardEvent) => void
   onFocus?: () => void
   ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const TableDropdown: FC<Props> = memo(
-  ({ tabIndex = -1, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
+  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
@@ -180,6 +181,7 @@ export const TableDropdown: FC<Props> = memo(
           icon={<FaTableIcon />}
           label={tableLabel}
           active={state.isInTable}
+          disabled={disabled}
           tabIndex={tabIndex}
           aria-expanded={state.isInTable ? isOpen : undefined}
           aria-haspopup={state.isInTable ? 'menu' : undefined}
