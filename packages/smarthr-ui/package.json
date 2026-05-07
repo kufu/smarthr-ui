@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "93.1.0",
+  "version": "93.1.1",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
