@@ -13,6 +13,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
+import { AltTextDialog } from '../Toolbar/AltTextDialog'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
@@ -20,6 +21,7 @@ import { normalizeToJSON } from '../serializers/normalizeToJSON'
 import { editorContentClasses } from '../styles'
 
 import type {
+  ImageUploadResult,
   RichTextChangeMeta,
   RichTextEditorController,
   RichTextEditorProps,
@@ -35,7 +37,7 @@ const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator--outer',
     ],
-    toolbarWrapper: 'shr-sticky shr-top-0 shr-rounded-t-[inherit] shr-bg-white',
+    toolbarWrapper: 'shr-sticky shr-top-0 shr-z-1 shr-rounded-t-[inherit] shr-bg-white',
     content: [
       'smarthr-ui-RichTextEditor-content',
       // editor area
@@ -116,7 +118,7 @@ export const RichTextEditor = memo(
         [onChange, outputFormat],
       )
 
-      const editor = useRichTextEditor({
+      const { editor, pendingFile, setPendingFile } = useRichTextEditor({
         value,
         defaultValue: normalizedDefaultValue,
         onChange: handleChange,
@@ -131,6 +133,28 @@ export const RichTextEditor = memo(
         placeholder,
         toolbarRef,
       })
+
+      const handleUploadSuccess = useCallback(
+        (result: ImageUploadResult, alt: string) => {
+          if (!editor || !pendingFile) return
+
+          const attrs = { src: result.src, alt: alt || result.alt || '' }
+          const chain = editor.chain().focus()
+
+          if (pendingFile.pos !== null) {
+            chain.insertContentAt(pendingFile.pos, { type: 'image', attrs }).run()
+          } else {
+            chain.insertContent({ type: 'image', attrs }).run()
+          }
+
+          setPendingFile(null)
+        },
+        [editor, pendingFile, setPendingFile],
+      )
+
+      const handleAltCancel = useCallback(() => {
+        setPendingFile(null)
+      }, [setPendingFile])
 
       useImperativeHandle(
         ref,
@@ -252,6 +276,14 @@ export const RichTextEditor = memo(
           </div>
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea()} />
+          )}
+          {pendingFile && onImageUpload && (
+            <AltTextDialog
+              file={pendingFile.file}
+              onImageUpload={onImageUpload}
+              onSuccess={handleUploadSuccess}
+              onCancel={handleAltCancel}
+            />
           )}
         </div>
       )

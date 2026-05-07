@@ -1,7 +1,7 @@
 'use client'
 
 import { useEditor } from '@tiptap/react'
-import { type RefObject, useEffect, useMemo } from 'react'
+import { type RefObject, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { configureExtensions } from '../extensions/configureExtensions'
 import { createChangeMeta } from '../serializers/createChangeMeta'
@@ -41,6 +41,12 @@ export const useRichTextEditor = ({
 }: UseRichTextEditorOptions) => {
   const isControlled = value !== undefined
 
+  const [pendingFile, setPendingFile] = useState<{ file: File; pos: number | null } | null>(null)
+
+  const handleFileDrop = useCallback((file: File, pos: number | null) => {
+    setPendingFile({ file, pos })
+  }, [])
+
   const featuresKey = features.join(',')
   const headingLevelsKey = headingLevels?.join(',')
   const mimeTypesKey = acceptedMimeTypes?.join(',')
@@ -52,10 +58,11 @@ export const useRichTextEditor = ({
         headingLevels,
         placeholder,
         onImageUpload,
+        onFileDrop: onImageUpload ? handleFileDrop : undefined,
         acceptedMimeTypes,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [featuresKey, headingLevelsKey, placeholder, onImageUpload, mimeTypesKey],
+    [featuresKey, headingLevelsKey, placeholder, onImageUpload, handleFileDrop, mimeTypesKey],
   )
 
   const editor = useEditor({
@@ -108,5 +115,5 @@ export const useRichTextEditor = ({
     }
   }, [editor, readOnly, disabled])
 
-  return editor
+  return { editor, pendingFile, setPendingFile }
 }

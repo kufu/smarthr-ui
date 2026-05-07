@@ -16,6 +16,7 @@ type ConfigureExtensionsOptions = {
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   placeholder?: string
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  onFileDrop?: (file: File, pos: number | null) => void
   acceptedMimeTypes?: string[]
 }
 
@@ -28,6 +29,7 @@ export const configureExtensions = ({
   headingLevels = DEFAULT_HEADING_LEVELS,
   placeholder,
   onImageUpload,
+  onFileDrop,
   acceptedMimeTypes,
 }: ConfigureExtensionsOptions): AnyExtension[] => {
   const has = (f: RichTextFeature) => features.includes(f)
@@ -72,45 +74,19 @@ export const configureExtensions = ({
       }),
     )
 
-    if (onImageUpload) {
+    if (onImageUpload && onFileDrop) {
       const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
 
       extensions.push(
         FileHandler.configure({
           allowedMimeTypes: mimeTypes,
-          onDrop: (editor, files, pos) => {
-            for (const file of files) {
-              if (!mimeTypes.some((type) => file.type === type)) continue
-              const formData = new FormData()
-              formData.append('file', file)
-              onImageUpload(file, formData).then(({ src, alt }) => {
-                editor
-                  .chain()
-                  .focus()
-                  .insertContentAt(pos, {
-                    type: 'image',
-                    attrs: { src, alt: alt ?? file.name },
-                  })
-                  .run()
-              })
-            }
+          onDrop: (_editor, files, pos) => {
+            const file = files.find((f) => mimeTypes.some((type) => f.type === type))
+            if (file) onFileDrop(file, pos)
           },
-          onPaste: (editor, files) => {
-            for (const file of files) {
-              if (!mimeTypes.some((type) => file.type === type)) continue
-              const formData = new FormData()
-              formData.append('file', file)
-              onImageUpload(file, formData).then(({ src, alt }) => {
-                editor
-                  .chain()
-                  .focus()
-                  .insertContent({
-                    type: 'image',
-                    attrs: { src, alt: alt ?? file.name },
-                  })
-                  .run()
-              })
-            }
+          onPaste: (_editor, files) => {
+            const file = files.find((f) => mimeTypes.some((type) => f.type === type))
+            if (file) onFileDrop(file, null)
           },
         }),
       )
