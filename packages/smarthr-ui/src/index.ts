@@ -83,7 +83,14 @@ export {
 export { InformationPanel } from './components/InformationPanel'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
-export { ErrorScreen } from './components/ErrorScreen'
+export {
+  ErrorScreen,
+  AuthErrorScreen,
+  ForbiddenErrorScreen,
+  NotFoundErrorScreen,
+  UnauthorizedErrorScreen,
+  UnexpectedErrorScreen,
+} from './components/ErrorScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl } from './components/SegmentedControl'
