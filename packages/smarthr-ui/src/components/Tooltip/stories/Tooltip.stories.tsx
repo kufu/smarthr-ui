@@ -1,4 +1,5 @@
-import { FaCircleQuestionIcon } from '../../Icon'
+import { Button } from '../../Button'
+import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
 import { Tooltip } from '../Tooltip'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -111,6 +112,22 @@ export const TabIndex: StoryObj<typeof Tooltip> = {
   args: {
     tabIndex: -1, // キーボードアクセスできなくなるため、良い例ではない
   },
+}
+
+export const Type: StoryObj<typeof Tooltip> = {
+  name: 'type',
+  render: () => (
+    <div className="shr-flex shr-gap-1">
+      <Tooltip message="description" type="description" ariaDescribedbyTarget="inner">
+        <Button>ボタン</Button>
+      </Tooltip>
+      <Tooltip message="label" type="label" triggerType="icon">
+        <Button>
+          <FaPencilIcon />
+        </Button>
+      </Tooltip>
+    </div>
+  ),
 }
 
 export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {

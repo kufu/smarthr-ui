@@ -41,16 +41,19 @@ const getFullscreenElementOnSSR = () => null
 type AbstractProps = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
+  /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
+  type?: 'label' | 'description'
   /** ツールチップを表示する対象のタイプ。アイコンの場合は `icon` を指定する */
   triggerType?: 'icon' | 'text'
   /** `true` のとき、ツールチップを表示する対象が省略されている場合のみツールチップ表示を有効にする */
   ellipsisOnly?: boolean
   /** ツールチップを表示する対象の tabIndex 値 */
   tabIndex?: number
-  /** ツールチップを内包要素に紐付けるかどうか */
+  /** `type` が `description` の場合に `aria-describedby` を付与する対象。`type` が `label` の場合は常に children に付与されるため無視される */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
-type Props = AbstractProps & Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby'>
+type Props = AbstractProps &
+  Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby' | 'aria-labelledby'>
 
 const classNameGenerator = tv({
   base: [
@@ -69,6 +72,7 @@ const classNameGenerator = tv({
 export const Tooltip: FC<Props> = ({
   message,
   children,
+  type = 'description',
   triggerType,
   ellipsisOnly,
   tabIndex = 0,
@@ -190,13 +194,20 @@ export const Tooltip: FC<Props> = ({
     () => classNameGenerator({ isIcon, className }),
     [isIcon, className],
   )
+  const isLabel = type === 'label'
   const isInnerTarget = ariaDescribedbyTarget === 'inner'
   const childrenWithProps = useMemo(
     () =>
-      isInnerTarget
-        ? cloneElement(children as ReactElement, { 'aria-describedby': messageId })
-        : children,
-    [children, isInnerTarget, messageId],
+      isLabel
+        ? cloneElement(children as ReactElement, { 'aria-labelledby': messageId })
+        : isInnerTarget
+          ? cloneElement(children as ReactElement, { 'aria-describedby': messageId })
+          : children,
+    [children, isLabel, isInnerTarget, messageId],
+  )
+  const actualAriaDescribedby = useMemo(
+    () => (!isLabel && !isInnerTarget ? messageId : undefined),
+    [isLabel, isInnerTarget, messageId],
   )
 
   return (
@@ -205,7 +216,7 @@ export const Tooltip: FC<Props> = ({
       {...rest}
       ref={ref}
       tabIndex={tabIndex}
-      aria-describedby={isInnerTarget ? undefined : messageId}
+      aria-describedby={actualAriaDescribedby}
       onPointerEnter={onDelegatePointerEnter}
       onTouchStart={onDelegateTouchStart}
       onFocus={onDelegateFocus}
