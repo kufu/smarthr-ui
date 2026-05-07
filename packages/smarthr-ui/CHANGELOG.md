@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [93.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.0.1...smarthr-ui-v93.1.0) (2026-04-24)
+
+
+### Features
+
+* 各種エラー画面を追加 ([#6274](https://github.com/kufu/smarthr-ui/issues/6274)) ([893bcce](https://github.com/kufu/smarthr-ui/commit/893bcceffe5db1ff86f8765c12bfb57e8434b86e))
+
 ## [93.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.0.0...smarthr-ui-v93.0.1) (2026-04-21)
 
 
