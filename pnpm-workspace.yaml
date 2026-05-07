@@ -17,8 +17,8 @@ auditConfig:
     - GHSA-c2c7-rcm5-vvqj # tailwindcssが依存しているパッケージの脆弱性だが、影響はないのでignoreする
     - GHSA-3v7f-55p6-f55p # tailwindcssが依存しているパッケージの脆弱性だが、影響はないのでignoreする
 minimumReleaseAgeExclude:
-  # Renovate security update: next@15.5.10
-  - next@15.5.10
+  # Renovate security update: next@15.5.10 || 16.2.5
+  - next@15.5.10 || 16.2.5
   # Renovate security update: webpack@5.104.1
   - webpack@5.104.1
   # Renovate security update: glob@13.0.1
