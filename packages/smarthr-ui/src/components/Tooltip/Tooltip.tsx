@@ -75,7 +75,7 @@ export const Tooltip: FC<Props> = ({
   type = 'description',
   triggerType,
   ellipsisOnly,
-  tabIndex = 0,
+  tabIndex,
   ariaDescribedbyTarget = 'wrapper',
   className,
   onPointerEnter,
@@ -97,9 +97,33 @@ export const Tooltip: FC<Props> = ({
     getFullscreenElementOnSSR,
   )
 
+  const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
+
   useEnhancedEffect(() => {
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
+
+  useEnhancedEffect(() => {
+    if (tabIndex !== undefined) {
+      setActualTabIndex(tabIndex)
+      return
+    }
+
+    const childElement = ref.current?.querySelector<HTMLElement>(
+      ':scope > :not(.smarthr-ui-VisuallyHiddenText)',
+    )
+
+    if (!childElement) {
+      setActualTabIndex(0)
+      return
+    }
+
+    const isFocusable =
+      childElement.matches('a[href], button, input, select, textarea, [tabindex]') &&
+      !childElement.matches('[tabindex="-1"]')
+
+    setActualTabIndex(isFocusable ? undefined : 0)
+  }, [tabIndex])
 
   const toShowAction = useCallback(
     (e: BaseSyntheticEvent) => {
@@ -215,7 +239,7 @@ export const Tooltip: FC<Props> = ({
     <span
       {...rest}
       ref={ref}
-      tabIndex={tabIndex}
+      tabIndex={actualTabIndex}
       aria-describedby={actualAriaDescribedby}
       onPointerEnter={onDelegatePointerEnter}
       onTouchStart={onDelegateTouchStart}

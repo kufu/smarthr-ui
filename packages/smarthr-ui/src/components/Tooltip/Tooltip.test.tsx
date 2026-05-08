@@ -2,10 +2,39 @@ import { render, screen } from '@testing-library/react'
 
 import { Button } from '../Button'
 import { FaPencilIcon } from '../Icon'
+import { Input } from '../Input'
 
 import { Tooltip } from './Tooltip'
 
 describe('Tooltip', () => {
+  describe('tabIndex', () => {
+    it('children がフォーカス可能な要素の場合、wrapper に tabIndex が設定されない', () => {
+      render(
+        <Tooltip message="説明">
+          <Button>ボタン</Button>
+        </Tooltip>,
+      )
+      const wrapper = screen.getByRole('button', { name: 'ボタン' }).closest('.smarthr-ui-Tooltip')!
+      expect(wrapper).not.toHaveAttribute('tabindex')
+    })
+
+    it('children がフォーカス不可能な要素の場合、wrapper に tabIndex=0 が設定される', () => {
+      render(<Tooltip message="説明">テキスト</Tooltip>)
+      const wrapper = screen.getByText('テキスト').closest('.smarthr-ui-Tooltip')!
+      expect(wrapper).toHaveAttribute('tabindex', '0')
+    })
+
+    it('tabIndex を明示的に指定した場合、その値が使われる', () => {
+      render(
+        <Tooltip message="説明" tabIndex={-1}>
+          <Button>ボタン</Button>
+        </Tooltip>,
+      )
+      const wrapper = screen.getByRole('button', { name: 'ボタン' }).closest('.smarthr-ui-Tooltip')!
+      expect(wrapper).toHaveAttribute('tabindex', '-1')
+    })
+  })
+
   describe('type="description"（デフォルト）', () => {
     it('wrapper span に aria-describedby が付与される', () => {
       render(
