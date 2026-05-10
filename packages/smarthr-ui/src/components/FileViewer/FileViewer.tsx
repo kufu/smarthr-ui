@@ -4,6 +4,7 @@ import Decimal from 'decimal.js'
 import {
   type ComponentProps,
   type FC,
+  type ReactNode,
   memo,
   useCallback,
   useEffect,
@@ -28,6 +29,8 @@ import { Localizer } from '../../intl'
 
 import { ImageViewer } from './ImageViewer'
 import { PDFViewer } from './PDFViewer'
+import { SearchController } from './SearchController'
+import { usePDFSearch } from './usePDFSearch'
 
 import type { FileForViewer } from './types'
 
@@ -61,6 +64,9 @@ export const FileViewer: FC<Props> = ({
   const [loaded, setLoaded] = useState(false)
   const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
+  const isPDF = file.contentType === 'application/pdf'
+
+  const search = usePDFSearch(file.url)
 
   const internalScaleStep = useMemo(
     () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
@@ -120,6 +126,19 @@ export const FileViewer: FC<Props> = ({
           onClickScaleUpButton={scaleUp}
           onClickScaleDownButton={scaleDown}
           onClickRotateButton={rotate}
+          searchController={
+            isPDF ? (
+              <SearchController
+                query={search.query}
+                setQuery={search.setQuery}
+                matchCount={search.matchCount}
+                currentMatchIndex={search.currentMatchIndex}
+                onClickNext={search.goNext}
+                onClickPrev={search.goPrev}
+                onClickClear={search.clear}
+              />
+            ) : undefined
+          }
         />
       </div>
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
@@ -129,7 +148,7 @@ export const FileViewer: FC<Props> = ({
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
-          {file.contentType === 'application/pdf' ? (
+          {isPDF ? (
             <PDFViewer
               scale={scale}
               rotation={rotation}
@@ -139,6 +158,10 @@ export const FileViewer: FC<Props> = ({
               onPDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={onLoadError}
+              searchQuery={search.query}
+              matches={search.matches}
+              currentMatchIndex={search.currentMatchIndex}
+              onPageTextLoaded={search.registerPageText}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
@@ -170,6 +193,7 @@ type ControllerProps = {
   onClickScaleUpButton: () => void
   onClickScaleDownButton: () => void
   onClickRotateButton: () => void
+  searchController?: ReactNode
 }
 
 const Controller: FC<ControllerProps> = memo(
@@ -180,8 +204,10 @@ const Controller: FC<ControllerProps> = memo(
     onClickScaleUpButton,
     onClickScaleDownButton,
     onClickRotateButton,
+    searchController,
   }) => (
-    <div className="shr-sticky shr-flex shr-w-full shr-items-center shr-justify-center shr-justify-items-center shr-gap-0.5 shr-bg-scrim shr-p-0.5 shr-shadow-layer-1">
+    <div className="shr-sticky shr-grid shr-w-full shr-grid-cols-[1fr_auto_1fr] shr-items-center shr-gap-0.5 shr-bg-scrim shr-p-0.5 shr-shadow-layer-1">
+      <div />
       <Cluster gap={0.5}>
         <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
           <Button
@@ -226,6 +252,7 @@ const Controller: FC<ControllerProps> = memo(
           />
         </Button>
       </Cluster>
+      <div className="shr-justify-self-end">{searchController}</div>
     </div>
   ),
 )

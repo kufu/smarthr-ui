@@ -7,6 +7,14 @@ export type FileForViewer = {
   alt?: string
 }
 
+export type PDFSearchMatch = {
+  pageIndex: number
+  itemIndex: number
+  matchStart: number
+  matchLength: number
+  globalIndex: number
+}
+
 export type ViewerProps = {
   file: FileForViewer
   scale: number
@@ -19,4 +27,8 @@ export type ViewerProps = {
    */
   onPassword?: ComponentProps<typeof Document>['onPassword']
   onLoadError?: () => void
+  searchQuery?: string
+  matches?: PDFSearchMatch[]
+  currentMatchIndex?: number
+  onPageTextLoaded?: (pageIndex: number, texts: string[]) => void
 }
