@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { type FC, useRef, useState } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
@@ -35,12 +35,12 @@ describe('ControlledFormDialog', () => {
     render(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'ControlledFormDialog' })).toBeVisible()
 
-    await act(() => userEvent.tab({ shift: true }))
-    await act(() => userEvent.keyboard('{ }'))
+    await userEvent.tab({ shift: true })
+    await userEvent.keyboard('{ }')
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
@@ -89,16 +89,16 @@ describe('ControlledFormDialog', () => {
     render(<DialogTemplateWithFocusTrap />)
 
     expect(screen.queryByRole('dialog', { name: '開いた状態で投入されたダイアログ' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: '開いた状態で投入されたダイアログ' })).toBeVisible()
 
     expect(
       screen.getByRole('textbox', { name: 'isOpen=true の状態で DOM に投入した場合のダイアログ' }),
     ).toHaveFocus()
 
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{ }'))
+    await userEvent.tab()
+    await userEvent.keyboard('{ }')
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
