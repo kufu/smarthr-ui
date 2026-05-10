@@ -123,4 +123,8 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/checkItem2': 'ブラウザのCookieとキャッシュの削除をお試しください。詳しくは、{cookieCacheLink}を参照してください。',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '上記を確認しても解消しない場合は、社内の労務担当者など、SmartHRの管理者権限をお持ちの方に、{errorInfoLink}の情報を添えてご連絡ください。',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': 'SmartHRの管理者権限をお持ちの方は、{errorInfoLink}の情報を添えて、右下のチャットマークからお問い合わせください。',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': 'メンテナンス・障害情報',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': 'SmartHRの動作環境',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': 'Q. ブラウザのCookieとキャッシュを削除するには？',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': 'エラー発生時に教えていただきたい内容',
 } as const
