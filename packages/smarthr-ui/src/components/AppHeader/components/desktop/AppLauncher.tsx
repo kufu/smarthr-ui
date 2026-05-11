@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 

@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [93.1.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.1...smarthr-ui-v93.1.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* エラー画面のexportを修正 ([#6305](https://github.com/kufu/smarthr-ui/issues/6305)) ([50fd3be](https://github.com/kufu/smarthr-ui/commit/50fd3bebf85d2b604e123b6c40a148e295c8260b))
+
+## [93.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.0...smarthr-ui-v93.1.1) (2026-05-07)
+
+
+### Bug Fixes
+
+* useTheme()を使用しているファイルで'use client'してサーバーコンポーネント内でも利用できるように対応 ([#6290](https://github.com/kufu/smarthr-ui/issues/6290)) ([847c70e](https://github.com/kufu/smarthr-ui/commit/847c70ed9a6a6871d7637de054db5ecc098fdf0f))
+
+## [93.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.0.1...smarthr-ui-v93.1.0) (2026-04-24)
+
+
+### Features
+
+* 各種エラー画面を追加 ([#6274](https://github.com/kufu/smarthr-ui/issues/6274)) ([893bcce](https://github.com/kufu/smarthr-ui/commit/893bcceffe5db1ff86f8765c12bfb57e8434b86e))
+
 ## [93.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.0.0...smarthr-ui-v93.0.1) (2026-04-21)
 
 
