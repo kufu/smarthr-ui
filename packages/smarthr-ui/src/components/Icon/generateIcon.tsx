@@ -3,7 +3,7 @@
 import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
+import { color as defaultColorPalette, fontSize, textColor } from '../../tailwind'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { FontSizes } from '../../themes'
@@ -73,7 +73,6 @@ export const generateIcon = (SvgIcon: IconType) => {
       size,
       ...rest
     }) => {
-      const theme = useTheme()
       const actualAriaHidden = useMemo(() => {
         if (ariaHidden !== undefined) {
           return ariaHidden
@@ -99,17 +98,17 @@ export const generateIcon = (SvgIcon: IconType) => {
         if (color && existsColor(color)) {
           const colorName = colorSet[color]
 
-          if (colorName in theme.textColor) {
-            return theme.textColor[colorName as keyof typeof theme.textColor]
+          if (colorName in textColor) {
+            return textColor[colorName as keyof typeof textColor]
           }
 
-          return theme.color[colorName as keyof typeof theme.color] as string
+          return defaultColorPalette[colorName as keyof typeof defaultColorPalette] as string
         }
 
         return color
-      }, [color, theme])
+      }, [color])
 
-      const iconSize = size ? theme.fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
+      const iconSize = size ? fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
           {...rest}
