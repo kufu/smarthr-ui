@@ -5,7 +5,6 @@ import { useIntl } from '../../../../intl'
 import { OpenInNewTabIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
-import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
 import { Translate } from '../common/Translate'
 
@@ -70,9 +69,7 @@ const ActualReleaseNote: FC<{
           <Loader />
         </Center>
       ) : data.error ? (
-        <Text>
-          <Translate>{translated.error}</Translate>
-        </Text>
+        <Translate>{translated.error}</Translate>
       ) : (
         <Stack>
           {data.links.slice(0, 5).map((link) => (

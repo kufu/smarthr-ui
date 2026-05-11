@@ -1,4 +1,4 @@
-import { Localizer } from '..'
+import { Localizer } from '../Localizer'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

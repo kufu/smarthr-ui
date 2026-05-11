@@ -14,6 +14,16 @@ type Props = {
 
 export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
   const { localize } = useIntl()
+  const errorInfoLinkValues = {
+    errorInfoLink: (
+      <HelpLink href="https://support.smarthr.jp/ja/help/articles/360036353773/">
+        {localize({
+          id: 'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation',
+          defaultText: 'エラー発生時に教えていただきたい内容',
+        })}
+      </HelpLink>
+    ),
+  }
 
   return (
     <ErrorScreen
@@ -64,7 +74,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
               values={{
                 maintenanceLink: (
                   <HelpLink href="https://support.smarthr.jp/ja/info/status/page/1/">
-                    メンテナンス・障害情報
+                    {localize({
+                      id: 'smarthr-ui/UnexpectedErrorScreen/maintenanceLink',
+                      defaultText: 'メンテナンス・障害情報',
+                    })}
                   </HelpLink>
                 ),
               }}
@@ -85,7 +98,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
               values={{
                 environmentLink: (
                   <HelpLink href="https://support.smarthr.jp/ja/help/articles/360035170054/">
-                    SmartHRの動作環境
+                    {localize({
+                      id: 'smarthr-ui/UnexpectedErrorScreen/environmentLink',
+                      defaultText: 'SmartHRの動作環境',
+                    })}
                   </HelpLink>
                 ),
               }}
@@ -98,7 +114,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
               values={{
                 cookieCacheLink: (
                   <HelpLink href="https://support.smarthr.jp/ja/help/articles/360026264433/">
-                    Q. ブラウザのCookieとキャッシュを削除するには？
+                    {localize({
+                      id: 'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink',
+                      defaultText: 'Q. ブラウザのCookieとキャッシュを削除するには？',
+                    })}
                   </HelpLink>
                 ),
               }}
@@ -109,26 +128,14 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
           <Localizer
             id="smarthr-ui/UnexpectedErrorScreen/contactAdmin"
             defaultText="上記を確認しても解消しない場合は、社内の労務担当者など、SmartHRの管理者権限をお持ちの方に、{errorInfoLink}の情報を添えてご連絡ください。"
-            values={{
-              errorInfoLink: (
-                <HelpLink href="https://support.smarthr.jp/ja/help/articles/360036353773/">
-                  エラー発生時に教えていただきたい内容
-                </HelpLink>
-              ),
-            }}
+            values={errorInfoLinkValues}
           />
         </p>
         <p>
           <Localizer
             id="smarthr-ui/UnexpectedErrorScreen/adminContact"
             defaultText="SmartHRの管理者権限をお持ちの方は、{errorInfoLink}の情報を添えて、右下のチャットマークからお問い合わせください。"
-            values={{
-              errorInfoLink: (
-                <HelpLink href="https://support.smarthr.jp/ja/help/articles/360036353773/">
-                  エラー発生時に教えていただきたい内容
-                </HelpLink>
-              ),
-            }}
+            values={errorInfoLinkValues}
           />
         </p>
       </Stack>
