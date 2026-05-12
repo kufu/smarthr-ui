@@ -12,6 +12,7 @@
     "husky": "^9.1.7",
     "knip": "^6.0.5",
     "lint-staged": "^16.2.7",
+    "oxfmt": "^0.48.0",
     "oxlint": "^1.63.0",
     "oxlint-config-smarthr": "^0.1.0",
     "prettier": "^3.6.2",

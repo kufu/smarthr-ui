@@ -33,6 +33,6 @@
     "tslib",
     "typescript-eslint"
   ],
-  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "knip", "oxlint"],
+  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "knip", "oxlint", "oxfmt"],
   "ignoreExportsUsedInFile": true
 }
