@@ -10,7 +10,7 @@
     ]
   },
   "entry": ["scripts/**/*.ts"],
-  "ignore": ["**/*.stories.tsx", "rollup.*.config.js", "vitest.config.ts", "vitest-setup.js"],
+  "ignore": ["**/*.stories.tsx", "rollup.*.config.js", "vitest.config.ts", "vitest-setup.js", "oxlint.config.mjs"],
   "ignoreDependencies": [
     "@rollup/plugin-commonjs",
     "@rollup/plugin-node-resolve",
@@ -36,6 +36,6 @@
     "vitest",
     "wait-on"
   ],
-  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "vitest", "knip"],
+  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "vitest", "knip", "oxlint"],
   "ignoreExportsUsedInFile": true
 }
