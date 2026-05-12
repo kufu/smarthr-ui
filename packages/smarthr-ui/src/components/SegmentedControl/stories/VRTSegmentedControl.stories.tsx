@@ -33,7 +33,7 @@ export default {
   // icon            false                   3       default
   // icon            true                    1       s
   // icon            false                   1       s
-  render: (_args: any) => (
+  render: () => (
     <Stack>
       <SegmentedControl options={iconOptions(true)} value={null} size="M" />
       <SegmentedControl options={textOptions(false)} value={null} size="S" />
