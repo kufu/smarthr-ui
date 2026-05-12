@@ -49,7 +49,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         formatValue(formatCurrency(defaultValue))
       }
       // when component did mount
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {

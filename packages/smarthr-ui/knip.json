@@ -30,9 +30,8 @@
     "postcss-syntax",
     "rollup-plugin-preserve-directives",
     "rollup-plugin-rename-node-modules",
-    "tslib",
-    "typescript-eslint"
+    "tslib"
   ],
-  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "knip", "oxlint", "oxfmt"],
+  "ignoreBinaries": ["tsc", "stylelint", "knip", "oxlint", "oxfmt"],
   "ignoreExportsUsedInFile": true
 }

@@ -23,7 +23,6 @@ export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Prop
 
     return (
       <span className={classNames.wrapper}>
-        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
           ref={ref}

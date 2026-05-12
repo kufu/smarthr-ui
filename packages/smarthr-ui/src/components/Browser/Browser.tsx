@@ -129,7 +129,6 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   )
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div {...rest} role="application" onKeyDown={onDelegateKeyDown} className={classNames.wrapper}>
       {columns.map((colItems, index) => (
         <BrowserColumn

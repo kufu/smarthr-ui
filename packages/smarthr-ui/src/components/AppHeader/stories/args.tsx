@@ -1,5 +1,3 @@
-/* eslint-disable smarthr/require-i18n-text */
-
 import { action } from 'storybook/actions'
 
 import type { AppHeader } from '../AppHeader'

@@ -485,7 +485,6 @@ const ActualMultiCombobox = <T,>(
   )
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
       ref={outerRef}
       role="group"

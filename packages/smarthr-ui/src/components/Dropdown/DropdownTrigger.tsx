@@ -87,11 +87,9 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
 
   return (
     <div ref={triggerElementRef} className={actualClassName}>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <ConditionalWrapper
         shouldWrapContent={tooltip?.show}
         wrapper={({ children: currentChildren }) => (
-          // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
           <Tooltip message={tooltip?.message} triggerType="icon" tabIndex={-1}>
             {currentChildren}
           </Tooltip>

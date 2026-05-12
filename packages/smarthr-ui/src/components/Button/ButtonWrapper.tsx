@@ -30,7 +30,6 @@ export const ButtonWrapper: FC<Props> = (props: Props) => {
   const disabledOnLoading = $loading || disabled
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
       {...rest}
       ref={buttonRef}

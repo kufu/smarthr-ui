@@ -171,7 +171,6 @@ export const AccordionPanelTrigger: FC<Props> = ({
   )
 
   return (
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading unrecommendedTag={unrecommendedHeadingTag} type={headingType}>
       <button
         {...rest}

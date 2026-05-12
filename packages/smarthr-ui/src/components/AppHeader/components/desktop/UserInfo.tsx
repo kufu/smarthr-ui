@@ -233,7 +233,6 @@ const DropdownMenuLabel = memo<
     return (
       <Cluster as="span" align="flex-start">
         {accountImageUrl ? (
-          // eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text
           <img src={accountImageUrl} className={accountImageClassName} aria-hidden />
         ) : (
           <span className={placeHolderImageClassName}>

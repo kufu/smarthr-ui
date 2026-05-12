@@ -215,7 +215,6 @@ const SegmentedControlButton: FC<
   }, [excludesSelected, isFocused, attrs.checked, index])
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <Button
       value={option.value}
       disabled={option.disabled}

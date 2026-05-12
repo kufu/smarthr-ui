@@ -161,7 +161,6 @@ const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: str
       [isOpen, onClickOverlay],
     )
 
-    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     return <div onClick={onClick} className={className} role="presentation" />
   },
 )

@@ -1,6 +1,5 @@
 import { getFromDate, getMonthArray, getToDate, isBetween } from './calendarHelper'
 
-// eslint-disable-next-line smarthr/best-practice-for-date
 const INVALID_DATE = new Date('aaa')
 
 describe('calendarHelper', () => {

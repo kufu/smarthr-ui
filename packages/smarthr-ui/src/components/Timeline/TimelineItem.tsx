@@ -107,10 +107,7 @@ export const TimelineItem: React.FC<Props> = ({
         </Sidebar>
         {sideActionArea}
       </Cluster>
-      {children && (
-        // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-        <Section aria-labelledby={id}>{children}</Section>
-      )}
+      {children && <Section aria-labelledby={id}>{children}</Section>}
     </Stack>
   )
 }

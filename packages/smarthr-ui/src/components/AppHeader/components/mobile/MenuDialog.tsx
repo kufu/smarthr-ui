@@ -142,10 +142,8 @@ export const Content: FC<
           {isAppLauncherSelected ? (
             <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
           ) : isReleaseNoteSelected ? (
-            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading title={translated.latestReleaseNotes} onClickBack={clearReleaseNote} />
           ) : selectedNavigationGroup ? (
-            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
               title={selectedNavigationGroup.children}
               onClickBack={clearNavigationGroup}

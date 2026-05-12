@@ -81,10 +81,8 @@ const SelectorHeading = memo<
   Pick<Props, 'onClickClose'> & { wrapperClassName: string; className: string }
 >(({ onClickClose, wrapperClassName, className }) => (
   <div className={wrapperClassName}>
-    {/* eslint-disable-next-line smarthr/require-i18n-text */}
     <Heading className={className}>Language</Heading>
     <Button type="button" size="S" onClick={onClickClose}>
-      {/* eslint-disable-next-line smarthr/require-i18n-text */}
       <FaXmarkIcon alt="close" />
     </Button>
   </div>

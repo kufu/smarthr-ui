@@ -137,7 +137,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
     }, [])
 
     return (
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         onDrop={onDrop}
         onDragOver={onDragOver}
@@ -152,7 +151,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           label={selectButtonLabel}
         />
         <VisuallyHiddenText>
-          {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
             data-smarthr-ui-input="true"

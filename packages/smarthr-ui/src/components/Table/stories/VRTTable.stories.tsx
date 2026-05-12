@@ -53,7 +53,6 @@ export default {
                       )}
                       <TdCheckbox
                         checked={i % 2 === 0}
-                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name="tbody_checkbox"
                       />
@@ -82,7 +81,6 @@ export default {
                       )}
                       <TdRadioButton
                         checked={i === 0}
-                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name={`tbody_radio--${fixed}--${borderType}`}
                       />

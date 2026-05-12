@@ -229,7 +229,6 @@ const MemoizedHeading = memo<
   return (
     <Heading
       {...rest}
-      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
         prefix: icon,

@@ -67,7 +67,6 @@ export const CommonButton = memo<Props>(
         )
       case 'button':
         return (
-          // eslint-disable-next-line smarthr/best-practice-for-button-element
           <button {...(rest as ButtonProps)} className={actualClassName}>
             {prefix}
             {children}

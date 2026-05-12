@@ -4,7 +4,6 @@ const DISCLOSURE_CHANGE_EVENT = 'smarthr-ui:disclosure-change'
 type DisclosureChangeEventDetail = { id: string; expanded: boolean }
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface DocumentEventMap {
     [DISCLOSURE_CHANGE_EVENT]: CustomEvent<DisclosureChangeEventDetail>
   }

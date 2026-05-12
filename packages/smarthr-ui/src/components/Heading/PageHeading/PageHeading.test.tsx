@@ -1,4 +1,3 @@
-/* eslint-disable smarthr/a11y-heading-in-sectioning-content */
 import { render } from '@testing-library/react'
 
 import { PageHeading } from './PageHeading'
