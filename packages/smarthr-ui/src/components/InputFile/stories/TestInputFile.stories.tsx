@@ -6,7 +6,6 @@ import { FormControl } from '../../FormControl'
 import { Heading } from '../../Heading'
 import { InformationPanel } from '../../InformationPanel'
 import { Stack } from '../../Layout'
-import { Text } from '../../Text'
 import { InputFile } from '../InputFile'
 
 import type { Meta } from '@storybook/react-webpack5'

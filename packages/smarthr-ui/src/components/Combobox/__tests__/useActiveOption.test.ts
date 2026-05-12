@@ -16,12 +16,13 @@ describe('useActiveOption', () => {
       { id: 'id4', selected: false, isNew: false, item: { label: 'label3', value: 'value3' } },
     ],
   }
-  const resultDummy = renderHook((props) => useActiveOption(props), {
-    initialProps,
-  })
 
-  let result: (typeof resultDummy)['result']
-  let rerender: (typeof resultDummy)['rerender']
+  let result: ReturnType<
+    typeof renderHook<ReturnType<typeof useActiveOption>, typeof initialProps>
+  >['result']
+  let rerender: ReturnType<
+    typeof renderHook<ReturnType<typeof useActiveOption>, typeof initialProps>
+  >['rerender']
   beforeEach(() => {
     const renderHookResult = renderHook((props) => useActiveOption(props), { initialProps })
     result = renderHookResult.result

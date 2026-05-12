@@ -1,6 +1,5 @@
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { Td } from '../Td'

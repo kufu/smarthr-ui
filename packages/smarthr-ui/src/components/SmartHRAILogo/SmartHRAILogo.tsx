@@ -8,7 +8,7 @@ type AbstractProps = {
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof AbstractProps>
 
 export const SmartHRAILogo = memo<Props>(
-  ({ alt = 'SmartHR（スマートHR） AI', width, height, fill, ...rest }) => {
+  ({ alt = 'SmartHR（スマートHR） AI', width, height, ...rest }) => {
     const style = useMemo(
       () => ({
         ...(width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }),

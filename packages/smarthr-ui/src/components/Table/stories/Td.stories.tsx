@@ -1,5 +1,4 @@
 import { Chip } from '../../Chip'
-import { Text } from '../../Text'
 import { Table } from '../Table'
 import { Td } from '../Td'
 import { Th } from '../Th'
