@@ -57,7 +57,7 @@ export const ControlledStepFormDialog: FC<Props> = ({ portalParent, id, firstSte
 
   return createPortal(
     <StepFormDialogProvider firstStep={firstStep}>
-      <ActualControlledStepFormDialog {...rest} id={id} firstStep={firstStep} />
+      <ActualControlledStepFormDialog {...rest} firstStep={firstStep} />
     </StepFormDialogProvider>,
   )
 }
