@@ -16,13 +16,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useDecorators } from '../../hooks/useDecorators'
 import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import type { DecoratorsType } from '../../hooks/useDecorators'
 
 const classNameGenerator = tv({
   slots: {
@@ -74,8 +71,8 @@ type AbstractProps = PropsWithChildren<{
   disabled?: boolean
   /** フォームにエラーがあるかどうか */
   error?: boolean
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'selectButtonLabel'>
+  /** ファイル選択ボタンのラベル */
+  selectButtonLabel?: string
 }>
 type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
 
@@ -85,7 +82,10 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, Props>(
-  ({ children, onSelectFiles, multiple = true, disabled, error, decorators, ...rest }, ref) => {
+  (
+    { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
+    ref,
+  ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
     const classNames = useMemo(() => {
@@ -149,7 +149,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           onClick={onClickButton}
           disabled={disabled}
           className={classNames.button}
-          decorators={decorators}
+          label={selectButtonLabel}
         />
         <VisuallyHiddenText>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
@@ -160,6 +160,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             type="file"
             multiple={multiple}
             disabled={disabled}
+            tabIndex={-1}
             aria-invalid={error || undefined}
             onChange={onChange}
           />
@@ -170,25 +171,23 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 )
 
 const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> & Pick<Props, 'decorators'> & { onClick: () => void }
->(({ onClick, decorators, ...rest }) => {
+  ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
+>(({ onClick, label, ...rest }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      selectButtonLabel: localize({
+  const buttonLabel = useMemo(
+    () =>
+      label ||
+      localize({
         id: 'smarthr-ui/DropZone/selectButtonLabel',
         defaultText: 'ファイルを選択',
       }),
-    }),
-    [localize],
+    [label, localize],
   )
-
-  const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
 
   return (
     <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
-      {decorated.selectButtonLabel}
+      {buttonLabel}
     </Button>
   )
 })

@@ -44,7 +44,7 @@ export const Playground: StoryObj<typeof DropdownMenuButton> = {
   args: {
     trigger: {
       children: 'その他の操作',
-      size: 'default',
+      size: 'M',
     },
   },
 }
@@ -61,7 +61,7 @@ export const TriggerSize: StoryObj<typeof DropdownMenuButton> = {
   args: {
     trigger: {
       children: 'ドロップダウンメニューボタンラベル',
-      size: 's',
+      size: 'S',
     },
   },
 }

@@ -2,10 +2,10 @@ import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/
 
 import { BarChart } from './BarChart'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta<typeof BarChart> = {
-  title: 'BarChart',
+  title: 'Charts/BarChart',
   component: BarChart,
   decorators: [
     (Story) => (
@@ -91,5 +91,27 @@ export const WithChartJsOptions: Story = {
       ],
     },
     options: chartJsOptionsExamples.comprehensive,
+  },
+}
+
+export const WithAnnotations: Story = {
+  name: 'with chartjs-plugin-annotation options',
+  args: {
+    data: singleSmall,
+    options: {
+      plugins: {
+        annotation: {
+          annotations: {
+            average: {
+              type: 'line',
+              yMin: 10,
+              yMax: 10,
+              borderColor: 'rgb(255, 99, 132)',
+              borderWidth: 2,
+            },
+          },
+        },
+      },
+    },
   },
 }

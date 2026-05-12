@@ -1,6 +1,6 @@
-import { Reel } from '..'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
+import { Reel } from '../Reel'
 
 import type { Gap } from '../../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

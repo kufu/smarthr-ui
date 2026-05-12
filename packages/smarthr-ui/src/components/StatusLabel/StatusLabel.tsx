@@ -9,7 +9,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-StatusLabel',
     'shr-border-shorthand shr-box-content shr-inline-flex shr-min-h-em shr-min-w-[3.5em] shr-items-center shr-justify-center shr-gap-0.25 shr-whitespace-nowrap shr-border-current shr-bg-white shr-px-0.5 shr-py-0.25 shr-text-sm shr-font-bold',

@@ -73,8 +73,8 @@ const classNameGenerator = tv({
       },
     },
     triggerSize: {
-      default: {},
-      s: {
+      M: {},
+      S: {
         iconWrapper: '-shr-translate-x-0.25',
       },
     },
@@ -224,7 +224,7 @@ export const FilterDropdown: FC<Props> = ({
                 <div className={classNames.resetButtonArea}>
                   <Button
                     variant="text"
-                    size="s"
+                    size="S"
                     prefix={<FaRotateLeftIcon />}
                     onClick={onReset}
                     disabled={calcedResponseStatus.isProcessing}

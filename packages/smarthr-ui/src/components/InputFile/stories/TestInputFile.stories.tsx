@@ -56,9 +56,7 @@ export const ManualTest1 = () => {
       </form>
       <Heading>送信結果</Heading>
       <BaseColumn>
-        <Text as="output" className="shr-whitespace-pre">
-          {result}
-        </Text>
+        <output className="shr-whitespace-pre">{result}</output>
       </BaseColumn>
     </Stack>
   )
@@ -106,9 +104,7 @@ export const ManualTest2 = () => {
       </form>
       <Heading>送信結果</Heading>
       <BaseColumn>
-        <Text as="output" className="shr-whitespace-pre">
-          {result}
-        </Text>
+        <output className="shr-whitespace-pre">{result}</output>
       </BaseColumn>
     </Stack>
   )
@@ -145,9 +141,7 @@ export const ManualTest3 = () => {
       </form>
       <Heading>onChange</Heading>
       <BaseColumn>
-        <Text as="output" className="shr-whitespace-pre">
-          {value.map((file) => file.name).join('\n')}
-        </Text>
+        <output className="shr-whitespace-pre">{value.map((file) => file.name).join('\n')}</output>
       </BaseColumn>
     </Stack>
   )
@@ -187,9 +181,7 @@ export const ManualTest4 = () => {
       </form>
       <Heading>onChange</Heading>
       <BaseColumn>
-        <Text as="output" className="shr-whitespace-pre">
-          {value.map((file) => file.name).join('\n')}
-        </Text>
+        <output className="shr-whitespace-pre">{value.map((file) => file.name).join('\n')}</output>
       </BaseColumn>
     </Stack>
   )

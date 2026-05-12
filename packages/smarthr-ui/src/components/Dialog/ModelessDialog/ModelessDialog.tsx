@@ -101,11 +101,11 @@ const classNameGenerator = tv({
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5',
       'hover:shr-bg-white-darken',
       /* DialogHandlerにフォーカスが当たっているときは、headerもフォーカス状態のスタイルにする。 */
-      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-bg-white-darken has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-transition-colors has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-duration-100 has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-ease-in-out',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-focus-indicator has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-bg-white-darken has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-transition-colors has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-duration-100 has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-ease-in-out',
     ],
     dialogHandler: [
       'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-border-none shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
-      'shr-cursor-[inherit] shr-bg-[unset] focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
+      'focus-visible:shr-focus-indicator--none shr-cursor-[inherit] shr-bg-[unset]',
     ],
     headingEl: ['shr-my-1 shr-me-1'],
     closeButtonLayout: [
@@ -382,7 +382,7 @@ export const ModelessDialog: FC<Props> = ({
           className={classNames.wrapper}
           style={positionStyle}
         >
-          {/* dummy element for focus management. */}
+          {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
           <div className={classNames.header}>
             <Handler onArrowKeyDown={handleArrowKey} className={classNames.dialogHandler} />
@@ -472,7 +472,7 @@ const CloseButton = memo<{
     <div className={className}>
       <Button
         type="button"
-        size="s"
+        size="S"
         onClick={onClick}
         className="smarthr-ui-ModelessDialog-closeButton"
       >

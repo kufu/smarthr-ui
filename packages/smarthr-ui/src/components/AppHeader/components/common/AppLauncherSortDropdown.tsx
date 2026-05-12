@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type FC,
   type MouseEvent,
@@ -135,7 +137,7 @@ const TriggerButton = memo<
   <DropdownTrigger>
     <Button
       ref={triggerRef}
-      size="s"
+      size="S"
       variant="text"
       suffix={<FaCaretDownIcon />}
       className={className}

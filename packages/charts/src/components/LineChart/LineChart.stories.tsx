@@ -2,10 +2,10 @@ import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/
 
 import { LineChart } from './LineChart'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta<typeof LineChart> = {
-  title: 'LineChart',
+  title: 'Charts/LineChart',
   component: LineChart,
   decorators: [
     (Story) => (

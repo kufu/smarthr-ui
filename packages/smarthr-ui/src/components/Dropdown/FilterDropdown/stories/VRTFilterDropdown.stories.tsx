@@ -22,8 +22,8 @@ const _cases: Array<
   >
 > = [
   { trigger: { onlyIcon: true } },
-  { trigger: { size: 's' }, filtered: true, disabled: true },
-  { trigger: { size: 's' } },
+  { trigger: { size: 'S' }, filtered: true, disabled: true },
+  { trigger: { size: 'S' } },
   { filtered: false, disabled: true },
   { filtered: true },
 ]

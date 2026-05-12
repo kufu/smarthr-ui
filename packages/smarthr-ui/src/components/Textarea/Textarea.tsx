@@ -22,8 +22,6 @@ import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { DecoratorsType } from '../../hooks/useDecorators'
-
 type AbstractProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
@@ -39,8 +37,6 @@ type AbstractProps = {
   rows?: number
   /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
   maxLetters?: number
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
   /**
    * placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -61,15 +57,6 @@ const getStringLength = (value: TextareaValue) => {
   const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
-
-const DECORATOR_DEFAULT_TEXTS = {
-  beforeMaxLettersCount: 'あと',
-  afterMaxLettersCount: '文字',
-  afterMaxLettersCountExceeded: 'オーバー',
-  beforeScreenReaderMaxLettersDescription: '最大',
-  afterScreenReaderMaxLettersDescription: '文字入力できます',
-} as const
-type DecoratorKeyTypes = keyof typeof DECORATOR_DEFAULT_TEXTS
 
 const classNameGenerator = tv({
   slots: {
@@ -123,7 +110,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       autoResize = false,
       maxRows = Infinity,
       rows = 2,
-      decorators,
       error,
       onChange,
       value,
@@ -144,78 +130,36 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
     const buildAvailableLetters = useCallback(
-      (availableLetters: number): ReactNode => {
-        if (decorators?.beforeMaxLettersCount || decorators?.afterMaxLettersCount) {
-          return (
-            <>
-              {decorators.beforeMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.beforeMaxLettersCount)}
-              {availableLetters}
-              {decorators.afterMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount)}
-            </>
-          )
-        }
-        return (
-          <Localizer
-            id="smarthr-ui/Textarea/availableLetters"
-            defaultText="あと{availableLetters}文字"
-            values={{ availableLetters }}
-          />
-        )
-      },
-      [decorators],
+      (availableLetters: number): ReactNode => (
+        <Localizer
+          id="smarthr-ui/Textarea/availableLetters"
+          defaultText="あと{availableLetters}文字"
+          values={{ availableLetters }}
+        />
+      ),
+      [],
     )
 
     const buildmaxLettersExceeded = useCallback(
-      (exceededLetters: number): ReactNode => {
-        if (decorators?.afterMaxLettersCount || decorators?.afterMaxLettersCountExceeded) {
-          return (
-            <>
-              {exceededLetters}
-              {decorators.afterMaxLettersCount?.(DECORATOR_DEFAULT_TEXTS.afterMaxLettersCount)}
-              {decorators.afterMaxLettersCountExceeded?.(
-                DECORATOR_DEFAULT_TEXTS.afterMaxLettersCountExceeded,
-              )}
-            </>
-          )
-        }
-        return (
-          <Localizer
-            id="smarthr-ui/Textarea/maxLettersExceeded"
-            defaultText="{exceededLetters}文字オーバー"
-            values={{ exceededLetters }}
-          />
-        )
-      },
-      [decorators],
+      (exceededLetters: number): ReactNode => (
+        <Localizer
+          id="smarthr-ui/Textarea/maxLettersExceeded"
+          defaultText="{exceededLetters}文字オーバー"
+          values={{ exceededLetters }}
+        />
+      ),
+      [],
     )
 
     const buildScreenReaderMaxLettersDescription = useCallback(
-      (internalMaxLetters: number): ReactNode => {
-        if (
-          decorators?.beforeScreenReaderMaxLettersDescription ||
-          decorators?.afterScreenReaderMaxLettersDescription
-        ) {
-          return (
-            <>
-              {decorators.beforeScreenReaderMaxLettersDescription?.(
-                DECORATOR_DEFAULT_TEXTS.beforeScreenReaderMaxLettersDescription,
-              )}
-              {internalMaxLetters}
-              {decorators.afterScreenReaderMaxLettersDescription?.(
-                DECORATOR_DEFAULT_TEXTS.afterScreenReaderMaxLettersDescription,
-              )}
-            </>
-          )
-        }
-        return (
-          <Localizer
-            id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
-            defaultText="最大{maxLetters}文字入力できます"
-            values={{ maxLetters: internalMaxLetters }}
-          />
-        )
-      },
-      [decorators],
+      (internalMaxLetters: number): ReactNode => (
+        <Localizer
+          id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
+          defaultText="最大{maxLetters}文字入力できます"
+          values={{ maxLetters: internalMaxLetters }}
+        />
+      ),
+      [],
     )
 
     const getCounterMessage = useCallback(

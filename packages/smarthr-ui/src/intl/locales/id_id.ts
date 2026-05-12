@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { locale as ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
@@ -103,4 +103,30 @@ export const locale = {
   'smarthr-ui/Th/sortDirectionNone': 'Tanpa pengurutan',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'Pilih/hapus semua item',
   'smarthr-ui/ThCheckbox/checkColumnName': 'Pilih',
+  'smarthr-ui/ErrorScreen/homeLink': 'Kembali ke halaman beranda',
+  'smarthr-ui/ErrorScreen/smarthrLink': 'Kembali ke SmartHR',
+  'smarthr-ui/AuthErrorScreen/title': 'Ada masalah dengan autentikasi Anda.',
+  'smarthr-ui/ForbiddenErrorScreen/title': 'Anda tidak memiliki izin untuk melihat halaman ini.',
+  'smarthr-ui/ForbiddenErrorScreen/description': 'Untuk informasi lebih lanjut, silakan hubungi administrator di perusahaan Anda.',
+  'smarthr-ui/NotFoundErrorScreen/title': 'Tidak dapat menemukan halaman ini.',
+  'smarthr-ui/NotFoundErrorScreen/description': '',
+  'smarthr-ui/UnauthorizedErrorScreen/title': 'Anda Telah Logout Karena Tidak Ada Aktivitas Selama Jangka Waktu Tertentu',
+  'smarthr-ui/UnauthorizedErrorScreen/description1': 'Anda telah logout secara otomatis karena tidak ada aktivitas selama jangka waktu tertentu.',
+  'smarthr-ui/UnauthorizedErrorScreen/description2': 'Untuk mengakses halaman yang dituju, Anda perlu login kembali.',
+  'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': 'Login ulang',
+  'smarthr-ui/UnexpectedErrorScreen/title': 'Terjadi kesalahan tak terduga.',
+  'smarthr-ui/UnexpectedErrorScreen/apology': '',
+  'smarthr-ui/UnexpectedErrorScreen/possibleCause': '',
+  'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
+  'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
 } as const satisfies Record<keyof typeof ja, string>

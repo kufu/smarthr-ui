@@ -60,7 +60,7 @@ const wrapperClassNameGenerator = tv({
       true: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
     },
     readOnly: {
-      true: '[&&&]:shr-border-[theme(backgroundColor.background)] [&&&]:shr-bg-background',
+      true: '[&&&]:shr-border-[theme(backgroundColor.column)] [&&&]:shr-bg-column',
     },
   },
 })

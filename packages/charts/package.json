@@ -1,7 +1,7 @@
 {
   "name": "@smarthr/smarthr-ui-charts",
   "description": "Chart components for SmartHR UI built with React.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "SmartHR-UI Team",
   "type": "module",
   "main": "lib/index.js",
@@ -52,6 +52,7 @@
   "dependencies": {
     "@smarthr/patternomaly": "^2.0.0",
     "chart.js": "^4.5.1",
+    "chartjs-plugin-annotation": "^3.1.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "deepmerge": "^4.3.1",
     "react-chartjs-2": "^5.3.1"
@@ -85,6 +86,7 @@
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
+    "vite": "7.3.2",
     "vitest": "^4.0.18"
   },
   "keywords": [
