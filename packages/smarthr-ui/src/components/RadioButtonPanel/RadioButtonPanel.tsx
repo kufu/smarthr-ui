@@ -48,6 +48,8 @@ const classNameGenerator = tv({
 })
 
 export const RadioButtonPanel: FC<Props> = ({
+  // NOTE: onClickは型上受け取れるが、onDelegateClickで独自実装しているため使用しない
+  // TODO: Props型から除外するか、適切にハンドリングして二重発火を防ぐべき
   onClick: _onClick,
   as,
   className,
