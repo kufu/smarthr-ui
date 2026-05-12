@@ -30,7 +30,7 @@ overrides:
   storybook@>=9.0.0 <9.1.17: '>=9.1.17'
   tar@<=7.5.2: '>=7.5.9'
   tar@<=7.5.3: '>=7.5.9'
-  tar@<7.5.7: '>=7.5.9'
+  tar@<7.5.7: '>=7.5.15'
   qs@<6.14.1: '>=6.15.1'
   qs@>=6.7.0 <=6.14.1: '>=6.15.1'
   tar@<7.5.8: '>=7.5.9'
@@ -1060,10 +1060,6 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
-
-  '@babel/runtime@7.28.6':
-    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
-    engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.29.2':
     resolution: {integrity: sha512-JiDShH45zKHWyGe4ZNVRrCjBz8Nh9TMmZG1kh4QTK8hCBTWBi8Da+i7s1fJw7/lYpM4ccepSNfqzZ/QvABBi5g==}
@@ -2639,7 +2635,7 @@ packages:
       react: ^19.2.4
       react-dom: ^19.2.4
       storybook: ^9.1.19
-      vite: '>=7.3.2'
+      vite: '>=6.4.1'
 
   '@storybook/react@9.1.19':
     resolution: {integrity: sha512-UuTGumzQ1/Nffm1rWjrfFefL1a7uZlJEk34Cjp8N5uA9qPEX68e1OEeFnHX3nBk+8yEadPfs77vJox76aeTC6g==}
@@ -6524,18 +6520,6 @@ packages:
     resolution: {integrity: sha512-YnlPC6JqnZl6aO4uRc+dx5PHguiR9S6WeoLtpxNT9wIG+BDya7ZNE1q7KOjVgaA73hKhKLpVPgJ5QA9THQ5BRg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  ws@8.19.0:
-    resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.20.0:
     resolution: {integrity: sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==}
     engines: {node: '>=10.0.0'}
@@ -7360,8 +7344,6 @@ snapshots:
       make-dir: 2.1.0
       pirates: 4.0.6
       source-map-support: 0.5.21
-
-  '@babel/runtime@7.28.6': {}
 
   '@babel/runtime@7.29.2': {}
 
@@ -8636,7 +8618,7 @@ snapshots:
 
   '@testing-library/react@16.3.2(@testing-library/dom@10.4.0)(@types/react-dom@19.2.3(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       '@testing-library/dom': 10.4.0
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
@@ -9573,7 +9555,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       csstype: 3.2.3
 
   dot-prop@5.3.0:
@@ -10806,7 +10788,7 @@ snapshots:
       whatwg-encoding: 3.1.1
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
-      ws: 8.19.0
+      ws: 8.20.0
       xml-name-validator: 5.0.0
     optionalDependencies:
       canvas: 3.1.0
@@ -11543,7 +11525,7 @@ snapshots:
 
   polished@4.3.1:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
 
   portfinder@1.0.28:
     dependencies:
@@ -11761,7 +11743,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.2
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -12215,7 +12197,7 @@ snapshots:
       esbuild-register: 3.6.0(esbuild@0.28.0)
       recast: 0.23.11
       semver: 7.7.4
-      ws: 8.19.0
+      ws: 8.20.0
     optionalDependencies:
       prettier: 3.6.2
     transitivePeerDependencies:
@@ -12961,8 +12943,6 @@ snapshots:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
-
-  ws@8.19.0: {}
 
   ws@8.20.0: {}
 
