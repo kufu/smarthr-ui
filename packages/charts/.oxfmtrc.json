@@ -1,10 +1,14 @@
 {
   "extends": "oxlint-config-smarthr/.oxfmtrc.json",
-  "printWidth": 130,
+  "printWidth": 100,
   "singleQuote": true,
   "trailingComma": "all",
   "semi": false,
   "arrowParens": "always",
   "bracketSpacing": true,
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "sortTailwindcss": {
+    "functions": ["tv"],
+    "config": "./tailwind.config.js"
+  }
 }

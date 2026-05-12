@@ -13,8 +13,8 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import deepmerge from 'deepmerge'
 
 import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'

@@ -4,4 +4,12 @@ module.exports = {
   plugins: ['prettier-plugin-tailwindcss'],
   tailwindFunctions: ['tv'],
   tailwindConfig: './packages/smarthr-ui/tailwind.config.ts',
+  overrides: [
+    {
+      files: 'packages/charts/**/*',
+      options: {
+        tailwindConfig: './packages/charts/tailwind.config.js',
+      },
+    },
+  ],
 }
