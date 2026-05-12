@@ -1,4 +1,4 @@
-import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/testData'
+import { chartJsOptionsExamples, singleSmall } from '../__stories__/testData'
 
 import { Chart } from './Chart'
 

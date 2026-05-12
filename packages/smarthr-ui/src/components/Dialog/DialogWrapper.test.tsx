@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../intl'
@@ -6,7 +6,6 @@ import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-import { MessageDialogContent } from './ControlledMessageDialog'
 import { DialogCloser } from './DialogCloser'
 import { DialogContent } from './DialogContent'
 import { DialogTrigger } from './DialogTrigger'

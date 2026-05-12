@@ -1,0 +1,10 @@
+{
+  "extends": "oxlint-config-smarthr/.oxfmtrc.json",
+  "printWidth": 100,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": false,
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "endOfLine": "lf"
+}

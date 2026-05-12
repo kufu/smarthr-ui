@@ -25,9 +25,7 @@ const classNameGenerator = tv({
 export const SmartHRLogo = memo<Props>(
   ({ alt = 'SmartHR（スマートHR）', width, height, fill, className, ...rest }) => {
     const style = useMemo(
-      () => ({
-        ...(width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }),
-      }),
+      () => (width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }),
       [height, width],
     )
     const actualClassName = useMemo(

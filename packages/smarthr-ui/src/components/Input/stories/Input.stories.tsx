@@ -1,6 +1,5 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColor as tailwindBackgroundColor } from '../../../tailwind'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { CurrencyInput } from '../CurrencyInput'

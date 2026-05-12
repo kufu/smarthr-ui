@@ -1,4 +1,4 @@
-import { fireEvent, userEvent, within } from 'storybook/test'
+import { userEvent } from 'storybook/test'
 
 import { FaChartAreaIcon, FaChartBarIcon, FaChartLineIcon } from '../../Icon'
 import { Stack } from '../../Layout'
@@ -33,7 +33,7 @@ export default {
   // icon            false                   3       default
   // icon            true                    1       s
   // icon            false                   1       s
-  render: (args: any) => (
+  render: (_args: any) => (
     <Stack>
       <SegmentedControl options={iconOptions(true)} value={null} size="M" />
       <SegmentedControl options={textOptions(false)} value={null} size="S" />

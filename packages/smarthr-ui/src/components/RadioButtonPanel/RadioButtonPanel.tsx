@@ -48,7 +48,7 @@ const classNameGenerator = tv({
 })
 
 export const RadioButtonPanel: FC<Props> = ({
-  onClick,
+  onClick: _onClick,
   as,
   className,
   children,

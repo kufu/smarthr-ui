@@ -78,7 +78,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   onPressEscape = onClickClose,
   responseStatus,
   className,
-  id,
+  id: _id,
   isOpen,
   ...rest
 }) => {
