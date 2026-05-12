@@ -27,12 +27,7 @@ const classNameGenerator = tv({
 })
 
 export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
-  (
-    // NOTE: classNameは型上受け取れるが、classNames.wrapperで独自実装しているため使用しない
-    // TODO: Props型から除外するか、classNames.wrapperとマージして適切にハンドリングすべき
-    { className: _className, children, fixedHead, ...rest },
-    forwardedRef: ForwardedRef<HTMLDivElement>,
-  ) => {
+  ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
     const innerRef = useRef<HTMLDivElement | null>(null)
     const classNames = useMemo(() => {
       const { wrapper } = classNameGenerator()
