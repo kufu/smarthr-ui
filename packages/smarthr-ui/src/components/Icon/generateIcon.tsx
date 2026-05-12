@@ -1,10 +1,12 @@
+'use client'
+
 import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { colors, fontSize, textColor } from '../../tailwind'
+import { color as defaultColorPalette, fontSize, textColor } from '../../tailwind'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { FontSizes } from '../../themes/createFontSize'
+import type { FontSizes } from '../../themes'
 import type { IconType } from 'react-icons'
 
 /**
@@ -26,16 +28,6 @@ export const colorSet = {
 } as const
 
 const existsColor = (color: string): color is keyof typeof colorSet => color in colorSet
-
-const fontSizeMap = {
-  XXS: '2xs',
-  XS: 'xs',
-  S: 'sm',
-  M: 'base',
-  L: 'lg',
-  XL: 'xl',
-  XXL: '2xl',
-} as const
 
 type IconProps = {
   /**
@@ -110,13 +102,13 @@ export const generateIcon = (SvgIcon: IconType) => {
             return textColor[colorName as keyof typeof textColor]
           }
 
-          return colors[colorName as keyof typeof colors]
+          return defaultColorPalette[colorName as keyof typeof defaultColorPalette] as string
         }
 
         return color
       }, [color])
 
-      const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
+      const iconSize = size ? fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
           {...rest}

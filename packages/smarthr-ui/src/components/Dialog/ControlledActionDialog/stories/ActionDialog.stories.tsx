@@ -38,7 +38,7 @@ export default {
     )
   },
   args: {
-    heading: 'ダイアログタイトル',
+    heading: 'アクションダイアログ（Controlled）',
     actionText: 'アクションボタンラベル',
   },
   parameters: {

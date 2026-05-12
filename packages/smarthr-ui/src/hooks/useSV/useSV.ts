@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../useEnvironment'
 
-import type { Environment } from '../useEnvironment/useEnvironment'
+import type { Environment } from '../useEnvironment'
 
 // tailwind-variantsのslotsから型を抽出する型ヘルパー
 type Slots<T> = T extends { slots: infer S }

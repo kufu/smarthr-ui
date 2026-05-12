@@ -1,4 +1,4 @@
-triggerSize: default, s
+triggerSize: M, S
 onlyIconTrigger: false, true
 triggerIcon: udnefined (10), 指定あり
 

@@ -1,7 +1,7 @@
 import { type ComponentProps, type FC, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { bgColors } from '../../../tailwind'
+import { backgroundColor } from '../../../tailwind'
 import { Base } from '../Base'
 
 type AbstractProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'> &
@@ -11,7 +11,7 @@ type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
   variants: {
-    bgColor: bgColors,
+    bgColor: backgroundColor,
     rounded: {
       true: 'shr-rounded-l',
       all: 'shr-rounded-l',

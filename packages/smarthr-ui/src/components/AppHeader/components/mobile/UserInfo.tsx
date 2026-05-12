@@ -87,7 +87,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
     <>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="skeleton" size="s" className={classNames.iconButton}>
+          <Button variant="skeleton" size="S" className={classNames.iconButton}>
             <span className={classNames.iconButtonInner}>
               <FaUserLargeIcon alt={translated.account} className="shr-fill-grey" />
             </span>

@@ -48,7 +48,7 @@ export default {
     )
   },
   args: {
-    heading: 'フォームダイアログ',
+    heading: 'フォームダイアログ（Controlled）',
     actionText: '送信',
   },
   parameters: {

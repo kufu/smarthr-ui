@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from 'react'
 
-import type { CreatedMediaQueryTheme } from '../../themes/createMediaQuery'
+import type { CreatedMediaQueryTheme } from '../../themes'
 
 export type Environment = {
   mobile: boolean

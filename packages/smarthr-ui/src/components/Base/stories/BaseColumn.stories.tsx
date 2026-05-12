@@ -1,4 +1,5 @@
-import { backgroundColor, bgColors } from '../../../tailwind'
+import { backgroundColor } from '../../../tailwind'
+import { defaultBackgroundColor as backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
@@ -27,7 +28,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
+      values: [{ name: 'light', value: backgroundColorValue.white }],
     },
     chromatic: { disableSnapshot: true },
   },
@@ -58,7 +59,7 @@ export const BgColor: StoryObj<typeof BaseColumn> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {Object.keys(bgColors).map((bgColor) => (
+      {Object.keys(backgroundColor).map((bgColor) => (
         <BaseColumn {...args} bgColor={bgColor as any} key={bgColor}>
           {bgColor}
         </BaseColumn>

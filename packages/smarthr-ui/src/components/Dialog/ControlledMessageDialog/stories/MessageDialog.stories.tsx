@@ -21,7 +21,7 @@ export default {
     )
   },
   args: {
-    heading: 'メッセージダイアログタイトル',
+    heading: 'メッセージダイアログ（Controlled）',
     children: 'メッセージダイアログ本文',
   },
   parameters: {

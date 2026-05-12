@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { Chip, classNameGenerator } from '../Chip'
+import { Chip } from '../Chip'
 
 import type { Meta } from '@storybook/react-webpack5'
 
@@ -8,7 +8,7 @@ export default {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, true].map((disabled) =>
-        Object.keys(classNameGenerator.variants.color).map((color) => (
+        ['grey', 'blue', 'green', 'orange', 'red'].map((color) => (
           <Chip {...args} disabled={disabled} key={`${disabled}${color}`} color={color as any} />
         )),
       )}

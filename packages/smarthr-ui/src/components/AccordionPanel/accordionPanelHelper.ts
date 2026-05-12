@@ -21,7 +21,7 @@ export const getNewExpandedItems = (
   return newState
 }
 
-export const getSiblingButtons = (parent: HTMLDivElement): HTMLElement[] =>
+const getSiblingButtons = (parent: HTMLDivElement): HTMLElement[] =>
   Array.from(parent.querySelectorAll('[data-component="AccordionHeaderButton"]'))
 
 export const focusFirstSibling = (parent: HTMLDivElement): void => {
