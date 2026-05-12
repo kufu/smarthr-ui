@@ -12,7 +12,6 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
@@ -37,7 +36,6 @@ type ObjectHeadingType = {
   unrecommendedTag?: HeadingTagTypes
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type DecoratorKeyTypes = 'openButtonLabel' | 'closeButtonLabel'
 type AbstractProps = PropsWithChildren<{
   /** パネルのタイトル */
   heading: HeadingType
@@ -45,8 +43,6 @@ type AbstractProps = PropsWithChildren<{
   toggleable?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
 }> &
   VariantProps<typeof classNameGenerator>
 
@@ -54,10 +50,10 @@ type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
-    header: 'shr-p-1.5',
+    header: 'shr-rounded-t-l shr-p-1.5',
     heading: 'smarthr-ui-InformationPanel-heading',
     toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
@@ -76,7 +72,7 @@ export const classNameGenerator = tv({
     active: {
       true: {},
       false: {
-        header: 'shr-py-1',
+        header: 'shr-rounded-b-l shr-py-1',
       },
     },
     bold: {
@@ -133,7 +129,6 @@ export const InformationPanel: FC<Props> = ({
   className,
   children,
   onClickTrigger,
-  decorators,
   ...rest
 }) => {
   const [active, setActive] = useState(activeProps)
@@ -179,7 +174,7 @@ export const InformationPanel: FC<Props> = ({
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
+    <Base {...rest} as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         <MemoizedHeading
           heading={heading}
@@ -194,7 +189,6 @@ export const InformationPanel: FC<Props> = ({
             setActive={setActive}
             contentId={contentId}
             className={classNames.toggleableButton}
-            decorators={decorators}
           />
         )}
       </Sidebar>
@@ -249,30 +243,28 @@ const MemoizedHeading = memo<
 })
 
 const ToggleableButton: FC<
-  Pick<Props, 'onClickTrigger' | 'decorators'> & {
+  Pick<Props, 'onClickTrigger'> & {
     active: boolean
     setActive: (flg: boolean) => void
     contentId: string
     className: string
   }
-> = ({ active, onClickTrigger, setActive, contentId, className, decorators }) => {
+> = ({ active, onClickTrigger, setActive, contentId, className }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
+  const buttonLabels = useMemo(
     () => ({
-      openButtonLabel: localize({
+      open: localize({
         id: 'smarthr-ui/InformationPanel/openButtonLabel',
         defaultText: '開く',
       }),
-      closeButtonLabel: localize({
+      close: localize({
         id: 'smarthr-ui/InformationPanel/closeButtonLabel',
         defaultText: '閉じる',
       }),
     }),
     [localize],
   )
-
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   const onClick = useMemo(
     () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
@@ -285,10 +277,10 @@ const ToggleableButton: FC<
       aria-controls={contentId}
       onClick={onClick}
       suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-      size="s"
+      size="S"
       className={className}
     >
-      {decorated[active ? 'closeButtonLabel' : 'openButtonLabel']}
+      {active ? buttonLabels.close : buttonLabels.open}
     </Button>
   )
 }

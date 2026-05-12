@@ -24,7 +24,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
   (
     {
       type = 'button',
-      size = 'default',
+      size = 'M',
       prefix,
       suffix,
       wide = false,

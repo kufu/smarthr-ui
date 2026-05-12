@@ -12,7 +12,7 @@ export default {
   subcomponents: { AnchorButton, UnstyledButton },
   render: (args) => <Button {...args} />,
   args: {
-    size: 'default',
+    size: 'M',
     children: 'ボタン',
     variant: 'secondary',
     disabled: false,
@@ -87,7 +87,7 @@ export const Variant: StoryObj<typeof Button> = {
 export const Size: StoryObj<typeof Button> = {
   name: 'size',
   args: {
-    size: 's',
+    size: 'S',
   },
 }
 

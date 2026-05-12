@@ -9,9 +9,9 @@ export default {
     <Stack>
       <DropZone {...args} />
       <DropZone {...args}>children あり</DropZone>
-      <DropZone {...args} decorators={{ selectButtonLabel: (txt) => `select file.(${txt})` }} />
       <DropZone {...args} disabled />
       <DropZone {...args} error />
+      <DropZone {...args} selectButtonLabel="Choose File" />
     </Stack>
   ),
   parameters: {

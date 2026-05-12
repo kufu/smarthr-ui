@@ -1,8 +1,10 @@
+'use client'
+
 import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../../../hooks/useTheme'
 import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../tailwind'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
@@ -81,7 +83,7 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
 const MemoizedDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => (
     <DropdownTrigger>
-      <Button className={className} size="s" suffix={<FaCaretDownIcon />}>
+      <Button className={className} size="S" suffix={<FaCaretDownIcon />}>
         <Translate>{children}</Translate>
       </Button>
     </DropdownTrigger>
@@ -95,6 +97,7 @@ const ContentBody = memo<
     buttonClassName: string
   }
 >(({ page, onSelectPage, translated, className, buttonClassName }) => {
+  const theme = useTheme()
   const isFavorite = page === 'favorite'
 
   const onClickButton = useCallback(
@@ -105,7 +108,10 @@ const ContentBody = memo<
   )
 
   const buttonPrefix = (
-    <FaCheckIcon color={textColor.main} alt={<Translate>{translated.checkIconAlt}</Translate>} />
+    <FaCheckIcon
+      color={theme.textColor.main}
+      alt={<Translate>{translated.checkIconAlt}</Translate>}
+    />
   )
 
   return (

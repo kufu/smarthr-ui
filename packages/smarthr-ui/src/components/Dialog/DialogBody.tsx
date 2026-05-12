@@ -1,7 +1,8 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { bgColors, paddingBlock, paddingInline } from '../../tailwind'
+import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
+import { Scroller } from '../Scroller'
 
 import type { Gap } from '../../types'
 
@@ -13,11 +14,11 @@ export type Props = PropsWithChildren<
 >
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-Dialog-body', 'shr-flex-auto shr-overflow-auto'],
+  base: ['smarthr-ui-Dialog-body', 'shr-flex-auto'],
   variants: {
     paddingBlock,
     paddingInline,
-    contentBgColor: bgColors,
+    contentBgColor: backgroundColor,
   },
 })
 
@@ -38,5 +39,5 @@ export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, classNam
     [actualPaddings.block, actualPaddings.inline, contentBgColor, className],
   )
 
-  return <div {...rest} className={actualClassName} />
+  return <Scroller {...rest} className={actualClassName} />
 }

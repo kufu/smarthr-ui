@@ -25,7 +25,7 @@ type SeparatePadding = {
   narrowModeInline?: Gap
 }
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   base: 'shr-mx-auto shr-w-full',
   variants: {
     size: {

@@ -1,3 +1,4 @@
+import { type CreatedBackgroundColorTheme, createBackgroundColor } from './createBackgroundColor'
 import { type BorderProperty, type CreatedBorderTheme, createBorder } from './createBorder'
 import {
   type BreakpointProperty,
@@ -26,6 +27,7 @@ import {
   createSpacing,
   createSpacingByChar,
 } from './createSpacing'
+import { type CreatedTextColorTheme, createTextColor } from './createTextColor'
 import { type CreatedZindexTheme, type ZIndexProperty, createZIndex } from './createZIndex'
 
 type ThemeProperty = {
@@ -43,6 +45,7 @@ type ThemeProperty = {
 }
 
 export type CreatedTheme = {
+  backgroundColor: CreatedBackgroundColorTheme
   border: CreatedBorderTheme
   breakpoint: CreatedBreakpointTheme
   color: CreatedColorTheme
@@ -55,6 +58,7 @@ export type CreatedTheme = {
   space: CreatedSpacingByCharTheme
   spacing: CreatedSpacingTheme
   spacingByChar: CreatedSpacingByCharTheme
+  textColor: CreatedTextColorTheme
   zIndex: CreatedZindexTheme
 }
 
@@ -64,6 +68,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
   const spacingByChar = createSpacingByChar(baseSize)
 
   return {
+    backgroundColor: createBackgroundColor(colorProperty),
     border: createBorder(theme.border, colorProperty),
     breakpoint: createBreakpoint(theme.breakpoint),
     color: createColor(colorProperty),
@@ -76,6 +81,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
     space: spacingByChar,
     spacing: createSpacing(baseSize),
     spacingByChar,
+    textColor: createTextColor(colorProperty),
     zIndex: createZIndex(theme.zIndex),
   }
 }

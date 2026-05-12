@@ -21,10 +21,10 @@ export const classNameGenerator = tv({
   },
   variants: {
     size: {
-      default: {
+      M: {
         inputWrapper: 'shr-px-1 shr-py-0.75 shr-text-base',
       },
-      s: {
+      S: {
         inputWrapper: 'shr-p-0.5 shr-text-sm',
       },
     },
@@ -38,6 +38,6 @@ export const classNameGenerator = tv({
     },
   },
   defaultVariants: {
-    size: 'default',
+    size: 'M',
   },
 })
