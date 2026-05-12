@@ -49,11 +49,12 @@ export default {
                     <tr key={i}>
                       {fixed === 'left' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                       <TdCheckbox
                         checked={i % 2 === 0}
+                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name="tbody_checkbox"
                       />
@@ -68,7 +69,7 @@ export default {
                       ))}
                       {fixed === 'right' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                     </tr>
@@ -77,11 +78,12 @@ export default {
                     <tr key={i}>
                       {fixed === 'left' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                       <TdRadioButton
                         checked={i === 0}
+                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name={`tbody_radio--${fixed}--${borderType}`}
                       />
@@ -96,7 +98,7 @@ export default {
                       ))}
                       {fixed === 'right' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                     </tr>

@@ -12,18 +12,18 @@ import {
   useState,
 } from 'react'
 
+import { Localizer } from '../../intl'
+import { Button } from '../Button'
+import { DropdownMenuButton } from '../Dropdown'
 import {
-  Button,
-  Cluster,
-  DropdownMenuButton,
   FaArrowRotateLeftIcon,
   FaMagnifyingGlassMinusIcon,
   FaMagnifyingGlassPlusIcon,
-  Loader,
-  Text,
-  VisuallyHiddenText,
-} from '../..'
-import { Localizer } from '../../intl'
+} from '../Icon'
+import { Cluster } from '../Layout'
+import { Loader } from '../Loader'
+import { Scroller } from '../Scroller'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ImageViewer } from './ImageViewer'
 import { PDFViewer } from './PDFViewer'
@@ -106,8 +106,9 @@ export const FileViewer: FC<Props> = ({
   }, [fixedWidth])
 
   return (
-    <div
-      className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-overflow-auto shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
+    <Scroller
+      direction="both"
+      className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
       ref={ref}
     >
       <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
@@ -123,7 +124,7 @@ export const FileViewer: FC<Props> = ({
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
         {!loaded && (
           <div className="shr-pointer-events-none shr-fixed shr-inset-0 shr-flex shr-h-full shr-w-full shr-items-center shr-justify-center">
-            <Loader type="light" size="m" />
+            <Loader type="light" size="M" />
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
@@ -148,16 +149,14 @@ export const FileViewer: FC<Props> = ({
               onLoadError={onLoadError}
             />
           ) : (
-            <Text>
-              <Localizer
-                id="smarthr-ui/FileViewer/unsupportedFileText"
-                defaultText="サポートされていない形式のファイルです。"
-              />
-            </Text>
+            <Localizer
+              id="smarthr-ui/FileViewer/unsupportedFileText"
+              defaultText="サポートされていない形式のファイルです。"
+            />
           )}
         </div>
       </div>
-    </div>
+    </Scroller>
   )
 }
 
@@ -193,12 +192,12 @@ const Controller: FC<ControllerProps> = memo(
           </Button>
           <DropdownMenuButton
             trigger={
-              <Text>
+              <>
                 <VisuallyHiddenText>
                   <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
                 </VisuallyHiddenText>
                 {`${(scale * 100).toFixed(0)}%`}
-              </Text>
+              </>
             }
             className="shr-border-y-0 shr-border-[theme(borderColor.default)] [&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-[transparent]"
           >

@@ -15,7 +15,8 @@ import { Cluster } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Text } from '../Text'
 
-import { AppLauncher, HeaderDropdownMenuButton } from '.'
+import { AppLauncher } from './AppLauncher'
+import { HeaderDropdownMenuButton } from './HeaderDropdownMenuButton'
 
 const classNameGenerator = tv({
   slots: {

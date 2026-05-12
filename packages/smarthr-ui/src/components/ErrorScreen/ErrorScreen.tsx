@@ -28,7 +28,7 @@ type AbstractProps = {
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-ErrorScreen shr-bg-background',
+  base: 'smarthr-ui-ErrorScreen shr-box-border shr-bg-background shr-p-1.5',
 })
 
 export const ErrorScreen: FC<Props> = ({ logo, title, links, children, className, ...rest }) => {

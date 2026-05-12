@@ -50,12 +50,10 @@ export const Error: StoryObj<typeof DropZone> = {
   },
 }
 
-export const Decorators: StoryObj<typeof DropZone> = {
-  name: 'decorators',
+export const SelectButtonLabel: StoryObj<typeof DropZone> = {
+  name: 'selectButtonLabel',
   args: {
-    decorators: {
-      selectButtonLabel: (txt) => `select file.(${txt})`,
-    },
-    children: 'ボタンのテキストを変更',
+    selectButtonLabel: 'Choose File',
+    children: 'カスタムラベルのボタン',
   },
 }

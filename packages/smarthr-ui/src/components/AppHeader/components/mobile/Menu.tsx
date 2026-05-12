@@ -103,7 +103,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 }
 
 const OpenButton = memo<{ alt: ReactNode; onClick: () => void }>(({ onClick, alt }) => (
-  <Button size="s" onClick={onClick} aria-haspopup="true">
+  <Button size="S" onClick={onClick} aria-haspopup="true">
     <FaBarsIcon alt={alt} />
   </Button>
 ))

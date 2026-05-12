@@ -1,3 +1,4 @@
+// eslint-disable-next-line smarthr/require-barrel-import
 import { Stack } from '../../../../smarthr-ui/src/components/Layout'
 import {
   chartJsOptionsExamples,
@@ -8,11 +9,9 @@ import {
 
 import { BarChart } from './BarChart'
 
-import type { StoryObj } from '@storybook/react-webpack5'
-
 export default {
-  title: 'BarChart/VRT',
-  render: (args: any) => (
+  title: 'Charts/BarChart/VRT',
+  render: (args) => (
     <Stack {...args}>
       {/* パターン1: 単一データセット、タイトルなし、ラベルなし、標準サイズ、少データ */}
       <div className="shr-h-[400px]">
@@ -61,6 +60,29 @@ export default {
       <div className="shr-h-[400px]">
         <BarChart data={manyPoints} title="多データポイント" />
       </div>
+
+      {/* パターン9: chartjs-plugin-annotation options */}
+      <div className="shr-h-[400px]">
+        <BarChart
+          data={singleSmall}
+          title="chartjs-plugin-annotation options"
+          options={{
+            plugins: {
+              annotation: {
+                annotations: {
+                  average: {
+                    type: 'line',
+                    yMin: 10,
+                    yMax: 10,
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 2,
+                  },
+                },
+              },
+            },
+          }}
+        />
+      </div>
     </Stack>
   ),
   parameters: {
@@ -71,7 +93,7 @@ export default {
 
 export const VRT = {}
 
-export const VRTForcedColors: StoryObj = {
+export const VRTForcedColors = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
