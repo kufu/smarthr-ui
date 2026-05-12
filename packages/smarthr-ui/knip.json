@@ -10,7 +10,7 @@
     ]
   },
   "entry": ["scripts/**/*.ts"],
-  "ignore": ["**/*.stories.tsx", "rollup.*.config.js", "vitest.config.ts", "vitest-setup.js"],
+  "ignore": ["**/*.stories.tsx", "rollup.*.config.js", "vitest.config.ts", "vitest-setup.js", "oxlint.config.mjs"],
   "ignoreDependencies": [
     "@rollup/plugin-commonjs",
     "@rollup/plugin-node-resolve",
@@ -25,17 +25,14 @@
     "babel-plugin-polyfill-regenerator",
     "eslint-plugin-storybook",
     "http-server",
-    "jsdom",
     "playwright",
     "postcss-styled-syntax",
     "postcss-syntax",
     "rollup-plugin-preserve-directives",
     "rollup-plugin-rename-node-modules",
     "tslib",
-    "typescript-eslint",
-    "vitest",
-    "wait-on"
+    "typescript-eslint"
   ],
-  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "vitest", "knip"],
+  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "knip", "oxlint"],
   "ignoreExportsUsedInFile": true
 }
