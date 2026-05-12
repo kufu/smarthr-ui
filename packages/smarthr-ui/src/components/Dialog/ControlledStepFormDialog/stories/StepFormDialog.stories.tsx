@@ -20,7 +20,7 @@ export default {
   title: 'Components/Dialog/ControlledStepFormDialog',
   component: ControlledStepFormDialog,
   subcomponents: { StepFormDialogItem },
-  render: ({ onSubmit: _onSubmit, onClickClose, children: _children, ...rest }) => {
+  render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const handleClose = onClickClose ?? (() => setOpen(false))
 
@@ -342,7 +342,7 @@ export const Width: StoryObj<typeof ControlledStepFormDialog> = {
 
 export const FirstFocusTarget: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'firstFocusTarget',
-  render: ({ onSubmit: _onSubmit, onClickClose, children: _children, ...rest }) => {
+  render: ({ onClickClose, ...rest }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
@@ -394,7 +394,7 @@ export const OnClickOverlay: StoryObj<typeof ControlledStepFormDialog> = {
 
 export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'portalParent',
-  render: ({ onSubmit: _onSubmit, onClickClose, children: _children, ...rest }) => {
+  render: ({ onClickClose, ...rest }) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
@@ -434,7 +434,7 @@ export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
 
 export const AsyncSubmitSuccess: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'asyncSubmit（Promise対応・成功パターン）',
-  render: ({ onSubmit: _onSubmit, onClickClose, children: _children, ...rest }) => {
+  render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
       useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
@@ -509,7 +509,7 @@ export const AsyncSubmitSuccess: StoryObj<typeof ControlledStepFormDialog> = {
 
 export const AsyncSubmitError: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'asyncSubmit（Promise対応・エラーパターン）',
-  render: ({ onSubmit: _onSubmit, onClickClose, children: _children, ...rest }) => {
+  render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
       useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
