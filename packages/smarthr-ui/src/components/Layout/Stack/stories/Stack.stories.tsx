@@ -1,6 +1,6 @@
-import { Stack } from '..'
 import { Cluster } from '../../Cluster'
 import { ColorBox } from '../../ComponentsForStories'
+import { Stack } from '../Stack'
 
 import type { Gap } from '../../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

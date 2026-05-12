@@ -1,10 +1,4 @@
-import {
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
-  type ReactNode,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { InputWithTooltip } from '../InputWithTooltip'
@@ -14,7 +8,6 @@ import { SearchInputIcon } from './SearchInputIcon'
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
   tooltipMessage: ReactNode
-  decorators?: ComponentPropsWithoutRef<typeof SearchInputIcon>['decorators']
 }
 
 const classNameGenerator = tv({
@@ -33,7 +26,7 @@ const classNameGenerator = tv({
 })
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
-  ({ decorators, width, className, ...rest }, ref) => {
+  ({ width, className, ...rest }, ref) => {
     const labelStyle = useMemo(
       () => ({
         width: typeof width === 'number' ? `${width}px` : width,
@@ -54,7 +47,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<SearchInputIcon decorators={decorators} />}
+          prefix={<SearchInputIcon />}
           className={classNames.input}
         />
       </label>

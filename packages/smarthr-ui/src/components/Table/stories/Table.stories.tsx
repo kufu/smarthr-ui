@@ -136,20 +136,24 @@ export const FixedHead: StoryObj<typeof Table> = {
         </tr>
       </thead>
       <tbody>
-        {[...Array(20)].map((_, i) => (
-          <tr key={i}>
-            <TdCheckbox name={`test-check${i + 1}`} aria-labelledby="check" key={0} />
-            <Td>
-              <Text whiteSpace="nowrap">オブジェクト{i + 1}</Text>
-            </Td>
-            <Td>
-              <Text whiteSpace="nowrap">情報{i + 1}</Text>
-            </Td>
-            <Td>
-              <Text whiteSpace="nowrap">2024-11-26</Text>
-            </Td>
-          </tr>
-        ))}
+        {[...Array(20)].map((_, i) => {
+          const objectId = `test-check${i + 1}`
+
+          return (
+            <tr key={i}>
+              <TdCheckbox name={objectId} aria-labelledby={objectId} key={0} />
+              <Td id={objectId}>
+                <Text whiteSpace="nowrap">オブジェクト{i + 1}</Text>
+              </Td>
+              <Td>
+                <Text whiteSpace="nowrap">情報{i + 1}</Text>
+              </Td>
+              <Td>
+                <Text whiteSpace="nowrap">2024-11-26</Text>
+              </Td>
+            </tr>
+          )
+        })}
       </tbody>
     </Table>
   ),

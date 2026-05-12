@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { locale as ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
@@ -103,4 +103,30 @@ export const locale = {
   'smarthr-ui/Th/sortDirectionNone': '並べかえなし',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'すべての　項目を　えらぶ/やめる',
   'smarthr-ui/ThCheckbox/checkColumnName': 'えらぶ',
+  'smarthr-ui/ErrorScreen/homeLink': '',
+  'smarthr-ui/ErrorScreen/smarthrLink': '',
+  'smarthr-ui/AuthErrorScreen/title': '',
+  'smarthr-ui/ForbiddenErrorScreen/title': '',
+  'smarthr-ui/ForbiddenErrorScreen/description': '',
+  'smarthr-ui/NotFoundErrorScreen/title': '',
+  'smarthr-ui/NotFoundErrorScreen/description': '',
+  'smarthr-ui/UnauthorizedErrorScreen/title': '',
+  'smarthr-ui/UnauthorizedErrorScreen/description1': '',
+  'smarthr-ui/UnauthorizedErrorScreen/description2': '',
+  'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': '',
+  'smarthr-ui/UnexpectedErrorScreen/title': '',
+  'smarthr-ui/UnexpectedErrorScreen/apology': '',
+  'smarthr-ui/UnexpectedErrorScreen/possibleCause': '',
+  'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
+  'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
 } as const satisfies Record<keyof typeof ja, string>

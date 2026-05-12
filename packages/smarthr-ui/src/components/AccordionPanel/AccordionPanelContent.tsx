@@ -31,7 +31,7 @@ const classNameGenerator = tv({
 })
 
 export const AccordionPanelContent: FC<Props> = ({ className, ...rest }) => {
-  const { name } = useContext(AccordionPanelItemContext)
+  const { name, contentId, triggerId } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
   const visible = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -43,8 +43,8 @@ export const AccordionPanelContent: FC<Props> = ({ className, ...rest }) => {
         <div
           {...rest}
           ref={wrapperRef}
-          id={`${name}-content`}
-          aria-labelledby={`${name}-trigger`}
+          id={contentId}
+          aria-labelledby={triggerId}
           aria-hidden={visible ? undefined : true}
           className={`${actualClassName} ${status}`}
         />

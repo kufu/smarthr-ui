@@ -84,7 +84,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
   return (
     <div ref={innerRef}>
-      {/* dummy element for focus management. */}
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={dummyFocusRef} tabIndex={-1} />
       {children}
     </div>

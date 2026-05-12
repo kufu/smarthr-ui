@@ -112,7 +112,7 @@ export default {
       options: ['文字列', 'ReactNode'],
       mapping: {
         文字列: 'ヘルプメッセージ',
-        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
+        ReactNode: <span className="shr-text-danger">React Nodeを渡したメッセージ</span>,
       },
     },
   },
@@ -215,5 +215,13 @@ export const DropdownWidth: StoryObj<typeof SingleCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',
+  },
+}
+
+export const NoResultText: StoryObj<typeof SingleCombobox> = {
+  name: 'noResultText',
+  args: {
+    items: [],
+    noResultText: '該当する商品が見つかりません',
   },
 }

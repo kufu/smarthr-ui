@@ -11,6 +11,12 @@ import ReactGA from 'react-ga4'
 import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 import resolveConfig from 'tailwindcss/resolveConfig'
 
+// tv() が shr- プレフィックスを認識するために必要。
+// パッケージ利用側では package.json の sideEffects 宣言により index.js 経由で自動実行されるが、
+// プロジェクト内の Storybook はソース（../src）を直接参照するため sideEffects が適用されず、
+// build-storybook（Rollup）の tree-shaking で除去されてしまう。
+// eslint-disable-next-line smarthr/require-barrel-import
+import '../src/configureTwMerge'
 // eslint-disable-next-line smarthr/require-barrel-import
 import '../src/styles/index.css'
 import { EnvironmentProvider, IntlProvider, locales } from '../src'

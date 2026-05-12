@@ -12,8 +12,8 @@ export const sampleChildrens = {
   String: 'NotificationBar が表示されました',
   ReactNode: (
     <>
-      <Text>任意の ReactNode を設定できます</Text>
-      <Button size="s">編集</Button>
+      <span>任意の ReactNode を設定できます</span>
+      <Button size="S">編集</Button>
       <TextLink href="#top">
         <Text size="S">ヘルプ</Text>
       </TextLink>
@@ -22,7 +22,7 @@ export const sampleChildrens = {
 }
 export const sampleSubActionAreas = {
   なし: undefined,
-  ReactNode: <Button size="s">編集</Button>,
+  ReactNode: <Button size="S">編集</Button>,
 }
 export const sampleOnCloseHandlers = {
   あり: () => {
@@ -127,9 +127,9 @@ export const Children: StoryObj<typeof NotificationBar> = {
       <NotificationBar {...args}>NotificationBar が表示されました</NotificationBar>
       <NotificationBar {...args}>
         <Stack>
-          <Text>任意の</Text>
-          <Text>ReactNode</Text>
-          <Text>を設定できます</Text>
+          <span>任意の</span>
+          <span>ReactNode</span>
+          <span>を設定できます</span>
         </Stack>
       </NotificationBar>
     </Stack>
@@ -139,7 +139,7 @@ export const Children: StoryObj<typeof NotificationBar> = {
 export const SubActionArea: StoryObj<typeof NotificationBar> = {
   name: 'subActionArea',
   render: (args) => (
-    <NotificationBar {...args} subActionArea={<Text>任意のReactNodeを設定できます</Text>} />
+    <NotificationBar {...args} subActionArea={<span>任意のReactNodeを設定できます</span>} />
   ),
 }
 

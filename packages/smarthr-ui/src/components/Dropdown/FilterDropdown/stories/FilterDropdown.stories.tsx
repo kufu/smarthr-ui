@@ -30,7 +30,7 @@ export const TriggerSize: StoryObj<typeof FilterDropdown> = {
   name: 'trigger.size',
   args: {
     trigger: {
-      size: 's',
+      size: 'S',
     },
   },
 }

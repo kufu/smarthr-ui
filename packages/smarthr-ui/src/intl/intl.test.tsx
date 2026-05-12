@@ -1,9 +1,10 @@
 import { renderHook } from '@testing-library/react'
 import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 
+import { IntlProvider } from './IntlProvider'
 import { convertLang } from './localeMap'
-
-import { IntlProvider, locales, useIntl } from '.'
+import { locales } from './locales'
+import { useIntl } from './useIntl'
 
 import type { FC, PropsWithChildren } from 'react'
 
