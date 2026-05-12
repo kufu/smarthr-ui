@@ -1,5 +1,9 @@
-export default {
-  extends: ['oxlint-config-smarthr'],
+import { defineConfig } from 'oxlint'
+import smarthrConfig from 'oxlint-config-smarthr'
+
+export default defineConfig({
+  ...smarthrConfig,
+  plugins: ['typescript', 'import', 'react', 'jsx-a11y'],
   jsPlugins: ['eslint-plugin-smarthr'],
   ignorePatterns: [
     // NOTE: storiesやtestファイルにもlintを適用するため、パターンでの除外は行わない
@@ -30,14 +34,15 @@ export default {
       },
     ],
     'jsx-a11y/mouse-events-have-key-events': 'error',
-    'jsx-a11y/no-noninteractive-element-interactions': 'error',
-    'jsx-a11y/no-noninteractive-element-to-interactive-role': [
-      'error',
-      {
-        menu: ['menu'],
-      },
-    ],
-    'jsx-a11y/no-static-element-interactions': 'error',
+    // NOTE: oxlint未サポート
+    // 'jsx-a11y/no-noninteractive-element-interactions': 'error',
+    // 'jsx-a11y/no-noninteractive-element-to-interactive-role': [
+    //   'error',
+    //   {
+    //     menu: ['menu'],
+    //   },
+    // ],
+    // 'jsx-a11y/no-static-element-interactions': 'error',
     'jsx-a11y/role-has-required-aria-props': 'error',
 
     // React
@@ -60,21 +65,22 @@ export default {
     'smarthr/best-practice-for-rest-parameters': 'error',
     'smarthr/best-practice-for-unnesessary-early-return': 'error',
 
+    // NOTE: oxlint未サポート
     // export * / import * 禁止
-    'no-restricted-syntax': [
-      'error',
-      {
-        selector: 'ExportAllDeclaration',
-        message: 'export * は使用できません。明示的なexportを使用してください。',
-      },
-      {
-        selector: 'ExportNamedDeclaration[specifiers.0.type="ExportNamespaceSpecifier"]',
-        message: 'export * as は使用できません。個別にimportしてオブジェクトを構築してください。',
-      },
-      {
-        selector: 'ImportNamespaceSpecifier',
-        message: 'import * as は使用できません。個別にimportしてください。',
-      },
-    ],
+    // 'no-restricted-syntax': [
+    //   'error',
+    //   {
+    //     selector: 'ExportAllDeclaration',
+    //     message: 'export * は使用できません。明示的なexportを使用してください。',
+    //   },
+    //   {
+    //     selector: 'ExportNamedDeclaration[specifiers.0.type="ExportNamespaceSpecifier"]',
+    //     message: 'export * as は使用できません。個別にimportしてオブジェクトを構築してください。',
+    //   },
+    //   {
+    //     selector: 'ImportNamespaceSpecifier',
+    //     message: 'import * as は使用できません。個別にimportしてください。',
+    //   },
+    // ],
   },
-}
+})
