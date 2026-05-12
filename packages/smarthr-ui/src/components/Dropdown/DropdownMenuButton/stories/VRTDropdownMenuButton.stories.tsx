@@ -21,10 +21,10 @@ import type { ComponentProps } from 'react'
  * default     true            指定あり
  */
 const _cases: Array<Pick<ComponentProps<typeof DropdownMenuButton>, 'trigger'>> = [
-  { trigger: { children: 'その他の操作', size: 's', onlyIcon: true } },
-  { trigger: { children: 'その他の操作', size: 's' } },
+  { trigger: { children: 'その他の操作', size: 'S', onlyIcon: true } },
+  { trigger: { children: 'その他の操作', size: 'S' } },
   { trigger: { children: 'その他の操作', onlyIcon: true } },
-  { trigger: { children: 'その他の操作', size: 's', onlyIcon: { component: FaGearIcon } } },
+  { trigger: { children: 'その他の操作', size: 'S', onlyIcon: { component: FaGearIcon } } },
   { trigger: 'その他の操作' },
   { trigger: { children: 'その他の操作', onlyIcon: { component: FaGearIcon } } },
 ]

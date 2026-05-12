@@ -14,7 +14,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+import { useSectionWrapper } from '../../SectioningContent'
 
 import type { Gap, SeparateGap } from '../../../types'
 

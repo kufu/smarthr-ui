@@ -1,4 +1,4 @@
-import { Stack } from '../../..'
+import { Stack } from '../../Layout'
 import { Browser } from '../Browser'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

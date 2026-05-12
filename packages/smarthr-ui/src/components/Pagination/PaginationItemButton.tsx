@@ -73,7 +73,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
   }, [disabled, page, hrefTemplate, linkAs, ariaLabel])
 
   return (
-    <Component {...attrs} variant="secondary" size="s" className={className}>
+    <Component {...attrs} variant="secondary" size="S" className={className}>
       {page}
     </Component>
   )

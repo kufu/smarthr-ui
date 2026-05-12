@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentPropsWithoutRef,
   type FC,
@@ -9,7 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { spacing } from '../../tailwind'
+import { useTheme } from '../../hooks/useTheme'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
@@ -50,6 +52,7 @@ export const DefinitionListItem: FC<Props> = ({
   fullWidth,
   className,
 }) => {
+  const theme = useTheme()
   // HINT: ReactNodeとObjectのどちらかを判定
   // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
   // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
@@ -74,10 +77,10 @@ export const DefinitionListItem: FC<Props> = ({
       flexBasis:
         // fullWidth の方が強い
         !fullWidth && maxColumns
-          ? `calc((100% - ${spacing[1.5]} * ${maxColumns - 1}) / ${maxColumns})`
+          ? `calc((100% - ${theme.spacingByChar(1.5)} * ${maxColumns - 1}) / ${maxColumns})`
           : undefined,
     }),
-    [fullWidth, maxColumns],
+    [fullWidth, maxColumns, theme],
   )
 
   return (

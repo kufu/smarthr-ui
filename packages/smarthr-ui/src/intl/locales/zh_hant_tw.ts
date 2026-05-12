@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { locale as ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
@@ -103,4 +103,30 @@ export const locale = {
   'smarthr-ui/Th/sortDirectionNone': '無排序',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '選擇/取消所有項目',
   'smarthr-ui/ThCheckbox/checkColumnName': '選擇',
+  'smarthr-ui/ErrorScreen/homeLink': '返回首頁',
+  'smarthr-ui/ErrorScreen/smarthrLink': '返回SmartHR',
+  'smarthr-ui/AuthErrorScreen/title': '驗證發生問題。',
+  'smarthr-ui/ForbiddenErrorScreen/title': '沒有權限查看此頁面',
+  'smarthr-ui/ForbiddenErrorScreen/description': '如需了解詳情，請聯絡公司管理者。',
+  'smarthr-ui/NotFoundErrorScreen/title': '找不到此頁面。',
+  'smarthr-ui/NotFoundErrorScreen/description': '',
+  'smarthr-ui/UnauthorizedErrorScreen/title': '已自動登出',
+  'smarthr-ui/UnauthorizedErrorScreen/description1': '因長時間未操作，系統已自動將您登出。',
+  'smarthr-ui/UnauthorizedErrorScreen/description2': '若要存取該頁面，請重新登入。',
+  'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': '重新登入',
+  'smarthr-ui/UnexpectedErrorScreen/title': '發生非預期的錯誤。',
+  'smarthr-ui/UnexpectedErrorScreen/apology': '',
+  'smarthr-ui/UnexpectedErrorScreen/possibleCause': '',
+  'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
+  'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
 } as const satisfies Record<keyof typeof ja, string>

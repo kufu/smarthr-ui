@@ -12,7 +12,6 @@ import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
-import { Text } from '../../../Text'
 import { CommonButton } from '../common/CommonButton'
 
 import type { Header } from '../../../Header'
@@ -60,7 +59,7 @@ const ActualTenantSelector: FC<ActualProps> = ({
   tenantName,
 }) => {
   if (tenants.length === 1 || !onTenantSelect) {
-    return <Text as="p">{tenantName}</Text>
+    return <p>{tenantName}</p>
   }
 
   return (

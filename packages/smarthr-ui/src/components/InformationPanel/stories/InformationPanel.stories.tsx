@@ -1,7 +1,7 @@
 import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
-import { InformationPanel, classNameGenerator } from '../InformationPanel'
+import { InformationPanel } from '../InformationPanel'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -26,7 +26,7 @@ export const Type: StoryObj<typeof InformationPanel> = {
   name: 'type',
   render: (args) => (
     <Stack>
-      {Object.keys(classNameGenerator.variants.type).map((type) => (
+      {['success', 'info', 'warning', 'error', 'sync'].map((type) => (
         <InformationPanel {...args} type={type as any} key={type} />
       ))}
     </Stack>

@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { locale as ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
@@ -103,4 +103,30 @@ export const locale = {
   'smarthr-ui/Th/sortDirectionNone': '정렬하지 않음',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '모든 항목을 선택/해제',
   'smarthr-ui/ThCheckbox/checkColumnName': '선택',
+  'smarthr-ui/ErrorScreen/homeLink': '홈으로 돌아가기',
+  'smarthr-ui/ErrorScreen/smarthrLink': 'SmartHR로 돌아가기',
+  'smarthr-ui/AuthErrorScreen/title': '인증에서 문제가 발생했습니다.',
+  'smarthr-ui/ForbiddenErrorScreen/title': '이 페이지를 표시할 권한이 없습니다',
+  'smarthr-ui/ForbiddenErrorScreen/description': '자세한 내용은 소속 기업의 담당자에게 문의해 주세요.',
+  'smarthr-ui/NotFoundErrorScreen/title': '찾고 있는 페이지를 찾을수 없습니다.',
+  'smarthr-ui/NotFoundErrorScreen/description': '',
+  'smarthr-ui/UnauthorizedErrorScreen/title': '일정 시간 동안 조작이 없었기 때문에 로그아웃되었습니다.',
+  'smarthr-ui/UnauthorizedErrorScreen/description1': '일정 시간 동안 조작이 없었기 때문에 자동으로 로그아웃되었습니다.',
+  'smarthr-ui/UnauthorizedErrorScreen/description2': '지정된 페이지에 접근하려면 다시 로그인해야 합니다.',
+  'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': '재로그인',
+  'smarthr-ui/UnexpectedErrorScreen/title': '예기치않은 에러가 발생했습니다.',
+  'smarthr-ui/UnexpectedErrorScreen/apology': '',
+  'smarthr-ui/UnexpectedErrorScreen/possibleCause': '',
+  'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
+  'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
 } as const satisfies Record<keyof typeof ja, string>

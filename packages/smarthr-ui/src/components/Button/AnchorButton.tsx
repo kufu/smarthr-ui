@@ -40,7 +40,7 @@ const classNameGenerator = tv({
 const AnchorButton = forwardRef(
   <T extends ElementType = 'a'>(
     {
-      size = 'default',
+      size = 'M',
       prefix,
       suffix,
       wide = false,

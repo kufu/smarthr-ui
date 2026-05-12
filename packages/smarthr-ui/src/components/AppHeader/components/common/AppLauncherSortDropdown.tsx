@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type FC,
   type MouseEvent,
@@ -10,8 +12,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../../../hooks/useTheme'
 import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../tailwind'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
@@ -135,7 +137,7 @@ const TriggerButton = memo<
   <DropdownTrigger>
     <Button
       ref={triggerRef}
-      size="s"
+      size="S"
       variant="text"
       suffix={<FaCaretDownIcon />}
       className={className}
@@ -153,17 +155,22 @@ const OptionButton = memo<
     onClick: (e: MouseEvent<HTMLButtonElement>) => void
     className: string
   }>
->(({ value, selected, selectedAlt, onClick, children, className }) => (
-  <Button
-    value={value}
-    role="option"
-    aria-selected={selected}
-    className={className}
-    prefix={
-      selected && <FaCheckIcon color={textColor.main} alt={<Translate>{selectedAlt}</Translate>} />
-    }
-    onClick={onClick}
-  >
-    <Translate>{children}</Translate>
-  </Button>
-))
+>(({ value, selected, selectedAlt, onClick, children, className }) => {
+  const theme = useTheme()
+  return (
+    <Button
+      value={value}
+      role="option"
+      aria-selected={selected}
+      className={className}
+      prefix={
+        selected && (
+          <FaCheckIcon color={theme.textColor.main} alt={<Translate>{selectedAlt}</Translate>} />
+        )
+      }
+      onClick={onClick}
+    >
+      <Translate>{children}</Translate>
+    </Button>
+  )
+})
