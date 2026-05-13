@@ -89,10 +89,15 @@ type AbstractProps = PropsWithChildren<{
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
 }>
-type Props = AbstractProps &
-  Omit<DialogBodyProps, keyof AbstractProps> &
-  Omit<BaseElementProps, keyof AbstractProps> &
-  Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
+
+type ComponentProps = PropsWithHTMLAttributes<
+  AbstractProps &
+    Omit<
+      DialogBodyProps & BaseElementProps & VariantProps<typeof classNameGenerator>,
+      keyof AbstractProps
+    >,
+  'div'
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -133,11 +138,6 @@ const classNameGenerator = tv({
     },
   },
 })
-
-type ComponentProps = PropsWithHTMLAttributes<
-  Props & VariantProps<typeof classNameGenerator>,
-  'div'
->
 
 export const ModelessDialog: FC<ComponentProps> = ({
   heading,
