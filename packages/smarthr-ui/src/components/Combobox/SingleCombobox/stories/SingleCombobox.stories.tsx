@@ -4,7 +4,6 @@ import { useArgs } from 'storybook/preview-api'
 import { backgroundColor } from '../../../../tailwind'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
-import { Text } from '../../../Text'
 import { SingleCombobox } from '../SingleCombobox'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

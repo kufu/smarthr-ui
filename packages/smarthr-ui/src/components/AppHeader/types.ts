@@ -74,12 +74,6 @@ export type ReleaseNoteProps = {
   error?: boolean | null
 }
 
-const launcher = {
-  pages: ['favorite', 'all'],
-  modes: ['default', 'search'],
-  sortTypes: ['default', 'name/asc', 'name/desc'],
-} as const
-
 export type Launcher = {
   feature: {
     id: string
@@ -88,7 +82,7 @@ export type Launcher = {
     favorite: boolean
     position?: number | null
   }
-  page: (typeof launcher)['pages'][number]
-  mode: (typeof launcher)['modes'][number]
-  sortType: (typeof launcher)['sortTypes'][number]
+  page: 'favorite' | 'all'
+  mode: 'default' | 'search'
+  sortType: 'default' | 'name/asc' | 'name/desc'
 }
