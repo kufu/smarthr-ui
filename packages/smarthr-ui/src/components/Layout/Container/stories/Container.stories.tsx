@@ -7,7 +7,7 @@ import { Container } from '../Container'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
-const Template: StoryFn<typeof Container> = ({ size, children, ...rest }) => (
+const Template: StoryFn<typeof Container> = ({ size, ...rest }) => (
   <Container {...rest} size={size}>
     <DisplayDimensionsBase padding={1.5} size={size}>
       Story をわかりやすくするためのカスタム Base
@@ -58,7 +58,7 @@ export const Padding: StoryObj<typeof Container> = {
 
 const DisplayDimensionsBase: React.FC<
   ComponentProps<typeof Base> & Pick<ComponentProps<typeof Container>, 'size'>
-> = ({ children, size, ...rest }) => {
+> = ({ size, ...rest }) => {
   const target = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0 })
 

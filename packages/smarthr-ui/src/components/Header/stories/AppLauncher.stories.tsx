@@ -1,5 +1,3 @@
-import { action } from 'storybook/actions'
-
 import { backgroundColor } from '../../../tailwind'
 import { AppLauncher } from '../AppLauncher'
 
