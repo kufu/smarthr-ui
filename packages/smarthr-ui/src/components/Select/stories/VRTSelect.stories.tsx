@@ -1,9 +1,8 @@
-import { ComponentProps } from 'react'
-
 import { Stack } from '../../Layout'
 import { Select } from '../Select'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 /**
  * pict select.pict
@@ -16,11 +15,11 @@ import type { Meta, StoryObj } from '@storybook/react'
  * false    false なし   default true
  */
 const _cases: Array<Omit<ComponentProps<typeof Select>, 'options'>> = [
-  { disabled: false, error: false, width: undefined, size: 's', hasBlank: true },
+  { disabled: false, error: false, width: undefined, size: 'S', hasBlank: true },
   { disabled: false, error: true, width: '15em', size: undefined, hasBlank: false },
-  { disabled: true, error: true, width: '15em', size: 's', hasBlank: true },
+  { disabled: true, error: true, width: '15em', size: 'S', hasBlank: true },
   { disabled: true, error: false, width: '15em', size: undefined, hasBlank: false },
-  { disabled: true, error: true, width: undefined, size: 's', hasBlank: false },
+  { disabled: true, error: true, width: undefined, size: 'S', hasBlank: false },
   { disabled: false, error: false, width: undefined, size: undefined, hasBlank: true },
 ]
 

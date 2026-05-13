@@ -9,16 +9,22 @@ export default [
   ...storybook.configs['flat/recommended'],
   {
     rules: {
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       'jsx-a11y/anchor-is-valid': 'error',
       'jsx-a11y/click-events-have-key-events': 'error',
-      'jsx-a11y/no-static-element-interactions': 'error',
       'jsx-a11y/label-has-associated-control': [
         'error',
         {
           controlComponents: ['Input', 'InputWithTooltip'],
         },
       ],
-      'jsx-a11y/role-has-required-aria-props': 'error',
       'jsx-a11y/mouse-events-have-key-events': 'error',
       'jsx-a11y/no-noninteractive-element-interactions': 'error',
       'jsx-a11y/no-noninteractive-element-to-interactive-role': [
@@ -27,9 +33,9 @@ export default [
           menu: ['menu'],
         },
       ],
-      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      'jsx-a11y/no-static-element-interactions': 'error',
+      'jsx-a11y/role-has-required-aria-props': 'error',
       'react-hooks/exhaustive-deps': 'error',
-      'smarthr/require-barrel-import': 'off',
       'smarthr/a11y-anchor-has-href-attribute': [
         'error',
         {
@@ -42,25 +48,46 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
-      'smarthr/a11y-prohibit-sectioning-content-in-form': 'error',
-      '@typescript-eslint/consistent-type-imports': [
+      'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
+      'smarthr/best-practice-for-rest-parameters': 'error',
+      'smarthr/best-practice-for-unnesessary-early-return': 'error',
+      'no-restricted-syntax': [
         'error',
         {
-          fixStyle: 'inline-type-imports',
+          selector: 'ExportAllDeclaration',
+          message: 'export * は使用できません。明示的なexportを使用してください。',
+        },
+        {
+          selector: 'ExportNamedDeclaration[specifiers.0.type="ExportNamespaceSpecifier"]',
+          message: 'export * as は使用できません。個別にimportしてオブジェクトを構築してください。',
+        },
+        {
+          selector: 'ImportNamespaceSpecifier',
+          message: 'import * as は使用できません。個別にimportしてください。',
         },
       ],
-      '@typescript-eslint/no-import-type-side-effects': 'error',
     },
   },
   {
     ignores: [
-      '**/*.{mjs,js}',
-      '**/*.stories.tsx',
       'sandbox/',
       'storybook-static/',
       'packages/smarthr-ui/esm/',
       'packages/smarthr-ui/lib/',
-      'packages/smarthr-ui/.storybook',
     ],
+  },
+  {
+    files: ['**/*.test.tsx', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    rules: {
+      'smarthr/require-i18n-text': 'off',
+    },
+  },
+  {
+    files: ['**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    rules: {
+      'smarthr/a11y-form-control-in-form': 'off',
+      'smarthr/a11y-heading-in-sectioning-content': 'off',
+      'smarthr/a11y-input-in-form-control': 'off',
+    },
   },
 ]

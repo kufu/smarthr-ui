@@ -7,6 +7,6 @@ import { DialogContentContext } from './DialogContent'
 export const DialogCloser: FC<PropsWithChildren> = (props) => {
   const { onClickClose } = useContext(DialogContentContext)
 
-  // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+  // eslint-disable-next-line smarthr/best-practice-for-interactive-element
   return <div {...props} onClick={onClickClose} role="presentation" className="shr-inline-block" />
 }

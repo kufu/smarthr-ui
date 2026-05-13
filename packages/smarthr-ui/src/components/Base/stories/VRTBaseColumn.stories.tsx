@@ -1,9 +1,9 @@
 import { Stack } from '../../Layout'
-import { Base } from '../Base'
 
-import { BgColor, Padding } from './BaseColumn.stories'
+import { BgColor, Padding, Rounded } from './BaseColumn.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Base } from '../Base'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Base/BaseColumn/VRT',
@@ -11,6 +11,7 @@ export default {
     <Stack>
       {Padding.render && Padding.render(args, context)}
       {BgColor.render && BgColor.render(args, context)}
+      {Rounded.render && Rounded.render(args, context)}
     </Stack>
   ),
   parameters: {

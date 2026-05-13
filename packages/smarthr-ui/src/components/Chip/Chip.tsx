@@ -5,7 +5,7 @@ type Props = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & ComponentPropsWithoutRef<'span'>
 >
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   base: [
     'smarthr-ui-Chip',
     'shr-border-shorthand shr-rounded-full shr-bg-white shr-leading-none shr-text-black',
@@ -32,10 +32,10 @@ export const classNameGenerator = tv({
   },
 })
 
-export const Chip: FC<Props> = ({ size, color, disabled, className, ...props }) => {
+export const Chip: FC<Props> = ({ size, color, disabled, className, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ size, color, disabled, className }),
     [size, color, disabled, className],
   )
-  return <span {...props} className={actualClassName} />
+  return <span {...rest} className={actualClassName} />
 }

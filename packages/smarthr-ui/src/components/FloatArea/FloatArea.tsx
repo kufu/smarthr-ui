@@ -6,7 +6,7 @@ import { Cluster, Stack } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { Gap } from '../../types'
 
 const classNameGenerator = tv({
@@ -90,7 +90,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = {
+type AbstractProps = {
   /** 表示する `Button` または `AnchorButton` コンポーネント */
   primaryButton: ReactNode
   /** 表示する `Button` または `AnchorButton` コンポーネント */
@@ -104,9 +104,9 @@ type Props = {
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
-export const FloatArea: FC<Props & ElementProps> = ({
+export const FloatArea: FC<Props> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
@@ -140,7 +140,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
         </Cluster>
         {responseStatus && (
           <p className={classNames.responseMessageWrapper}>
-            <ResponseMessage type={responseStatus.status}>{responseStatus.text}</ResponseMessage>
+            <ResponseMessage status={responseStatus.status}>{responseStatus.text}</ResponseMessage>
           </p>
         )}
       </Stack>

@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { InputFile } from '../InputFile'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/InputFile/VRT',
@@ -9,7 +9,7 @@ export default {
     <Stack>
       {[undefined, 'hover', 'focus-within'].map((id) => (
         <Stack id={id} key={id}>
-          {[undefined, 'default', 's'].map((size) =>
+          {[undefined, 'M', 'S'].map((size) =>
             [false, true].map((disabled) =>
               [false, true].map((error) => (
                 <InputFile

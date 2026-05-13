@@ -1,4 +1,4 @@
-import { ActualFormControl } from '../FormControl/FormControl'
+import { ActualFormControl } from '../FormControl'
 
 import type { ComponentProps, FC, ReactNode } from 'react'
 
@@ -8,4 +8,4 @@ export const Fieldset: FC<
   Omit<FormControlType, 'as' | 'label'> & {
     legend: Omit<Exclude<FormControlType['label'], ReactNode>, 'htmlFor'> | ReactNode
   }
-> = ({ legend, ...props }) => <ActualFormControl {...props} label={legend} as="fieldset" />
+> = ({ legend, ...rest }) => <ActualFormControl {...rest} label={legend} as="fieldset" />

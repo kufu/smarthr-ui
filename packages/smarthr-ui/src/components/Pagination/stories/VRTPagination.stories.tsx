@@ -1,11 +1,11 @@
 import { fireEvent, within } from 'storybook/test'
 
 import { Stack } from '../../Layout'
-import { Pagination } from '../Pagination'
 
 import { Current } from './Pagination.stories'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Pagination } from '../Pagination'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const meta = {
   title: 'Components/Pagination/VRT',

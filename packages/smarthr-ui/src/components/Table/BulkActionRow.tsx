@@ -11,6 +11,7 @@ const classNameGenerator = tv({
     cell: [
       'shr-bg-action-background shr-p-1 shr-text-base',
       'forced-colors:shr-border-t-shorthand',
+      '[&_.smarthr-ui-Button.shr-text-link]:shr-text-link-darken',
     ],
   },
 })
@@ -18,7 +19,7 @@ const classNameGenerator = tv({
 export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> = ({
   children,
   className,
-  ...props
+  ...rest
 }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
@@ -32,7 +33,7 @@ export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> =
   }, [className])
 
   return (
-    <tr {...props} ref={countHeadCellRef} className={classNames.wrapper}>
+    <tr {...rest} ref={countHeadCellRef} className={classNames.wrapper}>
       <td colSpan={count} className={classNames.cell}>
         {children}
       </td>

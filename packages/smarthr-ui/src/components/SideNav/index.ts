@@ -1,2 +1,2 @@
 export { SideNav } from './SideNav'
-export { SideNavItemButton } from './SideNavItemButton'
+export { SideNavItemButton, SideNavItemAnchor } from './SideNavItemButton'

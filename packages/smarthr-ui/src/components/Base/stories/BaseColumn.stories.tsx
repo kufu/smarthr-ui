@@ -1,10 +1,11 @@
-import { backgroundColor, bgColors } from '../../../themes'
-import { Gap } from '../../../types'
+import { backgroundColor } from '../../../tailwind'
+import { defaultBackgroundColor as backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
 import { baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Gap } from '../../../types'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
@@ -27,7 +28,7 @@ export default {
   },
   parameters: {
     backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
+      values: [{ name: 'light', value: backgroundColorValue.white }],
     },
     chromatic: { disableSnapshot: true },
   },
@@ -58,11 +59,37 @@ export const BgColor: StoryObj<typeof BaseColumn> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {Object.keys(bgColors).map((bgColor) => (
+      {Object.keys(backgroundColor).map((bgColor) => (
         <BaseColumn {...args} bgColor={bgColor as any} key={bgColor}>
           {bgColor}
         </BaseColumn>
       ))}
+    </Stack>
+  ),
+}
+export const Rounded: StoryObj<typeof BaseColumn> = {
+  name: 'rounded',
+  render: (args) => (
+    <Stack>
+      <BaseColumn {...args}>rounded未指定</BaseColumn>
+      <BaseColumn {...args} rounded={true}>
+        rounded: true
+      </BaseColumn>
+      <BaseColumn {...args} rounded="all">
+        rounded: all
+      </BaseColumn>
+      <BaseColumn {...args} rounded="top">
+        rounded: top
+      </BaseColumn>
+      <BaseColumn {...args} rounded="right">
+        rounded: right
+      </BaseColumn>
+      <BaseColumn {...args} rounded="bottom">
+        rounded: bottom
+      </BaseColumn>
+      <BaseColumn {...args} rounded="left">
+        rounded: left
+      </BaseColumn>
     </Stack>
   ),
 }

@@ -24,6 +24,8 @@ export type CreatedFontSizeTheme = {
   XXL: string
 }
 
+// smarthr-design-systemでdeep importされています:
+// import type { FontSizes } from 'smarthr-ui/lib/themes/createFontSize'
 export type FontSizes = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
 
 const getFontSize = (scaleFactor: number, diff: number = 0) =>
@@ -46,13 +48,13 @@ export const createFontSize = (userFontSize?: FontSizeProperty): CreatedFontSize
     return defaultFontSize
   }
 
-  const { scaleFactor, ...userTokens } = userFontSize
+  const { scaleFactor, ...rest } = userFontSize
 
   return merge(
     {
       ...defaultFontSize,
     },
     scaleFactor ? getSizes(scaleFactor) : {},
-    userTokens,
+    rest,
   )
 }

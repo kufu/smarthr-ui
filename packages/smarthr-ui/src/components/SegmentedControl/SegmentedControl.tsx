@@ -26,7 +26,7 @@ export type Option = {
   disabled?: boolean
 }
 
-type Props = {
+type AbstractProps = {
   /** 選択肢の配列 */
   options: Option[]
   /** 選択中の値 */
@@ -34,9 +34,9 @@ type Props = {
   /** 選択肢を押下したときに発火するコールバック関数 */
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
-  size?: 'default' | 's'
+  size?: 'M' | 'S'
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -52,23 +52,23 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      default: {
+      M: {
         button: '[&:has(>_span_>_.smarthr-ui-Icon:only-child)]:shr-p-0.75',
       },
-      s: {
+      S: {
         button: 'shr-p-0.5',
       },
     },
   },
 })
 
-export const SegmentedControl: FC<Props & ElementProps> = ({
+export const SegmentedControl: FC<Props> = ({
   options,
   value,
   onClickOption,
-  size = 'default',
+  size = 'M',
   className,
-  ...props
+  ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -82,8 +82,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     }
   }, [className, size])
 
-  const onFocus = useCallback(() => setIsFocused(true), [])
-  const onBlur = useCallback(() => setIsFocused(false), [])
+  const onDelegateFocus = useCallback(() => setIsFocused(true), [])
+  const onDelegateBlur = useCallback(() => setIsFocused(false), [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -157,10 +157,10 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
 
   return (
     <div
-      {...props}
+      {...rest}
       className={classNames.container}
-      onFocus={onFocus}
-      onBlur={onBlur}
+      onFocus={onDelegateFocus}
+      onBlur={onDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
@@ -215,6 +215,7 @@ const SegmentedControlButton: FC<
   }, [excludesSelected, isFocused, attrs.checked, index])
 
   return (
+    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <Button
       value={option.value}
       disabled={option.disabled}

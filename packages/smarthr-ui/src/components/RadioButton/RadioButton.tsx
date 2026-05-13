@@ -34,7 +34,7 @@ const classNameGenerator = tv({
       'peer-checked:before:shr-pointer-events-none peer-checked:before:shr-absolute peer-checked:before:shr-left-1/2 peer-checked:before:shr-top-1/2 peer-checked:before:shr-h-[0.375em] peer-checked:before:shr-w-[0.375em] peer-checked:before:-shr-translate-x-1/2 peer-checked:before:-shr-translate-y-1/2 peer-checked:before:shr-rounded-full peer-checked:before:shr-bg-white peer-checked:before:shr-content-[""]',
       'peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border peer-disabled:peer-checked:before:shr-bg-white-darken',
-      'peer-focus-visible:shr-focus-indicator',
+      'peer-focus-visible:shr-focus-indicator--outer',
       'peer-[:not(:disabled)]:peer-hover:shr-shadow-input-hover',
     ],
     input: [
@@ -48,7 +48,7 @@ const classNameGenerator = tv({
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, required, ...props }, ref) => {
+  ({ onChange, children, className, required, id, disabled, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
@@ -62,13 +62,13 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     const defaultId = useId()
-    const radioButtonId = props.id || defaultId
+    const radioButtonId = id || defaultId
 
     return (
-      <span data-disabled={props.disabled} className={classNames.wrapper}>
+      <span data-disabled={disabled} className={classNames.wrapper}>
         <span className={classNames.innerWrapper}>
           <input
-            {...props}
+            {...rest}
             ref={ref}
             type="radio"
             id={radioButtonId}
@@ -79,6 +79,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
             // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
             required={isIOS ? undefined : required}
+            disabled={disabled}
             onChange={onChange}
             className={classNames.input}
             data-smarthr-ui-input="true"

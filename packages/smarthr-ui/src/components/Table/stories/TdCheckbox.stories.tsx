@@ -2,7 +2,7 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof TdCheckbox> = (args) => (
   <Table>
@@ -31,16 +31,20 @@ export const Playground: StoryObj<typeof TdCheckbox> = {}
 
 export const AriaLabelledBy: StoryObj<typeof TdCheckbox> = {
   name: 'aria-labelledby',
-  render: (args) => (
-    <Table>
-      <tbody>
-        <tr>
-          <TdCheckbox {...args} aria-labelledby="label-name" vAlign="baseline" />
-          <Td id="label-name">ラベル名</Td>
-        </tr>
-      </tbody>
-    </Table>
-  ),
+  render: (args) => {
+    const ariaLabelledBy = 'label-name'
+
+    return (
+      <Table>
+        <tbody>
+          <tr>
+            <TdCheckbox {...args} aria-labelledby={ariaLabelledBy} vAlign="baseline" />
+            <Td id={ariaLabelledBy}>ラベル名</Td>
+          </tr>
+        </tbody>
+      </Table>
+    )
+  },
 }
 
 export const Checked: StoryObj<typeof TdCheckbox> = {

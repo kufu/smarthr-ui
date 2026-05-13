@@ -1,1 +1,1 @@
-export { VisuallyHiddenText, visuallyHiddenTextClassNameGenerator } from './VisuallyHiddenText'
+export { VisuallyHiddenText, visuallyHiddenTextClassName } from './VisuallyHiddenText'

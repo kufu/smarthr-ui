@@ -2,9 +2,9 @@ import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { SideNavItemButton, SideNavSizeType } from '../SideNavItemButton'
+import { SideNavItemButton, type SideNavSizeType } from '../SideNavItemButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/SideNav/SideNavItemButton',

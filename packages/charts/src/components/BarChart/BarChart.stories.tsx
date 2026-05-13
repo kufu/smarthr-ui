@@ -1,8 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/testData'
+
 import { BarChart } from './BarChart'
 
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
 const meta: Meta<typeof BarChart> = {
-  title: 'BarChart',
+  title: 'Charts/BarChart',
   component: BarChart,
   decorators: [
     (Story) => (
@@ -11,46 +14,104 @@ const meta: Meta<typeof BarChart> = {
       </div>
     ),
   ],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 }
 
 export default meta
 
 type Story = StoryObj<typeof BarChart>
 
-const sampleData = {
-  labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
-  datasets: [
-    {
-      label: '売上',
-      data: [12, 19, 3, 5, 2, 3],
+export const Playground: Story = {
+  args: {
+    data: singleSmall,
+    title: 'Bar Chart',
+  },
+  argTypes: {
+    data: {
+      control: 'object',
     },
-  ],
-}
-
-const multiDatasetData = {
-  labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
-  datasets: [
-    {
-      label: '売上',
-      data: [12, 19, 3, 5, 2, 3],
+    title: {
+      control: 'text',
     },
-    {
-      label: '利益',
-      data: [2, 3, 20, 5, 1, 4],
+    options: {
+      control: 'object',
     },
-  ],
+  },
 }
 
 export const Default: Story = {
   args: {
-    data: sampleData,
-    title: '棒グラフ',
+    data: singleSmall,
   },
 }
 
 export const MultipleDatasets: Story = {
   args: {
-    data: multiDatasetData,
-    title: '複数データの棒グラフ',
+    data: multiSmall,
+  },
+}
+
+export const Title: Story = {
+  name: 'title',
+  args: {
+    data: singleSmall,
+    title: 'Title',
+  },
+  argTypes: {
+    title: {
+      control: 'text',
+    },
+  },
+}
+
+export const WithChartJsOptions: Story = {
+  name: 'with Chart.js options',
+  args: {
+    data: {
+      labels: [
+        'レベル1',
+        'レベル2',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル4',
+        'レベル5',
+      ],
+      datasets: [
+        {
+          label: '人数',
+          data: [95, 48, 138, 138, 138, 138, 138, 138, 138, 88, 42],
+        },
+      ],
+    },
+    options: chartJsOptionsExamples.comprehensive,
+  },
+}
+
+export const WithAnnotations: Story = {
+  name: 'with chartjs-plugin-annotation options',
+  args: {
+    data: singleSmall,
+    options: {
+      plugins: {
+        annotation: {
+          annotations: {
+            average: {
+              type: 'line',
+              yMin: 10,
+              yMax: 10,
+              borderColor: 'rgb(255, 99, 132)',
+              borderWidth: 2,
+            },
+          },
+        },
+      },
+    },
   },
 }

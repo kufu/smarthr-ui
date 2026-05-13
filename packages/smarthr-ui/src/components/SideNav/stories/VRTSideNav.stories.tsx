@@ -1,13 +1,14 @@
-import { Meta } from '@storybook/react/*'
-import React, { ComponentProps } from 'react'
+import { type ComponentProps, Fragment } from 'react'
 
 import { Stack } from '../../Layout'
 import { SideNav } from '../SideNav'
-import { SideNavItemButton } from '../SideNavItemButton'
+import { SideNavItemAnchor, SideNavItemButton } from '../SideNavItemButton'
 
 import { _sideNavItems } from './SideNav.stories'
 
-const _casse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
+import type { Meta } from '@storybook/react-webpack5'
+
+const sizeCasse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'M', 'S']
 
 export default {
   title: 'Components/SideNav/VRT',
@@ -20,23 +21,25 @@ export default {
   render: (args) => (
     <Stack gap={2} className="shr-p-1">
       {[undefined, 'hover', 'focus-visible'].map((id, index) => (
-        <React.Fragment key={index}>
-          {_casse.map((size, i) => (
+        <Fragment key={index}>
+          {sizeCasse.map((size, i) => (
             <SideNav {...args} key={`${index}-${i}`} size={size} id={id}>
-              {_sideNavItems.map((item) => (
-                <SideNavItemButton
-                  key={item.id}
-                  id={item.id}
-                  current={item.current}
-                  prefix={item.prefix}
-                >
-                  {item.children}
-                </SideNavItemButton>
-              ))}
+              {_sideNavItems.map((item) =>
+                i % 2 === 0 ? (
+                  <SideNavItemButton {...item} key={item.id} />
+                ) : (
+                  <SideNavItemAnchor {...item} key={item.id} href={`#${index}-${i}`} />
+                ),
+              )}
             </SideNav>
           ))}
-        </React.Fragment>
+        </Fragment>
       ))}
+      <SideNav {...args} rounded="all">
+        {_sideNavItems.map((item) => (
+          <SideNavItemButton {...item} key={item.id} />
+        ))}
+      </SideNav>
     </Stack>
   ),
   parameters: {

@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -11,13 +13,14 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
+import { useTheme } from '../../hooks/useTheme'
 import { useIntl } from '../../intl'
-import { spacing } from '../../themes'
-import { FaInfoCircleIcon } from '../Icon'
+import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
+import { Scroller } from '../Scroller'
+import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
@@ -35,7 +38,8 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  decorators?: DecoratorsType<DecoratorKeyTypes>
+  /** 検索結果が0件の時に表示するコンテンツ */
+  noResultText?: ReactNode
 }
 
 type Rect = {
@@ -43,8 +47,6 @@ type Rect = {
   left: number
   height?: number
 }
-
-type DecoratorKeyTypes = 'loadingText' | 'noResultText'
 
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
@@ -54,7 +56,7 @@ const classNameGenerator = tv({
     wrapper: 'shr-absolute',
     dropdownList: [
       'smarthr-ui-Combobox-dropdownList',
-      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
       /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
       = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
       'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
@@ -76,8 +78,9 @@ export const useListbox = <T,>({
   isExpanded,
   isLoading,
   triggerRef,
-  decorators,
+  noResultText: orgNoResultText,
 }: Props<T>) => {
+  const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
   const { localize } = useIntl()
@@ -258,10 +261,10 @@ export const useListbox = <T,>({
 
     return {
       width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-      maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
+      maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
       height: height ? `${height}px` : undefined,
     }
-  }, [listBoxRect, triggerWidth, dropdownWidth])
+  }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
   const classNames = useMemo(() => {
     const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
@@ -275,27 +278,27 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const decoratorDefaultTexts = useMemo(
+  const texts = useMemo(
     () => ({
       loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
-      noResultText: localize({
-        id: 'smarthr-ui/Combobox/noResultsText',
-        defaultText: '一致する選択肢がありません。',
-      }),
+      noResultText:
+        orgNoResultText ??
+        localize({
+          id: 'smarthr-ui/Combobox/noResultsText',
+          defaultText: '一致する選択肢がありません。',
+        }),
     }),
-    [localize],
+    [orgNoResultText, localize],
   )
-
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
   const renderListBox = useCallback(
     () =>
       createPortal(
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{decorated.loadingText}</VisuallyHiddenText>
+            <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
           )}
-          <div
+          <Scroller
             id={listBoxId}
             ref={listBoxRef}
             role="listbox"
@@ -304,9 +307,13 @@ export const useListbox = <T,>({
             style={dropdownListStyle}
           >
             {dropdownHelpMessage && (
-              <p className={classNames.helpMessage}>
-                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-              </p>
+              <Text
+                className={classNames.helpMessage}
+                icon={<FaCircleInfoIcon color="TEXT_GREY" />}
+                as="p"
+              >
+                {dropdownHelpMessage}
+              </Text>
             )}
             {isExpanded ? (
               isLoading ? (
@@ -315,7 +322,7 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {decorated.noResultText}
+                  {texts.noResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -331,7 +338,7 @@ export const useListbox = <T,>({
               )
             ) : null}
             {renderIntersection()}
-          </div>
+          </Scroller>
         </div>,
       ),
     [
@@ -343,7 +350,7 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      decorated,
+      texts,
       handleAdd,
       handleHoverOption,
       handleSelect,

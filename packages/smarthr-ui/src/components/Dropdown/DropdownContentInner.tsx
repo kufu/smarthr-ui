@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentProps,
   type FC,
@@ -10,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { spacing } from '../../themes'
+import { useTheme } from '../../hooks/useTheme'
 
 import { DropdownCloser } from './DropdownCloser'
 import { type ContentBoxStyle, type Rect, getContentBoxStyle } from './dropdownHelper'
@@ -26,12 +28,13 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   triggerRect: Rect
   controllable: boolean
 }>
 
-export type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+export type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = AbstractProps & ElementProps
 
 type DropdownContentInnerContextType = {
   maxHeight: string
@@ -41,13 +44,14 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
   maxHeight: '',
 })
 
-export const DropdownContentInner: FC<Props & ElementProps> = ({
+export const DropdownContentInner: FC<Props> = ({
   triggerRect,
   children,
   className,
   controllable,
-  ...props
+  ...rest
 }) => {
+  const theme = useTheme()
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
     top: 'auto',
@@ -62,9 +66,11 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   )
 
   const style = useMemo(() => {
-    const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
+    const defaultMargin = theme.spacingByChar(0.5)
+    const leftMargin =
+      contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
     const rightMargin =
-      contentBox.right === undefined ? spacing[0.5] : `max(${contentBox.right}, 0px)`
+      contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
     const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
     return {
@@ -73,7 +79,7 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
       insetInlineEnd: contentBox.right || undefined,
       maxWidth: maxWidthStyle,
     }
-  }, [contentBox.left, contentBox.right, contentBox.top])
+  }, [contentBox.left, contentBox.right, contentBox.top, theme])
   const controllableWrapperStyleProps = useMemo(
     () => ({
       maxHeight: contentBox.maxHeight || undefined,
@@ -113,8 +119,8 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   useKeyboardNavigation(wrapperRef, focusTargetRef)
 
   return (
-    <div {...props} ref={wrapperRef} className={actualClassName} style={style}>
-      {/* dummy element for focus management. */}
+    <div {...rest} ref={wrapperRef} className={actualClassName} style={style}>
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
         <div style={controllableWrapperStyleProps}>{children}</div>

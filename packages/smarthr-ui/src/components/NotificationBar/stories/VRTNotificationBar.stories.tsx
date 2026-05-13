@@ -3,297 +3,74 @@ import { fireEvent, within } from 'storybook/test'
 import { Stack } from '../../Layout'
 import { NotificationBar } from '../NotificationBar'
 
-import { sampleMessages, sampleOnCloseHandlers } from './NotificationBar.stories'
+import {
+  sampleChildrens,
+  sampleOnCloseHandlers,
+  sampleSubActionAreas,
+} from './NotificationBar.stories'
 
-import type { StoryObj } from '@storybook/react'
+import type { StoryObj } from '@storybook/react-webpack5'
+
+/* ペアワイズ法による網羅
+base  bold   type     children   subActionArea  layer      onClose  */
+const pairwisePatterns = `
+base  false  error    String     ReactNode      1          no
+base  true   error    ReactNode  undefined      2          yes
+base  false  info     ReactNode  undefined      0          no
+base  true   info     String     ReactNode      4          yes
+base  true   success  String     ReactNode      0          yes
+base  true   error    ReactNode  undefined      4          no
+base  false  error    String     undefined      3          yes
+base  true   info     ReactNode  ReactNode      3          no
+none  true   warning  ReactNode  undefined      undefined  no
+base  false  warning  String     ReactNode      4          yes
+none  false  success  String     ReactNode      undefined  yes
+base  true   sync     ReactNode  undefined      3          no
+none  false  sync     String     ReactNode      undefined  yes
+base  true   sync     String     undefined      4          no
+base  false  info     String     undefined      undefined  no
+base  true   info     ReactNode  undefined      1          yes
+base  true   success  ReactNode  undefined      3          no
+base  false  success  String     ReactNode      2          no
+base  true   warning  String     undefined      0          yes
+base  true   sync     String     undefined      2          no
+none  true   error    String     undefined      undefined  no
+base  true   error    String     undefined      0          yes
+base  false  success  String     undefined      1          no
+base  true   success  String     undefined      4          no
+base  false  info     String     ReactNode      2          yes
+base  true   sync     String     undefined      1          yes
+base  false  warning  String     undefined      2          no
+base  true   warning  String     undefined      1          yes
+base  false  warning  ReactNode  undefined      3          yes
+base  true   sync     String     undefined      0          no
+none  true   info     String     undefined      undefined  yes
+`
+  .replace(/ +/g, ' ')
+  .replace(/(^\n|\n$)/g, '')
+  .split('\n')
+  .map((l) => {
+    const [base, bold, type, children, subActionArea, layer, onClose] = l.split(' ')
+
+    return {
+      base,
+      bold,
+      type,
+      children: children === 'String' ? sampleChildrens.String : sampleChildrens.ReactNode,
+      subActionArea:
+        subActionArea === 'ReactNode' ? sampleSubActionAreas.ReactNode : sampleSubActionAreas.なし,
+      layer: layer === 'undefined' ? undefined : parseInt(layer, 10),
+      onClose: onClose === 'yes' ? sampleOnCloseHandlers.あり : sampleOnCloseHandlers.なし,
+    }
+  })
 
 export default {
   title: 'Components/NotificationBar/VRT',
-  /* ペアワイズ法による網羅
-  base    bold    type      message     layer       onClose
-  ---------------------------------------------------------
-  base    true    warning   ReactNode   4           あり
-  base    false   success   String      4           なし
-  base    false   error     String      2           あり
-  base    true    error     ReactNode   3           なし
-  none    false   warning   String      undefined   なし
-  base    false   error     ReactNode   1           あり
-  base    true    info      String      1           なし
-  base    true    sync      ReactNode   2           なし
-  base    true    warning   ReactNode   2           あり
-  base    false   sync      String      3           あり
-  base    true    error     ReactNode   0           あり
-  none    true    sync      ReactNode   undefined   あり
-  base    false   warning   ReactNode   1           なし
-  none    true    success   ReactNode   undefined   あり
-  base    true    success   ReactNode   3           なし
-  base    false   success   String      0           なし
-  none    false   info      ReactNode   undefined   あり
-  base    false   success   String      1           あり
-  base    false   info      String      2           なし
-  base    true    success   String      2           あり
-  none    false   error     String      undefined   なし
-  base    true    error     ReactNode   4           なし
-  base    true    info      ReactNode   0           なし
-  base    false   sync      ReactNode   0           なし
-  base    true    sync      String      1           あり
-  base    true    sync      String      4           あり
-  base    true    info      String      3           あり
-  base    true    info      String      4           なし
-  base    false   warning   String      3           なし
-  base    false   warning   String      0           あり
-  base    true    error     ReactNode   undefined   あり
-*/
   render: (args: any) => (
     <Stack {...args}>
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="warning"
-        message={sampleMessages.ReactNode}
-        layer={4}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="success"
-        message={sampleMessages.String}
-        layer={4}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="error"
-        message={sampleMessages.String}
-        layer={2}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="error"
-        message={sampleMessages.ReactNode}
-        layer={3}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="none"
-        bold={false}
-        type="warning"
-        message={sampleMessages.String}
-        layer={undefined}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="error"
-        message={sampleMessages.ReactNode}
-        layer={1}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="info"
-        message={sampleMessages.String}
-        layer={1}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="sync"
-        message={sampleMessages.ReactNode}
-        layer={2}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="warning"
-        message={sampleMessages.ReactNode}
-        layer={2}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="sync"
-        message={sampleMessages.String}
-        layer={3}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="error"
-        message={sampleMessages.ReactNode}
-        layer={0}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="none"
-        bold={true}
-        type="sync"
-        message={sampleMessages.ReactNode}
-        layer={undefined}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="warning"
-        message={sampleMessages.ReactNode}
-        layer={1}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="none"
-        bold={true}
-        type="success"
-        message={sampleMessages.ReactNode}
-        layer={undefined}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="success"
-        message={sampleMessages.ReactNode}
-        layer={3}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="success"
-        message={sampleMessages.String}
-        layer={0}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="none"
-        bold={false}
-        type="info"
-        message={sampleMessages.ReactNode}
-        layer={undefined}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="success"
-        message={sampleMessages.String}
-        layer={1}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="info"
-        message={sampleMessages.String}
-        layer={2}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="success"
-        message={sampleMessages.String}
-        layer={2}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="none"
-        bold={false}
-        type="error"
-        message={sampleMessages.String}
-        layer={undefined}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="error"
-        message={sampleMessages.ReactNode}
-        layer={4}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="info"
-        message={sampleMessages.ReactNode}
-        layer={0}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="sync"
-        message={sampleMessages.ReactNode}
-        layer={0}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="sync"
-        message={sampleMessages.String}
-        layer={1}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="sync"
-        message={sampleMessages.String}
-        layer={4}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="info"
-        message={sampleMessages.String}
-        layer={3}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="info"
-        message={sampleMessages.String}
-        layer={4}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="warning"
-        message={sampleMessages.String}
-        layer={3}
-        onClose={sampleOnCloseHandlers.なし}
-      />
-      <NotificationBar
-        base="base"
-        bold={false}
-        type="warning"
-        message={sampleMessages.String}
-        layer={0}
-        onClose={sampleOnCloseHandlers.あり}
-      />
-      <NotificationBar
-        base="base"
-        bold={true}
-        type="error"
-        message={sampleMessages.ReactNode}
-        layer={undefined}
-        onClose={sampleOnCloseHandlers.あり}
-      />
+      {pairwisePatterns.map((ars, index) => (
+        <NotificationBar {...ars} key={index} />
+      ))}
     </Stack>
   ),
   parameters: {

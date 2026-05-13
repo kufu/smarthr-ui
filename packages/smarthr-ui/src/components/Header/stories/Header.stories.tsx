@@ -5,7 +5,7 @@ import { Header } from '../Header'
 import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
 import { HeaderLink } from '../HeaderLink'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _logoOptions = {
   default: undefined,

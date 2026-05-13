@@ -16,18 +16,16 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useDecorators } from '../../hooks/useDecorators'
 import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { DecoratorsType } from '../../hooks/useDecorators'
-
 const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-DropZone',
+      'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
     ],
     button: '',
@@ -54,9 +52,7 @@ const classNameGenerator = tv({
   },
 })
 
-type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof DropZoneProps>
-
-type DropZoneProps = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -75,17 +71,21 @@ type DropZoneProps = PropsWithChildren<{
   disabled?: boolean
   /** フォームにエラーがあるかどうか */
   error?: boolean
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'selectButtonLabel'>
+  /** ファイル選択ボタンのラベル */
+  selectButtonLabel?: string
 }>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }
 
-export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
-  ({ children, onSelectFiles, multiple = true, disabled, error, decorators, ...props }, ref) => {
+export const DropZone = forwardRef<HTMLInputElement, Props>(
+  (
+    { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
+    ref,
+  ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
     const classNames = useMemo(() => {
@@ -149,17 +149,18 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
           onClick={onClickButton}
           disabled={disabled}
           className={classNames.button}
-          decorators={decorators}
+          label={selectButtonLabel}
         />
         <VisuallyHiddenText>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
-            {...props}
+            {...rest}
             data-smarthr-ui-input="true"
             ref={fileRef}
             type="file"
             multiple={multiple}
             disabled={disabled}
+            tabIndex={-1}
             aria-invalid={error || undefined}
             onChange={onChange}
           />
@@ -170,26 +171,23 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
 )
 
 const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> &
-    Pick<DropZoneProps, 'decorators'> & { onClick: () => void }
->(({ onClick, decorators, ...rest }) => {
+  ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
+>(({ onClick, label, ...rest }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      selectButtonLabel: localize({
+  const buttonLabel = useMemo(
+    () =>
+      label ||
+      localize({
         id: 'smarthr-ui/DropZone/selectButtonLabel',
         defaultText: 'ファイルを選択',
       }),
-    }),
-    [localize],
+    [label, localize],
   )
-
-  const decorated = useDecorators<'selectButtonLabel'>(decoratorDefaultTexts, decorators)
 
   return (
     <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
-      {decorated.selectButtonLabel}
+      {buttonLabel}
     </Button>
   )
 })

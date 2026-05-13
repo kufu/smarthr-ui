@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react'
-
 import { Base } from '../../Base'
+import { Button } from '../../Button'
+import { Cluster } from '../../Layout'
+import { TextLink } from '../../TextLink'
 import { Timeline } from '../Timeline'
 import { TimelineItem } from '../TimelineItem'
-import { Button } from '../../Button'
-import { TextLink } from '../../TextLink'
-import { Cluster } from '../../Layout'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Timeline/VRT',
@@ -20,10 +20,10 @@ export default {
         datetime="2025-06-09T00:00:00.000Z"
         dateSuffixArea={
           <Cluster align="center">
-            <Button size="s" variant="text">
+            <Button size="S" variant="text">
               ボタン
             </Button>
-            <TextLink href="#" size="S">
+            <TextLink href="https://smarthr.design/" size="S">
               リンク
             </TextLink>
           </Cluster>
@@ -31,7 +31,7 @@ export default {
       >
         <Base>タイムラインアイテム</Base>
       </TimelineItem>
-      <TimelineItem datetime="2024-06-10" sideActionArea={<Button size="s">ボタン</Button>}>
+      <TimelineItem datetime="2024-06-10" sideActionArea={<Button size="S">ボタン</Button>}>
         <Base>タイムラインアイテム</Base>
       </TimelineItem>
       <TimelineItem
@@ -39,15 +39,15 @@ export default {
         timeFormat="HH:mm:ss"
         dateSuffixArea={
           <Cluster align="center">
-            <Button size="s" variant="text">
+            <Button size="S" variant="text">
               ボタン
             </Button>
-            <TextLink href="#" size="S">
+            <TextLink href="https://smarthr.design/" size="S">
               リンク
             </TextLink>
           </Cluster>
         }
-        sideActionArea={<Button size="s">ボタン</Button>}
+        sideActionArea={<Button size="S">ボタン</Button>}
       >
         <Base>タイムラインアイテム</Base>
       </TimelineItem>

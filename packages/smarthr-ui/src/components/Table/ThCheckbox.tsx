@@ -3,19 +3,14 @@
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
 import { useIntl } from '../../intl'
 import { Balloon } from '../Balloon'
 import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 
 import { Th } from './Th'
 
-type Props = {
-  // HINT: checkColumnName は aria-label属性に設定されるため、型をstringのみに絞ります
-  decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
-    checkColumnName?: (text: string) => string
-  }
-} & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -35,27 +30,26 @@ const classNameGenerator = tv({
   },
 })
 
-export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
-  ({ vAlign, fixed, decorators, className, ...others }, ref) => {
+export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
+  ({ vAlign, fixed, className, ...rest }, ref) => {
     const { localize } = useIntl()
 
-    const decoratorDefaultTexts = useMemo(
-      () => ({
-        checkAllInvisibleLabel: localize({
+    const checkAllInvisibleLabel = useMemo(
+      () =>
+        localize({
           id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
           defaultText: 'すべての項目を選択/解除',
         }),
-        checkColumnName: localize({
-          id: 'smarthr-ui/ThCheckbox/checkColumnName',
-          defaultText: '選択',
-        }),
-      }),
       [localize],
     )
 
-    const decorated = useDecorators<'checkAllInvisibleLabel' | 'checkColumnName'>(
-      decoratorDefaultTexts,
-      decorators,
+    const checkColumnName = useMemo(
+      () =>
+        localize({
+          id: 'smarthr-ui/ThCheckbox/checkColumnName',
+          defaultText: '選択',
+        }),
+      [localize],
     )
 
     const classNames = useMemo(() => {
@@ -71,18 +65,13 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckboxProps & Props>(
 
     return (
       // Th に必要な属性やイベントは不要
-      <Th
-        vAlign={vAlign}
-        fixed={fixed}
-        className={classNames.wrapper}
-        aria-label={decorated.checkColumnName as string}
-      >
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      <Th vAlign={vAlign} fixed={fixed} className={classNames.wrapper} aria-label={checkColumnName}>
         <label className={classNames.inner}>
           <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
-            <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
+            <span className="shr-block shr-p-0.5">{checkAllInvisibleLabel}</span>
           </Balloon>
-          <Checkbox {...others} ref={ref} className={classNames.checkbox} />
+          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
+          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
         </label>
       </Th>
     )

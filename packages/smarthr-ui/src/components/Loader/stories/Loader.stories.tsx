@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Loader } from '../Loader'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Loader',
@@ -26,8 +26,8 @@ export const Size: StoryObj<typeof Loader> = {
   render: (args) => (
     <Stack align="flex-start">
       <Loader {...args} />
-      <Loader {...args} size="m" />
-      <Loader {...args} size="s" />
+      <Loader {...args} size="M" />
+      <Loader {...args} size="S" />
     </Stack>
   ),
 }

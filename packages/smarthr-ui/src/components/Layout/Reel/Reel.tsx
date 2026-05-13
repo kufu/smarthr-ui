@@ -9,7 +9,8 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+import { Scroller } from '../../Scroller'
+import { useSectionWrapper } from '../../SectioningContent'
 
 import type { Gap } from '../../../types'
 
@@ -21,7 +22,7 @@ type Props = VariantProps<typeof classNameGenerator> &
 
 const classNameGenerator = tv({
   base: [
-    'shr-flex shr-overflow-x-auto shr-overflow-y-hidden',
+    'shr-flex',
     '[&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto',
     /*
       Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
@@ -82,14 +83,24 @@ const classNameGenerator = tv({
 })
 
 export const Reel = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...props }, ref) => {
+  ({ as: Component = 'div', gap = 0.5, padding = 0, className, children, ...rest }, ref) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ gap, padding, className }),
       [className, gap, padding],
     )
 
     const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...props} ref={ref} className={actualClassName} />
+    const body = (
+      <Scroller
+        {...rest}
+        as={Component}
+        ref={ref}
+        direction="horizontal"
+        className={actualClassName}
+      >
+        {children}
+      </Scroller>
+    )
 
     if (Wrapper) {
       return <Wrapper>{body}</Wrapper>

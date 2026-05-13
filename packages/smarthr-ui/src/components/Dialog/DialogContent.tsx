@@ -20,13 +20,13 @@ export const DialogContentContext = createContext<DialogContentContextType>({
 
 type Props = UncontrolledDialogProps & DirectChildren
 
-export const DialogContent: FC<Props> = ({ portalParent, ...props }) => {
+export const DialogContent: FC<Props> = ({ portalParent, ...rest }) => {
   const { onClickClose, active } = useContext(DialogContext)
   const { createPortal } = useDialogPortal(portalParent)
 
   return createPortal(
     <DialogContentContext.Provider value={{ onClickClose }}>
-      <DialogContentInner {...props} isOpen={active} onPressEscape={onClickClose} />
+      <DialogContentInner {...rest} isOpen={active} onPressEscape={onClickClose} />
     </DialogContentContext.Provider>,
   )
 }

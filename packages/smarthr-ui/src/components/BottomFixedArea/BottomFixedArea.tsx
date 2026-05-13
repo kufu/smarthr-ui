@@ -27,9 +27,7 @@ export type ButtonType =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
 
-type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
-
-type Props = {
+type AbstractProps = {
   /** この領域の説明 */
   description?: ReactNode
   /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
@@ -48,6 +46,7 @@ type Props = {
   /** コンポーネントに適用する z-index 値 */
   zIndex?: number
 }
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -68,14 +67,14 @@ const classNameGenerator = tv({
 /**
  * @deprecated BottomFixedArea は非推奨です。FloatArea を使ってください。 https://smarthr.design/products/components/float-area/
  */
-export const BottomFixedArea: FC<Props & ElementProps> = ({
+export const BottomFixedArea: FC<Props> = ({
   description,
   primaryButton,
   secondaryButton,
   tertiaryLinks,
   zIndex,
   className,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, tertiaryButton } = classNameGenerator()
@@ -92,7 +91,7 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base {...props} className={classNames.wrapper} style={style}>
+    <Base {...rest} className={classNames.wrapper} style={style}>
       <Stack>
         <Description>{description}</Description>
         <Stack gap={0.25}>
@@ -108,18 +107,28 @@ export const BottomFixedArea: FC<Props & ElementProps> = ({
           )}
           {tertiaryLinks && tertiaryLinks.length > 0 && (
             <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 0 }}>
-              {tertiaryLinks.map(({ text, icon: Icon, ...tertiaryRest }, index) => (
-                <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
-                  <Button
-                    {...tertiaryRest}
-                    variant="text"
-                    prefix={Icon && <Icon />}
-                    className={classNames.tertiaryButton}
-                  >
-                    {text}
-                  </Button>
-                </li>
-              ))}
+              {tertiaryLinks.map(
+                (
+                  {
+                    text,
+                    icon: Icon,
+
+                    ...tertiaryRest
+                  },
+                  index,
+                ) => (
+                  <li key={index} className="smarthr-ui-BottomFixedArea-tertiaryListItem">
+                    <Button
+                      {...tertiaryRest}
+                      variant="text"
+                      prefix={Icon && <Icon />}
+                      className={classNames.tertiaryButton}
+                    >
+                      {text}
+                    </Button>
+                  </li>
+                ),
+              )}
             </Cluster>
           )}
         </Stack>

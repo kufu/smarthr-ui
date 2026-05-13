@@ -4,11 +4,11 @@ import { Button } from '../../Button'
 import { FaArrowsRotateIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
-import { AppNavi } from '../AppNavi'
 
 import { Template } from './AppNavi.stories'
 
-import type { Meta } from '@storybook/react'
+import type { AppNavi } from '../AppNavi'
+import type { Meta } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/AppNavi/VRT',
@@ -24,7 +24,7 @@ export default {
     additionalArea: (
       <Cluster align="center">
         <Text size="S">最終同期： 2024/11/21 10:13</Text>
-        <Button size="s" prefix={<FaArrowsRotateIcon />}>
+        <Button size="S" prefix={<FaArrowsRotateIcon />}>
           データを同期
         </Button>
       </Cluster>

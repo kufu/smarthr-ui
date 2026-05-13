@@ -8,11 +8,11 @@ import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ButtonWrapper } from './ButtonWrapper'
-import { DisabledDetail } from './DisabledDetail'
+import { DisabledReason } from './DisabledReason'
 
-import type { BaseProps } from './types'
+import type { AbstractProps } from './types'
 
-type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
+type Props = AbstractProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -20,21 +20,21 @@ const classNameGenerator = tv({
   },
 })
 
-export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
+export const Button = forwardRef<HTMLButtonElement, Props>(
   (
     {
       type = 'button',
-      size = 'default',
+      size = 'M',
       prefix,
       suffix,
       wide = false,
       variant = 'secondary',
       disabled,
-      disabledDetail,
+      disabledReason,
       className,
       children,
       loading = false,
-      ...props
+      ...rest
     },
     ref,
   ) => {
@@ -48,7 +48,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
 
     const button = (
       <ButtonWrapper
-        {...props}
+        {...rest}
         buttonRef={ref}
         type={type}
         size={size}
@@ -65,8 +65,8 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       </ButtonWrapper>
     )
 
-    if (disabled && disabledDetail) {
-      return <DisabledDetail button={button} disabledDetail={disabledDetail} />
+    if (disabled && disabledReason) {
+      return <DisabledReason button={button} disabledReason={disabledReason} />
     }
 
     return button

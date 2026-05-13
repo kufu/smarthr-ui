@@ -1,12 +1,12 @@
+'use client'
+
 import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { colors, fontSize, textColor } from '../../themes'
+import { color as defaultColorPalette, fontSize, textColor } from '../../tailwind'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { FontSizes } from '../../themes/createFontSize'
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import type { Gap } from '../../types'
+import type { FontSizes } from '../../themes'
 import type { IconType } from 'react-icons'
 
 /**
@@ -29,16 +29,6 @@ export const colorSet = {
 
 const existsColor = (color: string): color is keyof typeof colorSet => color in colorSet
 
-const fontSizeMap = {
-  XXS: '2xs',
-  XS: 'xs',
-  S: 'sm',
-  M: 'base',
-  L: 'lg',
-  XL: 'xl',
-  XXL: '2xl',
-} as const
-
 type IconProps = {
   /**
    * アイコンの色
@@ -52,26 +42,12 @@ type IconProps = {
   size?: FontSizes
 }
 
-type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
-
-type BaseComponentProps = {
+type AbstractProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
-  /**
-   * @deprecated この属性は指定した場合の挙動が想像しにくく、コードもわかりづらくなってしまうため、他の方法を利用してください
-   *  - TextコンポーネントのprefixIcon, suffixIcon
-   *  - Headingコンポーネントのicon
-   *  - FormControlのlabel.icon
-   *  - Fieldsetのlegend.icon
-   */
-  /** アイコンと並べるテキスト */
-  text?: ReactNode
-  /** アイコンと並べるテキストとの溝 */
-  iconGap?: CharRelativeSize | AbstractSize
-  /** `true` のとき、アイコンを右側に表示する */
-  right?: boolean
 }
-export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
+export type Props = AbstractProps &
+  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
@@ -79,51 +55,7 @@ export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & B
 const classNameGenerator = tv({
   slots: {
     icon: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
-    wrapperWithAlt: 'smarthr-ui-Icon-extended smarthr-ui-Icon-withAlt shr-leading-[0]',
-  },
-})
-
-const wrapperClassNameGenerator = tv({
-  base: [
-    'smarthr-ui-Icon-extended smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline',
-  ],
-  variants: {
-    gap: {
-      0: 'shr-gap-x-0',
-      0.25: 'shr-gap-x-0.25',
-      0.5: 'shr-gap-x-0.5',
-      0.75: 'shr-gap-x-0.75',
-      1: 'shr-gap-x-1',
-      1.25: 'shr-gap-x-1.25',
-      1.5: 'shr-gap-x-1.5',
-      2: 'shr-gap-x-2',
-      2.5: 'shr-gap-x-2.5',
-      3: 'shr-gap-x-3',
-      3.5: 'shr-gap-x-3.5',
-      4: 'shr-gap-x-4',
-      8: 'shr-gap-x-8',
-      '-0.25': '-shr-gap-x-0.25',
-      '-0.5': '-shr-gap-x-0.5',
-      '-0.75': '-shr-gap-x-0.75',
-      '-1': '-shr-gap-x-1',
-      '-1.25': '-shr-gap-x-1.25',
-      '-1.5': '-shr-gap-x-1.5',
-      '-2': '-shr-gap-x-2',
-      '-2.5': '-shr-gap-x-2.5',
-      '-3': '-shr-gap-x-3',
-      '-3.5': '-shr-gap-x-3.5',
-      '-4': '-shr-gap-x-4',
-      '-8': '-shr-gap-x-8',
-      X3S: 'shr-gap-x-0.25',
-      XXS: 'shr-gap-x-0.5',
-      XS: 'shr-gap-x-1',
-      S: 'shr-gap-x-1.5',
-      M: 'shr-gap-x-2',
-      L: 'shr-gap-x-2.5',
-      XL: 'shr-gap-x-3',
-      XXL: 'shr-gap-x-3.5',
-      X3L: 'shr-gap-x-4',
-    } as { [key in Gap]: string },
+    wrapperWithAlt: 'smarthr-ui-Icon-extended smarthr-ui-Icon-withAlt shr-relative shr-leading-[0]',
   },
 })
 
@@ -138,11 +70,8 @@ export const generateIcon = (SvgIcon: IconType) => {
       'aria-label': ariaLabel,
       'aria-labelledby': ariaLabelledby,
       focusable = false,
-      text,
-      iconGap = 0.25,
-      right,
       size,
-      ...props
+      ...rest
     }) => {
       const actualAriaHidden = useMemo(() => {
         if (ariaHidden !== undefined) {
@@ -164,7 +93,6 @@ export const generateIcon = (SvgIcon: IconType) => {
           wrapperWithAlt: wrapperWithAlt(),
         }
       }, [className])
-      const wrapperClassName = useMemo(() => wrapperClassNameGenerator({ gap: iconGap }), [iconGap])
 
       const replacedColor = useMemo(() => {
         if (color && existsColor(color)) {
@@ -174,16 +102,16 @@ export const generateIcon = (SvgIcon: IconType) => {
             return textColor[colorName as keyof typeof textColor]
           }
 
-          return colors[colorName as keyof typeof colors]
+          return defaultColorPalette[colorName as keyof typeof defaultColorPalette] as string
         }
 
         return color
       }, [color])
 
-      const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
+      const iconSize = size ? fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
-          {...props}
+          {...rest}
           stroke="currentColor"
           fill="currentColor"
           strokeWidth="0"
@@ -200,26 +128,14 @@ export const generateIcon = (SvgIcon: IconType) => {
           focusable={focusable}
         />
       )
-      const visuallyHiddenAlt = alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>
 
-      if (text) {
+      if (alt) {
         return (
-          <span className={wrapperClassName}>
-            {right && text}
-            {visuallyHiddenAlt}
-            {svgIcon}
-            {!right && text}
-          </span>
-        )
-      }
-
-      if (visuallyHiddenAlt) {
-        return (
-          // HINT: visuallyが存在すると、アイコンなのに2つの要素がある状態になってしまい
+          // HINT: VisuallyHiddenTextが存在すると、アイコンなのに2つの要素がある状態になってしまい
           // styleなどを記述する際、意図しない状態になる場合がある
           // 回避するため、spanでラップし、開発者のメンタルモデルに合わせる
           <span className={classNames.wrapperWithAlt}>
-            {visuallyHiddenAlt}
+            <VisuallyHiddenText>{alt}</VisuallyHiddenText>
             {svgIcon}
           </span>
         )

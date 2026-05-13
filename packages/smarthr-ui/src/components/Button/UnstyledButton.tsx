@@ -11,8 +11,8 @@ const classNameGenerator = tv({
 export const UnstyledButton = forwardRef<
   HTMLButtonElement,
   PropsWithChildren<ComponentProps<'button'>>
->(({ className, type = 'button', ...props }, ref) => {
+>(({ className, type = 'button', ...rest }, ref) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  return <button {...props} type={type} ref={ref} className={actualClassName} />
+  return <button {...rest} type={type} ref={ref} className={actualClassName} />
 })

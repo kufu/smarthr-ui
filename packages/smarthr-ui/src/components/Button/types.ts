@@ -1,14 +1,14 @@
 import type { FunctionComponent, PropsWithChildren, ReactNode } from 'react'
 
-export type BaseProps = PropsWithChildren<{
+export type AbstractProps = PropsWithChildren<{
   /**
    * ボタンの大きさ
    */
-  size?: 'default' | 's'
+  size?: 'M' | 'S'
   /**
    * 無効な理由
    */
-  disabledDetail?: {
+  disabledReason?: {
     icon?: FunctionComponent
     message: ReactNode
   }

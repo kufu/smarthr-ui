@@ -1,12 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import { ModelessDialog } from '../ModelessDialog'
+
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Dialog/ModelessDialog/VRT',
   component: ModelessDialog,
   args: {
     isOpen: true,
-    title: 'モードレスダイアログタイトル',
+    heading: 'モードレスダイアログタイトル',
     children: 'ダイアログコンテンツ',
     footer: 'ダイアログフッター',
     top: 10,

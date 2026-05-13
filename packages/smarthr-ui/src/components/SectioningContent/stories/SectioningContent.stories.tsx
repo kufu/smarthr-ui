@@ -2,7 +2,7 @@ import { Heading } from '../../Heading'
 import { Stack } from '../../Layout'
 import { Article, Aside, Nav, Section } from '../SectioningContent'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/SectioningContent',

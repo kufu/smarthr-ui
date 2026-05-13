@@ -1,20 +1,31 @@
-import { useEffect } from 'react'
-import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 import {
-  Title,
-  Subtitle,
+  Controls,
   Description,
   Primary,
   Stories,
-  Controls,
+  Subtitle,
+  Title,
 } from '@storybook/addon-docs/blocks'
-import type { Preview } from '@storybook/react-webpack5'
+import { useEffect } from 'react'
 import ReactGA from 'react-ga4'
+import { INITIAL_VIEWPORTS } from 'storybook/viewport'
+import resolveConfig from 'tailwindcss/resolveConfig'
 
+// tv() が shr- プレフィックスを認識するために必要。
+// パッケージ利用側では package.json の sideEffects 宣言により index.js 経由で自動実行されるが、
+// プロジェクト内の Storybook はソース（../src）を直接参照するため sideEffects が適用されず、
+// build-storybook（Rollup）の tree-shaking で除去されてしまう。
+// eslint-disable-next-line smarthr/require-barrel-import
+import '../src/configureTwMerge'
+// eslint-disable-next-line smarthr/require-barrel-import
 import '../src/styles/index.css'
-import { backgroundColor } from '../src/themes'
-import { IntlProvider } from '../src'
-import * as locales from '../src/intl/locales'
+import { EnvironmentProvider, IntlProvider, locales } from '../src'
+// eslint-disable-next-line smarthr/require-barrel-import
+import presetConfig from '../src/smarthr-ui-preset'
+
+import type { Preview } from '@storybook/react-vite'
+
+const { backgroundColor } = resolveConfig(presetConfig).theme
 
 const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 
@@ -91,7 +102,9 @@ const preview: Preview = {
       const locale = context.globals?.locale
       return (
         <IntlProvider locale={locale}>
-          <Story />
+          <EnvironmentProvider>
+            <Story />
+          </EnvironmentProvider>
         </IntlProvider>
       )
     },

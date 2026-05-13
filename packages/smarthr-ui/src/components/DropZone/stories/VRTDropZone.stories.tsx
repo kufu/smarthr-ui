@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { DropZone } from '../DropZone'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/DropZone/VRT',
@@ -9,9 +9,9 @@ export default {
     <Stack>
       <DropZone {...args} />
       <DropZone {...args}>children あり</DropZone>
-      <DropZone {...args} decorators={{ selectButtonLabel: (txt) => `select file.(${txt})` }} />
       <DropZone {...args} disabled />
       <DropZone {...args} error />
+      <DropZone {...args} selectButtonLabel="Choose File" />
     </Stack>
   ),
   parameters: {

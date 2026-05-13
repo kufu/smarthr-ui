@@ -1,6 +1,7 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../intl'
 import { Base } from '../Base'
 import { Heading } from '../Heading'
 import { Nav } from '../SectioningContent'
@@ -23,7 +24,9 @@ export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, ...rest }) =>
 
   return (
     <Nav>
-      <Heading visuallyHidden={true}>サイドメニュー</Heading>
+      <Heading visuallyHidden={true}>
+        <Localizer id="smarthr-ui/SideMenu/navigationLabel" defaultText="サイドメニュー" />
+      </Heading>
       <Base {...rest} as={elementAs} className={actualClassName} />
     </Nav>
   )

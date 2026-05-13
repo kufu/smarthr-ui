@@ -9,8 +9,9 @@
     "src/**/__tests__"
   ],
   "compilerOptions": {
-    // stories.tsx で発生する下記のエラーを避けるため、tsconfig.json ではなくこちらで `"declaration": true` を指定
-    // https://github.com/microsoft/TypeScript/issues/47663#issuecomment-1519138189
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "outDir": "./lib",
     "declaration": true,
     "types": ["node", "react"]
   },

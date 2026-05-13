@@ -1,10 +1,11 @@
-import { Base } from '../../../Base'
-import { Container, classNameGenerator } from '../Container'
+import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react'
-import { ComponentProps, useLayoutEffect, useRef, useState } from 'react'
+import { DeviceProvider } from '../../../../hooks/useDevice'
+import { Base } from '../../../Base'
 import { Stack } from '../../Stack'
-import { DeviceProvider } from '../../../..'
+import { Container } from '../Container'
+
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof Container> = ({ size, children, ...rest }) => (
   <Container {...rest} size={size}>
@@ -36,7 +37,7 @@ export const Size: StoryObj<typeof Container> = {
   name: 'size',
   render: (args, context) => (
     <Stack>
-      {[undefined, ...Object.keys(classNameGenerator.variants.size)].map((size) =>
+      {[undefined, 'NARROW', 'DEFAULT', 'WIDE', 'FULL'].map((size) =>
         Template({ ...args, size: size as any }, context),
       )}
     </Stack>

@@ -1,17 +1,16 @@
-import { ComponentProps } from 'react'
-
 import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { Button } from '../Button'
 
-import type { StoryFn, StoryObj } from '@storybook/react'
+import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { ComponentProps } from 'react'
 
 type Variant = ComponentProps<typeof Button>['variant']
 
 /**
  * $ pict button.pict.txt /e:button-seeds.pict.txt
- * size    disabled disabledDetail loading prefix suffix wide
+ * size    disabled disabledReason loading prefix suffix wide
  * default false    なし           false   あり   なし   false
  * default false    なし           false   なし   なし   false
  * s       false    なし           false   なし   あり   true
@@ -34,13 +33,13 @@ const Template: StoryFn = (args) => (
             <Button variant={variant}>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" suffix={<FaCaretDownIcon />} wide>
+            <Button variant={variant} size="S" suffix={<FaCaretDownIcon />} wide>
               ボタン
             </Button>
             <Button
               variant={variant}
               disabled
-              disabledDetail={{ message: 'ボタンが無効な理由' }}
+              disabledReason={{ message: 'ボタンが無効な理由' }}
               suffix={<FaCaretDownIcon />}
             >
               ボタン
@@ -48,20 +47,20 @@ const Template: StoryFn = (args) => (
             <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
               ボタン
             </Button>
-            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />} wide>
+            <Button variant={variant} size="S" loading prefix={<FaCirclePlusIcon />} wide>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" disabled prefix={<FaCirclePlusIcon />} wide>
+            <Button variant={variant} size="S" disabled prefix={<FaCirclePlusIcon />} wide>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="s" loading prefix={<FaCirclePlusIcon />}>
+            <Button variant={variant} size="S" loading prefix={<FaCirclePlusIcon />}>
               ボタン
             </Button>
             <Button
               variant={variant}
-              size="s"
+              size="S"
               disabled
-              disabledDetail={{ message: 'ボタンが無効な理由' }}
+              disabledReason={{ message: 'ボタンが無効な理由' }}
               prefix={<FaCirclePlusIcon />}
             >
               ボタン

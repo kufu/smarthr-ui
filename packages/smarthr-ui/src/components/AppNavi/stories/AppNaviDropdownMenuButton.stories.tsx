@@ -1,8 +1,8 @@
-import { backgroundColor } from '../../../themes'
+import { backgroundColor } from '../../../tailwind'
 import { AnchorButton, Button } from '../../Button'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/AppNavi/AppNaviDropdownMenuButton',

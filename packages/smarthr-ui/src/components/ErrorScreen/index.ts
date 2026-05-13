@@ -1,5 +1,6 @@
-import { ErrorScreen } from './ErrorScreen'
-/** @deprecated MessageScreen は非推奨です。ErrorScreen を使ってください。 */
-const MessageScreen = ErrorScreen
-
-export { MessageScreen, ErrorScreen }
+export { ErrorScreen } from './ErrorScreen'
+export { UnauthorizedErrorScreen } from './UnauthorizedErrorScreen'
+export { ForbiddenErrorScreen } from './ForbiddenErrorScreen'
+export { NotFoundErrorScreen } from './NotFoundErrorScreen'
+export { UnexpectedErrorScreen } from './UnexpectedErrorScreen'
+export { AuthErrorScreen } from './AuthErrorScreen'

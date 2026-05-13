@@ -25,7 +25,6 @@ const SERVER_COMPONENTS = [
   'HeaderLink',
   'Icon',
   'Loader',
-  'MessageScreen',
   'MonthPicker',
   'NotificationBar',
   'PageCounter',
@@ -48,7 +47,6 @@ const SERVER_COMPONENTS = [
   'Th',
   'TimePicker',
   'UnstyledButton',
-  'UpwardLink',
   'VisuallyHiddenText',
   'WakuWakuButton',
 ]
@@ -113,6 +111,7 @@ const CLIENT_COMPONENTS: string[] = [
   'ThCheckbox',     // 多言語化対応のため
   'Tooltip',        // 開閉状態の管理
   'DateFormatter',  // 多言語化対応のため
+  'UpwardLink',     // モバイル対応のため
 ]
 
 /**
@@ -125,7 +124,6 @@ const DISABLED_COMPONENTS = [
   'FilterDropdown',             // 必須のイベントハンドラをもつため
   'FormDialog',                 // 必須のイベントハンドラをもつため
   'MessageDialog',              // 必須のイベントハンドラをもつため
-  'MessageDialogContent',       // 必須のイベントハンドラを持つため
   'RemoteTriggerActionDialog',  // 必須のイベントハンドラをもつため
   'RemoteTriggerFormDialog',    // 必須のイベントハンドラをもつため
   'SortDropdown',               // 必須のイベントハンドラをもつため

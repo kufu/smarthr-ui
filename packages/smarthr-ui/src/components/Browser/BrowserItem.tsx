@@ -3,7 +3,6 @@ import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
-import { Text } from '../Text'
 
 import { getElementIdFromNode } from './utils'
 
@@ -39,6 +38,7 @@ const classNameGenerator = tv({
           'shr-bg-main shr-text-white',
           'hover:shr-bg-main-darken',
           'forced-colors:shr-bg-[Highlight]',
+          'has-[:focus-visible]:shr-focus-indicator',
         ],
       },
     },
@@ -100,7 +100,7 @@ export const BrowserItem: FC<Props> = ({
 
 const BodyCluster = memo<{ label: string; hasChildren: boolean }>(({ label, hasChildren }) => (
   <Cluster align="center" justify="space-between" as="span">
-    <Text>{label}</Text>
+    <span>{label}</span>
     {hasChildren && <FaAngleRightIcon />}
   </Cluster>
 ))

@@ -18,19 +18,18 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
+import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
-import { textColor } from '../../../themes'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { BaseProps, ComboboxItem } from '../types'
+import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
-type Props<T> = BaseProps<T> & {
+type AbstractProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -64,21 +63,23 @@ type Props<T> = BaseProps<T> & {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
-  // HINT: useListbox内でnoResultText, loadingTextは実行される
   /**
-   * コンポーネント内のテキストを変更する関数/
+   * 検索結果が0件の時に表示するコンテンツ
    */
-  decorators?: DecoratorsType<DecoratorKeyTypes | 'noResultText' | 'loadingText'>
+  noResultText?: ReactNode
 }
-
-type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
-
-type DecoratorKeyTypes = 'destroyButtonIconAlt'
+type Props<T> = AbstractProps<T> &
+  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
 
 const NOOP = () => undefined
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
+
+const EMPTY_INPUT_CHANGE_EVENT = {
+  currentTarget: { value: '' },
+  target: { value: '' },
+} as ChangeEvent<HTMLInputElement>
 
 const classNameGenerator = tv({
   slots: {
@@ -144,12 +145,13 @@ const ActualSingleCombobox = <T,>(
     onFocus,
     onBlur,
     onKeyPress,
-    decorators,
+    noResultText,
     style,
     ...rest
-  }: Props<T> & ElementProps,
+  }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
+  const theme = useTheme()
   const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -180,6 +182,9 @@ const ActualSingleCombobox = <T,>(
         onSelect?.(selected)
         onChangeSelected?.(selected)
 
+        // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+        onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
         requestAnimationFrame(() => {
@@ -188,12 +193,12 @@ const ActualSingleCombobox = <T,>(
 
         setIsEditing(false)
       },
-      [onChangeSelected, onSelect],
+      [onChangeSelected, onSelect, onChangeInput],
     ),
     isExpanded,
     isLoading,
     triggerRef: outerRef,
-    decorators,
+    noResultText,
   })
 
   const selectDefaultItem = useMemo(
@@ -267,6 +272,7 @@ const ActualSingleCombobox = <T,>(
     },
     [disabled, readOnly, inputRef, isExpanded],
   )
+  const onDelegateClickIcon = onClickInput
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange?.(e)
@@ -329,11 +335,11 @@ const ActualSingleCombobox = <T,>(
   )
 
   const caretIconColor = useMemo(() => {
-    if (isFocused) return textColor.black
-    if (disabled || readOnly) return textColor.disabled
+    if (isFocused) return theme.textColor.black
+    if (disabled || readOnly) return theme.textColor.disabled
 
-    return textColor.grey
-  }, [disabled, readOnly, isFocused])
+    return theme.textColor.grey
+  }, [disabled, readOnly, isFocused, theme.textColor])
 
   useClick(
     useMemo(() => [outerRef, listBoxRef, clearButtonRef], [outerRef, listBoxRef, clearButtonRef]),
@@ -371,20 +377,17 @@ const ActualSingleCombobox = <T,>(
     }
   }, [notSelected, disabled, readOnly, className])
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      destroyButtonIconAlt: localize({
+  const destroyButtonIconAlt = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
-        defaultText: '削除',
+        defaultText: 'クリア',
       }),
-    }),
     [localize],
   )
 
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
-
   return (
-    <div className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
+    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
         {...rest}
         ref={inputRef}
@@ -421,12 +424,15 @@ const ActualSingleCombobox = <T,>(
             >
               <FaCircleXmarkIcon
                 color="TEXT_BLACK"
-                alt={decorated.destroyButtonIconAlt}
+                alt={destroyButtonIconAlt}
                 className={classNames.clearButtonIcon}
               />
             </UnstyledButton>
-            {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-            <span onClick={onClickInput} role="presentation" className={classNames.caretDownLayout}>
+            <span
+              role="presentation"
+              onClick={onDelegateClickIcon}
+              className={classNames.caretDownLayout}
+            >
               <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
             </span>
           </>

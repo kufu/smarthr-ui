@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
@@ -13,7 +13,11 @@ describe('ModelessDialog', () => {
     return (
       <IntlProvider locale="ja">
         <Button onClick={() => setIsOpen(true)}>ModelessDialog</Button>
-        <ModelessDialog isOpen={isOpen} title="座標指定表示" onClickClose={() => setIsOpen(false)}>
+        <ModelessDialog
+          isOpen={isOpen}
+          heading="座標指定表示"
+          onClickClose={() => setIsOpen(false)}
+        >
           <p>ダイアログの中身</p>
         </ModelessDialog>
       </IntlProvider>
@@ -24,12 +28,12 @@ describe('ModelessDialog', () => {
 
     // トリガ押下でダイアログが開くこと
     expect(screen.queryByRole('dialog', { name: 'ModelessDialog' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: '座標指定表示' })).toBeVisible()
 
     // 裏側をクリックしてもダイアログが閉じないこと
-    await act(() => userEvent.click(document.body))
+    await userEvent.click(document.body)
     await waitFor(
       () => {
         expect(screen.getByRole('dialog', { name: '座標指定表示' })).toBeVisible()

@@ -1,21 +1,21 @@
 export { AppNavi } from './AppNavi'
 export {
-  /** @deprecated AppNaviAnchor を直接使ってください */
+  /** @deprecated AppNaviAnchor から型を生成してください */
   type AppNaviAnchorProps,
   AppNaviAnchor,
 } from './AppNaviAnchor'
 export {
-  /** @deprecated AppNaviButton を直接使ってください */
+  /** @deprecated AppNaviButton から型を生成してください */
   type AppNaviButtonProps,
   AppNaviButton,
 } from './AppNaviButton'
 export {
-  /** @deprecated AppNaviDropdownMenuButton を直接使ってください */
+  /** @deprecated AppNaviDropdownMenuButton から型を生成してください */
   type AppNaviDropdownProps,
   AppNaviDropdown,
 } from './AppNaviDropdown'
 export {
-  /** @deprecated AppNaviCustomTag を直接使ってください */
+  /** @deprecated AppNaviCustomTag から型を生成してください */
   type AppNaviCustomTagProps,
   AppNaviCustomTag,
 } from './AppNaviCustomTag'

@@ -12,6 +12,7 @@ import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
+import { Scroller } from '../Scroller'
 
 type AbstractProps = {
   /** 選択された年 */
@@ -27,15 +28,14 @@ type AbstractProps = {
   /** HTMLのid属性 */
   id: string
 }
-type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 type ActualProps = Omit<Props, 'isDisplayed'>
 
 const classNameGenerator = tv({
   slots: {
     overlay: 'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white',
     container:
-      'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-overflow-y-auto shr-px-0.25 shr-py-0.5',
+      'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-px-0.25 shr-py-0.5',
     yearButton:
       'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none',
     yearWrapper: [
@@ -46,7 +46,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const YearPicker: FC<Props & ElementProps> = ({ isDisplayed, ...rest }) =>
+export const YearPicker: FC<Props> = ({ isDisplayed, ...rest }) =>
   isDisplayed ? <ActualYearPicker {...rest} /> : null
 
 const ActualYearPicker: FC<ActualProps> = ({
@@ -55,7 +55,7 @@ const ActualYearPicker: FC<ActualProps> = ({
   toYear,
   onSelectYear,
   id,
-  ...props
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
@@ -91,8 +91,8 @@ const ActualYearPicker: FC<ActualProps> = ({
   }, [])
 
   return (
-    <div {...props} id={id} className={classNames.overlay}>
-      <div className={classNames.container}>
+    <div {...rest} id={id} className={classNames.overlay}>
+      <Scroller className={classNames.container}>
         {yearArray.map((year) => (
           <YearButton
             key={year}
@@ -105,7 +105,7 @@ const ActualYearPicker: FC<ActualProps> = ({
             onClick={onSelectYear}
           />
         ))}
-      </div>
+      </Scroller>
     </div>
   )
 }

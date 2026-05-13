@@ -8,6 +8,7 @@ const classNameGenerator = tv({
   base: [
     'shr-rounded-s',
     'aria-current-page:[&&&]:shr-cursor-default aria-current-page:[&&&]:shr-bg-main aria-current-page:[&&&]:shr-text-white',
+    'aria-current-page:focus-visible:[&&&]:shr-focus-indicator',
     'aria-current-page:[&&&]:shr-border-solid aria-current-page:[&&&]:shr-border-main',
   ],
 })
@@ -72,7 +73,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
   }, [disabled, page, hrefTemplate, linkAs, ariaLabel])
 
   return (
-    <Component {...attrs} variant="secondary" size="s" className={className}>
+    <Component {...attrs} variant="secondary" size="S" className={className}>
       {page}
     </Component>
   )

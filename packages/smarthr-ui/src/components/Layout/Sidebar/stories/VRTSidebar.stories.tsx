@@ -1,7 +1,9 @@
-import { Meta } from '@storybook/react'
-import { Sidebar, Stack } from '../../../..'
+import { Stack } from '../../Stack'
+import { Sidebar } from '../Sidebar'
 
-import { GapStory, Align as AlignStory } from './Sidebar.stories'
+import { Align as AlignStory, GapStory } from './Sidebar.stories'
+
+import type { Meta } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Layout/Sidebar/VRT',

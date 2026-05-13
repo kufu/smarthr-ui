@@ -13,22 +13,22 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type ElementProps = Omit<ComponentPropsWithRef<'span'>, keyof Props>
+type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type Props = AbstractProps & Omit<ComponentPropsWithRef<'span'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   slots: {
     base: 'smarthr-ui-LineClamp shr-relative',
-    clampedLine: 'shr-w-full',
+    clampedLine: 'shr-max-w-full',
     shadowElementWrapper:
-      'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0',
-    shadowElement: 'shr-absolute shr-left-0 shr-top-0 shr-w-full',
+      'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-max-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0',
+    shadowElement: 'shr-absolute shr-left-0 shr-top-0 shr-max-w-full',
   },
   variants: {
     maxLines: {
       1: {
         clampedLine:
-          'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+          'shr-inline-block shr-max-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       },
       2: {
         clampedLine: 'shr-line-clamp-[2]',
@@ -58,12 +58,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const LineClamp: FC<Props & ElementProps> = ({
-  maxLines = 3,
-  children,
-  className,
-  ...rest
-}) => {
+export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...rest }) => {
   if (maxLines < 1 || maxLines > 6) {
     throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
   }

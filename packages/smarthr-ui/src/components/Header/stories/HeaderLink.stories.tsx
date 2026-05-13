@@ -1,8 +1,8 @@
-import { backgroundColor } from '../../../themes'
+import { backgroundColor } from '../../../tailwind'
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { HeaderLink } from '../HeaderLink'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/Header/HeaderLink',

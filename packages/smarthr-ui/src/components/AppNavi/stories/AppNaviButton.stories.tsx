@@ -1,10 +1,10 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColor } from '../../../themes'
+import { backgroundColor } from '../../../tailwind'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviButton } from '../AppNaviButton'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const _iconOptions = {
   なし: undefined,

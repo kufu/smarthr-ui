@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Badge } from '../../Badge'
 import { TabItem } from '../TabItem'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/TabBar/TabItem',
@@ -48,11 +48,11 @@ export const Disabled: StoryObj<typeof TabItem> = {
   },
 }
 
-export const DisabledDetail: StoryObj<typeof TabItem> = {
-  name: 'disabledDetail',
+export const DisabledReason: StoryObj<typeof TabItem> = {
+  name: 'disabledReason',
   args: {
     disabled: true,
-    disabledDetail: {
+    disabledReason: {
       message: '無効な理由',
     },
   },

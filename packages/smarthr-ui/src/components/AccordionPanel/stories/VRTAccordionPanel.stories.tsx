@@ -4,7 +4,7 @@ import { AccordionPanelContent } from '../AccordionPanelContent'
 import { AccordionPanelItem } from '../AccordionPanelItem'
 import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
   title: 'Components/AccordionPanel/VRT',
@@ -41,6 +41,14 @@ export default {
           </AccordionPanelItem>
         </AccordionPanel>
       ))}
+      <AccordionPanel rounded="all">
+        {[...Array(2)].map((_, i) => (
+          <AccordionPanelItem key={i + 1} name={`accordion-panel-${i + 1}`}>
+            <AccordionPanelTrigger>アコーディオンパネル{i + 1}</AccordionPanelTrigger>
+            <AccordionPanelContent>アコーディオンパネルコンテンツ{i + 1}</AccordionPanelContent>
+          </AccordionPanelItem>
+        ))}
+      </AccordionPanel>
     </Stack>
   ),
   parameters: {

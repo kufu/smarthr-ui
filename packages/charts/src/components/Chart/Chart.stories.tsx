@@ -1,8 +1,11 @@
-import { Meta, StoryObj } from '@storybook/react'
+import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/testData'
+
 import { Chart } from './Chart'
 
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
 const meta: Meta<typeof Chart> = {
-  title: 'Chart',
+  title: 'Charts/Chart',
   component: Chart,
   decorators: [
     (Story) => (
@@ -11,43 +14,78 @@ const meta: Meta<typeof Chart> = {
       </div>
     ),
   ],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof Chart>
 
-export const BarChart: Story = {
+export const Playground: Story = {
   args: {
     type: 'bar',
-    title: 'サンプル棒グラフ',
+    title: 'Chart',
+    data: singleSmall,
+  },
+  argTypes: {
+    type: {
+      control: 'select',
+      options: ['bar', 'line'],
+    },
     data: {
-      labels: ['1月', '2月', '3月', '4月', '5月'],
-      datasets: [
-        {
-          label: '売上',
-          data: [65, 59, 80, 81, 56],
-        },
-      ],
+      control: 'object',
+    },
+    title: {
+      control: 'text',
+    },
+    options: {
+      control: 'object',
     },
   },
 }
 
-export const MultipleDatasets: Story = {
+export const Type: Story = {
+  name: 'type',
   args: {
     type: 'bar',
-    title: '部門別売上比較',
+    data: singleSmall,
+  },
+  argTypes: {
+    type: {
+      control: 'radio',
+      options: ['bar', 'line'],
+    },
+  },
+}
+
+export const Title: Story = {
+  name: 'title',
+  args: {
+    type: 'bar',
+    data: singleSmall,
+    title: 'Title',
+  },
+  argTypes: {
+    title: {
+      control: 'text',
+    },
+  },
+}
+
+export const WithChartJsOptions: Story = {
+  name: 'with Chart.js options',
+  args: {
+    type: 'bar',
     data: {
-      labels: ['1月', '2月', '3月', '4月', '5月'],
+      labels: ['A', 'B', 'C', 'D', 'E'],
       datasets: [
         {
-          label: '部門A',
-          data: [65, 59, 80, 81, 56],
-        },
-        {
-          label: '部門B',
-          data: [45, 70, 65, 75, 60],
+          label: 'データ',
+          data: [95, 48, 80, 70, 42],
         },
       ],
     },
+    options: chartJsOptionsExamples.comprehensive,
   },
 }

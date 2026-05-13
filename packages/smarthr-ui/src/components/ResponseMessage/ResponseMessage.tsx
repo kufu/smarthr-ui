@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import {
   FaCircleCheckIcon,
@@ -11,18 +11,15 @@ import {
 } from '../Icon'
 import { Text } from '../Text'
 
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-
-type Props = PropsWithChildren<VariantProps<typeof classNameGenerator>> &
-  Omit<IconProps, 'text' | 'size' | 'alt' | 'iconGap'> & {
-    size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-    iconGap?: CharRelativeSize | AbstractSize
-  }
+type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
+  size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
+  status?: keyof typeof STATUS_ICON_MAPPER
+}
 
 export const classNameGenerator = tv({
   base: '',
   variants: {
-    type: {
+    status: {
       info: 'shr-fill-grey',
       success: 'shr-fill-main',
       warning: '',
@@ -32,7 +29,7 @@ export const classNameGenerator = tv({
   },
 })
 
-const ICON_MAPPER = {
+const STATUS_ICON_MAPPER = {
   info: FaCircleInfoIcon,
   success: FaCircleCheckIcon,
   warning: WarningIcon,
@@ -40,25 +37,12 @@ const ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({
-  type = 'info',
-  size,
-  iconGap,
-  right,
-  children,
-  ...other
-}) => {
-  const className = useMemo(() => classNameGenerator({ type }), [type])
-  const Icon = ICON_MAPPER[type]
-  const icon = <Icon {...other} className={className} />
-  const textIconAttributes = {
-    iconGap,
-    prefixIcon: right ? undefined : icon,
-    suffixIcon: right ? icon : undefined,
-  }
+export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ...rest }) => {
+  const className = useMemo(() => classNameGenerator({ status }), [status])
+  const TextIcon = STATUS_ICON_MAPPER[status]
 
   return (
-    <Text {...textIconAttributes} size={size}>
+    <Text icon={<TextIcon {...rest} className={className} />} size={size}>
       {children}
     </Text>
   )

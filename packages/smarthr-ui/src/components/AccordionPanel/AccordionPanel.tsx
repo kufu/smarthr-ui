@@ -12,13 +12,13 @@ import {
   useRef,
   useState,
 } from 'react'
-import { tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { flatArrayToMap } from '../../libs/map'
 
 import { getNewExpandedItems } from './accordionPanelHelper'
 
-type Props = PropsWithChildren<{
+type AbstractProps = PropsWithChildren<{
   /** アイコンの左右位置 */
   iconPosition?: 'left' | 'right'
   /** 複数のパネルを同時に開くことを許容するかどうか */
@@ -27,8 +27,9 @@ type Props = PropsWithChildren<{
   defaultExpanded?: string[]
   /** トリガのクリックイベントを処理するハンドラ */
   onClick?: (expandedItems: string[]) => void
-}>
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+}> &
+  VariantProps<typeof classNameGenerator>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
@@ -44,21 +45,48 @@ export const AccordionPanelContext = createContext<{
   parentRef: null,
 })
 
+const ROUNDED = {
+  t_l: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tl-l',
+  t_r: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tr-l',
+  b_l: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-bl-l',
+  b_r: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-br-l',
+}
+
+const ROUNDED_ALL = [ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
+
 const classNameGenerator = tv({
   base: 'smarthr-ui-AccordionPanel',
+  variants: {
+    rounded: {
+      true: ROUNDED_ALL,
+      false: '',
+      all: ROUNDED_ALL,
+      top: [ROUNDED.t_l, ROUNDED.t_r],
+      right: [ROUNDED.t_r, ROUNDED.b_r],
+      bottom: [ROUNDED.b_l, ROUNDED.b_r],
+      left: [ROUNDED.t_l, ROUNDED.b_l],
+    },
+  },
+  defaultVariants: {
+    rounded: false,
+  },
 })
 
-export const AccordionPanel: FC<Props & ElementProps> = ({
+export const AccordionPanel: FC<Props> = ({
   iconPosition = 'left',
   expandableMultiply = true,
   defaultExpanded = [],
   className,
   onClick: onClickProps,
-  ...props
+  rounded,
+  ...rest
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ className, rounded }),
+    [rounded, className],
+  )
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -82,7 +110,7 @@ export const AccordionPanel: FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      <div {...props} ref={parentRef} role="presentation" className={actualClassName} />
+      <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
     </AccordionPanelContext.Provider>
   )
 }

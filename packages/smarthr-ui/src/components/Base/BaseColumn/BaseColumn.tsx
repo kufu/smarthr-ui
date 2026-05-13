@@ -1,33 +1,37 @@
 import { type ComponentProps, type FC, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { bgColors } from '../../../themes/tailwind'
+import { backgroundColor } from '../../../tailwind'
 import { Base } from '../Base'
 
-type BaseProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'>
-type Props = VariantProps<typeof classNameGenerator>
-type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps | keyof Props>
+type AbstractProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'> &
+  VariantProps<typeof classNameGenerator>
+type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
   variants: {
-    bgColor: bgColors,
+    bgColor: backgroundColor,
+    rounded: {
+      true: 'shr-rounded-l',
+      all: 'shr-rounded-l',
+      top: 'shr-rounded-t-l',
+      right: 'shr-rounded-r-l',
+      bottom: 'shr-rounded-b-l',
+      left: 'shr-rounded-l-l',
+    },
   },
   defaultVariants: {
     bgColor: 'COLUMN',
+    rounded: false,
   },
 })
 
-export const BaseColumn: FC<BaseProps & Props & ElementProps> = ({
-  bgColor,
-  padding = 1,
-  className,
-  ...props
-}) => {
+export const BaseColumn: FC<Props> = ({ bgColor, rounded, padding = 1, className, ...rest }) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ bgColor, className }),
-    [bgColor, className],
+    () => classNameGenerator({ bgColor, rounded, className }),
+    [bgColor, rounded, className],
   )
 
-  return <Base {...props} padding={padding} layer={0} className={actualClassName} />
+  return <Base {...rest} padding={padding} layer={0} className={actualClassName} />
 }

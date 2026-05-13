@@ -1,8 +1,13 @@
 import { Cluster, Stack } from '../../Layout'
-import * as Icons from '../Icon'
+// eslint-disable-next-line no-restricted-syntax -- 200個以上のアイコンを一覧表示するため
+import * as Icons from '../FaIcon'
+import { LanguageIcon } from '../LanguageIcon'
+import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
+import { SparklesIcon } from '../SparklesIcon'
+import { WarningIcon } from '../WarningIcon'
 import { colorSet } from '../generateIcon'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 const FaAddressBookIcon = Icons.FaAddressBookIcon
 
@@ -15,14 +20,10 @@ export default {
       options: Object.keys(colorSet),
     },
     alt: { control: 'text' },
-    text: { control: 'text' },
   },
   args: {
     color: 'TEXT_BLACK',
     alt: '',
-    text: '',
-    iconGap: 0.25,
-    right: false,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -32,16 +33,22 @@ export default {
 export const All: StoryObj<typeof FaAddressBookIcon> = {
   render: (args) => (
     <Stack gap={0.75} as="ul" className="shr-list-none">
-      {Object.entries(Icons).map(([name, Icon]) => (
+      {[
+        ...Object.entries(Icons),
+        ['WarningIcon', WarningIcon],
+        ['SparklesIcon', SparklesIcon],
+        ['LanguageIcon', LanguageIcon],
+        ['OpenInNewTabIcon', OpenInNewTabIcon],
+      ].map(([name, Icon]) => (
         <li key={name}>
-          <Icon {...args} text={args.text || name.replace(/Icon$/, '')} />
+          <Cluster gap={0.5} align="center">
+            <Icon {...args} />
+            <span>{name}</span>
+          </Cluster>
         </li>
       ))}
     </Stack>
   ),
-  args: {
-    iconGap: 0.5,
-  },
 }
 
 export const IconControl: StoryObj<typeof FaAddressBookIcon> = {
@@ -69,33 +76,5 @@ export const Alt: StoryObj<typeof FaAddressBookIcon> = {
   name: 'alt',
   args: {
     alt: '連絡帳',
-  },
-}
-
-export const Text: StoryObj<typeof FaAddressBookIcon> = {
-  name: 'text',
-  args: {
-    text: '連絡帳',
-  },
-}
-
-export const IconGap: StoryObj<typeof FaAddressBookIcon> = {
-  name: 'iconGap',
-  args: {
-    text: '連絡帳',
-  },
-  render: (args) => (
-    <Stack>
-      <FaAddressBookIcon {...args} iconGap={0.25} />
-      <FaAddressBookIcon {...args} iconGap={0.5} />
-    </Stack>
-  ),
-}
-
-export const Right: StoryObj<typeof FaAddressBookIcon> = {
-  name: 'right',
-  args: {
-    text: '連絡帳',
-    right: true,
   },
 }
