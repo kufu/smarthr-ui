@@ -17,8 +17,14 @@ type AbstractProps = PropsWithChildren<{
 }>
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'section'>, keyof AbstractProps>
 
-export const AccordionPanelItemContext = createContext<{ name: string }>({
+export const AccordionPanelItemContext = createContext<{
+  name: string
+  triggerId: string
+  contentId: string
+}>({
   name: '',
+  triggerId: '',
+  contentId: '',
 })
 
 const classNameGenerator = tv({
@@ -32,6 +38,8 @@ export const AccordionPanelItem: FC<Props> = ({ name, className, ...rest }) => {
     <AccordionPanelItemContext.Provider
       value={{
         name,
+        triggerId: `${name}-trigger`,
+        contentId: `${name}-content`,
       }}
     >
       <Section {...rest} className={actualClassName} />

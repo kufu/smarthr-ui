@@ -1,7 +1,6 @@
-import { Center } from '..'
 import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
-import { centerClassNameGenerator } from '../Center'
+import { Center, centerClassNameGenerator } from '../Center'
 
 import type { Gap as GapType } from '../../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

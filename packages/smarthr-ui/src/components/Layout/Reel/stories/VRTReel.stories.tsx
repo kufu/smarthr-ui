@@ -1,4 +1,4 @@
-import { Reel } from '../../../..'
+import { Reel } from '../Reel'
 
 import { GapStory, Padding } from './Reel.stories'
 

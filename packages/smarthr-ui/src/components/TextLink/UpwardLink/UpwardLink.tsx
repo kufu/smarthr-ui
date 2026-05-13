@@ -3,9 +3,9 @@
 import { type ComponentProps, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { TextLink } from '..'
 import { useEnvironment } from '../../../hooks/useEnvironment'
 import { FaArrowLeftIcon } from '../../Icon'
+import { TextLink } from '../TextLink'
 
 const classNameGenerator = tv({
   base: 'shr-leading-none',

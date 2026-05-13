@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { locale as ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
@@ -125,4 +125,8 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/checkItem2': ' For details, see {cookieCacheLink}.',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
 } as const satisfies Record<keyof typeof ja, string>
