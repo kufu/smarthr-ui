@@ -78,9 +78,7 @@ const isRadioButtonElementClicked = (path: EventTarget[], currentTarget: EventTa
 }
 
 export const RadioButtonPanel: FC<Props> = ({
-  // FIXME: onClickを受け取っているが使用していない。型定義から削除するか、
-  // RadioButtonに渡して二重実行を防ぐ仕組みを実装する必要がある
-  onClick: _onClick,
+  onClick,
   as,
   className,
   children,
