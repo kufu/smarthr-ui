@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [94.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.2...smarthr-ui-v94.0.0) (2026-05-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ThCheckbox:** decorators属性を削除しIntlProviderのみを使用 ([#6235](https://github.com/kufu/smarthr-ui/issues/6235))
+
+### Features
+
+* **BulkActionRow:** BulkActionRow内にButton[variant="tertiary"]がある場合コントラスト比を上げるスタイル追加 ([#6285](https://github.com/kufu/smarthr-ui/issues/6285)) ([f9fb34a](https://github.com/kufu/smarthr-ui/commit/f9fb34a3e47302b059f39b7a97b2890fe21246fe))
+* **TimeFormatter, TimestampFormatter:** 時間とタイムスタンプを言語に合った形式に変換できるようにしたい ([#6013](https://github.com/kufu/smarthr-ui/issues/6013)) ([e6ea561](https://github.com/kufu/smarthr-ui/commit/e6ea561e2d590740bade2f4de1ce9fd690838e3c))
+
+
+### Bug Fixes
+
+* **Icon:** generateIconから'use client'を削除してサーバーコンポーネント対応 ([#6310](https://github.com/kufu/smarthr-ui/issues/6310)) ([a0e4e31](https://github.com/kufu/smarthr-ui/commit/a0e4e31d5fa5af326aa3b57f2b9befc327861927))
+* **RadioButtonPanel:** onClick属性を正しく処理し二重実行を防止 ([#6327](https://github.com/kufu/smarthr-ui/issues/6327)) ([1fc6239](https://github.com/kufu/smarthr-ui/commit/1fc623914035ad99ee076e09d7c3b9f016594b98))
+
+
+### Code Refactoring
+
+* **ThCheckbox:** decorators属性を削除しIntlProviderのみを使用 ([#6235](https://github.com/kufu/smarthr-ui/issues/6235)) ([3ccc2c7](https://github.com/kufu/smarthr-ui/commit/3ccc2c77927f2e615b96314b7903f497de786a00))
+
 ## [93.1.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.1...smarthr-ui-v93.1.2) (2026-05-08)
 
 
