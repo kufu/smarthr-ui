@@ -51,9 +51,13 @@ const classNameGenerator = tv({
 
       '[&:not([aria-checked="true"]):focus-visible]:shr-relative [&:not([aria-checked="true"]):focus-visible]:shr-border-x',
 
+      // ::before: フォーカスリングと前のボタンの右端の間の隙間を埋めるために、左端から2px外側に1pxの縦線を描画する。
+      // 非選択かつ先頭以外のボタンにフォーカスが当たったときのみ表示する
       'before:-shr-left-[2px] before:shr-hidden before:shr-h-[calc(100%+2px)] before:shr-w-px before:shr-bg-border before:shr-content-[""]',
       '[&:first-child]:before:shr-hidden [&:not([aria-checked="true"]):not(:first-child):focus-visible]:before:shr-absolute [&:not([aria-checked="true"]):not(:first-child):focus-visible]:before:shr-block',
 
+      // ::after: フォーカスリングと次のボタンの左端の間の隙間を埋めるために、右端から2px外側に1pxの縦線を描画する。
+      // 非選択かつ末尾以外のボタンにフォーカスが当たったときのみ表示する
       'after:-shr-right-[2px] after:shr-hidden after:shr-h-[calc(100%+2px)] after:shr-w-px after:shr-bg-border after:shr-content-[""]',
       '[&:last-child]:after:shr-hidden [&:not([aria-checked="true"]):not(:last-child):focus-visible]:after:shr-absolute [&:not([aria-checked="true"]):not(:last-child):focus-visible]:after:shr-block',
     ],

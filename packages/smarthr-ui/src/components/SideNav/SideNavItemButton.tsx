@@ -49,9 +49,13 @@ const classNameGenerator = tv({
       'shr-inline-flex shr-items-center',
       'shr-no-underline',
 
+      // ::before: フォーカスリングと上のアイテムの下端の間の隙間を埋めるために、上端から1px外側に1pxの横線を描画する。
+      // 非選択かつ先頭以外のボタンにフォーカスが当たったときのみ表示する
       'before:shr-absolute before:-shr-top-[1px] before:shr-left-0 before:shr-hidden before:shr-h-px before:shr-w-full before:shr-bg-border before:shr-content-[""]',
       '[:first-child_&]:before:shr-hidden [[data-current=false]:not(:first-child)_&:focus-visible]:before:shr-block [[data-current=false]_&:focus-visible]:before:shr-absolute',
 
+      // ::after: フォーカスリングと下のアイテムの上端の間の隙間を埋めるために、下端から1px外側に1pxの横線を描画する。
+      // 非選択かつ末尾以外のボタンにフォーカスが当たったときのみ表示する
       'after:shr-absolute after:-shr-bottom-[1px] after:shr-left-0 after:shr-hidden after:shr-h-px after:shr-w-full after:shr-bg-border after:shr-content-[""]',
       '[:last-child_&]:after:shr-hidden [[data-current=false]:not(:last-child)_&:focus-visible]:after:shr-block [[data-current=false]_&:focus-visible]:after:shr-absolute',
     ],
