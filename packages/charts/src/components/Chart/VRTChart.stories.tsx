@@ -1,6 +1,6 @@
 // eslint-disable-next-line smarthr/require-barrel-import
 import { Stack } from '../../../../smarthr-ui/src/components/Layout'
-import { multiSmall, singleSmall } from '../__stories__/testData'
+import { multiSmall, radarMultiSmall, radarSingleSmall, singleSmall } from '../__stories__/testData'
 
 import { Chart } from './Chart'
 
@@ -26,6 +26,16 @@ export default {
       {/* Line型 パターン4: 複数データセット(3個)、タイトルあり、標準サイズ */}
       <div className="shr-h-[400px]">
         <Chart type="line" data={multiSmall} title="Line型 - 複数データセット" />
+      </div>
+
+      {/* Radar型 パターン5: 単一データセット、タイトルあり、標準サイズ */}
+      <div className="shr-h-[400px]">
+        <Chart type="radar" data={radarSingleSmall} title="Radar型 - 単一データセット" />
+      </div>
+
+      {/* Radar型 パターン6: 複数データセット(3個)、タイトルあり、標準サイズ */}
+      <div className="shr-h-[400px]">
+        <Chart type="radar" data={radarMultiSmall} title="Radar型 - 複数データセット" />
       </div>
     </Stack>
   ),

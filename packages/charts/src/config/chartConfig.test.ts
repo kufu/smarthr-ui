@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest'
 
 import { SMARTHR_DEFAULT_COLORS } from '../helper'
 
-import { createBarChartOptions, createLineChartOptions } from './chartConfig'
+import {
+  createBarChartOptions,
+  createLineChartOptions,
+  createRadarChartOptions,
+} from './chartConfig'
 
 import type { ChartOptions } from 'chart.js'
 
@@ -196,6 +200,70 @@ describe('createLineChartOptions', () => {
 
   it('datalabelsなどの他のplugin設定は外部から追加できること', () => {
     const result = createLineChartOptions({
+      plugins: {
+        datalabels: {
+          display: true,
+          backgroundColor: '#fff',
+        },
+      },
+    })
+
+    expect(result.plugins?.datalabels?.display).toBe(true)
+    expect(result.plugins?.datalabels?.backgroundColor).toBe('#fff')
+  })
+})
+
+describe('createRadarChartOptions', () => {
+  it('rスケールにbeginAtZeroが設定されていること', () => {
+    const result = createRadarChartOptions()
+    expect(result.scales?.r?.beginAtZero).toBe(true)
+  })
+
+  it('rスケールのgrid colorが内部デフォルトであること', () => {
+    const result = createRadarChartOptions()
+    expect(result.scales?.r?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
+  })
+
+  it('rスケールのangleLinesにデフォルト色が設定されること', () => {
+    const result = createRadarChartOptions()
+    expect(result.scales?.r?.angleLines?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
+  })
+
+  it('外部からrスケールをカスタマイズできること', () => {
+    const result = createRadarChartOptions({
+      scales: {
+        r: {
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 25,
+          },
+        },
+      },
+    })
+
+    expect(result.scales?.r?.min).toBe(0)
+    expect(result.scales?.r?.max).toBe(100)
+    expect(result.scales?.r?.ticks?.stepSize).toBe(25)
+    // 内部設定が保持される
+    expect(result.scales?.r?.beginAtZero).toBe(true)
+    expect(result.scales?.r?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
+  })
+
+  it('tooltipの設定が外部から上書きできないこと（保護されている）', () => {
+    const result = createRadarChartOptions({
+      plugins: {
+        tooltip: {
+          backgroundColor: '#ff0000',
+        } as ChartOptions<'radar'>['plugins']['tooltip'],
+      },
+    })
+
+    expect(result.plugins?.tooltip?.backgroundColor).toBe(SMARTHR_DEFAULT_COLORS.BACKGROUND)
+  })
+
+  it('datalabelsなどの他のplugin設定は外部から追加できること', () => {
+    const result = createRadarChartOptions({
       plugins: {
         datalabels: {
           display: true,
