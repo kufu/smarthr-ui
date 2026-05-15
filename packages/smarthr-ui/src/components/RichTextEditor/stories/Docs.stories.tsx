@@ -425,7 +425,7 @@ const handleSave = () => {
   },
   render: () => {
     const ref = useRef<RichTextEditorController>(null)
-    const [value, setValue] = useState<RichTextJSON | undefined>()
+    const [_value, setValue] = useState<RichTextJSON | undefined>()
     const [error, setError] = useState('')
     const [saved, setSaved] = useState(false)
 
