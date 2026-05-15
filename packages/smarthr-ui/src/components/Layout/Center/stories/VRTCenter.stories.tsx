@@ -1,4 +1,4 @@
-import { Center } from '../../../..'
+import { Center } from '../Center'
 
 import { Padding } from './Center.stories'
 

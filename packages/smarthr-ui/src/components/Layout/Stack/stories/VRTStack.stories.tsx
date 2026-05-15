@@ -1,4 +1,4 @@
-import { Stack } from '../../../..'
+import { Stack } from '../Stack'
 
 import { GapStory } from './Stack.stories'
 

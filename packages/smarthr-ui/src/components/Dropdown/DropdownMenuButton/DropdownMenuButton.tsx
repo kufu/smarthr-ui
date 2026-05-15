@@ -19,13 +19,16 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { Dropdown, DropdownCloser, DropdownContent, DropdownMenuGroup, DropdownTrigger } from '..'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useIntl } from '../../../intl'
 import { type AnchorButton, Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
-import { DropdownContext } from '../Dropdown'
+import { Dropdown, DropdownContext } from '../Dropdown'
+import { DropdownCloser } from '../DropdownCloser'
+import { DropdownContent } from '../DropdownContent'
+import { DropdownTrigger } from '../DropdownTrigger'
 
+import { DropdownMenuGroup } from './DropdownMenuGroup'
 import useKeyboardNavigation from './useKeyboardNavigation'
 
 import type { RemoteDialogTrigger } from '../../Dialog'

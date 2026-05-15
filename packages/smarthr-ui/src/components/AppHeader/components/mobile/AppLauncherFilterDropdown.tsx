@@ -1,3 +1,5 @@
+'use client'
+
 import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 

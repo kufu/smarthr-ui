@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [94.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.2...smarthr-ui-v94.0.0) (2026-05-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ThCheckbox:** decorators属性を削除しIntlProviderのみを使用 ([#6235](https://github.com/kufu/smarthr-ui/issues/6235))
+
+### Features
+
+* **BulkActionRow:** BulkActionRow内にButton[variant="tertiary"]がある場合コントラスト比を上げるスタイル追加 ([#6285](https://github.com/kufu/smarthr-ui/issues/6285)) ([f9fb34a](https://github.com/kufu/smarthr-ui/commit/f9fb34a3e47302b059f39b7a97b2890fe21246fe))
+* **TimeFormatter, TimestampFormatter:** 時間とタイムスタンプを言語に合った形式に変換できるようにしたい ([#6013](https://github.com/kufu/smarthr-ui/issues/6013)) ([e6ea561](https://github.com/kufu/smarthr-ui/commit/e6ea561e2d590740bade2f4de1ce9fd690838e3c))
+
+
+### Bug Fixes
+
+* **Icon:** generateIconから'use client'を削除してサーバーコンポーネント対応 ([#6310](https://github.com/kufu/smarthr-ui/issues/6310)) ([a0e4e31](https://github.com/kufu/smarthr-ui/commit/a0e4e31d5fa5af326aa3b57f2b9befc327861927))
+* **RadioButtonPanel:** onClick属性を正しく処理し二重実行を防止 ([#6327](https://github.com/kufu/smarthr-ui/issues/6327)) ([1fc6239](https://github.com/kufu/smarthr-ui/commit/1fc623914035ad99ee076e09d7c3b9f016594b98))
+
+
+### Code Refactoring
+
+* **ThCheckbox:** decorators属性を削除しIntlProviderのみを使用 ([#6235](https://github.com/kufu/smarthr-ui/issues/6235)) ([3ccc2c7](https://github.com/kufu/smarthr-ui/commit/3ccc2c77927f2e615b96314b7903f497de786a00))
+
+## [93.1.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.1...smarthr-ui-v93.1.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* エラー画面のexportを修正 ([#6305](https://github.com/kufu/smarthr-ui/issues/6305)) ([50fd3be](https://github.com/kufu/smarthr-ui/commit/50fd3bebf85d2b604e123b6c40a148e295c8260b))
+
+## [93.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.0...smarthr-ui-v93.1.1) (2026-05-07)
+
+
+### Bug Fixes
+
+* useTheme()を使用しているファイルで'use client'してサーバーコンポーネント内でも利用できるように対応 ([#6290](https://github.com/kufu/smarthr-ui/issues/6290)) ([847c70e](https://github.com/kufu/smarthr-ui/commit/847c70ed9a6a6871d7637de054db5ecc098fdf0f))
+
+## [93.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.0.1...smarthr-ui-v93.1.0) (2026-04-24)
+
+
+### Features
+
+* 各種エラー画面を追加 ([#6274](https://github.com/kufu/smarthr-ui/issues/6274)) ([893bcce](https://github.com/kufu/smarthr-ui/commit/893bcceffe5db1ff86f8765c12bfb57e8434b86e))
+
+## [93.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.0.0...smarthr-ui-v93.0.1) (2026-04-21)
+
+
+### Bug Fixes
+
+* **Table:** fixedHeadのテーブルコンポネントが縦スクロール出来なくなっている ([#6275](https://github.com/kufu/smarthr-ui/issues/6275)) ([2971884](https://github.com/kufu/smarthr-ui/commit/29718846b439da9af0fde195b6771d13ca394a21))
+
 ## [93.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v92.0.0...smarthr-ui-v93.0.0) (2026-04-16)
 
 

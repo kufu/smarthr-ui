@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "93.0.0",
+  "version": "94.0.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -22,7 +22,7 @@
     "@tiptap/static-renderer": "^3.22.1",
     "dayjs": "^1.11.18",
     "decimal.js": "^10.6.0",
-    "intl-messageformat": "^11.2.0",
+    "intl-messageformat": "^11.2.4",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.3.0",
@@ -62,8 +62,8 @@
     "@vitejs/plugin-react": "^5.1.4",
     "autoprefixer": "^10.4.27",
     "babel-plugin-polyfill-corejs2": "^0.4.17",
-    "babel-plugin-polyfill-regenerator": "^0.6.6",
-    "chromatic": "^15.0.0",
+    "babel-plugin-polyfill-regenerator": "^0.6.8",
+    "chromatic": "^16.2.0",
     "eslint-plugin-storybook": "9.1.19",
     "glob": "13.0.6",
     "http-server": "^14.1.1",
@@ -89,6 +89,7 @@
     "tailwind-merge": "^3.3.1",
     "tslib": "^2.8.1",
     "tsx": "^4.20.6",
+    "vite": "7.3.2",
     "vitest": "^4.0.18"
   },
   "peerDependencies": {

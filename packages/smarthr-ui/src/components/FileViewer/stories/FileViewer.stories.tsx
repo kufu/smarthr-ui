@@ -1,4 +1,4 @@
-import { FileViewer } from '..'
+import { FileViewer } from '../FileViewer'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

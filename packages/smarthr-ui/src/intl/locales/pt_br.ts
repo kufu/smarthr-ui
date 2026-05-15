@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { locale as ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
@@ -185,4 +185,30 @@ export const locale = {
   'smarthr-ui/Th/sortDirectionNone': 'Sem ordenação',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': 'Selecionar/limpar tudo',
   'smarthr-ui/ThCheckbox/checkColumnName': 'Selecionar',
+  'smarthr-ui/ErrorScreen/homeLink': 'Voltar à tela inicial',
+  'smarthr-ui/ErrorScreen/smarthrLink': 'Voltar ao SmartHR',
+  'smarthr-ui/AuthErrorScreen/title': 'Houve um problema na autenticação.',
+  'smarthr-ui/ForbiddenErrorScreen/title': 'Você não tem permissão para acessar esta página.',
+  'smarthr-ui/ForbiddenErrorScreen/description': 'Consulte a pessoa responsável da sua empresa para mais informações.',
+  'smarthr-ui/NotFoundErrorScreen/title': 'A página procurada não foi encontrada.',
+  'smarthr-ui/NotFoundErrorScreen/description': '',
+  'smarthr-ui/UnauthorizedErrorScreen/title': 'Sessão encerrada por inatividade',
+  'smarthr-ui/UnauthorizedErrorScreen/description1': 'Logout efetuado automaticamente devido à inatividade por um determinado tempo.',
+  'smarthr-ui/UnauthorizedErrorScreen/description2': 'Para acessar a página solicitada, faça login novamente.',
+  'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': 'Fazer login novamente',
+  'smarthr-ui/UnexpectedErrorScreen/title': 'Ocorreu um erro inesperado.',
+  'smarthr-ui/UnexpectedErrorScreen/apology': '',
+  'smarthr-ui/UnexpectedErrorScreen/possibleCause': '',
+  'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem1': '',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '',
+  'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '',
+  'smarthr-ui/UnexpectedErrorScreen/adminContact': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
 } as const satisfies Record<keyof typeof ja, string>

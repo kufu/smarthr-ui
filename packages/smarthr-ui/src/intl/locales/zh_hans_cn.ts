@@ -1,4 +1,4 @@
-import type { ja } from '.'
+import type { locale as ja } from './ja'
 
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
 // prettier-ignore
@@ -185,4 +185,30 @@ export const locale = {
   'smarthr-ui/Th/sortDirectionNone': '无排序',
   'smarthr-ui/ThCheckbox/checkAllInvisibleLabel': '选择/取消所有项目',
   'smarthr-ui/ThCheckbox/checkColumnName': '选择',
+  'smarthr-ui/ErrorScreen/homeLink': '返回主页',
+  'smarthr-ui/ErrorScreen/smarthrLink': '返回 SmartHR',
+  'smarthr-ui/AuthErrorScreen/title': '认证过程中出现问题',
+  'smarthr-ui/ForbiddenErrorScreen/title': '您暂无查看本页面的权限',
+  'smarthr-ui/ForbiddenErrorScreen/description': '详情请咨询贵公司负责人或管理员。',
+  'smarthr-ui/NotFoundErrorScreen/title': '未找到您查找的页面',
+  'smarthr-ui/NotFoundErrorScreen/description': '您所查找的页面可能暂时无法访问，或已被移动或删除。',
+  'smarthr-ui/UnauthorizedErrorScreen/title': '由于长时间未操作，已退出登录',
+  'smarthr-ui/UnauthorizedErrorScreen/description1': '由于长时间未操作，系统已自动退出登录。',
+  'smarthr-ui/UnauthorizedErrorScreen/description2': '如需访问该页面，请重新登录。',
+  'smarthr-ui/UnauthorizedErrorScreen/reLoginButton': '重新登录',
+  'smarthr-ui/UnexpectedErrorScreen/title': '发生意外错误',
+  'smarthr-ui/UnexpectedErrorScreen/apology': '非常抱歉。',
+  'smarthr-ui/UnexpectedErrorScreen/possibleCause': '可能因临时网络问题、使用环境或上传文件内容等原因而出现错误。',
+  'smarthr-ui/UnexpectedErrorScreen/pleaseRetry': '请尝试以下操作。',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem1': '请稍后重试。',
+  'smarthr-ui/UnexpectedErrorScreen/retryItem2': '请查看{maintenanceLink}（相关信息可能稍后更新）。',
+  'smarthr-ui/UnexpectedErrorScreen/ifNotResolved': '如果问题仍未解决，请确认以下内容。',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem1': '请确认当前使用环境是否符合{environmentLink}。',
+  'smarthr-ui/UnexpectedErrorScreen/checkItem2': '请尝试删除浏览器的 Cookie 和缓存。详情请参阅{cookieCacheLink}。',
+  'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '如果问题仍未解决，请将{errorInfoLink}中的信息提供给贵公司的劳务负责人或其他拥有 SmartHR 管理员权限的负责人。',
+  'smarthr-ui/UnexpectedErrorScreen/adminContact': '如果您是 SmartHR 管理员，请将{errorInfoLink}中的信息一并发送给我们，并通过右下角的聊天图标联系我们。',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
 } as const satisfies Record<keyof typeof ja, string>
