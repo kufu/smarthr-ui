@@ -16,7 +16,7 @@ export default {
       text: 'フォームダイアログタイトル',
       sub: 'フォームダイアログのサブタイトル',
     },
-    actionText: '送信',
+    actionButton: '送信',
     subActionArea: <Button>サブアクション</Button>,
     contentBgColor: 'BACKGROUND',
     responseStatus: {

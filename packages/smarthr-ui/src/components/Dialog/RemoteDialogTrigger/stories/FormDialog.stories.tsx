@@ -19,7 +19,7 @@ export default {
         {...args}
         id="remote-dialog"
         heading="リモートトリガーフォームダイアログ"
-        actionText="アクション"
+        actionButton="アクション"
         onSubmit={(e, { close }) => {
           action('onSubmit')(e)
           close()
