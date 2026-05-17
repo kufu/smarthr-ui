@@ -1,7 +1,7 @@
 import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Tooltip } from '../../Tooltip'
+import { Tooltip } from '../../Balloon'
 import { Input } from '../Input'
 
 type Props = ComponentProps<typeof Input> & {

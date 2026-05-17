@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { Tooltip } from '../Tooltip'
+import { Tooltip } from '../Balloon'
 
 type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
 type Props = AbstractProps & Omit<ComponentPropsWithRef<'span'>, keyof AbstractProps>

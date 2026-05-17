@@ -3,8 +3,8 @@
 import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
-import { debounce } from '../../libs/debounce'
+import { useTheme } from '../../../hooks/useTheme'
+import { debounce } from '../../../libs/debounce'
 import { Balloon } from '../Balloon'
 
 type Props = {

@@ -134,11 +134,6 @@ type AbstractProps = PropsWithChildren<
 >
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
-/**
- * @deprecated 通常の用途では Tooltip コンポーネントを使用してください。
- * Tour（アプリの初回利用時チュートリアル）のような特殊な用途でのみ使用可能ですが、
- * 将来的には Tour 専用のコンポーネントとして整理される予定です。
- */
 export const Balloon = memo<Props>(
   ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...rest }) => {
     const actualClassName = useMemo(
