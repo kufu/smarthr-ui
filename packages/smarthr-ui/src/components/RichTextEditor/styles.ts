@@ -46,10 +46,13 @@ export const editorContentClasses = [
   '[&_.ProseMirror_div[data-youtube-video]]:shr-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-outline-main [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rounded-m',
   // table (resizable: tableWrapper で囲まれる)
-  '[&_.ProseMirror_.tableWrapper]:shr-my-0.5 [&_.ProseMirror_.tableWrapper]:shr-overflow-x-auto',
-  '[&_.ProseMirror_table]:shr-w-full [&_.ProseMirror_table]:shr-table-fixed [&_.ProseMirror_table]:shr-border-collapse [&_.ProseMirror_table]:shr-overflow-hidden',
-  '[&_.ProseMirror_td]:shr-border-shorthand [&_.ProseMirror_td]:shr-p-0.5 [&_.ProseMirror_td]:shr-align-top [&_.ProseMirror_td]:shr-min-w-[1em] [&_.ProseMirror_td]:shr-relative [&_.ProseMirror_td]:shr-box-border',
-  '[&_.ProseMirror_th]:shr-border-shorthand [&_.ProseMirror_th]:shr-p-0.5 [&_.ProseMirror_th]:shr-align-top [&_.ProseMirror_th]:shr-min-w-[1em] [&_.ProseMirror_th]:shr-bg-head [&_.ProseMirror_th]:shr-font-bold [&_.ProseMirror_th]:shr-relative [&_.ProseMirror_th]:shr-box-border',
+  // テーブルは内容幅にしてNotion風レイアウトを実現。column-resizingはtable-fixedで動作する。
+  // tableWrapperの右と下に +列/+行 バー(24px)用の余白を確保。テーブル幅がそれを超えると
+  // tableWrapper内で横スクロールが発生する。
+  '[&_.ProseMirror_.tableWrapper]:shr-mt-0.5 [&_.ProseMirror_.tableWrapper]:shr-mb-2 [&_.ProseMirror_.tableWrapper]:shr-w-fit [&_.ProseMirror_.tableWrapper]:shr-max-w-[calc(100%-1.75rem)] [&_.ProseMirror_.tableWrapper]:shr-overflow-x-auto',
+  '[&_.ProseMirror_table]:shr-w-auto [&_.ProseMirror_table]:shr-table-fixed [&_.ProseMirror_table]:shr-border-collapse [&_.ProseMirror_table]:shr-overflow-hidden',
+  '[&_.ProseMirror_td]:shr-border-shorthand [&_.ProseMirror_td]:shr-p-0.5 [&_.ProseMirror_td]:shr-align-top [&_.ProseMirror_td]:shr-min-w-[6em] [&_.ProseMirror_td]:shr-relative [&_.ProseMirror_td]:shr-box-border',
+  '[&_.ProseMirror_th]:shr-border-shorthand [&_.ProseMirror_th]:shr-p-0.5 [&_.ProseMirror_th]:shr-align-top [&_.ProseMirror_th]:shr-min-w-[6em] [&_.ProseMirror_th]:shr-bg-head [&_.ProseMirror_th]:shr-text-left [&_.ProseMirror_th]:shr-font-bold [&_.ProseMirror_th]:shr-relative [&_.ProseMirror_th]:shr-box-border',
   // selectedCell: 疑似要素オーバーレイ
   '[&_.ProseMirror_td.selectedCell::after]:shr-content-[""] [&_.ProseMirror_td.selectedCell::after]:shr-absolute [&_.ProseMirror_td.selectedCell::after]:shr-inset-0 [&_.ProseMirror_td.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_td.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_td.selectedCell::after]:shr-z-1',
   '[&_.ProseMirror_th.selectedCell::after]:shr-content-[""] [&_.ProseMirror_th.selectedCell::after]:shr-absolute [&_.ProseMirror_th.selectedCell::after]:shr-inset-0 [&_.ProseMirror_th.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_th.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_th.selectedCell::after]:shr-z-1',
@@ -96,10 +99,12 @@ export const staticContentClasses = [
   '[&_img]:shr-block [&_img]:shr-my-0.5 [&_img]:shr-max-w-full',
   // youtube iframe
   '[&_iframe]:shr-my-0.5 [&_iframe]:shr-max-w-full [&_iframe]:shr-rounded-m',
-  // table
-  '[&_table]:shr-my-0.5 [&_table]:shr-w-full [&_table]:shr-border-collapse',
+  // table (renderWrapper: true で <div class="tableWrapper"> が出力されるので、その内側に table)
+  // テーブル自身に inline style で width が付くため、wrapper 側で横スクロールを担保する
+  '[&_.tableWrapper]:shr-my-0.5 [&_.tableWrapper]:shr-max-w-full [&_.tableWrapper]:shr-overflow-x-auto',
+  '[&_table]:shr-border-collapse',
   '[&_td]:shr-border-shorthand [&_td]:shr-p-0.5 [&_td]:shr-align-top',
-  '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-align-top [&_th]:shr-bg-head [&_th]:shr-font-bold',
+  '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-align-top [&_th]:shr-bg-head [&_th]:shr-text-left [&_th]:shr-font-bold',
   '[&_td_p]:shr-my-0',
   '[&_th_p]:shr-my-0',
   // paragraph

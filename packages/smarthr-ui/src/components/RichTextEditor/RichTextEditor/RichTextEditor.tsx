@@ -16,6 +16,7 @@ import { useIntl } from '../../../intl'
 import { AltTextDialog } from '../Toolbar/AltTextDialog'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
+import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { normalizeToJSON } from '../serializers/normalizeToJSON'
 import { editorContentClasses } from '../styles'
@@ -33,7 +34,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-RichTextEditor',
-      'shr-border-shorthand shr-rounded-m',
+      'shr-border-shorthand shr-relative shr-rounded-m',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator--outer',
     ],
@@ -97,6 +98,7 @@ export const RichTextEditor = memo(
       }: RichTextEditorProps,
       ref,
     ) => {
+      const wrapperRef = useRef<HTMLDivElement>(null)
       const toolbarRef = useRef<HTMLDivElement>(null)
       const contentRef = useRef<HTMLDivElement>(null)
 
@@ -265,7 +267,7 @@ export const RichTextEditor = memo(
       )
 
       return (
-        <div className={classNames.wrapper({ className })}>
+        <div ref={wrapperRef} className={classNames.wrapper({ className })}>
           {toolbar}
           <div
             ref={contentRef}
@@ -274,6 +276,9 @@ export const RichTextEditor = memo(
           >
             {editor && <EditorContent editor={editor} />}
           </div>
+          {editor && !readOnly && !disabled && !hideToolbar && features.includes('table') && (
+            <TableFloatingUI editor={editor} containerRef={wrapperRef} />
+          )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea()} />
           )}

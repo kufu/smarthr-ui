@@ -26,7 +26,7 @@ import { FontSizeDropdown } from './FontSizeDropdown'
 import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
 import { LinkButton } from './LinkButton'
-import { TableDropdown } from './TableDropdown'
+import { TableInsertDropdown } from './TableInsertDropdown'
 import { TextAlignDropdown } from './TextAlignDropdown'
 import { ToolbarButton } from './ToolbarButton'
 import { YoutubeInsertButton } from './YoutubeInsertButton'
@@ -311,7 +311,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
           return <TextAlignDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'table') {
-          return <TableDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
+          return <TableInsertDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         const buttonItem = item as ButtonItem
         return (

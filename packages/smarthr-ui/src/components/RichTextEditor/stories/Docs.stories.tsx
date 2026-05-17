@@ -329,11 +329,21 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   <code>table</code>
                 </td>
-                <td style={tdStyle}>テーブル</td>
                 <td style={tdStyle}>
-                  <FaTableIcon /> テーブル操作ドロップダウン
+                  テーブル
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    ツールバーは挿入のみ。テーブル付近に floating UI で操作系を表示
+                  </Text>
                 </td>
-                <td style={tdStyle}>Tab / Shift+Tab（セル移動）</td>
+                <td style={tdStyle}>
+                  <FaTableIcon /> テーブル挿入
+                </td>
+                <td style={tdStyle}>
+                  Tab / Shift+Tab（セル移動）
+                  <br />
+                  Alt+Enter / Shift+F10（表の操作メニュー）
+                </td>
                 <td style={tdStyle}>なし</td>
               </tr>
             </tbody>

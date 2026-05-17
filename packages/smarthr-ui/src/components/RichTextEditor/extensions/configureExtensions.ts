@@ -2,11 +2,13 @@ import { Color } from '@tiptap/extension-color'
 import { FileHandler } from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
-import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { Youtube } from '@tiptap/extension-youtube'
 import StarterKit from '@tiptap/starter-kit'
+
+import { CustomTable } from './Table/CustomTable'
 
 import type { ImageUploadResult, RichTextFeature } from '../types'
 import type { AnyExtension } from '@tiptap/react'
@@ -103,7 +105,14 @@ export const configureExtensions = ({
   }
 
   if (has('table')) {
-    extensions.push(Table.configure({ resizable: true }), TableRow, TableHeader, TableCell)
+    // renderWrapper: true で HTML 出力にも <div class="tableWrapper"> を含める。
+    // これで RichTextContent 側でも横スクロール用 wrapper が機能する。
+    extensions.push(
+      CustomTable.configure({ resizable: true, renderWrapper: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
+    )
   }
 
   if (has('color') || has('fontSize')) {
