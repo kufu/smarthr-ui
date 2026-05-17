@@ -33,6 +33,9 @@ export const LinkButton: FC<Props> = memo(
     const [error, setError] = useState('')
 
     const handleClick = useCallback(() => {
+      if (editor.isActive('link')) {
+        editor.chain().extendMarkRange('link').run()
+      }
       const { from, to } = editor.state.selection
       const selectedText = editor.state.doc.textBetween(from, to, '')
       const currentHref = (editor.getAttributes('link').href as string | undefined) ?? ''
@@ -75,25 +78,17 @@ export const LinkButton: FC<Props> = memo(
           const { from, to } = editor.state.selection
           const selectedText = editor.state.doc.textBetween(from, to, '')
 
-          if (selectedText) {
+          if (selectedText && text === selectedText) {
             editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-          } else if (text) {
-            editor
-              .chain()
-              .focus()
-              .insertContent({
-                type: 'text',
-                text,
-                marks: [{ type: 'link', attrs: { href: url } }],
-              })
-              .run()
           } else {
+            const finalText = text || selectedText || url
             editor
               .chain()
               .focus()
+              .extendMarkRange('link')
               .insertContent({
                 type: 'text',
-                text: url,
+                text: finalText,
                 marks: [{ type: 'link', attrs: { href: url } }],
               })
               .run()
