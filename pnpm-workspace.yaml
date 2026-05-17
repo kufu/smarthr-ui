@@ -2,7 +2,7 @@ packages:
   - packages/*
   - sandbox/*
 
-minimumReleaseAge: 4320
+minimumReleaseAge: 10080
 
 auditConfig:
   # HINT: Next.jsに関するpatchだが、SCのチェックでしか利用していないためignoreする

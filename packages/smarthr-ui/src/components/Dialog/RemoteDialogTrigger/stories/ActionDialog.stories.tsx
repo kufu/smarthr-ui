@@ -18,8 +18,8 @@ export default {
       <ActionDialog
         {...args}
         id="remote-dialog"
-        heading="アクションダイアログ"
-        actionText="アクション"
+        heading="リモートトリガーアクションダイアログ"
+        actionButton="アクション"
         onClickAction={(e, { close }) => {
           action('onClickAction')(e)
           close()

@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
 
@@ -16,7 +16,7 @@ describe('ControlledActionDialog', () => {
         <ControlledActionDialog
           isOpen={isOpen}
           heading="ControlledActionDialog"
-          actionText="保存"
+          actionButton="保存"
           onClickClose={() => setIsOpen(false)}
           onClickAction={(_, { close }) => {
             close()

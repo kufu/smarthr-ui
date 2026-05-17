@@ -35,7 +35,7 @@ export const ControlledMessageDialog: FC<Props> = ({
   contentPadding,
   className,
   portalParent,
-  decorators,
+  closeButton,
   id,
   isOpen,
   ...rest
@@ -64,7 +64,7 @@ export const ControlledMessageDialog: FC<Props> = ({
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         onClickClose={handleClickClose}
-        decorators={decorators}
+        closeButton={closeButton}
       >
         {children}
       </MessageDialogContentInner>

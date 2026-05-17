@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.2...smarthr-ui-charts-v0.1.3) (2026-05-13)
+
+
+### Bug Fixes
+
+* **charts:** chartjs-plugin-datalabels の型拡張を利用者側に伝播させる ([#6316](https://github.com/kufu/smarthr-ui/issues/6316)) ([daaa3d3](https://github.com/kufu/smarthr-ui/commit/daaa3d3e7854eb41e7067c0d6cb2dc67ee20abf6))
+
 ## [0.1.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.1...smarthr-ui-charts-v0.1.2) (2026-04-16)
 
 

@@ -31,7 +31,7 @@ export const Playground: Story = {
   argTypes: {
     type: {
       control: 'select',
-      options: ['bar', 'line'],
+      options: ['bar', 'line', 'radar'],
     },
     data: {
       control: 'object',
@@ -54,7 +54,7 @@ export const Type: Story = {
   argTypes: {
     type: {
       control: 'radio',
-      options: ['bar', 'line'],
+      options: ['bar', 'line', 'radar'],
     },
   },
 }

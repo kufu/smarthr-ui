@@ -59,6 +59,57 @@ export const manyPoints = {
 }
 
 /**
+ * Radar チャート用 - 少データ（5軸）- 単一データセット
+ */
+export const radarSingleSmall = {
+  labels: ['企画力', '実行力', '協調性', '分析力', 'コミュニケーション'],
+  datasets: [
+    {
+      label: 'データ1',
+      data: [80, 65, 90, 55, 75],
+    },
+  ],
+}
+
+/**
+ * Radar チャート用 - 少データ（5軸）- 複数データセット（3個）
+ */
+export const radarMultiSmall = {
+  labels: ['企画力', '実行力', '協調性', '分析力', 'コミュニケーション'],
+  datasets: [
+    {
+      label: 'グループA',
+      data: [80, 65, 90, 55, 75],
+    },
+    {
+      label: 'グループB',
+      data: [60, 80, 70, 85, 60],
+    },
+    {
+      label: 'グループC',
+      data: [70, 55, 80, 65, 90],
+    },
+  ],
+}
+
+/**
+ * Radar チャート用 - 多軸（8軸）- 複数データセット（2個）
+ */
+export const radarManyAxes = {
+  labels: ['速度', '精度', '安全性', '快適性', '経済性', '環境性能', '耐久性', '操作性'],
+  datasets: [
+    {
+      label: 'モデルA',
+      data: [85, 70, 90, 75, 60, 80, 65, 70],
+    },
+    {
+      label: 'モデルB',
+      data: [70, 85, 75, 80, 75, 65, 80, 85],
+    },
+  ],
+}
+
+/**
  * chart.js オプションのサンプル
  */
 export const chartJsOptionsExamples = {

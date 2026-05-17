@@ -57,7 +57,7 @@ export const ControlledStepFormDialog: FC<Props> = ({ portalParent, id, firstSte
 
   return createPortal(
     <StepFormDialogProvider firstStep={firstStep}>
-      <ActualControlledStepFormDialog {...rest} id={id} firstStep={firstStep} />
+      <ActualControlledStepFormDialog {...rest} firstStep={firstStep} />
     </StepFormDialogProvider>,
   )
 }
@@ -78,7 +78,6 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   onPressEscape = onClickClose,
   responseStatus,
   className,
-  id,
   isOpen,
   ...rest
 }) => {

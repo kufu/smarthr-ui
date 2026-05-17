@@ -1,6 +1,5 @@
 import { type FC, type ReactNode, memo, useMemo } from 'react'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
@@ -14,8 +13,8 @@ export type AbstractProps = DialogBodyProps & {
   heading: DialogHeadingProps
   /** ダイアログの説明 */
   children: ReactNode
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'closeButtonLabel'>
+  /** 閉じるボタン */
+  closeButton?: ReactNode
 }
 
 export type MessageDialogContentInnerProps = AbstractProps & {
@@ -28,7 +27,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   contentPadding,
   children,
   onClickClose,
-  decorators,
+  closeButton,
 }) => {
   const styles = useMemo(() => {
     const { wrapper, actionArea } = dialogContentInner()
@@ -47,7 +46,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
       </DialogBody>
       <FooterCluster
         onClickClose={onClickClose}
-        decorators={decorators}
+        closeButton={closeButton}
         className={styles.actionArea}
       />
     </Section>
@@ -55,26 +54,23 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
 }
 
 const FooterCluster = memo<
-  Pick<MessageDialogContentInnerProps, 'onClickClose' | 'decorators'> & { className: string }
->(({ onClickClose, decorators, className }) => {
+  Pick<MessageDialogContentInnerProps, 'onClickClose' | 'closeButton'> & { className: string }
+>(({ onClickClose, closeButton, className }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      closeButtonLabel: localize({
+  const defaultText = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/MessageDialog/closeButtonLabel',
         defaultText: '閉じる',
       }),
-    }),
     [localize],
   )
-
-  const decorated = useDecorators<'closeButtonLabel'>(decoratorDefaultTexts, decorators)
 
   return (
     <Cluster as="footer" justify="flex-end" className={className}>
       <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
-        {decorated.closeButtonLabel}
+        {closeButton ?? defaultText}
       </Button>
     </Cluster>
   )
