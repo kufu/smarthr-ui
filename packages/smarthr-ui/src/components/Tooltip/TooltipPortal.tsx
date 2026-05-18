@@ -5,7 +5,8 @@ import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../hooks/useTheme'
 import { debounce } from '../../libs/debounce'
-import { Balloon } from '../Balloon'
+
+import { ControlledTooltip } from './ControlledTooltip'
 
 type Props = {
   message: ReactNode
@@ -85,14 +86,14 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
       className={classNames.container}
       style={style}
     >
-      <Balloon
+      <ControlledTooltip
         horizontal={actualHorizontal}
         vertical={actualVertical}
         triggerIcon={isIcon}
         className={classNames.balloon}
       >
         <div className={classNames.balloonText}>{message}</div>
-      </Balloon>
+      </ControlledTooltip>
     </div>
   )
 }
