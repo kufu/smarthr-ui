@@ -9,7 +9,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
@@ -24,28 +23,38 @@ export type FormDialogHelpers = {
   close: () => void
 }
 
+type ObjectActionButtonType = {
+  /** アクションボタンのラベル */
+  text: ReactNode
+  /** アクションボタンのスタイル */
+  theme?: 'primary' | 'secondary' | 'danger'
+  /** アクションボタンを無効にするかどうか */
+  disabled?: boolean
+}
+
+type ObjectCloseButtonType = {
+  /** 閉じるボタンのラベル */
+  text: ReactNode
+  /** 閉じるボタンを無効にするかどうか */
+  disabled?: boolean
+}
+
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
-    /** アクションボタンのラベル */
-    actionText: ReactNode
-    /** アクションボタンのスタイル */
-    actionTheme?: 'primary' | 'secondary' | 'danger'
+    /** アクションボタン */
+    actionButton: ObjectActionButtonType
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
      * @param helpers ダイアログ操作のためのヘルパー関数
      */
     onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
-    /** アクションボタンを無効にするかどうか */
-    actionDisabled?: boolean
-    /** 閉じるボタンを無効にするかどうか */
-    closeDisabled?: boolean
+    /** 閉じるボタン */
+    closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
-    /** コンポーネント内の文言を変更するための関数を設定 */
-    decorators?: DecoratorsType<'closeButtonLabel'>
   }
 >
 
@@ -68,15 +77,12 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   heading,
   contentBgColor,
   contentPadding,
-  actionText,
-  actionTheme,
+  actionButton,
   onSubmit,
   onClickClose,
   responseStatus,
-  actionDisabled,
-  closeDisabled,
+  closeButton,
   subActionArea,
-  decorators,
 }) => {
   const handleSubmitAction = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -116,12 +122,9 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
             {subActionArea}
             <ActionAreaCluster
               onClickClose={onClickClose}
-              closeDisabled={closeDisabled}
-              actionDisabled={actionDisabled}
+              closeButton={closeButton}
+              actionButton={actionButton}
               loading={calculatedResponseStatus.isProcessing}
-              actionTheme={actionTheme}
-              decorators={decorators}
-              actionText={actionText}
               className={styles.buttonArea}
             />
           </Cluster>
@@ -136,43 +139,29 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<
-    FormDialogContentInnerProps,
-    | 'onClickClose'
-    | 'closeDisabled'
-    | 'actionDisabled'
-    | 'actionTheme'
-    | 'decorators'
-    | 'actionText'
-  > & { loading: boolean; className: string }
->(
-  ({
-    onClickClose,
-    closeDisabled,
-    actionDisabled,
-    loading,
-    actionTheme,
-    decorators,
-    actionText,
-    className,
-  }) => (
-    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
-      <CloseButton
-        onClick={onClickClose}
-        disabled={closeDisabled || loading}
-        decorators={decorators}
-      />
-      <ActionButton variant={actionTheme} disabled={actionDisabled} loading={loading}>
-        {actionText}
-      </ActionButton>
-    </Cluster>
-  ),
-)
+  Pick<FormDialogContentInnerProps, 'onClickClose'> & {
+    actionButton: ObjectActionButtonType
+    closeButton: ObjectCloseButtonType
+    loading: boolean
+    className: string
+  }
+>(({ onClickClose, closeButton, actionButton, loading, className }) => (
+  <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+    <CloseButton
+      onClick={onClickClose}
+      disabled={closeButton.disabled || loading}
+      text={closeButton.text}
+    />
+    <ActionButton variant={actionButton.theme} disabled={actionButton.disabled} loading={loading}>
+      {actionButton.text}
+    </ActionButton>
+  </Cluster>
+))
 
 const ActionButton = memo<
   PropsWithChildren<{
-    variant: FormDialogContentInnerProps['actionTheme']
-    disabled: FormDialogContentInnerProps['actionDisabled']
+    variant: ObjectActionButtonType['theme']
+    disabled: ObjectActionButtonType['disabled']
     loading: boolean
   }>
 >(({ variant = 'primary', disabled, loading, children }) => (
@@ -187,29 +176,25 @@ const ActionButton = memo<
   </Button>
 ))
 
-const CloseButton = memo<
-  Pick<FormDialogContentInnerProps, 'decorators'> & {
-    onClick: FormDialogContentInnerProps['onClickClose']
-    disabled: boolean
-  }
->(({ onClick, disabled, decorators }) => {
+const CloseButton = memo<{
+  onClick: FormDialogContentInnerProps['onClickClose']
+  disabled: boolean
+  text: ReactNode
+}>(({ onClick, disabled, text }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      closeButtonLabel: localize({
+  const defaultText = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/FormDialog/closeButtonLabel',
         defaultText: 'キャンセル',
       }),
-    }),
     [localize],
   )
 
-  const decorated = useDecorators(decoratorDefaultTexts, decorators)
-
   return (
     <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {decorated.closeButtonLabel}
+      {text ?? defaultText}
     </Button>
   )
 })
