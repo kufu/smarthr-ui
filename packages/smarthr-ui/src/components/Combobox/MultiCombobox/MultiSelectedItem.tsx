@@ -13,10 +13,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
-import { Tooltip } from '../../Balloon'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaCircleXmarkIcon } from '../../Icon'
+import { Tooltip } from '../../Tooltip'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import type { ComboboxItem } from '../types'

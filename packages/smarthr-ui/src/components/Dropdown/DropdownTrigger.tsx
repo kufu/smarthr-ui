@@ -12,7 +12,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { tabbable } from '../../libs/tabbable'
-import { Tooltip } from '../Balloon'
+import { Tooltip } from '../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 

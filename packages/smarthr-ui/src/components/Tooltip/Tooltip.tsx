@@ -23,8 +23,8 @@ import { createPortal } from 'react-dom'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { useEnhancedEffect } from '../../../hooks/useEnhancedEffect'
-import { VisuallyHiddenText } from '../../VisuallyHiddenText'
+import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { TooltipPortal } from './TooltipPortal'
 

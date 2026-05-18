@@ -10,9 +10,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Tooltip } from '../Balloon'
 import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
+import { Tooltip } from '../Tooltip'
 
 const classNameGenerator = tv({
   slots: {

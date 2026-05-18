@@ -1,8 +1,8 @@
 import { type FC, type FunctionComponent, type JSX, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Tooltip } from '../Balloon'
 import { FaCircleInfoIcon } from '../Icon'
+import { Tooltip } from '../Tooltip'
 
 type Props = {
   button: JSX.Element
