@@ -1,7 +1,7 @@
 import { userEvent } from 'storybook/test'
 
-import { FaCircleQuestionIcon } from '../../../Icon'
-import { Stack } from '../../../Layout'
+import { FaCircleQuestionIcon } from '../../Icon'
+import { Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
