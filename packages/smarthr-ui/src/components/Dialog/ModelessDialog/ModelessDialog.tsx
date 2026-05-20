@@ -96,7 +96,8 @@ type Props = AbstractProps &
 const classNameGenerator = tv({
   slots: {
     overlap: 'shr-inset-[unset]',
-    wrapper: 'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
+    wrapper:
+      'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-max-w-[calc(100dvw-theme(spacing.1))] shr-flex-col',
     headerEl: [
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5',
       'hover:shr-bg-white-darken',
