@@ -41,3 +41,5 @@ allowBuilds:
   canvas: true
   esbuild: true
   sharp: true
+overrides:
+  postcss@<8.5.10: ^8.5.10
