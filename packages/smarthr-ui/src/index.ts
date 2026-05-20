@@ -151,7 +151,14 @@ export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // localization
-export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
+export {
+  IntlProvider,
+  useIntl,
+  DateFormatter,
+  TimeFormatter,
+  TimestampFormatter,
+  locales,
+} from './intl'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
