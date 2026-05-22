@@ -125,8 +125,8 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/checkItem2': '請嘗試刪除瀏覽器的Cookie和快取。詳情請參閱{cookieCacheLink}。',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '如果檢查上述內容後問題仍然存在，請聯繫公司內部的勞務負責人或擁有SmartHR管理者權限的人，並附上{errorInfoLink}的資訊。',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': '擁有SmartHR管理者權限的人，請附上{errorInfoLink}的資訊，並透過右下角的聊天圖示聯繫我們。',
-  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
-  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
-  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
-  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '維護與故障資訊',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': 'SmartHR的系統需求環境',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': 'Q. 如何刪除瀏覽器的Cookie和快取？',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '希望您能告訴我們發生錯誤時的內容',
 } as const satisfies Record<keyof typeof ja, string>
