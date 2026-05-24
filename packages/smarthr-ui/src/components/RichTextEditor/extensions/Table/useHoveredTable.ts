@@ -1,6 +1,8 @@
 'use client'
 
-import { type RefObject, useCallback, useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
+
+import { hitTestExtendedTableArea } from './helpers/extendedHitArea'
 
 import type { Editor } from '@tiptap/react'
 
@@ -12,7 +14,13 @@ export type HoveredTableInfo = {
   viewport: { top: number; left: number; width: number; height: number }
 }
 
-const CLEAR_DELAY_MS = 150
+export type UseHoveredTableReturn = {
+  info: HoveredTableInfo | null
+  inRightBar: boolean
+  inBottomBar: boolean
+}
+
+const BAR_THICKNESS = 24
 
 const resolveTablePos = (editor: Editor, tableEl: HTMLElement): number | null => {
   try {
@@ -29,20 +37,39 @@ const resolveTablePos = (editor: Editor, tableEl: HTMLElement): number | null =>
   return null
 }
 
-/**
- * .tableWrapper が存在すればその要素（max-width制限・横スクロール考慮）、
- * なければ table 自体を返す。
- */
 const resolveDisplayEl = (tableEl: HTMLElement): HTMLElement => {
   const parent = tableEl.parentElement
   if (parent && parent.classList.contains('tableWrapper')) return parent
   return tableEl
 }
 
-export type UseHoveredTableReturn = {
-  info: HoveredTableInfo | null
-  cancelClear: () => void
-  scheduleClear: () => void
+const buildHoveredInfo = (
+  editor: Editor,
+  tableEl: HTMLElement,
+  container: HTMLElement,
+): HoveredTableInfo | null => {
+  const pos = resolveTablePos(editor, tableEl)
+  if (pos === null) return null
+  const displayEl = resolveDisplayEl(tableEl)
+  const displayRect = displayEl.getBoundingClientRect()
+  const containerRect = container.getBoundingClientRect()
+  const proseMirrorRect = editor.view.dom.getBoundingClientRect()
+  return {
+    pos,
+    rect: {
+      top: displayRect.top - containerRect.top,
+      left: displayRect.left - containerRect.left,
+      width: displayRect.width,
+      height: displayRect.height,
+    },
+    containerSize: { width: containerRect.width, height: containerRect.height },
+    viewport: {
+      top: proseMirrorRect.top - containerRect.top,
+      left: proseMirrorRect.left - containerRect.left,
+      width: proseMirrorRect.width,
+      height: proseMirrorRect.height,
+    },
+  }
 }
 
 export const useHoveredTable = (
@@ -50,128 +77,127 @@ export const useHoveredTable = (
   containerRef: RefObject<HTMLElement | null>,
 ): UseHoveredTableReturn => {
   const [info, setInfo] = useState<HoveredTableInfo | null>(null)
-  const clearTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const currentTableElRef = useRef<HTMLElement | null>(null)
-
-  const cancelClear = useCallback(() => {
-    if (clearTimeoutRef.current) {
-      clearTimeout(clearTimeoutRef.current)
-      clearTimeoutRef.current = null
-    }
-  }, [])
-
-  const scheduleClear = useCallback(() => {
-    cancelClear()
-    clearTimeoutRef.current = setTimeout(() => {
-      currentTableElRef.current = null
-      setInfo(null)
-      clearTimeoutRef.current = null
-    }, CLEAR_DELAY_MS)
-  }, [cancelClear])
-
-  const updateRectFromEl = useCallback(
-    (tableEl: HTMLElement) => {
-      const container = containerRef.current
-      if (!container) return
-      const pos = resolveTablePos(editor, tableEl)
-      if (pos === null) {
-        setInfo(null)
-        return
-      }
-      const displayEl = resolveDisplayEl(tableEl)
-      const displayRect = displayEl.getBoundingClientRect()
-      const containerRect = container.getBoundingClientRect()
-      const proseMirrorRect = editor.view.dom.getBoundingClientRect()
-      setInfo({
-        pos,
-        rect: {
-          top: displayRect.top - containerRect.top,
-          left: displayRect.left - containerRect.left,
-          width: displayRect.width,
-          height: displayRect.height,
-        },
-        containerSize: {
-          width: containerRect.width,
-          height: containerRect.height,
-        },
-        viewport: {
-          top: proseMirrorRect.top - containerRect.top,
-          left: proseMirrorRect.left - containerRect.left,
-          width: proseMirrorRect.width,
-          height: proseMirrorRect.height,
-        },
-      })
-    },
-    [editor, containerRef],
-  )
+  const [inRightBar, setInRightBar] = useState(false)
+  const [inBottomBar, setInBottomBar] = useState(false)
+  const rafRef = useRef<number | null>(null)
+  const lastEventRef = useRef<MouseEvent | null>(null)
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const tableEl = (e.target as HTMLElement).closest('table') as HTMLElement | null
-      if (tableEl) {
-        // 同じテーブルに戻ってきた場合もタイマーをキャンセル
-        // （例: ボタン→隙間→テーブル と移動した時、テーブルに戻ったら維持）
-        cancelClear()
-        if (tableEl !== currentTableElRef.current) {
-          currentTableElRef.current = tableEl
-          updateRectFromEl(tableEl)
+    const clearAll = () => {
+      setInfo(null)
+      setInRightBar(false)
+      setInBottomBar(false)
+    }
+
+    const applyHit = (
+      next: HoveredTableInfo | null,
+      hit: { inside: boolean; inRightBar: boolean; inBottomBar: boolean },
+    ) => {
+      if (!hit.inside || !next) {
+        clearAll()
+        return
+      }
+      setInfo(next)
+      setInRightBar(hit.inRightBar)
+      setInBottomBar(hit.inBottomBar)
+    }
+
+    const evaluate = (mouseEvent: MouseEvent) => {
+      const containerRect = container.getBoundingClientRect()
+      const cx = mouseEvent.clientX - containerRect.left
+      const cy = mouseEvent.clientY - containerRect.top
+      const targetEl = mouseEvent.target as HTMLElement | null
+      const tableElFromTarget = targetEl?.closest('table') as HTMLElement | null
+
+      if (tableElFromTarget) {
+        const next = buildHoveredInfo(editor, tableElFromTarget, container)
+        if (!next) {
+          clearAll()
+          return
         }
+        const hit = hitTestExtendedTableArea({ x: cx, y: cy }, next.rect, BAR_THICKNESS)
+        applyHit(next, hit)
+        return
+      }
+
+      // テーブルの外をホバー: 既存 info の拡張領域内なら維持、外なら null
+      setInfo((prev) => {
+        if (!prev) {
+          setInRightBar(false)
+          setInBottomBar(false)
+          return null
+        }
+        const hit = hitTestExtendedTableArea({ x: cx, y: cy }, prev.rect, BAR_THICKNESS)
+        if (!hit.inside) {
+          setInRightBar(false)
+          setInBottomBar(false)
+          return null
+        }
+        setInRightBar(hit.inRightBar)
+        setInBottomBar(hit.inBottomBar)
+        return prev
+      })
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      lastEventRef.current = e
+      if (rafRef.current === null) {
+        rafRef.current = window.requestAnimationFrame(() => {
+          rafRef.current = null
+          const last = lastEventRef.current
+          if (last) evaluate(last)
+        })
       }
     }
 
-    const handleMouseOut = (e: MouseEvent) => {
-      if (!currentTableElRef.current) return
-      const relatedTarget = e.relatedTarget as Node | null
-      // tableWrapper も「table の関連エリア」として扱う
-      const currentDisplayEl = resolveDisplayEl(currentTableElRef.current)
-      if (!relatedTarget || !currentDisplayEl.contains(relatedTarget)) {
-        scheduleClear()
+    const handleMouseLeave = () => {
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
       }
+      clearAll()
     }
 
-    container.addEventListener('mouseover', handleMouseOver)
-    container.addEventListener('mouseout', handleMouseOut)
-
+    container.addEventListener('mousemove', handleMouseMove)
+    container.addEventListener('mouseleave', handleMouseLeave)
     return () => {
-      container.removeEventListener('mouseover', handleMouseOver)
-      container.removeEventListener('mouseout', handleMouseOut)
+      container.removeEventListener('mousemove', handleMouseMove)
+      container.removeEventListener('mouseleave', handleMouseLeave)
+      if (rafRef.current !== null) window.cancelAnimationFrame(rafRef.current)
     }
-  }, [containerRef, cancelClear, scheduleClear, updateRectFromEl])
+  }, [editor, containerRef])
 
+  // テーブルの位置変動（スクロール、リサイズ）に追従して info.rect を更新
   useEffect(() => {
     if (!info) return
-    const tableEl = currentTableElRef.current
     const container = containerRef.current
-    if (!tableEl || !container) return
-
+    if (!container) return
     const update = () => {
-      if (currentTableElRef.current) updateRectFromEl(currentTableElRef.current)
+      const tableNode = editor.view.nodeDOM(info.pos)
+      const tableEl =
+        tableNode instanceof HTMLElement
+          ? tableNode.tagName === 'TABLE'
+            ? tableNode
+            : tableNode.querySelector<HTMLElement>('table')
+          : null
+      if (!tableEl) {
+        setInfo(null)
+        return
+      }
+      const next = buildHoveredInfo(editor, tableEl, container)
+      if (next && next.pos === info.pos) setInfo(next)
     }
-
-    const displayEl = resolveDisplayEl(tableEl)
     const resizeObserver = new ResizeObserver(update)
-    resizeObserver.observe(displayEl)
     resizeObserver.observe(container)
-    // スクロールは位置の変化なので ResizeObserver で検知できない。capture phase で祖先全部のスクロールを拾う。
     window.addEventListener('scroll', update, true)
-
     return () => {
       resizeObserver.disconnect()
       window.removeEventListener('scroll', update, true)
     }
-    // info全体ではなく posだけを依存にすることで、rect更新による無限ループを防ぐ
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [info?.pos, containerRef, updateRectFromEl])
+  }, [info?.pos, editor, containerRef]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(
-    () => () => {
-      if (clearTimeoutRef.current) clearTimeout(clearTimeoutRef.current)
-    },
-    [],
-  )
-
-  return { info, cancelClear, scheduleClear }
+  return { info, inRightBar, inBottomBar }
 }

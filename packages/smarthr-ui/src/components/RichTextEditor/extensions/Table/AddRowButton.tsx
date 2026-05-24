@@ -17,8 +17,8 @@ type Props = {
   left: number
   width: number
   thickness: number
-  onMouseEnter?: () => void
-  onMouseLeave?: () => void
+  onFocus?: () => void
+  onBlur?: () => void
 }
 
 const classNameGenerator = tv({
@@ -35,7 +35,7 @@ const classNameGenerator = tv({
 })
 
 export const AddRowButton: FC<Props> = memo(
-  ({ editor, tablePos, top, left, width, thickness, onMouseEnter, onMouseLeave }) => {
+  ({ editor, tablePos, top, left, width, thickness, onFocus, onBlur }) => {
     const { localize } = useIntl()
     const classNames = classNameGenerator()
 
@@ -90,8 +90,8 @@ export const AddRowButton: FC<Props> = memo(
         className={classNames.button()}
         style={{ top, left, width, height: thickness }}
         onMouseDown={(e) => e.preventDefault()}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+        onFocus={onFocus}
+        onBlur={onBlur}
         onClick={handleClick}
       >
         <FaPlusIcon alt="" />

@@ -1,7 +1,10 @@
 'use client'
 
+import { CellSelection, TableMap } from '@tiptap/pm/tables'
 import { type Editor, useEditorState } from '@tiptap/react'
-import { type RefObject, useEffect, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
+
+import { detectEdgeCells } from './helpers/edgeCellDetection'
 
 export type ActiveTableInfo = {
   pos: number
@@ -9,6 +12,10 @@ export type ActiveTableInfo = {
   containerSize: { width: number; height: number }
   /** ProseMirror（実際の編集領域）のwrapper相対rect。ボタン表示判定の基準にする */
   viewport: { top: number; left: number; width: number; height: number }
+  /** caret/選択が最右列のいずれかのセルに触れている */
+  isRightmostColumnSelected: boolean
+  /** caret/選択が最下行のいずれかのセルに触れている */
+  isBottommostRowSelected: boolean
 }
 
 const findTablePos = (editor: Editor): number | null => {
@@ -39,14 +46,64 @@ const resolveDisplayEl = (tableEl: HTMLElement | null): HTMLElement | null => {
   return tableEl
 }
 
+const computeEdgeCells = (
+  editor: Editor,
+  tablePos: number,
+): { isRightmostColumnSelected: boolean; isBottommostRowSelected: boolean } => {
+  const tableNode = editor.state.doc.nodeAt(tablePos)
+  if (!tableNode || tableNode.type.name !== 'table') {
+    return { isRightmostColumnSelected: false, isBottommostRowSelected: false }
+  }
+  const map = TableMap.get(tableNode)
+  const tableStart = tablePos + 1
+  const selection = editor.state.selection
+
+  let cellOffsets: number[] = []
+  if (selection instanceof CellSelection) {
+    selection.forEachCell((_cellNode, cellPos) => {
+      cellOffsets.push(cellPos - tableStart)
+    })
+  } else {
+    const { $from } = selection
+    for (let d = $from.depth; d > 0; d--) {
+      const typeName = $from.node(d).type.name
+      if (typeName === 'tableCell' || typeName === 'tableHeader') {
+        cellOffsets = [$from.before(d) - tableStart]
+        break
+      }
+    }
+  }
+  return detectEdgeCells(map, cellOffsets)
+}
+
 export const useActiveTableRect = (
   editor: Editor,
   containerRef: RefObject<HTMLElement | null>,
 ): ActiveTableInfo | null => {
-  const tablePos = useEditorState({
+  const activeSelection = useEditorState({
     editor,
-    selector: ({ editor: e }) => (e.isActive('table') ? findTablePos(e) : null),
+    selector: ({ editor: e }) => {
+      if (!e.isActive('table')) return null
+      const tablePos = findTablePos(e)
+      if (tablePos === null) return null
+      const edge = computeEdgeCells(e, tablePos)
+      return { tablePos, edge }
+    },
+    equalityFn: (a, b) =>
+      a === b ||
+      (!!a &&
+        !!b &&
+        a.tablePos === b.tablePos &&
+        a.edge.isRightmostColumnSelected === b.edge.isRightmostColumnSelected &&
+        a.edge.isBottommostRowSelected === b.edge.isBottommostRowSelected),
   })
+  const tablePos = activeSelection?.tablePos ?? null
+  const isRightmostColumnSelected = activeSelection?.edge.isRightmostColumnSelected ?? false
+  const isBottommostRowSelected = activeSelection?.edge.isBottommostRowSelected ?? false
+  // Use a ref so updateRect can always read the latest edge flags without them being deps
+  const edgeFlagsRef = useRef({ isRightmostColumnSelected, isBottommostRowSelected })
+  edgeFlagsRef.current = { isRightmostColumnSelected, isBottommostRowSelected }
+
   const [info, setInfo] = useState<ActiveTableInfo | null>(null)
 
   useEffect(() => {
@@ -81,6 +138,8 @@ export const useActiveTableRect = (
           width: proseMirrorRect.width,
           height: proseMirrorRect.height,
         },
+        isRightmostColumnSelected: edgeFlagsRef.current.isRightmostColumnSelected,
+        isBottommostRowSelected: edgeFlagsRef.current.isBottommostRowSelected,
       })
     }
 
@@ -100,6 +159,18 @@ export const useActiveTableRect = (
       window.removeEventListener('scroll', updateRect, true)
     }
   }, [editor, tablePos, containerRef])
+
+  useEffect(() => {
+    setInfo((prev) =>
+      prev
+        ? {
+            ...prev,
+            isRightmostColumnSelected,
+            isBottommostRowSelected,
+          }
+        : prev,
+    )
+  }, [isRightmostColumnSelected, isBottommostRowSelected])
 
   return info
 }

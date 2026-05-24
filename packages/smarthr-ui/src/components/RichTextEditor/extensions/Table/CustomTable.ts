@@ -1,4 +1,14 @@
-import { Table } from '@tiptap/extension-table'
+import { Table, type TableOptions, TableView } from '@tiptap/extension-table'
+
+import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
+
+class CustomTableView extends TableView {
+  constructor(node: ProseMirrorNode, cellMinWidth: number) {
+    super(node, cellMinWidth)
+    // Chrome の focusable scrollable region 対策: Tab で wrapper にフォーカスが奪われないようにする
+    this.dom.setAttribute('tabindex', '-1')
+  }
+}
 
 declare module '@tiptap/core' {
   // declaration merging が必要なため interface を使用
@@ -11,6 +21,13 @@ declare module '@tiptap/core' {
 }
 
 export const CustomTable = Table.extend({
+  addOptions(): TableOptions {
+    return {
+      ...this.parent?.(),
+      View: CustomTableView,
+    } as TableOptions
+  },
+
   addStorage() {
     return {
       openActionsMenu: null,
