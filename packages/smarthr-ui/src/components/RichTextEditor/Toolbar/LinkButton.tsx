@@ -1,18 +1,29 @@
 'use client'
 
-import { type FC, type FormEvent, type KeyboardEvent, memo, useCallback, useState } from 'react'
+import {
+  type FC,
+  type FormEvent,
+  type KeyboardEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
-import { ControlledFormDialog } from '../../Dialog'
 import { FormControl } from '../../FormControl'
 import { FaLinkIcon } from '../../Icon'
 import { Input } from '../../Input'
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ToolbarButton } from './ToolbarButton'
+
+const POPUP_CLASS = 'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'
 
 type Props = {
   tabIndex?: number
@@ -23,98 +34,18 @@ type Props = {
 }
 
 export const LinkButton: FC<Props> = memo(
-  ({ tabIndex = -1, disabled, onKeyDown, onFocus, ref: refProp }) => {
+  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const state = useToolbarState(editor)
-    const [showDialog, setShowDialog] = useState(false)
-    const [url, setUrl] = useState('')
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const [text, setText] = useState('')
+    const [url, setUrl] = useState('')
     const [error, setError] = useState('')
-
-    const handleClick = useCallback(() => {
-      if (editor.isActive('link')) {
-        editor.chain().extendMarkRange('link').run()
-      }
-      const { from, to } = editor.state.selection
-      const selectedText = editor.state.doc.textBetween(from, to, '')
-      const currentHref = (editor.getAttributes('link').href as string | undefined) ?? ''
-
-      setText(selectedText)
-      setUrl(currentHref)
-      setError('')
-      setShowDialog(true)
-    }, [editor])
-
-    const validate = useCallback(
-      (value: string): boolean => {
-        if (!value.trim()) {
-          setError(
-            localize({
-              id: 'smarthr-ui/RichTextEditor/linkUrlRequired',
-              defaultText: 'URLを入力してください',
-            }),
-          )
-          return false
-        }
-        if (!/^https?:\/\//i.test(value) && !/^mailto:/i.test(value)) {
-          setError(
-            localize({
-              id: 'smarthr-ui/RichTextEditor/linkUrlInvalid',
-              defaultText: '有効なURL（http://, https://, mailto:）を入力してください',
-            }),
-          )
-          return false
-        }
-        setError('')
-        return true
-      },
-      [localize],
-    )
-
-    const handleSubmit = useCallback(
-      (_e: FormEvent<HTMLFormElement>, helpers: { close: () => void }) => {
-        if (validate(url)) {
-          const { from, to } = editor.state.selection
-          const selectedText = editor.state.doc.textBetween(from, to, '')
-
-          if (selectedText && text === selectedText) {
-            editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-          } else {
-            const finalText = text || selectedText || url
-            editor
-              .chain()
-              .focus()
-              .extendMarkRange('link')
-              .insertContent({
-                type: 'text',
-                text: finalText,
-                marks: [{ type: 'link', attrs: { href: url } }],
-              })
-              .run()
-          }
-          helpers.close()
-          setShowDialog(false)
-        }
-      },
-      [url, text, validate, editor],
-    )
-
-    const handleUnsetLink = useCallback(() => {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run()
-      setShowDialog(false)
-    }, [editor])
-
-    const handleClose = useCallback(() => {
-      setShowDialog(false)
-      editor.commands.focus()
-    }, [editor])
+    const popupRef = useRef<HTMLDivElement>(null)
+    const urlInputRef = useRef<HTMLInputElement>(null)
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/link', defaultText: 'リンク' })
-    const dialogTitle = localize({
-      id: 'smarthr-ui/RichTextEditor/linkDialogTitle',
-      defaultText: 'リンクを設定',
-    })
     const textLabel = localize({
       id: 'smarthr-ui/RichTextEditor/linkTextLabel',
       defaultText: 'テキスト',
@@ -131,68 +62,197 @@ export const LinkButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/linkSetButton',
       defaultText: '適用',
     })
+    const cancelText = localize({
+      id: 'smarthr-ui/RichTextEditor/linkCancelButton',
+      defaultText: 'キャンセル',
+    })
     const unsetText = localize({
       id: 'smarthr-ui/RichTextEditor/linkUnsetButton',
       defaultText: 'リンクを解除',
     })
+    const requiredMessage = localize({
+      id: 'smarthr-ui/RichTextEditor/linkUrlRequired',
+      defaultText: 'URLを入力してください',
+    })
+    const invalidMessage = localize({
+      id: 'smarthr-ui/RichTextEditor/linkUrlInvalid',
+      defaultText: '有効なURLを入力してください',
+    })
+
+    const closePopup = useCallback(() => {
+      setIsOpen(false)
+      triggerRef.current?.focus()
+    }, [setIsOpen, triggerRef])
+
+    const handleSubmit = useCallback(
+      (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const trimmed = url.trim()
+        if (!trimmed) {
+          setError(requiredMessage)
+          return
+        }
+        if (!/^https?:\/\//i.test(trimmed) && !/^mailto:/i.test(trimmed)) {
+          setError(invalidMessage)
+          return
+        }
+
+        const { from, to } = editor.state.selection
+        const selectedText = editor.state.doc.textBetween(from, to, '')
+
+        if (selectedText && text === selectedText) {
+          editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run()
+        } else {
+          const finalText = text || selectedText || trimmed
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange('link')
+            .insertContent({
+              type: 'text',
+              text: finalText,
+              marks: [{ type: 'link', attrs: { href: trimmed } }],
+            })
+            .run()
+        }
+        setIsOpen(false)
+      },
+      [editor, url, text, requiredMessage, invalidMessage, setIsOpen],
+    )
+
+    const handleUnsetLink = useCallback(() => {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+      setIsOpen(false)
+    }, [editor, setIsOpen])
+
+    const handlePopupKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          e.stopPropagation()
+          closePopup()
+        }
+      },
+      [closePopup],
+    )
+
+    const handleTriggerKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        switch (e.key) {
+          case 'Enter':
+          case ' ':
+          case 'ArrowDown':
+            e.preventDefault()
+            e.stopPropagation()
+            setIsOpen(true)
+            break
+          default:
+            onKeyDownProp?.(e)
+        }
+      },
+      [setIsOpen, onKeyDownProp],
+    )
+
+    // ポップアップ表示時: 選択範囲・既存リンクから値を投入し URL Input にフォーカス
+    // 閉じた時: 入力値とエラーをリセット
+    useEffect(() => {
+      if (isOpen) {
+        if (editor.isActive('link')) {
+          editor.chain().extendMarkRange('link').run()
+        }
+        const { from, to } = editor.state.selection
+        const selectedText = editor.state.doc.textBetween(from, to, '')
+        const currentHref = (editor.getAttributes('link').href as string | undefined) ?? ''
+        setText(selectedText)
+        setUrl(currentHref)
+        setError('')
+        requestAnimationFrame(() => {
+          urlInputRef.current?.focus()
+        })
+      } else {
+        setText('')
+        setUrl('')
+        setError('')
+      }
+      // editor は実体変わらないため依存に含めない（YouTube 実装と同じ方針）
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen])
 
     return (
       <>
         <ToolbarButton
-          ref={refProp}
+          ref={(el) => {
+            triggerRef.current = el
+            refProp?.(el)
+          }}
           icon={<FaLinkIcon />}
           label={label}
           active={state.isLink}
           disabled={disabled}
           tabIndex={tabIndex}
-          onKeyDown={onKeyDown}
-          onFocus={onFocus}
-          onClick={handleClick}
+          aria-expanded={isOpen}
+          aria-haspopup="dialog"
+          onClick={() => setIsOpen((prev) => !prev)}
+          onKeyDown={handleTriggerKeyDown}
+          onFocus={onFocusProp}
         />
-        {showDialog && (
-          <ControlledFormDialog
-            isOpen
-            heading={dialogTitle}
-            actionText={applyText}
-            onSubmit={handleSubmit}
-            onClickClose={handleClose}
-            size="S"
-            subActionArea={
-              state.isLink ? (
-                <Button variant="text" size="S" prefix={<FaLinkIcon />} onClick={handleUnsetLink}>
-                  {unsetText}
-                </Button>
-              ) : undefined
-            }
-          >
-            <Stack gap={1}>
-              <FormControl label={textLabel}>
-                <Input
-                  name="linkText"
-                  value={text}
-                  width="100%"
-                  onChange={(e) => setText(e.target.value)}
-                />
-              </FormControl>
-              <FormControl
-                label={urlLabelText}
-                helpMessage={urlHelpText}
-                errorMessages={error || undefined}
-              >
-                <Input
-                  name="linkUrl"
-                  type="url"
-                  value={url}
-                  error={!!error}
-                  width="100%"
-                  onChange={(e) => {
-                    setUrl(e.target.value)
-                    if (error) setError('')
-                  }}
-                />
-              </FormControl>
-            </Stack>
-          </ControlledFormDialog>
+        {renderDropdown(
+          <div ref={popupRef} role="dialog" aria-label={label} className={POPUP_CLASS}>
+            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+            <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
+              <Stack gap={0.75}>
+                <FormControl label={textLabel}>
+                  <Input
+                    name="linkText"
+                    value={text}
+                    width="100%"
+                    onChange={(e) => setText(e.target.value)}
+                  />
+                </FormControl>
+                <FormControl
+                  label={urlLabelText}
+                  helpMessage={urlHelpText}
+                  errorMessages={error || undefined}
+                >
+                  <Input
+                    ref={urlInputRef}
+                    name="linkUrl"
+                    type="url"
+                    value={url}
+                    width="100%"
+                    error={!!error}
+                    onChange={(e) => {
+                      setUrl(e.target.value)
+                      if (error) setError('')
+                    }}
+                  />
+                </FormControl>
+                <Cluster gap={0.5} justify="space-between">
+                  {state.isLink ? (
+                    <Button
+                      type="button"
+                      variant="text"
+                      size="S"
+                      prefix={<FaLinkIcon />}
+                      onClick={handleUnsetLink}
+                    >
+                      {unsetText}
+                    </Button>
+                  ) : (
+                    <span />
+                  )}
+                  <Cluster gap={0.5}>
+                    <Button type="button" size="S" variant="secondary" onClick={closePopup}>
+                      {cancelText}
+                    </Button>
+                    <Button type="submit" size="S" variant="primary">
+                      {applyText}
+                    </Button>
+                  </Cluster>
+                </Cluster>
+              </Stack>
+            </form>
+          </div>,
         )}
       </>
     )
