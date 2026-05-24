@@ -155,7 +155,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
         {renderDropdown(
           <div ref={popupRef} role="dialog" aria-label={label} className={POPUP_CLASS}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
+            <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
               <Stack gap={0.75}>
                 <FormControl
                   label={urlLabelText}
