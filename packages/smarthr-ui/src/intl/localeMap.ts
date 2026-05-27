@@ -45,7 +45,7 @@ export const convertLang = (rawLang: string): keyof typeof locales => {
   if (lang.startsWith('zh')) {
     const regionOrScript = lang.split('-')[1] ?? ''
 
-    if (['tw', 'hant'].includes(regionOrScript)) {
+    if (['tw', 'hant', 'hk', 'mo'].includes(regionOrScript)) {
       return 'zh-tw'
     }
 
