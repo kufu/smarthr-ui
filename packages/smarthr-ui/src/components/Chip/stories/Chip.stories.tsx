@@ -30,7 +30,7 @@ export const Size: StoryObj<typeof Chip> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, 's'].map((size) => (
+      {[undefined, 'S'].map((size) => (
         <Chip {...args} size={size as any} key={String(size)} />
       ))}
     </Stack>
