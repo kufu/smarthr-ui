@@ -169,6 +169,22 @@ export const MinimalFeatures: Story = {
   },
 }
 
+export const ColorPickerWithExistingContent: Story = {
+  name: 'カラーピッカー: 既存コンテンツの色読み込み',
+  args: {
+    content: {
+      format: 'html',
+      content:
+        '<p>色付きテキストを選択してカラーピッカー(A)を開くと、現在の色が反映されます。</p>' +
+        '<p><span style="color: rgb(255, 0, 0)">rgb()形式の赤</span>(rgb(255, 0, 0) → #ff0000 として読み込まれる)</p>' +
+        '<p><span style="color: #fff">#fff 短縮形式 (背景白なので見えませんが、3桁hex → #ffffff として読み込まれる)</span></p>' +
+        '<p><span style="color: #e01e5a">標準パレットの赤 (#e01e5a)</span> — 標準スウォッチにチェックが出る</p>' +
+        '<p><span style="color: #ff6600">標準にない橙 (#ff6600)</span> — カスタムスウォッチにチェックが出る</p>' +
+        '<p><span style="color: rgb(114, 57, 179)">標準と一致するrgb (#7239b3 紫)</span> — 標準スウォッチにチェックが出る</p>',
+    },
+  },
+}
+
 export const HTMLIntegration: Story = {
   name: 'HTML入出力',
   render: ({ outputFormat: _, onChange: __, ...rest }) => {
