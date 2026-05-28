@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [95.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.0...smarthr-ui-v95.0.1) (2026-05-27)
+
+
+### Bug Fixes
+
+* **i18n:** ロケール判定修正：マカオ・香港追加、Export可 ([#6358](https://github.com/kufu/smarthr-ui/issues/6358)) ([774a2f9](https://github.com/kufu/smarthr-ui/commit/774a2f91bd497b199f5ae424726d87180ae5232f))
+
 ## [95.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v94.0.0...smarthr-ui-v95.0.0) (2026-05-21)
 
 
