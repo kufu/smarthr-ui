@@ -158,6 +158,7 @@ export {
   TimeFormatter,
   TimestampFormatter,
   locales,
+  convertLang,
 } from './intl'
 
 // constants
