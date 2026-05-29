@@ -9,7 +9,7 @@ export const locale = {
   'smarthr-ui/AppHeader/help': 'Ajuda',
   'smarthr-ui/AppHeader/userSettings': 'Configurações pessoais',
   'smarthr-ui/AppHeader/releaseNotes': 'Notas de lançamento',
-  'smarthr-ui/AppHeader/releaseNotesLoadError': 'Falha ao carregar as notas de lançamento. \n Por favor, tente novamente mais tarde.',
+  'smarthr-ui/AppHeader/releaseNotesLoadError': 'Falha ao carregar as notas de lançamento.\nPor favor, tente novamente mais tarde.',
   'smarthr-ui/AppHeader/seeAllReleaseNotes': 'Ver toda as notas de lançamento sobre a avaliação de desempenho',
   'smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel': 'Apps',
   'smarthr-ui/AppHeader/MobileHeader/account': 'Conta',
