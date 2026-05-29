@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentPropsWithoutRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -24,21 +25,9 @@ export type ActionDialogHelpers = {
   close: () => void
 }
 
-type ObjectActionButtonType = {
-  /** アクションボタンのラベル */
-  text: ReactNode
-  /** アクションボタンのスタイル */
-  theme?: 'primary' | 'secondary' | 'danger'
-  /** アクションボタンを無効にするかどうか */
-  disabled?: boolean
-}
+type ObjectActionButtonType = ComponentPropsWithoutRef<typeof Button>
 
-type ObjectCloseButtonType = {
-  /** 閉じるボタンのラベル */
-  text: ReactNode
-  /** 閉じるボタンを無効にするかどうか */
-  disabled?: boolean
-}
+type ObjectCloseButtonType = ComponentPropsWithoutRef<typeof Button>
 
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
@@ -133,37 +122,27 @@ const ActionAreaCluster = memo<
     [onClickAction, onClickClose],
   )
 
+  const { onClick: _closeButtonOnClick, ...closeButtonRest } = closeButton
+  const { onClick: _actionButtonOnClick, ...actionButtonRest } = actionButton
+
   return (
     <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
-      <CloseButton
-        onClick={onClickClose}
-        disabled={closeButton.disabled || loading}
-        text={closeButton.text}
-      />
-      <ActionButton
-        variant={actionButton.theme}
-        disabled={actionButton.disabled}
-        loading={loading}
-        onClick={handleClickAction}
-      >
-        {actionButton.text}
-      </ActionButton>
+      <CloseButton {...closeButtonRest} onClick={onClickClose} disabled={loading} />
+      <ActionButton {...actionButtonRest} loading={loading} onClick={handleClickAction} />
     </Cluster>
   )
 })
 
 const ActionButton = memo<
-  PropsWithChildren<{
-    variant: ObjectActionButtonType['theme']
-    disabled: ObjectActionButtonType['disabled']
+  ObjectActionButtonType & {
     loading: boolean
     onClick: (e: MouseEvent<HTMLButtonElement>) => void
-  }>
->(({ variant = 'primary', disabled, loading, onClick, children }) => (
+  }
+>(({ children, variant = 'primary', loading, onClick, ...rest }) => (
   <Button
+    {...rest}
     type="submit"
     variant={variant}
-    disabled={disabled}
     loading={loading}
     onClick={onClick}
     className="smarthr-ui-Dialog-actionButton"
@@ -172,11 +151,12 @@ const ActionButton = memo<
   </Button>
 ))
 
-const CloseButton = memo<{
-  onClick: ActionDialogContentInnerProps['onClickClose']
-  disabled: boolean
-  text: ReactNode
-}>(({ onClick, disabled, text }) => {
+const CloseButton = memo<
+  ObjectCloseButtonType & {
+    onClick: ActionDialogContentInnerProps['onClickClose']
+    disabled: boolean
+  }
+>(({ onClick, disabled, children, disabled: buttonDisabled, ...rest }) => {
   const { localize } = useIntl()
 
   const defaultText = useMemo(
@@ -189,8 +169,13 @@ const CloseButton = memo<{
   )
 
   return (
-    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {text ?? defaultText}
+    <Button
+      {...rest}
+      onClick={onClick}
+      disabled={disabled || buttonDisabled}
+      className="smarthr-ui-Dialog-closeButton"
+    >
+      {children ?? defaultText}
     </Button>
   )
 })

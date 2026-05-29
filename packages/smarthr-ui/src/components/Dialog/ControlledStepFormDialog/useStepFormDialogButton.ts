@@ -1,16 +1,21 @@
-import { type ReactNode, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type ReactNode, useMemo } from 'react'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 
 import type { StepItem } from './StepFormDialogProvider'
+import type { Button } from '../../Button'
 
 type ButtonThemeType = 'primary' | 'secondary' | 'danger'
 export type ButtonArgType =
   | ReactNode
   | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
 type VariableFunctionType<T> = (currentStep: StepItem) => T
-export type ObjectButtonType = {
-  text?: ButtonArgType
+export type ObjectButtonType = Omit<
+  ComponentPropsWithoutRef<typeof Button>,
+  'children' | 'hidden' | 'disabled' | 'variant'
+> & {
+  /** ボタンの内容（関数も可） */
+  children?: ButtonArgType
   /** ボタンを非表示にするかどうか */
   hidden?: boolean | VariableFunctionType<boolean>
   /** ボタンを無効にするかどうか */
@@ -19,8 +24,8 @@ export type ObjectButtonType = {
   theme?: ButtonThemeType | VariableFunctionType<ButtonThemeType>
 }
 
-const buttonObjectConverter = (text: ButtonArgType): ObjectButtonType => ({
-  text,
+const buttonObjectConverter = (children: ButtonArgType): ObjectButtonType => ({
+  children,
 })
 
 type Props = {
@@ -43,12 +48,12 @@ export const useStepFormDialogButton = ({
   )
 
   const actualButton = useMemo(() => {
-    let text = temp.text ?? defaultText
-    let textFunc = false
+    let children = temp.children ?? defaultText
+    let childrenFunc = false
 
-    if (typeof text === 'function') {
-      textFunc = true
-      text = text(currentStep, defaultText)
+    if (typeof children === 'function') {
+      childrenFunc = true
+      children = children(currentStep, defaultText)
     }
 
     const tempTheme = temp.theme || defaultTheme
@@ -57,13 +62,24 @@ export const useStepFormDialogButton = ({
       typeof temp.disabled === 'function' ? temp.disabled(currentStep) : temp.disabled
     const hidden = typeof temp.hidden === 'function' ? temp.hidden(currentStep) : temp.hidden
 
+    // children, theme, disabled, hidden以外のpropsを抽出
+
+    const {
+      children: _children,
+      theme: _theme,
+      disabled: _disabled,
+      hidden: _hidden,
+      ...rest
+    } = temp
+
     return {
-      text,
+      ...rest,
+      children,
       theme,
       disabled,
       hidden,
       functionCall: {
-        text: textFunc,
+        children: childrenFunc,
       },
     }
   }, [currentStep, temp, defaultText, defaultTheme])

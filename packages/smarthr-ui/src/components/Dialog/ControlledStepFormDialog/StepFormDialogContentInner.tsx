@@ -167,38 +167,75 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           </DialogBody>
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
-              {!backButton.hidden && activeStep > 1 && (
-                <Button
-                  onClick={handleBackAction}
-                  variant={backButton.theme}
-                  disabled={backButton.disabled || calcedResponseStatus.isProcessing}
-                  className="smarthr-ui-Dialog-backButton"
-                >
-                  {backButton.text}
-                </Button>
-              )}
+              {!backButton.hidden &&
+                activeStep > 1 &&
+                (() => {
+                  const {
+                    children: buttonChildren,
+                    theme,
+                    disabled,
+                    hidden: _hidden,
+                    functionCall: _functionCall,
+                    ...rest
+                  } = backButton
+                  return (
+                    <Button
+                      {...rest}
+                      onClick={handleBackAction}
+                      variant={theme}
+                      disabled={disabled || calcedResponseStatus.isProcessing}
+                      className="smarthr-ui-Dialog-backButton"
+                    >
+                      {buttonChildren}
+                    </Button>
+                  )
+                })()}
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
-                {!closeButton.hidden && (
-                  <Button
-                    onClick={handleCloseAction}
-                    variant={closeButton.theme}
-                    disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-closeButton"
-                  >
-                    {closeButton.text}
-                  </Button>
-                )}
-                {!submitButton.hidden && (
-                  <Button
-                    type="submit"
-                    variant={submitButton.theme}
-                    disabled={submitButton.disabled}
-                    loading={calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-actionButton"
-                  >
-                    {submitButton.text}
-                  </Button>
-                )}
+                {!closeButton.hidden &&
+                  (() => {
+                    const {
+                      children: buttonChildren,
+                      theme,
+                      disabled,
+                      hidden: _hidden,
+                      functionCall: _functionCall,
+                      ...rest
+                    } = closeButton
+                    return (
+                      <Button
+                        {...rest}
+                        onClick={handleCloseAction}
+                        variant={theme}
+                        disabled={disabled || calcedResponseStatus.isProcessing}
+                        className="smarthr-ui-Dialog-closeButton"
+                      >
+                        {buttonChildren}
+                      </Button>
+                    )
+                  })()}
+                {!submitButton.hidden &&
+                  (() => {
+                    const {
+                      children: buttonChildren,
+                      theme,
+                      disabled,
+                      hidden: _hidden,
+                      functionCall: _functionCall,
+                      ...rest
+                    } = submitButton
+                    return (
+                      <Button
+                        {...rest}
+                        type="submit"
+                        variant={theme}
+                        disabled={disabled}
+                        loading={calcedResponseStatus.isProcessing}
+                        className="smarthr-ui-Dialog-actionButton"
+                      >
+                        {buttonChildren}
+                      </Button>
+                    )
+                  })()}
               </Cluster>
             </Cluster>
             <DialogContentResponseStatusMessage

@@ -31,7 +31,7 @@ type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 const headingObjectConverter = (text: ReactNode) => ({
   text,
 })
-const buttonObjectConverter = (text: ReactNode) => ({ text })
+const buttonObjectConverter = (text: ReactNode) => ({ children: text })
 
 export const ControlledFormDialog: FC<Props> = ({
   children,
@@ -80,13 +80,16 @@ export const ControlledFormDialog: FC<Props> = ({
     [isOpen, onSubmit],
   )
 
+  const isCloseButtonDisabled =
+    typeof closeButton === 'string' ? false : (closeButton.disabled ?? false)
+
   return createPortal(
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
       ariaLabelledby={heading.id}
       className={className}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
+      onPressEscape={isCloseButtonDisabled ? undefined : onPressEscape}
     >
       <FormDialogContentInner
         heading={heading}

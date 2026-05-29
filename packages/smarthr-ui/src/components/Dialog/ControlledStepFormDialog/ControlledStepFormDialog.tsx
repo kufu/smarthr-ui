@@ -118,9 +118,9 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   const submitButton = useMemo(
     () => ({
       ...tempSubmitButton,
-      text:
-        tempSubmitButton.functionCall.text || activeStep === stepLength
-          ? tempSubmitButton.text
+      children:
+        tempSubmitButton.functionCall.children || activeStep === stepLength
+          ? tempSubmitButton.children
           : defaultTexts.nextButtonLabel,
     }),
     [tempSubmitButton, activeStep, stepLength, defaultTexts.nextButtonLabel],
