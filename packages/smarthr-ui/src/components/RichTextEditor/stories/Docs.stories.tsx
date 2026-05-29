@@ -21,8 +21,8 @@ import {
 } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Text } from '../../Text'
-import { RichTextContent } from '../RichTextContent/RichTextContent'
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
+import { RichTextViewer } from '../RichTextViewer/RichTextViewer'
 
 import type { RichTextEditorController, RichTextJSON } from '../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -99,7 +99,7 @@ export const Overview: Story = {
               <tr>
                 <td style={tdStyle}>保存済みの内容を表示だけしたい（編集不要）</td>
                 <td style={tdStyle}>
-                  <code>RichTextContent</code>
+                  <code>RichTextViewer</code>
                 </td>
               </tr>
             </tbody>
@@ -536,27 +536,27 @@ export const HTMLIntegration: Story = {
 }
 
 export const StaticDisplay: Story = {
-  name: '表示専用（RichTextContent）',
+  name: '表示専用（RichTextViewer）',
   parameters: {
     docs: {
       source: {
         language: 'tsx',
         code: `// JSON形式
-<RichTextContent content={savedJsonData} />
+<RichTextViewer content={savedJsonData} />
 
 // HTML形式
-<RichTextContent content={{ format: 'html', content: savedHtml }} />`,
+<RichTextViewer content={{ format: 'html', content: savedHtml }} />`,
       },
     },
   },
   render: () => (
     <Stack gap={1.5}>
       <Text color="TEXT_GREY">
-        保存済みの内容を表示するだけなら RichTextContent を使います。editor instance
+        保存済みの内容を表示するだけなら RichTextViewer を使います。editor instance
         を起動しないため軽量です。JSON でも HTML でも渡せます。
       </Text>
       <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16 }}>
-        <RichTextContent
+        <RichTextViewer
           content={{
             type: 'doc',
             content: [
@@ -569,7 +569,7 @@ export const StaticDisplay: Story = {
                 type: 'paragraph',
                 content: [
                   { type: 'text', text: 'これは' },
-                  { type: 'text', marks: [{ type: 'bold' }], text: 'RichTextContent' },
+                  { type: 'text', marks: [{ type: 'bold' }], text: 'RichTextViewer' },
                   { type: 'text', text: 'による表示です。編集はできません。' },
                 ],
               },

@@ -1,5 +1,5 @@
 /**
- * RichTextEditor と RichTextContent で共通のコンテンツスタイル定義
+ * RichTextEditor と RichTextViewer で共通のコンテンツスタイル定義
  *
  * Tailwind JIT はソースコード上のリテラル文字列をスキャンして CSS を生成するため、
  * クラス名を動的に組み立ててはならない。両方のバリエーションを静的に保持する。
@@ -74,7 +74,7 @@ export const editorContentClasses = [
   '[&_.ProseMirror_blockquote]::after:shr-content-[\\200B]',
 ] as const
 
-/** RichTextContent 用: 直下の要素向けスタイル */
+/** RichTextViewer 用: 直下の要素向けスタイル */
 export const staticContentClasses = [
   // lists
   '[&_ul]:shr-my-0.5 [&_ul]:shr-list-disc [&_ul]:shr-pl-1.5',

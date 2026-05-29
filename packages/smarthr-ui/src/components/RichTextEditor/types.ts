@@ -73,7 +73,7 @@ export type RichTextEditorProps = RichTextEditorBaseProps &
       }
   )
 
-export type RichTextContentProps = {
+export type RichTextViewerProps = {
   content: ExternalRichTextValue | RichTextJSON
   className?: string
 }

@@ -106,7 +106,7 @@ export const configureExtensions = ({
 
   if (has('table')) {
     // renderWrapper: true で HTML 出力にも <div class="tableWrapper"> を含める。
-    // これで RichTextContent 側でも横スクロール用 wrapper が機能する。
+    // これで RichTextViewer 側でも横スクロール用 wrapper が機能する。
     extensions.push(
       CustomTable.configure({ resizable: true, renderWrapper: true }),
       TableRow,

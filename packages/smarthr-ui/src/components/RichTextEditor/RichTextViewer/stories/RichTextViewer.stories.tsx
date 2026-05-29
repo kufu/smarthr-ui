@@ -1,14 +1,14 @@
-import { RichTextContent } from '../RichTextContent'
+import { RichTextViewer } from '../RichTextViewer'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Components/RichTextEditor/RichTextContent',
-  component: RichTextContent,
+  title: 'Components/RichTextEditor/RichTextViewer',
+  component: RichTextViewer,
   parameters: {
     layout: 'padded',
   },
-} satisfies Meta<typeof RichTextContent>
+} satisfies Meta<typeof RichTextViewer>
 
 export default meta
 type Story = StoryObj<typeof meta>

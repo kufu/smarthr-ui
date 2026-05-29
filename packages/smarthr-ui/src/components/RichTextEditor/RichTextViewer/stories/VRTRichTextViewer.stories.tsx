@@ -1,5 +1,5 @@
 import { Stack } from '../../../Layout'
-import { RichTextContent } from '../RichTextContent'
+import { RichTextViewer } from '../RichTextViewer'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -123,14 +123,14 @@ const richContent = {
 }
 
 const meta = {
-  title: 'Components/RichTextEditor/RichTextContent/VRT',
-  component: RichTextContent,
+  title: 'Components/RichTextEditor/RichTextViewer/VRT',
+  component: RichTextViewer,
   tags: ['!autodocs'],
   parameters: {
     chromatic: { disableSnapshot: false },
     layout: 'padded',
   },
-} satisfies Meta<typeof RichTextContent>
+} satisfies Meta<typeof RichTextViewer>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -141,11 +141,11 @@ export const AllElements: Story = {
   },
   render: (args) => (
     <Stack gap={2}>
-      <RichTextContent {...args} />
-      <RichTextContent
+      <RichTextViewer {...args} />
+      <RichTextViewer
         content={{ format: 'html', content: '<p><strong>HTML</strong>から表示</p>' }}
       />
-      <RichTextContent content={{ format: 'empty' }} />
+      <RichTextViewer content={{ format: 'empty' }} />
     </Stack>
   ),
 }
@@ -154,7 +154,7 @@ export const BackgroundColor: Story = {
   name: '背景色ハイライト',
   render: () => (
     <Stack gap={2}>
-      <RichTextContent
+      <RichTextViewer
         content={{
           type: 'doc',
           content: [
@@ -189,7 +189,7 @@ export const BackgroundColor: Story = {
           ],
         }}
       />
-      <RichTextContent
+      <RichTextViewer
         content={{
           format: 'html',
           content:

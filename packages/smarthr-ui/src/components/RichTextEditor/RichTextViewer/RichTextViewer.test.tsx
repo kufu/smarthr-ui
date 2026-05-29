@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { RichTextContent } from './RichTextContent'
+import { RichTextViewer } from './RichTextViewer'
 
-describe('RichTextContent', () => {
+describe('RichTextViewer', () => {
   it('JSON content を静的に描画する', () => {
     render(
-      <RichTextContent
+      <RichTextViewer
         content={{
           type: 'doc',
           content: [{ type: 'paragraph', content: [{ type: 'text', text: '表示テスト' }] }],
@@ -17,18 +17,18 @@ describe('RichTextContent', () => {
   })
 
   it('HTML content を正規化して描画する', () => {
-    render(<RichTextContent content={{ format: 'html', content: '<p>HTMLから表示</p>' }} />)
+    render(<RichTextViewer content={{ format: 'html', content: '<p>HTMLから表示</p>' }} />)
     expect(screen.getByText('HTMLから表示')).toBeInTheDocument()
   })
 
   it('empty content で空の div を描画する', () => {
-    const { container } = render(<RichTextContent content={{ format: 'empty' }} />)
-    expect(container.querySelector('.smarthr-ui-RichTextContent')).toBeInTheDocument()
+    const { container } = render(<RichTextViewer content={{ format: 'empty' }} />)
+    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toBeInTheDocument()
   })
 
   it('太字マークを strong タグで描画する', () => {
     render(
-      <RichTextContent
+      <RichTextViewer
         content={{
           type: 'doc',
           content: [
@@ -46,7 +46,7 @@ describe('RichTextContent', () => {
 
   it('見出しを h タグで描画する', () => {
     const { container } = render(
-      <RichTextContent
+      <RichTextViewer
         content={{
           type: 'doc',
           content: [
@@ -64,7 +64,7 @@ describe('RichTextContent', () => {
 
   it('リンクを a タグで描画する', () => {
     render(
-      <RichTextContent
+      <RichTextViewer
         content={{
           type: 'doc',
           content: [
@@ -89,7 +89,7 @@ describe('RichTextContent', () => {
 
   it('水平線を hr タグで描画する', () => {
     const { container } = render(
-      <RichTextContent
+      <RichTextViewer
         content={{
           type: 'doc',
           content: [{ type: 'horizontalRule' }],
@@ -101,7 +101,7 @@ describe('RichTextContent', () => {
 
   it('コードブロックを pre > code で描画する', () => {
     const { container } = render(
-      <RichTextContent
+      <RichTextViewer
         content={{
           type: 'doc',
           content: [{ type: 'codeBlock', content: [{ type: 'text', text: 'const x = 1' }] }],

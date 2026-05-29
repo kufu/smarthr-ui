@@ -1,5 +1,5 @@
 export { RichTextEditor } from './RichTextEditor/RichTextEditor'
-export { RichTextContent } from './RichTextContent/RichTextContent'
+export { RichTextViewer } from './RichTextViewer/RichTextViewer'
 
 export type {
   RichTextJSON,
@@ -8,6 +8,6 @@ export type {
   RichTextChangeMeta,
   RichTextEditorProps,
   RichTextEditorController,
-  RichTextContentProps,
+  RichTextViewerProps,
   ImageUploadResult,
 } from './types'
