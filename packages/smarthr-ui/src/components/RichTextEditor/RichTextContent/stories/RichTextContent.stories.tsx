@@ -170,6 +170,29 @@ const sampleJSON = {
     },
     {
       type: 'paragraph',
+      content: [
+        { type: 'text', text: '背景色の例: ' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#fbf3c4' } }],
+          text: '黄色ハイライト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#d2e9f5' } }],
+          text: '水色ハイライト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#e01e5a', backgroundColor: '#fbf3c4' } }],
+          text: '赤字+黄色背景',
+        },
+      ],
+    },
+    {
+      type: 'paragraph',
       attrs: { textAlign: 'center' },
       content: [{ type: 'text', text: '中央揃えのテキスト' }],
     },
@@ -220,6 +243,7 @@ export const HTMLPreview: Story = {
         '<p><code>コード</code>と<s>打ち消し線</s></p>',
         '<p><a href="https://smarthr.design" target="_blank" rel="noopener noreferrer">SmartHR Design System</a></p>',
         '<p><span style="color: #e01e5a">赤いテキスト</span>・<span style="color: #0077c7">青いテキスト</span></p>',
+        '<p><span style="background-color: #fbf3c4">黄色ハイライト</span>・<span style="background-color: #d2e9f5">水色ハイライト</span>・<span style="color: #e01e5a; background-color: #fbf3c4">赤字+黄色背景</span></p>',
         '<p style="text-align: center">中央揃えのHTML</p>',
         '<p style="text-align: right">右揃えのHTML</p>',
         '<table><tr><th>項目</th><th>説明</th></tr><tr><td>テーブル</td><td>サンプルデータ</td></tr></table>',

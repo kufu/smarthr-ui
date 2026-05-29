@@ -18,6 +18,7 @@ const ALL_FEATURES = [
   'horizontalRule',
   'link',
   'color',
+  'backgroundColor',
   'fontSize',
   'textAlign',
   'image',
@@ -159,6 +160,29 @@ const richContent = {
         },
       ],
     },
+    {
+      type: 'paragraph',
+      content: [
+        { type: 'text', text: '背景色の例: ' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#fbf3c4' } }],
+          text: '黄色ハイライト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#d2e9f5' } }],
+          text: '水色ハイライト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#e01e5a', backgroundColor: '#fbf3c4' } }],
+          text: '背景色と文字色の組み合わせ',
+        },
+      ],
+    },
   ],
 }
 
@@ -189,6 +213,73 @@ export const AllStates: Story = {
       </FormControl>
       <FormControl label="エラー" errorMessages="入力内容にエラーがあります">
         <RichTextEditor features={ALL_FEATURES} error defaultValue={richContent} />
+      </FormControl>
+    </Stack>
+  ),
+}
+
+const backgroundColorContent = {
+  type: 'doc' as const,
+  content: [
+    {
+      type: 'paragraph',
+      content: [
+        { type: 'text', text: '背景色の例: ' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#fbf3c4' } }],
+          text: '黄色ハイライト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#d2e9f5' } }],
+          text: '水色ハイライト',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#f5d6e6' } }],
+          text: 'ピンクハイライト',
+        },
+      ],
+    },
+    {
+      type: 'paragraph',
+      content: [
+        { type: 'text', text: '文字色との組み合わせ: ' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#e01e5a', backgroundColor: '#fbf3c4' } }],
+          text: '赤字 + 黄色背景',
+        },
+        { type: 'text', text: '・' },
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#0077c7', backgroundColor: '#d2e9f5' } }],
+          text: '青字 + 水色背景',
+        },
+      ],
+    },
+  ],
+}
+
+export const BackgroundColor: Story = {
+  name: '背景色ハイライト',
+  render: () => (
+    <Stack gap={2}>
+      <FormControl label="背景色付きコンテンツ（通常）">
+        <RichTextEditor
+          features={['color', 'backgroundColor']}
+          defaultValue={backgroundColorContent}
+        />
+      </FormControl>
+      <FormControl label="背景色付きコンテンツ（読み取り専用）">
+        <RichTextEditor
+          features={['color', 'backgroundColor']}
+          readOnly
+          defaultValue={backgroundColorContent}
+        />
       </FormControl>
     </Stack>
   ),

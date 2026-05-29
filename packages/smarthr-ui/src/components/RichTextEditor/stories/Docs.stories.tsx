@@ -41,6 +41,7 @@ const ALL_FEATURES = [
   'horizontalRule',
   'link',
   'color',
+  'backgroundColor',
   'fontSize',
   'textAlign',
   'image',
@@ -285,6 +286,15 @@ export const Overview: Story = {
               </tr>
               <tr>
                 <td style={tdStyle}>
+                  <code>backgroundColor</code>
+                </td>
+                <td style={tdStyle}>背景色（ハイライト）</td>
+                <td style={tdStyle}>背景色ピッカーボタン</td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
                   <code>fontSize</code>
                 </td>
                 <td style={tdStyle}>フォントサイズ（12px〜72px）</td>
@@ -368,7 +378,7 @@ export const BasicUsage: Story = {
       'bold', 'italic', 'underline', 'strike', 'code',
       'heading', 'bulletList', 'orderedList',
       'blockquote', 'codeBlock', 'horizontalRule',
-      'link', 'color', 'fontSize', 'textAlign',
+      'link', 'color', 'backgroundColor', 'fontSize', 'textAlign',
       'image', 'youtube', 'table',
     ]}
     onChange={(json) => setValue(json)}

@@ -29,6 +29,17 @@ const dangerousInputs = [
   '<svg onload="alert(1)"></svg>',
 ]
 
+// これらの入力はTiptapのHTMLパーサーがCSS値をそのままJSONに保持するため、
+// normalizeToJSON段階では javascript: が JSON内に残る。
+// 安全性はシリアライザー（isSafeColor）の段階で保証される。
+const cssInjectionInputs = [
+  '<span style="background-color: url(javascript:alert(1))">x</span>',
+  '<span style="background-color: expression(alert(1))">x</span>',
+  '<p style="background-image: url(javascript:alert(1))">x</p>',
+  '<span style="background-color: rgba(0,0,0,0); background-image: url(javascript:alert(1))">x</span>',
+  '<span style="color: rgba(0,0,0,1); behavior: url(javascript:alert(1))">x</span>',
+]
+
 const assertSafe = (output: string) => {
   for (const pattern of DANGEROUS_PATTERNS) {
     expect(output).not.toContain(pattern)
@@ -52,11 +63,25 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
         assertSafe(serializeToHTML(json))
       })
     })
+    cssInjectionInputs.forEach((input) => {
+      it(`CSS注入も安全: "${input.slice(0, 40)}..."`, () => {
+        const json = normalizeToJSON({ format: 'html', content: input })
+        assertSafe(serializeToHTML(json))
+      })
+    })
   })
 
   describe('serializeToReactElement', () => {
     dangerousInputs.forEach((input) => {
       it(`React要素に変換しても安全: "${input.slice(0, 40)}..."`, () => {
+        const json = normalizeToJSON({ format: 'html', content: input })
+        const element = serializeToReactElement(json)
+        const html = renderToStaticMarkup(element as React.ReactElement)
+        assertSafe(html)
+      })
+    })
+    cssInjectionInputs.forEach((input) => {
+      it(`CSS注入もReact変換後も安全: "${input.slice(0, 40)}..."`, () => {
         const json = normalizeToJSON({ format: 'html', content: input })
         const element = serializeToReactElement(json)
         const html = renderToStaticMarkup(element as React.ReactElement)
@@ -174,6 +199,33 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       const html = renderToStaticMarkup(element as React.ReactElement)
       expect(html).toContain('<h4')
       expect(html).not.toContain('<h99')
+    })
+
+    it('rgb()/rgba() 形式の color/backgroundColor が保持される', () => {
+      const json = {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                marks: [
+                  {
+                    type: 'textStyle',
+                    attrs: { color: 'rgb(255, 0, 0)', backgroundColor: 'rgba(0, 0, 255, 0.5)' },
+                  },
+                ],
+                text: 'colored',
+              },
+            ],
+          },
+        ],
+      }
+      const element = serializeToReactElement(json)
+      const html = renderToStaticMarkup(element as React.ReactElement)
+      expect(html).toContain('color:rgb(255, 0, 0)')
+      expect(html).toContain('background-color:rgba(0, 0, 255, 0.5)')
     })
   })
 })

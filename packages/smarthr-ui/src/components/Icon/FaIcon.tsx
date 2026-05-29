@@ -121,6 +121,7 @@ import {
   FaGripLinesVertical,
   FaGripVertical,
   FaHeading,
+  FaHighlighter,
   FaHourglassHalf,
   FaHouse,
   FaIdBadge,
@@ -341,6 +342,7 @@ export const FaGripLinesIcon = /*#__PURE__*/ generateIcon(FaGripLines)
 export const FaGripLinesVerticalIcon = /*#__PURE__*/ generateIcon(FaGripLinesVertical)
 export const FaGripVerticalIcon = /*#__PURE__*/ generateIcon(FaGripVertical)
 export const FaHeadingIcon = /*#__PURE__*/ generateIcon(FaHeading)
+export const FaHighlighterIcon = /*#__PURE__*/ generateIcon(FaHighlighter)
 export const FaHourglassHalfIcon = /*#__PURE__*/ generateIcon(FaHourglassHalf)
 export const FaHouseIcon = /*#__PURE__*/ generateIcon(FaHouse)
 export const FaIdBadgeIcon = /*#__PURE__*/ generateIcon(FaIdBadge)

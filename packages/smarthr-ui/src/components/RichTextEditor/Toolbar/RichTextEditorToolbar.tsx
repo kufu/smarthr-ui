@@ -21,7 +21,8 @@ import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useRovingToolbar } from '../hooks/useRovingToolbar'
 import { useToolbarState } from '../hooks/useToolbarState'
 
-import { ColorPickerButton } from './ColorPickerButton'
+import { BackgroundColorPickerButton } from './ColorPicker/BackgroundColorPickerButton'
+import { TextColorPickerButton } from './ColorPicker/TextColorPickerButton'
 import { FontSizeDropdown } from './FontSizeDropdown'
 import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
@@ -44,7 +45,16 @@ type ButtonItem = {
 }
 
 type CustomItem = {
-  type: 'heading' | 'fontSize' | 'color' | 'image' | 'youtube' | 'link' | 'textAlign' | 'table'
+  type:
+    | 'heading'
+    | 'fontSize'
+    | 'color'
+    | 'backgroundColor'
+    | 'image'
+    | 'youtube'
+    | 'link'
+    | 'textAlign'
+    | 'table'
   key: string
   disabled: boolean
 }
@@ -160,6 +170,15 @@ export const RichTextEditorToolbar: FC = memo(() => {
     // 文字色
     if (has('color')) {
       toolbarItems.push({ type: 'color', key: 'color-picker', disabled: state.isNodeSelected })
+    }
+
+    // 背景色（ハイライト）
+    if (has('backgroundColor')) {
+      toolbarItems.push({
+        type: 'backgroundColor',
+        key: 'background-color-picker',
+        disabled: state.isNodeSelected,
+      })
     }
 
     // リンク
@@ -296,7 +315,12 @@ export const RichTextEditorToolbar: FC = memo(() => {
           return <FontSizeDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'color') {
-          return <ColorPickerButton {...rovingProps} disabled={item.disabled} key={item.key} />
+          return <TextColorPickerButton {...rovingProps} disabled={item.disabled} key={item.key} />
+        }
+        if (item.type === 'backgroundColor') {
+          return (
+            <BackgroundColorPickerButton {...rovingProps} disabled={item.disabled} key={item.key} />
+          )
         }
         if (item.type === 'image') {
           return <ImageInsertButton {...rovingProps} disabled={item.disabled} key={item.key} />

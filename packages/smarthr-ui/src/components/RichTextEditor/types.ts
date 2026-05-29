@@ -21,6 +21,7 @@ export type RichTextFeature =
   | 'link'
   | 'heading'
   | 'color'
+  | 'backgroundColor'
   | 'fontSize'
   | 'textAlign'
   | 'image'

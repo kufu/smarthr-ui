@@ -21,6 +21,7 @@ const ALL_FEATURES = [
   'horizontalRule',
   'link',
   'color',
+  'backgroundColor',
   'image',
   'youtube',
   'fontSize',
@@ -181,6 +182,21 @@ export const ColorPickerWithExistingContent: Story = {
         '<p><span style="color: #e01e5a">標準パレットの赤 (#e01e5a)</span> — 標準スウォッチにチェックが出る</p>' +
         '<p><span style="color: #ff6600">標準にない橙 (#ff6600)</span> — カスタムスウォッチにチェックが出る</p>' +
         '<p><span style="color: rgb(114, 57, 179)">標準と一致するrgb (#7239b3 紫)</span> — 標準スウォッチにチェックが出る</p>',
+    },
+  },
+}
+
+export const BackgroundColorPickerWithExistingContent: Story = {
+  name: '背景色ピッカー: 既存コンテンツの背景色読み込み',
+  args: {
+    content: {
+      format: 'html',
+      content:
+        '<p>背景色付きテキストを選択して背景色ピッカー(ハイライト)を開くと、現在の色が反映されます。</p>' +
+        '<p><span style="background-color: #fbf3c4">黄色ハイライト (#fbf3c4) — 標準パレットにチェックが出る</span></p>' +
+        '<p><span style="background-color: #d2e9f5">水色ハイライト (#d2e9f5) — 標準パレットにチェックが出る</span></p>' +
+        '<p><span style="background-color: #ff9900">標準にない橙 (#ff9900) — カスタムスウォッチにチェックが出る</span></p>' +
+        '<p><span style="background-color: #fbf3c4"><span style="color: #e01e5a">背景色と文字色の組み合わせ</span></span></p>',
     },
   },
 }

@@ -4,7 +4,7 @@ import { Image } from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
-import { FontSize, TextStyle } from '@tiptap/extension-text-style'
+import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { Youtube } from '@tiptap/extension-youtube'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -115,12 +115,16 @@ export const configureExtensions = ({
     )
   }
 
-  if (has('color') || has('fontSize')) {
+  if (has('color') || has('fontSize') || has('backgroundColor')) {
     extensions.push(TextStyle.configure())
   }
 
   if (has('color')) {
     extensions.push(Color.configure())
+  }
+
+  if (has('backgroundColor')) {
+    extensions.push(BackgroundColor.configure())
   }
 
   if (has('fontSize')) {
@@ -153,6 +157,7 @@ export const ALL_FEATURES: readonly RichTextFeature[] = [
   'link',
   'heading',
   'color',
+  'backgroundColor',
   'fontSize',
   'textAlign',
   'image',

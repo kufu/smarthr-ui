@@ -26,7 +26,8 @@ const isSafeYoutubeSrc = (src: unknown): src is string =>
 const isSafeColor = (color: unknown): color is string =>
   typeof color === 'string' &&
   (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(color) ||
-    /^rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)$/i.test(color))
+    /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/i.test(color) ||
+    /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(?:0|1|0?\.\d+)\s*\)$/i.test(color))
 
 const isSafeFontSize = (fontSize: unknown): fontSize is string =>
   typeof fontSize === 'string' && /^\d+(\.\d+)?px$/.test(fontSize)
@@ -104,6 +105,7 @@ const markMapping: Record<string, ReactMarkMapping> = {
   textStyle: ({ mark, children }) => {
     const style: Record<string, string> = {}
     if (isSafeColor(mark.attrs.color)) style.color = mark.attrs.color
+    if (isSafeColor(mark.attrs.backgroundColor)) style.backgroundColor = mark.attrs.backgroundColor
     if (isSafeFontSize(mark.attrs.fontSize)) style.fontSize = mark.attrs.fontSize
     return createElement(
       'span',
