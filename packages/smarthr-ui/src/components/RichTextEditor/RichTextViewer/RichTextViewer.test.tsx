@@ -110,4 +110,19 @@ describe('RichTextViewer', () => {
     )
     expect(container.querySelector('pre code')).toHaveTextContent('const x = 1')
   })
+
+  it('gap 未指定時はデフォルトで shr-space-y-1 クラスが付く', () => {
+    const { container } = render(<RichTextViewer content={{ format: 'empty' }} />)
+    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toHaveClass('shr-space-y-1')
+  })
+
+  it('gap 指定時に対応する shr-space-y クラスが付く', () => {
+    const { container } = render(<RichTextViewer content={{ format: 'empty' }} gap={2} />)
+    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toHaveClass('shr-space-y-2')
+  })
+
+  it('直下要素の縦マージンをリセットするクラスが付く', () => {
+    const { container } = render(<RichTextViewer content={{ format: 'empty' }} />)
+    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toHaveClass('[&>*]:shr-my-0')
+  })
 })

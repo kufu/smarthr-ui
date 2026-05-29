@@ -77,31 +77,31 @@ export const editorContentClasses = [
 /** RichTextViewer 用: 直下の要素向けスタイル */
 export const staticContentClasses = [
   // lists
-  '[&_ul]:shr-my-0.5 [&_ul]:shr-list-disc [&_ul]:shr-pl-1.5',
-  '[&_ol]:shr-my-0.5 [&_ol]:shr-list-decimal [&_ol]:shr-pl-1.5',
+  '[&_ul]:shr-list-disc [&_ul]:shr-pl-1.5',
+  '[&_ol]:shr-list-decimal [&_ol]:shr-pl-1.5',
   '[&_li]:shr-my-0.25',
   '[&_li_p]:shr-my-0',
   // blockquote
-  '[&_blockquote]:shr-my-0.5 [&_blockquote]:shr-ml-0 [&_blockquote]:shr-mr-0 [&_blockquote]:shr-border-0 [&_blockquote]:shr-border-l-[3px] [&_blockquote]:shr-border-solid [&_blockquote]:shr-border-l-grey [&_blockquote]:shr-pl-0.5',
+  '[&_blockquote]:shr-ml-0 [&_blockquote]:shr-mr-0 [&_blockquote]:shr-border-0 [&_blockquote]:shr-border-l-[3px] [&_blockquote]:shr-border-solid [&_blockquote]:shr-border-l-grey [&_blockquote]:shr-pl-0.5',
   // headings (デザイントークン準拠: XXL→XL→L→M)
-  '[&_h1]:shr-my-0.5 [&_h1]:shr-text-2xl [&_h1]:shr-font-normal [&_h1]:shr-leading-tight',
-  '[&_h2]:shr-my-0.5 [&_h2]:shr-text-xl [&_h2]:shr-font-normal [&_h2]:shr-leading-tight',
-  '[&_h3]:shr-my-0.5 [&_h3]:shr-text-lg [&_h3]:shr-font-normal [&_h3]:shr-leading-tight',
-  '[&_h4]:shr-my-0.5 [&_h4]:shr-text-base [&_h4]:shr-font-bold [&_h4]:shr-leading-tight [&_h4]:shr-text-black',
+  '[&_h1]:shr-text-2xl [&_h1]:shr-font-normal [&_h1]:shr-leading-tight',
+  '[&_h2]:shr-text-xl [&_h2]:shr-font-normal [&_h2]:shr-leading-tight',
+  '[&_h3]:shr-text-lg [&_h3]:shr-font-normal [&_h3]:shr-leading-tight',
+  '[&_h4]:shr-text-base [&_h4]:shr-font-bold [&_h4]:shr-leading-tight [&_h4]:shr-text-black',
   // code
   '[&_code]:shr-rounded-m [&_code]:shr-bg-white-darken [&_code]:shr-px-0.25 [&_code]:shr-py-[0.125rem] [&_code]:shr-text-sm',
-  '[&_pre]:shr-my-0.5 [&_pre]:shr-overflow-x-auto [&_pre]:shr-rounded-m [&_pre]:shr-bg-white-darken [&_pre]:shr-p-0.75 [&_pre]:shr-text-sm',
+  '[&_pre]:shr-overflow-x-auto [&_pre]:shr-rounded-m [&_pre]:shr-bg-white-darken [&_pre]:shr-p-0.75 [&_pre]:shr-text-sm',
   // horizontal rule
-  '[&_hr]:shr-my-1 [&_hr]:shr-border-t-shorthand',
+  '[&_hr]:shr-border-t-shorthand',
   // link
   '[&_a]:shr-text-main [&_a]:shr-underline',
   // image
-  '[&_img]:shr-block [&_img]:shr-my-0.5 [&_img]:shr-max-w-full',
+  '[&_img]:shr-block [&_img]:shr-max-w-full',
   // youtube iframe
-  '[&_iframe]:shr-my-0.5 [&_iframe]:shr-max-w-full [&_iframe]:shr-rounded-m',
+  '[&_iframe]:shr-max-w-full [&_iframe]:shr-rounded-m',
   // table (renderWrapper: true で <div class="tableWrapper"> が出力されるので、その内側に table)
   // テーブル自身に inline style で width が付くため、wrapper 側で横スクロールを担保する
-  '[&_.tableWrapper]:shr-my-0.5 [&_.tableWrapper]:shr-max-w-full [&_.tableWrapper]:shr-overflow-x-auto',
+  '[&_.tableWrapper]:shr-max-w-full [&_.tableWrapper]:shr-overflow-x-auto',
   '[&_table]:shr-border-collapse',
   '[&_td]:shr-border-shorthand [&_td]:shr-p-0.5 [&_td]:shr-align-top',
   '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-align-top [&_th]:shr-bg-head [&_th]:shr-text-left [&_th]:shr-font-bold',

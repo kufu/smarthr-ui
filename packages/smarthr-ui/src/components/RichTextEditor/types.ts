@@ -73,9 +73,17 @@ export type RichTextEditorProps = RichTextEditorBaseProps &
       }
   )
 
+/**
+ * ブロック要素間の縦間隔として使える数値トークン。
+ * smarthr-ui の spacing 数値トークンに対応する。
+ */
+export type RichTextViewerGap = 0 | 0.25 | 0.5 | 0.75 | 1 | 1.25 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 8
+
 export type RichTextViewerProps = {
   content: ExternalRichTextValue | RichTextJSON
   className?: string
+  /** ブロック要素間の縦間隔。デフォルトは 1（16px）。 */
+  gap?: RichTextViewerGap
 }
 
 export type RichTextEditorController = {

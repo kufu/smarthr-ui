@@ -152,43 +152,44 @@ export const AllElements: Story = {
 
 export const BackgroundColor: Story = {
   name: '背景色ハイライト',
-  render: () => (
-    <Stack gap={2}>
-      <RichTextViewer
-        content={{
-          type: 'doc',
+  args: {
+    content: {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
           content: [
+            { type: 'text', text: '背景色の例 (JSON): ' },
             {
-              type: 'paragraph',
-              content: [
-                { type: 'text', text: '背景色の例 (JSON): ' },
+              type: 'text',
+              marks: [{ type: 'textStyle', attrs: { backgroundColor: '#fbf3c4' } }],
+              text: '黄色ハイライト',
+            },
+            { type: 'text', text: '・' },
+            {
+              type: 'text',
+              marks: [{ type: 'textStyle', attrs: { backgroundColor: '#d2e9f5' } }],
+              text: '水色ハイライト',
+            },
+            { type: 'text', text: '・' },
+            {
+              type: 'text',
+              marks: [
                 {
-                  type: 'text',
-                  marks: [{ type: 'textStyle', attrs: { backgroundColor: '#fbf3c4' } }],
-                  text: '黄色ハイライト',
-                },
-                { type: 'text', text: '・' },
-                {
-                  type: 'text',
-                  marks: [{ type: 'textStyle', attrs: { backgroundColor: '#d2e9f5' } }],
-                  text: '水色ハイライト',
-                },
-                { type: 'text', text: '・' },
-                {
-                  type: 'text',
-                  marks: [
-                    {
-                      type: 'textStyle',
-                      attrs: { color: '#e01e5a', backgroundColor: '#fbf3c4' },
-                    },
-                  ],
-                  text: '赤字+黄色背景',
+                  type: 'textStyle',
+                  attrs: { color: '#e01e5a', backgroundColor: '#fbf3c4' },
                 },
               ],
+              text: '赤字+黄色背景',
             },
           ],
-        }}
-      />
+        },
+      ],
+    },
+  },
+  render: ({ content }) => (
+    <Stack gap={2}>
+      <RichTextViewer content={content} />
       <RichTextViewer
         content={{
           format: 'html',
@@ -196,6 +197,50 @@ export const BackgroundColor: Story = {
             '<p>背景色の例 (HTML): <span style="background-color: #fbf3c4">黄色ハイライト</span>・<span style="background-color: #d2e9f5">水色ハイライト</span>・<span style="color: #e01e5a; background-color: #fbf3c4">赤字+黄色背景</span></p>',
         }}
       />
+    </Stack>
+  ),
+}
+
+export const Gap: Story = {
+  name: 'gap バリエーション',
+  args: {
+    content: {
+      type: 'doc',
+      content: [
+        {
+          type: 'heading',
+          attrs: { level: 2 },
+          content: [{ type: 'text', text: '見出し' }],
+        },
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text: '1段落目のテキストです。' }],
+        },
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text: '2段落目のテキストです。' }],
+        },
+        {
+          type: 'bulletList',
+          content: [
+            {
+              type: 'listItem',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目1' }] }],
+            },
+            {
+              type: 'listItem',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目2' }] }],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  render: ({ content }) => (
+    <Stack gap={2}>
+      <RichTextViewer content={content} gap={0.5} />
+      <RichTextViewer content={content} gap={1} />
+      <RichTextViewer content={content} gap={2} />
     </Stack>
   ),
 }
