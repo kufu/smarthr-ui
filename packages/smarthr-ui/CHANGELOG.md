@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [95.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.1...smarthr-ui-v95.1.0) (2026-05-29)
+
+
+### Features
+
+* **intl:** convertLangをsmarthr-uiとしてexport ([#6361](https://github.com/kufu/smarthr-ui/issues/6361)) ([b9bbd07](https://github.com/kufu/smarthr-ui/commit/b9bbd07d2b35f0d557ae133f5e8881de710ac9cf))
+
 ## [95.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.0...smarthr-ui-v95.0.1) (2026-05-27)
 
 
