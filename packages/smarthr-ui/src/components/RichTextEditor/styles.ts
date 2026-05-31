@@ -31,7 +31,10 @@ export const editorContentClasses = [
   // link
   '[&_.ProseMirror_a]:shr-text-main [&_.ProseMirror_a]:shr-underline',
   // image
-  '[&_.ProseMirror_img]:shr-my-0.5 [&_.ProseMirror_img]:shr-max-w-full',
+  // display:block にしないと inline 画像の行ボックスにディセンダ分の隙間ができ、
+  // リサイズハンドル(wrapper基準で bottom:0 配置)の下側が画像下端より下にズレる。
+  // RichTextViewer 側(staticContentClasses)も block で揃えている。
+  '[&_.ProseMirror_img]:shr-my-0.5 [&_.ProseMirror_img]:shr-block [&_.ProseMirror_img]:shr-max-w-full',
   '[&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-main',
   // image resize container
   '[&_.ProseMirror_[data-resize-container]]:shr-w-fit [&_.ProseMirror_[data-resize-container]]:shr-max-w-full [&_.ProseMirror_[data-resize-container]]:shr-my-0.5',
@@ -41,6 +44,9 @@ export const editorContentClasses = [
   '[&_.ProseMirror_[data-resize-handle]]:shr-size-[10px] [&_.ProseMirror_[data-resize-handle]]:shr-rounded-full [&_.ProseMirror_[data-resize-handle]]:shr-bg-main [&_.ProseMirror_[data-resize-handle]]:shr-border [&_.ProseMirror_[data-resize-handle]]:shr-border-solid [&_.ProseMirror_[data-resize-handle]]:shr-border-white [&_.ProseMirror_[data-resize-handle]]:shr-shadow-sm [&_.ProseMirror_[data-resize-handle]]:shr-opacity-0 [&_.ProseMirror_[data-resize-handle]]:shr-transition-opacity [&_.ProseMirror_[data-resize-handle]]:shr-z-1 [&_.ProseMirror_[data-resize-handle]]:shr-m-[-5px]',
   '[&_.ProseMirror_[data-resize-wrapper]:hover_[data-resize-handle]]:shr-opacity-100',
   '[&_.ProseMirror_[data-resize-container][data-resize-state=true]_[data-resize-handle]]:shr-opacity-100',
+  // image upload placeholder（アップロード中。Decoration の widget span）
+  // 円形CSSスピナー（Loader size="S" 相当の24px）。上辺だけ透明にして回転させる。
+  '[&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-my-0.5 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-inline-block [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-size-2 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rounded-full [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-border-2 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-border-solid [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-border-main [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-border-t-transparent [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-align-middle [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-animate-[spin_0.8s_linear_infinite] motion-reduce:[&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-animate-none',
   // youtube iframe
   '[&_.ProseMirror_iframe]:shr-my-0.5 [&_.ProseMirror_iframe]:shr-max-w-full [&_.ProseMirror_iframe]:shr-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video]]:shr-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rounded-m',

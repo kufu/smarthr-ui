@@ -30,8 +30,12 @@ const ALL_FEATURES = [
 ] as const
 
 const mockImageUpload = async (file: File) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await new Promise((resolve) => setTimeout(resolve, 5000))
   return { src: URL.createObjectURL(file), alt: file.name }
+}
+
+const mockImageUploadError = (error: unknown, file: File) => {
+  console.error('image upload failed:', file.name, error)
 }
 
 const meta = {
@@ -70,6 +74,7 @@ export const Playground: Story = {
             {...rest}
             onChange={(json) => setValue(json)}
             onImageUpload={mockImageUpload}
+            onImageUploadError={mockImageUploadError}
             placeholder="ここに本文を入力してください"
             showCharacterCount
           />
@@ -168,6 +173,36 @@ export const MinimalFeatures: Story = {
     features: [],
     placeholder: 'テキストを入力',
   },
+}
+
+export const ImageEditing: Story = {
+  name: '画像編集（フローティングツールバー）',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => (
+    <FormControl label="画像編集">
+      <RichTextEditor
+        {...rest}
+        features={['image', 'bold']}
+        defaultValue={{
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                { type: 'text', text: '画像をクリックすると上部に操作バーが表示されます。' },
+              ],
+            },
+            {
+              type: 'image',
+              attrs: { src: 'https://placehold.co/400x300.png', alt: 'サンプル画像' },
+            },
+            { type: 'paragraph' },
+          ],
+        }}
+        onImageUpload={mockImageUpload}
+        onImageUploadError={mockImageUploadError}
+      />
+    </FormControl>
+  ),
 }
 
 export const ColorPickerWithExistingContent: Story = {

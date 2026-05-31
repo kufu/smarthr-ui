@@ -58,6 +58,10 @@ type RichTextEditorBaseProps = {
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   showCharacterCount?: boolean
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  /** 画像アップロード失敗時に呼ばれる。通知方法は利用者に委ねる。 */
+  onImageUploadError?: (error: unknown, file: File) => void
+  /** 画像がドキュメントから削除されたときに、その画像の src ごとに呼ばれる。 */
+  onImageRemove?: (src: string) => void
   acceptedMimeTypes?: string[]
 }
 

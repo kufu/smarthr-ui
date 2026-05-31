@@ -284,3 +284,31 @@ export const BackgroundColor: Story = {
     </Stack>
   ),
 }
+
+const imageWithWidthContent = {
+  type: 'doc' as const,
+  content: [
+    {
+      type: 'paragraph',
+      content: [{ type: 'text', text: '幅・高さを指定した画像:' }],
+    },
+    {
+      type: 'image',
+      attrs: { src: 'https://placehold.co/400x300.png', alt: 'sample', width: 200, height: 150 },
+    },
+  ],
+}
+
+export const VRTImageWithWidth: Story = {
+  name: '幅指定画像',
+  render: () => (
+    <Stack gap={2}>
+      <FormControl label="幅指定画像（通常）">
+        <RichTextEditor features={['image']} defaultValue={imageWithWidthContent} />
+      </FormControl>
+      <FormControl label="幅指定画像（読み取り専用）">
+        <RichTextEditor features={['image']} readOnly defaultValue={imageWithWidthContent} />
+      </FormControl>
+    </Stack>
+  ),
+}

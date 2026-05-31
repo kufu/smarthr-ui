@@ -14,13 +14,11 @@ import { tv } from 'tailwind-variants'
 import { useIntl } from '../../../intl'
 import { FaImageIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { uploadAndInsertImage } from '../extensions/configureExtensions'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
-import { AltTextDialog } from './AltTextDialog'
-import { ImageUrlDialog } from './ImageUrlDialog'
+import { ImageUrlPopover } from './ImageUrlPopover'
 import { ToolbarButton } from './ToolbarButton'
-
-import type { ImageUploadResult } from '../types'
 
 const DEFAULT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
@@ -47,12 +45,12 @@ type Props = {
 
 export const ImageInsertButton: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown, onFocus, ref: refProp }) => {
-    const { editor, onImageUpload, acceptedMimeTypes } = useRichTextEditorContext()
+    const { editor, onImageUpload, onImageUploadError, acceptedMimeTypes } =
+      useRichTextEditorContext()
     const { localize } = useIntl()
     const { setIsOpen: setIsMenuOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const fileInputRef = useRef<HTMLInputElement>(null)
     const menuRef = useRef<HTMLDivElement>(null)
-    const [pendingFile, setPendingFile] = useState<File | null>(null)
     const [showUrlDialog, setShowUrlDialog] = useState(false)
 
     const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
@@ -72,53 +70,30 @@ export const ImageInsertButton: FC<Props> = memo(
       setShowUrlDialog(true)
     }, [setIsMenuOpen])
 
-    const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if (file) {
-        setPendingFile(file)
-      }
-      if (e.target) {
-        e.target.value = ''
-      }
-    }, [])
-
-    const handleUploadSuccess = useCallback(
-      (result: ImageUploadResult, alt: string) => {
-        editor
-          .chain()
-          .focus()
-          .insertContent({
-            type: 'image',
-            attrs: { src: result.src, alt: alt || result.alt || '' },
-          })
-          .run()
-        setPendingFile(null)
+    const handleFileChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file && onImageUpload) {
+          uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
+        }
+        if (e.target) {
+          e.target.value = ''
+        }
       },
-      [editor],
+      [editor, onImageUpload, onImageUploadError],
     )
 
-    const handleAltCancel = useCallback(() => {
-      setPendingFile(null)
-    }, [])
-
-    const handleUrlSubmit = useCallback(
-      (src: string, alt: string) => {
+    const handleUrlInsert = useCallback(
+      (src: string) => {
         editor
           .chain()
           .focus()
-          .insertContent({
-            type: 'image',
-            attrs: { src, alt },
-          })
+          .insertContent({ type: 'image', attrs: { src, alt: '' } })
           .run()
         setShowUrlDialog(false)
       },
       [editor],
     )
-
-    const handleUrlCancel = useCallback(() => {
-      setShowUrlDialog(false)
-    }, [])
 
     const handleMenuKeyDown = useCallback(
       (e: KeyboardEvent) => {
@@ -222,15 +197,12 @@ export const ImageInsertButton: FC<Props> = memo(
           tabIndex={-1}
           onChange={handleFileChange}
         />
-        {pendingFile && onImageUpload && (
-          <AltTextDialog
-            file={pendingFile}
-            onImageUpload={onImageUpload}
-            onSuccess={handleUploadSuccess}
-            onCancel={handleAltCancel}
-          />
-        )}
-        {showUrlDialog && <ImageUrlDialog onInsert={handleUrlSubmit} onClose={handleUrlCancel} />}
+        <ImageUrlPopover
+          anchorRef={triggerRef}
+          isOpen={showUrlDialog}
+          onInsert={handleUrlInsert}
+          onClose={() => setShowUrlDialog(false)}
+        />
       </>
     )
   },

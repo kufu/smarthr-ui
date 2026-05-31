@@ -10,6 +10,7 @@ type RichTextEditorContextValue = {
   features: readonly RichTextFeature[]
   headingLevels: ReadonlyArray<1 | 2 | 3 | 4>
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  onImageUploadError?: (error: unknown, file: File) => void
   acceptedMimeTypes?: string[]
 }
 
@@ -22,6 +23,7 @@ type ProviderProps = {
   features: readonly RichTextFeature[]
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  onImageUploadError?: (error: unknown, file: File) => void
   acceptedMimeTypes?: string[]
   children: ReactNode
 }
@@ -31,11 +33,19 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   features,
   headingLevels = DEFAULT_HEADING_LEVELS,
   onImageUpload,
+  onImageUploadError,
   acceptedMimeTypes,
   children,
 }) => (
   <RichTextEditorContext.Provider
-    value={{ editor, features, headingLevels, onImageUpload, acceptedMimeTypes }}
+    value={{
+      editor,
+      features,
+      headingLevels,
+      onImageUpload,
+      onImageUploadError,
+      acceptedMimeTypes,
+    }}
   >
     {children}
   </RichTextEditorContext.Provider>

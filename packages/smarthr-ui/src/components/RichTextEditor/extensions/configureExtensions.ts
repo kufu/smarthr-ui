@@ -1,6 +1,6 @@
+import { Extension } from '@tiptap/core'
 import { Color } from '@tiptap/extension-color'
 import { FileHandler } from '@tiptap/extension-file-handler'
-import { Image } from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
@@ -8,16 +8,24 @@ import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-sty
 import { Youtube } from '@tiptap/extension-youtube'
 import StarterKit from '@tiptap/starter-kit'
 
+import { CustomImage } from './Image/CustomImage'
+import {
+  addImagePlaceholder,
+  findImagePlaceholderPos,
+  imageUploadPlaceholderPlugin,
+  removeImagePlaceholder,
+} from './Image/imageUploadPlaceholder'
 import { CustomTable } from './Table/CustomTable'
 
 import type { ImageUploadResult, RichTextFeature } from '../types'
-import type { AnyExtension } from '@tiptap/react'
+import type { AnyExtension, Editor } from '@tiptap/react'
 
 type ConfigureExtensionsOptions = {
   features?: readonly RichTextFeature[]
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   placeholder?: string
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  onImageUploadError?: (error: unknown, file: File) => void
   onFileDrop?: (file: File, pos: number | null) => void
   acceptedMimeTypes?: string[]
 }
@@ -26,12 +34,50 @@ const DEFAULT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'
 
 const DEFAULT_HEADING_LEVELS: ReadonlyArray<1 | 2 | 3 | 4> = [1, 2, 3, 4]
 
+/**
+ * 画像ファイルを即アップロードし、完了後にエディタへ挿入する共通処理。
+ * - 開始時にプレースホルダ Decoration を立てる（ドキュメントには載らない）
+ * - 成功: プレースホルダ位置に image ノードを挿入
+ * - 失敗: onImageUploadError を呼ぶ
+ * - finally: プレースホルダを除去
+ */
+export const uploadAndInsertImage = async (
+  editor: Editor,
+  file: File,
+  pos: number | null,
+  onImageUpload: (file: File, formData: FormData) => Promise<ImageUploadResult>,
+  onImageUploadError?: (error: unknown, file: File) => void,
+): Promise<void> => {
+  const view = editor.view
+  const insertPos = pos ?? view.state.selection.from
+  const placeholderId = addImagePlaceholder(view, insertPos)
+
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    const result = await onImageUpload(file, formData)
+
+    const at = findImagePlaceholderPos(view, placeholderId) ?? insertPos
+    editor
+      .chain()
+      .insertContentAt(at, {
+        type: 'image',
+        attrs: { src: result.src, alt: result.alt ?? '' },
+      })
+      .run()
+  } catch (error) {
+    onImageUploadError?.(error, file)
+  } finally {
+    removeImagePlaceholder(view, placeholderId)
+  }
+}
+
 export const configureExtensions = ({
   features = [],
   headingLevels = DEFAULT_HEADING_LEVELS,
   placeholder,
   onImageUpload,
-  onFileDrop,
+  onImageUploadError,
   acceptedMimeTypes,
 }: ConfigureExtensionsOptions): AnyExtension[] => {
   const has = (f: RichTextFeature) => features.includes(f)
@@ -65,7 +111,7 @@ export const configureExtensions = ({
 
   if (has('image')) {
     extensions.push(
-      Image.configure({
+      CustomImage.configure({
         allowBase64: false,
         resize: {
           enabled: true,
@@ -76,19 +122,33 @@ export const configureExtensions = ({
       }),
     )
 
-    if (onImageUpload && onFileDrop) {
+    // アップロード中プレースホルダ（ドキュメント非汚染の Decoration）
+    extensions.push(
+      Extension.create({
+        name: 'imageUploadPlaceholder',
+        addProseMirrorPlugins() {
+          return [imageUploadPlaceholderPlugin()]
+        },
+      }),
+    )
+
+    if (onImageUpload) {
       const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
 
       extensions.push(
         FileHandler.configure({
           allowedMimeTypes: mimeTypes,
-          onDrop: (_editor, files, pos) => {
+          onDrop: (editor, files, pos) => {
             const file = files.find((f) => mimeTypes.some((type) => f.type === type))
-            if (file) onFileDrop(file, pos)
+            if (file) {
+              uploadAndInsertImage(editor, file, pos, onImageUpload, onImageUploadError)
+            }
           },
-          onPaste: (_editor, files) => {
+          onPaste: (editor, files) => {
             const file = files.find((f) => mimeTypes.some((type) => f.type === type))
-            if (file) onFileDrop(file, null)
+            if (file) {
+              uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
+            }
           },
         }),
       )

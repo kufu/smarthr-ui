@@ -13,16 +13,15 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
-import { AltTextDialog } from '../Toolbar/AltTextDialog'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
+import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { normalizeToJSON } from '../serializers/normalizeToJSON'
 import { editorContentClasses } from '../styles'
 
 import type {
-  ImageUploadResult,
   RichTextChangeMeta,
   RichTextEditorController,
   RichTextEditorProps,
@@ -94,6 +93,8 @@ export const RichTextEditor = memo(
         className,
         editorClassName,
         onImageUpload,
+        onImageUploadError,
+        onImageRemove,
         acceptedMimeTypes,
       }: RichTextEditorProps,
       ref,
@@ -120,11 +121,13 @@ export const RichTextEditor = memo(
         [onChange, outputFormat],
       )
 
-      const { editor, pendingFile, setPendingFile } = useRichTextEditor({
+      const { editor } = useRichTextEditor({
         value,
         defaultValue: normalizedDefaultValue,
         onChange: handleChange,
         onImageUpload,
+        onImageUploadError,
+        onImageRemove,
         acceptedMimeTypes,
         onFocus,
         onBlur,
@@ -135,28 +138,6 @@ export const RichTextEditor = memo(
         placeholder,
         toolbarRef,
       })
-
-      const handleUploadSuccess = useCallback(
-        (result: ImageUploadResult, alt: string) => {
-          if (!editor || !pendingFile) return
-
-          const attrs = { src: result.src, alt: alt || result.alt || '' }
-          const chain = editor.chain().focus()
-
-          if (pendingFile.pos !== null) {
-            chain.insertContentAt(pendingFile.pos, { type: 'image', attrs }).run()
-          } else {
-            chain.insertContent({ type: 'image', attrs }).run()
-          }
-
-          setPendingFile(null)
-        },
-        [editor, pendingFile, setPendingFile],
-      )
-
-      const handleAltCancel = useCallback(() => {
-        setPendingFile(null)
-      }, [setPendingFile])
 
       useImperativeHandle(
         ref,
@@ -258,6 +239,7 @@ export const RichTextEditor = memo(
           features={features}
           headingLevels={headingLevels}
           onImageUpload={onImageUpload}
+          onImageUploadError={onImageUploadError}
           acceptedMimeTypes={acceptedMimeTypes}
         >
           <div ref={toolbarRef} className={classNames.toolbarWrapper()}>
@@ -279,16 +261,11 @@ export const RichTextEditor = memo(
           {editor && !readOnly && !disabled && !hideToolbar && features.includes('table') && (
             <TableFloatingUI editor={editor} containerRef={wrapperRef} />
           )}
+          {editor && !readOnly && !disabled && !hideToolbar && features.includes('image') && (
+            <ImageFloatingUI editor={editor} containerRef={wrapperRef} />
+          )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea()} />
-          )}
-          {pendingFile && onImageUpload && (
-            <AltTextDialog
-              file={pendingFile.file}
-              onImageUpload={onImageUpload}
-              onSuccess={handleUploadSuccess}
-              onCancel={handleAltCancel}
-            />
           )}
         </div>
       )

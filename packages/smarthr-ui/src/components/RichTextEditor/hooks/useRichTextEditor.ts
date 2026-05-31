@@ -1,8 +1,9 @@
 'use client'
 
 import { useEditor } from '@tiptap/react'
-import { type RefObject, useCallback, useEffect, useMemo, useState } from 'react'
+import { type RefObject, useEffect, useMemo } from 'react'
 
+import { collectImageSrcs, diffRemovedSrcs } from '../extensions/Image/collectImageSrcs'
 import { configureExtensions } from '../extensions/configureExtensions'
 import { createChangeMeta } from '../serializers/createChangeMeta'
 
@@ -21,6 +22,8 @@ type UseRichTextEditorOptions = {
   placeholder?: string
   toolbarRef?: RefObject<HTMLDivElement | null>
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+  onImageUploadError?: (error: unknown, file: File) => void
+  onImageRemove?: (src: string) => void
   acceptedMimeTypes?: string[]
 }
 
@@ -37,15 +40,11 @@ export const useRichTextEditor = ({
   placeholder,
   toolbarRef,
   onImageUpload,
+  onImageUploadError,
+  onImageRemove,
   acceptedMimeTypes,
 }: UseRichTextEditorOptions) => {
   const isControlled = value !== undefined
-
-  const [pendingFile, setPendingFile] = useState<{ file: File; pos: number | null } | null>(null)
-
-  const handleFileDrop = useCallback((file: File, pos: number | null) => {
-    setPendingFile({ file, pos })
-  }, [])
 
   const featuresKey = features.join(',')
   const headingLevelsKey = headingLevels?.join(',')
@@ -58,11 +57,11 @@ export const useRichTextEditor = ({
         headingLevels,
         placeholder,
         onImageUpload,
-        onFileDrop: onImageUpload ? handleFileDrop : undefined,
+        onImageUploadError,
         acceptedMimeTypes,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [featuresKey, headingLevelsKey, placeholder, onImageUpload, handleFileDrop, mimeTypesKey],
+    [featuresKey, headingLevelsKey, placeholder, onImageUpload, onImageUploadError, mimeTypesKey],
   )
 
   const editor = useEditor({
@@ -85,10 +84,19 @@ export const useRichTextEditor = ({
         return false
       },
     },
-    onUpdate: ({ editor: e }) => {
+    onUpdate: ({ editor: e, transaction }) => {
       const json = e.getJSON() as RichTextJSON
       const characterCount = e.getText({ blockSeparator: '' }).length
       onChange?.(json, createChangeMeta(json, characterCount))
+
+      if (onImageRemove && transaction.docChanged) {
+        const before = collectImageSrcs(transaction.before)
+        const after = collectImageSrcs(transaction.doc)
+        const removed = diffRemovedSrcs(before, after)
+        for (const src of removed) {
+          onImageRemove(src)
+        }
+      }
     },
     onFocus: () => onFocus?.(),
     onBlur: () => onBlur?.(),
@@ -115,5 +123,5 @@ export const useRichTextEditor = ({
     }
   }, [editor, readOnly, disabled])
 
-  return { editor, pendingFile, setPendingFile }
+  return { editor }
 }
