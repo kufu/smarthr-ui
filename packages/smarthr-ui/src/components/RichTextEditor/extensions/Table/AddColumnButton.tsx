@@ -28,8 +28,8 @@ const classNameGenerator = tv({
       'shr-absolute shr-z-overlap-base',
       'shr-flex shr-items-center shr-justify-center',
       'shr-border-shorthand shr-cursor-pointer shr-rounded-m shr-bg-white shr-text-base shr-text-grey shr-shadow-layer-1',
-      'hover:shr-bg-main hover:shr-text-white',
-      'focus-visible:shr-focus-indicator focus-visible:shr-bg-main focus-visible:shr-text-white',
+      'hover:shr-bg-white-darken',
+      'focus-visible:shr-focus-indicator focus-visible:shr-bg-white-darken',
     ],
   },
 })
