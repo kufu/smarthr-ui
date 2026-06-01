@@ -16,7 +16,7 @@ const SAFE_LINK_TARGETS = new Set(['_blank', '_self', '_parent', '_top'])
 const isSafeUrl = (url: unknown): url is string =>
   typeof url === 'string' && /^https?:\/\/|^mailto:/i.test(url.trim())
 
-const isSafeImageSrc = (src: unknown): src is string =>
+export const isSafeImageSrc = (src: unknown): src is string =>
   typeof src === 'string' && /^https?:\/\//i.test(src)
 
 const isSafeYoutubeSrc = (src: unknown): src is string =>

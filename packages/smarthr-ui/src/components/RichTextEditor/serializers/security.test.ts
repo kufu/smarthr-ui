@@ -201,6 +201,32 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(html).not.toContain('<h99')
     })
 
+    it('serializeToHTML: 直接JSON入力の画像の危険な src が除去される', () => {
+      const dangerousSrcs = [
+        'javascript:alert(1)',
+        'data:text/html,<script>alert(1)</script>',
+        'vbscript:msgbox(1)',
+      ]
+      for (const src of dangerousSrcs) {
+        const json = {
+          type: 'doc',
+          content: [{ type: 'image', attrs: { src, alt: 'x' } }],
+        }
+        const html = serializeToHTML(json)
+        expect(html).not.toContain(src)
+        expect(html).not.toContain('javascript:')
+        expect(html).not.toContain('data:text/html')
+      }
+    })
+
+    it('serializeToHTML: 直接JSON入力の安全な画像 src は保持される', () => {
+      const json = {
+        type: 'doc',
+        content: [{ type: 'image', attrs: { src: 'https://example.com/a.png', alt: 'x' } }],
+      }
+      expect(serializeToHTML(json)).toContain('https://example.com/a.png')
+    })
+
     it('rgb()/rgba() 形式の color/backgroundColor が保持される', () => {
       const json = {
         type: 'doc',
