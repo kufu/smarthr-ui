@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [96.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.1...smarthr-ui-v96.0.0) (2026-06-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Chip:** size表記を "s" から "S"に修正 ([#6360](https://github.com/kufu/smarthr-ui/issues/6360))
+
+### Features
+
+* **intl:** convertLangをsmarthr-uiとしてexport ([#6361](https://github.com/kufu/smarthr-ui/issues/6361)) ([b9bbd07](https://github.com/kufu/smarthr-ui/commit/b9bbd07d2b35f0d557ae133f5e8881de710ac9cf))
+
+
+### Bug Fixes
+
+* **Chip:** size表記を "s" から "S"に修正 ([#6360](https://github.com/kufu/smarthr-ui/issues/6360)) ([f5186eb](https://github.com/kufu/smarthr-ui/commit/f5186ebefe26599fd5ccf4f16f45a3a931e05e40))
+
 ## [95.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.0...smarthr-ui-v95.0.1) (2026-05-27)
 
 
