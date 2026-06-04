@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [96.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.0.0...smarthr-ui-v96.0.1) (2026-06-04)
+
+
+### Bug Fixes
+
+* **Icon:** generateIconからuse client directiveを削除 ([#6366](https://github.com/kufu/smarthr-ui/issues/6366)) ([198ab91](https://github.com/kufu/smarthr-ui/commit/198ab916984d8ca007d2c3197659d5bd40b2117a))
+
 ## [96.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.1...smarthr-ui-v96.0.0) (2026-06-03)
 
 
