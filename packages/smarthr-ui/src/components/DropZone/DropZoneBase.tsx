@@ -3,11 +3,9 @@
 import {
   type ChangeEvent,
   type ComponentPropsWithRef,
-  type ComponentPropsWithoutRef,
   type DragEvent,
   type PropsWithChildren,
   forwardRef,
-  memo,
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -15,11 +13,9 @@ import {
   useState,
 } from 'react'
 
-import { useIntl } from '../../intl'
-import { Button } from '../Button'
-import { FaFolderOpenIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
+import { SelectButton } from './SelectButton'
 import { classNameGenerator } from './style'
 
 type AbstractProps = PropsWithChildren<{
@@ -139,25 +135,3 @@ export const DropZoneBase = forwardRef<HTMLInputElement, DropZoneBaseProps>(
     )
   },
 )
-
-const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
->(({ onClick, label, ...rest }) => {
-  const { localize } = useIntl()
-
-  const buttonLabel = useMemo(
-    () =>
-      label ||
-      localize({
-        id: 'smarthr-ui/DropZone/selectButtonLabel',
-        defaultText: 'ファイルを選択',
-      }),
-    [label, localize],
-  )
-
-  return (
-    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
-      {buttonLabel}
-    </Button>
-  )
-})
