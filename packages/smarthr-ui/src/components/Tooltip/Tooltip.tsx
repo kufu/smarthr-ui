@@ -49,8 +49,6 @@ type AbstractProps = PropsWithChildren<{
   ellipsisOnly?: boolean
   /** ツールチップを表示する対象の tabIndex 値 */
   tabIndex?: number
-  /** `type` が `description` の場合に `aria-describedby` を付与する対象。`type` が `label` の場合は常に children に付与されるため無視される */
-  ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
 type Props = AbstractProps &
   Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby' | 'aria-labelledby'>
@@ -76,7 +74,6 @@ export const Tooltip: FC<Props> = ({
   triggerType,
   ellipsisOnly,
   tabIndex,
-  ariaDescribedbyTarget = 'wrapper',
   className,
   onPointerEnter,
   onPointerLeave,
@@ -97,6 +94,7 @@ export const Tooltip: FC<Props> = ({
     getFullscreenElementOnSSR,
   )
 
+  const [isFocusableChild, setIsFocusableChild] = useState(false)
   const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
 
   useEnhancedEffect(() => {
@@ -104,25 +102,17 @@ export const Tooltip: FC<Props> = ({
   }, [fullscreenElement])
 
   useEnhancedEffect(() => {
-    if (tabIndex !== undefined) {
-      setActualTabIndex(tabIndex)
-      return
-    }
-
     const childElement = ref.current?.querySelector<HTMLElement>(
       ':scope > :not(.smarthr-ui-VisuallyHiddenText)',
     )
 
-    if (!childElement) {
-      setActualTabIndex(0)
-      return
-    }
-
-    const isFocusable =
+    const focusable =
+      !!childElement &&
       childElement.matches('a[href], button, input, select, textarea, [tabindex]') &&
       !childElement.matches('[tabindex="-1"]')
 
-    setActualTabIndex(isFocusable ? undefined : 0)
+    setIsFocusableChild(focusable)
+    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
   }, [tabIndex])
 
   const toShowAction = useCallback(
@@ -219,19 +209,19 @@ export const Tooltip: FC<Props> = ({
     [isIcon, className],
   )
   const isLabel = type === 'label'
-  const isInnerTarget = ariaDescribedbyTarget === 'inner'
+  const isInnerTarget = isLabel || isFocusableChild
   const childrenWithProps = useMemo(
     () =>
       isLabel
         ? cloneElement(children as ReactElement, { 'aria-labelledby': messageId })
-        : isInnerTarget
+        : isFocusableChild
           ? cloneElement(children as ReactElement, { 'aria-describedby': messageId })
           : children,
-    [children, isLabel, isInnerTarget, messageId],
+    [children, isLabel, isFocusableChild, messageId],
   )
-  const actualAriaDescribedby = useMemo(
-    () => (!isLabel && !isInnerTarget ? messageId : undefined),
-    [isLabel, isInnerTarget, messageId],
+  const actualWrapperAriaDescribedby = useMemo(
+    () => (!isInnerTarget ? messageId : undefined),
+    [isInnerTarget, messageId],
   )
 
   return (
@@ -240,7 +230,7 @@ export const Tooltip: FC<Props> = ({
       {...rest}
       ref={ref}
       tabIndex={actualTabIndex}
-      aria-describedby={actualAriaDescribedby}
+      aria-describedby={actualWrapperAriaDescribedby}
       onPointerEnter={onDelegatePointerEnter}
       onTouchStart={onDelegateTouchStart}
       onFocus={onDelegateFocus}

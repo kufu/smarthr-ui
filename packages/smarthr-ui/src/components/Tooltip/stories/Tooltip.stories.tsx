@@ -118,7 +118,7 @@ export const Type: StoryObj<typeof Tooltip> = {
   name: 'type',
   render: () => (
     <div className="shr-flex shr-gap-1">
-      <Tooltip message="description" type="description" ariaDescribedbyTarget="inner">
+      <Tooltip message="description" type="description">
         <Button>ボタン</Button>
       </Tooltip>
       <Tooltip message="label" type="label" triggerType="icon">
@@ -128,13 +128,4 @@ export const Type: StoryObj<typeof Tooltip> = {
       </Tooltip>
     </div>
   ),
-}
-
-export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {
-  name: 'ariaDescribedbyTarget',
-  args: {
-    ariaDescribedbyTarget: 'inner',
-    triggerType: 'icon',
-    children: <FaCircleQuestionIcon alt="ツールチップ" />,
-  },
 }
