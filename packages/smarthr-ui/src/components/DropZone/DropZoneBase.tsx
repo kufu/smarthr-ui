@@ -23,18 +23,29 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { classNameGenerator } from './style'
 
 type AbstractProps = PropsWithChildren<{
+  /**
+   * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
+   */
   onSelectFiles: (
     e: DragEvent<HTMLElement> | ChangeEvent<HTMLInputElement>,
     files: FileList | null,
   ) => void
+  /**
+   * 許可するファイル型を表す1つ以上の固有ファイル型指定子
+   * <b>（ドラッグ&ドロップの挙動には影響しません）</b>
+   */
   accept?: string
+  /** 複数ファイルを選択できるかどうか */
   multiple?: boolean
   name?: string
   disabled?: boolean
+  /** フォームにエラーがあるかどうか */
   error?: boolean
+  /** ファイル選択ボタンのラベル */
   selectButtonLabel?: string
 }>
-export type DropZoneBaseProps = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+export type DropZoneBaseProps = AbstractProps &
+  Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -75,13 +86,10 @@ export const DropZoneBase = forwardRef<HTMLInputElement, DropZoneBaseProps>(
       [onSelectFiles],
     )
 
-    const onDragOver = useCallback(
-      (e: DragEvent<HTMLElement>) => {
-        overrideEventDefault(e)
-        setFilesDraggedOver(true)
-      },
-      [],
-    )
+    const onDragOver = useCallback((e: DragEvent<HTMLElement>) => {
+      overrideEventDefault(e)
+      setFilesDraggedOver(true)
+    }, [])
 
     const onDragLeave = useCallback(() => {
       setFilesDraggedOver(false)
