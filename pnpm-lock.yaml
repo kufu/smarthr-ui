@@ -190,46 +190,46 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0
       '@tiptap/core':
-        specifier: ^3.22.1
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/pm@3.23.6)
       '@tiptap/extension-color':
-        specifier: ^3.22.3
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/extension-text-style@3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6)))
       '@tiptap/extension-file-handler':
-        specifier: ^3.22.3
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))(@tiptap/extension-text-style@3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6)))(@tiptap/pm@3.23.6)
       '@tiptap/extension-image':
-        specifier: ^3.22.3
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))
       '@tiptap/extension-placeholder':
-        specifier: ^3.22.1
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/extensions@3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))(@tiptap/pm@3.23.6))
       '@tiptap/extension-table':
-        specifier: ^3.22.3
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))(@tiptap/pm@3.23.6)
       '@tiptap/extension-text-align':
-        specifier: ^3.22.3
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))
       '@tiptap/extension-text-style':
-        specifier: ^3.22.3
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))
       '@tiptap/extension-youtube':
-        specifier: ^3.22.3
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))
       '@tiptap/html':
-        specifier: ^3.22.1
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))(@tiptap/pm@3.23.6)(happy-dom@20.9.0)
       '@tiptap/pm':
-        specifier: ^3.22.1
+        specifier: ^3.23.6
         version: 3.23.6
       '@tiptap/react':
-        specifier: ^3.22.1
+        specifier: ^3.23.6
         version: 3.23.6(@floating-ui/dom@1.7.6)(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))(@tiptap/pm@3.23.6)(@types/react-dom@19.2.3(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tiptap/starter-kit':
-        specifier: ^3.22.1
+        specifier: ^3.23.6
         version: 3.23.6
       '@tiptap/static-renderer':
-        specifier: ^3.22.1
+        specifier: ^3.23.6
         version: 3.23.6(@tiptap/core@3.23.6(@tiptap/pm@3.23.6))(@tiptap/pm@3.23.6)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       dayjs:
         specifier: ^1.11.18
