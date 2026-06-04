@@ -1,21 +1,21 @@
 import { Cluster } from '../../Layout'
-import { Balloon } from '../Balloon'
+import { ControlledTooltip } from '../ControlledTooltip'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Balloon/VRT',
+  title: 'Components/Tooltip（Internal）/ControlledTooltip/VRT',
   render: () => (
     <Cluster className="shr-p-1">
       {['top', 'bottom', 'middle'].map((vertical) =>
         ['center', 'right', 'left'].map((horizontal) => (
-          <Balloon
+          <ControlledTooltip
             key={`${vertical}-${horizontal}`}
             horizontal={horizontal as any}
             vertical={vertical as any}
           >
-            バルーン vertical: {vertical}, horizontal: {horizontal}
-          </Balloon>
+            吹き出し vertical: {vertical}, horizontal: {horizontal}
+          </ControlledTooltip>
         )),
       )}
     </Cluster>
@@ -24,7 +24,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof Balloon>
+} satisfies Meta<typeof ControlledTooltip>
 
 export const VRT = {}
 

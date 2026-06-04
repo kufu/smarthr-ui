@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.4](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.3...smarthr-ui-charts-v0.1.4) (2026-05-21)
+
+
+### Features
+
+* **Chart:** chartsパッケージにRadarChartを追加 ([#6277](https://github.com/kufu/smarthr-ui/issues/6277)) ([9fcd272](https://github.com/kufu/smarthr-ui/commit/9fcd27259b5938d427ce8e66788fa023faff9b49))
+
 ## [0.1.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.2...smarthr-ui-charts-v0.1.3) (2026-05-13)
 
 

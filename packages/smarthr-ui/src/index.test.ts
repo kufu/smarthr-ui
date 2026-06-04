@@ -92,7 +92,9 @@ const parseFile = async (filePath: string): Promise<string[]> => {
 
 const getExportedComponents = async (file: string): Promise<string[]> => {
   const files = await parseFile(file)
-  return files.filter(isNonComponentsExports).map(getComponentName)
+  const components = files.filter(isNonComponentsExports).map(getComponentName)
+  // 同じディレクトリから複数のコンポーネントをexportする場合があるため重複を除去
+  return [...new Set(components)]
 }
 
 const getComponentDirs = async (dirPath: string, ignoreDirs: string[] = []) => {

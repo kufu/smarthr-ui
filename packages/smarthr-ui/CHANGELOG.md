@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [96.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.1...smarthr-ui-v96.0.0) (2026-06-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Chip:** size表記を "s" から "S"に修正 ([#6360](https://github.com/kufu/smarthr-ui/issues/6360))
+
+### Features
+
+* **intl:** convertLangをsmarthr-uiとしてexport ([#6361](https://github.com/kufu/smarthr-ui/issues/6361)) ([b9bbd07](https://github.com/kufu/smarthr-ui/commit/b9bbd07d2b35f0d557ae133f5e8881de710ac9cf))
+
+
+### Bug Fixes
+
+* **Chip:** size表記を "s" から "S"に修正 ([#6360](https://github.com/kufu/smarthr-ui/issues/6360)) ([f5186eb](https://github.com/kufu/smarthr-ui/commit/f5186ebefe26599fd5ccf4f16f45a3a931e05e40))
+
+## [95.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v95.0.0...smarthr-ui-v95.0.1) (2026-05-27)
+
+
+### Bug Fixes
+
+* **i18n:** ロケール判定修正：マカオ・香港追加、Export可 ([#6358](https://github.com/kufu/smarthr-ui/issues/6358)) ([774a2f9](https://github.com/kufu/smarthr-ui/commit/774a2f91bd497b199f5ae424726d87180ae5232f))
+
+## [95.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v94.0.0...smarthr-ui-v95.0.0) (2026-05-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **LanguageSwitcher,AppLauncher:** decorators属性を削除 ([#6233](https://github.com/kufu/smarthr-ui/issues/6233))
+* **InputFile:** decorators属性を削除しIntlProviderのみを使用 ([#6234](https://github.com/kufu/smarthr-ui/issues/6234))
+* FormDialogのボタン属性をObject形式に統合 ([#6229](https://github.com/kufu/smarthr-ui/issues/6229))
+* MessageDialogのdecorators削除とcloseButton属性への統一 ([#6230](https://github.com/kufu/smarthr-ui/issues/6230))
+* ActionDialogのボタン属性をObject形式に統合 ([#6228](https://github.com/kufu/smarthr-ui/issues/6228))
+
+### Bug Fixes
+
+* **DropZone:** ファイル以外のドロップ時にonSelectFilesを呼ばないように修正 ([#6347](https://github.com/kufu/smarthr-ui/issues/6347)) ([929dd94](https://github.com/kufu/smarthr-ui/commit/929dd944450b2af46eb0d43fd76a125fcbd615a4))
+* **SegmentedControl/SideNav:** フォーカス中でフォーカスリングと選択中の要素を見分けれない ([#6291](https://github.com/kufu/smarthr-ui/issues/6291)) ([199b030](https://github.com/kufu/smarthr-ui/commit/199b030475f0da94b74608a1b03fc5dbcc5be7a3))
+* **TimeFormatter,TimestampFormatter:** パッケージからexport ([#6349](https://github.com/kufu/smarthr-ui/issues/6349)) ([ac67f95](https://github.com/kufu/smarthr-ui/commit/ac67f959692238ff6cb9d0547ade766e67c497e5))
+
+
+### Code Refactoring
+
+* ActionDialogのボタン属性をObject形式に統合 ([#6228](https://github.com/kufu/smarthr-ui/issues/6228)) ([73eac60](https://github.com/kufu/smarthr-ui/commit/73eac60b2eef4be18314a6fbc1c1f8597bafbd17))
+* FormDialogのボタン属性をObject形式に統合 ([#6229](https://github.com/kufu/smarthr-ui/issues/6229)) ([d4ef841](https://github.com/kufu/smarthr-ui/commit/d4ef8410fe0104285e152cd9f0941f12bad4ee35))
+* **InputFile:** decorators属性を削除しIntlProviderのみを使用 ([#6234](https://github.com/kufu/smarthr-ui/issues/6234)) ([13bfdd4](https://github.com/kufu/smarthr-ui/commit/13bfdd4691e0e35aae36cb30ced68f25e3e094ba))
+* **LanguageSwitcher,AppLauncher:** decorators属性を削除 ([#6233](https://github.com/kufu/smarthr-ui/issues/6233)) ([ab0b636](https://github.com/kufu/smarthr-ui/commit/ab0b63690fbbdcb4f1572949a73d90a0c4c164b2))
+* MessageDialogのdecorators削除とcloseButton属性への統一 ([#6230](https://github.com/kufu/smarthr-ui/issues/6230)) ([ff5dd30](https://github.com/kufu/smarthr-ui/commit/ff5dd30662f0d26047ed0807217ee6cca1e24e50))
+
 ## [94.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v93.1.2...smarthr-ui-v94.0.0) (2026-05-13)
 
 

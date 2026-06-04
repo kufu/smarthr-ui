@@ -14,7 +14,7 @@ export default {
       text: 'アクションダイアログタイトル',
       sub: 'アクションダイアログのサブタイトル',
     },
-    actionText: '保存',
+    actionButton: '保存',
     subActionArea: <Button>サブアクション</Button>,
     contentBgColor: 'BACKGROUND',
     responseStatus: {
