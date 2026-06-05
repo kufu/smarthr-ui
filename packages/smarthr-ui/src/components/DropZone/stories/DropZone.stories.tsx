@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { DropZone } from '../DropZone'
@@ -55,5 +56,37 @@ export const SelectButtonLabel: StoryObj<typeof DropZone> = {
   args: {
     selectButtonLabel: 'Choose File',
     children: 'カスタムラベルのボタン',
+  },
+}
+
+export const MultipleAppendable: StoryObj<typeof DropZone> = {
+  name: 'multiple (appendable)',
+  render: () => {
+    const [files, setFiles] = useState<File[]>([])
+
+    return (
+      <DropZone
+        name="file"
+        multiple={{ appendable: true }}
+        files={files}
+        onSelectFiles={(_, newFiles) => {
+          action('onSelectFiles')(newFiles)
+          setFiles(newFiles)
+        }}
+      >
+        {files.length > 0 && (
+          <ul>
+            {files.map((f) => (
+              <li key={f.name}>
+                {f.name}
+                <button type="button" onClick={() => setFiles(files.filter((x) => x !== f))}>
+                  削除
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </DropZone>
+    )
   },
 }
