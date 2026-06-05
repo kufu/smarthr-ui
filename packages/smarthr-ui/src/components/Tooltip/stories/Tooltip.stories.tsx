@@ -1,6 +1,6 @@
 import { Button } from '../../Button'
 import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -141,30 +141,30 @@ export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {
   name: 'ariaDescribedbyTarget',
   render: () => (
     <Stack>
-      <div>
+      <Cluster>
         wrapper + focusable:
         <Tooltip message="wrapper + focusable" ariaDescribedbyTarget="wrapper">
           <Button>ボタン</Button>
         </Tooltip>
-      </div>
-      <div>
+      </Cluster>
+      <Cluster>
         wrapper + non-focusable:
         <Tooltip message="wrapper + non-focusable" ariaDescribedbyTarget="wrapper">
           テキスト
         </Tooltip>
-      </div>
-      <div>
+      </Cluster>
+      <Cluster>
         inner + focusable:
         <Tooltip message="inner + focusable" ariaDescribedbyTarget="inner">
           <Button>ボタン</Button>
         </Tooltip>
-      </div>
-      <div>
+      </Cluster>
+      <Cluster>
         inner + non-focusable:
         <Tooltip message="inner + non-focusable" ariaDescribedbyTarget="inner" triggerType="icon">
           <FaCircleQuestionIcon alt="ツールチップ" />
         </Tooltip>
-      </div>
+      </Cluster>
     </Stack>
   ),
 }
