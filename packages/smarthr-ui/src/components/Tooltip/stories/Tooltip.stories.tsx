@@ -1,5 +1,6 @@
 import { Button } from '../../Button'
 import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
+import { Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -117,15 +118,53 @@ export const TabIndex: StoryObj<typeof Tooltip> = {
 export const Type: StoryObj<typeof Tooltip> = {
   name: 'type',
   render: () => (
-    <div className="shr-flex shr-gap-1">
-      <Tooltip message="description" type="description">
-        <Button>ボタン</Button>
-      </Tooltip>
-      <Tooltip message="label" type="label" triggerType="icon">
-        <Button>
-          <FaPencilIcon />
-        </Button>
-      </Tooltip>
-    </div>
+    <Stack>
+      <div>
+        description(default):
+        <Tooltip message="description">
+          <Button>ボタン</Button>
+        </Tooltip>
+      </div>
+      <div>
+        label:
+        <Tooltip message="label" type="label" triggerType="icon">
+          <Button>
+            <FaPencilIcon />
+          </Button>
+        </Tooltip>
+      </div>
+    </Stack>
+  ),
+}
+
+export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {
+  name: 'ariaDescribedbyTarget',
+  render: () => (
+    <Stack>
+      <div>
+        wrapper + focusable:
+        <Tooltip message="wrapper + focusable" ariaDescribedbyTarget="wrapper">
+          <Button>ボタン</Button>
+        </Tooltip>
+      </div>
+      <div>
+        wrapper + non-focusable:
+        <Tooltip message="wrapper + non-focusable" ariaDescribedbyTarget="wrapper">
+          テキスト
+        </Tooltip>
+      </div>
+      <div>
+        inner + focusable:
+        <Tooltip message="inner + focusable" ariaDescribedbyTarget="inner">
+          <Button>ボタン</Button>
+        </Tooltip>
+      </div>
+      <div>
+        inner + non-focusable:
+        <Tooltip message="inner + non-focusable" ariaDescribedbyTarget="inner" triggerType="icon">
+          <FaCircleQuestionIcon alt="ツールチップ" />
+        </Tooltip>
+      </div>
+    </Stack>
   ),
 }

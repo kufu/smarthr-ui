@@ -49,6 +49,8 @@ type AbstractProps = PropsWithChildren<{
   ellipsisOnly?: boolean
   /** ツールチップを表示する対象の tabIndex 値 */
   tabIndex?: number
+  /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
+  ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
 type Props = AbstractProps &
   Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby' | 'aria-labelledby'>
@@ -74,6 +76,7 @@ export const Tooltip: FC<Props> = ({
   triggerType,
   ellipsisOnly,
   tabIndex,
+  ariaDescribedbyTarget = 'wrapper',
   className,
   onPointerEnter,
   onPointerLeave,
@@ -209,15 +212,15 @@ export const Tooltip: FC<Props> = ({
     [isIcon, className],
   )
   const isLabel = type === 'label'
-  const isInnerTarget = isLabel || isFocusableChild
+  const isInnerTarget = isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner'
   const childrenWithProps = useMemo(
     () =>
       isLabel
         ? cloneElement(children as ReactElement, { 'aria-labelledby': messageId })
-        : isFocusableChild
+        : isInnerTarget
           ? cloneElement(children as ReactElement, { 'aria-describedby': messageId })
           : children,
-    [children, isLabel, isFocusableChild, messageId],
+    [children, isLabel, isInnerTarget, messageId],
   )
   const actualWrapperAriaDescribedby = useMemo(
     () => (!isInnerTarget ? messageId : undefined),

@@ -54,6 +54,18 @@ describe('Tooltip', () => {
       expect(document.getElementById(describedbyId)).toHaveTextContent('説明テキスト')
     })
 
+    it('children が non-focusable でも ariaDescribedbyTarget="inner" なら children の accessible description になる', () => {
+      render(
+        <Tooltip message="説明テキスト" ariaDescribedbyTarget="inner">
+          <span>テキスト</span>
+        </Tooltip>,
+      )
+      const child = screen.getByText('テキスト')
+      expect(child).toHaveAttribute('aria-describedby')
+      const describedbyId = child.getAttribute('aria-describedby')!
+      expect(document.getElementById(describedbyId)).toHaveTextContent('説明テキスト')
+    })
+
     it('children のアクセシブルネームが message にならない', () => {
       render(
         <Tooltip message="説明テキスト">
