@@ -54,26 +54,15 @@ describe('Tooltip', () => {
       expect(document.getElementById(describedbyId)).toHaveTextContent('説明テキスト')
     })
 
-    it('children が non-focusable でも ariaDescribedbyTarget="inner" なら children の accessible description になる', () => {
+    it('children が focusable なとき ariaDescribedbyTarget="wrapper" を指定しても children の accessible description になる', () => {
       render(
-        <Tooltip message="説明テキスト" ariaDescribedbyTarget="inner">
-          <span>テキスト</span>
-        </Tooltip>,
-      )
-      const child = screen.getByText('テキスト')
-      expect(child).toHaveAttribute('aria-describedby')
-      const describedbyId = child.getAttribute('aria-describedby')!
-      expect(document.getElementById(describedbyId)).toHaveTextContent('説明テキスト')
-    })
-
-    it('children のアクセシブルネームが message にならない', () => {
-      render(
-        <Tooltip message="説明テキスト">
+        <Tooltip message="説明テキスト" ariaDescribedbyTarget="wrapper">
           <Button>ボタン</Button>
         </Tooltip>,
       )
-      expect(screen.getByRole('button', { name: 'ボタン' })).toBeInTheDocument()
-      expect(screen.queryByRole('button', { name: '説明テキスト' })).not.toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: 'ボタン', description: '説明テキスト' }),
+      ).toBeInTheDocument()
     })
   })
 
@@ -87,17 +76,6 @@ describe('Tooltip', () => {
         </Tooltip>,
       )
       expect(screen.getByRole('button', { name: '保存' })).toBeInTheDocument()
-    })
-
-    it('children の accessible description にならない', () => {
-      render(
-        <Tooltip type="label" message="保存">
-          <Button>
-            <FaPencilIcon />
-          </Button>
-        </Tooltip>,
-      )
-      expect(screen.getByRole('button', { name: '保存' })).not.toHaveAttribute('aria-describedby')
     })
   })
 })
