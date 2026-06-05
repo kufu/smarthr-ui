@@ -43,7 +43,9 @@ type AppendableModeProps = CommonProps & {
 type Props = NormalModeProps | AppendableModeProps
 
 function isAppendableMode(props: Props): props is AppendableModeProps {
-  return typeof props.multiple === 'object' && !!props.multiple.appendable
+  return (
+    props.multiple !== null && typeof props.multiple === 'object' && !!props.multiple.appendable
+  )
 }
 
 export const DropZone = forwardRef<HTMLInputElement, Props>((props, ref) => {
