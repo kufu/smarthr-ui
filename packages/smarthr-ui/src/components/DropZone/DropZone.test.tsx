@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { IntlProvider } from '../../intl'
 
 import { DropZone } from './DropZone'
+import { DropZoneMultiplyAppendable } from './DropZoneMultiplyAppendable'
 
 const createFileList = (files: File[]): FileList => {
   const fileList = {
@@ -151,5 +152,162 @@ describe('DropZone', () => {
         )
       })
     })
+  })
+})
+
+describe('DropZoneMultiplyAppendable', () => {
+  describe('onSelectFiles', () => {
+    describe('ファイルをドロップした場合', () => {
+      it('既存ファイルにマージして onSelectFiles が File[] で呼ばれる', () => {
+        const existingFile = new File(['existing'], 'existing.txt', { type: 'text/plain' })
+        const newFile = new File(['new'], 'new.txt', { type: 'text/plain' })
+        const onSelectFiles = vi.fn()
+
+        const { container } = render(
+          <IntlProvider locale="ja">
+            <DropZoneMultiplyAppendable
+              name="test_file"
+              files={[existingFile]}
+              onSelectFiles={onSelectFiles}
+            >
+              ファイルをドロップ
+            </DropZoneMultiplyAppendable>
+          </IntlProvider>,
+        )
+
+        const dropZone = container.querySelector('.smarthr-ui-DropZone')
+        if (!dropZone) throw new Error('DropZone not found')
+
+        const newFileList = createFileList([newFile])
+        fireEvent.drop(dropZone, { dataTransfer: { files: newFileList, types: ['Files'] } })
+
+        expect(onSelectFiles).toHaveBeenCalledTimes(1)
+        expect(onSelectFiles).toHaveBeenCalledWith(expect.anything(), [existingFile, newFile])
+      })
+
+      it('files が空のとき新規ファイルだけを渡す', () => {
+        const newFile = new File(['content'], 'new.txt', { type: 'text/plain' })
+        const onSelectFiles = vi.fn()
+
+        const { container } = render(
+          <IntlProvider locale="ja">
+            <DropZoneMultiplyAppendable name="test_file" files={[]} onSelectFiles={onSelectFiles}>
+              ファイルをドロップ
+            </DropZoneMultiplyAppendable>
+          </IntlProvider>,
+        )
+
+        const dropZone = container.querySelector('.smarthr-ui-DropZone')
+        if (!dropZone) throw new Error('DropZone not found')
+
+        const newFileList = createFileList([newFile])
+        fireEvent.drop(dropZone, { dataTransfer: { files: newFileList, types: ['Files'] } })
+
+        expect(onSelectFiles).toHaveBeenCalledWith(expect.anything(), [newFile])
+      })
+    })
+
+    describe('ボタンクリックでファイルを選択した場合', () => {
+      it('既存ファイルにマージして onSelectFiles が File[] で呼ばれる', async () => {
+        const existingFile = new File(['existing'], 'existing.txt', { type: 'text/plain' })
+        const newFile = new File(['new'], 'new.txt', { type: 'text/plain' })
+        const onSelectFiles = vi.fn()
+
+        render(
+          <IntlProvider locale="ja">
+            <DropZoneMultiplyAppendable
+              name="test_file"
+              files={[existingFile]}
+              onSelectFiles={onSelectFiles}
+            >
+              ファイルをドロップ
+            </DropZoneMultiplyAppendable>
+          </IntlProvider>,
+        )
+
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement
+        if (!input) throw new Error('Input not found')
+
+        await userEvent.upload(input, newFile)
+
+        expect(onSelectFiles).toHaveBeenCalledTimes(1)
+        expect(onSelectFiles).toHaveBeenCalledWith(expect.anything(), [existingFile, newFile])
+      })
+    })
+
+    describe('テキストをドロップした場合', () => {
+      it('onSelectFiles が発火しない', () => {
+        const onSelectFiles = vi.fn()
+
+        const { container } = render(
+          <IntlProvider locale="ja">
+            <DropZoneMultiplyAppendable name="test_file" files={[]} onSelectFiles={onSelectFiles}>
+              ファイルをドロップ
+            </DropZoneMultiplyAppendable>
+          </IntlProvider>,
+        )
+
+        const dropZone = container.querySelector('.smarthr-ui-DropZone')
+        if (!dropZone) throw new Error('DropZone not found')
+
+        fireEvent.drop(dropZone, {
+          dataTransfer: { files: createFileList([]), types: ['text/plain'] },
+        })
+
+        expect(onSelectFiles).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('URLをドロップした場合', () => {
+      it('onSelectFiles が発火しない', () => {
+        const onSelectFiles = vi.fn()
+
+        const { container } = render(
+          <IntlProvider locale="ja">
+            <DropZoneMultiplyAppendable name="test_file" files={[]} onSelectFiles={onSelectFiles}>
+              ファイルをドロップ
+            </DropZoneMultiplyAppendable>
+          </IntlProvider>,
+        )
+
+        const dropZone = container.querySelector('.smarthr-ui-DropZone')
+        if (!dropZone) throw new Error('DropZone not found')
+
+        fireEvent.drop(dropZone, {
+          dataTransfer: { files: createFileList([]), types: ['text/uri-list'] },
+        })
+
+        expect(onSelectFiles).not.toHaveBeenCalled()
+      })
+    })
+  })
+})
+
+describe('DropZone (appendable mode)', () => {
+  it('multiple={{ appendable: true }} のとき既存ファイルにマージして onSelectFiles が呼ばれる', () => {
+    const existingFile = new File(['existing'], 'existing.txt', { type: 'text/plain' })
+    const newFile = new File(['new'], 'new.txt', { type: 'text/plain' })
+    const onSelectFiles = vi.fn()
+
+    const { container } = render(
+      <IntlProvider locale="ja">
+        <DropZone
+          name="test_file"
+          multiple={{ appendable: true }}
+          files={[existingFile]}
+          onSelectFiles={onSelectFiles}
+        >
+          ファイルをドロップ
+        </DropZone>
+      </IntlProvider>,
+    )
+
+    const dropZone = container.querySelector('.smarthr-ui-DropZone')
+    if (!dropZone) throw new Error('DropZone not found')
+
+    const newFileList = createFileList([newFile])
+    fireEvent.drop(dropZone, { dataTransfer: { files: newFileList, types: ['Files'] } })
+
+    expect(onSelectFiles).toHaveBeenCalledWith(expect.anything(), [existingFile, newFile])
   })
 })
