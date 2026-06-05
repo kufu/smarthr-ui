@@ -51,9 +51,11 @@ function isAppendableMode(props: Props): props is AppendableModeProps {
 export const DropZone = forwardRef<HTMLInputElement, Props>((props, ref) => {
   if (isAppendableMode(props)) {
     const { multiple: _m, ...rest } = props
-    return <DropZoneMultiplyAppendable {...rest} ref={ref} />
+    return (
+      <DropZoneMultiplyAppendable {...(rest as Omit<AppendableModeProps, 'multiple'>)} ref={ref} />
+    )
   }
 
   const { files: _f, ...rest } = props
-  return <DropZoneBase {...rest} ref={ref} />
+  return <DropZoneBase {...(rest as Omit<NormalModeProps, 'files'>)} ref={ref} />
 })
