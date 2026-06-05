@@ -2,7 +2,6 @@ import { action } from 'storybook/actions'
 
 import { Chip } from '../../Chip'
 import { Stack } from '../../Layout'
-import { Text } from '../../Text'
 import { Table } from '../Table'
 import { Th } from '../Th'
 

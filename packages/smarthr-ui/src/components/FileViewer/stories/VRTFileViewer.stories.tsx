@@ -1,5 +1,5 @@
-import { FileViewer } from '..'
 import { Stack } from '../../Layout'
+import { FileViewer } from '../FileViewer'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

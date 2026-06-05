@@ -10,7 +10,6 @@ import {
   useMemo,
 } from 'react'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
@@ -25,28 +24,38 @@ export type ActionDialogHelpers = {
   close: () => void
 }
 
+type ObjectActionButtonType = {
+  /** アクションボタンのラベル */
+  text: ReactNode
+  /** アクションボタンのスタイル */
+  theme?: 'primary' | 'secondary' | 'danger'
+  /** アクションボタンを無効にするかどうか */
+  disabled?: boolean
+}
+
+type ObjectCloseButtonType = {
+  /** 閉じるボタンのラベル */
+  text: ReactNode
+  /** 閉じるボタンを無効にするかどうか */
+  disabled?: boolean
+}
+
 export type AbstractProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
-    /** アクションボタンのラベル */
-    actionText: ReactNode
-    /** アクションボタンのスタイル */
-    actionTheme?: 'primary' | 'secondary' | 'danger'
+    /** アクションボタン */
+    actionButton: ObjectActionButtonType
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e マウスイベント
      * @param helpers ダイアログ操作のためのヘルパー関数
      */
     onClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
-    /** アクションボタンを無効にするかどうか */
-    actionDisabled?: boolean
-    /** 閉じるボタンを無効にするかどうか */
-    closeDisabled?: boolean
+    /** 閉じるボタン */
+    closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
-    /** コンポーネント内の文言を変更するための関数を設定 */
-    decorators?: DecoratorsType<'closeButtonLabel'>
   }
 >
 
@@ -62,15 +71,12 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   heading,
   contentBgColor,
   contentPadding,
-  actionText,
-  actionTheme,
+  actionButton,
   onClickAction,
   onClickClose,
   responseStatus,
-  actionDisabled,
-  closeDisabled,
+  closeButton,
   subActionArea,
-  decorators,
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
@@ -97,12 +103,9 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           <ActionAreaCluster
             onClickClose={onClickClose}
             onClickAction={onClickAction}
-            closeDisabled={closeDisabled}
-            actionDisabled={actionDisabled}
+            closeButton={closeButton}
+            actionButton={actionButton}
             loading={calcedResponseStatus.isProcessing}
-            actionTheme={actionTheme}
-            decorators={decorators}
-            actionText={actionText}
             className={styles.buttonArea}
           />
         </Cluster>
@@ -116,59 +119,43 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<
-    ActionDialogContentInnerProps,
-    | 'onClickClose'
-    | 'onClickAction'
-    | 'closeDisabled'
-    | 'actionDisabled'
-    | 'actionTheme'
-    | 'decorators'
-    | 'actionText'
-  > & { loading: boolean; className: string }
->(
-  ({
-    onClickClose,
-    onClickAction,
-    closeDisabled,
-    actionDisabled,
-    loading,
-    actionTheme,
-    decorators,
-    actionText,
-    className,
-  }) => {
-    const handleClickAction = useCallback(
-      (e: MouseEvent<Element>) => {
-        onClickAction(e, { close: onClickClose })
-      },
-      [onClickAction, onClickClose],
-    )
+  Pick<ActionDialogContentInnerProps, 'onClickClose' | 'onClickAction'> & {
+    actionButton: ObjectActionButtonType
+    closeButton: ObjectCloseButtonType
+    loading: boolean
+    className: string
+  }
+>(({ onClickClose, onClickAction, closeButton, actionButton, loading, className }) => {
+  const handleClickAction = useCallback(
+    (e: MouseEvent<Element>) => {
+      onClickAction(e, { close: onClickClose })
+    },
+    [onClickAction, onClickClose],
+  )
 
-    return (
-      <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
-        <CloseButton
-          onClick={onClickClose}
-          disabled={closeDisabled || loading}
-          decorators={decorators}
-        />
-        <ActionButton
-          variant={actionTheme}
-          disabled={actionDisabled}
-          loading={loading}
-          onClick={handleClickAction}
-        >
-          {actionText}
-        </ActionButton>
-      </Cluster>
-    )
-  },
-)
+  return (
+    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+      <CloseButton
+        onClick={onClickClose}
+        disabled={closeButton.disabled || loading}
+        text={closeButton.text}
+      />
+      <ActionButton
+        variant={actionButton.theme}
+        disabled={actionButton.disabled}
+        loading={loading}
+        onClick={handleClickAction}
+      >
+        {actionButton.text}
+      </ActionButton>
+    </Cluster>
+  )
+})
 
 const ActionButton = memo<
   PropsWithChildren<{
-    variant: ActionDialogContentInnerProps['actionTheme']
-    disabled: ActionDialogContentInnerProps['actionDisabled']
+    variant: ObjectActionButtonType['theme']
+    disabled: ObjectActionButtonType['disabled']
     loading: boolean
     onClick: (e: MouseEvent<HTMLButtonElement>) => void
   }>
@@ -185,29 +172,25 @@ const ActionButton = memo<
   </Button>
 ))
 
-const CloseButton = memo<
-  Pick<ActionDialogContentInnerProps, 'decorators'> & {
-    onClick: ActionDialogContentInnerProps['onClickClose']
-    disabled: boolean
-  }
->(({ onClick, disabled, decorators }) => {
+const CloseButton = memo<{
+  onClick: ActionDialogContentInnerProps['onClickClose']
+  disabled: boolean
+  text: ReactNode
+}>(({ onClick, disabled, text }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      closeButtonLabel: localize({
+  const defaultText = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/ActionDialog/closeButtonLabel',
         defaultText: 'キャンセル',
       }),
-    }),
     [localize],
   )
 
-  const decorated = useDecorators(decoratorDefaultTexts, decorators)
-
   return (
     <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {decorated.closeButtonLabel}
+      {text ?? defaultText}
     </Button>
   )
 })

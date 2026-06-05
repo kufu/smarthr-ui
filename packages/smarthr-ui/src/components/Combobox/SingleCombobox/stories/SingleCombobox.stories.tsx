@@ -4,7 +4,6 @@ import { useArgs } from 'storybook/preview-api'
 import { backgroundColor } from '../../../../tailwind'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
-import { Text } from '../../../Text'
 import { SingleCombobox } from '../SingleCombobox'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -112,7 +111,7 @@ export default {
       options: ['文字列', 'ReactNode'],
       mapping: {
         文字列: 'ヘルプメッセージ',
-        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
+        ReactNode: <span className="shr-text-danger">React Nodeを渡したメッセージ</span>,
       },
     },
   },

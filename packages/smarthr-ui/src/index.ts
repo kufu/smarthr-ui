@@ -2,7 +2,6 @@ import './configureTwMerge'
 
 // components
 export { DisclosureTrigger, DisclosureContent } from './components/Disclosure'
-export { Balloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export { Chip } from './components/Chip'
 export {
@@ -81,9 +80,22 @@ export {
   AccordionPanelTrigger,
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
+/**
+ * @deprecated 通常の用途では Tooltip コンポーネントを使用してください。
+ * Tour（アプリの初回利用時チュートリアル）のような特殊な用途でのみ使用可能ですが、
+ * 将来的には Tour 専用のコンポーネントとして整理される予定です。
+ */
+export { ControlledTooltip as Balloon } from './components/Tooltip'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
-export { ErrorScreen } from './components/ErrorScreen'
+export {
+  ErrorScreen,
+  AuthErrorScreen,
+  ForbiddenErrorScreen,
+  NotFoundErrorScreen,
+  UnauthorizedErrorScreen,
+  UnexpectedErrorScreen,
+} from './components/ErrorScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl } from './components/SegmentedControl'
@@ -139,7 +151,15 @@ export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // localization
-export { IntlProvider, useIntl, DateFormatter, locales } from './intl'
+export {
+  IntlProvider,
+  useIntl,
+  DateFormatter,
+  TimeFormatter,
+  TimestampFormatter,
+  locales,
+  convertLang,
+} from './intl'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'

@@ -15,8 +15,8 @@ export default {
       <RemoteDialogTrigger {...args}>
         <Button>ダイアログを開く</Button>
       </RemoteDialogTrigger>
-      <MessageDialog id="remote-dialog" heading="メッセージダイアログ">
-        メッセージダイアログです。
+      <MessageDialog id="remote-dialog" heading="リモートトリガーメッセージダイアログ">
+        RemoteDialogTrigger で開かれた MessageDialog です。
       </MessageDialog>
     </>
   ),

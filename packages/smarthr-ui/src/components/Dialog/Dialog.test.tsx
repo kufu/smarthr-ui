@@ -36,7 +36,7 @@ describe('Dialog', () => {
               <FormControl label="dialog_datepicker">
                 <DatePicker
                   name="dialog_datepicker"
-                  value={'2021-01-01'}
+                  value="2021-01-01"
                   formatDate={(_date) => (_date ? _date.toDateString() : '')}
                 />
               </FormControl>

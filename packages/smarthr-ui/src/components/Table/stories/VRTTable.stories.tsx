@@ -1,6 +1,5 @@
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { Td } from '../Td'
@@ -54,6 +53,7 @@ export default {
                       )}
                       <TdCheckbox
                         checked={i % 2 === 0}
+                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name="tbody_checkbox"
                       />
@@ -82,6 +82,7 @@ export default {
                       )}
                       <TdRadioButton
                         checked={i === 0}
+                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name={`tbody_radio--${fixed}--${borderType}`}
                       />

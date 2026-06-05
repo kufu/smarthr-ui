@@ -17,6 +17,15 @@ export default [
         },
       ],
       '@typescript-eslint/no-import-type-side-effects': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
       'jsx-a11y/anchor-is-valid': 'error',
       'jsx-a11y/click-events-have-key-events': 'error',
       'jsx-a11y/label-has-associated-control': [

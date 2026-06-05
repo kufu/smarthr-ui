@@ -120,7 +120,7 @@ export const DropdownContentInner: FC<Props> = ({
 
   return (
     <div {...rest} ref={wrapperRef} className={actualClassName} style={style}>
-      {/* dummy element for focus management. */}
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
         <div style={controllableWrapperStyleProps}>{children}</div>

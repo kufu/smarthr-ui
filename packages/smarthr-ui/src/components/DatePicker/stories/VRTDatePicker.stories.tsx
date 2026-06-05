@@ -11,7 +11,6 @@ export default {
   component: DatePicker,
   render: (args) => {
     const value = '2024/11/06'
-    const placeholder = '日付を入力してください'
     const width = '100%'
     const showAlternative = (_: Date | null) => <div>alt</div>
     const formatDate = (date: Date | null) => dayjs(date).format('YYYY年MM月DD')
