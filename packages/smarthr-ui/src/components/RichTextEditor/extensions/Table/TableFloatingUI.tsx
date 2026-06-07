@@ -24,6 +24,8 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   const buttonSize = 24
   const actionsGap = 4
   const barThickness = 24
+  // 表と +列/+行 バーの間の余白（窮屈に見えないよう少し離す）
+  const barGap = 4
 
   // 表示対象テーブル: caret 側 > ホバー側 の優先順位（caret あるなら caret の rect/pos を使う）
   const targetInfo = activeInfo ?? hoveredInfo
@@ -43,13 +45,13 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   const viewportBottom = targetInfo.viewport.top + targetInfo.viewport.height
 
   // 既存の viewport クランプロジック
-  const colLeftIdeal = targetInfo.rect.left + targetInfo.rect.width
+  const colLeftIdeal = targetInfo.rect.left + targetInfo.rect.width + barGap
   const colLeftMax = viewportRight - barThickness
   const colLeft = Math.min(colLeftIdeal, colLeftMax)
   const colVisibleInViewport =
     colLeftMax >= targetInfo.viewport.left && targetInfo.rect.top + barThickness <= viewportBottom
 
-  const rowTopIdeal = targetInfo.rect.top + targetInfo.rect.height
+  const rowTopIdeal = targetInfo.rect.top + targetInfo.rect.height + barGap
   const rowTopMax = viewportBottom - barThickness
   const rowTop = Math.min(rowTopIdeal, rowTopMax)
   const rowVisibleInViewport =

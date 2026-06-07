@@ -94,7 +94,7 @@ export const AddRowButton: FC<Props> = memo(
         onBlur={onBlur}
         onClick={handleClick}
       >
-        <FaPlusIcon alt="" />
+        <FaPlusIcon alt="" className="shr-shrink-0" />
       </button>
     )
   },

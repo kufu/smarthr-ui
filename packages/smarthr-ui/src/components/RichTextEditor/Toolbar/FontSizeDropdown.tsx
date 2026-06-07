@@ -4,7 +4,7 @@ import { type FC, type KeyboardEvent, memo, useCallback, useRef, useState } from
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
-import { FaCheckIcon, FaChevronDownIcon } from '../../Icon'
+import { FaCaretDownIcon, FaCheckIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
@@ -203,7 +203,7 @@ export const FontSizeDropdown: FC<Props> = memo(
             className={classNames.trigger()}
           >
             <span className="shr-flex-1">{currentLabel}</span>
-            <FaChevronDownIcon className="shr-shrink-0 shr-text-xs" />
+            <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
           </button>
           <span aria-hidden="true" className={classNames.tooltip()}>
             {dropdownLabel}

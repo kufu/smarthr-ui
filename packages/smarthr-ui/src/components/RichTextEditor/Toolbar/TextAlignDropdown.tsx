@@ -9,7 +9,7 @@ import {
   FaAlignJustifyIcon,
   FaAlignLeftIcon,
   FaAlignRightIcon,
-  FaChevronDownIcon,
+  FaCaretDownIcon,
 } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
@@ -220,7 +220,7 @@ export const TextAlignDropdown: FC<Props> = memo(
             className={classNames.trigger()}
           >
             {getAlignIcon(currentAlign)}
-            <FaChevronDownIcon className="shr-shrink-0 shr-text-xs" />
+            <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
           </button>
           <span aria-hidden="true" className={classNames.tooltip()}>
             {dropdownLabel}

@@ -10,7 +10,6 @@ export const editorContentClasses = [
   // lists
   '[&_.ProseMirror_ul]:shr-my-0.5 [&_.ProseMirror_ul]:shr-list-disc [&_.ProseMirror_ul]:shr-pl-1.5',
   '[&_.ProseMirror_ol]:shr-my-0.5 [&_.ProseMirror_ol]:shr-list-decimal [&_.ProseMirror_ol]:shr-pl-1.5',
-  '[&_.ProseMirror_li]:shr-my-0.25',
   '[&_.ProseMirror_li_p]:shr-my-0',
   // blockquote
   '[&_.ProseMirror_blockquote]:shr-my-0.5 [&_.ProseMirror_blockquote]:shr-ml-0 [&_.ProseMirror_blockquote]:shr-mr-0 [&_.ProseMirror_blockquote]:shr-border-0 [&_.ProseMirror_blockquote]:shr-border-l-[3px] [&_.ProseMirror_blockquote]:shr-border-solid [&_.ProseMirror_blockquote]:shr-border-l-grey [&_.ProseMirror_blockquote]:shr-pl-0.5',
@@ -69,7 +68,9 @@ export const editorContentClasses = [
   '[&_.ProseMirror_td_p]:shr-my-0',
   '[&_.ProseMirror_th_p]:shr-my-0',
   // paragraph
-  '[&_.ProseMirror_p]:shr-my-0',
+  // 本文の行送りはデザイントークンの RELAXED(1.75) をデフォルトにする。
+  // li / blockquote / table セルの中身も p なのでまとめて 1.75 になる（見出し・コードは別指定）。
+  '[&_.ProseMirror_p]:shr-my-0 [&_.ProseMirror_p]:shr-leading-loose',
   // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ
   '[&_.ProseMirror_p]::after:shr-content-[\\200B]',
   '[&_.ProseMirror_h1]::after:shr-content-[\\200B]',
@@ -85,7 +86,6 @@ export const staticContentClasses = [
   // lists
   '[&_ul]:shr-list-disc [&_ul]:shr-pl-1.5',
   '[&_ol]:shr-list-decimal [&_ol]:shr-pl-1.5',
-  '[&_li]:shr-my-0.25',
   '[&_li_p]:shr-my-0',
   // blockquote
   '[&_blockquote]:shr-ml-0 [&_blockquote]:shr-mr-0 [&_blockquote]:shr-border-0 [&_blockquote]:shr-border-l-[3px] [&_blockquote]:shr-border-solid [&_blockquote]:shr-border-l-grey [&_blockquote]:shr-pl-0.5',
@@ -114,7 +114,8 @@ export const staticContentClasses = [
   '[&_td_p]:shr-my-0',
   '[&_th_p]:shr-my-0',
   // paragraph
-  '[&_p]:shr-my-0',
+  // エディタ側(editorContentClasses)と行送りを揃える: 本文は RELAXED(1.75)
+  '[&_p]:shr-my-0 [&_p]:shr-leading-loose',
   // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ
   '[&_p]::after:shr-content-[\\200B]',
   '[&_h1]::after:shr-content-[\\200B]',

@@ -4,7 +4,7 @@ import { type FC, type KeyboardEvent, memo, useCallback, useEffect, useRef, useS
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
-import { FaChevronDownIcon } from '../../../Icon'
+import { FaCaretDownIcon } from '../../../Icon'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 import { useToolbarState } from '../../hooks/useToolbarState'
@@ -162,7 +162,7 @@ export const TextColorPickerButton: FC<Props> = memo(
                 style={{ backgroundColor: currentColor ?? DEFAULT_COLOR }}
               />
             </span>
-            <FaChevronDownIcon className="shr-text-xs" />
+            <FaCaretDownIcon className="shr-text-xs" />
           </button>
         </span>
         {renderDropdown(
