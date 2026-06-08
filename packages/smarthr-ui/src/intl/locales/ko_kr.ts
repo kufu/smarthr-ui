@@ -117,6 +117,8 @@ export const locale = {
   'smarthr-ui/RichTextEditor/heading3': '제목 3',
   'smarthr-ui/RichTextEditor/heading4': '제목 4',
   'smarthr-ui/RichTextEditor/fontSizeDropdownLabel': '글꼴 크기',
+  'smarthr-ui/RichTextEditor/lineHeightDropdownLabel': '줄 간격',
+  'smarthr-ui/RichTextEditor/lineHeightDefaultSuffix': '기본',
   'smarthr-ui/RichTextEditor/color': '글자 색',
   'smarthr-ui/RichTextEditor/colorBlack': '검정',
   'smarthr-ui/RichTextEditor/colorReset': '색상 초기화',

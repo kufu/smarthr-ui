@@ -20,6 +20,7 @@ const ALL_FEATURES = [
   'color',
   'backgroundColor',
   'fontSize',
+  'lineHeight',
   'textAlign',
   'image',
   'youtube',

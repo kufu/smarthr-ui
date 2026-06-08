@@ -26,6 +26,7 @@ import { TextColorPickerButton } from './ColorPicker/TextColorPickerButton'
 import { FontSizeDropdown } from './FontSizeDropdown'
 import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
+import { LineHeightDropdown } from './LineHeightDropdown'
 import { LinkButton } from './LinkButton'
 import { TableInsertDropdown } from './TableInsertDropdown'
 import { TextAlignDropdown } from './TextAlignDropdown'
@@ -48,6 +49,7 @@ type CustomItem = {
   type:
     | 'heading'
     | 'fontSize'
+    | 'lineHeight'
     | 'color'
     | 'backgroundColor'
     | 'image'
@@ -107,6 +109,15 @@ export const RichTextEditorToolbar: FC = memo(() => {
         type: 'fontSize',
         key: 'fontSize-dropdown',
         disabled: state.isInHeading || state.isNodeSelected,
+      })
+    }
+
+    // 行送り
+    if (has('lineHeight')) {
+      toolbarItems.push({
+        type: 'lineHeight',
+        key: 'lineHeight-dropdown',
+        disabled: state.isNodeSelected,
       })
     }
 
@@ -313,6 +324,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
         }
         if (item.type === 'fontSize') {
           return <FontSizeDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
+        }
+        if (item.type === 'lineHeight') {
+          return <LineHeightDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
         }
         if (item.type === 'color') {
           return <TextColorPickerButton {...rovingProps} disabled={item.disabled} key={item.key} />

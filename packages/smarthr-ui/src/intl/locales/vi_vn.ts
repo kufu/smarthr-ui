@@ -117,6 +117,8 @@ export const locale = {
   'smarthr-ui/RichTextEditor/heading3': 'Tiêu đề 3',
   'smarthr-ui/RichTextEditor/heading4': 'Tiêu đề 4',
   'smarthr-ui/RichTextEditor/fontSizeDropdownLabel': 'Cỡ chữ',
+  'smarthr-ui/RichTextEditor/lineHeightDropdownLabel': 'Chiều cao dòng',
+  'smarthr-ui/RichTextEditor/lineHeightDefaultSuffix': 'Mặc định',
   'smarthr-ui/RichTextEditor/color': 'Màu chữ',
   'smarthr-ui/RichTextEditor/colorBlack': 'Đen',
   'smarthr-ui/RichTextEditor/colorReset': 'Đặt lại màu',

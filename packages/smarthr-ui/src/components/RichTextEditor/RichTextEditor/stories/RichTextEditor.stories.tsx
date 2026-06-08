@@ -25,6 +25,7 @@ const ALL_FEATURES = [
   'image',
   'youtube',
   'fontSize',
+  'lineHeight',
   'textAlign',
   'table',
 ] as const

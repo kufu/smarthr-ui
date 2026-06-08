@@ -227,6 +227,58 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(serializeToHTML(json)).toContain('https://example.com/a.png')
     })
 
+    it('paragraph の不正な lineHeight が style に出ない', () => {
+      const json = {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            attrs: { lineHeight: '1;background-image:url(javascript:alert(1))' },
+            content: [{ type: 'text', text: 'x' }],
+          },
+        ],
+      }
+      assertSafe(serializeToHTML(json))
+      const element = serializeToReactElement(json)
+      const html = renderToStaticMarkup(element as React.ReactElement)
+      assertSafe(html)
+      expect(html).not.toContain('background-image')
+    })
+
+    it('heading の不正な lineHeight が style に出ない', () => {
+      const json = {
+        type: 'doc',
+        content: [
+          {
+            type: 'heading',
+            attrs: { level: 2, lineHeight: '1;background-image:url(javascript:alert(1))' },
+            content: [{ type: 'text', text: 'h' }],
+          },
+        ],
+      }
+      assertSafe(serializeToHTML(json))
+      const element = serializeToReactElement(json)
+      const html = renderToStaticMarkup(element as React.ReactElement)
+      assertSafe(html)
+      expect(html).not.toContain('background-image')
+    })
+
+    it('heading の安全な lineHeight が保持される', () => {
+      const json = {
+        type: 'doc',
+        content: [
+          {
+            type: 'heading',
+            attrs: { level: 2, lineHeight: '2' },
+            content: [{ type: 'text', text: 'h' }],
+          },
+        ],
+      }
+      const element = serializeToReactElement(json)
+      const html = renderToStaticMarkup(element as React.ReactElement)
+      expect(html).toContain('line-height:2')
+    })
+
     it('rgb()/rgba() 形式の color/backgroundColor が保持される', () => {
       const json = {
         type: 'doc',

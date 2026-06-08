@@ -76,6 +76,10 @@ export const useToolbarState = (editor: Editor) =>
       currentColor: (e.getAttributes('textStyle').color as string) ?? null,
       currentBackgroundColor: (e.getAttributes('textStyle').backgroundColor as string) ?? null,
       currentFontSize: (e.getAttributes('textStyle').fontSize as string) ?? null,
+      currentLineHeight:
+        (e.getAttributes('paragraph').lineHeight as string) ??
+        (e.getAttributes('heading').lineHeight as string) ??
+        null,
       currentTextAlign:
         (e.getAttributes('paragraph').textAlign as string) ??
         (e.getAttributes('heading').textAlign as string) ??

@@ -117,6 +117,8 @@ export const locale = {
   'smarthr-ui/RichTextEditor/heading3': 'Judul 3',
   'smarthr-ui/RichTextEditor/heading4': 'Judul 4',
   'smarthr-ui/RichTextEditor/fontSizeDropdownLabel': 'Ukuran font',
+  'smarthr-ui/RichTextEditor/lineHeightDropdownLabel': 'Tinggi baris',
+  'smarthr-ui/RichTextEditor/lineHeightDefaultSuffix': 'Default',
   'smarthr-ui/RichTextEditor/color': 'Warna teks',
   'smarthr-ui/RichTextEditor/colorBlack': 'Hitam',
   'smarthr-ui/RichTextEditor/colorReset': 'Reset warna',

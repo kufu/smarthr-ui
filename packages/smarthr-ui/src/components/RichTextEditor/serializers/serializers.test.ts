@@ -111,3 +111,27 @@ describe('createChangeMeta', () => {
     expect(meta.characterCount).toBe(0)
   })
 })
+
+describe('line-height のシリアライズ', () => {
+  it('paragraph の lineHeight 属性が style として HTML 出力される', () => {
+    const json = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          attrs: { lineHeight: '2' },
+          content: [{ type: 'text', text: 'hello' }],
+        },
+      ],
+    }
+    expect(serializeToHTML(json)).toContain('line-height: 2')
+  })
+
+  it('lineHeight 属性が無い paragraph には line-height が出力されない', () => {
+    const json = {
+      type: 'doc',
+      content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hi' }] }],
+    }
+    expect(serializeToHTML(json)).not.toContain('line-height')
+  })
+})

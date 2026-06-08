@@ -43,6 +43,7 @@ const ALL_FEATURES = [
   'color',
   'backgroundColor',
   'fontSize',
+  'lineHeight',
   'textAlign',
   'image',
   'youtube',
@@ -304,6 +305,15 @@ export const Overview: Story = {
               </tr>
               <tr>
                 <td style={tdStyle}>
+                  <code>lineHeight</code>
+                </td>
+                <td style={tdStyle}>行送り（1〜2）</td>
+                <td style={tdStyle}>行送り選択ドロップダウン</td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
                   <code>textAlign</code>
                 </td>
                 <td style={tdStyle}>テキスト配置（左/中央/右/両端）</td>
@@ -378,7 +388,7 @@ export const BasicUsage: Story = {
       'bold', 'italic', 'underline', 'strike', 'code',
       'heading', 'bulletList', 'orderedList',
       'blockquote', 'codeBlock', 'horizontalRule',
-      'link', 'color', 'backgroundColor', 'fontSize', 'textAlign',
+      'link', 'color', 'backgroundColor', 'fontSize', 'lineHeight', 'textAlign',
       'image', 'youtube', 'table',
     ]}
     onChange={(json) => setValue(json)}

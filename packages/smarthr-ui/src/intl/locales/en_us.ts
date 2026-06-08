@@ -117,6 +117,8 @@ export const locale = {
   'smarthr-ui/RichTextEditor/heading3': 'Heading 3',
   'smarthr-ui/RichTextEditor/heading4': 'Heading 4',
   'smarthr-ui/RichTextEditor/fontSizeDropdownLabel': 'Font size',
+  'smarthr-ui/RichTextEditor/lineHeightDropdownLabel': 'Line height',
+  'smarthr-ui/RichTextEditor/lineHeightDefaultSuffix': 'Default',
   'smarthr-ui/RichTextEditor/color': 'Text color',
   'smarthr-ui/RichTextEditor/colorBlack': 'Black',
   'smarthr-ui/RichTextEditor/colorReset': 'Reset color',

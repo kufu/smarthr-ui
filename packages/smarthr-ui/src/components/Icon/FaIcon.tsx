@@ -193,6 +193,7 @@ import {
   FaTableList,
   FaTag,
   FaTags,
+  FaTextHeight,
   FaThumbtack,
   FaToolbox,
   FaTrashCan,
@@ -416,6 +417,7 @@ export const FaTableListIcon = /*#__PURE__*/ generateIcon(FaTableList)
 export const FaTableColumnsIcon = /*#__PURE__*/ generateIcon(FaTableColumns)
 export const FaTagIcon = /*#__PURE__*/ generateIcon(FaTag)
 export const FaTagsIcon = /*#__PURE__*/ generateIcon(FaTags)
+export const FaTextHeightIcon = /*#__PURE__*/ generateIcon(FaTextHeight)
 export const FaThumbtackIcon = /*#__PURE__*/ generateIcon(FaThumbtack)
 export const FaToolboxIcon = /*#__PURE__*/ generateIcon(FaToolbox)
 export const FaTrashCanIcon = /*#__PURE__*/ generateIcon(FaTrashCan)

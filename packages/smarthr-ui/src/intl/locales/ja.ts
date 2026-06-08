@@ -115,6 +115,8 @@ export const locale = {
   'smarthr-ui/RichTextEditor/heading3': '見出し3',
   'smarthr-ui/RichTextEditor/heading4': '見出し4',
   'smarthr-ui/RichTextEditor/fontSizeDropdownLabel': 'フォントサイズ',
+  'smarthr-ui/RichTextEditor/lineHeightDropdownLabel': '行送り',
+  'smarthr-ui/RichTextEditor/lineHeightDefaultSuffix': '標準',
   'smarthr-ui/RichTextEditor/color': '文字色',
   'smarthr-ui/RichTextEditor/colorBlack': '黒',
   'smarthr-ui/RichTextEditor/colorReset': '色をリセット',

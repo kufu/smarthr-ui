@@ -15,6 +15,7 @@ import {
   imageUploadPlaceholderPlugin,
   removeImagePlaceholder,
 } from './Image/imageUploadPlaceholder'
+import { LineHeight } from './LineHeight'
 import { CustomTable } from './Table/CustomTable'
 
 import type { ImageUploadResult, RichTextFeature } from '../types'
@@ -191,6 +192,10 @@ export const configureExtensions = ({
     extensions.push(FontSize.configure())
   }
 
+  if (has('lineHeight')) {
+    extensions.push(LineHeight.configure({ types: ['paragraph', 'heading'] }))
+  }
+
   if (placeholder) {
     extensions.push(
       Placeholder.configure({
@@ -219,6 +224,7 @@ export const ALL_FEATURES: readonly RichTextFeature[] = [
   'color',
   'backgroundColor',
   'fontSize',
+  'lineHeight',
   'textAlign',
   'image',
   'youtube',

@@ -117,6 +117,8 @@ export const locale = {
   'smarthr-ui/RichTextEditor/heading3': '标题 3',
   'smarthr-ui/RichTextEditor/heading4': '标题 4',
   'smarthr-ui/RichTextEditor/fontSizeDropdownLabel': '字号',
+  'smarthr-ui/RichTextEditor/lineHeightDropdownLabel': '行高',
+  'smarthr-ui/RichTextEditor/lineHeightDefaultSuffix': '标准',
   'smarthr-ui/RichTextEditor/color': '文字颜色',
   'smarthr-ui/RichTextEditor/colorBlack': '黑色',
   'smarthr-ui/RichTextEditor/colorReset': '重置颜色',

@@ -1,6 +1,7 @@
 import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/static-renderer'
 import { type ReactNode, createElement } from 'react'
 
+import { isAllowedLineHeight } from '../extensions/LineHeight'
 import { ALL_FEATURES, configureExtensions } from '../extensions/configureExtensions'
 
 import type { RichTextJSON } from '../types'
@@ -51,8 +52,14 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
   heading: ({ node, children }) => {
     const level = Math.min(Math.max(Number(node.attrs.level) || 2, 1), 4) as 1 | 2 | 3 | 4
     const textAlign = node.attrs.textAlign as string | undefined
-    const style = textAlign && textAlign !== 'left' ? { textAlign } : undefined
-    return createElement(`h${level}`, { style }, children)
+    const style: Record<string, string> = {}
+    if (textAlign && textAlign !== 'left') style.textAlign = textAlign
+    if (isAllowedLineHeight(node.attrs.lineHeight)) style.lineHeight = node.attrs.lineHeight
+    return createElement(
+      `h${level}`,
+      { style: Object.keys(style).length > 0 ? style : undefined },
+      children,
+    )
   },
   image: ({ node }) => {
     const src = node.attrs.src

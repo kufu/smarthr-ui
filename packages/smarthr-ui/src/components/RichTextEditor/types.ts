@@ -23,6 +23,7 @@ export type RichTextFeature =
   | 'color'
   | 'backgroundColor'
   | 'fontSize'
+  | 'lineHeight'
   | 'textAlign'
   | 'image'
   | 'youtube'
