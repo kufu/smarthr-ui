@@ -1,6 +1,7 @@
 import { userEvent } from 'storybook/test'
 
-import { FaCircleQuestionIcon } from '../../Icon'
+import { Button } from '../../Button'
+import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Tooltip } from '../Tooltip'
 
@@ -30,6 +31,26 @@ export default {
           </span>
         </Tooltip>
       </div>
+      <Tooltip message="description" type="description">
+        <Button>ボタン</Button>
+      </Tooltip>
+      <Tooltip message="label" type="label" triggerType="icon">
+        <Button>
+          <FaPencilIcon />
+        </Button>
+      </Tooltip>
+      <Tooltip message="wrapper + focusable" ariaDescribedbyTarget="wrapper">
+        <Button>ボタン</Button>
+      </Tooltip>
+      <Tooltip message="wrapper + non-focusable" ariaDescribedbyTarget="wrapper">
+        テキスト
+      </Tooltip>
+      <Tooltip message="inner + focusable" ariaDescribedbyTarget="inner">
+        <Button>ボタン</Button>
+      </Tooltip>
+      <Tooltip message="inner + non-focusable" ariaDescribedbyTarget="inner" triggerType="icon">
+        <FaCircleQuestionIcon alt="ツールチップ" />
+      </Tooltip>
     </Stack>
   ),
   args: {
