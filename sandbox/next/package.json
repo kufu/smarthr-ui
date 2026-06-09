@@ -15,7 +15,7 @@
     "smarthr-ui": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/test": "1.55.1",
+    "@playwright/test": "1.60.0",
     "@types/node": "20.19.35",
     "@types/react": "18.3.28",
     "@types/react-dom": "19.2.3",
