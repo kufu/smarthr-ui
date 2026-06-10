@@ -21,8 +21,8 @@ const classNameGenerator = tv({
     base: 'smarthr-ui-LineClamp shr-relative',
     clampedLine: 'shr-max-w-full',
     shadowElementWrapper:
-      'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-max-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0',
-    shadowElement: 'shr-absolute shr-left-0 shr-top-0 shr-max-w-full',
+      'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0',
+    shadowElement: 'shr-absolute shr-left-0 shr-top-0 shr-w-full',
   },
   variants: {
     maxLines: {
@@ -74,10 +74,7 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
     // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-    const isMultiLineOverflow =
-      el && shadowEl
-        ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
-        : false
+    const isMultiLineOverflow = el && shadowEl ? shadowEl.clientHeight > el.clientHeight : false
 
     setTooltipVisible(isMultiLineOverflow)
   }, [maxLines, children])

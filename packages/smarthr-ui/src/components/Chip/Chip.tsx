@@ -20,14 +20,14 @@ const classNameGenerator = tv({
       red: 'shr-border-danger',
     },
     size: {
-      s: 'shr-px-0.5 shr-py-0.25 shr-text-sm',
+      S: 'shr-px-0.5 shr-py-0.25 shr-text-sm',
     },
     disabled: {
       true: 'shr-bg-white/50 shr-text-disabled',
     },
   },
   defaultVariants: {
-    size: 's',
+    size: 'S',
     color: 'grey',
   },
 })

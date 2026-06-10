@@ -6,12 +6,13 @@ import { tv } from 'tailwind-variants'
 import { registerChartComponents } from '../../config'
 import { BarChart } from '../BarChart'
 import { LineChart } from '../LineChart'
+import { RadarChart } from '../RadarChart'
 
 import type { ChartData, ChartOptions } from 'chart.js'
 
 registerChartComponents()
 
-type ChartType = 'bar' | 'line'
+type ChartType = 'bar' | 'line' | 'radar'
 
 type Props = {
   [K in ChartType]: {
@@ -42,6 +43,8 @@ const InnerChart: React.FC<Props> = (props) => {
       return <BarChart data={props.data} title={props.title} options={props.options} />
     case 'line':
       return <LineChart data={props.data} title={props.title} options={props.options} />
+    case 'radar':
+      return <RadarChart data={props.data} title={props.title} options={props.options} />
     default:
       return null
   }

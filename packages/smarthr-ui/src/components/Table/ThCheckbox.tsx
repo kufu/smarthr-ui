@@ -4,8 +4,8 @@ import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
-import { Balloon } from '../Balloon'
 import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
+import { ControlledTooltip } from '../Tooltip'
 
 import { Th } from './Th'
 
@@ -67,9 +67,14 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
       // Th に必要な属性やイベントは不要
       <Th vAlign={vAlign} fixed={fixed} className={classNames.wrapper} aria-label={checkColumnName}>
         <label className={classNames.inner}>
-          <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
+          <ControlledTooltip
+            as="span"
+            horizontal="left"
+            vertical="middle"
+            className={classNames.balloon}
+          >
             <span className="shr-block shr-p-0.5">{checkAllInvisibleLabel}</span>
-          </Balloon>
+          </ControlledTooltip>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
         </label>

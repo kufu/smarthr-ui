@@ -125,8 +125,8 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/checkItem2': '请尝试删除浏览器的 Cookie 和缓存。详情请参阅{cookieCacheLink}。',
   'smarthr-ui/UnexpectedErrorScreen/contactAdmin': '如果问题仍未解决，请将{errorInfoLink}中的信息提供给贵公司的劳务负责人或其他拥有 SmartHR 管理员权限的负责人。',
   'smarthr-ui/UnexpectedErrorScreen/adminContact': '如果您是 SmartHR 管理员，请将{errorInfoLink}中的信息一并发送给我们，并通过右下角的聊天图标联系我们。',
-  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '',
-  'smarthr-ui/UnexpectedErrorScreen/environmentLink': '',
-  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': '',
-  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '',
+  'smarthr-ui/UnexpectedErrorScreen/maintenanceLink': '维护与故障',
+  'smarthr-ui/UnexpectedErrorScreen/environmentLink': 'SmartHR 运行环境',
+  'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': 'Q. 如何清除浏览器的 Cookie 和缓存？',
+  'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': '报错指引',
 } as const satisfies Record<keyof typeof ja, string>

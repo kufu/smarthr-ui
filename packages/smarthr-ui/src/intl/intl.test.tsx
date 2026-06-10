@@ -586,6 +586,8 @@ describe('intl', () => {
         expect(convertLang('zh-Hant')).toBe('zh-tw') // スクリプトコード
         expect(convertLang('zh-HANT')).toBe('zh-tw') // 大文字スクリプトコード
         expect(convertLang('zh_hant')).toBe('zh-tw') // アンダースコア
+        expect(convertLang('zh-HK')).toBe('zh-tw') // 香港
+        expect(convertLang('zh-MO')).toBe('zh-tw') // マカオ
         expect(convertLang('zh-Hant-TW')).toBe('zh-tw') // 複数ハイフン
       })
     })
