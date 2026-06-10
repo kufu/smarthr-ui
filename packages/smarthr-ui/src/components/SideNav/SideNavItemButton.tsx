@@ -14,8 +14,6 @@ import { Cluster } from '../Layout'
 export type SideNavSizeType = 'M' | 'S'
 
 type AbstractProps = {
-  /** アイテムの識別子 */
-  id: string
   /** アイテムのタイトル
    * @deprecated SideNav で items を使う時の props です。children を使ってください。
    */
@@ -31,7 +29,26 @@ type AbstractProps = {
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) => void
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractProps>
+
+type AbstractButtonProps = AbstractProps & {
+  /** アイテムの識別子。onClickのイベントオブジェクトのcurrentTarget.valueで取得できます。 */
+  id: string
+}
+
+type AbstractAnchorProps<T extends ElementType = 'a'> = AbstractProps & {
+  href: string
+  /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  elementAs?: T
+}
+
+type ButtonProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractButtonProps> &
+  AbstractButtonProps
+
+type AnchorProps<T extends ElementType = 'a'> = Omit<
+  ComponentPropsWithoutRef<'li'>,
+  keyof AbstractAnchorProps<T>
+> &
+  AbstractAnchorProps<T>
 
 const classNameGenerator = tv({
   slots: {
@@ -74,11 +91,18 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideNavItemButton: FC<
-  Omit<Props, 'onClick'> & {
-    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  }
-> = ({ id, title, prefix, suffix, current, size, onClick, children, className, ...rest }) => {
+export const SideNavItemButton: FC<ButtonProps> = ({
+  id,
+  title,
+  prefix,
+  suffix,
+  current,
+  size,
+  onClick,
+  children,
+  className,
+  ...rest
+}) => {
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
@@ -117,12 +141,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   href,
   elementAs,
   ...rest
-}: Omit<Props, 'onClick'> & {
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
-  href: string | undefined
-  /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  elementAs?: T
-}) => {
+}: AnchorProps<T>) => {
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
@@ -151,7 +170,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 }
 
 const BodyCluster = memo<
-  Pick<Props, 'prefix' | 'suffix' | 'title'> & {
+  Pick<AbstractProps, 'prefix' | 'suffix' | 'title'> & {
     classNames: { body: string; bodyText: string }
   }
 >(({ prefix, suffix, title, classNames }) => (
