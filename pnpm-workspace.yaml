@@ -36,8 +36,10 @@ minimumReleaseAgeExclude:
   - '@babel/plugin-transform-modules-systemjs@7.29.4'
   - brace-expansion@5.0.6
   - ws@8.20.1
-  # Renovate security update: qs@>=6.7.0 <=6.14.1@6.15.2
-  - qs@>=6.7.0 <=6.14.1@6.15.2
+  # Renovate security update: qs@6.15.2
+  - qs@6.15.2
+  # Renovate security update: vitest@4.1.0
+  - vitest@4.1.0
 allowBuilds:
   '@swc/core': true
   canvas: true
