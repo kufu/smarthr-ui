@@ -122,11 +122,22 @@ export const useButtonWrapper = ({
   }
 
   useEffect(() => {
-    if (innerRef.current) {
-      // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonの場合true
-      setSquare(!!innerRef.current.querySelector(ICON_BUTTON_SELECTOR))
+    const element = innerRef.current
+
+    if (!element) return
+
+    const checkSquare = () => {
+      const newSquare = !!element.querySelector(ICON_BUTTON_SELECTOR)
+      setSquare((prev) => (prev === newSquare ? prev : newSquare))
     }
-  }, [children])
+
+    checkSquare()
+
+    const observer = new MutationObserver(checkSquare)
+    observer.observe(element, { childList: true, subtree: true })
+
+    return () => observer.disconnect()
+  }, [])
 
   return {
     filteredProps: { ...rest, $loading } as FilteredAnchorProps | FilteredButtonProps,
