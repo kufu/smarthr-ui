@@ -176,7 +176,7 @@ export const InformationPanel: FC<Props> = ({
   return (
     <Panel {...rest} as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- Panel (Base) は as="section" で Section として扱われるため問題ない。eslint-plugin-smarthr の Panel 対応後に削除 */}
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- Panel は as="section" で Section として扱われるため問題ない。eslint-plugin-smarthr の Panel 対応後に削除 */}
         <MemoizedHeading
           heading={heading}
           id={`${id}-heading`}
