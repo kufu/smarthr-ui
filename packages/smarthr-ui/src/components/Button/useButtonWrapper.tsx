@@ -16,18 +16,10 @@ import { Loader } from '../Loader'
 
 import type { Variant } from './types'
 
-// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonのselector
+// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
+// このSELECTORはbody内の対象を列挙する
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
-const ICON_BUTTON_SELECTOR = [
-  '.smarthr-ui-Icon',
-  '.smarthr-ui-Icon-extended',
-  'svg',
-  'img',
-  '.smarthr-ui-Loader',
-].reduce(
-  (prev, selector, index) => `${prev}${index !== 0 ? ',' : ''}:scope>${selector}:only-child`,
-  '',
-)
+const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
 
 type AbstractProps = PropsWithChildren<{
   size: 'M' | 'S'
@@ -142,8 +134,7 @@ export const useButtonWrapper = ({
     if (!target) return
 
     const checkSquare = () => {
-      const hit = onlyBody && target.querySelector(ICON_BUTTON_SELECTOR)
-      setSquare(!!hit)
+      setSquare(target.children.length === 1 && target.children[0].matches(ICON_SELECTOR))
     }
 
     checkSquare()
