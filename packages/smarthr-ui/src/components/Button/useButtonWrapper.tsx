@@ -19,8 +19,7 @@ import type { Variant } from './types'
 // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', '.smarthr-ui-Icon-extended', 'svg', 'img'].reduce(
-  (prev, selector, index) =>
-    `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
+  (prev, selector, index) => `${prev}${index !== 0 ? ',' : ''}:scope>${selector}:only-child`,
   '',
 )
 
@@ -121,23 +120,38 @@ export const useButtonWrapper = ({
     }
   }
 
-  useEffect(() => {
-    const element = innerRef.current
+  const onlyBody = !prefix && !suffix
 
-    if (!element) return
+  useEffect(() => {
+    if (!onlyBody) {
+      setSquare(false)
+
+      return
+    }
+
+    const target = innerRef.current
+
+    if (!target) return
 
     const checkSquare = () => {
-      const newSquare = !!element.querySelector(ICON_BUTTON_SELECTOR)
-      setSquare((prev) => (prev === newSquare ? prev : newSquare))
+      const hit = onlyBody && target.querySelector(ICON_BUTTON_SELECTOR)
+      setSquare(!!hit)
     }
 
     checkSquare()
 
     const observer = new MutationObserver(checkSquare)
-    observer.observe(element, { childList: true, subtree: true })
 
-    return () => observer.disconnect()
-  }, [])
+    observer.observe(target, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [onlyBody])
 
   return {
     filteredProps: { ...rest, $loading } as FilteredAnchorProps | FilteredButtonProps,
@@ -145,10 +159,11 @@ export const useButtonWrapper = ({
     children: (
       <>
         {actualPrefix}
-        <span ref={innerRef} className={innerClassName}>
-          {actualChildren}
-        </span>
+        <span className={innerClassName}>{actualChildren}</span>
         {actualSuffix}
+        <div ref={innerRef} hidden>
+          {children}
+        </div>
       </>
     ),
   }
