@@ -1,12 +1,12 @@
 import { Stack } from '../../Layout'
 
-import { Layer, Overflow, Padding, Radius } from './Base.stories'
+import { Layer, Overflow, Padding, Radius } from './Panel.stories'
 
-import type { Panel } from '../Base'
+import type { Panel } from '../Panel'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Base/VRT',
+  title: 'Components/Panel/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}
@@ -19,7 +19,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} as Meta<typeof Base>
+} as Meta<typeof Panel>
 
 export const VRT = {}
 

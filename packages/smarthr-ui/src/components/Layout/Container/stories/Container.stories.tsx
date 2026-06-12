@@ -57,7 +57,7 @@ export const Padding: StoryObj<typeof Container> = {
 }
 
 const DisplayDimensionsBase: React.FC<
-  ComponentProps<typeof Base> & Pick<ComponentProps<typeof Container>, 'size'>
+  ComponentProps<typeof Panel> & Pick<ComponentProps<typeof Container>, 'size'>
 > = ({ size, ...rest }) => {
   const target = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0 })

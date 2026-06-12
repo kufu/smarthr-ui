@@ -1,23 +1,23 @@
 import { Stack } from '../../Layout'
-import { Panel, baseClassNameGenerator } from '../Base'
 import { BaseColumn } from '../BaseColumn'
+import { Panel, panelClassNameGenerator } from '../Panel'
 
 import type { Gap } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 import type { ComponentProps } from 'react'
 
-const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
+const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]
 const baseOverflow = [undefined, 'visible', 'hidden', 'clip', 'scroll', 'auto'] as const
-const baseLayer = Object.keys(baseClassNameGenerator.variants.layer).map(Number) as Array<
-  ComponentProps<typeof Base>['layer']
+const baseLayer = Object.keys(panelClassNameGenerator.variants.layer).map(Number) as Array<
+  ComponentProps<typeof Panel>['layer']
 >
 
 export default {
-  title: 'Components/Base',
-  component: Base,
+  title: 'Components/Panel',
+  component: Panel,
   subcomponents: { BaseColumn },
   render: (args) => <Panel {...args} />,
   argTypes: {
@@ -35,14 +35,14 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof Base>
+} as Meta<typeof Panel>
 
-export const BaseControl: StoryObj<typeof Base> = {
+export const BaseControl: StoryObj<typeof Panel> = {
   name: 'Playground',
   args: {},
 }
 
-export const Padding: StoryObj<typeof Base> = {
+export const Padding: StoryObj<typeof Panel> = {
   name: 'padding',
   render: (args) => (
     <Stack>
@@ -57,7 +57,7 @@ export const Padding: StoryObj<typeof Base> = {
   ),
 }
 
-export const Radius: StoryObj<typeof Base> = {
+export const Radius: StoryObj<typeof Panel> = {
   name: 'radius',
   render: (args) => (
     <Stack>
@@ -71,7 +71,7 @@ export const Radius: StoryObj<typeof Base> = {
   ),
 }
 
-export const Overflow: StoryObj<typeof Base> = {
+export const Overflow: StoryObj<typeof Panel> = {
   name: 'overflow',
   render: (args) => (
     <Stack>
@@ -84,7 +84,7 @@ export const Overflow: StoryObj<typeof Base> = {
   ),
 }
 
-export const Layer: StoryObj<typeof Base> = {
+export const Layer: StoryObj<typeof Panel> = {
   name: 'layer',
   render: (args) => (
     <Stack>
@@ -97,7 +97,7 @@ export const Layer: StoryObj<typeof Base> = {
   ),
 }
 
-export const As: StoryObj<typeof Base> = {
+export const As: StoryObj<typeof Panel> = {
   name: 'as',
   args: {
     as: 'section',
