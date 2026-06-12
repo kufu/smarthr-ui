@@ -16,9 +16,15 @@ import { Loader } from '../Loader'
 
 import type { Variant } from './types'
 
-// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
+// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonのselector
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
-const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', '.smarthr-ui-Icon-extended', 'svg', 'img'].reduce(
+const ICON_BUTTON_SELECTOR = [
+  '.smarthr-ui-Icon',
+  '.smarthr-ui-Icon-extended',
+  'svg',
+  'img',
+  '.smarthr-ui-Loader',
+].reduce(
   (prev, selector, index) => `${prev}${index !== 0 ? ',' : ''}:scope>${selector}:only-child`,
   '',
 )
@@ -120,6 +126,8 @@ export const useButtonWrapper = ({
     }
   }
 
+  // HINT: actualSuffixなどは$loadingの判定で置き換えられる可能性がある
+  // あくまで利用者が設定したprefix, suffixがないかで判定する
   const onlyBody = !prefix && !suffix
 
   useEffect(() => {
@@ -159,11 +167,10 @@ export const useButtonWrapper = ({
     children: (
       <>
         {actualPrefix}
-        <span className={innerClassName}>{actualChildren}</span>
+        <span ref={innerRef} className={innerClassName}>
+          {actualChildren}
+        </span>
         {actualSuffix}
-        <div ref={innerRef} hidden>
-          {children}
-        </div>
       </>
     ),
   }
