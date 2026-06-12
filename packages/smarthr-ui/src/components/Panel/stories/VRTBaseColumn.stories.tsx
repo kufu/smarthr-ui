@@ -6,7 +6,7 @@ import type { BaseColumn } from '../BaseColumn'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Base/BaseColumn/VRT',
+  title: 'Components/Panel/BaseColumn/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}

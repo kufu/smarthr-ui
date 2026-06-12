@@ -13,7 +13,7 @@ const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   .sort() as Gap[]
 
 export default {
-  title: 'Components/Base/BaseColumn',
+  title: 'Components/Panel/BaseColumn',
   component: BaseColumn,
   render: (args) => <BaseColumn {...args} />,
   argTypes: {
