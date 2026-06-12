@@ -152,8 +152,6 @@ export const useButtonWrapper = ({
 
     observer.observe(target, {
       childList: true,
-      subtree: true,
-      characterData: true,
     })
 
     return () => {
