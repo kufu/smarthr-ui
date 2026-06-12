@@ -1,5 +1,5 @@
-import { Panel } from '../../Base'
 import { Stack } from '../../Layout'
+import { Panel } from '../../Panel'
 import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { EmptyTableBody } from '../EmptyTableBody'

@@ -2,8 +2,8 @@ import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Panel } from '../Base'
 import { Heading } from '../Heading'
+import { Panel } from '../Panel'
 import { Nav } from '../SectioningContent'
 
 const classNameGenerator = tv({

@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 
 import { BgColor, Padding, Rounded } from './BaseColumn.stories'
 
-import type { Panel } from '../Base'
+import type { BaseColumn } from '../BaseColumn'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
@@ -18,7 +18,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} as Meta<typeof Base>
+} as Meta<typeof BaseColumn>
 
 export const VRT = {}
 

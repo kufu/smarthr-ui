@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Panel } from '../Base'
+import { Panel } from '../Panel'
 import { RadioButton } from '../RadioButton'
 
 type Props = ComponentProps<typeof RadioButton> & {

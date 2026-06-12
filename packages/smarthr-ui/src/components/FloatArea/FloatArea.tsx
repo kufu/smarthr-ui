@@ -1,8 +1,8 @@
 import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Panel } from '../Base'
 import { Cluster, Stack } from '../Layout'
+import { Panel } from '../Panel'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'

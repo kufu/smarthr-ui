@@ -1,7 +1,7 @@
-import { BaseColumn } from '../../components/Base'
 import { DefinitionList, DefinitionListItem } from '../../components/DefinitionList'
 import { Heading } from '../../components/Heading'
 import { Stack } from '../../components/Layout'
+import { BaseColumn } from '../../components/Panel'
 import { createTheme, defaultMediaQuery } from '../../themes'
 import { ThemeProvider } from '../useTheme'
 

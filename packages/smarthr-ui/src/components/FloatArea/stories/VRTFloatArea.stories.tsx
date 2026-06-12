@@ -1,6 +1,6 @@
-import { Panel } from '../../Base'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
+import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { Meta } from '@storybook/react-webpack5'

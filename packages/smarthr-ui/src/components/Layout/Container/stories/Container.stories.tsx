@@ -1,7 +1,7 @@
 import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
 import { DeviceProvider } from '../../../../hooks/useDevice'
-import { Panel } from '../../../Base'
+import { Panel } from '../../../Panel'
 import { Stack } from '../../Stack'
 import { Container } from '../Container'
 
