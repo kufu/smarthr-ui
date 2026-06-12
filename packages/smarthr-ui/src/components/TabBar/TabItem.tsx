@@ -76,7 +76,6 @@ export const TabItem: FC<Props> = ({ selected = false, disabled, disabledReason,
       <Tooltip
         {...tabAttrs}
         message={disabledReason.message}
-        ariaDescribedbyTarget="inner"
         aria-disabled={disabled}
         className="focus-visible:shr-focus-indicator"
       >

@@ -1,37 +1,37 @@
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
+import { ActionDialog } from '../ActionDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
-import { RemoteTriggerActionDialog } from '../RemoteTriggerActionDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 /** props は [ActionDialog](./?path=/docs/dialog（ダイアログ）-dialog-actiondialog--docs) を参照してください。 */
 export default {
-  title: 'Components/Dialog/RemoteDialogTrigger/RemoteTriggerActionDialog',
-  component: RemoteTriggerActionDialog,
+  title: 'Components/Dialog/RemoteDialogTrigger/ActionDialog',
+  component: ActionDialog,
   render: (args) => (
     <>
       <RemoteDialogTrigger targetId="remote-dialog">
         <Button>ダイアログを開く</Button>
       </RemoteDialogTrigger>
-      <RemoteTriggerActionDialog
+      <ActionDialog
         {...args}
         id="remote-dialog"
         heading="リモートトリガーアクションダイアログ"
-        actionText="アクション"
+        actionButton="アクション"
         onClickAction={(e, { close }) => {
           action('onClickAction')(e)
           close()
         }}
       >
         <p>リモートトリガーアクションダイアログです。</p>
-      </RemoteTriggerActionDialog>
+      </ActionDialog>
     </>
   ),
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof RemoteTriggerActionDialog>
+} as Meta<typeof ActionDialog>
 
-export const Playground: StoryObj<typeof RemoteTriggerActionDialog> = {}
+export const Playground: StoryObj<typeof ActionDialog> = {}

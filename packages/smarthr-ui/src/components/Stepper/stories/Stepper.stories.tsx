@@ -1,5 +1,5 @@
-import { Stepper } from '..'
 import { Stack } from '../../Layout'
+import { Stepper } from '../Stepper'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

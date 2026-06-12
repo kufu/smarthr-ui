@@ -31,16 +31,20 @@ export const Playground: StoryObj<typeof TdRadioButton> = {}
 
 export const AriaLabelledBy: StoryObj<typeof TdRadioButton> = {
   name: 'aria-labelledby',
-  render: (args) => (
-    <Table>
-      <tbody>
-        <tr>
-          <TdRadioButton {...args} aria-labelledby="label-name" vAlign="baseline" />
-          <Td id="label-name">ラベル名</Td>
-        </tr>
-      </tbody>
-    </Table>
-  ),
+  render: (args) => {
+    const ariaLabelledby = 'label-name'
+
+    return (
+      <Table>
+        <tbody>
+          <tr>
+            <TdRadioButton {...args} aria-labelledby={ariaLabelledby} vAlign="baseline" />
+            <Td id={ariaLabelledby}>ラベル名</Td>
+          </tr>
+        </tbody>
+      </Table>
+    )
+  },
 }
 
 export const Checked: StoryObj<typeof TdRadioButton> = {

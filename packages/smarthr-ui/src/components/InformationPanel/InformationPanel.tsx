@@ -53,7 +53,7 @@ const headingObjectConverter = (text: ReactNode) => ({ text })
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
-    header: 'shr-p-1.5',
+    header: 'shr-rounded-t-l shr-p-1.5',
     heading: 'smarthr-ui-InformationPanel-heading',
     toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
@@ -72,7 +72,7 @@ const classNameGenerator = tv({
     active: {
       true: {},
       false: {
-        header: 'shr-py-1',
+        header: 'shr-rounded-b-l shr-py-1',
       },
     },
     bold: {
@@ -174,7 +174,7 @@ export const InformationPanel: FC<Props> = ({
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Panel {...rest} overflow="hidden" as="section" className={classNames.wrapper}>
+    <Panel {...rest} as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- Panel (Base) は as="section" で Section として扱われるため問題ない。eslint-plugin-smarthr の Panel 対応後に削除 */}
         <MemoizedHeading

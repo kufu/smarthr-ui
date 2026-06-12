@@ -1,5 +1,5 @@
-import { Scroller } from '..'
 import { Panel } from '../../Base'
+import { Scroller } from '../Scroller'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

@@ -21,7 +21,7 @@ export default {
     )
   },
   args: {
-    heading: 'メッセージダイアログタイトル',
+    heading: 'メッセージダイアログ（Controlled）',
     children: 'メッセージダイアログ本文',
   },
   parameters: {
@@ -83,6 +83,13 @@ export const OnPressEscape: StoryObj<typeof ControlledMessageDialog> = {
   name: 'onPressEscape',
   args: {
     onPressEscape: action('onPressEscape'),
+  },
+}
+
+export const CloseButton: StoryObj<typeof ControlledMessageDialog> = {
+  name: 'closeButton',
+  args: {
+    closeButton: '閉じる',
   },
 }
 

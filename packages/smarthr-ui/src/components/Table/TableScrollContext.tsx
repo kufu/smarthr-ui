@@ -27,7 +27,7 @@ const classNameGenerator = tv({
 })
 
 export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
-  ({ className, children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
+  ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
     const innerRef = useRef<HTMLDivElement | null>(null)
     const classNames = useMemo(() => {
       const { wrapper } = classNameGenerator()
@@ -59,7 +59,7 @@ export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
     }, [fixedHead])
 
     return (
-      <Scroller {...rest} ref={setRefs} direction="horizontal" className={classNames.wrapper}>
+      <Scroller {...rest} ref={setRefs} direction="both" className={classNames.wrapper}>
         {children}
       </Scroller>
     )

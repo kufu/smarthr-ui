@@ -134,7 +134,7 @@ type AbstractProps = PropsWithChildren<
 >
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
-export const Balloon = memo<Props>(
+export const ControlledTooltip = memo<Props>(
   ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...rest }) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ horizontal, vertical, triggerIcon, className }),

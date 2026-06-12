@@ -2,10 +2,10 @@
 
 import {
   type ChangeEvent,
-  type ComponentProps,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   type Ref,
   memo,
   useCallback,
@@ -32,7 +32,6 @@ import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 
-import type { DecoratorsType } from '../../../hooks/useDecorators'
 import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
 
 type AbstractProps<T> = ComboboxProps<T> & {
@@ -66,16 +65,13 @@ type AbstractProps<T> = ComboboxProps<T> & {
    */
   onBlur?: () => void
   /**
-   * コンポーネント内のテキストを変更する関数/
-   */
-  decorators?: DecoratorsType<'noResultText'> &
-    Exclude<ComponentProps<typeof MultiSelectedItem>['decorators'], undefined> & {
-      selectedListAriaLabel?: (text: string) => string
-    }
-  /**
    * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
    */
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
+  /**
+   * 検索結果が0件の時に表示するコンテンツ
+   */
+  noResultText?: ReactNode
 }
 type Props<T> = AbstractProps<T> &
   Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
@@ -180,8 +176,8 @@ const ActualMultiCombobox = <T,>(
     onFocus,
     onBlur,
     onKeyPress,
-    decorators,
     isItemSelected,
+    noResultText,
     style,
     ...rest
   }: Props<T>,
@@ -257,7 +253,7 @@ const ActualMultiCombobox = <T,>(
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
-    decorators,
+    noResultText,
   })
 
   const {
@@ -479,21 +475,13 @@ const ActualMultiCombobox = <T,>(
     }
   }, [isFocused, disabled, className])
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      selectedListAriaLabel: localize({
+  const selectedListAriaLabel = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
         defaultText: '選択済みアイテム',
       }),
-    }),
     [localize],
-  )
-
-  const decoratedAriaLabel = useMemo(
-    () =>
-      decorators?.selectedListAriaLabel?.(decoratorDefaultTexts.selectedListAriaLabel) ||
-      decoratorDefaultTexts.selectedListAriaLabel,
-    [decorators, decoratorDefaultTexts],
   )
 
   return (
@@ -508,7 +496,11 @@ const ActualMultiCombobox = <T,>(
       style={wrapperStyle}
     >
       <Scroller className={classNames.inputArea}>
-        <ul id={selectedListId} aria-label={decoratedAriaLabel} className={classNames.selectedList}>
+        <ul
+          id={selectedListId}
+          aria-label={selectedListAriaLabel}
+          className={classNames.selectedList}
+        >
           {selectedItems.map((selectedItem, i) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
@@ -517,7 +509,6 @@ const ActualMultiCombobox = <T,>(
                 onDelete={actualOnDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
-                decorators={decorators}
               />
             </li>
           ))}

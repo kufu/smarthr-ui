@@ -382,7 +382,7 @@ export const ModelessDialog: FC<Props> = ({
           className={classNames.wrapper}
           style={positionStyle}
         >
-          {/* dummy element for focus management. */}
+          {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
           <div className={classNames.header}>
             <Handler onArrowKeyDown={handleArrowKey} className={classNames.dialogHandler} />

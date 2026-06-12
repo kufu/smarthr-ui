@@ -83,7 +83,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
     }
   }, [className])
 
-  const { name } = useContext(AccordionPanelItemContext)
+  const { name, contentId, triggerId } = useContext(AccordionPanelItemContext)
   const {
     iconPosition,
     expandedItems,
@@ -177,9 +177,9 @@ export const AccordionPanelTrigger: FC<Props> = ({
         {...rest}
         type="button"
         value={name}
-        id={`${name}-trigger`}
+        id={triggerId}
         aria-expanded={isExpanded}
-        aria-controls={`${name}-content`}
+        aria-controls={contentId}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         className={classNames.button}

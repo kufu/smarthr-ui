@@ -1,6 +1,6 @@
-import { Sidebar } from '..'
 import { TextLink } from '../../../TextLink'
 import { Stack } from '../../Stack'
+import { Sidebar } from '../Sidebar'
 
 import type { Gap } from '../../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { act } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../intl'
 import { FormControl } from '../FormControl'
@@ -53,7 +53,7 @@ describe('DatePicker', () => {
       </form>,
     )
     const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
-    await act(() => userEvent.type(textbox, '平成4年5月29日{tab}'))
+    await userEvent.type(textbox, '平成4年5月29日{tab}')
     expect(textbox).toHaveProperty('value', '1992/05/29')
   })
 })

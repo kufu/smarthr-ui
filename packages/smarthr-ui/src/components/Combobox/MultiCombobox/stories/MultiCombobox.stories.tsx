@@ -1,7 +1,6 @@
 import { useArgs } from 'storybook/preview-api'
 
 import { Stack } from '../../../Layout'
-import { Text } from '../../../Text'
 import { MultiCombobox } from '../MultiCombobox'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -86,7 +85,7 @@ export default {
       options: ['文字列', 'ReactNode'],
       mapping: {
         文字列: 'ヘルプメッセージ',
-        ReactNode: <Text className="shr-text-danger">React Nodeを渡したメッセージ</Text>,
+        ReactNode: <span className="shr-text-danger">React Nodeを渡したメッセージ</span>,
       },
     },
   },
@@ -152,5 +151,13 @@ export const DropdownWidth: StoryObj<typeof MultiCombobox> = {
   name: 'dropdownWidth',
   args: {
     dropdownWidth: '30rem',
+  },
+}
+
+export const NoResultText: StoryObj<typeof MultiCombobox> = {
+  name: 'noResultText',
+  args: {
+    items: [],
+    noResultText: '該当するユーザーが見つかりません',
   },
 }

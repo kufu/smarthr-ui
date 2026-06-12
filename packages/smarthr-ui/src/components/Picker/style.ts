@@ -22,7 +22,7 @@ export const classNameGenerator = (componentType: keyof typeof MIN_WIDTH) =>
         'focus-within:shr-focus-indicator',
         'has-[[aria-invalid]]:shr-border-danger',
         'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken has-[:disabled]:[&&&]:shr-border-default/50',
-        'has-[[readonly]]:shr-border-[theme(backgroundColor.background)] has-[[readonly]]:shr-bg-background',
+        'has-[[readonly]]:shr-border-[theme(backgroundColor.column)] has-[[readonly]]:shr-bg-column',
       ],
       inner: [
         'shr-h-[theme(fontSize.base)] shr-border-none shr-bg-transparent shr-p-[unset] shr-py-0.75 shr-text-base shr-tabular-nums shr-text-black shr-outline-none shr-outline-0',

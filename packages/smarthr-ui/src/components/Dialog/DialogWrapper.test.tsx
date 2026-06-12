@@ -1,12 +1,11 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
-import { userEvent } from 'storybook/test'
+import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-import { MessageDialogContent } from './ControlledMessageDialog'
 import { DialogCloser } from './DialogCloser'
 import { DialogContent } from './DialogContent'
 import { DialogTrigger } from './DialogTrigger'
@@ -36,12 +35,12 @@ describe('DialogWrapper', () => {
       render(<DialogContentTemplate />)
 
       expect(screen.queryByRole('dialog', { name: 'DialogContent' })).toBeNull()
-      await act(() => userEvent.tab())
-      await act(() => userEvent.keyboard('{enter}'))
+      await userEvent.tab()
+      await userEvent.keyboard('{enter}')
       expect(screen.getByRole('dialog', { name: 'DialogContent' })).toBeVisible()
 
-      await act(() => userEvent.tab({ shift: true }))
-      await act(() => userEvent.keyboard('{ }'))
+      await userEvent.tab({ shift: true })
+      await userEvent.keyboard('{ }')
       await waitFor(
         () => {
           expect(screen.queryByRole('dialog', { name: 'DialogContent' })).toBeNull()

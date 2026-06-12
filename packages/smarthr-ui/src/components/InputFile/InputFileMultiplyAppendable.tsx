@@ -14,7 +14,6 @@ import {
   useState,
 } from 'react'
 
-import { useDecorators } from '../../hooks/useDecorators'
 import { useIntl } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
@@ -23,40 +22,27 @@ import { Stack } from '../Layout'
 
 import { classNameGenerator } from './style'
 
-import type { DecoratorKeyTypes, Props } from './types'
+import type { Props } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
   (
-    {
-      className,
-      size,
-      label,
-      hasFileList = true,
-      onChange,
-      disabled = false,
-      error,
-      decorators,
-      ...rest
-    },
+    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
     const { localize } = useIntl()
 
-    const decoratorDefaultTexts = useMemo(
-      () => ({
-        destroy: localize({
+    const destroyLabel = useMemo(
+      () =>
+        localize({
           id: 'smarthr-ui/InputFile/destroy',
           defaultText: '削除',
         }),
-      }),
       [localize],
     )
-
-    const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
 
     const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
@@ -157,7 +143,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
                   onClick={handleDelete}
                   className="smarthr-ui-InputFile-deleteButton"
                 >
-                  {decorated.destroy}
+                  {destroyLabel}
                 </Button>
               </li>
             ))}

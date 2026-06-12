@@ -38,8 +38,8 @@ export default {
     )
   },
   args: {
-    heading: 'ダイアログタイトル',
-    actionText: 'アクションボタンラベル',
+    heading: 'アクションダイアログ（Controlled）',
+    actionButton: 'アクションボタンラベル',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -82,17 +82,20 @@ export const ContentPadding: StoryObj<typeof ControlledActionDialog> = {
   },
 }
 
-export const ActionText: StoryObj<typeof ControlledActionDialog> = {
-  name: 'actionText',
+export const ActionButton: StoryObj<typeof ControlledActionDialog> = {
+  name: 'actionButton',
   args: {
-    actionText: '保存',
+    actionButton: '保存',
   },
 }
 
-export const ActionTheme: StoryObj<typeof ControlledActionDialog> = {
-  name: 'actionTheme',
+export const ActionButtonTheme: StoryObj<typeof ControlledActionDialog> = {
+  name: 'actionButton.theme',
   args: {
-    actionTheme: 'danger',
+    actionButton: {
+      text: '削除',
+      theme: 'danger',
+    },
   },
 }
 
@@ -165,17 +168,30 @@ export const ResponseStatus: StoryObj<typeof ControlledActionDialog> = {
   },
 }
 
-export const ActionDisabled: StoryObj<typeof ControlledActionDialog> = {
-  name: 'actionDisabled',
+export const ActionButtonDisabled: StoryObj<typeof ControlledActionDialog> = {
+  name: 'actionButton.disabled',
   args: {
-    actionDisabled: true,
+    actionButton: {
+      text: 'アクションボタンラベル',
+      disabled: true,
+    },
   },
 }
 
-export const CloseDisabled: StoryObj<typeof ControlledActionDialog> = {
-  name: 'closeDisabled',
+export const CloseButton: StoryObj<typeof ControlledActionDialog> = {
+  name: 'closeButton',
   args: {
-    closeDisabled: true,
+    closeButton: '閉じる',
+  },
+}
+
+export const CloseButtonDisabled: StoryObj<typeof ControlledActionDialog> = {
+  name: 'closeButton.disabled',
+  args: {
+    closeButton: {
+      text: '閉じる',
+      disabled: true,
+    },
   },
 }
 

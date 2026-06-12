@@ -11,6 +11,7 @@ const classNameGenerator = tv({
     cell: [
       'shr-bg-action-background shr-p-1 shr-text-base',
       'forced-colors:shr-border-t-shorthand',
+      '[&_.smarthr-ui-Button.shr-text-link]:shr-text-link-darken',
     ],
   },
 })

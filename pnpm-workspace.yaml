@@ -2,7 +2,7 @@ packages:
   - packages/*
   - sandbox/*
 
-minimumReleaseAge: 4320
+minimumReleaseAge: 10080
 
 auditConfig:
   # HINT: Next.jsに関するpatchだが、SCのチェックでしか利用していないためignoreする
@@ -23,3 +23,27 @@ minimumReleaseAgeExclude:
   - webpack@5.104.1
   # Renovate security update: glob@13.0.1
   - glob@13.0.1
+  # Renovate security update: postcss@8.5.10
+  - postcss@8.5.10
+  - tar@7.5.7
+  - tar@7.5.3
+  - tar@7.5.8
+  - tar@7.5.10
+  - tar@7.5.11
+  - tar@7.5.4
+  - fast-uri@3.1.1
+  - fast-uri@3.1.2
+  - '@babel/plugin-transform-modules-systemjs@7.29.4'
+  - brace-expansion@5.0.6
+  - ws@8.20.1
+  # Renovate security update: qs@6.15.2
+  - qs@6.15.2
+  # Renovate security update: vitest@4.1.0
+  - vitest@4.1.0
+allowBuilds:
+  '@swc/core': true
+  canvas: true
+  esbuild: true
+  sharp: true
+overrides:
+  postcss@<8.5.10: ^8.5.10
