@@ -86,6 +86,7 @@ export const Tooltip: FC<Props> = ({
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const messageId = useId()
+  const childrenWrapperId = `${messageId}-children-wrapper`
   const fullscreenElement = useSyncExternalStore(
     subscribeFullscreenChange,
     getFullscreenElement,
@@ -95,23 +96,31 @@ export const Tooltip: FC<Props> = ({
   const [isFocusableChild, setIsFocusableChild] = useState(false)
   const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
 
+  const isLabel = type === 'label'
+
   useEnhancedEffect(() => {
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
 
   useEnhancedEffect(() => {
     const childElement = ref.current?.querySelector<HTMLElement>(
-      ':scope > :not(.smarthr-ui-VisuallyHiddenText)',
+      `:scope > #${childrenWrapperId} > *`,
     )
 
     const focusable =
       !!childElement &&
-      childElement.matches('a[href], button, input, select, textarea, [tabindex]') &&
-      !childElement.matches('[tabindex="-1"]')
+      childElement.matches(
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )
 
     setIsFocusableChild(focusable)
     setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
-  }, [tabIndex])
+
+    // focusableな要素に直接aria属性を設定
+    if (focusable) {
+      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+    }
+  }, [tabIndex, isLabel, messageId, childrenWrapperId])
 
   const toShowAction = useCallback(
     (e: BaseSyntheticEvent) => {
@@ -207,16 +216,15 @@ export const Tooltip: FC<Props> = ({
     [isIcon, className],
   )
 
-  const isLabel = type === 'label'
-  const isInnerTarget = isFocusableChild || ariaDescribedbyTarget === 'inner'
-
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       {...rest}
       ref={ref}
       tabIndex={actualTabIndex}
-      aria-describedby={isLabel || isInnerTarget ? undefined : messageId}
+      aria-describedby={
+        isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
+      }
       onPointerEnter={onDelegatePointerEnter}
       onTouchStart={onDelegateTouchStart}
       onFocus={onDelegateFocus}
@@ -236,11 +244,7 @@ export const Tooltip: FC<Props> = ({
           />,
           portalRoot,
         )}
-      <span
-        className="shr-contents"
-        aria-labelledby={isLabel ? messageId : undefined}
-        aria-describedby={isInnerTarget && !isLabel ? messageId : undefined}
-      >
+      <span id={childrenWrapperId} className="shr-contents">
         {children}
       </span>
     </span>
