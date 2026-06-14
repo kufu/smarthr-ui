@@ -33,6 +33,9 @@ const subscribeFullscreenChange = (callback: () => void) => {
 const getFullscreenElement = () => document.fullscreenElement
 const getFullscreenElementOnSSR = () => null
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+
 type AbstractProps = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
@@ -85,8 +88,8 @@ export const Tooltip: FC<Props> = ({
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
+  const childrenWrapperRef = useRef<HTMLSpanElement>(null)
   const messageId = useId()
-  const childrenWrapperId = `${messageId}-children-wrapper`
   const fullscreenElement = useSyncExternalStore(
     subscribeFullscreenChange,
     getFullscreenElement,
@@ -103,15 +106,9 @@ export const Tooltip: FC<Props> = ({
   }, [fullscreenElement])
 
   useEnhancedEffect(() => {
-    const childElement = ref.current?.querySelector<HTMLElement>(
-      `:scope > #${childrenWrapperId} > *`,
-    )
+    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
 
-    const focusable =
-      !!childElement &&
-      childElement.matches(
-        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      )
+    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
 
     setIsFocusableChild(focusable)
     setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
@@ -120,7 +117,7 @@ export const Tooltip: FC<Props> = ({
     if (focusable) {
       childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
     }
-  }, [tabIndex, isLabel, messageId, childrenWrapperId])
+  }, [tabIndex, isLabel, messageId])
 
   const toShowAction = useCallback(
     (e: BaseSyntheticEvent) => {
@@ -244,7 +241,7 @@ export const Tooltip: FC<Props> = ({
           />,
           portalRoot,
         )}
-      <span id={childrenWrapperId} className="shr-contents">
+      <span ref={childrenWrapperRef} className="shr-contents">
         {children}
       </span>
     </span>
