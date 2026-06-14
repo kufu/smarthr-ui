@@ -161,11 +161,11 @@ const MemoizedTriggerButton = memo<
 
   const { active } = useContext(DropdownContext)
 
-  const showTooltip = !!onlyIconTrigger
-  const tooltip = useMemo(() => ({ show: showTooltip, message: children }), [children, showTooltip])
-
   return (
-    <DropdownTrigger className={classNames.triggerWrapper} tooltip={tooltip}>
+    <DropdownTrigger
+      className={classNames.triggerWrapper}
+      tooltip={{ show: !!onlyIconTrigger, message: children }}
+    >
       <Button
         {...rest}
         suffix={
