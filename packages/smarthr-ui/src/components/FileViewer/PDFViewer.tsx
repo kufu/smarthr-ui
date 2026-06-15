@@ -117,9 +117,12 @@ export const PDFViewer: FC<Props> = memo(
     const handleGetTextSuccess = useCallback(
       (pageIndex: number, textContent: TextContent) => {
         if (!onPageTextLoaded) return
-        const texts: string[] = textContent.items
-          .filter((item) => 'str' in item)
-          .map((item) => item.str)
+        const texts = textContent.items.reduce<string[]>((acc, item) => {
+          if ('str' in item) {
+            acc.push(item.str)
+          }
+          return acc
+        }, [])
         onPageTextLoaded(pageIndex, texts)
       },
       [onPageTextLoaded],
