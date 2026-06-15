@@ -84,8 +84,9 @@ function getLeft({
       }
     case 'top':
     case 'bottom': {
-      const arrowPosition = 29 // length between Balloon edge and center of arrow
-      const iconGap = isIcon ? arrowPosition - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
+      // 29 : length between Balloon edge and center of arrow
+      const iconGap = isIcon ? 29 - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
+
       switch (horizontal) {
         case 'right':
           return parentRect.left + parentRect.width - tooltipWidth + iconGap
