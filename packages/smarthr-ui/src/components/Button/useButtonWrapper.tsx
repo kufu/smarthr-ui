@@ -16,13 +16,10 @@ import { Loader } from '../Loader'
 
 import type { Variant } from './types'
 
-// HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonのselector
+// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
+// このSELECTORはbody内の対象を列挙する
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
-const ICON_BUTTON_SELECTOR = ['.smarthr-ui-Icon', '.smarthr-ui-Icon-extended', 'svg', 'img'].reduce(
-  (prev, selector, index) =>
-    `${prev}${index !== 0 ? ',' : ''}.smarthr-ui-Button-body:only-child>${selector}:only-child`,
-  '',
-)
+const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
 
 type AbstractProps = PropsWithChildren<{
   size: 'M' | 'S'
@@ -121,12 +118,37 @@ export const useButtonWrapper = ({
     }
   }
 
+  // HINT: actualSuffixなどは$loadingの判定で置き換えられる可能性がある
+  // あくまで利用者が設定したprefix, suffixがないかで判定する
+  const onlyBody = !prefix && !suffix
+
   useEffect(() => {
-    if (innerRef.current) {
-      // HINT: prefix, suffixが存在せず、かつicon,svg,imgのいずれかが単一でbodyに含まれるButtonの場合true
-      setSquare(!!innerRef.current.querySelector(ICON_BUTTON_SELECTOR))
+    if (!onlyBody) {
+      setSquare(false)
+
+      return
     }
-  }, [children])
+
+    const target = innerRef.current
+
+    if (!target) return
+
+    const checkSquare = () => {
+      setSquare(target.children.length === 1 && target.children[0].matches(ICON_SELECTOR))
+    }
+
+    checkSquare()
+
+    const observer = new MutationObserver(checkSquare)
+
+    observer.observe(target, {
+      childList: true,
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [onlyBody])
 
   return {
     filteredProps: { ...rest, $loading } as FilteredAnchorProps | FilteredButtonProps,
