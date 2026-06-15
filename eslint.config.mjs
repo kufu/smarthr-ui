@@ -57,7 +57,10 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
+      'smarthr/best-practice-for-consecutive-definition-list': 'off',
+      'smarthr/best-practice-for-default-props': 'off',
       'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
+      'smarthr/design-system-guideline-bulk-action-row-button': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
       'no-restricted-syntax': [
