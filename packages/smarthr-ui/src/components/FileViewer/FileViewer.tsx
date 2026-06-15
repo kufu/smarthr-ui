@@ -205,7 +205,8 @@ const Controller: FC<ControllerProps> = memo(
 
     return (
       <div className={className}>
-        {!mobile && <div />}
+        {/* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */}
+        {!mobile && <div role="presentation" aria-hidden="true" />}
         <Cluster gap={0.5} className="shr-justify-self-center">
           <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
             <Button
@@ -253,7 +254,8 @@ const Controller: FC<ControllerProps> = memo(
         {searchController ? (
           <div className="shr-min-w-0 shr-justify-self-stretch">{searchController}</div>
         ) : (
-          !mobile && <div />
+          /* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */
+          !mobile && <div role="presentation" aria-hidden="true" />
         )}
       </div>
     )
