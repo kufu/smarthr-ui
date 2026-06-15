@@ -81,16 +81,23 @@ export const SearchController: FC<Props> = memo(({ search }) => {
       if (e.nativeEvent.isComposing) {
         return
       }
-      if (e.key === 'Enter') {
-        e.preventDefault()
-        if (e.shiftKey) {
-          onClickPrev()
-        } else {
-          onClickNext()
+      switch (e.key) {
+        case 'Enter': {
+          e.preventDefault()
+          if (e.shiftKey) {
+            onClickPrev()
+          } else {
+            onClickNext()
+          }
+          break
         }
-      } else if (e.key === 'Escape' && query !== '') {
-        e.preventDefault()
-        onClickClear()
+        case 'Escape': {
+          if (query !== '') {
+            e.preventDefault()
+            onClickClear()
+          }
+          break
+        }
       }
     },
     [onClickNext, onClickPrev, onClickClear, query],
