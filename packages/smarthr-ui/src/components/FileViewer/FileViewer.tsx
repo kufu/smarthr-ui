@@ -4,6 +4,7 @@ import Decimal from 'decimal.js'
 import {
   type ComponentProps,
   type FC,
+  type MouseEvent,
   type ReactNode,
   memo,
   useCallback,
@@ -203,6 +204,11 @@ const Controller: FC<ControllerProps> = memo(
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
 
+    const onClickScaleStep = useCallback(
+      (e: MouseEvent<HTMLButtonElement>) => setScale(Number(e.currentTarget.value)),
+      [setScale],
+    )
+
     return (
       <div className={className}>
         {/* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */}
@@ -232,7 +238,8 @@ const Controller: FC<ControllerProps> = memo(
               {scaleSteps.map((step) => (
                 <Button
                   key={step.toString()}
-                  onClick={() => setScale(step)}
+                  value={step}
+                  onClick={onClickScaleStep}
                   className="shr-rounded-none shr-border-0"
                 >
                   {`${(step * 100).toFixed(0)}%`}
