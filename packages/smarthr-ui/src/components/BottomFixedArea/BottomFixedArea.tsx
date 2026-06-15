@@ -10,7 +10,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useEffect,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -86,9 +85,7 @@ export const BottomFixedArea: FC<Props> = ({
   }, [className])
   const style = useMemo(() => ({ zIndex }), [zIndex])
 
-  useEffect(() => {
-    validateElement(primaryButton, secondaryButton)
-  }, [primaryButton, secondaryButton])
+  validateElement(primaryButton, secondaryButton)
 
   return (
     <Base {...rest} className={classNames.wrapper} style={style}>
