@@ -57,10 +57,10 @@ const StepItem: FC<
   const isPrevStepCompleted = useMemo(() => {
     if (!previousStepStatus) return false
 
-    const statusType =
-      typeof previousStepStatus === 'object' ? previousStepStatus.type : previousStepStatus
-
-    return statusType === 'completed'
+    return (
+      (typeof previousStepStatus === 'object' ? previousStepStatus.type : previousStepStatus) ===
+      'completed'
+    )
   }, [previousStepStatus])
 
   return (
