@@ -25,8 +25,9 @@ export const computeMatchesForPage = (
 
     let itemStart = 0
     for (let i = 0; i < normalizedTextItems.length; i++) {
-      const itemEnd = itemStart + normalizedTextItems[i].length
       if (itemStart >= matchEnd) break
+
+      const itemEnd = itemStart + normalizedTextItems[i].length
 
       const overlapStart = Math.max(matchStart, itemStart)
       const overlapEnd = Math.min(matchEnd, itemEnd)
