@@ -63,7 +63,8 @@ export default [
       'smarthr/design-system-guideline-bulk-action-row-button': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
-      'smarthr/best-practice-for-lazy-variable': ['warn', { fix: true }],
+      'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
+      'smarthr/best-practice-for-no-unnecessary-variable': ['error', { fix: false }],
       'no-restricted-syntax': [
         'error',
         {
