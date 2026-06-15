@@ -91,9 +91,11 @@ export default [
     ],
   },
   {
-    files: ['**/*.test.tsx', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    files: ['**/*.test.ts', '**/*.test.tsx', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
     rules: {
       'smarthr/require-i18n-text': 'off',
+      'smarthr/best-practice-for-lazy-variable': 'off',
+      'smarthr/best-practice-for-no-unnecessary-variable': 'off',
     },
   },
   {
