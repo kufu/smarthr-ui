@@ -128,6 +128,7 @@ export { WarekiPicker } from './components/WarekiPicker'
 export { AppHeader } from './components/AppHeader'
 export { Timeline, TimelineItem } from './components/Timeline'
 export { Scroller } from './components/Scroller'
+export { List, ListItem, ListItemAnchor } from './components/List'
 
 // layout components
 export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
