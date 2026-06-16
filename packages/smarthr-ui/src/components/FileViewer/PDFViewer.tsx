@@ -115,7 +115,7 @@ export const PDFViewer: FC<Props> = memo(
     }, [matches])
 
     const handleGetTextSuccess = useCallback(
-      (pageIndex: number, textContent: TextContent) => {
+      (pageIndex: number) => (textContent: TextContent) => {
         if (!onPageTextLoaded) return
         const texts = textContent.items.reduce<string[]>((acc, item) => {
           if ('str' in item) {
@@ -179,7 +179,7 @@ export const PDFViewer: FC<Props> = memo(
                 scale={scale}
                 className="shr-w-full"
                 onLoadSuccess={onPageLoad}
-                onGetTextSuccess={(textContent) => handleGetTextSuccess(i, textContent)}
+                onGetTextSuccess={handleGetTextSuccess(i)}
                 customTextRenderer={customTextRenderer}
                 loading={null}
               />
