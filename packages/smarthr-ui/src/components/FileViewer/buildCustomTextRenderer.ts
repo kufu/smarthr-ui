@@ -18,7 +18,8 @@ const HTML_ESCAPE_MAP: Record<string, string> = {
   '"': '&quot;',
   "'": '&#39;',
 }
-const escapeHtml = (s: string): string => s.replace(/[&<>"']/g, (c) => HTML_ESCAPE_MAP[c]!)
+const replaceHtmlChar = (c: string): string => HTML_ESCAPE_MAP[c]!
+const escapeHtml = (s: string): string => s.replace(/[&<>"']/g, replaceHtmlChar)
 
 const buildMarkHtml = (text: string, globalIndex: number): string =>
   `<mark class="highlight" ${MATCH_INDEX_ATTR}="${globalIndex}">${escapeHtml(text)}</mark>`
