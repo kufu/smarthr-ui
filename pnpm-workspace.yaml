@@ -2,7 +2,7 @@ packages:
   - packages/*
   - sandbox/*
 
-minimumReleaseAge: 0  # FIXME: eslint-config-smarthr@14.6.0更新後、元の10080に戻す（マージ時には7日経過済み）
+minimumReleaseAge: 10080
 
 auditConfig:
   # HINT: Next.jsに関するpatchだが、SCのチェックでしか利用していないためignoreする
