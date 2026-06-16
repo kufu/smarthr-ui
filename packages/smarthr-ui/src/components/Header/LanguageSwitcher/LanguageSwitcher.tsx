@@ -53,9 +53,8 @@ const onDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   const buttons = tabbable(e.currentTarget)
   const currentIndex = buttons.indexOf(e.target as HTMLElement)
   const direction = ARROW_UPS_REGEX.test(e.key) ? 'up' : 'down'
-  const nextIndex = getCircularIndex(currentIndex, direction, buttons.length)
 
-  buttons[nextIndex]?.focus()
+  buttons[getCircularIndex(currentIndex, direction, buttons.length)]?.focus()
 }
 
 const classNameGenerator = tv({
