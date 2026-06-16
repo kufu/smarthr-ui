@@ -130,6 +130,7 @@ const ActualCluster = <T extends ElementType = 'div'>(
     [inline, gaps.row, gaps.column, align, justify, className],
   )
 
+  // eslint-disable-next-line smarthr/best-practice-for-no-unnecessary-variable -- Componentは useSectionWrapper と JSX の2箇所で使用されているため誤検知
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
   const body = <Component {...rest} ref={ref} className={actualClassName} />
