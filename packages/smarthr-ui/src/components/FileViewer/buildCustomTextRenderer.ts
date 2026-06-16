@@ -25,15 +25,15 @@ const buildMarkHtml = (text: string, globalIndex: number): string =>
   `<mark class="highlight" ${MATCH_INDEX_ATTR}="${globalIndex}">${escapeHtml(text)}</mark>`
 
 const renderHighlightedFragment = (str: string, itemMatches: PDFSearchMatch[]): string => {
-  const parts: string[] = []
+  let result = ''
   let cursor = 0
   for (const { matchStart, matchLength, globalIndex } of itemMatches) {
-    parts.push(escapeHtml(str.slice(cursor, matchStart)))
-    parts.push(buildMarkHtml(str.slice(matchStart, matchStart + matchLength), globalIndex))
+    result += escapeHtml(str.slice(cursor, matchStart))
+    result += buildMarkHtml(str.slice(matchStart, matchStart + matchLength), globalIndex)
     cursor = matchStart + matchLength
   }
-  parts.push(escapeHtml(str.slice(cursor)))
-  return parts.join('')
+  result += escapeHtml(str.slice(cursor))
+  return result
 }
 
 const groupMatchesByItem = (matches: PDFSearchMatch[]): Map<string, PDFSearchMatch[]> => {
