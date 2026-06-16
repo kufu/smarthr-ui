@@ -104,7 +104,7 @@ type Props<T extends ElementType> = PropsWithChildren<
 
 const ActualCluster = <T extends ElementType = 'div'>(
   { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
-  ref: ForwardedRef<HTMLDivElement>,
+  ref: ForwardedRef<HTMLElement>,
 ) => {
   const gaps = useMemo(() => {
     if (gap instanceof Object) {
@@ -133,7 +133,10 @@ const ActualCluster = <T extends ElementType = 'div'>(
   // eslint-disable-next-line smarthr/best-practice-for-no-unnecessary-variable -- Componentは useSectionWrapper と JSX の2箇所で使用されているため誤検知
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
-  const body = <Component {...rest} ref={ref} className={actualClassName} />
+  // ポリモーフィックコンポーネント: asプロパティで要素型を動的に変更可能なため、
+  // refの型を静的に決定できません。HTMLElementを基底型として使用し、
+  // 実際の要素型との整合性はas anyで型アサーションします。
+  const body = <Component {...rest} ref={ref as any} className={actualClassName} />
 
   if (Wrapper) {
     return <Wrapper>{body}</Wrapper>
