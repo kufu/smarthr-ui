@@ -64,7 +64,13 @@ export default [
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
       'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
-      'smarthr/best-practice-for-no-unnecessary-variable': ['error', { fix: false }],
+      'smarthr/best-practice-for-no-unnecessary-variable': [
+        'error',
+        {
+          fix: false,
+          maxComplexity: 4,
+        },
+      ],
       'no-restricted-syntax': [
         'error',
         {
