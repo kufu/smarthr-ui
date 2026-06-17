@@ -4,18 +4,6 @@ packages:
 
 minimumReleaseAge: 10080
 
-auditConfig:
-  # HINT: Next.jsに関するpatchだが、SCのチェックでしか利用していないためignoreする
-  ignoreGhsas:
-    - GHSA-h25m-26qc-wcjf
-    - GHSA-9g9p-9gw9-jx7f
-    - GHSA-5f7q-jpqc-wp7h
-    - GHSA-2g4f-4pwh-qvx6 # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20508
-    - GHSA-7r86-cg39-jmmj # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20518
-    - GHSA-23c5-xmqv-rm74 # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20518
-    - GHSA-f886-m6hf-6m8v
-    - GHSA-c2c7-rcm5-vvqj # tailwindcssが依存しているパッケージの脆弱性だが、影響はないのでignoreする
-    - GHSA-3v7f-55p6-f55p # tailwindcssが依存しているパッケージの脆弱性だが、影響はないのでignoreする
 minimumReleaseAgeExclude:
   # Security update: esbuild@0.28.1
   - esbuild@0.28.1
