@@ -68,7 +68,7 @@ export default [
         'error',
         {
           fix: false,
-          maxComplexity: 4,
+          maxComplexity: 3,
         },
       ],
       'no-restricted-syntax': [
