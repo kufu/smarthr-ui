@@ -363,12 +363,13 @@ export const ModelessDialog: FC<Props> = ({
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
+      {/* @ts-expect-error react-draggable@4.6.0の型定義に不整合があるため */}
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={onDragStart}
         onDrag={onDrag}
         position={position}
-        bounds={draggableBounds}
+        bounds={draggableBounds ?? false}
         nodeRef={wrapperRef}
       >
         <Base
@@ -470,12 +471,7 @@ const CloseButton = memo<{
 
   return (
     <div className={className}>
-      <Button
-        type="button"
-        size="S"
-        onClick={onClick}
-        className="smarthr-ui-ModelessDialog-closeButton"
-      >
+      <Button size="S" onClick={onClick} className="smarthr-ui-ModelessDialog-closeButton">
         <FaXmarkIcon alt={closeButtonIconAlt} />
       </Button>
     </div>
