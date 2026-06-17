@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [96.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.0.1...smarthr-ui-v96.1.0) (2026-06-10)
+
+
+### Features
+
+* **Tooltip:** type propの追加とchildrenのタブストップ二重問題の解消 ([#6307](https://github.com/kufu/smarthr-ui/issues/6307)) ([2124884](https://github.com/kufu/smarthr-ui/commit/21248846d4154c06f6b858f0b5f6e3d620a56bf3))
+
+
+### Bug Fixes
+
+* maxLinesに収まる場合でもTooltipが表示される問題を修正 ([#6374](https://github.com/kufu/smarthr-ui/issues/6374)) ([d6bb449](https://github.com/kufu/smarthr-ui/commit/d6bb449a2f625088b46a3b41e5ebecca72679e4c))
+* **SideNavItemAnchor:** 必須のidを任意に変更 ([#6369](https://github.com/kufu/smarthr-ui/issues/6369)) ([e5fa4df](https://github.com/kufu/smarthr-ui/commit/e5fa4dfb452d0092464fb90ca7ee2fddb7e642a5))
+
 ## [96.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.0.0...smarthr-ui-v96.0.1) (2026-06-04)
 
 
