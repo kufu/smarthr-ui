@@ -86,6 +86,7 @@ export const Header: FC<Props> = ({
   onTenantSelect,
   children,
   className,
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const {
@@ -106,11 +107,17 @@ export const Header: FC<Props> = ({
   }, [enableNew, className])
 
   return (
-    <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={classNames.wrapper}>
+    <Cluster
+      {...rest}
+      as="header"
+      justify="space-between"
+      gap={COMMON_GAP}
+      className={classNames.wrapper}
+    >
       <Cluster align="center" gap={COMMON_GAP}>
-        <Logo href={logoHref} enableNew={enableNew} className={classNames.logoLink}>
+        <LogoLink href={logoHref} enableNew={enableNew} className={classNames.logoLink}>
           {logo}
-        </Logo>
+        </LogoLink>
         {enableNew ? (
           <MemoizedAppLauncher featureName={featureName} apps={apps} enableNew={enableNew} />
         ) : (
@@ -129,7 +136,7 @@ export const Header: FC<Props> = ({
   )
 }
 
-const Logo = memo<
+const LogoLink = memo<
   Pick<Props, 'enableNew'> & { children: Props['logo']; href: Props['logoHref']; className: string }
 >(({ children, href, enableNew, className }) => (
   <a href={href || '/'} className={className}>

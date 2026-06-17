@@ -49,7 +49,7 @@ export function usePortal() {
     document.body.appendChild(portalRoot)
 
     return () => {
-      document.body.removeChild(portalRoot)
+      portalRoot.remove()
     }
   }, [portalRoot, calculatedSeqs.portalChildOf])
 
