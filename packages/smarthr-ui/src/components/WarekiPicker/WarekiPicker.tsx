@@ -1,7 +1,7 @@
-import { type ComponentProps, type FC, useCallback } from 'react'
-
 import { useIntl } from '../../intl'
 import { DatePicker } from '../DatePicker'
+
+import type { ComponentProps, FC } from 'react'
 
 type Props = Omit<ComponentProps<typeof DatePicker>, 'showAlternative'>
 
@@ -18,10 +18,11 @@ const handleShowWareki = (date: Date | null, locale: string) => {
 
 export const WarekiPicker: FC<Props> = (props) => {
   const { locale } = useIntl()
-  const showAlternative = useCallback(
-    (date: Date | null) => handleShowWareki(date, locale),
-    [locale],
-  )
 
-  return <DatePicker {...props} showAlternative={showAlternative} />
+  return (
+    <DatePicker
+      {...props}
+      showAlternative={(date: Date | null) => handleShowWareki(date, locale)}
+    />
+  )
 }
