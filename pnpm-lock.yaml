@@ -20,7 +20,6 @@ overrides:
   '@babel/runtime@<7.26.10': '>=7.29.7'
   '@babel/helpers@<7.26.10': '>=7.29.7'
   '@babel/core@<=7.29.0': '>=7.29.1'
-  brace-expansion@<5.0.6: '>=5.0.6'
   tar-fs@>=3.1.1: '>=3.1.2'
   tmp@<=0.2.3: '>=0.2.5'
   vite@>=6.0.0 <=6.4.0: '>=6.4.2'
@@ -52,6 +51,7 @@ overrides:
   next@>=16.0.0-beta.0 <16.2.3: '>=16.2.6'
   follow-redirects@<=1.15.11: '>=1.16.0'
   postcss@<8.5.10: ^8.5.15
+  react-draggable: 4.5.0
 
 importers:
 
@@ -68,7 +68,7 @@ importers:
         version: 9.39.4(jiti@2.7.0)
       eslint-config-smarthr:
         specifier: ^14.0.1
-        version: 14.5.0(eslint@9.39.4(jiti@2.7.0))(react@19.2.6)(typescript@5.9.3)
+        version: 14.0.1(eslint@9.39.4(jiti@2.7.0))(react@19.2.6)(typescript@5.9.3)
       eslint-plugin-storybook:
         specifier: ^9.1.19
         version: 9.1.19(eslint@9.39.4(jiti@2.7.0))(storybook@9.1.19(@testing-library/dom@10.4.1)(prettier@3.8.4)(vite@7.3.2(@types/node@20.19.35)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)))(typescript@5.9.3)
@@ -254,8 +254,8 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1
       react-draggable:
-        specifier: ^4.5.0
-        version: 4.6.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: 4.5.0
+        version: 4.5.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-icons:
         specifier: ^5.6.0
         version: 5.6.0(react@19.2.6)
@@ -448,7 +448,7 @@ importers:
     dependencies:
       next:
         specifier: 16.2.6
-        version: 16.2.6(@babel/core@7.29.7)(@playwright/test@1.55.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 16.2.6(@playwright/test@1.55.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -2317,7 +2317,7 @@ packages:
       react: ^19.2.6
       react-dom: ^19.2.6
       storybook: ^9.1.19
-      vite: '>=7.3.3'
+      vite: '>=6.4.2'
 
   '@storybook/react@9.1.19':
     resolution: {integrity: sha512-UuTGumzQ1/Nffm1rWjrfFefL1a7uZlJEk34Cjp8N5uA9qPEX68e1OEeFnHX3nBk+8yEadPfs77vJox76aeTC6g==}
@@ -2872,6 +2872,9 @@ packages:
       '@babel/core': '>=7.29.1'
       styled-components: '>= 2'
 
+  balanced-match@1.0.2:
+    resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
   balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
@@ -2898,6 +2901,12 @@ packages:
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
+
+  brace-expansion@1.1.15:
+    resolution: {integrity: sha512-EwOCDEex4quD37XhqM3omwtMoJjr//isUZz1JopUNWms+4Z2ViyM/k1YIRePpoVNnQhENnxtFjLaxNHrT7xIUg==}
+
+  brace-expansion@2.1.1:
+    resolution: {integrity: sha512-WR1cURNjuvBLMZBMbqM0UoE+WAfdUcEV1ccD8PVBVOI+Z3ND4+SZbN8RsfT2bMuG1qwz5RFvPukSZm5fF2D5eA==}
 
   brace-expansion@5.0.6:
     resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
@@ -3085,6 +3094,9 @@ packages:
 
   compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
+
+  concat-map@0.0.1:
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   confbox@0.1.8:
     resolution: {integrity: sha512-RMtmw0iFkeR4YV+fUOSucriAQNb9g8zFR52MWCtl+cCZOFRNL6zeB395vPzFhEjjn4fMxXudmELnl/KF/WrK6w==}
@@ -3395,8 +3407,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-config-smarthr@14.5.0:
-    resolution: {integrity: sha512-ypWiYpgWXGF8Nlykd9spsnAM9G0mKjzHNnZLXXRREEx4EFOZJvN5yeuFhkIYH+DqKeT+Omirxktv+F0refNO0g==}
+  eslint-config-smarthr@14.0.1:
+    resolution: {integrity: sha512-kKCyly5Qxd/nQ2nr6xPrmAjU60lOPgbNZw8byp5rj8oO+zbSl4Zy6ZAgiXwYH6lx7YYG6cIYb/JkWj2Rp7Dagg==}
     peerDependencies:
       eslint: ^9.0.0
       react: ^19.2.6
@@ -3454,8 +3466,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-plugin-smarthr@6.18.0:
-    resolution: {integrity: sha512-0vNKLSjpkTO4zH7C93RYiLKPzpxLJjlV8NZRDgSEKSBB8MJzNa26Vbe7G6HDdeY2d94KMwRDdkVA8Fjo7yrLGQ==}
+  eslint-plugin-smarthr@6.12.1:
+    resolution: {integrity: sha512-lkQZWqtP36N4VJqWlHW1qzXTOIx5rYiYYsjneldwB16LNYGVj4gkBwDB/WfzC6V2TCHtAO0J6mgiVqjtDeYvuw==}
     peerDependencies:
       eslint: ^9
 
@@ -5028,8 +5040,8 @@ packages:
     peerDependencies:
       react: ^19.2.6
 
-  react-draggable@4.6.0:
-    resolution: {integrity: sha512-g4vqY53xhmPrBnZvGP+1YQV0eYnB3o0VLzoi6q2IpwnQrxIZ34tYRKpVtsWIXPg4D/pvLn+oYCW5gOK2cWIrgA==}
+  react-draggable@4.5.0:
+    resolution: {integrity: sha512-VC+HBLEZ0XJxnOxVAZsdRi8rD04Iz3SiiKOoYzamjylUcju/hP9np/aZdLHf/7WOD268WMoNJMvYfB5yAK45cw==}
     peerDependencies:
       react: ^19.2.6
       react-dom: ^19.2.6
@@ -8643,6 +8655,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  balanced-match@1.0.2: {}
+
   balanced-match@4.0.4: {}
 
   base64-js@1.5.1: {}
@@ -8664,6 +8678,15 @@ snapshots:
       buffer: 5.7.1
       inherits: 2.0.4
       readable-stream: 3.6.2
+
+  brace-expansion@1.1.15:
+    dependencies:
+      balanced-match: 1.0.2
+      concat-map: 0.0.1
+
+  brace-expansion@2.1.1:
+    dependencies:
+      balanced-match: 1.0.2
 
   brace-expansion@5.0.6:
     dependencies:
@@ -8842,6 +8865,8 @@ snapshots:
     dependencies:
       array-ify: 1.0.0
       dot-prop: 5.3.0
+
+  concat-map@0.0.1: {}
 
   confbox@0.1.8: {}
 
@@ -9209,7 +9234,7 @@ snapshots:
     dependencies:
       eslint: 9.39.4(jiti@2.7.0)
 
-  eslint-config-smarthr@14.5.0(eslint@9.39.4(jiti@2.7.0))(react@19.2.6)(typescript@5.9.3):
+  eslint-config-smarthr@14.0.1(eslint@9.39.4(jiti@2.7.0))(react@19.2.6)(typescript@5.9.3):
     dependencies:
       '@eslint/js': 9.39.4
       '@typescript-eslint/eslint-plugin': 8.61.0(@typescript-eslint/parser@8.61.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
@@ -9220,7 +9245,7 @@ snapshots:
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@9.39.4(jiti@2.7.0))
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.4(jiti@2.7.0))
-      eslint-plugin-smarthr: 6.18.0(eslint@9.39.4(jiti@2.7.0))
+      eslint-plugin-smarthr: 6.12.1(eslint@9.39.4(jiti@2.7.0))
       globals: 17.6.0
       react: 19.2.6
       typescript: 5.9.3
@@ -9319,7 +9344,7 @@ snapshots:
       estraverse: 5.3.0
       hasown: 2.0.4
       jsx-ast-utils: 3.3.5
-      minimatch: 3.1.5
+      minimatch: 10.2.5
       object.entries: 1.1.9
       object.fromentries: 2.0.8
       object.values: 1.2.1
@@ -9329,7 +9354,7 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-smarthr@6.18.0(eslint@9.39.4(jiti@2.7.0)):
+  eslint-plugin-smarthr@6.12.1(eslint@9.39.4(jiti@2.7.0)):
     dependencies:
       eslint: 9.39.4(jiti@2.7.0)
       json5: 2.2.3
@@ -9704,7 +9729,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.5
+      minimatch: 10.2.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -10419,11 +10444,11 @@ snapshots:
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 5.0.6
+      brace-expansion: 1.1.15
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 5.0.6
+      brace-expansion: 2.1.1
 
   minimist@1.2.8: {}
 
@@ -10466,7 +10491,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.55.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  next@16.2.6(@playwright/test@1.55.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       '@next/env': 16.2.6
       '@swc/helpers': 0.5.15
@@ -10475,7 +10500,7 @@ snapshots:
       postcss: 8.5.15
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-      styled-jsx: 5.1.6(@babel/core@7.29.7)(react@19.2.6)
+      styled-jsx: 5.1.6(react@19.2.6)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.2.6
       '@next/swc-darwin-x64': 16.2.6
@@ -10501,7 +10526,7 @@ snapshots:
 
   node-dir@0.1.17:
     dependencies:
-      minimatch: 3.1.5
+      minimatch: 10.2.5
 
   node-exports-info@1.6.0:
     dependencies:
@@ -11020,7 +11045,7 @@ snapshots:
       react: 19.2.6
       scheduler: 0.27.0
 
-  react-draggable@4.6.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  react-draggable@4.5.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       clsx: 2.1.1
       prop-types: 15.8.1
@@ -11446,7 +11471,7 @@ snapshots:
       polished: 4.3.1
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-      react-draggable: 4.6.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      react-draggable: 4.5.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-icons: 5.6.0(react@19.2.6)
       react-innertext: 1.1.5(@types/react@18.3.31)(react@19.2.6)
       react-intl: 10.1.13(@types/react@18.3.31)(react@19.2.6)
@@ -11659,12 +11684,10 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
 
-  styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6):
+  styled-jsx@5.1.6(react@19.2.6):
     dependencies:
       client-only: 0.0.1
       react: 19.2.6
-    optionalDependencies:
-      '@babel/core': 7.29.7
 
   stylelint-config-prettier@9.0.5(stylelint@17.13.0(typescript@5.9.3)):
     dependencies:
