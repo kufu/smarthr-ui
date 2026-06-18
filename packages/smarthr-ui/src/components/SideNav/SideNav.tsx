@@ -1,25 +1,11 @@
-import {
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { SideNavProvider } from './SideNavContext'
-import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
 
-export type SideNavItemButtonProps = Omit<
-  ComponentProps<typeof SideNavItemButton>,
-  'size' | 'onClick'
->
+import type { SideNavSizeType } from './SideNavItemButton'
 
 type AbstractProps = PropsWithChildren<{
-  /** 各アイテムのデータの配列
-   * @deprecated SideNavItemButton を使ってください
-   */
-  items?: SideNavItemButtonProps[]
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
@@ -59,7 +45,6 @@ const classNameGenerator = tv({
 })
 
 export const SideNav: FC<Props> = ({
-  items,
   size = 'M',
   onClick,
   className,
@@ -88,19 +73,7 @@ export const SideNav: FC<Props> = ({
   return (
     <SideNavProvider value={{ size, onClick: actualOnClick }}>
       <ul {...rest} className={actualClassName}>
-        {items
-          ? items.map((item) => (
-              <SideNavItemButton
-                key={item.id}
-                id={item.id}
-                title={item.title}
-                prefix={item.prefix}
-                current={item.current}
-                size={size}
-                onClick={actualOnClick}
-              />
-            ))
-          : children}
+        {children}
       </ul>
     </SideNavProvider>
   )
