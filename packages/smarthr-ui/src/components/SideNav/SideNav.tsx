@@ -5,9 +5,9 @@ import {
   type PropsWithChildren,
   useMemo,
 } from 'react'
-import { Children, cloneElement } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { SideNavProvider } from './SideNavContext'
 import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
 
 export type SideNavItemButtonProps = Omit<
@@ -86,39 +86,22 @@ export const SideNav: FC<Props> = ({
   )
 
   return (
-    <ul {...rest} className={actualClassName}>
-      {items
-        ? items.map((item) => (
-            <SideNavItemButton
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              prefix={item.prefix}
-              current={item.current}
-              size={size}
-              onClick={actualOnClick}
-            />
-          ))
-        : children &&
-          Children.map(children, (child) => {
-            if (
-              child &&
-              typeof child === 'object' &&
-              'type' in child &&
-              child.type === SideNavItemButton
-            ) {
-              return cloneElement(
-                child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
-                {
-                  // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
-                  size,
-                  onClick: actualOnClick,
-                },
-              )
-            }
-
-            return child
-          })}
-    </ul>
+    <SideNavProvider value={{ size, onClick: actualOnClick }}>
+      <ul {...rest} className={actualClassName}>
+        {items
+          ? items.map((item) => (
+              <SideNavItemButton
+                key={item.id}
+                id={item.id}
+                title={item.title}
+                prefix={item.prefix}
+                current={item.current}
+                size={size}
+                onClick={actualOnClick}
+              />
+            ))
+          : children}
+      </ul>
+    </SideNavProvider>
   )
 }

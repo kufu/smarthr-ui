@@ -11,6 +11,8 @@ import { tv } from 'tailwind-variants'
 import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
 
+import { useSideNavContext } from './SideNavContext'
+
 export type SideNavSizeType = 'M' | 'S'
 
 type AbstractProps = {
@@ -97,18 +99,22 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   prefix,
   suffix,
   current,
-  size,
-  onClick,
+  size: sizeProp,
+  onClick: onClickProp,
   children,
   className,
   ...rest
 }) => {
+  const context = useSideNavContext()
+  const size = sizeProp ?? context?.size ?? 'M'
+  const onClick = onClickProp ?? context?.onClick
+
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: size ?? 'M' }),
+      button: button({ size }),
       body: body(),
       bodyText: bodyText(),
     }
@@ -134,20 +140,24 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   prefix,
   suffix,
   current,
-  size,
-  onClick,
+  size: sizeProp,
+  onClick: onClickProp,
   children,
   className,
   href,
   elementAs,
   ...rest
 }: AnchorProps<T>) => {
+  const context = useSideNavContext()
+  const size = sizeProp ?? context?.size ?? 'M'
+  const onClick = onClickProp ?? context?.onClick
+
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: size ?? 'M' }),
+      button: button({ size }),
       body: body(),
       bodyText: bodyText(),
     }
