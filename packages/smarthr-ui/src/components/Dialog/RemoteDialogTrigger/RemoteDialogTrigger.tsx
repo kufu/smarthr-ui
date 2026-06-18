@@ -46,9 +46,12 @@ export const RemoteDialogTrigger: FC<
       return
     }
 
+    const getClickableElement = () =>
+      currentRef.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
+
     // 現在の子要素に対して処理を実行
     const setupElement = () => {
-      const element = currentRef.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
+      const element = getClickableElement()
       if (element) {
         element.setAttribute('aria-haspopup', 'dialog')
         element.setAttribute('aria-controls', targetId)
@@ -57,20 +60,20 @@ export const RemoteDialogTrigger: FC<
       }
     }
 
+    const clearEventListener = () => {
+      // 既存のイベントリスナーをクリーンアップ
+      const element = getClickableElement()
+      if (element) {
+        element.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
+      }
+    }
+
     // 初回セットアップ
     setupElement()
 
     // MutationObserverでDOM変更を監視
     const observer = new MutationObserver(() => {
-      // 既存のイベントリスナーをクリーンアップ
-      const oldElement = currentRef.querySelector<HTMLButtonElement | HTMLAnchorElement>(
-        'button, a',
-      )
-      if (oldElement) {
-        oldElement.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
-      }
-
-      // 新しい要素にセットアップ
+      clearEventListener()
       setupElement()
     })
 
@@ -81,10 +84,7 @@ export const RemoteDialogTrigger: FC<
 
     return () => {
       observer.disconnect()
-      const element = currentRef.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
-      if (element) {
-        element.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
-      }
+      clearEventListener()
     }
   }, [targetId, actualOnClick])
 
