@@ -1,1 +1,1 @@
-export { defaultTextColor as textColor } from '../themes/createTextColor'
+export { defaultTextColor as textColor } from '../themes'
