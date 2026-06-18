@@ -71,13 +71,27 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
     const el = ref.current
     const shadowEl = shadowRef.current
 
+    if (!el || !shadowEl) return
+
     // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-    const isMultiLineOverflow = el && shadowEl ? shadowEl.clientHeight > el.clientHeight : false
+    const checkOverflow = () => {
+      const isMultiLineOverflow = shadowEl.clientHeight > el.clientHeight
+      setTooltipVisible(isMultiLineOverflow)
+    }
 
-    setTooltipVisible(isMultiLineOverflow)
-  }, [maxLines, children])
+    checkOverflow()
+
+    const resizeObserver = new ResizeObserver(checkOverflow)
+    resizeObserver.observe(el)
+    resizeObserver.observe(shadowEl)
+
+    return () => {
+      resizeObserver.unobserve(el)
+      resizeObserver.unobserve(shadowEl)
+    }
+  }, [maxLines])
 
   const classNames = useMemo(() => {
     const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
