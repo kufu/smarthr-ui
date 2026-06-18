@@ -1,15 +1,12 @@
 'use client'
 
-import {
-  type FC,
-  type MouseEvent,
-  type ReactElement,
-  cloneElement,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
+
+const CAPTURE_OPTION = {
+  capture: true,
+}
 
 const onClickRemoteDialogTrigger = (ariaControls: string) => {
   document.dispatchEvent(
@@ -19,37 +16,81 @@ const onClickRemoteDialogTrigger = (ariaControls: string) => {
   )
 }
 
-export const RemoteDialogTrigger: FC<{
-  targetId: string
-  onClick?: (open: () => void) => void
-  children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
-}> = ({ targetId, children, onClick, ...rest }) => {
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
-      // 先にariaControlsを取得しておく
-      const ariaControls = e.currentTarget.getAttribute('aria-controls') as string
+export const RemoteDialogTrigger: FC<
+  PropsWithChildren<{
+    targetId: string
+    onClick?: (open: () => void) => void
+  }>
+> = ({ targetId, children, onClick }) => {
+  const ref = useRef<HTMLSpanElement | null>(null)
+  const onClickRef = useRef(onClick)
+  onClickRef.current = onClick
 
-      if (onClick) {
-        return onClick(() => {
-          onClickRemoteDialogTrigger(ariaControls)
-        })
+  const actualOnClick = useCallback((e: Event) => {
+    // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+    // 先にariaControlsを取得しておく
+    const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
+
+    if (onClickRef.current) {
+      return onClickRef.current(() => {
+        onClickRemoteDialogTrigger(ariaControls)
+      })
+    }
+
+    onClickRemoteDialogTrigger(ariaControls)
+  }, [])
+
+  useEffect(() => {
+    const currentRef = ref.current
+    if (!currentRef) {
+      return
+    }
+
+    const getClickableElement = () =>
+      currentRef.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
+
+    // 現在の子要素に対して処理を実行
+    const setupElement = () => {
+      const element = getClickableElement()
+      if (element) {
+        element.setAttribute('aria-haspopup', 'dialog')
+        element.setAttribute('aria-controls', targetId)
+        // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
+        element.addEventListener('click', actualOnClick, CAPTURE_OPTION)
       }
+    }
 
-      onClickRemoteDialogTrigger(ariaControls)
-    },
-    [onClick],
-  )
-  const actualTrigger = useMemo(
-    () =>
-      cloneElement(children as ReactElement, {
-        ...rest,
-        onClick: actualOnClick,
-        'aria-haspopup': 'dialog',
-        'aria-controls': targetId,
-      }),
-    [children, actualOnClick, targetId, rest],
-  )
+    const clearEventListener = () => {
+      // 既存のイベントリスナーをクリーンアップ
+      const element = getClickableElement()
+      if (element) {
+        element.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
+      }
+    }
 
-  return actualTrigger
+    // 初回セットアップ
+    setupElement()
+
+    // MutationObserverでDOM変更を監視
+    const observer = new MutationObserver(() => {
+      clearEventListener()
+      setupElement()
+    })
+
+    observer.observe(currentRef, {
+      childList: true, // 直接の子要素の追加・削除を監視
+      subtree: true, // 子孫要素の変更も監視
+    })
+
+    return () => {
+      observer.disconnect()
+      clearEventListener()
+    }
+  }, [targetId, actualOnClick])
+
+  return (
+    <span className="smarthr-ui-RemoteDialogTrigger shr-contents" ref={ref}>
+      {children}
+    </span>
+  )
 }
