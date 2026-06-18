@@ -25,14 +25,16 @@ type AbstractProps = {
 }
 
 type AbstractButtonProps = AbstractProps & {
-  /** アイテムの識別子。onClickのイベントオブジェクトのcurrentTarget.valueで取得できます。 */
-  id: string
+  /** アイテムを押下したときに発火するコールバック関数 */
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 type AbstractAnchorProps<T extends ElementType = 'a'> = AbstractProps & {
   href: string
   /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
+  /** アイテムを押下したときに発火するコールバック関数 */
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }
 
 type ButtonProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractButtonProps> &
@@ -92,11 +94,11 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   current,
   children,
   className,
+  onClick,
   ...rest
 }) => {
   const context = useSideNavContext()
   const size = context?.size ?? 'M'
-  const onClick = context?.onClick
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
@@ -110,7 +112,7 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   }, [className, size])
 
   return (
-    <li {...rest} data-current={!!current} className={classNames.wrapper}>
+    <li {...rest} id={id} data-current={!!current} className={classNames.wrapper}>
       <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
         <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
           {children}
@@ -121,7 +123,6 @@ export const SideNavItemButton: FC<ButtonProps> = ({
 }
 
 export const SideNavItemAnchor = <T extends ElementType = 'a'>({
-  id,
   prefix,
   suffix,
   current,
@@ -129,11 +130,11 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   className,
   href,
   elementAs,
+  onClick,
   ...rest
 }: AnchorProps<T>) => {
   const context = useSideNavContext()
   const size = context?.size ?? 'M'
-  const onClick = context?.onClick
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
@@ -150,7 +151,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 
   return (
     <li {...rest} data-current={!!current} className={classNames.wrapper}>
-      <Anchor className={classNames.button} href={href} onClick={onClick} data-value={id}>
+      <Anchor className={classNames.button} href={href} onClick={onClick}>
         <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
           {children}
         </BodyCluster>

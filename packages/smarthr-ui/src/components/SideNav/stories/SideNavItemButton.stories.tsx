@@ -18,7 +18,6 @@ export default {
     size: {
       description: 'SideNavItemButton に指定せず、SideNav に指定してください。',
     },
-    onClick: { description: 'SideNavItemButton に指定せず、SideNav に指定してください。' },
   },
   args: {
     id: 'id-1',

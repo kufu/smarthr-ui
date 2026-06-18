@@ -8,11 +8,6 @@ import type { SideNavSizeType } from './SideNavItemButton'
 type AbstractProps = PropsWithChildren<{
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (
-    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>,
-    id: string,
-  ) => void
   /** コンポーネントに適用するクラス名 */
   className?: string
 }> &
@@ -44,34 +39,14 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideNav: FC<Props> = ({
-  size = 'M',
-  onClick,
-  className,
-  rounded,
-  children,
-  ...rest
-}) => {
-  const actualOnClick = useMemo(
-    () =>
-      onClick
-        ? (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) =>
-            onClick(
-              e,
-              ((e as React.MouseEvent<HTMLButtonElement, MouseEvent>).currentTarget.value ||
-                e.currentTarget.getAttribute('data-value')) as string,
-            )
-        : undefined,
-    [onClick],
-  )
-
+export const SideNav: FC<Props> = ({ size = 'M', className, rounded, children, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ rounded, className }),
     [rounded, className],
   )
 
   return (
-    <SideNavProvider value={{ size, onClick: actualOnClick }}>
+    <SideNavProvider value={{ size }}>
       <ul {...rest} className={actualClassName}>
         {children}
       </ul>

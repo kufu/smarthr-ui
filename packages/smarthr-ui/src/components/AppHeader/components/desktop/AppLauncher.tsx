@@ -258,8 +258,8 @@ const SideNavs = memo<
   )
 
   const onClick = useCallback(
-    (_: any, id: string) => {
-      changePage(id as Launcher['page'])
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      changePage(e.currentTarget.value as Launcher['page'])
     },
     [changePage],
   )
@@ -269,11 +269,16 @@ const SideNavs = memo<
       <SideNav
         className={classNames.unselectedSideNav}
         size="S"
-        onClick={onClick}
         aria-label={typeof translated.favorite === 'string' ? translated.favorite : undefined}
       >
         {unselectedItems.map((item) => (
-          <SideNavItemButton key={item.id} id={item.id} prefix={item.prefix} current={item.current}>
+          <SideNavItemButton
+            key={item.id}
+            id={item.id}
+            prefix={item.prefix}
+            current={item.current}
+            onClick={onClick}
+          >
             {item.title}
           </SideNavItemButton>
         ))}
@@ -288,11 +293,10 @@ const SideNavs = memo<
         <SideNav
           className={classNames.selectedSideNav}
           size="S"
-          onClick={onClick}
           aria-label={typeof translated.listText === 'string' ? translated.listText : undefined}
         >
           {selectedItems.map((item) => (
-            <SideNavItemButton key={item.id} id={item.id} current={item.current}>
+            <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
               {item.title}
             </SideNavItemButton>
           ))}

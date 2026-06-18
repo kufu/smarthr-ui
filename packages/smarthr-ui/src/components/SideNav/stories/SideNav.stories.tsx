@@ -112,9 +112,24 @@ export const Rounded: StoryObj<typeof SideNav> = {
 
 export const OnClick: StoryObj<typeof SideNav> = {
   name: 'onClick',
-  args: {
-    onClick: (_, id) => {
-      action('clicked')(id)
-    },
-  },
+  render: (args) => (
+    <SideNav {...args}>
+      {_sideNavItems.map((item, index) => {
+        const commonAttrs = {
+          key: item.id,
+          id: item.id,
+          current: item.current,
+          prefix: item.prefix,
+          children: item.children,
+          onClick: () => action('clicked')(item.id),
+        }
+
+        return index % 2 === 0 ? (
+          <SideNavItemButton {...commonAttrs} />
+        ) : (
+          <SideNavItemAnchor {...commonAttrs} href={`#${index}`} />
+        )
+      })}
+    </SideNav>
+  ),
 }
