@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactElement, useEffect, useMemo, useRef } from 'react'
+import { type FC, type ReactElement, useCallback, useEffect, useRef } from 'react'
 
 import { useDisclosure } from './useDisclosure'
 
@@ -22,39 +22,65 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   const [expanded, setExpanded] = useDisclosure(targetId)
   const ref = useRef<HTMLSpanElement | null>(null)
 
-  const actualOnClick = useMemo(() => {
+  // onClickとsetExpandedをrefに保存（毎レンダリング時に最新の値を設定）
+  const onClickRef = useRef(onClick)
+  const setExpandedRef = useRef(setExpanded)
+  onClickRef.current = onClick
+  setExpandedRef.current = setExpanded
+
+  // actualOnClickをuseCallbackで安定させる
+  const actualOnClick = useCallback((e: MouseEvent) => {
     const toggleExpanded = () => {
-      setExpanded((current) => !current)
+      setExpandedRef.current((current) => !current)
     }
 
-    if (onClick) {
-      return (e: MouseEvent) => {
-        onClick(toggleExpanded, e)
-      }
+    if (onClickRef.current) {
+      onClickRef.current(toggleExpanded, e)
+    } else {
+      toggleExpanded()
     }
-
-    return toggleExpanded
-  }, [onClick, setExpanded])
+  }, [])
 
   useEffect(() => {
-    if (!ref.current) {
+    const wrapper = ref.current
+    if (!wrapper) {
       return
     }
 
-    const button = ref.current.querySelector('button')
+    let currentCleanup: (() => void) | undefined
 
-    if (!button) {
-      throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
+    const setupButton = () => {
+      currentCleanup?.()
+      currentCleanup = undefined
+
+      const button = wrapper.querySelector('button')
+
+      if (!button) {
+        throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
+      }
+
+      button.setAttribute('aria-expanded', expanded.toString())
+      button.setAttribute('aria-controls', targetId)
+      button.addEventListener('click', actualOnClick)
+
+      currentCleanup = () => {
+        button.removeEventListener('click', actualOnClick)
+      }
     }
 
-    button.setAttribute('aria-expanded', expanded.toString())
-    button.setAttribute('aria-controls', targetId)
-    button.addEventListener('click', actualOnClick)
+    setupButton()
+
+    const observer = new MutationObserver(setupButton)
+    observer.observe(wrapper, {
+      childList: true,
+      subtree: true,
+    })
 
     return () => {
-      button.removeEventListener('click', actualOnClick)
+      currentCleanup?.()
+      observer.disconnect()
     }
-  }, [expanded, children, actualOnClick, targetId])
+  }, [expanded, targetId, actualOnClick])
 
   // HINT: 念の為spanに対して外部からstyleを当てられるようにしておく。
   // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる
