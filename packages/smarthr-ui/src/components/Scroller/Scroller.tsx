@@ -120,7 +120,17 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
 
     useEffect(() => {
       autoTabIndex()
-    }, [children, autoTabIndex])
+
+      const refCurrent = wrapperRef.current
+      if (!refCurrent) return
+
+      const resizeObserver = new ResizeObserver(autoTabIndex)
+      resizeObserver.observe(refCurrent)
+
+      return () => {
+        resizeObserver.unobserve(refCurrent)
+      }
+    }, [autoTabIndex])
 
     useEffect(() => {
       const debouncedAction = debounce(autoTabIndex, 100)
