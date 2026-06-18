@@ -2,14 +2,10 @@
 
 import {
   type CSSProperties,
-  Children,
   type ComponentPropsWithRef,
   type ComponentType,
   type PropsWithChildren,
-  type ReactElement,
-  cloneElement,
   forwardRef,
-  isValidElement,
   useMemo,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
@@ -78,29 +74,24 @@ const classNameGenerator = tv({
       XXL: 'shr-gap-x-3.5',
       X3L: 'shr-gap-x-4',
     } as { [key in Gap]: string },
-  },
-})
-const itemClassNameGenerator = tv({
-  slots: {
-    firstItem: '',
-    lastItem: '',
-  },
-  variants: {
     right: {
-      true: {
-        firstItem: 'shr-grow-[999] shr-basis-0',
-        lastItem: 'shr-grow',
-      },
-      false: {
-        firstItem: 'shr-grow',
-        lastItem: 'shr-grow-[999] shr-basis-0',
-      },
+      false: [
+        '[&>:first-child]:shr-grow',
+        '[&>:last-child]:shr-grow-[999]',
+        '[&>:last-child]:shr-basis-0',
+        '[&>:last-child]:shr-min-w-[var(--sidebar-min-width)]',
+      ],
+      true: [
+        '[&>:first-child]:shr-grow-[999]',
+        '[&>:first-child]:shr-basis-0',
+        '[&>:first-child]:shr-min-w-[var(--sidebar-min-width)]',
+        '[&>:last-child]:shr-grow',
+      ],
     },
   },
 })
 
 type Props = Omit<VariantProps<typeof classNameGenerator>, 'rowGap' | 'columnGap'> &
-  VariantProps<typeof itemClassNameGenerator> &
   PropsWithChildren<{
     as?: string | ComponentType<any>
     /** コンポーネントの `min-width` 値 */
@@ -120,6 +111,7 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       right = false,
       className,
       children,
+      style: styleFromProps,
       ...rest
     },
     ref,
@@ -136,61 +128,19 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
     }, [gap])
 
     const actualClassName = useMemo(
-      () => classNameGenerator({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
-      [align, gaps.row, gaps.column, className],
+      () =>
+        classNameGenerator({ align, rowGap: gaps.row, columnGap: gaps.column, right, className }),
+      [align, gaps.row, gaps.column, right, className],
     )
-    const classNames = useMemo(() => {
-      const { firstItem, lastItem } = itemClassNameGenerator({ right })
-
-      return {
-        firstItem: firstItem(),
-        lastItem: lastItem(),
-      }
-    }, [right])
-    const styles = useMemo(() => {
-      const styleProps = {
-        minWidth: contentsMinWidth,
-      }
-
-      if (right) {
-        return {
-          firstItem: styleProps,
-          lastItem: undefined,
-        }
-      }
-
-      return {
-        firstItem: undefined,
-        lastItem: styleProps,
-      }
-    }, [contentsMinWidth, right])
-
-    // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
-    const maxChildrenIndex = Children.count(children) - 1
-    const styledChildren = Children.map(children, (child, i) => {
-      if (isValidElement(child)) {
-        const childClassName = child.props.className ?? ''
-
-        if (i === 0) {
-          return cloneElement(child as ReactElement, {
-            className: `${classNames.firstItem} ${childClassName}`,
-            style: { ...styles.firstItem, ...child.props.style },
-          })
-        } else if (i === maxChildrenIndex) {
-          return cloneElement(child as ReactElement, {
-            className: `${classNames.lastItem} ${childClassName}`,
-            style: { ...styles.lastItem, ...child.props.style },
-          })
-        }
-      }
-
-      return child
-    })
+    const style = useMemo(
+      () => ({ ...styleFromProps, '--sidebar-min-width': contentsMinWidth }) as CSSProperties,
+      [contentsMinWidth, styleFromProps],
+    )
 
     const Wrapper = useSectionWrapper(Component)
     const body = (
-      <Component {...rest} ref={ref} className={actualClassName}>
-        {styledChildren}
+      <Component {...rest} ref={ref} className={actualClassName} style={style}>
+        {children}
       </Component>
     )
 
