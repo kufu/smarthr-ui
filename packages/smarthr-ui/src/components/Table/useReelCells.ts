@@ -91,17 +91,23 @@ export const useReelCells = (
     handleScroll()
     wrapper.addEventListener('scroll', handleScroll)
 
-    const observer = new ResizeObserver(handleScroll)
+    const resizeObserver = new ResizeObserver(handleScroll)
+    resizeObserver.observe(wrapper)
 
-    observer.observe(wrapper)
+    // HINT: Paginationと組み合わせた際などにテーブル構造の変更を検知して再生成
+    const mutationObserver = new MutationObserver(handleScroll)
+    mutationObserver.observe(wrapper, {
+      childList: true,
+      subtree: true,
+    })
 
     return () => {
       wrapper.removeEventListener('scroll', handleScroll)
-      observer.unobserve(wrapper)
+      resizeObserver.unobserve(wrapper)
+      mutationObserver.disconnect()
       allClean()
     }
-    // HINT: Paginationと組み合わせた際などに再生成したい
-  }, [children, tableWrapperRef])
+  }, [tableWrapperRef])
 
   return { tableWrapperRef, showShadow }
 }
