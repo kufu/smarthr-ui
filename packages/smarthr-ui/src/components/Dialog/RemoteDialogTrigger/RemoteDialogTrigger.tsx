@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  type FC,
-  type MouseEvent,
-  type ReactElement,
-  cloneElement,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
@@ -19,16 +12,19 @@ const onClickRemoteDialogTrigger = (ariaControls: string) => {
   )
 }
 
-export const RemoteDialogTrigger: FC<{
-  targetId: string
-  onClick?: (open: () => void) => void
-  children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
-}> = ({ targetId, children, onClick, ...rest }) => {
+export const RemoteDialogTrigger: FC<
+  PropsWithChildren<{
+    targetId: string
+    onClick?: (open: () => void) => void
+  }>
+> = ({ targetId, children, onClick }) => {
+  const ref = useRef<HTMLSpanElement | null>(null)
+
   const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
+    (e: Event) => {
       // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
       // 先にariaControlsを取得しておく
-      const ariaControls = e.currentTarget.getAttribute('aria-controls') as string
+      const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
 
       if (onClick) {
         return onClick(() => {
@@ -40,16 +36,30 @@ export const RemoteDialogTrigger: FC<{
     },
     [onClick],
   )
-  const actualTrigger = useMemo(
-    () =>
-      cloneElement(children as ReactElement, {
-        ...rest,
-        onClick: actualOnClick,
-        'aria-haspopup': 'dialog',
-        'aria-controls': targetId,
-      }),
-    [children, actualOnClick, targetId, rest],
-  )
 
-  return actualTrigger
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    const element = ref.current.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
+
+    if (!element) {
+      return
+    }
+
+    element.setAttribute('aria-haspopup', 'dialog')
+    element.setAttribute('aria-controls', targetId)
+    element.addEventListener('click', actualOnClick)
+
+    return () => {
+      element.removeEventListener('click', actualOnClick)
+    }
+  }, [children, actualOnClick, targetId])
+
+  return (
+    <span className="smarthr-ui-RemoteDialogTrigger shr-contents" ref={ref}>
+      {children}
+    </span>
+  )
 }
