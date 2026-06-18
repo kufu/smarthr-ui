@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -6,10 +6,7 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-export const useReelCells = (
-  children: ReactNode,
-  tableWrapperRef: React.RefObject<HTMLDivElement>,
-) => {
+export const useReelCells = (tableWrapperRef: React.RefObject<HTMLDivElement>) => {
   const [showShadow, setShowShadow] = useState(false)
 
   useEffect(() => {
