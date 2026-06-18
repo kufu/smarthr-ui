@@ -4,6 +4,10 @@ import { type FC, type PropsWithChildren, useCallback, useEffect, useRef } from 
 
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
+const CAPTURE_OPTION = {
+  capture: true,
+}
+
 const onClickRemoteDialogTrigger = (ariaControls: string) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
@@ -50,10 +54,11 @@ export const RemoteDialogTrigger: FC<
 
     element.setAttribute('aria-haspopup', 'dialog')
     element.setAttribute('aria-controls', targetId)
-    element.addEventListener('click', actualOnClick)
+    // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
+    element.addEventListener('click', actualOnClick, CAPTURE_OPTION)
 
     return () => {
-      element.removeEventListener('click', actualOnClick)
+      element.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
     }
   }, [children, actualOnClick, targetId])
 
