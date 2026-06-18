@@ -1,7 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, memo, useEffect, useId, useMemo } from 'react'
-import innerText from 'react-innertext'
+import { type PropsWithChildren, memo, useEffect, useId, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { IS_NEXT_JS } from '../../../libs/nextjs'
@@ -70,18 +69,18 @@ export const PageHeading = memo<Props>(
     }, [size])
 
     const pseudoTitleId = useId()
-
-    const autoTitleText = useMemo(
-      () =>
-        autoPageTitle && !IS_NEXT_JS
-          ? `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
-          : '',
-      [children, pageTitle, pageTitleSuffix, autoPageTitle],
-    )
+    const h1Ref = useRef<HTMLHeadingElement>(null)
 
     useEffect(() => {
-      if (autoTitleText) {
-        document.title = autoTitleText
+      if (!autoPageTitle || IS_NEXT_JS) return
+
+      const h1 = h1Ref.current
+      if (!h1) return
+
+      const updateTitle = () => {
+        const text = h1.textContent || ''
+        const titleText = `${pageTitle || text}｜${pageTitleSuffix}`
+        document.title = titleText
 
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
@@ -94,21 +93,32 @@ export const PageHeading = memo<Props>(
         document.body.prepend(pseudoTitle)
 
         requestAnimationFrame(() => {
-          pseudoTitle.textContent = autoTitleText
+          pseudoTitle.textContent = titleText
         })
+      }
 
-        return () => {
+      updateTitle()
+
+      const observer = new MutationObserver(updateTitle)
+      observer.observe(h1, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+      })
+
+      return () => {
+        observer.disconnect()
+        const pseudoTitle = document.getElementById(pseudoTitleId)
+        if (pseudoTitle) {
           pseudoTitle.remove()
         }
       }
-
-      return undefined
-    }, [autoTitleText, pseudoTitleId])
+    }, [autoPageTitle, pageTitle, pageTitleSuffix, pseudoTitleId])
 
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
     return (
-      <Component {...rest} {...actualTypography} as="h1" className={actualClassName}>
+      <Component {...rest} {...actualTypography} as="h1" className={actualClassName} ref={h1Ref}>
         {children}
       </Component>
     )
