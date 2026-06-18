@@ -46,10 +46,8 @@ export const SideNav: FC<Props> = ({ size = 'M', className, rounded, children, .
   )
 
   return (
-    <SideNavProvider value={{ size }}>
-      <ul {...rest} className={actualClassName}>
-        {children}
-      </ul>
-    </SideNavProvider>
+    <ul {...rest} className={actualClassName}>
+      <SideNavProvider value={{ size }}>{children}</SideNavProvider>
+    </ul>
   )
 }
