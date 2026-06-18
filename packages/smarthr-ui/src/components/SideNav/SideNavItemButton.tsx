@@ -22,10 +22,6 @@ type AbstractProps = {
   suffix?: ReactNode
   /** 選択されているアイテムかどうか */
   current?: boolean
-  /** アイテムの大きさ */
-  size?: SideNavSizeType
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) => void
 }
 
 type AbstractButtonProps = AbstractProps & {
@@ -94,15 +90,13 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   prefix,
   suffix,
   current,
-  size: sizeProp,
-  onClick: onClickProp,
   children,
   className,
   ...rest
 }) => {
   const context = useSideNavContext()
-  const size = sizeProp ?? context?.size ?? 'M'
-  const onClick = onClickProp ?? context?.onClick
+  const size = context?.size ?? 'M'
+  const onClick = context?.onClick
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
@@ -131,8 +125,6 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   prefix,
   suffix,
   current,
-  size: sizeProp,
-  onClick: onClickProp,
   children,
   className,
   href,
@@ -140,8 +132,8 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   ...rest
 }: AnchorProps<T>) => {
   const context = useSideNavContext()
-  const size = sizeProp ?? context?.size ?? 'M'
-  const onClick = onClickProp ?? context?.onClick
+  const size = context?.size ?? 'M'
+  const onClick = context?.onClick
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()

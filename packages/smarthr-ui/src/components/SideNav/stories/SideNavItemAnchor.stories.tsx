@@ -1,8 +1,5 @@
-import { action } from 'storybook/actions'
-
-import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { SideNavItemAnchor, type SideNavSizeType } from '../SideNavItemButton'
+import { SideNavItemAnchor } from '../SideNavItemButton'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -37,14 +34,6 @@ export const Playground: StoryObj<typeof SideNavItemAnchor> = {
   args: {},
 }
 
-export const Title: StoryObj<typeof SideNavItemAnchor> = {
-  name: 'title（非推奨）',
-  args: {
-    title: 'サイドナビ',
-    children: undefined,
-  },
-}
-
 export const Prefix: StoryObj<typeof SideNavItemAnchor> = {
   name: 'prefix',
   args: {
@@ -56,27 +45,5 @@ export const Selected: StoryObj<typeof SideNavItemAnchor> = {
   name: 'selected',
   args: {
     current: true,
-  },
-}
-
-export const Size: StoryObj<typeof SideNavItemAnchor> = {
-  name: 'size',
-  render: (args) => (
-    <Stack as="ul" className="shr-list-none">
-      {[undefined, 'default', 's'].map((size, i) => (
-        <SideNavItemAnchor {...args} id={i.toString()} key={i} size={size as SideNavSizeType}>
-          サイドナビ{i + 1}
-        </SideNavItemAnchor>
-      ))}
-    </Stack>
-  ),
-}
-
-export const OnClick: StoryObj<typeof SideNavItemAnchor> = {
-  name: 'onClick',
-  args: {
-    onClick: (e) => {
-      action('clicked')(e.currentTarget.value)
-    },
   },
 }
