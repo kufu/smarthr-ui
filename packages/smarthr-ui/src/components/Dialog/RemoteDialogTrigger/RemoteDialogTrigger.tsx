@@ -23,23 +23,22 @@ export const RemoteDialogTrigger: FC<
   }>
 > = ({ targetId, children, onClick }) => {
   const ref = useRef<HTMLSpanElement | null>(null)
+  const onClickRef = useRef(onClick)
+  onClickRef.current = onClick
 
-  const actualOnClick = useCallback(
-    (e: Event) => {
-      // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
-      // 先にariaControlsを取得しておく
-      const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
+  const actualOnClick = useCallback((e: Event) => {
+    // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+    // 先にariaControlsを取得しておく
+    const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
 
-      if (onClick) {
-        return onClick(() => {
-          onClickRemoteDialogTrigger(ariaControls)
-        })
-      }
+    if (onClickRef.current) {
+      return onClickRef.current(() => {
+        onClickRemoteDialogTrigger(ariaControls)
+      })
+    }
 
-      onClickRemoteDialogTrigger(ariaControls)
-    },
-    [onClick],
-  )
+    onClickRemoteDialogTrigger(ariaControls)
+  }, [])
 
   useEffect(() => {
     if (!ref.current) {
@@ -60,7 +59,7 @@ export const RemoteDialogTrigger: FC<
     return () => {
       element.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
     }
-  }, [children, actualOnClick, targetId])
+  }, [children, targetId, actualOnClick])
 
   return (
     <span className="smarthr-ui-RemoteDialogTrigger shr-contents" ref={ref}>
