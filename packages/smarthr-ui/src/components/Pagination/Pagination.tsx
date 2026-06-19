@@ -131,7 +131,9 @@ const ActualPagination: FC<Props> = ({
         const href = (anchor as HTMLAnchorElement).href
 
         if (href) {
-          onClickRef.current?.(href, e)
+          ;(
+            onClickRef.current as ((href: string, e: MouseEvent<HTMLElement>) => void) | undefined
+          )?.(href, e)
         }
       }
     }
@@ -140,7 +142,11 @@ const ActualPagination: FC<Props> = ({
       const button = getTargetDelegateElement(e, BUTTON_REGEX)
 
       if (button) {
-        onClickRef.current?.(parseInt((button as HTMLButtonElement).value, 10), e)
+        ;(
+          onClickRef.current as
+            | ((pageNumber: number, e: MouseEvent<HTMLElement>) => void)
+            | undefined
+        )?.(parseInt((button as HTMLButtonElement).value, 10), e)
       }
     }
   }, [hasHrefTemplate])
