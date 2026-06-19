@@ -65,7 +65,7 @@ export default [
             // ReactNode
             'prefix',
             'suffix',
-            // 'icon',
+            'icon',
             // オブジェクト
             // 'options',
             // 'config',
