@@ -179,14 +179,13 @@ const SelectTdButton = memo<{
   )
 
   const onClickRef = useRef(onClick)
+  const targetDateRef = useRef(target.date)
   onClickRef.current = onClick
+  targetDateRef.current = target.date
 
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      onClickRef.current(e, target.date)
-    },
-    [target.date],
-  )
+  const actualOnClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    onClickRef.current(e, targetDateRef.current)
+  }, [])
 
   return (
     <td className={classNames.td}>
