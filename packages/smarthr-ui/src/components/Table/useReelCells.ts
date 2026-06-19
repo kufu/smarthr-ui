@@ -106,5 +106,5 @@ export const useReelCells = (tableWrapperRef: React.RefObject<HTMLDivElement>) =
     }
   }, [tableWrapperRef])
 
-  return { tableWrapperRef, showShadow }
+  return { showShadow }
 }
