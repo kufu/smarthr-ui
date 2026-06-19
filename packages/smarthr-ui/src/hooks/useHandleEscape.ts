@@ -4,20 +4,20 @@ import { useEffect } from 'react'
 // Esc is a IE/Edge specific value
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
-export const useHandleEscape = (callback?: () => void) => {
+export const useHandleEscape = (memoizedCallback?: () => void) => {
   useEffect(() => {
-    if (!callback) {
+    if (!memoizedCallback) {
       return
     }
 
     const handleKeyPress = (e: KeyboardEvent) => {
       if (ESCAPE_KEY_REGEX.test(e.key)) {
-        callback()
+        memoizedCallback()
       }
     }
 
     document.addEventListener('keydown', handleKeyPress)
 
     return () => document.removeEventListener('keydown', handleKeyPress)
-  }, [callback])
+  }, [memoizedCallback])
 }
