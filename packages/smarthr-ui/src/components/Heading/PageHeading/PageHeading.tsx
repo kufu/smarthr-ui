@@ -69,18 +69,16 @@ export const PageHeading = memo<Props>(
     }, [size])
 
     const pseudoTitleId = useId()
-    const h1Ref = useRef<HTMLHeadingElement>(null)
+    const ref = useRef<HTMLHeadingElement>(null)
 
     useEffect(() => {
       if (!autoPageTitle || IS_NEXT_JS) return
 
-      const h1 = h1Ref.current
+      const h1 = ref.current
       if (!h1) return
 
       const updateTitle = () => {
-        const text = h1.textContent || ''
-        const titleText = `${pageTitle || text}｜${pageTitleSuffix}`
-        document.title = titleText
+        document.title = `${pageTitle || h1.textContent || ''}｜${pageTitleSuffix}`
 
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
@@ -93,7 +91,7 @@ export const PageHeading = memo<Props>(
         document.body.prepend(pseudoTitle)
 
         requestAnimationFrame(() => {
-          pseudoTitle.textContent = titleText
+          pseudoTitle.textContent = document.title
         })
       }
 
@@ -118,7 +116,7 @@ export const PageHeading = memo<Props>(
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
     return (
-      <Component {...rest} {...actualTypography} as="h1" className={actualClassName} ref={h1Ref}>
+      <Component {...rest} {...actualTypography} as="h1" className={actualClassName} ref={ref}>
         {children}
       </Component>
     )
