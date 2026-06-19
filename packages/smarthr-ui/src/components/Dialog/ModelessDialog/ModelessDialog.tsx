@@ -328,7 +328,7 @@ export const ModelessDialog: FC<Props> = ({
 
   // stableなcallbackを作成
   const memoizedOnPressEscape = useMemo(() => {
-    if (!isOpen) {
+    if (!isOpen || !onPressEscapeRef.current) {
       return undefined
     }
     return () => {
