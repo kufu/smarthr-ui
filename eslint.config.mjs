@@ -63,8 +63,8 @@ export default [
           additionalTargetHooks: ['useEnhancedEffect'],
           additionalUnstableNames: [
             // ReactNode
-            // 'prefix',
-            // 'suffix',
+            'prefix',
+            'suffix',
             // 'icon',
             // オブジェクト
             // 'options',
@@ -79,7 +79,6 @@ export default [
             // 'records',
             // 関数
             'callback',
-            // 'handler',
             // 'onClick',
             // 'onChange',
             // 'onOpen',
