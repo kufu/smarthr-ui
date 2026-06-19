@@ -7,6 +7,7 @@ import {
   type MouseEvent,
   memo,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -110,12 +111,16 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
+  const onClickRef = useRef(onClick)
+  onClickRef.current = onClick
+  const hasHrefTemplate = !!hrefTemplate
+
   const onDelegateClick = useMemo(() => {
-    if (!onClick) {
+    if (!onClickRef.current) {
       return undefined
     }
 
-    if (hrefTemplate) {
+    if (hasHrefTemplate) {
       return (e: MouseEvent<HTMLElement>) => {
         const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
@@ -126,7 +131,7 @@ const ActualPagination: FC<Props> = ({
         const href = (anchor as HTMLAnchorElement).href
 
         if (href) {
-          onClick(href, e)
+          onClickRef.current?.(href, e)
         }
       }
     }
@@ -135,10 +140,10 @@ const ActualPagination: FC<Props> = ({
       const button = getTargetDelegateElement(e, BUTTON_REGEX)
 
       if (button) {
-        onClick(parseInt((button as HTMLButtonElement).value, 10), e)
+        onClickRef.current?.(parseInt((button as HTMLButtonElement).value, 10), e)
       }
     }
-  }, [onClick, hrefTemplate])
+  }, [hasHrefTemplate])
 
   const navigationLabel = useMemo(
     () =>
