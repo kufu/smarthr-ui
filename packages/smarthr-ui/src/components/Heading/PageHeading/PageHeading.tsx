@@ -69,12 +69,12 @@ export const PageHeading = memo<Props>(
     }, [size])
 
     const pseudoTitleId = useId()
-    const h1Ref = useRef<HTMLHeadingElement>(null)
+    const ref = useRef<HTMLHeadingElement>(null)
 
     useEffect(() => {
       if (!autoPageTitle || IS_NEXT_JS) return
 
-      const h1 = h1Ref.current
+      const h1 = ref.current
       if (!h1) return
 
       const updateTitle = () => {
@@ -118,7 +118,7 @@ export const PageHeading = memo<Props>(
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
     return (
-      <Component {...rest} {...actualTypography} as="h1" className={actualClassName} ref={h1Ref}>
+      <Component {...rest} {...actualTypography} as="h1" className={actualClassName} ref={ref}>
         {children}
       </Component>
     )
