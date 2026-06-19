@@ -77,8 +77,7 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
     const checkOverflow = () => {
-      const isMultiLineOverflow = shadowEl.clientHeight > el.clientHeight
-      setTooltipVisible(isMultiLineOverflow)
+      setTooltipVisible(shadowEl.clientHeight > el.clientHeight)
     }
 
     checkOverflow()
