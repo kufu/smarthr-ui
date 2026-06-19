@@ -61,6 +61,33 @@ export default [
         'error',
         {
           additionalTargetHooks: ['useEnhancedEffect'],
+          additionalUnstableNames: [
+            // ReactNode
+            'prefix',
+            'suffix',
+            'icon',
+            // オブジェクト
+            'options',
+            'config',
+            'settings',
+            'decorators',
+            'trigger',
+            // 配列
+            'items',
+            'list',
+            'data',
+            'records',
+            // 関数
+            'callback',
+            'handler',
+            'onClick',
+            'onChange',
+            'onOpen',
+            'onClose',
+            'onSelect',
+            'onSubmit',
+            'onApply',
+          ],
         },
       ],
       'smarthr/best-practice-for-consecutive-definition-list': 'off',
