@@ -6,6 +6,7 @@ import {
   memo,
   useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -177,11 +178,14 @@ const SelectTdButton = memo<{
     [nowDateText, target.day],
   )
 
+  const onClickRef = useRef(onClick)
+  onClickRef.current = onClick
+
   const actualOnClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onClick(e, target.date)
+      onClickRef.current(e, target.date)
     },
-    [onClick, target.date],
+    [target.date],
   )
 
   return (
