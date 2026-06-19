@@ -79,7 +79,7 @@ export default [
             // 'records',
             // 関数
             'callback',
-            // 'onClick',
+            'onClick',
             // 'onChange',
             // 'onOpen',
             // 'onClose',
