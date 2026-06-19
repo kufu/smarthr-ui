@@ -57,6 +57,12 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
+      'smarthr/best-practice-for-unstable-dependencies': [
+        'error',
+        {
+          additionalTargetHooks: ['useEnhancedEffect'],
+        },
+      ],
       'smarthr/best-practice-for-consecutive-definition-list': 'off',
       'smarthr/best-practice-for-default-props': 'off',
       'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
