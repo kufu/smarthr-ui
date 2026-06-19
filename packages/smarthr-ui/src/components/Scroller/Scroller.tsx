@@ -121,8 +121,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       autoTabIndex()
 
       const refCurrent = wrapperRef.current
-      // ResizeObserver が存在しない環境（テスト環境など）ではスキップ
-      if (!refCurrent || typeof ResizeObserver === 'undefined') return
+      if (!refCurrent) return
 
       const resizeObserver = new ResizeObserver(autoTabIndex)
       resizeObserver.observe(refCurrent)
