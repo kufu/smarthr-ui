@@ -322,23 +322,22 @@ export const ModelessDialog: FC<Props> = ({
     [onClickClose],
   )
 
-  const actualOnPressEscape = useMemo(
-    () =>
-      onPressEscape
-        ? () => {
-            lastFocusElementRef.current?.focus()
-            onPressEscape()
-          }
-        : undefined,
-    [onPressEscape],
-  )
+  // 外部propsのonPressEscapeをrefに保存
+  const onPressEscapeRef = useRef(onPressEscape)
+  onPressEscapeRef.current = onPressEscape
 
-  useHandleEscape(
-    useMemo(
-      () => (actualOnPressEscape && isOpen ? actualOnPressEscape : undefined),
-      [isOpen, actualOnPressEscape],
-    ),
-  )
+  // stableなcallbackを作成
+  const memoizedOnPressEscape = useMemo(() => {
+    if (!isOpen) {
+      return undefined
+    }
+    return () => {
+      lastFocusElementRef.current?.focus()
+      onPressEscapeRef.current?.()
+    }
+  }, [isOpen])
+
+  useHandleEscape(memoizedOnPressEscape)
 
   useEffect(() => {
     const focusHandler = (e: FocusEvent) => {
