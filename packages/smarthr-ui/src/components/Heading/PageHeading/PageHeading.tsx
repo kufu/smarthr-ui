@@ -78,9 +78,7 @@ export const PageHeading = memo<Props>(
       if (!h1) return
 
       const updateTitle = () => {
-        const text = h1.textContent || ''
-        const titleText = `${pageTitle || text}｜${pageTitleSuffix}`
-        document.title = titleText
+        document.title = `${pageTitle || h1.textContent || ''}｜${pageTitleSuffix}`
 
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
@@ -93,7 +91,7 @@ export const PageHeading = memo<Props>(
         document.body.prepend(pseudoTitle)
 
         requestAnimationFrame(() => {
-          pseudoTitle.textContent = titleText
+          pseudoTitle.textContent = document.title
         })
       }
 
