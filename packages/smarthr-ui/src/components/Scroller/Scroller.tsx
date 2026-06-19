@@ -14,7 +14,6 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { debounce } from '../../libs/debounce'
 import { useSectionWrapper } from '../SectioningContent'
 
 type AbstractProps = PropsWithChildren<
@@ -129,16 +128,6 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
 
       return () => {
         resizeObserver.unobserve(refCurrent)
-      }
-    }, [autoTabIndex])
-
-    useEffect(() => {
-      const debouncedAction = debounce(autoTabIndex, 100)
-
-      window.addEventListener('resize', debouncedAction)
-
-      return () => {
-        window.removeEventListener('resize', debouncedAction)
       }
     }, [autoTabIndex])
 
