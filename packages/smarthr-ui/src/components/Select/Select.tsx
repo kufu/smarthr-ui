@@ -10,6 +10,7 @@ import {
   memo,
   useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -101,24 +102,26 @@ const ActualSelect = <T extends string>(
   }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      onChange?.(e)
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+  const onChangeValueRef = useRef(onChangeValue)
+  onChangeValueRef.current = onChangeValue
+  const optionsRef = useRef<Array<Option<T> | Optgroup<T>>>(options)
+  optionsRef.current = options
 
-      if (onChangeValue) {
-        const flattenOptions = options.reduce(
-          (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
-          [] as Array<Option<T>>,
-        )
-        const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
+  const handleChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+    onChangeRef.current?.(e)
 
-        if (selectedOption) {
-          onChangeValue(selectedOption.value)
-        }
+    if (onChangeValueRef.current) {
+      const selectedOption = optionsRef.current
+        .flatMap((option) => ('value' in option ? [option] : option.options))
+        .find((option) => option.value === e.target.value)
+
+      if (selectedOption) {
+        onChangeValueRef.current(selectedOption.value)
       }
-    },
-    [onChange, onChangeValue, options],
-  )
+    }
+  }, [])
 
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap, blankOptgroup } = classNameGenerator()
