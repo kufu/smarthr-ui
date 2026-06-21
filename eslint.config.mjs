@@ -66,13 +66,12 @@ export default [
             'prefix',
             'suffix',
             'icon',
-            // オブジェクト
-            // 'options',
+            // オブジェクト・配列
+            'options',
             // 'config',
             // 'settings',
             // 'decorators',
             // 'trigger',
-            // 配列
             // 'items',
             // 'list',
             // 'data',
