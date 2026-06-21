@@ -80,7 +80,7 @@ export default [
             // 関数
             'callback',
             'onClick',
-            // 'onChange',
+            'onChange',
             // 'onOpen',
             // 'onClose',
             // 'onSelect',
