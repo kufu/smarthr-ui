@@ -8,7 +8,9 @@ import {
   type Ref,
   forwardRef,
   memo,
+  useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
@@ -86,37 +88,30 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
     const actualSuffix =
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
-    const actualHref = useMemo(() => {
-      if (href) {
-        return href
-      }
-
-      if (onClick) {
-        return ''
-      }
-
-      return undefined
-    }, [href, onClick])
+    const actualHref = href || (onClick ? '' : undefined)
     const actualRel = useMemo(
       () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
       [rel, target],
     )
     const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
 
-    const actualOnClick = useMemo(() => {
-      if (!onClick) {
-        return undefined
-      }
+    const onClickRef = useRef(onClick)
+    onClickRef.current = onClick
 
-      if (href) {
-        return onClick
-      }
+    const actualOnClick = useCallback(
+      (e: MouseEvent) => {
+        const currentOnClick = onClickRef.current
+        if (!currentOnClick) {
+          return
+        }
 
-      return (e: MouseEvent) => {
-        e.preventDefault()
-        onClick(e)
-      }
-    }, [onClick, href])
+        if (!href) {
+          e.preventDefault()
+        }
+        currentOnClick(e)
+      },
+      [href],
+    )
 
     return (
       <Anchor
@@ -125,7 +120,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         href={actualHref}
         target={target}
         rel={actualRel}
-        onClick={actualOnClick}
+        onClick={onClick ? actualOnClick : undefined}
         className={anchorClassName}
       >
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
