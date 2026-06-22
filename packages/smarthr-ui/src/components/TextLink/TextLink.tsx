@@ -41,8 +41,10 @@ const classNameGenerator = tv({
     anchor: [
       'shr-text-link shr-no-underline shr-shadow-underline',
       'forced-colors:shr-underline',
+      'focus-visible:shr-focus-indicator--outer',
       '[&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
       '[.smarthr-ui-Th_&]:shr-text-link-darken',
+      '[&_.smarthr-ui-Icon-withAlt]:shr-inline-flex',
     ],
     prefixWrapper: 'shr-me-0.25 shr-align-middle',
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
