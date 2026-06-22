@@ -2,7 +2,7 @@ packages:
   - packages/*
   - sandbox/*
 
-minimumReleaseAge: 10080
+minimumReleaseAge: 0
 
 minimumReleaseAgeExclude:
   # Security update: esbuild@0.28.1
