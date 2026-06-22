@@ -4,42 +4,35 @@ packages:
 
 minimumReleaseAge: 10080
 
-auditConfig:
-  # HINT: Next.jsに関するpatchだが、SCのチェックでしか利用していないためignoreする
-  ignoreGhsas:
-    - GHSA-h25m-26qc-wcjf
-    - GHSA-9g9p-9gw9-jx7f
-    - GHSA-5f7q-jpqc-wp7h
-    - GHSA-2g4f-4pwh-qvx6 # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20508
-    - GHSA-7r86-cg39-jmmj # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20518
-    - GHSA-23c5-xmqv-rm74 # eslintが依存しているパッケージの脆弱性だが、問題ないらしいのでignoreする https://github.com/eslint/eslint/issues/20518
-    - GHSA-f886-m6hf-6m8v
-    - GHSA-c2c7-rcm5-vvqj # tailwindcssが依存しているパッケージの脆弱性だが、影響はないのでignoreする
-    - GHSA-3v7f-55p6-f55p # tailwindcssが依存しているパッケージの脆弱性だが、影響はないのでignoreする
 minimumReleaseAgeExclude:
-  # Renovate security update: next@15.5.10
-  - next@15.5.10
-  # Renovate security update: webpack@5.104.1
-  - webpack@5.104.1
-  # Renovate security update: glob@13.0.1
-  - glob@13.0.1
-  # Renovate security update: postcss@8.5.10
-  - postcss@8.5.10
-  - tar@7.5.7
-  - tar@7.5.3
-  - tar@7.5.8
-  - tar@7.5.10
-  - tar@7.5.11
-  - tar@7.5.4
-  - fast-uri@3.1.1
-  - fast-uri@3.1.2
-  - '@babel/plugin-transform-modules-systemjs@7.29.4'
-  - brace-expansion@5.0.6
-  - ws@8.20.1
-  # Renovate security update: qs@6.15.2
-  - qs@6.15.2
-  # Renovate security update: vitest@4.1.0
-  - vitest@4.1.0
+  # Security update: esbuild@0.28.1
+  - esbuild@0.28.1
+  - '@esbuild/aix-ppc64@0.28.1'
+  - '@esbuild/android-arm@0.28.1'
+  - '@esbuild/android-arm64@0.28.1'
+  - '@esbuild/android-x64@0.28.1'
+  - '@esbuild/darwin-arm64@0.28.1'
+  - '@esbuild/darwin-x64@0.28.1'
+  - '@esbuild/freebsd-arm64@0.28.1'
+  - '@esbuild/freebsd-x64@0.28.1'
+  - '@esbuild/linux-arm@0.28.1'
+  - '@esbuild/linux-arm64@0.28.1'
+  - '@esbuild/linux-ia32@0.28.1'
+  - '@esbuild/linux-loong64@0.28.1'
+  - '@esbuild/linux-mips64el@0.28.1'
+  - '@esbuild/linux-ppc64@0.28.1'
+  - '@esbuild/linux-riscv64@0.28.1'
+  - '@esbuild/linux-s390x@0.28.1'
+  - '@esbuild/linux-x64@0.28.1'
+  - '@esbuild/netbsd-arm64@0.28.1'
+  - '@esbuild/netbsd-x64@0.28.1'
+  - '@esbuild/openbsd-arm64@0.28.1'
+  - '@esbuild/openbsd-x64@0.28.1'
+  - '@esbuild/openharmony-arm64@0.28.1'
+  - '@esbuild/sunos-x64@0.28.1'
+  - '@esbuild/win32-arm64@0.28.1'
+  - '@esbuild/win32-ia32@0.28.1'
+  - '@esbuild/win32-x64@0.28.1'
 allowBuilds:
   '@swc/core': true
   canvas: true
@@ -47,3 +40,10 @@ allowBuilds:
   sharp: true
 overrides:
   postcss@<8.5.10: ^8.5.15
+  esbuild@<=0.24.2: '>=0.28.1'
+  esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
+  tar@<=7.5.15: '>=7.5.16'
+  vite@>=7.0.0 <=7.3.4: '>=7.3.5'
+  react-draggable: 4.5.0
+  js-yaml@>=4.0.0 <=4.1.1: '>=4.1.2'
+  '@babel/core@<=7.29.0': '>=7.29.1'

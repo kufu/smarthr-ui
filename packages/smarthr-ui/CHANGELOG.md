@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [96.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.1.0...smarthr-ui-v96.1.1) (2026-06-18)
+
+
+### Bug Fixes
+
+* **BottomFixedArea:** hookの依存配列からReactNodeを削除 ([#6390](https://github.com/kufu/smarthr-ui/issues/6390)) ([1677783](https://github.com/kufu/smarthr-ui/commit/16777834808bb355187cc0db7d78070e7e13529a))
+* **Button:** Maximum update depth exceededエラーを修正 ([#6384](https://github.com/kufu/smarthr-ui/issues/6384)) ([36cd5f1](https://github.com/kufu/smarthr-ui/commit/36cd5f1fdd04e02c1a1bdb82cd199eb7067b9471))
+* **DropdownMenuButton:** hookの依存配列からReactNodeを削除 ([#6389](https://github.com/kufu/smarthr-ui/issues/6389)) ([3049435](https://github.com/kufu/smarthr-ui/commit/3049435335fdaf2d2647895a0b72e447cf865a99))
+* **Header:** Headerコンポーネントが受け取った属性を適切に設定出来ていなかったバグを修正 ([#6393](https://github.com/kufu/smarthr-ui/issues/6393)) ([f912ca2](https://github.com/kufu/smarthr-ui/commit/f912ca26531c3361958ee8b3d23a9ef193f15f14))
+* **Tooltip:** focusable な子要素への aria 属性設定とパフォーマンス改善 ([#6388](https://github.com/kufu/smarthr-ui/issues/6388)) ([a0c62c1](https://github.com/kufu/smarthr-ui/commit/a0c62c1a3dde48b1f121f5f2fde16f8b6272fcbb))
+* **usePortal:** ポータル要素の削除時にNotFoundErrorが発生する問題を修正 ([#6386](https://github.com/kufu/smarthr-ui/issues/6386)) ([1334850](https://github.com/kufu/smarthr-ui/commit/13348501820b1cd57995e342b62e8fa0eeac9855))
+
 ## [96.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.0.1...smarthr-ui-v96.1.0) (2026-06-10)
 
 
