@@ -132,52 +132,31 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const onChangeRef = useRef(onChange)
     onChangeRef.current = onChange
 
-    const buildAvailableLetters = useCallback(
-      (availableLetters: number): ReactNode => (
-        <Localizer
-          id="smarthr-ui/Textarea/availableLetters"
-          defaultText="あと{availableLetters}文字"
-          values={{ availableLetters }}
-        />
-      ),
-      [],
-    )
-
-    const buildmaxLettersExceeded = useCallback(
-      (exceededLetters: number): ReactNode => (
-        <Localizer
-          id="smarthr-ui/Textarea/maxLettersExceeded"
-          defaultText="{exceededLetters}文字オーバー"
-          values={{ exceededLetters }}
-        />
-      ),
-      [],
-    )
-
-    const buildScreenReaderMaxLettersDescription = useCallback(
-      (internalMaxLetters: number): ReactNode => (
-        <Localizer
-          id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
-          defaultText="最大{maxLetters}文字入力できます"
-          values={{ maxLetters: internalMaxLetters }}
-        />
-      ),
-      [],
-    )
-
     const getCounterMessage = useCallback(
       (counterValue: number) => {
         if (maxLetters === undefined) return
 
         if (counterValue > maxLetters) {
           // {count}文字オーバー
-          return <>{buildmaxLettersExceeded(counterValue - maxLetters)}</>
+          return (
+            <Localizer
+              id="smarthr-ui/Textarea/maxLettersExceeded"
+              defaultText="{exceededLetters}文字オーバー"
+              values={{ exceededLetters: counterValue - maxLetters }}
+            />
+          )
         }
 
         // あと{count}文字
-        return <>{buildAvailableLetters(maxLetters - counterValue)}</>
+        return (
+          <Localizer
+            id="smarthr-ui/Textarea/availableLetters"
+            defaultText="あと{availableLetters}文字"
+            values={{ availableLetters: maxLetters - counterValue }}
+          />
+        )
       },
-      [maxLetters, buildAvailableLetters, buildmaxLettersExceeded],
+      [maxLetters],
     )
 
     const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
@@ -235,7 +214,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
     // autoFocus時に、フォーカスを当てる
     useEffect(() => {
-      if (autoFocus && textareaRef && textareaRef.current) {
+      if (autoFocus && textareaRef.current) {
         textareaRef.current.focus()
       }
     }, [autoFocus])
@@ -288,7 +267,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       <span className="shr-relative">
         {body}
         <VisuallyHiddenText id={maxLettersNoticeId}>
-          {buildScreenReaderMaxLettersDescription(maxLetters)}
+          <Localizer
+            id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
+            defaultText="最大{maxLetters}文字入力できます"
+            values={{ maxLetters }}
+          />
         </VisuallyHiddenText>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>
