@@ -84,7 +84,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           updateFiles(Array.from(e.target.files ?? []))
         }
       },
-      [isUpdatingFilesDirectly, updateFiles],
+      [updateFiles],
     )
 
     const handleDelete = useCallback(
@@ -108,7 +108,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         inputRef.current.files = buff.files
         isUpdatingFilesDirectly.current = false
       },
-      [files, isUpdatingFilesDirectly, inputRef, updateFiles],
+      [files, updateFiles],
     )
 
     return (
