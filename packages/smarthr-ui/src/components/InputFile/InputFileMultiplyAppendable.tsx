@@ -66,36 +66,33 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       () => inputRef.current,
     )
 
-    const updateInputFiles = useCallback(
+    const onChangeRef = useRef(onChange)
+    onChangeRef.current = onChange
+
+    const filesRef = useRef(files)
+    filesRef.current = files
+
+    const updateInputFiles = useCallback((newFiles: File[]) => {
+      if (!inputRef.current) {
+        return
+      }
+      const buff = new DataTransfer()
+      newFiles.forEach((file) => {
+        buff.items.add(file)
+      })
+
+      isUpdatingFilesDirectly.current = true
+      inputRef.current.files = buff.files
+      isUpdatingFilesDirectly.current = false
+    }, [])
+
+    const updateFiles = useCallback(
       (newFiles: File[]) => {
-        if (!inputRef.current) {
-          return
-        }
-        const buff = new DataTransfer()
-        newFiles.forEach((file) => {
-          buff.items.add(file)
-        })
-
-        isUpdatingFilesDirectly.current = true
-        inputRef.current.files = buff.files
-        isUpdatingFilesDirectly.current = false
+        onChangeRef.current?.(newFiles)
+        updateInputFiles(newFiles)
+        setFiles(newFiles)
       },
-      [inputRef],
-    )
-
-    const updateFiles = useMemo(
-      () =>
-        onChange
-          ? (newFiles: File[]) => {
-              onChange(newFiles)
-              updateInputFiles(newFiles)
-              setFiles(newFiles)
-            }
-          : (newFiles: File[]) => {
-              setFiles(newFiles)
-              updateInputFiles(newFiles)
-            },
-      [onChange, updateInputFiles],
+      [updateInputFiles],
     )
 
     const handleChange = useCallback(
@@ -107,9 +104,9 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
         const newFiles = Array.from(e.target.files ?? [])
 
-        updateFiles([...files, ...newFiles])
+        updateFiles([...filesRef.current, ...newFiles])
       },
-      [files, isUpdatingFilesDirectly, updateFiles],
+      [updateFiles],
     )
 
     const handleDelete = useCallback(
@@ -119,14 +116,14 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         }
 
         const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = files.filter((_, i) => index !== i)
+        const newFiles = filesRef.current.filter((_, i) => index !== i)
 
         // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
         inputRef.current.value = ''
 
         updateFiles(newFiles)
       },
-      [files, updateFiles],
+      [updateFiles],
     )
 
     return (
