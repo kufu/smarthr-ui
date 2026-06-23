@@ -70,16 +70,13 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       () => inputRef.current,
     )
 
-    const updateFiles = useMemo(
-      () =>
-        onChange
-          ? (newFiles: File[]) => {
-              onChange(newFiles)
-              setFiles(newFiles)
-            }
-          : setFiles,
-      [onChange],
-    )
+    const onChangeRef = useRef(onChange)
+    onChangeRef.current = onChange
+
+    const updateFiles = useCallback((newFiles: File[]) => {
+      onChangeRef.current?.(newFiles)
+      setFiles(newFiles)
+    }, [])
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
