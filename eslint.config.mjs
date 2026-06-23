@@ -68,6 +68,7 @@ export default [
             'icon',
             // オブジェクト・配列
             'options',
+            'files',
             // 'config',
             // 'settings',
             // 'decorators',
