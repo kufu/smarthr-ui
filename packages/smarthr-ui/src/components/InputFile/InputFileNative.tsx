@@ -73,6 +73,9 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     const onChangeRef = useRef(onChange)
     onChangeRef.current = onChange
 
+    const filesRef = useRef(files)
+    filesRef.current = files
+
     const updateFiles = useCallback((newFiles: File[]) => {
       onChangeRef.current?.(newFiles)
       setFiles(newFiles)
@@ -94,7 +97,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         }
 
         const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = files.filter((_, i) => index !== i)
+        const newFiles = filesRef.current.filter((_, i) => index !== i)
 
         updateFiles(newFiles)
 
@@ -108,7 +111,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         inputRef.current.files = buff.files
         isUpdatingFilesDirectly.current = false
       },
-      [files, updateFiles],
+      [updateFiles],
     )
 
     return (
