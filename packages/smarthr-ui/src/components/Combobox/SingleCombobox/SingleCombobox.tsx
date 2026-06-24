@@ -136,36 +136,32 @@ const SuffixButtons = memo<SuffixButtonsProps>(
   ({
     onClickClear,
     clearButtonRef,
-    onClickIcon,
+    onClickIcon: onDelegateClickIcon,
     caretIconColor,
     destroyButtonIconAlt,
     classNames,
-  }) => {
-    const onDelegateClickIcon = onClickIcon
-
-    return (
-      <>
-        <UnstyledButton
-          onClick={onClickClear}
-          ref={clearButtonRef}
-          className={classNames.clearButton}
-        >
-          <FaCircleXmarkIcon
-            color="TEXT_BLACK"
-            alt={destroyButtonIconAlt}
-            className={classNames.clearButtonIcon}
-          />
-        </UnstyledButton>
-        <span
-          role="presentation"
-          onClick={onDelegateClickIcon}
-          className={classNames.caretDownLayout}
-        >
-          <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
-        </span>
-      </>
-    )
-  },
+  }) => (
+    <>
+      <UnstyledButton
+        onClick={onClickClear}
+        ref={clearButtonRef}
+        className={classNames.clearButton}
+      >
+        <FaCircleXmarkIcon
+          color="TEXT_BLACK"
+          alt={destroyButtonIconAlt}
+          className={classNames.clearButtonIcon}
+        />
+      </UnstyledButton>
+      <span
+        role="presentation"
+        onClick={onDelegateClickIcon}
+        className={classNames.caretDownLayout}
+      >
+        <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
+      </span>
+    </>
+  ),
 )
 
 const ActualSingleCombobox = <T,>(
