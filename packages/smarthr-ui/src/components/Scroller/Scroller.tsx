@@ -5,7 +5,6 @@ import {
   type ComponentType,
   type PropsWithChildren,
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -68,14 +67,20 @@ const classNameGenerator = tv({
       className: 'shr-overflow-scroll',
     },
   ],
-  defaultVariants: {
-    direction: 'vertical',
-    styleType: 'auto',
-  },
 })
 
 export const Scroller = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', direction, styleType, className, children, ...rest }, ref) => {
+  (
+    {
+      as: Component = 'div',
+      direction = 'vertical',
+      styleType = 'auto',
+      className,
+      children,
+      ...rest
+    },
+    ref,
+  ) => {
     const wrapperRef = useRef<HTMLDivElement>(null)
 
     useImperativeHandle(ref, () => wrapperRef.current!)
@@ -92,11 +97,13 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       [direction, styleType, className],
     )
 
-    const autoTabIndex = useCallback(() => {
-      let nextTabIndex: 0 | undefined = undefined
+    useEffect(() => {
       const refCurrent = wrapperRef.current
+      if (!refCurrent) return
 
-      if (refCurrent) {
+      const autoTabIndex = () => {
+        let nextTabIndex: 0 | undefined = undefined
+
         switch (direction) {
           case 'vertical':
             nextTabIndex = refCurrent.scrollHeight > refCurrent.clientHeight ? 0 : undefined
@@ -112,16 +119,11 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
                 : undefined
             break
         }
+
+        setTabIndex(nextTabIndex)
       }
 
-      setTabIndex(nextTabIndex)
-    }, [direction])
-
-    useEffect(() => {
       autoTabIndex()
-
-      const refCurrent = wrapperRef.current
-      if (!refCurrent) return
 
       const resizeObserver = new ResizeObserver(autoTabIndex)
       resizeObserver.observe(refCurrent)
@@ -129,7 +131,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       return () => {
         resizeObserver.unobserve(refCurrent)
       }
-    }, [autoTabIndex])
+    }, [direction])
 
     const Wrapper = useSectionWrapper(Component)
     const body = (
