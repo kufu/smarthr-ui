@@ -112,53 +112,42 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const onClickRef = useRef(onClick)
-  onClickRef.current = onClick
-  const hasHrefTemplate = !!hrefTemplate
-
-  const hrefTemplateRef = useRef(hrefTemplate)
-  hrefTemplateRef.current = hrefTemplate
+  const propsRef = useRef({ onClick, hrefTemplate })
+  propsRef.current = { onClick, hrefTemplate }
 
   const stableHrefTemplate = useCallback(
-    (pageNumber: number) => hrefTemplateRef.current!(pageNumber),
+    (pageNumber: number) => propsRef.current.hrefTemplate!(pageNumber),
     [],
   )
 
-  const onDelegateClick = useMemo(() => {
-    if (!onClickRef.current) {
-      return undefined
+  const onDelegateClick = useCallback((e: MouseEvent<HTMLElement>) => {
+    if (!propsRef.current.onClick) {
+      return
     }
 
-    if (hasHrefTemplate) {
-      return (e: MouseEvent<HTMLElement>) => {
-        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
+    if (propsRef.current.hrefTemplate) {
+      const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
-        if (!anchor) {
-          return
-        }
-
-        const href = (anchor as HTMLAnchorElement).href
-
-        if (href) {
-          ;(
-            onClickRef.current as ((href: string, e: MouseEvent<HTMLElement>) => void) | undefined
-          )?.(href, e)
-        }
+      if (!anchor) {
+        return
       }
-    }
 
-    return (e: MouseEvent<HTMLElement>) => {
+      const href = (anchor as HTMLAnchorElement).href
+
+      if (href) {
+        ;(propsRef.current.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(href, e)
+      }
+    } else {
       const button = getTargetDelegateElement(e, BUTTON_REGEX)
 
       if (button) {
-        ;(
-          onClickRef.current as
-            | ((pageNumber: number, e: MouseEvent<HTMLElement>) => void)
-            | undefined
-        )?.(parseInt((button as HTMLButtonElement).value, 10), e)
+        ;(propsRef.current.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
+          parseInt((button as HTMLButtonElement).value, 10),
+          e,
+        )
       }
     }
-  }, [hasHrefTemplate])
+  }, [])
 
   const navigationLabel = useMemo(
     () =>
