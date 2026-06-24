@@ -7,6 +7,8 @@ import {
   type MouseEvent,
   type ReactNode,
   type Ref,
+  type RefObject,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -115,6 +117,56 @@ const classNameGenerator = tv({
     },
   },
 })
+
+type SuffixButtonsProps = {
+  onClickClear: (e: MouseEvent) => void
+  clearButtonRef: RefObject<HTMLButtonElement>
+  onClickIcon: (e: MouseEvent) => void
+  caretIconColor: string
+  destroyButtonIconAlt: string
+  classNames: {
+    clearButton: string
+    clearButtonIcon: string
+    caretDownLayout: string
+    caretDownIcon: string
+  }
+}
+
+const SuffixButtons = memo<SuffixButtonsProps>(
+  ({
+    onClickClear,
+    clearButtonRef,
+    onClickIcon,
+    caretIconColor,
+    destroyButtonIconAlt,
+    classNames,
+  }) => {
+    const onDelegateClickIcon = onClickIcon
+
+    return (
+      <>
+        <UnstyledButton
+          onClick={onClickClear}
+          ref={clearButtonRef}
+          className={classNames.clearButton}
+        >
+          <FaCircleXmarkIcon
+            color="TEXT_BLACK"
+            alt={destroyButtonIconAlt}
+            className={classNames.clearButtonIcon}
+          />
+        </UnstyledButton>
+        <span
+          role="presentation"
+          onClick={onDelegateClickIcon}
+          className={classNames.caretDownLayout}
+        >
+          <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
+        </span>
+      </>
+    )
+  },
+)
 
 const ActualSingleCombobox = <T,>(
   {
@@ -299,7 +351,6 @@ const ActualSingleCombobox = <T,>(
     },
     [disabled, readOnly],
   )
-  const onDelegateClickIcon = onClickInput
   const actualOnChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     propsRef.current.onChange?.(e)
     propsRef.current.onChangeInput?.(e)
@@ -438,26 +489,19 @@ const ActualSingleCombobox = <T,>(
         error={error}
         prefix={prefix}
         suffix={
-          <>
-            <UnstyledButton
-              onClick={onClickClear}
-              ref={clearButtonRef}
-              className={classNames.clearButton}
-            >
-              <FaCircleXmarkIcon
-                color="TEXT_BLACK"
-                alt={destroyButtonIconAlt}
-                className={classNames.clearButtonIcon}
-              />
-            </UnstyledButton>
-            <span
-              role="presentation"
-              onClick={onDelegateClickIcon}
-              className={classNames.caretDownLayout}
-            >
-              <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
-            </span>
-          </>
+          <SuffixButtons
+            onClickClear={onClickClear}
+            clearButtonRef={clearButtonRef}
+            onClickIcon={onClickInput}
+            caretIconColor={caretIconColor}
+            destroyButtonIconAlt={destroyButtonIconAlt}
+            classNames={{
+              clearButton: classNames.clearButton,
+              clearButtonIcon: classNames.clearButtonIcon,
+              caretDownLayout: classNames.caretDownLayout,
+              caretDownIcon: classNames.caretDownIcon,
+            }}
+          />
         }
         className={classNames.input}
         data-smarthr-ui-input="true"
