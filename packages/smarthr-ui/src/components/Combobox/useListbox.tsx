@@ -102,6 +102,7 @@ export const useListbox = <T,>({
       return optionsRef.current.find((option) => current.id === option.id) ?? null
     })
     // TODO: optionsの安定化方法を検討中
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [options])
 
   const moveActiveOptionIndex = useCallback(
