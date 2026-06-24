@@ -314,22 +314,19 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [isOpen])
 
-  const actualOnClickClose = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      lastFocusElementRef.current?.focus()
-      onClickClose?.(e)
-    },
-    [onClickClose],
-  )
+  // 外部propsをrefに保存
+  const propsRef = useRef({ onClickClose, onPressEscape })
+  propsRef.current = { onClickClose, onPressEscape }
 
-  // 外部propsのonPressEscapeをrefに保存
-  const onPressEscapeRef = useRef(onPressEscape)
-  onPressEscapeRef.current = onPressEscape
+  const actualOnClickClose = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    lastFocusElementRef.current?.focus()
+    propsRef.current.onClickClose?.(e)
+  }, [])
 
   // stableなcallbackを作成
   const memoizedOnPressEscape = useCallback(() => {
     lastFocusElementRef.current?.focus()
-    onPressEscapeRef.current?.()
+    propsRef.current.onPressEscape?.()
   }, [])
 
   useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
