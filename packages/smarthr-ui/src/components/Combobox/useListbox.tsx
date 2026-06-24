@@ -24,7 +24,6 @@ import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
-import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
 
 import type { ComboboxItem, ComboboxOption } from './types'
@@ -82,11 +81,60 @@ export const useListbox = <T,>({
 }: Props<T>) => {
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
   const { localize } = useIntl()
 
   const propsRef = useRef({ onAdd, onSelect })
   propsRef.current = { onAdd, onSelect }
+
+  const optionsRef = useRef(options)
+  optionsRef.current = options
+
+  // useActiveOptionの内容を統合
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+
+  useEffect(() => {
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return optionsRef.current.find((option) => current.id === option.id) ?? null
+    })
+    // TODO: optionsの安定化方法を検討中
+  }, [options])
+
+  const moveActiveOptionIndex = useCallback(
+    (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
+      const opts = optionsRef.current
+
+      if (opts.every((option) => option.item.disabled)) {
+        return
+      }
+
+      const currentActiveIndex =
+        currentActive === null ? -1 : opts.findIndex((option) => option.id === currentActive.id)
+      let nextIndex = 0
+
+      if (currentActiveIndex !== -1) {
+        nextIndex = (currentActiveIndex + delta + opts.length) % opts.length
+      } else if (delta !== 1) {
+        nextIndex = opts.length - 1
+      }
+
+      const nextActive = opts[nextIndex]
+
+      if (nextActive) {
+        if (nextActive.item.disabled) {
+          // skip disabled item
+          moveActiveOptionIndex(nextActive, delta)
+        } else {
+          setActiveOption(nextActive)
+        }
+      }
+    },
+    [],
+  )
 
   const activeOptionRef = useRef({ activeOption, setActiveOption, moveActiveOptionIndex })
   activeOptionRef.current = { activeOption, setActiveOption, moveActiveOptionIndex }
