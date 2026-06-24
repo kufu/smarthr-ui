@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
+import { useCallback, useId, useMemo, useRef } from 'react'
 import innerText from 'react-innertext'
 
 import { areItemsEqual, convertMatchableString } from './helper'
@@ -23,9 +23,13 @@ export const useSingleOptions = <T>({
 }: BaseUseOptionsProps<T> & {
   selected: ComboboxItem<T> | null
 }) => {
+  const selectedRef = useRef(selected)
+  selectedRef.current = selected
+
   const isSelected = useCallback(
-    (item: ComboboxItem<T>) => selected !== null && areItemsEqual(selected, item),
-    [selected],
+    (item: ComboboxItem<T>) =>
+      selectedRef.current !== null && areItemsEqual(selectedRef.current, item),
+    [],
   )
 
   return useOptions<T>(rest, isSelected)
