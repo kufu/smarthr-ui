@@ -1,3 +1,4 @@
+// eslint-disable-next-line smarthr/require-barrel-import
 import './configureTwMerge'
 
 // components
@@ -138,17 +139,20 @@ export { useDevice, DeviceProvider } from './hooks/useDevice'
 export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
 
 // themes
-export { createTheme } from './themes/createTheme'
+export {
+  createTheme,
+  createMediaQuery,
+  defaultMediaQuery,
+  defaultColor,
+  defaultInteraction,
+  defaultBorder,
+  defaultRadius,
+  defaultFontSize,
+  defaultLeading,
+  defaultSpacing,
+  defaultBreakpoint,
+} from './themes'
 export { ThemeProvider } from './hooks/useTheme'
-export { createMediaQuery, defaultMediaQuery } from './themes/createMediaQuery'
-export { defaultColor } from './themes/createColor'
-export { defaultInteraction } from './themes/createInteraction'
-export { defaultBorder } from './themes/createBorder'
-export { defaultRadius } from './themes/createRadius'
-export { defaultFontSize } from './themes/createFontSize'
-export { defaultLeading } from './themes/createLeading'
-export { defaultSpacing } from './themes/createSpacing'
-export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // localization
 export {
