@@ -1,3 +1,4 @@
+/* eslint-disable smarthr/require-barrel-import */
 import { locale as enUs } from './en_us'
 import { locale as idId } from './id_id'
 import { locale as ja } from './ja'
