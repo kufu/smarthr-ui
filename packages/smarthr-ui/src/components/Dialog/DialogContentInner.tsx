@@ -127,16 +127,14 @@ export const DialogContentInner: FC<Props> = ({
   onPressEscapeRef.current = onPressEscape
 
   // stableなcallbackを作成
-  const memoizedOnPressEscape = useMemo(() => {
-    if (!isOpen || !onPressEscapeRef.current) {
-      return undefined
-    }
-    return () => {
+  const memoizedOnPressEscape = useMemo(
+    () => () => {
       onPressEscapeRef.current?.()
-    }
-  }, [isOpen])
+    },
+    [],
+  )
 
-  useHandleEscape(memoizedOnPressEscape)
+  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
 
   useBodyScrollLock(isOpen)
 
