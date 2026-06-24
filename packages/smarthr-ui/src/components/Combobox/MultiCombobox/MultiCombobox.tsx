@@ -191,6 +191,36 @@ const ActualMultiCombobox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
+
+  const propsRef = useRef({
+    onChange,
+    onChangeInput,
+    onAdd,
+    onSelect,
+    onDelete,
+    onChangeSelected,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    isItemSelected,
+    selectedItems,
+  })
+  propsRef.current = {
+    onChange,
+    onChangeInput,
+    onAdd,
+    onSelect,
+    onDelete,
+    onChangeSelected,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    isItemSelected,
+    selectedItems,
+  }
+
+  const stateRef = useRef({ isFocused, highlighted, isComposing })
+  stateRef.current = { isFocused, highlighted, isComposing }
   const { options } = useMultiOptions({
     items,
     selected: selectedItems,
@@ -199,49 +229,51 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
   })
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
-  const actualOnDelete = useMemo(() => {
-    const handlers: Array<(item: ComboboxItem<T>) => void> = []
+  const actualOnDelete = useCallback((item: ComboboxItem<T>) => {
+    const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
-    if (onDelete) {
-      handlers.push((item: ComboboxItem<T>) => onDelete(item))
+    if (propsRef.current.onDelete) {
+      handlers.push((deletingItem: ComboboxItem<T>) => propsRef.current.onDelete!(deletingItem))
     }
-    if (onChangeSelected) {
-      handlers.push((item: ComboboxItem<T>) =>
-        onChangeSelected(selectedItems.filter((selected) => !areItemsEqual(selected, item))),
+    if (propsRef.current.onChangeSelected) {
+      handlers.push((deletingItem: ComboboxItem<T>) =>
+        propsRef.current.onChangeSelected!(
+          propsRef.current.selectedItems.filter(
+            (selected) => !areItemsEqual(selected, deletingItem),
+          ),
+        ),
       )
     }
 
-    if (handlers.length === 0) {
-      return NOOP
-    }
-
-    return (item: ComboboxItem<T>) => {
+    if (handlers.length > 0) {
       // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
         handlers.forEach((h) => h(item))
       })
     }
-  }, [selectedItems, onChangeSelected, onDelete])
+  }, [])
   const actualOnSelect = useCallback(
     (selected: ComboboxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = selectedItems.find((item) => areItemsEqual(item, selected))
+        const matchedSelectedItem = propsRef.current.selectedItems.find((item) =>
+          areItemsEqual(item, selected),
+        )
 
         if (matchedSelectedItem === undefined) {
-          onSelect?.(selected)
-          onChangeSelected?.(selectedItems.concat(selected))
+          propsRef.current.onSelect?.(selected)
+          propsRef.current.onChangeSelected?.(propsRef.current.selectedItems.concat(selected))
 
           // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          propsRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         } else if (matchedSelectedItem.deletable !== false) {
           actualOnDelete(selected)
         }
       })
     },
-    [selectedItems, actualOnDelete, onChangeSelected, onSelect, onChangeInput],
+    [actualOnDelete],
   )
 
   const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({
@@ -266,159 +298,124 @@ const ActualMultiCombobox = <T,>(
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
-  const focus = useMemo(() => {
-    const baseAction = () => {
-      setIsFocused(true)
-    }
+  const focus = useCallback(() => {
+    propsRef.current.onFocus?.()
+    setIsFocused(true)
+  }, [])
 
-    if (onFocus) {
-      return () => {
-        onFocus()
-        baseAction()
-      }
-    }
-
-    return baseAction
-  }, [onFocus])
-  const blur = useMemo(() => {
-    if (!isFocused) {
-      return NOOP
-    }
-
-    const baseAction = () => {
+  const blur = useCallback(() => {
+    if (stateRef.current.isFocused) {
+      propsRef.current.onBlur?.()
       setIsFocused(false)
       resetDeletionButtonFocus()
     }
+  }, [resetDeletionButtonFocus])
 
-    if (onBlur) {
-      return () => {
-        onBlur()
-        baseAction()
-      }
-    }
-
-    return baseAction
-  }, [isFocused, onBlur, resetDeletionButtonFocus])
-
-  const outerClickRef = useMemo(() => [outerRef, listBoxRef], [outerRef, listBoxRef])
+  const outerClickRef = useMemo(() => [outerRef, listBoxRef], [listBoxRef])
   useOuterClick(outerClickRef, blur)
 
-  const highlightedRef = useRef(highlighted)
-
   useEffect(() => {
-    highlightedRef.current = highlighted
-  }, [highlighted])
-
-  useEffect(() => {
-    if (highlightedRef.current) {
+    if (stateRef.current.highlighted) {
       setHighlighted(false)
       inputRef.current?.select()
     } else {
       setInputValueIfUncontrolled('')
     }
-  }, [selectedItems, inputRef, setInputValueIfUncontrolled])
+  }, [selectedItems, setInputValueIfUncontrolled, inputRef])
 
   useEffect(() => {
     if (isFocused) {
       inputRef.current?.focus()
     }
-  }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
+  }, [isFocused, setInputValueIfUncontrolled, selectedItems, inputRef])
 
-  const onDelegateKeyDown = useMemo(
-    () =>
-      isComposing
-        ? undefined
-        : (e: KeyboardEvent<HTMLDivElement>) => {
-            if (ESCAPE_KEY_REGEX.test(e.key)) {
-              e.stopPropagation()
-              blur()
-            } else if (e.key === 'Tab') {
-              if (isFocused) {
-                // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-                inputRef.current?.focus()
-              }
+  const isInputEmpty = !inputValue
 
-              blur()
-            } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
-              e.stopPropagation()
-              focusPrevDeletionButton()
-            } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
-              e.stopPropagation()
-              focusNextDeletionButton()
-            } else if (
-              e.key === 'Backspace' &&
-              !inputValue &&
-              selectedItems.length > 0 &&
-              selectedItems[selectedItems.length - 1].deletable !== false
-            ) {
-              e.preventDefault()
-              e.stopPropagation()
+  const onDelegateKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (stateRef.current.isComposing) return
 
-              const lastItem = selectedItems[selectedItems.length - 1]
+      if (ESCAPE_KEY_REGEX.test(e.key)) {
+        e.stopPropagation()
+        blur()
+      } else if (e.key === 'Tab') {
+        if (stateRef.current.isFocused) {
+          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+          inputRef.current?.focus()
+        }
 
-              actualOnDelete(lastItem)
-              setHighlighted(true)
-              setInputValueIfUncontrolled(innerText(lastItem.label))
-            } else {
-              e.stopPropagation()
-              inputRef.current?.focus()
-              resetDeletionButtonFocus()
-            }
+        blur()
+      } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
+        e.stopPropagation()
+        focusPrevDeletionButton()
+      } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
+        e.stopPropagation()
+        focusNextDeletionButton()
+      } else if (
+        e.key === 'Backspace' &&
+        isInputEmpty &&
+        propsRef.current.selectedItems.length > 0 &&
+        propsRef.current.selectedItems[propsRef.current.selectedItems.length - 1].deletable !==
+          false
+      ) {
+        e.preventDefault()
+        e.stopPropagation()
 
-            onKeyDownListBox(e)
-          },
+        const lastItem = propsRef.current.selectedItems[propsRef.current.selectedItems.length - 1]
+
+        actualOnDelete(lastItem)
+        setHighlighted(true)
+        setInputValueIfUncontrolled(innerText(lastItem.label))
+      } else {
+        e.stopPropagation()
+        inputRef.current?.focus()
+        resetDeletionButtonFocus()
+      }
+
+      onKeyDownListBox(e)
+    },
     [
       blur,
       focusNextDeletionButton,
       focusPrevDeletionButton,
       onKeyDownListBox,
-      inputRef,
-      isComposing,
-      isFocused,
       resetDeletionButtonFocus,
       actualOnDelete,
-      inputValue,
-      selectedItems,
+      isInputEmpty,
       setInputValueIfUncontrolled,
+      inputRef,
     ],
   )
 
-  const onDelegateClick = useMemo(
-    () =>
-      disabled || isFocused
-        ? undefined
-        : (e: MouseEvent<HTMLElement>) => {
-            if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
-              focus()
-            }
-          },
-    [isFocused, disabled, focus],
+  const onDelegateClick = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      if (!disabled && !stateRef.current.isFocused) {
+        if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
+          focus()
+        }
+      }
+    },
+    [disabled, focus],
   )
-  const actualOnChangeInput = useMemo(() => {
-    const handlers = [onChange, onChangeInput].filter((h) => !!h)
-    const onSetValue = (e: ChangeEvent<HTMLInputElement>) => {
-      setInputValueIfUncontrolled(e.currentTarget.value)
-    }
+  const actualOnChangeInput = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const handlers = [propsRef.current.onChange, propsRef.current.onChangeInput].filter(
+        (h) => !!h,
+      )
 
-    if (handlers.length === 0) {
-      return onSetValue
-    }
-
-    return (e: ChangeEvent<HTMLInputElement>) => {
       handlers.forEach((h) => h(e))
-      onSetValue(e)
-    }
-  }, [onChange, onChangeInput, setInputValueIfUncontrolled])
-  const onFocusInput = useMemo(
-    () =>
-      isFocused
-        ? resetDeletionButtonFocus
-        : () => {
-            resetDeletionButtonFocus()
-            focus()
-          },
-    [isFocused, focus, resetDeletionButtonFocus],
+      setInputValueIfUncontrolled(e.currentTarget.value)
+    },
+    [setInputValueIfUncontrolled],
   )
+  const onFocusInput = useCallback(() => {
+    if (stateRef.current.isFocused) {
+      resetDeletionButtonFocus()
+    } else {
+      resetDeletionButtonFocus()
+      focus()
+    }
+  }, [resetDeletionButtonFocus, focus])
   const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
   const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
@@ -431,16 +428,10 @@ const ActualMultiCombobox = <T,>(
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const onDelegateKeyPress = useMemo(
-    () =>
-      onKeyPress
-        ? (e: KeyboardEvent<HTMLInputElement>) => {
-            preventDefaultWithPressEnter(e)
-            onKeyPress(e)
-          }
-        : preventDefaultWithPressEnter,
-    [onKeyPress],
-  )
+  const onDelegateKeyPress = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    preventDefaultWithPressEnter(e)
+    propsRef.current.onKeyPress?.(e)
+  }, [])
 
   const selectedListId = useId()
 
@@ -569,12 +560,11 @@ const MemoizedCaretDown = memo<{
   isFocused: boolean
 }>(({ className, iconStyle, disabled, isFocused }) => {
   const theme = useTheme()
-  const caretIconColor = useMemo(() => {
-    if (isFocused) return theme.textColor.black
-    if (disabled) return theme.textColor.disabled
-
-    return theme.textColor.grey
-  }, [disabled, isFocused, theme.textColor])
+  const caretIconColor = isFocused
+    ? theme.textColor.black
+    : disabled
+      ? theme.textColor.disabled
+      : theme.textColor.grey
 
   return (
     <div className={className}>
