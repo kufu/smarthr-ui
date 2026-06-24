@@ -85,6 +85,12 @@ export const useListbox = <T,>({
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
   const { localize } = useIntl()
 
+  const propsRef = useRef({ onAdd, onSelect })
+  propsRef.current = { onAdd, onSelect }
+
+  const activeOptionRef = useRef({ activeOption, setActiveOption, moveActiveOptionIndex })
+  activeOptionRef.current = { activeOption, setActiveOption, moveActiveOptionIndex }
+
   useEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
@@ -148,7 +154,7 @@ export const useListbox = <T,>({
       height,
     })
     setTriggerWidth(rect.width)
-  }, [listBoxRef, triggerRef])
+  }, [triggerRef])
 
   const activeRef = useRef<HTMLButtonElement>(null)
 
@@ -171,7 +177,7 @@ export const useListbox = <T,>({
     } else if (activeRect.bottom > containerRect.bottom) {
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
-  }, [activeOption, listBoxRef, navigationType])
+  }, [activeOption, navigationType])
 
   useEnhancedEffect(() => {
     if (isExpanded) {
@@ -180,64 +186,51 @@ export const useListbox = <T,>({
     }
   }, [calculateRect, isExpanded, options])
 
-  const onKeyDownListBox = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
-      setNavigationType('key')
+  const onKeyDownListBox = useCallback((e: KeyboardEvent<HTMLElement>) => {
+    setNavigationType('key')
 
-      if (KEY_DOWN_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(activeOption, 1)
-      } else if (KEY_UP_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(activeOption, -1)
-      } else if (e.key === 'Enter') {
-        if (activeOption === null) {
-          return
-        }
-
-        e.stopPropagation()
-
-        if (!activeOption.isNew) {
-          onSelect(activeOption.item)
-        } else if (onAdd) {
-          onAdd(activeOption.item.value)
-        }
-      } else {
-        setActiveOption(null)
+    if (KEY_DOWN_REGEX.test(e.key)) {
+      e.stopPropagation()
+      activeOptionRef.current.moveActiveOptionIndex(activeOptionRef.current.activeOption, 1)
+    } else if (KEY_UP_REGEX.test(e.key)) {
+      e.stopPropagation()
+      activeOptionRef.current.moveActiveOptionIndex(activeOptionRef.current.activeOption, -1)
+    } else if (e.key === 'Enter') {
+      if (activeOptionRef.current.activeOption === null) {
+        return
       }
-    },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
-  )
+
+      e.stopPropagation()
+
+      if (!activeOptionRef.current.activeOption.isNew) {
+        propsRef.current.onSelect(activeOptionRef.current.activeOption.item)
+      } else if (propsRef.current.onAdd) {
+        propsRef.current.onAdd(activeOptionRef.current.activeOption.item.value)
+      }
+    } else {
+      activeOptionRef.current.setActiveOption(null)
+    }
+  }, [])
 
   const { createPortal } = usePortal()
   const listBoxId = useId()
   const { items: partialOptions, renderIntersection } = usePartialRendering({
     items: options,
-    minLength: useMemo(
-      () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
-      [activeOption, options],
-    ),
+    minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
   })
 
-  const handleAdd = useMemo(
-    () =>
-      onAdd
-        ? (option: ComboboxOption<T>) => {
-            // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-            requestAnimationFrame(() => {
-              onAdd(option.item.value)
-            })
-          }
-        : undefined,
-    [onAdd],
-  )
-  const handleSelect = useCallback(
-    (option: ComboboxOption<T>) => {
-      onSelect(option.item)
-    },
-    [onSelect],
-  )
+  const handleAdd = useCallback((option: ComboboxOption<T>) => {
+    if (propsRef.current.onAdd) {
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        propsRef.current.onAdd?.(option.item.value)
+      })
+    }
+  }, [])
+  const handleSelect = useCallback((option: ComboboxOption<T>) => {
+    propsRef.current.onSelect(option.item)
+  }, [])
   const handleHoverOption = useCallback(
     (option: ComboboxOption<T>) => {
       setNavigationType('pointer')
