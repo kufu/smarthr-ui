@@ -83,11 +83,8 @@ export const useListbox = <T,>({
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { localize } = useIntl()
 
-  const propsRef = useRef({ onAdd, onSelect })
-  propsRef.current = { onAdd, onSelect }
-
-  const optionsRef = useRef(options)
-  optionsRef.current = options
+  const propsRef = useRef({ onAdd, onSelect, options })
+  propsRef.current = { onAdd, onSelect, options }
 
   // useActiveOptionの内容を統合
   const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
@@ -99,14 +96,14 @@ export const useListbox = <T,>({
         return null
       }
 
-      return optionsRef.current.find((option) => current.id === option.id) ?? null
+      return propsRef.current.options.find((option) => current.id === option.id) ?? null
     })
     // TODO: optionsの安定化方法を検討中
   }, [options])
 
   const moveActiveOptionIndex = useCallback(
     (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
-      const opts = optionsRef.current
+      const opts = propsRef.current.options
 
       if (opts.every((option) => option.item.disabled)) {
         return
