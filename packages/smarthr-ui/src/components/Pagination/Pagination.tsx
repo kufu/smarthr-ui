@@ -6,6 +6,7 @@ import {
   type HTMLAttributes,
   type MouseEvent,
   memo,
+  useCallback,
   useMemo,
   useRef,
 } from 'react'
@@ -115,6 +116,14 @@ const ActualPagination: FC<Props> = ({
   onClickRef.current = onClick
   const hasHrefTemplate = !!hrefTemplate
 
+  const hrefTemplateRef = useRef(hrefTemplate)
+  hrefTemplateRef.current = hrefTemplate
+
+  const stableHrefTemplate = useCallback(
+    (pageNumber: number) => hrefTemplateRef.current!(pageNumber),
+    [],
+  )
+
   const onDelegateClick = useMemo(() => {
     if (!onClickRef.current) {
       return undefined
@@ -168,7 +177,7 @@ const ActualPagination: FC<Props> = ({
           current={current}
           padding={padding}
           withoutNumbers={withoutNumbers}
-          hrefTemplate={hrefTemplate}
+          hrefTemplate={hrefTemplate ? stableHrefTemplate : undefined}
           classNames={classNames}
           linkAs={linkAs}
         />
