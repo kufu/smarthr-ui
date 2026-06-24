@@ -57,9 +57,20 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
+      'smarthr/best-practice-for-consecutive-definition-list': 'off',
+      'smarthr/best-practice-for-default-props': 'off',
       'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
+      'smarthr/design-system-guideline-bulk-action-row-button': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
+      'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
+      'smarthr/best-practice-for-no-unnecessary-variable': [
+        'error',
+        {
+          fix: false,
+          maxComplexity: 3,
+        },
+      ],
       'no-restricted-syntax': [
         'error',
         {
@@ -86,9 +97,11 @@ export default [
     ],
   },
   {
-    files: ['**/*.test.tsx', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
     rules: {
       'smarthr/require-i18n-text': 'off',
+      'smarthr/best-practice-for-lazy-variable': 'off',
+      'smarthr/best-practice-for-no-unnecessary-variable': 'off',
     },
   },
   {
