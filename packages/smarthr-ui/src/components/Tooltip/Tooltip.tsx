@@ -99,6 +99,23 @@ export const Tooltip: FC<Props> = ({
   const [isFocusableChild, setIsFocusableChild] = useState(false)
   const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
 
+  const propsRef = useRef({
+    onPointerEnter,
+    onPointerLeave,
+    onTouchStart,
+    onTouchEnd,
+    onFocus,
+    onBlur,
+  })
+  propsRef.current = {
+    onPointerEnter,
+    onPointerLeave,
+    onTouchStart,
+    onTouchEnd,
+    onFocus,
+    onBlur,
+  }
+
   const isLabel = type === 'label'
 
   useEnhancedEffect(() => {
@@ -144,67 +161,49 @@ export const Tooltip: FC<Props> = ({
     },
     [ellipsisOnly],
   )
-  const onDelegatePointerEnter = useMemo(
-    () =>
-      onPointerEnter
-        ? (e: PointerEvent<HTMLSpanElement>) => {
-            onPointerEnter(e)
-            toShowAction(e)
-          }
-        : toShowAction,
-    [onPointerEnter, toShowAction],
+  const onDelegatePointerEnter = useCallback(
+    (e: PointerEvent<HTMLSpanElement>) => {
+      propsRef.current.onPointerEnter?.(e)
+      toShowAction(e)
+    },
+    [toShowAction],
   )
-  const onDelegateTouchStart = useMemo(
-    () =>
-      onTouchStart
-        ? (e: TouchEvent<HTMLSpanElement>) => {
-            onTouchStart(e)
-            toShowAction(e)
-          }
-        : toShowAction,
-    [onTouchStart, toShowAction],
+  const onDelegateTouchStart = useCallback(
+    (e: TouchEvent<HTMLSpanElement>) => {
+      propsRef.current.onTouchStart?.(e)
+      toShowAction(e)
+    },
+    [toShowAction],
   )
-  const onDelegateFocus = useMemo(
-    () =>
-      onFocus
-        ? (e: FocusEvent<HTMLSpanElement>) => {
-            onFocus(e)
-            toShowAction(e)
-          }
-        : toShowAction,
-    [onFocus, toShowAction],
+  const onDelegateFocus = useCallback(
+    (e: FocusEvent<HTMLSpanElement>) => {
+      propsRef.current.onFocus?.(e)
+      toShowAction(e)
+    },
+    [toShowAction],
   )
 
   const toCloseAction = useCallback(() => setIsVisible(false), [])
-  const onDelegatePointerLeave = useMemo(
-    () =>
-      onPointerLeave
-        ? (e: PointerEvent<HTMLSpanElement>) => {
-            onPointerLeave(e)
-            toCloseAction()
-          }
-        : toCloseAction,
-    [onPointerLeave, toCloseAction],
+  const onDelegatePointerLeave = useCallback(
+    (e: PointerEvent<HTMLSpanElement>) => {
+      propsRef.current.onPointerLeave?.(e)
+      toCloseAction()
+    },
+    [toCloseAction],
   )
-  const onDelegateTouchEnd = useMemo(
-    () =>
-      onTouchEnd
-        ? (e: TouchEvent<HTMLSpanElement>) => {
-            onTouchEnd(e)
-            toCloseAction()
-          }
-        : toCloseAction,
-    [onTouchEnd, toCloseAction],
+  const onDelegateTouchEnd = useCallback(
+    (e: TouchEvent<HTMLSpanElement>) => {
+      propsRef.current.onTouchEnd?.(e)
+      toCloseAction()
+    },
+    [toCloseAction],
   )
-  const onDelegateBlur = useMemo(
-    () =>
-      onBlur
-        ? (e: FocusEvent<HTMLSpanElement>) => {
-            onBlur(e)
-            toCloseAction()
-          }
-        : toCloseAction,
-    [onBlur, toCloseAction],
+  const onDelegateBlur = useCallback(
+    (e: FocusEvent<HTMLSpanElement>) => {
+      propsRef.current.onBlur?.(e)
+      toCloseAction()
+    },
+    [toCloseAction],
   )
 
   const isIcon = triggerType === 'icon'
