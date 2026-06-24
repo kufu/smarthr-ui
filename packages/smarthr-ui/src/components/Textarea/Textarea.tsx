@@ -5,6 +5,7 @@ import {
   type ComponentPropsWithRef,
   type ReactNode,
   forwardRef,
+  memo,
   startTransition,
   useCallback,
   useEffect,
@@ -266,13 +267,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     return maxLetters ? (
       <span className="shr-relative">
         {body}
-        <VisuallyHiddenText id={maxLettersNoticeId}>
-          <Localizer
-            id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
-            defaultText="最大{maxLetters}文字入力できます"
-            values={{ maxLetters }}
-          />
-        </VisuallyHiddenText>
+        <MaxLettersNotice id={maxLettersNoticeId} maxLetters={maxLetters} />
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>
           {counterVisualMessage}
@@ -283,3 +278,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     )
   },
 )
+
+const MaxLettersNotice = memo<{ id: string; maxLetters: number }>(({ id, maxLetters }) => (
+  <VisuallyHiddenText id={id}>
+    <Localizer
+      id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
+      defaultText="最大{maxLetters}文字入力できます"
+      values={{ maxLetters }}
+    />
+  </VisuallyHiddenText>
+))
