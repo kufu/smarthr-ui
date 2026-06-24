@@ -44,20 +44,12 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
     }
   }, [id, handleDisclosureChange])
 
-  const safeSetExpanded: Setter = useCallback(
-    (value) => {
-      // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
-      requestAnimationFrame(() => {
-        if (typeof value === 'function') {
-          const newValue = value(expanded)
-          setExpanded(newValue)
-        } else {
-          setExpanded(value)
-        }
-      })
-    },
-    [expanded],
-  )
+  const safeSetExpanded: Setter = useCallback((value) => {
+    // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
+    requestAnimationFrame(() => {
+      setExpanded(value)
+    })
+  }, [])
 
   return [expanded, safeSetExpanded]
 }
