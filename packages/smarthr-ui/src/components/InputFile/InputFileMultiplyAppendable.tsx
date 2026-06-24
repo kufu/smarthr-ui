@@ -72,10 +72,13 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     const filesRef = useRef(files)
     filesRef.current = files
 
-    const updateInputFiles = useCallback((newFiles: File[]) => {
+    const updateFiles = useCallback((newFiles: File[]) => {
       if (!inputRef.current) {
         return
       }
+
+      onChangeRef.current?.(newFiles)
+
       const buff = new DataTransfer()
       newFiles.forEach((file) => {
         buff.items.add(file)
@@ -84,16 +87,9 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       isUpdatingFilesDirectly.current = true
       inputRef.current.files = buff.files
       isUpdatingFilesDirectly.current = false
-    }, [])
 
-    const updateFiles = useCallback(
-      (newFiles: File[]) => {
-        onChangeRef.current?.(newFiles)
-        updateInputFiles(newFiles)
-        setFiles(newFiles)
-      },
-      [updateInputFiles],
-    )
+      setFiles(newFiles)
+    }, [])
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
