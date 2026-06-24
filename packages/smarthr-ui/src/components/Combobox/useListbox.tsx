@@ -184,6 +184,7 @@ export const useListbox = <T,>({
       // options の更新毎に座標を再計算する
       calculateRect()
     }
+    // TODO: optionsの安定化方法を検討中
   }, [calculateRect, isExpanded, options])
 
   const onKeyDownListBox = useCallback((e: KeyboardEvent<HTMLElement>) => {
