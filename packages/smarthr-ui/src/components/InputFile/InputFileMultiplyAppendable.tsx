@@ -3,6 +3,7 @@
 import {
   type ChangeEvent,
   type MouseEvent,
+  type PropsWithChildren,
   type ReactNode,
   forwardRef,
   memo,
@@ -127,18 +128,15 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         {!disabled && hasFileList && files.length > 0 && (
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
-              <li key={index} className={classNames.fileItem}>
-                <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
-                <Button
-                  variant="text"
-                  prefix={<FaTrashCanIcon />}
-                  value={index}
-                  onClick={handleDelete}
-                  className="smarthr-ui-InputFile-deleteButton"
-                >
-                  {destroyLabel}
-                </Button>
-              </li>
+              <FileListItem
+                key={index}
+                value={index}
+                onDeleteClick={handleDelete}
+                destroyLabel={destroyLabel}
+                className={classNames.fileItem}
+              >
+                {file.name}
+              </FileListItem>
             ))}
           </BaseColumn>
         )}
@@ -161,6 +159,30 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       </Stack>
     )
   },
+)
+
+type FileListItemProps = PropsWithChildren<{
+  value: number
+  onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
+  destroyLabel: string
+  className: string
+}>
+
+const FileListItem = memo<FileListItemProps>(
+  ({ value, onDeleteClick, destroyLabel, className, children }) => (
+    <li className={className}>
+      <span className="smarthr-ui-InputFile-fileName">{children}</span>
+      <Button
+        variant="text"
+        prefix={<FaTrashCanIcon />}
+        value={value}
+        onClick={onDeleteClick}
+        className="smarthr-ui-InputFile-deleteButton"
+      >
+        {destroyLabel}
+      </Button>
+    </li>
+  ),
 )
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
