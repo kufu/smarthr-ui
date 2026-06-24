@@ -8,7 +8,9 @@ import {
   type Ref,
   forwardRef,
   memo,
+  useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
@@ -90,20 +92,22 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     const actualRel = rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel
     const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
 
-    const actualOnClick = useMemo(() => {
-      if (!onClick) {
-        return undefined
-      }
+    const onClickRef = useRef(onClick)
+    onClickRef.current = onClick
 
-      if (href) {
-        return onClick
-      }
+    const actualOnClick = useCallback(
+      (e: MouseEvent) => {
+        if (!onClickRef.current) {
+          return
+        }
 
-      return (e: MouseEvent) => {
-        e.preventDefault()
-        onClick(e)
-      }
-    }, [onClick, href])
+        if (!href) {
+          e.preventDefault()
+        }
+        onClickRef.current(e)
+      },
+      [href],
+    )
 
     return (
       <Anchor
@@ -112,7 +116,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         href={actualHref}
         target={target}
         rel={actualRel}
-        onClick={actualOnClick}
+        onClick={onClick && actualOnClick}
         className={anchorClassName}
       >
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
