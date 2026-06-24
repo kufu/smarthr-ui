@@ -29,20 +29,28 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
+    const propsRef = useRef({
+      onFocus,
+      onBlur,
+      onFormatValue,
+    })
+    propsRef.current = {
+      onFocus,
+      onBlur,
+      onFormatValue,
+    }
+
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => innerRef.current,
     )
 
-    const formatValue = useCallback(
-      (formatted = '') => {
-        if (innerRef.current && formatted !== innerRef.current.value) {
-          innerRef.current.value = formatted
-          onFormatValue?.(formatted)
-        }
-      },
-      [onFormatValue],
-    )
+    const formatValue = useCallback((formatted = '') => {
+      if (innerRef.current && formatted !== innerRef.current.value) {
+        innerRef.current.value = formatted
+        propsRef.current.onFormatValue?.(formatted)
+      }
+    }, [])
 
     useEffect(() => {
       if (value === undefined && defaultValue !== undefined) {
@@ -73,19 +81,16 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           formatValue(commaExcluded)
         }
 
-        onFocus?.(e)
+        propsRef.current.onFocus?.(e)
       },
-      [formatValue, onFocus],
+      [formatValue],
     )
 
-    const handleBlur = useCallback(
-      (e: FocusEvent<HTMLInputElement>) => {
-        setIsFocused(false)
+    const handleBlur = useCallback((e: FocusEvent<HTMLInputElement>) => {
+      setIsFocused(false)
 
-        onBlur?.(e)
-      },
-      [onBlur],
-    )
+      propsRef.current.onBlur?.(e)
+    }, [])
 
     return (
       <Input
