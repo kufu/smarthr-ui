@@ -185,6 +185,7 @@ export const useListbox = <T,>({
       calculateRect()
     }
     // TODO: optionsの安定化方法を検討中
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [calculateRect, isExpanded, options])
 
   const onKeyDownListBox = useCallback((e: KeyboardEvent<HTMLElement>) => {
