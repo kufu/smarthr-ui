@@ -6,7 +6,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
@@ -39,8 +38,9 @@ const classNameGenerator = tv({
 })
 
 export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
-  const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
+  const childrenBufferRef = useRef<ReactNode>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
+  const observerRef = useRef<MutationObserver | null>(null)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
@@ -49,8 +49,39 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
   childrenRef.current = children
 
   useEffect(() => {
-    if (isOpen) {
-      setChildrenBuffer(childrenRef.current)
+    if (!isOpen) {
+      return
+    }
+
+    // isOpen が true になった時に初期値を設定
+    childrenBufferRef.current = childrenRef.current
+
+    // requestAnimationFrame で DOM のマウントを待つ
+    const rafId = requestAnimationFrame(() => {
+      if (!nodeRef.current) {
+        return
+      }
+
+      // MutationObserver で DOM の変更を監視
+      const observer = new MutationObserver(() => {
+        childrenBufferRef.current = childrenRef.current
+      })
+
+      observer.observe(nodeRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+
+      observerRef.current = observer
+    })
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+        observerRef.current = null
+      }
     }
   }, [isOpen])
 
@@ -63,7 +94,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       classNames="shr-dialog-transition"
     >
       <Center ref={nodeRef} verticalCentering className={actualClassName} as={as}>
-        {isOpen ? children : childrenBuffer}
+        {isOpen ? children : childrenBufferRef.current}
       </Center>
     </CSSTransition>
   )
