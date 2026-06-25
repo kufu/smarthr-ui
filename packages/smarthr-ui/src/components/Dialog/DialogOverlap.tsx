@@ -48,30 +48,23 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
   childrenRef.current = children
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && nodeRef.current) {
       // isOpen が true になった時に初期値を設定
       childrenBufferRef.current = childrenRef.current
 
-      let observer: MutationObserver | null = null
-      // requestAnimationFrame で DOM のマウントを待つ
-      const rafId = requestAnimationFrame(() => {
-        if (nodeRef.current) {
-          // MutationObserver で DOM の変更を監視
-          observer = new MutationObserver(() => {
-            childrenBufferRef.current = childrenRef.current
-          })
+      // MutationObserver で DOM の変更を監視
+      const observer = new MutationObserver(() => {
+        childrenBufferRef.current = childrenRef.current
+      })
 
-          observer.observe(nodeRef.current, {
-            childList: true,
-            subtree: true,
-            characterData: true,
-          })
-        }
+      observer.observe(nodeRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true,
       })
 
       return () => {
-        cancelAnimationFrame(rafId)
-        observer?.disconnect()
+        observer.disconnect()
       }
     }
   }, [isOpen])
