@@ -40,7 +40,6 @@ const classNameGenerator = tv({
 export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
   const childrenBufferRef = useRef<ReactNode>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
-  const observerRef = useRef<MutationObserver | null>(null)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
@@ -49,38 +48,30 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
   childrenRef.current = children
 
   useEffect(() => {
-    if (!isOpen) {
-      return
-    }
+    if (isOpen) {
+      // isOpen が true になった時に初期値を設定
+      childrenBufferRef.current = childrenRef.current
 
-    // isOpen が true になった時に初期値を設定
-    childrenBufferRef.current = childrenRef.current
+      let observer: MutationObserver | null = null
+      // requestAnimationFrame で DOM のマウントを待つ
+      const rafId = requestAnimationFrame(() => {
+        if (nodeRef.current) {
+          // MutationObserver で DOM の変更を監視
+          observer = new MutationObserver(() => {
+            childrenBufferRef.current = childrenRef.current
+          })
 
-    // requestAnimationFrame で DOM のマウントを待つ
-    const rafId = requestAnimationFrame(() => {
-      if (!nodeRef.current) {
-        return
-      }
-
-      // MutationObserver で DOM の変更を監視
-      const observer = new MutationObserver(() => {
-        childrenBufferRef.current = childrenRef.current
+          observer.observe(nodeRef.current, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+          })
+        }
       })
 
-      observer.observe(nodeRef.current, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-      })
-
-      observerRef.current = observer
-    })
-
-    return () => {
-      cancelAnimationFrame(rafId)
-      if (observerRef.current) {
-        observerRef.current.disconnect()
-        observerRef.current = null
+      return () => {
+        cancelAnimationFrame(rafId)
+        observer?.disconnect()
       }
     }
   }, [isOpen])
