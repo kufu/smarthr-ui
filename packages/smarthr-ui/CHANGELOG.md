@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [96.1.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.1.1...smarthr-ui-v96.1.2) (2026-06-25)
+
+
+### Bug Fixes
+
+* **Scroller:** ResizeObserverでの監視とpropsデフォルト値への移行 ([#6405](https://github.com/kufu/smarthr-ui/issues/6405)) ([3992da0](https://github.com/kufu/smarthr-ui/commit/3992da0c31fc3b89d361e0aa16ade895f9d50f74))
+
 ## [96.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.1.0...smarthr-ui-v96.1.1) (2026-06-18)
 
 
