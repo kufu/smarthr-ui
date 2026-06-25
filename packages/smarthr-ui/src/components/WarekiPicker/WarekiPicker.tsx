@@ -11,9 +11,7 @@ const handleShowWareki = (date: Date | null, locale: string) => {
   }
 
   // 和暦を使う
-  const calendarLocale = `${locale}-u-ca-japanese`
-
-  return date.toLocaleDateString(calendarLocale, {
+  return date.toLocaleDateString(`${locale}-u-ca-japanese`, {
     dateStyle: 'long',
   })
 }
@@ -21,5 +19,10 @@ const handleShowWareki = (date: Date | null, locale: string) => {
 export const WarekiPicker: FC<Props> = (props) => {
   const { locale } = useIntl()
 
-  return <DatePicker {...props} showAlternative={(date) => handleShowWareki(date, locale)} />
+  return (
+    <DatePicker
+      {...props}
+      showAlternative={(date: Date | null) => handleShowWareki(date, locale)}
+    />
+  )
 }

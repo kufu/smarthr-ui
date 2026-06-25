@@ -43,7 +43,8 @@ const classNameGenerator = tv({
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
-  const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
+  const { active, memoizedOnClickTrigger, contentId, triggerElementRef } =
+    useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
@@ -61,29 +62,52 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   }, [active, triggerElementRef, contentId])
 
   useEffect(() => {
-    if (!triggerElementRef.current) {
+    const triggerElement = triggerElementRef.current
+    if (!triggerElement) {
       return
     }
 
-    const button = triggerElementRef.current.querySelector<HTMLButtonElement>('button')
+    let currentCleanup: (() => void) | undefined
 
-    // 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する
-    if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
-      return
+    const setupButton = () => {
+      // 既存のクリーンアップを実行
+      currentCleanup?.()
+      currentCleanup = undefined
+
+      const button = triggerElement.querySelector<HTMLButtonElement>('button')
+
+      // 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する
+      if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+        return
+      }
+
+      // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
+      // そのためcaptureで開く処理を実行する
+      const callback = (e: MouseEvent) => {
+        memoizedOnClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
+      }
+
+      button.addEventListener('click', callback, CAPTURE_OPTION)
+
+      currentCleanup = () => {
+        button.removeEventListener('click', callback, CAPTURE_OPTION)
+      }
     }
 
-    // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
-    // そのためcaptureで開く処理を実行する
-    const callback = (e: MouseEvent) => {
-      onClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
-    }
+    setupButton()
 
-    button.addEventListener('click', callback, CAPTURE_OPTION)
+    const observer = new MutationObserver(setupButton)
+
+    observer.observe(triggerElement, {
+      childList: true,
+      subtree: true,
+    })
 
     return () => {
-      button.removeEventListener('click', callback, CAPTURE_OPTION)
+      currentCleanup?.()
+      observer.disconnect()
     }
-  }, [children, onClickTrigger, triggerElementRef])
+  }, [memoizedOnClickTrigger, triggerElementRef])
 
   return (
     <div ref={triggerElementRef} className={actualClassName}>
