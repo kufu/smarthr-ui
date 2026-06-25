@@ -88,11 +88,8 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
     const actualSuffix =
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
-    const actualHref = href || (onClick ? '' : undefined)
-    const actualRel = useMemo(
-      () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
-      [rel, target],
-    )
+    const actualHref = href ? href : onClick ? '' : undefined
+    const actualRel = rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel
     const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
 
     const onClickRef = useRef(onClick)
@@ -100,15 +97,14 @@ const ActualTextLink: TextLinkComponent = forwardRef(
 
     const actualOnClick = useCallback(
       (e: MouseEvent) => {
-        const currentOnClick = onClickRef.current
-        if (!currentOnClick) {
+        if (!onClickRef.current) {
           return
         }
 
         if (!href) {
           e.preventDefault()
         }
-        currentOnClick(e)
+        onClickRef.current(e)
       },
       [href],
     )
@@ -120,7 +116,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         href={actualHref}
         target={target}
         rel={actualRel}
-        onClick={onClick ? actualOnClick : undefined}
+        onClick={onClick && actualOnClick}
         className={anchorClassName}
       >
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}

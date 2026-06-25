@@ -6,7 +6,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
@@ -39,7 +38,7 @@ const classNameGenerator = tv({
 })
 
 export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
-  const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
+  const childrenBufferRef = useRef<ReactNode>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
@@ -49,8 +48,26 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
   childrenRef.current = children
 
   useEffect(() => {
-    if (isOpen) {
-      setChildrenBuffer(childrenRef.current)
+    if (!isOpen || !nodeRef.current) {
+      return
+    }
+
+    // isOpen が true になった時に初期値を設定
+    childrenBufferRef.current = childrenRef.current
+
+    // MutationObserver で DOM の変更を監視
+    const observer = new MutationObserver(() => {
+      childrenBufferRef.current = childrenRef.current
+    })
+
+    observer.observe(nodeRef.current, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    })
+
+    return () => {
+      observer.disconnect()
     }
   }, [isOpen])
 
@@ -63,7 +80,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       classNames="shr-dialog-transition"
     >
       <Center ref={nodeRef} verticalCentering className={actualClassName} as={as}>
-        {isOpen ? children : childrenBuffer}
+        {isOpen ? children : childrenBufferRef.current}
       </Center>
     </CSSTransition>
   )
