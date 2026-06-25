@@ -44,11 +44,15 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
+  // childrenをrefに保存（毎レンダリング時に最新の値を設定）
+  const childrenRef = useRef(children)
+  childrenRef.current = children
+
   useEffect(() => {
     if (isOpen) {
-      setChildrenBuffer(children)
+      setChildrenBuffer(childrenRef.current)
     }
-  }, [isOpen, children])
+  }, [isOpen])
 
   return (
     <CSSTransition
