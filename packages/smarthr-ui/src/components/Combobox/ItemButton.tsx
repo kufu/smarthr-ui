@@ -47,23 +47,21 @@ const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Pro
     propsRef.current.onSelect(propsRef.current.option)
   }, [])
 
+  const commonAttrs = {
+    id: option.id,
+    label: option.item.label,
+    activeRef,
+    onMouseOver: handleMouseOver,
+  }
+
   return option.isNew ? (
-    <AddButton
-      id={option.id}
-      label={option.item.label}
-      activeRef={activeRef}
-      onClick={handleAddClick}
-      onMouseOver={handleMouseOver}
-    />
+    <AddButton {...commonAttrs} onClick={handleAddClick} />
   ) : (
     <SelectButton
-      id={option.id}
-      label={option.item.label}
+      {...commonAttrs}
       disabled={option.item.disabled}
       selected={option.selected}
-      activeRef={activeRef}
       onClick={handleSelectClick}
-      onMouseOver={handleMouseOver}
     />
   )
 }
