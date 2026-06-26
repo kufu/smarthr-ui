@@ -1,6 +1,6 @@
-import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { BaseColumn } from '../../Panel'
 import { Button } from '../Button'
 
 import type { StoryFn, StoryObj } from '@storybook/react-webpack5'

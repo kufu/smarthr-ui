@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
+import { Panel } from '../Panel'
 import { RadioButton } from '../RadioButton'
 
 type Props = ComponentProps<typeof RadioButton> & {
@@ -69,7 +69,7 @@ const isRadioButtonElementClicked = (path: EventTarget[], currentTarget: EventTa
     ) {
       return true
     } else if (node === currentTarget) {
-      // Base要素に到達したらfalse（低頻度ケース）
+      // Panel要素に到達したらfalse（低頻度ケース）
       return false
     }
   }
@@ -99,9 +99,9 @@ export const RadioButtonPanel: FC<Props> = ({
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
   const onDelegateClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    // RadioButtonの要素（labelまたはinput）以外がクリックされた場合（description や Base の余白）
+    // RadioButtonの要素（labelまたはinput）以外がクリックされた場合（description や Panel の余白）
     if (!isRadioButtonElementClicked(e.nativeEvent.composedPath(), e.currentTarget)) {
-      // Base要素のclickイベントは止める（実装の詳細を隠蔽し、input要素のclickのみを親に伝える）
+      // Panel要素のclickイベントは止める（実装の詳細を隠蔽し、input要素のclickのみを親に伝える）
       e.stopPropagation()
       // 手動でinputをクリック
       innerRef.current?.click()
@@ -113,7 +113,7 @@ export const RadioButtonPanel: FC<Props> = ({
   const descriptionId = useId()
 
   return (
-    <Base padding={1} onClick={onDelegateClick} as={as} className={classNames.base}>
+    <Panel padding={1} onClick={onDelegateClick} as={as} className={classNames.base}>
       <RadioButton
         {...rest}
         onClick={onClick}
@@ -128,6 +128,6 @@ export const RadioButtonPanel: FC<Props> = ({
           {children}
         </div>
       )}
-    </Base>
+    </Panel>
   )
 }

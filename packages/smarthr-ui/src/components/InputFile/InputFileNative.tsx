@@ -15,10 +15,10 @@ import {
 } from 'react'
 
 import { useIntl } from '../../intl'
-import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
+import { BaseColumn } from '../Panel'
 
 import { classNameGenerator } from './style'
 

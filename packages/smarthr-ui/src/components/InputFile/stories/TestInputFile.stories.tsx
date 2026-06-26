@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
-import { BaseColumn } from '../../Base'
 import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
 import { Heading } from '../../Heading'
 import { InformationPanel } from '../../InformationPanel'
 import { Stack } from '../../Layout'
+import { BaseColumn } from '../../Panel'
 import { InputFile } from '../InputFile'
 
 import type { Meta } from '@storybook/react-webpack5'
