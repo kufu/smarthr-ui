@@ -86,8 +86,6 @@ export const SegmentedControl: FC<Props> = ({
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const optionsRef = useRef<Option[]>(options)
-  optionsRef.current = options
   const onClickOptionRef = useRef(onClickOption)
   onClickOptionRef.current = onClickOption
 
@@ -161,7 +159,7 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [isFocused])
 
-  const excludesSelected = !value || optionsRef.current.every((option) => option.value !== value)
+  const excludesSelected = !value || options.every((option) => option.value !== value)
 
   const onClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     onClickOptionRef.current?.(e.currentTarget.value)
