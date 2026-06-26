@@ -87,6 +87,7 @@ export default [
             'onFocus',
             'onBlur',
             'onKeyPress',
+            'onMouseOver',
             'onPointerEnter',
             'onPointerLeave',
             'onTouchStart',
