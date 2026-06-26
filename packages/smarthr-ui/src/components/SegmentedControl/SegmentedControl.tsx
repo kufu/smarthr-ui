@@ -223,7 +223,8 @@ const SegmentedControlButton = memo<
     className,
   }) => {
     const checked = value === optionValue
-    const tabIndex = isFocused ? -1 : excludesSelected ? (index === 0 ? 0 : -1) : checked ? 0 : -1
+    const tabIndex =
+      !isFocused && ((excludesSelected && index === 0) || (!excludesSelected && checked)) ? 0 : -1
 
     return (
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
