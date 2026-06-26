@@ -22,20 +22,16 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   const [expanded, setExpanded] = useDisclosure(targetId)
   const ref = useRef<HTMLSpanElement | null>(null)
 
-  // onClickとsetExpandedをrefに保存（毎レンダリング時に最新の値を設定）
-  const onClickRef = useRef(onClick)
-  const setExpandedRef = useRef(setExpanded)
-  onClickRef.current = onClick
-  setExpandedRef.current = setExpanded
+  const propsRef = useRef({ onClick, setExpanded })
+  propsRef.current = { onClick, setExpanded }
 
-  // actualOnClickをuseCallbackで安定させる
   const actualOnClick = useCallback((e: MouseEvent) => {
     const toggleExpanded = () => {
-      setExpandedRef.current((current) => !current)
+      propsRef.current.setExpanded((current) => !current)
     }
 
-    if (onClickRef.current) {
-      onClickRef.current(toggleExpanded, e)
+    if (propsRef.current.onClick) {
+      propsRef.current.onClick(toggleExpanded, e)
     } else {
       toggleExpanded()
     }
