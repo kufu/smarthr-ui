@@ -227,20 +227,35 @@ const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
   const ref = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
-    if (!ref.current) {
+    const listItem = ref.current
+    if (!listItem) {
       return
     }
 
-    const button = ref.current.querySelector('button,a')
+    const setupButton = () => {
+      const button = listItem.querySelector('button,a')
 
-    if (button) {
-      button.setAttribute('role', 'menuitem')
-      button.setAttribute(
-        'class',
-        actionListItemButton({ className: button.getAttribute('class') }),
-      )
+      if (button) {
+        button.setAttribute('role', 'menuitem')
+        button.setAttribute(
+          'class',
+          actionListItemButton({ className: button.getAttribute('class') }),
+        )
+      }
     }
-  }, [children])
+
+    setupButton()
+
+    const observer = new MutationObserver(setupButton)
+    observer.observe(listItem, {
+      childList: true,
+      subtree: true,
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return (
     <li role="presentation" ref={ref}>
