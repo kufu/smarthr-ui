@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
 } from 'react'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -86,14 +87,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 }) => {
   const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
 
+  const propsRef = useRef({ onClickClose, onSubmit, onClickBack, currentStep })
+  propsRef.current = { onClickClose, onSubmit, onClickBack, currentStep }
+
   const handleCloseAction = useCallback(() => {
-    onClickClose()
+    propsRef.current.onClickClose()
     setTimeout(() => {
       // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
       stepQueue.current = []
       setCurrentStep(firstStep)
     }, 300)
-  }, [firstStep, stepQueue, setCurrentStep, onClickClose])
+  }, [firstStep, stepQueue, setCurrentStep])
 
   const changeCurrentStep = useCallback(
     (step: Parameters<typeof setCurrentStep>[0]) => {
@@ -116,22 +120,22 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
       const helpers: StepFormHelpers = {
         goto: (nextStep: StepItem) => {
-          stepQueue.current.push(currentStep)
+          stepQueue.current.push(propsRef.current.currentStep)
           changeCurrentStep(nextStep)
         },
         close: handleCloseAction,
-        currentStep,
+        currentStep: propsRef.current.currentStep,
       }
 
-      onSubmit(e, helpers)
+      propsRef.current.onSubmit(e, helpers)
     },
-    [currentStep, stepQueue, onSubmit, handleCloseAction, changeCurrentStep],
+    [stepQueue, handleCloseAction, changeCurrentStep],
   )
   const handleBackAction = useCallback(() => {
-    onClickBack?.()
+    propsRef.current.onClickBack?.()
 
     changeCurrentStep(stepQueue.current.pop() ?? firstStep)
-  }, [firstStep, stepQueue, onClickBack, changeCurrentStep])
+  }, [firstStep, stepQueue, changeCurrentStep])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
