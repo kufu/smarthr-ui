@@ -16,7 +16,6 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
@@ -204,7 +203,7 @@ const TriggerLabelText = memo<{
 
   const Icon = (typeof onlyIconTrigger === 'object' && onlyIconTrigger.component) || FaEllipsisIcon
 
-  return <Icon alt={typeof children === 'string' ? children : innerText(children)} />
+  return <Icon alt={children} />
 })
 
 export const renderButtonList = (children: Actions) =>

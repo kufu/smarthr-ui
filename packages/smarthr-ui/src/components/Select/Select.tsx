@@ -8,9 +8,7 @@ import {
   type OptionHTMLAttributes,
   type PropsWithChildren,
   memo,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -102,27 +100,6 @@ const ActualSelect = <T extends string>(
   }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
-  const onChangeRef = useRef(onChange)
-  onChangeRef.current = onChange
-  const onChangeValueRef = useRef(onChangeValue)
-  onChangeValueRef.current = onChangeValue
-  const optionsRef = useRef<Array<Option<T> | Optgroup<T>>>(options)
-  optionsRef.current = options
-
-  const handleChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
-    onChangeRef.current?.(e)
-
-    if (onChangeValueRef.current) {
-      const selectedOption = optionsRef.current
-        .flatMap((option) => ('value' in option ? [option] : option.options))
-        .find((option) => option.value === e.target.value)
-
-      if (selectedOption) {
-        onChangeValueRef.current(selectedOption.value)
-      }
-    }
-  }, [])
-
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap, blankOptgroup } = classNameGenerator()
     const sizeProps = {
@@ -150,7 +127,19 @@ const ActualSelect = <T extends string>(
       <select
         {...rest}
         data-smarthr-ui-input="true"
-        onChange={handleChange}
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+          onChange?.(e)
+
+          if (onChangeValue) {
+            const selectedOption = options
+              .flatMap((option) => ('value' in option ? [option] : option.options))
+              .find((option) => option.value === e.target.value)
+
+            if (selectedOption) {
+              onChangeValue(selectedOption.value)
+            }
+          }
+        }}
         aria-invalid={error || undefined}
         disabled={disabled}
         // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
