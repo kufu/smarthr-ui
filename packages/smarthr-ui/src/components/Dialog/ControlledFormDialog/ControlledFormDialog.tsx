@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type FC, type FormEvent, type ReactNode, useCallback } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type FormEvent,
+  type ReactNode,
+  useCallback,
+  useRef,
+} from 'react'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
@@ -65,19 +72,22 @@ export const ControlledFormDialog: FC<Props> = ({
     buttonObjectConverter,
   )
 
+  const propsRef = useRef({ onClickClose, onSubmit })
+  propsRef.current = { onClickClose, onSubmit }
+
   const actualOnClickClose = useCallback(() => {
     if (isOpen) {
-      onClickClose()
+      propsRef.current.onClickClose()
     }
-  }, [isOpen, onClickClose])
+  }, [isOpen])
 
   const onDelegateSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => {
       if (isOpen) {
-        onSubmit(e, helpers)
+        propsRef.current.onSubmit(e, helpers)
       }
     },
-    [isOpen, onSubmit],
+    [isOpen],
   )
 
   return createPortal(

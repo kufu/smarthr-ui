@@ -6,6 +6,7 @@ import {
   memo,
   useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -84,16 +85,16 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   closeButton,
   subActionArea,
 }) => {
-  const handleSubmitAction = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-      // 親formが意図せずsubmitされてしまう場合がある
-      e.stopPropagation()
-      onSubmit(e, { close: onClickClose })
-    },
-    [onSubmit, onClickClose],
-  )
+  const propsRef = useRef({ onSubmit, onClickClose })
+  propsRef.current = { onSubmit, onClickClose }
+
+  const handleSubmitAction = useCallback((e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+    // 親formが意図せずsubmitされてしまう場合がある
+    e.stopPropagation()
+    propsRef.current.onSubmit(e, { close: propsRef.current.onClickClose })
+  }, [])
 
   const calculatedResponseStatus = useResponseStatus(responseStatus)
 

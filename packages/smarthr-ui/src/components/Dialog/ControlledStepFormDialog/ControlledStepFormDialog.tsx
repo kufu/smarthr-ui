@@ -142,29 +142,32 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
 
   const focusTrapRef = useRef<FocusTrapRef>(null)
 
+  const propsRef = useRef({ onClickClose, onSubmit, onClickBack })
+  propsRef.current = { onClickClose, onSubmit, onClickBack }
+
   const actualOnClickClose = useCallback(() => {
     if (isOpen) {
       focusTrapRef.current?.focus()
-      onClickClose()
+      propsRef.current.onClickClose()
     }
-  }, [isOpen, onClickClose])
+  }, [isOpen])
 
   const onDelegateSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
       if (isOpen) {
         focusTrapRef.current?.focus()
-        onSubmit(e, helpers)
+        propsRef.current.onSubmit(e, helpers)
       }
     },
-    [onSubmit, isOpen],
+    [isOpen],
   )
 
   const actualOnClickBack = useCallback(() => {
     if (isOpen) {
       focusTrapRef.current?.focus()
-      onClickBack?.()
+      propsRef.current.onClickBack?.()
     }
-  }, [isOpen, onClickBack])
+  }, [isOpen])
 
   return (
     <DialogContentInner
