@@ -4,6 +4,7 @@ import {
   type FC,
   type FormEvent,
   type PropsWithChildren,
+  type ReactNode,
   memo,
   useCallback,
   useContext,
@@ -222,7 +223,7 @@ const BackButton = memo<{
   onClick: () => void
   variant: CommonButtonType['theme']
   disabled: boolean
-  text: string
+  text: ReactNode
 }>(({ onClick, variant, disabled, text }) => (
   <Button
     onClick={onClick}
@@ -238,7 +239,7 @@ const CloseButton = memo<{
   onClick: () => void
   variant: CommonButtonType['theme']
   disabled: boolean
-  text: string
+  text: ReactNode
 }>(({ onClick, variant, disabled, text }) => (
   <Button
     onClick={onClick}
@@ -252,9 +253,9 @@ const CloseButton = memo<{
 
 const SubmitButton = memo<{
   variant: CommonButtonType['theme']
-  disabled: boolean
+  disabled: boolean | undefined
   loading: boolean
-  text: string
+  text: ReactNode
 }>(({ variant, disabled, loading, text }) => (
   <Button
     type="submit"
