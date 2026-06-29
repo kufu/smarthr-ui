@@ -4,6 +4,7 @@ import {
   type FC,
   type FormEvent,
   type PropsWithChildren,
+  memo,
   useCallback,
   useContext,
   useMemo,
@@ -180,36 +181,29 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
-                <Button
+                <BackButton
                   onClick={handleBackAction}
                   variant={backButton.theme}
                   disabled={backButton.disabled || calcedResponseStatus.isProcessing}
-                  className="smarthr-ui-Dialog-backButton"
-                >
-                  {backButton.text}
-                </Button>
+                  text={backButton.text}
+                />
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 {!closeButton.hidden && (
-                  <Button
+                  <CloseButton
                     onClick={handleCloseAction}
                     variant={closeButton.theme}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-closeButton"
-                  >
-                    {closeButton.text}
-                  </Button>
+                    text={closeButton.text}
+                  />
                 )}
                 {!submitButton.hidden && (
-                  <Button
-                    type="submit"
+                  <SubmitButton
                     variant={submitButton.theme}
                     disabled={submitButton.disabled}
                     loading={calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-actionButton"
-                  >
-                    {submitButton.text}
-                  </Button>
+                    text={submitButton.text}
+                  />
                 )}
               </Cluster>
             </Cluster>
@@ -223,3 +217,52 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     </Section>
   )
 }
+
+const BackButton = memo<{
+  onClick: () => void
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  text: string
+}>(({ onClick, variant, disabled, text }) => (
+  <Button
+    onClick={onClick}
+    variant={variant}
+    disabled={disabled}
+    className="smarthr-ui-Dialog-backButton"
+  >
+    {text}
+  </Button>
+))
+
+const CloseButton = memo<{
+  onClick: () => void
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  text: string
+}>(({ onClick, variant, disabled, text }) => (
+  <Button
+    onClick={onClick}
+    variant={variant}
+    disabled={disabled}
+    className="smarthr-ui-Dialog-closeButton"
+  >
+    {text}
+  </Button>
+))
+
+const SubmitButton = memo<{
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  loading: boolean
+  text: string
+}>(({ variant, disabled, loading, text }) => (
+  <Button
+    type="submit"
+    variant={variant}
+    disabled={disabled}
+    loading={loading}
+    className="smarthr-ui-Dialog-actionButton"
+  >
+    {text}
+  </Button>
+))
