@@ -101,6 +101,9 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     observer.observe(triggerElement, {
       childList: true,
       subtree: true,
+      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+      attributes: true,
+      attributeFilter: ['disabled', 'aria-disabled'],
     })
 
     return () => {
