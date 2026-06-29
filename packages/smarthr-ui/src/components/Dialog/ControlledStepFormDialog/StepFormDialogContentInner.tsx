@@ -4,9 +4,11 @@ import {
   type FC,
   type FormEvent,
   type PropsWithChildren,
+  memo,
   useCallback,
   useContext,
   useMemo,
+  useRef,
 } from 'react'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -84,16 +86,27 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   responseStatus,
   onClickBack,
 }) => {
-  const { currentStep, stepQueue, setCurrentStep, scrollerRef } = useContext(StepFormDialogContext)
+  const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
+    useContext(StepFormDialogContext)
+
+  const propsRef = useRef({
+    onClickClose,
+    onSubmit,
+    onClickBack,
+    currentStep,
+    firstStep,
+    setCurrentStep,
+  })
+  propsRef.current = { onClickClose, onSubmit, onClickBack, currentStep, firstStep, setCurrentStep }
 
   const handleCloseAction = useCallback(() => {
-    onClickClose()
+    propsRef.current.onClickClose()
     setTimeout(() => {
       // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
-      stepQueue.current = []
-      setCurrentStep(firstStep)
+      stepQueueRef.current = []
+      propsRef.current.setCurrentStep(propsRef.current.firstStep)
     }, 300)
-  }, [firstStep, stepQueue, setCurrentStep, onClickClose])
+  }, [stepQueueRef])
 
   const changeCurrentStep = useCallback(
     (step: Parameters<typeof setCurrentStep>[0]) => {
@@ -116,22 +129,22 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
       const helpers: StepFormHelpers = {
         goto: (nextStep: StepItem) => {
-          stepQueue.current.push(currentStep)
+          stepQueueRef.current.push(propsRef.current.currentStep)
           changeCurrentStep(nextStep)
         },
         close: handleCloseAction,
-        currentStep,
+        currentStep: propsRef.current.currentStep,
       }
 
-      onSubmit(e, helpers)
+      propsRef.current.onSubmit(e, helpers)
     },
-    [currentStep, stepQueue, onSubmit, handleCloseAction, changeCurrentStep],
+    [stepQueueRef, handleCloseAction, changeCurrentStep],
   )
   const handleBackAction = useCallback(() => {
-    onClickBack?.()
+    propsRef.current.onClickBack?.()
 
-    changeCurrentStep(stepQueue.current.pop() ?? firstStep)
-  }, [firstStep, stepQueue, onClickBack, changeCurrentStep])
+    changeCurrentStep(stepQueueRef.current.pop() ?? propsRef.current.firstStep)
+  }, [stepQueueRef, changeCurrentStep])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
@@ -168,36 +181,29 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
-                <Button
+                <BackButton
                   onClick={handleBackAction}
                   variant={backButton.theme}
                   disabled={backButton.disabled || calcedResponseStatus.isProcessing}
-                  className="smarthr-ui-Dialog-backButton"
-                >
-                  {backButton.text}
-                </Button>
+                  text={backButton.text}
+                />
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 {!closeButton.hidden && (
-                  <Button
+                  <CloseButton
                     onClick={handleCloseAction}
                     variant={closeButton.theme}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-closeButton"
-                  >
-                    {closeButton.text}
-                  </Button>
+                    text={closeButton.text}
+                  />
                 )}
                 {!submitButton.hidden && (
-                  <Button
-                    type="submit"
+                  <SubmitButton
                     variant={submitButton.theme}
                     disabled={submitButton.disabled}
                     loading={calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-actionButton"
-                  >
-                    {submitButton.text}
-                  </Button>
+                    text={submitButton.text}
+                  />
                 )}
               </Cluster>
             </Cluster>
@@ -211,3 +217,52 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     </Section>
   )
 }
+
+const BackButton = memo<{
+  onClick: () => void
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  text: string
+}>(({ onClick, variant, disabled, text }) => (
+  <Button
+    onClick={onClick}
+    variant={variant}
+    disabled={disabled}
+    className="smarthr-ui-Dialog-backButton"
+  >
+    {text}
+  </Button>
+))
+
+const CloseButton = memo<{
+  onClick: () => void
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  text: string
+}>(({ onClick, variant, disabled, text }) => (
+  <Button
+    onClick={onClick}
+    variant={variant}
+    disabled={disabled}
+    className="smarthr-ui-Dialog-closeButton"
+  >
+    {text}
+  </Button>
+))
+
+const SubmitButton = memo<{
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  loading: boolean
+  text: string
+}>(({ variant, disabled, loading, text }) => (
+  <Button
+    type="submit"
+    variant={variant}
+    disabled={disabled}
+    loading={loading}
+    className="smarthr-ui-Dialog-actionButton"
+  >
+    {text}
+  </Button>
+))
