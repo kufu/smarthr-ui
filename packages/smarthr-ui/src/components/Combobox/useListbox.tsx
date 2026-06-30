@@ -356,8 +356,7 @@ export const ListBox = memo(
       (option: ComboboxOption<T>) => {
         unstableRef.current!.onSelect(option.item)
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
+      [unstableRef],
     )
 
     const handleAdd = useCallback(
@@ -370,8 +369,7 @@ export const ListBox = memo(
           })
         }
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
+      [unstableRef],
     )
 
     const handleHoverOption = useCallback(
@@ -379,8 +377,7 @@ export const ListBox = memo(
         unstableRef.current!.setNavigationType('pointer')
         unstableRef.current!.setActiveOption(option)
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
+      [unstableRef],
     )
 
     const { localize } = useIntl()
