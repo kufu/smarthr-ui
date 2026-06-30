@@ -1,7 +1,6 @@
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
-const RETURN_NULL = () => null
 
 export function usePartialRendering<T>({
   items,
@@ -14,31 +13,29 @@ export function usePartialRendering<T>({
 
   const [currentItemLength, setCurrentItemLength] = useState(limiter(OPTION_INCREMENT_AMOUNT))
 
+  const limiterRef = useRef(limiter)
+  limiterRef.current = limiter
+
   useEffect(() => {
     setCurrentItemLength((current) => limiter(current))
   }, [limiter])
 
   // minLength も考慮した実際のアイテム数を算出
-  const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
+  // itemsはunstableなのでuseMemoは毎回再計算されるため、直接計算する
+  const partialItems = items.slice(0, currentItemLength)
 
-  const renderIntersection = useCallback(
-    () => (
-      <Intersection
-        onIntersect={() => {
-          setCurrentItemLength((current) => limiter(current + OPTION_INCREMENT_AMOUNT))
-        }}
-      />
-    ),
-    [limiter],
-  )
+  const onIntersect = useCallback(() => {
+    setCurrentItemLength((current) => limiterRef.current(current + OPTION_INCREMENT_AMOUNT))
+  }, [])
 
   return {
     items: partialItems,
-    renderIntersection: currentItemLength >= items.length ? RETURN_NULL : renderIntersection,
+    onIntersect,
+    shouldIntersection: currentItemLength < items.length,
   }
 }
 
-const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
+export const Intersection: FC<{ onIntersect: () => void }> = memo(({ onIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -61,4 +58,4 @@ const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
   }, [onIntersect])
 
   return <div ref={ref} />
-}
+})
