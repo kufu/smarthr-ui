@@ -81,7 +81,7 @@ export const useSortDropdown = ({
   )
 
   // 外向きの値
-  const [selectedLabel, setSelectedLabel] = useState<string>()
+  const [selectedLabel, setSelectedLabel] = useState<string>('')
   const [checkedOrder, setCheckedOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   // 内部的な値
@@ -102,15 +102,18 @@ export const useSortDropdown = ({
     onApply,
   }
 
+  const defaultFieldLabel = useMemo(() => {
+    if (selectedLabel) return selectedLabel
+
+    const nextField = sortFields.find((field) => field.selected) || sortFields[0]
+
+    return nextField.label
+  }, [sortFields, selectedLabel])
+
   useEffect(() => {
-    if (selectedLabel) return
-
-    // 初期値は option に紛れているので、選択されている項目を取得
-    const defaultField = sortFields.find((field) => field.selected) || sortFields[0]
-
-    setSelectedLabel(defaultField.label)
-    setInnerSelectedField(defaultField.label)
-  }, [selectedLabel, sortFields])
+    setSelectedLabel(defaultFieldLabel)
+    setInnerSelectedField(defaultFieldLabel)
+  }, [defaultFieldLabel])
 
   const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((e) => {
     const select = e.currentTarget
