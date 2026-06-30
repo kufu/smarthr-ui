@@ -64,54 +64,31 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const triggerElementRef = useRef<HTMLDivElement>(null)
   const contentId = useId()
 
-  if (portalRoot) {
-    portalRoot.setAttribute('id', contentId)
-  }
-
-  useEffect(() => {
-    const onClickBody = (e: any) => {
-      // ignore events from events within DropdownTrigger and DropdownContent
-      if (!isEventFromChild(e, triggerElementRef.current) && !isChildPortal(e.target)) {
-        setActive(false)
-      }
-    }
-
-    document.body.addEventListener('click', onClickBody, false)
-
-    return () => {
-      document.body.removeEventListener('click', onClickBody, false)
-    }
-  }, [isChildPortal, portalRoot])
-
   const propsRef = useRef({
     active,
     isPortalRootMounted,
     onOpen,
     onClose,
+    createPortal,
   })
   propsRef.current = {
     active,
     isPortalRootMounted,
     onOpen,
     onClose,
+    createPortal,
   }
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(() => {
     const result: FC<{ children: ReactNode }> = (props) =>
-      propsRef.current.active ? createPortal(props.children) : null
+      propsRef.current.active ? propsRef.current.createPortal(props.children) : null
 
     // set the displayName explicit for DevTools
     result.displayName = 'DropdownContentRoot'
 
     return result
-  }, [createPortal])
-
-  useEffect(() => {
-    if (propsRef.current.isPortalRootMounted()) {
-      propsRef.current[active ? 'onOpen' : 'onClose']?.()
-    }
-  }, [active])
+  }, [])
 
   const memoizedOnClickTrigger = useCallback((rect: Rect) => {
     setActive((current) => {
@@ -131,6 +108,31 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     // return focus to the Trigger
     getFirstTabbable(triggerElementRef)?.focus()
   }, [])
+
+  useEffect(() => {
+    if (portalRoot) {
+      portalRoot.setAttribute('id', contentId)
+    }
+
+    const onClickBody = (e: any) => {
+      // ignore events from events within DropdownTrigger and DropdownContent
+      if (!isEventFromChild(e, triggerElementRef.current) && !isChildPortal(e.target)) {
+        setActive(false)
+      }
+    }
+
+    document.body.addEventListener('click', onClickBody, false)
+
+    return () => {
+      document.body.removeEventListener('click', onClickBody, false)
+    }
+  }, [isChildPortal, portalRoot, contentId])
+
+  useEffect(() => {
+    if (propsRef.current.isPortalRootMounted()) {
+      propsRef.current[active ? 'onOpen' : 'onClose']?.()
+    }
+  }, [active])
 
   return (
     <PortalParentProvider>
