@@ -1,5 +1,7 @@
 # Crowdinの設定ファイル
 # 参照：https://support.crowdin.com/developer/configuration-file/
+
+# CrowdinプロジェクトID
 project_id_env: "CROWDIN_PROJECT_ID"
 
 # このディレクトリを基準にパスを解決
@@ -37,11 +39,11 @@ files:
     # Crowdinの言語コードをカスタムなロケール名に変換
     languages_mapping:
       locale:
-        ja-easy: ja_easy
-        zh-CN: zh_hans_cn
-        zh-TW: zh_hant_tw
         en-US: en_us
         id: id_id
+        ja-easy: ja_easy
+        ko: ko_kr
         pt-BR: pt_br
         vi: vi_vn
-        ko: ko_kr
+        zh-CN: zh_hans_cn
+        zh-TW: zh_hant_tw
