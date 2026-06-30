@@ -35,30 +35,41 @@ export function useRemoteTrigger({
     orgOnPressEscape,
   }
 
+  const updateIsOpen = useCallback((newIsOpen: boolean) => {
+    setIsOpen(newIsOpen)
+    propsRef.current.onToggle?.(newIsOpen)
+
+    if (newIsOpen) {
+      propsRef.current.onOpen?.()
+    } else {
+      propsRef.current.onClose?.()
+    }
+  }, [])
+
   const onClickClose = useCallback(() => {
     if (propsRef.current.orgOnClickClose) {
       return propsRef.current.orgOnClickClose(() => {
-        setIsOpen(false)
+        updateIsOpen(false)
       })
     }
 
-    setIsOpen(false)
-  }, [])
+    updateIsOpen(false)
+  }, [updateIsOpen])
 
   const onPressEscape = useCallback(() => {
     if (propsRef.current.orgOnPressEscape) {
       return propsRef.current.orgOnPressEscape(() => {
-        setIsOpen(false)
+        updateIsOpen(false)
       })
     }
 
-    setIsOpen(false)
-  }, [])
+    updateIsOpen(false)
+  }, [updateIsOpen])
 
   useEffect(() => {
     const handler = ((e: Event & { detail: { id: string } }) => {
       if (id === e.detail.id) {
-        setIsOpen(true)
+        updateIsOpen(true)
       }
     }) as Parameters<typeof document.addEventListener>['1']
 
@@ -67,17 +78,7 @@ export function useRemoteTrigger({
     return () => {
       document.removeEventListener(TRIGGER_EVENT, handler)
     }
-  }, [id])
-
-  useEffect(() => {
-    propsRef.current.onToggle?.(isOpen)
-
-    if (isOpen) {
-      propsRef.current.onOpen?.()
-    } else {
-      propsRef.current.onClose?.()
-    }
-  }, [isOpen])
+  }, [id, updateIsOpen])
 
   return {
     isOpen,
