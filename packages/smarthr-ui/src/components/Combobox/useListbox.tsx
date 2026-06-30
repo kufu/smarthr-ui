@@ -246,11 +246,7 @@ export const useListbox = <T,>({
   }, [])
 
   const listBoxId = useId()
-  const {
-    items: partialOptions,
-    onIntersect,
-    shouldIntersection,
-  } = usePartialRendering({
+  const { items: partialOptions, onIntersect } = usePartialRendering({
     items: options,
     minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
   })
@@ -299,7 +295,6 @@ export const useListbox = <T,>({
     () => ({
       activeOptionId: activeOption?.id,
       onIntersect,
-      shouldIntersection,
       partialOptions,
       optionsLength: options.length,
       isExpanded,
@@ -318,7 +313,6 @@ export const useListbox = <T,>({
     [
       activeOption?.id,
       onIntersect,
-      shouldIntersection,
       partialOptions,
       options.length,
       isExpanded,
@@ -347,8 +341,7 @@ export const useListbox = <T,>({
 
 type ListBoxProps<T> = {
   activeOptionId: string | undefined
-  onIntersect: () => void
-  shouldIntersection: boolean
+  onIntersect: (() => void) | null
   partialOptions: Array<ComboboxOption<T>>
   optionsLength: number
   isExpanded: boolean
@@ -387,7 +380,6 @@ export const ListBox = memo(
   <T,>({
     activeOptionId,
     onIntersect,
-    shouldIntersection,
     partialOptions,
     optionsLength,
     isExpanded,
@@ -475,7 +467,7 @@ export const ListBox = memo(
               ))
             )
           ) : null}
-          {shouldIntersection && <Intersection onIntersect={onIntersect} />}
+          {onIntersect && <Intersection onIntersect={onIntersect} />}
         </Scroller>
       </div>,
     )
