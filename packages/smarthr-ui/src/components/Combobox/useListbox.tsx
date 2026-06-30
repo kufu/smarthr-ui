@@ -117,15 +117,15 @@ export const useListbox = <T,>({
     [],
   )
 
-  const activeOptionRef = useRef({ activeOption, setActiveOption, moveActiveOptionIndex })
-  activeOptionRef.current = { activeOption, setActiveOption, moveActiveOptionIndex }
+  const activeOptionRef = useRef({ activeOption, moveActiveOptionIndex })
+  activeOptionRef.current = { activeOption, moveActiveOptionIndex }
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       setActiveOption(null)
     }
-  }, [isExpanded, setActiveOption])
+  }, [isExpanded])
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
@@ -238,7 +238,7 @@ export const useListbox = <T,>({
         propsRef.current.onAdd(activeOptionRef.current.activeOption.item.value)
       }
     } else {
-      activeOptionRef.current.setActiveOption(null)
+      setActiveOption(null)
     }
   }, [])
 
@@ -260,13 +260,10 @@ export const useListbox = <T,>({
   const handleSelect = useCallback((option: ComboboxOption<T>) => {
     propsRef.current.onSelect(option.item)
   }, [])
-  const handleHoverOption = useCallback(
-    (option: ComboboxOption<T>) => {
-      setNavigationType('pointer')
-      setActiveOption(option)
-    },
-    [setActiveOption],
-  )
+  const handleHoverOption = useCallback((option: ComboboxOption<T>) => {
+    setNavigationType('pointer')
+    setActiveOption(option)
+  }, [])
 
   const listBoxProps = useMemo(
     () => ({
