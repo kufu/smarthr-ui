@@ -245,23 +245,6 @@ export const useListbox = <T,>({
     minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
   })
 
-  const handleAdd = useCallback((option: ComboboxOption<T>) => {
-    if (unstableRef.current.onAdd) {
-      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        unstableRef.current.onAdd?.(option.item.value)
-      })
-    }
-  }, [])
-  const handleSelect = useCallback((option: ComboboxOption<T>) => {
-    unstableRef.current.onSelect(option.item)
-  }, [])
-  const handleHoverOption = useCallback((option: ComboboxOption<T>) => {
-    setNavigationType('pointer')
-    setActiveOption(option)
-  }, [])
-
   const listBoxProps = useMemo(
     () => ({
       activeOptionId: activeOption?.id,
@@ -274,9 +257,9 @@ export const useListbox = <T,>({
       noResultText,
       listBoxId,
       listBoxRef,
-      handleAdd,
-      handleHoverOption,
-      handleSelect,
+      unstableRef,
+      setNavigationType,
+      setActiveOption,
       activeRef,
       listBoxRect,
       triggerWidth,
@@ -293,9 +276,6 @@ export const useListbox = <T,>({
       noResultText,
       listBoxId,
       listBoxRef,
-      handleAdd,
-      handleHoverOption,
-      handleSelect,
       activeRef,
       listBoxRect,
       triggerWidth,
@@ -323,9 +303,14 @@ type ListBoxProps<T> = {
   dropdownHelpMessage?: ReactNode
   listBoxId: string
   listBoxRef: RefObject<HTMLDivElement>
-  handleAdd: (option: ComboboxOption<T>) => void
-  handleHoverOption: (option: ComboboxOption<T>) => void
-  handleSelect: (option: ComboboxOption<T>) => void
+  unstableRef: RefObject<{
+    onAdd?: (label: string) => void
+    onSelect: (item: ComboboxItem<T>) => void
+    options: Array<ComboboxOption<T>>
+    activeOption: ComboboxOption<T> | null
+  }>
+  setNavigationType: (type: 'pointer' | 'key') => void
+  setActiveOption: (option: ComboboxOption<T> | null) => void
   activeRef: RefObject<HTMLButtonElement>
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
@@ -362,9 +347,9 @@ export const ListBox = memo(
     dropdownHelpMessage,
     listBoxId,
     listBoxRef,
-    handleAdd,
-    handleHoverOption,
-    handleSelect,
+    unstableRef,
+    setNavigationType,
+    setActiveOption,
     activeRef,
     listBoxRect,
     triggerWidth,
@@ -372,6 +357,37 @@ export const ListBox = memo(
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
     const theme = useTheme()
+
+    const handleSelect = useCallback(
+      (option: ComboboxOption<T>) => {
+        unstableRef.current!.onSelect(option.item)
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    )
+
+    const handleAdd = useCallback(
+      (option: ComboboxOption<T>) => {
+        if (unstableRef.current!.onAdd) {
+          // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+          // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+          requestAnimationFrame(() => {
+            unstableRef.current!.onAdd?.(option.item.value)
+          })
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    )
+
+    const handleHoverOption = useCallback(
+      (option: ComboboxOption<T>) => {
+        setNavigationType('pointer')
+        setActiveOption(option)
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    )
 
     const { localize } = useIntl()
     const texts = useMemo(
