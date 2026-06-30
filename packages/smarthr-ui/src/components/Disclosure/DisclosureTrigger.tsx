@@ -70,6 +70,7 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
     observer.observe(wrapper, {
       childList: true,
       subtree: true,
+      attributes: true,
     })
 
     return () => {

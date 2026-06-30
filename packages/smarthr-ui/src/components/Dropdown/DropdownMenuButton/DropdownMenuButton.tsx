@@ -249,6 +249,7 @@ const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
     observer.observe(listItem, {
       childList: true,
       subtree: true,
+      attributes: true,
     })
 
     return () => {

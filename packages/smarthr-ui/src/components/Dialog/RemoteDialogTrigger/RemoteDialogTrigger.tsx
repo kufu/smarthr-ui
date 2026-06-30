@@ -78,8 +78,9 @@ export const RemoteDialogTrigger: FC<
     })
 
     observer.observe(currentRef, {
-      childList: true, // 直接の子要素の追加・削除を監視
-      subtree: true, // 子孫要素の変更も監視
+      childList: true,
+      subtree: true,
+      attributes: true,
     })
 
     return () => {
