@@ -86,7 +86,7 @@ export const useSortDropdown = ({
 
   // 内部的な値
   const [innerFields, setInnerFields] = useState<Props['sortFields']>(sortFields)
-  const [innerSelectedField, setInnerSelectedField] = useState<string>()
+  const [innerSelectedField, setInnerSelectedField] = useState<string>('')
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   const propsRef = useRef({
@@ -102,13 +102,8 @@ export const useSortDropdown = ({
     onApply,
   }
 
-  const defaultFieldLabel = useMemo(() => {
-    if (selectedLabel) return selectedLabel
-
-    const nextField = sortFields.find((field) => field.selected) || sortFields[0]
-
-    return nextField.label
-  }, [sortFields, selectedLabel])
+  const defaultFieldLabel =
+    selectedLabel || (sortFields.find((field) => field.selected) || sortFields[0])?.label || ''
 
   useEffect(() => {
     setSelectedLabel(defaultFieldLabel)
