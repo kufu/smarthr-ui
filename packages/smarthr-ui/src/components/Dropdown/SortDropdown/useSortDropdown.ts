@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -88,6 +89,19 @@ export const useSortDropdown = ({
   const [innerSelectedField, setInnerSelectedField] = useState<string>()
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
+  const propsRef = useRef({
+    innerCheckedOrder,
+    innerFields,
+    innerSelectedField,
+    onApply,
+  })
+  propsRef.current = {
+    innerCheckedOrder,
+    innerFields,
+    innerSelectedField,
+    onApply,
+  }
+
   useEffect(() => {
     if (selectedLabel) return
 
@@ -98,39 +112,40 @@ export const useSortDropdown = ({
     setInnerSelectedField(defaultField.label)
   }, [selectedLabel, sortFields])
 
-  const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
-    (e) => {
-      const select = e.currentTarget
-      const newLabel = select.options[select.selectedIndex].label
+  const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((e) => {
+    const select = e.currentTarget
+    const newLabel = select.options[select.selectedIndex].label
 
-      setInnerFields(
-        innerFields.map((field) => {
-          if (field.label === newLabel) {
-            if (!field.selected) {
-              return {
-                ...field,
-                selected: true,
-              }
-            }
-          } else if (field.selected) {
+    setInnerFields((currentFields) =>
+      currentFields.map((field) => {
+        if (field.label === newLabel) {
+          if (!field.selected) {
             return {
               ...field,
-              selected: false,
+              selected: true,
             }
           }
+        } else if (field.selected) {
+          return {
+            ...field,
+            selected: false,
+          }
+        }
 
-          return field
-        }),
-      )
-      setInnerSelectedField(newLabel)
-    },
-    [innerFields],
-  )
+        return field
+      }),
+    )
+    setInnerSelectedField(newLabel)
+  }, [])
   const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
-    setSelectedLabel(innerSelectedField)
-    setCheckedOrder(innerCheckedOrder)
-    onApply({ field: innerSelectedField || '', order: innerCheckedOrder, newfields: innerFields })
-  }, [innerCheckedOrder, innerFields, innerSelectedField, onApply])
+    setSelectedLabel(propsRef.current.innerSelectedField)
+    setCheckedOrder(propsRef.current.innerCheckedOrder)
+    propsRef.current.onApply({
+      field: propsRef.current.innerSelectedField || '',
+      order: propsRef.current.innerCheckedOrder,
+      newfields: propsRef.current.innerFields,
+    })
+  }, [])
 
   const onChangeSortOrderRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
     setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
