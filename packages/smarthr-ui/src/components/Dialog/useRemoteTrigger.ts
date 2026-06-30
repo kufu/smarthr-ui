@@ -20,14 +20,14 @@ export function useRemoteTrigger({
   id,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const propsRef = useRef({
+  const unstableRef = useRef({
     onToggle,
     onOpen,
     onClose,
     orgOnClickClose,
     orgOnPressEscape,
   })
-  propsRef.current = {
+  unstableRef.current = {
     onToggle,
     onOpen,
     onClose,
@@ -37,18 +37,18 @@ export function useRemoteTrigger({
 
   const updateIsOpen = useCallback((newIsOpen: boolean) => {
     setIsOpen(newIsOpen)
-    propsRef.current.onToggle?.(newIsOpen)
+    unstableRef.current.onToggle?.(newIsOpen)
 
     if (newIsOpen) {
-      propsRef.current.onOpen?.()
+      unstableRef.current.onOpen?.()
     } else {
-      propsRef.current.onClose?.()
+      unstableRef.current.onClose?.()
     }
   }, [])
 
   const onClickClose = useCallback(() => {
-    if (propsRef.current.orgOnClickClose) {
-      return propsRef.current.orgOnClickClose(() => {
+    if (unstableRef.current.orgOnClickClose) {
+      return unstableRef.current.orgOnClickClose(() => {
         updateIsOpen(false)
       })
     }
@@ -57,8 +57,8 @@ export function useRemoteTrigger({
   }, [updateIsOpen])
 
   const onPressEscape = useCallback(() => {
-    if (propsRef.current.orgOnPressEscape) {
-      return propsRef.current.orgOnPressEscape(() => {
+    if (unstableRef.current.orgOnPressEscape) {
+      return unstableRef.current.orgOnPressEscape(() => {
         updateIsOpen(false)
       })
     }
