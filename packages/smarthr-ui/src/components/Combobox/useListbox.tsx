@@ -62,7 +62,6 @@ export const useListbox = <T,>({
   triggerRef,
   noResultText,
 }: Props<T>) => {
-  const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
 
   const propsRef = useRef({ onAdd, onSelect })
@@ -269,26 +268,6 @@ export const useListbox = <T,>({
     [setActiveOption],
   )
 
-  const wrapperStyle = useMemo(() => {
-    const { top, left } = listBoxRect
-
-    return {
-      top: `${top}px`,
-      left: `${left}px`,
-      width: `${triggerWidth}px`,
-    }
-  }, [listBoxRect, triggerWidth])
-  const dropdownListStyle = useMemo(() => {
-    const { left, height } = listBoxRect
-    const dropdownListWidth = dropdownWidth || triggerWidth
-
-    return {
-      width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-      maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
-      height: height ? `${height}px` : undefined,
-    }
-  }, [listBoxRect, triggerWidth, dropdownWidth, theme])
-
   const listBoxProps = useMemo(
     () => ({
       activeOptionId: activeOption?.id,
@@ -305,8 +284,9 @@ export const useListbox = <T,>({
       handleHoverOption,
       handleSelect,
       activeRef,
-      dropdownListStyle,
-      wrapperStyle,
+      listBoxRect,
+      triggerWidth,
+      dropdownWidth,
     }),
     [
       activeOption?.id,
@@ -323,8 +303,9 @@ export const useListbox = <T,>({
       handleHoverOption,
       handleSelect,
       activeRef,
-      dropdownListStyle,
-      wrapperStyle,
+      listBoxRect,
+      triggerWidth,
+      dropdownWidth,
     ],
   )
 
@@ -352,8 +333,9 @@ type ListBoxProps<T> = {
   handleHoverOption: (option: ComboboxOption<T>) => void
   handleSelect: (option: ComboboxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement>
-  dropdownListStyle: { width?: string; maxWidth?: string; height?: string; maxHeight?: string }
-  wrapperStyle: { width?: string }
+  listBoxRect: { top: number; left: number; height?: number }
+  triggerWidth: number
+  dropdownWidth?: string | number
 }
 
 const classNameGenerator = tv({
@@ -390,10 +372,12 @@ export const ListBox = memo(
     handleHoverOption,
     handleSelect,
     activeRef,
-    dropdownListStyle,
-    wrapperStyle,
+    listBoxRect,
+    triggerWidth,
+    dropdownWidth,
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
+    const theme = useTheme()
 
     const { localize } = useIntl()
     const texts = useMemo(
@@ -420,6 +404,27 @@ export const ListBox = memo(
         noItems: noItems(),
       }
     }, [])
+
+    const wrapperStyle = useMemo(() => {
+      const { top, left } = listBoxRect
+
+      return {
+        top: `${top}px`,
+        left: `${left}px`,
+        width: `${triggerWidth}px`,
+      }
+    }, [listBoxRect, triggerWidth])
+
+    const dropdownListStyle = useMemo(() => {
+      const { left, height } = listBoxRect
+      const dropdownListWidth = dropdownWidth || triggerWidth
+
+      return {
+        width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
+        maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
+        height: height ? `${height}px` : undefined,
+      }
+    }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
     return createPortal(
       <div className={classNames.wrapper} style={wrapperStyle}>
