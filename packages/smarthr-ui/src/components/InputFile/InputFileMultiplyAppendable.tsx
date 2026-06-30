@@ -3,6 +3,7 @@
 import {
   type ChangeEvent,
   type MouseEvent,
+  type PropsWithChildren,
   type ReactNode,
   forwardRef,
   memo,
@@ -66,16 +67,16 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       () => inputRef.current,
     )
 
-    const onChangeRef = useRef(onChange)
-    onChangeRef.current = onChange
+    const unstableRef = useRef({ onChange, files })
+    unstableRef.current = { onChange, files }
 
-    const filesRef = useRef(files)
-    filesRef.current = files
-
-    const updateInputFiles = useCallback((newFiles: File[]) => {
+    const updateFiles = useCallback((newFiles: File[]) => {
       if (!inputRef.current) {
         return
       }
+
+      unstableRef.current.onChange?.(newFiles)
+
       const buff = new DataTransfer()
       newFiles.forEach((file) => {
         buff.items.add(file)
@@ -84,16 +85,9 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       isUpdatingFilesDirectly.current = true
       inputRef.current.files = buff.files
       isUpdatingFilesDirectly.current = false
-    }, [])
 
-    const updateFiles = useCallback(
-      (newFiles: File[]) => {
-        onChangeRef.current?.(newFiles)
-        updateInputFiles(newFiles)
-        setFiles(newFiles)
-      },
-      [updateInputFiles],
-    )
+      setFiles(newFiles)
+    }, [])
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +98,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
         const newFiles = Array.from(e.target.files ?? [])
 
-        updateFiles([...filesRef.current, ...newFiles])
+        updateFiles([...unstableRef.current.files, ...newFiles])
       },
       [updateFiles],
     )
@@ -116,7 +110,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         }
 
         const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = filesRef.current.filter((_, i) => index !== i)
+        const newFiles = unstableRef.current.files.filter((_, i) => index !== i)
 
         // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
         inputRef.current.value = ''
@@ -131,18 +125,15 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         {!disabled && hasFileList && files.length > 0 && (
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
-              <li key={index} className={classNames.fileItem}>
-                <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
-                <Button
-                  variant="text"
-                  prefix={<FaTrashCanIcon />}
-                  value={index}
-                  onClick={handleDelete}
-                  className="smarthr-ui-InputFile-deleteButton"
-                >
-                  {destroyLabel}
-                </Button>
-              </li>
+              <FileListItem
+                key={index}
+                value={index}
+                onDeleteClick={handleDelete}
+                destroyLabel={destroyLabel}
+                className={classNames.fileItem}
+              >
+                {file.name}
+              </FileListItem>
             ))}
           </BaseColumn>
         )}
@@ -165,6 +156,30 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       </Stack>
     )
   },
+)
+
+type FileListItemProps = PropsWithChildren<{
+  value: number
+  onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
+  destroyLabel: string
+  className: string
+}>
+
+const FileListItem = memo<FileListItemProps>(
+  ({ value, onDeleteClick, destroyLabel, className, children }) => (
+    <li className={className}>
+      <span className="smarthr-ui-InputFile-fileName">{children}</span>
+      <Button
+        variant="text"
+        prefix={<FaTrashCanIcon />}
+        value={value}
+        onClick={onDeleteClick}
+        className="smarthr-ui-InputFile-deleteButton"
+      >
+        {destroyLabel}
+      </Button>
+    </li>
+  ),
 )
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (

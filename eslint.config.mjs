@@ -130,6 +130,12 @@ export default [
     },
   },
   {
+    files: ['**/ja.ts'],
+    rules: {
+      'smarthr/require-i18n-translation-sync': 'error',
+    },
+  },
+  {
     ignores: [
       'sandbox/',
       'storybook-static/',
