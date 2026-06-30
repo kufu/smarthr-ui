@@ -213,8 +213,8 @@ export const ModelessDialog: FC<Props> = ({
   }, [localize, wrapperPosition, debounceLiveRegionText])
 
   // 外部propsをrefに保存
-  const propsRef = useRef({ isOpen, onClickClose, onPressEscape })
-  propsRef.current = { isOpen, onClickClose, onPressEscape }
+  const unstableRef = useRef({ isOpen, onClickClose, onPressEscape })
+  unstableRef.current = { isOpen, onClickClose, onPressEscape }
 
   const positionStyle = useMemo(
     () => ({
@@ -229,7 +229,7 @@ export const ModelessDialog: FC<Props> = ({
   )
 
   const handleArrowKey = useCallback((e: KeyboardEvent) => {
-    if (!propsRef.current.isOpen || document.activeElement !== e.currentTarget) {
+    if (!unstableRef.current.isOpen || document.activeElement !== e.currentTarget) {
       return
     }
 
@@ -317,13 +317,13 @@ export const ModelessDialog: FC<Props> = ({
 
   const actualOnClickClose = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     lastFocusElementRef.current?.focus()
-    propsRef.current.onClickClose?.(e)
+    unstableRef.current.onClickClose?.(e)
   }, [])
 
   // stableなcallbackを作成
   const memoizedOnPressEscape = useCallback(() => {
     lastFocusElementRef.current?.focus()
-    propsRef.current.onPressEscape?.()
+    unstableRef.current.onPressEscape?.()
   }, [])
 
   useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
