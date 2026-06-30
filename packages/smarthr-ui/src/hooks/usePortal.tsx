@@ -36,8 +36,8 @@ export function usePortal() {
     }
   }, [currentSeq, parent.seqs])
 
-  const propsRef = useRef({ calculatedSeqs, portalRoot })
-  propsRef.current = { calculatedSeqs, portalRoot }
+  const unstableRef = useRef({ calculatedSeqs, portalRoot })
+  unstableRef.current = { calculatedSeqs, portalRoot }
 
   useEnhancedEffect(() => {
     // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
@@ -64,21 +64,21 @@ export function usePortal() {
 
   const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(({ children }) => {
     const value: ParentContextValue = {
-      seqs: propsRef.current.calculatedSeqs.parentSeqs,
+      seqs: unstableRef.current.calculatedSeqs.parentSeqs,
     }
 
     return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
   }, [])
 
   const wrappedCreatePortal = useCallback((children: ReactNode) => {
-    if (propsRef.current.portalRoot === null) {
+    if (unstableRef.current.portalRoot === null) {
       return null
     }
 
-    return createPortal(children, propsRef.current.portalRoot)
+    return createPortal(children, unstableRef.current.portalRoot)
   }, [])
 
-  const isPortalRootMounted = useCallback(() => propsRef.current.portalRoot !== null, [])
+  const isPortalRootMounted = useCallback(() => unstableRef.current.portalRoot !== null, [])
 
   return {
     portalRoot,

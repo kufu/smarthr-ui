@@ -89,13 +89,13 @@ export const useSortDropdown = ({
   const [innerSelectedField, setInnerSelectedField] = useState<string>('')
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
-  const propsRef = useRef({
+  const unstableRef = useRef({
     innerCheckedOrder,
     innerFields,
     innerSelectedField,
     onApply,
   })
-  propsRef.current = {
+  unstableRef.current = {
     innerCheckedOrder,
     innerFields,
     innerSelectedField,
@@ -136,12 +136,12 @@ export const useSortDropdown = ({
     setInnerSelectedField(newLabel)
   }, [])
   const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
-    setSelectedLabel(propsRef.current.innerSelectedField)
-    setCheckedOrder(propsRef.current.innerCheckedOrder)
-    propsRef.current.onApply({
-      field: propsRef.current.innerSelectedField || '',
-      order: propsRef.current.innerCheckedOrder,
-      newfields: propsRef.current.innerFields,
+    setSelectedLabel(unstableRef.current.innerSelectedField)
+    setCheckedOrder(unstableRef.current.innerCheckedOrder)
+    unstableRef.current.onApply({
+      field: unstableRef.current.innerSelectedField || '',
+      order: unstableRef.current.innerCheckedOrder,
+      newfields: unstableRef.current.innerFields,
     })
   }, [])
 
