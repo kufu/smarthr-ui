@@ -67,18 +67,15 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       () => inputRef.current,
     )
 
-    const onChangeRef = useRef(onChange)
-    onChangeRef.current = onChange
-
-    const filesRef = useRef(files)
-    filesRef.current = files
+    const unstableRef = useRef({ onChange, files })
+    unstableRef.current = { onChange, files }
 
     const updateFiles = useCallback((newFiles: File[]) => {
       if (!inputRef.current) {
         return
       }
 
-      onChangeRef.current?.(newFiles)
+      unstableRef.current.onChange?.(newFiles)
 
       const buff = new DataTransfer()
       newFiles.forEach((file) => {
@@ -101,7 +98,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
         const newFiles = Array.from(e.target.files ?? [])
 
-        updateFiles([...filesRef.current, ...newFiles])
+        updateFiles([...unstableRef.current.files, ...newFiles])
       },
       [updateFiles],
     )
@@ -113,7 +110,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         }
 
         const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = filesRef.current.filter((_, i) => index !== i)
+        const newFiles = unstableRef.current.files.filter((_, i) => index !== i)
 
         // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
         inputRef.current.value = ''
