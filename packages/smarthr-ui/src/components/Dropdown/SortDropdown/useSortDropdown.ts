@@ -98,17 +98,6 @@ export const useSortDropdown = ({
     setInnerSelectedField(defaultField.label)
   }, [selectedLabel, sortFields])
 
-  // 外向きな値で構成
-  const triggerLabel = useMemo(
-    () => `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
-    [texts.ascLabel, texts.descLabel, selectedLabel, checkedOrder],
-  )
-
-  const SortIcon = useMemo(
-    () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
-    [checkedOrder],
-  )
-
   const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
     (e) => {
       const select = e.currentTarget
@@ -161,11 +150,11 @@ export const useSortDropdown = ({
     onChangeSortOrderRadio,
     texts: {
       ...texts,
-      triggerLabel,
+      triggerLabel: `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
     },
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
-    SortIcon,
+    SortIcon: checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon,
     classNames,
   }
 }
