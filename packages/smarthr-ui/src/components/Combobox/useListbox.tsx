@@ -4,6 +4,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
   type RefObject,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -24,7 +25,6 @@ import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
-import { useActiveOption } from './useActiveOption'
 import { Intersection, usePartialRendering } from './usePartialRendering'
 
 import type { ComboboxItem, ComboboxOption } from './types'
@@ -51,24 +51,6 @@ type Rect = {
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
 
-const classNameGenerator = tv({
-  slots: {
-    wrapper: 'shr-absolute',
-    dropdownList: [
-      'smarthr-ui-Combobox-dropdownList',
-      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
-      /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
-      = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
-      'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
-      'aria-hidden:shr-hidden',
-    ],
-    helpMessage:
-      'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
-    loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
-    noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
-  },
-})
-
 export const useListbox = <T,>({
   options,
   dropdownHelpMessage,
@@ -78,12 +60,66 @@ export const useListbox = <T,>({
   isExpanded,
   isLoading,
   triggerRef,
-  noResultText: orgNoResultText,
+  noResultText,
 }: Props<T>) => {
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
-  const { localize } = useIntl()
+
+  const propsRef = useRef({ onAdd, onSelect })
+  propsRef.current = { onAdd, onSelect }
+
+  const optionsRef = useRef(options)
+  optionsRef.current = options
+
+  // useActiveOptionの内容を統合
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+
+  useEffect(() => {
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return optionsRef.current.find((option) => current.id === option.id) ?? null
+    })
+    // TODO: optionsの安定化方法を検討中
+  }, [options])
+
+  const moveActiveOptionIndex = useCallback(
+    (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
+      const opts = optionsRef.current
+
+      if (opts.every((option) => option.item.disabled)) {
+        return
+      }
+
+      const currentActiveIndex =
+        currentActive === null ? -1 : opts.findIndex((option) => option.id === currentActive.id)
+      let nextIndex = 0
+
+      if (currentActiveIndex !== -1) {
+        nextIndex = (currentActiveIndex + delta + opts.length) % opts.length
+      } else if (delta !== 1) {
+        nextIndex = opts.length - 1
+      }
+
+      const nextActive = opts[nextIndex]
+
+      if (nextActive) {
+        if (nextActive.item.disabled) {
+          // skip disabled item
+          moveActiveOptionIndex(nextActive, delta)
+        } else {
+          setActiveOption(nextActive)
+        }
+      }
+    },
+    [],
+  )
+
+  const activeOptionRef = useRef({ activeOption, setActiveOption, moveActiveOptionIndex })
+  activeOptionRef.current = { activeOption, setActiveOption, moveActiveOptionIndex }
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -148,7 +184,7 @@ export const useListbox = <T,>({
       height,
     })
     setTriggerWidth(rect.width)
-  }, [listBoxRef, triggerRef])
+  }, [triggerRef])
 
   const activeRef = useRef<HTMLButtonElement>(null)
 
@@ -171,45 +207,42 @@ export const useListbox = <T,>({
     } else if (activeRect.bottom > containerRect.bottom) {
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
-  }, [activeOption, listBoxRef, navigationType])
+  }, [activeOption, navigationType])
 
   useEnhancedEffect(() => {
     if (isExpanded) {
       // options の更新毎に座標を再計算する
       calculateRect()
     }
+    // TODO: optionsの安定化方法を検討中
   }, [calculateRect, isExpanded, options])
 
-  const onKeyDownListBox = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
-      setNavigationType('key')
+  const onKeyDownListBox = useCallback((e: KeyboardEvent<HTMLElement>) => {
+    setNavigationType('key')
 
-      if (KEY_DOWN_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(activeOption, 1)
-      } else if (KEY_UP_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(activeOption, -1)
-      } else if (e.key === 'Enter') {
-        if (activeOption === null) {
-          return
-        }
-
-        e.stopPropagation()
-
-        if (!activeOption.isNew) {
-          onSelect(activeOption.item)
-        } else if (onAdd) {
-          onAdd(activeOption.item.value)
-        }
-      } else {
-        setActiveOption(null)
+    if (KEY_DOWN_REGEX.test(e.key)) {
+      e.stopPropagation()
+      activeOptionRef.current.moveActiveOptionIndex(activeOptionRef.current.activeOption, 1)
+    } else if (KEY_UP_REGEX.test(e.key)) {
+      e.stopPropagation()
+      activeOptionRef.current.moveActiveOptionIndex(activeOptionRef.current.activeOption, -1)
+    } else if (e.key === 'Enter') {
+      if (activeOptionRef.current.activeOption === null) {
+        return
       }
-    },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
-  )
 
-  const { createPortal } = usePortal()
+      e.stopPropagation()
+
+      if (!activeOptionRef.current.activeOption.isNew) {
+        propsRef.current.onSelect(activeOptionRef.current.activeOption.item)
+      } else if (propsRef.current.onAdd) {
+        propsRef.current.onAdd(activeOptionRef.current.activeOption.item.value)
+      }
+    } else {
+      activeOptionRef.current.setActiveOption(null)
+    }
+  }, [])
+
   const listBoxId = useId()
   const {
     items: partialOptions,
@@ -217,31 +250,21 @@ export const useListbox = <T,>({
     shouldIntersection,
   } = usePartialRendering({
     items: options,
-    minLength: useMemo(
-      () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
-      [activeOption, options],
-    ),
+    minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
   })
 
-  const handleAdd = useMemo(
-    () =>
-      onAdd
-        ? (option: ComboboxOption<T>) => {
-            // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-            requestAnimationFrame(() => {
-              onAdd(option.item.value)
-            })
-          }
-        : undefined,
-    [onAdd],
-  )
-  const handleSelect = useCallback(
-    (option: ComboboxOption<T>) => {
-      onSelect(option.item)
-    },
-    [onSelect],
-  )
+  const handleAdd = useCallback((option: ComboboxOption<T>) => {
+    if (propsRef.current.onAdd) {
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        propsRef.current.onAdd?.(option.item.value)
+      })
+    }
+  }, [])
+  const handleSelect = useCallback((option: ComboboxOption<T>) => {
+    propsRef.current.onSelect(option.item)
+  }, [])
   const handleHoverOption = useCallback(
     (option: ComboboxOption<T>) => {
       setNavigationType('pointer')
@@ -270,81 +293,26 @@ export const useListbox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-  const classNames = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      dropdownList: dropdownList(),
-      helpMessage: helpMessage(),
-      loaderWrapper: loaderWrapper(),
-      noItems: noItems(),
-    }
-  }, [])
-
-  const texts = useMemo(
+  const listBoxProps = useMemo(
     () => ({
-      loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
-      noResultText:
-        orgNoResultText ??
-        localize({
-          id: 'smarthr-ui/Combobox/noResultsText',
-          defaultText: '一致する選択肢がありません。',
-        }),
+      activeOptionId: activeOption?.id,
+      onIntersect,
+      shouldIntersection,
+      partialOptions,
+      optionsLength: options.length,
+      isExpanded,
+      isLoading,
+      dropdownHelpMessage,
+      noResultText,
+      listBoxId,
+      listBoxRef,
+      handleAdd,
+      handleHoverOption,
+      handleSelect,
+      activeRef,
+      dropdownListStyle,
+      wrapperStyle,
     }),
-    [orgNoResultText, localize],
-  )
-
-  const renderListBox = useCallback(
-    () =>
-      createPortal(
-        <div className={classNames.wrapper} style={wrapperStyle}>
-          {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
-          )}
-          <Scroller
-            id={listBoxId}
-            ref={listBoxRef}
-            role="listbox"
-            aria-hidden={!isExpanded}
-            className={classNames.dropdownList}
-            style={dropdownListStyle}
-          >
-            {dropdownHelpMessage && (
-              <Text
-                className={classNames.helpMessage}
-                icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-                as="p"
-              >
-                {dropdownHelpMessage}
-              </Text>
-            )}
-            {isExpanded ? (
-              isLoading ? (
-                <div className={classNames.loaderWrapper}>
-                  <Loader aria-hidden />
-                </div>
-              ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {texts.noResultText}
-                </p>
-              ) : (
-                partialOptions.map((option) => (
-                  <ItemButton
-                    key={option.id}
-                    option={option}
-                    onAdd={handleAdd}
-                    onSelect={handleSelect}
-                    onMouseOver={handleHoverOption}
-                    activeRef={option.id === activeOption?.id ? activeRef : undefined}
-                  />
-                ))
-              )
-            ) : null}
-            {shouldIntersection && <Intersection onIntersect={onIntersect} />}
-          </Scroller>
-        </div>,
-      ),
     [
       activeOption?.id,
       onIntersect,
@@ -354,23 +322,160 @@ export const useListbox = <T,>({
       isExpanded,
       isLoading,
       dropdownHelpMessage,
+      noResultText,
       listBoxId,
-      texts,
+      listBoxRef,
       handleAdd,
       handleHoverOption,
       handleSelect,
-      classNames,
+      activeRef,
       dropdownListStyle,
       wrapperStyle,
-      createPortal,
     ],
   )
 
   return {
-    renderListBox,
+    listBoxProps,
     activeOption,
     onKeyDownListBox,
     listBoxId,
     listBoxRef,
   }
 }
+
+type ListBoxProps<T> = {
+  activeOptionId: string | undefined
+  onIntersect: () => void
+  shouldIntersection: boolean
+  partialOptions: Array<ComboboxOption<T>>
+  optionsLength: number
+  isExpanded: boolean
+  isLoading?: boolean
+  noResultText?: ReactNode
+  dropdownHelpMessage?: ReactNode
+  listBoxId: string
+  listBoxRef: RefObject<HTMLDivElement>
+  handleAdd: (option: ComboboxOption<T>) => void
+  handleHoverOption: (option: ComboboxOption<T>) => void
+  handleSelect: (option: ComboboxOption<T>) => void
+  activeRef: RefObject<HTMLButtonElement>
+  dropdownListStyle: { width?: string; maxWidth?: string; height?: string; maxHeight?: string }
+  wrapperStyle: { width?: string }
+}
+
+const classNameGenerator = tv({
+  slots: {
+    wrapper: 'shr-absolute',
+    dropdownList: [
+      'smarthr-ui-Combobox-dropdownList',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
+      = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
+      'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
+      'aria-hidden:shr-hidden',
+    ],
+    helpMessage:
+      'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
+    loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
+    noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
+  },
+})
+
+export const ListBox = memo(
+  <T,>({
+    activeOptionId,
+    onIntersect,
+    shouldIntersection,
+    partialOptions,
+    optionsLength,
+    isExpanded,
+    isLoading,
+    noResultText,
+    dropdownHelpMessage,
+    listBoxId,
+    listBoxRef,
+    handleAdd,
+    handleHoverOption,
+    handleSelect,
+    activeRef,
+    dropdownListStyle,
+    wrapperStyle,
+  }: ListBoxProps<T>) => {
+    const { createPortal } = usePortal()
+
+    const { localize } = useIntl()
+    const texts = useMemo(
+      () => ({
+        loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
+        noResultText:
+          noResultText ??
+          localize({
+            id: 'smarthr-ui/Combobox/noResultsText',
+            defaultText: '一致する選択肢がありません。',
+          }),
+      }),
+      [noResultText, localize],
+    )
+
+    const classNames = useMemo(() => {
+      const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
+
+      return {
+        wrapper: wrapper(),
+        dropdownList: dropdownList(),
+        helpMessage: helpMessage(),
+        loaderWrapper: loaderWrapper(),
+        noItems: noItems(),
+      }
+    }, [])
+
+    return createPortal(
+      <div className={classNames.wrapper} style={wrapperStyle}>
+        {isExpanded && isLoading && (
+          <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
+        )}
+        <Scroller
+          id={listBoxId}
+          ref={listBoxRef}
+          role="listbox"
+          aria-hidden={!isExpanded}
+          className={classNames.dropdownList}
+          style={dropdownListStyle}
+        >
+          {dropdownHelpMessage && (
+            <Text
+              className={classNames.helpMessage}
+              icon={<FaCircleInfoIcon color="TEXT_GREY" />}
+              as="p"
+            >
+              {dropdownHelpMessage}
+            </Text>
+          )}
+          {isExpanded ? (
+            isLoading ? (
+              <div className={classNames.loaderWrapper}>
+                <Loader aria-hidden />
+              </div>
+            ) : optionsLength === 0 ? (
+              <p role="alert" aria-live="polite" className={classNames.noItems}>
+                {texts.noResultText}
+              </p>
+            ) : (
+              partialOptions.map((option) => (
+                <ItemButton
+                  key={option.id}
+                  option={option}
+                  onAdd={handleAdd}
+                  onSelect={handleSelect}
+                  onMouseOver={handleHoverOption}
+                  activeRef={option.id === activeOptionId ? activeRef : undefined}
+                />
+              ))
+            )
+          ) : null}
+          {shouldIntersection && <Intersection onIntersect={onIntersect} />}
+        </Scroller>
+      </div>,
+    )
+  },
+) as <T>(props: ListBoxProps<T>) => ReactNode
