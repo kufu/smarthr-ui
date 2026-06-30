@@ -64,14 +64,17 @@ export const useListbox = <T,>({
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
 
+  // useActiveOptionの内容を統合
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+
   const propsRef = useRef({ onAdd, onSelect })
   propsRef.current = { onAdd, onSelect }
 
   const optionsRef = useRef(options)
   optionsRef.current = options
 
-  // useActiveOptionの内容を統合
-  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+  const activeOptionRef = useRef({ activeOption })
+  activeOptionRef.current = { activeOption }
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
@@ -80,7 +83,7 @@ export const useListbox = <T,>({
         return null
       }
 
-      return optionsRef.current.find((option) => current.id === option.id) ?? null
+      return options.find((option) => current.id === option.id) ?? null
     })
     // TODO: optionsの安定化方法を検討中
   }, [options])
@@ -116,9 +119,6 @@ export const useListbox = <T,>({
     },
     [],
   )
-
-  const activeOptionRef = useRef({ activeOption, moveActiveOptionIndex })
-  activeOptionRef.current = { activeOption, moveActiveOptionIndex }
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -216,31 +216,34 @@ export const useListbox = <T,>({
     // TODO: optionsの安定化方法を検討中
   }, [calculateRect, isExpanded, options])
 
-  const onKeyDownListBox = useCallback((e: KeyboardEvent<HTMLElement>) => {
-    setNavigationType('key')
+  const onKeyDownListBox = useCallback(
+    (e: KeyboardEvent<HTMLElement>) => {
+      setNavigationType('key')
 
-    if (KEY_DOWN_REGEX.test(e.key)) {
-      e.stopPropagation()
-      activeOptionRef.current.moveActiveOptionIndex(activeOptionRef.current.activeOption, 1)
-    } else if (KEY_UP_REGEX.test(e.key)) {
-      e.stopPropagation()
-      activeOptionRef.current.moveActiveOptionIndex(activeOptionRef.current.activeOption, -1)
-    } else if (e.key === 'Enter') {
-      if (activeOptionRef.current.activeOption === null) {
-        return
+      if (KEY_DOWN_REGEX.test(e.key)) {
+        e.stopPropagation()
+        moveActiveOptionIndex(activeOptionRef.current.activeOption, 1)
+      } else if (KEY_UP_REGEX.test(e.key)) {
+        e.stopPropagation()
+        moveActiveOptionIndex(activeOptionRef.current.activeOption, -1)
+      } else if (e.key === 'Enter') {
+        if (activeOptionRef.current.activeOption === null) {
+          return
+        }
+
+        e.stopPropagation()
+
+        if (!activeOptionRef.current.activeOption.isNew) {
+          propsRef.current.onSelect(activeOptionRef.current.activeOption.item)
+        } else if (propsRef.current.onAdd) {
+          propsRef.current.onAdd(activeOptionRef.current.activeOption.item.value)
+        }
+      } else {
+        setActiveOption(null)
       }
-
-      e.stopPropagation()
-
-      if (!activeOptionRef.current.activeOption.isNew) {
-        propsRef.current.onSelect(activeOptionRef.current.activeOption.item)
-      } else if (propsRef.current.onAdd) {
-        propsRef.current.onAdd(activeOptionRef.current.activeOption.item.value)
-      }
-    } else {
-      setActiveOption(null)
-    }
-  }, [])
+    },
+    [moveActiveOptionIndex],
+  )
 
   const listBoxId = useId()
   const { items: partialOptions, onIntersect } = usePartialRendering({
