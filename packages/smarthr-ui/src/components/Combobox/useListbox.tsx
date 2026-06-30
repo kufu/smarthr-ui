@@ -4,6 +4,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
   type RefObject,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -50,24 +51,6 @@ type Rect = {
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
 
-const classNameGenerator = tv({
-  slots: {
-    wrapper: 'shr-absolute',
-    dropdownList: [
-      'smarthr-ui-Combobox-dropdownList',
-      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
-      /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
-      = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
-      'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
-      'aria-hidden:shr-hidden',
-    ],
-    helpMessage:
-      'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
-    loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
-    noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
-  },
-})
-
 export const useListbox = <T,>({
   options,
   dropdownHelpMessage,
@@ -77,11 +60,10 @@ export const useListbox = <T,>({
   isExpanded,
   isLoading,
   triggerRef,
-  noResultText: orgNoResultText,
+  noResultText,
 }: Props<T>) => {
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const { localize } = useIntl()
 
   const propsRef = useRef({ onAdd, onSelect })
   propsRef.current = { onAdd, onSelect }
@@ -263,7 +245,6 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const { createPortal } = usePortal()
   const listBoxId = useId()
   const {
     items: partialOptions,
@@ -314,81 +295,26 @@ export const useListbox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-  const classNames = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      dropdownList: dropdownList(),
-      helpMessage: helpMessage(),
-      loaderWrapper: loaderWrapper(),
-      noItems: noItems(),
-    }
-  }, [])
-
-  const texts = useMemo(
+  const listBoxProps = useMemo(
     () => ({
-      loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
-      noResultText:
-        orgNoResultText ??
-        localize({
-          id: 'smarthr-ui/Combobox/noResultsText',
-          defaultText: '一致する選択肢がありません。',
-        }),
+      activeOptionId: activeOption?.id,
+      onIntersect,
+      shouldIntersection,
+      partialOptions,
+      optionsLength: options.length,
+      isExpanded,
+      isLoading,
+      dropdownHelpMessage,
+      noResultText,
+      listBoxId,
+      listBoxRef,
+      handleAdd,
+      handleHoverOption,
+      handleSelect,
+      activeRef,
+      dropdownListStyle,
+      wrapperStyle,
     }),
-    [orgNoResultText, localize],
-  )
-
-  const renderListBox = useCallback(
-    () =>
-      createPortal(
-        <div className={classNames.wrapper} style={wrapperStyle}>
-          {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
-          )}
-          <Scroller
-            id={listBoxId}
-            ref={listBoxRef}
-            role="listbox"
-            aria-hidden={!isExpanded}
-            className={classNames.dropdownList}
-            style={dropdownListStyle}
-          >
-            {dropdownHelpMessage && (
-              <Text
-                className={classNames.helpMessage}
-                icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-                as="p"
-              >
-                {dropdownHelpMessage}
-              </Text>
-            )}
-            {isExpanded ? (
-              isLoading ? (
-                <div className={classNames.loaderWrapper}>
-                  <Loader aria-hidden />
-                </div>
-              ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {texts.noResultText}
-                </p>
-              ) : (
-                partialOptions.map((option) => (
-                  <ItemButton
-                    key={option.id}
-                    option={option}
-                    onAdd={handleAdd}
-                    onSelect={handleSelect}
-                    onMouseOver={handleHoverOption}
-                    activeRef={option.id === activeOption?.id ? activeRef : undefined}
-                  />
-                ))
-              )
-            ) : null}
-            {shouldIntersection && <Intersection onIntersect={onIntersect} />}
-          </Scroller>
-        </div>,
-      ),
     [
       activeOption?.id,
       onIntersect,
@@ -398,23 +324,160 @@ export const useListbox = <T,>({
       isExpanded,
       isLoading,
       dropdownHelpMessage,
+      noResultText,
       listBoxId,
-      texts,
+      listBoxRef,
       handleAdd,
       handleHoverOption,
       handleSelect,
-      classNames,
+      activeRef,
       dropdownListStyle,
       wrapperStyle,
-      createPortal,
     ],
   )
 
   return {
-    renderListBox,
+    listBoxProps,
     activeOption,
     onKeyDownListBox,
     listBoxId,
     listBoxRef,
   }
 }
+
+type ListBoxProps<T> = {
+  activeOptionId: string | undefined
+  onIntersect: () => void
+  shouldIntersection: boolean
+  partialOptions: Array<ComboboxOption<T>>
+  optionsLength: number
+  isExpanded: boolean
+  isLoading?: boolean
+  noResultText?: ReactNode
+  dropdownHelpMessage?: ReactNode
+  listBoxId: string
+  listBoxRef: RefObject<HTMLDivElement>
+  handleAdd: (option: ComboboxOption<T>) => void
+  handleHoverOption: (option: ComboboxOption<T>) => void
+  handleSelect: (option: ComboboxOption<T>) => void
+  activeRef: RefObject<HTMLButtonElement>
+  dropdownListStyle: { width?: string; maxWidth?: string; height?: string; maxHeight?: string }
+  wrapperStyle: { width?: string }
+}
+
+const classNameGenerator = tv({
+  slots: {
+    wrapper: 'shr-absolute',
+    dropdownList: [
+      'smarthr-ui-Combobox-dropdownList',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
+      = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
+      'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
+      'aria-hidden:shr-hidden',
+    ],
+    helpMessage:
+      'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
+    loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
+    noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
+  },
+})
+
+export const ListBox = memo(
+  <T,>({
+    activeOptionId,
+    onIntersect,
+    shouldIntersection,
+    partialOptions,
+    optionsLength,
+    isExpanded,
+    isLoading,
+    noResultText,
+    dropdownHelpMessage,
+    listBoxId,
+    listBoxRef,
+    handleAdd,
+    handleHoverOption,
+    handleSelect,
+    activeRef,
+    dropdownListStyle,
+    wrapperStyle,
+  }: ListBoxProps<T>) => {
+    const { createPortal } = usePortal()
+
+    const { localize } = useIntl()
+    const texts = useMemo(
+      () => ({
+        loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
+        noResultText:
+          noResultText ??
+          localize({
+            id: 'smarthr-ui/Combobox/noResultsText',
+            defaultText: '一致する選択肢がありません。',
+          }),
+      }),
+      [noResultText, localize],
+    )
+
+    const classNames = useMemo(() => {
+      const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
+
+      return {
+        wrapper: wrapper(),
+        dropdownList: dropdownList(),
+        helpMessage: helpMessage(),
+        loaderWrapper: loaderWrapper(),
+        noItems: noItems(),
+      }
+    }, [])
+
+    return createPortal(
+      <div className={classNames.wrapper} style={wrapperStyle}>
+        {isExpanded && isLoading && (
+          <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
+        )}
+        <Scroller
+          id={listBoxId}
+          ref={listBoxRef}
+          role="listbox"
+          aria-hidden={!isExpanded}
+          className={classNames.dropdownList}
+          style={dropdownListStyle}
+        >
+          {dropdownHelpMessage && (
+            <Text
+              className={classNames.helpMessage}
+              icon={<FaCircleInfoIcon color="TEXT_GREY" />}
+              as="p"
+            >
+              {dropdownHelpMessage}
+            </Text>
+          )}
+          {isExpanded ? (
+            isLoading ? (
+              <div className={classNames.loaderWrapper}>
+                <Loader aria-hidden />
+              </div>
+            ) : optionsLength === 0 ? (
+              <p role="alert" aria-live="polite" className={classNames.noItems}>
+                {texts.noResultText}
+              </p>
+            ) : (
+              partialOptions.map((option) => (
+                <ItemButton
+                  key={option.id}
+                  option={option}
+                  onAdd={handleAdd}
+                  onSelect={handleSelect}
+                  onMouseOver={handleHoverOption}
+                  activeRef={option.id === activeOptionId ? activeRef : undefined}
+                />
+              ))
+            )
+          ) : null}
+          {shouldIntersection && <Intersection onIntersect={onIntersect} />}
+        </Scroller>
+      </div>,
+    )
+  },
+) as <T>(props: ListBoxProps<T>) => ReactNode
