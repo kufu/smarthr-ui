@@ -1,7 +1,6 @@
 import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
-const RETURN_NULL = () => null
 
 export function usePartialRendering<T>({
   items,
@@ -29,18 +28,14 @@ export function usePartialRendering<T>({
     setCurrentItemLength((current) => limiterRef.current(current + OPTION_INCREMENT_AMOUNT))
   }, [])
 
-  const renderIntersection = useCallback(
-    () => <Intersection onIntersect={onIntersect} />,
-    [onIntersect],
-  )
-
   return {
     items: partialItems,
-    renderIntersection: currentItemLength >= items.length ? RETURN_NULL : renderIntersection,
+    onIntersect,
+    shouldIntersection: currentItemLength < items.length,
   }
 }
 
-const Intersection: FC<{ onIntersect: () => void }> = memo(({ onIntersect }) => {
+export const Intersection: FC<{ onIntersect: () => void }> = memo(({ onIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

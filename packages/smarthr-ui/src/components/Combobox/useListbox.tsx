@@ -24,7 +24,7 @@ import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
-import { usePartialRendering } from './usePartialRendering'
+import { Intersection, usePartialRendering } from './usePartialRendering'
 
 import type { ComboboxItem, ComboboxOption } from './types'
 
@@ -265,7 +265,11 @@ export const useListbox = <T,>({
 
   const { createPortal } = usePortal()
   const listBoxId = useId()
-  const { items: partialOptions, renderIntersection } = usePartialRendering({
+  const {
+    items: partialOptions,
+    onIntersect,
+    shouldIntersection,
+  } = usePartialRendering({
     items: options,
     minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
   })
@@ -381,13 +385,14 @@ export const useListbox = <T,>({
                 ))
               )
             ) : null}
-            {renderIntersection()}
+            {shouldIntersection && <Intersection onIntersect={onIntersect} />}
           </Scroller>
         </div>,
       ),
     [
       activeOption?.id,
-      renderIntersection,
+      onIntersect,
+      shouldIntersection,
       partialOptions,
       options.length,
       isExpanded,
