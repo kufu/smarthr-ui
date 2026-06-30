@@ -67,8 +67,24 @@ export const useListbox = <T,>({
   // useActiveOptionの内容を統合
   const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
 
-  const unstableRef = useRef({ onAdd, onSelect, options, activeOption })
-  unstableRef.current = { onAdd, onSelect, options, activeOption }
+  // setNavigationType と setActiveOption は useState の setter で stable だが、
+  // ListBox 内で使用するために unstableRef に含めている
+  const unstableRef = useRef({
+    onAdd,
+    onSelect,
+    options,
+    activeOption,
+    setNavigationType,
+    setActiveOption,
+  })
+  unstableRef.current = {
+    onAdd,
+    onSelect,
+    options,
+    activeOption,
+    setNavigationType,
+    setActiveOption,
+  }
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
@@ -257,8 +273,6 @@ export const useListbox = <T,>({
     listBoxId,
     listBoxRef,
     unstableRef,
-    setNavigationType,
-    setActiveOption,
     activeRef,
     listBoxRect,
     triggerWidth,
@@ -290,9 +304,9 @@ type ListBoxProps<T> = {
     onSelect: (item: ComboboxItem<T>) => void
     options: Array<ComboboxOption<T>>
     activeOption: ComboboxOption<T> | null
+    setNavigationType: (type: 'pointer' | 'key') => void
+    setActiveOption: (option: ComboboxOption<T> | null) => void
   }>
-  setNavigationType: (type: 'pointer' | 'key') => void
-  setActiveOption: (option: ComboboxOption<T> | null) => void
   activeRef: RefObject<HTMLButtonElement>
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
@@ -330,8 +344,6 @@ export const ListBox = memo(
     listBoxId,
     listBoxRef,
     unstableRef,
-    setNavigationType,
-    setActiveOption,
     activeRef,
     listBoxRect,
     triggerWidth,
@@ -364,8 +376,8 @@ export const ListBox = memo(
 
     const handleHoverOption = useCallback(
       (option: ComboboxOption<T>) => {
-        setNavigationType('pointer')
-        setActiveOption(option)
+        unstableRef.current!.setNavigationType('pointer')
+        unstableRef.current!.setActiveOption(option)
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [],
