@@ -130,13 +130,6 @@ export const useListbox = <T,>({
     [],
   )
 
-  useEffect(() => {
-    // 閉じたときに activeOption を初期化
-    if (!isExpanded) {
-      setActiveOption(null)
-    }
-  }, [isExpanded])
-
   const listBoxRef = useRef<HTMLDivElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
@@ -146,13 +139,16 @@ export const useListbox = <T,>({
   const [triggerWidth, setTriggerWidth] = useState(0)
 
   useEffect(() => {
-    if (!triggerRef.current) {
-      return
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      setActiveOption(null)
     }
 
-    const rect = triggerRef.current.getBoundingClientRect()
-
-    setTriggerWidth(rect.width)
+    // triggerWidth の更新
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect()
+      setTriggerWidth(rect.width)
+    }
   }, [isExpanded, triggerRef])
 
   const calculateRect = useCallback(() => {
