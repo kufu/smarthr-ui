@@ -220,7 +220,7 @@ export const useListbox = <T,>({
       calculateRect()
     }
     // TODO: optionsの安定化方法を検討中
-  }, [calculateRect, isExpanded, options])
+  }, [isExpanded, options, calculateRect])
 
   const onKeyDownListBox = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
