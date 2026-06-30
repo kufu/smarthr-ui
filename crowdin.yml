@@ -1,0 +1,49 @@
+# Crowdinの設定ファイル
+# 参照：https://support.crowdin.com/developer/configuration-file/
+
+# CrowdinプロジェクトID
+project_id_env: "CROWDIN_PROJECT_ID"
+
+# このディレクトリを基準にパスを解決
+base_path: .
+
+# Crowdin API URL
+base_url_env: "CROWDIN_BASE_URL"
+
+# Crowdin上でフォルダ構成を保持
+preserve_hierarchy: 1
+
+# Crowdinの認証トークン
+api_token_env: "CROWDIN_PERSONAL_TOKEN"
+
+files:
+  # 原文の辞書ファイルへのパス
+  - source: packages/smarthr-ui/src/intl/locales/ja.ts
+
+    # 翻訳の辞書ファイルへのパス
+    translation: packages/smarthr-ui/src/intl/locales/%locale%.ts
+
+    # Crowdin上のファイル表示階層
+    dest: ja.ts
+
+    # 除外するファイル
+    ignore:
+      - "packages/smarthr-ui/src/intl/locales/index.ts"
+
+    # 翻訳をエクスポートする時に未翻訳の文字列を除外（""として書き込む）
+    skip_untranslated_strings: 1
+
+    # 確定済みの翻訳のみエクスポート
+    export_only_approved: 1
+
+    # Crowdinの言語コードをカスタムなロケール名に変換
+    languages_mapping:
+      locale:
+        en-US: en_us
+        id: id_id
+        ja-easy: ja_easy
+        ko: ko_kr
+        pt-BR: pt_br
+        vi: vi_vn
+        zh-CN: zh_hans_cn
+        zh-TW: zh_hant_tw
