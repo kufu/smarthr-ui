@@ -20,31 +20,40 @@ export function useRemoteTrigger({
   id,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const togglerRef = useRef<Pick<Props, 'onToggle' | 'onOpen' | 'onClose'>>({
+  const propsRef = useRef({
     onToggle,
     onOpen,
     onClose,
+    orgOnClickClose,
+    orgOnPressEscape,
   })
+  propsRef.current = {
+    onToggle,
+    onOpen,
+    onClose,
+    orgOnClickClose,
+    orgOnPressEscape,
+  }
 
   const onClickClose = useCallback(() => {
-    if (orgOnClickClose) {
-      return orgOnClickClose(() => {
+    if (propsRef.current.orgOnClickClose) {
+      return propsRef.current.orgOnClickClose(() => {
         setIsOpen(false)
       })
     }
 
     setIsOpen(false)
-  }, [orgOnClickClose])
+  }, [])
 
   const onPressEscape = useCallback(() => {
-    if (orgOnPressEscape) {
-      return orgOnPressEscape(() => {
+    if (propsRef.current.orgOnPressEscape) {
+      return propsRef.current.orgOnPressEscape(() => {
         setIsOpen(false)
       })
     }
 
     setIsOpen(false)
-  }, [orgOnPressEscape])
+  }, [])
 
   useEffect(() => {
     const handler = ((e: Event & { detail: { id: string } }) => {
@@ -61,18 +70,12 @@ export function useRemoteTrigger({
   }, [id])
 
   useEffect(() => {
-    togglerRef.current.onToggle = onToggle
-    togglerRef.current.onOpen = onOpen
-    togglerRef.current.onClose = onClose
-  }, [onToggle, onOpen, onClose])
-
-  useEffect(() => {
-    togglerRef.current.onToggle?.(isOpen)
+    propsRef.current.onToggle?.(isOpen)
 
     if (isOpen) {
-      togglerRef.current.onOpen?.()
+      propsRef.current.onOpen?.()
     } else {
-      togglerRef.current.onClose?.()
+      propsRef.current.onClose?.()
     }
   }, [isOpen])
 
