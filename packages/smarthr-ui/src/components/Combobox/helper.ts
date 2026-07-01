@@ -3,16 +3,18 @@ import innerText from 'react-innertext'
 import type { ComboboxItem } from './types'
 
 const CHAR_MAP: Record<string, string> = {
-  '\u2019': "'", // '
-  '\u201C': '"', // "
-  '\u201D': '"', // "
+  '\u2019': "'", // ’
+  '\u201C': '"', // “
+  '\u201D': '"', // ”
   '｀': '`',
   '￥': '¥',
   '−': '-',
   '〜': '~',
 }
 
-const NORMALIZE_PATTERN = new RegExp(`[\\s${Object.keys(CHAR_MAP).join('')}]|[！-｝]`, 'g')
+// 変換対象：空白・特殊な全角記号（マップ変換用）および Unicode [！]〜[｝] の全角英数記号
+// ※ [−]（全角マイナス）は正規表現の範囲指定ハイフンと誤認されないよう、エスケープなしで安全な位置に配置
+const NORMALIZE_PATTERN = /[\s’“”｀￥−〜\uFF01-\uFF5D]/g
 const WHITESPACE_PATTERN = /\s/
 
 const normalizeChar = (match: string): string => {
@@ -21,9 +23,9 @@ const normalizeChar = (match: string): string => {
 
   // マッピングテーブルでの変換
   const mappedMatch = CHAR_MAP[match]
-  if (mappedMatch) return mappedMatch
+  if (mappedMatch !== undefined) return mappedMatch
 
-  // 全角英数記号の半角化（unicode で [！] から [｝] の間に定義されている英数・記号を半角に変換）
+  // 全角英数記号の半角化
   const code = match.charCodeAt(0)
   if (code >= 0xff01 && code <= 0xff5d) {
     return String.fromCharCode(code - 0xfee0)
