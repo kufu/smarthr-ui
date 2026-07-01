@@ -112,20 +112,20 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const propsRef = useRef({ onClick, hrefTemplate })
-  propsRef.current = { onClick, hrefTemplate }
+  const unstableRef = useRef({ onClick, hrefTemplate })
+  unstableRef.current = { onClick, hrefTemplate }
 
   const stableHrefTemplate = useCallback(
-    (pageNumber: number) => propsRef.current.hrefTemplate!(pageNumber),
+    (pageNumber: number) => unstableRef.current.hrefTemplate!(pageNumber),
     [],
   )
 
   const onDelegateClick = useCallback((e: MouseEvent<HTMLElement>) => {
-    if (!propsRef.current.onClick) {
+    if (!unstableRef.current.onClick) {
       return
     }
 
-    if (propsRef.current.hrefTemplate) {
+    if (unstableRef.current.hrefTemplate) {
       const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
       if (!anchor) {
@@ -135,13 +135,16 @@ const ActualPagination: FC<Props> = ({
       const href = (anchor as HTMLAnchorElement).href
 
       if (href) {
-        ;(propsRef.current.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(href, e)
+        ;(unstableRef.current.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(
+          href,
+          e,
+        )
       }
     } else {
       const button = getTargetDelegateElement(e, BUTTON_REGEX)
 
       if (button) {
-        ;(propsRef.current.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
+        ;(unstableRef.current.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
           parseInt((button as HTMLButtonElement).value, 10),
           e,
         )
