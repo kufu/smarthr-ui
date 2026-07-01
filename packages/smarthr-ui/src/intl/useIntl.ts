@@ -8,15 +8,15 @@ import {
 } from 'react-intl'
 
 import { useAvailableLocales } from './IntlProvider'
-import { locales } from './locales'
+import { locales, type typedJa } from './locales'
 
 import type { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
 
-type Messages = Record<keyof typeof locales.ja, string>
+type Messages = Record<keyof typeof typedJa, string>
 
 type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescriptor, 'id'> & {
   id: T
-  defaultText: (typeof locales.ja)[T]
+  defaultText: (typeof typedJa)[T]
 }
 
 type DatePart = 'year' | 'month' | 'day' | 'weekday'
