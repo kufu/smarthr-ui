@@ -63,7 +63,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     }, [disabled, size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
-    const isUpdatingFilesDirectly = useRef(false)
+    const isUpdatingFilesRef = useRef(false)
 
     const inputRef = useRef<HTMLInputElement>(null)
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
@@ -84,7 +84,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        if (!isUpdatingFilesDirectly.current) {
+        if (!isUpdatingFilesRef.current) {
           updateFiles(Array.from(e.target.files ?? []))
         }
       },
@@ -108,9 +108,9 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           buff.items.add(file)
         })
 
-        isUpdatingFilesDirectly.current = true
+        isUpdatingFilesRef.current = true
         inputRef.current.files = buff.files
-        isUpdatingFilesDirectly.current = false
+        isUpdatingFilesRef.current = false
       },
       [updateFiles],
     )
