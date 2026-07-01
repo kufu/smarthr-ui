@@ -1,16 +1,21 @@
+/*
+ * 翻訳データの集約ファイル
+ * このファイルはJSONファイルからデータをimportし、型定義のためにja.tsからのみ型をexportする特殊なファイルです。
+ * barrel patternには該当しないため、require-barrel-importルールを無効化します。
+ */
 /* eslint-disable smarthr/require-barrel-import */
-import { locale as enUs } from './en_us'
-import { locale as idId } from './id_id'
-import { locale as ja } from './ja'
-import { locale as jaEasy } from './ja_easy'
-import { locale as ko } from './ko_kr'
-import { locale as pt } from './pt_br'
-import { locale as vi } from './vi_vn'
-import { locale as zhCn } from './zh_hans_cn'
-import { locale as zhTw } from './zh_hant_tw'
+import enUs from './en_us.json'
+import idId from './id_id.json'
+import ja from './ja.json'
+import jaEasy from './ja_easy.json'
+import ko from './ko_kr.json'
+import pt from './pt_br.json'
+import vi from './vi_vn.json'
+import zhCn from './zh_hans_cn.json'
+import zhTw from './zh_hant_tw.json'
 
-// 他のlocaleファイル（en_us.ts, id_id.ts等）が `import type { ja } from '.'` で型を参照するためにexport
-export { ja }
+// 型定義用にja.tsの型をexport
+export { locale as typedJa } from './ja'
 
 export const locales = {
   ja,

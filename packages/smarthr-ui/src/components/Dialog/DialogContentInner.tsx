@@ -6,6 +6,7 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
+  useCallback,
   useMemo,
   useRef,
 } from 'react'
@@ -122,9 +123,16 @@ export const DialogContentInner: FC<Props> = ({
 
   const innerRef = useRef<HTMLDivElement>(null)
 
-  useHandleEscape(
-    useMemo(() => (onPressEscape && isOpen ? onPressEscape : undefined), [isOpen, onPressEscape]),
-  )
+  // 外部propsのonPressEscapeをrefに保存
+  const onPressEscapeRef = useRef(onPressEscape)
+  onPressEscapeRef.current = onPressEscape
+
+  // stableなcallbackを作成
+  const memoizedOnPressEscape = useCallback(() => {
+    onPressEscapeRef.current?.()
+  }, [])
+
+  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
 
   useBodyScrollLock(isOpen)
 
