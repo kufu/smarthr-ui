@@ -12,7 +12,7 @@ const CHAR_MAP: Record<string, string> = {
   '〜': '~',
 }
 
-const NORMALIZE_PATTERN = /[\s\u2019\u201C\u201D｀￥−〜]|[！-｝]/g
+const NORMALIZE_PATTERN = new RegExp(`[\\s${Object.keys(CHAR_MAP).join('')}]|[！-｝]`, 'g')
 const WHITESPACE_PATTERN = /\s/
 
 const normalizeChar = (match: string): string => {
