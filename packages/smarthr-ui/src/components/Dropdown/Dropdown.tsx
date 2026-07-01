@@ -64,14 +64,14 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const triggerElementRef = useRef<HTMLDivElement>(null)
   const contentId = useId()
 
-  const propsRef = useRef({
+  const unstableRef = useRef({
     active,
     isPortalRootMounted,
     onOpen,
     onClose,
     createPortal,
   })
-  propsRef.current = {
+  unstableRef.current = {
     active,
     isPortalRootMounted,
     onOpen,
@@ -82,7 +82,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(() => {
     const result: FC<{ children: ReactNode }> = (props) =>
-      propsRef.current.active ? propsRef.current.createPortal(props.children) : null
+      unstableRef.current.active ? unstableRef.current.createPortal(props.children) : null
 
     // set the displayName explicit for DevTools
     result.displayName = 'DropdownContentRoot'
@@ -129,8 +129,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [isChildPortal, portalRoot, contentId])
 
   useEffect(() => {
-    if (propsRef.current.isPortalRootMounted()) {
-      propsRef.current[active ? 'onOpen' : 'onClose']?.()
+    if (unstableRef.current.isPortalRootMounted()) {
+      unstableRef.current[active ? 'onOpen' : 'onClose']?.()
     }
   }, [active])
 
