@@ -210,7 +210,7 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const propsRef = useRef({
+  const unstableRef = useRef({
     onChange,
     onChangeInput,
     onAdd,
@@ -223,8 +223,12 @@ const ActualSingleCombobox = <T,>(
     onKeyPress,
     defaultItem,
     selectedItem,
+    isFocused,
+    isExpanded,
+    isComposing,
+    isEditing,
   })
-  propsRef.current = {
+  unstableRef.current = {
     onChange,
     onChangeInput,
     onAdd,
@@ -237,10 +241,11 @@ const ActualSingleCombobox = <T,>(
     onKeyPress,
     defaultItem,
     selectedItem,
+    isFocused,
+    isExpanded,
+    isComposing,
+    isEditing,
   }
-
-  const stateRef = useRef({ isFocused, isExpanded, isComposing, isEditing })
-  stateRef.current = { isFocused, isExpanded, isComposing, isEditing }
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
@@ -258,11 +263,11 @@ const ActualSingleCombobox = <T,>(
     dropdownWidth,
     onAdd,
     onSelect: useCallback((selected: ComboboxItem<T>) => {
-      propsRef.current.onSelect?.(selected)
-      propsRef.current.onChangeSelected?.(selected)
+      unstableRef.current.onSelect?.(selected)
+      unstableRef.current.onChangeSelected?.(selected)
 
       // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-      propsRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+      unstableRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
 
       // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
@@ -279,31 +284,31 @@ const ActualSingleCombobox = <T,>(
   })
 
   const selectDefaultItem = useCallback(() => {
-    if (propsRef.current.onSelect && propsRef.current.defaultItem) {
-      propsRef.current.onSelect(propsRef.current.defaultItem)
+    if (unstableRef.current.onSelect && unstableRef.current.defaultItem) {
+      unstableRef.current.onSelect(unstableRef.current.defaultItem)
     }
   }, [])
 
   const focus = useCallback(() => {
-    propsRef.current.onFocus?.()
+    unstableRef.current.onFocus?.()
     inputRef.current?.focus()
     setIsFocused(true)
 
-    if (!stateRef.current.isFocused) {
+    if (!unstableRef.current.isFocused) {
       setIsExpanded(true)
     }
   }, [])
   const unfocus = useCallback(() => {
-    if (!stateRef.current.isFocused) return
+    if (!unstableRef.current.isFocused) return
 
-    propsRef.current.onBlur?.()
+    unstableRef.current.onBlur?.()
 
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (propsRef.current.selectedItem) {
-      setInputValue(innerText(propsRef.current.selectedItem.label))
+    if (unstableRef.current.selectedItem) {
+      setInputValue(innerText(unstableRef.current.selectedItem.label))
     } else {
       selectDefaultItem()
     }
@@ -313,7 +318,7 @@ const ActualSingleCombobox = <T,>(
 
     let isExecutedPreventDefault = false
 
-    propsRef.current.onClearClick?.({
+    unstableRef.current.onClearClick?.({
       ...e,
       preventDefault: () => {
         e.preventDefault()
@@ -322,8 +327,8 @@ const ActualSingleCombobox = <T,>(
     })
 
     if (!isExecutedPreventDefault) {
-      propsRef.current.onClear?.()
-      propsRef.current.onChangeSelected?.(null)
+      unstableRef.current.onClear?.()
+      unstableRef.current.onChangeSelected?.(null)
 
       inputRef.current?.focus()
 
@@ -341,37 +346,37 @@ const ActualSingleCombobox = <T,>(
 
       inputRef.current?.focus()
 
-      if (!stateRef.current.isExpanded) {
+      if (!unstableRef.current.isExpanded) {
         setIsExpanded(true)
       }
     },
     [disabled, readOnly],
   )
   const actualOnChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    propsRef.current.onChange?.(e)
-    propsRef.current.onChangeInput?.(e)
+    unstableRef.current.onChange?.(e)
+    unstableRef.current.onChangeInput?.(e)
 
-    if (!stateRef.current.isEditing) setIsEditing(true)
+    if (!unstableRef.current.isEditing) setIsEditing(true)
 
     const { value } = e.currentTarget
 
     setInputValue(value)
 
     if (value === '') {
-      propsRef.current.onClear?.()
-      propsRef.current.onChangeSelected?.(null)
+      unstableRef.current.onClear?.()
+      unstableRef.current.onChangeSelected?.(null)
     }
   }, [])
   const onCompositionStart = useCallback(() => setIsComposing(true), [])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (stateRef.current.isComposing) {
+      if (unstableRef.current.isComposing) {
         return
       }
 
       if (ESCAPE_KEY_REGEX.test(e.key)) {
-        if (stateRef.current.isExpanded) {
+        if (unstableRef.current.isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
         }
@@ -384,7 +389,7 @@ const ActualSingleCombobox = <T,>(
 
         inputRef.current?.focus()
 
-        if (!stateRef.current.isExpanded) {
+        if (!unstableRef.current.isExpanded) {
           setIsExpanded(true)
         }
       }
@@ -399,7 +404,7 @@ const ActualSingleCombobox = <T,>(
   const handleKeyPress = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') e.preventDefault()
 
-    propsRef.current.onKeyPress?.(e)
+    unstableRef.current.onKeyPress?.(e)
   }, [])
 
   const caretIconColor = isFocused
