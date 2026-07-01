@@ -192,7 +192,7 @@ const ActualMultiCombobox = <T,>(
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
 
-  const propsRef = useRef({
+  const unstableRef = useRef({
     onChange,
     onChangeInput,
     onAdd,
@@ -205,7 +205,7 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     selectedItems,
   })
-  propsRef.current = {
+  unstableRef.current = {
     onChange,
     onChangeInput,
     onAdd,
@@ -232,13 +232,13 @@ const ActualMultiCombobox = <T,>(
   const actualOnDelete = useCallback((item: ComboboxItem<T>) => {
     const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
-    if (propsRef.current.onDelete) {
-      handlers.push((deletingItem: ComboboxItem<T>) => propsRef.current.onDelete!(deletingItem))
+    if (unstableRef.current.onDelete) {
+      handlers.push((deletingItem: ComboboxItem<T>) => unstableRef.current.onDelete!(deletingItem))
     }
-    if (propsRef.current.onChangeSelected) {
+    if (unstableRef.current.onChangeSelected) {
       handlers.push((deletingItem: ComboboxItem<T>) =>
-        propsRef.current.onChangeSelected!(
-          propsRef.current.selectedItems.filter(
+        unstableRef.current.onChangeSelected!(
+          unstableRef.current.selectedItems.filter(
             (selected) => !areItemsEqual(selected, deletingItem),
           ),
         ),
@@ -258,16 +258,16 @@ const ActualMultiCombobox = <T,>(
       // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = propsRef.current.selectedItems.find((item) =>
+        const matchedSelectedItem = unstableRef.current.selectedItems.find((item) =>
           areItemsEqual(item, selected),
         )
 
         if (matchedSelectedItem === undefined) {
-          propsRef.current.onSelect?.(selected)
-          propsRef.current.onChangeSelected?.(propsRef.current.selectedItems.concat(selected))
+          unstableRef.current.onSelect?.(selected)
+          unstableRef.current.onChangeSelected?.(unstableRef.current.selectedItems.concat(selected))
 
           // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          propsRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          unstableRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         } else if (matchedSelectedItem.deletable !== false) {
           actualOnDelete(selected)
         }
@@ -299,13 +299,13 @@ const ActualMultiCombobox = <T,>(
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   const focus = useCallback(() => {
-    propsRef.current.onFocus?.()
+    unstableRef.current.onFocus?.()
     setIsFocused(true)
   }, [])
 
   const blur = useCallback(() => {
     if (stateRef.current.isFocused) {
-      propsRef.current.onBlur?.()
+      unstableRef.current.onBlur?.()
       setIsFocused(false)
       resetDeletionButtonFocus()
     }
@@ -354,14 +354,15 @@ const ActualMultiCombobox = <T,>(
       } else if (
         e.key === 'Backspace' &&
         isInputEmpty &&
-        propsRef.current.selectedItems.length > 0 &&
-        propsRef.current.selectedItems[propsRef.current.selectedItems.length - 1].deletable !==
-          false
+        unstableRef.current.selectedItems.length > 0 &&
+        unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1]
+          .deletable !== false
       ) {
         e.preventDefault()
         e.stopPropagation()
 
-        const lastItem = propsRef.current.selectedItems[propsRef.current.selectedItems.length - 1]
+        const lastItem =
+          unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1]
 
         actualOnDelete(lastItem)
         setHighlighted(true)
@@ -399,7 +400,7 @@ const ActualMultiCombobox = <T,>(
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const handlers = [propsRef.current.onChange, propsRef.current.onChangeInput].filter(
+      const handlers = [unstableRef.current.onChange, unstableRef.current.onChangeInput].filter(
         (h) => !!h,
       )
 
@@ -430,7 +431,7 @@ const ActualMultiCombobox = <T,>(
   // submitイベントが発生し、formが送信される場合がある
   const onDelegateKeyPress = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     preventDefaultWithPressEnter(e)
-    propsRef.current.onKeyPress?.(e)
+    unstableRef.current.onKeyPress?.(e)
   }, [])
 
   const selectedListId = useId()
