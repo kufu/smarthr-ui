@@ -334,62 +334,49 @@ const ActualMultiCombobox = <T,>(
 
   const isInputEmpty = !inputValue
 
-  const onDelegateKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
-      if (unstableRef.current.isComposing) return
+  const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (unstableRef.current.isComposing) return
 
-      if (ESCAPE_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        blur()
-      } else if (e.key === 'Tab') {
-        if (unstableRef.current.isFocused) {
-          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-          inputRef.current?.focus()
-        }
-
-        blur()
-      } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusPrevDeletionButton()
-      } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusNextDeletionButton()
-      } else if (
-        e.key === 'Backspace' &&
-        isInputEmpty &&
-        unstableRef.current.selectedItems.length > 0 &&
-        unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1]
-          .deletable !== false
-      ) {
-        e.preventDefault()
-        e.stopPropagation()
-
-        const lastItem =
-          unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1]
-
-        actualOnDelete(lastItem)
-        setHighlighted(true)
-        setInputValueIfUncontrolled(innerText(lastItem.label))
-      } else {
-        e.stopPropagation()
+    if (ESCAPE_KEY_REGEX.test(e.key)) {
+      e.stopPropagation()
+      blur()
+    } else if (e.key === 'Tab') {
+      if (unstableRef.current.isFocused) {
+        // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
         inputRef.current?.focus()
-        resetDeletionButtonFocus()
       }
 
-      onKeyDownListBox(e)
-    },
-    [
-      blur,
-      focusNextDeletionButton,
-      focusPrevDeletionButton,
-      onKeyDownListBox,
-      resetDeletionButtonFocus,
-      actualOnDelete,
-      isInputEmpty,
-      setInputValueIfUncontrolled,
-      inputRef,
-    ],
-  )
+      blur()
+    } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
+      e.stopPropagation()
+      focusPrevDeletionButton()
+    } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
+      e.stopPropagation()
+      focusNextDeletionButton()
+    } else if (
+      e.key === 'Backspace' &&
+      isInputEmpty &&
+      unstableRef.current.selectedItems.length > 0 &&
+      unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1].deletable !==
+        false
+    ) {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const lastItem =
+        unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1]
+
+      actualOnDelete(lastItem)
+      setHighlighted(true)
+      setInputValueIfUncontrolled(innerText(lastItem.label))
+    } else {
+      e.stopPropagation()
+      inputRef.current?.focus()
+      resetDeletionButtonFocus()
+    }
+
+    onKeyDownListBox(e)
+  }
 
   const onDelegateClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
