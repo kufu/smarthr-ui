@@ -62,17 +62,18 @@ function useOptions<T>(
       item,
     }))
 
-    const addingOption: ComboboxOption<T> | null =
+    const allOptions =
       creatable && inputValue && items.every((item) => item.label !== inputValue)
-        ? {
-            id: newItemId,
-            isNew: true,
-            selected: false,
-            item: { label: inputValue, value: inputValue },
-          }
-        : null
-
-    const allOptions = addingOption ? [addingOption, ...existedOptions] : existedOptions
+        ? [
+            {
+              id: newItemId,
+              isNew: true,
+              selected: false,
+              item: { label: inputValue, value: inputValue },
+            } as ComboboxOption<T>,
+            ...existedOptions,
+          ]
+        : existedOptions
 
     if (isFilteringDisabled || !inputValue) {
       return allOptions
