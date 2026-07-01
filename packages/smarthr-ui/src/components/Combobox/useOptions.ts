@@ -54,17 +54,14 @@ function useOptions<T>(
   const newItemId = useId()
   const optionIdPrefix = useId()
 
-  const existedOptions: Array<ComboboxOption<T>> = useMemo(
-    () =>
-      items.map((item, i) => ({
-        id: `${optionIdPrefix}-${i}`,
-        selected: isSelected(item),
-        isNew: false,
-        item,
-      })),
-    [isSelected, items, optionIdPrefix],
-  )
   const options = useMemo(() => {
+    const existedOptions: Array<ComboboxOption<T>> = items.map((item, i) => ({
+      id: `${optionIdPrefix}-${i}`,
+      selected: isSelected(item),
+      isNew: false,
+      item,
+    }))
+
     const addingOption: ComboboxOption<T> | null =
       creatable && inputValue && items.every((item) => item.label !== inputValue)
         ? {
@@ -85,7 +82,7 @@ function useOptions<T>(
       convertMatchableString(innerText(label)).includes(convertMatchableString(inputValue)),
     )
     // TODO: itemsの安定化方法を検討中
-  }, [existedOptions, inputValue, items, creatable, newItemId, isFilteringDisabled])
+  }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])
 
   return {
     options,
