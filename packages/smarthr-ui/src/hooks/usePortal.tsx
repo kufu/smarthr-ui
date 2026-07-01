@@ -5,7 +5,6 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
@@ -35,9 +34,6 @@ export function usePortal() {
       portalChildOf: parentSeqs.join(','),
     }
   }, [currentSeq, parent.seqs])
-
-  const portalRootRef = useRef(portalRoot)
-  portalRootRef.current = portalRoot
 
   useEnhancedEffect(() => {
     // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
@@ -73,15 +69,18 @@ export function usePortal() {
     [calculatedSeqs.parentSeqs],
   )
 
-  const wrappedCreatePortal = useCallback((children: ReactNode) => {
-    if (portalRootRef.current === null) {
-      return null
-    }
+  const wrappedCreatePortal = useCallback(
+    (children: ReactNode) => {
+      if (portalRoot === null) {
+        return null
+      }
 
-    return createPortal(children, portalRootRef.current)
-  }, [])
+      return createPortal(children, portalRoot)
+    },
+    [portalRoot],
+  )
 
-  const isPortalRootMounted = useCallback(() => portalRootRef.current !== null, [])
+  const isPortalRootMounted = useCallback(() => portalRoot !== null, [portalRoot])
 
   return {
     portalRoot,
