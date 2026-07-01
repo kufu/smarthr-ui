@@ -135,7 +135,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [className])
 
-    const propsRef = useRef({
+    const unstableRef = useRef({
       onChange,
       onChangeDate,
       parseInput,
@@ -143,7 +143,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       showAlternative,
       onBlur,
     })
-    propsRef.current = {
+    unstableRef.current = {
       onChange,
       onChangeDate,
       parseInput,
@@ -154,21 +154,21 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const stringToDate = useCallback((str?: string | null) => {
       if (!str) return null
-      return propsRef.current.parseInput
-        ? propsRef.current.parseInput(str)
+      return unstableRef.current.parseInput
+        ? unstableRef.current.parseInput(str)
         : parseJpnDateString(str)
     }, [])
 
     const dateToString = useCallback(
       (date: Date | null) =>
-        propsRef.current.formatDate
-          ? propsRef.current.formatDate(date)
+        unstableRef.current.formatDate
+          ? unstableRef.current.formatDate(date)
           : DEFAULT_DATE_TO_STRING(date),
       [],
     )
     const dateToAlternativeFormat = useCallback((d: Date | null) => {
-      if (!propsRef.current.showAlternative) return null
-      return d ? propsRef.current.showAlternative(d) : null
+      if (!unstableRef.current.showAlternative) return null
+      return d ? unstableRef.current.showAlternative(d) : null
     }, [])
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
@@ -215,7 +215,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
-        if (propsRef.current.onChange) {
+        if (unstableRef.current.onChange) {
           e.preventDefault()
           e.stopPropagation()
 
@@ -223,7 +223,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           const input = inputRef.current
 
           input.dispatchEvent(event)
-          propsRef.current.onChange(
+          unstableRef.current.onChange(
             // HINT: 型問題のため別途オブジェクトをイベントに見立てる
             {
               stopPropagation: () => {
@@ -237,8 +237,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             } as ChangeEvent<HTMLInputElement>,
             { date: nextDate, formatValue, errors },
           )
-        } else if (propsRef.current.onChangeDate) {
-          propsRef.current.onChangeDate(nextDate, formatValue, { errors })
+        } else if (unstableRef.current.onChangeDate) {
+          unstableRef.current.onChangeDate(nextDate, formatValue, { errors })
         }
       },
       [dateToString, dateToAlternativeFormat],
@@ -335,7 +335,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       (e) => {
         setIsInputFocused(false)
         updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
-        propsRef.current.onBlur?.(e)
+        unstableRef.current.onBlur?.(e)
       },
       [stringToDate, updateDate],
     )
