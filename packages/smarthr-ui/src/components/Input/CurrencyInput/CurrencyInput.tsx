@@ -29,12 +29,12 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
-    const propsRef = useRef({
+    const unstableRef = useRef({
       onFocus,
       onBlur,
       onFormatValue,
     })
-    propsRef.current = {
+    unstableRef.current = {
       onFocus,
       onBlur,
       onFormatValue,
@@ -48,7 +48,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     const formatValue = useCallback((formatted = '') => {
       if (innerRef.current && formatted !== innerRef.current.value) {
         innerRef.current.value = formatted
-        propsRef.current.onFormatValue?.(formatted)
+        unstableRef.current.onFormatValue?.(formatted)
       }
     }, [])
 
@@ -81,7 +81,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           formatValue(commaExcluded)
         }
 
-        propsRef.current.onFocus?.(e)
+        unstableRef.current.onFocus?.(e)
       },
       [formatValue],
     )
@@ -89,7 +89,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     const handleBlur = useCallback((e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(false)
 
-      propsRef.current.onBlur?.(e)
+      unstableRef.current.onBlur?.(e)
     }, [])
 
     return (
