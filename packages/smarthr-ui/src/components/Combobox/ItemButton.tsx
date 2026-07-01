@@ -32,19 +32,19 @@ const classNameGenerator = tv({
 })
 
 const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
-  const propsRef = useRef({ onAdd, onSelect, onMouseOver, option })
-  propsRef.current = { onAdd, onSelect, onMouseOver, option }
+  const unstableRef = useRef({ onAdd, onSelect, onMouseOver, option })
+  unstableRef.current = { onAdd, onSelect, onMouseOver, option }
 
   const handleMouseOver = useCallback(() => {
-    propsRef.current.onMouseOver(propsRef.current.option)
+    unstableRef.current.onMouseOver(unstableRef.current.option)
   }, [])
 
   const handleAddClick = useCallback(() => {
-    propsRef.current.onAdd?.(propsRef.current.option)
+    unstableRef.current.onAdd?.(unstableRef.current.option)
   }, [])
 
   const handleSelectClick = useCallback(() => {
-    propsRef.current.onSelect(propsRef.current.option)
+    unstableRef.current.onSelect(unstableRef.current.option)
   }, [])
 
   const commonAttrs = {
