@@ -20,36 +20,56 @@ export function useRemoteTrigger({
   id,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const togglerRef = useRef<Pick<Props, 'onToggle' | 'onOpen' | 'onClose'>>({
+  const unstableRef = useRef({
     onToggle,
     onOpen,
     onClose,
+    orgOnClickClose,
+    orgOnPressEscape,
   })
+  unstableRef.current = {
+    onToggle,
+    onOpen,
+    onClose,
+    orgOnClickClose,
+    orgOnPressEscape,
+  }
+
+  const updateIsOpen = useCallback((newIsOpen: boolean) => {
+    setIsOpen(newIsOpen)
+    unstableRef.current.onToggle?.(newIsOpen)
+
+    if (newIsOpen) {
+      unstableRef.current.onOpen?.()
+    } else {
+      unstableRef.current.onClose?.()
+    }
+  }, [])
 
   const onClickClose = useCallback(() => {
-    if (orgOnClickClose) {
-      return orgOnClickClose(() => {
-        setIsOpen(false)
+    if (unstableRef.current.orgOnClickClose) {
+      return unstableRef.current.orgOnClickClose(() => {
+        updateIsOpen(false)
       })
     }
 
-    setIsOpen(false)
-  }, [orgOnClickClose])
+    updateIsOpen(false)
+  }, [updateIsOpen])
 
   const onPressEscape = useCallback(() => {
-    if (orgOnPressEscape) {
-      return orgOnPressEscape(() => {
-        setIsOpen(false)
+    if (unstableRef.current.orgOnPressEscape) {
+      return unstableRef.current.orgOnPressEscape(() => {
+        updateIsOpen(false)
       })
     }
 
-    setIsOpen(false)
-  }, [orgOnPressEscape])
+    updateIsOpen(false)
+  }, [updateIsOpen])
 
   useEffect(() => {
     const handler = ((e: Event & { detail: { id: string } }) => {
       if (id === e.detail.id) {
-        setIsOpen(true)
+        updateIsOpen(true)
       }
     }) as Parameters<typeof document.addEventListener>['1']
 
@@ -58,23 +78,7 @@ export function useRemoteTrigger({
     return () => {
       document.removeEventListener(TRIGGER_EVENT, handler)
     }
-  }, [id])
-
-  useEffect(() => {
-    togglerRef.current.onToggle = onToggle
-    togglerRef.current.onOpen = onOpen
-    togglerRef.current.onClose = onClose
-  }, [onToggle, onOpen, onClose])
-
-  useEffect(() => {
-    togglerRef.current.onToggle?.(isOpen)
-
-    if (isOpen) {
-      togglerRef.current.onOpen?.()
-    } else {
-      togglerRef.current.onClose?.()
-    }
-  }, [isOpen])
+  }, [id, updateIsOpen])
 
   return {
     isOpen,
