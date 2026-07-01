@@ -155,21 +155,25 @@ const BaseDestroyButton = <T,>({
   iconStyle: string
 }) => {
   const { localize } = useIntl()
-  const onClick = useCallback(() => {
-    onDelete(item)
-  }, [item, onDelete])
-  const onKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLButtonElement>) => {
-      if (EXEC_DESTROY_KEY.test(e.key)) {
-        e.stopPropagation()
 
-        // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
-        // このタイミングで明示的に削除処理を実行する
-        onClick()
-      }
-    },
-    [onClick],
-  )
+  const onDeleteRef = useRef(onDelete)
+  onDeleteRef.current = onDelete
+  const itemRef = useRef(item)
+  itemRef.current = item
+
+  const onClick = useCallback(() => {
+    onDeleteRef.current(itemRef.current)
+  }, [])
+
+  const onKeyDown = useCallback((e: KeyboardEvent<HTMLButtonElement>) => {
+    if (EXEC_DESTROY_KEY.test(e.key)) {
+      e.stopPropagation()
+
+      // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+      // このタイミングで明示的に削除処理を実行する
+      onDeleteRef.current(itemRef.current)
+    }
+  }, [])
 
   const destroyButtonIconAltSuffix = useMemo(
     () =>
