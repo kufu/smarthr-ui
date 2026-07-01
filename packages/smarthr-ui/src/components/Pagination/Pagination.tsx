@@ -6,7 +6,9 @@ import {
   type HTMLAttributes,
   type MouseEvent,
   memo,
+  useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -110,35 +112,45 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const onDelegateClick = useMemo(() => {
-    if (!onClick) {
-      return undefined
+  const unstableRef = useRef({ onClick, hrefTemplate })
+  unstableRef.current = { onClick, hrefTemplate }
+
+  const stableHrefTemplate = useCallback(
+    (pageNumber: number) => unstableRef.current.hrefTemplate!(pageNumber),
+    [],
+  )
+
+  const onDelegateClick = useCallback((e: MouseEvent<HTMLElement>) => {
+    if (!unstableRef.current.onClick) {
+      return
     }
 
-    if (hrefTemplate) {
-      return (e: MouseEvent<HTMLElement>) => {
-        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
+    if (unstableRef.current.hrefTemplate) {
+      const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
-        if (!anchor) {
-          return
-        }
-
-        const href = (anchor as HTMLAnchorElement).href
-
-        if (href) {
-          onClick(href, e)
-        }
+      if (!anchor) {
+        return
       }
-    }
 
-    return (e: MouseEvent<HTMLElement>) => {
+      const href = (anchor as HTMLAnchorElement).href
+
+      if (href) {
+        ;(unstableRef.current.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(
+          href,
+          e,
+        )
+      }
+    } else {
       const button = getTargetDelegateElement(e, BUTTON_REGEX)
 
       if (button) {
-        onClick(parseInt((button as HTMLButtonElement).value, 10), e)
+        ;(unstableRef.current.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
+          parseInt((button as HTMLButtonElement).value, 10),
+          e,
+        )
       }
     }
-  }, [onClick, hrefTemplate])
+  }, [])
 
   const navigationLabel = useMemo(
     () =>
@@ -157,7 +169,7 @@ const ActualPagination: FC<Props> = ({
           current={current}
           padding={padding}
           withoutNumbers={withoutNumbers}
-          hrefTemplate={hrefTemplate}
+          hrefTemplate={hrefTemplate ? stableHrefTemplate : undefined}
           classNames={classNames}
           linkAs={linkAs}
         />
