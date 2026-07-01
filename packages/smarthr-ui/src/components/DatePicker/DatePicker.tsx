@@ -135,6 +135,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [className])
 
+    const [isInputFocused, setIsInputFocused] = useState(false)
+
     const unstableRef = useRef({
       onChange,
       onChangeDate,
@@ -142,6 +144,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       formatDate,
       showAlternative,
       onBlur,
+      isInputFocused,
     })
     unstableRef.current = {
       onChange,
@@ -150,6 +153,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       formatDate,
       showAlternative,
       onBlur,
+      isInputFocused,
     }
 
     const stringToDate = useCallback((str?: string | null) => {
@@ -178,8 +182,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const inputWrapperRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
-    const [isInputFocused, setIsInputFocused] = useState(false)
     const [isCalendarShown, setIsCalendarShown] = useState(false)
+
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
@@ -298,7 +302,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
         const firstCalendarButton = calendarButtons[0]
 
-        if (isInputFocused) {
+        if (unstableRef.current.isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
             closeCalendar()
@@ -328,7 +332,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           closeCalendar()
         }
       },
-      [isInputFocused, closeCalendar],
+      [closeCalendar],
     )
 
     const handleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
