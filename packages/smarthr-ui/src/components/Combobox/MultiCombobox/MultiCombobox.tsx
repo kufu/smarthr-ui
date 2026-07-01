@@ -204,6 +204,9 @@ const ActualMultiCombobox = <T,>(
     onKeyPress,
     isItemSelected,
     selectedItems,
+    isFocused,
+    highlighted,
+    isComposing,
   })
   unstableRef.current = {
     onChange,
@@ -217,10 +220,10 @@ const ActualMultiCombobox = <T,>(
     onKeyPress,
     isItemSelected,
     selectedItems,
+    isFocused,
+    highlighted,
+    isComposing,
   }
-
-  const stateRef = useRef({ isFocused, highlighted, isComposing })
-  stateRef.current = { isFocused, highlighted, isComposing }
   const { options } = useMultiOptions({
     items,
     selected: selectedItems,
@@ -304,7 +307,7 @@ const ActualMultiCombobox = <T,>(
   }, [])
 
   const blur = useCallback(() => {
-    if (stateRef.current.isFocused) {
+    if (unstableRef.current.isFocused) {
       unstableRef.current.onBlur?.()
       setIsFocused(false)
       resetDeletionButtonFocus()
@@ -315,7 +318,7 @@ const ActualMultiCombobox = <T,>(
   useOuterClick(outerClickRef, blur)
 
   useEffect(() => {
-    if (stateRef.current.highlighted) {
+    if (unstableRef.current.highlighted) {
       setHighlighted(false)
       inputRef.current?.select()
     } else {
@@ -333,13 +336,13 @@ const ActualMultiCombobox = <T,>(
 
   const onDelegateKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
-      if (stateRef.current.isComposing) return
+      if (unstableRef.current.isComposing) return
 
       if (ESCAPE_KEY_REGEX.test(e.key)) {
         e.stopPropagation()
         blur()
       } else if (e.key === 'Tab') {
-        if (stateRef.current.isFocused) {
+        if (unstableRef.current.isFocused) {
           // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
           inputRef.current?.focus()
         }
@@ -390,7 +393,7 @@ const ActualMultiCombobox = <T,>(
 
   const onDelegateClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
-      if (!disabled && !stateRef.current.isFocused) {
+      if (!disabled && !unstableRef.current.isFocused) {
         if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
           focus()
         }
@@ -410,7 +413,7 @@ const ActualMultiCombobox = <T,>(
     [setInputValueIfUncontrolled],
   )
   const onFocusInput = useCallback(() => {
-    if (stateRef.current.isFocused) {
+    if (unstableRef.current.isFocused) {
       resetDeletionButtonFocus()
     } else {
       resetDeletionButtonFocus()
