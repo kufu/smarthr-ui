@@ -79,10 +79,10 @@ function useOptions<T>(
       return allOptions
     }
 
-    const convertedInputedValue = convertMatchableString(inputValue)
+    const convertedInputtedValue = convertMatchableString(inputValue)
 
     return allOptions.filter(({ item: { label } }) =>
-      convertMatchableString(innerText(label)).includes(convertedInputedValue),
+      convertMatchableString(innerText(label)).includes(convertedInputtedValue),
     )
     // TODO: itemsの安定化方法を検討中
   }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])
