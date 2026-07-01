@@ -64,8 +64,8 @@ function useOptions<T>(
       })),
     [isSelected, items, optionIdPrefix],
   )
-  const addingOption: ComboboxOption<T> | null = useMemo(
-    () =>
+  const options = useMemo(() => {
+    const addingOption: ComboboxOption<T> | null =
       creatable && inputValue && items.every((item) => item.label !== inputValue)
         ? {
             id: newItemId,
@@ -73,16 +73,10 @@ function useOptions<T>(
             selected: false,
             item: { label: inputValue, value: inputValue },
           }
-        : null,
-    [inputValue, items, creatable, newItemId],
-  )
+        : null
 
-  const allOptions: Array<ComboboxOption<T>> = useMemo(
-    () => (addingOption ? [addingOption, ...existedOptions] : existedOptions),
-    [existedOptions, addingOption],
-  )
+    const allOptions = addingOption ? [addingOption, ...existedOptions] : existedOptions
 
-  const options = useMemo(() => {
     if (isFilteringDisabled || !inputValue) {
       return allOptions
     }
@@ -90,7 +84,8 @@ function useOptions<T>(
     return allOptions.filter(({ item: { label } }) =>
       convertMatchableString(innerText(label)).includes(convertMatchableString(inputValue)),
     )
-  }, [allOptions, inputValue, isFilteringDisabled])
+    // TODO: itemsの安定化方法を検討中
+  }, [existedOptions, inputValue, items, creatable, newItemId, isFilteringDisabled])
 
   return {
     options,
