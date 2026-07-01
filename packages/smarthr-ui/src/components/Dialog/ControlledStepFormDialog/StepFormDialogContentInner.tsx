@@ -90,7 +90,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
     useContext(StepFormDialogContext)
 
-  const propsRef = useRef({
+  const unstableRef = useRef({
     onClickClose,
     onSubmit,
     onClickBack,
@@ -98,14 +98,21 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     firstStep,
     setCurrentStep,
   })
-  propsRef.current = { onClickClose, onSubmit, onClickBack, currentStep, firstStep, setCurrentStep }
+  unstableRef.current = {
+    onClickClose,
+    onSubmit,
+    onClickBack,
+    currentStep,
+    firstStep,
+    setCurrentStep,
+  }
 
   const handleCloseAction = useCallback(() => {
-    propsRef.current.onClickClose()
+    unstableRef.current.onClickClose()
     setTimeout(() => {
       // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
       stepQueueRef.current = []
-      propsRef.current.setCurrentStep(propsRef.current.firstStep)
+      unstableRef.current.setCurrentStep(unstableRef.current.firstStep)
     }, 300)
   }, [stepQueueRef])
 
@@ -130,21 +137,21 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
       const helpers: StepFormHelpers = {
         goto: (nextStep: StepItem) => {
-          stepQueueRef.current.push(propsRef.current.currentStep)
+          stepQueueRef.current.push(unstableRef.current.currentStep)
           changeCurrentStep(nextStep)
         },
         close: handleCloseAction,
-        currentStep: propsRef.current.currentStep,
+        currentStep: unstableRef.current.currentStep,
       }
 
-      propsRef.current.onSubmit(e, helpers)
+      unstableRef.current.onSubmit(e, helpers)
     },
     [stepQueueRef, handleCloseAction, changeCurrentStep],
   )
   const handleBackAction = useCallback(() => {
-    propsRef.current.onClickBack?.()
+    unstableRef.current.onClickBack?.()
 
-    changeCurrentStep(stepQueueRef.current.pop() ?? propsRef.current.firstStep)
+    changeCurrentStep(stepQueueRef.current.pop() ?? unstableRef.current.firstStep)
   }, [stepQueueRef, changeCurrentStep])
 
   const classNames = useMemo(() => {
