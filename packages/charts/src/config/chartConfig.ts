@@ -114,7 +114,7 @@ const createBaseChartOptions = <T extends ChartType>({
     plugins: {
       ...options.plugins,
       tooltip: {
-        ...options.plugins.tooltip,
+        ...(options.plugins?.tooltip ?? {}),
         ...internalTooltipConfig,
       },
     },
