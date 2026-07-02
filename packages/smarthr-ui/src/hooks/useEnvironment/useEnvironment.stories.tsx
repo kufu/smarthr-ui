@@ -12,13 +12,16 @@ import type { Meta, StoryObj } from '@storybook/react/*'
 import type { FC, PropsWithChildren } from 'react'
 
 const Content = () => {
-  const { mobile, matches } = useEnvironment()
+  const { mobile, narrow, matches } = useEnvironment()
 
   return (
     <Stack gap={1.5}>
       <DefinitionList>
         <DefinitionListItem maxColumns={1} term="mobile">
           {mobile.toString()}
+        </DefinitionListItem>
+        <DefinitionListItem maxColumns={1} term="narrow">
+          {narrow.toString()}
         </DefinitionListItem>
       </DefinitionList>
       <Stack>
@@ -59,14 +62,14 @@ export const FixedValue: StoryObj<typeof EnvironmentProvider> = {
 
 const CustomEnvironmentProvider: FC<PropsWithChildren> = ({ children }) => {
   const environment = useEnvironment()
-  const mobile = environment.matches.SCREEN_SMALL && window.navigator.maxTouchPoints > 0
+  const mobile = environment.narrow && window.navigator.maxTouchPoints > 0
   return (
     <EnvironmentProvider environment={{ ...environment, mobile }}>{children}</EnvironmentProvider>
   )
 }
 
 export const CustomMobile: StoryObj<typeof EnvironmentProvider> = {
-  name: 'モバイルの判定をカスタマイズする場合 (例：タッチデバイスかつ画面がSCREEN_SMALL)',
+  name: 'モバイルの判定をカスタマイズする場合 (例：タッチデバイスかつ画面が狭い(narrow))',
   render: (args) => (
     <EnvironmentProvider {...args}>
       <CustomEnvironmentProvider>
@@ -76,7 +79,7 @@ export const CustomMobile: StoryObj<typeof EnvironmentProvider> = {
         {`
 const CustomEnvironmentProvider : FC<PropsWithChildren> = ({ children }) => {
   const environment = useEnvironment()
-  const mobile = environment.matches.SCREEN_SMALL && window.navigator.maxTouchPoints > 0
+  const mobile = environment.narrow && window.navigator.maxTouchPoints > 0
   return (
     <EnvironmentProvider environment={{ ...environment, mobile }}>
       { children }

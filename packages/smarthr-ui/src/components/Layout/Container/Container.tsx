@@ -96,8 +96,8 @@ export const Container: FC<Props> = ({
   ...rest
 }) => {
   const { isNarrowView } = useDevice()
-  const environment = useEnvironment()
-  const mobile = isNarrowView || environment.mobile
+  const { narrow } = useEnvironment()
+  const mobile = isNarrowView || narrow
   const actualClassName = useMemo(() => {
     const actualPadding =
       padding instanceof Object

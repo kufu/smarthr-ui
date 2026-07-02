@@ -6,11 +6,13 @@ import type { CreatedMediaQueryTheme } from '../../themes'
 
 export type Environment = {
   mobile: boolean
+  narrow: boolean
   matches: Record<keyof CreatedMediaQueryTheme, boolean>
 }
 
 const defaultEnvironment: Environment = {
   mobile: false,
+  narrow: false,
   matches: {
     SCREEN_SMALL: false,
     COLOR_MODE_FORCED: false,
