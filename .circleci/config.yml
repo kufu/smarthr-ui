@@ -33,7 +33,7 @@ commands:
           sudo npm install -g corepack@latest
           sudo corepack enable
           sudo corepack prepare
-          pnpm install
+          pnpm install --config.minimumReleaseAge=0
       - save_cache:
           paths:
             - node_modules
