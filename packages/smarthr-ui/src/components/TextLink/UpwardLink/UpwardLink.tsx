@@ -24,10 +24,10 @@ type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> &
   }
 
 export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
-  const { mobile } = useEnvironment()
+  const { narrow } = useEnvironment()
   const actualClassName = useMemo(
-    () => classNameGenerator({ indent: indent ?? !mobile, className }),
-    [indent, mobile, className],
+    () => classNameGenerator({ indent: indent ?? !narrow, className }),
+    [indent, narrow, className],
   )
 
   return (

@@ -3,7 +3,6 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useDevice } from '../../../hooks/useDevice'
 import { useEnvironment } from '../../../hooks/useEnvironment'
 import { paddingBlock, paddingInline } from '../../../tailwind'
 
@@ -95,9 +94,7 @@ export const Container: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const { isNarrowView } = useDevice()
-  const environment = useEnvironment()
-  const mobile = isNarrowView || environment.mobile
+  const { narrow } = useEnvironment()
   const actualClassName = useMemo(() => {
     const actualPadding =
       padding instanceof Object
@@ -105,10 +102,10 @@ export const Container: FC<Props> = ({
         : { block: padding, inline: padding, narrowModeBlock: padding, narrowModeInline: padding }
     return classNameGenerator({
       size,
-      paddingBlock: mobile ? actualPadding.narrowModeBlock : actualPadding.block,
-      paddingInline: mobile ? actualPadding.narrowModeInline : actualPadding.inline,
+      paddingBlock: narrow ? actualPadding.narrowModeBlock : actualPadding.block,
+      paddingInline: narrow ? actualPadding.narrowModeInline : actualPadding.inline,
       className,
     })
-  }, [size, className, padding, mobile])
+  }, [size, className, padding, narrow])
   return <div {...rest} className={actualClassName} />
 }
