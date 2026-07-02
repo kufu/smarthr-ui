@@ -86,16 +86,14 @@ describe('createBarChartOptions', () => {
     expect(result.plugins?.tooltip?.cornerRadius).toBe(4)
   })
 
-  it('tooltipの保護対象外のの設定が追加できること', () => {
-    const labelCallback = (context: TooltipItem<'bar'>) => {
-      return 'hello world'
-    }
+  it('tooltipの保護対象外の設定が追加できること', () => {
+    const labelCallback = (_context: TooltipItem<'bar'>) => 'hello world'
     const result = createBarChartOptions({
       plugins: {
         tooltip: {
           callbacks: {
-            label: labelCallback
-          }
+            label: labelCallback,
+          },
         } as ChartOptions<'bar'>['plugins']['tooltip'],
       },
     })
