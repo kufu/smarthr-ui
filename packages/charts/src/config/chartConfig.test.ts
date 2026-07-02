@@ -8,7 +8,7 @@ import {
   createRadarChartOptions,
 } from './chartConfig'
 
-import type { ChartOptions } from 'chart.js'
+import type { ChartOptions, TooltipItem } from 'chart.js'
 
 describe('createBarChartOptions', () => {
   it('外部オプションと内部デフォルトを深くマージすること', () => {
@@ -63,7 +63,7 @@ describe('createBarChartOptions', () => {
     expect(result.scales?.x?.grid?.lineWidth).toBe(2)
   })
 
-  it('tooltipの設定が外部から上書きできないこと（保護されている）', () => {
+  it('tooltipの装飾の設定が外部から上書きできないこと', () => {
     const result = createBarChartOptions({
       plugins: {
         tooltip: {
@@ -84,6 +84,22 @@ describe('createBarChartOptions', () => {
     expect(result.plugins?.tooltip?.borderColor).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
     expect(result.plugins?.tooltip?.borderWidth).toBe(1)
     expect(result.plugins?.tooltip?.cornerRadius).toBe(4)
+  })
+
+  it('tooltipの保護対象外の設定が追加できること', () => {
+    const labelCallback = (_context: TooltipItem<'bar'>) => 'hello world'
+    const result = createBarChartOptions({
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: labelCallback,
+          },
+        } as ChartOptions<'bar'>['plugins']['tooltip'],
+      },
+    })
+
+    // 内部のtooltip設定が保持される（外部設定は無視される）
+    expect(result.plugins?.tooltip?.callbacks.label).toBe(labelCallback)
   })
 
   it('その他のplugin設定は外部から追加できること', () => {
