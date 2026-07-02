@@ -8,7 +8,7 @@ import {
   createRadarChartOptions,
 } from './chartConfig'
 
-import type { ChartOptions, TooltipItem } from 'chart.js'
+import type { ChartOptions, LinearScaleOptions, TooltipItem } from 'chart.js'
 
 describe('createBarChartOptions', () => {
   it('外部オプションと内部デフォルトを深くマージすること', () => {
@@ -22,11 +22,11 @@ describe('createBarChartOptions', () => {
     })
 
     // 内部設定が保持される
-    expect(result.scales?.y?.beginAtZero).toBe(true)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
     expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
 
     // 外部設定が反映される
-    expect(result.scales?.y?.ticks?.stepSize).toBe(50)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.ticks?.stepSize).toBe(50)
     expect(result.scales?.y?.grid?.display).toBe(false)
   })
 
@@ -40,7 +40,7 @@ describe('createBarChartOptions', () => {
     })
 
     expect(result.scales?.y?.suggestedMax).toBe(150)
-    expect(result.scales?.y?.beginAtZero).toBe(true)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
   })
 
   it('x軸のgrid設定も深くマージされること', () => {
@@ -128,7 +128,7 @@ describe('createBarChartOptions', () => {
         y: {
           ticks: { stepSize: 50 },
           suggestedMax: 150,
-          grid: { drawBorder: false },
+          grid: { drawTicks: false },
         },
       },
     })
@@ -139,11 +139,32 @@ describe('createBarChartOptions', () => {
     expect(result.scales?.x?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
 
     // y軸の設定
-    expect(result.scales?.y?.beginAtZero).toBe(true)
-    expect(result.scales?.y?.ticks?.stepSize).toBe(50)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.ticks?.stepSize).toBe(50)
     expect(result.scales?.y?.suggestedMax).toBe(150)
-    expect(result.scales?.y?.grid?.drawBorder).toBe(false)
+    expect(result.scales?.y?.grid?.drawTicks).toBe(false)
     expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
+  })
+
+  it('scaleのborder設定（Chart.js v4でgrid.drawBorderの後継）が深くマージされること', () => {
+    const result = createBarChartOptions({
+      scales: {
+        y: {
+          border: {
+            display: false,
+            width: 2,
+          },
+        },
+      },
+    })
+
+    // 外部設定が反映される
+    expect(result.scales?.y?.border?.display).toBe(false)
+    expect(result.scales?.y?.border?.width).toBe(2)
+
+    // 内部設定が保持される
+    expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
   })
 })
 
@@ -162,7 +183,7 @@ describe('createLineChartOptions', () => {
     expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
 
     // 外部設定が反映される
-    expect(result.scales?.y?.ticks?.stepSize).toBe(50)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.ticks?.stepSize).toBe(50)
     expect(result.scales?.y?.grid?.display).toBe(false)
   })
 
