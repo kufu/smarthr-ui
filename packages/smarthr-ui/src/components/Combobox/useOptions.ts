@@ -39,13 +39,12 @@ export const useMultiOptions = <T>({
   selected: Array<ComboboxItem<T>>
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }) => {
-  const unstableRef = useRef({ selected, isItemSelected })
-  unstableRef.current = { selected, isItemSelected }
+  const unstableRef = useRef({ isItemSelected })
+  unstableRef.current = { isItemSelected }
 
   const isSelected = useCallback(
-    (item: ComboboxItem<T>) =>
-      unstableRef.current.isItemSelected(item, unstableRef.current.selected),
-    [],
+    (item: ComboboxItem<T>) => unstableRef.current.isItemSelected(item, selected),
+    [selected],
   )
 
   return useOptions<T>(rest, isSelected)
