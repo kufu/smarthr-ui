@@ -25,8 +25,7 @@ export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
 
   const state: Environment = {
     ...baseEnvironment,
-    mobile: baseEnvironment.mobile ?? false,
-    narrow: baseEnvironment.narrow ?? matches.SCREEN_SMALL,
+    mobile: baseEnvironment.mobile ?? matches.SCREEN_SMALL,
     matches: baseEnvironment.matches ?? matches,
   }
 

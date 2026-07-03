@@ -94,7 +94,7 @@ export const Container: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const { narrow } = useEnvironment()
+  const { mobile } = useEnvironment()
   const actualClassName = useMemo(() => {
     const actualPadding =
       padding instanceof Object
@@ -102,10 +102,10 @@ export const Container: FC<Props> = ({
         : { block: padding, inline: padding, narrowModeBlock: padding, narrowModeInline: padding }
     return classNameGenerator({
       size,
-      paddingBlock: narrow ? actualPadding.narrowModeBlock : actualPadding.block,
-      paddingInline: narrow ? actualPadding.narrowModeInline : actualPadding.inline,
+      paddingBlock: mobile ? actualPadding.narrowModeBlock : actualPadding.block,
+      paddingInline: mobile ? actualPadding.narrowModeInline : actualPadding.inline,
       className,
     })
-  }, [size, className, padding, narrow])
+  }, [size, className, padding, mobile])
   return <div {...rest} className={actualClassName} />
 }
