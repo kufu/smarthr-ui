@@ -3,6 +3,7 @@ import { type FC, type ReactNode, memo, useMemo } from 'react'
 import { useEnvironment } from '../../../hooks/useEnvironment'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
+import { FaXmarkIcon } from '../../Icon'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
@@ -17,6 +18,10 @@ export type BaseProps = DialogBodyProps & {
   children: ReactNode
   /** 閉じるボタン */
   closeButton?: ReactNode
+  /**
+   * モバイル時の表示形式（'sheet' でボトムシート表示になり閉じるボタンがアイコン化する）
+   */
+  mobileType?: 'sheet'
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
@@ -30,43 +35,50 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   children,
   handleClickClose,
   closeButton,
+  mobileType,
 }) => {
   const { mobile } = useEnvironment()
+  const isSheet = mobileType === 'sheet'
 
   const styles = useMemo(() => {
-    const { wrapper, actionArea } = dialogContentInner({ mobile })
+    const { wrapper, actionArea } = dialogContentInner({ mobile, mobileType })
 
     return {
       wrapper: wrapper(),
       actionArea: actionArea(),
     }
-  }, [mobile])
+  }, [mobile, mobileType])
 
   return (
     <Section className={styles.wrapper}>
-      <DialogHeader>
+      <DialogHeader mobileType={mobileType}>
         <DialogHeading {...heading} />
+        {isSheet && (
+          <CloseButton handleClickClose={handleClickClose} closeButton={closeButton} iconOnly />
+        )}
       </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <FooterCluster
-        handleClickClose={handleClickClose}
-        closeButton={closeButton}
-        className={styles.actionArea}
-      />
+      {!isSheet && (
+        <Cluster as="footer" justify="flex-end" className={styles.actionArea}>
+          <CloseButton handleClickClose={handleClickClose} closeButton={closeButton} />
+        </Cluster>
+      )}
     </Section>
   )
 }
 
-const FooterCluster = memo<
-  Pick<MessageDialogContentInnerProps, 'handleClickClose' | 'closeButton'> & { className: string }
->(({ handleClickClose, closeButton, className }) => (
-  <Cluster as="footer" justify="flex-end" className={className}>
+const CloseButton = memo<
+  Pick<MessageDialogContentInnerProps, 'handleClickClose' | 'closeButton'> & { iconOnly?: boolean }
+>(({ handleClickClose, closeButton, iconOnly }) => {
+  const text = closeButton ?? (
+    <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />
+  )
+
+  return (
     <Button className="smarthr-ui-Dialog-closeButton" onClick={handleClickClose}>
-      {closeButton ?? (
-        <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />
-      )}
+      {iconOnly ? <FaXmarkIcon alt={text} /> : text}
     </Button>
-  </Cluster>
-))
+  )
+})

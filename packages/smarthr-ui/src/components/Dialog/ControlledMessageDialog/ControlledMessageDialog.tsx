@@ -40,6 +40,7 @@ export const ControlledMessageDialog: FC<Props> = ({
   closeButton,
   id,
   isOpen,
+  mobileType,
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
@@ -69,6 +70,7 @@ export const ControlledMessageDialog: FC<Props> = ({
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={onPressEscape}
+      mobileType={mobileType}
     >
       <MessageDialogContentInner
         contentBgColor={contentBgColor}
@@ -76,6 +78,7 @@ export const ControlledMessageDialog: FC<Props> = ({
         handleClickClose={functions.handleClickClose}
         heading={heading}
         closeButton={closeButton}
+        mobileType={mobileType}
       >
         {children}
       </MessageDialogContentInner>
