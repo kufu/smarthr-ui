@@ -5,6 +5,7 @@ import {
   type KeyboardEventHandler,
   useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
