@@ -22,7 +22,7 @@ export const dialogContentInner = tv({
       sheet: {
         wrapper: 'shr-max-h-[95svh]',
         actionArea: 'shr-rounded-none',
-        actionAreaInner: 'shr-flex-col-reverse shr-items-stretch',
+        actionAreaInner: 'shr-flex-col-reverse shr-flex-nowrap shr-items-stretch',
         buttonArea: 'shr-ms-0 shr-w-full shr-flex-nowrap [&>button]:shr-flex-1',
       },
     },
