@@ -269,6 +269,18 @@ export const Size: StoryObj<typeof ControlledFormDialog> = {
   },
 }
 
+export const MobileType: StoryObj<typeof ControlledFormDialog> = {
+  name: 'mobileType',
+  args: {
+    mobileType: 'sheet',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
+  },
+}
+
 export const FirstFocusTarget: StoryObj<typeof ControlledFormDialog> = {
   name: 'firstFocusTarget',
   render: (args) => {

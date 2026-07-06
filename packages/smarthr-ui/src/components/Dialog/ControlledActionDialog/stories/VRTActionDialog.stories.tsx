@@ -37,3 +37,15 @@ export const VRTForcedColors: StoryObj<typeof ControlledActionDialog> = {
     chromatic: { forcedColors: 'active' },
   },
 }
+
+export const VRTMobileSheet: StoryObj<typeof ControlledActionDialog> = {
+  ...VRT,
+  args: {
+    mobileType: 'sheet',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
+  },
+}

@@ -243,6 +243,18 @@ export const Size: StoryObj<typeof ControlledActionDialog> = {
   },
 }
 
+export const MobileType: StoryObj<typeof ControlledActionDialog> = {
+  name: 'mobileType',
+  args: {
+    mobileType: 'sheet',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
+  },
+}
+
 export const FirstFocusTarget: StoryObj<typeof ControlledActionDialog> = {
   name: 'firstFocusTarget',
   render: (args) => {
