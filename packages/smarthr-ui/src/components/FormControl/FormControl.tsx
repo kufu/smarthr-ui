@@ -15,7 +15,6 @@ import {
   useState,
 } from 'react'
 import { useId } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -169,6 +168,7 @@ export const ActualFormControl: FC<Props> = ({
   const managedHtmlFor = label.htmlFor || childInputId || defaultHtmlFor
   const managedLabelId = label.id || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
+  const labelTextRef = useRef<HTMLElement>(null)
   const isFieldset = as === 'fieldset'
 
   const describedbyIds = useMemo(() => {
@@ -298,33 +298,46 @@ export const ActualFormControl: FC<Props> = ({
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
   useEffect(() => {
-    if (!isFieldset || !inputWrapperRef.current) return
+    if (!isFieldset || !inputWrapperRef.current || !labelTextRef.current) return
 
-    const inputs =
-      inputWrapperRef.current.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
+    const updateAriaLabels = () => {
+      const labelText = labelTextRef.current?.textContent || ''
+      if (!labelText) return
 
-    if (!inputs.length) return
+      const inputs =
+        inputWrapperRef.current!.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
+      if (!inputs.length) return
 
-    const legendText = innerText(label.text)
+      inputs.forEach((input: HTMLInputElement) => {
+        const accessibleName =
+          input.getAttribute('aria-label') ||
+          (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
+            ? input.labels[0].textContent
+            : '')
 
-    if (!legendText) return
+        if (
+          accessibleName &&
+          !accessibleName.includes(labelText) &&
+          !labelText.includes(accessibleName)
+        ) {
+          input.setAttribute('aria-label', `${accessibleName} ${labelText}`)
+        }
+      })
+    }
 
-    inputs.forEach((input: HTMLInputElement) => {
-      const accessibleName =
-        input.getAttribute('aria-label') ||
-        (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
-          ? input.labels![0].textContent
-          : '')
+    // 初回実行
+    updateAriaLabels()
 
-      if (
-        accessibleName &&
-        !accessibleName.includes(legendText) &&
-        !legendText.includes(accessibleName)
-      ) {
-        input.setAttribute('aria-label', `${accessibleName} ${legendText}`)
-      }
+    // label要素の変更を監視
+    const observer = new MutationObserver(updateAriaLabels)
+    observer.observe(labelTextRef.current, {
+      childList: true,
+      subtree: true,
+      characterData: true,
     })
-  }, [isFieldset, label.text])
+
+    return () => observer.disconnect()
+  }, [isFieldset])
 
   let body = (
     <>
@@ -375,6 +388,7 @@ export const ActualFormControl: FC<Props> = ({
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
         labelClassName={classNames.label}
+        labelTextRef={labelTextRef}
       />
       {body}
     </Stack>
@@ -392,6 +406,7 @@ const LabelCluster = memo<
     managedLabelId: string
     labelClassName: string
     statusLabels: StatusLabelType[]
+    labelTextRef: React.RefObject<HTMLElement>
   }
 >(
   ({
@@ -405,6 +420,7 @@ const LabelCluster = memo<
     subActionArea,
     labelClassName,
     statusLabels,
+    labelTextRef,
   }) => {
     const body = (
       <>
@@ -451,12 +467,8 @@ const LabelCluster = memo<
     return (
       <>
         {attrs.visuallyHidden && (
-          <VisuallyHiddenText {...attrs.visuallyHidden}>
-            {
-              // HINT: innerTextでは正しく文字が取得できない場合がある
-              // 安全策としてinnerTextが空を取得してきたらbody自体を埋めこみます
-              innerText(body) || body
-            }
+          <VisuallyHiddenText {...attrs.visuallyHidden} ref={labelTextRef}>
+            {body}
           </VisuallyHiddenText>
         )}
         {attrs.label && (
@@ -466,7 +478,7 @@ const LabelCluster = memo<
             // 常にmargin-topを0にする
             className="[&&&]:shr--mt-0"
           >
-            <Cluster {...attrs.label} align="center" className={labelClassName}>
+            <Cluster {...attrs.label} align="center" className={labelClassName} ref={labelTextRef}>
               {body}
             </Cluster>
             {subActionArea && <div className="shr-grow">{subActionArea}</div>}
