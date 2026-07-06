@@ -266,13 +266,17 @@ const ActualSingleCombobox = <T,>(
       unstableRef.current.onSelect?.(selected)
       unstableRef.current.onChangeSelected?.(selected)
 
-      // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-      unstableRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-
       // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
         setIsExpanded(false)
+        // HINT:
+        // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+        // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
+        //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
+        //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
+        //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
+        unstableRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
       })
 
       setIsEditing(false)
