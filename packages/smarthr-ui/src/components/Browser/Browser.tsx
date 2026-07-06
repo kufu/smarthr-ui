@@ -67,66 +67,61 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     return [...node.getAncestors().map((n) => n.value), node.value]
   }, [rootNode, value])
 
-  const selectedNode = useMemo(
-    () => (value ? rootNode.findByValue(value) : undefined),
-    [value, rootNode],
-  )
+  const unstableRef = useRef({ onSelectItem, value, rootNode })
+  unstableRef.current = { onSelectItem, value, rootNode }
 
   // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
-  const onDelegateKeyDown: KeyboardEventHandler = useCallback(
-    (e) => {
-      if (!selectedNode) {
-        return
+  const onDelegateKeyDown: KeyboardEventHandler = useCallback((e) => {
+    const selectedNode = unstableRef.current.value
+      ? unstableRef.current.rootNode.findByValue(unstableRef.current.value)
+      : undefined
+
+    if (!selectedNode) {
+      return
+    }
+
+    let target: ItemNode | undefined = undefined
+
+    switch (e.key) {
+      case 'ArrowUp': {
+        target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
+
+        break
       }
+      case 'ArrowDown': {
+        target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
 
-      let target: ItemNode | undefined = undefined
-
-      switch (e.key) {
-        case 'ArrowUp': {
-          target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
-
-          break
-        }
-        case 'ArrowDown': {
-          target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
-
-          break
-        }
-        case 'ArrowLeft': {
-          const node = selectedNode.parent
-
-          if (node instanceof ItemNode) {
-            target = node
-          }
-
-          break
-        }
-        case 'ArrowRight':
-        case 'Enter':
-        case ' ': {
-          target = selectedNode.getFirstChild()
-
-          break
-        }
+        break
       }
+      case 'ArrowLeft': {
+        const node = selectedNode.parent
 
-      if (target) {
-        e.preventDefault()
-        onSelectItem?.(target.value)
-        document.getElementById(getElementIdFromNode(target.value))?.focus()
+        if (node instanceof ItemNode) {
+          target = node
+        }
+
+        break
       }
-    },
-    [selectedNode, onSelectItem],
-  )
+      case 'ArrowRight':
+      case 'Enter':
+      case ' ': {
+        target = selectedNode.getFirstChild()
 
-  const onChangeInput = useMemo(
-    () =>
-      onSelectItem
-        ? (e: ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
-        : undefined,
-    [onSelectItem],
-  )
+        break
+      }
+    }
+
+    if (target) {
+      e.preventDefault()
+      unstableRef.current.onSelectItem?.(target.value)
+      document.getElementById(getElementIdFromNode(target.value))?.focus()
+    }
+  }, [])
+
+  const onChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    unstableRef.current.onSelectItem?.(e.currentTarget.value)
+  }, [])
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
@@ -137,7 +132,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
           items={colItems}
           index={index}
           value={selectedPath[index]}
-          onChangeInput={onChangeInput}
+          onChangeInput={onSelectItem ? onChangeInput : undefined}
           className={classNames.column}
         />
       ))}
