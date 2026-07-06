@@ -41,6 +41,8 @@ type AbstractProps = PropsWithChildren<{
   heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
   toggleable?: boolean
+  /** `true` のとき、パネルを開く */
+  active?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
 }> &
@@ -53,7 +55,10 @@ const headingObjectConverter = (text: ReactNode) => ({ text })
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
-    header: 'shr-rounded-t-l shr-p-1.5',
+    header: [
+      'shr-rounded-t-l shr-p-1.5',
+      '[div[data-active="false"]_&]:shr-rounded-b-l [div[data-active="false"]_&]:shr-py-1',
+    ],
     heading: 'smarthr-ui-InformationPanel-heading',
     toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
@@ -68,12 +73,6 @@ const classNameGenerator = tv({
       warning: {},
       error: {},
       sync: {},
-    },
-    active: {
-      true: {},
-      false: {
-        header: 'shr-rounded-b-l shr-py-1',
-      },
     },
     bold: {
       true: {
@@ -139,42 +138,29 @@ export const InformationPanel: FC<Props> = ({
     setActive(activeProps)
   }, [activeProps])
 
-  const classNamesMapper = useMemo(() => {
-    const withActive = classNameGenerator({
+  const classNames = useMemo(() => {
+    const {
+      wrapper,
+      header,
+      heading: headingClassName,
+      toggleableButton,
+      content,
+    } = classNameGenerator({
       type,
-      active: true,
       bold,
     })
-    const withInactive = classNameGenerator({
-      type,
-      active: false,
-      bold,
-    })
-
-    const wrapperProps = { className }
 
     return {
-      active: {
-        wrapper: withActive.wrapper(wrapperProps),
-        header: withActive.header(),
-        heading: withActive.heading(),
-        toggleableButton: withActive.toggleableButton(),
-        content: withActive.content(),
-      },
-      inactive: {
-        wrapper: withInactive.wrapper(wrapperProps),
-        header: withInactive.header(),
-        heading: withInactive.heading(),
-        toggleableButton: withInactive.toggleableButton(),
-        content: withInactive.content(),
-      },
+      wrapper: wrapper({ className }),
+      header: header(),
+      heading: headingClassName(),
+      toggleableButton: toggleableButton(),
+      content: content(),
     }
-  }, [bold, type, className])
-
-  const classNames = classNamesMapper[active ? 'active' : 'inactive']
+  }, [type, bold, className])
 
   return (
-    <Base {...rest} as="section" className={classNames.wrapper}>
+    <Base {...rest} as="section" data-active={active} className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         <MemoizedHeading
           heading={heading}
@@ -185,8 +171,7 @@ export const InformationPanel: FC<Props> = ({
         {toggleable && (
           <ToggleableButton
             active={active}
-            onClickTrigger={onClickTrigger}
-            setActive={setActive}
+            onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
             contentId={contentId}
             className={classNames.toggleableButton}
           />
@@ -211,7 +196,7 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const icon = useMemo(() => {
+  const icon = (() => {
     switch (type) {
       case 'info':
         return <FaCircleInfoIcon color="TEXT_GREY" />
@@ -224,7 +209,7 @@ const MemoizedHeading = memo<
       case 'sync':
         return <FaRotateIcon color="MAIN" />
     }
-  }, [type])
+  })()
 
   return (
     <Heading
@@ -242,14 +227,12 @@ const MemoizedHeading = memo<
   )
 })
 
-const ToggleableButton: FC<
-  Pick<Props, 'onClickTrigger'> & {
-    active: boolean
-    setActive: (flg: boolean) => void
-    contentId: string
-    className: string
-  }
-> = ({ active, onClickTrigger, setActive, contentId, className }) => {
+const ToggleableButton: FC<{
+  active: boolean
+  onClick: () => void
+  contentId: string
+  className: string
+}> = ({ active, onClick, contentId, className }) => {
   const { localize } = useIntl()
 
   const buttonLabels = useMemo(
@@ -264,11 +247,6 @@ const ToggleableButton: FC<
       }),
     }),
     [localize],
-  )
-
-  const onClick = useMemo(
-    () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
-    [active, onClickTrigger, setActive],
   )
 
   return (
