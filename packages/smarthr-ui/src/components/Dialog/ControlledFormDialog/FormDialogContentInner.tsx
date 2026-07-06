@@ -12,7 +12,7 @@ import { useEnvironment } from '../../../hooks/useEnvironment'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
-import { Cluster } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
@@ -55,6 +55,10 @@ export type BaseProps = PropsWithChildren<
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
+    /**
+     * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+     */
+    mobileType?: 'sheet'
   }
 >
 
@@ -83,34 +87,37 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   responseStatus,
   closeButton,
   subActionArea,
+  mobileType,
 }) => {
   const calculatedResponseStatus = useResponseStatus(responseStatus)
   const { mobile } = useEnvironment()
 
   const styles = useMemo(() => {
-    const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner({ mobile })
+    const { form, wrapper, actionArea, actionAreaInner, buttonArea, message } =
+      formDialogContentInner({ mobile, mobileType })
 
     return {
       form: form(),
       wrapper: wrapper(),
       actionArea: actionArea(),
+      actionAreaInner: actionAreaInner(),
       buttonArea: buttonArea(),
       message: message(),
     }
-  }, [mobile])
+  }, [mobile, mobileType])
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={styles.wrapper}>
-      <DialogHeader>
+      <DialogHeader mobileType={mobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <form className={styles.form} onSubmit={handleSubmit}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
-        <div className={styles.actionArea}>
-          <Cluster justify="space-between">
+        <Stack gap={0.5} className={styles.actionArea}>
+          <Cluster justify="space-between" className={styles.actionAreaInner}>
             {subActionArea}
             <ActionAreaCluster
               loading={calculatedResponseStatus.isProcessing}
@@ -124,7 +131,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
             responseStatus={calculatedResponseStatus}
             className={styles.message}
           />
-        </div>
+        </Stack>
       </form>
     </Section>
   )

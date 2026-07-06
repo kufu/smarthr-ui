@@ -61,6 +61,7 @@ export const ControlledActionDialog: FC<Props> = ({
   portalParent,
   id,
   isOpen,
+  mobileType,
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
@@ -102,6 +103,7 @@ export const ControlledActionDialog: FC<Props> = ({
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
+      mobileType={mobileType}
     >
       <ActionDialogContentInner
         contentBgColor={contentBgColor}
@@ -113,6 +115,7 @@ export const ControlledActionDialog: FC<Props> = ({
         actionButton={actionButton}
         closeButton={closeButton}
         subActionArea={subActionArea}
+        mobileType={mobileType}
       >
         {children}
       </ActionDialogContentInner>

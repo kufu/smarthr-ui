@@ -13,17 +13,27 @@ const classNameGenerator = tv({
       true: 'shr-p-1',
       false: '',
     },
+    mobileType: {
+      sheet:
+        '[&>.smarthr-ui-Dialog-headingWrapper]:shr-min-w-0 [&>.smarthr-ui-Dialog-headingWrapper]:shr-flex-1',
+    },
   },
 })
 
-type Props = PropsWithChildren<{ className?: string }>
+type Props = PropsWithChildren<{
+  className?: string
+  /**
+   * モバイル時の表示形式（'sheet' で見出しと閉じるボタンを横並びにする）
+   */
+  mobileType?: 'sheet'
+}>
 
-export const DialogHeader: FC<Props> = ({ children, className }) => {
+export const DialogHeader: FC<Props> = ({ children, className, mobileType }) => {
   const { mobile } = useEnvironment()
 
   const actualClassName = useMemo(
-    () => classNameGenerator({ mobile, className }),
-    [mobile, className],
+    () => classNameGenerator({ mobile, mobileType, className }),
+    [mobile, mobileType, className],
   )
 
   return (

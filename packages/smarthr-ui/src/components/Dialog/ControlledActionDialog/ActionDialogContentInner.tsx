@@ -14,7 +14,7 @@ import { useEnvironment } from '../../../hooks/useEnvironment'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
-import { Cluster } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
@@ -58,6 +58,10 @@ export type BaseProps = PropsWithChildren<
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
+    /**
+     * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+     */
+    mobileType?: 'sheet'
   }
 >
 
@@ -79,31 +83,36 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   responseStatus,
   closeButton,
   subActionArea,
+  mobileType,
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
   const { mobile } = useEnvironment()
 
   const styles = useMemo(() => {
-    const { wrapper, actionArea, buttonArea, message } = dialogContentInner({ mobile })
+    const { wrapper, actionArea, actionAreaInner, buttonArea, message } = dialogContentInner({
+      mobile,
+      mobileType,
+    })
 
     return {
       wrapper: wrapper(),
       actionArea: actionArea(),
+      actionAreaInner: actionAreaInner(),
       buttonArea: buttonArea(),
       message: message(),
     }
-  }, [mobile])
+  }, [mobile, mobileType])
 
   return (
     <Section className={styles.wrapper}>
-      <DialogHeader>
+      <DialogHeader mobileType={mobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <div className={styles.actionArea}>
-        <Cluster justify="space-between">
+      <Stack gap={0.5} className={styles.actionArea}>
+        <Cluster justify="space-between" className={styles.actionAreaInner}>
           {subActionArea}
           <ActionAreaCluster
             loading={calcedResponseStatus.isProcessing}
@@ -118,7 +127,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           responseStatus={calcedResponseStatus}
           className={styles.message}
         />
-      </div>
+      </Stack>
     </Section>
   )
 }
