@@ -13,8 +13,8 @@ export type Props = {
 }
 
 export const DialogHeading = memo<Props>(({ text, sub, id }) => (
-  <Heading className="smarthr-ui-Dialog-titleArea shr-border-b-shorthand shr-flex-[0_0_auto] shr-px-1.5 shr-py-1">
-    <Stack as="span" gap={0.25}>
+  <Heading className="smarthr-ui-Dialog-headingWrapper">
+    <Stack gap={0.25} as="span">
       {sub && (
         <Text size="S" leading="TIGHT" color="TEXT_GREY" className="smarthr-ui-Dialog-heading-sub">
           {sub}

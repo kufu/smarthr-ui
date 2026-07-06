@@ -8,6 +8,7 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
+import { DialogHeader } from '../DialogHeader'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -92,7 +93,9 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={CLASS_NAMES.wrapper}>
-      <DialogHeading {...heading} />
+      <DialogHeader>
+        <DialogHeading {...heading} />
+      </DialogHeader>
       <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}

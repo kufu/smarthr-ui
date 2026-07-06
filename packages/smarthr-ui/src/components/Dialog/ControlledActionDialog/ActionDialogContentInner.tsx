@@ -16,6 +16,7 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
+import { DialogHeader } from '../DialogHeader'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -92,7 +93,9 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
   return (
     <Section className={CLASS_NAMES.wrapper}>
-      <DialogHeading {...heading} />
+      <DialogHeader>
+        <DialogHeading {...heading} />
+      </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>

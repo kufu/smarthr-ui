@@ -5,6 +5,7 @@ import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogHeader } from '../DialogHeader'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -39,7 +40,9 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   closeButton,
 }) => (
   <Section className={CLASS_NAMES.wrapper}>
-    <DialogHeading {...heading} />
+    <DialogHeader>
+      <DialogHeading {...heading} />
+    </DialogHeader>
     <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
       {children}
     </DialogBody>

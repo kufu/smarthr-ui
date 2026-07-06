@@ -17,6 +17,7 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
+import { DialogHeader } from '../DialogHeader'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -164,11 +165,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     <Section>
       <form onSubmit={functions.handleSubmitAction}>
         <div className={CLASS_NAMES.wrapper}>
-          <DialogHeading
-            id={heading.id}
-            sub={heading.sub ? `${heading.sub}${stepText}` : undefined}
-            text={heading.sub ? heading.text : `${heading.text}${stepText}`}
-          />
+          <DialogHeader>
+            <DialogHeading
+              id={heading.id}
+              sub={heading.sub ? `${heading.sub}${stepText}` : undefined}
+              text={heading.sub ? heading.text : `${heading.text}${stepText}`}
+            />
+          </DialogHeader>
           <DialogBody
             ref={scrollerRef}
             contentPadding={contentPadding}
