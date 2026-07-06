@@ -422,17 +422,11 @@ const LabelCluster = memo<
     statusLabels,
     labelTextRef,
   }) => {
-    const labelTextElement = (
-      <span ref={labelTextRef}>
-        <Text styleType={labelType} icon={labelIcon}>
-          {label}
-        </Text>
-      </span>
-    )
-
     const body = (
       <>
-        {labelTextElement}
+        <Text styleType={labelType} icon={labelIcon} ref={labelTextRef}>
+          {label}
+        </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
