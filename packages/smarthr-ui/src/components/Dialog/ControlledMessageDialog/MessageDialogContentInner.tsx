@@ -1,5 +1,6 @@
-import { type FC, type ReactNode, memo } from 'react'
+import { type FC, type ReactNode, memo, useMemo } from 'react'
 
+import { useEnvironment } from '../../../hooks/useEnvironment'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
@@ -22,15 +23,6 @@ export type MessageDialogContentInnerProps = BaseProps & {
   handleClickClose: () => void
 }
 
-const CLASS_NAMES = (() => {
-  const { wrapper, actionArea } = dialogContentInner()
-
-  return {
-    wrapper: wrapper(),
-    actionArea: actionArea(),
-  }
-})()
-
 export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   heading,
   contentBgColor,
@@ -38,22 +30,39 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   children,
   handleClickClose,
   closeButton,
-}) => (
-  <Section className={CLASS_NAMES.wrapper}>
-    <DialogHeader>
-      <DialogHeading {...heading} />
-    </DialogHeader>
-    <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-      {children}
-    </DialogBody>
-    <FooterCluster handleClickClose={handleClickClose} closeButton={closeButton} />
-  </Section>
-)
+}) => {
+  const { mobile } = useEnvironment()
+
+  const styles = useMemo(() => {
+    const { wrapper, actionArea } = dialogContentInner({ mobile })
+
+    return {
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+    }
+  }, [mobile])
+
+  return (
+    <Section className={styles.wrapper}>
+      <DialogHeader>
+        <DialogHeading {...heading} />
+      </DialogHeader>
+      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+        {children}
+      </DialogBody>
+      <FooterCluster
+        handleClickClose={handleClickClose}
+        closeButton={closeButton}
+        className={styles.actionArea}
+      />
+    </Section>
+  )
+}
 
 const FooterCluster = memo<
-  Pick<MessageDialogContentInnerProps, 'handleClickClose' | 'closeButton'>
->(({ handleClickClose, closeButton }) => (
-  <Cluster as="footer" justify="flex-end" className={CLASS_NAMES.actionArea}>
+  Pick<MessageDialogContentInnerProps, 'handleClickClose' | 'closeButton'> & { className: string }
+>(({ handleClickClose, closeButton, className }) => (
+  <Cluster as="footer" justify="flex-end" className={className}>
     <Button className="smarthr-ui-Dialog-closeButton" onClick={handleClickClose}>
       {closeButton ?? (
         <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />

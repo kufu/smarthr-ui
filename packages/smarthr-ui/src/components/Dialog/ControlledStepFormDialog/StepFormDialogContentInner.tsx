@@ -10,6 +10,7 @@ import {
   useMemo,
 } from 'react'
 
+import { useEnvironment } from '../../../hooks/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
@@ -69,17 +70,6 @@ const BUTTON_COLUMN_GAP = {
   column: 1,
 } as const
 
-const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
-
-  return {
-    wrapper: wrapper(),
-    actionArea: actionArea(),
-    buttonArea: buttonArea(),
-    message: message(),
-  }
-})()
-
 export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
   children,
   heading,
@@ -98,6 +88,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 }) => {
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
     useContext(StepFormDialogContext)
+  const { mobile } = useEnvironment()
 
   const latest = useLatest({
     handleClickClose,
@@ -156,6 +147,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     }
   }, [latest])
 
+  const classNames = useMemo(() => {
+    const { wrapper, actionArea, buttonArea, message } = dialogContentInner({ mobile })
+
+    return {
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+      buttonArea: buttonArea(),
+      message: message(),
+    }
+  }, [mobile])
+
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
@@ -164,7 +166,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
       <form onSubmit={functions.handleSubmitAction}>
-        <div className={CLASS_NAMES.wrapper}>
+        <div className={classNames.wrapper}>
           <DialogHeader>
             <DialogHeading
               id={heading.id}
@@ -179,7 +181,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           >
             {children}
           </DialogBody>
-          <div className={CLASS_NAMES.actionArea}>
+          <div className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <BackButton
@@ -189,7 +191,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   handleClick={functions.handleBackAction}
                 />
               )}
-              <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
+              <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 {!closeButton.hidden && (
                   <CloseButton
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
@@ -210,7 +212,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             </Cluster>
             <DialogContentResponseStatusMessage
               responseStatus={calcedResponseStatus}
-              className={CLASS_NAMES.message}
+              className={classNames.message}
             />
           </div>
         </div>

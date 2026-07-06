@@ -1,6 +1,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useEnvironment } from '../../hooks/useEnvironment'
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
 import { Scroller } from '../Scroller'
 
@@ -23,10 +24,13 @@ const classNameGenerator = tv({
 })
 
 export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
-  const initialized = contentPadding === undefined ? 1.5 : contentPadding
-  const actualPaddings =
-    initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
+  const { mobile } = useEnvironment()
 
+  const actualPaddings = useMemo(() => {
+    const initialized = contentPadding === undefined ? (mobile ? 1 : 1.5) : contentPadding
+
+    return initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
+  }, [contentPadding, mobile])
   const actualClassName = useMemo(
     () =>
       classNameGenerator({

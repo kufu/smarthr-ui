@@ -7,8 +7,10 @@ import {
   type ReactNode,
   memo,
   useCallback,
+  useMemo,
 } from 'react'
 
+import { useEnvironment } from '../../../hooks/useEnvironment'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -66,17 +68,6 @@ export type ActionDialogContentInnerProps = BaseProps & {
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
-const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
-
-  return {
-    wrapper: wrapper(),
-    actionArea: actionArea(),
-    buttonArea: buttonArea(),
-    message: message(),
-  }
-})()
-
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
   heading,
@@ -90,21 +81,33 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   subActionArea,
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
+  const { mobile } = useEnvironment()
+
+  const styles = useMemo(() => {
+    const { wrapper, actionArea, buttonArea, message } = dialogContentInner({ mobile })
+
+    return {
+      wrapper: wrapper(),
+      actionArea: actionArea(),
+      buttonArea: buttonArea(),
+      message: message(),
+    }
+  }, [mobile])
 
   return (
-    <Section className={CLASS_NAMES.wrapper}>
+    <Section className={styles.wrapper}>
       <DialogHeader>
         <DialogHeading {...heading} />
       </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <div className={CLASS_NAMES.actionArea}>
+      <div className={styles.actionArea}>
         <Cluster justify="space-between">
           {subActionArea}
           <ActionAreaCluster
             loading={calcedResponseStatus.isProcessing}
-            className={CLASS_NAMES.buttonArea}
+            className={styles.buttonArea}
             handleClickClose={handleClickClose}
             handleClickAction={handleClickAction}
             closeButton={closeButton}
@@ -113,7 +116,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         </Cluster>
         <DialogContentResponseStatusMessage
           responseStatus={calcedResponseStatus}
-          className={CLASS_NAMES.message}
+          className={styles.message}
         />
       </div>
     </Section>
