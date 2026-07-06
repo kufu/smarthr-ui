@@ -424,8 +424,8 @@ const LabelCluster = memo<
   }) => {
     const body = (
       <>
-        <Text styleType={labelType} icon={labelIcon} ref={labelTextRef}>
-          {label}
+        <Text styleType={labelType} icon={labelIcon}>
+          <span ref={labelTextRef}>{label}</span>
         </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
