@@ -422,11 +422,17 @@ const LabelCluster = memo<
     statusLabels,
     labelTextRef,
   }) => {
-    const body = (
-      <>
+    const labelTextElement = (
+      <span ref={labelTextRef}>
         <Text styleType={labelType} icon={labelIcon}>
           {label}
         </Text>
+      </span>
+    )
+
+    const body = (
+      <>
+        {labelTextElement}
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
@@ -467,9 +473,7 @@ const LabelCluster = memo<
     return (
       <>
         {attrs.visuallyHidden && (
-          <VisuallyHiddenText {...attrs.visuallyHidden} ref={labelTextRef}>
-            {body}
-          </VisuallyHiddenText>
+          <VisuallyHiddenText {...attrs.visuallyHidden}>{body}</VisuallyHiddenText>
         )}
         {attrs.label && (
           <Cluster
@@ -478,7 +482,7 @@ const LabelCluster = memo<
             // 常にmargin-topを0にする
             className="[&&&]:shr--mt-0"
           >
-            <Cluster {...attrs.label} align="center" className={labelClassName} ref={labelTextRef}>
+            <Cluster {...attrs.label} align="center" className={labelClassName}>
               {body}
             </Cluster>
             {subActionArea && <div className="shr-grow">{subActionArea}</div>}
