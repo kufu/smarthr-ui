@@ -20,6 +20,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useEnvironment } from '../../../hooks/useEnvironment'
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
@@ -111,6 +112,7 @@ const classNameGenerator = tv({
       'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-duration-100',
       'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-ease-in-out',
     ],
+    headingEl: 'shr-my-1 shr-me-1 shr-min-w-0',
     dialogHandler: [
       'smarthr-ui-ModelessDialog-handle',
       'shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px]',
@@ -132,6 +134,13 @@ const classNameGenerator = tv({
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
+      },
+      false: {},
+    },
+    mobile: {
+      true: {
+        headerEl: 'shr-ps-1',
+        headingEl: 'shr-my-0.5 shr-me-0.5',
       },
       false: {},
     },
@@ -167,17 +176,19 @@ export const ModelessDialog: FC<Props> = ({
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
   const { createPortal } = useDialogPortal(portalParent, id)
   const { localize } = useIntl()
+  const { mobile } = useEnvironment()
 
   const classNames = useMemo(() => {
-    const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
+    const { overlap, wrapper, headerEl, headingEl, dialogHandler } = classNameGenerator()
 
     return {
       overlap: overlap({ className }),
       wrapper: wrapper({ size, resizable }),
-      header: headerEl(),
+      header: headerEl({ mobile }),
+      heading: headingEl({ mobile }),
       dialogHandler: dialogHandler(),
     }
-  }, [className, size, resizable])
+  }, [className, size, resizable, mobile])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -444,7 +455,7 @@ export const ModelessDialog: FC<Props> = ({
               className={classNames.dialogHandler}
               handleArrowKeyDown={functions.handleArrowKeyDown}
             />
-            <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
+            <div id={labelId} className={classNames.heading}>
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
