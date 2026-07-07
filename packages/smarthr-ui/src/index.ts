@@ -131,7 +131,16 @@ export { Timeline, TimelineItem } from './components/Timeline'
 export { Scroller } from './components/Scroller'
 
 // layout components
-export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
+export {
+  Center,
+  Cluster,
+  Container,
+  MainContent,
+  Reel,
+  Stack,
+  SubContent,
+  Sidebar,
+} from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'
