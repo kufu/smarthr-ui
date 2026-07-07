@@ -40,15 +40,11 @@ export const TableScroller = forwardRef<HTMLDivElement, Props>(
       className: classNames.wrapper,
     }
 
-    if (fixedHead) {
-      return (
-        <FixedHeadTableScroller {...rest} {...commonProps} forwardedRef={forwardedRef}>
-          {children}
-        </FixedHeadTableScroller>
-      )
-    }
-
-    return (
+    return fixedHead ? (
+      <FixedHeadTableScroller {...rest} {...commonProps} forwardedRef={forwardedRef}>
+        {children}
+      </FixedHeadTableScroller>
+    ) : (
       <Scroller {...rest} {...commonProps} ref={forwardedRef}>
         {children}
       </Scroller>
