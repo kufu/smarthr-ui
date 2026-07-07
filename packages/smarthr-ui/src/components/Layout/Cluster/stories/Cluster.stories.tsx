@@ -1,7 +1,5 @@
 import { ColorBox } from '../../ComponentsForStories'
-import { MainContent } from '../../MainContent'
 import { Stack } from '../../Stack'
-import { SubContent } from '../../SubContent'
 import { Cluster, clusterClassNameGenerator } from '../Cluster'
 
 import type { Gap as GapType } from '../../../../types'
@@ -118,12 +116,12 @@ export const LayoutMainSub: StoryObj<typeof Cluster> = {
   name: 'layout="main sub"',
   render: (args) => (
     <Cluster {...args} layout="main sub" gap={1}>
-      <MainContent minWidth="300px">
+      <div style={{ minWidth: '300px' }}>
         <ColorBox>メインコンテンツ（min-width: 300px）</ColorBox>
-      </MainContent>
-      <SubContent maxWidth="400px">
+      </div>
+      <div style={{ maxWidth: '400px' }}>
         <ColorBox>サブコンテンツ（max-width: 400px）</ColorBox>
-      </SubContent>
+      </div>
     </Cluster>
   ),
 }
@@ -132,12 +130,12 @@ export const LayoutSubMain: StoryObj<typeof Cluster> = {
   name: 'layout="sub main"',
   render: (args) => (
     <Cluster {...args} layout="sub main" gap={1}>
-      <SubContent maxWidth="400px">
+      <div style={{ maxWidth: '400px' }}>
         <ColorBox>サブコンテンツ（max-width: 400px）</ColorBox>
-      </SubContent>
-      <MainContent minWidth="300px">
+      </div>
+      <div style={{ minWidth: '300px' }}>
         <ColorBox>メインコンテンツ（min-width: 300px）</ColorBox>
-      </MainContent>
+      </div>
     </Cluster>
   ),
 }
@@ -146,12 +144,12 @@ export const LayoutWithSectioningContent: StoryObj<typeof Cluster> = {
   name: 'layout（sectioning content使用）',
   render: (args) => (
     <Cluster {...args} layout="main sub" gap={1}>
-      <MainContent as="article" minWidth="300px">
+      <article style={{ minWidth: '300px' }}>
         <ColorBox>記事コンテンツ（article要素）</ColorBox>
-      </MainContent>
-      <SubContent as="aside" maxWidth="400px">
+      </article>
+      <aside style={{ maxWidth: '400px' }}>
         <ColorBox>サイドバー（aside要素）</ColorBox>
-      </SubContent>
+      </aside>
     </Cluster>
   ),
 }
