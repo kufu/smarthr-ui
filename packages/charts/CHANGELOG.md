@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.5](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.4...smarthr-ui-charts-v0.1.5) (2026-07-02)
+
+
+### Bug Fixes
+
+* **charts:** chartConfig.testの型エラーを修正 ([#6462](https://github.com/kufu/smarthr-ui/issues/6462)) ([d4bd9f7](https://github.com/kufu/smarthr-ui/commit/d4bd9f720e930d8b129229dd1b9a36f2b5affa5c))
+
 ## [0.1.4](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.3...smarthr-ui-charts-v0.1.4) (2026-05-21)
 
 

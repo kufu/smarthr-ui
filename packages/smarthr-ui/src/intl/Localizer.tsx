@@ -2,14 +2,14 @@
 
 import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 
-import type { ja } from './locales'
+import type { typedJa } from './locales'
 import type { ComponentProps } from 'react'
 
-type Messages = Record<keyof typeof ja, string>
+type Messages = Record<keyof typeof typedJa, string>
 
 type Props<Id extends keyof Messages> = {
   id: Id
-  defaultText: (typeof ja)[Id]
+  defaultText: (typeof typedJa)[Id]
   values?: ComponentProps<typeof ReactIntlFormattedMessage>['values']
 }
 
