@@ -5,6 +5,7 @@ import {
   type ForwardedRef,
   type PropsWithChildren,
   forwardRef,
+  useCallback,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -68,16 +69,19 @@ const FixedHeadTableScroller = ({
 }: FixedHeadTableScrollerProps) => {
   const innerRef = useRef<HTMLDivElement | null>(null)
 
-  const setRefs = (node: HTMLDivElement) => {
-    innerRef.current = node
-    if (forwardedRef) {
-      if (typeof forwardedRef === 'function') {
-        forwardedRef(node)
-      } else {
-        forwardedRef.current = node
+  const setRefs = useCallback(
+    (node: HTMLDivElement) => {
+      innerRef.current = node
+      if (forwardedRef) {
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(node)
+        } else {
+          forwardedRef.current = node
+        }
       }
-    }
-  }
+    },
+    [forwardedRef],
+  )
 
   // thead の高さ分だけ scroll-padding-top を設定
   useLayoutEffect(() => {
