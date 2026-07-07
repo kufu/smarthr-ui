@@ -7,7 +7,6 @@ import {
   forwardRef,
   useCallback,
   useLayoutEffect,
-  useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -27,16 +26,13 @@ const classNameGenerator = tv({
   },
 })
 
+const { wrapper } = classNameGenerator()
+const classNames = {
+  wrapper: wrapper(),
+}
+
 export const TableScroller = forwardRef<HTMLDivElement, Props>(
   ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
-    const classNames = useMemo(() => {
-      const { wrapper } = classNameGenerator()
-
-      return {
-        wrapper: wrapper(),
-      }
-    }, [])
-
     if (fixedHead) {
       return (
         <FixedHeadTableScroller
