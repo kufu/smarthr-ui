@@ -21,7 +21,7 @@ export type Option = {
   /** ボタンに表示する内容 */
   content: ReactNode
   /** ボタンの `aria-label` */
-  ariaLabel?: string
+  'aria-label'?: string
   /** ボタンを disabled にするかどうか */
   disabled?: boolean
 }
@@ -177,8 +177,11 @@ export const SegmentedControl: FC<Props> = ({
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => (
           <SegmentedControlButton
-            {...option}
             key={option.value}
+            value={option.value}
+            content={option.content}
+            aria-label={option['aria-label']}
+            disabled={option.disabled}
             index={index}
             onClick={onClickOption ? actualOnClickOption : undefined}
             size={size}
@@ -195,7 +198,8 @@ export const SegmentedControl: FC<Props> = ({
 
 const SegmentedControlButton: FC<
   Pick<Props, 'size'> &
-    Props['options'][number] & {
+    Omit<Props['options'][number], 'content'> & {
+      content: ReactNode
       onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
       selectedValue: Props['value']
       index: number
@@ -203,19 +207,7 @@ const SegmentedControlButton: FC<
       excludesSelected: boolean
       className: string
     }
-> = ({
-  onClick,
-  size,
-  selectedValue,
-  value,
-  content,
-  ariaLabel,
-  disabled,
-  index,
-  isFocused,
-  excludesSelected,
-  className,
-}) => {
+> = ({ onClick, selectedValue, content, value, index, isFocused, excludesSelected, ...rest }) => {
   const checked = selectedValue === value
 
   const tabIndex = isFocused ? -1 : excludesSelected ? (index === 0 ? 0 : -1) : checked ? 0 : -1
@@ -223,16 +215,13 @@ const SegmentedControlButton: FC<
   return (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <Button
+      {...rest}
       value={value}
-      disabled={disabled}
       tabIndex={tabIndex}
       role="radio"
-      aria-label={ariaLabel}
       aria-checked={checked && !!selectedValue}
       onClick={onClick}
       variant={checked ? 'primary' : 'secondary'}
-      size={size}
-      className={className}
     >
       {content}
     </Button>
