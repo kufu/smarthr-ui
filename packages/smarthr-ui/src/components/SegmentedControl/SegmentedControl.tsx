@@ -84,6 +84,8 @@ export const SegmentedControl: FC<Props> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const unstableRef = useRef({ onClickOption })
+  unstableRef.current = { onClickOption }
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -159,13 +161,9 @@ export const SegmentedControl: FC<Props> = ({
     [value, options],
   )
 
-  const actualOnClickOption = useMemo(
-    () =>
-      onClickOption
-        ? (e: MouseEvent<HTMLButtonElement>) => onClickOption(e.currentTarget.value)
-        : undefined,
-    [onClickOption],
-  )
+  const actualOnClickOption = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    unstableRef.current.onClickOption?.(e.currentTarget.value)
+  }, [])
 
   return (
     <div
@@ -197,7 +195,7 @@ export const SegmentedControl: FC<Props> = ({
 
 const SegmentedControlButton: FC<
   Pick<Props, 'size' | 'value'> & {
-    onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
+    onClick: (e: MouseEvent<HTMLButtonElement>) => void
     option: Props['options'][number]
     index: number
     isFocused: boolean
