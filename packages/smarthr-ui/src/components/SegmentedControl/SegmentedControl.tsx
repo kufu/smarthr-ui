@@ -5,6 +5,7 @@ import {
   type FC,
   type MouseEvent,
   type ReactNode,
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -196,7 +197,7 @@ export const SegmentedControl: FC<Props> = ({
   )
 }
 
-const SegmentedControlButton: FC<
+const SegmentedControlButton = memo<
   Pick<Props, 'size'> &
     Omit<Props['options'][number], 'content'> & {
       content: ReactNode
@@ -207,7 +208,7 @@ const SegmentedControlButton: FC<
       excludesSelected: boolean
       className: string
     }
-> = ({ onClick, selectedValue, content, value, index, isFocused, excludesSelected, ...rest }) => {
+>(({ onClick, selectedValue, content, value, index, isFocused, excludesSelected, ...rest }) => {
   const checked = selectedValue === value
 
   const tabIndex = isFocused ? -1 : excludesSelected ? (index === 0 ? 0 : -1) : checked ? 0 : -1
@@ -226,4 +227,4 @@ const SegmentedControlButton: FC<
       {content}
     </Button>
   )
-}
+})
