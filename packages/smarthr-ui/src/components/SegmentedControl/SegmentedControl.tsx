@@ -84,8 +84,8 @@ export const SegmentedControl: FC<Props> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const unstableRef = useRef({ onClickOption })
-  unstableRef.current = { onClickOption }
+  const unstableRef = useRef({ onClickOption, isFocused })
+  unstableRef.current = { onClickOption, isFocused }
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -101,7 +101,7 @@ export const SegmentedControl: FC<Props> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isFocused || !containerRef.current || !document.activeElement) {
+      if (!unstableRef.current.isFocused || !containerRef.current || !document.activeElement) {
         return
       }
 
@@ -154,7 +154,7 @@ export const SegmentedControl: FC<Props> = ({
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isFocused])
+  }, [])
 
   const excludesSelected = useMemo(
     () => !value || options.every((option) => option.value !== value),
