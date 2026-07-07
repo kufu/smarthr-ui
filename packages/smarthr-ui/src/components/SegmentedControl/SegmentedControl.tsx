@@ -168,6 +168,8 @@ export const SegmentedControl: FC<Props> = ({
 
   const actualOnClickOption = onClickOption ? stableOnClickOption : undefined
 
+  const focusable = !isFocused
+
   return (
     <div
       {...rest}
@@ -178,19 +180,24 @@ export const SegmentedControl: FC<Props> = ({
       role="toolbar"
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
-        {options.map((option, index) => (
-          <SegmentedControlButton
-            {...option}
-            key={option.value}
-            index={index}
-            onClick={actualOnClickOption}
-            size={size}
-            selectedValue={value}
-            isFocused={isFocused}
-            excludesSelected={excludesSelected}
-            className={classNames.button}
-          />
-        ))}
+        {options.map((option, index) => {
+          const checked = value === option.value
+          const tabIndex = focusable && (excludesSelected ? index === 0 : checked) ? 0 : -1
+          const ariaChecked = checked && !!value
+
+          return (
+            <SegmentedControlButton
+              {...option}
+              key={option.value}
+              onClick={actualOnClickOption}
+              size={size}
+              checked={checked}
+              tabIndex={tabIndex}
+              aria-checked={ariaChecked}
+              className={classNames.button}
+            />
+          )
+        })}
       </div>
     </div>
   )
@@ -201,29 +208,20 @@ const SegmentedControlButton = memo<
     Omit<Props['options'][number], 'content'> & {
       content: ReactNode
       onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
-      selectedValue: Props['value']
-      index: number
-      isFocused: boolean
-      excludesSelected: boolean
+      checked: boolean
+      tabIndex: number
+      'aria-checked': boolean
       className: string
     }
->(({ onClick, selectedValue, content, value, index, isFocused, excludesSelected, ...rest }) => {
-  const checked = selectedValue === value
-
-  const tabIndex = isFocused ? -1 : excludesSelected ? (index === 0 ? 0 : -1) : checked ? 0 : -1
-
-  return (
-    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    <Button
-      {...rest}
-      value={value}
-      tabIndex={tabIndex}
-      role="radio"
-      aria-checked={checked && !!selectedValue}
-      onClick={onClick}
-      variant={checked ? 'primary' : 'secondary'}
-    >
-      {content}
-    </Button>
-  )
-})
+>(({ onClick, checked, content, value, ...rest }) => (
+  // eslint-disable-next-line smarthr/best-practice-for-interactive-element
+  <Button
+    {...rest}
+    value={value}
+    role="radio"
+    onClick={onClick}
+    variant={checked ? 'primary' : 'secondary'}
+  >
+    {content}
+  </Button>
+))
