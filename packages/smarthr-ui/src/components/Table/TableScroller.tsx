@@ -26,10 +26,12 @@ const classNameGenerator = tv({
   },
 })
 
-const { wrapper } = classNameGenerator()
-const classNames = {
-  wrapper: wrapper(),
-}
+const classNames = (() => {
+  const { wrapper } = classNameGenerator()
+  return {
+    wrapper: wrapper(),
+  }
+})()
 
 export const TableScroller = forwardRef<HTMLDivElement, Props>(
   ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
