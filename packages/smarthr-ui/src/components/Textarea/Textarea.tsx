@@ -225,7 +225,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       if (autoResize && textareaRef.current) {
         setInterimRows(calculateIdealRows(textareaRef.current, maxRows, theme.leading.NORMAL))
       }
-    }, [setInterimRows, maxRows, autoResize, theme.leading.NORMAL])
+    }, [maxRows, autoResize, theme.leading.NORMAL])
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
