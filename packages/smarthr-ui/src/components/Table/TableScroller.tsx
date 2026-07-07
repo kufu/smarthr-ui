@@ -35,21 +35,21 @@ const classNames = (() => {
 
 export const TableScroller = forwardRef<HTMLDivElement, Props>(
   ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
+    const commonProps = {
+      direction: 'both' as const,
+      className: classNames.wrapper,
+    }
+
     if (fixedHead) {
       return (
-        <FixedHeadTableScroller
-          {...rest}
-          forwardedRef={forwardedRef}
-          className={classNames.wrapper}
-          direction="both"
-        >
+        <FixedHeadTableScroller {...rest} {...commonProps} forwardedRef={forwardedRef}>
           {children}
         </FixedHeadTableScroller>
       )
     }
 
     return (
-      <Scroller {...rest} ref={forwardedRef} direction="both" className={classNames.wrapper}>
+      <Scroller {...rest} {...commonProps} ref={forwardedRef}>
         {children}
       </Scroller>
     )
