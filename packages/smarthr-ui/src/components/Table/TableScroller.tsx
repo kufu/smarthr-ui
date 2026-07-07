@@ -26,7 +26,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableScrollContext = forwardRef<HTMLDivElement, Props>(
+export const TableScroller = forwardRef<HTMLDivElement, Props>(
   ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
     const innerRef = useRef<HTMLDivElement | null>(null)
     const classNames = useMemo(() => {
