@@ -162,9 +162,11 @@ export const SegmentedControl: FC<Props> = ({
     [value, options],
   )
 
-  const actualOnClickOption = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+  const stableOnClickOption = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     unstableRef.current.onClickOption?.(e.currentTarget.value)
   }, [])
+
+  const actualOnClickOption = onClickOption ? stableOnClickOption : undefined
 
   return (
     <div
@@ -178,13 +180,10 @@ export const SegmentedControl: FC<Props> = ({
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => (
           <SegmentedControlButton
+            {...option}
             key={option.value}
-            value={option.value}
-            content={option.content}
-            aria-label={option['aria-label']}
-            disabled={option.disabled}
             index={index}
-            onClick={onClickOption ? actualOnClickOption : undefined}
+            onClick={actualOnClickOption}
             size={size}
             selectedValue={value}
             isFocused={isFocused}
