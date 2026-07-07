@@ -83,10 +83,10 @@ export const SegmentedControl: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const [isFocused, setIsFocused] = useState(false)
+  const [focusable, setFocusable] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
-  const unstableRef = useRef({ onClickOption, isFocused })
-  unstableRef.current = { onClickOption, isFocused }
+  const unstableRef = useRef({ onClickOption, focusable })
+  unstableRef.current = { onClickOption, focusable }
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -97,12 +97,12 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [className, size])
 
-  const onDelegateFocus = useCallback(() => setIsFocused(true), [])
-  const onDelegateBlur = useCallback(() => setIsFocused(false), [])
+  const onDelegateFocus = useCallback(() => setFocusable(false), [])
+  const onDelegateBlur = useCallback(() => setFocusable(true), [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!unstableRef.current.isFocused || !containerRef.current || !document.activeElement) {
+      if (unstableRef.current.focusable || !containerRef.current || !document.activeElement) {
         return
       }
 
@@ -167,8 +167,6 @@ export const SegmentedControl: FC<Props> = ({
   }, [])
 
   const actualOnClickOption = onClickOption ? stableOnClickOption : undefined
-
-  const focusable = !isFocused
 
   return (
     <div
