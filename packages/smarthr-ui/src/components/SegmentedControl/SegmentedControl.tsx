@@ -180,7 +180,7 @@ export const SegmentedControl: FC<Props> = ({
             key={option.value}
             option={option}
             index={index}
-            onClick={actualOnClickOption}
+            onClick={onClickOption ? actualOnClickOption : undefined}
             size={size}
             value={value}
             isFocused={isFocused}
@@ -195,7 +195,7 @@ export const SegmentedControl: FC<Props> = ({
 
 const SegmentedControlButton: FC<
   Pick<Props, 'size' | 'value'> & {
-    onClick: (e: MouseEvent<HTMLButtonElement>) => void
+    onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
     option: Props['options'][number]
     index: number
     isFocused: boolean
