@@ -211,15 +211,9 @@ const SegmentedControlButton = memo<
       'aria-checked': boolean
       className: string
     }
->(({ onClick, checked, content, value, ...rest }) => (
+>(({ checked, content, ...rest }) => (
   // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-  <Button
-    {...rest}
-    value={value}
-    role="radio"
-    onClick={onClick}
-    variant={checked ? 'primary' : 'secondary'}
-  >
+  <Button {...rest} role="radio" variant={checked ? 'primary' : 'secondary'}>
     {content}
   </Button>
 ))
