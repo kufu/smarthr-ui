@@ -180,8 +180,6 @@ export const SegmentedControl: FC<Props> = ({
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
           const checked = value === option.value
-          const tabIndex = focusable && (excludesSelected ? index === 0 : checked) ? 0 : -1
-          const ariaChecked = checked && !!value
 
           return (
             <SegmentedControlButton
@@ -190,8 +188,8 @@ export const SegmentedControl: FC<Props> = ({
               onClick={actualOnClickOption}
               size={size}
               checked={checked}
-              tabIndex={tabIndex}
-              aria-checked={ariaChecked}
+              tabIndex={focusable && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              aria-checked={checked && !!value}
               className={classNames.button}
             />
           )
