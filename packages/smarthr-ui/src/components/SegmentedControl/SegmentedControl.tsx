@@ -177,12 +177,12 @@ export const SegmentedControl: FC<Props> = ({
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => (
           <SegmentedControlButton
+            {...option}
             key={option.value}
-            option={option}
             index={index}
             onClick={onClickOption ? actualOnClickOption : undefined}
             size={size}
-            value={value}
+            selectedValue={value}
             isFocused={isFocused}
             excludesSelected={excludesSelected}
             className={classNames.button}
@@ -194,34 +194,47 @@ export const SegmentedControl: FC<Props> = ({
 }
 
 const SegmentedControlButton: FC<
-  Pick<Props, 'size' | 'value'> & {
-    onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
-    option: Props['options'][number]
-    index: number
-    isFocused: boolean
-    excludesSelected: boolean
-    className: string
-  }
-> = ({ onClick, size, value, option, index, isFocused, excludesSelected, className }) => {
-  const checked = value === option.value
+  Pick<Props, 'size'> &
+    Props['options'][number] & {
+      onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
+      selectedValue: Props['value']
+      index: number
+      isFocused: boolean
+      excludesSelected: boolean
+      className: string
+    }
+> = ({
+  onClick,
+  size,
+  selectedValue,
+  value,
+  content,
+  ariaLabel,
+  disabled,
+  index,
+  isFocused,
+  excludesSelected,
+  className,
+}) => {
+  const checked = selectedValue === value
 
   const tabIndex = isFocused ? -1 : excludesSelected ? (index === 0 ? 0 : -1) : checked ? 0 : -1
 
   return (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <Button
-      value={option.value}
-      disabled={option.disabled}
+      value={value}
+      disabled={disabled}
       tabIndex={tabIndex}
       role="radio"
-      aria-label={option.ariaLabel}
-      aria-checked={checked && !!value}
+      aria-label={ariaLabel}
+      aria-checked={checked && !!selectedValue}
       onClick={onClick}
       variant={checked ? 'primary' : 'secondary'}
       size={size}
       className={className}
     >
-      {option.content}
+      {content}
     </Button>
   )
 }
