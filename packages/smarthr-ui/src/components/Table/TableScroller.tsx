@@ -41,6 +41,7 @@ export const TableScroller = forwardRef<HTMLDivElement, Props>(
           {...rest}
           forwardedRef={forwardedRef}
           className={classNames.wrapper}
+          direction="both"
         >
           {children}
         </FixedHeadTableScroller>
@@ -58,11 +59,13 @@ export const TableScroller = forwardRef<HTMLDivElement, Props>(
 type FixedHeadTableScrollerProps = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
     forwardedRef: ForwardedRef<HTMLDivElement>
+    direction: 'both'
   }
 
 const FixedHeadTableScroller = ({
   children,
   forwardedRef,
+  direction,
   ...rest
 }: FixedHeadTableScrollerProps) => {
   const innerRef = useRef<HTMLDivElement | null>(null)
@@ -92,7 +95,7 @@ const FixedHeadTableScroller = ({
   }, [])
 
   return (
-    <Scroller {...rest} ref={setRefs} direction="both">
+    <Scroller {...rest} ref={setRefs} direction={direction}>
       {children}
     </Scroller>
   )
