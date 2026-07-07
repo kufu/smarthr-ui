@@ -70,17 +70,11 @@ const classNameGenerator = tv({
       'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
       'aria-[invalid]:shr-border-danger',
     ],
-    counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black',
-  },
-  variants: {
-    error: {
-      true: {
-        counter: 'shr-text-danger',
-      },
-    },
-  },
-  defaultVariants: {
-    error: false,
+    counter: [
+      'smarthr-ui-Textarea-counter',
+      'shr-block shr-text-sm shr-text-black',
+      'data-[error=true]:shr-text-danger',
+    ],
   },
 })
 
@@ -244,9 +238,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
       return {
         textarea: textareaEl({ className }),
-        counter: counter({ error: !!countError }),
+        counter: counter(),
       }
-    }, [countError, className])
+    }, [className])
 
     const body = (
       <textarea
@@ -269,7 +263,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         {body}
         <MaxLettersNotice id={maxLettersNoticeId} maxLetters={maxLetters} />
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
-        <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>
+        <span
+          id={actualMaxLettersId}
+          aria-hidden={true}
+          className={classNames.counter}
+          data-error={countError || undefined}
+        >
           {counterVisualMessage}
         </span>
       </span>
