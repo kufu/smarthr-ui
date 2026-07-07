@@ -28,7 +28,6 @@ const classNameGenerator = tv({
 
 export const TableScroller = forwardRef<HTMLDivElement, Props>(
   ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
-    const innerRef = useRef<HTMLDivElement | null>(null)
     const classNames = useMemo(() => {
       const { wrapper } = classNameGenerator()
 
@@ -37,31 +36,62 @@ export const TableScroller = forwardRef<HTMLDivElement, Props>(
       }
     }, [])
 
-    const setRefs = (node: HTMLDivElement) => {
-      innerRef.current = node
-      if (forwardedRef) {
-        if (typeof forwardedRef === 'function') {
-          forwardedRef(node)
-        } else {
-          forwardedRef.current = node
-        }
-      }
+    if (fixedHead) {
+      return (
+        <FixedHeadTableScroller
+          {...rest}
+          forwardedRef={forwardedRef}
+          className={classNames.wrapper}
+        >
+          {children}
+        </FixedHeadTableScroller>
+      )
     }
 
-    // fixedHead 時に thead の高さ分だけ scroll-padding-top を正しい高さをに設定できるように、Tableのtheadがある場合のみで計算する
-    useLayoutEffect(() => {
-      if (!innerRef.current || !fixedHead) return
-      const thead = innerRef.current.querySelector('thead')
-      if (thead) {
-        const { height } = thead.getBoundingClientRect()
-        innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
-      }
-    }, [fixedHead])
-
     return (
-      <Scroller {...rest} ref={setRefs} direction="both" className={classNames.wrapper}>
+      <Scroller {...rest} ref={forwardedRef} direction="both" className={classNames.wrapper}>
         {children}
       </Scroller>
     )
   },
 )
+
+type FixedHeadTableScrollerProps = PropsWithChildren &
+  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
+    forwardedRef: ForwardedRef<HTMLDivElement>
+  }
+
+const FixedHeadTableScroller = ({
+  children,
+  forwardedRef,
+  ...rest
+}: FixedHeadTableScrollerProps) => {
+  const innerRef = useRef<HTMLDivElement | null>(null)
+
+  const setRefs = (node: HTMLDivElement) => {
+    innerRef.current = node
+    if (forwardedRef) {
+      if (typeof forwardedRef === 'function') {
+        forwardedRef(node)
+      } else {
+        forwardedRef.current = node
+      }
+    }
+  }
+
+  // thead の高さ分だけ scroll-padding-top を設定
+  useLayoutEffect(() => {
+    if (!innerRef.current) return
+    const thead = innerRef.current.querySelector('thead')
+    if (thead) {
+      const { height } = thead.getBoundingClientRect()
+      innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
+    }
+  }, [])
+
+  return (
+    <Scroller {...rest} ref={setRefs} direction="both">
+      {children}
+    </Scroller>
+  )
+}
