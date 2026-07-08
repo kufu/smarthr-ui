@@ -55,11 +55,12 @@ export const ImageViewer: FC<ViewerProps> = memo(
 
     // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
     const updateViewConfig = useCallback(() => {
-      if (!imageRef.current?.complete) {
+      const img = imageRef.current
+
+      if (!img?.complete) {
         return
       }
 
-      const img = imageRef.current
       // 与えられたwidthに対する適切なscaleを算出
       const viewportScale = (width / img.naturalWidth) * scale
 
