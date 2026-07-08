@@ -38,14 +38,23 @@ export const ImageViewer: FC<ViewerProps> = memo(
       })
     }, [scale, rotation, width])
 
+    const unstableRef = useRef({
+      onLoad,
+      updateViewConfig,
+    })
+    unstableRef.current = {
+      onLoad,
+      updateViewConfig,
+    }
+
     const handleLoad = useCallback(() => {
-      updateViewConfig()
-      onLoad?.()
-    }, [updateViewConfig, onLoad])
+      unstableRef.current.updateViewConfig()
+      unstableRef.current.onLoad?.()
+    }, [])
 
     useEffect(() => {
-      updateViewConfig()
-    }, [updateViewConfig])
+      unstableRef.current.updateViewConfig()
+    }, [scale, rotation, width])
 
     return (
       <div
