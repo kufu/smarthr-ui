@@ -100,7 +100,8 @@ export const AccordionPanel: FC<Props> = ({
 
   useEffect(() => {
     setExpanded(flatArrayToMap(defaultExpanded))
-  }, [defaultExpanded])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <AccordionPanelContext.Provider
