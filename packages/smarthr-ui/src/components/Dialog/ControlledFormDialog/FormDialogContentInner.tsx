@@ -24,6 +24,13 @@ export type FormDialogHelpers = {
   close: () => void
 }
 
+type SubActionAreaHelpers = {
+  /**
+   * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+   */
+  mobileType?: 'sheet'
+}
+
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
   text: ReactNode
@@ -54,7 +61,7 @@ export type BaseProps = PropsWithChildren<
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
-    subActionArea?: ReactNode
+    subActionArea?: ReactNode | ((helpers: SubActionAreaHelpers) => ReactNode)
     /**
      * モバイル時の表示形式（'sheet' でボトムシート表示になる）
      */
@@ -91,6 +98,8 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }) => {
   const calculatedResponseStatus = useResponseStatus(responseStatus)
   const { mobile } = useEnvironment()
+  const actualSubActionArea =
+    typeof subActionArea === 'function' ? subActionArea({ mobileType }) : subActionArea
 
   const styles = useMemo(() => {
     const { form, wrapper, actionArea, actionAreaInner, buttonArea, message } =
@@ -122,7 +131,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
             justify="space-between"
             className={styles.actionAreaInner}
           >
-            {subActionArea}
+            {actualSubActionArea}
             <ActionAreaCluster
               loading={calculatedResponseStatus.isProcessing}
               className={styles.buttonArea}
