@@ -124,12 +124,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const unstableRef = useRef({
-      onChange,
-      updateCounters: undefined as ((newValue: TextareaValue) => void) | undefined,
-    })
-    unstableRef.current.onChange = onChange
-
     const getCounterMessage = useCallback(
       (counterValue: number) => {
         if (maxLetters === undefined) return
@@ -187,7 +181,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         updateSrMessage(newValue)
       }
     }, [maxLetters, getCounterMessage])
-    unstableRef.current.updateCounters = updateCounters
+
+    const unstableRef = useRef({
+      onChange,
+      updateCounters: undefined as typeof updateCounters,
+    })
+    unstableRef.current = {
+      onChange,
+      updateCounters,
+    }
 
     const calculateRows = useCallback(
       (element: HTMLTextAreaElement | null | undefined) =>
