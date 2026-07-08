@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
+import { type FC, type PropsWithChildren, useEffect, useRef } from 'react'
 
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
@@ -26,24 +26,24 @@ export const RemoteDialogTrigger: FC<
   const onClickRef = useRef(onClick)
   onClickRef.current = onClick
 
-  const actualOnClick = useCallback((e: Event) => {
-    // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
-    // 先にariaControlsを取得しておく
-    const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
-
-    if (onClickRef.current) {
-      return onClickRef.current(() => {
-        onClickRemoteDialogTrigger(ariaControls)
-      })
-    }
-
-    onClickRemoteDialogTrigger(ariaControls)
-  }, [])
-
   useEffect(() => {
     const currentRef = ref.current
     if (!currentRef) {
       return
+    }
+
+    const actualOnClick = (e: Event) => {
+      // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+      // 先にariaControlsを取得しておく
+      const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
+
+      if (onClickRef.current) {
+        return onClickRef.current(() => {
+          onClickRemoteDialogTrigger(ariaControls)
+        })
+      }
+
+      onClickRemoteDialogTrigger(ariaControls)
     }
 
     const getClickableElement = () =>
@@ -89,7 +89,7 @@ export const RemoteDialogTrigger: FC<
       observer.disconnect()
       clearEventListener()
     }
-  }, [targetId, actualOnClick])
+  }, [targetId])
 
   return (
     <span className="smarthr-ui-RemoteDialogTrigger shr-contents" ref={ref}>
