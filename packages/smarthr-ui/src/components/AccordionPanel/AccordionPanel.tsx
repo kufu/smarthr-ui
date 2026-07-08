@@ -31,6 +31,9 @@ type AbstractProps = PropsWithChildren<{
   VariantProps<typeof classNameGenerator>
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
+const DEFAULT_EXPANDED_ARRAY: string[] = []
+const DEFAULT_EXPANDED_MAP = new Map<string, string>()
+
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
@@ -40,7 +43,7 @@ export const AccordionPanelContext = createContext<{
   onClickProps?: (expandedItems: string[]) => void
 }>({
   iconPosition: 'left',
-  expandedItems: new Map(),
+  expandedItems: DEFAULT_EXPANDED_MAP,
   expandableMultiply: true,
   parentRef: null,
 })
@@ -75,13 +78,13 @@ const classNameGenerator = tv({
 export const AccordionPanel: FC<Props> = ({
   iconPosition = 'left',
   expandableMultiply = true,
-  defaultExpanded = [],
+  defaultExpanded = DEFAULT_EXPANDED_ARRAY,
   className,
   onClick: onClickProps,
   rounded,
   ...rest
 }) => {
-  const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
+  const [expandedItems, setExpanded] = useState(DEFAULT_EXPANDED_MAP)
   const parentRef = useRef<HTMLDivElement>(null)
   const actualClassName = useMemo(
     () => classNameGenerator({ className, rounded }),
@@ -96,7 +99,7 @@ export const AccordionPanel: FC<Props> = ({
   )
 
   useEffect(() => {
-    if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
+    setExpanded(flatArrayToMap(defaultExpanded))
   }, [defaultExpanded])
 
   return (
