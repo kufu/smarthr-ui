@@ -187,7 +187,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         updateSrMessage(newValue)
       }
     }, [maxLetters, getCounterMessage])
-
     unstableRef.current.updateCounters = updateCounters
 
     const calculateRows = useCallback(
