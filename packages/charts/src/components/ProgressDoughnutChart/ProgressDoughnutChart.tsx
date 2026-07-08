@@ -1,0 +1,121 @@
+'use client'
+
+import { useId, useMemo, useRef } from 'react'
+import { Doughnut } from 'react-chartjs-2'
+import { VisuallyHiddenText } from 'smarthr-ui'
+
+import { createDoughnutChartOptions, registerChartComponents } from '../../config'
+import {
+  CUTOUT_BY_THICKNESS,
+  SMARTHR_DEFAULT_COLORS,
+  getProgressDoughnutColors,
+} from '../../helper'
+
+import type { Chart, ChartData, ChartDataset, ChartOptions } from 'chart.js'
+
+// Chart.jsのコンポーネントをモジュールレベルで登録
+registerChartComponents()
+
+type Props = {
+  /**
+   * 進捗と残りの2セグメント。ラベルと値。
+   * data[0] = 進捗、data[1] = 残り（トラック）。
+   */
+  data: {
+    labels: [string, string]
+    datasets: [{ data: [number, number] }]
+  }
+  /** アクセシブルネームの元 */
+  title?: string
+  /** 中央（穴の中）に重ねる内容 */
+  children?: React.ReactNode
+  /** ドーナツの太さ。既定 'S' */
+  thickness?: 'S' | 'M' | 'L'
+  /** 進捗色の濃淡。既定は基準色 tone=1 */
+  tone?: 0 | 1 | 2 | 3 | 4 | 5
+  className?: string
+  options?: Partial<ChartOptions<'doughnut'>>
+}
+
+export const ProgressDoughnutChart: React.FC<Props> = ({
+  data,
+  title,
+  children,
+  thickness = 'S',
+  tone = 1,
+  className,
+  options: externalOptions,
+}) => {
+  const chartId = useId()
+  const chartRef = useRef<Chart<'doughnut'>>(null)
+  const colors = useMemo(() => getProgressDoughnutColors(tone), [tone])
+
+  const ariaLabel = useMemo(() => {
+    const prefix = title ? `${title} ` : ''
+    // 初期フォーカス時点で SR 利用者にも進捗の概要が伝わるよう、data から
+    // 「ラベル 値」のサマリを算出して含める（矢印キー操作前でも内容が分かる）。
+    const summary = data.labels
+      .map((segmentLabel, index) => `${segmentLabel} ${data.datasets[0].data[index]}`)
+      .join(' ')
+    return `${prefix}ドーナツグラフ ${summary}`
+  }, [title, data])
+
+  const chartData: ChartData<'doughnut'> = useMemo(
+    () => ({
+      labels: data.labels,
+      datasets: [
+        {
+          data: data.datasets[0].data,
+          backgroundColor: [
+            colors.progress,
+            colors.track,
+          ] as ChartDataset<'doughnut'>['backgroundColor'],
+          borderWidth: 0,
+          hoverBorderColor: SMARTHR_DEFAULT_COLORS.OUTLINE,
+          hoverBorderWidth: 4,
+        },
+      ],
+    }),
+    [data, colors],
+  )
+
+  const chartOptions: ChartOptions<'doughnut'> = useMemo(
+    () =>
+      createDoughnutChartOptions({
+        ...externalOptions,
+        cutout: externalOptions?.cutout ?? CUTOUT_BY_THICKNESS[thickness],
+        plugins: {
+          ...externalOptions?.plugins,
+          title: title ? { display: true, text: title } : { display: false },
+          legend: { display: false },
+          keyboardNavigation: {
+            liveRegionId: chartId,
+          },
+        },
+      }) as ChartOptions<'doughnut'>,
+    [title, thickness, chartId, externalOptions],
+  )
+
+  return (
+    <div className={`shr-relative shr-h-full shr-w-full ${className ?? ''}`}>
+      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
+      <Doughnut
+        tabIndex={0}
+        role="application"
+        ref={chartRef}
+        data={chartData}
+        options={chartOptions}
+        aria-label={ariaLabel}
+      />
+      {children !== null && children !== undefined && (
+        <div
+          className="shr-pointer-events-none shr-absolute shr-inset-0 shr-flex shr-flex-col shr-items-center shr-justify-center"
+          aria-hidden="true"
+        >
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}

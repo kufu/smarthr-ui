@@ -1,4 +1,10 @@
-export { CHART_COLORS, FONT_FAMILY, defaultColor as SMARTHR_DEFAULT_COLORS } from 'smarthr-ui'
+export {
+  CHART_COLORS,
+  SINGLE_CHART_COLORS,
+  OTHER_CHART_COLOR,
+  FONT_FAMILY,
+  defaultColor as SMARTHR_DEFAULT_COLORS,
+} from 'smarthr-ui'
 
 export const BORDER_DASHES = [
   [],
@@ -28,3 +34,9 @@ export const SHAPE_TYPES = [
   'box',
   'triangle-inverted',
 ] as const
+
+export const CUTOUT_BY_THICKNESS = {
+  S: '85%',
+  M: '75%',
+  L: '60%',
+} as const satisfies Record<'S' | 'M' | 'L', string>

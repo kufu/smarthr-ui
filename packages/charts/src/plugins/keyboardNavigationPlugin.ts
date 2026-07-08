@@ -86,12 +86,17 @@ export const keyboardNavigationPlugin = {
       )
       chart.update()
 
-      const datasetLabel = datasets[actualNextDatasetIndex].label
-      const label = labels[actualNextDataIndex]
-      const value = datasets[actualNextDatasetIndex].data[actualNextDataIndex]
-      const liveRegionText = `${datasetLabel} ${label} ${value}`
-
       if (liveRegionElement) {
+        const datasetLabel = datasets[actualNextDatasetIndex].label
+        // labels は ChartData 上で任意（undefined 可）のため、無条件参照で落ちないよう防御する
+        const label = labels?.[actualNextDataIndex]
+        const value = datasets[actualNextDatasetIndex].data[actualNextDataIndex]
+        // datasetLabel（系列名）や label（項目名）が無いチャート（例: 系列名を持たない
+        // ProgressDoughnutChart）でも "undefined" を読み上げないよう、空要素を除いて連結する。
+        // value は 0 も有効な値のため除外しない。
+        const liveRegionText = [datasetLabel, label, value]
+          .filter((part) => part !== null && part !== undefined && part !== '')
+          .join(' ')
         liveRegionElement.textContent = liveRegionText
       } else {
         console.warn('Live region element is null, cannot update text')

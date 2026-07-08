@@ -3,8 +3,10 @@ import { draw } from '@smarthr/patternomaly'
 import {
   BORDER_DASHES,
   CHART_COLORS,
+  OTHER_CHART_COLOR,
   POINT_STYLES,
   SHAPE_TYPES,
+  SINGLE_CHART_COLORS,
   SMARTHR_DEFAULT_COLORS,
 } from './constants'
 
@@ -126,4 +128,12 @@ export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   }
 
   return colors
+}
+
+export const getProgressDoughnutColors = (tone: number): { progress: string; track: string } => {
+  const index = Math.min(SINGLE_CHART_COLORS.length - 1, Math.max(0, Math.trunc(tone)))
+  return {
+    progress: SINGLE_CHART_COLORS[index],
+    track: OTHER_CHART_COLOR,
+  }
 }

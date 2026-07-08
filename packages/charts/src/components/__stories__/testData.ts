@@ -198,3 +198,16 @@ export const chartJsOptionsExamples = {
     },
   },
 }
+
+/**
+ * Doughnut チャート用 - 構成比（4セグメント）
+ */
+export const doughnutSmall = {
+  labels: ['正社員', '契約社員', 'パート', '業務委託'],
+  datasets: [
+    {
+      label: '雇用形態',
+      data: [540, 180, 320, 60],
+    },
+  ],
+}

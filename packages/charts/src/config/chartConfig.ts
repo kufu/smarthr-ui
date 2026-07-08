@@ -225,3 +225,14 @@ export const createRadarChartOptions = (
   // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
   return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'radar'>>
 }
+
+export const createDoughnutChartOptions = (
+  options: Partial<ChartOptions<'doughnut'>> = {},
+): Partial<ChartOptions<'doughnut'>> => {
+  const baseOptions = createBaseChartOptions({
+    chartType: 'doughnut',
+    options,
+  })
+
+  return baseOptions as unknown as Partial<ChartOptions<'doughnut'>>
+}
