@@ -92,9 +92,11 @@ export const AccordionPanel: FC<Props> = ({
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
-      setExpanded(getNewExpandedItems(expandedItems, itemName, isExpanded, expandableMultiply))
+      setExpanded((prevExpandedItems) =>
+        getNewExpandedItems(prevExpandedItems, itemName, isExpanded, expandableMultiply),
+      )
     },
-    [expandableMultiply, expandedItems],
+    [expandableMultiply],
   )
 
   return (
