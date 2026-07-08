@@ -92,7 +92,7 @@ const ActualYearPicker: FC<ActualProps> = ({
 
   return (
     <div {...rest} id={id} className={classNames.overlay}>
-      <Scroller className={classNames.container}>
+      <Scroller styleType="scroll" className={classNames.container}>
         {yearArray.map((year) => (
           <YearButton
             key={year}
