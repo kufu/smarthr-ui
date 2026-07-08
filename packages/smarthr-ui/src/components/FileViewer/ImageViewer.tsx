@@ -1,8 +1,55 @@
 'use client'
 
-import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { type FC, type RefObject, memo, useCallback, useEffect, useRef, useState } from 'react'
 
 import type { ViewerProps } from './types'
+
+const ImageDisplay = memo<{
+  wrapperWidth: number
+  wrapperHeight: number
+  rotation: number
+  imgScale: number
+  url: string
+  alt?: string
+  onLoad: () => void
+  onLoadError?: () => void
+  imageRef: RefObject<HTMLImageElement>
+}>(
+  ({
+    wrapperWidth,
+    wrapperHeight,
+    rotation,
+    imgScale,
+    url,
+    alt,
+    onLoad,
+    onLoadError,
+    imageRef,
+  }) => (
+    <div
+      style={{
+        width: wrapperWidth,
+        height: wrapperHeight,
+      }}
+      className="shr-relative shr-h-full shr-w-full"
+    >
+      {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+      <img
+        className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
+        ref={imageRef}
+        src={url}
+        alt={alt}
+        style={{
+          rotate: `${rotation}deg`,
+          scale: `${imgScale}`,
+        }}
+        onLoad={onLoad}
+        onError={onLoadError}
+      />
+    </div>
+  ),
+)
 
 export const ImageViewer: FC<ViewerProps> = memo(
   ({ scale, rotation, file, width, onLoad, onLoadError }) => {
@@ -59,28 +106,14 @@ export const ImageViewer: FC<ViewerProps> = memo(
     }, [scale, rotation, width])
 
     return (
-      <div
-        style={{
-          width: viewConfig.wrapperWidth,
-          height: viewConfig.wrapperHeight,
-        }}
-        className="shr-relative shr-h-full shr-w-full"
-      >
-        {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
-        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-        <img
-          className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
-          ref={imageRef}
-          src={file.url}
-          alt={file.alt}
-          style={{
-            rotate: `${viewConfig.rotation}deg`,
-            scale: `${viewConfig.imgScale}`,
-          }}
-          onLoad={handleLoad}
-          onError={onLoadError}
-        />
-      </div>
+      <ImageDisplay
+        {...viewConfig}
+        url={file.url}
+        alt={file.alt}
+        onLoad={handleLoad}
+        onLoadError={onLoadError}
+        imageRef={imageRef}
+      />
     )
   },
 )
