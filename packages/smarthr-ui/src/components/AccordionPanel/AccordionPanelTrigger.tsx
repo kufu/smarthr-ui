@@ -97,18 +97,19 @@ export const AccordionPanelTrigger: FC<Props> = ({
 
   const handleClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onClickTrigger?.(e.currentTarget.value, !isExpanded)
+      const currentIsExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
+      onClickTrigger?.(e.currentTarget.value, !currentIsExpanded)
       if (onClickProps) {
         const newExpandedItems = getNewExpandedItems(
           expandedItems,
           e.currentTarget.value,
-          !isExpanded,
+          !currentIsExpanded,
           expandableMultiply,
         )
         onClickProps(mapToKeyArray(newExpandedItems))
       }
     },
-    [isExpanded, expandedItems, expandableMultiply, onClickTrigger, onClickProps],
+    [expandedItems, expandableMultiply, onClickTrigger, onClickProps],
   )
 
   const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
