@@ -163,6 +163,60 @@ export const AccordionPanelTrigger: FC<Props> = ({
   )
 
   return (
+    <MemoizedHeadingButton
+      {...rest}
+      name={name}
+      triggerId={triggerId}
+      isExpanded={isExpanded}
+      contentId={contentId}
+      actualOnClick={actualOnClick}
+      handleKeyDown={handleKeyDown}
+      classNames={classNames}
+      iconPosition={iconPosition}
+      headingType={headingType}
+      unrecommendedHeadingTag={unrecommendedHeadingTag}
+    >
+      {children}
+    </MemoizedHeadingButton>
+  )
+}
+
+const MemoizedHeadingButton = memo<
+  PropsWithChildren<
+    Omit<ComponentPropsWithoutRef<'button'>, 'onClick' | 'onKeyDown'> & {
+      name: string
+      triggerId: string
+      isExpanded: boolean
+      contentId: string
+      actualOnClick: ((e: MouseEvent<HTMLButtonElement>) => void) | undefined
+      handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
+      classNames: {
+        button: string
+        titleWrapper: string
+        leftIcon: string
+        rightIcon: string
+        title: string
+      }
+      iconPosition: 'left' | 'right'
+      headingType: Exclude<TextProps['styleType'], 'screenTitle'>
+      unrecommendedHeadingTag?: HeadingTagTypes
+    }
+  >
+>(
+  ({
+    children,
+    name,
+    triggerId,
+    isExpanded,
+    contentId,
+    actualOnClick,
+    handleKeyDown,
+    classNames,
+    iconPosition,
+    headingType,
+    unrecommendedHeadingTag,
+    ...rest
+  }) => (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading unrecommendedTag={unrecommendedHeadingTag} type={headingType}>
       <button
@@ -177,23 +231,13 @@ export const AccordionPanelTrigger: FC<Props> = ({
         className={classNames.button}
         data-component="AccordionHeaderButton"
       >
-        <MemoizedTitle iconPosition={iconPosition} classNames={classNames}>
-          {children}
-        </MemoizedTitle>
+        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+        <Cluster className={classNames.titleWrapper} align="center" as="span">
+          {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
+          <span className={classNames.title}>{children}</span>
+          {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
+        </Cluster>
       </button>
     </Heading>
-  )
-}
-
-const MemoizedTitle = memo<
-  PropsWithChildren<{
-    iconPosition: undefined | 'left' | 'right'
-    classNames: { leftIcon: string; rightIcon: string; title: string; titleWrapper: string }
-  }>
->(({ classNames, iconPosition, children }) => (
-  <Cluster className={classNames.titleWrapper} align="center" as="span">
-    {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
-    <span className={classNames.title}>{children}</span>
-    {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
-  </Cluster>
-))
+  ),
+)
