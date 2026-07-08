@@ -107,7 +107,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
     onClickProps,
   }
 
-  const handleClick = useCallback(
+  const stableOnClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
       unstableRef.current.onClickTrigger?.(e.currentTarget.value, newIsExpanded)
@@ -123,6 +123,8 @@ export const AccordionPanelTrigger: FC<Props> = ({
     },
     [expandableMultiply],
   )
+
+  const actualOnClick = onClickTrigger || onClickProps ? stableOnClick : undefined
 
   const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
     (e): void => {
@@ -170,7 +172,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        onClick={onClickTrigger || onClickProps ? handleClick : undefined}
+        onClick={actualOnClick}
         onKeyDown={handleKeyDown}
         className={classNames.button}
         data-component="AccordionHeaderButton"
