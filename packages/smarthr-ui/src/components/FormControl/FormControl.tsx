@@ -87,7 +87,6 @@ const classNameGenerator = tv({
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
     errorMessage: ['smarthr-ui-FormControl-errorMessage'],
-    underLabelStack: ['[&&&]:shr-mt-0'],
     childrenWrapper: [],
   },
   variants: {
@@ -196,8 +195,6 @@ export const ActualFormControl: FC<Props> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
-
   const classNames = useMemo(() => {
     const generators = classNameGenerator({ innerMargin, isFieldset })
 
@@ -209,7 +206,6 @@ export const ActualFormControl: FC<Props> = ({
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
@@ -319,41 +315,11 @@ export const ActualFormControl: FC<Props> = ({
     })
   }, [isFieldset, label.text])
 
-  let body = (
-    <>
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
-      <ErrorMessageList
-        errorMessages={actualErrorMessages}
-        managedHtmlFor={managedHtmlFor}
-        classNames={classNames}
-      />
-      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
-        {children}
-      </div>
-      <SupplementaryMessageText
-        supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={managedHtmlFor}
-      />
-    </>
-  )
-
-  // HINT: label.unrecommendedHideの場合、body以下の余白の計算を簡略化するため
-  // Stackをネストし、そのStackに対してmargin-top: 0を指定する
-  // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
-  if (label.unrecommendedHide) {
-    body = (
-      <Stack gap={actualInnerMargin} className={classNames.underLabelStack}>
-        {body}
-      </Stack>
-    )
-  }
-
   return (
     <Stack
       {...rest}
       as={as}
-      gap={actualInnerMargin}
+      gap={innerMargin ?? 0.5}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={classNames.wrapper}
     >
@@ -369,7 +335,20 @@ export const ActualFormControl: FC<Props> = ({
         subActionArea={subActionArea}
         labelClassName={classNames.label}
       />
-      {body}
+      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
+      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+      <ErrorMessageList
+        errorMessages={actualErrorMessages}
+        managedHtmlFor={managedHtmlFor}
+        classNames={classNames}
+      />
+      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
+        {children}
+      </div>
+      <SupplementaryMessageText
+        supplementaryMessage={supplementaryMessage}
+        managedHtmlFor={managedHtmlFor}
+      />
     </Stack>
   )
 }
@@ -453,12 +432,7 @@ const LabelCluster = memo<
           </VisuallyHiddenText>
         )}
         {attrs.label && (
-          <Cluster
-            justify="space-between"
-            // HINT: UI上、常にトップの要素になるため、Stackの計算が狂わないよう、
-            // 常にmargin-topを0にする
-            className="[&&&]:shr--mt-0"
-          >
+          <Cluster justify="space-between">
             <Cluster {...attrs.label} align="center" className={labelClassName}>
               {body}
             </Cluster>
