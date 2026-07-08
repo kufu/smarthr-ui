@@ -11,6 +11,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
       wrapperWidth: 0,
       wrapperHeight: 0,
       imgScale: 1,
+      rotation: 0,
     })
 
     // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
@@ -35,6 +36,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
         wrapperWidth: scaledWidth * cos + scaledHeight * sin,
         wrapperHeight: scaledWidth * sin + scaledHeight * cos,
         imgScale: viewportScale,
+        rotation: rotation ?? 0,
       })
     }, [scale, rotation, width])
 
@@ -72,7 +74,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
           src={file.url}
           alt={file.alt}
           style={{
-            rotate: `${rotation ?? 0}deg`,
+            rotate: `${viewConfig.rotation}deg`,
             scale: `${viewConfig.imgScale}`,
           }}
           onLoad={handleLoad}
