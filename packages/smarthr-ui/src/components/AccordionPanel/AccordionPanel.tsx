@@ -90,6 +90,13 @@ export const AccordionPanel: FC<Props> = ({
     [rounded, className],
   )
 
+  const onClickPropsRef = useRef(onClickProps)
+  onClickPropsRef.current = onClickProps
+
+  const stableOnClickProps = useCallback((items: string[]) => {
+    onClickPropsRef.current?.(items)
+  }, [])
+
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
       setExpanded((prevExpandedItems) =>
@@ -103,7 +110,7 @@ export const AccordionPanel: FC<Props> = ({
     <AccordionPanelContext.Provider
       value={{
         onClickTrigger,
-        onClickProps,
+        onClickProps: stableOnClickProps,
         expandedItems,
         iconPosition,
         expandableMultiply,
