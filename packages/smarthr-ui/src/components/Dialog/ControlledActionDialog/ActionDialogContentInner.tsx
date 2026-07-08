@@ -112,7 +112,11 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         {children}
       </DialogBody>
       <Stack gap={0.5} className={styles.actionArea}>
-        <Cluster justify="space-between" className={styles.actionAreaInner}>
+        <Cluster
+          gap={ACTION_AREA_CLUSTER_GAP}
+          justify="space-between"
+          className={styles.actionAreaInner}
+        >
           {subActionArea}
           <ActionAreaCluster
             loading={calcedResponseStatus.isProcessing}
