@@ -32,7 +32,7 @@ type AbstractProps = PropsWithChildren<{
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const DEFAULT_EXPANDED_ARRAY: string[] = []
-const DEFAULT_EXPANDED_MAP = new Map<string, string>()
+const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
 
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
