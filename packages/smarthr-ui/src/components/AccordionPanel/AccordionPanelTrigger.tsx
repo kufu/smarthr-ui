@@ -95,44 +95,21 @@ export const AccordionPanelTrigger: FC<Props> = ({
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
-  const actualOnClickTrigger = useMemo(
-    () =>
-      onClickTrigger
-        ? (e: MouseEvent<HTMLButtonElement>) => onClickTrigger(e.currentTarget.value, !isExpanded)
-        : undefined,
-    [isExpanded, onClickTrigger],
-  )
-  const actualOnClickProps = useMemo(
-    () =>
-      onClickProps
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            const newExpandedItems = getNewExpandedItems(
-              expandedItems,
-              e.currentTarget.value,
-              !isExpanded,
-              expandableMultiply,
-            )
-            onClickProps(mapToKeyArray(newExpandedItems))
-          }
-        : undefined,
-    [isExpanded, expandedItems, expandableMultiply, onClickProps],
-  )
-  const handleClick = useMemo(() => {
-    if (actualOnClickTrigger) {
-      if (actualOnClickProps) {
-        return (e: MouseEvent<HTMLButtonElement>) => {
-          actualOnClickTrigger(e)
-          actualOnClickProps(e)
-        }
+  const handleClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      onClickTrigger?.(e.currentTarget.value, !isExpanded)
+      if (onClickProps) {
+        const newExpandedItems = getNewExpandedItems(
+          expandedItems,
+          e.currentTarget.value,
+          !isExpanded,
+          expandableMultiply,
+        )
+        onClickProps(mapToKeyArray(newExpandedItems))
       }
-
-      return actualOnClickTrigger
-    } else if (actualOnClickProps) {
-      return actualOnClickProps
-    }
-
-    return undefined
-  }, [actualOnClickProps, actualOnClickTrigger])
+    },
+    [isExpanded, expandedItems, expandableMultiply, onClickTrigger, onClickProps],
+  )
 
   const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
     (e): void => {
@@ -180,7 +157,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        onClick={handleClick}
+        onClick={onClickTrigger || onClickProps ? handleClick : undefined}
         onKeyDown={handleKeyDown}
         className={classNames.button}
         data-component="AccordionHeaderButton"
