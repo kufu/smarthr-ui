@@ -7,7 +7,6 @@ import {
   type RefObject,
   createContext,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -84,7 +83,7 @@ export const AccordionPanel: FC<Props> = ({
   rounded,
   ...rest
 }) => {
-  const [expandedItems, setExpanded] = useState(DEFAULT_EXPANDED_MAP)
+  const [expandedItems, setExpanded] = useState(() => flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
   const actualClassName = useMemo(
     () => classNameGenerator({ className, rounded }),
@@ -97,11 +96,6 @@ export const AccordionPanel: FC<Props> = ({
     },
     [expandableMultiply, expandedItems],
   )
-
-  useEffect(() => {
-    setExpanded(flatArrayToMap(defaultExpanded))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <AccordionPanelContext.Provider
