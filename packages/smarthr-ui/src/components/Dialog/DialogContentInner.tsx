@@ -127,7 +127,9 @@ export const DialogContentInner: FC<Props> = ({
     }
   }, [size, mobileType, className])
   // width は deprecated なので、size が指定されている場合は width を無視する
-  const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
+  // mobileType の場合は幅いっぱいなので width を無視する
+  const actualWidth =
+    size || mobileType ? undefined : typeof width === 'number' ? `${width}px` : width
 
   const latest = useLatest({ onPressEscape, onClickOverlay })
 
