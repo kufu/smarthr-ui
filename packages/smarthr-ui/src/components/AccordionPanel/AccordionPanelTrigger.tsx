@@ -97,13 +97,13 @@ export const AccordionPanelTrigger: FC<Props> = ({
 
   const handleClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      const currentIsExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
-      onClickTrigger?.(e.currentTarget.value, !currentIsExpanded)
+      const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+      onClickTrigger?.(e.currentTarget.value, newIsExpanded)
       if (onClickProps) {
         const newExpandedItems = getNewExpandedItems(
           expandedItems,
           e.currentTarget.value,
-          !currentIsExpanded,
+          newIsExpanded,
           expandableMultiply,
         )
         onClickProps(mapToKeyArray(newExpandedItems))
