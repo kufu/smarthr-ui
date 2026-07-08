@@ -190,6 +190,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
     unstableRef.current.updateCounters = updateCounters
 
+    const calculateRows = useCallback(
+      (element: HTMLTextAreaElement | null | undefined) =>
+        calculateIdealRows(element, maxRows, theme.leading.NORMAL),
+      [maxRows, theme.leading.NORMAL],
+    )
+
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = e.target.value
@@ -199,7 +205,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         e.target.rows = rows
 
         if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows, theme.leading.NORMAL)
+          const currentRows = calculateRows(e.target)
           // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
           e.target.rows = currentRows
           setInterimRows(currentRows)
@@ -207,7 +213,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
         unstableRef.current.onChange?.(e)
       },
-      [autoResize, maxRows, rows, theme.leading.NORMAL],
+      [autoResize, calculateRows, rows],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -220,9 +226,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     // autoResize時に、初期値での高さを指定
     useEffect(() => {
       if (autoResize && textareaRef.current) {
-        setInterimRows(calculateIdealRows(textareaRef.current, maxRows, theme.leading.NORMAL))
+        setInterimRows(calculateRows(textareaRef.current))
       }
-    }, [maxRows, autoResize, theme.leading.NORMAL])
+    }, [calculateRows, autoResize])
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
