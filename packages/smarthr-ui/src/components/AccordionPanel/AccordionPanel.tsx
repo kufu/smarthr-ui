@@ -79,7 +79,7 @@ export const AccordionPanel: FC<Props> = ({
   expandableMultiply = true,
   defaultExpanded = DEFAULT_EXPANDED_ARRAY,
   className,
-  onClick: onClickProps,
+  onClick,
   rounded,
   ...rest
 }) => {
@@ -90,11 +90,11 @@ export const AccordionPanel: FC<Props> = ({
     [rounded, className],
   )
 
-  const onClickPropsRef = useRef(onClickProps)
-  onClickPropsRef.current = onClickProps
+  const onClickRef = useRef(onClick)
+  onClickRef.current = onClick
 
-  const stableOnClickProps = useCallback((items: string[]) => {
-    onClickPropsRef.current?.(items)
+  const onClickProps = useCallback((items: string[]) => {
+    onClickRef.current?.(items)
   }, [])
 
   const onClickTrigger = useCallback(
@@ -110,7 +110,7 @@ export const AccordionPanel: FC<Props> = ({
     <AccordionPanelContext.Provider
       value={{
         onClickTrigger,
-        onClickProps: stableOnClickProps,
+        onClickProps: onClick ? onClickProps : undefined,
         expandedItems,
         iconPosition,
         expandableMultiply,
