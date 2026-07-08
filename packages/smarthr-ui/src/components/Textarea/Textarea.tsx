@@ -184,7 +184,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
     const unstableRef = useRef({
       onChange,
-      updateCounters: undefined as typeof updateCounters,
+      updateCounters,
     })
     unstableRef.current = {
       onChange,
