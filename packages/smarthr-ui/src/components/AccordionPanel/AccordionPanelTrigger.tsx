@@ -10,6 +10,7 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -95,21 +96,32 @@ export const AccordionPanelTrigger: FC<Props> = ({
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
+  const unstableRef = useRef({
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+  })
+  unstableRef.current = {
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+  }
+
   const handleClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
-      onClickTrigger?.(e.currentTarget.value, newIsExpanded)
-      if (onClickProps) {
+      unstableRef.current.onClickTrigger?.(e.currentTarget.value, newIsExpanded)
+      if (unstableRef.current.onClickProps) {
         const newExpandedItems = getNewExpandedItems(
-          expandedItems,
+          unstableRef.current.expandedItems,
           e.currentTarget.value,
           newIsExpanded,
           expandableMultiply,
         )
-        onClickProps(mapToKeyArray(newExpandedItems))
+        unstableRef.current.onClickProps(mapToKeyArray(newExpandedItems))
       }
     },
-    [expandedItems, expandableMultiply, onClickTrigger, onClickProps],
+    [expandableMultiply],
   )
 
   const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
