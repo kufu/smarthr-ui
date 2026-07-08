@@ -124,8 +124,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const onChangeRef = useRef(onChange)
-    onChangeRef.current = onChange
+    const unstableRef = useRef({
+      onChange,
+      updateCounters: undefined as ((newValue: TextareaValue) => void) | undefined,
+    })
+    unstableRef.current.onChange = onChange
 
     const getCounterMessage = useCallback(
       (counterValue: number) => {
@@ -185,10 +188,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       }
     }, [maxLetters, getCounterMessage])
 
+    unstableRef.current.updateCounters = updateCounters
+
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = e.target.value
-        updateCounters?.(newValue)
+        unstableRef.current.updateCounters?.(newValue)
 
         // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
         e.target.rows = rows
@@ -200,9 +205,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           setInterimRows(currentRows)
         }
 
-        onChangeRef.current?.(e)
+        unstableRef.current.onChange?.(e)
       },
-      [updateCounters, autoResize, maxRows, rows, theme.leading.NORMAL],
+      [autoResize, maxRows, rows, theme.leading.NORMAL],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -222,9 +227,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     // value 変更時にもカウントを更新する
     useEffect(() => {
       if (value && maxLetters) {
-        updateCounters?.(value)
+        unstableRef.current.updateCounters?.(value)
       }
-    }, [maxLetters, updateCounters, value])
+    }, [maxLetters, value])
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
