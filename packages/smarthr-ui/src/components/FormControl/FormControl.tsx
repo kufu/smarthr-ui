@@ -129,13 +129,6 @@ const classNameGenerator = tv({
       innerMargin: undefined,
       isFieldset: true,
       class: {
-        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-1',
-      },
-    },
-    {
-      innerMargin: undefined,
-      isFieldset: false,
-      class: {
         childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
       },
     },
