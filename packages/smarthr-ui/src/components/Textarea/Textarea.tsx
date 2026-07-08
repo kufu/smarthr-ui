@@ -154,8 +154,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       [maxLetters],
     )
 
-    const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
-
     useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
       ref,
       () => textareaRef.current,
@@ -269,7 +267,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           className={classNames.counter}
           data-error={countError || undefined}
         >
-          {counterVisualMessage}
+          {getCounterMessage(count)}
         </span>
       </span>
     ) : (
