@@ -1,55 +1,47 @@
 'use client'
 
-import { type FC, type RefObject, memo, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type RefObject,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import type { ViewerProps } from './types'
 
-const ImageDisplay = memo<{
-  wrapperWidth: number
-  wrapperHeight: number
-  rotation: number
-  imgScale: number
-  url: string
-  alt?: string
-  onLoad: () => void
-  onLoadError?: () => void
-  imageRef: RefObject<HTMLImageElement>
-}>(
-  ({
-    wrapperWidth,
-    wrapperHeight,
-    rotation,
-    imgScale,
-    url,
-    alt,
-    onLoad,
-    onLoadError,
-    imageRef,
-  }) => (
-    <div
+const ImageDisplay = memo<
+  {
+    wrapperWidth: number
+    wrapperHeight: number
+    rotation: number
+    imgScale: number
+    imageRef: RefObject<HTMLImageElement>
+  } & Pick<ComponentProps<'img'>, 'src' | 'alt' | 'onLoad' | 'onError'>
+>(({ wrapperWidth, wrapperHeight, rotation, imgScale, imageRef, ...rest }) => (
+  <div
+    style={{
+      width: wrapperWidth,
+      height: wrapperHeight,
+    }}
+    className="shr-relative shr-h-full shr-w-full"
+  >
+    {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
+    {/* eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text */}
+    <img
+      {...rest}
+      className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
+      ref={imageRef}
       style={{
-        width: wrapperWidth,
-        height: wrapperHeight,
+        rotate: `${rotation}deg`,
+        scale: `${imgScale}`,
       }}
-      className="shr-relative shr-h-full shr-w-full"
-    >
-      {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-      <img
-        className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
-        ref={imageRef}
-        src={url}
-        alt={alt}
-        style={{
-          rotate: `${rotation}deg`,
-          scale: `${imgScale}`,
-        }}
-        onLoad={onLoad}
-        onError={onLoadError}
-      />
-    </div>
-  ),
-)
+    />
+  </div>
+))
 
 export const ImageViewer: FC<ViewerProps> = memo(
   ({ scale, rotation, file, width, onLoad, onLoadError }) => {
@@ -108,10 +100,10 @@ export const ImageViewer: FC<ViewerProps> = memo(
     return (
       <ImageDisplay
         {...viewConfig}
-        url={file.url}
+        src={file.url}
         alt={file.alt}
         onLoad={handleLoad}
-        onLoadError={onLoadError}
+        onError={onLoadError}
         imageRef={imageRef}
       />
     )
