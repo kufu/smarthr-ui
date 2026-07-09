@@ -211,7 +211,7 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const latests = useLatest({
+  const latest = useLatest({
     onChange,
     onChangeInput,
     onAdd,
@@ -247,8 +247,8 @@ const ActualSingleCombobox = <T,>(
     onAdd,
     onSelect: useCallback(
       (selected: ComboboxItem<T>) => {
-        latests.onSelect?.(selected)
-        latests.onChangeSelected?.(selected)
+        latest.onSelect?.(selected)
+        latest.onChangeSelected?.(selected)
 
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
@@ -260,12 +260,12 @@ const ActualSingleCombobox = <T,>(
           //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
           //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
           //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
-          latests.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         })
 
         setIsEditing(false)
       },
-      [latests],
+      [latest],
     ),
     isExpanded,
     isLoading,
@@ -274,42 +274,42 @@ const ActualSingleCombobox = <T,>(
   })
 
   const selectDefaultItem = useCallback(() => {
-    if (latests.onSelect && latests.defaultItem) {
-      latests.onSelect(latests.defaultItem)
+    if (latest.onSelect && latest.defaultItem) {
+      latest.onSelect(latest.defaultItem)
     }
-  }, [latests])
+  }, [latest])
 
   const focus = useCallback(() => {
-    latests.onFocus?.()
+    latest.onFocus?.()
     inputRef.current?.focus()
     setIsFocused(true)
 
-    if (!latests.isFocused) {
+    if (!latest.isFocused) {
       setIsExpanded(true)
     }
-  }, [latests])
+  }, [latest])
   const unfocus = useCallback(() => {
-    if (!latests.isFocused) return
+    if (!latest.isFocused) return
 
-    latests.onBlur?.()
+    latest.onBlur?.()
 
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (latests.selectedItem) {
-      setInputValue(innerText(latests.selectedItem.label))
+    if (latest.selectedItem) {
+      setInputValue(innerText(latest.selectedItem.label))
     } else {
       selectDefaultItem()
     }
-  }, [latests, selectDefaultItem])
+  }, [latest, selectDefaultItem])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
 
       let isExecutedPreventDefault = false
 
-      latests.onClearClick?.({
+      latest.onClearClick?.({
         ...e,
         preventDefault: () => {
           e.preventDefault()
@@ -318,8 +318,8 @@ const ActualSingleCombobox = <T,>(
       })
 
       if (!isExecutedPreventDefault) {
-        latests.onClear?.()
-        latests.onChangeSelected?.(null)
+        latest.onClear?.()
+        latest.onChangeSelected?.(null)
 
         inputRef.current?.focus()
 
@@ -327,7 +327,7 @@ const ActualSingleCombobox = <T,>(
         setIsExpanded(true)
       }
     },
-    [latests],
+    [latest],
   )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
@@ -339,40 +339,40 @@ const ActualSingleCombobox = <T,>(
 
       inputRef.current?.focus()
 
-      if (!latests.isExpanded) {
+      if (!latest.isExpanded) {
         setIsExpanded(true)
       }
     },
-    [disabled, readOnly, latests],
+    [disabled, readOnly, latest],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      latests.onChange?.(e)
-      latests.onChangeInput?.(e)
+      latest.onChange?.(e)
+      latest.onChangeInput?.(e)
 
-      if (!latests.isEditing) setIsEditing(true)
+      if (!latest.isEditing) setIsEditing(true)
 
       const { value } = e.currentTarget
 
       setInputValue(value)
 
       if (value === '') {
-        latests.onClear?.()
-        latests.onChangeSelected?.(null)
+        latest.onClear?.()
+        latest.onChangeSelected?.(null)
       }
     },
-    [latests],
+    [latest],
   )
   const onCompositionStart = useCallback(() => setIsComposing(true), [])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (latests.isComposing) {
+      if (latest.isComposing) {
         return
       }
 
       if (ESCAPE_KEY_REGEX.test(e.key)) {
-        if (latests.isExpanded) {
+        if (latest.isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
         }
@@ -385,13 +385,13 @@ const ActualSingleCombobox = <T,>(
 
         inputRef.current?.focus()
 
-        if (!latests.isExpanded) {
+        if (!latest.isExpanded) {
           setIsExpanded(true)
         }
       }
       onKeyDownListBox(e)
     },
-    [latests, unfocus, onKeyDownListBox],
+    [latest, unfocus, onKeyDownListBox],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
@@ -401,9 +401,9 @@ const ActualSingleCombobox = <T,>(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
 
-      latests.onKeyPress?.(e)
+      latest.onKeyPress?.(e)
     },
-    [latests],
+    [latest],
   )
 
   const caretIconColor = isFocused

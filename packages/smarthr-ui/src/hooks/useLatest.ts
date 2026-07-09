@@ -8,15 +8,15 @@ import { useMemo, useRef } from 'react'
  * 常に最新の値を参照する。
  *
  * @example
- * const latests = useLatest({
+ * const latest = useLatest({
  *   onChange,
  *   onSelect,
  *   selectedItem,
  * })
  *
  * // 最新の値に常にアクセス可能
- * latests.onChange?.(e)
- * if (latests.selectedItem) { ... }
+ * latest.onChange?.(e)
+ * if (latest.selectedItem) { ... }
  */
 export function useLatest<T extends Record<string, any>>(values: T): Readonly<T> {
   const ref = useRef<T>(values)
