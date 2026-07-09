@@ -188,12 +188,8 @@ const SelectTdButton = memo<{
         className={classNames.cellButton}
         data-is-today={target.day.isSame(nowDateText, 'date')}
       >
-        <SelectButtonTdDateCell className={classNames.dateCell}>{date}</SelectButtonTdDateCell>
+        <span className={classNames.dateCell}>{date}</span>
       </UnstyledButton>
     </td>
   )
 })
-
-const SelectButtonTdDateCell = memo<{ children: number; className: string }>(
-  ({ children, className }) => <span className={className}>{children}</span>,
-)
