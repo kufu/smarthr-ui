@@ -15,6 +15,7 @@ import {
   useState,
 } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
@@ -67,27 +68,29 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       () => inputRef.current,
     )
 
-    const unstableRef = useRef({ onChange, files })
-    unstableRef.current = { onChange, files }
+    const latest = useLatest({ onChange, files })
 
-    const updateFiles = useCallback((newFiles: File[]) => {
-      if (!inputRef.current) {
-        return
-      }
+    const updateFiles = useCallback(
+      (newFiles: File[]) => {
+        if (!inputRef.current) {
+          return
+        }
 
-      unstableRef.current.onChange?.(newFiles)
+        latest.onChange?.(newFiles)
 
-      const buff = new DataTransfer()
-      newFiles.forEach((file) => {
-        buff.items.add(file)
-      })
+        const buff = new DataTransfer()
+        newFiles.forEach((file) => {
+          buff.items.add(file)
+        })
 
-      isUpdatingFilesDirectly.current = true
-      inputRef.current.files = buff.files
-      isUpdatingFilesDirectly.current = false
+        isUpdatingFilesDirectly.current = true
+        inputRef.current.files = buff.files
+        isUpdatingFilesDirectly.current = false
 
-      setFiles(newFiles)
-    }, [])
+        setFiles(newFiles)
+      },
+      [latest],
+    )
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
@@ -98,9 +101,9 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
         const newFiles = Array.from(e.target.files ?? [])
 
-        updateFiles([...unstableRef.current.files, ...newFiles])
+        updateFiles([...latest.files, ...newFiles])
       },
-      [updateFiles],
+      [updateFiles, latest],
     )
 
     const handleDelete = useCallback(
@@ -110,14 +113,14 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         }
 
         const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = unstableRef.current.files.filter((_, i) => index !== i)
+        const newFiles = latest.files.filter((_, i) => index !== i)
 
         // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
         inputRef.current.value = ''
 
         updateFiles(newFiles)
       },
-      [updateFiles],
+      [updateFiles, latest],
     )
 
     return (
