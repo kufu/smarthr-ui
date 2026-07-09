@@ -49,7 +49,7 @@ export const PageHeading = memo<Props>(
     className,
     visuallyHidden,
     autoPageTitle = true,
-    pageTitleSuffix = 'SmartHR（スマートHR）',
+    pageTitleSuffix,
     pageTitle,
     children,
     ...rest
@@ -58,67 +58,98 @@ export const PageHeading = memo<Props>(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
-    const actualTypography = useMemo(() => {
-      const defaultTypography = STYLE_TYPE_MAP.screenTitle
 
-      if (size) {
-        return { ...defaultTypography, size }
-      }
+    if (IS_NEXT_JS || !autoPageTitle) {
+      const Component = visuallyHidden ? VisuallyHiddenText : Text
 
-      return defaultTypography
-    }, [size])
-
-    const pseudoTitleId = useId()
-    const ref = useRef<HTMLHeadingElement>(null)
-
-    useEffect(() => {
-      if (!autoPageTitle || IS_NEXT_JS) return
-
-      const h1 = ref.current
-      if (!h1) return
-
-      const updateTitle = () => {
-        document.title = `${pageTitle || h1.textContent || ''}｜${pageTitleSuffix}`
-
-        // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
-        // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-        const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
-          document.createElement('div')) as HTMLDivElement
-
-        pseudoTitle.setAttribute('id', pseudoTitleId)
-        pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
-        pseudoTitle.setAttribute('aria-live', 'polite')
-        document.body.prepend(pseudoTitle)
-
-        requestAnimationFrame(() => {
-          pseudoTitle.textContent = document.title
-        })
-      }
-
-      updateTitle()
-
-      const observer = new MutationObserver(updateTitle)
-      observer.observe(h1, {
-        characterData: true,
-        childList: true,
-        subtree: true,
-      })
-
-      return () => {
-        observer.disconnect()
-        const pseudoTitle = document.getElementById(pseudoTitleId)
-        if (pseudoTitle) {
-          pseudoTitle.remove()
-        }
-      }
-    }, [autoPageTitle, pageTitle, pageTitleSuffix, pseudoTitleId])
-
-    const Component = visuallyHidden ? VisuallyHiddenText : Text
+      return (
+        <Component
+          {...rest}
+          {...STYLE_TYPE_MAP.screenTitle}
+          size={size || STYLE_TYPE_MAP.screenTitle.size}
+          as="h1"
+          className={actualClassName}
+        >
+          {children}
+        </Component>
+      )
+    }
 
     return (
-      <Component {...rest} {...actualTypography} as="h1" className={actualClassName} ref={ref}>
+      <AutoPageTitleHeading
+        {...rest}
+        size={size || STYLE_TYPE_MAP.screenTitle.size}
+        visuallyHidden={visuallyHidden}
+        pageTitleSuffix={pageTitleSuffix}
+        pageTitle={pageTitle}
+        className={actualClassName}
+      >
         {children}
-      </Component>
+      </AutoPageTitleHeading>
     )
   },
 )
+
+export const AutoPageTitleHeading = memo<
+  Omit<Props, 'size' | 'autoPageTitle'> & {
+    size: TextProps['size']
+  }
+>(({ size, className, visuallyHidden, pageTitleSuffix, pageTitle, children, ...rest }) => {
+  const pseudoTitleId = useId()
+  const ref = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    const h1 = ref.current
+    if (!h1) return
+
+    const updateTitle = () => {
+      document.title = `${pageTitle || h1.textContent || ''}｜${pageTitleSuffix || 'SmartHR（スマートHR）'}`
+
+      // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
+      // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
+      const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
+        document.createElement('div')) as HTMLDivElement
+
+      pseudoTitle.setAttribute('id', pseudoTitleId)
+      pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
+      pseudoTitle.setAttribute('aria-live', 'polite')
+      document.body.prepend(pseudoTitle)
+
+      requestAnimationFrame(() => {
+        pseudoTitle.textContent = document.title
+      })
+    }
+
+    updateTitle()
+
+    const observer = new MutationObserver(updateTitle)
+    observer.observe(h1, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+    })
+
+    return () => {
+      observer.disconnect()
+      const pseudoTitle = document.getElementById(pseudoTitleId)
+      if (pseudoTitle) {
+        pseudoTitle.remove()
+      }
+    }
+  }, [pageTitle, pageTitleSuffix, pseudoTitleId, visuallyHidden])
+
+  const Component = visuallyHidden ? VisuallyHiddenText : Text
+
+  return (
+    <Component
+      {...rest}
+      {...STYLE_TYPE_MAP.screenTitle}
+      size={size}
+      as="h1"
+      className={className}
+      ref={ref}
+    >
+      {children}
+    </Component>
+  )
+})
