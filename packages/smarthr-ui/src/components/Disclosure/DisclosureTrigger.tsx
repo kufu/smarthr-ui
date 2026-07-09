@@ -2,6 +2,8 @@
 
 import { type FC, type ReactElement, useCallback, useEffect, useRef } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
+
 import { useDisclosure } from './useDisclosure'
 
 type DisclosureTriggerNodeChildren = Omit<
@@ -22,20 +24,22 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   const [expanded, setExpanded] = useDisclosure(targetId)
   const ref = useRef<HTMLSpanElement | null>(null)
 
-  const unstableRef = useRef({ onClick, setExpanded })
-  unstableRef.current = { onClick, setExpanded }
+  const latest = useLatest({ onClick, setExpanded })
 
-  const actualOnClick = useCallback((e: MouseEvent) => {
-    const toggleExpanded = () => {
-      unstableRef.current.setExpanded((current) => !current)
-    }
+  const actualOnClick = useCallback(
+    (e: MouseEvent) => {
+      const toggleExpanded = () => {
+        latest.setExpanded((current) => !current)
+      }
 
-    if (unstableRef.current.onClick) {
-      unstableRef.current.onClick(toggleExpanded, e)
-    } else {
-      toggleExpanded()
-    }
-  }, [])
+      if (latest.onClick) {
+        latest.onClick(toggleExpanded, e)
+      } else {
+        toggleExpanded()
+      }
+    },
+    [latest],
+  )
 
   useEffect(() => {
     const wrapper = ref.current
