@@ -4,6 +4,7 @@ import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'reac
 import { IntlProvider } from './IntlProvider'
 import { convertLang } from './localeMap'
 import { locales } from './locales'
+import { useDateFormat } from './useDateFormat'
 import { useIntl } from './useIntl'
 
 import type { FC, PropsWithChildren } from 'react'
@@ -65,7 +66,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: testDate })).toBe('2025/01/01')
         })
       })
@@ -75,7 +76,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
             '2025/01/01（水）',
           )
@@ -85,7 +86,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
             'Jan 01, 2025 (Wed)',
           )
@@ -95,7 +96,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja-easy">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: testDate, parts: fullParts })).toBe('2025年1月1日（水）')
         })
 
@@ -103,7 +104,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="id-id">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
             '01 Jan 2025 (Rab)',
           )
@@ -113,7 +114,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ko">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
             '2025년 1월 1일 (수)',
           )
@@ -123,7 +124,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="pt">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
             '01 de jan. de 2025 (qua.)',
           )
@@ -133,7 +134,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="vi">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           // 環境によって "Th 4" または "Thứ 4" が返される
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toMatch(
             /^01 tháng 1, 2025 \(Thứ? 4\)$/,
@@ -144,7 +145,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="zh-cn">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
             '2025年1月1日（周三）',
           )
@@ -154,7 +155,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="zh-tw">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: fullParts })).toBe(
             '2025年1月1日（週三）',
           )
@@ -166,7 +167,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: ['year', 'month'] })).toBe(
             '2025/01',
           )
@@ -176,7 +177,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: ['year'] })).toBe('2025年')
         })
 
@@ -184,7 +185,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: ['month', 'day'] })).toBe(
             '01/01',
           )
@@ -194,7 +195,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: ['weekday'] })).toBe('水')
         })
 
@@ -202,7 +203,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatDate({
               date: new Date(2025, 1 - 1, 1),
@@ -217,7 +218,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatDate({
               date: testDate,
@@ -231,7 +232,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="pt">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatDate({
               date: new Date(2025, 1 - 1, 1),
@@ -252,7 +253,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatDate({
               date: new Date(2025, 1 - 1, 1),
@@ -266,7 +267,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatDate({
               date: new Date(2025, 1 - 1, 1),
@@ -282,7 +283,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
 
           expect(formatDate({ date: new Date(2024, 11 - 1, 15) })).toBe('2024/11/15')
 
@@ -294,7 +295,7 @@ describe('intl', () => {
           const zhCnWrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="zh-cn">{children}</IntlProvider>
           )
-          const { formatDate: formatDateZhCn } = renderHook(() => useIntl(), {
+          const { formatDate: formatDateZhCn } = renderHook(() => useDateFormat(), {
             wrapper: zhCnWrapper,
           }).result.current
 
@@ -306,7 +307,7 @@ describe('intl', () => {
           const zhTwWrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="zh-tw">{children}</IntlProvider>
           )
-          const { formatDate: formatDateZhTw } = renderHook(() => useIntl(), {
+          const { formatDate: formatDateZhTw } = renderHook(() => useDateFormat(), {
             wrapper: zhTwWrapper,
           }).result.current
           expect(formatDateZhTw({ date: new Date(2025, 1 - 1, 1), parts: ['weekday'] })).toBe(
@@ -318,7 +319,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
-          const { formatDate } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatDate } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatDate({ date: new Date(2025, 1 - 1, 1), parts: ['weekday'] })).toBe('Wed')
         })
       })
@@ -332,7 +333,7 @@ describe('intl', () => {
             const wrapper: FC<PropsWithChildren> = ({ children }) => (
               <IntlProvider locale={locale}>{children}</IntlProvider>
             )
-            const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+            const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
             expect(formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45) })).toBe('14:30')
           })
         })
@@ -341,7 +342,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="id-id">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45) })).toBe('14.30')
         })
 
@@ -349,7 +350,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45) })).toMatch(/^2:30 PM$/)
         })
       })
@@ -359,7 +360,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45) })).toBe('14:30')
         })
 
@@ -367,7 +368,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTime({
               date: new Date(2025, 1 - 1, 1, 14, 30, 45),
@@ -380,7 +381,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTime({
               date: new Date(2025, 1 - 1, 1, 14, 30, 45),
@@ -393,7 +394,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="id-id">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTime({
               date: new Date(2025, 1 - 1, 1, 14, 30, 45),
@@ -406,7 +407,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45), parts: ['hour'] }),
           ).toMatch(/^14/)
@@ -416,7 +417,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45), parts: ['minute'] }),
           ).toMatch(/^30/)
@@ -426,7 +427,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45), parts: ['second'] }),
           ).toMatch(/^45/)
@@ -438,7 +439,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           const formatted = formatTime({
             date: new Date(2025, 1 - 1, 1, 14, 30, 45),
             options: { hour12: true },
@@ -450,7 +451,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
-          const { formatTime } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTime } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTime({ date: new Date(2025, 1 - 1, 1, 14, 30, 45), options: { hour12: false } }),
           ).toBe('14:30')
@@ -464,7 +465,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTimestamp } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatTimestamp({ date: new Date(2025, 1 - 1, 1, 14, 30, 45) })).toBe(
             '2025/01/01 14:30',
           )
@@ -474,7 +475,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="en-us">{children}</IntlProvider>
           )
-          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTimestamp } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatTimestamp({ date: new Date(2025, 1 - 1, 1, 14, 30, 45) })).toBe(
             'Jan 01, 2025 2:30 PM',
           )
@@ -484,7 +485,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="id-id">{children}</IntlProvider>
           )
-          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTimestamp } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(formatTimestamp({ date: new Date(2025, 1 - 1, 1, 14, 30, 45) })).toBe(
             '01 Jan 2025 14.30',
           )
@@ -496,7 +497,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="ja">{children}</IntlProvider>
           )
-          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTimestamp } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTimestamp({
               date: new Date(2025, 1 - 1, 1, 14, 30, 45),
@@ -509,7 +510,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale="id-id">{children}</IntlProvider>
           )
-          const { formatTimestamp } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { formatTimestamp } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(
             formatTimestamp({
               date: new Date(2025, 1 - 1, 1, 14, 30, 45),
@@ -528,7 +529,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale={locale}>{children}</IntlProvider>
           )
-          const { getWeekStartDay } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { getWeekStartDay } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(getWeekStartDay()).toBe(0)
         })
       })
@@ -540,7 +541,7 @@ describe('intl', () => {
           const wrapper: FC<PropsWithChildren> = ({ children }) => (
             <IntlProvider locale={locale}>{children}</IntlProvider>
           )
-          const { getWeekStartDay } = renderHook(() => useIntl(), { wrapper }).result.current
+          const { getWeekStartDay } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(getWeekStartDay()).toBe(1)
         })
       })
