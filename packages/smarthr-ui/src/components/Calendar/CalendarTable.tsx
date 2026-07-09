@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { useDateFormat } from '../../intl'
 import { UnstyledButton } from '../Button'
 
 import { isBetween } from './calendarHelper'
@@ -61,7 +61,7 @@ export const CalendarTable: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const { formatDate, getWeekStartDay } = useIntl()
+  const { formatDate, getWeekStartDay } = useDateFormat()
 
   const classNames = useMemo(() => {
     const { wrapper, table, th, td, cellButton, dateCell } = classNameGenerator()
