@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
+import { useCallback, useId, useMemo, useRef } from 'react'
 import innerText from 'react-innertext'
 
 import { areItemsEqual, convertMatchableString } from './helper'
@@ -39,9 +39,12 @@ export const useMultiOptions = <T>({
   selected: Array<ComboboxItem<T>>
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }) => {
+  const unstableRef = useRef({ isItemSelected })
+  unstableRef.current = { isItemSelected }
+
   const isSelected = useCallback(
-    (item: ComboboxItem<T>) => isItemSelected(item, selected),
-    [selected, isItemSelected],
+    (item: ComboboxItem<T>) => unstableRef.current.isItemSelected(item, selected),
+    [selected],
   )
 
   return useOptions<T>(rest, isSelected)
