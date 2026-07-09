@@ -302,7 +302,7 @@ const ActualSingleCombobox = <T,>(
     } else {
       selectDefaultItem()
     }
-  }, [latest, selectDefaultItem])
+  }, [selectDefaultItem, latest])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
@@ -391,7 +391,7 @@ const ActualSingleCombobox = <T,>(
       }
       onKeyDownListBox(e)
     },
-    [latest, unfocus, onKeyDownListBox],
+    [unfocus, onKeyDownListBox, latest],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
