@@ -1,6 +1,16 @@
 'use client'
 
-import { type PropsWithChildren, memo, useEffect, useId, useMemo, useRef } from 'react'
+import {
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  type Ref,
+  memo,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { IS_NEXT_JS } from '../../../libs/nextjs'
@@ -44,57 +54,24 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo<Props>(
-  ({
-    size,
-    className,
-    visuallyHidden,
-    autoPageTitle = true,
-    pageTitleSuffix,
-    pageTitle,
-    children,
-    ...rest
-  }) => {
-    const actualClassName = useMemo(
-      () => classNameGenerator({ visuallyHidden, className }),
-      [className, visuallyHidden],
-    )
-
+  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, children, ...rest }) => {
     if (IS_NEXT_JS || !autoPageTitle) {
-      const Component = visuallyHidden ? VisuallyHiddenText : Text
-
-      return (
-        <Component
-          {...rest}
-          {...STYLE_TYPE_MAP.screenTitle}
-          size={size || STYLE_TYPE_MAP.screenTitle.size}
-          as="h1"
-          className={actualClassName}
-        >
-          {children}
-        </Component>
-      )
+      return <ActualHeading {...rest}>{children}</ActualHeading>
     }
 
     return (
-      <AutoPageTitleHeading
-        {...rest}
-        size={size || STYLE_TYPE_MAP.screenTitle.size}
-        visuallyHidden={visuallyHidden}
-        pageTitleSuffix={pageTitleSuffix}
-        pageTitle={pageTitle}
-        className={actualClassName}
-      >
+      <AutoPageTitleHeading {...rest} pageTitleSuffix={pageTitleSuffix} pageTitle={pageTitle}>
         {children}
       </AutoPageTitleHeading>
     )
   },
 )
 
-export const AutoPageTitleHeading = memo<
+const AutoPageTitleHeading: FC<
   Omit<Props, 'size' | 'autoPageTitle'> & {
     size: TextProps['size']
   }
->(({ size, className, visuallyHidden, pageTitleSuffix, pageTitle, children, ...rest }) => {
+> = ({ pageTitleSuffix, pageTitle, children, ...rest }) => {
   const pseudoTitleId = useId()
   const ref = useRef<HTMLHeadingElement>(null)
 
@@ -136,20 +113,47 @@ export const AutoPageTitleHeading = memo<
         pseudoTitle.remove()
       }
     }
-  }, [pageTitle, pageTitleSuffix, pseudoTitleId, visuallyHidden])
+  }, [pageTitle, pageTitleSuffix, pseudoTitleId])
+
+  return (
+    <ActualHeading {...rest} headingRef={ref}>
+      {children}
+    </ActualHeading>
+  )
+}
+
+type ActualHeadingProps = {
+  visuallyHidden?: boolean
+  size: TextProps['size']
+  className?: string
+  children: ReactNode
+  headingRef?: Ref<HTMLHeadingElement>
+} & Omit<ElementProps, 'size' | 'className' | 'visuallyHidden' | 'children'>
+
+const ActualHeading: FC<ActualHeadingProps> = ({
+  visuallyHidden,
+  size,
+  className,
+  children,
+  headingRef,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ visuallyHidden, className }),
+    [className, visuallyHidden],
+  )
 
   const Component = visuallyHidden ? VisuallyHiddenText : Text
-
   return (
     <Component
       {...rest}
       {...STYLE_TYPE_MAP.screenTitle}
-      size={size}
+      size={size || STYLE_TYPE_MAP.screenTitle.size}
       as="h1"
-      className={className}
-      ref={ref}
+      className={actualClassName}
+      ref={headingRef}
     >
       {children}
     </Component>
   )
-})
+}
