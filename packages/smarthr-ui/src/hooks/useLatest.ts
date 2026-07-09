@@ -18,7 +18,7 @@ import { useMemo, useRef } from 'react'
  * latest.onChange?.(e)
  * if (latest.selectedItem) { ... }
  */
-export function useLatest<T extends Record<string, any>>(values: T): Readonly<T> {
+export function useLatest<T extends object>(values: T): Readonly<T> {
   const ref = useRef<T>(values)
   ref.current = values
 
