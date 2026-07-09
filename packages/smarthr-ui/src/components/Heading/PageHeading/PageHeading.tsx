@@ -54,17 +54,14 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo<Props>(
-  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, children, ...rest }) => {
-    if (IS_NEXT_JS || !autoPageTitle) {
-      return <ActualHeading {...rest}>{children}</ActualHeading>
-    }
-
-    return (
+  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, children, ...rest }) =>
+    !IS_NEXT_JS && autoPageTitle ? (
       <AutoPageTitleHeading {...rest} pageTitleSuffix={pageTitleSuffix} pageTitle={pageTitle}>
         {children}
       </AutoPageTitleHeading>
-    )
-  },
+    ) : (
+      <ActualHeading {...rest}>{children}</ActualHeading>
+    ),
 )
 
 const AutoPageTitleHeading: FC<
