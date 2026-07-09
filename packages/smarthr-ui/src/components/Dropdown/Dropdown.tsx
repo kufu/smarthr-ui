@@ -16,6 +16,7 @@ import {
   useState,
 } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 
 import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
@@ -64,31 +65,24 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const triggerElementRef = useRef<HTMLDivElement>(null)
   const contentId = useId()
 
-  const unstableRef = useRef({
+  const latest = useLatest({
     active,
     isPortalRootMounted,
     onOpen,
     onClose,
     createPortal,
   })
-  unstableRef.current = {
-    active,
-    isPortalRootMounted,
-    onOpen,
-    onClose,
-    createPortal,
-  }
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(() => {
     const result: FC<{ children: ReactNode }> = (props) =>
-      unstableRef.current.active ? unstableRef.current.createPortal(props.children) : null
+      latest.active ? latest.createPortal(props.children) : null
 
     // set the displayName explicit for DevTools
     result.displayName = 'DropdownContentRoot'
 
     return result
-  }, [])
+  }, [latest])
 
   const memoizedOnClickTrigger = useCallback((rect: Rect) => {
     setActive((current) => {
@@ -129,10 +123,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [isChildPortal, portalRoot, contentId])
 
   useEffect(() => {
-    if (unstableRef.current.isPortalRootMounted()) {
-      unstableRef.current[active ? 'onOpen' : 'onClose']?.()
+    if (latest.isPortalRootMounted()) {
+      latest[active ? 'onOpen' : 'onClose']?.()
     }
-  }, [active])
+  }, [active, latest])
 
   return (
     <PortalParentProvider>
