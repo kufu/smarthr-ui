@@ -160,7 +160,12 @@ export const InformationPanel: FC<Props> = ({
   }, [type, bold, className])
 
   return (
-    <Base {...rest} as="section" data-active={active} className={classNames.wrapper}>
+    <Base
+      {...rest}
+      as="section"
+      data-active={(active || false).toString()}
+      className={classNames.wrapper}
+    >
       <Sidebar align="baseline" right className={classNames.header}>
         <MemoizedHeading
           heading={heading}
