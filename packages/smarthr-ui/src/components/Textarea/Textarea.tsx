@@ -283,7 +283,7 @@ const MaxLettersTextarea = forwardRef<HTMLTextAreaElement, Props & { maxLetters:
       if (value) {
         updateCounters(value)
       }
-    }, [updateCounters, value])
+    }, [value, updateCounters])
 
     const countError = count > maxLetters
     const classNames = useMemo(() => {
