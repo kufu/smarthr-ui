@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
@@ -83,7 +83,6 @@ export const useListbox = <T,>({
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
-  const { localize } = useIntl()
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -278,17 +277,18 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const texts = useMemo(
-    () => ({
-      loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
-      noResultText:
-        orgNoResultText ??
-        localize({
-          id: 'smarthr-ui/Combobox/noResultsText',
-          defaultText: '一致する選択肢がありません。',
-        }),
-    }),
-    [orgNoResultText, localize],
+  const defaultLoadingText = useMemo(
+    () => <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />,
+    [],
+  )
+  const defaultNoResultText = useMemo(
+    () => (
+      <Localizer
+        id="smarthr-ui/Combobox/noResultsText"
+        defaultText="一致する選択肢がありません。"
+      />
+    ),
+    [],
   )
 
   const renderListBox = useCallback(
@@ -296,7 +296,7 @@ export const useListbox = <T,>({
       createPortal(
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
+            <VisuallyHiddenText role="status">{defaultLoadingText}</VisuallyHiddenText>
           )}
           <Scroller
             id={listBoxId}
@@ -322,7 +322,7 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {texts.noResultText}
+                  {orgNoResultText ?? defaultNoResultText}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -350,7 +350,9 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      texts,
+      defaultLoadingText,
+      defaultNoResultText,
+      orgNoResultText,
       handleAdd,
       handleHoverOption,
       handleSelect,
