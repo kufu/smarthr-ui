@@ -10,7 +10,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
@@ -180,21 +180,8 @@ const CloseButton = memo<{
   onClick: FormDialogContentInnerProps['onClickClose']
   disabled: boolean
   text: ReactNode
-}>(({ onClick, disabled, text }) => {
-  const { localize } = useIntl()
-
-  const defaultText = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/FormDialog/closeButtonLabel',
-        defaultText: 'キャンセル',
-      }),
-    [localize],
-  )
-
-  return (
-    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {text ?? defaultText}
-    </Button>
-  )
-})
+}>(({ onClick, disabled, text }) => (
+  <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+    {text ?? <Localizer id="smarthr-ui/FormDialog/closeButtonLabel" defaultText="キャンセル" />}
+  </Button>
+))

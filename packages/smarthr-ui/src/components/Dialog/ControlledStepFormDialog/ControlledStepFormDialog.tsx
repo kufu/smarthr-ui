@@ -11,7 +11,7 @@ import {
   useRef,
 } from 'react'
 
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
@@ -32,11 +32,6 @@ import type { DialogProps /** コンテンツなにもないDialogの基本props
 
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
-
-type DefaultTextsType = Record<
-  'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel',
-  ReactNode
->
 
 type AbstractProps = Omit<
   StepFormDialogContentInnerProps,
@@ -81,24 +76,6 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   isOpen,
   ...rest
 }) => {
-  const { localize } = useIntl()
-  const defaultTexts: DefaultTextsType = useMemo(
-    () => ({
-      closeButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
-        defaultText: 'キャンセル',
-      }),
-      nextButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
-        defaultText: '次へ',
-      }),
-      backButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/backButtonLabel',
-        defaultText: '戻る',
-      }),
-    }),
-    [localize],
-  )
   const { currentStep } = useContext(StepFormDialogContext)
   const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
 
@@ -107,11 +84,16 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     headingObjectConverter,
   )
 
+  const nextButtonLabel = useMemo(
+    () => <Localizer id="smarthr-ui/StepFormDialog/nextButtonLabel" defaultText="次へ" />,
+    [],
+  )
+
   const tempSubmitButton = useStepFormDialogButton({
     button: originalSubmitButton,
     currentStep,
     defaultValues: {
-      text: defaultTexts.nextButtonLabel,
+      text: nextButtonLabel,
       theme: 'primary' as const,
     },
   })
@@ -121,22 +103,22 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       text:
         tempSubmitButton.functionCall.text || activeStep === stepLength
           ? tempSubmitButton.text
-          : defaultTexts.nextButtonLabel,
+          : nextButtonLabel,
     }),
-    [tempSubmitButton, activeStep, stepLength, defaultTexts.nextButtonLabel],
+    [tempSubmitButton, activeStep, stepLength, nextButtonLabel],
   )
   const closeButton = useStepFormDialogButton({
     button: originalCloseButton,
     currentStep,
     defaultValues: {
-      text: defaultTexts.closeButtonLabel,
+      text: <Localizer id="smarthr-ui/StepFormDialog/closeButtonLabel" defaultText="キャンセル" />,
     },
   })
   const backButton = useStepFormDialogButton({
     button: originalBackButton,
     currentStep,
     defaultValues: {
-      text: defaultTexts.backButtonLabel,
+      text: <Localizer id="smarthr-ui/StepFormDialog/backButtonLabel" defaultText="戻る" />,
     },
   })
 
