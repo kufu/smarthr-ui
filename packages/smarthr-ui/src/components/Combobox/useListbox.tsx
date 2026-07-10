@@ -277,26 +277,14 @@ export const useListbox = <T,>({
     }
   }, [])
 
-  const defaultLoadingText = useMemo(
-    () => <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />,
-    [],
-  )
-  const defaultNoResultText = useMemo(
-    () => (
-      <Localizer
-        id="smarthr-ui/Combobox/noResultsText"
-        defaultText="一致する選択肢がありません。"
-      />
-    ),
-    [],
-  )
-
   const renderListBox = useCallback(
     () =>
       createPortal(
         <div className={classNames.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{defaultLoadingText}</VisuallyHiddenText>
+            <VisuallyHiddenText role="status">
+              <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
+            </VisuallyHiddenText>
           )}
           <Scroller
             id={listBoxId}
@@ -322,7 +310,12 @@ export const useListbox = <T,>({
                 </div>
               ) : options.length === 0 ? (
                 <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {orgNoResultText ?? defaultNoResultText}
+                  {orgNoResultText ?? (
+                    <Localizer
+                      id="smarthr-ui/Combobox/noResultsText"
+                      defaultText="一致する選択肢がありません。"
+                    />
+                  )}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -350,8 +343,6 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      defaultLoadingText,
-      defaultNoResultText,
       orgNoResultText,
       handleAdd,
       handleHoverOption,
