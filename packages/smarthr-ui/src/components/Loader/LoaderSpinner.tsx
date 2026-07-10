@@ -3,7 +3,7 @@
 import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type Props = {
@@ -117,8 +117,6 @@ const classNameGenerator = tv({
 })
 
 export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' }) => {
-  const { localize } = useIntl()
-
   const classNames = useMemo(() => {
     const { spinner, line, cog, cogInner } = classNameGenerator({
       type,
@@ -137,9 +135,9 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
     }
   }, [type, size])
 
-  const actualAlt = useMemo(
-    () => alt ?? localize({ id: 'smarthr-ui/Loader/alt', defaultText: '処理中' }),
-    [alt, localize],
+  const defaultAlt = useMemo(
+    () => <Localizer id="smarthr-ui/Loader/alt" defaultText="処理中" />,
+    [],
   )
 
   const lineBody = (
@@ -159,7 +157,7 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
       <span className={classNames.line2}>{lineBody}</span>
       <span className={classNames.line3}>{lineBody}</span>
       <span className={classNames.line4}>{lineBody}</span>
-      <VisuallyHiddenText>{actualAlt}</VisuallyHiddenText>
+      <VisuallyHiddenText>{alt ?? defaultAlt}</VisuallyHiddenText>
     </span>
   )
 })
