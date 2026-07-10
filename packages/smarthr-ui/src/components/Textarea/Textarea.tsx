@@ -140,6 +140,12 @@ const ActualTextarea = forwardRef<
     const onChangeRef = useRef(onChange)
     onChangeRef.current = onChange
 
+    const updateInterimRows = useCallback(() => {
+      if (autoResize && internalRef.current) {
+        setInterimRows(calculateIdealRows(internalRef.current, maxRows, theme.leading.NORMAL))
+      }
+    }, [maxRows, autoResize, theme.leading.NORMAL])
+
     const textareaRef = useCallback(
       (node: HTMLTextAreaElement | null) => {
         internalRef.current = node
@@ -156,9 +162,12 @@ const ActualTextarea = forwardRef<
         if (autoFocus && node) {
           node.focus()
         }
+
+        // autoResize時に、初期値での高さを指定
+        updateInterimRows()
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
+      [updateInterimRows],
     )
 
     const handleChange = useCallback(
@@ -178,12 +187,10 @@ const ActualTextarea = forwardRef<
       [autoResize, maxRows, rows, theme.leading.NORMAL],
     )
 
-    // autoResize時に、初期値での高さを指定
+    // props変更時の再計算用
     useEffect(() => {
-      if (autoResize && internalRef.current) {
-        setInterimRows(calculateIdealRows(internalRef.current, maxRows, theme.leading.NORMAL))
-      }
-    }, [maxRows, autoResize, theme.leading.NORMAL])
+      updateInterimRows()
+    }, [updateInterimRows])
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
