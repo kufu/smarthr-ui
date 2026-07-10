@@ -1,7 +1,7 @@
 import { type FC, memo, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer, useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -59,10 +59,6 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
   const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      account: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/account',
-        defaultText: 'アカウント',
-      }),
       userSetting: localize({
         id: 'smarthr-ui/AppHeader/userSettings',
         defaultText: '個人設定',
@@ -89,7 +85,15 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
         <DropdownTrigger>
           <Button variant="skeleton" size="S" className={classNames.iconButton}>
             <span className={classNames.iconButtonInner}>
-              <FaUserLargeIcon alt={translated.account} className="shr-fill-grey" />
+              <FaUserLargeIcon
+                alt={
+                  <Localizer
+                    id="smarthr-ui/AppHeader/MobileHeader/account"
+                    defaultText="アカウント"
+                  />
+                }
+                className="shr-fill-grey"
+              />
             </span>
           </Button>
         </DropdownTrigger>

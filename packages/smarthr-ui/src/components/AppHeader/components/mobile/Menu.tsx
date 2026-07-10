@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
 import { usePortal } from '../../../../hooks/usePortal'
-import { useIntl } from '../../../../intl'
+import { Localizer, useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
 import { Translate } from '../common/Translate'
@@ -63,10 +63,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const { localize } = useIntl()
   const translated = useMemo(
     () => ({
-      open: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/openMenu',
-        defaultText: 'メニューを開く',
-      }),
       launcherListText: localize({
         id: 'smarthr-ui/AppHeader/Launcher/listText',
         defaultText: 'アプリ一覧',
@@ -85,7 +81,12 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   return (
     <>
-      <OpenButton onClick={open} alt={translated.open} />
+      <OpenButton
+        onClick={open}
+        alt={
+          <Localizer id="smarthr-ui/AppHeader/MobileHeader/openMenu" defaultText="メニューを開く" />
+        }
+      />
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
           <FeatureButton className={className}>{translated.launcherListText}</FeatureButton>

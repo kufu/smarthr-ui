@@ -15,7 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useDateFormat, useIntl } from '../../intl'
+import { Localizer, useDateFormat } from '../../intl'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
@@ -206,23 +206,13 @@ const YearSelectButton = memo<{
   'aria-controls': string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>((props) => {
-  const { localize } = useIntl()
-  const selectYearAltText = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/Calendar/selectYear',
-        defaultText: '年を選択する',
-      }),
-    [localize],
-  )
-
-  return (
-    <Button {...props} size="S">
-      <FaCaretDownIcon alt={selectYearAltText} />
-    </Button>
-  )
-})
+}>((props) => (
+  <Button {...props} size="S">
+    <FaCaretDownIcon
+      alt={<Localizer id="smarthr-ui/Calendar/selectYear" defaultText="年を選択する" />}
+    />
+  </Button>
+))
 
 const MonthDirectionCluster = memo<{
   isSelectingYear: boolean
@@ -235,27 +225,8 @@ const MonthDirectionCluster = memo<{
   setCurrentMonth: (day: DayJsType) => void
   className: string
 }>(({ isSelectingYear, directionMonth: { prev, next }, from, to, setCurrentMonth, className }) => {
-  const { localize } = useIntl()
   const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
   const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
-
-  const previousMonthAltText = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/Calendar/previousMonth',
-        defaultText: '前の月へ',
-      }),
-    [localize],
-  )
-
-  const nextMonthAltText = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/Calendar/nextMonth',
-        defaultText: '次の月へ',
-      }),
-    [localize],
-  )
 
   return (
     <Cluster gap={0.5} className={className}>
@@ -265,7 +236,9 @@ const MonthDirectionCluster = memo<{
         size="S"
         className="smarthr-ui-Calendar-monthButtonPrev"
       >
-        <FaChevronLeftIcon alt={previousMonthAltText} />
+        <FaChevronLeftIcon
+          alt={<Localizer id="smarthr-ui/Calendar/previousMonth" defaultText="前の月へ" />}
+        />
       </Button>
       <Button
         disabled={isSelectingYear || next.isAfter(to, 'month')}
@@ -273,7 +246,9 @@ const MonthDirectionCluster = memo<{
         size="S"
         className="smarthr-ui-Calendar-monthButtonNext"
       >
-        <FaChevronRightIcon alt={nextMonthAltText} />
+        <FaChevronRightIcon
+          alt={<Localizer id="smarthr-ui/Calendar/nextMonth" defaultText="次の月へ" />}
+        />
       </Button>
     </Cluster>
   )

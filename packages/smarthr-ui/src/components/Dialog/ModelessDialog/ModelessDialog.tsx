@@ -20,7 +20,7 @@ import Draggable from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
-import { useIntl } from '../../../intl'
+import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
 import { Base, type BaseElementProps } from '../../Base'
@@ -449,23 +449,17 @@ const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
 const CloseButton = memo<{
   className: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ onClick, className }) => {
-  const { localize } = useIntl()
-  const closeButtonIconAlt = localize({
-    id: 'smarthr-ui/ModelessDialog/closeButtonIconAlt',
-    defaultText: '閉じる',
-  })
-
-  return (
-    <div className={className}>
-      <Button
-        type="button"
-        size="S"
-        onClick={onClick}
-        className="smarthr-ui-ModelessDialog-closeButton"
-      >
-        <FaXmarkIcon alt={closeButtonIconAlt} />
-      </Button>
-    </div>
-  )
-})
+}>(({ onClick, className }) => (
+  <div className={className}>
+    <Button
+      type="button"
+      size="S"
+      onClick={onClick}
+      className="smarthr-ui-ModelessDialog-closeButton"
+    >
+      <FaXmarkIcon
+        alt={<Localizer id="smarthr-ui/ModelessDialog/closeButtonIconAlt" defaultText="閉じる" />}
+      />
+    </Button>
+  </div>
+))

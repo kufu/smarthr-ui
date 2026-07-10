@@ -13,7 +13,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer, useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
@@ -101,10 +101,6 @@ export const Content: FC<
         id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
         defaultText: '最新のリリースノート',
       }),
-      closeMenu: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/closeMenu',
-        defaultText: 'メニューを閉じる',
-      }),
     }),
     [localize],
   )
@@ -155,7 +151,14 @@ export const Content: FC<
           )}
 
           <Button variant="secondary" size="S" onClick={dialogClose}>
-            <FaXmarkIcon alt={translated.closeMenu} />
+            <FaXmarkIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/closeMenu"
+                  defaultText="メニューを閉じる"
+                />
+              }
+            />
           </Button>
         </Cluster>
       </div>
