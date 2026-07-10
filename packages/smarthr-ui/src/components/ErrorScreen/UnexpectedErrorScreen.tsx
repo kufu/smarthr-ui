@@ -44,13 +44,8 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
       <Stack className="shr-max-w-col6">
         <p>
           <Localizer
-            id="smarthr-ui/UnexpectedErrorScreen/apology"
-            defaultText="大変申し訳ございません。"
-          />
-          <br />
-          <Localizer
-            id="smarthr-ui/UnexpectedErrorScreen/possibleCause"
-            defaultText="一時的な通信の問題や、ご利用環境、アップロードしたファイルの内容などによりエラーが発生している可能性があります。"
+            id="smarthr-ui/UnexpectedErrorScreen/description"
+            defaultText="大変申し訳ございません。{break}一時的な通信の問題や、ご利用環境、アップロードしたファイルの内容などによりエラーが発生している可能性があります。"
           />
         </p>
         <p>

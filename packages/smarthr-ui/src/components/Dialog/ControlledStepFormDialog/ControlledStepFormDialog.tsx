@@ -84,16 +84,11 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     headingObjectConverter,
   )
 
-  const nextButtonLabel = useMemo(
-    () => <Localizer id="smarthr-ui/StepFormDialog/nextButtonLabel" defaultText="次へ" />,
-    [],
-  )
-
   const tempSubmitButton = useStepFormDialogButton({
     button: originalSubmitButton,
     currentStep,
     defaultValues: {
-      text: nextButtonLabel,
+      text: <Localizer id="smarthr-ui/StepFormDialog/nextButtonLabel" defaultText="次へ" />,
       theme: 'primary' as const,
     },
   })
@@ -101,11 +96,13 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     () => ({
       ...tempSubmitButton,
       text:
-        tempSubmitButton.functionCall.text || activeStep === stepLength
-          ? tempSubmitButton.text
-          : nextButtonLabel,
+        tempSubmitButton.functionCall.text || activeStep === stepLength ? (
+          tempSubmitButton.text
+        ) : (
+          <Localizer id="smarthr-ui/StepFormDialog/nextButtonLabel" defaultText="次へ" />
+        ),
     }),
-    [tempSubmitButton, activeStep, stepLength, nextButtonLabel],
+    [tempSubmitButton, activeStep, stepLength],
   )
   const closeButton = useStepFormDialogButton({
     button: originalCloseButton,

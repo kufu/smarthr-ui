@@ -25,13 +25,8 @@ export const UnauthorizedErrorScreen: FC<Props> = ({ onClickLogin, isLoading }) 
     >
       <p>
         <Localizer
-          id="smarthr-ui/UnauthorizedErrorScreen/description1"
-          defaultText="一定時間操作がなかったため、自動でログアウトしました。"
-        />
-        <br />
-        <Localizer
-          id="smarthr-ui/UnauthorizedErrorScreen/description2"
-          defaultText="指定のページにアクセスするには、再度ログインが必要です。"
+          id="smarthr-ui/UnauthorizedErrorScreen/description"
+          defaultText="一定時間操作がなかったため、自動でログアウトしました。{break}指定のページにアクセスするには、再度ログインが必要です。"
         />
       </p>
       <Center>
