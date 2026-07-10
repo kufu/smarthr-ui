@@ -136,6 +136,16 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const [isInputFocused, setIsInputFocused] = useState(false)
 
+    const stringToDate = useCallback(
+      (str?: string | null) => {
+        if (!str) return null
+        return parseInput ? parseInput(str) : parseJpnDateString(str)
+      },
+      [parseInput],
+    )
+
+    const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
+
     const unstableRef = useRef({
       onChange,
       onChangeDate,
@@ -144,6 +154,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       showAlternative,
       onBlur,
       isInputFocused,
+      selectedDate: null as Date | null,
     })
     unstableRef.current = {
       onChange,
@@ -153,14 +164,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       showAlternative,
       onBlur,
       isInputFocused,
+      selectedDate,
     }
-
-    const stringToDate = useCallback((str?: string | null) => {
-      if (!str) return null
-      return unstableRef.current.parseInput
-        ? unstableRef.current.parseInput(str)
-        : parseJpnDateString(str)
-    }, [])
 
     const dateToString = useCallback(
       (date: Date | null) =>
@@ -173,10 +178,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       if (!unstableRef.current.showAlternative) return null
       return d ? unstableRef.current.showAlternative(d) : null
     }, [])
-
-    const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
-    const selectedDateRef = useRef(selectedDate)
-    selectedDateRef.current = selectedDate
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
@@ -195,10 +196,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
-          newDate === selectedDateRef.current ||
+          newDate === unstableRef.current.selectedDate ||
           (newDate &&
-            selectedDateRef.current &&
-            newDate.getTime() === selectedDateRef.current.getTime())
+            unstableRef.current.selectedDate &&
+            newDate.getTime() === unstableRef.current.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
           return
