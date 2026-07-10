@@ -250,14 +250,6 @@ const ToggleableButton: FC<
     className: string
   }
 > = ({ active, onClickTrigger, setActive, contentId, className }) => {
-  const buttonLabels = useMemo(
-    () => ({
-      open: <Localizer id="smarthr-ui/InformationPanel/openButtonLabel" defaultText="開く" />,
-      close: <Localizer id="smarthr-ui/InformationPanel/closeButtonLabel" defaultText="閉じる" />,
-    }),
-    [],
-  )
-
   const onClick = useMemo(
     () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
     [active, onClickTrigger, setActive],
@@ -272,7 +264,11 @@ const ToggleableButton: FC<
       size="S"
       className={className}
     >
-      {active ? buttonLabels.close : buttonLabels.open}
+      {active ? (
+        <Localizer id="smarthr-ui/InformationPanel/closeButtonLabel" defaultText="閉じる" />
+      ) : (
+        <Localizer id="smarthr-ui/InformationPanel/openButtonLabel" defaultText="開く" />
+      )}
     </Button>
   )
 }
