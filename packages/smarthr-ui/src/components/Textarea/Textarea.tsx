@@ -10,7 +10,6 @@ import {
   useCallback,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -135,15 +134,31 @@ const ActualTextarea = forwardRef<
     ref,
   ) => {
     const theme = useTheme()
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const internalRef = useRef<HTMLTextAreaElement | null>(null)
     const [interimRows, setInterimRows] = useState(rows)
 
     const onChangeRef = useRef(onChange)
     onChangeRef.current = onChange
 
-    useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
-      ref,
-      () => textareaRef.current,
+    const textareaRef = useCallback(
+      (node: HTMLTextAreaElement | null) => {
+        internalRef.current = node
+
+        // 外部refの設定
+        if (typeof ref === 'function') {
+          ref(node)
+        } else if (ref) {
+          // RefObject.currentは型定義上readonlyだが、実行時は書き込み可能
+          Object.assign(ref, { current: node })
+        }
+
+        // autoFocus時に、フォーカスを当てる
+        if (autoFocus && node) {
+          node.focus()
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
     )
 
     const handleChange = useCallback(
@@ -163,19 +178,12 @@ const ActualTextarea = forwardRef<
       [autoResize, maxRows, rows, theme.leading.NORMAL],
     )
 
-    // autoFocus時に、フォーカスを当てる
-    useEffect(() => {
-      if (autoFocus && textareaRef.current) {
-        textareaRef.current.focus()
-      }
-    }, [autoFocus])
-
     // autoResize時に、初期値での高さを指定
     useEffect(() => {
-      if (autoResize && textareaRef.current) {
-        setInterimRows(calculateIdealRows(textareaRef.current, maxRows, theme.leading.NORMAL))
+      if (autoResize && internalRef.current) {
+        setInterimRows(calculateIdealRows(internalRef.current, maxRows, theme.leading.NORMAL))
       }
-    }, [setInterimRows, maxRows, autoResize, theme.leading.NORMAL])
+    }, [maxRows, autoResize, theme.leading.NORMAL])
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
