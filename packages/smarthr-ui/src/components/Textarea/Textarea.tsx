@@ -46,11 +46,11 @@ type AbstractProps = {
 type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
 type TextareaValue = string | number | readonly string[]
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props>((props, ref) =>
-  props.maxLetters !== undefined ? (
-    <MaxLettersTextarea {...props} maxLetters={props.maxLetters} ref={ref} />
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ maxLetters, ...rest }, ref) =>
+  maxLetters ? (
+    <MaxLettersTextarea {...rest} maxLetters={maxLetters} ref={ref} />
   ) : (
-    <ActualTextarea {...props} ref={ref} />
+    <ActualTextarea {...rest} ref={ref} />
   ),
 )
 
