@@ -1,6 +1,6 @@
 'use client'
 
-import { useIntl } from '../../intl'
+import { Localizer, useIntl } from '../../intl'
 
 import { ErrorScreen } from './ErrorScreen'
 
@@ -30,11 +30,10 @@ export const NotFoundErrorScreen: FC<Props> = ({ homeUrl }) => {
       ]}
     >
       <p>
-        {localize({
-          id: 'smarthr-ui/NotFoundErrorScreen/description',
-          defaultText:
-            'お探しのページは一時的にアクセスができない状況にあるか、移動もしくは削除された可能性があります。',
-        })}
+        <Localizer
+          id="smarthr-ui/NotFoundErrorScreen/description"
+          defaultText="お探しのページは一時的にアクセスができない状況にあるか、移動もしくは削除された可能性があります。"
+        />
       </p>
     </ErrorScreen>
   )

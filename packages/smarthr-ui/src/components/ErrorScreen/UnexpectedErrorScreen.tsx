@@ -17,10 +17,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
   const errorInfoLinkValues = {
     errorInfoLink: (
       <HelpLink href="https://support.smarthr.jp/ja/help/articles/360036353773/">
-        {localize({
-          id: 'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation',
-          defaultText: 'エラー発生時に教えていただきたい内容',
-        })}
+        <Localizer
+          id="smarthr-ui/UnexpectedErrorScreen/errorOccursInformation"
+          defaultText="エラー発生時に教えていただきたい内容"
+        />
       </HelpLink>
     ),
   }
@@ -43,29 +43,28 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
     >
       <Stack className="shr-max-w-col6">
         <p>
-          {localize({
-            id: 'smarthr-ui/UnexpectedErrorScreen/apology',
-            defaultText: '大変申し訳ございません。',
-          })}
+          <Localizer
+            id="smarthr-ui/UnexpectedErrorScreen/apology"
+            defaultText="大変申し訳ございません。"
+          />
           <br />
-          {localize({
-            id: 'smarthr-ui/UnexpectedErrorScreen/possibleCause',
-            defaultText:
-              '一時的な通信の問題や、ご利用環境、アップロードしたファイルの内容などによりエラーが発生している可能性があります。',
-          })}
+          <Localizer
+            id="smarthr-ui/UnexpectedErrorScreen/possibleCause"
+            defaultText="一時的な通信の問題や、ご利用環境、アップロードしたファイルの内容などによりエラーが発生している可能性があります。"
+          />
         </p>
         <p>
-          {localize({
-            id: 'smarthr-ui/UnexpectedErrorScreen/pleaseRetry',
-            defaultText: 'お手数ですが、以下をお試しください。',
-          })}
+          <Localizer
+            id="smarthr-ui/UnexpectedErrorScreen/pleaseRetry"
+            defaultText="お手数ですが、以下をお試しください。"
+          />
         </p>
         <ol className="shr-ps-[1.5em]">
           <li>
-            {localize({
-              id: 'smarthr-ui/UnexpectedErrorScreen/retryItem1',
-              defaultText: '少し時間をおいて、再度お試しください。',
-            })}
+            <Localizer
+              id="smarthr-ui/UnexpectedErrorScreen/retryItem1"
+              defaultText="少し時間をおいて、再度お試しください。"
+            />
           </li>
           <li>
             <Localizer
@@ -74,10 +73,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
               values={{
                 maintenanceLink: (
                   <HelpLink href="https://support.smarthr.jp/ja/info/status/page/1/">
-                    {localize({
-                      id: 'smarthr-ui/UnexpectedErrorScreen/maintenanceLink',
-                      defaultText: 'メンテナンス・障害情報',
-                    })}
+                    <Localizer
+                      id="smarthr-ui/UnexpectedErrorScreen/maintenanceLink"
+                      defaultText="メンテナンス・障害情報"
+                    />
                   </HelpLink>
                 ),
               }}
@@ -85,10 +84,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
           </li>
         </ol>
         <p>
-          {localize({
-            id: 'smarthr-ui/UnexpectedErrorScreen/ifNotResolved',
-            defaultText: '解消しない場合は、以下もご確認ください。',
-          })}
+          <Localizer
+            id="smarthr-ui/UnexpectedErrorScreen/ifNotResolved"
+            defaultText="解消しない場合は、以下もご確認ください。"
+          />
         </p>
         <ul className="shr-ps-[1.5em]">
           <li>
@@ -98,10 +97,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
               values={{
                 environmentLink: (
                   <HelpLink href="https://support.smarthr.jp/ja/help/articles/360035170054/">
-                    {localize({
-                      id: 'smarthr-ui/UnexpectedErrorScreen/environmentLink',
-                      defaultText: 'SmartHRの動作環境',
-                    })}
+                    <Localizer
+                      id="smarthr-ui/UnexpectedErrorScreen/environmentLink"
+                      defaultText="SmartHRの動作環境"
+                    />
                   </HelpLink>
                 ),
               }}
@@ -114,10 +113,10 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
               values={{
                 cookieCacheLink: (
                   <HelpLink href="https://support.smarthr.jp/ja/help/articles/360026264433/">
-                    {localize({
-                      id: 'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink',
-                      defaultText: 'Q. ブラウザのCookieとキャッシュを削除するには？',
-                    })}
+                    <Localizer
+                      id="smarthr-ui/UnexpectedErrorScreen/cookieCacheLink"
+                      defaultText="Q. ブラウザのCookieとキャッシュを削除するには？"
+                    />
                   </HelpLink>
                 ),
               }}

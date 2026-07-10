@@ -1,6 +1,6 @@
 'use client'
 
-import { useIntl } from '../../intl'
+import { Localizer, useIntl } from '../../intl'
 
 import { ErrorScreen } from './ErrorScreen'
 
@@ -30,10 +30,10 @@ export const ForbiddenErrorScreen: FC<Props> = ({ homeUrl }) => {
       ]}
     >
       <p>
-        {localize({
-          id: 'smarthr-ui/ForbiddenErrorScreen/description',
-          defaultText: '詳しくは、所属企業の担当者にお問い合わせください。',
-        })}
+        <Localizer
+          id="smarthr-ui/ForbiddenErrorScreen/description"
+          defaultText="詳しくは、所属企業の担当者にお問い合わせください。"
+        />
       </p>
     </ErrorScreen>
   )
