@@ -14,7 +14,7 @@ import {
   useState,
 } from 'react'
 
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
@@ -37,16 +37,6 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
   ) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
-    const { localize } = useIntl()
-
-    const destroyLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/InputFile/destroy',
-          defaultText: '削除',
-        }),
-      [localize],
-    )
 
     const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
@@ -130,7 +120,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
                   onClick={handleDelete}
                   className="smarthr-ui-InputFile-deleteButton"
                 >
-                  {destroyLabel}
+                  <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
                 </Button>
               </li>
             ))}

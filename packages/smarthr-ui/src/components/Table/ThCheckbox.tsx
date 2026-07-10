@@ -3,7 +3,7 @@
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { Localizer, useIntl } from '../../intl'
 import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 import { ControlledTooltip } from '../Tooltip'
 
@@ -33,15 +33,6 @@ const classNameGenerator = tv({
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
   ({ vAlign, fixed, className, ...rest }, ref) => {
     const { localize } = useIntl()
-
-    const checkAllInvisibleLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
-          defaultText: 'すべての項目を選択/解除',
-        }),
-      [localize],
-    )
 
     const checkColumnName = useMemo(
       () =>
@@ -73,7 +64,12 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
             vertical="middle"
             className={classNames.balloon}
           >
-            <span className="shr-block shr-p-0.5">{checkAllInvisibleLabel}</span>
+            <span className="shr-block shr-p-0.5">
+              <Localizer
+                id="smarthr-ui/ThCheckbox/checkAllInvisibleLabel"
+                defaultText="すべての項目を選択/解除"
+              />
+            </span>
           </ControlledTooltip>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />

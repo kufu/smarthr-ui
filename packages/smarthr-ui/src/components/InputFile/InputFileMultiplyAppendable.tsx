@@ -15,7 +15,7 @@ import {
   useState,
 } from 'react'
 
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
@@ -34,16 +34,6 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
   ) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
-    const { localize } = useIntl()
-
-    const destroyLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/InputFile/destroy',
-          defaultText: '削除',
-        }),
-      [localize],
-    )
 
     const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
@@ -129,7 +119,6 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
                 key={index}
                 value={index}
                 onDeleteClick={handleDelete}
-                destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
                 {file.name}
@@ -161,26 +150,23 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 type FileListItemProps = PropsWithChildren<{
   value: number
   onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
-  destroyLabel: string
   className: string
 }>
 
-const FileListItem = memo<FileListItemProps>(
-  ({ value, onDeleteClick, destroyLabel, className, children }) => (
-    <li className={className}>
-      <span className="smarthr-ui-InputFile-fileName">{children}</span>
-      <Button
-        variant="text"
-        prefix={<FaTrashCanIcon />}
-        value={value}
-        onClick={onDeleteClick}
-        className="smarthr-ui-InputFile-deleteButton"
-      >
-        {destroyLabel}
-      </Button>
-    </li>
-  ),
-)
+const FileListItem = memo<FileListItemProps>(({ value, onDeleteClick, className, children }) => (
+  <li className={className}>
+    <span className="smarthr-ui-InputFile-fileName">{children}</span>
+    <Button
+      variant="text"
+      prefix={<FaTrashCanIcon />}
+      value={value}
+      onClick={onDeleteClick}
+      className="smarthr-ui-InputFile-deleteButton"
+    >
+      <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
+    </Button>
+  </li>
+))
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
