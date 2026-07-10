@@ -13,7 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
@@ -250,20 +250,12 @@ const ToggleableButton: FC<
     className: string
   }
 > = ({ active, onClickTrigger, setActive, contentId, className }) => {
-  const { localize } = useIntl()
-
   const buttonLabels = useMemo(
     () => ({
-      open: localize({
-        id: 'smarthr-ui/InformationPanel/openButtonLabel',
-        defaultText: '開く',
-      }),
-      close: localize({
-        id: 'smarthr-ui/InformationPanel/closeButtonLabel',
-        defaultText: '閉じる',
-      }),
+      open: <Localizer id="smarthr-ui/InformationPanel/openButtonLabel" defaultText="開く" />,
+      close: <Localizer id="smarthr-ui/InformationPanel/closeButtonLabel" defaultText="閉じる" />,
     }),
-    [localize],
+    [],
   )
 
   const onClick = useMemo(
