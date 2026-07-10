@@ -135,11 +135,6 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
     }
   }, [type, size])
 
-  const defaultAlt = useMemo(
-    () => <Localizer id="smarthr-ui/Loader/alt" defaultText="処理中" />,
-    [],
-  )
-
   const lineBody = (
     <>
       <span className={classNames.cog}>
@@ -157,7 +152,9 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
       <span className={classNames.line2}>{lineBody}</span>
       <span className={classNames.line3}>{lineBody}</span>
       <span className={classNames.line4}>{lineBody}</span>
-      <VisuallyHiddenText>{alt ?? defaultAlt}</VisuallyHiddenText>
+      <VisuallyHiddenText>
+        {alt ?? <Localizer id="smarthr-ui/Loader/alt" defaultText="処理中" />}
+      </VisuallyHiddenText>
     </span>
   )
 })
