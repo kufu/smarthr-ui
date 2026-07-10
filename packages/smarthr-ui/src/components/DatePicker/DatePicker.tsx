@@ -287,8 +287,17 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       closeCalendar,
     )
 
-    const handleKeyDown = useCallback(
-      (e: KeyboardEvent) => {
+    const handleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
+      (e) => {
+        setIsInputFocused(false)
+        updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
+        unstableRef.current.onBlur?.(e)
+      },
+      [stringToDate, updateDate],
+    )
+
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
         if (!inputRef.current || !calendarPortalRef.current || e.key !== 'Tab') {
           return
         }
@@ -330,26 +339,14 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           inputRef.current.focus()
           closeCalendar()
         }
-      },
-      [closeCalendar],
-    )
+      }
 
-    const handleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
-      (e) => {
-        setIsInputFocused(false)
-        updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
-        unstableRef.current.onBlur?.(e)
-      },
-      [stringToDate, updateDate],
-    )
-
-    useEffect(() => {
       window.addEventListener('keydown', handleKeyDown)
 
       return () => {
         window.removeEventListener('keydown', handleKeyDown)
       }
-    }, [handleKeyDown])
+    }, [closeCalendar])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
