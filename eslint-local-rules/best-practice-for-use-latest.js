@@ -16,7 +16,9 @@ module.exports = {
         'useLatestの返り値は "latest" という変数名で受け取る必要があります。',
       noDestructuring: 'useLatestの返り値を分割代入で受け取ることはできません。',
       noUsageOutsideHook:
-        'latest変数はuseEffect、useLayoutEffect、useCallback、useMemo内でのみ使用できます。関数内で使用する場合はuseCallbackまたはuseMemoでラップしてください。または、latest経由ではなく値を直接参照することを検討してください。',
+        'latest変数はuseEffect、useLayoutEffect、useCallback、useMemo内でのみ使用できます。',
+      noUsageOutsideHookInFunction:
+        'latest変数はuseEffect、useLayoutEffect、useCallback、useMemo内でのみ使用できます。関数内で使用する場合はuseCallbackでラップしてください。または、latest経由ではなく値を直接参照することを検討してください。',
       noLatestItself:
         'latest自体を使用することはできません。latest.xxxのようにプロパティアクセスするか、const { xxx } = latestのように分割代入してください。',
       noPropertyInDeps:
@@ -46,6 +48,27 @@ module.exports = {
         parent = parent.parent
       }
       return false
+    }
+
+    /**
+     * ノードがネストした関数内にあるかチェック
+     * （Reactコンポーネント自体は除外し、その中のイベントハンドラ等の関数を検出）
+     */
+    function isInsideNestedFunction(node) {
+      let functionCount = 0
+      let parent = node.parent
+      while (parent) {
+        if (
+          parent.type === 'ArrowFunctionExpression' ||
+          parent.type === 'FunctionExpression' ||
+          parent.type === 'FunctionDeclaration'
+        ) {
+          functionCount++
+        }
+        parent = parent.parent
+      }
+      // 関数が2つ以上ネストしている場合は、イベントハンドラ等の内側の関数
+      return functionCount >= 2
     }
 
     /**
@@ -131,7 +154,7 @@ module.exports = {
           if (!isInsideAllowedHook(node)) {
             context.report({
               node,
-              messageId: 'noUsageOutsideHook',
+              messageId: isInsideNestedFunction(node) ? 'noUsageOutsideHookInFunction' : 'noUsageOutsideHook',
             })
           }
           // フック内ならOK
@@ -148,7 +171,7 @@ module.exports = {
           if (!isInsideAllowedHook(node)) {
             context.report({
               node,
-              messageId: 'noUsageOutsideHook',
+              messageId: isInsideNestedFunction(node) ? 'noUsageOutsideHookInFunction' : 'noUsageOutsideHook',
             })
           }
           // フック内ならOK

@@ -141,6 +141,47 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [{ messageId: 'noUsageOutsideHook' }],
     },
 
+    // Reactコンポーネント内のトップレベル（関数内だが短いメッセージ）
+    {
+      code: `
+        function MyComponent() {
+          const latest = useLatest({ value: 1 })
+          const result = latest.value
+          return result
+        }
+      `,
+      errors: [{ messageId: 'noUsageOutsideHook' }],
+    },
+
+    // イベントハンドラ等の関数内（ネストした関数内なので長いメッセージ）
+    {
+      code: `
+        function MyComponent() {
+          const latest = useLatest({ onChange })
+          const handleClick = () => {
+            latest.onChange()
+          }
+          return handleClick
+        }
+      `,
+      errors: [{ messageId: 'noUsageOutsideHookInFunction' }],
+    },
+
+    // イベントハンドラ内での分割代入（ネストした関数内なので長いメッセージ）
+    {
+      code: `
+        function MyComponent() {
+          const latest = useLatest({ onChange })
+          function handleClick() {
+            const { onChange } = latest
+            onChange()
+          }
+          return handleClick
+        }
+      `,
+      errors: [{ messageId: 'noUsageOutsideHookInFunction' }],
+    },
+
     // latest自体を変数に代入（フック内）
     {
       code: `
