@@ -1,0 +1,234 @@
+/**
+ * @fileoverview Tests for best-practice-for-use-latest rule
+ */
+
+const { RuleTester } = require('eslint')
+const rule = require('./best-practice-for-use-latest')
+
+const ruleTester = new RuleTester({
+  languageOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
+    },
+  },
+})
+
+ruleTester.run('best-practice-for-use-latest', rule, {
+  valid: [
+    // 正しい変数名
+    {
+      code: 'const latest = useLatest({ onChange, value })',
+    },
+
+    // useEffect内でのプロパティアクセス
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          console.log(latest.onChange)
+        }, [latest])
+      `,
+    },
+
+    // useLayoutEffect内でのプロパティアクセス
+    {
+      code: `
+        const latest = useLatest({ ref })
+        useLayoutEffect(() => {
+          latest.ref.current.focus()
+        }, [latest])
+      `,
+    },
+
+    // useCallback内でのプロパティアクセス
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const callback = useCallback(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+    },
+
+    // useMemo内でのプロパティアクセス
+    {
+      code: `
+        const latest = useLatest({ value })
+        const memoized = useMemo(() => {
+          return latest.value * 2
+        }, [latest])
+      `,
+    },
+
+    // useEffect内での分割代入
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const { onChange } = latest
+          onChange()
+        }, [latest])
+      `,
+    },
+
+    // useEffect内でのプロパティを配列に含める
+    {
+      code: `
+        const latest = useLatest({ ref })
+        useEffect(() => {
+          const refs = [latest.ref]
+        }, [latest])
+      `,
+    },
+
+    // 依存配列にlatest自体を最後尾に配置
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [dep1, dep2, latest])
+      `,
+    },
+
+    // 依存配列にlatestのみ
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+    },
+  ],
+
+  invalid: [
+    // 間違った変数名
+    {
+      code: 'const ref = useLatest({ onChange })',
+      errors: [{ messageId: 'invalidVariableName' }],
+    },
+    {
+      code: 'const latestRef = useLatest({ onChange })',
+      errors: [{ messageId: 'invalidVariableName' }],
+    },
+
+    // 分割代入で受け取る
+    {
+      code: 'const { onChange } = useLatest({ onChange })',
+      errors: [{ messageId: 'noDestructuring' }],
+    },
+
+    // トップレベルでのプロパティアクセス
+    {
+      code: `
+        const latest = useLatest({ value })
+        const result = latest.value
+      `,
+      errors: [{ messageId: 'noUsageOutsideHook' }],
+    },
+
+    // トップレベルでの分割代入
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const { onChange } = latest
+      `,
+      errors: [{ messageId: 'noUsageOutsideHook' }],
+    },
+
+    // latest自体を変数に代入（フック内）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          const ref = latest
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noLatestItself' }],
+    },
+
+    // latest自体を関数に渡す（フック内）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          doSomething(latest)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noLatestItself' }],
+    },
+
+    // latest自体を配列に含める（フック内）
+    {
+      code: `
+        const latest = useLatest({ ref })
+        useEffect(() => {
+          const refs = [latest]
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noLatestItself' }],
+    },
+
+    // latest自体をオブジェクトに含める（フック内）
+    {
+      code: `
+        const latest = useLatest({ ref })
+        useEffect(() => {
+          const obj = { ref: latest }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noLatestItself' }],
+    },
+
+    // 依存配列にプロパティアクセスを含める
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest.onChange])
+      `,
+      errors: [{ messageId: 'noPropertyInDeps' }],
+    },
+
+    // 依存配列にプロパティアクセスを含める（複数）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [dep1, latest.onChange])
+      `,
+      errors: [{ messageId: 'noPropertyInDeps' }],
+    },
+
+    // latestが最後尾でない
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest, dep1])
+      `,
+      errors: [{ messageId: 'latestMustBeLastInDeps' }],
+    },
+
+    // latestが最後尾でない（複数の依存）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest, dep1, dep2])
+      `,
+      errors: [{ messageId: 'latestMustBeLastInDeps' }],
+    },
+  ],
+})
+
+console.log('All tests passed!')

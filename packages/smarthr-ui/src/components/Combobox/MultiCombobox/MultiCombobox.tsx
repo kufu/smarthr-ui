@@ -321,13 +321,13 @@ const ActualMultiCombobox = <T,>(
   const isInputEmpty = !inputValue
 
   const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (latest.isComposing) return
+    if (isComposing) return
 
     if (ESCAPE_KEY_REGEX.test(e.key)) {
       e.stopPropagation()
       blur()
     } else if (e.key === 'Tab') {
-      if (latest.isFocused) {
+      if (isFocused) {
         // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
         inputRef.current?.focus()
       }
@@ -342,13 +342,13 @@ const ActualMultiCombobox = <T,>(
     } else if (
       e.key === 'Backspace' &&
       isInputEmpty &&
-      latest.selectedItems.length > 0 &&
-      latest.selectedItems[latest.selectedItems.length - 1].deletable !== false
+      selectedItems.length > 0 &&
+      selectedItems[selectedItems.length - 1].deletable !== false
     ) {
       e.preventDefault()
       e.stopPropagation()
 
-      const lastItem = latest.selectedItems[latest.selectedItems.length - 1]
+      const lastItem = selectedItems[selectedItems.length - 1]
 
       actualOnDelete(lastItem)
       setHighlighted(true)
