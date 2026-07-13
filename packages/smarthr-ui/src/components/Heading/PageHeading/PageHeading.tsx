@@ -76,6 +76,7 @@ export const PageHeading = memo<Props>(
         autoPageTitle && !IS_NEXT_JS
           ? `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
           : '',
+      // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
       [children, pageTitle, pageTitleSuffix, autoPageTitle],
     )
 
