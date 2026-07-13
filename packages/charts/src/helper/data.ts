@@ -130,10 +130,17 @@ export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   return colors
 }
 
-export const getProgressDoughnutColors = (tone: number): { progress: string; track: string } => {
-  const index = Math.min(SINGLE_CHART_COLORS.length - 1, Math.max(0, Math.trunc(tone)))
+export const getProgressDoughnutColors = (
+  tone: number,
+): { progress: string; progressHover: string; track: string } => {
+  const lastIndex = SINGLE_CHART_COLORS.length - 1
+  const index = Math.min(lastIndex, Math.max(0, Math.trunc(tone)))
+  // hover 時は 1 段濃い色を使う（最濃色のときはそのまま）。定義済みトークン内で
+  // 完結させ、コントラストを保つ。
+  const hoverIndex = Math.min(lastIndex, index + 1)
   return {
     progress: SINGLE_CHART_COLORS[index],
+    progressHover: SINGLE_CHART_COLORS[hoverIndex],
     track: OTHER_CHART_COLOR,
   }
 }

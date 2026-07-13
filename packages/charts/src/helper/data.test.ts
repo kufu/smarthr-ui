@@ -25,4 +25,13 @@ describe('getProgressDoughnutColors', () => {
     )
     expect(getProgressDoughnutColors(-1).progress).toBe(SINGLE_CHART_COLORS[0])
   })
+
+  it('hover色は1段濃い色を返す', () => {
+    expect(getProgressDoughnutColors(1).progressHover).toBe(SINGLE_CHART_COLORS[2])
+  })
+
+  it('最濃色のときhover色は同色になる', () => {
+    const last = SINGLE_CHART_COLORS.length - 1
+    expect(getProgressDoughnutColors(last).progressHover).toBe(SINGLE_CHART_COLORS[last])
+  })
 })

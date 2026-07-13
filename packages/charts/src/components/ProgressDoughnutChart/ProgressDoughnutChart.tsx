@@ -10,8 +10,9 @@ import {
   SMARTHR_DEFAULT_COLORS,
   getProgressDoughnutColors,
 } from '../../helper'
+import { roundedProgressPlugin } from '../../plugins'
 
-import type { Chart, ChartData, ChartDataset, ChartOptions } from 'chart.js'
+import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart.js'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -66,13 +67,29 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
       datasets: [
         {
           data: data.datasets[0].data,
+          // 進捗（index 0）の塗りは透明にし、見た目は roundedProgressPlugin が
+          // 丸端付きの円弧ストロークで描く（hit 判定・キーボードナビ・tooltip は
+          // 透明でも arc として残る）。トラック（index 1）は chart.js が描く。
           backgroundColor: [
-            colors.progress,
+            'transparent',
             colors.track,
           ] as ChartDataset<'doughnut'>['backgroundColor'],
-          borderWidth: 0,
-          hoverBorderColor: SMARTHR_DEFAULT_COLORS.OUTLINE,
+          hoverBackgroundColor: [
+            'transparent',
+            colors.track,
+          ] as ChartDataset<'doughnut'>['hoverBackgroundColor'],
+          // hover 時の枠はセグメント別に指定する。進捗（index 0）は透明にして
+          // プラグインが丸端付きの枠を描く（二重描画を避ける）。トラック（index 1）は
+          // 角端なので chart.js 標準の枠で強調する。
+          hoverBorderColor: [
+            'transparent',
+            SMARTHR_DEFAULT_COLORS.OUTLINE,
+          ] as ChartDataset<'doughnut'>['hoverBorderColor'],
           hoverBorderWidth: 4,
+          borderWidth: 0,
+          // 枠を arc の内側に描く。既定（center）だと外周の外側にはみ出し、canvas 端
+          // ぎりぎりのリングでは hover 枠が見切れるため、inner で内側に寄せて防ぐ。
+          borderAlign: 'inner',
         },
       ],
     }),
@@ -91,9 +108,16 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
           keyboardNavigation: {
             liveRegionId: chartId,
           },
+          roundedProgress: {
+            segmentIndex: 0,
+            color: colors.progress,
+            hoverColor: colors.progressHover,
+            hoverBorderColor: SMARTHR_DEFAULT_COLORS.OUTLINE,
+            hoverBorderWidth: 4,
+          },
         },
       }) as ChartOptions<'doughnut'>,
-    [title, thickness, chartId, externalOptions],
+    [title, thickness, chartId, externalOptions, colors],
   )
 
   return (
@@ -106,6 +130,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         ref={chartRef}
         data={chartData}
         options={chartOptions}
+        plugins={[roundedProgressPlugin as Plugin<'doughnut'>]}
         aria-label={ariaLabel}
       />
       {children !== null && children !== undefined && (
