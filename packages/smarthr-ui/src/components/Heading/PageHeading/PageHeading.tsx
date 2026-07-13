@@ -54,13 +54,20 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo<Props>(
-  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, children, ...rest }) =>
+  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, size = 'XL', children, ...rest }) =>
     !IS_NEXT_JS && autoPageTitle ? (
-      <AutoPageTitleHeading {...rest} pageTitleSuffix={pageTitleSuffix} pageTitle={pageTitle}>
+      <AutoPageTitleHeading
+        {...rest}
+        size={size}
+        pageTitleSuffix={pageTitleSuffix}
+        pageTitle={pageTitle}
+      >
         {children}
       </AutoPageTitleHeading>
     ) : (
-      <ActualHeading {...rest}>{children}</ActualHeading>
+      <ActualHeading {...rest} size={size}>
+        {children}
+      </ActualHeading>
     ),
 )
 
