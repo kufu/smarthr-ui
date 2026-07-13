@@ -154,7 +154,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       showAlternative,
       onBlur,
       isInputFocused,
-      selectedDate: null as Date | null,
+      selectedDate,
     })
     unstableRef.current = {
       onChange,
