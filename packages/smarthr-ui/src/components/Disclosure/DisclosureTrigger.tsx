@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactElement, useCallback, useEffect, useRef } from 'react'
+import { type FC, type ReactElement, useEffect, useRef } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -26,21 +26,6 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
 
   const latest = useLatest({ onClick, setExpanded })
 
-  const actualOnClick = useCallback(
-    (e: MouseEvent) => {
-      const toggleExpanded = () => {
-        latest.setExpanded((current) => !current)
-      }
-
-      if (latest.onClick) {
-        latest.onClick(toggleExpanded, e)
-      } else {
-        toggleExpanded()
-      }
-    },
-    [latest],
-  )
-
   useEffect(() => {
     const wrapper = ref.current
     if (!wrapper) {
@@ -57,6 +42,18 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
 
       if (!button) {
         throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
+      }
+
+      const actualOnClick = (e: MouseEvent) => {
+        const toggleExpanded = () => {
+          latest.setExpanded((current) => !current)
+        }
+
+        if (latest.onClick) {
+          latest.onClick(toggleExpanded, e)
+        } else {
+          toggleExpanded()
+        }
       }
 
       button.setAttribute('aria-expanded', expanded.toString())
@@ -83,7 +80,7 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
       currentCleanup?.()
       observer.disconnect()
     }
-  }, [expanded, targetId, actualOnClick])
+  }, [expanded, targetId, latest])
 
   // HINT: 念の為spanに対して外部からstyleを当てられるようにしておく。
   // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる
