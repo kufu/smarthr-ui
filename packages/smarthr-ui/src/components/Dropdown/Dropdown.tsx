@@ -66,23 +66,22 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const contentId = useId()
 
   const latest = useLatest({
-    active,
     isPortalRootMounted,
     onOpen,
     onClose,
-    createPortal,
   })
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(() => {
     const result: FC<{ children: ReactNode }> = (props) =>
-      latest.active ? latest.createPortal(props.children) : null
+      active ? createPortal(props.children) : null
 
     // set the displayName explicit for DevTools
     result.displayName = 'DropdownContentRoot'
 
     return result
-  }, [latest])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const memoizedOnClickTrigger = useCallback((rect: Rect) => {
     setActive((current) => {
