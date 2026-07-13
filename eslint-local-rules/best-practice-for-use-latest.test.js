@@ -24,67 +24,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       code: 'const latest = useLatest({ onChange, value })',
     },
 
-    // useEffect内でのプロパティアクセス
-    {
-      code: `
-        const latest = useLatest({ onChange })
-        useEffect(() => {
-          console.log(latest.onChange)
-        }, [latest])
-      `,
-    },
-
-    // useLayoutEffect内でのプロパティアクセス
-    {
-      code: `
-        const latest = useLatest({ ref })
-        useLayoutEffect(() => {
-          latest.ref.current.focus()
-        }, [latest])
-      `,
-    },
-
-    // useCallback内でのプロパティアクセス
-    {
-      code: `
-        const latest = useLatest({ onChange })
-        const callback = useCallback(() => {
-          latest.onChange()
-        }, [latest])
-      `,
-    },
-
-    // useMemo内でのプロパティアクセス
-    {
-      code: `
-        const latest = useLatest({ value })
-        const memoized = useMemo(() => {
-          return latest.value * 2
-        }, [latest])
-      `,
-    },
-
-    // useEffect内での分割代入
-    {
-      code: `
-        const latest = useLatest({ onChange, value })
-        useEffect(() => {
-          const { onChange } = latest
-          onChange()
-        }, [latest])
-      `,
-    },
-
-    // useEffect内でのプロパティを配列に含める
-    {
-      code: `
-        const latest = useLatest({ ref })
-        useEffect(() => {
-          const refs = [latest.ref]
-        }, [latest])
-      `,
-    },
-
     // 依存配列にlatest自体を最後尾に配置
     {
       code: `
@@ -95,13 +34,33 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
     },
 
-    // 依存配列にlatestのみ
+    // useCallback - 依存配列にlatestのみ（OK）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const callback = useCallback(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+    },
+
+    // useEffect - 依存配列にlatestと他の依存（OK）
     {
       code: `
         const latest = useLatest({ onChange })
         useEffect(() => {
           latest.onChange()
-        }, [latest])
+        }, [someValue, latest])
+      `,
+    },
+
+    // useMemo - 依存配列にlatestと他の依存（OK）
+    {
+      code: `
+        const latest = useLatest({ value })
+        const result = useMemo(() => {
+          return latest.value * factor
+        }, [factor, latest])
       `,
     },
   ],
@@ -190,7 +149,10 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const ref = latest
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
     },
 
     // latest自体を関数に渡す（フック内）
@@ -201,7 +163,10 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           doSomething(latest)
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
     },
 
     // latest自体を配列に含める（フック内）
@@ -212,7 +177,10 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const refs = [latest]
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
     },
 
     // latest自体をオブジェクトに含める（フック内）
@@ -223,7 +191,10 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const obj = { ref: latest }
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
     },
 
     // 依存配列にプロパティアクセスを含める
@@ -268,6 +239,39 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest, dep1, dep2])
       `,
       errors: [{ messageId: 'latestMustBeLastInDeps' }],
+    },
+
+    // useEffect - 依存配列がlatestのみ
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'latestOnlyDepsInEffectOrMemo' }],
+    },
+
+    // useLayoutEffect - 依存配列がlatestのみ
+    {
+      code: `
+        const latest = useLatest({ ref })
+        useLayoutEffect(() => {
+          latest.ref.current.focus()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'latestOnlyDepsInEffectOrMemo' }],
+    },
+
+    // useMemo - 依存配列がlatestのみ
+    {
+      code: `
+        const latest = useLatest({ value })
+        const result = useMemo(() => {
+          return latest.value * 2
+        }, [latest])
+      `,
+      errors: [{ messageId: 'latestOnlyDepsInEffectOrMemo' }],
     },
   ],
 })

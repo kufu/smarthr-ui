@@ -25,6 +25,8 @@ module.exports = {
         '依存配列にはlatestのプロパティ（latest.current等）を含めることはできません。latest自体を含めてください。',
       latestMustBeLastInDeps:
         'latestを依存配列に含める場合は、最後尾に配置してください。',
+      latestOnlyDepsInEffectOrMemo:
+        'latestのみを依存配列に含めても意味がありません。依存配列を空にして、latest.xxxではなく値を直接使用してください。',
     },
     schema: [],
   },
@@ -187,6 +189,7 @@ module.exports = {
 
       // 3. 依存配列のチェック
       'CallExpression[callee.name=/^use((Layout)?Effect|Callback|Memo)$/]'(node) {
+        const hookName = node.callee.name
         const depsArg = node.arguments[1]
 
         if (!depsArg || depsArg.type !== 'ArrayExpression') {
@@ -198,8 +201,24 @@ module.exports = {
           (el) => el.type === 'Identifier' && el.name === 'latest',
         )
 
+        // latestが見つからない場合は何もチェックしない
+        if (latestIndex === -1) {
+          return
+        }
+
+        // useEffect/useLayoutEffect/useMemoで依存配列がlatestのみの場合
+        if (/^use((Layout)?Effect|Memo)$/.test(hookName)) {
+          if (elements.length === 1 && elements[0].name === 'latest') {
+            context.report({
+              node: elements[0],
+              messageId: 'latestOnlyDepsInEffectOrMemo',
+            })
+            return
+          }
+        }
+
         // latestが含まれていて、最後尾でない場合
-        if (latestIndex !== -1 && latestIndex !== elements.length - 1) {
+        if (latestIndex !== elements.length - 1) {
           context.report({
             node: elements[latestIndex],
             messageId: 'latestMustBeLastInDeps',
