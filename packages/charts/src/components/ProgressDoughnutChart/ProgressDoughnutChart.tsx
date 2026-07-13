@@ -12,7 +12,7 @@ import {
 } from '../../helper'
 import { roundedProgressPlugin } from '../../plugins'
 
-import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart.js'
+import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin, TooltipItem } from 'chart.js'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -105,6 +105,16 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
           ...externalOptions?.plugins,
           title: title ? { display: true, text: title } : { display: false },
           legend: { display: false },
+          tooltip: {
+            callbacks: {
+              // 進捗（index 0）の塗りは透明にしてプラグインで描いているため、
+              // tooltip の色マーカーが透明になってしまう。実際の進捗色／トラック色を返す。
+              labelColor: (context: TooltipItem<'doughnut'>) => {
+                const segmentColor = context.dataIndex === 0 ? colors.progress : colors.track
+                return { borderColor: segmentColor, backgroundColor: segmentColor }
+              },
+            },
+          },
           keyboardNavigation: {
             liveRegionId: chartId,
           },
