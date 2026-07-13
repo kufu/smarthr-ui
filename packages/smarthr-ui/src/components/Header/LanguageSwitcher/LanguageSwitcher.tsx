@@ -196,20 +196,25 @@ const LanguageListItemButton = memo<{
 
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: string }
->(({ narrow, invert, className, label }) => (
-  <DropdownTrigger>
-    {narrow ? (
-      <Button suffix={<FaCaretDownIcon />} className={className}>
-        {invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />}
+>(({ narrow, invert, className, label }) => {
+  let prefix: ReactNode = undefined
+  let body: ReactNode = label
+
+  if (narrow) {
+    if (invert) {
+      prefix = <LanguageIcon />
+      body = <LanguageIcon alt={label} />
+    } else {
+      prefix = <FaGlobeIcon />
+      body = <FaGlobeIcon alt={label} />
+    }
+  }
+
+  return (
+    <DropdownTrigger>
+      <Button prefix={prefix} suffix={<FaCaretDownIcon />} className={className}>
+        {body}
       </Button>
-    ) : (
-      <Button
-        prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
-        suffix={<FaCaretDownIcon />}
-        className={className}
-      >
-        {label}
-      </Button>
-    )}
-  </DropdownTrigger>
-))
+    </DropdownTrigger>
+  )
+})
