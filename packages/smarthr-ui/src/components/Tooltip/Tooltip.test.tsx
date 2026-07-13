@@ -25,6 +25,7 @@ describe('Tooltip', () => {
 
     it('tabIndex を明示的に指定した場合、その値が使われる', () => {
       render(
+        // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
         <Tooltip message="説明" tabIndex={-1}>
           <Button>ボタン</Button>
         </Tooltip>,

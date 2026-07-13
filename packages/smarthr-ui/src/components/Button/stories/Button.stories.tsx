@@ -119,6 +119,14 @@ export const Loading: StoryObj<typeof Button> = {
     loading: true,
   },
 }
+export const OnlyIconLoading: StoryObj<typeof Button> = {
+  name: 'loading(only Icon)',
+  render: () => (
+    <Button loading={true}>
+      <FaCirclePlusIcon />
+    </Button>
+  ),
+}
 
 export const Prefix: StoryObj<typeof Button> = {
   name: 'prefix',

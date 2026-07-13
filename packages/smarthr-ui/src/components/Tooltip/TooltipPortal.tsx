@@ -9,6 +9,7 @@ import { debounce } from '../../libs/debounce'
 import { ControlledTooltip } from './ControlledTooltip'
 
 type Props = {
+  messageId: string
   message: ReactNode
   isVisible: boolean
   parentRect: DOMRect | null
@@ -29,7 +30,7 @@ const SPACING = 5
 type HorizontalType = 'left' | 'center' | 'right'
 type VerticalType = 'top' | 'middle' | 'bottom'
 
-export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIcon }) => {
+export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parentRect, isIcon }) => {
   const theme = useTheme()
   const portalRef = useRef<HTMLDivElement>(null)
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
@@ -92,7 +93,9 @@ export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIco
         triggerIcon={isIcon}
         className={classNames.balloon}
       >
-        <div className={classNames.balloonText}>{message}</div>
+        <div id={messageId} className={classNames.balloonText}>
+          {message}
+        </div>
       </ControlledTooltip>
     </div>
   )
