@@ -99,8 +99,8 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [className, size])
 
-  const onDelegateFocus = useCallback(() => setIsFocused(true), [])
-  const onDelegateBlur = useCallback(() => setIsFocused(false), [])
+  const onDelegateFocus = () => setIsFocused(true)
+  const onDelegateBlur = () => setIsFocused(false)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
