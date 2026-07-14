@@ -169,6 +169,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       stringToDate,
       handleBlur,
       onDelegateKeyDown,
+      onKeyPressInput,
     } = useMemo(() => {
       const internalDateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
@@ -257,6 +258,14 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
       }
 
+      const internalOnKeyPressInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+          const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
+          ;(isExpanded ? internalOpenCalendar : internalCloseCalendar)()
+          internalUpdateDate(e, internalStringToDate(e.currentTarget.value))
+        }
+      }
+
       return {
         dateToString: internalDateToString,
         dateToAlternativeFormat: internalDateToAlternativeFormat,
@@ -266,6 +275,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         stringToDate: internalStringToDate,
         handleBlur: internalHandleBlur,
         onDelegateKeyDown: internalOnDelegateKeyDown,
+        onKeyPressInput: internalOnKeyPressInput,
       }
     }, [latest])
 
@@ -365,16 +375,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           ? theme.textColor.disabled
           : theme.textColor.grey
 
-    const onKeyPressInput = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-          const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
-          ;(isExpanded ? openCalendar : closeCalendar)()
-          updateDate(e, stringToDate(e.currentTarget.value))
-        }
-      },
-      [updateDate, closeCalendar, openCalendar, stringToDate],
-    )
     const onFocusInput = useCallback(() => {
       setIsInputFocused(true)
       openCalendar()
