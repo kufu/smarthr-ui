@@ -39,6 +39,8 @@ import type { FileForViewer } from './types'
 const defaultScaleStep = new Decimal(0.2)
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
+type OnPasswordType = Exclude<ComponentProps<typeof PDFViewer>['onPassword'], undefined>
+
 type Props = {
   file: FileForViewer
   width?: number
@@ -49,7 +51,7 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onPassword?: OnPasswordType
   onLoadError?: () => void
 }
 
@@ -75,14 +77,18 @@ const PDFFileViewer: FC<
     rotation: number | undefined
     setRotation: (rotation: number) => void
   }
-> = ({ file, rotation, setRotation, ...rest }) => {
+> = ({ file, rotation, setRotation, onPassword, ...rest }) => {
   const pdfSearch = usePDFSearch(file.url)
 
-  const handlePDFLoaded = useCallback(
-    (defaultRotation: number) => {
-      setRotation(defaultRotation)
-    },
-    [setRotation],
+  const unstableRef = useRef({ onPassword, setRotation })
+  unstableRef.current = { onPassword, setRotation }
+
+  const handlePDFLoaded = useCallback((defaultRotation: number) => {
+    unstableRef.current.setRotation(defaultRotation)
+  }, [])
+  const actualOnPassword: OnPasswordType = useCallback(
+    (...passRest) => unstableRef.current.onPassword?.(...passRest),
+    [],
   )
 
   return (
@@ -93,6 +99,7 @@ const PDFFileViewer: FC<
       setRotation={setRotation}
       pdfSearch={pdfSearch}
       handlePDFLoaded={handlePDFLoaded}
+      onPassword={onPassword ? actualOnPassword : undefined}
     />
   )
 }
@@ -126,24 +133,35 @@ const ActualFileViewer: FC<
     [scaleStep],
   )
 
+  const unstableRef = useRef({ internalScaleStep, onLoadError, rotation, setRotation })
+  unstableRef.current = { internalScaleStep, onLoadError, rotation, setRotation }
+
   const scaleUp = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
-  }, [internalScaleStep])
+    setScale((currentScale) =>
+      new Decimal(currentScale).add(unstableRef.current.internalScaleStep).toNumber(),
+    )
+  }, [])
 
   const scaleDown = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
-  }, [internalScaleStep])
+    setScale((currentScale) =>
+      new Decimal(currentScale).sub(unstableRef.current.internalScaleStep).toNumber(),
+    )
+  }, [])
 
   const rotate = useCallback(() => {
     // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
-    const currentRotation = rotation ?? 0
-    const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
-    setRotation(newRotation)
-  }, [rotation, setRotation])
+    const currentRotation = unstableRef.current.rotation ?? 0
+    unstableRef.current.setRotation(currentRotation === 0 ? 270 : currentRotation - 90)
+  }, [])
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
   }, [])
+
+  const handleLoadError = useCallback(() => {
+    unstableRef.current.onLoadError?.()
+  }, [])
+  const actualHandleLoadError = onLoadError ? handleLoadError : undefined
 
   useEffect(() => {
     if (!ref.current || fixedWidth !== undefined) {
@@ -194,7 +212,7 @@ const ActualFileViewer: FC<
               onLoad={handleLoaded}
               onPDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
-              onLoadError={onLoadError}
+              onLoadError={actualHandleLoadError}
               search={pdfSearch}
             />
           ) : file.contentType.startsWith('image/') ? (
@@ -204,7 +222,7 @@ const ActualFileViewer: FC<
               file={file}
               width={width}
               onLoad={handleLoaded}
-              onLoadError={onLoadError}
+              onLoadError={actualHandleLoadError}
             />
           ) : (
             <Localizer
