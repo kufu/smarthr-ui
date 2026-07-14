@@ -7,6 +7,8 @@ import {
   type MouseEvent,
   type ReactNode,
   type Ref,
+  type RefObject,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -18,6 +20,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
+import { useLatest } from '../../../hooks/useLatest'
 import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -116,6 +119,52 @@ const classNameGenerator = tv({
   },
 })
 
+type SuffixButtonsProps = {
+  onClickClear: (e: MouseEvent) => void
+  clearButtonRef: RefObject<HTMLButtonElement>
+  onClickIcon: (e: MouseEvent) => void
+  caretIconColor: string
+  destroyButtonIconAlt: string
+  classNames: {
+    clearButton: string
+    clearButtonIcon: string
+    caretDownLayout: string
+    caretDownIcon: string
+  }
+}
+
+const SuffixButtons = memo<SuffixButtonsProps>(
+  ({
+    onClickClear,
+    clearButtonRef,
+    onClickIcon: onDelegateClickIcon,
+    caretIconColor,
+    destroyButtonIconAlt,
+    classNames,
+  }) => (
+    <>
+      <UnstyledButton
+        onClick={onClickClear}
+        ref={clearButtonRef}
+        className={classNames.clearButton}
+      >
+        <FaCircleXmarkIcon
+          color="TEXT_BLACK"
+          alt={destroyButtonIconAlt}
+          className={classNames.clearButtonIcon}
+        />
+      </UnstyledButton>
+      <span
+        role="presentation"
+        onClick={onDelegateClickIcon}
+        className={classNames.caretDownLayout}
+      >
+        <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
+      </span>
+    </>
+  ),
+)
+
 const ActualSingleCombobox = <T,>(
   {
     items,
@@ -162,6 +211,25 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
+  const latest = useLatest({
+    onChange,
+    onChangeInput,
+    onAdd,
+    onSelect,
+    onClear,
+    onClearClick,
+    onChangeSelected,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    defaultItem,
+    selectedItem,
+    isFocused,
+    isExpanded,
+    isComposing,
+    isEditing,
+  })
+
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   const { options } = useSingleOptions({
@@ -179,21 +247,25 @@ const ActualSingleCombobox = <T,>(
     onAdd,
     onSelect: useCallback(
       (selected: ComboboxItem<T>) => {
-        onSelect?.(selected)
-        onChangeSelected?.(selected)
-
-        // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-        onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+        latest.onSelect?.(selected)
+        latest.onChangeSelected?.(selected)
 
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
         requestAnimationFrame(() => {
           setIsExpanded(false)
+          // HINT:
+          // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+          // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
+          //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
+          //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
+          //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         })
 
         setIsEditing(false)
       },
-      [onChangeSelected, onSelect, onChangeInput],
+      [latest],
     ),
     isExpanded,
     isLoading,
@@ -201,42 +273,43 @@ const ActualSingleCombobox = <T,>(
     noResultText,
   })
 
-  const selectDefaultItem = useMemo(
-    () => (onSelect && defaultItem ? () => onSelect(defaultItem) : NOOP),
-    [onSelect, defaultItem],
-  )
+  const selectDefaultItem = useCallback(() => {
+    if (latest.onSelect && latest.defaultItem) {
+      latest.onSelect(latest.defaultItem)
+    }
+  }, [latest])
 
   const focus = useCallback(() => {
-    onFocus?.()
+    latest.onFocus?.()
     inputRef.current?.focus()
     setIsFocused(true)
 
-    if (!isFocused) {
+    if (!latest.isFocused) {
       setIsExpanded(true)
     }
-  }, [onFocus, isFocused])
+  }, [latest])
   const unfocus = useCallback(() => {
-    if (!isFocused) return
+    if (!latest.isFocused) return
 
-    onBlur?.()
+    latest.onBlur?.()
 
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (selectedItem) {
-      setInputValue(innerText(selectedItem.label))
+    if (latest.selectedItem) {
+      setInputValue(innerText(latest.selectedItem.label))
     } else {
       selectDefaultItem()
     }
-  }, [isFocused, onBlur, selectedItem, selectDefaultItem])
+  }, [selectDefaultItem, latest])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
 
       let isExecutedPreventDefault = false
 
-      onClearClick?.({
+      latest.onClearClick?.({
         ...e,
         preventDefault: () => {
           e.preventDefault()
@@ -245,8 +318,8 @@ const ActualSingleCombobox = <T,>(
       })
 
       if (!isExecutedPreventDefault) {
-        onClear?.()
-        onChangeSelected?.(null)
+        latest.onClear?.()
+        latest.onChangeSelected?.(null)
 
         inputRef.current?.focus()
 
@@ -254,7 +327,7 @@ const ActualSingleCombobox = <T,>(
         setIsExpanded(true)
       }
     },
-    [onClearClick, onClear, onChangeSelected],
+    [latest],
   )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
@@ -266,41 +339,40 @@ const ActualSingleCombobox = <T,>(
 
       inputRef.current?.focus()
 
-      if (!isExpanded) {
+      if (!latest.isExpanded) {
         setIsExpanded(true)
       }
     },
-    [disabled, readOnly, inputRef, isExpanded],
+    [disabled, readOnly, latest],
   )
-  const onDelegateClickIcon = onClickInput
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      onChange?.(e)
-      onChangeInput?.(e)
+      latest.onChange?.(e)
+      latest.onChangeInput?.(e)
 
-      if (!isEditing) setIsEditing(true)
+      if (!latest.isEditing) setIsEditing(true)
 
       const { value } = e.currentTarget
 
       setInputValue(value)
 
       if (value === '') {
-        onClear?.()
-        onChangeSelected?.(null)
+        latest.onClear?.()
+        latest.onChangeSelected?.(null)
       }
     },
-    [isEditing, onChange, onChangeInput, onClear, onChangeSelected],
+    [latest],
   )
   const onCompositionStart = useCallback(() => setIsComposing(true), [])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (isComposing) {
+      if (latest.isComposing) {
         return
       }
 
       if (ESCAPE_KEY_REGEX.test(e.key)) {
-        if (isExpanded) {
+        if (latest.isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
         }
@@ -313,13 +385,13 @@ const ActualSingleCombobox = <T,>(
 
         inputRef.current?.focus()
 
-        if (!isExpanded) {
+        if (!latest.isExpanded) {
           setIsExpanded(true)
         }
       }
       onKeyDownListBox(e)
     },
-    [isComposing, isExpanded, unfocus, onKeyDownListBox],
+    [unfocus, onKeyDownListBox, latest],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
@@ -329,20 +401,19 @@ const ActualSingleCombobox = <T,>(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') e.preventDefault()
 
-      onKeyPress?.(e)
+      latest.onKeyPress?.(e)
     },
-    [onKeyPress],
+    [latest],
   )
 
-  const caretIconColor = useMemo(() => {
-    if (isFocused) return theme.textColor.black
-    if (disabled || readOnly) return theme.textColor.disabled
-
-    return theme.textColor.grey
-  }, [disabled, readOnly, isFocused, theme.textColor])
+  const caretIconColor = isFocused
+    ? theme.textColor.black
+    : disabled || readOnly
+      ? theme.textColor.disabled
+      : theme.textColor.grey
 
   useClick(
-    useMemo(() => [outerRef, listBoxRef, clearButtonRef], [outerRef, listBoxRef, clearButtonRef]),
+    useMemo(() => [outerRef, listBoxRef, clearButtonRef], [listBoxRef]),
     isFocused || selectedItem ? NOOP : selectDefaultItem,
     unfocus,
   )
@@ -361,7 +432,7 @@ const ActualSingleCombobox = <T,>(
     [style, width],
   )
 
-  const notSelected = selectedItem === null
+  const hasSelectedItem = selectedItem !== null
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
@@ -372,10 +443,12 @@ const ActualSingleCombobox = <T,>(
       input: input(),
       caretDownLayout: caretDownLayout(),
       caretDownIcon: caretDownIcon(),
-      clearButton: clearButton({ hidden: notSelected || disabled || readOnly }),
+      clearButton: clearButton({
+        hidden: !hasSelectedItem || disabled || readOnly,
+      }),
       clearButtonIcon: clearButtonIcon(),
     }
-  }, [notSelected, disabled, readOnly, className])
+  }, [hasSelectedItem, disabled, readOnly, className])
 
   const destroyButtonIconAlt = useMemo(
     () =>
@@ -416,26 +489,19 @@ const ActualSingleCombobox = <T,>(
         error={error}
         prefix={prefix}
         suffix={
-          <>
-            <UnstyledButton
-              onClick={onClickClear}
-              ref={clearButtonRef}
-              className={classNames.clearButton}
-            >
-              <FaCircleXmarkIcon
-                color="TEXT_BLACK"
-                alt={destroyButtonIconAlt}
-                className={classNames.clearButtonIcon}
-              />
-            </UnstyledButton>
-            <span
-              role="presentation"
-              onClick={onDelegateClickIcon}
-              className={classNames.caretDownLayout}
-            >
-              <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
-            </span>
-          </>
+          <SuffixButtons
+            onClickClear={onClickClear}
+            clearButtonRef={clearButtonRef}
+            onClickIcon={onClickInput}
+            caretIconColor={caretIconColor}
+            destroyButtonIconAlt={destroyButtonIconAlt}
+            classNames={{
+              clearButton: classNames.clearButton,
+              clearButtonIcon: classNames.clearButtonIcon,
+              caretDownLayout: classNames.caretDownLayout,
+              caretDownIcon: classNames.caretDownIcon,
+            }}
+          />
         }
         className={classNames.input}
         data-smarthr-ui-input="true"

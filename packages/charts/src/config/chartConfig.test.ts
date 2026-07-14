@@ -8,7 +8,7 @@ import {
   createRadarChartOptions,
 } from './chartConfig'
 
-import type { ChartOptions } from 'chart.js'
+import type { ChartOptions, LinearScaleOptions, TooltipItem } from 'chart.js'
 
 describe('createBarChartOptions', () => {
   it('外部オプションと内部デフォルトを深くマージすること', () => {
@@ -22,11 +22,11 @@ describe('createBarChartOptions', () => {
     })
 
     // 内部設定が保持される
-    expect(result.scales?.y?.beginAtZero).toBe(true)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
     expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
 
     // 外部設定が反映される
-    expect(result.scales?.y?.ticks?.stepSize).toBe(50)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.ticks?.stepSize).toBe(50)
     expect(result.scales?.y?.grid?.display).toBe(false)
   })
 
@@ -40,7 +40,7 @@ describe('createBarChartOptions', () => {
     })
 
     expect(result.scales?.y?.suggestedMax).toBe(150)
-    expect(result.scales?.y?.beginAtZero).toBe(true)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
   })
 
   it('x軸のgrid設定も深くマージされること', () => {
@@ -63,7 +63,7 @@ describe('createBarChartOptions', () => {
     expect(result.scales?.x?.grid?.lineWidth).toBe(2)
   })
 
-  it('tooltipの設定が外部から上書きできないこと（保護されている）', () => {
+  it('tooltipの装飾の設定が外部から上書きできないこと', () => {
     const result = createBarChartOptions({
       plugins: {
         tooltip: {
@@ -84,6 +84,22 @@ describe('createBarChartOptions', () => {
     expect(result.plugins?.tooltip?.borderColor).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
     expect(result.plugins?.tooltip?.borderWidth).toBe(1)
     expect(result.plugins?.tooltip?.cornerRadius).toBe(4)
+  })
+
+  it('tooltipの保護対象外の設定が追加できること', () => {
+    const labelCallback = (_context: TooltipItem<'bar'>) => 'hello world'
+    const result = createBarChartOptions({
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: labelCallback,
+          },
+        } as ChartOptions<'bar'>['plugins']['tooltip'],
+      },
+    })
+
+    // 内部のtooltip設定が保持される（外部設定は無視される）
+    expect(result.plugins?.tooltip?.callbacks.label).toBe(labelCallback)
   })
 
   it('その他のplugin設定は外部から追加できること', () => {
@@ -112,7 +128,7 @@ describe('createBarChartOptions', () => {
         y: {
           ticks: { stepSize: 50 },
           suggestedMax: 150,
-          grid: { drawBorder: false },
+          grid: { drawTicks: false },
         },
       },
     })
@@ -123,11 +139,32 @@ describe('createBarChartOptions', () => {
     expect(result.scales?.x?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
 
     // y軸の設定
-    expect(result.scales?.y?.beginAtZero).toBe(true)
-    expect(result.scales?.y?.ticks?.stepSize).toBe(50)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.ticks?.stepSize).toBe(50)
     expect(result.scales?.y?.suggestedMax).toBe(150)
-    expect(result.scales?.y?.grid?.drawBorder).toBe(false)
+    expect(result.scales?.y?.grid?.drawTicks).toBe(false)
     expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
+  })
+
+  it('scaleのborder設定（Chart.js v4でgrid.drawBorderの後継）が深くマージされること', () => {
+    const result = createBarChartOptions({
+      scales: {
+        y: {
+          border: {
+            display: false,
+            width: 2,
+          },
+        },
+      },
+    })
+
+    // 外部設定が反映される
+    expect(result.scales?.y?.border?.display).toBe(false)
+    expect(result.scales?.y?.border?.width).toBe(2)
+
+    // 内部設定が保持される
+    expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.beginAtZero).toBe(true)
   })
 })
 
@@ -146,7 +183,7 @@ describe('createLineChartOptions', () => {
     expect(result.scales?.y?.grid?.color).toBe(SMARTHR_DEFAULT_COLORS.BORDER)
 
     // 外部設定が反映される
-    expect(result.scales?.y?.ticks?.stepSize).toBe(50)
+    expect((result.scales?.y as LinearScaleOptions | undefined)?.ticks?.stepSize).toBe(50)
     expect(result.scales?.y?.grid?.display).toBe(false)
   })
 
