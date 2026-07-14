@@ -129,6 +129,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
+    const onChangeRef = useRef(onChange)
+    onChangeRef.current = onChange
+
     const buildAvailableLetters = useCallback(
       (availableLetters: number): ReactNode => (
         <Localizer
@@ -229,10 +232,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           setInterimRows(currentRows)
         }
 
-        onChange?.(e)
+        onChangeRef.current?.(e)
       },
       [
-        onChange,
         debouncedUpdateCount,
         debouncedUpdateSrCounterMessage,
         autoResize,
