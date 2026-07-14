@@ -83,6 +83,7 @@ export const PDFViewer: FC<Props> = memo(
     const currentMatchIndex = search?.currentMatchIndex
     const onPageTextLoaded = search?.registerPageText
     const [pdfNumPages, setPdfNumPages] = useState(1)
+    const [pdfPageArray, setPdfPageArray] = useState<unknown[]>([])
     const rootRef = useRef<HTMLDivElement>(null)
 
     const unstableRef = useRef({ onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation })
@@ -92,6 +93,7 @@ export const PDFViewer: FC<Props> = memo(
       NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
     >(({ numPages }) => {
       setPdfNumPages(numPages)
+      setPdfPageArray(Array.from({ length: numPages }))
     }, [])
 
     const onPageLoad = useCallback<ComponentProps<typeof Page>['onLoadSuccess']>((page) => {
@@ -111,8 +113,8 @@ export const PDFViewer: FC<Props> = memo(
       return buildCustomTextRenderer(matches)
     }, [matches])
 
-    const handleGetTextSuccess = useCallback(
-      (pageIndex: number) => (textContent: TextContent) => {
+    const handleGetTextSuccess = useMemo(() => {
+      const commonAction = (pageIndex: number, textContent: TextContent) => {
         if (!unstableRef.current.onPageTextLoaded) return
         const texts = textContent.items.reduce<string[]>((acc, item) => {
           if ('str' in item) {
@@ -121,9 +123,12 @@ export const PDFViewer: FC<Props> = memo(
           return acc
         }, [])
         unstableRef.current.onPageTextLoaded(pageIndex, texts)
-      },
-      [],
-    )
+      }
+
+      return pdfPageArray.map(
+        (_, pageIndex) => (textContent: TextContent) => commonAction(pageIndex, textContent),
+      )
+    }, [pdfPageArray])
 
     useEffect(() => {
       const root = rootRef.current
@@ -168,7 +173,7 @@ export const PDFViewer: FC<Props> = memo(
             loading={null}
             onPassword={onPassword}
           >
-            {Array.from({ length: pdfNumPages }).map((_, i) => (
+            {pdfPageArray.map((_, i) => (
               <Page
                 key={`page_${i}`}
                 pageNumber={i + 1}
@@ -176,7 +181,7 @@ export const PDFViewer: FC<Props> = memo(
                 scale={scale}
                 className="shr-w-full"
                 onLoadSuccess={onPageLoad}
-                onGetTextSuccess={handleGetTextSuccess(i)}
+                onGetTextSuccess={handleGetTextSuccess[i]}
                 customTextRenderer={customTextRenderer}
                 loading={null}
               />
