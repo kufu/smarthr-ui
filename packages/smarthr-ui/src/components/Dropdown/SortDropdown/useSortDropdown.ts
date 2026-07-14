@@ -157,7 +157,6 @@ export const useSortDropdown = ({
   }, [])
 
   return {
-    onChangeSortOrderRadio: handler.changeSortOrderRadio,
     texts: {
       ...texts,
       triggerLabel: `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,

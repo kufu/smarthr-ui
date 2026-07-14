@@ -72,9 +72,8 @@ export const SortDropdown: FC<Props> = ({
   const {
     texts,
     SortIcon,
-    onChangeSortOrderRadio,
     innerValues: { innerFields, innerCheckedOrder },
-    handler: { apply, change },
+    handler: { apply, change, changeSortOrderRadio },
     classNames,
   } = useSortDropdown({
     sortFields,
@@ -112,7 +111,7 @@ export const SortDropdown: FC<Props> = ({
                   name="sortOrder"
                   value="asc"
                   checked={innerCheckedOrder === 'asc'}
-                  onChange={onChangeSortOrderRadio}
+                  onChange={changeSortOrderRadio}
                 >
                   {texts.ascLabel}
                 </RadioButton>
@@ -120,7 +119,7 @@ export const SortDropdown: FC<Props> = ({
                   name="sortOrder"
                   value="desc"
                   checked={innerCheckedOrder === 'desc'}
-                  onChange={onChangeSortOrderRadio}
+                  onChange={changeSortOrderRadio}
                 >
                   {texts.descLabel}
                 </RadioButton>
