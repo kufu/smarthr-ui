@@ -70,6 +70,17 @@ const BUTTON_COLUMN_GAP = {
   column: 1,
 } as const
 
+const CLASS_NAMES = (() => {
+  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+
+  return {
+    wrapper: wrapper(),
+    actionArea: actionArea(),
+    buttonArea: buttonArea(),
+    message: message(),
+  }
+})()
+
 export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
   children,
   heading,
@@ -146,17 +157,6 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     }
   }, [latest])
 
-  const classNames = useMemo(() => {
-    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
-
-    return {
-      wrapper: wrapper(),
-      actionArea: actionArea(),
-      buttonArea: buttonArea(),
-      message: message(),
-    }
-  }, [])
-
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
@@ -165,7 +165,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
       <form onSubmit={functions.handleSubmitAction}>
-        <div className={classNames.wrapper}>
+        <div className={CLASS_NAMES.wrapper}>
           <DialogHeading
             id={heading.id}
             sub={heading.sub ? `${heading.sub}${stepText}` : undefined}
@@ -178,7 +178,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           >
             {children}
           </DialogBody>
-          <div className={classNames.actionArea}>
+          <div className={CLASS_NAMES.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <BackButton
@@ -188,7 +188,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                   text={backButton.text}
                 />
               )}
-              <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
+              <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
                 {!closeButton.hidden && (
                   <CloseButton
                     onClick={functions.handleCloseAction}
@@ -209,7 +209,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             </Cluster>
             <DialogContentResponseStatusMessage
               responseStatus={calcedResponseStatus}
-              className={classNames.message}
+              className={CLASS_NAMES.message}
             />
           </div>
         </div>
