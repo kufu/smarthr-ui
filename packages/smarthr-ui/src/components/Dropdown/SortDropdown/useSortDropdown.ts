@@ -5,11 +5,11 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
@@ -89,18 +89,12 @@ export const useSortDropdown = ({
   const [innerSelectedField, setInnerSelectedField] = useState<string>('')
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
-  const unstableRef = useRef({
+  const latest = useLatest({
     innerCheckedOrder,
     innerFields,
     innerSelectedField,
     onApply,
   })
-  unstableRef.current = {
-    innerCheckedOrder,
-    innerFields,
-    innerSelectedField,
-    onApply,
-  }
 
   const defaultFieldLabel =
     selectedLabel || (sortFields.find((field) => field.selected) || sortFields[0])?.label || ''
@@ -136,14 +130,14 @@ export const useSortDropdown = ({
     setInnerSelectedField(newLabel)
   }, [])
   const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
-    setSelectedLabel(unstableRef.current.innerSelectedField)
-    setCheckedOrder(unstableRef.current.innerCheckedOrder)
-    unstableRef.current.onApply({
-      field: unstableRef.current.innerSelectedField || '',
-      order: unstableRef.current.innerCheckedOrder,
-      newfields: unstableRef.current.innerFields,
+    setSelectedLabel(latest.innerSelectedField)
+    setCheckedOrder(latest.innerCheckedOrder)
+    latest.onApply({
+      field: latest.innerSelectedField || '',
+      order: latest.innerCheckedOrder,
+      newfields: latest.innerFields,
     })
-  }, [])
+  }, [latest])
 
   const onChangeSortOrderRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
     setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
