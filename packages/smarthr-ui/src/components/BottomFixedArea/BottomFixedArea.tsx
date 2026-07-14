@@ -14,9 +14,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
 import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
+import { Base } from '../Panel'
 
 import { validateElement } from './helper'
 

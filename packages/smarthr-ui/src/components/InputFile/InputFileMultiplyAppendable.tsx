@@ -16,10 +16,10 @@ import {
 } from 'react'
 
 import { useIntl } from '../../intl'
-import { Groupbox } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
+import { Groupbox } from '../Panel'
 
 import { classNameGenerator } from './style'
 

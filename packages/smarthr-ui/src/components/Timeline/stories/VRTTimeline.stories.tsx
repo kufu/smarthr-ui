@@ -1,6 +1,6 @@
-import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
+import { Base } from '../../Panel'
 import { TextLink } from '../../TextLink'
 import { Timeline } from '../Timeline'
 import { TimelineItem } from '../TimelineItem'

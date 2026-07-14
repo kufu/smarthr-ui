@@ -1,5 +1,5 @@
-import { Base } from '../../Base'
 import { Stack } from '../../Layout'
+import { Base } from '../../Panel'
 import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { EmptyTableBody } from '../EmptyTableBody'

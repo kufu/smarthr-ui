@@ -1,6 +1,6 @@
 import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
-import { Base } from '../../../Base'
+import { Base } from '../../../Panel'
 import { Stack } from '../../Stack'
 import { Container } from '../Container'
 

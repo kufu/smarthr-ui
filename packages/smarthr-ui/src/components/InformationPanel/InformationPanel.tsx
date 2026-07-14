@@ -14,7 +14,6 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
-import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import {
@@ -27,6 +26,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Sidebar } from '../Layout'
+import { Base, type BaseElementProps } from '../Panel'
 
 type ObjectHeadingType = {
   text: ReactNode

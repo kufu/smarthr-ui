@@ -1,4 +1,4 @@
-import { Base } from '../../Base'
+import { Base } from '../../Panel'
 import { Scroller } from '../Scroller'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'

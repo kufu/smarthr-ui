@@ -1,6 +1,6 @@
-import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
+import { Base } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { ResponseStatusWithoutProcessing } from '../../../types'

@@ -1,6 +1,6 @@
-import { Groupbox } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { Button } from '../Button'
 
 import type { StoryFn, StoryObj } from '@storybook/react-webpack5'

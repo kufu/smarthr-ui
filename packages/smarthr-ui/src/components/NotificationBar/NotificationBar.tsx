@@ -11,7 +11,6 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Base } from '../Base'
 import { Button } from '../Button'
 import {
   FaCircleCheckIcon,
@@ -23,6 +22,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
+import { Base } from '../Panel'
 import { Text } from '../Text'
 
 const classNameGenerator = tv({
