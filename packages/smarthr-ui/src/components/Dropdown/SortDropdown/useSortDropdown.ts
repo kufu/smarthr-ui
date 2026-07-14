@@ -22,6 +22,16 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { body, select, footer } = classNameGenerator()
+
+  return {
+    body: body(),
+    select: select(),
+    footer: footer(),
+  }
+})()
+
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
 export const useSortDropdown = ({
@@ -146,16 +156,6 @@ export const useSortDropdown = ({
     setInnerSelectedField(defaultFieldLabel)
   }, [defaultFieldLabel])
 
-  const classNames = useMemo(() => {
-    const { body, select, footer } = classNameGenerator()
-
-    return {
-      body: body(),
-      select: select(),
-      footer: footer(),
-    }
-  }, [])
-
   return {
     texts: {
       ...texts,
@@ -164,6 +164,6 @@ export const useSortDropdown = ({
     handler,
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
     SortIcon: checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon,
-    classNames,
+    classNames: CLASS_NAMES,
   }
 }
