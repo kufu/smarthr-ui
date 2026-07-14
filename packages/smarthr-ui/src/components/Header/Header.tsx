@@ -6,7 +6,9 @@ import {
   type ReactElement,
   type ReactNode,
   memo,
+  useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
@@ -106,6 +108,15 @@ export const Header: FC<Props> = ({
     }
   }, [enableNew, className])
 
+  const unstableRef = useRef({ onTenantSelect })
+  unstableRef.current = { onTenantSelect }
+
+  const handleTenantSelect = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    unstableRef.current.onTenantSelect?.(e.currentTarget.value)
+  }, [])
+
+  const actualHandleTenantSelect = onTenantSelect ? handleTenantSelect : undefined
+
   return (
     <Cluster
       {...rest}
@@ -125,7 +136,7 @@ export const Header: FC<Props> = ({
             currentTenantId={currentTenantId}
             tenants={tenants}
             classNames={classNames}
-            onTenantSelect={onTenantSelect}
+            handleTenantSelect={actualHandleTenantSelect}
           />
         )}
       </Cluster>
@@ -150,10 +161,11 @@ const MemoizedAppLauncher = memo<Pick<Props, 'featureName' | 'apps' | 'enableNew
 )
 
 const TenantSwitcher = memo<
-  Pick<Props, 'currentTenantId' | 'tenants' | 'onTenantSelect'> & {
+  Pick<Props, 'currentTenantId' | 'tenants'> & {
     classNames: { tenantInfo: string; tenantNameText: string }
+    handleTenantSelect?: (e: MouseEvent<HTMLButtonElement>) => void
   }
->(({ currentTenantId, tenants, classNames, onTenantSelect }) => {
+>(({ currentTenantId, tenants, classNames, handleTenantSelect }) => {
   const currentTenantName = useMemo(() => {
     if (tenants && tenants.length >= 1) {
       const current = tenants.find(({ id }) => id === currentTenantId)
@@ -171,7 +183,7 @@ const TenantSwitcher = memo<
           <MultiTenantDropdownMenuButton
             trigger={currentTenantName}
             tenants={tenants}
-            onTenantSelect={onTenantSelect}
+            handleTenantSelect={handleTenantSelect}
           />
         ) : (
           <Text color="TEXT_WHITE" className={classNames.tenantNameText}>
@@ -184,25 +196,16 @@ const TenantSwitcher = memo<
 })
 
 const MultiTenantDropdownMenuButton = memo<
-  Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { trigger: ReactNode }
->(({ trigger, tenants, onTenantSelect }) => {
-  const onClick = useMemo(
-    () =>
-      onTenantSelect
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            onTenantSelect(e.currentTarget.value)
-          }
-        : undefined,
-    [onTenantSelect],
-  )
-
-  return (
-    <HeaderDropdownMenuButton trigger={trigger}>
-      {tenants.map(({ id, name }) => (
-        <Button key={id} value={id} onClick={onClick}>
-          {name}
-        </Button>
-      ))}
-    </HeaderDropdownMenuButton>
-  )
-})
+  Pick<Required<Props>, 'tenants'> & {
+    trigger: ReactNode
+    handleTenantSelect?: (e: MouseEvent<HTMLButtonElement>) => void
+  }
+>(({ trigger, tenants, handleTenantSelect }) => (
+  <HeaderDropdownMenuButton trigger={trigger}>
+    {tenants.map(({ id, name }) => (
+      <Button key={id} value={id} onClick={handleTenantSelect}>
+        {name}
+      </Button>
+    ))}
+  </HeaderDropdownMenuButton>
+))
