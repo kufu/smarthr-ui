@@ -170,6 +170,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       handleBlur,
       onDelegateKeyDown,
       onKeyPressInput,
+      onFocusInput,
     } = useMemo(() => {
       const internalDateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
@@ -266,6 +267,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
       }
 
+      const internalOnFocusInput = () => {
+        setIsInputFocused(true)
+        internalOpenCalendar()
+      }
+
       return {
         dateToString: internalDateToString,
         dateToAlternativeFormat: internalDateToAlternativeFormat,
@@ -276,6 +282,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         handleBlur: internalHandleBlur,
         onDelegateKeyDown: internalOnDelegateKeyDown,
         onKeyPressInput: internalOnKeyPressInput,
+        onFocusInput: internalOnFocusInput,
       }
     }, [latest])
 
@@ -375,10 +382,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           ? theme.textColor.disabled
           : theme.textColor.grey
 
-    const onFocusInput = useCallback(() => {
-      setIsInputFocused(true)
-      openCalendar()
-    }, [openCalendar])
     const onSelectDateCalendar = useCallback(
       (e: ChangeLikeEvent, selected: Date | null) => {
         updateDate(e, selected)
