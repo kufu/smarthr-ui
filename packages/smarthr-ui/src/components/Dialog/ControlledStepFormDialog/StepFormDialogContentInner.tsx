@@ -9,9 +9,9 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useRef,
 } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
@@ -90,7 +90,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
     useContext(StepFormDialogContext)
 
-  const unstableRef = useRef({
+  const latest = useLatest({
     onClickClose,
     onSubmit,
     onClickBack,
@@ -98,23 +98,15 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     firstStep,
     setCurrentStep,
   })
-  unstableRef.current = {
-    onClickClose,
-    onSubmit,
-    onClickBack,
-    currentStep,
-    firstStep,
-    setCurrentStep,
-  }
 
   const handleCloseAction = useCallback(() => {
-    unstableRef.current.onClickClose()
+    latest.onClickClose()
     setTimeout(() => {
       // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
       stepQueueRef.current = []
-      unstableRef.current.setCurrentStep(unstableRef.current.firstStep)
+      latest.setCurrentStep(latest.firstStep)
     }, 300)
-  }, [stepQueueRef])
+  }, [stepQueueRef, latest])
 
   const changeCurrentStep = useCallback(
     (step: Parameters<typeof setCurrentStep>[0]) => {
@@ -137,22 +129,22 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
       const helpers: StepFormHelpers = {
         goto: (nextStep: StepItem) => {
-          stepQueueRef.current.push(unstableRef.current.currentStep)
+          stepQueueRef.current.push(latest.currentStep)
           changeCurrentStep(nextStep)
         },
         close: handleCloseAction,
-        currentStep: unstableRef.current.currentStep,
+        currentStep: latest.currentStep,
       }
 
-      unstableRef.current.onSubmit(e, helpers)
+      latest.onSubmit(e, helpers)
     },
-    [stepQueueRef, handleCloseAction, changeCurrentStep],
+    [stepQueueRef, handleCloseAction, changeCurrentStep, latest],
   )
   const handleBackAction = useCallback(() => {
-    unstableRef.current.onClickBack?.()
+    latest.onClickBack?.()
 
-    changeCurrentStep(stepQueueRef.current.pop() ?? unstableRef.current.firstStep)
-  }, [stepQueueRef, changeCurrentStep])
+    changeCurrentStep(stepQueueRef.current.pop() ?? latest.firstStep)
+  }, [stepQueueRef, changeCurrentStep, latest])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
