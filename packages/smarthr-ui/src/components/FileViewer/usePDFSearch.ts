@@ -52,9 +52,11 @@ export const usePDFSearch = (fileUrl: string) => {
   const [matches, setMatches] = useState<PDFSearchMatch[]>([])
   const [currentMatchIndex, setCurrentMatchIndex] = useState(-1)
   const pageTextsRef = useRef<Map<number, string[]>>(new Map())
-  const queryRef = useRef('')
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
+
+  const unstableRef = useRef({ matchCount, query })
+  unstableRef.current = { matchCount, query }
 
   const resetMatchState = useCallback(() => {
     setMatches([])
@@ -99,7 +101,6 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const setQuery = useCallback(
     (nextQuery: string) => {
-      queryRef.current = nextQuery
       setQueryState(nextQuery)
       recalculate(nextQuery, { resetSelection: true })
     },
@@ -110,38 +111,40 @@ export const usePDFSearch = (fileUrl: string) => {
     (pageIndex: number, texts: string[]) => {
       pageTextsRef.current.set(pageIndex, texts.map(normalize))
       // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
-      if (queryRef.current !== '') {
-        recalculate(queryRef.current)
+      if (unstableRef.current.query !== '') {
+        recalculate(unstableRef.current.query)
       }
     },
     [recalculate],
   )
 
   const clear = useCallback(() => {
-    queryRef.current = ''
     setQueryState('')
     resetMatchState()
   }, [resetMatchState])
 
   const goNext = useCallback(() => {
     setCurrentMatchIndex((prev) => {
-      if (matchCount === 0) return -1
+      const { matchCount: count } = unstableRef.current
+
+      if (count === 0) return -1
       if (prev < 0) return 0
-      return (prev + 1) % matchCount
+      return (prev + 1) % count
     })
-  }, [matchCount])
+  }, [])
 
   const goPrev = useCallback(() => {
     setCurrentMatchIndex((prev) => {
-      if (matchCount === 0) return -1
-      if (prev < 0) return matchCount - 1
-      return (prev - 1 + matchCount) % matchCount
+      const { matchCount: count } = unstableRef.current
+
+      if (count === 0) return -1
+      if (prev < 0) return count - 1
+      return (prev - 1 + count) % count
     })
-  }, [matchCount])
+  }, [])
 
   useEffect(() => {
     pageTextsRef.current.clear()
-    queryRef.current = ''
     setQueryState('')
     resetMatchState()
   }, [fileUrl, resetMatchState])
