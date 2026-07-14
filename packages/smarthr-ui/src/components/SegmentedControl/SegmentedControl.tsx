@@ -22,7 +22,7 @@ export type Option = {
   /** ボタンに表示する内容 */
   content: ReactNode
   /** ボタンの `aria-label` */
-  ariaLabel?: string
+  'aria-label'?: string
   /** ボタンを disabled にするかどうか */
   disabled?: boolean
 }
@@ -83,12 +83,10 @@ export const SegmentedControl: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const [isFocused, setIsFocused] = useState(false)
+  const [focusable, setFocusable] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
-
-  const onClickOptionRef = useRef(onClickOption)
-  onClickOptionRef.current = onClickOption
-
+  const unstableRef = useRef({ onClickOption, focusable })
+  unstableRef.current = { onClickOption, focusable }
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -99,12 +97,12 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [className, size])
 
-  const onDelegateFocus = useCallback(() => setIsFocused(true), [])
-  const onDelegateBlur = useCallback(() => setIsFocused(false), [])
+  const onDelegateFocus = useCallback(() => setFocusable(false), [])
+  const onDelegateBlur = useCallback(() => setFocusable(true), [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isFocused || !containerRef.current || !document.activeElement) {
+      if (unstableRef.current.focusable || !containerRef.current || !document.activeElement) {
         return
       }
 
@@ -157,13 +155,15 @@ export const SegmentedControl: FC<Props> = ({
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isFocused])
+  }, [])
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
-  const onClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    onClickOptionRef.current?.(e.currentTarget.value)
+  const stableOnClickOption = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    unstableRef.current.onClickOption?.(e.currentTarget.value)
   }, [])
+
+  const actualOnClickOption = onClickOption ? stableOnClickOption : undefined
 
   return (
     <div
@@ -175,72 +175,40 @@ export const SegmentedControl: FC<Props> = ({
       role="toolbar"
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
-        {options.map((option, index) => (
-          <SegmentedControlButton
-            key={option.value}
-            optionValue={option.value}
-            optionContent={option.content}
-            optionAriaLabel={option.ariaLabel}
-            optionDisabled={option.disabled}
-            index={index}
-            onClick={onClick}
-            size={size}
-            value={value}
-            isFocused={isFocused}
-            excludesSelected={excludesSelected}
-            className={classNames.button}
-          />
-        ))}
+        {options.map((option, index) => {
+          const checked = value === option.value
+
+          return (
+            <SegmentedControlButton
+              {...option}
+              key={option.value}
+              onClick={actualOnClickOption}
+              size={size}
+              checked={checked}
+              tabIndex={focusable && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              aria-checked={checked && !!value}
+              className={classNames.button}
+            />
+          )
+        })}
       </div>
     </div>
   )
 }
 
 const SegmentedControlButton = memo<
-  Pick<Props, 'size' | 'value'> & {
-    onClick: (e: MouseEvent<HTMLButtonElement>) => void
-    optionValue: string
-    optionContent: ReactNode
-    optionAriaLabel?: string
-    optionDisabled?: boolean
-    index: number
-    isFocused: boolean
-    excludesSelected: boolean
-    className: string
-  }
->(
-  ({
-    onClick,
-    size,
-    value,
-    optionValue,
-    optionContent,
-    optionAriaLabel,
-    optionDisabled,
-    index,
-    isFocused,
-    excludesSelected,
-    className,
-  }) => {
-    const checked = value === optionValue
-    const tabIndex = !isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1
-
-    return (
-      // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-      <Button
-        value={optionValue}
-        disabled={optionDisabled}
-        tabIndex={tabIndex}
-        role="radio"
-        aria-label={optionAriaLabel}
-        aria-checked={checked && !!value}
-        onClick={onClick}
-        variant={checked ? 'primary' : 'secondary'}
-        size={size}
-        className={className}
-      >
-        {optionContent}
-      </Button>
-    )
-  },
-)
+  Pick<Props, 'size'> &
+    Omit<Props['options'][number], 'content'> & {
+      content: ReactNode
+      onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
+      checked: boolean
+      tabIndex: number
+      'aria-checked': boolean
+      className: string
+    }
+>(({ checked, content, ...rest }) => (
+  // eslint-disable-next-line smarthr/best-practice-for-interactive-element
+  <Button {...rest} role="radio" variant={checked ? 'primary' : 'secondary'}>
+    {content}
+  </Button>
+))
