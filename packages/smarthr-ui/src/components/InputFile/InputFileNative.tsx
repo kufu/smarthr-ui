@@ -7,7 +7,6 @@ import {
   type ReactNode,
   forwardRef,
   memo,
-  useCallback,
   useId,
   useImperativeHandle,
   useMemo,
@@ -15,6 +14,7 @@ import {
   useState,
 } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
@@ -71,46 +71,42 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       () => inputRef.current,
     )
 
-    const unstableRef = useRef({ onChange, files })
-    unstableRef.current = { onChange, files }
+    const latest = useLatest({ onChange, files })
 
-    const updateFiles = useCallback((newFiles: File[]) => {
-      unstableRef.current.onChange?.(newFiles)
-      setFiles(newFiles)
-    }, [])
+    const { handleChange, handleDelete } = useMemo(() => {
+      const updateFiles = (newFiles: File[]) => {
+        latest.onChange?.(newFiles)
+        setFiles(newFiles)
+      }
 
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        if (!isUpdatingFilesRef.current) {
-          updateFiles(Array.from(e.target.files ?? []))
-        }
-      },
-      [updateFiles],
-    )
+      return {
+        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
+          if (!isUpdatingFilesRef.current) {
+            updateFiles(Array.from(e.target.files ?? []))
+          }
+        },
+        handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
+          if (!inputRef.current) {
+            return
+          }
 
-    const handleDelete = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => {
-        if (!inputRef.current) {
-          return
-        }
+          const index = parseInt(e.currentTarget.value, 10)
+          const newFiles = latest.files.filter((_, i) => index !== i)
 
-        const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = unstableRef.current.files.filter((_, i) => index !== i)
+          updateFiles(newFiles)
 
-        updateFiles(newFiles)
+          const buff = new DataTransfer()
 
-        const buff = new DataTransfer()
+          newFiles.forEach((file) => {
+            buff.items.add(file)
+          })
 
-        newFiles.forEach((file) => {
-          buff.items.add(file)
-        })
-
-        isUpdatingFilesRef.current = true
-        inputRef.current.files = buff.files
-        isUpdatingFilesRef.current = false
-      },
-      [updateFiles],
-    )
+          isUpdatingFilesRef.current = true
+          inputRef.current.files = buff.files
+          isUpdatingFilesRef.current = false
+        },
+      }
+    }, [latest])
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
