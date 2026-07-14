@@ -144,15 +144,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
-    const stringToDate = useCallback(
-      (str?: string | null) => {
-        if (!str) return null
-        return parseInput ? parseInput(str) : parseJpnDateString(str)
-      },
-      [parseInput],
-    )
-
-    const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
+    const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
+      if (!value) return null
+      return parseInput ? parseInput(value) : parseJpnDateString(value)
+    })
 
     const latest = useLatest({
       onChange,
@@ -165,82 +160,102 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       selectedDate,
     })
 
-    const { dateToString, dateToAlternativeFormat, updateDate, closeCalendar, openCalendar } =
-      useMemo(() => {
-        const internalDateToString = (date: Date | null) =>
-          latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
-        const internalDateToAlternativeFormat = (d: Date | null) => {
-          if (!latest.showAlternative) return null
-          return d ? latest.showAlternative(d) : null
+    const {
+      dateToString,
+      dateToAlternativeFormat,
+      updateDate,
+      closeCalendar,
+      openCalendar,
+      stringToDate,
+      handleBlur,
+    } = useMemo(() => {
+      const internalDateToString = (date: Date | null) =>
+        latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
+      const internalDateToAlternativeFormat = (d: Date | null) => {
+        if (!latest.showAlternative) return null
+        return d ? latest.showAlternative(d) : null
+      }
+
+      const internalStringToDate = (str?: string | null) => {
+        if (!str) return null
+        return latest.parseInput ? latest.parseInput(str) : parseJpnDateString(str)
+      }
+
+      const internalUpdateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
+        if (
+          !inputRef.current ||
+          newDate === latest.selectedDate ||
+          (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
+        ) {
+          // Do not update date if the new date is same with the old one.
+          return
         }
 
-        const internalUpdateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
-          if (
-            !inputRef.current ||
-            newDate === latest.selectedDate ||
-            (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
-          ) {
-            // Do not update date if the new date is same with the old one.
-            return
-          }
+        const isValid = !newDate || dayjs(newDate).isValid()
+        const errors: string[] = []
 
-          const isValid = !newDate || dayjs(newDate).isValid()
-          const errors: string[] = []
-
-          if (!isValid) {
-            errors.push('INVALID_DATE')
-          }
-
-          const nextDate = isValid ? newDate : null
-          const formatValue = internalDateToString(nextDate)
-
-          inputRef.current.value = formatValue
-          setAlternativeFormat(internalDateToAlternativeFormat(nextDate))
-          setSelectedDate(nextDate)
-
-          if (latest.onChange) {
-            e.preventDefault()
-            e.stopPropagation()
-
-            const event = new Event('change', { bubbles: true })
-            const input = inputRef.current
-
-            input.dispatchEvent(event)
-            latest.onChange(
-              // HINT: 型問題のため別途オブジェクトをイベントに見立てる
-              {
-                stopPropagation: () => {
-                  event.stopPropagation()
-                },
-                preventDefault: () => {
-                  event.preventDefault()
-                },
-                target: input,
-                currentTarget: input,
-              } as ChangeEvent<HTMLInputElement>,
-              { date: nextDate, formatValue, errors },
-            )
-          } else if (latest.onChangeDate) {
-            latest.onChangeDate(nextDate, formatValue, { errors })
-          }
+        if (!isValid) {
+          errors.push('INVALID_DATE')
         }
 
-        const internalCloseCalendar = () => setIsCalendarShown(false)
-        const internalOpenCalendar = () => {
-          if (inputWrapperRef.current) {
-            setIsCalendarShown(true)
-            setInputRect(inputWrapperRef.current.getBoundingClientRect())
-          }
-        }
+        const nextDate = isValid ? newDate : null
+        const formatValue = internalDateToString(nextDate)
 
-        return {
-          dateToString: internalDateToString,
-          dateToAlternativeFormat: internalDateToAlternativeFormat,
-          updateDate: internalUpdateDate,
-          closeCalendar: internalCloseCalendar,
-          openCalendar: internalOpenCalendar,
+        inputRef.current.value = formatValue
+        setAlternativeFormat(internalDateToAlternativeFormat(nextDate))
+        setSelectedDate(nextDate)
+
+        if (latest.onChange) {
+          e.preventDefault()
+          e.stopPropagation()
+
+          const event = new Event('change', { bubbles: true })
+          const input = inputRef.current
+
+          input.dispatchEvent(event)
+          latest.onChange(
+            // HINT: 型問題のため別途オブジェクトをイベントに見立てる
+            {
+              stopPropagation: () => {
+                event.stopPropagation()
+              },
+              preventDefault: () => {
+                event.preventDefault()
+              },
+              target: input,
+              currentTarget: input,
+            } as ChangeEvent<HTMLInputElement>,
+            { date: nextDate, formatValue, errors },
+          )
+        } else if (latest.onChangeDate) {
+          latest.onChangeDate(nextDate, formatValue, { errors })
         }
-      }, [latest])
+      }
+
+      const internalCloseCalendar = () => setIsCalendarShown(false)
+      const internalOpenCalendar = () => {
+        if (inputWrapperRef.current) {
+          setIsCalendarShown(true)
+          setInputRect(inputWrapperRef.current.getBoundingClientRect())
+        }
+      }
+
+      const internalHandleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+        setIsInputFocused(false)
+        internalUpdateDate(e, e.target.value ? internalStringToDate(e.target.value) : null)
+        latest.onBlur?.(e)
+      }
+
+      return {
+        dateToString: internalDateToString,
+        dateToAlternativeFormat: internalDateToAlternativeFormat,
+        updateDate: internalUpdateDate,
+        closeCalendar: internalCloseCalendar,
+        openCalendar: internalOpenCalendar,
+        stringToDate: internalStringToDate,
+        handleBlur: internalHandleBlur,
+      }
+    }, [latest])
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
@@ -277,15 +292,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     useOuterClick(
       useMemo(() => [inputWrapperRef, calendarPortalRef], [inputWrapperRef, calendarPortalRef]),
       closeCalendar,
-    )
-
-    const handleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
-      (e) => {
-        setIsInputFocused(false)
-        updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
-        latest.onBlur?.(e)
-      },
-      [stringToDate, updateDate, latest],
     )
 
     useEffect(() => {
