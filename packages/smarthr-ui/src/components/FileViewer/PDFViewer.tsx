@@ -85,27 +85,24 @@ export const PDFViewer: FC<Props> = memo(
     const [pdfNumPages, setPdfNumPages] = useState(1)
     const rootRef = useRef<HTMLDivElement>(null)
 
+    const unstableRef = useRef({ onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation })
+    unstableRef.current = { onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation }
+
     const onDocumentLoadSuccess = useCallback<
       NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
     >(({ numPages }) => {
       setPdfNumPages(numPages)
     }, [])
 
-    const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!onLoad && !onPDFLoaded) {
-        return undefined
+    const onPageLoad = useCallback<ComponentProps<typeof Page>['onLoadSuccess']>((page) => {
+      if (unstableRef.current.onPDFLoaded && unstableRef.current.rotation === undefined) {
+        unstableRef.current.onPDFLoaded(page.rotate)
       }
-
-      return (page) => {
-        if (onPDFLoaded && rotation === undefined) {
-          onPDFLoaded(page.rotate)
-        }
-        // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (onLoad && page.pageNumber === pdfNumPages) {
-          onLoad()
-        }
+      // DocumentのLoadだとページごとの読み込みが考慮されないため
+      if (unstableRef.current.onLoad && page.pageNumber === unstableRef.current.pdfNumPages) {
+        unstableRef.current.onLoad()
       }
-    }, [onLoad, onPDFLoaded, pdfNumPages, rotation])
+    }, [])
 
     const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
       if (!matches || matches.length === 0) {
@@ -116,16 +113,16 @@ export const PDFViewer: FC<Props> = memo(
 
     const handleGetTextSuccess = useCallback(
       (pageIndex: number) => (textContent: TextContent) => {
-        if (!onPageTextLoaded) return
+        if (!unstableRef.current.onPageTextLoaded) return
         const texts = textContent.items.reduce<string[]>((acc, item) => {
           if ('str' in item) {
             acc.push(item.str)
           }
           return acc
         }, [])
-        onPageTextLoaded(pageIndex, texts)
+        unstableRef.current.onPageTextLoaded(pageIndex, texts)
       },
-      [onPageTextLoaded],
+      [],
     )
 
     useEffect(() => {
