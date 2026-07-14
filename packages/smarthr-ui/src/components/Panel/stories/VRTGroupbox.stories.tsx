@@ -2,11 +2,11 @@ import { Stack } from '../../Layout'
 
 import { BgColor, Padding, Rounded } from './Groupbox.stories'
 
-import type { Base } from '../Base'
+import type { Groupbox } from '../Groupbox'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Base/Groupbox/VRT',
+  title: 'Components/Panel/Groupbox/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}
@@ -18,7 +18,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} as Meta<typeof Base>
+} as Meta<typeof Groupbox>
 
 export const VRT = {}
 

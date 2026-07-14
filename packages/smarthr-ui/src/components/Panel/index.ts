@@ -1,3 +1,3 @@
-export { Base } from './Base'
-export type { ElementProps as BaseElementProps } from './Base'
+export { Panel, panelClassNameGenerator } from './Panel'
+export type { ElementProps as PanelElementProps } from './Panel'
 export { Groupbox } from './Groupbox'

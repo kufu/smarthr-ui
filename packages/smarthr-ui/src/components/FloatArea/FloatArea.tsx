@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 
 import { tv } from 'tailwind-variants'
 
 import { Cluster, Stack } from '../Layout'
-import { Base } from '../Panel'
+import { Panel } from '../Panel'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
@@ -129,7 +129,7 @@ export const FloatArea: FC<Props> = ({
   const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
-    <Base {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
+    <Panel {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
       <Stack gap={0.5}>
         <Cluster>
           {tertiaryButton}
@@ -144,6 +144,6 @@ export const FloatArea: FC<Props> = ({
           </p>
         )}
       </Stack>
-    </Base>
+    </Panel>
   )
 }

@@ -1,25 +1,25 @@
 import { Stack } from '../../Layout'
-import { Base, baseClassNameGenerator } from '../Base'
 import { Groupbox } from '../Groupbox'
+import { Panel, panelClassNameGenerator } from '../Panel'
 
 import type { Gap } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 import type { ComponentProps } from 'react'
 
-const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
+const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]
 const baseOverflow = [undefined, 'visible', 'hidden', 'clip', 'scroll', 'auto'] as const
-const baseLayer = Object.keys(baseClassNameGenerator.variants.layer).map(Number) as Array<
-  ComponentProps<typeof Base>['layer']
+const baseLayer = Object.keys(panelClassNameGenerator.variants.layer).map(Number) as Array<
+  ComponentProps<typeof Panel>['layer']
 >
 
 export default {
-  title: 'Components/Base',
-  component: Base,
+  title: 'Components/Panel',
+  component: Panel,
   subcomponents: { Groupbox },
-  render: (args) => <Base {...args} />,
+  render: (args) => <Panel {...args} />,
   argTypes: {
     padding: {
       options: basePadding,
@@ -35,69 +35,69 @@ export default {
   parameters: {
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof Base>
+} as Meta<typeof Panel>
 
-export const BaseControl: StoryObj<typeof Base> = {
+export const BaseControl: StoryObj<typeof Panel> = {
   name: 'Playground',
   args: {},
 }
 
-export const Padding: StoryObj<typeof Base> = {
+export const Padding: StoryObj<typeof Panel> = {
   name: 'padding',
   render: (args) => (
     <Stack>
       {[undefined, ...basePadding].map((padding) => (
-        <Base {...args} padding={padding} key={padding}>
+        <Panel {...args} padding={padding} key={padding}>
           padding: {padding}
-        </Base>
+        </Panel>
       ))}
-      <Base padding={{ block: 1, inline: 1.5 }}>padding: {'{{ block: 1, inline: 1.5 }}'}</Base>
-      <Base padding={{ block: 1 }}>padding: {'{{ block: 1 }}'}</Base>
+      <Panel padding={{ block: 1, inline: 1.5 }}>padding: {'{{ block: 1, inline: 1.5 }}'}</Panel>
+      <Panel padding={{ block: 1 }}>padding: {'{{ block: 1 }}'}</Panel>
     </Stack>
   ),
 }
 
-export const Radius: StoryObj<typeof Base> = {
+export const Radius: StoryObj<typeof Panel> = {
   name: 'radius',
   render: (args) => (
     <Stack>
-      <Base {...args} radius="m">
+      <Panel {...args} radius="m">
         m
-      </Base>
-      <Base {...args} radius="s">
+      </Panel>
+      <Panel {...args} radius="s">
         s
-      </Base>
+      </Panel>
     </Stack>
   ),
 }
 
-export const Overflow: StoryObj<typeof Base> = {
+export const Overflow: StoryObj<typeof Panel> = {
   name: 'overflow',
   render: (args) => (
     <Stack>
       {baseOverflow.map((overflow) => (
-        <Base {...args} overflow={overflow} key={overflow}>
+        <Panel {...args} overflow={overflow} key={overflow}>
           <p className="shr-bg-white">{overflow || 'undefined'}</p>
-        </Base>
+        </Panel>
       ))}
     </Stack>
   ),
 }
 
-export const Layer: StoryObj<typeof Base> = {
+export const Layer: StoryObj<typeof Panel> = {
   name: 'layer',
   render: (args) => (
     <Stack>
       {baseLayer.map((layer) => (
-        <Base {...args} layer={layer} key={layer}>
+        <Panel {...args} layer={layer} key={layer}>
           layer: {layer}
-        </Base>
+        </Panel>
       ))}
     </Stack>
   ),
 }
 
-export const As: StoryObj<typeof Base> = {
+export const As: StoryObj<typeof Panel> = {
   name: 'as',
   args: {
     as: 'section',

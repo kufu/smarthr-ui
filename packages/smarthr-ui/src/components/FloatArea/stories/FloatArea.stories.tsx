@@ -1,6 +1,6 @@
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
-import { Base } from '../../Panel'
+import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { ResponseStatusWithoutProcessing } from '../../../types'
@@ -99,9 +99,9 @@ export const Bottom: StoryObj<typeof FloatArea> = {
   render: (args) => (
     <Stack gap={1.5}>
       {[...Array(15)].map((_, index) => (
-        <Base padding={1.5} key={index}>
+        <Panel padding={1.5} key={index}>
           <p>bottom を確認するための Base</p>
-        </Base>
+        </Panel>
       ))}
       <FloatArea {...args} />
     </Stack>

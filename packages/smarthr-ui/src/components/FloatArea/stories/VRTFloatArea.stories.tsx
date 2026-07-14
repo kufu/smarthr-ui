@@ -1,6 +1,6 @@
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
-import { Base } from '../../Panel'
+import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { Meta } from '@storybook/react-webpack5'
@@ -11,9 +11,9 @@ export default {
     <Stack gap={1.5}>
       <Stack>
         {[...Array(15)].map((_, index) => (
-          <Base padding={1.5} key={index}>
+          <Panel padding={1.5} key={index}>
             <div className="shr-h-2" />
-          </Base>
+          </Panel>
         ))}
       </Stack>
       <FloatArea

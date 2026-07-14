@@ -1,19 +1,19 @@
 import { backgroundColor } from '../../../tailwind'
 import { defaultBackgroundColor as backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
-import { baseClassNameGenerator } from '../Base'
 import { Groupbox } from '../Groupbox'
+import { panelClassNameGenerator } from '../Panel'
 
 import type { Gap } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
-const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
+const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]
 
 export default {
-  title: 'Components/Base/Groupbox',
+  title: 'Components/Panel/Groupbox',
   component: Groupbox,
   render: (args) => <Groupbox {...args} />,
   argTypes: {

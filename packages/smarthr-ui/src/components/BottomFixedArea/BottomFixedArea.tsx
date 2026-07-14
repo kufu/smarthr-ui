@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 
 import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
-import { Base } from '../Panel'
+import { Panel } from '../Panel'
 
 import { validateElement } from './helper'
 
@@ -88,7 +88,7 @@ export const BottomFixedArea: FC<Props> = ({
   validateElement(primaryButton, secondaryButton)
 
   return (
-    <Base {...rest} className={classNames.wrapper} style={style}>
+    <Panel {...rest} className={classNames.wrapper} style={style}>
       <Stack>
         <Description>{description}</Description>
         <Stack gap={0.25}>
@@ -130,7 +130,7 @@ export const BottomFixedArea: FC<Props> = ({
           )}
         </Stack>
       </Stack>
-    </Base>
+    </Panel>
   )
 }
 
