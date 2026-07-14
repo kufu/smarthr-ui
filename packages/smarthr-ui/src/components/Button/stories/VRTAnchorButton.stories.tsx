@@ -1,4 +1,4 @@
-import { BaseColumn } from '../../Base'
+import { Groupbox } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
@@ -92,13 +92,13 @@ const Template: StoryFn<typeof AnchorButton> = (args) => (
     {[undefined, 'hover', 'focus-visible'].map((id) => (
       <Stack id={id} key={id}>
         {(['secondary', 'primary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
-          <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+          <Groupbox bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
             <Cluster align="center">
               {_cases.map((props, index) => (
                 <AnchorButton {...args} {...props} variant={variant} key={index} />
               ))}
             </Cluster>
-          </BaseColumn>
+          </Groupbox>
         ))}
       </Stack>
     ))}

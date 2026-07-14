@@ -1,4 +1,4 @@
-import { BaseColumn } from '../../components/Base'
+import { Groupbox } from '../../components/Base'
 import { DefinitionList, DefinitionListItem } from '../../components/DefinitionList'
 import { Heading } from '../../components/Heading'
 import { Stack } from '../../components/Layout'
@@ -23,7 +23,7 @@ const Content = () => {
       </DefinitionList>
       <Stack>
         <Heading>matches</Heading>
-        <BaseColumn>
+        <Groupbox>
           <DefinitionList>
             {Object.entries(matches).map(([key, value]) => (
               <DefinitionListItem key={key} maxColumns={1} term={key}>
@@ -31,7 +31,7 @@ const Content = () => {
               </DefinitionListItem>
             ))}
           </DefinitionList>
-        </BaseColumn>
+        </Groupbox>
       </Stack>
     </Stack>
   )

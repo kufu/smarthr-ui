@@ -1,6 +1,6 @@
 import { Stack } from '../../Layout'
 import { Base, baseClassNameGenerator } from '../Base'
-import { BaseColumn } from '../BaseColumn'
+import { Groupbox } from '../Groupbox'
 
 import type { Gap } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -18,7 +18,7 @@ const baseLayer = Object.keys(baseClassNameGenerator.variants.layer).map(Number)
 export default {
   title: 'Components/Base',
   component: Base,
-  subcomponents: { BaseColumn },
+  subcomponents: { Groupbox },
   render: (args) => <Base {...args} />,
   argTypes: {
     padding: {

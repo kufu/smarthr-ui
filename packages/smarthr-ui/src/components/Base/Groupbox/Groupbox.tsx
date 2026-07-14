@@ -27,7 +27,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const BaseColumn: FC<Props> = ({ bgColor, rounded, padding = 1, className, ...rest }) => {
+export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ bgColor, rounded, className }),
     [bgColor, rounded, className],

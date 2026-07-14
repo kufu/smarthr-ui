@@ -1,12 +1,12 @@
 import { Stack } from '../../Layout'
 
-import { BgColor, Padding, Rounded } from './BaseColumn.stories'
+import { BgColor, Padding, Rounded } from './Groupbox.stories'
 
 import type { Base } from '../Base'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Base/BaseColumn/VRT',
+  title: 'Components/Base/Groupbox/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}

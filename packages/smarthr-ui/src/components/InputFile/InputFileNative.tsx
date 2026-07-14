@@ -15,7 +15,7 @@ import {
 } from 'react'
 
 import { useIntl } from '../../intl'
-import { BaseColumn } from '../Base'
+import { Groupbox } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
@@ -117,7 +117,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
         {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
+          <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <li key={index} className={classNames.fileItem}>
                 <span className="smarthr-ui-InputFile-fileName shr-wrap-break-word shr-min-w-[0]">
@@ -134,7 +134,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
                 </Button>
               </li>
             ))}
-          </BaseColumn>
+          </Groupbox>
         )}
         <span className={classNames.inputWrapper}>
           <input
