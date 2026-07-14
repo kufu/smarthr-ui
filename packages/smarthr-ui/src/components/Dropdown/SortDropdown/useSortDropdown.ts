@@ -1,11 +1,4 @@
-import {
-  type ChangeEvent,
-  type ComponentProps,
-  type MouseEvent,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { type ChangeEvent, type ComponentProps, useEffect, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -132,7 +125,7 @@ export const useSortDropdown = ({
         )
         setInnerSelectedField(newLabel)
       },
-      apply: (_e: MouseEvent<HTMLButtonElement>) => {
+      apply: () => {
         setSelectedLabel(latest.innerSelectedField)
         setCheckedOrder(latest.innerCheckedOrder)
         latest.onApply({
