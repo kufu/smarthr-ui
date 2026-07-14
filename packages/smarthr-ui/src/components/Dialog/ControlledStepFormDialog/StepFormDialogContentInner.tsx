@@ -111,14 +111,14 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const changeCurrentStep = useCallback(
     (step: Parameters<typeof setCurrentStep>[0]) => {
-      setCurrentStep(step)
+      latest.setCurrentStep(step)
 
       // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
       if (scrollerRef.current) {
         scrollerRef.current.scroll(0, 0)
       }
     },
-    [setCurrentStep, scrollerRef],
+    [scrollerRef, latest],
   )
 
   const handleSubmitAction = useCallback(
