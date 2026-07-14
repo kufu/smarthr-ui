@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -30,8 +30,8 @@ export function useRemoteTrigger({
     orgOnPressEscape,
   })
 
-  const updateIsOpen = useCallback(
-    (newIsOpen: boolean) => {
+  const functions = useMemo(() => {
+    const updateIsOpen = (newIsOpen: boolean) => {
       setIsOpen(newIsOpen)
       latest.onToggle?.(newIsOpen)
 
@@ -40,34 +40,35 @@ export function useRemoteTrigger({
       } else {
         latest.onClose?.()
       }
-    },
-    [latest],
-  )
-
-  const onClickClose = useCallback(() => {
-    if (latest.orgOnClickClose) {
-      return latest.orgOnClickClose(() => {
-        updateIsOpen(false)
-      })
     }
 
-    updateIsOpen(false)
-  }, [updateIsOpen, latest])
+    return {
+      updateIsOpen,
+      onClickClose: () => {
+        if (latest.orgOnClickClose) {
+          return latest.orgOnClickClose(() => {
+            updateIsOpen(false)
+          })
+        }
 
-  const onPressEscape = useCallback(() => {
-    if (latest.orgOnPressEscape) {
-      return latest.orgOnPressEscape(() => {
         updateIsOpen(false)
-      })
-    }
+      },
+      onPressEscape: () => {
+        if (latest.orgOnPressEscape) {
+          return latest.orgOnPressEscape(() => {
+            updateIsOpen(false)
+          })
+        }
 
-    updateIsOpen(false)
-  }, [updateIsOpen, latest])
+        updateIsOpen(false)
+      },
+    }
+  }, [latest])
 
   useEffect(() => {
     const handler = ((e: Event & { detail: { id: string } }) => {
       if (id === e.detail.id) {
-        updateIsOpen(true)
+        functions.updateIsOpen(true)
       }
     }) as Parameters<typeof document.addEventListener>['1']
 
@@ -76,11 +77,11 @@ export function useRemoteTrigger({
     return () => {
       document.removeEventListener(TRIGGER_EVENT, handler)
     }
-  }, [id, updateIsOpen])
+  }, [id, functions])
 
   return {
     isOpen,
-    onClickClose,
-    onPressEscape,
+    onClickClose: functions.onClickClose,
+    onPressEscape: functions.onPressEscape,
   }
 }
