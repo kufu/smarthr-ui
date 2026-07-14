@@ -3,6 +3,7 @@
 import {
   type ChangeEvent,
   type MouseEvent,
+  type PropsWithChildren,
   type ReactNode,
   forwardRef,
   memo,
@@ -62,7 +63,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     }, [disabled, size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
-    const isUpdatingFilesDirectly = useRef(false)
+    const isUpdatingFilesRef = useRef(false)
 
     const inputRef = useRef<HTMLInputElement>(null)
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
@@ -70,24 +71,21 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       () => inputRef.current,
     )
 
-    const updateFiles = useMemo(
-      () =>
-        onChange
-          ? (newFiles: File[]) => {
-              onChange(newFiles)
-              setFiles(newFiles)
-            }
-          : setFiles,
-      [onChange],
-    )
+    const unstableRef = useRef({ onChange, files })
+    unstableRef.current = { onChange, files }
+
+    const updateFiles = useCallback((newFiles: File[]) => {
+      unstableRef.current.onChange?.(newFiles)
+      setFiles(newFiles)
+    }, [])
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        if (!isUpdatingFilesDirectly.current) {
+        if (!isUpdatingFilesRef.current) {
           updateFiles(Array.from(e.target.files ?? []))
         }
       },
-      [isUpdatingFilesDirectly, updateFiles],
+      [updateFiles],
     )
 
     const handleDelete = useCallback(
@@ -97,7 +95,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         }
 
         const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = files.filter((_, i) => index !== i)
+        const newFiles = unstableRef.current.files.filter((_, i) => index !== i)
 
         updateFiles(newFiles)
 
@@ -107,11 +105,11 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           buff.items.add(file)
         })
 
-        isUpdatingFilesDirectly.current = true
+        isUpdatingFilesRef.current = true
         inputRef.current.files = buff.files
-        isUpdatingFilesDirectly.current = false
+        isUpdatingFilesRef.current = false
       },
-      [files, isUpdatingFilesDirectly, inputRef, updateFiles],
+      [updateFiles],
     )
 
     return (
@@ -119,20 +117,15 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         {!disabled && hasFileList && files.length > 0 && (
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
-              <li key={index} className={classNames.fileItem}>
-                <span className="smarthr-ui-InputFile-fileName shr-wrap-break-word shr-min-w-[0]">
-                  {file.name}
-                </span>
-                <Button
-                  variant="text"
-                  prefix={<FaTrashCanIcon />}
-                  value={index}
-                  onClick={handleDelete}
-                  className="smarthr-ui-InputFile-deleteButton"
-                >
-                  {destroyLabel}
-                </Button>
-              </li>
+              <FileListItem
+                key={index}
+                value={index}
+                onDeleteClick={handleDelete}
+                destroyLabel={destroyLabel}
+                className={classNames.fileItem}
+              >
+                {file.name}
+              </FileListItem>
             ))}
           </BaseColumn>
         )}
@@ -154,6 +147,32 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       </Stack>
     )
   },
+)
+
+type FileListItemProps = PropsWithChildren<{
+  value: number
+  onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
+  destroyLabel: string
+  className: string
+}>
+
+const FileListItem = memo<FileListItemProps>(
+  ({ value, onDeleteClick, destroyLabel, className, children }) => (
+    <li className={className}>
+      <span className="smarthr-ui-InputFile-fileName shr-wrap-break-word shr-min-w-[0]">
+        {children}
+      </span>
+      <Button
+        variant="text"
+        prefix={<FaTrashCanIcon />}
+        value={value}
+        onClick={onDeleteClick}
+        className="smarthr-ui-InputFile-deleteButton"
+      >
+        {destroyLabel}
+      </Button>
+    </li>
+  ),
 )
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
