@@ -26,7 +26,7 @@ import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
-import { useListbox } from '../useListbox'
+import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
 import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
@@ -257,7 +257,7 @@ const ActualSingleCombobox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>({
+  const { listBoxProps, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -511,7 +511,7 @@ const ActualSingleCombobox = <T,>(
         className={classNames.input}
         data-smarthr-ui-input="true"
       />
-      {!readOnly && renderListBox()}
+      {!readOnly && <ListBox {...listBoxProps} />}
     </div>
   )
 }
