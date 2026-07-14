@@ -136,6 +136,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     const [isInputFocused, setIsInputFocused] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null)
+    const inputWrapperRef = useRef<HTMLDivElement>(null)
+    const calendarPortalRef = useRef<HTMLDivElement>(null)
+    const [inputRect, setInputRect] = useState<DOMRect | null>(null)
+    const [isCalendarShown, setIsCalendarShown] = useState(false)
+    const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
+    const calenderId = useId()
 
     const stringToDate = useCallback(
       (str?: string | null) => {
@@ -171,14 +178,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         dateToAlternativeFormat: internalDateToAlternativeFormat,
       }
     }, [latest])
-    const inputRef = useRef<HTMLInputElement>(null)
-    const inputWrapperRef = useRef<HTMLDivElement>(null)
-    const calendarPortalRef = useRef<HTMLDivElement>(null)
-    const [inputRect, setInputRect] = useState<DOMRect | null>(null)
-    const [isCalendarShown, setIsCalendarShown] = useState(false)
-
-    const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
-    const calenderId = useId()
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
