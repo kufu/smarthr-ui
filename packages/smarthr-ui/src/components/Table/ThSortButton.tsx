@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
+import { type PropsWithChildren, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
@@ -24,15 +24,12 @@ type Props = PropsWithChildren<{
   align?: VariantProps<typeof sortButtonClassNameGenerator>['align']
   onSort?: () => void
   sort?: sortTypes
-  decorators?: {
-    sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
-  }
 }>
 
-export const ThSortButton = memo<Props>(({ align, sort, decorators, onSort, children }) => {
+export const ThSortButton = memo<Props>(({ align, sort, onSort, children }) => {
   const { localize } = useIntl()
 
-  const decoratorDefaultTexts = useMemo(
+  const defaultTexts = useMemo(
     () => ({
       asc: localize({
         id: 'smarthr-ui/Th/sortDirectionAsc',
@@ -53,11 +50,8 @@ export const ThSortButton = memo<Props>(({ align, sort, decorators, onSort, chil
   const sortLabel = useMemo(() => {
     if (!sort) return undefined
 
-    return (
-      decorators?.sortDirectionIconAlt?.(decoratorDefaultTexts[sort], { sort }) ??
-      decoratorDefaultTexts[sort]
-    )
-  }, [decorators, sort, decoratorDefaultTexts])
+    return defaultTexts[sort]
+  }, [sort, defaultTexts])
 
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
