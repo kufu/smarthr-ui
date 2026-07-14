@@ -8,10 +8,10 @@ import {
   memo,
   useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
@@ -112,45 +112,44 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const unstableRef = useRef({ onClick, hrefTemplate })
-  unstableRef.current = { onClick, hrefTemplate }
+  const latest = useLatest({ onClick, hrefTemplate })
 
   const stableHrefTemplate = useCallback(
-    (pageNumber: number) => unstableRef.current.hrefTemplate!(pageNumber),
-    [],
+    (pageNumber: number) => latest.hrefTemplate!(pageNumber),
+    [latest],
   )
 
-  const onDelegateClick = useCallback((e: MouseEvent<HTMLElement>) => {
-    if (!unstableRef.current.onClick) {
-      return
-    }
-
-    if (unstableRef.current.hrefTemplate) {
-      const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
-
-      if (!anchor) {
+  const onDelegateClick = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      if (!latest.onClick) {
         return
       }
 
-      const href = (anchor as HTMLAnchorElement).href
+      if (latest.hrefTemplate) {
+        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
-      if (href) {
-        ;(unstableRef.current.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(
-          href,
-          e,
-        )
-      }
-    } else {
-      const button = getTargetDelegateElement(e, BUTTON_REGEX)
+        if (!anchor) {
+          return
+        }
 
-      if (button) {
-        ;(unstableRef.current.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
-          parseInt((button as HTMLButtonElement).value, 10),
-          e,
-        )
+        const href = (anchor as HTMLAnchorElement).href
+
+        if (href) {
+          ;(latest.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(href, e)
+        }
+      } else {
+        const button = getTargetDelegateElement(e, BUTTON_REGEX)
+
+        if (button) {
+          ;(latest.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
+            parseInt((button as HTMLButtonElement).value, 10),
+            e,
+          )
+        }
       }
-    }
-  }, [])
+    },
+    [latest],
+  )
 
   const navigationLabel = useMemo(
     () =>
