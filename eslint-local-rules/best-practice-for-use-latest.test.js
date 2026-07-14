@@ -53,16 +53,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [someValue, latest])
       `,
     },
-
-    // useMemo - 依存配列にlatestと他の依存（OK）
-    {
-      code: `
-        const latest = useLatest({ value })
-        const result = useMemo(() => {
-          return latest.value * factor
-        }, [factor, latest])
-      `,
-    },
   ],
 
   invalid: [
@@ -271,7 +261,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           return latest.value * 2
         }, [latest])
       `,
-      errors: [{ messageId: 'latestOnlyDepsInEffectOrMemo' }],
+      errors: [{ messageId: 'noLatestInUseMemo' }],
     },
 
     // スプレッド構文の使用（オブジェクト）
@@ -388,6 +378,18 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         { messageId: 'noForIn' },
         { messageId: 'latestOnlyDepsInEffectOrMemo' },
       ],
+    },
+
+    // useMemoの依存配列にlatestを含める（他の依存と混在）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const result = useMemo(() => {
+          latest.onChange()
+          return count
+        }, [count, latest])
+      `,
+      errors: [{ messageId: 'noLatestInUseMemo' }],
     },
   ],
 })

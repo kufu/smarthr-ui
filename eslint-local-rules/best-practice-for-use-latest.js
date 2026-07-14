@@ -27,6 +27,8 @@ module.exports = {
         'latestを依存配列に含める場合は、最後尾に配置してください。',
       latestOnlyDepsInEffectOrMemo:
         'latestのみを依存配列に含めても意味がありません。依存配列を空にして、latest.xxxではなく値を直接使用してください。',
+      noLatestInUseMemo:
+        'useMemoの依存配列にlatestを含めることはできません。useCallbackを使用するか、値を直接参照してください。',
       noSpread:
         'latestに対してスプレッド構文（...latest）を使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
       noInOperator:
@@ -261,8 +263,17 @@ module.exports = {
             )
 
             if (latestIndex !== -1) {
-              // useEffect/useLayoutEffect/useMemoで依存配列がlatestのみの場合
-              if (/^use((Layout)?Effect|Memo)$/.test(hookName)) {
+              // useMemoでは依存配列にlatestを含めることを禁止
+              if (hookName === 'useMemo') {
+                context.report({
+                  node: elements[latestIndex],
+                  messageId: 'noLatestInUseMemo',
+                })
+                return
+              }
+
+              // useEffect/useLayoutEffectで依存配列がlatestのみの場合
+              if (/^use(Layout)?Effect$/.test(hookName)) {
                 if (elements.length === 1 && elements[0].name === 'latest') {
                   context.report({
                     node: elements[0],
