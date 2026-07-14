@@ -6,10 +6,10 @@ import {
   memo,
   useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 
@@ -97,12 +97,14 @@ export const CalendarTable: FC<Props> = ({
     return days
   }, [formatDate, getWeekStartDay])
 
-  const onSelectDateRef = useRef(onSelectDate)
-  onSelectDateRef.current = onSelectDate
+  const latest = useLatest({ onSelectDate })
 
-  const actualOnSelectDate: typeof onSelectDate = useCallback((...argsRest) => {
-    onSelectDateRef.current(...argsRest)
-  }, [])
+  const actualOnSelectDate: typeof onSelectDate = useCallback(
+    (...argsRest) => {
+      latest.onSelectDate(...argsRest)
+    },
+    [latest],
+  )
 
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
   const nowDateText = dayjs().startOf('date').toString()
