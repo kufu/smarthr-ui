@@ -141,7 +141,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -155,7 +155,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -169,7 +169,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -183,7 +183,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -239,7 +239,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           latest.onChange()
         }, [latest])
       `,
-      errors: [{ messageId: 'latestOnlyDepsInEffectOrMemo' }],
+      errors: [{ messageId: 'latestOnlyDepsInEffect' }],
     },
 
     // useLayoutEffect - 依存配列がlatestのみ
@@ -250,7 +250,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           latest.ref.current.focus()
         }, [latest])
       `,
-      errors: [{ messageId: 'latestOnlyDepsInEffectOrMemo' }],
+      errors: [{ messageId: 'latestOnlyDepsInEffect' }],
     },
 
     // useMemo - 依存配列がlatestのみ
@@ -274,7 +274,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noSpread' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -288,7 +288,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noSpread' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -304,7 +304,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noInOperator' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -318,7 +318,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -332,7 +332,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -346,7 +346,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -360,7 +360,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -376,7 +376,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noForIn' },
-        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 

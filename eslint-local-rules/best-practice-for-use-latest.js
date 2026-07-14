@@ -25,8 +25,8 @@ module.exports = {
         '依存配列にはlatestのプロパティ（latest.current等）を含めることはできません。latest自体を含めてください。',
       latestMustBeLastInDeps:
         'latestを依存配列に含める場合は、最後尾に配置してください。',
-      latestOnlyDepsInEffectOrMemo:
-        'latestのみを依存配列に含めても意味がありません。依存配列を空にして、latest.xxxではなく値を直接使用してください。',
+      latestOnlyDepsInEffect:
+        'useEffect/useLayoutEffectの依存配列にlatestのみを含めても意味がありません。依存配列を空にして、latest.xxxではなく値を直接使用してください。',
       noLatestInUseMemo:
         'useMemoの依存配列にlatestを含めることはできません。useCallbackを使用するか、値を直接参照してください。',
       noSpread:
@@ -277,7 +277,7 @@ module.exports = {
                 if (elements.length === 1 && elements[0].name === 'latest') {
                   context.report({
                     node: elements[0],
-                    messageId: 'latestOnlyDepsInEffectOrMemo',
+                    messageId: 'latestOnlyDepsInEffect',
                   })
                   return
                 }
