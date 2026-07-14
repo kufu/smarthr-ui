@@ -2,7 +2,6 @@ import {
   type ChangeEventHandler,
   type ComponentProps,
   type MouseEventHandler,
-  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -96,6 +95,49 @@ export const useSortDropdown = ({
     onApply,
   })
 
+  const handler = useMemo(
+    () => ({
+      change: ((e) => {
+        const select = e.currentTarget
+        const newLabel = select.options[select.selectedIndex].label
+
+        setInnerFields((currentFields) =>
+          currentFields.map((field) => {
+            if (field.label === newLabel) {
+              if (!field.selected) {
+                return {
+                  ...field,
+                  selected: true,
+                }
+              }
+            } else if (field.selected) {
+              return {
+                ...field,
+                selected: false,
+              }
+            }
+
+            return field
+          }),
+        )
+        setInnerSelectedField(newLabel)
+      }) as ChangeEventHandler<HTMLSelectElement>,
+      apply: (() => {
+        setSelectedLabel(latest.innerSelectedField)
+        setCheckedOrder(latest.innerCheckedOrder)
+        latest.onApply({
+          field: latest.innerSelectedField || '',
+          order: latest.innerCheckedOrder,
+          newfields: latest.innerFields,
+        })
+      }) as MouseEventHandler<HTMLButtonElement>,
+      changeSortOrderRadio: ((e) => {
+        setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
+      }) as ChangeEventHandler<HTMLInputElement>,
+    }),
+    [latest],
+  )
+
   const defaultFieldLabel =
     selectedLabel || (sortFields.find((field) => field.selected) || sortFields[0])?.label || ''
 
@@ -103,45 +145,6 @@ export const useSortDropdown = ({
     setSelectedLabel(defaultFieldLabel)
     setInnerSelectedField(defaultFieldLabel)
   }, [defaultFieldLabel])
-
-  const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((e) => {
-    const select = e.currentTarget
-    const newLabel = select.options[select.selectedIndex].label
-
-    setInnerFields((currentFields) =>
-      currentFields.map((field) => {
-        if (field.label === newLabel) {
-          if (!field.selected) {
-            return {
-              ...field,
-              selected: true,
-            }
-          }
-        } else if (field.selected) {
-          return {
-            ...field,
-            selected: false,
-          }
-        }
-
-        return field
-      }),
-    )
-    setInnerSelectedField(newLabel)
-  }, [])
-  const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
-    setSelectedLabel(latest.innerSelectedField)
-    setCheckedOrder(latest.innerCheckedOrder)
-    latest.onApply({
-      field: latest.innerSelectedField || '',
-      order: latest.innerCheckedOrder,
-      newfields: latest.innerFields,
-    })
-  }, [latest])
-
-  const onChangeSortOrderRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
-    setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
-  }, [])
 
   const classNames = useMemo(() => {
     const { body, select, footer } = classNameGenerator()
@@ -154,12 +157,12 @@ export const useSortDropdown = ({
   }, [])
 
   return {
-    onChangeSortOrderRadio,
+    onChangeSortOrderRadio: handler.changeSortOrderRadio,
     texts: {
       ...texts,
       triggerLabel: `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
     },
-    handler: { handleApply, handleChange },
+    handler,
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
     SortIcon: checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon,
     classNames,

@@ -74,7 +74,7 @@ export const SortDropdown: FC<Props> = ({
     SortIcon,
     onChangeSortOrderRadio,
     innerValues: { innerFields, innerCheckedOrder },
-    handler: { handleApply, handleChange },
+    handler: { apply, change },
     classNames,
   } = useSortDropdown({
     sortFields,
@@ -102,7 +102,7 @@ export const SortDropdown: FC<Props> = ({
               <Select
                 name="sortFields"
                 options={innerFields}
-                onChange={handleChange}
+                onChange={change}
                 className={classNames.select}
               />
             </FormControl>
@@ -128,7 +128,7 @@ export const SortDropdown: FC<Props> = ({
             </Fieldset>
           </Stack>
           <Footer
-            onApply={handleApply}
+            onApply={apply}
             onCancel={onCancel}
             cancelText={texts.cancelText}
             applyText={texts.applyText}
