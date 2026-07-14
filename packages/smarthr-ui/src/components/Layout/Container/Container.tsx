@@ -3,7 +3,6 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useDevice } from '../../../hooks/useDevice'
 import { useEnvironment } from '../../../hooks/useEnvironment'
 import { paddingBlock, paddingInline } from '../../../tailwind'
 
@@ -95,9 +94,7 @@ export const Container: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const { isNarrowView } = useDevice()
-  const environment = useEnvironment()
-  const mobile = isNarrowView || environment.mobile
+  const { mobile } = useEnvironment()
   const actualClassName = useMemo(() => {
     const actualPadding =
       padding instanceof Object

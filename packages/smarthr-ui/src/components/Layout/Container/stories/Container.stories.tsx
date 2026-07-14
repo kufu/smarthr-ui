@@ -1,6 +1,5 @@
 import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
-import { DeviceProvider } from '../../../../hooks/useDevice'
 import { Base } from '../../../Base'
 import { Stack } from '../../Stack'
 import { Container } from '../Container'
@@ -19,13 +18,6 @@ export default {
   title: 'Components/Layout/Container',
   component: Container,
   render: Template,
-  decorators: [
-    (Story) => (
-      <DeviceProvider>
-        <Story />
-      </DeviceProvider>
-    ),
-  ],
   parameters: {
     chromatic: { disableSnapshot: true },
   },
