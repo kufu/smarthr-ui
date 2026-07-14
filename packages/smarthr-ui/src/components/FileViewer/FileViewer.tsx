@@ -55,29 +55,70 @@ type Props = {
 
 export const FileViewer: FC<Props> = ({ file, ...rest }) => {
   const isPDF = file.contentType === 'application/pdf'
+  const [rotation, setRotation] = useState<number | undefined>(undefined)
+
+  const commonProps = {
+    file,
+    rotation,
+    setRotation,
+  }
 
   return isPDF ? (
-    <PDFFileViewer {...rest} file={file} />
+    <PDFFileViewer {...rest} {...commonProps} />
   ) : (
-    <ActualFileViewer {...rest} file={file} />
+    <ActualFileViewer {...rest} {...commonProps} />
   )
 }
 
-const PDFFileViewer: FC<Props> = ({ file, ...rest }) => {
+const PDFFileViewer: FC<
+  Props & {
+    rotation: number | undefined
+    setRotation: (rotation: number) => void
+  }
+> = ({ file, rotation, setRotation, ...rest }) => {
   const pdfSearch = usePDFSearch(file.url)
 
-  return <ActualFileViewer {...rest} file={file} pdfSearch={pdfSearch} />
+  const handlePDFLoaded = useCallback(
+    (defaultRotation: number) => {
+      setRotation(defaultRotation)
+    },
+    [setRotation],
+  )
+
+  return (
+    <ActualFileViewer
+      {...rest}
+      file={file}
+      rotation={rotation}
+      setRotation={setRotation}
+      pdfSearch={pdfSearch}
+      handlePDFLoaded={handlePDFLoaded}
+    />
+  )
 }
 
 const ActualFileViewer: FC<
   Props & {
+    rotation: number | undefined
+    setRotation: (rotation: number) => void
     pdfSearch?: ReturnType<typeof usePDFSearch>
+    handlePDFLoaded?: (defaultRotation: number) => void
   }
-> = ({ file, scaleStep, scaleSteps, width: fixedWidth, onPassword, onLoadError, pdfSearch }) => {
+> = ({
+  file,
+  scaleStep,
+  scaleSteps,
+  width: fixedWidth,
+  onPassword,
+  onLoadError,
+  rotation,
+  setRotation,
+  pdfSearch,
+  handlePDFLoaded,
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
-  const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
 
   const internalScaleStep = useMemo(
@@ -98,14 +139,10 @@ const ActualFileViewer: FC<
     const currentRotation = rotation ?? 0
     const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
     setRotation(newRotation)
-  }, [rotation])
+  }, [rotation, setRotation])
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
-  }, [])
-
-  const handlePDFLoaded = useCallback((defaultRotation: number) => {
-    setRotation(defaultRotation)
   }, [])
 
   useEffect(() => {
