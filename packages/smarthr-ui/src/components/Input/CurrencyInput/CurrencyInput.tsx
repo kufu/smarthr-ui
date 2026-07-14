@@ -4,9 +4,9 @@ import {
   type ComponentProps,
   type FocusEvent,
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -41,19 +41,37 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const formatValue = useCallback(
-      (formatted = '') => {
+    const functions = useMemo(() => {
+      const formatValue = (formatted = '') => {
         if (innerRef.current && formatted !== innerRef.current.value) {
           innerRef.current.value = formatted
           latest.onFormatValue?.(formatted)
         }
-      },
-      [latest],
-    )
+      }
+
+      return {
+        formatValue,
+        handleFocus: (e: FocusEvent<HTMLInputElement>) => {
+          setIsFocused(true)
+
+          if (innerRef.current) {
+            const commaExcluded = innerRef.current.value.replace(/,/g, '')
+            formatValue(commaExcluded)
+          }
+
+          latest.onFocus?.(e)
+        },
+        handleBlur: (e: FocusEvent<HTMLInputElement>) => {
+          setIsFocused(false)
+
+          latest.onBlur?.(e)
+        },
+      }
+    }, [latest])
 
     useEffect(() => {
       if (value === undefined && defaultValue !== undefined) {
-        formatValue(formatCurrency(defaultValue))
+        functions.formatValue(formatCurrency(defaultValue))
       }
       // when component did mount
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,36 +81,13 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       if (!isFocused) {
         if (value !== undefined) {
           // for controlled component
-          formatValue(formatCurrency(value))
+          functions.formatValue(formatCurrency(value))
         } else if (innerRef.current) {
           // for uncontrolled component
-          formatValue(formatCurrency(innerRef.current.value))
+          functions.formatValue(formatCurrency(innerRef.current.value))
         }
       }
-    }, [isFocused, value, formatValue])
-
-    const handleFocus = useCallback(
-      (e: FocusEvent<HTMLInputElement>) => {
-        setIsFocused(true)
-
-        if (innerRef.current) {
-          const commaExcluded = innerRef.current.value.replace(/,/g, '')
-          formatValue(commaExcluded)
-        }
-
-        latest.onFocus?.(e)
-      },
-      [formatValue, latest],
-    )
-
-    const handleBlur = useCallback(
-      (e: FocusEvent<HTMLInputElement>) => {
-        setIsFocused(false)
-
-        latest.onBlur?.(e)
-      },
-      [latest],
-    )
+    }, [isFocused, value, functions])
 
     return (
       <Input
@@ -100,8 +95,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         type="text"
         value={value}
         defaultValue={defaultValue}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={functions.handleFocus}
+        onBlur={functions.handleBlur}
         ref={innerRef}
         className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
