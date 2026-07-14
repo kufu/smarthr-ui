@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
 
@@ -20,51 +22,47 @@ export function useRemoteTrigger({
   id,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const unstableRef = useRef({
+  const latest = useLatest({
     onToggle,
     onOpen,
     onClose,
     orgOnClickClose,
     orgOnPressEscape,
   })
-  unstableRef.current = {
-    onToggle,
-    onOpen,
-    onClose,
-    orgOnClickClose,
-    orgOnPressEscape,
-  }
 
-  const updateIsOpen = useCallback((newIsOpen: boolean) => {
-    setIsOpen(newIsOpen)
-    unstableRef.current.onToggle?.(newIsOpen)
+  const updateIsOpen = useCallback(
+    (newIsOpen: boolean) => {
+      setIsOpen(newIsOpen)
+      latest.onToggle?.(newIsOpen)
 
-    if (newIsOpen) {
-      unstableRef.current.onOpen?.()
-    } else {
-      unstableRef.current.onClose?.()
-    }
-  }, [])
+      if (newIsOpen) {
+        latest.onOpen?.()
+      } else {
+        latest.onClose?.()
+      }
+    },
+    [latest],
+  )
 
   const onClickClose = useCallback(() => {
-    if (unstableRef.current.orgOnClickClose) {
-      return unstableRef.current.orgOnClickClose(() => {
+    if (latest.orgOnClickClose) {
+      return latest.orgOnClickClose(() => {
         updateIsOpen(false)
       })
     }
 
     updateIsOpen(false)
-  }, [updateIsOpen])
+  }, [updateIsOpen, latest])
 
   const onPressEscape = useCallback(() => {
-    if (unstableRef.current.orgOnPressEscape) {
-      return unstableRef.current.orgOnPressEscape(() => {
+    if (latest.orgOnPressEscape) {
+      return latest.orgOnPressEscape(() => {
         updateIsOpen(false)
       })
     }
 
     updateIsOpen(false)
-  }, [updateIsOpen])
+  }, [updateIsOpen, latest])
 
   useEffect(() => {
     const handler = ((e: Event & { detail: { id: string } }) => {
