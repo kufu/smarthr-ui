@@ -6,6 +6,7 @@ import {
   memo,
   useCallback,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -96,6 +97,13 @@ export const CalendarTable: FC<Props> = ({
     return days
   }, [formatDate, getWeekStartDay])
 
+  const onSelectDateRef = useRef(onSelectDate)
+  onSelectDateRef.current = onSelectDate
+
+  const actualOnSelectDate: typeof onSelectDate = useCallback((...argsRest) => {
+    onSelectDateRef.current(...argsRest)
+  }, [])
+
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
   const nowDateText = dayjs().startOf('date').toString()
 
@@ -116,7 +124,7 @@ export const CalendarTable: FC<Props> = ({
                     from={from}
                     to={to}
                     nowDateText={nowDateText}
-                    onClick={onSelectDate}
+                    onClick={actualOnSelectDate}
                     classNames={classNames}
                   />
                 ) : (
@@ -167,39 +175,21 @@ const SelectTdButton = memo<{
       date: day.toDate(),
     }
   }, [currentDay, date])
-  const disabled = useMemo(() => !isBetween(target.date, from, to), [target.date, from, to])
-  const ariaPressed = useMemo(
-    () => target.day.isSame(selectedDayText, 'date'),
-    [selectedDayText, target.day],
-  )
-  const dataIsToday = useMemo(
-    () => target.day.isSame(nowDateText, 'date'),
-    [nowDateText, target.day],
-  )
-
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      onClick(e, target.date)
-    },
-    [onClick, target.date],
-  )
 
   return (
     <td className={classNames.td}>
       <UnstyledButton
         type="button"
-        disabled={disabled}
-        aria-pressed={ariaPressed}
-        onClick={actualOnClick}
+        disabled={!isBetween(target.date, from, to)}
+        aria-pressed={target.day.isSame(selectedDayText, 'date')}
+        onClick={(e) => {
+          onClick(e, target.date)
+        }}
         className={classNames.cellButton}
-        data-is-today={dataIsToday}
+        data-is-today={target.day.isSame(nowDateText, 'date')}
       >
-        <SelectButtonTdDateCell className={classNames.dateCell}>{date}</SelectButtonTdDateCell>
+        <span className={classNames.dateCell}>{date}</span>
       </UnstyledButton>
     </td>
   )
 })
-
-const SelectButtonTdDateCell = memo<{ children: number; className: string }>(
-  ({ children, className }) => <span className={className}>{children}</span>,
-)
