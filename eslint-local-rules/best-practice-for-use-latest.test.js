@@ -273,6 +273,122 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [{ messageId: 'latestOnlyDepsInEffectOrMemo' }],
     },
+
+    // スプレッド構文の使用（オブジェクト）
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const obj = { ...latest }
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noSpread' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
+
+    // スプレッド構文の使用（配列）
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const arr = [...latest]
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noSpread' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
+
+    // in演算子の使用
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          if ('onChange' in latest) {
+            console.log('has onChange')
+          }
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noInOperator' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
+
+    // Object.keysの使用
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const keys = Object.keys(latest)
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
+
+    // Object.valuesの使用
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const values = Object.values(latest)
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
+
+    // Object.entriesの使用
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const entries = Object.entries(latest)
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
+
+    // Object.assignの使用
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          const obj = Object.assign({}, latest)
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
+
+    // for...inループの使用
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          for (const key in latest) {
+            console.log(key)
+          }
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noForIn' },
+        { messageId: 'latestOnlyDepsInEffectOrMemo' },
+      ],
+    },
   ],
 })
 

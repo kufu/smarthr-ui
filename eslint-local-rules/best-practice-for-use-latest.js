@@ -27,6 +27,14 @@ module.exports = {
         'latestを依存配列に含める場合は、最後尾に配置してください。',
       latestOnlyDepsInEffectOrMemo:
         'latestのみを依存配列に含めても意味がありません。依存配列を空にして、latest.xxxではなく値を直接使用してください。',
+      noSpread:
+        'latestに対してスプレッド構文（...latest）を使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
+      noInOperator:
+        'latestに対してin演算子を使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
+      noObjectMethods:
+        'latestに対してObject.keys/values/entries等を使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
+      noForIn:
+        'latestに対してfor...inループを使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
     },
     schema: [],
   },
@@ -137,6 +145,31 @@ module.exports = {
           return
         }
 
+        // スプレッド構文、in演算子、for...inループ、Object.*メソッドは
+        // それぞれ専用のチェックで処理するのでスキップ
+        switch (parent.type) {
+          case 'SpreadElement':
+            if (parent.argument === node) return
+            break
+          case 'BinaryExpression':
+            if (parent.operator === 'in' && parent.right === node) return
+            break
+          case 'ForInStatement':
+            if (parent.right === node) return
+            break
+          case 'CallExpression':
+            // Object.*メソッドの引数として使われている場合もスキップ
+            if (
+              parent.callee.type === 'MemberExpression' &&
+              parent.callee.object.type === 'Identifier' &&
+              parent.callee.object.name === 'Object' &&
+              parent.arguments.includes(node)
+            ) {
+              return
+            }
+            break
+        }
+
         // 依存配列内での使用
         if (isInsideDependencyArray(node)) {
           // MemberExpression（latest.xxx）の場合はエラー
@@ -187,41 +220,96 @@ module.exports = {
         })
       },
 
-      // 3. 依存配列のチェック
-      'CallExpression[callee.name=/^use((Layout)?Effect|Callback|Memo)$/]'(node) {
-        const hookName = node.callee.name
-        const depsArg = node.arguments[1]
+      // 3. CallExpressionのチェック（依存配列、Object.*メソッド）
+      CallExpression(node) {
+        // 3-1. Object.keys/values/entries等のチェック
+        if (
+          node.callee.type === 'MemberExpression' &&
+          node.callee.object.type === 'Identifier' &&
+          node.callee.object.name === 'Object' &&
+          node.callee.property.type === 'Identifier' &&
+          /^(keys|values|entries|getOwnPropertyNames|getOwnPropertyDescriptors|getOwnPropertySymbols|assign|freeze|seal|preventExtensions)$/.test(
+            node.callee.property.name,
+          )
+        ) {
+          // Object.assignの場合は第二引数以降も、それ以外は第一引数をチェック
+          const argsToCheck = node.callee.property.name === 'assign' ? node.arguments.slice(1) : node.arguments.slice(0, 1)
 
-        if (!depsArg || depsArg.type !== 'ArrayExpression') {
-          return
-        }
-
-        const elements = depsArg.elements.filter((el) => el !== null)
-        const latestIndex = elements.findIndex(
-          (el) => el.type === 'Identifier' && el.name === 'latest',
-        )
-
-        // latestが見つからない場合は何もチェックしない
-        if (latestIndex === -1) {
-          return
-        }
-
-        // useEffect/useLayoutEffect/useMemoで依存配列がlatestのみの場合
-        if (/^use((Layout)?Effect|Memo)$/.test(hookName)) {
-          if (elements.length === 1 && elements[0].name === 'latest') {
-            context.report({
-              node: elements[0],
-              messageId: 'latestOnlyDepsInEffectOrMemo',
-            })
-            return
+          for (const arg of argsToCheck) {
+            if (arg.type === 'Identifier' && arg.name === 'latest') {
+              context.report({
+                node: arg,
+                messageId: 'noObjectMethods',
+              })
+              break
+            }
           }
         }
 
-        // latestが含まれていて、最後尾でない場合
-        if (latestIndex !== elements.length - 1) {
+        // 3-2. use*フックの依存配列のチェック
+        if (
+          node.callee.type === 'Identifier' &&
+          /^use((Layout)?Effect|Callback|Memo)$/.test(node.callee.name)
+        ) {
+          const hookName = node.callee.name
+          const depsArg = node.arguments[1]
+
+          if (depsArg && depsArg.type === 'ArrayExpression') {
+            const elements = depsArg.elements.filter((el) => el !== null)
+            const latestIndex = elements.findIndex(
+              (el) => el.type === 'Identifier' && el.name === 'latest',
+            )
+
+            if (latestIndex !== -1) {
+              // useEffect/useLayoutEffect/useMemoで依存配列がlatestのみの場合
+              if (/^use((Layout)?Effect|Memo)$/.test(hookName)) {
+                if (elements.length === 1 && elements[0].name === 'latest') {
+                  context.report({
+                    node: elements[0],
+                    messageId: 'latestOnlyDepsInEffectOrMemo',
+                  })
+                  return
+                }
+              }
+
+              // latestが含まれていて、最後尾でない場合
+              if (latestIndex !== elements.length - 1) {
+                context.report({
+                  node: elements[latestIndex],
+                  messageId: 'latestMustBeLastInDeps',
+                })
+              }
+            }
+          }
+        }
+      },
+
+      // 4. スプレッド構文のチェック
+      SpreadElement(node) {
+        if (node.argument.type === 'Identifier' && node.argument.name === 'latest') {
           context.report({
-            node: elements[latestIndex],
-            messageId: 'latestMustBeLastInDeps',
+            node: node.argument,
+            messageId: 'noSpread',
+          })
+        }
+      },
+
+      // 5. in演算子のチェック
+      'BinaryExpression[operator="in"]'(node) {
+        if (node.right.type === 'Identifier' && node.right.name === 'latest') {
+          context.report({
+            node: node.right,
+            messageId: 'noInOperator',
+          })
+        }
+      },
+
+      // 6. for...inループのチェック
+      ForInStatement(node) {
+        if (node.right.type === 'Identifier' && node.right.name === 'latest') {
+          context.report({
+            node: node.right,
+            messageId: 'noForIn',
           })
         }
       },
