@@ -53,22 +53,32 @@ type Props = {
   onLoadError?: () => void
 }
 
-export const FileViewer: FC<Props> = ({
-  file,
-  scaleStep,
-  scaleSteps,
-  width: fixedWidth,
-  onPassword,
-  onLoadError,
-}) => {
+export const FileViewer: FC<Props> = ({ file, ...rest }) => {
+  const isPDF = file.contentType === 'application/pdf'
+
+  return isPDF ? (
+    <PDFFileViewer {...rest} file={file} />
+  ) : (
+    <ActualFileViewer {...rest} file={file} />
+  )
+}
+
+const PDFFileViewer: FC<Props> = ({ file, ...rest }) => {
+  const pdfSearch = usePDFSearch(file.url)
+
+  return <ActualFileViewer {...rest} file={file} pdfSearch={pdfSearch} />
+}
+
+const ActualFileViewer: FC<
+  Props & {
+    pdfSearch?: ReturnType<typeof usePDFSearch>
+  }
+> = ({ file, scaleStep, scaleSteps, width: fixedWidth, onPassword, onLoadError, pdfSearch }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
   const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
-  const isPDF = file.contentType === 'application/pdf'
-
-  const search = usePDFSearch(file.url)
 
   const internalScaleStep = useMemo(
     () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
@@ -128,7 +138,7 @@ export const FileViewer: FC<Props> = ({
           onClickScaleUpButton={scaleUp}
           onClickScaleDownButton={scaleDown}
           onClickRotateButton={rotate}
-          searchController={isPDF ? <SearchController search={search} /> : undefined}
+          searchController={pdfSearch ? <SearchController search={pdfSearch} /> : undefined}
         />
       </div>
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
@@ -138,7 +148,7 @@ export const FileViewer: FC<Props> = ({
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
-          {isPDF ? (
+          {pdfSearch ? (
             <PDFViewer
               scale={scale}
               rotation={rotation}
@@ -148,7 +158,7 @@ export const FileViewer: FC<Props> = ({
               onPDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={onLoadError}
-              search={search}
+              search={pdfSearch}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
