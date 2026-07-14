@@ -16,9 +16,9 @@ module.exports = {
         'useLatestの返り値は "latest" という変数名で受け取る必要があります。',
       noDestructuring: 'useLatestの返り値を分割代入で受け取ることはできません。',
       noUsageOutsideHook:
-        'latest変数はuseEffect、useLayoutEffect、useCallback、useMemo内でのみ使用できます。',
+        'latest変数はuseEffect、useLayoutEffect、useCallback内でのみ使用できます。',
       noUsageOutsideHookInFunction:
-        'latest変数はuseEffect、useLayoutEffect、useCallback、useMemo内でのみ使用できます。関数内で使用する場合はuseCallbackでラップしてください。または、latest経由ではなく値を直接参照することを検討してください。',
+        'latest変数はuseEffect、useLayoutEffect、useCallback内でのみ使用できます。関数内で使用する場合はuseCallbackでラップしてください。または、latest経由ではなく値を直接参照することを検討してください。',
       noLatestItself:
         'latest自体を使用することはできません。latest.xxxのようにプロパティアクセスするか、const { xxx } = latestのように分割代入してください。',
       noPropertyInDeps:
@@ -53,7 +53,7 @@ module.exports = {
         if (
           parent.type === 'CallExpression' &&
           parent.callee.type === 'Identifier' &&
-          /^use((Layout)?Effect|Callback|Memo)$/.test(parent.callee.name)
+          /^use((Layout)?Effect|Callback)$/.test(parent.callee.name)
         ) {
           return true
         }
@@ -96,7 +96,7 @@ module.exports = {
             grandParent &&
             grandParent.type === 'CallExpression' &&
             grandParent.callee.type === 'Identifier' &&
-            /^use((Layout)?Effect|Callback|Memo)$/.test(grandParent.callee.name) &&
+            /^use((Layout)?Effect|Callback)$/.test(grandParent.callee.name) &&
             grandParent.arguments[1] === parent
           ) {
             return true

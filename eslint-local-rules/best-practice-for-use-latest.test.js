@@ -261,7 +261,11 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           return latest.value * 2
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestInUseMemo' }],
+      errors: [
+        { messageId: 'noUsageOutsideHook' },
+        { messageId: 'noLatestInUseMemo' },
+        { messageId: 'noLatestItself' },
+      ],
     },
 
     // スプレッド構文の使用（オブジェクト）
@@ -389,7 +393,11 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           return count
         }, [count, latest])
       `,
-      errors: [{ messageId: 'noLatestInUseMemo' }],
+      errors: [
+        { messageId: 'noUsageOutsideHook' },
+        { messageId: 'noLatestInUseMemo' },
+        { messageId: 'noLatestItself' },
+      ],
     },
   ],
 })
