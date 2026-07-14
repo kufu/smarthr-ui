@@ -160,19 +160,19 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     })
 
     const functions = useMemo(() => {
-      const internalDateToString = (date: Date | null) =>
+      const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
-      const internalDateToAlternativeFormat = (d: Date | null) => {
+      const dateToAlternativeFormat = (d: Date | null) => {
         if (!latest.showAlternative) return null
         return d ? latest.showAlternative(d) : null
       }
 
-      const internalStringToDate = (str?: string | null) => {
+      const stringToDate = (str?: string | null) => {
         if (!str) return null
         return latest.parseInput ? latest.parseInput(str) : parseJpnDateString(str)
       }
 
-      const internalUpdateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
+      const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
           newDate === latest.selectedDate ||
@@ -190,10 +190,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
 
         const nextDate = isValid ? newDate : null
-        const formatValue = internalDateToString(nextDate)
+        const formatValue = dateToString(nextDate)
 
         inputRef.current.value = formatValue
-        setAlternativeFormat(internalDateToAlternativeFormat(nextDate))
+        setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
         if (latest.onChange) {
@@ -223,62 +223,52 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
       }
 
-      const internalCloseCalendar = () => setIsCalendarShown(false)
-      const internalOpenCalendar = () => {
+      const closeCalendar = () => setIsCalendarShown(false)
+      const openCalendar = () => {
         if (inputWrapperRef.current) {
           setIsCalendarShown(true)
           setInputRect(inputWrapperRef.current.getBoundingClientRect())
         }
       }
 
-      const internalHandleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-        setIsInputFocused(false)
-        internalUpdateDate(e, e.target.value ? internalStringToDate(e.target.value) : null)
-        latest.onBlur?.(e)
-      }
+      return {
+        dateToString,
+        dateToAlternativeFormat,
+        closeCalendar,
+        openCalendar,
+        stringToDate,
+        handleBlur: ((e) => {
+          setIsInputFocused(false)
+          updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
+          latest.onBlur?.(e)
+        }) as FocusEventHandler<HTMLInputElement>,
+        onDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (ESCAPE_KEY_REGEX.test(e.key)) {
+            e.stopPropagation()
+            // delay hiding calendar because calendar will be displayed when input is focused
+            requestAnimationFrame(closeCalendar)
 
-      const internalOnDelegateKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (ESCAPE_KEY_REGEX.test(e.key)) {
-          e.stopPropagation()
+            if (inputRef.current) inputRef.current.focus()
+          }
+        },
+        onKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter') {
+            const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
+            ;(isExpanded ? openCalendar : closeCalendar)()
+            updateDate(e, stringToDate(e.currentTarget.value))
+          }
+        },
+        onFocusInput: () => {
+          setIsInputFocused(true)
+          openCalendar()
+        },
+        onSelectDateCalendar: (e: ChangeLikeEvent, selected: Date | null) => {
+          updateDate(e, selected)
           // delay hiding calendar because calendar will be displayed when input is focused
-          requestAnimationFrame(internalCloseCalendar)
+          requestAnimationFrame(closeCalendar)
 
           if (inputRef.current) inputRef.current.focus()
-        }
-      }
-
-      const internalOnKeyPressInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-          const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
-          ;(isExpanded ? internalOpenCalendar : internalCloseCalendar)()
-          internalUpdateDate(e, internalStringToDate(e.currentTarget.value))
-        }
-      }
-
-      const internalOnFocusInput = () => {
-        setIsInputFocused(true)
-        internalOpenCalendar()
-      }
-
-      const internalOnSelectDateCalendar = (e: ChangeLikeEvent, selected: Date | null) => {
-        internalUpdateDate(e, selected)
-        // delay hiding calendar because calendar will be displayed when input is focused
-        requestAnimationFrame(internalCloseCalendar)
-
-        if (inputRef.current) inputRef.current.focus()
-      }
-
-      return {
-        dateToString: internalDateToString,
-        dateToAlternativeFormat: internalDateToAlternativeFormat,
-        closeCalendar: internalCloseCalendar,
-        openCalendar: internalOpenCalendar,
-        stringToDate: internalStringToDate,
-        handleBlur: internalHandleBlur,
-        onDelegateKeyDown: internalOnDelegateKeyDown,
-        onKeyPressInput: internalOnKeyPressInput,
-        onFocusInput: internalOnFocusInput,
-        onSelectDateCalendar: internalOnSelectDateCalendar,
+        },
       }
     }, [latest])
 
