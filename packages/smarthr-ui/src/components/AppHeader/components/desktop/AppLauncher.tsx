@@ -12,7 +12,7 @@ import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { Scroller } from '../../../Scroller'
 import { Section } from '../../../SectioningContent'
-import { SideNav } from '../../../SideNav'
+import { SideNav, SideNavItemButton } from '../../../SideNav'
 import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
@@ -258,8 +258,8 @@ const SideNavs = memo<
   )
 
   const onClick = useCallback(
-    (_: any, id: string) => {
-      changePage(id as Launcher['page'])
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      changePage(e.currentTarget.value as Launcher['page'])
     },
     [changePage],
   )
@@ -269,9 +269,20 @@ const SideNavs = memo<
       <SideNav
         className={classNames.unselectedSideNav}
         size="S"
-        items={unselectedItems}
-        onClick={onClick}
-      />
+        aria-label={typeof translated.favorite === 'string' ? translated.favorite : undefined}
+      >
+        {unselectedItems.map((item) => (
+          <SideNavItemButton
+            key={item.id}
+            id={item.id}
+            prefix={item.prefix}
+            current={item.current}
+            onClick={onClick}
+          >
+            {item.title}
+          </SideNavItemButton>
+        ))}
+      </SideNav>
 
       <hr />
 
@@ -282,9 +293,14 @@ const SideNavs = memo<
         <SideNav
           className={classNames.selectedSideNav}
           size="S"
-          items={selectedItems}
-          onClick={onClick}
-        />
+          aria-label={typeof translated.listText === 'string' ? translated.listText : undefined}
+        >
+          {selectedItems.map((item) => (
+            <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
+              {item.title}
+            </SideNavItemButton>
+          ))}
+        </SideNav>
       </Section>
 
       <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
