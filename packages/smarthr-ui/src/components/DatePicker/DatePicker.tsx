@@ -168,6 +168,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       openCalendar,
       stringToDate,
       handleBlur,
+      onDelegateKeyDown,
     } = useMemo(() => {
       const internalDateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
@@ -246,6 +247,16 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         latest.onBlur?.(e)
       }
 
+      const internalOnDelegateKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (ESCAPE_KEY_REGEX.test(e.key)) {
+          e.stopPropagation()
+          // delay hiding calendar because calendar will be displayed when input is focused
+          requestAnimationFrame(internalCloseCalendar)
+
+          if (inputRef.current) inputRef.current.focus()
+        }
+      }
+
       return {
         dateToString: internalDateToString,
         dateToAlternativeFormat: internalDateToAlternativeFormat,
@@ -254,6 +265,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         openCalendar: internalOpenCalendar,
         stringToDate: internalStringToDate,
         handleBlur: internalHandleBlur,
+        onDelegateKeyDown: internalOnDelegateKeyDown,
       }
     }, [latest])
 
@@ -353,18 +365,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           ? theme.textColor.disabled
           : theme.textColor.grey
 
-    const onDelegateKeyDown = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (ESCAPE_KEY_REGEX.test(e.key)) {
-          e.stopPropagation()
-          // delay hiding calendar because calendar will be displayed when input is focused
-          requestAnimationFrame(closeCalendar)
-
-          if (inputRef.current) inputRef.current.focus()
-        }
-      },
-      [closeCalendar],
-    )
     const onKeyPressInput = useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
