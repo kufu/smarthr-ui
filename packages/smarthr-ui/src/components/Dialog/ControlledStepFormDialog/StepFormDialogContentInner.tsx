@@ -121,7 +121,6 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
     return {
       handleCloseAction,
-      changeCurrentStep,
       handleSubmitAction: (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
