@@ -159,18 +159,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       selectedDate,
     })
 
-    const {
-      dateToString,
-      dateToAlternativeFormat,
-      closeCalendar,
-      openCalendar,
-      stringToDate,
-      handleBlur,
-      onDelegateKeyDown,
-      onKeyPressInput,
-      onFocusInput,
-      onSelectDateCalendar,
-    } = useMemo(() => {
+    const functions = useMemo(() => {
       const internalDateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
       const internalDateToAlternativeFormat = (d: Date | null) => {
@@ -309,11 +298,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
        * - if the given value is not date formattable.
        */
       if (!isInputFocused) {
-        const newDate = stringToDate(value)
+        const newDate = functions.stringToDate(value)
 
         if (newDate && dayjs(newDate).isValid()) {
-          inputRef.current.value = dateToString(newDate)
-          setAlternativeFormat(dateToAlternativeFormat(newDate))
+          inputRef.current.value = functions.dateToString(newDate)
+          setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
           setSelectedDate(newDate)
 
           return
@@ -323,11 +312,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       inputRef.current.value = value || ''
-    }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
+    }, [value, isInputFocused, functions])
 
     useOuterClick(
       useMemo(() => [inputWrapperRef, calendarPortalRef], [inputWrapperRef, calendarPortalRef]),
-      closeCalendar,
+      functions.closeCalendar,
     )
 
     useEffect(() => {
@@ -347,7 +336,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         if (latest.isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
-            closeCalendar()
+            functions.closeCalendar()
 
             return
           }
@@ -371,7 +360,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         } else if (currentFocused === calendarButtonAry.at(-1)) {
           // move focus from Calendar to next elements of DatePicker
           inputRef.current.focus()
-          closeCalendar()
+          functions.closeCalendar()
         }
       }
 
@@ -380,7 +369,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       return () => {
         window.removeEventListener('keydown', handleKeyDown)
       }
-    }, [closeCalendar, latest])
+    }, [functions, latest])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
@@ -392,8 +381,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     return (
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
-        onClick={!isCalendarShown && !disabled ? openCalendar : undefined}
-        onKeyDown={isCalendarShown ? onDelegateKeyDown : undefined}
+        onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
+        onKeyDown={isCalendarShown ? functions.onDelegateKeyDown : undefined}
         role="presentation"
         className={classNames.container}
         style={containerStyle}
@@ -404,10 +393,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             data-smarthr-ui-input="true"
             width="100%"
             name={name}
-            onChange={isCalendarShown ? closeCalendar : undefined}
-            onKeyPress={onKeyPressInput}
-            onFocus={onFocusInput}
-            onBlur={handleBlur}
+            onChange={isCalendarShown ? functions.closeCalendar : undefined}
+            onKeyPress={functions.onKeyPressInput}
+            onFocus={functions.onFocusInput}
+            onBlur={functions.handleBlur}
             suffix={
               <InputSuffixIcon
                 alternativeFormat={showAlternative ? alternativeFormat : null}
@@ -431,7 +420,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
               value={selectedDate || undefined}
               from={from}
               to={to}
-              onSelectDate={onSelectDateCalendar}
+              onSelectDate={functions.onSelectDateCalendar}
             />
           </Portal>
         )}
