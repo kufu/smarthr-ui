@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -80,68 +81,69 @@ export const useSortDropdown = ({
   )
 
   // 外向きの値
-  const [selectedLabel, setSelectedLabel] = useState<string>()
+  const [selectedLabel, setSelectedLabel] = useState<string>('')
   const [checkedOrder, setCheckedOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   // 内部的な値
   const [innerFields, setInnerFields] = useState<Props['sortFields']>(sortFields)
-  const [innerSelectedField, setInnerSelectedField] = useState<string>()
+  const [innerSelectedField, setInnerSelectedField] = useState<string>('')
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
+  const unstableRef = useRef({
+    innerCheckedOrder,
+    innerFields,
+    innerSelectedField,
+    onApply,
+  })
+  unstableRef.current = {
+    innerCheckedOrder,
+    innerFields,
+    innerSelectedField,
+    onApply,
+  }
+
+  const defaultFieldLabel =
+    selectedLabel || (sortFields.find((field) => field.selected) || sortFields[0])?.label || ''
+
   useEffect(() => {
-    if (selectedLabel) return
+    setSelectedLabel(defaultFieldLabel)
+    setInnerSelectedField(defaultFieldLabel)
+  }, [defaultFieldLabel])
 
-    // 初期値は option に紛れているので、選択されている項目を取得
-    const defaultField = sortFields.find((field) => field.selected) || sortFields[0]
+  const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((e) => {
+    const select = e.currentTarget
+    const newLabel = select.options[select.selectedIndex].label
 
-    setSelectedLabel(defaultField.label)
-    setInnerSelectedField(defaultField.label)
-  }, [selectedLabel, sortFields])
-
-  // 外向きな値で構成
-  const triggerLabel = useMemo(
-    () => `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
-    [texts.ascLabel, texts.descLabel, selectedLabel, checkedOrder],
-  )
-
-  const SortIcon = useMemo(
-    () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
-    [checkedOrder],
-  )
-
-  const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
-    (e) => {
-      const select = e.currentTarget
-      const newLabel = select.options[select.selectedIndex].label
-
-      setInnerFields(
-        innerFields.map((field) => {
-          if (field.label === newLabel) {
-            if (!field.selected) {
-              return {
-                ...field,
-                selected: true,
-              }
-            }
-          } else if (field.selected) {
+    setInnerFields((currentFields) =>
+      currentFields.map((field) => {
+        if (field.label === newLabel) {
+          if (!field.selected) {
             return {
               ...field,
-              selected: false,
+              selected: true,
             }
           }
+        } else if (field.selected) {
+          return {
+            ...field,
+            selected: false,
+          }
+        }
 
-          return field
-        }),
-      )
-      setInnerSelectedField(newLabel)
-    },
-    [innerFields],
-  )
+        return field
+      }),
+    )
+    setInnerSelectedField(newLabel)
+  }, [])
   const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
-    setSelectedLabel(innerSelectedField)
-    setCheckedOrder(innerCheckedOrder)
-    onApply({ field: innerSelectedField || '', order: innerCheckedOrder, newfields: innerFields })
-  }, [innerCheckedOrder, innerFields, innerSelectedField, onApply])
+    setSelectedLabel(unstableRef.current.innerSelectedField)
+    setCheckedOrder(unstableRef.current.innerCheckedOrder)
+    unstableRef.current.onApply({
+      field: unstableRef.current.innerSelectedField || '',
+      order: unstableRef.current.innerCheckedOrder,
+      newfields: unstableRef.current.innerFields,
+    })
+  }, [])
 
   const onChangeSortOrderRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
     setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
@@ -161,11 +163,11 @@ export const useSortDropdown = ({
     onChangeSortOrderRadio,
     texts: {
       ...texts,
-      triggerLabel,
+      triggerLabel: `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
     },
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
-    SortIcon,
+    SortIcon: checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon,
     classNames,
   }
 }
