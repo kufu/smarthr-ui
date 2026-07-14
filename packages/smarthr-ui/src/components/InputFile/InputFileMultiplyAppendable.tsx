@@ -7,7 +7,6 @@ import {
   type ReactNode,
   forwardRef,
   memo,
-  useCallback,
   useId,
   useImperativeHandle,
   useMemo,
@@ -70,8 +69,8 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
     const latest = useLatest({ onChange, files })
 
-    const updateFiles = useCallback(
-      (newFiles: File[]) => {
+    const { handleChange, handleDelete } = useMemo(() => {
+      const updateFiles = (newFiles: File[]) => {
         if (!inputRef.current) {
           return
         }
@@ -88,40 +87,34 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         isUpdatingFilesRef.current = false
 
         setFiles(newFiles)
-      },
-      [latest],
-    )
+      }
 
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        // Safari において、input.files への直接代入時はonChangeを発火させない
-        if (isUpdatingFilesRef.current) {
-          return
-        }
+      return {
+        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
+          // Safari において、input.files への直接代入時はonChangeを発火させない
+          if (isUpdatingFilesRef.current) {
+            return
+          }
 
-        const newFiles = Array.from(e.target.files ?? [])
+          const newFiles = Array.from(e.target.files ?? [])
 
-        updateFiles([...latest.files, ...newFiles])
-      },
-      [latest, updateFiles],
-    )
+          updateFiles([...latest.files, ...newFiles])
+        },
+        handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
+          if (!inputRef.current) {
+            return
+          }
 
-    const handleDelete = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => {
-        if (!inputRef.current) {
-          return
-        }
+          const index = parseInt(e.currentTarget.value, 10)
+          const newFiles = latest.files.filter((_, i) => index !== i)
 
-        const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = latest.files.filter((_, i) => index !== i)
+          // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
+          inputRef.current.value = ''
 
-        // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-        inputRef.current.value = ''
-
-        updateFiles(newFiles)
-      },
-      [latest, updateFiles],
-    )
+          updateFiles(newFiles)
+        },
+      }
+    }, [latest])
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
