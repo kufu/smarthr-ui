@@ -98,6 +98,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     firstStep,
     setCurrentStep,
     stepQueueRef,
+    scrollerRef,
   })
 
   const handleCloseAction = useCallback(() => {
@@ -114,11 +115,11 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       latest.setCurrentStep(step)
 
       // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
-      if (scrollerRef.current) {
-        scrollerRef.current.scroll(0, 0)
+      if (latest.scrollerRef.current) {
+        latest.scrollerRef.current.scroll(0, 0)
       }
     },
-    [scrollerRef, latest],
+    [latest],
   )
 
   const handleSubmitAction = useCallback(
