@@ -5,7 +5,6 @@ import {
   type ChangeEvent,
   type ComponentProps,
   type ComponentPropsWithRef,
-  type FocusEventHandler,
   type MouseEvent,
   type ReactNode,
   forwardRef,
@@ -237,11 +236,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         closeCalendar,
         openCalendar,
         stringToDate,
-        handleBlur: ((e) => {
+        handleBlur: (e: React.FocusEvent<HTMLInputElement>) => {
           setIsInputFocused(false)
           updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
           latest.onBlur?.(e)
-        }) as FocusEventHandler<HTMLInputElement>,
+        },
         onDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
           if (ESCAPE_KEY_REGEX.test(e.key)) {
             e.stopPropagation()
