@@ -1,7 +1,7 @@
 import {
-  type ChangeEventHandler,
+  type ChangeEvent,
   type ComponentProps,
-  type MouseEventHandler,
+  type MouseEvent,
   useEffect,
   useMemo,
   useState,
@@ -97,7 +97,7 @@ export const useSortDropdown = ({
 
   const handler = useMemo(
     () => ({
-      change: ((e) => {
+      change: (e: ChangeEvent<HTMLSelectElement>) => {
         const select = e.currentTarget
         const newLabel = select.options[select.selectedIndex].label
 
@@ -121,8 +121,8 @@ export const useSortDropdown = ({
           }),
         )
         setInnerSelectedField(newLabel)
-      }) as ChangeEventHandler<HTMLSelectElement>,
-      apply: (() => {
+      },
+      apply: (_e: MouseEvent<HTMLButtonElement>) => {
         setSelectedLabel(latest.innerSelectedField)
         setCheckedOrder(latest.innerCheckedOrder)
         latest.onApply({
@@ -130,10 +130,10 @@ export const useSortDropdown = ({
           order: latest.innerCheckedOrder,
           newfields: latest.innerFields,
         })
-      }) as MouseEventHandler<HTMLButtonElement>,
-      changeSortOrderRadio: ((e) => {
+      },
+      changeSortOrderRadio: (e: ChangeEvent<HTMLInputElement>) => {
         setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
-      }) as ChangeEventHandler<HTMLInputElement>,
+      },
     }),
     [latest],
   )
