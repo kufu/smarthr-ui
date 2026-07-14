@@ -158,17 +158,19 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       selectedDate,
     })
 
-    const { dateToString, dateToAlternativeFormat } = useMemo(
-      () => ({
-        dateToString: (date: Date | null) =>
-          latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date),
-        dateToAlternativeFormat: (d: Date | null) => {
-          if (!latest.showAlternative) return null
-          return d ? latest.showAlternative(d) : null
-        },
-      }),
-      [latest],
-    )
+    const { dateToString, dateToAlternativeFormat } = useMemo(() => {
+      const internalDateToString = (date: Date | null) =>
+        latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
+      const internalDateToAlternativeFormat = (d: Date | null) => {
+        if (!latest.showAlternative) return null
+        return d ? latest.showAlternative(d) : null
+      }
+
+      return {
+        dateToString: internalDateToString,
+        dateToAlternativeFormat: internalDateToAlternativeFormat,
+      }
+    }, [latest])
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
