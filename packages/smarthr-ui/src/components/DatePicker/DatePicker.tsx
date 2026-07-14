@@ -165,7 +165,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       selectedDate,
     })
 
-    const { dateToString, dateToAlternativeFormat } = useMemo(() => {
+    const { dateToString, dateToAlternativeFormat, updateDate } = useMemo(() => {
       const internalDateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
       const internalDateToAlternativeFormat = (d: Date | null) => {
@@ -173,19 +173,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         return d ? latest.showAlternative(d) : null
       }
 
-      return {
-        dateToString: internalDateToString,
-        dateToAlternativeFormat: internalDateToAlternativeFormat,
-      }
-    }, [latest])
-
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
-
-    const updateDate = useCallback(
-      (e: ChangeLikeEvent, newDate: Date | null) => {
+      const internalUpdateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
           newDate === latest.selectedDate ||
@@ -203,10 +191,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
 
         const nextDate = isValid ? newDate : null
-        const formatValue = dateToString(nextDate)
+        const formatValue = internalDateToString(nextDate)
 
         inputRef.current.value = formatValue
-        setAlternativeFormat(dateToAlternativeFormat(nextDate))
+        setAlternativeFormat(internalDateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
         if (latest.onChange) {
@@ -234,8 +222,18 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         } else if (latest.onChangeDate) {
           latest.onChangeDate(nextDate, formatValue, { errors })
         }
-      },
-      [dateToString, dateToAlternativeFormat, latest],
+      }
+
+      return {
+        dateToString: internalDateToString,
+        dateToAlternativeFormat: internalDateToAlternativeFormat,
+        updateDate: internalUpdateDate,
+      }
+    }, [latest])
+
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => inputRef.current,
     )
 
     const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
