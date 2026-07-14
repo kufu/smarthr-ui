@@ -27,6 +27,7 @@
     "allowSyntheticDefaultImports": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "paths": {},
     "isolatedModules": true
   },

@@ -22,16 +22,16 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   const [expanded, setExpanded] = useDisclosure(targetId)
   const ref = useRef<HTMLSpanElement | null>(null)
 
-  const propsRef = useRef({ onClick, setExpanded })
-  propsRef.current = { onClick, setExpanded }
+  const unstableRef = useRef({ onClick, setExpanded })
+  unstableRef.current = { onClick, setExpanded }
 
   const actualOnClick = useCallback((e: MouseEvent) => {
     const toggleExpanded = () => {
-      propsRef.current.setExpanded((current) => !current)
+      unstableRef.current.setExpanded((current) => !current)
     }
 
-    if (propsRef.current.onClick) {
-      propsRef.current.onClick(toggleExpanded, e)
+    if (unstableRef.current.onClick) {
+      unstableRef.current.onClick(toggleExpanded, e)
     } else {
       toggleExpanded()
     }
@@ -70,6 +70,9 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
     observer.observe(wrapper, {
       childList: true,
       subtree: true,
+      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+      attributes: true,
+      attributeFilter: ['disabled', 'aria-disabled'],
     })
 
     return () => {
