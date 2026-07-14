@@ -97,16 +97,17 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     currentStep,
     firstStep,
     setCurrentStep,
+    stepQueueRef,
   })
 
   const handleCloseAction = useCallback(() => {
     latest.onClickClose()
     setTimeout(() => {
       // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
-      stepQueueRef.current = []
+      latest.stepQueueRef.current = []
       latest.setCurrentStep(latest.firstStep)
     }, 300)
-  }, [stepQueueRef, latest])
+  }, [latest])
 
   const changeCurrentStep = useCallback(
     (step: Parameters<typeof setCurrentStep>[0]) => {
@@ -129,7 +130,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
       const helpers: StepFormHelpers = {
         goto: (nextStep: StepItem) => {
-          stepQueueRef.current.push(latest.currentStep)
+          latest.stepQueueRef.current.push(latest.currentStep)
           changeCurrentStep(nextStep)
         },
         close: handleCloseAction,
@@ -138,13 +139,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
       latest.onSubmit(e, helpers)
     },
-    [stepQueueRef, handleCloseAction, changeCurrentStep, latest],
+    [handleCloseAction, changeCurrentStep, latest],
   )
   const handleBackAction = useCallback(() => {
     latest.onClickBack?.()
 
-    changeCurrentStep(stepQueueRef.current.pop() ?? latest.firstStep)
-  }, [stepQueueRef, changeCurrentStep, latest])
+    changeCurrentStep(latest.stepQueueRef.current.pop() ?? latest.firstStep)
+  }, [changeCurrentStep, latest])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
