@@ -6,7 +6,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useContext,
   useMemo,
 } from 'react'
@@ -101,52 +100,52 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     scrollerRef,
   })
 
-  const handleCloseAction = useCallback(() => {
-    latest.onClickClose()
-    setTimeout(() => {
-      // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
-      latest.stepQueueRef.current = []
-      latest.setCurrentStep(latest.firstStep)
-    }, 300)
-  }, [latest])
+  const functions = useMemo(() => {
+    const handleCloseAction = () => {
+      latest.onClickClose()
+      setTimeout(() => {
+        // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
+        latest.stepQueueRef.current = []
+        latest.setCurrentStep(latest.firstStep)
+      }, 300)
+    }
 
-  const changeCurrentStep = useCallback(
-    (step: Parameters<typeof setCurrentStep>[0]) => {
+    const changeCurrentStep = (step: Parameters<typeof setCurrentStep>[0]) => {
       latest.setCurrentStep(step)
 
       // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
       if (latest.scrollerRef.current) {
         latest.scrollerRef.current.scroll(0, 0)
       }
-    },
-    [latest],
-  )
+    }
 
-  const handleSubmitAction = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-      // 親formが意図せずsubmitされてしまう場合がある
-      e.stopPropagation()
+    return {
+      handleCloseAction,
+      changeCurrentStep,
+      handleSubmitAction: (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+        // 親formが意図せずsubmitされてしまう場合がある
+        e.stopPropagation()
 
-      const helpers: StepFormHelpers = {
-        goto: (nextStep: StepItem) => {
-          latest.stepQueueRef.current.push(latest.currentStep)
-          changeCurrentStep(nextStep)
-        },
-        close: handleCloseAction,
-        currentStep: latest.currentStep,
-      }
+        const helpers: StepFormHelpers = {
+          goto: (nextStep: StepItem) => {
+            latest.stepQueueRef.current.push(latest.currentStep)
+            changeCurrentStep(nextStep)
+          },
+          close: handleCloseAction,
+          currentStep: latest.currentStep,
+        }
 
-      latest.onSubmit(e, helpers)
-    },
-    [handleCloseAction, changeCurrentStep, latest],
-  )
-  const handleBackAction = useCallback(() => {
-    latest.onClickBack?.()
+        latest.onSubmit(e, helpers)
+      },
+      handleBackAction: () => {
+        latest.onClickBack?.()
 
-    changeCurrentStep(latest.stepQueueRef.current.pop() ?? latest.firstStep)
-  }, [changeCurrentStep, latest])
+        changeCurrentStep(latest.stepQueueRef.current.pop() ?? latest.firstStep)
+      },
+    }
+  }, [latest])
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
@@ -166,7 +165,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
-      <form onSubmit={handleSubmitAction}>
+      <form onSubmit={functions.handleSubmitAction}>
         <div className={classNames.wrapper}>
           <DialogHeading
             id={heading.id}
@@ -184,7 +183,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <BackButton
-                  onClick={handleBackAction}
+                  onClick={functions.handleBackAction}
                   variant={backButton.theme}
                   disabled={backButton.disabled || calcedResponseStatus.isProcessing}
                   text={backButton.text}
@@ -193,7 +192,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
                 {!closeButton.hidden && (
                   <CloseButton
-                    onClick={handleCloseAction}
+                    onClick={functions.handleCloseAction}
                     variant={closeButton.theme}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
                     text={closeButton.text}
