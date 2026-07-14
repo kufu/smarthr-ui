@@ -10,6 +10,7 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -95,44 +96,35 @@ export const AccordionPanelTrigger: FC<Props> = ({
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
-  const actualOnClickTrigger = useMemo(
-    () =>
-      onClickTrigger
-        ? (e: MouseEvent<HTMLButtonElement>) => onClickTrigger(e.currentTarget.value, !isExpanded)
-        : undefined,
-    [isExpanded, onClickTrigger],
-  )
-  const actualOnClickProps = useMemo(
-    () =>
-      onClickProps
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            const newExpandedItems = getNewExpandedItems(
-              expandedItems,
-              e.currentTarget.value,
-              !isExpanded,
-              expandableMultiply,
-            )
-            onClickProps(mapToKeyArray(newExpandedItems))
-          }
-        : undefined,
-    [isExpanded, expandedItems, expandableMultiply, onClickProps],
-  )
-  const handleClick = useMemo(() => {
-    if (actualOnClickTrigger) {
-      if (actualOnClickProps) {
-        return (e: MouseEvent<HTMLButtonElement>) => {
-          actualOnClickTrigger(e)
-          actualOnClickProps(e)
-        }
+  const unstableRef = useRef({
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+  })
+  unstableRef.current = {
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+  }
+
+  const stableOnClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+      unstableRef.current.onClickTrigger?.(e.currentTarget.value, newIsExpanded)
+      if (unstableRef.current.onClickProps) {
+        const newExpandedItems = getNewExpandedItems(
+          unstableRef.current.expandedItems,
+          e.currentTarget.value,
+          newIsExpanded,
+          expandableMultiply,
+        )
+        unstableRef.current.onClickProps(mapToKeyArray(newExpandedItems))
       }
+    },
+    [expandableMultiply],
+  )
 
-      return actualOnClickTrigger
-    } else if (actualOnClickProps) {
-      return actualOnClickProps
-    }
-
-    return undefined
-  }, [actualOnClickProps, actualOnClickTrigger])
+  const actualOnClick = onClickTrigger || onClickProps ? stableOnClick : undefined
 
   const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
     (e): void => {
@@ -171,6 +163,60 @@ export const AccordionPanelTrigger: FC<Props> = ({
   )
 
   return (
+    <MemoizedHeadingButton
+      {...rest}
+      name={name}
+      triggerId={triggerId}
+      isExpanded={isExpanded}
+      contentId={contentId}
+      actualOnClick={actualOnClick}
+      handleKeyDown={handleKeyDown}
+      classNames={classNames}
+      iconPosition={iconPosition}
+      headingType={headingType}
+      unrecommendedHeadingTag={unrecommendedHeadingTag}
+    >
+      {children}
+    </MemoizedHeadingButton>
+  )
+}
+
+const MemoizedHeadingButton = memo<
+  PropsWithChildren<
+    Omit<ComponentPropsWithoutRef<'button'>, 'onClick' | 'onKeyDown'> & {
+      name: string
+      triggerId: string
+      isExpanded: boolean
+      contentId: string
+      actualOnClick: ((e: MouseEvent<HTMLButtonElement>) => void) | undefined
+      handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
+      classNames: {
+        button: string
+        titleWrapper: string
+        leftIcon: string
+        rightIcon: string
+        title: string
+      }
+      iconPosition: 'left' | 'right'
+      headingType: Exclude<TextProps['styleType'], 'screenTitle'>
+      unrecommendedHeadingTag?: HeadingTagTypes
+    }
+  >
+>(
+  ({
+    children,
+    name,
+    triggerId,
+    isExpanded,
+    contentId,
+    actualOnClick,
+    handleKeyDown,
+    classNames,
+    iconPosition,
+    headingType,
+    unrecommendedHeadingTag,
+    ...rest
+  }) => (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading unrecommendedTag={unrecommendedHeadingTag} type={headingType}>
       <button
@@ -180,28 +226,18 @@ export const AccordionPanelTrigger: FC<Props> = ({
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        onClick={handleClick}
+        onClick={actualOnClick}
         onKeyDown={handleKeyDown}
         className={classNames.button}
         data-component="AccordionHeaderButton"
       >
-        <MemoizedTitle iconPosition={iconPosition} classNames={classNames}>
-          {children}
-        </MemoizedTitle>
+        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+        <Cluster className={classNames.titleWrapper} align="center" as="span">
+          {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
+          <span className={classNames.title}>{children}</span>
+          {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
+        </Cluster>
       </button>
     </Heading>
-  )
-}
-
-const MemoizedTitle = memo<
-  PropsWithChildren<{
-    iconPosition: undefined | 'left' | 'right'
-    classNames: { leftIcon: string; rightIcon: string; title: string; titleWrapper: string }
-  }>
->(({ classNames, iconPosition, children }) => (
-  <Cluster className={classNames.titleWrapper} align="center" as="span">
-    {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
-    <span className={classNames.title}>{children}</span>
-    {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
-  </Cluster>
-))
+  ),
+)
