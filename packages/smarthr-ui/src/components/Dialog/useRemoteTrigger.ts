@@ -34,12 +34,7 @@ export function useRemoteTrigger({
     const updateIsOpen = (newIsOpen: boolean) => {
       setIsOpen(newIsOpen)
       latest.onToggle?.(newIsOpen)
-
-      if (newIsOpen) {
-        latest.onOpen?.()
-      } else {
-        latest.onClose?.()
-      }
+      latest[newIsOpen ? 'onOpen' : 'onClose']?.()
     }
 
     return {
