@@ -36,11 +36,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       onFormatValue,
     })
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-    )
-
     const functions = useMemo(() => {
       const formatValue = (formatted = '') => {
         if (innerRef.current && formatted !== innerRef.current.value) {
@@ -50,7 +45,9 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
 
       return {
-        formatValue,
+        formatCurrencyValue: (raw = '') => {
+          formatValue(formatCurrency(raw))
+        },
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
 
@@ -69,9 +66,14 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => innerRef.current,
+    )
+
     useEffect(() => {
       if (value === undefined && defaultValue !== undefined) {
-        functions.formatValue(formatCurrency(defaultValue))
+        functions.formatCurrencyValue(defaultValue)
       }
       // when component did mount
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,10 +83,10 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       if (!isFocused) {
         if (value !== undefined) {
           // for controlled component
-          functions.formatValue(formatCurrency(value))
+          functions.formatCurrencyValue(value)
         } else if (innerRef.current) {
           // for uncontrolled component
-          functions.formatValue(formatCurrency(innerRef.current.value))
+          functions.formatCurrencyValue(innerRef.current.value)
         }
       }
     }, [isFocused, value, functions])
