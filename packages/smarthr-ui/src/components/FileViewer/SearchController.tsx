@@ -1,6 +1,14 @@
 'use client'
 
-import { type ChangeEvent, type FC, type KeyboardEvent, memo, useCallback, useMemo } from 'react'
+import {
+  type ChangeEvent,
+  type FC,
+  type KeyboardEvent,
+  memo,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
@@ -33,15 +41,7 @@ const classNameGenerator = tv({
 })
 
 export const SearchController: FC<Props> = memo(({ search }) => {
-  const {
-    query,
-    setQuery,
-    matchCount,
-    currentMatchIndex,
-    goNext: onClickNext,
-    goPrev: onClickPrev,
-    clear: onClickClear,
-  } = search
+  const { query, setQuery, matchCount, currentMatchIndex, goNext, goPrev, clear } = search
   const { localize } = useIntl()
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
@@ -66,42 +66,35 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     [localize],
   )
 
-  const hasMatches = matchCount > 0
-  const displayedCurrent = hasMatches ? currentMatchIndex + 1 : 0
+  const notMatches = matchCount === 0
 
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setQuery(e.target.value)
-    },
-    [setQuery],
-  )
+  const unstableRef = useRef({ setQuery, goNext, goPrev, clear, query })
+  unstableRef.current = { setQuery, goNext, goPrev, clear, query }
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.nativeEvent.isComposing) {
-        return
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    unstableRef.current.setQuery(e.target.value)
+  }, [])
+
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return
+    }
+
+    switch (e.key) {
+      case 'Enter': {
+        e.preventDefault()
+        unstableRef.current[e.shiftKey ? 'goPrev' : 'goNext']()
+        break
       }
-      switch (e.key) {
-        case 'Enter': {
+      case 'Escape': {
+        if (unstableRef.current.query !== '') {
           e.preventDefault()
-          if (e.shiftKey) {
-            onClickPrev()
-          } else {
-            onClickNext()
-          }
-          break
+          unstableRef.current.clear()
         }
-        case 'Escape': {
-          if (query !== '') {
-            e.preventDefault()
-            onClickClear()
-          }
-          break
-        }
+        break
       }
-    },
-    [onClickNext, onClickPrev, onClickClear, query],
-  )
+    }
+  }, [])
 
   return (
     <div className={classNames.wrapper}>
@@ -116,7 +109,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
           suffix={
             query !== '' ? (
               <Text size="S" aria-live="polite" className="shr-tabular-nums">
-                {`${displayedCurrent}/${matchCount}`}
+                {`${notMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
               </Text>
             ) : undefined
           }
@@ -124,15 +117,15 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         />
       </div>
       <Button
-        onClick={onClickPrev}
-        disabled={!hasMatches}
+        onClick={goPrev}
+        disabled={notMatches}
         className="shr-rounded-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
         <FaAngleUpIcon alt={translated.previousMatchAlt} />
       </Button>
       <Button
-        onClick={onClickNext}
-        disabled={!hasMatches}
+        onClick={goNext}
+        disabled={notMatches}
         className="shr-rounded-s-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
         <FaAngleDownIcon alt={translated.nextMatchAlt} />
