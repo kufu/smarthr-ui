@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { Input } from '../Input'
 
 import { formatCurrency } from './currencyInputHelper'
@@ -29,28 +30,26 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
-    const unstableRef = useRef({
+    const latest = useLatest({
       onFocus,
       onBlur,
       onFormatValue,
     })
-    unstableRef.current = {
-      onFocus,
-      onBlur,
-      onFormatValue,
-    }
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => innerRef.current,
     )
 
-    const formatValue = useCallback((formatted = '') => {
-      if (innerRef.current && formatted !== innerRef.current.value) {
-        innerRef.current.value = formatted
-        unstableRef.current.onFormatValue?.(formatted)
-      }
-    }, [])
+    const formatValue = useCallback(
+      (formatted = '') => {
+        if (innerRef.current && formatted !== innerRef.current.value) {
+          innerRef.current.value = formatted
+          latest.onFormatValue?.(formatted)
+        }
+      },
+      [latest],
+    )
 
     useEffect(() => {
       if (value === undefined && defaultValue !== undefined) {
@@ -81,16 +80,19 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           formatValue(commaExcluded)
         }
 
-        unstableRef.current.onFocus?.(e)
+        latest.onFocus?.(e)
       },
-      [formatValue],
+      [formatValue, latest],
     )
 
-    const handleBlur = useCallback((e: FocusEvent<HTMLInputElement>) => {
-      setIsFocused(false)
+    const handleBlur = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => {
+        setIsFocused(false)
 
-      unstableRef.current.onBlur?.(e)
-    }, [])
+        latest.onBlur?.(e)
+      },
+      [latest],
+    )
 
     return (
       <Input
