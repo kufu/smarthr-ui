@@ -14,6 +14,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 
 export type Option = {
@@ -86,8 +87,7 @@ export const SegmentedControl: FC<Props> = ({
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const onClickOptionRef = useRef(onClickOption)
-  onClickOptionRef.current = onClickOption
+  const latest = useLatest({ onClickOption })
 
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
@@ -161,9 +161,12 @@ export const SegmentedControl: FC<Props> = ({
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
-  const onClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    onClickOptionRef.current?.(e.currentTarget.value)
-  }, [])
+  const onClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      latest.onClickOption?.(e.currentTarget.value)
+    },
+    [latest],
+  )
 
   return (
     <div
