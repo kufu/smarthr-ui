@@ -10,7 +10,6 @@ import {
   type ReactNode,
   forwardRef,
   memo,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -163,7 +162,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const {
       dateToString,
       dateToAlternativeFormat,
-      updateDate,
       closeCalendar,
       openCalendar,
       stringToDate,
@@ -171,6 +169,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       onDelegateKeyDown,
       onKeyPressInput,
       onFocusInput,
+      onSelectDateCalendar,
     } = useMemo(() => {
       const internalDateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
@@ -272,10 +271,17 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         internalOpenCalendar()
       }
 
+      const internalOnSelectDateCalendar = (e: ChangeLikeEvent, selected: Date | null) => {
+        internalUpdateDate(e, selected)
+        // delay hiding calendar because calendar will be displayed when input is focused
+        requestAnimationFrame(internalCloseCalendar)
+
+        if (inputRef.current) inputRef.current.focus()
+      }
+
       return {
         dateToString: internalDateToString,
         dateToAlternativeFormat: internalDateToAlternativeFormat,
-        updateDate: internalUpdateDate,
         closeCalendar: internalCloseCalendar,
         openCalendar: internalOpenCalendar,
         stringToDate: internalStringToDate,
@@ -283,6 +289,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         onDelegateKeyDown: internalOnDelegateKeyDown,
         onKeyPressInput: internalOnKeyPressInput,
         onFocusInput: internalOnFocusInput,
+        onSelectDateCalendar: internalOnSelectDateCalendar,
       }
     }, [latest])
 
@@ -381,17 +388,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         : disabled
           ? theme.textColor.disabled
           : theme.textColor.grey
-
-    const onSelectDateCalendar = useCallback(
-      (e: ChangeLikeEvent, selected: Date | null) => {
-        updateDate(e, selected)
-        // delay hiding calendar because calendar will be displayed when input is focused
-        requestAnimationFrame(closeCalendar)
-
-        if (inputRef.current) inputRef.current.focus()
-      },
-      [updateDate, closeCalendar],
-    )
 
     return (
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
