@@ -9,7 +9,6 @@ import {
   isValidElement,
   useMemo,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -40,7 +39,7 @@ type AbstractProps = {
   filtered?:
     | boolean
     | {
-        iconAlt?: ReactNode
+        iconAlt?: string
       }
   responseStatus?: ResponseStatus
   onApply: MouseEventHandler<HTMLButtonElement>
@@ -143,10 +142,6 @@ export const FilterDropdown: FC<Props> = ({
     [filtered, trigger.text, applyText, cancelText, resetText, localize],
   )
 
-  const filteredIconAlt = useMemo(
-    () => innerText(decorated.filteredIconAlt),
-    [decorated.filteredIconAlt],
-  )
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
   const classNamesMapper = useMemo(() => {
@@ -190,7 +185,10 @@ export const FilterDropdown: FC<Props> = ({
 
         {filtered && (
           // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-          <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
+          <FaCircleCheckIcon
+            aria-label={decorated.filteredIconAlt}
+            className={classNames.filteredIcon}
+          />
         )}
       </span>
     )
@@ -206,7 +204,7 @@ export const FilterDropdown: FC<Props> = ({
       buttonSuffix: FilterIcon,
       buttonContent: decorated.trigger,
     }
-  }, [filtered, decorated.trigger, trigger.onlyIcon, filteredIconAlt, classNames])
+  }, [filtered, decorated.trigger, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>

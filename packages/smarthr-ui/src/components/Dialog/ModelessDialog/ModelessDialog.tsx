@@ -212,6 +212,10 @@ export const ModelessDialog: FC<Props> = ({
     debounceLiveRegionText(txt)
   }, [localize, wrapperPosition, debounceLiveRegionText])
 
+  // 外部propsをrefに保存
+  const unstableRef = useRef({ isOpen, onClickClose, onPressEscape })
+  unstableRef.current = { isOpen, onClickClose, onPressEscape }
+
   const positionStyle = useMemo(
     () => ({
       top: centering.top ?? top,
@@ -224,47 +228,44 @@ export const ModelessDialog: FC<Props> = ({
     [centering, top, left, right, bottom, width, height, size],
   )
 
-  const handleArrowKey = useCallback(
-    (e: KeyboardEvent) => {
-      if (!isOpen || document.activeElement !== e.currentTarget) {
-        return
-      }
+  const handleArrowKey = useCallback((e: KeyboardEvent) => {
+    if (!unstableRef.current.isOpen || document.activeElement !== e.currentTarget) {
+      return
+    }
 
-      const movingDistance = 20
+    const movingDistance = 20
 
-      switch (e.key) {
-        case 'ArrowUp':
-          setPosition((prev) => ({
-            x: prev.x,
-            y: prev.y - movingDistance,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowDown':
-          setPosition((prev) => ({
-            x: prev.x,
-            y: prev.y + movingDistance,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowLeft':
-          setPosition((prev) => ({
-            x: prev.x - movingDistance,
-            y: prev.y,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowRight':
-          setPosition((prev) => ({
-            x: prev.x + movingDistance,
-            y: prev.y,
-          }))
-          e.preventDefault()
-          break
-      }
-    },
-    [isOpen],
-  )
+    switch (e.key) {
+      case 'ArrowUp':
+        setPosition((prev) => ({
+          x: prev.x,
+          y: prev.y - movingDistance,
+        }))
+        e.preventDefault()
+        break
+      case 'ArrowDown':
+        setPosition((prev) => ({
+          x: prev.x,
+          y: prev.y + movingDistance,
+        }))
+        e.preventDefault()
+        break
+      case 'ArrowLeft':
+        setPosition((prev) => ({
+          x: prev.x - movingDistance,
+          y: prev.y,
+        }))
+        e.preventDefault()
+        break
+      case 'ArrowRight':
+        setPosition((prev) => ({
+          x: prev.x + movingDistance,
+          y: prev.y,
+        }))
+        e.preventDefault()
+        break
+    }
+  }, [])
 
   useEffect(() => {
     if (wrapperRef.current instanceof Element) {
@@ -314,31 +315,18 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [isOpen])
 
-  const actualOnClickClose = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      lastFocusElementRef.current?.focus()
-      onClickClose?.(e)
-    },
-    [onClickClose],
-  )
+  const actualOnClickClose = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    lastFocusElementRef.current?.focus()
+    unstableRef.current.onClickClose?.(e)
+  }, [])
 
-  const actualOnPressEscape = useMemo(
-    () =>
-      onPressEscape
-        ? () => {
-            lastFocusElementRef.current?.focus()
-            onPressEscape()
-          }
-        : undefined,
-    [onPressEscape],
-  )
+  // stableなcallbackを作成
+  const memoizedOnPressEscape = useCallback(() => {
+    lastFocusElementRef.current?.focus()
+    unstableRef.current.onPressEscape?.()
+  }, [])
 
-  useHandleEscape(
-    useMemo(
-      () => (actualOnPressEscape && isOpen ? actualOnPressEscape : undefined),
-      [isOpen, actualOnPressEscape],
-    ),
-  )
+  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
 
   useEffect(() => {
     const focusHandler = (e: FocusEvent) => {

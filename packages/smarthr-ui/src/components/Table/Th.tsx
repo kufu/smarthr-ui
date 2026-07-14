@@ -20,8 +20,6 @@ export type AbstractProps = PropsWithChildren<
     onSort?: () => void
     /** 横スクロール時、カラムを左右いずれかに固定 */
     fixed?: 'left' | 'right'
-    /** 文言を変更するための関数 */
-    decorators?: ComponentPropsWithoutRef<typeof ThSortButton>['decorators']
     contentWidth?: CellContentWidth
   } & VariantProps<typeof classNameGenerator>
 >
@@ -65,19 +63,7 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
 }
 
 export const Th = memo<Props>(
-  ({
-    children,
-    sort,
-    onSort,
-    decorators,
-    align,
-    vAlign,
-    fixed,
-    contentWidth,
-    className,
-    style,
-    ...rest
-  }) => {
+  ({ children, sort, onSort, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ className, align, vAlign })
 
@@ -111,7 +97,7 @@ export const Th = memo<Props>(
         style={actualStyle}
       >
         {sort ? (
-          <ThSortButton align={align} onSort={onSort} sort={sort} decorators={decorators}>
+          <ThSortButton align={align} onSort={onSort} sort={sort}>
             {children}
           </ThSortButton>
         ) : (
