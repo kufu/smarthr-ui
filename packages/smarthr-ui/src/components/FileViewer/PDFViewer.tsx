@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ComponentProps, type FC, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
 import { useLatest } from '../../hooks/useLatest'
@@ -89,13 +80,6 @@ export const PDFViewer: FC<Props> = memo(
 
     const latest = useLatest({ onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation })
 
-    const onDocumentLoadSuccess = useCallback<
-      NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
-    >(({ numPages }) => {
-      setPdfNumPages(numPages)
-      setPdfPageArray(Array.from({ length: numPages }))
-    }, [])
-
     const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
       if (!matches || matches.length === 0) {
         return undefined
@@ -105,6 +89,10 @@ export const PDFViewer: FC<Props> = memo(
 
     const functions = useMemo(
       () => ({
+        onDocumentLoadSuccess: ({ numPages }: { numPages: number }) => {
+          setPdfNumPages(numPages)
+          setPdfPageArray(Array.from({ length: numPages }))
+        },
         onPageLoad: (
           page: Parameters<NonNullable<ComponentProps<typeof Page>['onLoadSuccess']>>[0],
         ) => {
@@ -165,7 +153,7 @@ export const PDFViewer: FC<Props> = memo(
           <Document
             options={options}
             file={file.url}
-            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadSuccess={functions.onDocumentLoadSuccess}
             onLoadError={onLoadError}
             rotate={rotation}
             className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
