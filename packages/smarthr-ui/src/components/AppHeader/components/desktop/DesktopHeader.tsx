@@ -59,7 +59,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
     }
   }, [className])
 
-  const { localize, locale } = useIntl()
+  const { localize, getLocale } = useIntl()
   const translated = useMemo(
     () => ({
       appLauncherLabel: localize({
@@ -124,7 +124,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
           {localeProps && (
             <LanguageSwitcher
               localeMap={localeMap}
-              locale={locale}
+              locale={getLocale()}
               onLanguageSelect={localeProps.onSelectLocale as (locale: string) => void}
               enableNew={enableNew}
             />

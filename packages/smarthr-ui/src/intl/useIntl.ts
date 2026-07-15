@@ -31,8 +31,8 @@ export type UseIntlReturn = {
     values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
     opts?: IntlMessageFormatOptions,
   ) => string
-  /** 現在のロケール */
-  locale: keyof typeof locales
+  /** 現在のロケールを取得する関数 */
+  getLocale: () => keyof typeof locales
 }
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
@@ -50,10 +50,10 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
  * }
  *
  * @example
- * // 利用可能なロケールの確認
+ * // 現在のロケールの取得
  * const Component = () => {
- *   const { availableLocales, locale } = useIntl()
- *   return <div>現在のロケール: {locale}</div>
+ *   const { getLocale } = useIntl()
+ *   return <div>現在のロケール: {getLocale()}</div>
  * }
  */
 export const useIntl = (): UseIntlReturn => {
@@ -70,9 +70,14 @@ export const useIntl = (): UseIntlReturn => {
     [intl],
   )
 
+  const getLocale = useCallback(
+    (): keyof typeof locales => (isValidLocale(intl.locale) ? intl.locale : 'ja'),
+    [intl],
+  )
+
   return {
     availableLocales,
     localize,
-    locale: isValidLocale(intl.locale) ? intl.locale : 'ja',
+    getLocale,
   }
 }

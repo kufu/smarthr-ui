@@ -17,12 +17,12 @@ const handleShowWareki = (date: Date | null, locale: string) => {
 }
 
 export const WarekiPicker: FC<Props> = (props) => {
-  const { locale } = useIntl()
+  const { getLocale } = useIntl()
 
   return (
     <DatePicker
       {...props}
-      showAlternative={(date: Date | null) => handleShowWareki(date, locale)}
+      showAlternative={(date: Date | null) => handleShowWareki(date, getLocale())}
     />
   )
 }

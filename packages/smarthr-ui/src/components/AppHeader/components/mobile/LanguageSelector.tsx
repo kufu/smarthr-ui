@@ -28,7 +28,7 @@ type Props = {
 }
 
 export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose }) => {
-  const { locale, availableLocales } = useIntl()
+  const { getLocale, availableLocales } = useIntl()
   const { locales } = useMemo(
     () => ({
       locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
@@ -66,7 +66,7 @@ export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose
             key={localeKey}
             value={localeKey as Locale}
             onClick={onClickLocale}
-            selected={localeKey === locale}
+            selected={localeKey === getLocale()}
             className={classNames.button}
           >
             {label}
