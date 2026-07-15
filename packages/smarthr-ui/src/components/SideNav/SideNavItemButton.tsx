@@ -11,34 +11,30 @@ import { tv } from 'tailwind-variants'
 import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
 
+import { useSideNavContext } from './SideNavContext'
+
 export type SideNavSizeType = 'M' | 'S'
 
 type AbstractProps = {
-  /** アイテムのタイトル
-   * @deprecated SideNav で items を使う時の props です。children を使ってください。
-   */
-  title?: ReactNode
   /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
   prefix?: ReactNode
   /** タイトルのサフィックスの内容。通常、Prefixを使用済みの場合にStatusLabelやChipの配置に用います。 */
   suffix?: ReactNode
   /** 選択されているアイテムかどうか */
   current?: boolean
-  /** アイテムの大きさ */
-  size?: SideNavSizeType
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) => void
 }
 
 type AbstractButtonProps = AbstractProps & {
-  /** アイテムの識別子。onClickのイベントオブジェクトのcurrentTarget.valueで取得できます。 */
-  id: string
+  /** アイテムを押下したときに発火するコールバック関数 */
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 type AbstractAnchorProps<T extends ElementType = 'a'> = AbstractProps & {
   href: string
   /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
+  /** アイテムを押下したときに発火するコールバック関数 */
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }
 
 type ButtonProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractButtonProps> &
@@ -93,61 +89,59 @@ const classNameGenerator = tv({
 
 export const SideNavItemButton: FC<ButtonProps> = ({
   id,
-  title,
   prefix,
   suffix,
   current,
-  size,
-  onClick,
   children,
   className,
+  onClick,
   ...rest
 }) => {
+  const context = useSideNavContext()
+  const size = context?.size ?? 'M'
+
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: size ?? 'M' }),
+      button: button({ size }),
       body: body(),
       bodyText: bodyText(),
     }
   }, [className, size])
 
   return (
-    <li {...rest} data-current={!!current} className={classNames.wrapper}>
+    <li {...rest} id={id} data-current={!!current} className={classNames.wrapper}>
       <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
-        <BodyCluster
-          prefix={prefix}
-          suffix={suffix}
-          title={children ?? title}
-          classNames={classNames}
-        />
+        <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
+          {children}
+        </BodyCluster>
       </UnstyledButton>
     </li>
   )
 }
 
 export const SideNavItemAnchor = <T extends ElementType = 'a'>({
-  id,
-  title,
   prefix,
   suffix,
   current,
-  size,
-  onClick,
   children,
   className,
   href,
   elementAs,
+  onClick,
   ...rest
 }: AnchorProps<T>) => {
+  const context = useSideNavContext()
+  const size = context?.size ?? 'M'
+
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: size ?? 'M' }),
+      button: button({ size }),
       body: body(),
       bodyText: bodyText(),
     }
@@ -157,26 +151,24 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 
   return (
     <li {...rest} data-current={!!current} className={classNames.wrapper}>
-      <Anchor className={classNames.button} href={href} onClick={onClick} data-value={id}>
-        <BodyCluster
-          prefix={prefix}
-          suffix={suffix}
-          title={children ?? title}
-          classNames={classNames}
-        />
+      <Anchor className={classNames.button} href={href} onClick={onClick}>
+        <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
+          {children}
+        </BodyCluster>
       </Anchor>
     </li>
   )
 }
 
 const BodyCluster = memo<
-  Pick<AbstractProps, 'prefix' | 'suffix' | 'title'> & {
+  Pick<AbstractProps, 'prefix' | 'suffix'> & {
+    children: ReactNode
     classNames: { body: string; bodyText: string }
   }
->(({ prefix, suffix, title, classNames }) => (
+>(({ prefix, suffix, children, classNames }) => (
   <Cluster inline align="center" className={classNames.body} as="span">
     {prefix}
-    <span className={classNames.bodyText}>{title}</span>
+    <span className={classNames.bodyText}>{children}</span>
     {suffix}
   </Cluster>
 ))
