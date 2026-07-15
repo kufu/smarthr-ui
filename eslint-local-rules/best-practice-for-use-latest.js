@@ -45,6 +45,32 @@ module.exports = {
     const sourceCode = context.sourceCode || context.getSourceCode()
 
     /**
+     * 識別子が useLatest() 呼び出しに束縛されているかチェック
+     */
+    function isLatestFromUseLatest(identifierNode) {
+      const scope = sourceCode.getScope(identifierNode)
+
+      // 現在のスコープから'latest'変数を探す
+      let variable = null
+      let currentScope = scope
+      while (currentScope) {
+        variable = currentScope.set.get('latest')
+        if (variable) break
+        currentScope = currentScope.upper
+      }
+
+      if (!variable) return false
+
+      const def = variable.defs[0]
+      return (
+        def?.node.type === 'VariableDeclarator' &&
+        def.node.init?.type === 'CallExpression' &&
+        def.node.init.callee.type === 'Identifier' &&
+        def.node.init.callee.name === 'useLatest'
+      )
+    }
+
+    /**
      * ノードがuseEffect/useLayoutEffect/useCallback内にあるかチェック
      */
     function isInsideAllowedHook(node) {
@@ -147,6 +173,11 @@ module.exports = {
           return
         }
 
+        // useLatest()由来の変数でない場合はスキップ
+        if (!isLatestFromUseLatest(node)) {
+          return
+        }
+
         // スプレッド構文、in演算子、for...inループ、Object.*メソッドは
         // それぞれ専用のチェックで処理するのでスキップ
         switch (parent.type) {
@@ -222,6 +253,10 @@ module.exports = {
           // すべての引数をチェック
           for (const arg of node.arguments) {
             if (arg.type === 'Identifier' && arg.name === 'latest') {
+              // useLatest()由来の変数でない場合はスキップ
+              if (!isLatestFromUseLatest(arg)) {
+                continue
+              }
               context.report({
                 node: arg,
                 messageId: 'noObjectMethods',
@@ -245,10 +280,17 @@ module.exports = {
             )
 
             if (latestIndex !== -1) {
+              const latestElement = elements[latestIndex]
+
+              // useLatest()由来の変数でない場合はスキップ
+              if (!isLatestFromUseLatest(latestElement)) {
+                return
+              }
+
               // useMemoでは依存配列にlatestを含めることを禁止
               if (hookName === 'useMemo') {
                 context.report({
-                  node: elements[latestIndex],
+                  node: latestElement,
                   messageId: 'noLatestInUseMemo',
                 })
                 return
@@ -268,7 +310,7 @@ module.exports = {
               // latestが含まれていて、最後尾でない場合
               if (latestIndex !== elements.length - 1) {
                 context.report({
-                  node: elements[latestIndex],
+                  node: latestElement,
                   messageId: 'latestMustBeLastInDeps',
                 })
               }
@@ -280,6 +322,10 @@ module.exports = {
       // 4. スプレッド構文のチェック
       SpreadElement(node) {
         if (node.argument.type === 'Identifier' && node.argument.name === 'latest') {
+          // useLatest()由来の変数でない場合はスキップ
+          if (!isLatestFromUseLatest(node.argument)) {
+            return
+          }
           context.report({
             node: node.argument,
             messageId: 'noSpread',
@@ -290,6 +336,10 @@ module.exports = {
       // 5. in演算子のチェック
       'BinaryExpression[operator="in"]'(node) {
         if (node.right.type === 'Identifier' && node.right.name === 'latest') {
+          // useLatest()由来の変数でない場合はスキップ
+          if (!isLatestFromUseLatest(node.right)) {
+            return
+          }
           context.report({
             node: node.right,
             messageId: 'noInOperator',
@@ -300,6 +350,10 @@ module.exports = {
       // 6. for...inループのチェック
       ForInStatement(node) {
         if (node.right.type === 'Identifier' && node.right.name === 'latest') {
+          // useLatest()由来の変数でない場合はスキップ
+          if (!isLatestFromUseLatest(node.right)) {
+            return
+          }
           context.report({
             node: node.right,
             messageId: 'noForIn',

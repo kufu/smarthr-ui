@@ -53,6 +53,51 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [someValue, latest])
       `,
     },
+
+    // useLatest()由来でないlatest変数（useState）
+    {
+      code: `
+        const [latest, setLatest] = useState(null)
+        const result = latest.value
+      `,
+    },
+
+    // useLatest()由来でないlatest変数（配列の最新要素）
+    {
+      code: `
+        const items = [1, 2, 3]
+        const latest = items[items.length - 1]
+        const result = Object.keys(latest)
+      `,
+    },
+
+    // useLatest()由来でないlatest変数（スプレッド構文）
+    {
+      code: `
+        const latest = { foo: 'bar' }
+        const obj = { ...latest }
+      `,
+    },
+
+    // useLatest()由来でないlatest変数（in演算子）
+    {
+      code: `
+        const latest = { foo: 'bar' }
+        if ('foo' in latest) {
+          console.log('has foo')
+        }
+      `,
+    },
+
+    // useLatest()由来でないlatest変数（for...in）
+    {
+      code: `
+        const latest = { foo: 'bar' }
+        for (const key in latest) {
+          console.log(key)
+        }
+      `,
+    },
   ],
 
   invalid: [
