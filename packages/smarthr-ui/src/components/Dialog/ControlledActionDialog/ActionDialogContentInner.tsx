@@ -13,7 +13,7 @@ import {
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
-import { Cluster, Stack } from '../../Layout'
+import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
@@ -97,7 +97,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <Stack gap={0.5} className={styles.actionArea}>
+      <div className={styles.actionArea}>
         <Cluster justify="space-between">
           {subActionArea}
           <ActionAreaCluster
@@ -113,7 +113,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           responseStatus={calcedResponseStatus}
           className={styles.message}
         />
-      </Stack>
+      </div>
     </Section>
   )
 }
