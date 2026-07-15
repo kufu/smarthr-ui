@@ -1,5 +1,7 @@
 import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
+
 const OPTION_INCREMENT_AMOUNT = 100
 
 export function usePartialRendering<T>({
@@ -13,23 +15,20 @@ export function usePartialRendering<T>({
 
   const [currentItemLength, setCurrentItemLength] = useState(limiter(OPTION_INCREMENT_AMOUNT))
 
-  const limiterRef = useRef(limiter)
-  limiterRef.current = limiter
+  const latest = useLatest({ limiter })
+
+  const onIntersect = useCallback(() => {
+    setCurrentItemLength((current) => latest.limiter(current + OPTION_INCREMENT_AMOUNT))
+  }, [latest])
 
   useEffect(() => {
     setCurrentItemLength((current) => limiter(current))
   }, [limiter])
 
-  // minLength も考慮した実際のアイテム数を算出
-  // itemsはunstableなのでuseMemoは毎回再計算されるため、直接計算する
-  const partialItems = items.slice(0, currentItemLength)
-
-  const onIntersect = useCallback(() => {
-    setCurrentItemLength((current) => limiterRef.current(current + OPTION_INCREMENT_AMOUNT))
-  }, [])
-
   return {
-    items: partialItems,
+    // minLength も考慮した実際のアイテム数を算出
+    // itemsはunstableなのでuseMemoは毎回再計算されるため、直接計算する
+    items: items.slice(0, currentItemLength),
     onIntersect: currentItemLength < items.length ? onIntersect : null,
   }
 }
