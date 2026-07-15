@@ -167,7 +167,7 @@ const ActualFileViewer: FC<
       },
       actualHandleLoadError: hasOnLoadError ? () => latest.onLoadError?.() : undefined,
     }),
-    [latest, hasOnLoadError],
+    [hasOnLoadError, latest],
   )
 
   useEffect(() => {

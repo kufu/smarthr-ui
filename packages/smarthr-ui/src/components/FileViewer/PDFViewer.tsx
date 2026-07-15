@@ -127,7 +127,7 @@ export const PDFViewer: FC<Props> = memo(
           latest.onPageTextLoaded(pageIndex, texts)
         }),
       }),
-      [latest, pdfPageArray],
+      [pdfPageArray, latest],
     )
 
     useEffect(() => {
