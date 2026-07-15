@@ -7,12 +7,11 @@ import {
   type MouseEvent,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
@@ -135,14 +134,18 @@ export const LanguageSwitcher: FC<Props> = ({
     }
   }, [enableNew, invert])
 
-  const unstableRef = useRef({ onLanguageSelect })
-  unstableRef.current = { onLanguageSelect }
+  const latest = useLatest({ onLanguageSelect })
 
-  const handleClickLanguageSelect = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    unstableRef.current.onLanguageSelect?.(e.currentTarget.value)
-  }, [])
+  const hasOnLanguageSelect = !!onLanguageSelect
 
-  const actualOnClickLanguageSelect = onLanguageSelect ? handleClickLanguageSelect : undefined
+  const functions = useMemo(
+    () => ({
+      actualOnClickLanguageSelect: hasOnLanguageSelect
+        ? (e: MouseEvent<HTMLButtonElement>) => latest.onLanguageSelect?.(e.currentTarget.value)
+        : undefined,
+    }),
+    [hasOnLanguageSelect, latest],
+  )
 
   return (
     <Dropdown {...rest}>
@@ -161,7 +164,7 @@ export const LanguageSwitcher: FC<Props> = ({
               className={classNames.languageItem}
               buttonStyle={classNames.languageButton}
               current={currentLang === code}
-              onClick={actualOnClickLanguageSelect}
+              onClick={functions.actualOnClickLanguageSelect}
               iconAlt={checkIconAlt}
             >
               {label}
