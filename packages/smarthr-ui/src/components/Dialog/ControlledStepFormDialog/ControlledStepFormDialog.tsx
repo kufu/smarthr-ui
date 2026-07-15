@@ -5,12 +5,12 @@ import {
   type FC,
   type FormEvent,
   type ReactNode,
-  useCallback,
   useContext,
   useMemo,
   useRef,
 } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -142,29 +142,34 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
 
   const focusTrapRef = useRef<FocusTrapRef>(null)
 
-  const actualOnClickClose = useCallback(() => {
-    if (isOpen) {
-      focusTrapRef.current?.focus()
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+  const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 
-  const onDelegateSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
-      if (isOpen) {
-        focusTrapRef.current?.focus()
-        onSubmit(e, helpers)
-      }
-    },
-    [onSubmit, isOpen],
+  const functions = useMemo(
+    () => ({
+      actualOnClickClose: () => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onClickClose()
+        }
+      },
+      onDelegateSubmit: (
+        e: FormEvent<HTMLFormElement>,
+        helpers: Parameters<typeof onSubmit>[1],
+      ) => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onSubmit(e, helpers)
+        }
+      },
+      actualOnClickBack: () => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onClickBack?.()
+        }
+      },
+    }),
+    [latest],
   )
-
-  const actualOnClickBack = useCallback(() => {
-    if (isOpen) {
-      focusTrapRef.current?.focus()
-      onClickBack?.()
-    }
-  }, [isOpen, onClickBack])
 
   return (
     <DialogContentInner
@@ -185,9 +190,9 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         submitButton={submitButton}
         closeButton={closeButton}
         backButton={backButton}
-        onClickClose={actualOnClickClose}
-        onSubmit={onDelegateSubmit}
-        onClickBack={actualOnClickBack}
+        onClickClose={functions.actualOnClickClose}
+        onSubmit={functions.onDelegateSubmit}
+        onClickBack={functions.actualOnClickBack}
         responseStatus={responseStatus}
       >
         {children}
