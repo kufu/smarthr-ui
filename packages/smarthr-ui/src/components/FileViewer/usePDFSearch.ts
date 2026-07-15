@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -57,17 +57,17 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const resetMatchState = useCallback(() => {
-    setMatches([])
-    setCurrentMatchIndex(-1)
-  }, [])
-
-  const latest = useLatest({ matchCount, query, resetMatchState })
+  const latest = useLatest({ matchCount, query })
 
   const functions = useMemo(() => {
+    const resetMatchState = () => {
+      setMatches([])
+      setCurrentMatchIndex(-1)
+    }
+
     const recalculate = (nextQuery: string, options?: { resetSelection?: boolean }) => {
       if (nextQuery === '') {
-        latest.resetMatchState()
+        resetMatchState()
         return
       }
       const escapedQuery = escapeRegExp(normalize(nextQuery))
@@ -130,16 +130,17 @@ export const usePDFSearch = (fileUrl: string) => {
       },
       clear: () => {
         setQueryState('')
-        latest.resetMatchState()
+        resetMatchState()
       },
+      resetMatchState,
     }
   }, [latest])
 
   useEffect(() => {
     pageTextsRef.current.clear()
     setQueryState('')
-    latest.resetMatchState()
-  }, [fileUrl, latest])
+    functions.resetMatchState()
+  }, [fileUrl, functions])
 
   return useMemo(
     () => ({
