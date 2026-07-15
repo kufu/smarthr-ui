@@ -1,7 +1,8 @@
 'use client'
 
-import { type ComponentProps, type FC, type FormEvent, type ReactNode, useCallback } from 'react'
+import { type ComponentProps, type FC, type FormEvent, type ReactNode, useMemo } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -61,24 +62,28 @@ export const ControlledFormDialog: FC<Props> = ({
     buttonObjectConverter,
   )
 
-  const actualOnClickClose = useCallback(() => {
-    if (isOpen) {
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+  const latest = useLatest({ onClickClose, onSubmit, isOpen })
 
-  const onDelegateSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      if (isOpen) {
-        e.preventDefault()
-        // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-        // 親formが意図せずsubmitされてしまう場合がある
-        e.stopPropagation()
-        onSubmit(e, { close: actualOnClickClose })
+  const functions = useMemo(() => {
+    const actualOnClickClose = () => {
+      if (latest.isOpen) {
+        latest.onClickClose()
       }
-    },
-    [isOpen, onSubmit, actualOnClickClose],
-  )
+    }
+
+    return {
+      actualOnClickClose,
+      onDelegateSubmit: (e: FormEvent<HTMLFormElement>) => {
+        if (latest.isOpen) {
+          e.preventDefault()
+          // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+          // 親formが意図せずsubmitされてしまう場合がある
+          e.stopPropagation()
+          latest.onSubmit(e, { close: actualOnClickClose })
+        }
+      },
+    }
+  }, [latest])
 
   return createPortal(
     <DialogContentInner
@@ -95,8 +100,8 @@ export const ControlledFormDialog: FC<Props> = ({
         actionButton={actionButton}
         closeButton={closeButton}
         subActionArea={subActionArea}
-        onClickClose={actualOnClickClose}
-        onSubmit={onDelegateSubmit}
+        onClickClose={functions.actualOnClickClose}
+        onSubmit={functions.onDelegateSubmit}
         responseStatus={responseStatus}
       >
         {children}
