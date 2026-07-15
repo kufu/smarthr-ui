@@ -152,11 +152,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       [maxLetters],
     )
 
-    useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
-      ref,
-      () => textareaRef.current,
-    )
-
     const latest = useLatest({
       onChange,
       maxLetters,
@@ -218,6 +213,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         },
       }
     }, [latest])
+
+    useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
+      ref,
+      () => textareaRef.current,
+    )
 
     // autoFocus時に、フォーカスを当てる
     useEffect(() => {
