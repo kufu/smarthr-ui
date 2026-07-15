@@ -95,10 +95,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         button: button(),
       }
     }, [disabled, error, filesDraggedOver])
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => fileRef.current,
-    )
 
     const onDrop = useCallback(
       (e: DragEvent<HTMLElement>) => {
@@ -134,6 +130,11 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
     const onClickButton = useCallback(() => {
       fileRef.current!.click()
     }, [])
+
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => fileRef.current,
+    )
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
