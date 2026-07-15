@@ -44,24 +44,24 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
         throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
       }
 
-      const actualOnClick = (e: MouseEvent) => {
-        const toggleExpanded = () => {
-          latest.setExpanded((current) => !current)
-        }
-
-        if (latest.onClick) {
-          latest.onClick(toggleExpanded, e)
-        } else {
-          toggleExpanded()
-        }
-      }
-
       button.setAttribute('aria-expanded', expanded.toString())
       button.setAttribute('aria-controls', targetId)
 
       // Button は native disabled ではなく aria-disabled を使うため、
       // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
       if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+        const actualOnClick = (e: MouseEvent) => {
+          const toggleExpanded = () => {
+            latest.setExpanded((current) => !current)
+          }
+
+          if (latest.onClick) {
+            latest.onClick(toggleExpanded, e)
+          } else {
+            toggleExpanded()
+          }
+        }
+
         button.addEventListener('click', actualOnClick)
 
         currentCleanup = () => {
