@@ -14,6 +14,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 
 export type Option = {
@@ -85,8 +86,9 @@ export const SegmentedControl: FC<Props> = ({
 }) => {
   const [focusable, setFocusable] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
-  const unstableRef = useRef({ onClickOption, focusable })
-  unstableRef.current = { onClickOption, focusable }
+
+  const latest = useLatest({ onClickOption, focusable })
+
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -102,7 +104,7 @@ export const SegmentedControl: FC<Props> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (unstableRef.current.focusable || !containerRef.current || !document.activeElement) {
+      if (latest.focusable || !containerRef.current || !document.activeElement) {
         return
       }
 
@@ -155,16 +157,19 @@ export const SegmentedControl: FC<Props> = ({
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
+  }, [latest])
 
   const excludesSelected = useMemo(
     () => !value || options.every((option) => option.value !== value),
     [value, options],
   )
 
-  const stableOnClickOption = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    unstableRef.current.onClickOption?.(e.currentTarget.value)
-  }, [])
+  const stableOnClickOption = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      latest.onClickOption?.(e.currentTarget.value)
+    },
+    [latest],
+  )
 
   const actualOnClickOption = onClickOption ? stableOnClickOption : undefined
 
