@@ -149,9 +149,6 @@ export type UseDateFormatReturn = {
    * @returns 週の開始日（0 = 日曜日, 1 = 月曜日, ..., 6 = 土曜日）
    */
   getWeekStartDay: () => number
-
-  /** 現在のロケール */
-  locale: keyof typeof locales
 }
 
 const WEEK_START_DAYS = {
@@ -302,7 +299,7 @@ const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
  * @example
  * // 週の開始日の取得
  * const Component = () => {
- *   const { getWeekStartDay, locale } = useDateFormat()
+ *   const { getWeekStartDay } = useDateFormat()
  *   return <div>週の開始日: {getWeekStartDay()}</div>
  * }
  */
@@ -413,6 +410,5 @@ export const useDateFormat = (): UseDateFormatReturn => {
     formatTime,
     formatTimestamp,
     getWeekStartDay,
-    locale,
   }
 }
