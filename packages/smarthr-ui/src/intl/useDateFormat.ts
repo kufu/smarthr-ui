@@ -23,7 +23,7 @@ export type FormatDateProps = {
   /**
    * フォーマットオプション
    */
-  options?: Intl.DateTimeFormatOptions & {
+  options?: Omit<Intl.DateTimeFormatOptions, 'dateStyle' | 'timeStyle'> & {
     /**
      * 日本語ロケールでスラッシュを無効化し、月を長形式で表示する
      * @example
@@ -56,7 +56,7 @@ export type FormatTimeProps = {
   /**
    * フォーマットオプション
    */
-  options?: Intl.DateTimeFormatOptions
+  options?: Omit<Intl.DateTimeFormatOptions, 'dateStyle' | 'timeStyle'>
 }
 
 export type FormatTimestampProps = {
