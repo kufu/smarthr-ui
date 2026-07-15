@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
+
 import type { PDFSearchMatch } from './types'
 
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -55,8 +57,7 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const unstableRef = useRef({ matchCount, query })
-  unstableRef.current = { matchCount, query }
+  const latest = useLatest({ matchCount, query })
 
   const resetMatchState = useCallback(() => {
     setMatches([])
@@ -107,41 +108,41 @@ export const usePDFSearch = (fileUrl: string) => {
     [recalculate],
   )
 
-  const registerPageText = useCallback(
-    (pageIndex: number, texts: string[]) => {
-      pageTextsRef.current.set(pageIndex, texts.map(normalize))
-      // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
-      if (unstableRef.current.query !== '') {
-        recalculate(unstableRef.current.query)
-      }
-    },
-    [recalculate],
-  )
-
   const clear = useCallback(() => {
     setQueryState('')
     resetMatchState()
   }, [resetMatchState])
 
-  const goNext = useCallback(() => {
-    setCurrentMatchIndex((prev) => {
-      const { matchCount: count } = unstableRef.current
+  const functions = useMemo(
+    () => ({
+      registerPageText: (pageIndex: number, texts: string[]) => {
+        pageTextsRef.current.set(pageIndex, texts.map(normalize))
+        // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
+        if (latest.query !== '') {
+          recalculate(latest.query)
+        }
+      },
+      goNext: () => {
+        setCurrentMatchIndex((prev) => {
+          const { matchCount: count } = latest
 
-      if (count === 0) return -1
-      if (prev < 0) return 0
-      return (prev + 1) % count
-    })
-  }, [])
+          if (count === 0) return -1
+          if (prev < 0) return 0
+          return (prev + 1) % count
+        })
+      },
+      goPrev: () => {
+        setCurrentMatchIndex((prev) => {
+          const { matchCount: count } = latest
 
-  const goPrev = useCallback(() => {
-    setCurrentMatchIndex((prev) => {
-      const { matchCount: count } = unstableRef.current
-
-      if (count === 0) return -1
-      if (prev < 0) return count - 1
-      return (prev - 1 + count) % count
-    })
-  }, [])
+          if (count === 0) return -1
+          if (prev < 0) return count - 1
+          return (prev - 1 + count) % count
+        })
+      },
+    }),
+    [latest, recalculate],
+  )
 
   useEffect(() => {
     pageTextsRef.current.clear()
@@ -156,22 +157,12 @@ export const usePDFSearch = (fileUrl: string) => {
       matches,
       matchCount,
       currentMatchIndex,
-      goNext,
-      goPrev,
+      goNext: functions.goNext,
+      goPrev: functions.goPrev,
       clear,
-      registerPageText,
+      registerPageText: functions.registerPageText,
     }),
-    [
-      query,
-      setQuery,
-      matches,
-      matchCount,
-      currentMatchIndex,
-      goNext,
-      goPrev,
-      clear,
-      registerPageText,
-    ],
+    [query, setQuery, matches, matchCount, currentMatchIndex, clear, functions],
   )
 }
 

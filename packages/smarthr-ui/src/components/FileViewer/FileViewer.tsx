@@ -16,6 +16,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { DropdownMenuButton } from '../Dropdown'
@@ -80,15 +81,17 @@ const PDFFileViewer: FC<
 > = ({ file, rotation, setRotation, onPassword, ...rest }) => {
   const pdfSearch = usePDFSearch(file.url)
 
-  const unstableRef = useRef({ onPassword, setRotation })
-  unstableRef.current = { onPassword, setRotation }
+  const latest = useLatest({ onPassword, setRotation })
 
-  const handlePDFLoaded = useCallback((defaultRotation: number) => {
-    unstableRef.current.setRotation(defaultRotation)
-  }, [])
-  const actualOnPassword: OnPasswordType = useCallback(
-    (...passRest) => unstableRef.current.onPassword?.(...passRest),
-    [],
+  const functions = useMemo(
+    () => ({
+      handlePDFLoaded: (defaultRotation: number) => {
+        latest.setRotation(defaultRotation)
+      },
+      actualOnPassword: ((...passRest: Parameters<OnPasswordType>) =>
+        latest.onPassword?.(...passRest)) as OnPasswordType,
+    }),
+    [latest],
   )
 
   return (
@@ -98,8 +101,8 @@ const PDFFileViewer: FC<
       rotation={rotation}
       setRotation={setRotation}
       pdfSearch={pdfSearch}
-      handlePDFLoaded={handlePDFLoaded}
-      onPassword={onPassword ? actualOnPassword : undefined}
+      handlePDFLoaded={functions.handlePDFLoaded}
+      onPassword={onPassword ? functions.actualOnPassword : undefined}
     />
   )
 }
@@ -133,35 +136,35 @@ const ActualFileViewer: FC<
     [scaleStep],
   )
 
-  const unstableRef = useRef({ internalScaleStep, onLoadError, rotation, setRotation })
-  unstableRef.current = { internalScaleStep, onLoadError, rotation, setRotation }
-
-  const scaleUp = useCallback(() => {
-    setScale((currentScale) =>
-      new Decimal(currentScale).add(unstableRef.current.internalScaleStep).toNumber(),
-    )
-  }, [])
-
-  const scaleDown = useCallback(() => {
-    setScale((currentScale) =>
-      new Decimal(currentScale).sub(unstableRef.current.internalScaleStep).toNumber(),
-    )
-  }, [])
-
-  const rotate = useCallback(() => {
-    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
-    const currentRotation = unstableRef.current.rotation ?? 0
-    unstableRef.current.setRotation(currentRotation === 0 ? 270 : currentRotation - 90)
-  }, [])
+  const latest = useLatest({ internalScaleStep, onLoadError, rotation, setRotation })
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
   }, [])
 
-  const handleLoadError = useCallback(() => {
-    unstableRef.current.onLoadError?.()
-  }, [])
-  const actualHandleLoadError = onLoadError ? handleLoadError : undefined
+  const hasOnLoadError = !!onLoadError
+
+  const functions = useMemo(
+    () => ({
+      scaleUp: () => {
+        setScale((currentScale) =>
+          new Decimal(currentScale).add(latest.internalScaleStep).toNumber(),
+        )
+      },
+      scaleDown: () => {
+        setScale((currentScale) =>
+          new Decimal(currentScale).sub(latest.internalScaleStep).toNumber(),
+        )
+      },
+      rotate: () => {
+        // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+        const currentRotation = latest.rotation ?? 0
+        latest.setRotation(currentRotation === 0 ? 270 : currentRotation - 90)
+      },
+      actualHandleLoadError: hasOnLoadError ? () => latest.onLoadError?.() : undefined,
+    }),
+    [latest, hasOnLoadError],
+  )
 
   useEffect(() => {
     if (!ref.current || fixedWidth !== undefined) {
@@ -190,9 +193,9 @@ const ActualFileViewer: FC<
           scale={scale}
           setScale={setScale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          onClickScaleUpButton={scaleUp}
-          onClickScaleDownButton={scaleDown}
-          onClickRotateButton={rotate}
+          onClickScaleUpButton={functions.scaleUp}
+          onClickScaleDownButton={functions.scaleDown}
+          onClickRotateButton={functions.rotate}
           searchController={pdfSearch ? <SearchController search={pdfSearch} /> : undefined}
         />
       </div>
@@ -212,7 +215,7 @@ const ActualFileViewer: FC<
               onLoad={handleLoaded}
               onPDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
-              onLoadError={actualHandleLoadError}
+              onLoadError={functions.actualHandleLoadError}
               search={pdfSearch}
             />
           ) : file.contentType.startsWith('image/') ? (
@@ -222,7 +225,7 @@ const ActualFileViewer: FC<
               file={file}
               width={width}
               onLoad={handleLoaded}
-              onLoadError={actualHandleLoadError}
+              onLoadError={functions.actualHandleLoadError}
             />
           ) : (
             <Localizer

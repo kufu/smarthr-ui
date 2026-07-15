@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Scroller } from '../Scroller'
 
 import {
@@ -86,24 +87,13 @@ export const PDFViewer: FC<Props> = memo(
     const [pdfPageArray, setPdfPageArray] = useState<unknown[]>([])
     const rootRef = useRef<HTMLDivElement>(null)
 
-    const unstableRef = useRef({ onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation })
-    unstableRef.current = { onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation }
+    const latest = useLatest({ onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation })
 
     const onDocumentLoadSuccess = useCallback<
       NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
     >(({ numPages }) => {
       setPdfNumPages(numPages)
       setPdfPageArray(Array.from({ length: numPages }))
-    }, [])
-
-    const onPageLoad = useCallback<ComponentProps<typeof Page>['onLoadSuccess']>((page) => {
-      if (unstableRef.current.onPDFLoaded && unstableRef.current.rotation === undefined) {
-        unstableRef.current.onPDFLoaded(page.rotate)
-      }
-      // DocumentのLoadだとページごとの読み込みが考慮されないため
-      if (unstableRef.current.onLoad && page.pageNumber === unstableRef.current.pdfNumPages) {
-        unstableRef.current.onLoad()
-      }
     }, [])
 
     const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
@@ -113,22 +103,32 @@ export const PDFViewer: FC<Props> = memo(
       return buildCustomTextRenderer(matches)
     }, [matches])
 
-    const handleGetTextSuccess = useMemo(() => {
-      const commonAction = (pageIndex: number, textContent: TextContent) => {
-        if (!unstableRef.current.onPageTextLoaded) return
-        const texts = textContent.items.reduce<string[]>((acc, item) => {
-          if ('str' in item) {
-            acc.push(item.str)
+    const functions = useMemo(
+      () => ({
+        onPageLoad: (
+          page: Parameters<NonNullable<ComponentProps<typeof Page>['onLoadSuccess']>>[0],
+        ) => {
+          if (latest.onPDFLoaded && latest.rotation === undefined) {
+            latest.onPDFLoaded(page.rotate)
           }
-          return acc
-        }, [])
-        unstableRef.current.onPageTextLoaded(pageIndex, texts)
-      }
-
-      return pdfPageArray.map(
-        (_, pageIndex) => (textContent: TextContent) => commonAction(pageIndex, textContent),
-      )
-    }, [pdfPageArray])
+          // DocumentのLoadだとページごとの読み込みが考慮されないため
+          if (latest.onLoad && page.pageNumber === latest.pdfNumPages) {
+            latest.onLoad()
+          }
+        },
+        handleGetTextSuccess: pdfPageArray.map((_, pageIndex) => (textContent: TextContent) => {
+          if (!latest.onPageTextLoaded) return
+          const texts = textContent.items.reduce<string[]>((acc, item) => {
+            if ('str' in item) {
+              acc.push(item.str)
+            }
+            return acc
+          }, [])
+          latest.onPageTextLoaded(pageIndex, texts)
+        }),
+      }),
+      [latest, pdfPageArray],
+    )
 
     useEffect(() => {
       const root = rootRef.current
@@ -180,8 +180,8 @@ export const PDFViewer: FC<Props> = memo(
                 width={width}
                 scale={scale}
                 className="shr-w-full"
-                onLoadSuccess={onPageLoad}
-                onGetTextSuccess={handleGetTextSuccess[i]}
+                onLoadSuccess={functions.onPageLoad}
+                onGetTextSuccess={functions.handleGetTextSuccess[i]}
                 customTextRenderer={customTextRenderer}
                 loading={null}
               />
