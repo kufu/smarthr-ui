@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 import type { PDFSearchMatch } from './types'
 
@@ -52,17 +54,18 @@ export const usePDFSearch = (fileUrl: string) => {
   const [matches, setMatches] = useState<PDFSearchMatch[]>([])
   const [currentMatchIndex, setCurrentMatchIndex] = useState(-1)
   const pageTextsRef = useRef<Map<number, string[]>>(new Map())
-  const queryRef = useRef('')
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const resetMatchState = useCallback(() => {
-    setMatches([])
-    setCurrentMatchIndex(-1)
-  }, [])
+  const latest = useLatest({ matchCount, query })
 
-  const recalculate = useCallback(
-    (nextQuery: string, options?: { resetSelection?: boolean }) => {
+  const functions = useMemo(() => {
+    const resetMatchState = () => {
+      setMatches([])
+      setCurrentMatchIndex(-1)
+    }
+
+    const recalculate = (nextQuery: string, options?: { resetSelection?: boolean }) => {
       if (nextQuery === '') {
         resetMatchState()
         return
@@ -93,82 +96,65 @@ export const usePDFSearch = (fileUrl: string) => {
         if (prev >= globalIndex) return globalIndex - 1
         return prev
       })
-    },
-    [resetMatchState],
-  )
+    }
 
-  const setQuery = useCallback(
-    (nextQuery: string) => {
-      queryRef.current = nextQuery
-      setQueryState(nextQuery)
-      recalculate(nextQuery, { resetSelection: true })
-    },
-    [recalculate],
-  )
+    return {
+      setQuery: (nextQuery: string) => {
+        setQueryState(nextQuery)
+        recalculate(nextQuery, { resetSelection: true })
+      },
+      registerPageText: (pageIndex: number, texts: string[]) => {
+        pageTextsRef.current.set(pageIndex, texts.map(normalize))
+        // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
+        if (latest.query !== '') {
+          recalculate(latest.query)
+        }
+      },
+      goNext: () => {
+        setCurrentMatchIndex((prev) => {
+          const { matchCount: count } = latest
 
-  const registerPageText = useCallback(
-    (pageIndex: number, texts: string[]) => {
-      pageTextsRef.current.set(pageIndex, texts.map(normalize))
-      // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
-      if (queryRef.current !== '') {
-        recalculate(queryRef.current)
-      }
-    },
-    [recalculate],
-  )
+          if (count === 0) return -1
+          if (prev < 0) return 0
+          return (prev + 1) % count
+        })
+      },
+      goPrev: () => {
+        setCurrentMatchIndex((prev) => {
+          const { matchCount: count } = latest
 
-  const clear = useCallback(() => {
-    queryRef.current = ''
-    setQueryState('')
-    resetMatchState()
-  }, [resetMatchState])
-
-  const goNext = useCallback(() => {
-    setCurrentMatchIndex((prev) => {
-      if (matchCount === 0) return -1
-      if (prev < 0) return 0
-      return (prev + 1) % matchCount
-    })
-  }, [matchCount])
-
-  const goPrev = useCallback(() => {
-    setCurrentMatchIndex((prev) => {
-      if (matchCount === 0) return -1
-      if (prev < 0) return matchCount - 1
-      return (prev - 1 + matchCount) % matchCount
-    })
-  }, [matchCount])
+          if (count === 0) return -1
+          if (prev < 0) return count - 1
+          return (prev - 1 + count) % count
+        })
+      },
+      clear: () => {
+        setQueryState('')
+        resetMatchState()
+      },
+      resetMatchState,
+    }
+  }, [latest])
 
   useEffect(() => {
     pageTextsRef.current.clear()
-    queryRef.current = ''
     setQueryState('')
-    resetMatchState()
-  }, [fileUrl, resetMatchState])
+    functions.resetMatchState()
+  }, [fileUrl, functions])
 
   return useMemo(
     () => ({
       query,
-      setQuery,
+      setQuery: functions.setQuery,
       matches,
       matchCount,
       currentMatchIndex,
-      goNext,
-      goPrev,
-      clear,
-      registerPageText,
+      goNext: functions.goNext,
+      goPrev: functions.goPrev,
+      clear: functions.clear,
+      registerPageText: functions.registerPageText,
     }),
-    [
-      query,
-      setQuery,
-      matches,
-      matchCount,
-      currentMatchIndex,
-      goNext,
-      goPrev,
-      clear,
-      registerPageText,
-    ],
+    [query, matches, matchCount, currentMatchIndex, functions],
   )
 }
 

@@ -16,6 +16,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { DropdownMenuButton } from '../Dropdown'
@@ -39,6 +40,8 @@ import type { FileForViewer } from './types'
 const defaultScaleStep = new Decimal(0.2)
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
+type OnPasswordType = Exclude<ComponentProps<typeof PDFViewer>['onPassword'], undefined>
+
 type Props = {
   file: FileForViewer
   width?: number
@@ -49,54 +52,112 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onPassword?: OnPasswordType
   onLoadError?: () => void
 }
 
-export const FileViewer: FC<Props> = ({
+export const FileViewer: FC<Props> = ({ file, ...rest }) => {
+  const [rotation, setRotation] = useState<number | undefined>(undefined)
+  const Component = file.contentType === 'application/pdf' ? PDFFileViewer : ActualFileViewer
+
+  return <Component {...rest} file={file} rotation={rotation} setRotation={setRotation} />
+}
+
+const PDFFileViewer: FC<
+  Props & {
+    rotation: number | undefined
+    setRotation: (rotation: number) => void
+  }
+> = ({ file, rotation, setRotation, onPassword, ...rest }) => {
+  const pdfSearch = usePDFSearch(file.url)
+
+  const latest = useLatest({ onPassword, setRotation })
+
+  const hasOnPassword = !!onPassword
+
+  const functions = useMemo(
+    () => ({
+      handlePDFLoaded: (defaultRotation: number) => {
+        latest.setRotation(defaultRotation)
+      },
+      actualOnPassword: hasOnPassword
+        ? (((...passRest: Parameters<OnPasswordType>) =>
+            latest.onPassword?.(...passRest)) as OnPasswordType)
+        : undefined,
+    }),
+    [hasOnPassword, latest],
+  )
+
+  return (
+    <ActualFileViewer
+      {...rest}
+      file={file}
+      rotation={rotation}
+      setRotation={setRotation}
+      pdfSearch={pdfSearch}
+      handlePDFLoaded={functions.handlePDFLoaded}
+      onPassword={functions.actualOnPassword}
+    />
+  )
+}
+
+const ActualFileViewer: FC<
+  Props & {
+    rotation: number | undefined
+    setRotation: (rotation: number) => void
+    pdfSearch?: ReturnType<typeof usePDFSearch>
+    handlePDFLoaded?: (defaultRotation: number) => void
+  }
+> = ({
   file,
   scaleStep,
   scaleSteps,
   width: fixedWidth,
   onPassword,
   onLoadError,
+  rotation,
+  setRotation,
+  pdfSearch,
+  handlePDFLoaded,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
-  const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
-  const isPDF = file.contentType === 'application/pdf'
-
-  const search = usePDFSearch(file.url)
 
   const internalScaleStep = useMemo(
     () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
     [scaleStep],
   )
 
-  const scaleUp = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
-  }, [internalScaleStep])
+  const latest = useLatest({ internalScaleStep, onLoadError, rotation, setRotation })
 
-  const scaleDown = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
-  }, [internalScaleStep])
+  const hasOnLoadError = !!onLoadError
 
-  const rotate = useCallback(() => {
-    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
-    const currentRotation = rotation ?? 0
-    const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
-    setRotation(newRotation)
-  }, [rotation])
-
-  const handleLoaded = useCallback(() => {
-    setLoaded(true)
-  }, [])
-
-  const handlePDFLoaded = useCallback((defaultRotation: number) => {
-    setRotation(defaultRotation)
-  }, [])
+  const functions = useMemo(
+    () => ({
+      handleLoaded: () => {
+        setLoaded(true)
+      },
+      scaleUp: () => {
+        setScale((currentScale) =>
+          new Decimal(currentScale).add(latest.internalScaleStep).toNumber(),
+        )
+      },
+      scaleDown: () => {
+        setScale((currentScale) =>
+          new Decimal(currentScale).sub(latest.internalScaleStep).toNumber(),
+        )
+      },
+      rotate: () => {
+        // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+        const currentRotation = latest.rotation ?? 0
+        latest.setRotation(currentRotation === 0 ? 270 : currentRotation - 90)
+      },
+      actualHandleLoadError: hasOnLoadError ? () => latest.onLoadError?.() : undefined,
+    }),
+    [hasOnLoadError, latest],
+  )
 
   useEffect(() => {
     if (!ref.current || fixedWidth !== undefined) {
@@ -125,10 +186,10 @@ export const FileViewer: FC<Props> = ({
           scale={scale}
           setScale={setScale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          onClickScaleUpButton={scaleUp}
-          onClickScaleDownButton={scaleDown}
-          onClickRotateButton={rotate}
-          searchController={isPDF ? <SearchController search={search} /> : undefined}
+          onClickScaleUpButton={functions.scaleUp}
+          onClickScaleDownButton={functions.scaleDown}
+          onClickRotateButton={functions.rotate}
+          searchController={pdfSearch ? <SearchController search={pdfSearch} /> : undefined}
         />
       </div>
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
@@ -138,17 +199,17 @@ export const FileViewer: FC<Props> = ({
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
-          {isPDF ? (
+          {pdfSearch ? (
             <PDFViewer
               scale={scale}
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
+              onLoad={functions.handleLoaded}
               onPDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
-              onLoadError={onLoadError}
-              search={search}
+              onLoadError={functions.actualHandleLoadError}
+              search={pdfSearch}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
@@ -156,8 +217,8 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
-              onLoadError={onLoadError}
+              onLoad={functions.handleLoaded}
+              onLoadError={functions.actualHandleLoadError}
             />
           ) : (
             <Localizer

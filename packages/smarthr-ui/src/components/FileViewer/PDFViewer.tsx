@@ -1,17 +1,9 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ComponentProps, type FC, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Scroller } from '../Scroller'
 
 import {
@@ -83,29 +75,10 @@ export const PDFViewer: FC<Props> = memo(
     const currentMatchIndex = search?.currentMatchIndex
     const onPageTextLoaded = search?.registerPageText
     const [pdfNumPages, setPdfNumPages] = useState(1)
+    const [pdfPageArray, setPdfPageArray] = useState<unknown[]>([])
     const rootRef = useRef<HTMLDivElement>(null)
 
-    const onDocumentLoadSuccess = useCallback<
-      NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
-    >(({ numPages }) => {
-      setPdfNumPages(numPages)
-    }, [])
-
-    const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!onLoad && !onPDFLoaded) {
-        return undefined
-      }
-
-      return (page) => {
-        if (onPDFLoaded && rotation === undefined) {
-          onPDFLoaded(page.rotate)
-        }
-        // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (onLoad && page.pageNumber === pdfNumPages) {
-          onLoad()
-        }
-      }
-    }, [onLoad, onPDFLoaded, pdfNumPages, rotation])
+    const latest = useLatest({ onLoad, onPDFLoaded, onPageTextLoaded, pdfNumPages, rotation })
 
     const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
       if (!matches || matches.length === 0) {
@@ -114,18 +87,35 @@ export const PDFViewer: FC<Props> = memo(
       return buildCustomTextRenderer(matches)
     }, [matches])
 
-    const handleGetTextSuccess = useCallback(
-      (pageIndex: number) => (textContent: TextContent) => {
-        if (!onPageTextLoaded) return
-        const texts = textContent.items.reduce<string[]>((acc, item) => {
-          if ('str' in item) {
-            acc.push(item.str)
+    const functions = useMemo(
+      () => ({
+        onDocumentLoadSuccess: ({ numPages }: { numPages: number }) => {
+          setPdfNumPages(numPages)
+          setPdfPageArray(Array.from({ length: numPages }))
+        },
+        onPageLoad: (
+          page: Parameters<NonNullable<ComponentProps<typeof Page>['onLoadSuccess']>>[0],
+        ) => {
+          if (latest.onPDFLoaded && latest.rotation === undefined) {
+            latest.onPDFLoaded(page.rotate)
           }
-          return acc
-        }, [])
-        onPageTextLoaded(pageIndex, texts)
-      },
-      [onPageTextLoaded],
+          // DocumentのLoadだとページごとの読み込みが考慮されないため
+          if (latest.onLoad && page.pageNumber === latest.pdfNumPages) {
+            latest.onLoad()
+          }
+        },
+        handleGetTextSuccess: pdfPageArray.map((_, pageIndex) => (textContent: TextContent) => {
+          if (!latest.onPageTextLoaded) return
+          const texts = textContent.items.reduce<string[]>((acc, item) => {
+            if ('str' in item) {
+              acc.push(item.str)
+            }
+            return acc
+          }, [])
+          latest.onPageTextLoaded(pageIndex, texts)
+        }),
+      }),
+      [pdfPageArray, latest],
     )
 
     useEffect(() => {
@@ -163,7 +153,7 @@ export const PDFViewer: FC<Props> = memo(
           <Document
             options={options}
             file={file.url}
-            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadSuccess={functions.onDocumentLoadSuccess}
             onLoadError={onLoadError}
             rotate={rotation}
             className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
@@ -171,15 +161,15 @@ export const PDFViewer: FC<Props> = memo(
             loading={null}
             onPassword={onPassword}
           >
-            {Array.from({ length: pdfNumPages }).map((_, i) => (
+            {pdfPageArray.map((_, i) => (
               <Page
                 key={`page_${i}`}
                 pageNumber={i + 1}
                 width={width}
                 scale={scale}
                 className="shr-w-full"
-                onLoadSuccess={onPageLoad}
-                onGetTextSuccess={handleGetTextSuccess(i)}
+                onLoadSuccess={functions.onPageLoad}
+                onGetTextSuccess={functions.handleGetTextSuccess[i]}
                 customTextRenderer={customTextRenderer}
                 loading={null}
               />
