@@ -142,14 +142,13 @@ const ActualFileViewer: FC<
 
   const latest = useLatest({ internalScaleStep, onLoadError, rotation, setRotation })
 
-  const handleLoaded = useCallback(() => {
-    setLoaded(true)
-  }, [])
-
   const hasOnLoadError = !!onLoadError
 
   const functions = useMemo(
     () => ({
+      handleLoaded: () => {
+        setLoaded(true)
+      },
       scaleUp: () => {
         setScale((currentScale) =>
           new Decimal(currentScale).add(latest.internalScaleStep).toNumber(),
@@ -216,7 +215,7 @@ const ActualFileViewer: FC<
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
+              onLoad={functions.handleLoaded}
               onPDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={functions.actualHandleLoadError}
@@ -228,7 +227,7 @@ const ActualFileViewer: FC<
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
+              onLoad={functions.handleLoaded}
               onLoadError={functions.actualHandleLoadError}
             />
           ) : (
