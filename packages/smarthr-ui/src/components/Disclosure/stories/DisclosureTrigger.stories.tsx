@@ -51,3 +51,15 @@ export const Children: StoryObj<typeof DisclosureTrigger> = {
     </>
   ),
 }
+
+export const Disabled: StoryObj<typeof DisclosureTrigger> = {
+  name: 'disabled',
+  render: () => (
+    <>
+      <DisclosureTrigger targetId="disclosure_disabled">
+        <Button disabled>ディスクロージャートリガー（disabled）</Button>
+      </DisclosureTrigger>
+      <DisclosureContent id="disclosure_disabled">ディスクロージャーコンテンツ</DisclosureContent>
+    </>
+  ),
+}
