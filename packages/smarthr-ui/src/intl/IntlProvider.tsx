@@ -31,13 +31,11 @@ export const IntlProvider = <AvailableLocales extends Locale[] = typeof allLocal
   const intl = useContext(IntlContext)
 
   const { convertedLocale, convertedAvailableLocales, actualMessages } = useMemo(() => {
-    const locale_ = convertLang(locale)
-    const availableLocales_ = availableLocales?.map(convertLang)
-
+    const _convertedLocale = convertLang(locale)
     return {
-      convertedLocale: locale_,
-      convertedAvailableLocales: availableLocales_,
-      actualMessages: { ...intl?.messages, ...locales[locale_] },
+      convertedLocale: _convertedLocale,
+      convertedAvailableLocales: availableLocales?.map(convertLang),
+      actualMessages: { ...intl?.messages, ...locales[_convertedLocale] },
     }
   }, [locale, availableLocales, intl])
 
