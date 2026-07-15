@@ -7,11 +7,7 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  FormDialogContentInner,
-  type FormDialogContentInnerProps,
-  type FormDialogHelpers,
-} from './FormDialogContentInner'
+import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
@@ -72,12 +68,16 @@ export const ControlledFormDialog: FC<Props> = ({
   }, [isOpen, onClickClose])
 
   const onDelegateSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => {
+    (e: FormEvent<HTMLFormElement>) => {
       if (isOpen) {
-        onSubmit(e, helpers)
+        e.preventDefault()
+        // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+        // 親formが意図せずsubmitされてしまう場合がある
+        e.stopPropagation()
+        onSubmit(e, { close: actualOnClickClose })
       }
     },
-    [isOpen, onSubmit],
+    [isOpen, onSubmit, actualOnClickClose],
   )
 
   return createPortal(

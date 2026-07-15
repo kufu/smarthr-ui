@@ -4,7 +4,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -48,9 +47,8 @@ export type AbstractProps = PropsWithChildren<
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
-     * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
+    onSubmit: (e: FormEvent<HTMLFormElement>) => void
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -84,17 +82,6 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   closeButton,
   subActionArea,
 }) => {
-  const handleSubmitAction = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-      // 親formが意図せずsubmitされてしまう場合がある
-      e.stopPropagation()
-      onSubmit(e, { close: onClickClose })
-    },
-    [onSubmit, onClickClose],
-  )
-
   const calculatedResponseStatus = useResponseStatus(responseStatus)
 
   const styles = useMemo(() => {
@@ -113,7 +100,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={styles.wrapper}>
       <DialogHeading {...heading} />
-      <form onSubmit={handleSubmitAction} className={styles.form}>
+      <form onSubmit={onSubmit} className={styles.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
