@@ -16,19 +16,15 @@ module.exports = {
         'useLatestの返り値は "latest" という変数名で受け取る必要があります。',
       noDestructuring: 'useLatestの返り値を分割代入で受け取ることはできません。',
       noUsageOutsideHook:
-        'latest変数はuseEffect、useLayoutEffect、useCallback内でのみ使用できます。',
+        'latest変数はuseEffect、useLayoutEffect、useCallback、useMemo内でのみ使用できます。',
       noUsageOutsideHookInFunction:
-        'latest変数はuseEffect、useLayoutEffect、useCallback内でのみ使用できます。関数内で使用する場合はuseCallbackでラップしてください。または、latest経由ではなく値を直接参照することを検討してください。',
+        'latest変数はuseEffect、useLayoutEffect、useCallback、useMemo内でのみ使用できます。関数内で使用する場合はuseCallbackまたはuseMemoでラップしてください。または、latest経由ではなく値を直接参照することを検討してください。',
       noLatestItself:
         'latest自体を使用することはできません。latest.xxxのようにプロパティアクセスするか、const { xxx } = latestのように分割代入してください。',
       noPropertyInDeps:
         '依存配列にはlatestのプロパティ（latest.current等）を含めることはできません。latest自体を含めてください。',
       latestMustBeLastInDeps:
         'latestを依存配列に含める場合は、最後尾に配置してください。',
-      latestOnlyDepsInEffect:
-        'useEffect/useLayoutEffectの依存配列にlatestのみを含めても意味がありません。依存配列を空にして、latest.xxxではなく値を直接使用してください。',
-      noLatestInUseMemo:
-        'useMemoの依存配列にlatestを含めることはできません。useCallbackを使用するか、値を直接参照してください。',
       noSpread:
         'latestに対してスプレッド構文（...latest）を使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
       noInOperator:
@@ -71,7 +67,7 @@ module.exports = {
     }
 
     /**
-     * ノードがuseEffect/useLayoutEffect/useCallback内にあるかチェック
+     * ノードがuseEffect/useLayoutEffect/useCallback/useMemo内にあるかチェック
      */
     function isInsideAllowedHook(node) {
       let parent = node.parent
@@ -79,7 +75,7 @@ module.exports = {
         if (
           parent.type === 'CallExpression' &&
           parent.callee.type === 'Identifier' &&
-          /^use((Layout)?Effect|Callback)$/.test(parent.callee.name)
+          /^use((Layout)?Effect|Callback|Memo)$/.test(parent.callee.name)
         ) {
           return true
         }
@@ -122,7 +118,7 @@ module.exports = {
             grandParent &&
             grandParent.type === 'CallExpression' &&
             grandParent.callee.type === 'Identifier' &&
-            /^use((Layout)?Effect|Callback)$/.test(grandParent.callee.name) &&
+            /^use((Layout)?Effect|Callback|Memo)$/.test(grandParent.callee.name) &&
             grandParent.arguments[1] === parent
           ) {
             return true
@@ -285,26 +281,6 @@ module.exports = {
               // useLatest()由来の変数でない場合はスキップ
               if (!isLatestFromUseLatest(latestElement)) {
                 return
-              }
-
-              // useMemoでは依存配列にlatestを含めることを禁止
-              if (hookName === 'useMemo') {
-                context.report({
-                  node: latestElement,
-                  messageId: 'noLatestInUseMemo',
-                })
-                return
-              }
-
-              // useEffect/useLayoutEffectで依存配列がlatestのみの場合
-              if (/^use(Layout)?Effect$/.test(hookName)) {
-                if (elements.length === 1 && elements[0].name === 'latest') {
-                  context.report({
-                    node: elements[0],
-                    messageId: 'latestOnlyDepsInEffect',
-                  })
-                  return
-                }
               }
 
               // latestが含まれていて、最後尾でない場合

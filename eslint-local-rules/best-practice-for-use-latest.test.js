@@ -98,6 +98,47 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }
       `,
     },
+
+    // useEffect - 依存配列にlatestのみ（OK）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+    },
+
+    // useLayoutEffect - 依存配列にlatestのみ（OK）
+    {
+      code: `
+        const latest = useLatest({ ref })
+        useLayoutEffect(() => {
+          latest.ref.current.focus()
+        }, [latest])
+      `,
+    },
+
+    // useMemo - 依存配列にlatestのみ（OK）
+    {
+      code: `
+        const latest = useLatest({ value })
+        const result = useMemo(() => {
+          return latest.value * 2
+        }, [latest])
+      `,
+    },
+
+    // useMemo - 依存配列にlatestと他の依存（OK）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const result = useMemo(() => {
+          latest.onChange()
+          return count
+        }, [count, latest])
+      `,
+    },
   ],
 
   invalid: [
@@ -184,10 +225,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const ref = latest
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
+      errors: [{ messageId: 'noLatestItself' }],
     },
 
     // latest自体を関数に渡す（フック内）
@@ -198,10 +236,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           doSomething(latest)
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
+      errors: [{ messageId: 'noLatestItself' }],
     },
 
     // latest自体を配列に含める（フック内）
@@ -212,10 +247,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const refs = [latest]
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
+      errors: [{ messageId: 'noLatestItself' }],
     },
 
     // latest自体をオブジェクトに含める（フック内）
@@ -226,10 +258,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const obj = { ref: latest }
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
+      errors: [{ messageId: 'noLatestItself' }],
     },
 
     // 依存配列にプロパティアクセスを含める
@@ -276,43 +305,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [{ messageId: 'latestMustBeLastInDeps' }],
     },
 
-    // useEffect - 依存配列がlatestのみ
-    {
-      code: `
-        const latest = useLatest({ onChange })
-        useEffect(() => {
-          latest.onChange()
-        }, [latest])
-      `,
-      errors: [{ messageId: 'latestOnlyDepsInEffect' }],
-    },
-
-    // useLayoutEffect - 依存配列がlatestのみ
-    {
-      code: `
-        const latest = useLatest({ ref })
-        useLayoutEffect(() => {
-          latest.ref.current.focus()
-        }, [latest])
-      `,
-      errors: [{ messageId: 'latestOnlyDepsInEffect' }],
-    },
-
-    // useMemo - 依存配列がlatestのみ
-    {
-      code: `
-        const latest = useLatest({ value })
-        const result = useMemo(() => {
-          return latest.value * 2
-        }, [latest])
-      `,
-      errors: [
-        { messageId: 'noUsageOutsideHook' },
-        { messageId: 'noLatestInUseMemo' },
-        { messageId: 'noLatestItself' },
-      ],
-    },
-
     // スプレッド構文の使用（オブジェクト）
     {
       code: `
@@ -321,10 +313,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const obj = { ...latest }
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noSpread' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
+      errors: [{ messageId: 'noSpread' }],
     },
 
     // スプレッド構文の使用（配列）
@@ -335,10 +324,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const arr = [...latest]
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noSpread' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
+      errors: [{ messageId: 'noSpread' }],
     },
 
     // in演算子の使用
@@ -351,10 +337,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           }
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noInOperator' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
+      errors: [{ messageId: 'noInOperator' }],
     },
 
     // Object.keysの使用
@@ -368,7 +351,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -383,7 +365,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -398,7 +379,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -413,7 +393,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -428,7 +407,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -443,7 +421,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -458,7 +435,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -473,7 +449,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
-        { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
@@ -487,26 +462,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           }
         }, [latest])
       `,
-      errors: [
-        { messageId: 'noForIn' },
-        { messageId: 'latestOnlyDepsInEffect' },
-      ],
-    },
-
-    // useMemoの依存配列にlatestを含める（他の依存と混在）
-    {
-      code: `
-        const latest = useLatest({ onChange })
-        const result = useMemo(() => {
-          latest.onChange()
-          return count
-        }, [count, latest])
-      `,
-      errors: [
-        { messageId: 'noUsageOutsideHook' },
-        { messageId: 'noLatestInUseMemo' },
-        { messageId: 'noLatestItself' },
-      ],
+      errors: [{ messageId: 'noForIn' }],
     },
   ],
 })
