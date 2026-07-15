@@ -192,31 +192,30 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       themeLeadingNormal: theme.leading.NORMAL,
     })
 
-    const calculateRows = useCallback(
-      (element: HTMLTextAreaElement | null | undefined) =>
-        calculateIdealRows(element, latest.maxRows, latest.themeLeadingNormal),
-      [latest],
-    )
+    const functions = useMemo(() => {
+      const calculateRows = (element: HTMLTextAreaElement | null | undefined) =>
+        calculateIdealRows(element, latest.maxRows, latest.themeLeadingNormal)
 
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLTextAreaElement>) => {
-        const newValue = e.target.value
-        latest.updateCounters?.(newValue)
+      return {
+        calculateRows,
+        handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
+          const newValue = e.target.value
+          latest.updateCounters?.(newValue)
 
-        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = latest.rows
+          // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
+          e.target.rows = latest.rows
 
-        if (latest.autoResize) {
-          const currentRows = calculateRows(e.target)
-          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
-          e.target.rows = currentRows
-          setInterimRows(currentRows)
-        }
+          if (latest.autoResize) {
+            const currentRows = calculateRows(e.target)
+            // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
+            e.target.rows = currentRows
+            setInterimRows(currentRows)
+          }
 
-        latest.onChange?.(e)
-      },
-      [calculateRows, latest],
-    )
+          latest.onChange?.(e)
+        },
+      }
+    }, [latest])
 
     // autoFocus時に、フォーカスを当てる
     useEffect(() => {
@@ -228,9 +227,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     // autoResize時に、初期値での高さを指定
     useEffect(() => {
       if (autoResize && textareaRef.current) {
-        setInterimRows(calculateRows(textareaRef.current))
+        setInterimRows(functions.calculateRows(textareaRef.current))
       }
-    }, [autoResize, calculateRows])
+    }, [autoResize, functions])
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
@@ -259,7 +258,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         data-smarthr-ui-input="true"
         value={value}
         defaultValue={defaultValue}
-        onChange={handleChange}
+        onChange={functions.handleChange}
         ref={textareaRef}
         aria-describedby={maxLetters ? `${maxLettersNoticeId} ${actualMaxLettersId}` : undefined}
         aria-invalid={error || countError || undefined}
