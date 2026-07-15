@@ -99,7 +99,6 @@ export const usePDFSearch = (fileUrl: string) => {
     }
 
     return {
-      recalculate,
       setQuery: (nextQuery: string) => {
         setQueryState(nextQuery)
         recalculate(nextQuery, { resetSelection: true })
