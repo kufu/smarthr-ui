@@ -159,17 +159,6 @@ module.exports = {
           case 'ForInStatement':
             if (parent.right === node) return
             break
-          case 'CallExpression':
-            // Object.*メソッドの引数として使われている場合もスキップ
-            if (
-              parent.callee.type === 'MemberExpression' &&
-              parent.callee.object.type === 'Identifier' &&
-              parent.callee.object.name === 'Object' &&
-              parent.arguments.includes(node)
-            ) {
-              return
-            }
-            break
         }
 
         // 依存配列内での使用
@@ -224,26 +213,19 @@ module.exports = {
 
       // 3. CallExpressionのチェック（依存配列、Object.*メソッド）
       CallExpression(node) {
-        // 3-1. Object.keys/values/entries等のチェック
+        // 3-1. Object.*メソッドのチェック（すべてのObject.*メソッドを禁止）
         if (
           node.callee.type === 'MemberExpression' &&
           node.callee.object.type === 'Identifier' &&
-          node.callee.object.name === 'Object' &&
-          node.callee.property.type === 'Identifier' &&
-          /^(keys|values|entries|getOwnPropertyNames|getOwnPropertyDescriptors|getOwnPropertySymbols|assign|freeze|seal|preventExtensions)$/.test(
-            node.callee.property.name,
-          )
+          node.callee.object.name === 'Object'
         ) {
-          // Object.assignの場合は第二引数以降も、それ以外は第一引数をチェック
-          const argsToCheck = node.callee.property.name === 'assign' ? node.arguments.slice(1) : node.arguments.slice(0, 1)
-
-          for (const arg of argsToCheck) {
+          // すべての引数をチェック
+          for (const arg of node.arguments) {
             if (arg.type === 'Identifier' && arg.name === 'latest') {
               context.report({
                 node: arg,
                 messageId: 'noObjectMethods',
               })
-              break
             }
           }
         }

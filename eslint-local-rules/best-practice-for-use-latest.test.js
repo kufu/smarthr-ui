@@ -322,6 +322,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
         { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
@@ -336,6 +337,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
         { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
@@ -350,11 +352,12 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
         { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
 
-    // Object.assignの使用
+    // Object.assignの使用（第2引数以降）
     {
       code: `
         const latest = useLatest({ onChange })
@@ -364,6 +367,67 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
       errors: [
         { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffect' },
+      ],
+    },
+
+    // Object.assignの使用（第1引数）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          const obj = Object.assign(latest, { foo: 'bar' })
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffect' },
+      ],
+    },
+
+    // Object.createの使用
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          const obj = Object.create(latest)
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffect' },
+      ],
+    },
+
+    // Object.definePropertyの使用
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          Object.defineProperty(latest, 'foo', { value: 'bar' })
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
+        { messageId: 'latestOnlyDepsInEffect' },
+      ],
+    },
+
+    // Object.freezeの使用
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        useEffect(() => {
+          Object.freeze(latest)
+        }, [latest])
+      `,
+      errors: [
+        { messageId: 'noObjectMethods' },
+        { messageId: 'noLatestItself' },
         { messageId: 'latestOnlyDepsInEffect' },
       ],
     },
