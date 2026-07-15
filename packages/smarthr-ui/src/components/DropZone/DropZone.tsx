@@ -16,6 +16,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
@@ -88,6 +89,9 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
   ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
+
+    const latest = useLatest({ onSelectFiles })
+
     const classNames = useMemo(() => {
       const { wrapper, button } = classNameGenerator({ filesDraggedOver, disabled, error })
       return {
@@ -105,10 +109,10 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           if (fileRef.current) {
             fileRef.current.files = e.dataTransfer.files
           }
-          onSelectFiles(e, e.dataTransfer.files)
+          latest.onSelectFiles(e, e.dataTransfer.files)
         }
       },
-      [onSelectFiles],
+      [latest],
     )
 
     const onDragOver = useCallback((e: DragEvent<HTMLElement>) => {
@@ -122,9 +126,9 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 
     const onChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        onSelectFiles(e, e.target.files)
+        latest.onSelectFiles(e, e.target.files)
       },
-      [onSelectFiles],
+      [latest],
     )
 
     const onClickButton = useCallback(() => {
