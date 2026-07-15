@@ -70,6 +70,18 @@ const formDialogContentInner = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+
+  return {
+    form: form(),
+    wrapper: wrapper(),
+    actionArea: actionArea(),
+    buttonArea: buttonArea(),
+    message: message(),
+  }
+})()
+
 export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   children,
   heading,
@@ -84,27 +96,15 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }) => {
   const calculatedResponseStatus = useResponseStatus(responseStatus)
 
-  const styles = useMemo(() => {
-    const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
-
-    return {
-      form: form(),
-      wrapper: wrapper(),
-      actionArea: actionArea(),
-      buttonArea: buttonArea(),
-      message: message(),
-    }
-  }, [])
-
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={styles.wrapper}>
+    <Section className={CLASS_NAMES.wrapper}>
       <DialogHeading {...heading} />
-      <form onSubmit={onSubmit} className={styles.form}>
+      <form onSubmit={onSubmit} className={CLASS_NAMES.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
-        <div className={styles.actionArea}>
+        <div className={CLASS_NAMES.actionArea}>
           <Cluster justify="space-between">
             {subActionArea}
             <ActionAreaCluster
@@ -112,12 +112,12 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
               closeButton={closeButton}
               actionButton={actionButton}
               loading={calculatedResponseStatus.isProcessing}
-              className={styles.buttonArea}
+              className={CLASS_NAMES.buttonArea}
             />
           </Cluster>
           <DialogContentResponseStatusMessage
             responseStatus={calculatedResponseStatus}
-            className={styles.message}
+            className={CLASS_NAMES.message}
           />
         </div>
       </form>
