@@ -7,7 +7,6 @@ import {
   forwardRef,
   memo,
   startTransition,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -125,37 +124,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const getCounterMessage = useCallback(
-      (counterValue: number) => {
-        if (maxLetters === undefined) return
-
-        if (counterValue > maxLetters) {
-          // {count}文字オーバー
-          return (
-            <Localizer
-              id="smarthr-ui/Textarea/maxLettersExceeded"
-              defaultText="{exceededLetters}文字オーバー"
-              values={{ exceededLetters: counterValue - maxLetters }}
-            />
-          )
-        }
-
-        // あと{count}文字
-        return (
-          <Localizer
-            id="smarthr-ui/Textarea/availableLetters"
-            defaultText="あと{availableLetters}文字"
-            values={{ availableLetters: maxLetters - counterValue }}
-          />
-        )
-      },
-      [maxLetters],
-    )
-
     const latest = useLatest({
       onChange,
       maxLetters,
-      getCounterMessage,
       rows,
       autoResize,
       maxRows,
@@ -165,6 +136,30 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const functions = useMemo(() => {
       const calculateRows = (element: HTMLTextAreaElement | null | undefined) =>
         calculateIdealRows(element, latest.maxRows, latest.themeLeadingNormal)
+
+      const getCounterMessage = (counterValue: number) => {
+        if (latest.maxLetters === undefined) return
+
+        if (counterValue > latest.maxLetters) {
+          // {count}文字オーバー
+          return (
+            <Localizer
+              id="smarthr-ui/Textarea/maxLettersExceeded"
+              defaultText="{exceededLetters}文字オーバー"
+              values={{ exceededLetters: counterValue - latest.maxLetters }}
+            />
+          )
+        }
+
+        // あと{count}文字
+        return (
+          <Localizer
+            id="smarthr-ui/Textarea/availableLetters"
+            defaultText="あと{availableLetters}文字"
+            values={{ availableLetters: latest.maxLetters - counterValue }}
+          />
+        )
+      }
 
       const updateCounters = !latest.maxLetters
         ? undefined
@@ -178,7 +173,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
             // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
             const updateSrMessage = debounce((newValue: TextareaValue) => {
               startTransition(() => {
-                const counterText = latest.getCounterMessage(getStringLength(newValue))
+                const counterText = getCounterMessage(getStringLength(newValue))
 
                 if (counterText) {
                   setSrCounterMessage(counterText)
@@ -194,6 +189,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
       return {
         calculateRows,
+        getCounterMessage,
         updateCounters,
         handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
           const newValue = e.target.value
@@ -281,7 +277,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           className={classNames.counter}
           data-error={countError || undefined}
         >
-          {getCounterMessage(count)}
+          {functions.getCounterMessage(count)}
         </span>
       </span>
     ) : (
