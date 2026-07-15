@@ -83,15 +83,19 @@ const PDFFileViewer: FC<
 
   const latest = useLatest({ onPassword, setRotation })
 
+  const hasOnPassword = !!onPassword
+
   const functions = useMemo(
     () => ({
       handlePDFLoaded: (defaultRotation: number) => {
         latest.setRotation(defaultRotation)
       },
-      actualOnPassword: ((...passRest: Parameters<OnPasswordType>) =>
-        latest.onPassword?.(...passRest)) as OnPasswordType,
+      actualOnPassword: hasOnPassword
+        ? (((...passRest: Parameters<OnPasswordType>) =>
+            latest.onPassword?.(...passRest)) as OnPasswordType)
+        : undefined,
     }),
-    [latest],
+    [hasOnPassword, latest],
   )
 
   return (
@@ -102,7 +106,7 @@ const PDFFileViewer: FC<
       setRotation={setRotation}
       pdfSearch={pdfSearch}
       handlePDFLoaded={functions.handlePDFLoaded}
-      onPassword={onPassword ? functions.actualOnPassword : undefined}
+      onPassword={functions.actualOnPassword}
     />
   )
 }
