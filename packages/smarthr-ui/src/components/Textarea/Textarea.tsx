@@ -130,12 +130,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       rows,
       autoResize,
       maxRows,
-      themeLeadingNormal: theme.leading.NORMAL,
+      theme,
     })
 
     const functions = useMemo(() => {
       const calculateRows = (element: HTMLTextAreaElement | null | undefined) =>
-        calculateIdealRows(element, latest.maxRows, latest.themeLeadingNormal)
+        calculateIdealRows(element, latest.maxRows, latest.theme.leading.NORMAL)
 
       const getCounterMessage = (counterValue: number) => {
         if (latest.maxLetters === undefined) return
