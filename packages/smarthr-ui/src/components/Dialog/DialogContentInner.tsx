@@ -13,6 +13,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
@@ -123,14 +124,11 @@ export const DialogContentInner: FC<Props> = ({
 
   const innerRef = useRef<HTMLDivElement>(null)
 
-  // 外部propsのonPressEscapeをrefに保存
-  const onPressEscapeRef = useRef(onPressEscape)
-  onPressEscapeRef.current = onPressEscape
+  const latest = useLatest({ onPressEscape })
 
-  // stableなcallbackを作成
   const memoizedOnPressEscape = useCallback(() => {
-    onPressEscapeRef.current?.()
-  }, [])
+    latest.onPressEscape?.()
+  }, [latest])
 
   useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
 
@@ -164,9 +162,11 @@ export const DialogContentInner: FC<Props> = ({
 
 const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: string }>(
   ({ onClickOverlay, isOpen, className }) => {
+    const latest = useLatest({ onClickOverlay })
+
     const onClick = useMemo(
-      () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
-      [isOpen, onClickOverlay],
+      () => (latest.onClickOverlay && isOpen ? latest.onClickOverlay : undefined),
+      [isOpen, latest],
     )
 
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
