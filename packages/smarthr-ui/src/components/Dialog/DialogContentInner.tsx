@@ -6,7 +6,6 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
-  useCallback,
   useMemo,
   useRef,
 } from 'react'
@@ -124,24 +123,29 @@ export const DialogContentInner: FC<Props> = ({
 
   const innerRef = useRef<HTMLDivElement>(null)
 
-  const latest = useLatest({ onPressEscape })
+  const latest = useLatest({ onPressEscape, onClickOverlay })
 
-  const memoizedOnPressEscape = useCallback(() => {
-    latest.onPressEscape?.()
-  }, [latest])
+  const functions = useMemo(() => {
+    if (!isOpen) {
+      return {
+        onPressEscape: undefined,
+        onClickOverlay: undefined,
+      }
+    }
 
-  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
+    return {
+      onPressEscape: () => latest.onPressEscape?.(),
+      onClickOverlay: () => latest.onClickOverlay?.(),
+    }
+  }, [isOpen, latest])
 
+  useHandleEscape(functions.onPressEscape)
   useBodyScrollLock(isOpen)
 
   return (
     <DialogOverlap isOpen={isOpen}>
       <div id={id} className={classNames.layout} style={style}>
-        <Overlay
-          isOpen={isOpen}
-          onClickOverlay={onClickOverlay}
-          className={classNames.background}
-        />
+        <Overlay onClickOverlay={functions.onClickOverlay} className={classNames.background} />
         <div
           {...rest}
           ref={innerRef}
@@ -160,16 +164,9 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: string }>(
-  ({ onClickOverlay, isOpen, className }) => {
-    const latest = useLatest({ onClickOverlay })
-
-    const onClick = useMemo(
-      () => (latest.onClickOverlay && isOpen ? latest.onClickOverlay : undefined),
-      [isOpen, latest],
-    )
-
+const Overlay = memo<{ onClickOverlay: (() => void) | undefined; className: string }>(
+  ({ onClickOverlay, className }) => (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    return <div onClick={onClick} className={className} role="presentation" />
-  },
+    <div onClick={onClickOverlay} className={className} role="presentation" />
+  ),
 )
