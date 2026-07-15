@@ -57,20 +57,10 @@ type Props = {
 }
 
 export const FileViewer: FC<Props> = ({ file, ...rest }) => {
-  const isPDF = file.contentType === 'application/pdf'
   const [rotation, setRotation] = useState<number | undefined>(undefined)
+  const Component = file.contentType === 'application/pdf' ? PDFFileViewer : ActualFileViewer
 
-  const commonProps = {
-    file,
-    rotation,
-    setRotation,
-  }
-
-  return isPDF ? (
-    <PDFFileViewer {...rest} {...commonProps} />
-  ) : (
-    <ActualFileViewer {...rest} {...commonProps} />
-  )
+  return <Component {...rest} file={file} rotation={rotation} setRotation={setRotation} />
 }
 
 const PDFFileViewer: FC<
