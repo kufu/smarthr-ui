@@ -45,16 +45,16 @@ describe('intl', () => {
       const wrapper: FC<PropsWithChildren> = ({ children }) => (
         <IntlProvider locale="en-us">{children}</IntlProvider>
       )
-      const { getLocale } = renderHook(() => useIntl(), { wrapper }).result.current
-      expect(getLocale()).toBe('en-us')
+      const { locale } = renderHook(() => useIntl(), { wrapper }).result.current
+      expect(locale).toBe('en-us')
     })
 
     it('returns different locales correctly', () => {
       const wrapper: FC<PropsWithChildren> = ({ children }) => (
         <IntlProvider locale="ja-easy">{children}</IntlProvider>
       )
-      const { getLocale } = renderHook(() => useIntl(), { wrapper }).result.current
-      expect(getLocale()).toBe('ja-easy')
+      const { locale } = renderHook(() => useIntl(), { wrapper }).result.current
+      expect(locale).toBe('ja-easy')
     })
 
     describe('formatDate', () => {

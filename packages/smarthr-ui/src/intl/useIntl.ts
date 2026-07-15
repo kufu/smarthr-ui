@@ -28,8 +28,8 @@ export type UseIntlReturn = {
     values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
     opts?: IntlMessageFormatOptions,
   ) => string
-  /** 現在のロケールを取得する関数 */
-  getLocale: () => keyof typeof locales
+  /** 現在のロケール */
+  locale: keyof typeof locales
 }
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
@@ -49,14 +49,14 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
  * @example
  * // 現在のロケールの取得
  * const Component = () => {
- *   const { getLocale } = useIntl()
- *   return <div>現在のロケール: {getLocale()}</div>
+ *   const { locale } = useIntl()
+ *   return <div>現在のロケール: {locale}</div>
  * }
  */
 export const useIntl = (): UseIntlReturn => {
   const intl = useReactIntl()
 
-  const functions = useMemo(
+  const result = useMemo(
     () => ({
       localize: <T extends keyof Messages>(
         descriptor: MessageDescriptor<T>,
@@ -64,10 +64,10 @@ export const useIntl = (): UseIntlReturn => {
         opts?: IntlMessageFormatOptions,
       ): string =>
         intl.formatMessage({ ...descriptor, defaultMessage: descriptor.defaultText }, values, opts),
-      getLocale: (): keyof typeof locales => (isValidLocale(intl.locale) ? intl.locale : 'ja'),
+      locale: isValidLocale(intl.locale) ? intl.locale : 'ja',
     }),
     [intl],
   )
 
-  return functions
+  return result
 }
