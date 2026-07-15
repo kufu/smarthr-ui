@@ -89,9 +89,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
   ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-
-    const latest = useLatest({ onSelectFiles })
-
     const classNames = useMemo(() => {
       const { wrapper, button } = classNameGenerator({ filesDraggedOver, disabled, error })
       return {
@@ -99,6 +96,8 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         button: button(),
       }
     }, [disabled, error, filesDraggedOver])
+
+    const latest = useLatest({ onSelectFiles })
 
     const onDrop = useCallback(
       (e: DragEvent<HTMLElement>) => {
