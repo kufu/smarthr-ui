@@ -406,7 +406,7 @@ export const useDateFormat = (): UseDateFormatReturn => {
     [formatDate, formatTime],
   )
 
-  const getWeekStartDay = (): number => DATE_FORMATS[locale].weekStartDay
+  const getWeekStartDay = useCallback((): number => DATE_FORMATS[locale].weekStartDay, [locale])
 
   return {
     formatDate,
