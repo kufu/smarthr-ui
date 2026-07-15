@@ -64,8 +64,8 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const latest = useLatest({ matchCount, query, resetMatchState })
 
-  const recalculate = useCallback(
-    (nextQuery: string, options?: { resetSelection?: boolean }) => {
+  const functions = useMemo(() => {
+    const recalculate = (nextQuery: string, options?: { resetSelection?: boolean }) => {
       if (nextQuery === '') {
         latest.resetMatchState()
         return
@@ -96,20 +96,14 @@ export const usePDFSearch = (fileUrl: string) => {
         if (prev >= globalIndex) return globalIndex - 1
         return prev
       })
-    },
-    [latest],
-  )
+    }
 
-  const setQuery = useCallback(
-    (nextQuery: string) => {
-      setQueryState(nextQuery)
-      recalculate(nextQuery, { resetSelection: true })
-    },
-    [recalculate],
-  )
-
-  const functions = useMemo(
-    () => ({
+    return {
+      recalculate,
+      setQuery: (nextQuery: string) => {
+        setQueryState(nextQuery)
+        recalculate(nextQuery, { resetSelection: true })
+      },
       registerPageText: (pageIndex: number, texts: string[]) => {
         pageTextsRef.current.set(pageIndex, texts.map(normalize))
         // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
@@ -139,9 +133,8 @@ export const usePDFSearch = (fileUrl: string) => {
         setQueryState('')
         latest.resetMatchState()
       },
-    }),
-    [recalculate, latest],
-  )
+    }
+  }, [latest])
 
   useEffect(() => {
     pageTextsRef.current.clear()
@@ -152,7 +145,7 @@ export const usePDFSearch = (fileUrl: string) => {
   return useMemo(
     () => ({
       query,
-      setQuery,
+      setQuery: functions.setQuery,
       matches,
       matchCount,
       currentMatchIndex,
@@ -161,7 +154,7 @@ export const usePDFSearch = (fileUrl: string) => {
       clear: functions.clear,
       registerPageText: functions.registerPageText,
     }),
-    [query, setQuery, matches, matchCount, currentMatchIndex, functions],
+    [query, matches, matchCount, currentMatchIndex, functions],
   )
 }
 
