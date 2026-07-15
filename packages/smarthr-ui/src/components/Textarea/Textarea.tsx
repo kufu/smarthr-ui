@@ -157,35 +157,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       () => textareaRef.current,
     )
 
-    const updateCounters = useMemo(() => {
-      if (!maxLetters) return undefined
-
-      const updateCount = debounce((newValue: TextareaValue) => {
-        startTransition(() => {
-          setCount(getStringLength(newValue))
-        })
-      }, 200)
-
-      // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-      const updateSrMessage = debounce((newValue: TextareaValue) => {
-        startTransition(() => {
-          const counterText = getCounterMessage(getStringLength(newValue))
-
-          if (counterText) {
-            setSrCounterMessage(counterText)
-          }
-        })
-      }, 1000)
-
-      return (newValue: TextareaValue) => {
-        updateCount(newValue)
-        updateSrMessage(newValue)
-      }
-    }, [maxLetters, getCounterMessage])
-
     const latest = useLatest({
       onChange,
-      updateCounters,
+      maxLetters,
+      getCounterMessage,
       rows,
       autoResize,
       maxRows,
@@ -196,11 +171,38 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       const calculateRows = (element: HTMLTextAreaElement | null | undefined) =>
         calculateIdealRows(element, latest.maxRows, latest.themeLeadingNormal)
 
+      const updateCounters = !latest.maxLetters
+        ? undefined
+        : (() => {
+            const updateCount = debounce((newValue: TextareaValue) => {
+              startTransition(() => {
+                setCount(getStringLength(newValue))
+              })
+            }, 200)
+
+            // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
+            const updateSrMessage = debounce((newValue: TextareaValue) => {
+              startTransition(() => {
+                const counterText = latest.getCounterMessage(getStringLength(newValue))
+
+                if (counterText) {
+                  setSrCounterMessage(counterText)
+                }
+              })
+            }, 1000)
+
+            return (newValue: TextareaValue) => {
+              updateCount(newValue)
+              updateSrMessage(newValue)
+            }
+          })()
+
       return {
         calculateRows,
+        updateCounters,
         handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
           const newValue = e.target.value
-          latest.updateCounters?.(newValue)
+          updateCounters?.(newValue)
 
           // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
           e.target.rows = latest.rows
@@ -234,9 +236,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     // value 変更時にもカウントを更新する
     useEffect(() => {
       if (value && maxLetters) {
-        latest.updateCounters?.(value)
+        functions.updateCounters?.(value)
       }
-    }, [value, maxLetters, latest])
+    }, [value, maxLetters, functions])
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
