@@ -26,8 +26,10 @@ type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof Abstra
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Badge shr-relative shr-inline-flex',
-    pill: ['shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums'],
-    dotElement: ['shr-h-[0.625em] shr-w-[0.625em]'],
+    pill: [
+      'shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums forced-colors:shr-outline',
+    ],
+    dotElement: ['shr-h-[0.625em] shr-w-[0.625em] forced-colors:shr-outline'],
   },
   variants: {
     color: {
