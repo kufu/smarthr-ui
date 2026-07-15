@@ -27,15 +27,19 @@ export const IntlProvider = <AvailableLocales extends Locale[] = typeof allLocal
   locale,
   children,
 }: Props<AvailableLocales>): ReturnType<FC> => {
-  const convertedLocale = convertLang(locale)
-  const convertedAvailableLocales = availableLocales?.map(convertLang)
-
   // プロダクト側でIntlProviderを使っている場合、プロダクト側のmessagesとマージして提供するためにContextから取得している
   const intl = useContext(IntlContext)
-  const actualMessages = useMemo(
-    () => ({ ...intl?.messages, ...locales[convertedLocale] }),
-    [intl, convertedLocale],
-  )
+
+  const { convertedLocale, convertedAvailableLocales, actualMessages } = useMemo(() => {
+    const locale_ = convertLang(locale)
+    const availableLocales_ = availableLocales?.map(convertLang)
+
+    return {
+      convertedLocale: locale_,
+      convertedAvailableLocales: availableLocales_,
+      actualMessages: { ...intl?.messages, ...locales[locale_] },
+    }
+  }, [locale, availableLocales, intl])
 
   return (
     <AvailableLocalesContext.Provider value={convertedAvailableLocales ?? allLocaleKeys}>
