@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [98.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v97.0.0...smarthr-ui-v98.0.0) (2026-07-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **SideNav:** cloneElementを削除しContext APIに移行、interfaceを整理 ([#6400](https://github.com/kufu/smarthr-ui/issues/6400))
+* **Th:** decorators propsとuseDecoratorフックを削除 ([#6446](https://github.com/kufu/smarthr-ui/issues/6446))
+* **useDevice:** useDeviceフックを削除 ([#6461](https://github.com/kufu/smarthr-ui/issues/6461))
+* **FilterDropdown:** iconAltの型をstringに変更 ([#6450](https://github.com/kufu/smarthr-ui/issues/6450))
+
+### Bug Fixes
+
+* **Dialog:** IME 変換中の Tab がフォーカストラップに奪われないようにする ([#6481](https://github.com/kufu/smarthr-ui/issues/6481)) ([6ed79cd](https://github.com/kufu/smarthr-ui/commit/6ed79cd79699b2e6efa391a7d5e0453abbb9067c))
+* **SingleCombobox:** onChangeInputの発火タイミングを修正 ([#6468](https://github.com/kufu/smarthr-ui/issues/6468)) ([5e84945](https://github.com/kufu/smarthr-ui/commit/5e849453883b680ce04f3b9eb2207611b46dcd84))
+
+
+### Code Refactoring
+
+* **FilterDropdown:** iconAltの型をstringに変更 ([#6450](https://github.com/kufu/smarthr-ui/issues/6450)) ([1418770](https://github.com/kufu/smarthr-ui/commit/1418770c74c65046ac7ab4a702b90f96426d139f))
+* **SideNav:** cloneElementを削除しContext APIに移行、interfaceを整理 ([#6400](https://github.com/kufu/smarthr-ui/issues/6400)) ([8d39471](https://github.com/kufu/smarthr-ui/commit/8d39471dfa81df7427af3c098d92afa0c35d68f7))
+* **Th:** decorators propsとuseDecoratorフックを削除 ([#6446](https://github.com/kufu/smarthr-ui/issues/6446)) ([565de20](https://github.com/kufu/smarthr-ui/commit/565de20d4baa227a4355ae5bd8d6d4b291374410))
+* **useDevice:** useDeviceフックを削除 ([#6461](https://github.com/kufu/smarthr-ui/issues/6461)) ([755b5b0](https://github.com/kufu/smarthr-ui/commit/755b5b011f8533beb380c8859b6312d0d08c1ca5))
+
 ## [97.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.1.3...smarthr-ui-v97.0.0) (2026-07-02)
 
 

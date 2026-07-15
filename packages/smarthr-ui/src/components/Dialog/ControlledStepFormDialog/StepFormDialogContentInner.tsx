@@ -11,7 +11,7 @@ import {
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
-import { Cluster, Stack } from '../../Layout'
+import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
@@ -165,7 +165,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           >
             {children}
           </DialogBody>
-          <Stack gap={0.5} className={classNames.actionArea}>
+          <div className={classNames.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <Button
@@ -205,7 +205,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               responseStatus={calcedResponseStatus}
               className={classNames.message}
             />
-          </Stack>
+          </div>
         </div>
       </form>
     </Section>
