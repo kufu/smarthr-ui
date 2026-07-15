@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [98.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.0.0...smarthr-ui-v98.1.0) (2026-07-15)
+
+
+### Features
+
+* **FileViewer:** 表示 PDF 内のテキストを検索できる機能を追加 ([#6309](https://github.com/kufu/smarthr-ui/issues/6309)) ([61e03b7](https://github.com/kufu/smarthr-ui/commit/61e03b7e496f47c62e607e09dbc4928acf2e1bbf))
+* useLatestフックを追加してunstableRefパターンを改善 ([#6483](https://github.com/kufu/smarthr-ui/issues/6483)) ([a728adb](https://github.com/kufu/smarthr-ui/commit/a728adb695a7efd6a5bc440be3c402871cc0ce93))
+
+
+### Bug Fixes
+
+* disabled なトリガーで Dialog・Disclosure が発火しないようにする ([#6497](https://github.com/kufu/smarthr-ui/issues/6497)) ([a5bea7f](https://github.com/kufu/smarthr-ui/commit/a5bea7f76ee6f31696bbb9d116e363ef4fafb928))
+
 ## [98.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v97.0.0...smarthr-ui-v98.0.0) (2026-07-09)
 
 
