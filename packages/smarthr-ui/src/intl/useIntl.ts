@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 import {
   type PrimitiveType,
   type MessageDescriptor as ReactIntlMessageDescriptor,
@@ -56,23 +56,18 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
 export const useIntl = (): UseIntlReturn => {
   const intl = useReactIntl()
 
-  const localize = useCallback(
-    <T extends keyof Messages>(
-      descriptor: MessageDescriptor<T>,
-      values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
-      opts?: IntlMessageFormatOptions,
-    ): string =>
-      intl.formatMessage({ ...descriptor, defaultMessage: descriptor.defaultText }, values, opts),
+  const functions = useMemo(
+    () => ({
+      localize: <T extends keyof Messages>(
+        descriptor: MessageDescriptor<T>,
+        values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
+        opts?: IntlMessageFormatOptions,
+      ): string =>
+        intl.formatMessage({ ...descriptor, defaultMessage: descriptor.defaultText }, values, opts),
+      getLocale: (): keyof typeof locales => (isValidLocale(intl.locale) ? intl.locale : 'ja'),
+    }),
     [intl],
   )
 
-  const getLocale = useCallback(
-    (): keyof typeof locales => (isValidLocale(intl.locale) ? intl.locale : 'ja'),
-    [intl],
-  )
-
-  return {
-    localize,
-    getLocale,
-  }
+  return functions
 }
