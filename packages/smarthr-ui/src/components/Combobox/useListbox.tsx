@@ -96,6 +96,7 @@ export const useListbox = <T,>({
       return options.find((option) => current.id === option.id) ?? null
     })
     // TODO: optionsの安定化方法を検討中
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [options])
 
   const moveActiveOptionIndex = useCallback(
@@ -220,6 +221,7 @@ export const useListbox = <T,>({
       calculateRect()
     }
     // TODO: optionsの安定化方法を検討中
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [isExpanded, options, calculateRect])
 
   const onKeyDownListBox = useCallback(
