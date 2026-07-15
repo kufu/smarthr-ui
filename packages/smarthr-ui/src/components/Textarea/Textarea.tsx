@@ -17,6 +17,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
@@ -182,14 +183,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       }
     }, [maxLetters, getCounterMessage])
 
-    const unstableRef = useRef({
+    const latest = useLatest({
       onChange,
       updateCounters,
     })
-    unstableRef.current = {
-      onChange,
-      updateCounters,
-    }
 
     const calculateRows = useCallback(
       (element: HTMLTextAreaElement | null | undefined) =>
@@ -200,7 +197,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = e.target.value
-        unstableRef.current.updateCounters?.(newValue)
+        latest.updateCounters?.(newValue)
 
         // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
         e.target.rows = rows
@@ -212,9 +209,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           setInterimRows(currentRows)
         }
 
-        unstableRef.current.onChange?.(e)
+        latest.onChange?.(e)
       },
-      [autoResize, calculateRows, rows],
+      [autoResize, calculateRows, rows, latest],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -234,9 +231,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     // value 変更時にもカウントを更新する
     useEffect(() => {
       if (value && maxLetters) {
-        unstableRef.current.updateCounters?.(value)
+        latest.updateCounters?.(value)
       }
-    }, [maxLetters, value])
+    }, [maxLetters, value, latest])
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
