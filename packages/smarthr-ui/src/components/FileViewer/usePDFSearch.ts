@@ -108,11 +108,6 @@ export const usePDFSearch = (fileUrl: string) => {
     [recalculate],
   )
 
-  const clear = useCallback(() => {
-    setQueryState('')
-    latest.resetMatchState()
-  }, [latest])
-
   const functions = useMemo(
     () => ({
       registerPageText: (pageIndex: number, texts: string[]) => {
@@ -140,8 +135,12 @@ export const usePDFSearch = (fileUrl: string) => {
           return (prev - 1 + count) % count
         })
       },
+      clear: () => {
+        setQueryState('')
+        latest.resetMatchState()
+      },
     }),
-    [latest, recalculate],
+    [recalculate, latest],
   )
 
   useEffect(() => {
@@ -159,10 +158,10 @@ export const usePDFSearch = (fileUrl: string) => {
       currentMatchIndex,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
-      clear,
+      clear: functions.clear,
       registerPageText: functions.registerPageText,
     }),
-    [query, setQuery, matches, matchCount, currentMatchIndex, clear, functions],
+    [query, setQuery, matches, matchCount, currentMatchIndex, functions],
   )
 }
 
