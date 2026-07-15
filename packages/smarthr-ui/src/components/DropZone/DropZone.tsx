@@ -112,20 +112,17 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           onSelectFiles(e, e.dataTransfer.files)
         }
       },
-      [setFilesDraggedOver, onSelectFiles],
+      [onSelectFiles],
     )
 
-    const onDragOver = useCallback(
-      (e: DragEvent<HTMLElement>) => {
-        overrideEventDefault(e)
-        setFilesDraggedOver(true)
-      },
-      [setFilesDraggedOver],
-    )
+    const onDragOver = useCallback((e: DragEvent<HTMLElement>) => {
+      overrideEventDefault(e)
+      setFilesDraggedOver(true)
+    }, [])
 
     const onDragLeave = useCallback(() => {
       setFilesDraggedOver(false)
-    }, [setFilesDraggedOver])
+    }, [])
 
     const onChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
