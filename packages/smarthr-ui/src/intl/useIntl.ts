@@ -7,7 +7,6 @@ import {
   useIntl as useReactIntl,
 } from 'react-intl'
 
-import { useAvailableLocales } from './IntlProvider'
 import { locales, type typedJa } from './locales'
 
 import type { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
@@ -23,8 +22,6 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
  * useIntlフックの戻り値の型定義
  */
 export type UseIntlReturn = {
-  /** 利用可能なロケールのリスト */
-  availableLocales: string[]
   /** メッセージのローカライズ関数 */
   localize: <T extends keyof Messages>(
     descriptor: MessageDescriptor<T>,
@@ -58,7 +55,6 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
  */
 export const useIntl = (): UseIntlReturn => {
   const intl = useReactIntl()
-  const availableLocales = useAvailableLocales()
 
   const localize = useCallback(
     <T extends keyof Messages>(
@@ -76,7 +72,6 @@ export const useIntl = (): UseIntlReturn => {
   )
 
   return {
-    availableLocales,
     localize,
     getLocale,
   }

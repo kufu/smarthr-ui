@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
+import { useAvailableLocales, useIntl } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -103,10 +103,13 @@ export const LanguageSwitcher: FC<Props> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const { localize, availableLocales } = useIntl()
+  const { localize } = useIntl()
+  const availableLocales = useAvailableLocales()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
-      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
+      locales: Object.entries(localeMap).filter(([code]) =>
+        availableLocales.includes(code as Locale),
+      ),
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
     [localeMap, availableLocales],

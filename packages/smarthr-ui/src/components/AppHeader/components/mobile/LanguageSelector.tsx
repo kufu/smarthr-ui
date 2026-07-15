@@ -1,7 +1,7 @@
 import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { useAvailableLocales, useIntl } from '../../../../intl'
 import { type Locale, localeMap } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -28,10 +28,13 @@ type Props = {
 }
 
 export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose }) => {
-  const { getLocale, availableLocales } = useIntl()
+  const { getLocale } = useIntl()
+  const availableLocales = useAvailableLocales()
   const { locales } = useMemo(
     () => ({
-      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
+      locales: Object.entries(localeMap).filter(([code]) =>
+        availableLocales.includes(code as Locale),
+      ),
     }),
     [availableLocales],
   )

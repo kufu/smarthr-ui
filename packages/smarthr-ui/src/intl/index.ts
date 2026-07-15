@@ -1,4 +1,4 @@
-export { IntlProvider } from './IntlProvider'
+export { IntlProvider, useAvailableLocales } from './IntlProvider'
 export { useIntl } from './useIntl'
 export { useDateFormat } from './useDateFormat'
 export { Localizer } from './Localizer'
