@@ -88,15 +88,19 @@ export const SegmentedControl: FC<Props> = ({
 
   const latest = useLatest({ onClickOption, focusable })
 
+  const hasOnClickOption = !!onClickOption
+
   const functions = useMemo(
     () => ({
-      stableOnClickOption: (e: MouseEvent<HTMLButtonElement>) => {
-        latest.onClickOption?.(e.currentTarget.value)
-      },
+      actualOnClickOption: hasOnClickOption
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onClickOption?.(e.currentTarget.value)
+          }
+        : undefined,
       onDelegateFocus: () => setFocusable(false),
       onDelegateBlur: () => setFocusable(true),
     }),
-    [latest],
+    [hasOnClickOption, latest],
   )
 
   const classNames = useMemo(() => {
@@ -171,8 +175,6 @@ export const SegmentedControl: FC<Props> = ({
     [value, options],
   )
 
-  const actualOnClickOption = onClickOption ? functions.stableOnClickOption : undefined
-
   return (
     <div
       {...rest}
@@ -190,7 +192,7 @@ export const SegmentedControl: FC<Props> = ({
             <SegmentedControlButton
               {...option}
               key={option.value}
-              onClick={actualOnClickOption}
+              onClick={functions.actualOnClickOption}
               size={size}
               checked={checked}
               tabIndex={focusable && (excludesSelected ? index === 0 : checked) ? 0 : -1}
