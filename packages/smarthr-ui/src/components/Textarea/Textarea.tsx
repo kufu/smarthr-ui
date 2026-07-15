@@ -126,7 +126,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
     const latest = useLatest({
       onChange,
-      maxLetters,
       rows,
       autoResize,
       maxRows,
@@ -138,15 +137,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         calculateIdealRows(element, latest.maxRows, latest.theme.leading.NORMAL)
 
       const getCounterMessage = (counterValue: number) => {
-        if (latest.maxLetters === undefined) return
+        if (maxLetters === undefined) return
 
-        if (counterValue > latest.maxLetters) {
+        if (counterValue > maxLetters) {
           // {count}文字オーバー
           return (
             <Localizer
               id="smarthr-ui/Textarea/maxLettersExceeded"
               defaultText="{exceededLetters}文字オーバー"
-              values={{ exceededLetters: counterValue - latest.maxLetters }}
+              values={{ exceededLetters: counterValue - maxLetters }}
             />
           )
         }
@@ -156,12 +155,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           <Localizer
             id="smarthr-ui/Textarea/availableLetters"
             defaultText="あと{availableLetters}文字"
-            values={{ availableLetters: latest.maxLetters - counterValue }}
+            values={{ availableLetters: maxLetters - counterValue }}
           />
         )
       }
 
-      const updateCounters = !latest.maxLetters
+      const updateCounters = !maxLetters
         ? undefined
         : (() => {
             const updateCount = debounce((newValue: TextareaValue) => {
@@ -208,7 +207,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           latest.onChange?.(e)
         },
       }
-    }, [latest])
+    }, [maxLetters, latest])
 
     useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
       ref,
