@@ -58,7 +58,6 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
  */
 export const useIntl = (): UseIntlReturn => {
   const intl = useReactIntl()
-  const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
   const availableLocales = useAvailableLocales()
 
   const localize = useCallback(
@@ -74,6 +73,6 @@ export const useIntl = (): UseIntlReturn => {
   return {
     availableLocales,
     localize,
-    locale,
+    locale: isValidLocale(intl.locale) ? intl.locale : 'ja',
   }
 }

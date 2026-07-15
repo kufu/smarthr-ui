@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 import { useIntl as useReactIntl } from 'react-intl'
 
 import { locales } from './locales'
@@ -305,10 +305,15 @@ const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
  */
 export const useDateFormat = (): UseDateFormatReturn => {
   const intl = useReactIntl()
-  const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
 
-  const formatDate = useCallback(
-    ({ date, parts = ['year', 'month', 'day'], options }: FormatDateProps): string => {
+  const functions = useMemo(() => {
+    const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
+
+    const formatDate = ({
+      date,
+      parts = ['year', 'month', 'day'],
+      options,
+    }: FormatDateProps): string => {
       const {
         disableSlashInJa = false,
         capitalizeFirstLetter = false,
@@ -361,12 +366,9 @@ export const useDateFormat = (): UseDateFormatReturn => {
       }
 
       return applyCapitalization(formattedResult, capitalizeFirstLetter)
-    },
-    [intl, locale],
-  )
+    }
 
-  const formatTime = useCallback(
-    ({ date, parts = ['hour', 'minute'], options }: FormatTimeProps): string => {
+    const formatTime = ({ date, parts = ['hour', 'minute'], options }: FormatTimeProps): string => {
       const formatOptions = options || {}
 
       const hasPart = parts.reduce(
@@ -390,25 +392,19 @@ export const useDateFormat = (): UseDateFormatReturn => {
       }
 
       return intl.formatDate(date, actualFormatOptions)
-    },
-    [intl, locale],
-  )
+    }
 
-  const formatTimestamp = useCallback(
-    ({ date, timeParts = ['hour', 'minute'] }: FormatTimestampProps): string => {
-      const formattedDate = formatDate({ date, parts: ['year', 'month', 'day'] })
-      const formattedTime = formatTime({ date, parts: timeParts })
-      return `${formattedDate} ${formattedTime}`
-    },
-    [formatDate, formatTime],
-  )
+    return {
+      formatDate,
+      formatTime,
+      formatTimestamp: ({ date, timeParts = ['hour', 'minute'] }: FormatTimestampProps): string => {
+        const formattedDate = formatDate({ date, parts: ['year', 'month', 'day'] })
+        const formattedTime = formatTime({ date, parts: timeParts })
+        return `${formattedDate} ${formattedTime}`
+      },
+      getWeekStartDay: (): number => DATE_FORMATS[locale].weekStartDay,
+    }
+  }, [intl])
 
-  const getWeekStartDay = useCallback((): number => DATE_FORMATS[locale].weekStartDay, [locale])
-
-  return {
-    formatDate,
-    formatTime,
-    formatTimestamp,
-    getWeekStartDay,
-  }
+  return functions
 }
