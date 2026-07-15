@@ -6,12 +6,11 @@ import {
   type ReactElement,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 import { Cluster } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
@@ -108,14 +107,18 @@ export const Header: FC<Props> = ({
     }
   }, [enableNew, className])
 
-  const unstableRef = useRef({ onTenantSelect })
-  unstableRef.current = { onTenantSelect }
+  const latest = useLatest({ onTenantSelect })
 
-  const handleTenantSelect = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    unstableRef.current.onTenantSelect?.(e.currentTarget.value)
-  }, [])
+  const hasOnTenantSelect = !!onTenantSelect
 
-  const actualHandleTenantSelect = onTenantSelect ? handleTenantSelect : undefined
+  const functions = useMemo(
+    () => ({
+      actualHandleTenantSelect: hasOnTenantSelect
+        ? (e: MouseEvent<HTMLButtonElement>) => latest.onTenantSelect?.(e.currentTarget.value)
+        : undefined,
+    }),
+    [hasOnTenantSelect, latest],
+  )
 
   return (
     <Cluster
@@ -136,7 +139,7 @@ export const Header: FC<Props> = ({
             currentTenantId={currentTenantId}
             tenants={tenants}
             classNames={classNames}
-            handleTenantSelect={actualHandleTenantSelect}
+            handleTenantSelect={functions.actualHandleTenantSelect}
           />
         )}
       </Cluster>
