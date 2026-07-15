@@ -5,11 +5,13 @@ import {
   type FC,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 import type { ViewerProps } from './types'
 
@@ -53,57 +55,60 @@ export const ImageViewer: FC<ViewerProps> = memo(
       rotation: 0,
     })
 
-    // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
-    const updateViewConfig = useCallback(() => {
-      const img = imageRef.current
+    const latest = useLatest({
+      onLoad,
+      scale,
+      rotation,
+      width,
+    })
 
-      if (!img?.complete) {
-        return
+    // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
+    const functions = useMemo(() => {
+      const updateViewConfig = () => {
+        const img = imageRef.current
+
+        if (!img?.complete) {
+          return
+        }
+
+        // 与えられたwidthに対する適切なscaleを算出
+        const viewportScale = (latest.width / img.naturalWidth) * latest.scale
+
+        const rad = ((latest.rotation ?? 0) * Math.PI) / 180
+        const sin = Math.abs(Math.sin(rad))
+        const cos = Math.abs(Math.cos(rad))
+
+        // imgをwidth: 100%で表示したときと同等の値を算出
+        const scaledWidth = img.naturalWidth * viewportScale
+        const scaledHeight = img.naturalHeight * viewportScale
+
+        setViewConfig({
+          wrapperWidth: scaledWidth * cos + scaledHeight * sin,
+          wrapperHeight: scaledWidth * sin + scaledHeight * cos,
+          imgScale: viewportScale,
+          rotation: latest.rotation ?? 0,
+        })
       }
 
-      // 与えられたwidthに対する適切なscaleを算出
-      const viewportScale = (width / img.naturalWidth) * scale
-
-      const rad = ((rotation ?? 0) * Math.PI) / 180
-      const sin = Math.abs(Math.sin(rad))
-      const cos = Math.abs(Math.cos(rad))
-
-      // imgをwidth: 100%で表示したときと同等の値を算出
-      const scaledWidth = img.naturalWidth * viewportScale
-      const scaledHeight = img.naturalHeight * viewportScale
-
-      setViewConfig({
-        wrapperWidth: scaledWidth * cos + scaledHeight * sin,
-        wrapperHeight: scaledWidth * sin + scaledHeight * cos,
-        imgScale: viewportScale,
-        rotation: rotation ?? 0,
-      })
-    }, [scale, rotation, width])
-
-    const unstableRef = useRef({
-      onLoad,
-      updateViewConfig,
-    })
-    unstableRef.current = {
-      onLoad,
-      updateViewConfig,
-    }
-
-    const handleLoad = useCallback(() => {
-      unstableRef.current.updateViewConfig()
-      unstableRef.current.onLoad?.()
-    }, [])
+      return {
+        updateViewConfig,
+        handleLoad: () => {
+          updateViewConfig()
+          latest.onLoad?.()
+        },
+      }
+    }, [latest])
 
     useEffect(() => {
-      unstableRef.current.updateViewConfig()
-    }, [scale, rotation, width])
+      functions.updateViewConfig()
+    }, [scale, rotation, width, functions])
 
     return (
       <ImageDisplay
         {...viewConfig}
         src={file.url}
         alt={file.alt}
-        onLoad={handleLoad}
+        onLoad={functions.handleLoad}
         onError={onLoadError}
         imageRef={imageRef}
       />
