@@ -57,17 +57,17 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const latest = useLatest({ matchCount, query })
-
   const resetMatchState = useCallback(() => {
     setMatches([])
     setCurrentMatchIndex(-1)
   }, [])
 
+  const latest = useLatest({ matchCount, query, resetMatchState })
+
   const recalculate = useCallback(
     (nextQuery: string, options?: { resetSelection?: boolean }) => {
       if (nextQuery === '') {
-        resetMatchState()
+        latest.resetMatchState()
         return
       }
       const escapedQuery = escapeRegExp(normalize(nextQuery))
@@ -97,7 +97,7 @@ export const usePDFSearch = (fileUrl: string) => {
         return prev
       })
     },
-    [resetMatchState],
+    [latest],
   )
 
   const setQuery = useCallback(
@@ -110,8 +110,8 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const clear = useCallback(() => {
     setQueryState('')
-    resetMatchState()
-  }, [resetMatchState])
+    latest.resetMatchState()
+  }, [latest])
 
   const functions = useMemo(
     () => ({
@@ -147,8 +147,8 @@ export const usePDFSearch = (fileUrl: string) => {
   useEffect(() => {
     pageTextsRef.current.clear()
     setQueryState('')
-    resetMatchState()
-  }, [fileUrl, resetMatchState])
+    latest.resetMatchState()
+  }, [fileUrl, latest])
 
   return useMemo(
     () => ({
