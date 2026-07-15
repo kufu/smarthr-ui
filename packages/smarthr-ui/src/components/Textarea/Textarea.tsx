@@ -183,16 +183,19 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       }
     }, [maxLetters, getCounterMessage])
 
-    const latest = useLatest({
-      onChange,
-      updateCounters,
-    })
-
     const calculateRows = useCallback(
       (element: HTMLTextAreaElement | null | undefined) =>
         calculateIdealRows(element, maxRows, theme.leading.NORMAL),
       [maxRows, theme.leading.NORMAL],
     )
+
+    const latest = useLatest({
+      onChange,
+      updateCounters,
+      rows,
+      autoResize,
+      calculateRows,
+    })
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -200,10 +203,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         latest.updateCounters?.(newValue)
 
         // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = rows
+        e.target.rows = latest.rows
 
-        if (autoResize) {
-          const currentRows = calculateRows(e.target)
+        if (latest.autoResize) {
+          const currentRows = latest.calculateRows(e.target)
           // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
           e.target.rows = currentRows
           setInterimRows(currentRows)
@@ -211,7 +214,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
         latest.onChange?.(e)
       },
-      [autoResize, calculateRows, rows, latest],
+      [latest],
     )
 
     // autoFocus時に、フォーカスを当てる
@@ -224,16 +227,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     // autoResize時に、初期値での高さを指定
     useEffect(() => {
       if (autoResize && textareaRef.current) {
-        setInterimRows(calculateRows(textareaRef.current))
+        setInterimRows(latest.calculateRows(textareaRef.current))
       }
-    }, [calculateRows, autoResize])
+    }, [autoResize, latest])
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
       if (value && maxLetters) {
         latest.updateCounters?.(value)
       }
-    }, [maxLetters, value, latest])
+    }, [value, maxLetters, latest])
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
