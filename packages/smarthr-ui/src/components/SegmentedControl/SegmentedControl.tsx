@@ -6,7 +6,6 @@ import {
   type MouseEvent,
   type ReactNode,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -89,6 +88,17 @@ export const SegmentedControl: FC<Props> = ({
 
   const latest = useLatest({ onClickOption, focusable })
 
+  const functions = useMemo(
+    () => ({
+      stableOnClickOption: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onClickOption?.(e.currentTarget.value)
+      },
+      onDelegateFocus: () => setFocusable(false),
+      onDelegateBlur: () => setFocusable(true),
+    }),
+    [latest],
+  )
+
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -98,9 +108,6 @@ export const SegmentedControl: FC<Props> = ({
       button: button({ size }),
     }
   }, [className, size])
-
-  const onDelegateFocus = useCallback(() => setFocusable(false), [])
-  const onDelegateBlur = useCallback(() => setFocusable(true), [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -164,21 +171,14 @@ export const SegmentedControl: FC<Props> = ({
     [value, options],
   )
 
-  const stableOnClickOption = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      latest.onClickOption?.(e.currentTarget.value)
-    },
-    [latest],
-  )
-
-  const actualOnClickOption = onClickOption ? stableOnClickOption : undefined
+  const actualOnClickOption = onClickOption ? functions.stableOnClickOption : undefined
 
   return (
     <div
       {...rest}
       className={classNames.container}
-      onFocus={onDelegateFocus}
-      onBlur={onDelegateBlur}
+      onFocus={functions.onDelegateFocus}
+      onBlur={functions.onDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
