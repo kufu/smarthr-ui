@@ -7,7 +7,6 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   memo,
-  useCallback,
   useContext,
   useMemo,
 } from 'react'
@@ -104,59 +103,59 @@ export const AccordionPanelTrigger: FC<Props> = ({
     expandableMultiply,
   })
 
-  const stableOnClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
-      latest.onClickTrigger?.(e.currentTarget.value, newIsExpanded)
-      if (latest.onClickProps) {
-        const newExpandedItems = getNewExpandedItems(
-          latest.expandedItems,
-          e.currentTarget.value,
-          newIsExpanded,
-          latest.expandableMultiply,
-        )
-        latest.onClickProps(mapToKeyArray(newExpandedItems))
-      }
-    },
-    [latest],
-  )
+  const hasOnClick = !!(onClickTrigger || onClickProps)
 
-  const actualOnClick = onClickTrigger || onClickProps ? stableOnClick : undefined
+  const functions = useMemo(
+    () => ({
+      actualOnClick: hasOnClick
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+            latest.onClickTrigger?.(e.currentTarget.value, newIsExpanded)
+            if (latest.onClickProps) {
+              const newExpandedItems = getNewExpandedItems(
+                latest.expandedItems,
+                e.currentTarget.value,
+                newIsExpanded,
+                latest.expandableMultiply,
+              )
+              latest.onClickProps(mapToKeyArray(newExpandedItems))
+            }
+          }
+        : undefined,
+      handleKeyDown: (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
+        if (!latest.parentRef?.current) {
+          return
+        }
 
-  const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
-    (e): void => {
-      if (!latest.parentRef?.current) {
-        return
-      }
+        const item = e.target as HTMLElement
 
-      const item = e.target as HTMLElement
-
-      switch (e.key) {
-        case 'Home': {
-          e.preventDefault()
-          focusFirstSibling(latest.parentRef.current)
-          break
+        switch (e.key) {
+          case 'Home': {
+            e.preventDefault()
+            focusFirstSibling(latest.parentRef.current)
+            break
+          }
+          case 'End': {
+            e.preventDefault()
+            focusLastSibling(latest.parentRef.current)
+            break
+          }
+          case 'ArrowLeft':
+          case 'ArrowUp': {
+            e.preventDefault()
+            focusPreviousSibling(item, latest.parentRef.current)
+            break
+          }
+          case 'ArrowRight':
+          case 'ArrowDown': {
+            e.preventDefault()
+            focusNextSibling(item, latest.parentRef.current)
+            break
+          }
         }
-        case 'End': {
-          e.preventDefault()
-          focusLastSibling(latest.parentRef.current)
-          break
-        }
-        case 'ArrowLeft':
-        case 'ArrowUp': {
-          e.preventDefault()
-          focusPreviousSibling(item, latest.parentRef.current)
-          break
-        }
-        case 'ArrowRight':
-        case 'ArrowDown': {
-          e.preventDefault()
-          focusNextSibling(item, latest.parentRef.current)
-          break
-        }
-      }
-    },
-    [latest],
+      },
+    }),
+    [hasOnClick, latest],
   )
 
   return (
@@ -166,8 +165,8 @@ export const AccordionPanelTrigger: FC<Props> = ({
       triggerId={triggerId}
       isExpanded={isExpanded}
       contentId={contentId}
-      actualOnClick={actualOnClick}
-      handleKeyDown={handleKeyDown}
+      actualOnClick={functions.actualOnClick}
+      handleKeyDown={functions.handleKeyDown}
       classNames={classNames}
       iconPosition={iconPosition}
       headingType={headingType}
