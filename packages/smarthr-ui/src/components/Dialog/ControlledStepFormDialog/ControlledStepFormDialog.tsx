@@ -100,7 +100,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     [localize],
   )
   const { currentStep } = useContext(StepFormDialogContext)
-  const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
+  const activeStep = currentStep?.stepNumber ?? 1
 
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
