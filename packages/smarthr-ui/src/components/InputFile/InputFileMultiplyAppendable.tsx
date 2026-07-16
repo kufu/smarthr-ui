@@ -124,7 +124,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
               <FileListItem
                 key={index}
                 value={index}
-                onDeleteClick={handleDelete}
+                handleDeleteClick={handleDelete}
                 destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
@@ -156,20 +156,20 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
 type FileListItemProps = PropsWithChildren<{
   value: number
-  onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
+  handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
   destroyLabel: string
   className: string
 }>
 
 const FileListItem = memo<FileListItemProps>(
-  ({ value, onDeleteClick, destroyLabel, className, children }) => (
+  ({ value, handleDeleteClick, destroyLabel, className, children }) => (
     <li className={className}>
       <span className="smarthr-ui-InputFile-fileName">{children}</span>
       <Button
         variant="text"
         prefix={<FaTrashCanIcon />}
         value={value}
-        onClick={onDeleteClick}
+        onClick={handleDeleteClick}
         className="smarthr-ui-InputFile-deleteButton"
       >
         {destroyLabel}

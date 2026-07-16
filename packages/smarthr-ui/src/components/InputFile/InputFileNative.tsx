@@ -116,7 +116,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
               <FileListItem
                 key={index}
                 value={index}
-                onDeleteClick={handleDelete}
+                handleDeleteClick={handleDelete}
                 destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
@@ -147,13 +147,13 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
 
 type FileListItemProps = PropsWithChildren<{
   value: number
-  onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
+  handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
   destroyLabel: string
   className: string
 }>
 
 const FileListItem = memo<FileListItemProps>(
-  ({ value, onDeleteClick, destroyLabel, className, children }) => (
+  ({ value, handleDeleteClick, destroyLabel, className, children }) => (
     <li className={className}>
       <span className="smarthr-ui-InputFile-fileName shr-wrap-break-word shr-min-w-[0]">
         {children}
@@ -162,7 +162,7 @@ const FileListItem = memo<FileListItemProps>(
         variant="text"
         prefix={<FaTrashCanIcon />}
         value={value}
-        onClick={onDeleteClick}
+        onClick={handleDeleteClick}
         className="smarthr-ui-InputFile-deleteButton"
       >
         {destroyLabel}
