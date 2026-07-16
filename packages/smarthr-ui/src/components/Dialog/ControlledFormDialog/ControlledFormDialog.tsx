@@ -65,21 +65,21 @@ export const ControlledFormDialog: FC<Props> = ({
   const latest = useLatest({ onClickClose, onSubmit, isOpen })
 
   const functions = useMemo(() => {
-    const actualOnClickClose = () => {
+    const handleClickClose = () => {
       if (latest.isOpen) {
         latest.onClickClose()
       }
     }
 
     return {
-      actualOnClickClose,
-      onDelegateSubmit: (e: FormEvent<HTMLFormElement>) => {
+      handleClickClose,
+      handleSubmit: (e: FormEvent<HTMLFormElement>) => {
         if (latest.isOpen) {
           e.preventDefault()
           // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
           // 親formが意図せずsubmitされてしまう場合がある
           e.stopPropagation()
-          latest.onSubmit(e, { close: actualOnClickClose })
+          latest.onSubmit(e, { close: handleClickClose })
         }
       },
     }
@@ -100,8 +100,8 @@ export const ControlledFormDialog: FC<Props> = ({
         actionButton={actionButton}
         closeButton={closeButton}
         subActionArea={subActionArea}
-        onClickClose={functions.actualOnClickClose}
-        onSubmit={functions.onDelegateSubmit}
+        handleClickClose={functions.handleClickClose}
+        handleSubmit={functions.handleSubmit}
         responseStatus={responseStatus}
       >
         {children}
