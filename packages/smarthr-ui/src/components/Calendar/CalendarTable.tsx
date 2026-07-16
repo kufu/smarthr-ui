@@ -99,7 +99,7 @@ export const CalendarTable: FC<Props> = ({
 
   const latest = useLatest({ onSelectDate })
 
-  const actualOnSelectDate: typeof onSelectDate = useCallback(
+  const handleSelectDate: typeof onSelectDate = useCallback(
     (...argsRest) => {
       latest.onSelectDate(...argsRest)
     },
@@ -126,7 +126,7 @@ export const CalendarTable: FC<Props> = ({
                     from={from}
                     to={to}
                     nowDateText={nowDateText}
-                    onClick={actualOnSelectDate}
+                    handleClick={handleSelectDate}
                     classNames={classNames}
                   />
                 ) : (
@@ -162,13 +162,13 @@ const SelectTdButton = memo<{
   from: Date
   to: Date
   nowDateText: string
-  onClick: Props['onSelectDate']
+  handleClick: Props['onSelectDate']
   classNames: {
     td: string
     cellButton: string
     dateCell: string
   }
-}>(({ date, currentDay, selectedDayText, from, to, nowDateText, onClick, classNames }) => {
+}>(({ date, currentDay, selectedDayText, from, to, nowDateText, handleClick, classNames }) => {
   const target = useMemo(() => {
     const day = currentDay.date(date)
 
@@ -185,7 +185,7 @@ const SelectTdButton = memo<{
         disabled={!isBetween(target.date, from, to)}
         aria-pressed={target.day.isSame(selectedDayText, 'date')}
         onClick={(e) => {
-          onClick(e, target.date)
+          handleClick(e, target.date)
         }}
         className={classNames.cellButton}
         data-is-today={target.day.isSame(nowDateText, 'date')}
