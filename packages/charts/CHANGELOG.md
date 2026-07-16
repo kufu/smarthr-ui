@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.6](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.5...smarthr-ui-charts-v0.1.6) (2026-07-16)
+
+
+### Bug Fixes
+
+* **BarChart:** 棒グラフの柄をSmartHRのトンマナに合わせ調整&視認性の低い柄を除去 ([#6489](https://github.com/kufu/smarthr-ui/issues/6489)) ([505fe2f](https://github.com/kufu/smarthr-ui/commit/505fe2fbd45dee4a5cf5861fb405c2579067c4aa))
+
 ## [0.1.5](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.4...smarthr-ui-charts-v0.1.5) (2026-07-02)
 
 
