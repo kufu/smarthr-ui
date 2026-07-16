@@ -80,8 +80,10 @@ pnpm ui scaffold:storybook
 - **内部で定義するハンドラ** → `handleXxx` 形式
 - **内部コンポーネントが受け取る** → `handleXxx` 形式
 
+**判断基準**: 外部公開コンポーネントとは、rootのbarrel file（`src/index.ts`）からexportされているコンポーネント
+
 ```tsx
-// ✅ 外部公開コンポーネント
+// ✅ 外部公開コンポーネント（src/index.tsからexportされている）
 export const Button: FC<{ onClick?: () => void }> = ({ onClick }) => {
   const handleClick = () => {
     // 内部処理
@@ -90,7 +92,7 @@ export const Button: FC<{ onClick?: () => void }> = ({ onClick }) => {
   return <InternalButton handleClick={handleClick} />
 }
 
-// ✅ 内部コンポーネント（非公開）
+// ✅ 内部コンポーネント（src/index.tsからexportされていない）
 const InternalButton: FC<{ handleClick?: () => void }> = ({ handleClick }) => {
   return <button onClick={handleClick}>Click</button>
 }
