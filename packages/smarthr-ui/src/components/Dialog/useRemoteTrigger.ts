@@ -39,7 +39,7 @@ export function useRemoteTrigger({
 
     return {
       updateIsOpen,
-      onClickClose: () => {
+      handleClickClose: () => {
         if (latest.orgOnClickClose) {
           return latest.orgOnClickClose(() => {
             updateIsOpen(false)
@@ -48,7 +48,7 @@ export function useRemoteTrigger({
 
         updateIsOpen(false)
       },
-      onPressEscape: () => {
+      handlePressEscape: () => {
         if (latest.orgOnPressEscape) {
           return latest.orgOnPressEscape(() => {
             updateIsOpen(false)
@@ -76,7 +76,7 @@ export function useRemoteTrigger({
 
   return {
     isOpen,
-    onClickClose: functions.onClickClose,
-    onPressEscape: functions.onPressEscape,
+    handleClickClose: functions.handleClickClose,
+    handlePressEscape: functions.handlePressEscape,
   }
 }
