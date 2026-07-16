@@ -73,7 +73,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
 
     const latest = useLatest({ onChange, files })
 
-    const { handleChange, handleDelete } = useMemo(() => {
+    const functions = useMemo(() => {
       const updateFiles = (newFiles: File[]) => {
         latest.onChange?.(newFiles)
         setFiles(newFiles)
@@ -116,7 +116,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
               <FileListItem
                 key={index}
                 value={index}
-                handleDeleteClick={handleDelete}
+                handleDeleteClick={functions.handleDelete}
                 destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
@@ -130,7 +130,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
             {...rest}
             data-smarthr-ui-input="true"
             type="file"
-            onChange={handleChange}
+            onChange={functions.handleChange}
             disabled={disabled}
             ref={inputRef}
             aria-invalid={error || undefined}

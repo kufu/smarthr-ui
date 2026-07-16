@@ -69,7 +69,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
     const latest = useLatest({ onChange, files })
 
-    const { handleChange, handleDelete } = useMemo(() => {
+    const functions = useMemo(() => {
       const updateFiles = (newFiles: File[]) => {
         if (!inputRef.current) {
           return
@@ -124,7 +124,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
               <FileListItem
                 key={index}
                 value={index}
-                handleDeleteClick={handleDelete}
+                handleDeleteClick={functions.handleDelete}
                 destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
@@ -139,7 +139,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
             multiple
             data-smarthr-ui-input="true"
             type="file"
-            onChange={handleChange}
+            onChange={functions.handleChange}
             disabled={disabled}
             ref={inputRef}
             aria-invalid={error || undefined}
