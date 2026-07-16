@@ -1,6 +1,7 @@
-import { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from 'react'
+import { type FC, type MouseEvent, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -92,19 +93,23 @@ const NavigationLink = memo<NavigationLink & { className: string }>(
 const NavigationButton: FC<
   Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }
 > = ({ navigation, onClickNavigation, className }) => {
-  const onClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      navigation.onClick(e)
-      onClickNavigation()
-    },
-    [navigation, onClickNavigation],
+  const latest = useLatest({ navigation, onClickNavigation })
+
+  const functions = useMemo(
+    () => ({
+      onClick: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.navigation.onClick(e)
+        latest.onClickNavigation()
+      },
+    }),
+    [latest],
   )
 
   return (
     <CommonButton
       elementAs="button"
       type="button"
-      onClick={onClick}
+      onClick={functions.onClick}
       current={navigation.current}
       boldWhenCurrent
       className={className}
@@ -117,9 +122,13 @@ const NavigationButton: FC<
 const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
-  const onClick = useCallback(
-    () => setSelectedNavigationGroup(navigation),
-    [navigation, setSelectedNavigationGroup],
+  const latest = useLatest({ navigation, setSelectedNavigationGroup })
+
+  const functions = useMemo(
+    () => ({
+      onClick: () => latest.setSelectedNavigationGroup(latest.navigation),
+    }),
+    [latest],
   )
 
   // 子要素に current を持っているものがあるかどうか
@@ -137,7 +146,7 @@ const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ naviga
   )
 
   return (
-    <MenuButton onClick={onClick} isCurrent={isCurrent}>
+    <MenuButton onClick={functions.onClick} isCurrent={isCurrent}>
       {navigation.children}
     </MenuButton>
   )
