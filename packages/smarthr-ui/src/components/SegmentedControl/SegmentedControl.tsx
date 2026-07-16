@@ -6,7 +6,6 @@ import {
   type MouseEvent,
   type ReactNode,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -87,8 +86,6 @@ export const SegmentedControl: FC<Props> = ({
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const latest = useLatest({ onClickOption })
-
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -99,8 +96,17 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [className, size])
 
-  const handleDelegateFocus = () => setIsFocused(true)
-  const handleDelegateBlur = () => setIsFocused(false)
+  const latest = useLatest({ onClickOption })
+  const functions = useMemo(
+    () => ({
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onClickOption?.(e.currentTarget.value)
+      },
+      handleDelegateFocus: () => setIsFocused(true),
+      handleDelegateBlur: () => setIsFocused(false),
+    }),
+    [latest],
+  )
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -161,19 +167,12 @@ export const SegmentedControl: FC<Props> = ({
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      latest.onClickOption?.(e.currentTarget.value)
-    },
-    [latest],
-  )
-
   return (
     <div
       {...rest}
       className={classNames.container}
-      onFocus={handleDelegateFocus}
-      onBlur={handleDelegateBlur}
+      onFocus={functions.handleDelegateFocus}
+      onBlur={functions.handleDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
@@ -186,7 +185,7 @@ export const SegmentedControl: FC<Props> = ({
             optionAriaLabel={option.ariaLabel}
             optionDisabled={option.disabled}
             index={index}
-            handleClick={handleClick}
+            handleClick={functions.handleClick}
             size={size}
             value={value}
             isFocused={isFocused}
