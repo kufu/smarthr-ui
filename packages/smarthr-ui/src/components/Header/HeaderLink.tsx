@@ -32,5 +32,14 @@ export const HeaderLink = memo<Props>(({ enableNew, className, ...rest }) => {
     [enableNew, className],
   )
 
-  return <AnchorButton {...rest} variant="text" target="_blank" className={actualClassName} />
+  return (
+    <AnchorButton
+      {...rest}
+      variant="text"
+      target="_blank"
+      rel="help"
+      referrerPolicy="no-referrer-when-downgrade"
+      className={actualClassName}
+    />
+  )
 })
