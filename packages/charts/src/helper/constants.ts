@@ -10,19 +10,18 @@ export const BORDER_DASHES = [
 
 export const POINT_STYLES = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'] as const
 
+export const PATTERN_SIZE = 10
+
 export const SHAPE_TYPES = [
   'diamond',
   'zigzag',
   'disc',
   'zigzag-vertical',
-  'diamond-box',
   'plus',
   'square',
   'ring',
   'diagonal',
-  'cross',
   'triangle',
-  'dash',
   'dot',
   'diagonal-right-left',
   'box',
