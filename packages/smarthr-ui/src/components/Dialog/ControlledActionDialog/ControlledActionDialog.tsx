@@ -10,7 +10,6 @@ import { useObjectHeading } from '../useObjectHeading'
 import {
   ActionDialogContentInner,
   type ActionDialogContentInnerProps,
-  type ActionDialogHelpers,
 } from './ActionDialogContentInner'
 
 import type { DialogProps } from '../types'
@@ -75,12 +74,12 @@ export const ControlledActionDialog: FC<Props> = ({
   }, [isOpen, onClickClose])
 
   const actualOnClickAction = useCallback(
-    (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
+    (e: React.MouseEvent<Element>) => {
       if (isOpen) {
-        onClickAction(e, helpers)
+        onClickAction(e, { close: actualOnClickClose })
       }
     },
-    [isOpen, onClickAction],
+    [isOpen, onClickAction, actualOnClickClose],
   )
 
   return createPortal(
