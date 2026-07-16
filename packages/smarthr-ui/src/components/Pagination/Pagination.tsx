@@ -119,7 +119,7 @@ const ActualPagination: FC<Props> = ({
     [latest],
   )
 
-  const onDelegateClick = useCallback(
+  const handleDelegateClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
       if (!latest.onClick) {
         return
@@ -162,7 +162,7 @@ const ActualPagination: FC<Props> = ({
 
   return (
     <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={onDelegateClick}>
+      <Reel onClick={handleDelegateClick}>
         <ItemButtons
           total={total}
           current={current}
