@@ -64,6 +64,17 @@ export type ActionDialogContentInnerProps = AbstractProps & {
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
+const CLASS_NAMES = (() => {
+  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+
+  return {
+    wrapper: wrapper(),
+    actionArea: actionArea(),
+    buttonArea: buttonArea(),
+    message: message(),
+  }
+})()
+
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
   heading,
@@ -78,24 +89,13 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
-  const styles = useMemo(() => {
-    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
-
-    return {
-      wrapper: wrapper(),
-      actionArea: actionArea(),
-      buttonArea: buttonArea(),
-      message: message(),
-    }
-  }, [])
-
   return (
-    <Section className={styles.wrapper}>
+    <Section className={CLASS_NAMES.wrapper}>
       <DialogHeading {...heading} />
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <div className={styles.actionArea}>
+      <div className={CLASS_NAMES.actionArea}>
         <Cluster justify="space-between">
           {subActionArea}
           <ActionAreaCluster
@@ -104,12 +104,12 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             closeButton={closeButton}
             actionButton={actionButton}
             loading={calcedResponseStatus.isProcessing}
-            className={styles.buttonArea}
+            className={CLASS_NAMES.buttonArea}
           />
         </Cluster>
         <DialogContentResponseStatusMessage
           responseStatus={calcedResponseStatus}
-          className={styles.message}
+          className={CLASS_NAMES.message}
         />
       </div>
     </Section>
