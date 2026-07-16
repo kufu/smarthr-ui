@@ -127,8 +127,8 @@ export const SortDropdown: FC<Props> = ({
             </Fieldset>
           </Stack>
           <Footer
-            onApply={handler.apply}
-            onCancel={onCancel}
+            handleApply={handler.apply}
+            handleCancel={onCancel}
             cancelText={texts.cancelText}
             applyText={texts.applyText}
             className={classNames.footer}
@@ -139,32 +139,31 @@ export const SortDropdown: FC<Props> = ({
   )
 }
 
-const Footer = memo<
-  Pick<Props, 'onCancel'> & {
-    onApply: MouseEventHandler<HTMLButtonElement>
-    className: string
-    cancelText: ReactNode
-    applyText: ReactNode
-  }
->(({ className, onApply, onCancel, cancelText, applyText }) => (
+const Footer = memo<{
+  handleApply: MouseEventHandler<HTMLButtonElement>
+  handleCancel?: MouseEventHandler<HTMLButtonElement>
+  className: string
+  cancelText: ReactNode
+  applyText: ReactNode
+}>(({ className, handleApply, handleCancel, cancelText, applyText }) => (
   <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
-    <CancelButton onClick={onCancel}>{cancelText}</CancelButton>
-    <ApplyButton onClick={onApply}>{applyText}</ApplyButton>
+    <CancelButton handleClick={handleCancel}>{cancelText}</CancelButton>
+    <ApplyButton handleClick={handleApply}>{applyText}</ApplyButton>
   </Cluster>
 ))
 
-const CancelButton = memo<PropsWithChildren<{ onClick: Props['onCancel'] }>>(
-  ({ onClick, children }) => (
-    <DropdownCloser>
-      <Button onClick={onClick}>{children}</Button>
-    </DropdownCloser>
-  ),
-)
+const CancelButton = memo<
+  PropsWithChildren<{ handleClick?: MouseEventHandler<HTMLButtonElement> }>
+>(({ handleClick, children }) => (
+  <DropdownCloser>
+    <Button onClick={handleClick}>{children}</Button>
+  </DropdownCloser>
+))
 
-const ApplyButton = memo<PropsWithChildren<{ onClick: MouseEventHandler<HTMLButtonElement> }>>(
-  ({ onClick, children }) => (
+const ApplyButton = memo<PropsWithChildren<{ handleClick: MouseEventHandler<HTMLButtonElement> }>>(
+  ({ handleClick, children }) => (
     <DropdownCloser>
-      <Button variant="primary" onClick={onClick}>
+      <Button variant="primary" onClick={handleClick}>
         {children}
       </Button>
     </DropdownCloser>
