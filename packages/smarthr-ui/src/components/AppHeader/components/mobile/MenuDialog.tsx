@@ -44,6 +44,16 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { wrapper, header, content } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    header: header(),
+    content: content(),
+  }
+})()
+
 type Props = PropsWithChildren<{
   isOpen: boolean
   setIsOpen: Dispatch<boolean>
@@ -79,16 +89,6 @@ export const Content: FC<
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
     useContext(AppLauncherContext)
-
-  const classNames = useMemo(() => {
-    const { wrapper, header, content } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      header: header(),
-      content: content(),
-    }
-  }, [])
 
   const { localize } = useIntl()
   const translated = useMemo(
@@ -136,8 +136,8 @@ export const Content: FC<
   )
 
   return (
-    <Section role="dialog" aria-modal="true" className={classNames.wrapper} ref={domRef}>
-      <div className={classNames.header}>
+    <Section role="dialog" aria-modal="true" className={CLASS_NAMES.wrapper} ref={domRef}>
+      <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
             <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
@@ -163,7 +163,7 @@ export const Content: FC<
       {isAppLauncherSelected && features && features.length > 0 ? (
         <AppLauncher features={features} />
       ) : (
-        <Scroller direction="vertical" className={classNames.content}>
+        <Scroller direction="vertical" className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (
