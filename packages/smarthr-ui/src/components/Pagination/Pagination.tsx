@@ -6,7 +6,6 @@ import {
   type HTMLAttributes,
   type MouseEvent,
   memo,
-  useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -113,42 +112,43 @@ const ActualPagination: FC<Props> = ({
   }, [className, withoutNumbers])
 
   const latest = useLatest({ onClick, hrefTemplate })
+  const hasHrefTemplate = !!hrefTemplate
 
-  const stableHrefTemplate = useCallback(
-    (pageNumber: number) => latest.hrefTemplate!(pageNumber),
-    [latest],
-  )
-
-  const handleDelegateClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      if (!latest.onClick) {
-        return
-      }
-
-      if (latest.hrefTemplate) {
-        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
-
-        if (!anchor) {
+  const functions = useMemo(
+    () => ({
+      actualHrefTemplate: hasHrefTemplate
+        ? (pageNumber: number) => latest.hrefTemplate!(pageNumber)
+        : undefined,
+      handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
+        if (!latest.onClick) {
           return
         }
 
-        const href = (anchor as HTMLAnchorElement).href
+        if (latest.hrefTemplate) {
+          const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
-        if (href) {
-          ;(latest.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(href, e)
-        }
-      } else {
-        const button = getTargetDelegateElement(e, BUTTON_REGEX)
+          if (!anchor) {
+            return
+          }
 
-        if (button) {
-          ;(latest.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
-            parseInt((button as HTMLButtonElement).value, 10),
-            e,
-          )
+          const href = (anchor as HTMLAnchorElement).href
+
+          if (href) {
+            ;(latest.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(href, e)
+          }
+        } else {
+          const button = getTargetDelegateElement(e, BUTTON_REGEX)
+
+          if (button) {
+            ;(latest.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
+              parseInt((button as HTMLButtonElement).value, 10),
+              e,
+            )
+          }
         }
-      }
-    },
-    [latest],
+      },
+    }),
+    [hasHrefTemplate, latest],
   )
 
   const navigationLabel = useMemo(
@@ -162,13 +162,13 @@ const ActualPagination: FC<Props> = ({
 
   return (
     <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={handleDelegateClick}>
+      <Reel onClick={functions.handleDelegateClick}>
         <ItemButtons
           total={total}
           current={current}
           padding={padding}
           withoutNumbers={withoutNumbers}
-          hrefTemplate={hrefTemplate ? stableHrefTemplate : undefined}
+          hrefTemplate={functions.actualHrefTemplate}
           classNames={classNames}
           linkAs={linkAs}
         />
