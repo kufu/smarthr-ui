@@ -4,7 +4,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   type RefObject,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -13,6 +12,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
@@ -109,18 +109,21 @@ export const Content: FC<
     [localize],
   )
 
-  const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
-  const clearAppLauncher = useCallback(
-    () => setIsAppLauncherSelected(false),
-    [setIsAppLauncherSelected],
-  )
-  const clearReleaseNote = useCallback(
-    () => setIsReleaseNoteSelected(false),
-    [setIsReleaseNoteSelected],
-  )
-  const clearNavigationGroup = useCallback(
-    () => setSelectedNavigationGroup(null),
-    [setSelectedNavigationGroup],
+  const latest = useLatest({
+    setIsOpen,
+    setIsAppLauncherSelected,
+    setIsReleaseNoteSelected,
+    setSelectedNavigationGroup,
+  })
+
+  const functions = useMemo(
+    () => ({
+      dialogClose: () => latest.setIsOpen(false),
+      clearAppLauncher: () => latest.setIsAppLauncherSelected(false),
+      clearReleaseNote: () => latest.setIsReleaseNoteSelected(false),
+      clearNavigationGroup: () => latest.setSelectedNavigationGroup(null),
+    }),
+    [latest],
   )
 
   // HINT: Contentをanimationで非表示にしたい
@@ -128,11 +131,11 @@ export const Content: FC<
   // unmount時に操作内容のclearを行う
   useEffect(
     () => () => {
-      clearReleaseNote()
-      clearAppLauncher()
-      clearNavigationGroup()
+      functions.clearReleaseNote()
+      functions.clearAppLauncher()
+      functions.clearNavigationGroup()
     },
-    [clearAppLauncher, clearReleaseNote, clearNavigationGroup],
+    [functions],
   )
 
   return (
@@ -140,21 +143,27 @@ export const Content: FC<
       <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
-            <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
+            <MenuSubHeading
+              title={translated.launcherListText}
+              onClickBack={functions.clearAppLauncher}
+            />
           ) : isReleaseNoteSelected ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading title={translated.latestReleaseNotes} onClickBack={clearReleaseNote} />
+            <MenuSubHeading
+              title={translated.latestReleaseNotes}
+              onClickBack={functions.clearReleaseNote}
+            />
           ) : selectedNavigationGroup ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
               title={selectedNavigationGroup.children}
-              onClickBack={clearNavigationGroup}
+              onClickBack={functions.clearNavigationGroup}
             />
           ) : (
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="S" onClick={dialogClose}>
+          <Button variant="secondary" size="S" onClick={functions.dialogClose}>
             <FaXmarkIcon alt={translated.closeMenu} />
           </Button>
         </Cluster>
@@ -169,7 +178,7 @@ export const Content: FC<
           ) : selectedNavigationGroup ? (
             <Navigation
               navigations={selectedNavigationGroup.childNavigations}
-              onClickNavigation={dialogClose}
+              onClickNavigation={functions.dialogClose}
             />
           ) : (
             children
