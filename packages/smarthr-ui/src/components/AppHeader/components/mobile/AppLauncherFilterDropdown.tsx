@@ -1,9 +1,8 @@
 'use client'
 
-import { type MouseEvent, type PropsWithChildren, memo, useMemo } from 'react'
+import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../../../hooks/useLatest'
 import { useTheme } from '../../../../hooks/useTheme'
 import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
@@ -15,7 +14,7 @@ import type { Launcher } from '../../types'
 
 type Props = {
   page: Launcher['page']
-  onSelectPage: (page: Launcher['page']) => void
+  handleSelectPage: (page: Launcher['page']) => void
 }
 
 const classNameGenerator = tv({
@@ -43,7 +42,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) => {
+export const AppLauncherFilterDropdown = memo<Props>(({ page, handleSelectPage }) => {
   const { localize } = useIntl()
   const translated = useMemo(
     () => ({
@@ -71,7 +70,7 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
       <DropdownContent>
         <ContentBody
           page={page}
-          onSelectPage={onSelectPage}
+          handleSelectPage={handleSelectPage}
           translated={translated}
           className={CLASS_NAMES.contentBody}
           buttonClassName={CLASS_NAMES.contentButton}
@@ -97,19 +96,15 @@ const ContentBody = memo<
     className: string
     buttonClassName: string
   }
->(({ page, onSelectPage, translated, className, buttonClassName }) => {
+>(({ page, handleSelectPage, translated, className, buttonClassName }) => {
   const theme = useTheme()
   const isFavorite = page === 'favorite'
 
-  const latest = useLatest({ onSelectPage })
-
-  const functions = useMemo(
-    () => ({
-      onClickButton: (e: MouseEvent<HTMLButtonElement>) => {
-        latest.onSelectPage(e.currentTarget.value as Launcher['page'])
-      },
-    }),
-    [latest],
+  const handleClickButton = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      handleSelectPage(e.currentTarget.value as Launcher['page'])
+    },
+    [handleSelectPage],
   )
 
   const buttonPrefix = (
@@ -125,7 +120,7 @@ const ContentBody = memo<
         value="favorite"
         role="option"
         aria-selected={isFavorite}
-        onClick={functions.onClickButton}
+        onClick={handleClickButton}
         className={buttonClassName}
         prefix={isFavorite && buttonPrefix}
       >
@@ -135,7 +130,7 @@ const ContentBody = memo<
         value="all"
         role="option"
         aria-selected={!isFavorite}
-        onClick={functions.onClickButton}
+        onClick={handleClickButton}
         className={buttonClassName}
         prefix={!isFavorite && buttonPrefix}
       >
