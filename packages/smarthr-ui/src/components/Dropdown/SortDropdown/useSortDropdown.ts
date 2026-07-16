@@ -1,4 +1,11 @@
-import { type ChangeEvent, type ComponentProps, useEffect, useMemo, useState } from 'react'
+import {
+  type ChangeEvent,
+  type ComponentProps,
+  type MouseEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -25,12 +32,13 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
+type Props = ComponentProps<typeof SortDropdown>
 
 export const useSortDropdown = ({
   sortFields,
   defaultOrder,
   onApply,
+  onCancel,
   sortFieldLabel,
   sortOrderLegend,
   ascLabel,
@@ -91,11 +99,14 @@ export const useSortDropdown = ({
   const [innerSelectedField, setInnerSelectedField] = useState<string>('')
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
+  const hasOnCancel = !!onCancel
+
   const latest = useLatest({
     innerCheckedOrder,
     innerFields,
     innerSelectedField,
     onApply,
+    onCancel,
   })
 
   const handler = useMemo(
@@ -134,11 +145,16 @@ export const useSortDropdown = ({
           newfields: latest.innerFields,
         })
       },
+      cancel: hasOnCancel
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onCancel!(e)
+          }
+        : undefined,
       changeSortOrderRadio: (e: ChangeEvent<HTMLInputElement>) => {
         setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
       },
     }),
-    [latest],
+    [hasOnCancel, latest],
   )
 
   const defaultFieldLabel =

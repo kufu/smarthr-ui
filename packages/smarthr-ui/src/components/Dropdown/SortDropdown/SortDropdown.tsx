@@ -79,6 +79,7 @@ export const SortDropdown: FC<Props> = ({
     sortFields,
     defaultOrder,
     onApply,
+    onCancel,
     sortFieldLabel,
     sortOrderLegend,
     ascLabel,
@@ -128,7 +129,7 @@ export const SortDropdown: FC<Props> = ({
           </Stack>
           <Footer
             handleApply={handler.apply}
-            handleCancel={onCancel}
+            handleCancel={handler.cancel}
             cancelText={texts.cancelText}
             applyText={texts.applyText}
             className={classNames.footer}
