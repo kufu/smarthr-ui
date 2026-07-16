@@ -241,7 +241,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
           latest.onBlur?.(e)
         },
-        onDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+        handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
           if (ESCAPE_KEY_REGEX.test(e.key)) {
             e.stopPropagation()
             // delay hiding calendar because calendar will be displayed when input is focused
@@ -250,18 +250,18 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             if (inputRef.current) inputRef.current.focus()
           }
         },
-        onKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
+        handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
             const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
             ;(isExpanded ? openCalendar : closeCalendar)()
             updateDate(e, stringToDate(e.currentTarget.value))
           }
         },
-        onFocusInput: () => {
+        handleFocusInput: () => {
           setIsInputFocused(true)
           openCalendar()
         },
-        onSelectDateCalendar: (e: ChangeLikeEvent, selected: Date | null) => {
+        handleSelectDateCalendar: (e: ChangeLikeEvent, selected: Date | null) => {
           updateDate(e, selected)
           // delay hiding calendar because calendar will be displayed when input is focused
           requestAnimationFrame(closeCalendar)
@@ -371,7 +371,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
         onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
-        onKeyDown={isCalendarShown ? functions.onDelegateKeyDown : undefined}
+        onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
         className={classNames.container}
         style={containerStyle}
@@ -383,8 +383,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             width="100%"
             name={name}
             onChange={isCalendarShown ? functions.closeCalendar : undefined}
-            onKeyPress={functions.onKeyPressInput}
-            onFocus={functions.onFocusInput}
+            onKeyPress={functions.handleKeyPressInput}
+            onFocus={functions.handleFocusInput}
             onBlur={functions.handleBlur}
             suffix={
               <InputSuffixIcon
@@ -409,7 +409,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
               value={selectedDate || undefined}
               from={from}
               to={to}
-              onSelectDate={functions.onSelectDateCalendar}
+              onSelectDate={functions.handleSelectDateCalendar}
             />
           </Portal>
         )}
