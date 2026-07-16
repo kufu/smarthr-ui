@@ -146,22 +146,19 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
 
   const functions = useMemo(
     () => ({
-      actualOnClickClose: () => {
+      handleClickClose: () => {
         if (latest.isOpen) {
           focusTrapRef.current?.focus()
           latest.onClickClose()
         }
       },
-      onDelegateSubmit: (
-        e: FormEvent<HTMLFormElement>,
-        helpers: Parameters<typeof onSubmit>[1],
-      ) => {
+      handleSubmit: (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
         if (latest.isOpen) {
           focusTrapRef.current?.focus()
           latest.onSubmit(e, helpers)
         }
       },
-      actualOnClickBack: () => {
+      handleClickBack: () => {
         if (latest.isOpen) {
           focusTrapRef.current?.focus()
           latest.onClickBack?.()
@@ -190,9 +187,9 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         submitButton={submitButton}
         closeButton={closeButton}
         backButton={backButton}
-        onClickClose={functions.actualOnClickClose}
-        onSubmit={functions.onDelegateSubmit}
-        onClickBack={functions.actualOnClickBack}
+        handleClickClose={functions.handleClickClose}
+        handleSubmit={functions.handleSubmit}
+        handleClickBack={functions.handleClickBack}
         responseStatus={responseStatus}
       >
         {children}

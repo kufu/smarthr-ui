@@ -24,10 +24,12 @@ import type { DialogSize } from './types'
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
    */
   onClickOverlay?: () => void
   /**
    * エスケープキーを押下した時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
    */
   onPressEscape?: () => void
   /**

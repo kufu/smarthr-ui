@@ -48,7 +48,7 @@ export type AbstractProps = PropsWithChildren<
      * @param e フォームイベント
      * @param helpers ステップ操作用のヘルパー関数群
      */
-    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
+    handleSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
     /** キャンセルボタン */
     closeButton: CommonButtonType
     /** 戻るボタン */
@@ -58,11 +58,11 @@ export type AbstractProps = PropsWithChildren<
 
 export type StepFormDialogContentInnerProps = AbstractProps & {
   firstStep: StepItem
-  onClickClose: () => void
+  handleClickClose: () => void
   responseStatus?: ResponseStatus
   /** ステップの総数 */
   stepLength: number
-  onClickBack?: () => void
+  handleClickBack?: () => void
 }
 
 const BUTTON_COLUMN_GAP = {
@@ -92,18 +92,18 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   backButton,
   stepLength,
   firstStep,
-  onSubmit,
-  onClickClose,
+  handleSubmit,
+  handleClickClose,
   responseStatus,
-  onClickBack,
+  handleClickBack,
 }) => {
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
     useContext(StepFormDialogContext)
 
   const latest = useLatest({
-    onClickClose,
-    onSubmit,
-    onClickBack,
+    handleClickClose,
+    handleSubmit,
+    handleClickBack,
     currentStep,
     firstStep,
     setCurrentStep,
@@ -113,7 +113,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const functions = useMemo(() => {
     const handleCloseAction = () => {
-      latest.onClickClose()
+      latest.handleClickClose()
       setTimeout(() => {
         // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
         latest.stepQueueRef.current = []
@@ -147,10 +147,10 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           currentStep: latest.currentStep,
         }
 
-        latest.onSubmit(e, helpers)
+        latest.handleSubmit(e, helpers)
       },
       handleBackAction: () => {
-        latest.onClickBack?.()
+        latest.handleClickBack?.()
 
         changeCurrentStep(latest.stepQueueRef.current.pop() ?? latest.firstStep)
       },
@@ -182,7 +182,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <BackButton
-                  onClick={functions.handleBackAction}
+                  handleClick={functions.handleBackAction}
                   variant={backButton.theme}
                   disabled={backButton.disabled || calcedResponseStatus.isProcessing}
                   text={backButton.text}
@@ -191,7 +191,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
                 {!closeButton.hidden && (
                   <CloseButton
-                    onClick={functions.handleCloseAction}
+                    handleClick={functions.handleCloseAction}
                     variant={closeButton.theme}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
                     text={closeButton.text}
@@ -219,13 +219,13 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 }
 
 const BackButton = memo<{
-  onClick: () => void
+  handleClick: () => void
   variant: CommonButtonType['theme']
   disabled: boolean
   text: ReactNode
-}>(({ onClick, variant, disabled, text }) => (
+}>(({ handleClick, variant, disabled, text }) => (
   <Button
-    onClick={onClick}
+    onClick={handleClick}
     variant={variant}
     disabled={disabled}
     className="smarthr-ui-Dialog-backButton"
@@ -235,13 +235,13 @@ const BackButton = memo<{
 ))
 
 const CloseButton = memo<{
-  onClick: () => void
+  handleClick: () => void
   variant: CommonButtonType['theme']
   disabled: boolean
   text: ReactNode
-}>(({ onClick, variant, disabled, text }) => (
+}>(({ handleClick, variant, disabled, text }) => (
   <Button
-    onClick={onClick}
+    onClick={handleClick}
     variant={variant}
     disabled={disabled}
     className="smarthr-ui-Dialog-closeButton"
