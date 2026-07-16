@@ -1,7 +1,8 @@
 'use client'
 
-import { type ComponentProps, type FC, type ReactNode, useCallback } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -67,20 +68,24 @@ export const ControlledActionDialog: FC<Props> = ({
     buttonObjectConverter,
   )
 
-  const actualOnClickClose = useCallback(() => {
-    if (isOpen) {
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+  const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
-  const actualOnClickAction = useCallback(
-    (e: React.MouseEvent<Element>) => {
-      if (isOpen) {
-        onClickAction(e, { close: actualOnClickClose })
+  const functions = useMemo(() => {
+    const actualOnClickClose = () => {
+      if (latest.isOpen) {
+        latest.onClickClose()
       }
-    },
-    [isOpen, onClickAction, actualOnClickClose],
-  )
+    }
+
+    return {
+      actualOnClickClose,
+      actualOnClickAction: (e: React.MouseEvent<Element>) => {
+        if (latest.isOpen) {
+          latest.onClickAction(e, { close: actualOnClickClose })
+        }
+      },
+    }
+  }, [latest])
 
   return createPortal(
     <DialogContentInner
@@ -96,8 +101,8 @@ export const ControlledActionDialog: FC<Props> = ({
         contentPadding={contentPadding}
         actionButton={actionButton}
         closeButton={closeButton}
-        onClickClose={actualOnClickClose}
-        onClickAction={actualOnClickAction}
+        onClickClose={functions.actualOnClickClose}
+        onClickAction={functions.actualOnClickAction}
         subActionArea={subActionArea}
         responseStatus={responseStatus}
       >
