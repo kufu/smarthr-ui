@@ -99,8 +99,8 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [className, size])
 
-  const onDelegateFocus = () => setIsFocused(true)
-  const onDelegateBlur = () => setIsFocused(false)
+  const handleDelegateFocus = () => setIsFocused(true)
+  const handleDelegateBlur = () => setIsFocused(false)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -161,7 +161,7 @@ export const SegmentedControl: FC<Props> = ({
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
-  const onClick = useCallback(
+  const handleClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       latest.onClickOption?.(e.currentTarget.value)
     },
@@ -172,8 +172,8 @@ export const SegmentedControl: FC<Props> = ({
     <div
       {...rest}
       className={classNames.container}
-      onFocus={onDelegateFocus}
-      onBlur={onDelegateBlur}
+      onFocus={handleDelegateFocus}
+      onBlur={handleDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
@@ -186,7 +186,7 @@ export const SegmentedControl: FC<Props> = ({
             optionAriaLabel={option.ariaLabel}
             optionDisabled={option.disabled}
             index={index}
-            onClick={onClick}
+            handleClick={handleClick}
             size={size}
             value={value}
             isFocused={isFocused}
@@ -201,7 +201,7 @@ export const SegmentedControl: FC<Props> = ({
 
 const SegmentedControlButton = memo<
   Pick<Props, 'size' | 'value'> & {
-    onClick: (e: MouseEvent<HTMLButtonElement>) => void
+    handleClick: (e: MouseEvent<HTMLButtonElement>) => void
     optionValue: string
     optionContent: ReactNode
     optionAriaLabel?: string
@@ -213,7 +213,7 @@ const SegmentedControlButton = memo<
   }
 >(
   ({
-    onClick,
+    handleClick,
     size,
     value,
     optionValue,
@@ -237,7 +237,7 @@ const SegmentedControlButton = memo<
         role="radio"
         aria-label={optionAriaLabel}
         aria-checked={checked && !!value}
-        onClick={onClick}
+        onClick={handleClick}
         variant={checked ? 'primary' : 'secondary'}
         size={size}
         className={className}
