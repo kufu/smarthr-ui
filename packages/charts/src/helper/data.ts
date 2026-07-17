@@ -3,8 +3,8 @@ import { draw } from '@smarthr/patternomaly'
 import {
   BORDER_DASHES,
   CHART_COLORS,
-  PATTERN_SIZE,
   OTHER_CHART_COLOR,
+  PATTERN_SIZE,
   POINT_STYLES,
   SHAPE_TYPES,
   SINGLE_CHART_COLORS,
