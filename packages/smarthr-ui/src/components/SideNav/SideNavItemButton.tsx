@@ -52,6 +52,7 @@ const classNameGenerator = tv({
       'smarthr-ui-SideNav-item shr-relative',
       'data-[current=true]:shr-bg-main data-[current=true]:shr-text-white',
       'data-[current=true]:after:shr-absolute data-[current=true]:after:-shr-right-0.25 data-[current=true]:after:shr-top-1/2 data-[current=true]:after:-shr-translate-y-1/2 data-[current=true]:after:shr-translate-x-0 data-[current=true]:after:shr-border-b-4 data-[current=true]:after:shr-border-l-4 data-[current=true]:after:shr-border-r-0 data-[current=true]:after:shr-border-t-4 data-[current=true]:after:shr-border-solid data-[current=true]:after:shr-border-b-transparent data-[current=true]:after:shr-border-l-main data-[current=true]:after:shr-border-r-transparent data-[current=true]:after:shr-border-t-transparent data-[current=true]:after:shr-content-[""]',
+      'forced-colors:data-[current=true]:shr-bg-[SelectedItem] forced-colors:data-[current=true]:shr-text-[SelectedItemText] forced-colors:data-[current=true]:after:shr-border-l-[color:SelectedItem] forced-colors:data-[current=true]:after:shr-forced-color-adjust-none',
       'data-[current=false]:hover:shr-bg-column-darken',
       '[&:has(:focus-visible)]:shr-z-1', // pseudoエレメントがliの::afterと衝突しないために子要素に適用しますが、次のエレメントに被られるからz-indexを一時的に変更します
     ],
@@ -73,7 +74,8 @@ const classNameGenerator = tv({
       '[:last-child_&]:after:shr-hidden [[data-current=false]:not(:last-child)_&:focus-visible]:after:shr-block [[data-current=false]_&:focus-visible]:after:shr-absolute',
     ],
     body: 'shr-w-full',
-    bodyText: 'smarthr-ui-SideNav-itemBodyText shr-grow',
+    bodyText:
+      'smarthr-ui-SideNav-itemBodyText shr-grow [[data-current=true]_&]:forced-colors:shr-bg-[SelectedItem] [[data-current=true]_&]:forced-colors:shr-text-[SelectedItemText]',
   },
   variants: {
     size: {
