@@ -57,10 +57,15 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
 
       button.setAttribute('aria-expanded', expanded.toString())
       button.setAttribute('aria-controls', targetId)
-      button.addEventListener('click', actualOnClick)
 
-      currentCleanup = () => {
-        button.removeEventListener('click', actualOnClick)
+      // Button は native disabled ではなく aria-disabled を使うため、
+      // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
+      if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+        button.addEventListener('click', actualOnClick)
+
+        currentCleanup = () => {
+          button.removeEventListener('click', actualOnClick)
+        }
       }
     }
 

@@ -7,6 +7,14 @@ export type FileForViewer = {
   alt?: string
 }
 
+export type PDFSearchMatch = {
+  pageIndex: number
+  itemIndex: number
+  matchStart: number
+  matchLength: number
+  globalIndex: number
+}
+
 export type ViewerProps = {
   file: FileForViewer
   scale: number

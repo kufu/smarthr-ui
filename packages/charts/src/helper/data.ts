@@ -3,6 +3,7 @@ import { draw } from '@smarthr/patternomaly'
 import {
   BORDER_DASHES,
   CHART_COLORS,
+  PATTERN_SIZE,
   OTHER_CHART_COLOR,
   POINT_STYLES,
   SHAPE_TYPES,
@@ -120,7 +121,8 @@ export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   for (let i = 0; i < dataLength; i++) {
     const color = getColor(i)
     colors.push({
-      backgroundColor: i > 0 ? draw(SHAPE_TYPES[i % SHAPE_TYPES.length], color) : color,
+      backgroundColor:
+        i > 0 ? draw(SHAPE_TYPES[i % SHAPE_TYPES.length], color, undefined, PATTERN_SIZE) : color,
       borderColor: color,
       hoverBorderColor: SMARTHR_DEFAULT_COLORS.OUTLINE,
       hoverBorderWidth: 4,
