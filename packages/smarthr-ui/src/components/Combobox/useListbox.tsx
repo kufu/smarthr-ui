@@ -75,6 +75,7 @@ export const useListbox = <T,>({
   })
   // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
   const [triggerWidth, setTriggerWidth] = useState(0)
+  const activeRef = useRef<HTMLButtonElement>(null)
 
   const latest = useLatest({
     onAdd,
@@ -181,8 +182,6 @@ export const useListbox = <T,>({
     })
     setTriggerWidth(rect.width)
   }, [triggerRef])
-
-  const activeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
