@@ -123,19 +123,6 @@ export const useListbox = <T,>({
     [latest],
   )
 
-  useEffect(() => {
-    // 閉じたときに activeOption を初期化
-    if (!isExpanded) {
-      setActiveOption(null)
-    }
-
-    // triggerWidth の更新
-    if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect()
-      setTriggerWidth(rect.width)
-    }
-  }, [isExpanded, triggerRef])
-
   const calculateRect = useCallback(() => {
     if (!listBoxRef.current || !triggerRef.current) {
       return
@@ -273,6 +260,19 @@ export const useListbox = <T,>({
     })
     // TODO: optionsの安定化方法を検討中
   }, [options])
+
+  useEffect(() => {
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      setActiveOption(null)
+    }
+
+    // triggerWidth の更新
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect()
+      setTriggerWidth(rect.width)
+    }
+  }, [isExpanded, triggerRef])
 
   return {
     listBoxProps: {
