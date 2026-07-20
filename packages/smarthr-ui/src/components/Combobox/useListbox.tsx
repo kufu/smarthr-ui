@@ -76,6 +76,11 @@ export const useListbox = <T,>({
   // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
   const [triggerWidth, setTriggerWidth] = useState(0)
   const activeRef = useRef<HTMLButtonElement>(null)
+  const listBoxId = useId()
+  const { items: partialOptions, onIntersect } = usePartialRendering({
+    items: options,
+    minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
+  })
 
   const latest = useLatest({
     onAdd,
@@ -268,12 +273,6 @@ export const useListbox = <T,>({
     },
     [latest],
   )
-
-  const listBoxId = useId()
-  const { items: partialOptions, onIntersect } = usePartialRendering({
-    items: options,
-    minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
-  })
 
   const listBoxProps = {
     activeOptionId: activeOption?.id,
