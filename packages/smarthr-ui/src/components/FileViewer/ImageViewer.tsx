@@ -22,31 +22,47 @@ const ImageDisplay = memo<
     rotation: number
     imgScale: number
     imageRef: RefObject<HTMLImageElement>
-  } & Pick<ComponentProps<'img'>, 'src' | 'alt' | 'onLoad' | 'onError'>
->(({ wrapperWidth, wrapperHeight, rotation, imgScale, imageRef, ...rest }) => (
-  <div
-    style={{
-      width: wrapperWidth,
-      height: wrapperHeight,
-    }}
-    className="shr-relative shr-h-full shr-w-full"
-  >
-    {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
-    {/* eslint-disable-next-line smarthr/a11y-image-has-alt-attribute, jsx-a11y/alt-text */}
-    <img
-      {...rest}
-      className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
-      ref={imageRef}
+    handleLoad?: () => void
+  } & Pick<ComponentProps<'img'>, 'src' | 'alt' | 'onError'>
+>(
+  ({
+    wrapperWidth,
+    wrapperHeight,
+    rotation,
+    imgScale,
+    imageRef,
+    src,
+    alt,
+    handleLoad,
+    onError,
+  }) => (
+    <div
       style={{
-        rotate: `${rotation}deg`,
-        scale: `${imgScale}`,
+        width: wrapperWidth,
+        height: wrapperHeight,
       }}
-    />
-  </div>
-))
+      className="shr-relative shr-h-full shr-w-full"
+    >
+      {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={handleLoad}
+        onError={onError}
+        className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
+        ref={imageRef}
+        style={{
+          rotate: `${rotation}deg`,
+          scale: `${imgScale}`,
+        }}
+      />
+    </div>
+  ),
+)
 
 export const ImageViewer: FC<ViewerProps> = memo(
-  ({ scale, rotation, file, width, onLoad, onLoadError }) => {
+  ({ scale, rotation, file, width, handleLoad, onLoadError }) => {
     const imageRef = useRef<HTMLImageElement>(null)
     const [viewConfig, setViewConfig] = useState({
       wrapperWidth: 0,
@@ -56,7 +72,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
     })
 
     const latest = useLatest({
-      onLoad,
+      handleLoad,
       scale,
       rotation,
       width,
@@ -94,7 +110,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
         updateViewConfig,
         handleLoad: () => {
           updateViewConfig()
-          latest.onLoad?.()
+          latest.handleLoad?.()
         },
       }
     }, [latest])
@@ -108,7 +124,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
         {...viewConfig}
         src={file.url}
         alt={file.alt}
-        onLoad={functions.handleLoad}
+        handleLoad={functions.handleLoad}
         onError={onLoadError}
         imageRef={imageRef}
       />

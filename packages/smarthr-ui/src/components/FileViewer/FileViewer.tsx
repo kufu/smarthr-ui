@@ -144,8 +144,8 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
-              onPDFLoaded={handlePDFLoaded}
+              handleLoad={handleLoaded}
+              handlePDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={onLoadError}
               search={search}
@@ -156,7 +156,7 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
+              handleLoad={handleLoaded}
               onLoadError={onLoadError}
             />
           ) : (
