@@ -123,46 +123,6 @@ export const useListbox = <T,>({
     [latest],
   )
 
-  const calculateRect = useCallback(() => {
-    if (!listBoxRef.current || !triggerRef.current) {
-      return
-    }
-    const rect = triggerRef.current.getBoundingClientRect()
-    const bottomSpace = window.innerHeight - rect.bottom
-    const topSpace = rect.top
-    const listBoxHeight = Math.min(
-      listBoxRef.current.scrollHeight,
-      parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
-    )
-    const offset = 2
-
-    let top = 0
-    let height: number | undefined = undefined
-
-    if (bottomSpace >= listBoxHeight) {
-      // 下側に十分なスペースがある場合は下側に通常表示
-      top = rect.top + rect.height - offset + window.pageYOffset
-    } else if (topSpace >= listBoxHeight) {
-      // 上側に十分なスペースがある場合は上側に通常表示
-      top = rect.top - listBoxHeight + offset + window.pageYOffset
-    } else if (topSpace > bottomSpace) {
-      // 上下に十分なスペースがなく、上側の方がスペースが大きい場合は上側に縮めて表示
-      top = rect.top - topSpace + offset + window.pageYOffset
-      height = topSpace
-    } else {
-      // 下側に縮めて表示
-      top = rect.top + rect.height - offset + window.pageYOffset
-      height = bottomSpace
-    }
-
-    setListBoxRect({
-      top,
-      left: rect.left + window.pageXOffset,
-      height,
-    })
-    setTriggerWidth(rect.width)
-  }, [triggerRef])
-
   const onKeyDownListBox = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
@@ -267,12 +227,54 @@ export const useListbox = <T,>({
   }, [activeOption, navigationType])
 
   useEnhancedEffect(() => {
-    if (isExpanded) {
-      // options の更新毎に座標を再計算する
-      calculateRect()
+    if (!isExpanded) {
+      return
     }
+
+    // options の更新毎に座標を再計算する
+    const calculateRect = () => {
+      if (!listBoxRef.current || !triggerRef.current) {
+        return
+      }
+      const rect = triggerRef.current.getBoundingClientRect()
+      const bottomSpace = window.innerHeight - rect.bottom
+      const topSpace = rect.top
+      const listBoxHeight = Math.min(
+        listBoxRef.current.scrollHeight,
+        parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
+      )
+      const offset = 2
+
+      let top = 0
+      let height: number | undefined = undefined
+
+      if (bottomSpace >= listBoxHeight) {
+        // 下側に十分なスペースがある場合は下側に通常表示
+        top = rect.top + rect.height - offset + window.pageYOffset
+      } else if (topSpace >= listBoxHeight) {
+        // 上側に十分なスペースがある場合は上側に通常表示
+        top = rect.top - listBoxHeight + offset + window.pageYOffset
+      } else if (topSpace > bottomSpace) {
+        // 上下に十分なスペースがなく、上側の方がスペースが大きい場合は上側に縮めて表示
+        top = rect.top - topSpace + offset + window.pageYOffset
+        height = topSpace
+      } else {
+        // 下側に縮めて表示
+        top = rect.top + rect.height - offset + window.pageYOffset
+        height = bottomSpace
+      }
+
+      setListBoxRect({
+        top,
+        left: rect.left + window.pageXOffset,
+        height,
+      })
+      setTriggerWidth(rect.width)
+    }
+
+    calculateRect()
     // TODO: optionsの安定化方法を検討中
-  }, [isExpanded, options, calculateRect])
+  }, [isExpanded, options, triggerRef])
 
   return {
     listBoxProps: {
