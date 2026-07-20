@@ -163,14 +163,6 @@ export const useListbox = <T,>({
     setTriggerWidth(rect.width)
   }, [triggerRef])
 
-  useEnhancedEffect(() => {
-    if (isExpanded) {
-      // options の更新毎に座標を再計算する
-      calculateRect()
-    }
-    // TODO: optionsの安定化方法を検討中
-  }, [isExpanded, options, calculateRect])
-
   const onKeyDownListBox = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
@@ -273,6 +265,14 @@ export const useListbox = <T,>({
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
   }, [activeOption, navigationType])
+
+  useEnhancedEffect(() => {
+    if (isExpanded) {
+      // options の更新毎に座標を再計算する
+      calculateRect()
+    }
+    // TODO: optionsの安定化方法を検討中
+  }, [isExpanded, options, calculateRect])
 
   return {
     listBoxProps: {
