@@ -279,7 +279,7 @@ const ActualMultiCombobox = <T,>(
     [actualOnDelete],
   )
 
-  const { listBoxProps, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -375,7 +375,7 @@ const ActualMultiCombobox = <T,>(
       resetDeletionButtonFocus()
     }
 
-    onKeyDownListBox(e)
+    handleKeyDownListBox(e)
   }
 
   const onDelegateClick = useCallback(

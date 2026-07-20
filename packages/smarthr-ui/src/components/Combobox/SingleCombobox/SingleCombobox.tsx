@@ -240,38 +240,40 @@ const ActualSingleCombobox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const { listBoxProps, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>({
-    options,
-    dropdownHelpMessage,
-    dropdownWidth,
-    onAdd,
-    onSelect: useCallback(
-      (selected: ComboboxItem<T>) => {
-        latest.onSelect?.(selected)
-        latest.onChangeSelected?.(selected)
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
+    {
+      options,
+      dropdownHelpMessage,
+      dropdownWidth,
+      onAdd,
+      onSelect: useCallback(
+        (selected: ComboboxItem<T>) => {
+          latest.onSelect?.(selected)
+          latest.onChangeSelected?.(selected)
 
-        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
-          setIsExpanded(false)
-          // HINT:
-          // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
-          //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
-          //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
-          //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
-          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-        })
+          // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+          // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+          requestAnimationFrame(() => {
+            setIsExpanded(false)
+            // HINT:
+            // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+            // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
+            //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
+            //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
+            //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
+            latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          })
 
-        setIsEditing(false)
-      },
-      [latest],
-    ),
-    isExpanded,
-    isLoading,
-    triggerRef: outerRef,
-    noResultText,
-  })
+          setIsEditing(false)
+        },
+        [latest],
+      ),
+      isExpanded,
+      isLoading,
+      triggerRef: outerRef,
+      noResultText,
+    },
+  )
 
   const selectDefaultItem = useCallback(() => {
     if (latest.onSelect && latest.defaultItem) {
@@ -389,9 +391,9 @@ const ActualSingleCombobox = <T,>(
           setIsExpanded(true)
         }
       }
-      onKeyDownListBox(e)
+      handleKeyDownListBox(e)
     },
-    [unfocus, onKeyDownListBox, latest],
+    [unfocus, handleKeyDownListBox, latest],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
