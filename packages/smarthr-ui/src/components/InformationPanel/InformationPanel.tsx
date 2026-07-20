@@ -57,7 +57,7 @@ const classNameGenerator = tv({
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
     header: [
       'shr-rounded-t-l shr-p-1.5',
-      '[[data-active="false"]_&]:shr-rounded-b-l [[data-active="false"]_&]:shr-py-1',
+      '[[data-active="false"]>&]:shr-rounded-b-l [[data-active="false"]>&]:shr-py-1',
     ],
     heading: 'smarthr-ui-InformationPanel-heading',
     toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
