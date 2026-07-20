@@ -154,8 +154,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       formatDate,
       showAlternative,
       onBlur,
-      isInputFocused,
-      selectedDate,
     })
 
     const functions = useMemo(() => {
@@ -174,8 +172,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
-          newDate === latest.selectedDate ||
-          (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
+          newDate === selectedDate ||
+          (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
           return
@@ -252,8 +250,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         },
         handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
-            const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
-            ;(isExpanded ? openCalendar : closeCalendar)()
+            ;(isCalendarShown ? openCalendar : closeCalendar)()
             updateDate(e, stringToDate(e.currentTarget.value))
           }
         },
@@ -269,7 +266,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           if (inputRef.current) inputRef.current.focus()
         },
       }
-    }, [latest])
+    }, [latest, selectedDate, isCalendarShown])
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
@@ -322,7 +319,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
         const firstCalendarButton = calendarButtons[0]
 
-        if (latest.isInputFocused) {
+        if (isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
             functions.closeCalendar()
@@ -358,7 +355,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       return () => {
         window.removeEventListener('keydown', handleKeyDown)
       }
-    }, [functions, latest])
+    }, [functions, isInputFocused])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
