@@ -76,7 +76,7 @@ export const useListbox = <T,>({
   const [triggerWidth, setTriggerWidth] = useState(0)
   const activeRef = useRef<HTMLButtonElement>(null)
   const listBoxId = useId()
-  const { items: partialOptions, onIntersect } = usePartialRendering({
+  const { items: partialOptions, handleIntersect } = usePartialRendering({
     items: options,
     minLength: (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
   })
@@ -265,7 +265,7 @@ export const useListbox = <T,>({
   return {
     listBoxProps: {
       activeOptionId: activeOption?.id,
-      onIntersect,
+      handleIntersect,
       partialOptions,
       optionsLength: options.length,
       isExpanded,
@@ -291,7 +291,7 @@ export const useListbox = <T,>({
 
 type ListBoxProps<T> = {
   activeOptionId: string | undefined
-  onIntersect: (() => void) | null
+  handleIntersect: (() => void) | null
   partialOptions: Array<ComboboxOption<T>>
   optionsLength: number
   isExpanded: boolean
@@ -330,7 +330,7 @@ const classNameGenerator = tv({
 export const ListBox = memo(
   <T,>({
     activeOptionId,
-    onIntersect,
+    handleIntersect,
     partialOptions,
     optionsLength,
     isExpanded,
@@ -441,7 +441,7 @@ export const ListBox = memo(
               ))
             )
           ) : null}
-          {onIntersect && <Intersection onIntersect={onIntersect} />}
+          {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
         </Scroller>
       </div>,
     )

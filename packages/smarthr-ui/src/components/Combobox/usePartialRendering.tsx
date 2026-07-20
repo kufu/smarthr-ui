@@ -17,7 +17,7 @@ export function usePartialRendering<T>({
 
   const latest = useLatest({ limiter })
 
-  const onIntersect = useCallback(() => {
+  const handleIntersect = useCallback(() => {
     setCurrentItemLength((current) => latest.limiter(current + OPTION_INCREMENT_AMOUNT))
   }, [latest])
 
@@ -29,11 +29,11 @@ export function usePartialRendering<T>({
     // minLength も考慮した実際のアイテム数を算出
     // itemsはunstableなのでuseMemoは毎回再計算されるため、直接計算する
     items: items.slice(0, currentItemLength),
-    onIntersect: currentItemLength < items.length ? onIntersect : null,
+    handleIntersect: currentItemLength < items.length ? handleIntersect : null,
   }
 }
 
-export const Intersection: FC<{ onIntersect: () => void }> = memo(({ onIntersect }) => {
+export const Intersection: FC<{ handleIntersect: () => void }> = memo(({ handleIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -46,14 +46,14 @@ export const Intersection: FC<{ onIntersect: () => void }> = memo(({ onIntersect
     // スクロール最下部に到達する度に表示するアイテム数を増加させるための IntersectionObserver
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        onIntersect()
+        handleIntersect()
       }
     })
 
     observer.observe(target)
 
     return () => observer.disconnect()
-  }, [onIntersect])
+  }, [handleIntersect])
 
   return <div ref={ref} />
 })
