@@ -32,7 +32,7 @@ export const RemoteDialogTrigger: FC<
       return
     }
 
-    const actualOnClick = (e: Event) => {
+    const handleClick = (e: Event) => {
       // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
       // 先にariaControlsを取得しておく
       const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
@@ -66,7 +66,7 @@ export const RemoteDialogTrigger: FC<
         element.getAttribute('aria-disabled') !== 'true'
       ) {
         // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
-        element.addEventListener('click', actualOnClick, CAPTURE_OPTION)
+        element.addEventListener('click', handleClick, CAPTURE_OPTION)
       }
     }
 
@@ -74,7 +74,7 @@ export const RemoteDialogTrigger: FC<
       // 既存のイベントリスナーをクリーンアップ
       const element = getClickableElement()
       if (element) {
-        element.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
+        element.removeEventListener('click', handleClick, CAPTURE_OPTION)
       }
     }
 
