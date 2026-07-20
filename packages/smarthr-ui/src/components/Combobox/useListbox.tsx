@@ -5,7 +5,6 @@ import {
   type ReactNode,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -91,8 +90,9 @@ export const useListbox = <T,>({
     setActiveOption,
   })
 
-  const moveActiveOptionIndex = useCallback(
-    (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
+  const functions = useMemo(() => {
+    // 内部ヘルパー関数
+    const moveActiveOptionIndex = (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
       const opts = latest.options
 
       if (opts.every((option) => option.item.disabled)) {
@@ -119,66 +119,52 @@ export const useListbox = <T,>({
           setActiveOption(nextActive)
         }
       }
-    },
-    [latest],
-  )
+    }
 
-  const onKeyDownListBox = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
-      setNavigationType('key')
+    return {
+      onKeyDownListBox: (e: KeyboardEvent<HTMLElement>) => {
+        setNavigationType('key')
 
-      if (KEY_DOWN_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(latest.activeOption, 1)
-      } else if (KEY_UP_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(latest.activeOption, -1)
-      } else if (e.key === 'Enter') {
-        if (latest.activeOption === null) {
-          return
+        if (KEY_DOWN_REGEX.test(e.key)) {
+          e.stopPropagation()
+          moveActiveOptionIndex(latest.activeOption, 1)
+        } else if (KEY_UP_REGEX.test(e.key)) {
+          e.stopPropagation()
+          moveActiveOptionIndex(latest.activeOption, -1)
+        } else if (e.key === 'Enter') {
+          if (latest.activeOption === null) {
+            return
+          }
+
+          e.stopPropagation()
+
+          if (!latest.activeOption.isNew) {
+            latest.onSelect(latest.activeOption.item)
+          } else if (latest.onAdd) {
+            latest.onAdd(latest.activeOption.item.value)
+          }
+        } else {
+          setActiveOption(null)
         }
-
-        e.stopPropagation()
-
-        if (!latest.activeOption.isNew) {
-          latest.onSelect(latest.activeOption.item)
-        } else if (latest.onAdd) {
-          latest.onAdd(latest.activeOption.item.value)
+      },
+      handleSelect: (option: ComboboxOption<T>) => {
+        latest.onSelect(option.item)
+      },
+      handleAdd: (option: ComboboxOption<T>) => {
+        if (latest.onAdd) {
+          // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+          // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+          requestAnimationFrame(() => {
+            latest.onAdd?.(option.item.value)
+          })
         }
-      } else {
-        setActiveOption(null)
-      }
-    },
-    [moveActiveOptionIndex, latest],
-  )
-
-  const handleSelect = useCallback(
-    (option: ComboboxOption<T>) => {
-      latest.onSelect(option.item)
-    },
-    [latest],
-  )
-
-  const handleAdd = useCallback(
-    (option: ComboboxOption<T>) => {
-      if (latest.onAdd) {
-        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
-          latest.onAdd?.(option.item.value)
-        })
-      }
-    },
-    [latest],
-  )
-
-  const handleHoverOption = useCallback(
-    (option: ComboboxOption<T>) => {
-      latest.setNavigationType('pointer')
-      latest.setActiveOption(option)
-    },
-    [latest],
-  )
+      },
+      handleHoverOption: (option: ComboboxOption<T>) => {
+        latest.setNavigationType('pointer')
+        latest.setActiveOption(option)
+      },
+    }
+  }, [latest])
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
@@ -288,16 +274,16 @@ export const useListbox = <T,>({
       noResultText,
       listBoxId,
       listBoxRef,
-      handleSelect,
-      handleAdd,
-      handleHoverOption,
+      handleSelect: functions.handleSelect,
+      handleAdd: functions.handleAdd,
+      handleHoverOption: functions.handleHoverOption,
       activeRef,
       listBoxRect,
       triggerWidth,
       dropdownWidth,
     },
     activeOption,
-    onKeyDownListBox,
+    onKeyDownListBox: functions.onKeyDownListBox,
     listBoxId,
     listBoxRef,
   }
