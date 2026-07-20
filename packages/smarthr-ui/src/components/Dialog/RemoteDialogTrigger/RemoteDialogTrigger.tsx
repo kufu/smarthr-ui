@@ -52,9 +52,19 @@ export const RemoteDialogTrigger: FC<
     // 現在の子要素に対して処理を実行
     const setupElement = () => {
       const element = getClickableElement()
-      if (element) {
-        element.setAttribute('aria-haspopup', 'dialog')
-        element.setAttribute('aria-controls', targetId)
+      if (!element) {
+        return
+      }
+
+      element.setAttribute('aria-haspopup', 'dialog')
+      element.setAttribute('aria-controls', targetId)
+
+      // Button は native disabled ではなく aria-disabled を使うため、
+      // 無効時はリスナーを貼らず Dialog が開かないようにする（DropdownTrigger と同じ）
+      if (
+        !('disabled' in element && element.disabled) &&
+        element.getAttribute('aria-disabled') !== 'true'
+      ) {
         // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
         element.addEventListener('click', actualOnClick, CAPTURE_OPTION)
       }
