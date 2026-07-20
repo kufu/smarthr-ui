@@ -13,7 +13,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
-import { getIsInclude, mapToKeyArray } from '../../libs/map'
+import { getIsInclude } from '../../libs/map'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
@@ -25,7 +25,6 @@ import {
   focusLastSibling,
   focusNextSibling,
   focusPreviousSibling,
-  getNewExpandedItems,
 } from './accordionPanelHelper'
 
 import type { TextProps } from '../Text'
@@ -84,44 +83,23 @@ export const AccordionPanelTrigger: FC<Props> = ({
   }, [className])
 
   const { name, contentId, triggerId } = useContext(AccordionPanelItemContext)
-  const {
-    iconPosition,
-    expandedItems,
-    onClickTrigger,
-    onClickProps,
-    expandableMultiply,
-    parentRef,
-  } = useContext(AccordionPanelContext)
+  const { iconPosition, expandedItems, handleClickTrigger, parentRef } =
+    useContext(AccordionPanelContext)
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
   const latest = useLatest({
     expandedItems,
-    onClickTrigger,
-    onClickProps,
+    handleClickTrigger,
     parentRef,
-    expandableMultiply,
   })
-
-  const hasOnClick = !!(onClickTrigger || onClickProps)
 
   const functions = useMemo(
     () => ({
-      actualOnClick: hasOnClick
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
-            latest.onClickTrigger?.(e.currentTarget.value, newIsExpanded)
-            if (latest.onClickProps) {
-              const newExpandedItems = getNewExpandedItems(
-                latest.expandedItems,
-                e.currentTarget.value,
-                newIsExpanded,
-                latest.expandableMultiply,
-              )
-              latest.onClickProps(mapToKeyArray(newExpandedItems))
-            }
-          }
-        : undefined,
+      actualOnClick: (e: MouseEvent<HTMLButtonElement>) => {
+        const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+        latest.handleClickTrigger(e.currentTarget.value, newIsExpanded)
+      },
       handleKeyDown: (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
         if (!latest.parentRef?.current) {
           return
@@ -155,7 +133,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
         }
       },
     }),
-    [hasOnClick, latest],
+    [latest],
   )
 
   return (
@@ -184,7 +162,7 @@ const MemoizedHeadingButton = memo<
       triggerId: string
       isExpanded: boolean
       contentId: string
-      actualOnClick: ((e: MouseEvent<HTMLButtonElement>) => void) | undefined
+      actualOnClick: (e: MouseEvent<HTMLButtonElement>) => void
       handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
       classNames: {
         button: string

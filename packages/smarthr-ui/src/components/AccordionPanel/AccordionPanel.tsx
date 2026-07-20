@@ -14,7 +14,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
-import { flatArrayToMap } from '../../libs/map'
+import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
 
 import { getNewExpandedItems } from './accordionPanelHelper'
 
@@ -39,13 +39,13 @@ export const AccordionPanelContext = createContext<{
   expandedItems: Map<string, string>
   expandableMultiply: boolean
   parentRef: RefObject<HTMLDivElement> | null
-  onClickTrigger?: (itemName: string, isExpanded: boolean) => void
-  onClickProps?: (expandedItems: string[]) => void
+  handleClickTrigger: (itemName: string, isExpanded: boolean) => void
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
   expandableMultiply: true,
   parentRef: null,
+  handleClickTrigger: () => {},
 })
 
 const ROUNDED = {
@@ -93,27 +93,28 @@ export const AccordionPanel: FC<Props> = ({
 
   const latest = useLatest({ onClick })
 
-  const onClickProps = useCallback(
-    (items: string[]) => {
-      latest.onClick?.(items)
-    },
-    [latest],
-  )
-
-  const onClickTrigger = useCallback(
+  const handleClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
-      setExpanded((prevExpandedItems) =>
-        getNewExpandedItems(prevExpandedItems, itemName, isExpanded, expandableMultiply),
-      )
+      setExpanded((prevExpandedItems) => {
+        const newExpandedItems = getNewExpandedItems(
+          prevExpandedItems,
+          itemName,
+          isExpanded,
+          expandableMultiply,
+        )
+
+        latest.onClick?.(mapToKeyArray(newExpandedItems))
+
+        return newExpandedItems
+      })
     },
-    [expandableMultiply],
+    [expandableMultiply, latest],
   )
 
   return (
     <AccordionPanelContext.Provider
       value={{
-        onClickTrigger,
-        onClickProps: onClick ? onClickProps : undefined,
+        handleClickTrigger,
         expandedItems,
         iconPosition,
         expandableMultiply,
