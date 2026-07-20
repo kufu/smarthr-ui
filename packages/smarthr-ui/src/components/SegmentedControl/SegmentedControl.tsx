@@ -92,13 +92,13 @@ export const SegmentedControl: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      actualOnClickOption: hasOnClickOption
+      handleClickOption: hasOnClickOption
         ? (e: MouseEvent<HTMLButtonElement>) => {
             latest.onClickOption?.(e.currentTarget.value)
           }
         : undefined,
-      onDelegateFocus: () => setFocusable(false),
-      onDelegateBlur: () => setFocusable(true),
+      handleDelegateFocus: () => setFocusable(false),
+      handleDelegateBlur: () => setFocusable(true),
     }),
     [hasOnClickOption, latest],
   )
@@ -179,8 +179,8 @@ export const SegmentedControl: FC<Props> = ({
     <div
       {...rest}
       className={classNames.container}
-      onFocus={functions.onDelegateFocus}
-      onBlur={functions.onDelegateBlur}
+      onFocus={functions.handleDelegateFocus}
+      onBlur={functions.handleDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
@@ -192,7 +192,7 @@ export const SegmentedControl: FC<Props> = ({
             <SegmentedControlButton
               {...option}
               key={option.value}
-              onClick={functions.actualOnClickOption}
+              handleClick={functions.handleClickOption}
               size={size}
               checked={checked}
               tabIndex={focusable && (excludesSelected ? index === 0 : checked) ? 0 : -1}
@@ -210,15 +210,15 @@ const SegmentedControlButton = memo<
   Pick<Props, 'size'> &
     Omit<Props['options'][number], 'content'> & {
       content: ReactNode
-      onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
+      handleClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
       checked: boolean
       tabIndex: number
       'aria-checked': boolean
       className: string
     }
->(({ checked, content, ...rest }) => (
+>(({ checked, content, handleClick, ...rest }) => (
   // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-  <Button {...rest} role="radio" variant={checked ? 'primary' : 'secondary'}>
+  <Button {...rest} role="radio" variant={checked ? 'primary' : 'secondary'} onClick={handleClick}>
     {content}
   </Button>
 ))
