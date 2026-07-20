@@ -68,6 +68,14 @@ export const useListbox = <T,>({
   // useActiveOptionの内容を統合
   const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
 
+  const listBoxRef = useRef<HTMLDivElement>(null)
+  const [listBoxRect, setListBoxRect] = useState<Rect>({
+    top: 0,
+    left: 0,
+  })
+  // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
+  const [triggerWidth, setTriggerWidth] = useState(0)
+
   const latest = useLatest({
     onAdd,
     onSelect,
@@ -120,14 +128,6 @@ export const useListbox = <T,>({
     },
     [latest],
   )
-
-  const listBoxRef = useRef<HTMLDivElement>(null)
-  const [listBoxRect, setListBoxRect] = useState<Rect>({
-    top: 0,
-    left: 0,
-  })
-  // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
-  const [triggerWidth, setTriggerWidth] = useState(0)
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
