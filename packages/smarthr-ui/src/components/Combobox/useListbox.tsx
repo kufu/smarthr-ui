@@ -15,6 +15,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
 import { useIntl } from '../../intl'
@@ -67,9 +68,7 @@ export const useListbox = <T,>({
   // useActiveOptionの内容を統合
   const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
 
-  // setNavigationType と setActiveOption は useState の setter で stable だが、
-  // ListBox 内で使用するために unstableRef に含めている
-  const unstableRef = useRef({
+  const latest = useLatest({
     onAdd,
     onSelect,
     options,
@@ -77,14 +76,6 @@ export const useListbox = <T,>({
     setNavigationType,
     setActiveOption,
   })
-  unstableRef.current = {
-    onAdd,
-    onSelect,
-    options,
-    activeOption,
-    setNavigationType,
-    setActiveOption,
-  }
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
@@ -100,7 +91,7 @@ export const useListbox = <T,>({
 
   const moveActiveOptionIndex = useCallback(
     (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
-      const opts = unstableRef.current.options
+      const opts = latest.options
 
       if (opts.every((option) => option.item.disabled)) {
         return
@@ -127,7 +118,7 @@ export const useListbox = <T,>({
         }
       }
     },
-    [],
+    [latest],
   )
 
   const listBoxRef = useRef<HTMLDivElement>(null)
@@ -228,27 +219,55 @@ export const useListbox = <T,>({
 
       if (KEY_DOWN_REGEX.test(e.key)) {
         e.stopPropagation()
-        moveActiveOptionIndex(unstableRef.current.activeOption, 1)
+        moveActiveOptionIndex(latest.activeOption, 1)
       } else if (KEY_UP_REGEX.test(e.key)) {
         e.stopPropagation()
-        moveActiveOptionIndex(unstableRef.current.activeOption, -1)
+        moveActiveOptionIndex(latest.activeOption, -1)
       } else if (e.key === 'Enter') {
-        if (unstableRef.current.activeOption === null) {
+        if (latest.activeOption === null) {
           return
         }
 
         e.stopPropagation()
 
-        if (!unstableRef.current.activeOption.isNew) {
-          unstableRef.current.onSelect(unstableRef.current.activeOption.item)
-        } else if (unstableRef.current.onAdd) {
-          unstableRef.current.onAdd(unstableRef.current.activeOption.item.value)
+        if (!latest.activeOption.isNew) {
+          latest.onSelect(latest.activeOption.item)
+        } else if (latest.onAdd) {
+          latest.onAdd(latest.activeOption.item.value)
         }
       } else {
         setActiveOption(null)
       }
     },
-    [moveActiveOptionIndex],
+    [moveActiveOptionIndex, latest],
+  )
+
+  const handleSelect = useCallback(
+    (option: ComboboxOption<T>) => {
+      latest.onSelect(option.item)
+    },
+    [latest],
+  )
+
+  const handleAdd = useCallback(
+    (option: ComboboxOption<T>) => {
+      if (latest.onAdd) {
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          latest.onAdd?.(option.item.value)
+        })
+      }
+    },
+    [latest],
+  )
+
+  const handleHoverOption = useCallback(
+    (option: ComboboxOption<T>) => {
+      latest.setNavigationType('pointer')
+      latest.setActiveOption(option)
+    },
+    [latest],
   )
 
   const listBoxId = useId()
@@ -268,7 +287,9 @@ export const useListbox = <T,>({
     noResultText,
     listBoxId,
     listBoxRef,
-    unstableRef,
+    handleSelect,
+    handleAdd,
+    handleHoverOption,
     activeRef,
     listBoxRect,
     triggerWidth,
@@ -295,14 +316,9 @@ type ListBoxProps<T> = {
   dropdownHelpMessage?: ReactNode
   listBoxId: string
   listBoxRef: RefObject<HTMLDivElement>
-  unstableRef: RefObject<{
-    onAdd?: (label: string) => void
-    onSelect: (item: ComboboxItem<T>) => void
-    options: Array<ComboboxOption<T>>
-    activeOption: ComboboxOption<T> | null
-    setNavigationType: (type: 'pointer' | 'key') => void
-    setActiveOption: (option: ComboboxOption<T> | null) => void
-  }>
+  handleSelect: (option: ComboboxOption<T>) => void
+  handleAdd: (option: ComboboxOption<T>) => void
+  handleHoverOption: (option: ComboboxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement>
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
@@ -339,7 +355,9 @@ export const ListBox = memo(
     dropdownHelpMessage,
     listBoxId,
     listBoxRef,
-    unstableRef,
+    handleSelect,
+    handleAdd,
+    handleHoverOption,
     activeRef,
     listBoxRect,
     triggerWidth,
@@ -347,34 +365,6 @@ export const ListBox = memo(
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
     const theme = useTheme()
-
-    const handleSelect = useCallback(
-      (option: ComboboxOption<T>) => {
-        unstableRef.current!.onSelect(option.item)
-      },
-      [unstableRef],
-    )
-
-    const handleAdd = useCallback(
-      (option: ComboboxOption<T>) => {
-        if (unstableRef.current!.onAdd) {
-          // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-          // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-          requestAnimationFrame(() => {
-            unstableRef.current!.onAdd?.(option.item.value)
-          })
-        }
-      },
-      [unstableRef],
-    )
-
-    const handleHoverOption = useCallback(
-      (option: ComboboxOption<T>) => {
-        unstableRef.current!.setNavigationType('pointer')
-        unstableRef.current!.setActiveOption(option)
-      },
-      [unstableRef],
-    )
 
     const { localize } = useIntl()
     const texts = useMemo(
