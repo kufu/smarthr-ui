@@ -91,18 +91,6 @@ export const useListbox = <T,>({
     setActiveOption,
   })
 
-  useEffect(() => {
-    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
-    setActiveOption((current) => {
-      if (current === null) {
-        return null
-      }
-
-      return options.find((option) => current.id === option.id) ?? null
-    })
-    // TODO: optionsの安定化方法を検討中
-  }, [options])
-
   const moveActiveOptionIndex = useCallback(
     (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
       const opts = latest.options
@@ -273,6 +261,18 @@ export const useListbox = <T,>({
     },
     [latest],
   )
+
+  useEffect(() => {
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return options.find((option) => current.id === option.id) ?? null
+    })
+    // TODO: optionsの安定化方法を検討中
+  }, [options])
 
   return {
     listBoxProps: {
