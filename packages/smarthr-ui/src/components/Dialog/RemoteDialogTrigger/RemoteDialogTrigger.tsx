@@ -2,6 +2,7 @@
 
 import { type FC, type PropsWithChildren, useEffect, useRef } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
 const CAPTURE_OPTION = {
@@ -23,8 +24,7 @@ export const RemoteDialogTrigger: FC<
   }>
 > = ({ targetId, children, onClick }) => {
   const ref = useRef<HTMLSpanElement | null>(null)
-  const onClickRef = useRef(onClick)
-  onClickRef.current = onClick
+  const latest = useLatest({ onClick })
 
   useEffect(() => {
     const currentRef = ref.current
@@ -37,8 +37,8 @@ export const RemoteDialogTrigger: FC<
       // 先にariaControlsを取得しておく
       const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
 
-      if (onClickRef.current) {
-        return onClickRef.current(() => {
+      if (latest.onClick) {
+        return latest.onClick(() => {
           dispatchRemoteDialogTrigger(ariaControls)
         })
       }
@@ -99,7 +99,7 @@ export const RemoteDialogTrigger: FC<
       observer.disconnect()
       clearEventListener()
     }
-  }, [targetId])
+  }, [targetId, latest])
 
   return (
     <span className="smarthr-ui-RemoteDialogTrigger shr-contents" ref={ref}>
