@@ -8,7 +8,7 @@ const CAPTURE_OPTION = {
   capture: true,
 }
 
-const onClickRemoteDialogTrigger = (ariaControls: string) => {
+const dispatchRemoteDialogTrigger = (ariaControls: string) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
       detail: { id: ariaControls },
@@ -39,11 +39,11 @@ export const RemoteDialogTrigger: FC<
 
       if (onClickRef.current) {
         return onClickRef.current(() => {
-          onClickRemoteDialogTrigger(ariaControls)
+          dispatchRemoteDialogTrigger(ariaControls)
         })
       }
 
-      onClickRemoteDialogTrigger(ariaControls)
+      dispatchRemoteDialogTrigger(ariaControls)
     }
 
     const getClickableElement = () =>
