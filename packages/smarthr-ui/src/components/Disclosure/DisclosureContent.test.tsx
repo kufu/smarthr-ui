@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
+import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 
 import { DisclosureContent } from './DisclosureContent'
@@ -34,6 +35,68 @@ describe('Disclosure', () => {
       await waitFor(async () => {
         expect(screen.queryByText('これは詳細です')).toBeNull()
       })
+    })
+  })
+
+  describe('トリガーボタンが disabled の場合', () => {
+    it('クリックしても開かないこと', async () => {
+      render(
+        <div className="App">
+          <DisclosureTrigger targetId="dc">
+            <Button disabled>押してね</Button>
+          </DisclosureTrigger>
+
+          <DisclosureContent id="dc">
+            <p>これは詳細です</p>
+          </DisclosureContent>
+        </div>,
+      )
+
+      act(() => {
+        screen.getByRole('button', { name: '押してね' }).click()
+      })
+
+      // useDisclosure は requestAnimationFrame 経由で状態更新する
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve())
+        })
+      })
+
+      expect(screen.queryByText('これは詳細です')).toBeNull()
+    })
+  })
+
+  describe('トリガーボタンが loading の場合', () => {
+    it('クリックしても開かないこと', async () => {
+      render(
+        // loading 中の Button は「処理中」テキストを描画するため IntlProvider が必要
+        <IntlProvider locale="ja">
+          <div className="App">
+            <DisclosureTrigger targetId="dc">
+              <Button loading>押してね</Button>
+            </DisclosureTrigger>
+
+            <DisclosureContent id="dc">
+              <p>これは詳細です</p>
+            </DisclosureContent>
+          </div>
+        </IntlProvider>,
+      )
+
+      act(() => {
+        // loading 中は accessible name に「処理中」が付与されるため部分一致で取得する
+        screen.getByRole('button', { name: /押してね/ }).click()
+      })
+
+      // useDisclosure は requestAnimationFrame 経由で状態更新する
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve())
+        })
+      })
+
+      expect(screen.queryByText('これは詳細です')).toBeNull()
     })
   })
 
