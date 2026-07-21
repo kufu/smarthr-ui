@@ -18,6 +18,7 @@ import { useObjectHeading } from '../useObjectHeading'
 
 import {
   StepFormDialogContentInner,
+  type AbstractProps as StepFormDialogContentInnerAbstractProps,
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
@@ -40,13 +41,23 @@ type DefaultTextsType = Record<
 
 type AbstractProps = Omit<
   StepFormDialogContentInnerProps,
-  'heading' | 'activeStep' | 'submitButton' | 'closeButton' | 'backButton'
+  | 'heading'
+  | 'activeStep'
+  | 'submitButton'
+  | 'closeButton'
+  | 'backButton'
+  | 'handleClickClose'
+  | 'handleClickBack'
+  | 'handleSubmit'
 > &
   DialogProps & {
     heading: HeadingType
     submitButton: ButtonArgType | ObjectButtonType
     closeButton?: ButtonArgType | ObjectButtonType
     backButton?: ButtonArgType | ObjectButtonType
+    onSubmit: StepFormDialogContentInnerAbstractProps['handleSubmit']
+    onClickClose: () => void
+    onClickBack?: () => void
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
