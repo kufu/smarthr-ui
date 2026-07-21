@@ -14,7 +14,6 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useIntl } from '../../intl'
-import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import {
@@ -27,6 +26,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Sidebar } from '../Layout'
+import { Panel, type PanelElementProps } from '../Panel'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -46,7 +46,7 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+type Props = AbstractProps & Omit<PanelElementProps, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
@@ -174,8 +174,9 @@ export const InformationPanel: FC<Props> = ({
   const classNames = classNamesMapper[active ? 'active' : 'inactive']
 
   return (
-    <Base {...rest} as="section" className={classNames.wrapper}>
+    <Panel {...rest} as="section" className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading
           heading={heading}
           id={`${id}-heading`}
@@ -195,7 +196,7 @@ export const InformationPanel: FC<Props> = ({
       <div id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </div>
-    </Base>
+    </Panel>
   )
 }
 

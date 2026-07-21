@@ -1,6 +1,6 @@
-import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { Button } from '../Button'
 
 import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
@@ -25,7 +25,7 @@ const Template: StoryFn = (args) => (
   <Stack {...args}>
     {(['secondary', 'primary', 'tertiary', 'danger', 'text', 'skeleton'] as Variant[]).map(
       (variant) => (
-        <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+        <Groupbox bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
           <Cluster align="center">
             <Button variant={variant} prefix={<FaCirclePlusIcon />}>
               ボタン
@@ -66,7 +66,7 @@ const Template: StoryFn = (args) => (
               ボタン
             </Button>
           </Cluster>
-        </BaseColumn>
+        </Groupbox>
       ),
     )}
   </Stack>

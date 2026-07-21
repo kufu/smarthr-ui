@@ -11,7 +11,6 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Base } from '../Base'
 import { Button } from '../Button'
 import {
   FaCircleCheckIcon,
@@ -23,6 +22,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
+import { Panel } from '../Panel'
 import { Text } from '../Text'
 
 const classNameGenerator = tv({
@@ -147,7 +147,7 @@ type AbstractProps = PropsWithChildren<
       role?: 'alert' | 'status'
     }
 >
-type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
+type BaseProps = Pick<ComponentProps<typeof Panel>, 'layer'>
 type Props = AbstractProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps> &
   Omit<BaseProps, keyof AbstractProps>
@@ -195,10 +195,10 @@ export const NotificationBar: FC<Props> = ({
     () =>
       base === 'base'
         ? {
-            WrapBase: Base,
+            WrapBase: Panel,
             baseProps: {
               layer,
-              overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
+              overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
             },
           }
         : {
