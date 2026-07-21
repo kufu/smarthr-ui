@@ -79,6 +79,7 @@ pnpm ui scaffold:storybook
 - **外部公開コンポーネントが属性として受け取る** → `onXxx` 形式
 - **内部で定義するハンドラ** → `handleXxx` 形式
 - **内部コンポーネントが受け取る** → `handleXxx` 形式
+- **透過的に渡す場合** → `onXxx` 形式のまま保つ（リネームしない）
 
 **判断基準**: 外部公開コンポーネントとは、rootのbarrel file（`src/index.ts`）からexportされているコンポーネント
 
@@ -95,6 +96,12 @@ export const Button: FC<{ onClick?: () => void }> = ({ onClick }) => {
 // ✅ 内部コンポーネント（src/index.tsからexportされていない）
 const InternalButton: FC<{ handleClick?: () => void }> = ({ handleClick }) => {
   return <button onClick={handleClick}>Click</button>
+}
+
+// ✅ 透過的に渡す場合（何も処理を加えずそのまま渡す）
+export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
+  // onClickをそのまま渡す場合は名称を変えない
+  return <InternalComponent onClick={onClick} />
 }
 ```
 
