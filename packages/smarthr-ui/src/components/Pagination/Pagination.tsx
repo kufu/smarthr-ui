@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
@@ -110,35 +111,45 @@ const ActualPagination: FC<Props> = ({
     }
   }, [className, withoutNumbers])
 
-  const onDelegateClick = useMemo(() => {
-    if (!onClick) {
-      return undefined
-    }
+  const latest = useLatest({ onClick, hrefTemplate })
+  const hasHrefTemplate = !!hrefTemplate
 
-    if (hrefTemplate) {
-      return (e: MouseEvent<HTMLElement>) => {
-        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
-
-        if (!anchor) {
+  const functions = useMemo(
+    () => ({
+      actualHrefTemplate: hasHrefTemplate
+        ? (pageNumber: number) => latest.hrefTemplate!(pageNumber)
+        : undefined,
+      handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
+        if (!latest.onClick) {
           return
         }
 
-        const href = (anchor as HTMLAnchorElement).href
+        if (latest.hrefTemplate) {
+          const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
 
-        if (href) {
-          onClick(href, e)
+          if (!anchor) {
+            return
+          }
+
+          const href = (anchor as HTMLAnchorElement).href
+
+          if (href) {
+            ;(latest.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(href, e)
+          }
+        } else {
+          const button = getTargetDelegateElement(e, BUTTON_REGEX)
+
+          if (button) {
+            ;(latest.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
+              parseInt((button as HTMLButtonElement).value, 10),
+              e,
+            )
+          }
         }
-      }
-    }
-
-    return (e: MouseEvent<HTMLElement>) => {
-      const button = getTargetDelegateElement(e, BUTTON_REGEX)
-
-      if (button) {
-        onClick(parseInt((button as HTMLButtonElement).value, 10), e)
-      }
-    }
-  }, [onClick, hrefTemplate])
+      },
+    }),
+    [hasHrefTemplate, latest],
+  )
 
   const navigationLabel = useMemo(
     () =>
@@ -151,13 +162,13 @@ const ActualPagination: FC<Props> = ({
 
   return (
     <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={onDelegateClick}>
+      <Reel onClick={functions.handleDelegateClick}>
         <ItemButtons
           total={total}
           current={current}
           padding={padding}
           withoutNumbers={withoutNumbers}
-          hrefTemplate={hrefTemplate}
+          hrefTemplate={functions.actualHrefTemplate}
           classNames={classNames}
           linkAs={linkAs}
         />
