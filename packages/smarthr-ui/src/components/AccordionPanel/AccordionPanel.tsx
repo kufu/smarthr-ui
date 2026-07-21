@@ -3,9 +3,9 @@
 import {
   type ComponentProps,
   type FC,
+  type KeyboardEventHandler,
   type MouseEvent,
   type PropsWithChildren,
-  type RefObject,
   createContext,
   useCallback,
   useMemo,
@@ -17,7 +17,13 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { useLatest } from '../../hooks/useLatest'
 import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
 
-import { getNewExpandedItems } from './accordionPanelHelper'
+import {
+  focusFirstSibling,
+  focusLastSibling,
+  focusNextSibling,
+  focusPreviousSibling,
+  getNewExpandedItems,
+} from './accordionPanelHelper'
 
 type AbstractProps = PropsWithChildren<{
   /** アイコンの左右位置 */
@@ -38,13 +44,13 @@ const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
-  parentRef: RefObject<HTMLDivElement> | null
   handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
+  handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
-  parentRef: null,
   handleClickTrigger: () => {},
+  handleKeyDown: () => {},
 })
 
 const ROUNDED = {
@@ -112,13 +118,50 @@ export const AccordionPanel: FC<Props> = ({
     [latest],
   )
 
+  const handleKeyDown = useMemo(
+    () =>
+      (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
+        if (!parentRef.current) {
+          return
+        }
+
+        const item = e.target as HTMLElement
+
+        switch (e.key) {
+          case 'Home': {
+            e.preventDefault()
+            focusFirstSibling(parentRef.current)
+            break
+          }
+          case 'End': {
+            e.preventDefault()
+            focusLastSibling(parentRef.current)
+            break
+          }
+          case 'ArrowLeft':
+          case 'ArrowUp': {
+            e.preventDefault()
+            focusPreviousSibling(item, parentRef.current)
+            break
+          }
+          case 'ArrowRight':
+          case 'ArrowDown': {
+            e.preventDefault()
+            focusNextSibling(item, parentRef.current)
+            break
+          }
+        }
+      },
+    [],
+  )
+
   return (
     <AccordionPanelContext.Provider
       value={{
         handleClickTrigger,
+        handleKeyDown,
         expandedItems,
         iconPosition,
-        parentRef,
       }}
     >
       <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />

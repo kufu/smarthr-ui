@@ -12,7 +12,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
 import { getIsInclude } from '../../libs/map'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
@@ -20,12 +19,6 @@ import { Cluster } from '../Layout'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
-import {
-  focusFirstSibling,
-  focusLastSibling,
-  focusNextSibling,
-  focusPreviousSibling,
-} from './accordionPanelHelper'
 
 import type { TextProps } from '../Text'
 
@@ -83,51 +76,10 @@ export const AccordionPanelTrigger: FC<Props> = ({
   }, [className])
 
   const { name, contentId, triggerId } = useContext(AccordionPanelItemContext)
-  const { iconPosition, expandedItems, handleClickTrigger, parentRef } =
+  const { iconPosition, expandedItems, handleClickTrigger, handleKeyDown } =
     useContext(AccordionPanelContext)
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
-
-  const latest = useLatest({
-    parentRef,
-  })
-
-  const handleKeyDown = useMemo(
-    () =>
-      (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
-        if (!latest.parentRef?.current) {
-          return
-        }
-
-        const item = e.target as HTMLElement
-
-        switch (e.key) {
-          case 'Home': {
-            e.preventDefault()
-            focusFirstSibling(latest.parentRef.current)
-            break
-          }
-          case 'End': {
-            e.preventDefault()
-            focusLastSibling(latest.parentRef.current)
-            break
-          }
-          case 'ArrowLeft':
-          case 'ArrowUp': {
-            e.preventDefault()
-            focusPreviousSibling(item, latest.parentRef.current)
-            break
-          }
-          case 'ArrowRight':
-          case 'ArrowDown': {
-            e.preventDefault()
-            focusNextSibling(item, latest.parentRef.current)
-            break
-          }
-        }
-      },
-    [latest],
-  )
 
   return (
     <MemoizedHeadingButton
