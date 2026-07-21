@@ -73,18 +73,60 @@ pnpm ui scaffold:storybook
 
 ## コード規約
 
-- **TypeScript**: `interface` ではなく `type` を使用（ESLint ルール `@typescript-eslint/consistent-type-definitions` で強制）
-- **インポート**: インライン型インポートを使用（`import { type Foo }`）— `@typescript-eslint/consistent-type-imports` で強制
-- **ワイルドカードの禁止**: `export *`、`export * as`、`import * as` は禁止（Icons のみ例外）
-- **アクセシビリティ**: 厳格な jsx-a11y ルールを適用。`smarthr/a11y-*` カスタム ESLint ルールが有効
-- **コンポーネント**: クライアントコンポーネントには `'use client'` ディレクティブを付与
-- **コミット**: Conventional Commits 形式。commitlint (`@commitlint/config-conventional`) で検証される
+### 命名規則
+
+#### イベントハンドラー
+- **外部公開コンポーネントが属性として受け取る** → `onXxx` 形式
+- **内部で定義するハンドラ** → `handleXxx` 形式
+- **内部コンポーネントが受け取る** → `handleXxx` 形式
+- **透過的に渡す場合** → `onXxx` 形式のまま保つ（リネームしない）
+
+**判断基準**: 外部公開コンポーネントとは、`packages/smarthr-ui/src/index.ts` からexportされているコンポーネント
+
+```tsx
+// ✅ 外部公開コンポーネント（packages/smarthr-ui/src/index.tsからexportされている）
+export const Button: FC<{ onClick?: () => void }> = ({ onClick }) => {
+  const handleClick = () => {
+    // 内部処理
+    onClick?.()
+  }
+  return <InternalButton handleClick={handleClick} />
+}
+
+// ✅ 内部コンポーネント（packages/smarthr-ui/src/index.tsからexportされていない）
+const InternalButton: FC<{ handleClick?: () => void }> = ({ handleClick }) => {
+  return <button onClick={handleClick}>Click</button>
+}
+
+// ✅ 透過的に渡す場合（何も処理を加えずそのまま渡す）
+export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
+  // onClickをそのまま渡す場合は名称を変えない
+  return <InternalComponent onClick={onClick} />
+}
+```
+
+### TypeScript
+- `interface` ではなく `type` を使用（ESLint ルール `@typescript-eslint/consistent-type-definitions` で強制）
+
+### インポート
+- インライン型インポートを使用（`import { type Foo }`）— `@typescript-eslint/consistent-type-imports` で強制
+- ワイルドカードの禁止: `export *`、`export * as`、`import * as` は禁止（Icons のみ例外）
+
+### アクセシビリティ
+- 厳格な jsx-a11y ルールを適用
+- `smarthr/a11y-*` カスタム ESLint ルールが有効
+
+### コンポーネント
+- クライアントコンポーネントには `'use client'` ディレクティブを付与
+- コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
+
+### コミット
+- Conventional Commits 形式。commitlint (`@commitlint/config-conventional`) で検証される
   - type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `ci`, `perf`, `style`, `build`, `revert`
   - scope: 任意。コンポーネント名を入れる（例: `fix(DropZone):`, `feat(StepFormDialog)!:`）
   - `!` 付きで破壊的変更を示す（例: `refactor!:`, `refactor(InformationPanel)!:`）
   - subject は日本語で記述（`subject-case` ルールは無効化されている）
   - リリースは release-please で管理。`feat` → minor、`fix` → patch、`!` → major
-- **コンポーネントサイズ**: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
 ## スキル
 
