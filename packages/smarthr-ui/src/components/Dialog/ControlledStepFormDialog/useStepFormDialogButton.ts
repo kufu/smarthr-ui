@@ -6,8 +6,7 @@ import type { StepItem } from './StepFormDialogProvider'
 
 type ButtonThemeType = 'primary' | 'secondary' | 'danger'
 export type ButtonArgType =
-  | ReactNode
-  | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
+  ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
 type VariableFunctionType<T> = (currentStep: StepItem) => T
 export type ObjectButtonType = {
   text?: ButtonArgType
