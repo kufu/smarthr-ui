@@ -157,7 +157,6 @@ const MemoizedTriggerButton = memo<
   }
 >(({ onlyIconTrigger, triggerSize, children, classNames, ...rest }) => {
   const { localize } = useIntl()
-
   const { active } = useContext(DropdownContext)
 
   return (
@@ -170,17 +169,17 @@ const MemoizedTriggerButton = memo<
         suffix={
           !onlyIconTrigger && (
             <FaCaretDownIcon
-              alt={
+              alt={localize(
                 active
-                  ? localize({
+                  ? {
                       id: 'smarthr-ui/DropdownMenuButton/triggerActive',
                       defaultText: '候補を閉じる',
-                    })
-                  : localize({
+                    }
+                  : {
                       id: 'smarthr-ui/DropdownMenuButton/triggerInactive',
                       defaultText: '候補を開く',
-                    })
-              }
+                    },
+              )}
             />
           )
         }
