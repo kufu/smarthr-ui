@@ -14,11 +14,7 @@ import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { Gap } from '../../types'
 
 type StyleType =
-  | 'screenTitle'
-  | 'sectionTitle'
-  | 'blockTitle'
-  | 'subBlockTitle'
-  | 'subSubBlockTitle'
+  'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
 export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
   screenTitle: {
