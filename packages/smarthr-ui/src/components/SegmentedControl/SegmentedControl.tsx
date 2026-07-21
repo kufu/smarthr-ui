@@ -5,7 +5,7 @@ import {
   type FC,
   type MouseEvent,
   type ReactNode,
-  useCallback,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -13,6 +13,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 
 export type Option = {
@@ -84,6 +85,7 @@ export const SegmentedControl: FC<Props> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
 
@@ -94,8 +96,17 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [className, size])
 
-  const onDelegateFocus = useCallback(() => setIsFocused(true), [])
-  const onDelegateBlur = useCallback(() => setIsFocused(false), [])
+  const latest = useLatest({ onClickOption })
+  const functions = useMemo(
+    () => ({
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onClickOption?.(e.currentTarget.value)
+      },
+      handleDelegateFocus: () => setIsFocused(true),
+      handleDelegateBlur: () => setIsFocused(false),
+    }),
+    [latest],
+  )
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -154,25 +165,14 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [isFocused])
 
-  const excludesSelected = useMemo(
-    () => !value || options.every((option) => option.value !== value),
-    [value, options],
-  )
-
-  const actualOnClickOption = useMemo(
-    () =>
-      onClickOption
-        ? (e: MouseEvent<HTMLButtonElement>) => onClickOption(e.currentTarget.value)
-        : undefined,
-    [onClickOption],
-  )
+  const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
       className={classNames.container}
-      onFocus={onDelegateFocus}
-      onBlur={onDelegateBlur}
+      onFocus={functions.handleDelegateFocus}
+      onBlur={functions.handleDelegateBlur}
       ref={containerRef}
       role="toolbar"
     >
@@ -180,9 +180,12 @@ export const SegmentedControl: FC<Props> = ({
         {options.map((option, index) => (
           <SegmentedControlButton
             key={option.value}
-            option={option}
+            optionValue={option.value}
+            optionContent={option.content}
+            optionAriaLabel={option.ariaLabel}
+            optionDisabled={option.disabled}
             index={index}
-            onClick={actualOnClickOption}
+            handleClick={functions.handleClick}
             size={size}
             value={value}
             isFocused={isFocused}
@@ -195,52 +198,51 @@ export const SegmentedControl: FC<Props> = ({
   )
 }
 
-const SegmentedControlButton: FC<
+const SegmentedControlButton = memo<
   Pick<Props, 'size' | 'value'> & {
-    onClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
-    option: Props['options'][number]
+    handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+    optionValue: string
+    optionContent: ReactNode
+    optionAriaLabel?: string
+    optionDisabled?: boolean
     index: number
     isFocused: boolean
     excludesSelected: boolean
     className: string
   }
-> = ({ onClick, size, value, option, index, isFocused, excludesSelected, className }) => {
-  const attrs = useMemo(() => {
-    const checked = value === option.value
+>(
+  ({
+    handleClick,
+    size,
+    value,
+    optionValue,
+    optionContent,
+    optionAriaLabel,
+    optionDisabled,
+    index,
+    isFocused,
+    excludesSelected,
+    className,
+  }) => {
+    const checked = value === optionValue
+    const tabIndex = !isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1
 
-    return {
-      checked,
-      ariaChecked: checked && !!value,
-      variant: checked ? 'primary' : 'secondary',
-    } as const
-  }, [value, option.value])
-  const tabIndex = useMemo(() => {
-    if (isFocused) {
-      return -1
-    }
-
-    if (excludesSelected) {
-      return index === 0 ? 0 : -1
-    }
-
-    return attrs.checked ? 0 : -1
-  }, [excludesSelected, isFocused, attrs.checked, index])
-
-  return (
-    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    <Button
-      value={option.value}
-      disabled={option.disabled}
-      tabIndex={tabIndex}
-      role="radio"
-      aria-label={option.ariaLabel}
-      aria-checked={attrs.ariaChecked}
-      onClick={onClick}
-      variant={attrs.variant}
-      size={size}
-      className={className}
-    >
-      {option.content}
-    </Button>
-  )
-}
+    return (
+      // eslint-disable-next-line smarthr/best-practice-for-interactive-element
+      <Button
+        value={optionValue}
+        disabled={optionDisabled}
+        tabIndex={tabIndex}
+        role="radio"
+        aria-label={optionAriaLabel}
+        aria-checked={checked && !!value}
+        onClick={handleClick}
+        variant={checked ? 'primary' : 'secondary'}
+        size={size}
+        className={className}
+      >
+        {optionContent}
+      </Button>
+    )
+  },
+)
