@@ -7,7 +7,6 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   createContext,
-  useCallback,
   useMemo,
   useRef,
   useState,
@@ -98,29 +97,25 @@ export const AccordionPanel: FC<Props> = ({
 
   const latest = useLatest({ onClick, expandableMultiply })
 
-  const handleClickTrigger = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      const { currentTarget } = e
+  const functions = useMemo(
+    () => ({
+      handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => {
+        const { currentTarget } = e
 
-      setExpanded((prevExpandedItems) => {
-        const newExpandedItems = getNewExpandedItems(
-          prevExpandedItems,
-          currentTarget.value,
-          currentTarget.getAttribute('aria-expanded') !== 'true',
-          latest.expandableMultiply,
-        )
+        setExpanded((prevExpandedItems) => {
+          const newExpandedItems = getNewExpandedItems(
+            prevExpandedItems,
+            currentTarget.value,
+            currentTarget.getAttribute('aria-expanded') !== 'true',
+            latest.expandableMultiply,
+          )
 
-        latest.onClick?.(mapToKeyArray(newExpandedItems))
+          latest.onClick?.(mapToKeyArray(newExpandedItems))
 
-        return newExpandedItems
-      })
-    },
-    [latest],
-  )
-
-  const handleKeyDown = useMemo(
-    () =>
-      (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
+          return newExpandedItems
+        })
+      },
+      handleKeyDown: (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
         if (!parentRef.current) {
           return
         }
@@ -152,14 +147,15 @@ export const AccordionPanel: FC<Props> = ({
           }
         }
       },
-    [],
+    }),
+    [latest],
   )
 
   return (
     <AccordionPanelContext.Provider
       value={{
-        handleClickTrigger,
-        handleKeyDown,
+        handleClickTrigger: functions.handleClickTrigger,
+        handleKeyDown: functions.handleKeyDown,
         expandedItems,
         iconPosition,
       }}
