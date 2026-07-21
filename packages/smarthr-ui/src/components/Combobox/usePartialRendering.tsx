@@ -1,7 +1,8 @@
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 const OPTION_INCREMENT_AMOUNT = 100
-const RETURN_NULL = () => null
 
 export function usePartialRendering<T>({
   items,
@@ -14,31 +15,25 @@ export function usePartialRendering<T>({
 
   const [currentItemLength, setCurrentItemLength] = useState(limiter(OPTION_INCREMENT_AMOUNT))
 
+  const latest = useLatest({ limiter })
+
+  const handleIntersect = useCallback(() => {
+    setCurrentItemLength((current) => latest.limiter(current + OPTION_INCREMENT_AMOUNT))
+  }, [latest])
+
   useEffect(() => {
     setCurrentItemLength((current) => limiter(current))
   }, [limiter])
 
-  // minLength も考慮した実際のアイテム数を算出
-  const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
-
-  const renderIntersection = useCallback(
-    () => (
-      <Intersection
-        onIntersect={() => {
-          setCurrentItemLength((current) => limiter(current + OPTION_INCREMENT_AMOUNT))
-        }}
-      />
-    ),
-    [limiter],
-  )
-
   return {
-    items: partialItems,
-    renderIntersection: currentItemLength >= items.length ? RETURN_NULL : renderIntersection,
+    // minLength も考慮した実際のアイテム数を算出
+    // itemsはunstableなのでuseMemoは毎回再計算されるため、直接計算する
+    items: items.slice(0, currentItemLength),
+    handleIntersect: currentItemLength < items.length ? handleIntersect : null,
   }
 }
 
-const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
+export const Intersection: FC<{ handleIntersect: () => void }> = memo(({ handleIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -51,14 +46,14 @@ const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
     // スクロール最下部に到達する度に表示するアイテム数を増加させるための IntersectionObserver
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        onIntersect()
+        handleIntersect()
       }
     })
 
     observer.observe(target)
 
     return () => observer.disconnect()
-  }, [onIntersect])
+  }, [handleIntersect])
 
   return <div ref={ref} />
-}
+})
