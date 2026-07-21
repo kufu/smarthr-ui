@@ -157,7 +157,6 @@ const MemoizedTriggerButton = memo<
   }
 >(({ onlyIconTrigger, triggerSize, children, classNames, ...rest }) => {
   const { localize } = useIntl()
-
   const { active } = useContext(DropdownContext)
 
   return (
@@ -170,17 +169,17 @@ const MemoizedTriggerButton = memo<
         suffix={
           !onlyIconTrigger && (
             <FaCaretDownIcon
-              alt={
+              alt={localize(
                 active
-                  ? localize({
+                  ? {
                       id: 'smarthr-ui/DropdownMenuButton/triggerActive',
                       defaultText: '候補を閉じる',
-                    })
-                  : localize({
+                    }
+                  : {
                       id: 'smarthr-ui/DropdownMenuButton/triggerInactive',
                       defaultText: '候補を開く',
-                    })
-              }
+                    },
+              )}
             />
           )
         }
@@ -249,6 +248,9 @@ const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
     observer.observe(listItem, {
       childList: true,
       subtree: true,
+      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+      attributes: true,
+      attributeFilter: ['disabled', 'aria-disabled'],
     })
 
     return () => {

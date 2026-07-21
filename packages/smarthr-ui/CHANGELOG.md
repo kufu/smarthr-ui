@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [98.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.0.0...smarthr-ui-v98.1.0) (2026-07-15)
+
+
+### Features
+
+* **FileViewer:** 表示 PDF 内のテキストを検索できる機能を追加 ([#6309](https://github.com/kufu/smarthr-ui/issues/6309)) ([61e03b7](https://github.com/kufu/smarthr-ui/commit/61e03b7e496f47c62e607e09dbc4928acf2e1bbf))
+* useLatestフックを追加してunstableRefパターンを改善 ([#6483](https://github.com/kufu/smarthr-ui/issues/6483)) ([a728adb](https://github.com/kufu/smarthr-ui/commit/a728adb695a7efd6a5bc440be3c402871cc0ce93))
+
+
+### Bug Fixes
+
+* disabled なトリガーで Dialog・Disclosure が発火しないようにする ([#6497](https://github.com/kufu/smarthr-ui/issues/6497)) ([a5bea7f](https://github.com/kufu/smarthr-ui/commit/a5bea7f76ee6f31696bbb9d116e363ef4fafb928))
+
+## [98.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v97.0.0...smarthr-ui-v98.0.0) (2026-07-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **SideNav:** cloneElementを削除しContext APIに移行、interfaceを整理 ([#6400](https://github.com/kufu/smarthr-ui/issues/6400))
+* **Th:** decorators propsとuseDecoratorフックを削除 ([#6446](https://github.com/kufu/smarthr-ui/issues/6446))
+* **useDevice:** useDeviceフックを削除 ([#6461](https://github.com/kufu/smarthr-ui/issues/6461))
+* **FilterDropdown:** iconAltの型をstringに変更 ([#6450](https://github.com/kufu/smarthr-ui/issues/6450))
+
+### Bug Fixes
+
+* **Dialog:** IME 変換中の Tab がフォーカストラップに奪われないようにする ([#6481](https://github.com/kufu/smarthr-ui/issues/6481)) ([6ed79cd](https://github.com/kufu/smarthr-ui/commit/6ed79cd79699b2e6efa391a7d5e0453abbb9067c))
+* **SingleCombobox:** onChangeInputの発火タイミングを修正 ([#6468](https://github.com/kufu/smarthr-ui/issues/6468)) ([5e84945](https://github.com/kufu/smarthr-ui/commit/5e849453883b680ce04f3b9eb2207611b46dcd84))
+
+
+### Code Refactoring
+
+* **FilterDropdown:** iconAltの型をstringに変更 ([#6450](https://github.com/kufu/smarthr-ui/issues/6450)) ([1418770](https://github.com/kufu/smarthr-ui/commit/1418770c74c65046ac7ab4a702b90f96426d139f))
+* **SideNav:** cloneElementを削除しContext APIに移行、interfaceを整理 ([#6400](https://github.com/kufu/smarthr-ui/issues/6400)) ([8d39471](https://github.com/kufu/smarthr-ui/commit/8d39471dfa81df7427af3c098d92afa0c35d68f7))
+* **Th:** decorators propsとuseDecoratorフックを削除 ([#6446](https://github.com/kufu/smarthr-ui/issues/6446)) ([565de20](https://github.com/kufu/smarthr-ui/commit/565de20d4baa227a4355ae5bd8d6d4b291374410))
+* **useDevice:** useDeviceフックを削除 ([#6461](https://github.com/kufu/smarthr-ui/issues/6461)) ([755b5b0](https://github.com/kufu/smarthr-ui/commit/755b5b011f8533beb380c8859b6312d0d08c1ca5))
+
+## [97.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.1.3...smarthr-ui-v97.0.0) (2026-07-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **TabItem:** onClickの型をイベントハンドラに変更 ([#6421](https://github.com/kufu/smarthr-ui/issues/6421))
+
+### Bug Fixes
+
+* **DropdownMenuButton:** IconのaltにReactNodeを直接渡すように修正 ([#6442](https://github.com/kufu/smarthr-ui/issues/6442)) ([29f8b31](https://github.com/kufu/smarthr-ui/commit/29f8b317fb65b073398f8a1263a38ddcaf95ad47))
+* **DropdownTrigger:** トリガーのdisabled動的切り替え時にメニューが開閉しなくなる問題を修正 ([#6445](https://github.com/kufu/smarthr-ui/issues/6445)) ([cc44aa7](https://github.com/kufu/smarthr-ui/commit/cc44aa73e77027c2f117f24c6a435962d1d7c83d))
+* MutationObserverの属性監視を追加しbutton要素の動的な属性変更に対応 ([#6458](https://github.com/kufu/smarthr-ui/issues/6458)) ([8268597](https://github.com/kufu/smarthr-ui/commit/82685974c8eec9c5a5da6148a466b49f07b67e7e))
+
+
+### Code Refactoring
+
+* **TabItem:** onClickの型をイベントハンドラに変更 ([#6421](https://github.com/kufu/smarthr-ui/issues/6421)) ([cc56610](https://github.com/kufu/smarthr-ui/commit/cc5661017219fe57199e790783e1bb6ebe1960fe))
+
 ## [96.1.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v96.1.2...smarthr-ui-v96.1.3) (2026-06-25)
 
 

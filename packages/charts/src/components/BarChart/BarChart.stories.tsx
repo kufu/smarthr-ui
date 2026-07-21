@@ -1,8 +1,9 @@
-import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/testData'
+import { chartJsOptionsExamples, multi20Datasets, multiSmall, singleSmall } from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { TooltipItem } from 'chart.js'
 
 const meta: Meta<typeof BarChart> = {
   title: 'Charts/BarChart',
@@ -50,6 +51,15 @@ export const Default: Story = {
 export const MultipleDatasets: Story = {
   args: {
     data: multiSmall,
+  },
+}
+
+export const ManyDatasets: Story = {
+  args: {
+    data: {
+      labels: ['A', 'B', 'C', 'D', 'E'],
+      datasets: multi20Datasets,
+    },
   },
 }
 
@@ -108,6 +118,48 @@ export const WithAnnotations: Story = {
               yMax: 10,
               borderColor: 'rgb(255, 99, 132)',
               borderWidth: 2,
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+const additionalData = {
+  datasets: [
+    {
+      data: ['Aの補足情報', 'Bの補足情報', 'Cの補足情報', 'Dの補足情報', 'Eの補足情報'],
+    },
+  ],
+}
+export const WithTooltipCallbacks: Story = {
+  name: 'with tooltip callbacks options',
+  args: {
+    data: singleSmall,
+    options: {
+      plugins: {
+        tooltip: {
+          titleColor: '#ED1A3D', // 保護しているプロパティの上書きができないことの検証
+          callbacks: {
+            label: function (context: TooltipItem<'bar'>) {
+              // 本来表示するラベル
+              let label = context.dataset.label || ''
+              if (label) {
+                label += ': '
+              }
+              // 単位を付与する
+              if (context.parsed.y !== null) {
+                label += context.parsed.y + '人'
+              }
+              // 補足情報を追加する
+              const additionalDataLabel =
+                additionalData.datasets[context.datasetIndex].data[context.dataIndex]
+              if (additionalDataLabel) {
+                label += `（${additionalDataLabel}）`
+              }
+
+              return label
             },
           },
         },
