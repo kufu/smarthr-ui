@@ -29,29 +29,27 @@ type Props = PropsWithChildren<{
 export const ThSortButton = memo<Props>(({ align, sort, onSort, children }) => {
   const { localize } = useIntl()
 
-  const defaultTexts = useMemo(
-    () => ({
-      asc: localize({
-        id: 'smarthr-ui/Th/sortDirectionAsc',
-        defaultText: '昇順',
-      }),
-      desc: localize({
-        id: 'smarthr-ui/Th/sortDirectionDesc',
-        defaultText: '降順',
-      }),
-      none: localize({
-        id: 'smarthr-ui/Th/sortDirectionNone',
-        defaultText: '並び替えなし',
-      }),
-    }),
-    [localize],
-  )
-
   const sortLabel = useMemo(() => {
-    if (!sort) return undefined
+    switch (sort) {
+      case 'asc':
+        return localize({
+          id: 'smarthr-ui/Th/sortDirectionAsc',
+          defaultText: '昇順',
+        })
+      case 'desc':
+        return localize({
+          id: 'smarthr-ui/Th/sortDirectionDesc',
+          defaultText: '降順',
+        })
+      case 'none':
+        return localize({
+          id: 'smarthr-ui/Th/sortDirectionNone',
+          defaultText: '並び替えなし',
+        })
+    }
 
-    return defaultTexts[sort]
-  }, [sort, defaultTexts])
+    return undefined
+  }, [sort, localize])
 
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
@@ -59,7 +57,7 @@ export const ThSortButton = memo<Props>(({ align, sort, onSort, children }) => {
     <UnstyledButton onClick={onSort} className={className}>
       {children}
       <SortIcon />
-      <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
+      {sortLabel && <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>}
     </UnstyledButton>
   )
 })
