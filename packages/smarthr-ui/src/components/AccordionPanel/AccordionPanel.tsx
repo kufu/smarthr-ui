@@ -38,13 +38,11 @@ const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
-  expandableMultiply: boolean
   parentRef: RefObject<HTMLDivElement> | null
   handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
-  expandableMultiply: true,
   parentRef: null,
   handleClickTrigger: () => {},
 })
@@ -92,19 +90,18 @@ export const AccordionPanel: FC<Props> = ({
     [rounded, className],
   )
 
-  const latest = useLatest({ onClick })
+  const latest = useLatest({ onClick, expandableMultiply })
 
   const handleClickTrigger = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      const itemName = e.currentTarget.value
-      const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+      const { currentTarget } = e
 
       setExpanded((prevExpandedItems) => {
         const newExpandedItems = getNewExpandedItems(
           prevExpandedItems,
-          itemName,
-          newIsExpanded,
-          expandableMultiply,
+          currentTarget.value,
+          currentTarget.getAttribute('aria-expanded') !== 'true',
+          latest.expandableMultiply,
         )
 
         latest.onClick?.(mapToKeyArray(newExpandedItems))
@@ -112,7 +109,7 @@ export const AccordionPanel: FC<Props> = ({
         return newExpandedItems
       })
     },
-    [expandableMultiply, latest],
+    [latest],
   )
 
   return (
@@ -121,7 +118,6 @@ export const AccordionPanel: FC<Props> = ({
         handleClickTrigger,
         expandedItems,
         iconPosition,
-        expandableMultiply,
         parentRef,
       }}
     >
