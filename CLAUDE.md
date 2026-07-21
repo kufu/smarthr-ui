@@ -81,10 +81,10 @@ pnpm ui scaffold:storybook
 - **内部コンポーネントが受け取る** → `handleXxx` 形式
 - **透過的に渡す場合** → `onXxx` 形式のまま保つ（リネームしない）
 
-**判断基準**: 外部公開コンポーネントとは、rootのbarrel file（`src/index.ts`）からexportされているコンポーネント
+**判断基準**: 外部公開コンポーネントとは、`packages/smarthr-ui/src/index.ts` からexportされているコンポーネント
 
 ```tsx
-// ✅ 外部公開コンポーネント（src/index.tsからexportされている）
+// ✅ 外部公開コンポーネント（packages/smarthr-ui/src/index.tsからexportされている）
 export const Button: FC<{ onClick?: () => void }> = ({ onClick }) => {
   const handleClick = () => {
     // 内部処理
@@ -93,7 +93,7 @@ export const Button: FC<{ onClick?: () => void }> = ({ onClick }) => {
   return <InternalButton handleClick={handleClick} />
 }
 
-// ✅ 内部コンポーネント（src/index.tsからexportされていない）
+// ✅ 内部コンポーネント（packages/smarthr-ui/src/index.tsからexportされていない）
 const InternalButton: FC<{ handleClick?: () => void }> = ({ handleClick }) => {
   return <button onClick={handleClick}>Click</button>
 }
