@@ -201,13 +201,11 @@ const MemoizedDropdownTrigger = memo<
   let body: ReactNode = label
 
   if (narrow) {
-    if (invert) {
-      prefix = <LanguageIcon />
-      body = <LanguageIcon alt={label} />
-    } else {
-      prefix = <FaGlobeIcon />
-      body = <FaGlobeIcon alt={label} />
-    }
+    // narrowの時はprefixなし、bodyにアイコン
+    body = invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />
+  } else {
+    // narrowでない時はprefixにアイコン、bodyはlabel
+    prefix = invert ? <LanguageIcon /> : <FaGlobeIcon />
   }
 
   return (
