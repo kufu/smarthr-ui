@@ -33,6 +33,8 @@ minimumReleaseAgeExclude:
   - '@esbuild/win32-arm64@0.28.1'
   - '@esbuild/win32-ia32@0.28.1'
   - '@esbuild/win32-x64@0.28.1'
+  # Renovate security update: tar@7.5.19
+  - tar@7.5.19
 allowBuilds:
   '@swc/core': true
   canvas: true
@@ -42,7 +44,7 @@ overrides:
   postcss@<8.5.10: ^8.5.15
   esbuild@<=0.24.2: '>=0.28.1'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
-  tar@<=7.5.15: '>=7.5.16'
+  tar@<=7.5.15: '>=7.5.19'
   vite@>=7.0.0 <=7.3.4: '>=7.3.5'
   react-draggable: 4.5.0
   js-yaml@>=4.0.0 <=4.1.1: '>=4.1.2'
