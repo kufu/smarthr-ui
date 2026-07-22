@@ -21,16 +21,16 @@ const classNameGenerator = tv({
   base: ['[&&]:shr-px-0.5'],
 })
 
-type Props = { navigation: Navigation; onClickNavigation: () => void }
+type Props = { navigation: Navigation; handleClickNavigation: () => void }
 
-export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => {
+export const NavigationItem: FC<Props> = ({ navigation, handleClickNavigation }) => {
   const className = classNameGenerator()
 
   if ('elementAs' in navigation) {
     return (
       <NavigationCustomTag
         {...navigation}
-        onClickNavigation={onClickNavigation}
+        handleClickNavigation={handleClickNavigation}
         className={`${className} ${navigation.className}`}
       />
     )
@@ -44,7 +44,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
     return (
       <NavigationButton
         navigation={navigation}
-        onClickNavigation={onClickNavigation}
+        handleClickNavigation={handleClickNavigation}
         className={className}
       />
     )
@@ -54,14 +54,14 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 }
 
 const NavigationCustomTag = memo<
-  NavigationCustomTag & Pick<Props, 'onClickNavigation'> & { className: string }
+  NavigationCustomTag & Pick<Props, 'handleClickNavigation'> & { className: string }
 >(
   ({
     children,
     elementAs: Tag,
     current,
     className,
-    onClickNavigation: onDelegateClick,
+    handleClickNavigation: onDelegateClick,
     ...rest
   }) => {
     const actualClassName = useMemo(
@@ -91,15 +91,15 @@ const NavigationLink = memo<NavigationLink & { className: string }>(
 )
 
 const NavigationButton: FC<
-  Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }
-> = ({ navigation, onClickNavigation, className }) => {
-  const latest = useLatest({ navigation, onClickNavigation })
+  Pick<Props, 'handleClickNavigation'> & { navigation: NavigationButton; className: string }
+> = ({ navigation, handleClickNavigation, className }) => {
+  const latest = useLatest({ navigation, handleClickNavigation })
 
   const functions = useMemo(
     () => ({
       onClick: (e: MouseEvent<HTMLButtonElement>) => {
         latest.navigation.onClick(e)
-        latest.onClickNavigation()
+        latest.handleClickNavigation()
       },
     }),
     [latest],

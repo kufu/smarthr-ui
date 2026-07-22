@@ -118,7 +118,7 @@ export const Content: FC<
 
   const functions = useMemo(
     () => ({
-      dialogClose: () => latest.setIsOpen(false),
+      handleDialogClose: () => latest.setIsOpen(false),
       clearAppLauncher: () => latest.setIsAppLauncherSelected(false),
       clearReleaseNote: () => latest.setIsReleaseNoteSelected(false),
       clearNavigationGroup: () => latest.setSelectedNavigationGroup(null),
@@ -145,25 +145,25 @@ export const Content: FC<
           {isAppLauncherSelected ? (
             <MenuSubHeading
               title={translated.launcherListText}
-              onClickBack={functions.clearAppLauncher}
+              handleClickBack={functions.clearAppLauncher}
             />
           ) : isReleaseNoteSelected ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
               title={translated.latestReleaseNotes}
-              onClickBack={functions.clearReleaseNote}
+              handleClickBack={functions.clearReleaseNote}
             />
           ) : selectedNavigationGroup ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
               title={selectedNavigationGroup.children}
-              onClickBack={functions.clearNavigationGroup}
+              handleClickBack={functions.clearNavigationGroup}
             />
           ) : (
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="S" onClick={functions.dialogClose}>
+          <Button variant="secondary" size="S" onClick={functions.handleDialogClose}>
             <FaXmarkIcon alt={translated.closeMenu} />
           </Button>
         </Cluster>
@@ -178,7 +178,7 @@ export const Content: FC<
           ) : selectedNavigationGroup ? (
             <Navigation
               navigations={selectedNavigationGroup.childNavigations}
-              onClickNavigation={functions.dialogClose}
+              handleClickNavigation={functions.handleDialogClose}
             />
           ) : (
             children

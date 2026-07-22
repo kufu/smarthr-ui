@@ -149,7 +149,7 @@ const NavigationAccordion = memo<
 >(({ appName, menuClose, className }) => {
   const { navigations } = useContext(NavigationContext)
 
-  const children = <Navigation navigations={navigations} onClickNavigation={menuClose} />
+  const children = <Navigation navigations={navigations} handleClickNavigation={menuClose} />
 
   return navigations.length > 0 && appName ? (
     <ActualNavigationAccordion appName={appName} className={className}>

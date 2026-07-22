@@ -81,7 +81,7 @@ const TenantDropdown: FC<
 
   const functions = useMemo(
     () => ({
-      onClickTenantName: (e: MouseEvent<HTMLButtonElement>) => {
+      handleClickTenantName: (e: MouseEvent<HTMLButtonElement>) => {
         latest.onTenantSelect(e.currentTarget.value)
       },
     }),
@@ -103,7 +103,7 @@ const TenantDropdown: FC<
                 type="button"
                 value={tenant.id}
                 current={isCurrent}
-                onClick={isCurrent ? undefined : functions.onClickTenantName}
+                onClick={isCurrent ? undefined : functions.handleClickTenantName}
               >
                 {tenant.name}
               </CommonButton>

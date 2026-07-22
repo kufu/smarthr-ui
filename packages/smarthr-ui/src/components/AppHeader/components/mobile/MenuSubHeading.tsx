@@ -8,10 +8,10 @@ import { Translate } from '../common/Translate'
 
 type Props = {
   title: ReactNode
-  onClickBack: () => void
+  handleClickBack: () => void
 }
 
-export const MenuSubHeading = memo<Props>(({ title, onClickBack }) => {
+export const MenuSubHeading = memo<Props>(({ title, handleClickBack }) => {
   const { localize } = useIntl()
   const backButtonAriaLabel = useMemo(
     () => localize({ id: 'smarthr-ui/AppHeader/MobileHeader/back', defaultText: '戻る' }),
@@ -20,7 +20,7 @@ export const MenuSubHeading = memo<Props>(({ title, onClickBack }) => {
 
   return (
     <>
-      <Button size="S" onClick={onClickBack}>
+      <Button size="S" onClick={handleClickBack}>
         <FaArrowLeftIcon alt={backButtonAriaLabel} />
       </Button>
       <Heading type="blockTitle">
