@@ -176,20 +176,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         return d ? latest.showAlternative(d) : null
       }
 
-      return {
-        stringToDate: (str: string | null | undefined) => stringToDate(str, latest.parseInput),
-        dateToString,
-        dateToAlternativeFormat,
-      }
-    }, [latest])
-
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
-
-    const updateDate = useCallback(
-      (e: ChangeLikeEvent, newDate: Date | null) => {
+      const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
           newDate === latest.selectedDate ||
@@ -207,10 +194,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
 
         const nextDate = isValid ? newDate : null
-        const formatValue = functions.dateToString(nextDate)
+        const formatValue = dateToString(nextDate)
 
         inputRef.current.value = formatValue
-        setAlternativeFormat(functions.dateToAlternativeFormat(nextDate))
+        setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
         if (latest.onChange) {
@@ -238,8 +225,19 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         } else if (latest.onChangeDate) {
           latest.onChangeDate(nextDate, formatValue, { errors })
         }
-      },
-      [functions, latest],
+      }
+
+      return {
+        stringToDate: (str: string | null | undefined) => stringToDate(str, latest.parseInput),
+        dateToString,
+        dateToAlternativeFormat,
+        updateDate,
+      }
+    }, [latest])
+
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => inputRef.current,
     )
 
     const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
@@ -285,10 +283,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const handleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
       (e) => {
         setIsInputFocused(false)
-        updateDate(e, e.target.value ? functions.stringToDate(e.target.value) : null)
+        functions.updateDate(e, e.target.value ? functions.stringToDate(e.target.value) : null)
         latest.onBlur?.(e)
       },
-      [functions, updateDate, latest],
+      [functions, latest],
     )
 
     useEffect(() => {
@@ -367,10 +365,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         if (e.key === 'Enter') {
           const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
           ;(isExpanded ? openCalendar : closeCalendar)()
-          updateDate(e, functions.stringToDate(e.currentTarget.value))
+          functions.updateDate(e, functions.stringToDate(e.currentTarget.value))
         }
       },
-      [updateDate, closeCalendar, openCalendar, functions],
+      [closeCalendar, openCalendar, functions],
     )
     const onFocusInput = useCallback(() => {
       setIsInputFocused(true)
@@ -378,13 +376,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     }, [openCalendar])
     const onSelectDateCalendar = useCallback(
       (e: ChangeLikeEvent, selected: Date | null) => {
-        updateDate(e, selected)
+        functions.updateDate(e, selected)
         // delay hiding calendar because calendar will be displayed when input is focused
         requestAnimationFrame(closeCalendar)
 
         if (inputRef.current) inputRef.current.focus()
       },
-      [updateDate, closeCalendar],
+      [functions, closeCalendar],
     )
 
     return (
