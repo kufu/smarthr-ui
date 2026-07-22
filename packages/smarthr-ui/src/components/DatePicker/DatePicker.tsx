@@ -28,7 +28,6 @@ import { Input } from '../Input'
 
 import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
-import { useGlobalKeyDown } from './useGlobalKeyDown'
 
 type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
 type AbstractProps = {
@@ -347,7 +346,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       [onBlur, baseHandleBlur],
     )
 
-    useGlobalKeyDown(handleKeyDown)
+    useEffect(() => {
+      window.addEventListener('keydown', handleKeyDown)
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown)
+      }
+    }, [handleKeyDown])
 
     const caretIconColor = useMemo(() => {
       if (isInputFocused || isCalendarShown) return theme.textColor.black
