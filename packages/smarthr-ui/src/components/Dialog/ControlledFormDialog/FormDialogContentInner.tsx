@@ -4,7 +4,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -48,9 +47,8 @@ export type AbstractProps = PropsWithChildren<
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
-     * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
+    handleSubmit: (e: FormEvent<HTMLFormElement>) => void
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -59,7 +57,7 @@ export type AbstractProps = PropsWithChildren<
 >
 
 export type FormDialogContentInnerProps = AbstractProps & {
-  onClickClose: () => void
+  handleClickClose: () => void
   responseStatus?: ResponseStatus
 }
 
@@ -72,65 +70,54 @@ const formDialogContentInner = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+
+  return {
+    form: form(),
+    wrapper: wrapper(),
+    actionArea: actionArea(),
+    buttonArea: buttonArea(),
+    message: message(),
+  }
+})()
+
 export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   children,
   heading,
   contentBgColor,
   contentPadding,
   actionButton,
-  onSubmit,
-  onClickClose,
+  handleSubmit,
+  handleClickClose,
   responseStatus,
   closeButton,
   subActionArea,
 }) => {
-  const handleSubmitAction = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-      // 親formが意図せずsubmitされてしまう場合がある
-      e.stopPropagation()
-      onSubmit(e, { close: onClickClose })
-    },
-    [onSubmit, onClickClose],
-  )
-
   const calculatedResponseStatus = useResponseStatus(responseStatus)
-
-  const styles = useMemo(() => {
-    const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
-
-    return {
-      form: form(),
-      wrapper: wrapper(),
-      actionArea: actionArea(),
-      buttonArea: buttonArea(),
-      message: message(),
-    }
-  }, [])
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={styles.wrapper}>
+    <Section className={CLASS_NAMES.wrapper}>
       <DialogHeading {...heading} />
-      <form onSubmit={handleSubmitAction} className={styles.form}>
+      <form onSubmit={handleSubmit} className={CLASS_NAMES.form}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
-        <div className={styles.actionArea}>
+        <div className={CLASS_NAMES.actionArea}>
           <Cluster justify="space-between">
             {subActionArea}
             <ActionAreaCluster
-              onClickClose={onClickClose}
+              handleClickClose={handleClickClose}
               closeButton={closeButton}
               actionButton={actionButton}
               loading={calculatedResponseStatus.isProcessing}
-              className={styles.buttonArea}
+              className={CLASS_NAMES.buttonArea}
             />
           </Cluster>
           <DialogContentResponseStatusMessage
             responseStatus={calculatedResponseStatus}
-            className={styles.message}
+            className={CLASS_NAMES.message}
           />
         </div>
       </form>
@@ -139,16 +126,16 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<FormDialogContentInnerProps, 'onClickClose'> & {
+  Pick<FormDialogContentInnerProps, 'handleClickClose'> & {
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
     className: string
   }
->(({ onClickClose, closeButton, actionButton, loading, className }) => (
+>(({ handleClickClose, closeButton, actionButton, loading, className }) => (
   <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
     <CloseButton
-      onClick={onClickClose}
+      handleClick={handleClickClose}
       disabled={closeButton.disabled || loading}
       text={closeButton.text}
     />
@@ -177,10 +164,10 @@ const ActionButton = memo<
 ))
 
 const CloseButton = memo<{
-  onClick: FormDialogContentInnerProps['onClickClose']
+  handleClick: FormDialogContentInnerProps['handleClickClose']
   disabled: boolean
   text: ReactNode
-}>(({ onClick, disabled, text }) => {
+}>(({ handleClick, disabled, text }) => {
   const { localize } = useIntl()
 
   const defaultText = useMemo(
@@ -193,7 +180,7 @@ const CloseButton = memo<{
   )
 
   return (
-    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+    <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
       {text ?? defaultText}
     </Button>
   )
