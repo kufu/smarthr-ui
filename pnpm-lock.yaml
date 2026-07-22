@@ -416,13 +416,13 @@ importers:
     dependencies:
       next:
         specifier: 16.2.10
-        version: 16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)
+        version: 16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
         specifier: 19.2.7
         version: 19.2.7
       react-dom:
-        specifier: 19.2.6
-        version: 19.2.6(react@19.2.7)
+        specifier: 19.2.7
+        version: 19.2.7(react@19.2.7)
       smarthr-ui:
         specifier: workspace:*
         version: link:../../packages/smarthr-ui
@@ -5343,6 +5343,11 @@ packages:
     resolution: {integrity: sha512-0prMI+hvBbPjsWnxDLxlCGyM8PN6UuWjEUCYmZhO67xIV9Xasa/r/vDnq+Xyq4Lo27g8QSbO5YzARu0D1Sps3g==}
     peerDependencies:
       react: ^19.2.6
+
+  react-dom@19.2.7:
+    resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
+    peerDependencies:
+      react: ^19.2.7
 
   react-draggable@4.5.0:
     resolution: {integrity: sha512-VC+HBLEZ0XJxnOxVAZsdRi8rD04Iz3SiiKOoYzamjylUcju/hP9np/aZdLHf/7WOD268WMoNJMvYfB5yAK45cw==}
@@ -11174,7 +11179,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.6(react@19.2.7))(react@19.2.7):
+  next@16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       '@next/env': 16.2.10
       '@swc/helpers': 0.5.15
@@ -11182,7 +11187,7 @@ snapshots:
       caniuse-lite: 1.0.30001805
       postcss: 8.5.19
       react: 19.2.7
-      react-dom: 19.2.6(react@19.2.7)
+      react-dom: 19.2.7(react@19.2.7)
       styled-jsx: 5.1.6(react@19.2.7)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.2.10
@@ -11740,7 +11745,7 @@ snapshots:
       react: 19.2.6
       scheduler: 0.27.0
 
-  react-dom@19.2.6(react@19.2.7):
+  react-dom@19.2.7(react@19.2.7):
     dependencies:
       react: 19.2.7
       scheduler: 0.27.0
