@@ -49,7 +49,7 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
       'first:shr-ml-0 first:shr-rounded-bl-m first:shr-rounded-tl-m',
       'last:shr-rounded-br-m last:shr-rounded-tr-m',
-
+      '[&[aria-checked="true"]]:forced-colors:shr-bg-[SelectedItem] [&[aria-checked="true"]]:forced-colors:shr-text-[SelectedItemText]',
       '[&:not([aria-checked="true"]):focus-visible]:shr-relative [&:not([aria-checked="true"]):focus-visible]:shr-border-x',
 
       // ::before: フォーカスリングと前のボタンの右端の間の隙間を埋めるために、左端から2px外側に1pxの縦線を描画する。
