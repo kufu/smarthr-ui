@@ -1,5 +1,6 @@
 import smarthr from 'eslint-config-smarthr'
 import storybook from 'eslint-plugin-storybook'
+import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -8,7 +9,15 @@ export default [
   ...smarthr,
   ...storybook.configs['flat/recommended'],
   {
+    plugins: {
+      'local-rules': {
+        rules: {
+          'best-practice-for-use-latest': bestPracticeForUseLatest,
+        },
+      },
+    },
     rules: {
+      'local-rules/best-practice-for-use-latest': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/consistent-type-imports': [
         'error',
