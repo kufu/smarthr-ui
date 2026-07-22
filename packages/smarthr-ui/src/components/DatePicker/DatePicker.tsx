@@ -94,6 +94,14 @@ const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
+const stringToDate = (
+  str: string | null | undefined,
+  parseInputFn: ((input: string) => Date | null) | undefined,
+) => {
+  if (!str) return null
+  return parseInputFn ? parseInputFn(str) : parseJpnDateString(str)
+}
+
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
 export const DatePicker = forwardRef<HTMLInputElement, Props>(
   (
@@ -144,10 +152,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
-    const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
-      if (!value) return null
-      return parseInput ? parseInput(value) : parseJpnDateString(value)
-    })
+    const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
+      stringToDate(value, parseInput),
+    )
 
     const latest = useLatest({
       onChange,
@@ -161,11 +168,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     })
 
     const functions = useMemo(() => {
-      const stringToDate = (str?: string | null) => {
-        if (!str) return null
-        return latest.parseInput ? latest.parseInput(str) : parseJpnDateString(str)
-      }
-
       const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
 
@@ -175,7 +177,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       return {
-        stringToDate,
+        stringToDate: (str: string | null | undefined) => stringToDate(str, latest.parseInput),
         dateToString,
         dateToAlternativeFormat,
       }
