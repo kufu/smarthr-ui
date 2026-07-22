@@ -1,6 +1,8 @@
 'use client'
 
-import { type FC, type ReactElement, useCallback, useEffect, useRef } from 'react'
+import { type FC, type ReactElement, useEffect, useRef } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 import { useDisclosure } from './useDisclosure'
 
@@ -22,20 +24,7 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   const [expanded, setExpanded] = useDisclosure(targetId)
   const ref = useRef<HTMLSpanElement | null>(null)
 
-  const unstableRef = useRef({ onClick, setExpanded })
-  unstableRef.current = { onClick, setExpanded }
-
-  const actualOnClick = useCallback((e: MouseEvent) => {
-    const toggleExpanded = () => {
-      unstableRef.current.setExpanded((current) => !current)
-    }
-
-    if (unstableRef.current.onClick) {
-      unstableRef.current.onClick(toggleExpanded, e)
-    } else {
-      toggleExpanded()
-    }
-  }, [])
+  const latest = useLatest({ onClick, setExpanded })
 
   useEffect(() => {
     const wrapper = ref.current
@@ -61,6 +50,18 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
       // Button は native disabled ではなく aria-disabled を使うため、
       // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
       if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+        const actualOnClick = (e: MouseEvent) => {
+          const toggleExpanded = () => {
+            latest.setExpanded((current) => !current)
+          }
+
+          if (latest.onClick) {
+            latest.onClick(toggleExpanded, e)
+          } else {
+            toggleExpanded()
+          }
+        }
+
         button.addEventListener('click', actualOnClick)
 
         currentCleanup = () => {
@@ -84,7 +85,7 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
       currentCleanup?.()
       observer.disconnect()
     }
-  }, [expanded, targetId, actualOnClick])
+  }, [expanded, targetId, latest])
 
   // HINT: 念の為spanに対して外部からstyleを当てられるようにしておく。
   // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる
