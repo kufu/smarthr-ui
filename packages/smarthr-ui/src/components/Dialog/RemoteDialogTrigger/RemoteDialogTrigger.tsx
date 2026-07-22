@@ -1,14 +1,15 @@
 'use client'
 
-import { type FC, type PropsWithChildren, useCallback, useEffect, useRef } from 'react'
+import { type FC, type PropsWithChildren, useEffect, useRef } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { TRIGGER_EVENT } from '../useRemoteTrigger'
 
 const CAPTURE_OPTION = {
   capture: true,
 }
 
-const onClickRemoteDialogTrigger = (ariaControls: string) => {
+const dispatchRemoteDialogTrigger = (ariaControls: string) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
       detail: { id: ariaControls },
@@ -23,27 +24,26 @@ export const RemoteDialogTrigger: FC<
   }>
 > = ({ targetId, children, onClick }) => {
   const ref = useRef<HTMLSpanElement | null>(null)
-  const onClickRef = useRef(onClick)
-  onClickRef.current = onClick
-
-  const actualOnClick = useCallback((e: Event) => {
-    // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
-    // 先にariaControlsを取得しておく
-    const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
-
-    if (onClickRef.current) {
-      return onClickRef.current(() => {
-        onClickRemoteDialogTrigger(ariaControls)
-      })
-    }
-
-    onClickRemoteDialogTrigger(ariaControls)
-  }, [])
+  const latest = useLatest({ onClick })
 
   useEffect(() => {
     const currentRef = ref.current
     if (!currentRef) {
       return
+    }
+
+    const handleClick = (e: Event) => {
+      // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+      // 先にariaControlsを取得しておく
+      const ariaControls = (e.currentTarget as HTMLElement).getAttribute('aria-controls') as string
+
+      if (latest.onClick) {
+        return latest.onClick(() => {
+          dispatchRemoteDialogTrigger(ariaControls)
+        })
+      }
+
+      dispatchRemoteDialogTrigger(ariaControls)
     }
 
     const getClickableElement = () =>
@@ -66,7 +66,7 @@ export const RemoteDialogTrigger: FC<
         element.getAttribute('aria-disabled') !== 'true'
       ) {
         // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
-        element.addEventListener('click', actualOnClick, CAPTURE_OPTION)
+        element.addEventListener('click', handleClick, CAPTURE_OPTION)
       }
     }
 
@@ -74,7 +74,7 @@ export const RemoteDialogTrigger: FC<
       // 既存のイベントリスナーをクリーンアップ
       const element = getClickableElement()
       if (element) {
-        element.removeEventListener('click', actualOnClick, CAPTURE_OPTION)
+        element.removeEventListener('click', handleClick, CAPTURE_OPTION)
       }
     }
 
@@ -99,7 +99,7 @@ export const RemoteDialogTrigger: FC<
       observer.disconnect()
       clearEventListener()
     }
-  }, [targetId, actualOnClick])
+  }, [targetId, latest])
 
   return (
     <span className="smarthr-ui-RemoteDialogTrigger shr-contents" ref={ref}>
