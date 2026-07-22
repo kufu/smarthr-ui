@@ -158,18 +158,19 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       selectedDate,
     })
 
-    const dateToString = useCallback(
-      (date: Date | null) =>
-        latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date),
-      [latest],
-    )
-    const dateToAlternativeFormat = useCallback(
-      (d: Date | null) => {
+    const { dateToString, dateToAlternativeFormat } = useMemo(() => {
+      const internalDateToString = (date: Date | null) =>
+        latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
+      const internalDateToAlternativeFormat = (d: Date | null) => {
         if (!latest.showAlternative) return null
         return d ? latest.showAlternative(d) : null
-      },
-      [latest],
-    )
+      }
+
+      return {
+        dateToString: internalDateToString,
+        dateToAlternativeFormat: internalDateToAlternativeFormat,
+      }
+    }, [latest])
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
