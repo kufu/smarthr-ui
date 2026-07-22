@@ -109,7 +109,7 @@ const NavigationButton: FC<
     <CommonButton
       elementAs="button"
       type="button"
-      onClick={functions.handleClick}
+      handleClick={functions.handleClick}
       current={navigation.current}
       boldWhenCurrent
       className={className}

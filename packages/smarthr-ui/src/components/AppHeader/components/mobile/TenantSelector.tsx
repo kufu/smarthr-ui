@@ -103,7 +103,7 @@ const TenantDropdown: FC<
                 type="button"
                 value={tenant.id}
                 current={isCurrent}
-                onClick={isCurrent ? undefined : functions.handleClickTenantName}
+                handleClick={isCurrent ? undefined : functions.handleClickTenantName}
               >
                 {tenant.name}
               </CommonButton>
