@@ -161,6 +161,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       formatDate,
       showAlternative,
       onBlur,
+      selectedDate,
     })
 
     const functions = useMemo(() => {
@@ -178,8 +179,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
-          newDate === selectedDate ||
-          (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
+          newDate === latest.selectedDate ||
+          (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
           return
@@ -272,7 +273,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           if (inputRef.current) inputRef.current.focus()
         },
       }
-    }, [selectedDate, isCalendarShown, latest])
+    }, [isCalendarShown, latest])
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
