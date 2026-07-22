@@ -97,7 +97,7 @@ const NavigationButton: FC<
 
   const functions = useMemo(
     () => ({
-      onClick: (e: MouseEvent<HTMLButtonElement>) => {
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => {
         latest.navigation.onClick(e)
         latest.handleClickNavigation()
       },
@@ -109,7 +109,7 @@ const NavigationButton: FC<
     <CommonButton
       elementAs="button"
       type="button"
-      onClick={functions.onClick}
+      onClick={functions.handleClick}
       current={navigation.current}
       boldWhenCurrent
       className={className}
