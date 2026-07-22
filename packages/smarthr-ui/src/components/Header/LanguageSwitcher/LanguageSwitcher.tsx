@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
@@ -133,14 +134,17 @@ export const LanguageSwitcher: FC<Props> = ({
     }
   }, [enableNew, invert])
 
-  const onClickLanguageSelect = useMemo(
-    () =>
-      onLanguageSelect
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            onLanguageSelect(e.currentTarget.value)
-          }
+  const latest = useLatest({ onLanguageSelect })
+
+  const hasOnLanguageSelect = !!onLanguageSelect
+
+  const functions = useMemo(
+    () => ({
+      handleClickLanguageSelect: hasOnLanguageSelect
+        ? (e: MouseEvent<HTMLButtonElement>) => latest.onLanguageSelect?.(e.currentTarget.value)
         : undefined,
-    [onLanguageSelect],
+    }),
+    [hasOnLanguageSelect, latest],
   )
 
   return (
@@ -160,7 +164,7 @@ export const LanguageSwitcher: FC<Props> = ({
               className={classNames.languageItem}
               buttonStyle={classNames.languageButton}
               current={currentLang === code}
-              onClick={onClickLanguageSelect}
+              handleClick={functions.handleClickLanguageSelect}
               iconAlt={checkIconAlt}
             >
               {label}
@@ -179,12 +183,12 @@ const LanguageListItemButton = memo<{
   buttonStyle: string
   current: boolean
   iconAlt: ReactNode
-  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, iconAlt, onClick }) => (
+  handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ code, children, buttonStyle, className, current, iconAlt, handleClick }) => (
   <li key={code} className={className} aria-current={current} lang={code}>
     <Button
       value={code}
-      onClick={onClick}
+      onClick={handleClick}
       wide
       prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
       className={buttonStyle}

@@ -1,6 +1,7 @@
-import { type ReactNode, type RefObject, memo, useCallback, useRef } from 'react'
+import { type ReactNode, type RefObject, memo, useCallback } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { FaCirclePlusIcon } from '../Icon'
 import { Text } from '../Text'
@@ -32,20 +33,19 @@ const classNameGenerator = tv({
 })
 
 const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
-  const unstableRef = useRef({ onAdd, onSelect, onMouseOver, option })
-  unstableRef.current = { onAdd, onSelect, onMouseOver, option }
+  const latest = useLatest({ onAdd, onSelect, onMouseOver, option })
 
   const handleMouseOver = useCallback(() => {
-    unstableRef.current.onMouseOver(unstableRef.current.option)
-  }, [])
+    latest.onMouseOver(latest.option)
+  }, [latest])
 
   const handleAddClick = useCallback(() => {
-    unstableRef.current.onAdd?.(unstableRef.current.option)
-  }, [])
+    latest.onAdd?.(latest.option)
+  }, [latest])
 
   const handleSelectClick = useCallback(() => {
-    unstableRef.current.onSelect(unstableRef.current.option)
-  }, [])
+    latest.onSelect(latest.option)
+  }, [latest])
 
   const commonAttrs = {
     id: option.id,
