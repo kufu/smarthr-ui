@@ -63,7 +63,7 @@ importers:
         version: 9.0.5(stylelint@17.14.0(typescript@5.9.3))
       stylelint-config-smarthr:
         specifier: ^3.0.2
-        version: 3.0.2(postcss-styled-syntax@0.7.1(postcss@8.5.19))(stylelint-config-standard@40.0.0(stylelint@17.14.0(typescript@5.9.3)))(stylelint@17.14.0(typescript@5.9.3))
+        version: 3.0.2(postcss-styled-syntax@0.7.2(postcss@8.5.19))(stylelint-config-standard@40.0.0(stylelint@17.14.0(typescript@5.9.3)))(stylelint@17.14.0(typescript@5.9.3))
       stylelint-config-standard:
         specifier: ^40.0.0
         version: 40.0.0(stylelint@17.14.0(typescript@5.9.3))
@@ -355,8 +355,8 @@ importers:
         specifier: ^8.5.14
         version: 8.5.14
       postcss-styled-syntax:
-        specifier: ^0.7.1
-        version: 0.7.1(postcss@8.5.14)
+        specifier: ^0.7.2
+        version: 0.7.2(postcss@8.5.14)
       postcss-syntax:
         specifier: ^0.36.2
         version: 0.36.2(postcss@8.5.14)
@@ -5180,8 +5180,8 @@ packages:
     resolution: {integrity: sha512-HeP7D2wyhkR+XaK6v4W8oRF62Dsz4flyuczALJp61GckGm42u1saSSJ/0auvcBqxs3jMRFEcPK34At/0JBKdOg==}
     engines: {node: '>=4'}
 
-  postcss-styled-syntax@0.7.1:
-    resolution: {integrity: sha512-V5Iy8JztqXOKnTojdytF8IJ3zDXyVR927XftBPinJa3TnKdChGvGzUNEYlNuDtR+iqpuFkwJMgZdaJarYfGFCg==}
+  postcss-styled-syntax@0.7.2:
+    resolution: {integrity: sha512-PrxG8BC6yh6pmrHx7NrseYt5TiSN57LbGYZxmreg7co7g+zXe6BwUfsZ6r/gghxbtabde3Z0hinelXj4jlJF4Q==}
     engines: {node: '>=14.17'}
     peerDependencies:
       postcss: ^8.5.15
@@ -6119,6 +6119,11 @@ packages:
 
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -11608,15 +11613,15 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-styled-syntax@0.7.1(postcss@8.5.14):
+  postcss-styled-syntax@0.7.2(postcss@8.5.14):
     dependencies:
       postcss: 8.5.14
-      typescript: 5.9.3
+      typescript: 6.0.3
 
-  postcss-styled-syntax@0.7.1(postcss@8.5.19):
+  postcss-styled-syntax@0.7.2(postcss@8.5.19):
     dependencies:
       postcss: 8.5.19
-      typescript: 5.9.3
+      typescript: 6.0.3
 
   postcss-syntax@0.36.2(postcss@8.5.14):
     dependencies:
@@ -12445,9 +12450,9 @@ snapshots:
     dependencies:
       stylelint: 17.14.0(typescript@5.9.3)
 
-  stylelint-config-smarthr@3.0.2(postcss-styled-syntax@0.7.1(postcss@8.5.19))(stylelint-config-standard@40.0.0(stylelint@17.14.0(typescript@5.9.3)))(stylelint@17.14.0(typescript@5.9.3)):
+  stylelint-config-smarthr@3.0.2(postcss-styled-syntax@0.7.2(postcss@8.5.19))(stylelint-config-standard@40.0.0(stylelint@17.14.0(typescript@5.9.3)))(stylelint@17.14.0(typescript@5.9.3)):
     dependencies:
-      postcss-styled-syntax: 0.7.1(postcss@8.5.19)
+      postcss-styled-syntax: 0.7.2(postcss@8.5.19)
       stylelint: 17.14.0(typescript@5.9.3)
       stylelint-config-standard: 40.0.0(stylelint@17.14.0(typescript@5.9.3))
 
@@ -12799,6 +12804,8 @@ snapshots:
       - supports-color
 
   typescript@5.9.3: {}
+
+  typescript@6.0.3: {}
 
   uglify-js@3.13.10:
     optional: true
