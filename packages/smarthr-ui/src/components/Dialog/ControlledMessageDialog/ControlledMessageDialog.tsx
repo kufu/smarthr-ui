@@ -1,7 +1,8 @@
 'use client'
 
-import { type ComponentProps, type FC, type ReactNode, useCallback } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
@@ -41,14 +42,23 @@ export const ControlledMessageDialog: FC<Props> = ({
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
-  const handleClickClose = useCallback(() => {
-    if (isOpen) {
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
+  )
+
+  const latest = useLatest({ onClickClose, isOpen })
+
+  const functions = useMemo(
+    () => ({
+      handleClickClose: () => {
+        if (latest.isOpen) {
+          latest.onClickClose()
+        }
+      },
+    }),
+    [latest],
   )
 
   return createPortal(
@@ -63,7 +73,7 @@ export const ControlledMessageDialog: FC<Props> = ({
         heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
-        onClickClose={handleClickClose}
+        onClickClose={functions.handleClickClose}
         closeButton={closeButton}
       >
         {children}
