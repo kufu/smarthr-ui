@@ -33,10 +33,10 @@ importers:
         version: 9.39.5(jiti@2.7.0)
       eslint-config-smarthr:
         specifier: 14.8.1
-        version: 14.8.1(eslint@9.39.5(jiti@2.7.0))(react@19.2.6)(typescript@5.9.3)
+        version: 14.8.1(eslint@9.39.5(jiti@2.7.0))(react@19.2.7)(typescript@5.9.3)
       eslint-plugin-storybook:
         specifier: ^9.1.20
-        version: 9.1.20(eslint@9.39.5(jiti@2.7.0))(storybook@10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.6))(typescript@5.9.3)
+        version: 9.1.20(eslint@9.39.5(jiti@2.7.0))(storybook@10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.7))(typescript@5.9.3)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -416,13 +416,13 @@ importers:
     dependencies:
       next:
         specifier: 16.2.10
-        version: 16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)
       react:
-        specifier: 19.2.6
-        version: 19.2.6
+        specifier: 19.2.7
+        version: 19.2.7
       react-dom:
         specifier: 19.2.6
-        version: 19.2.6(react@19.2.6)
+        version: 19.2.6(react@19.2.7)
       smarthr-ui:
         specifier: workspace:*
         version: link:../../packages/smarthr-ui
@@ -5407,6 +5407,10 @@ packages:
     resolution: {integrity: sha512-sfWGGfavi0xr8Pg0sVsyHMAOziVYKgPLNrS7ig+ivMNb3wbCBw3KxtflsGBAwD3gYQlE/AEZsTLgToRrSCjb0Q==}
     engines: {node: '>=0.10.0'}
 
+  react@19.2.7:
+    resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
+    engines: {node: '>=0.10.0'}
+
   read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
 
@@ -8462,9 +8466,9 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
-  '@storybook/icons@2.1.0(react@19.2.6)':
+  '@storybook/icons@2.1.0(react@19.2.7)':
     dependencies:
-      react: 19.2.6
+      react: 19.2.7
 
   '@storybook/react-dom-shim@9.1.19(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(storybook@9.1.19(@testing-library/dom@10.4.0)(prettier@3.9.5)(vite@7.3.5(@types/node@20.19.35)(jiti@2.7.0)(tsx@4.20.6)(yaml@2.9.0)))':
     dependencies:
@@ -9873,7 +9877,7 @@ snapshots:
     dependencies:
       eslint: 9.39.5(jiti@2.7.0)
 
-  eslint-config-smarthr@14.8.1(eslint@9.39.5(jiti@2.7.0))(react@19.2.6)(typescript@5.9.3):
+  eslint-config-smarthr@14.8.1(eslint@9.39.5(jiti@2.7.0))(react@19.2.7)(typescript@5.9.3):
     dependencies:
       '@eslint/js': 9.39.4
       '@typescript-eslint/eslint-plugin': 8.64.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
@@ -9886,7 +9890,7 @@ snapshots:
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.5(jiti@2.7.0))
       eslint-plugin-smarthr: 6.21.0(eslint@9.39.5(jiti@2.7.0))
       globals: 17.7.0
-      react: 19.2.6
+      react: 19.2.7
       typescript: 5.9.3
       typescript-eslint: 8.64.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
     transitivePeerDependencies:
@@ -10005,11 +10009,11 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-storybook@9.1.20(eslint@9.39.5(jiti@2.7.0))(storybook@10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.6))(typescript@5.9.3):
+  eslint-plugin-storybook@9.1.20(eslint@9.39.5(jiti@2.7.0))(storybook@10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.7))(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/utils': 8.64.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
       eslint: 9.39.5(jiti@2.7.0)
-      storybook: 10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.6)
+      storybook: 10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.7)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -11170,16 +11174,16 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next@16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  next@16.2.10(@playwright/test@1.55.1)(@types/node@20.19.35)(react-dom@19.2.6(react@19.2.7))(react@19.2.7):
     dependencies:
       '@next/env': 16.2.10
       '@swc/helpers': 0.5.15
       baseline-browser-mapping: 2.10.43
       caniuse-lite: 1.0.30001805
       postcss: 8.5.19
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-      styled-jsx: 5.1.6(react@19.2.6)
+      react: 19.2.7
+      react-dom: 19.2.6(react@19.2.7)
+      styled-jsx: 5.1.6(react@19.2.7)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.2.10
       '@next/swc-darwin-x64': 16.2.10
@@ -11736,6 +11740,11 @@ snapshots:
       react: 19.2.6
       scheduler: 0.27.0
 
+  react-dom@19.2.6(react@19.2.7):
+    dependencies:
+      react: 19.2.7
+      scheduler: 0.27.0
+
   react-draggable@4.5.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       clsx: 2.1.1
@@ -11798,6 +11807,8 @@ snapshots:
       react-dom: 19.2.6(react@19.2.6)
 
   react@19.2.6: {}
+
+  react@19.2.7: {}
 
   read-cache@1.0.0:
     dependencies:
@@ -12236,10 +12247,10 @@ snapshots:
     dependencies:
       storybook: 9.1.19(@testing-library/dom@10.4.0)(prettier@3.9.5)(vite@7.3.5(@types/node@20.19.35)(jiti@2.7.0)(tsx@4.20.6)(yaml@2.9.0))
 
-  storybook@10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.6):
+  storybook@10.3.0(@testing-library/dom@10.4.0)(prettier@3.9.5)(react@19.2.7):
     dependencies:
       '@storybook/global': 5.0.0
-      '@storybook/icons': 2.1.0(react@19.2.6)
+      '@storybook/icons': 2.1.0(react@19.2.7)
       '@testing-library/jest-dom': 6.9.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.0)
       '@vitest/expect': 3.2.4
@@ -12248,7 +12259,7 @@ snapshots:
       open: 10.2.0
       recast: 0.23.12
       semver: 7.8.5
-      use-sync-external-store: 1.6.0(react@19.2.6)
+      use-sync-external-store: 1.6.0(react@19.2.7)
       ws: 8.21.1
     optionalDependencies:
       prettier: 3.9.5
@@ -12427,10 +12438,10 @@ snapshots:
       shallowequal: 1.1.0
       supports-color: 5.5.0
 
-  styled-jsx@5.1.6(react@19.2.6):
+  styled-jsx@5.1.6(react@19.2.7):
     dependencies:
       client-only: 0.0.1
-      react: 19.2.6
+      react: 19.2.7
 
   stylelint-config-prettier@9.0.5(stylelint@17.14.0(typescript@5.9.3)):
     dependencies:
@@ -12861,9 +12872,9 @@ snapshots:
 
   url-join@4.0.1: {}
 
-  use-sync-external-store@1.6.0(react@19.2.6):
+  use-sync-external-store@1.6.0(react@19.2.7):
     dependencies:
-      react: 19.2.6
+      react: 19.2.7
 
   util-deprecate@1.0.2: {}
 
