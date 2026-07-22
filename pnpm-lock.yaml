@@ -240,8 +240,8 @@ importers:
         specifier: ^3.4.19
         version: 3.4.19(ts-node@10.9.2(@swc/core@1.15.17)(@types/node@20.19.35)(typescript@5.9.3))
       typescript-eslint:
-        specifier: ^8.60.0
-        version: 8.60.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+        specifier: ^8.60.1
+        version: 8.64.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
     devDependencies:
       '@babel/core':
         specifier: '>=7.29.7'
@@ -8826,8 +8826,8 @@ snapshots:
 
   '@typescript-eslint/project-service@8.60.0(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.60.0(typescript@5.9.3)
-      '@typescript-eslint/types': 8.60.0
+      '@typescript-eslint/tsconfig-utils': 8.64.0(typescript@5.9.3)
+      '@typescript-eslint/types': 8.64.0
       debug: 4.4.3(supports-color@5.5.0)
       typescript: 5.9.3
     transitivePeerDependencies:
