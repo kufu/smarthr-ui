@@ -9,7 +9,7 @@ overrides:
   esbuild@<=0.24.2: '>=0.28.1'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
   tar@<=7.5.15: '>=7.5.16'
-  vite@>=7.0.0 <=7.3.4: '>=7.3.5'
+  vite@>=7.0.0 <=7.3.4: '>=7.3.6'
   react-draggable: 4.5.0
   js-yaml@>=4.0.0 <=4.1.1: '>=4.1.2'
   '@babel/core@<=7.29.0': '>=7.29.7'
@@ -240,8 +240,8 @@ importers:
         specifier: ^3.4.19
         version: 3.4.19(ts-node@10.9.2(@swc/core@1.15.17)(@types/node@20.19.35)(typescript@5.9.3))
       typescript-eslint:
-        specifier: ^8.60.0
-        version: 8.60.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+        specifier: ^8.60.1
+        version: 8.64.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
     devDependencies:
       '@babel/core':
         specifier: '>=7.29.7'
@@ -1785,7 +1785,7 @@ packages:
     resolution: {integrity: sha512-J4BaTocTOYFkMHIra1JDWrMWpNmBl4EkplIwHEsV8aeUOtdWjwSnln9U7twjMFTAEB7mptNtSKyVi1Y2W9sDJw==}
     peerDependencies:
       typescript: '>= 4.3.x'
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -2392,7 +2392,7 @@ packages:
     resolution: {integrity: sha512-NidYsvbLig1zQjhSammTsbwc8KzYQ6vC07uZjfzarwSmTdhFp7j2II0nek8iMNMPnfP9sxugJL990UyV5Wbhug==}
     peerDependencies:
       storybook: ^9.1.19
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
 
   '@storybook/cli@9.1.19':
     resolution: {integrity: sha512-1oFOW5WwPV2jjwlJbgTr4WQ1Z7TVCh5KNU50gmNNaeSOkr95ipuYjXepbRC4LFrlHcu/xTphMMJL2E6Cg7Y6Dg==}
@@ -2435,7 +2435,7 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       storybook: ^9.1.19
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
 
   '@storybook/react@9.1.19':
     resolution: {integrity: sha512-UuTGumzQ1/Nffm1rWjrfFefL1a7uZlJEk34Cjp8N5uA9qPEX68e1OEeFnHX3nBk+8yEadPfs77vJox76aeTC6g==}
@@ -2806,7 +2806,7 @@ packages:
     resolution: {integrity: sha512-VIcFLdRi/VYRU8OL/puL7QXMYafHmqOnwTZY50U1JPlCNj30PxCMx65c494b1K9be9hX83KVt0+gTEwTWLqToA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
 
   '@vitest/expect@3.2.4':
     resolution: {integrity: sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig==}
@@ -2818,7 +2818,7 @@ packages:
     resolution: {integrity: sha512-46ryTE9RZO/rfDd7pEqFl7etuyzekzEhUbTW3BvmeO/BcCMEgq59BKhek3dXDWgAj4oMK6OZi+vRr1wPW6qjEQ==}
     peerDependencies:
       msw: ^2.4.9
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
     peerDependenciesMeta:
       msw:
         optional: true
@@ -2829,7 +2829,7 @@ packages:
     resolution: {integrity: sha512-LEiN/xe4OSIbKe9HQIp5OC24agGD9J5CnmMgsLohVVoOPWL9a2sBoR6VBx43jQZb7Kr1l4RCuyCJzcAa0+dojw==}
     peerDependencies:
       msw: ^2.4.9
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
     peerDependenciesMeta:
       msw:
         optional: true
@@ -6273,7 +6273,7 @@ packages:
       '@vitest/ui': 4.1.8
       happy-dom: '*'
       jsdom: '*'
-      vite: '>=7.3.5'
+      vite: '>=7.3.6'
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
@@ -8826,8 +8826,8 @@ snapshots:
 
   '@typescript-eslint/project-service@8.60.0(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.60.0(typescript@5.9.3)
-      '@typescript-eslint/types': 8.60.0
+      '@typescript-eslint/tsconfig-utils': 8.64.0(typescript@5.9.3)
+      '@typescript-eslint/types': 8.64.0
       debug: 4.4.3(supports-color@5.5.0)
       typescript: 5.9.3
     transitivePeerDependencies:
