@@ -111,6 +111,8 @@ export const DesktopHeader: FC<HeaderProps> = ({
           {helpPageUrl && (
             <HeaderLink
               href={helpPageUrl}
+              rel="help"
+              referrerPolicy="no-referrer-when-downgrade"
               prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
               className={
                 enableNew ? undefined : 'shr-flex shr-items-center shr-py-0.75 shr-leading-none'
