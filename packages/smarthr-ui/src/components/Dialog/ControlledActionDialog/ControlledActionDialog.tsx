@@ -11,6 +11,7 @@ import { useObjectHeading } from '../useObjectHeading'
 import {
   ActionDialogContentInner,
   type ActionDialogContentInnerProps,
+  type ActionDialogHelpers,
 } from './ActionDialogContentInner'
 
 import type { DialogProps } from '../types'
@@ -79,9 +80,9 @@ export const ControlledActionDialog: FC<Props> = ({
 
     return {
       actualOnClickClose,
-      actualOnClickAction: (e: React.MouseEvent<Element>) => {
+      actualOnClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
         if (latest.isOpen) {
-          latest.onClickAction(e, { close: actualOnClickClose })
+          latest.onClickAction(e, helpers)
         }
       },
     }

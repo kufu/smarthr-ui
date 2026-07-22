@@ -6,6 +6,7 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
+  useCallback,
   useMemo,
 } from 'react'
 
@@ -48,8 +49,9 @@ export type AbstractProps = PropsWithChildren<
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e マウスイベント
+     * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    onClickAction: (e: MouseEvent<Element>) => void
+    onClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -123,23 +125,32 @@ const ActionAreaCluster = memo<
     loading: boolean
     className: string
   }
->(({ onClickClose, onClickAction, closeButton, actionButton, loading, className }) => (
-  <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
-    <CloseButton
-      onClick={onClickClose}
-      disabled={closeButton.disabled || loading}
-      text={closeButton.text}
-    />
-    <ActionButton
-      variant={actionButton.theme}
-      disabled={actionButton.disabled}
-      loading={loading}
-      onClick={onClickAction}
-    >
-      {actionButton.text}
-    </ActionButton>
-  </Cluster>
-))
+>(({ onClickClose, onClickAction, closeButton, actionButton, loading, className }) => {
+  const handleClickAction = useCallback(
+    (e: MouseEvent<Element>) => {
+      onClickAction(e, { close: onClickClose })
+    },
+    [onClickAction, onClickClose],
+  )
+
+  return (
+    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+      <CloseButton
+        onClick={onClickClose}
+        disabled={closeButton.disabled || loading}
+        text={closeButton.text}
+      />
+      <ActionButton
+        variant={actionButton.theme}
+        disabled={actionButton.disabled}
+        loading={loading}
+        onClick={handleClickAction}
+      >
+        {actionButton.text}
+      </ActionButton>
+    </Cluster>
+  )
+})
 
 const ActionButton = memo<
   PropsWithChildren<{
