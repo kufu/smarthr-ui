@@ -113,7 +113,7 @@ export const Header: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      actualHandleTenantSelect: hasOnTenantSelect
+      handleTenantSelect: hasOnTenantSelect
         ? (e: MouseEvent<HTMLButtonElement>) => latest.onTenantSelect?.(e.currentTarget.value)
         : undefined,
     }),
@@ -139,7 +139,7 @@ export const Header: FC<Props> = ({
             currentTenantId={currentTenantId}
             tenants={tenants}
             classNames={classNames}
-            handleTenantSelect={functions.actualHandleTenantSelect}
+            handleTenantSelect={functions.handleTenantSelect}
           />
         )}
       </Cluster>
