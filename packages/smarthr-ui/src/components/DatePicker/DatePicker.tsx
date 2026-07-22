@@ -20,6 +20,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTheme'
 import { Calendar } from '../Calendar'
@@ -146,7 +147,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
 
-    const unstableRef = useRef({
+    const latest = useLatest({
       onChange,
       onChangeDate,
       parseInput,
@@ -156,28 +157,19 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       isInputFocused,
       selectedDate,
     })
-    unstableRef.current = {
-      onChange,
-      onChangeDate,
-      parseInput,
-      formatDate,
-      showAlternative,
-      onBlur,
-      isInputFocused,
-      selectedDate,
-    }
 
     const dateToString = useCallback(
       (date: Date | null) =>
-        unstableRef.current.formatDate
-          ? unstableRef.current.formatDate(date)
-          : DEFAULT_DATE_TO_STRING(date),
-      [],
+        latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date),
+      [latest],
     )
-    const dateToAlternativeFormat = useCallback((d: Date | null) => {
-      if (!unstableRef.current.showAlternative) return null
-      return d ? unstableRef.current.showAlternative(d) : null
-    }, [])
+    const dateToAlternativeFormat = useCallback(
+      (d: Date | null) => {
+        if (!latest.showAlternative) return null
+        return d ? latest.showAlternative(d) : null
+      },
+      [latest],
+    )
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
@@ -196,10 +188,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
-          newDate === unstableRef.current.selectedDate ||
-          (newDate &&
-            unstableRef.current.selectedDate &&
-            newDate.getTime() === unstableRef.current.selectedDate.getTime())
+          newDate === latest.selectedDate ||
+          (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
           return
@@ -219,7 +209,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
-        if (unstableRef.current.onChange) {
+        if (latest.onChange) {
           e.preventDefault()
           e.stopPropagation()
 
@@ -227,7 +217,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           const input = inputRef.current
 
           input.dispatchEvent(event)
-          unstableRef.current.onChange(
+          latest.onChange(
             // HINT: 型問題のため別途オブジェクトをイベントに見立てる
             {
               stopPropagation: () => {
@@ -241,11 +231,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             } as ChangeEvent<HTMLInputElement>,
             { date: nextDate, formatValue, errors },
           )
-        } else if (unstableRef.current.onChangeDate) {
-          unstableRef.current.onChangeDate(nextDate, formatValue, { errors })
+        } else if (latest.onChangeDate) {
+          latest.onChangeDate(nextDate, formatValue, { errors })
         }
       },
-      [dateToString, dateToAlternativeFormat],
+      [dateToString, dateToAlternativeFormat, latest],
     )
 
     const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
@@ -292,9 +282,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       (e) => {
         setIsInputFocused(false)
         updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
-        unstableRef.current.onBlur?.(e)
+        latest.onBlur?.(e)
       },
-      [stringToDate, updateDate],
+      [stringToDate, updateDate, latest],
     )
 
     useEffect(() => {
@@ -311,7 +301,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
         const firstCalendarButton = calendarButtons[0]
 
-        if (unstableRef.current.isInputFocused) {
+        if (latest.isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
             closeCalendar()
@@ -347,7 +337,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       return () => {
         window.removeEventListener('keydown', handleKeyDown)
       }
-    }, [closeCalendar])
+    }, [closeCalendar, latest])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
