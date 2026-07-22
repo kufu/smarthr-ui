@@ -8,7 +8,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useCallback,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -16,6 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
@@ -95,60 +95,55 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         button: button(),
       }
     }, [disabled, error, filesDraggedOver])
+
+    const latest = useLatest({ onSelectFiles })
+
+    const functions = useMemo(
+      () => ({
+        onDrop: (e: DragEvent<HTMLElement>) => {
+          overrideEventDefault(e)
+          setFilesDraggedOver(false)
+
+          if (e.dataTransfer.types.includes('Files')) {
+            if (fileRef.current) {
+              fileRef.current.files = e.dataTransfer.files
+            }
+            latest.onSelectFiles(e, e.dataTransfer.files)
+          }
+        },
+        onDragOver: (e: DragEvent<HTMLElement>) => {
+          overrideEventDefault(e)
+          setFilesDraggedOver(true)
+        },
+        onDragLeave: () => {
+          setFilesDraggedOver(false)
+        },
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          latest.onSelectFiles(e, e.target.files)
+        },
+        onClickButton: () => {
+          fileRef.current!.click()
+        },
+      }),
+      [latest],
+    )
+
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => fileRef.current,
     )
 
-    const onDrop = useCallback(
-      (e: DragEvent<HTMLElement>) => {
-        overrideEventDefault(e)
-        setFilesDraggedOver(false)
-
-        if (e.dataTransfer.types.includes('Files')) {
-          if (fileRef.current) {
-            fileRef.current.files = e.dataTransfer.files
-          }
-          onSelectFiles(e, e.dataTransfer.files)
-        }
-      },
-      [setFilesDraggedOver, onSelectFiles],
-    )
-
-    const onDragOver = useCallback(
-      (e: DragEvent<HTMLElement>) => {
-        overrideEventDefault(e)
-        setFilesDraggedOver(true)
-      },
-      [setFilesDraggedOver],
-    )
-
-    const onDragLeave = useCallback(() => {
-      setFilesDraggedOver(false)
-    }, [setFilesDraggedOver])
-
-    const onChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        onSelectFiles(e, e.target.files)
-      },
-      [onSelectFiles],
-    )
-
-    const onClickButton = useCallback(() => {
-      fileRef.current!.click()
-    }, [])
-
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
+        onDrop={functions.onDrop}
+        onDragOver={functions.onDragOver}
+        onDragLeave={functions.onDragLeave}
         className={classNames.wrapper}
       >
         {children}
         <SelectButton
-          onClick={onClickButton}
+          onClick={functions.onClickButton}
           disabled={disabled}
           className={classNames.button}
           label={selectButtonLabel}
@@ -164,7 +159,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             disabled={disabled}
             tabIndex={-1}
             aria-invalid={error || undefined}
-            onChange={onChange}
+            onChange={functions.onChange}
           />
         </VisuallyHiddenText>
       </div>
