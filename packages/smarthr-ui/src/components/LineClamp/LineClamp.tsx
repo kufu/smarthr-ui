@@ -84,7 +84,7 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
     return () => {
       window.removeEventListener('resize', checkOverflow)
     }
-  }, [maxLines, children])
+  }, [maxLines])
 
   const classNames = useMemo(() => {
     const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
