@@ -1,5 +1,7 @@
-import { useCallback, useId, useMemo, useRef } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
+
+import { useLatest } from '../../hooks/useLatest'
 
 import { areItemsEqual, convertMatchableString } from './helper'
 
@@ -39,12 +41,11 @@ export const useMultiOptions = <T>({
   selected: Array<ComboboxItem<T>>
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }) => {
-  const unstableRef = useRef({ isItemSelected })
-  unstableRef.current = { isItemSelected }
+  const latest = useLatest({ isItemSelected })
 
   const isSelected = useCallback(
-    (item: ComboboxItem<T>) => unstableRef.current.isItemSelected(item, selected),
-    [selected],
+    (item: ComboboxItem<T>) => latest.isItemSelected(item, selected),
+    [selected, latest],
   )
 
   return useOptions<T>(rest, isSelected)
