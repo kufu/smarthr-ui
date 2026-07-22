@@ -6,16 +6,15 @@ import {
   type ReactNode,
   forwardRef,
   startTransition,
-  useCallback,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
@@ -123,26 +122,54 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const maxLettersNoticeId = `${maxLettersId}-notice`
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const internalRef = useRef<HTMLTextAreaElement | null>(null)
     const currentValue = defaultValue || value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const onChangeRef = useRef(onChange)
-    onChangeRef.current = onChange
+    const latest = useLatest({
+      onChange,
+      ref,
+      autoFocus,
+      autoResize,
+      maxRows,
+      rows,
+      theme,
+    })
 
-    const getCounterMessage = useCallback(
-      (counterValue: number) => {
-        if (maxLetters === undefined) return
+    const functions = useMemo(() => {
+      const textareaRef = (node: HTMLTextAreaElement | null) => {
+        internalRef.current = node
 
-        if (counterValue > maxLetters) {
+        // 外部refの設定
+        if (typeof latest.ref === 'function') {
+          latest.ref(node)
+        } else if (latest.ref) {
+          // RefObject.currentは型定義上readonlyだが、実行時は書き込み可能
+          Object.assign(latest.ref, { current: node })
+        }
+
+        if (node) {
+          // autoFocus時に、フォーカスを当てる
+          if (latest.autoFocus) {
+            node.focus()
+          }
+          // autoResize時に、初期値での高さを指定
+          if (latest.autoResize) {
+            setInterimRows(calculateIdealRows(node, latest.maxRows, latest.theme.leading.NORMAL))
+          }
+        }
+      }
+
+      const getCounterMessage = (counterValue: number) => {
+        if (counterValue > maxLetters!) {
           // {count}文字オーバー
           return (
             <Localizer
               id="smarthr-ui/Textarea/maxLettersExceeded"
               defaultText="{exceededLetters}文字オーバー"
-              values={{ exceededLetters: counterValue - maxLetters }}
+              values={{ exceededLetters: counterValue - maxLetters! }}
             />
           )
         }
@@ -152,22 +179,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           <Localizer
             id="smarthr-ui/Textarea/availableLetters"
             defaultText="あと{availableLetters}文字"
-            values={{ availableLetters: maxLetters - counterValue }}
+            values={{ availableLetters: maxLetters! - counterValue }}
           />
         )
-      },
-      [maxLetters],
-    )
-
-    const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
-
-    useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
-      ref,
-      () => textareaRef.current,
-    )
-
-    const updateCounters = useMemo(() => {
-      if (!maxLetters) return undefined
+      }
 
       const updateCount = debounce((newValue: TextareaValue) => {
         startTransition(() => {
@@ -175,7 +190,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         })
       }, 200)
 
-      // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
       const updateSrMessage = debounce((newValue: TextareaValue) => {
         startTransition(() => {
           const counterText = getCounterMessage(getStringLength(newValue))
@@ -186,52 +200,52 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         })
       }, 1000)
 
-      return (newValue: TextareaValue) => {
+      const updateCounters = (newValue: TextareaValue) => {
         updateCount(newValue)
         updateSrMessage(newValue)
       }
-    }, [maxLetters, getCounterMessage])
 
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLTextAreaElement>) => {
-        const newValue = e.target.value
-        updateCounters?.(newValue)
+      const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        if (maxLetters) {
+          const newValue = e.target.value
+          updateCounters(newValue)
+        }
 
         // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = rows
+        e.target.rows = latest.rows
 
-        if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows, theme.leading.NORMAL)
+        if (latest.autoResize) {
+          const currentRows = calculateIdealRows(
+            e.target,
+            latest.maxRows,
+            latest.theme.leading.NORMAL,
+          )
           // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
           e.target.rows = currentRows
           setInterimRows(currentRows)
         }
 
-        onChangeRef.current?.(e)
-      },
-      [updateCounters, autoResize, maxRows, rows, theme.leading.NORMAL],
+        latest.onChange?.(e)
+      }
+
+      return {
+        ...(maxLetters && { getCounterMessage, updateCounters }),
+        textareaRef,
+        handleChange,
+      }
+    }, [maxLetters, latest])
+
+    const counterVisualMessage = useMemo(
+      () => (maxLetters ? functions.getCounterMessage?.(count) : null),
+      [count, functions, maxLetters],
     )
-
-    // autoFocus時に、フォーカスを当てる
-    useEffect(() => {
-      if (autoFocus && textareaRef.current) {
-        textareaRef.current.focus()
-      }
-    }, [autoFocus])
-
-    // autoResize時に、初期値での高さを指定
-    useEffect(() => {
-      if (autoResize && textareaRef.current) {
-        setInterimRows(calculateIdealRows(textareaRef.current, maxRows, theme.leading.NORMAL))
-      }
-    }, [setInterimRows, maxRows, autoResize, theme.leading.NORMAL])
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
       if (value && maxLetters) {
-        updateCounters?.(value)
+        functions.updateCounters?.(value)
       }
-    }, [maxLetters, updateCounters, value])
+    }, [maxLetters, value, functions])
 
     const textareaStyle = useMemo(
       () => ({ width: typeof width === 'number' ? `${width}px` : width }),
@@ -254,8 +268,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         data-smarthr-ui-input="true"
         value={value}
         defaultValue={defaultValue}
-        onChange={handleChange}
-        ref={textareaRef}
+        onChange={functions.handleChange}
+        ref={functions.textareaRef}
         aria-invalid={error || countError || undefined}
         rows={interimRows}
         className={classNames.textarea}
