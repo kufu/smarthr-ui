@@ -89,11 +89,11 @@ export const ControlledFormDialog: FC<Props> = ({
     return {
       handleClickClose,
       handleSubmit: (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+        // 親formが意図せずsubmitされてしまう場合がある
+        e.stopPropagation()
         if (latest.isOpen) {
-          e.preventDefault()
-          // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-          // 親formが意図せずsubmitされてしまう場合がある
-          e.stopPropagation()
           latest.onSubmit(e, { close: handleClickClose })
         }
       },
