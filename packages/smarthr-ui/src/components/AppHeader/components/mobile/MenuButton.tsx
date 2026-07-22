@@ -5,15 +5,15 @@ import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
 type Props = PropsWithChildren<{
-  onClick: () => void
+  handleClick: () => void
   isCurrent?: boolean
 }>
 
-export const MenuButton = memo<Props>(({ children, onClick, isCurrent }) => (
+export const MenuButton = memo<Props>(({ children, handleClick, isCurrent }) => (
   <CommonButton
     elementAs="button"
     type="button"
-    onClick={onClick}
+    onClick={handleClick}
     current={isCurrent}
     boldWhenCurrent
     className="[&&]:shr-justify-between [&&]:shr-px-0.5"

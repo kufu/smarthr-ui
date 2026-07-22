@@ -126,7 +126,7 @@ const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ naviga
 
   const functions = useMemo(
     () => ({
-      onClick: () => latest.setSelectedNavigationGroup(latest.navigation),
+      handleClick: () => latest.setSelectedNavigationGroup(latest.navigation),
     }),
     [latest],
   )
@@ -146,7 +146,7 @@ const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ naviga
   )
 
   return (
-    <MenuButton onClick={functions.onClick} isCurrent={isCurrent}>
+    <MenuButton handleClick={functions.handleClick} isCurrent={isCurrent}>
       {navigation.children}
     </MenuButton>
   )
