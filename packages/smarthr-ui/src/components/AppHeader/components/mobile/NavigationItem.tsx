@@ -61,7 +61,7 @@ const NavigationCustomTag = memo<
     elementAs: Tag,
     current,
     className,
-    handleClickNavigation: onDelegateClick,
+    handleClickNavigation: handleDelegateClick,
     ...rest
   }) => {
     const actualClassName = useMemo(
@@ -75,7 +75,7 @@ const NavigationCustomTag = memo<
     )
 
     return (
-      <Tag {...rest} onClick={onDelegateClick} className={actualClassName}>
+      <Tag {...rest} onClick={handleDelegateClick} className={actualClassName}>
         <Translate>{children}</Translate>
       </Tag>
     )
