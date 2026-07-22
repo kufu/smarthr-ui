@@ -94,6 +94,14 @@ const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
+const stringToDate = (
+  str: string | null | undefined,
+  parseInputFn: ((input: string) => Date | null) | undefined,
+) => {
+  if (!str) return null
+  return parseInputFn ? parseInputFn(str) : parseJpnDateString(str)
+}
+
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
 export const DatePicker = forwardRef<HTMLInputElement, Props>(
   (
@@ -144,15 +152,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
-    const stringToDate = useCallback(
-      (str?: string | null) => {
-        if (!str) return null
-        return parseInput ? parseInput(str) : parseJpnDateString(str)
-      },
-      [parseInput],
+    const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
+      stringToDate(value, parseInput),
     )
-
-    const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
 
     const latest = useLatest({
       onChange,
@@ -165,17 +167,19 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       selectedDate,
     })
 
-    const { dateToString, dateToAlternativeFormat } = useMemo(() => {
-      const internalDateToString = (date: Date | null) =>
+    const functions = useMemo(() => {
+      const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
-      const internalDateToAlternativeFormat = (d: Date | null) => {
+
+      const dateToAlternativeFormat = (d: Date | null) => {
         if (!latest.showAlternative) return null
         return d ? latest.showAlternative(d) : null
       }
 
       return {
-        dateToString: internalDateToString,
-        dateToAlternativeFormat: internalDateToAlternativeFormat,
+        stringToDate: (str: string | null | undefined) => stringToDate(str, latest.parseInput),
+        dateToString,
+        dateToAlternativeFormat,
       }
     }, [latest])
 
@@ -203,10 +207,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
 
         const nextDate = isValid ? newDate : null
-        const formatValue = dateToString(nextDate)
+        const formatValue = functions.dateToString(nextDate)
 
         inputRef.current.value = formatValue
-        setAlternativeFormat(dateToAlternativeFormat(nextDate))
+        setAlternativeFormat(functions.dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
         if (latest.onChange) {
@@ -235,7 +239,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           latest.onChangeDate(nextDate, formatValue, { errors })
         }
       },
-      [dateToString, dateToAlternativeFormat, latest],
+      [functions, latest],
     )
 
     const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
@@ -257,11 +261,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
        * - if the given value is not date formattable.
        */
       if (!isInputFocused) {
-        const newDate = stringToDate(value)
+        const newDate = functions.stringToDate(value)
 
         if (newDate && dayjs(newDate).isValid()) {
-          inputRef.current.value = dateToString(newDate)
-          setAlternativeFormat(dateToAlternativeFormat(newDate))
+          inputRef.current.value = functions.dateToString(newDate)
+          setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
           setSelectedDate(newDate)
 
           return
@@ -271,7 +275,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       inputRef.current.value = value || ''
-    }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
+    }, [value, isInputFocused, functions])
 
     useOuterClick(
       useMemo(() => [inputWrapperRef, calendarPortalRef], [inputWrapperRef, calendarPortalRef]),
@@ -281,10 +285,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const handleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
       (e) => {
         setIsInputFocused(false)
-        updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
+        updateDate(e, e.target.value ? functions.stringToDate(e.target.value) : null)
         latest.onBlur?.(e)
       },
-      [stringToDate, updateDate, latest],
+      [functions, updateDate, latest],
     )
 
     useEffect(() => {
@@ -363,10 +367,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         if (e.key === 'Enter') {
           const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
           ;(isExpanded ? openCalendar : closeCalendar)()
-          updateDate(e, stringToDate(e.currentTarget.value))
+          updateDate(e, functions.stringToDate(e.currentTarget.value))
         }
       },
-      [updateDate, closeCalendar, openCalendar, stringToDate],
+      [updateDate, closeCalendar, openCalendar, functions],
     )
     const onFocusInput = useCallback(() => {
       setIsInputFocused(true)
