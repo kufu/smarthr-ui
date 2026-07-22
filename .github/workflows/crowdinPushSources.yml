@@ -1,0 +1,46 @@
+# 日本語辞書を翻訳ツール(Crowdin)にアップロード
+name: "i18n: Upload Japanese dictionary to Crowdin"
+
+on:
+  schedule:
+    - cron: "0 8 * * MON"
+      timezone: Asia/Tokyo
+  workflow_dispatch:
+    inputs:
+      github_branch:
+        description: アップするブランチ名（Crowdinブランチ名としても使用される）
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.github_branch || github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  crowdin:
+    name: "Upload Japanese dictionary to Crowdin"
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ inputs.github_branch || github.ref_name }}
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+          persist-credentials: false
+      - name: Push ja-JP source to Crowdin
+        uses: crowdin/github-action@e0c8f73cdc0fafde9396e056c5038217000a32d1 # v2.16.4
+        with:
+          config: crowdin.yml
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          crowdin_branch_name: ${{ env.TARGET_BRANCH }}
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PUSH_PULL_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_BASE_URL: ${{ secrets.CROWDIN_BASE_URL }}
