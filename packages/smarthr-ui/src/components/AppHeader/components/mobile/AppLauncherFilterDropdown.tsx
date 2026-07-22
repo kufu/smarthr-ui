@@ -14,7 +14,7 @@ import type { Launcher } from '../../types'
 
 type Props = {
   page: Launcher['page']
-  onSelectPage: (page: Launcher['page']) => void
+  handleSelectPage: (page: Launcher['page']) => void
 }
 
 const classNameGenerator = tv({
@@ -32,17 +32,17 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) => {
-  const classNames = useMemo(() => {
-    const { trigger, contentBody, contentButton } = classNameGenerator()
+const CLASS_NAMES = (() => {
+  const { trigger, contentBody, contentButton } = classNameGenerator()
 
-    return {
-      trigger: trigger(),
-      contentBody: contentBody(),
-      contentButton: contentButton(),
-    }
-  }, [])
+  return {
+    trigger: trigger(),
+    contentBody: contentBody(),
+    contentButton: contentButton(),
+  }
+})()
 
+export const AppLauncherFilterDropdown = memo<Props>(({ page, handleSelectPage }) => {
   const { localize } = useIntl()
   const translated = useMemo(
     () => ({
@@ -64,16 +64,16 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
 
   return (
     <Dropdown>
-      <MemoizedDropdownTrigger className={classNames.trigger}>
+      <MemoizedDropdownTrigger className={CLASS_NAMES.trigger}>
         {translated[page]}
       </MemoizedDropdownTrigger>
       <DropdownContent>
         <ContentBody
           page={page}
-          onSelectPage={onSelectPage}
+          handleSelectPage={handleSelectPage}
           translated={translated}
-          className={classNames.contentBody}
-          buttonClassName={classNames.contentButton}
+          className={CLASS_NAMES.contentBody}
+          buttonClassName={CLASS_NAMES.contentButton}
         />
       </DropdownContent>
     </Dropdown>
@@ -96,15 +96,15 @@ const ContentBody = memo<
     className: string
     buttonClassName: string
   }
->(({ page, onSelectPage, translated, className, buttonClassName }) => {
+>(({ page, handleSelectPage, translated, className, buttonClassName }) => {
   const theme = useTheme()
   const isFavorite = page === 'favorite'
 
-  const onClickButton = useCallback(
+  const handleClickButton = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onSelectPage(e.currentTarget.value as Launcher['page'])
+      handleSelectPage(e.currentTarget.value as Launcher['page'])
     },
-    [onSelectPage],
+    [handleSelectPage],
   )
 
   const buttonPrefix = (
@@ -120,7 +120,7 @@ const ContentBody = memo<
         value="favorite"
         role="option"
         aria-selected={isFavorite}
-        onClick={onClickButton}
+        onClick={handleClickButton}
         className={buttonClassName}
         prefix={isFavorite && buttonPrefix}
       >
@@ -130,7 +130,7 @@ const ContentBody = memo<
         value="all"
         role="option"
         aria-selected={!isFavorite}
-        onClick={onClickButton}
+        onClick={handleClickButton}
         className={buttonClassName}
         prefix={!isFavorite && buttonPrefix}
       >

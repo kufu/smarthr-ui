@@ -1,4 +1,10 @@
-import { type ComponentPropsWithoutRef, type ReactNode, memo, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type MouseEvent,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 export const commonButtonClassNameGenerator = tv({
@@ -35,8 +41,12 @@ export const commonButtonClassNameGenerator = tv({
   },
 })
 
-type AnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'prefix'>
-type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'prefix'>
+type AnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'prefix' | 'onClick'> & {
+  handleClick?: (e: MouseEvent<HTMLAnchorElement>) => void
+}
+type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'prefix' | 'onClick'> & {
+  handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
+}
 
 type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & ButtonProps)) & {
   prefix?: ReactNode
@@ -45,7 +55,7 @@ type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & Bu
 }
 
 export const CommonButton = memo<Props>(
-  ({ elementAs, prefix, current, boldWhenCurrent, className, children, ...rest }) => {
+  ({ elementAs, prefix, current, boldWhenCurrent, className, children, handleClick, ...rest }) => {
     const hasPrefix = !!prefix
 
     const actualClassName = useMemo(
@@ -62,7 +72,12 @@ export const CommonButton = memo<Props>(
     switch (elementAs) {
       case 'a':
         return (
-          <a {...(rest as AnchorProps)} className={actualClassName}>
+          // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+          <a
+            {...(rest as AnchorProps)}
+            onClick={handleClick as AnchorProps['handleClick']}
+            className={actualClassName}
+          >
             {prefix}
             {children}
           </a>
@@ -70,7 +85,11 @@ export const CommonButton = memo<Props>(
       case 'button':
         return (
           // eslint-disable-next-line smarthr/best-practice-for-button-element
-          <button {...(rest as ButtonProps)} className={actualClassName}>
+          <button
+            {...(rest as ButtonProps)}
+            onClick={handleClick as ButtonProps['handleClick']}
+            className={actualClassName}
+          >
             {prefix}
             {children}
           </button>

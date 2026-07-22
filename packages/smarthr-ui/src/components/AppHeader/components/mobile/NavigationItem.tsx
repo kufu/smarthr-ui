@@ -1,6 +1,7 @@
-import { type FC, type MouseEvent, memo, useCallback, useContext, useMemo } from 'react'
+import { type FC, type MouseEvent, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
@@ -20,16 +21,16 @@ const classNameGenerator = tv({
   base: ['[&&]:shr-px-0.5'],
 })
 
-type Props = { navigation: Navigation; onClickNavigation: () => void }
+type Props = { navigation: Navigation; handleClickNavigation: () => void }
 
-export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => {
+export const NavigationItem: FC<Props> = ({ navigation, handleClickNavigation }) => {
   const className = classNameGenerator()
 
   if ('elementAs' in navigation) {
     return (
       <NavigationCustomTag
         {...navigation}
-        onClickNavigation={onClickNavigation}
+        handleClickNavigation={handleClickNavigation}
         className={`${className} ${navigation.className}`}
       />
     )
@@ -43,7 +44,7 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
     return (
       <NavigationButton
         navigation={navigation}
-        onClickNavigation={onClickNavigation}
+        handleClickNavigation={handleClickNavigation}
         className={className}
       />
     )
@@ -53,14 +54,14 @@ export const NavigationItem: FC<Props> = ({ navigation, onClickNavigation }) => 
 }
 
 const NavigationCustomTag = memo<
-  NavigationCustomTag & Pick<Props, 'onClickNavigation'> & { className: string }
+  NavigationCustomTag & Pick<Props, 'handleClickNavigation'> & { className: string }
 >(
   ({
     children,
     elementAs: Tag,
     current,
     className,
-    onClickNavigation: onDelegateClick,
+    handleClickNavigation: handleDelegateClick,
     ...rest
   }) => {
     const actualClassName = useMemo(
@@ -74,7 +75,7 @@ const NavigationCustomTag = memo<
     )
 
     return (
-      <Tag {...rest} onClick={onDelegateClick} className={actualClassName}>
+      <Tag {...rest} onClick={handleDelegateClick} className={actualClassName}>
         <Translate>{children}</Translate>
       </Tag>
     )
@@ -90,21 +91,25 @@ const NavigationLink = memo<NavigationLink & { className: string }>(
 )
 
 const NavigationButton: FC<
-  Pick<Props, 'onClickNavigation'> & { navigation: NavigationButton; className: string }
-> = ({ navigation, onClickNavigation, className }) => {
-  const onClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      navigation.onClick(e)
-      onClickNavigation()
-    },
-    [navigation, onClickNavigation],
+  Pick<Props, 'handleClickNavigation'> & { navigation: NavigationButton; className: string }
+> = ({ navigation, handleClickNavigation, className }) => {
+  const latest = useLatest({ navigation, handleClickNavigation })
+
+  const functions = useMemo(
+    () => ({
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.navigation.onClick(e)
+        latest.handleClickNavigation()
+      },
+    }),
+    [latest],
   )
 
   return (
     <CommonButton
       elementAs="button"
       type="button"
-      onClick={onClick}
+      handleClick={functions.handleClick}
       current={navigation.current}
       boldWhenCurrent
       className={className}
@@ -117,9 +122,13 @@ const NavigationButton: FC<
 const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ navigation }) => {
   const { setSelectedNavigationGroup } = useContext(NavigationContext)
 
-  const onClick = useCallback(
-    () => setSelectedNavigationGroup(navigation),
-    [navigation, setSelectedNavigationGroup],
+  const latest = useLatest({ navigation, setSelectedNavigationGroup })
+
+  const functions = useMemo(
+    () => ({
+      handleClick: () => latest.setSelectedNavigationGroup(latest.navigation),
+    }),
+    [latest],
   )
 
   // 子要素に current を持っているものがあるかどうか
@@ -137,7 +146,7 @@ const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ naviga
   )
 
   return (
-    <MenuButton onClick={onClick} isCurrent={isCurrent}>
+    <MenuButton handleClick={functions.handleClick} isCurrent={isCurrent}>
       {navigation.children}
     </MenuButton>
   )

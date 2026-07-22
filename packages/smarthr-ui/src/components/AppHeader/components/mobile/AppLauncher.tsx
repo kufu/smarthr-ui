@@ -98,7 +98,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         {mode === 'search' ? (
           <SearchResultText>{translated.searchResultText}</SearchResultText>
         ) : (
-          <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
+          <AppLauncherFilterDropdown page={page} handleSelectPage={changePage} />
         )}
 
         {(mode === 'search' || page === 'all') && (

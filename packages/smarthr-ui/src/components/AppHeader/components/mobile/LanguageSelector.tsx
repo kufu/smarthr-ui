@@ -101,7 +101,7 @@ const LocaleButton = memo<{
     elementAs="button"
     type="button"
     value={value}
-    onClick={onClick}
+    handleClick={onClick}
     prefix={selected && <FaCheckIcon color="MAIN" />}
     className={className}
   >
