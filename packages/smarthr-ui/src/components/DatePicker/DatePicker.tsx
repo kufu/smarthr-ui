@@ -266,7 +266,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           if (inputRef.current) inputRef.current.focus()
         },
       }
-    }, [latest, selectedDate, isCalendarShown])
+    }, [selectedDate, isCalendarShown, latest])
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
