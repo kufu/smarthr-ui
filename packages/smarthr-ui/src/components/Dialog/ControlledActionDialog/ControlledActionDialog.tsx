@@ -23,12 +23,20 @@ type ObjectCloseButtonType = ActionDialogContentInnerProps['closeButton']
 
 type AbstractProps = Omit<
   ActionDialogContentInnerProps,
-  'heading' | 'actionButton' | 'closeButton'
+  'heading' | 'actionButton' | 'closeButton' | 'handleClickAction' | 'handleClickClose'
 > &
   DialogProps & {
     heading: HeadingType
     actionButton: ReactNode | ObjectActionButtonType
     closeButton?: ReactNode | ObjectCloseButtonType
+    /**
+     * アクションボタンをクリックした時に発火するコールバック関数
+     */
+    onClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => void
+    /**
+     * 閉じるボタンをクリックした時に発火するコールバック関数
+     */
+    onClickClose: () => void
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
@@ -72,15 +80,15 @@ export const ControlledActionDialog: FC<Props> = ({
   const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
   const functions = useMemo(() => {
-    const actualOnClickClose = () => {
+    const handleClickClose = () => {
       if (latest.isOpen) {
         latest.onClickClose()
       }
     }
 
     return {
-      actualOnClickClose,
-      actualOnClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
+      handleClickClose,
+      handleClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
         if (latest.isOpen) {
           latest.onClickAction(e, helpers)
         }
@@ -102,8 +110,8 @@ export const ControlledActionDialog: FC<Props> = ({
         contentPadding={contentPadding}
         actionButton={actionButton}
         closeButton={closeButton}
-        onClickClose={functions.actualOnClickClose}
-        onClickAction={functions.actualOnClickAction}
+        handleClickClose={functions.handleClickClose}
+        handleClickAction={functions.handleClickAction}
         subActionArea={subActionArea}
         responseStatus={responseStatus}
       >

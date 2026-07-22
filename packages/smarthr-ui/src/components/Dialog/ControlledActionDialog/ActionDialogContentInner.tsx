@@ -51,7 +51,7 @@ export type AbstractProps = PropsWithChildren<
      * @param e マウスイベント
      * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    onClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
+    handleClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -60,7 +60,7 @@ export type AbstractProps = PropsWithChildren<
 >
 
 export type ActionDialogContentInnerProps = AbstractProps & {
-  onClickClose: () => void
+  handleClickClose: () => void
   responseStatus?: ResponseStatus
 }
 
@@ -83,8 +83,8 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   contentBgColor,
   contentPadding,
   actionButton,
-  onClickAction,
-  onClickClose,
+  handleClickAction,
+  handleClickClose,
   responseStatus,
   closeButton,
   subActionArea,
@@ -101,8 +101,8 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         <Cluster justify="space-between">
           {subActionArea}
           <ActionAreaCluster
-            onClickClose={onClickClose}
-            onClickAction={onClickAction}
+            handleClickClose={handleClickClose}
+            handleClickAction={handleClickAction}
             closeButton={closeButton}
             actionButton={actionButton}
             loading={calcedResponseStatus.isProcessing}
@@ -119,24 +119,24 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<ActionDialogContentInnerProps, 'onClickClose' | 'onClickAction'> & {
+  Pick<ActionDialogContentInnerProps, 'handleClickClose' | 'handleClickAction'> & {
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
     className: string
   }
->(({ onClickClose, onClickAction, closeButton, actionButton, loading, className }) => {
-  const handleClickAction = useCallback(
+>(({ handleClickClose, handleClickAction, closeButton, actionButton, loading, className }) => {
+  const handleClickActionWithHelpers = useCallback(
     (e: MouseEvent<Element>) => {
-      onClickAction(e, { close: onClickClose })
+      handleClickAction(e, { close: handleClickClose })
     },
-    [onClickAction, onClickClose],
+    [handleClickAction, handleClickClose],
   )
 
   return (
     <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
       <CloseButton
-        onClick={onClickClose}
+        handleClick={handleClickClose}
         disabled={closeButton.disabled || loading}
         text={closeButton.text}
       />
@@ -144,7 +144,7 @@ const ActionAreaCluster = memo<
         variant={actionButton.theme}
         disabled={actionButton.disabled}
         loading={loading}
-        onClick={handleClickAction}
+        handleClick={handleClickActionWithHelpers}
       >
         {actionButton.text}
       </ActionButton>
@@ -157,15 +157,15 @@ const ActionButton = memo<
     variant: ObjectActionButtonType['theme']
     disabled: ObjectActionButtonType['disabled']
     loading: boolean
-    onClick: (e: MouseEvent<HTMLButtonElement>) => void
+    handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   }>
->(({ variant = 'primary', disabled, loading, onClick, children }) => (
+>(({ variant = 'primary', disabled, loading, handleClick, children }) => (
   <Button
     type="submit"
     variant={variant}
     disabled={disabled}
     loading={loading}
-    onClick={onClick}
+    onClick={handleClick}
     className="smarthr-ui-Dialog-actionButton"
   >
     {children}
@@ -173,10 +173,10 @@ const ActionButton = memo<
 ))
 
 const CloseButton = memo<{
-  onClick: ActionDialogContentInnerProps['onClickClose']
+  handleClick: ActionDialogContentInnerProps['handleClickClose']
   disabled: boolean
   text: ReactNode
-}>(({ onClick, disabled, text }) => {
+}>(({ handleClick, disabled, text }) => {
   const { localize } = useIntl()
 
   const defaultText = useMemo(
@@ -189,7 +189,7 @@ const CloseButton = memo<{
   )
 
   return (
-    <Button onClick={onClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+    <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
       {text ?? defaultText}
     </Button>
   )
