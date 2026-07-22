@@ -8,7 +8,11 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { FormDialogContentInner, type FormDialogContentInnerProps } from './FormDialogContentInner'
+import {
+  FormDialogContentInner,
+  type FormDialogContentInnerProps,
+  type FormDialogHelpers,
+} from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
@@ -17,11 +21,22 @@ type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = FormDialogContentInnerProps['actionButton']
 type ObjectCloseButtonType = FormDialogContentInnerProps['closeButton']
 
-type AbstractProps = Omit<FormDialogContentInnerProps, 'heading' | 'actionButton' | 'closeButton'> &
+type AbstractProps = Omit<
+  FormDialogContentInnerProps,
+  'heading' | 'actionButton' | 'closeButton' | 'handleClickClose' | 'handleSubmit'
+> &
   DialogProps & {
     heading: HeadingType
     actionButton: ReactNode | ObjectActionButtonType
     closeButton?: ReactNode | ObjectCloseButtonType
+    /**
+     * フォーム送信時に発火するコールバック関数
+     */
+    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
+    /**
+     * 閉じるボタンをクリックした時に発火するコールバック関数
+     */
+    onClickClose: () => void
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
