@@ -13,7 +13,7 @@ overrides:
   react-draggable: 4.5.0
   js-yaml@>=4.0.0 <=4.1.1: '>=4.1.2'
   '@babel/core@<=7.29.0': '>=7.29.7'
-  sharp@<0.35.0: '>=0.35.0'
+  sharp@<0.35.0: '>=0.35.3'
 
 importers:
 
