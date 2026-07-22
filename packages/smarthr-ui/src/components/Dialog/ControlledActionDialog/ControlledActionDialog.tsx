@@ -79,22 +79,21 @@ export const ControlledActionDialog: FC<Props> = ({
 
   const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
-  const functions = useMemo(() => {
-    const handleClickClose = () => {
-      if (latest.isOpen) {
-        latest.onClickClose()
-      }
-    }
-
-    return {
-      handleClickClose,
+  const functions = useMemo(
+    () => ({
+      handleClickClose: () => {
+        if (latest.isOpen) {
+          latest.onClickClose()
+        }
+      },
       handleClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
         if (latest.isOpen) {
           latest.onClickAction(e, helpers)
         }
       },
-    }
-  }, [latest])
+    }),
+    [latest],
+  )
 
   return createPortal(
     <DialogContentInner
