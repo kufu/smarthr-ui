@@ -259,7 +259,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         },
         handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
-            ;(isCalendarShown ? closeCalendar : openCalendar)()
+            const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
+            ;(isExpanded ? closeCalendar : openCalendar)()
             updateDate(e, stringToDate(e.currentTarget.value))
           }
         },
@@ -275,7 +276,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           if (inputRef.current) inputRef.current.focus()
         },
       }
-    }, [isCalendarShown, latest])
+    }, [latest])
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
