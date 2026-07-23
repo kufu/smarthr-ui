@@ -43,6 +43,7 @@ export default {
       alias: {
         ...config.resolve?.alias,
         '@': join(__dirname, '../src'),
+        'smarthr-ui': join(__dirname, '../src/index.ts'),
       },
     },
     define: {
