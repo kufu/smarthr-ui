@@ -368,7 +368,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
           const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
-          ;(isExpanded ? functions.openCalendar : functions.closeCalendar)()
+          ;(isExpanded ? functions.closeCalendar : functions.openCalendar)()
           functions.updateDate(e, functions.stringToDate(e.currentTarget.value))
         }
       },
