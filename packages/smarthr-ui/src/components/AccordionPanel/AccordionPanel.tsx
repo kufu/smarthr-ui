@@ -7,7 +7,6 @@ import {
   type RefObject,
   createContext,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -31,6 +30,9 @@ type AbstractProps = PropsWithChildren<{
   VariantProps<typeof classNameGenerator>
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
+const DEFAULT_EXPANDED_ARRAY: string[] = []
+const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
+
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
@@ -40,7 +42,7 @@ export const AccordionPanelContext = createContext<{
   onClickProps?: (expandedItems: string[]) => void
 }>({
   iconPosition: 'left',
-  expandedItems: new Map(),
+  expandedItems: DEFAULT_EXPANDED_MAP,
   expandableMultiply: true,
   parentRef: null,
 })
@@ -75,13 +77,13 @@ const classNameGenerator = tv({
 export const AccordionPanel: FC<Props> = ({
   iconPosition = 'left',
   expandableMultiply = true,
-  defaultExpanded = [],
+  defaultExpanded = DEFAULT_EXPANDED_ARRAY,
   className,
   onClick: onClickProps,
   rounded,
   ...rest
 }) => {
-  const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
+  const [expandedItems, setExpanded] = useState(() => flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
   const actualClassName = useMemo(
     () => classNameGenerator({ className, rounded }),
@@ -90,14 +92,12 @@ export const AccordionPanel: FC<Props> = ({
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
-      setExpanded(getNewExpandedItems(expandedItems, itemName, isExpanded, expandableMultiply))
+      setExpanded((prevExpandedItems) =>
+        getNewExpandedItems(prevExpandedItems, itemName, isExpanded, expandableMultiply),
+      )
     },
-    [expandableMultiply, expandedItems],
+    [expandableMultiply],
   )
-
-  useEffect(() => {
-    if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
-  }, [defaultExpanded])
 
   return (
     <AccordionPanelContext.Provider
