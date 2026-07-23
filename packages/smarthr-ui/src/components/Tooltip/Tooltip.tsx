@@ -141,7 +141,10 @@ export const Tooltip: FC<Props> = ({
     },
     [ellipsisOnly],
   )
-  const toCloseAction = useCallback(() => setIsVisible(false), [])
+  const toCloseAction = useCallback(() => {
+    setRect(null)
+    setIsVisible(false)
+  }, [])
 
   const isIcon = triggerType === 'icon'
   const actualClassName = useMemo(
