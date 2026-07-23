@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [98.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.1.0...smarthr-ui-v98.1.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **AppHeader:** ヘルプリンクのrel属性をHelpLinkと統一 ([#6508](https://github.com/kufu/smarthr-ui/issues/6508)) ([a2aba4d](https://github.com/kufu/smarthr-ui/commit/a2aba4dee55311ca9f1868eb4a2586ff60ab6fa7))
+* **DatePicker:** Enterキー押下時のカレンダー開閉ロジックを修正 ([#6559](https://github.com/kufu/smarthr-ui/issues/6559)) ([fb322d6](https://github.com/kufu/smarthr-ui/commit/fb322d6a44424756544bc1d6e598c6b3f5909e59))
+
 ## [98.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.0.0...smarthr-ui-v98.1.0) (2026-07-15)
 
 
