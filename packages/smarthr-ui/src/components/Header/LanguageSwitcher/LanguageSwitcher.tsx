@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useAvailableLocales, useIntl } from '../../../intl'
+import { Localizer, useAvailableLocales } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -103,7 +103,6 @@ export const LanguageSwitcher: FC<Props> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const { localize } = useIntl()
   const availableLocales = useAvailableLocales()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
@@ -113,15 +112,6 @@ export const LanguageSwitcher: FC<Props> = ({
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
     [localeMap, availableLocales],
-  )
-
-  const checkIconAlt = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/LanguageSwitcher/checkIconAlt',
-        defaultText: '選択中',
-      }),
-    [localize],
   )
 
   const currentLang = locale || defaultLocale || defaultCurrentLang
@@ -164,7 +154,6 @@ export const LanguageSwitcher: FC<Props> = ({
               buttonStyle={classNames.languageButton}
               current={currentLang === code}
               onClick={onClickLanguageSelect}
-              iconAlt={checkIconAlt}
             >
               {label}
             </LanguageListItemButton>
@@ -181,15 +170,21 @@ const LanguageListItemButton = memo<{
   className: string
   buttonStyle: string
   current: boolean
-  iconAlt: ReactNode
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, iconAlt, onClick }) => (
+}>(({ code, children, buttonStyle, className, current, onClick }) => (
   <li key={code} className={className} aria-current={current} lang={code}>
     <Button
       value={code}
       onClick={onClick}
       wide
-      prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
+      prefix={
+        current ? (
+          <FaCheckIcon
+            color="MAIN"
+            alt={<Localizer id="smarthr-ui/LanguageSwitcher/checkIconAlt" defaultText="選択中" />}
+          />
+        ) : null
+      }
       className={buttonStyle}
     >
       {children}

@@ -12,7 +12,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { useIntl } from '../../../intl'
+import { Localizer, useIntl } from '../../../intl'
 import { Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -114,12 +114,6 @@ export const FilterDropdown: FC<Props> = ({
           id: 'smarthr-ui/FilterDropdown/status',
           defaultText: '適用中',
         }),
-      trigger:
-        trigger.text ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/triggerText',
-          defaultText: '絞り込み',
-        }),
       applyText:
         applyText ||
         localize({
@@ -139,7 +133,7 @@ export const FilterDropdown: FC<Props> = ({
           defaultText: '絞り込み条件を解除',
         }),
     }),
-    [filtered, trigger.text, applyText, cancelText, resetText, localize],
+    [filtered, applyText, cancelText, resetText, localize],
   )
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
@@ -179,9 +173,13 @@ export const FilterDropdown: FC<Props> = ({
   const classNames = classNamesMapper[filtered ? 'filtered' : 'unfiltered']
 
   const { buttonSuffix, buttonContent } = useMemo(() => {
+    const triggerText = trigger.text || (
+      <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
+    )
+
     const FilterIcon = (
       <span className={classNames.iconWrapper}>
-        <FaFilterIcon alt={trigger.onlyIcon ? decorated.trigger : undefined} />
+        <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
 
         {filtered && (
           // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
@@ -202,13 +200,20 @@ export const FilterDropdown: FC<Props> = ({
 
     return {
       buttonSuffix: FilterIcon,
-      buttonContent: decorated.trigger,
+      buttonContent: triggerText,
     }
-  }, [filtered, decorated.trigger, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
+  }, [filtered, trigger.text, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: decorated.trigger }}>
+      <DropdownTrigger
+        tooltip={{
+          show: trigger.onlyIcon,
+          message: trigger.text || (
+            <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
+          ),
+        }}
+      >
         <Button {...rest} suffix={buttonSuffix} size={trigger.size}>
           {buttonContent}
         </Button>
