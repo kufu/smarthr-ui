@@ -122,7 +122,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
         defaultText: 'アプリ名を入力してください。',
       }),
-      favoriteAriaLabel: localize({
+      favoriteModeText: localize({
         id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
         defaultText: 'よく使うアプリ',
       }),
@@ -153,7 +153,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           mode={mode}
           page={page}
           changePage={changePage}
-          favoriteAriaLabel={translated.favoriteAriaLabel}
+          favoriteModeText={translated.favoriteModeText}
           listAriaLabel={translated.listAriaLabel}
           classNames={classNames}
         />
@@ -168,10 +168,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
                       defaultText="検索結果"
                     />
                   ) : page === 'favorite' ? (
-                    <Localizer
-                      id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
-                      defaultText="よく使うアプリ"
-                    />
+                    translated.favoriteModeText
                   ) : (
                     <Localizer
                       id="smarthr-ui/AppHeader/Launcher/allModeText"
@@ -204,7 +201,7 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 
 const SideNavs = memo<
   Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
-    favoriteAriaLabel: string
+    favoriteModeText: string
     listAriaLabel: string
     classNames: {
       side: string
@@ -214,7 +211,7 @@ const SideNavs = memo<
       help: string
     }
   }
->(({ mode, page, changePage, favoriteAriaLabel, listAriaLabel, classNames }) => {
+>(({ mode, page, changePage, favoriteModeText, listAriaLabel, classNames }) => {
   const theme = useTheme()
   const isNotSearch = mode !== 'search'
   const isFavorite = isNotSearch && page === 'favorite'
@@ -224,19 +221,12 @@ const SideNavs = memo<
     () => [
       {
         id: 'favorite',
-        title: (
-          <Translate>
-            <Localizer
-              id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
-              defaultText="よく使うアプリ"
-            />
-          </Translate>
-        ),
+        title: <Translate>{favoriteModeText}</Translate>,
         prefix: <FaStarIcon color={isFavorite ? theme.textColor.white : undefined} />,
         current: isFavorite,
       },
     ],
-    [isFavorite, theme.textColor.white],
+    [favoriteModeText, isFavorite, theme.textColor.white],
   )
   const selectedItems = useMemo(
     () => [
@@ -265,7 +255,7 @@ const SideNavs = memo<
 
   return (
     <div className={classNames.side}>
-      <SideNav className={classNames.unselectedSideNav} size="S" aria-label={favoriteAriaLabel}>
+      <SideNav className={classNames.unselectedSideNav} size="S" aria-label={favoriteModeText}>
         {unselectedItems.map((item) => (
           <SideNavItemButton
             key={item.id}
