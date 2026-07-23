@@ -1,15 +1,8 @@
-import {
-  type FC,
-  type FormEvent,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type FC, type FormEvent, type PropsWithChildren, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
@@ -167,21 +160,8 @@ const CloseButton = memo<{
   handleClick: FormDialogContentInnerProps['handleClickClose']
   disabled: boolean
   text: ReactNode
-}>(({ handleClick, disabled, text }) => {
-  const { localize } = useIntl()
-
-  const defaultText = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/FormDialog/closeButtonLabel',
-        defaultText: 'キャンセル',
-      }),
-    [localize],
-  )
-
-  return (
-    <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {text ?? defaultText}
-    </Button>
-  )
-})
+}>(({ handleClick, disabled, text }) => (
+  <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+    {text ?? <Localizer id="smarthr-ui/FormDialog/closeButtonLabel" defaultText="キャンセル" />}
+  </Button>
+))
