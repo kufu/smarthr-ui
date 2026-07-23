@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../../../hooks/useTheme'
@@ -126,10 +126,6 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
         defaultText: 'よく使うアプリ',
       }),
-      listAriaLabel: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
     }),
     [localize],
   )
@@ -154,7 +150,6 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           page={page}
           changePage={changePage}
           favoriteModeText={translated.favoriteModeText}
-          listAriaLabel={translated.listAriaLabel}
           classNames={classNames}
         />
         <div className={classNames.main}>
@@ -202,7 +197,6 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 const SideNavs = memo<
   Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
     favoriteModeText: string
-    listAriaLabel: string
     classNames: {
       side: string
       unselectedSideNav: string
@@ -211,8 +205,9 @@ const SideNavs = memo<
       help: string
     }
   }
->(({ mode, page, changePage, favoriteModeText, listAriaLabel, classNames }) => {
+>(({ mode, page, changePage, favoriteModeText, classNames }) => {
   const theme = useTheme()
+  const listHeadingId = useId()
   const isNotSearch = mode !== 'search'
   const isFavorite = isNotSearch && page === 'favorite'
   const isAll = isNotSearch && page === 'all'
@@ -226,7 +221,7 @@ const SideNavs = memo<
         current: isFavorite,
       },
     ],
-    [favoriteModeText, isFavorite, theme.textColor.white],
+    [isFavorite, favoriteModeText, theme.textColor.white],
   )
   const selectedItems = useMemo(
     () => [
@@ -272,12 +267,8 @@ const SideNavs = memo<
       <hr />
 
       <Section>
-        <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
-          <Translate>
-            <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
-          </Translate>
-        </MemoizedSubSubBlockHeading>
-        <SideNav className={classNames.selectedSideNav} size="S" aria-label={listAriaLabel}>
+        <MemoizedSubSubBlockHeading id={listHeadingId} className={classNames.sideNavHeading} />
+        <SideNav className={classNames.selectedSideNav} size="S" aria-labelledby={listHeadingId}>
           {selectedItems.map((item) => (
             <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
               {item.title}
@@ -306,10 +297,10 @@ const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children,
   </div>
 ))
 
-const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
-  ({ children, className }) => (
-    <Heading type="subSubBlockTitle" className={className}>
-      {children}
-    </Heading>
-  ),
-)
+const MemoizedSubSubBlockHeading = memo<{ id: string; className?: string }>(({ id, className }) => (
+  <Heading type="subSubBlockTitle" id={id} className={className}>
+    <Translate>
+      <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
+    </Translate>
+  </Heading>
+))
