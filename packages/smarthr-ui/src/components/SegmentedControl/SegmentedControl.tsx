@@ -83,10 +83,10 @@ export const SegmentedControl: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const [focusable, setFocusable] = useState(true)
+  const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const latest = useLatest({ onClickOption, focusable })
+  const latest = useLatest({ onClickOption, isFocused })
 
   const hasOnClickOption = !!onClickOption
 
@@ -97,8 +97,8 @@ export const SegmentedControl: FC<Props> = ({
             latest.onClickOption?.(e.currentTarget.value)
           }
         : undefined,
-      handleDelegateFocus: () => setFocusable(false),
-      handleDelegateBlur: () => setFocusable(true),
+      handleDelegateFocus: () => setIsFocused(true),
+      handleDelegateBlur: () => setIsFocused(false),
     }),
     [hasOnClickOption, latest],
   )
@@ -115,7 +115,7 @@ export const SegmentedControl: FC<Props> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (latest.focusable || !containerRef.current || !document.activeElement) {
+      if (!latest.isFocused || !containerRef.current || !document.activeElement) {
         return
       }
 
@@ -195,7 +195,7 @@ export const SegmentedControl: FC<Props> = ({
               handleClick={functions.handleClickOption}
               size={size}
               checked={checked}
-              tabIndex={focusable && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
               aria-checked={checked && !!value}
               className={classNames.button}
             />

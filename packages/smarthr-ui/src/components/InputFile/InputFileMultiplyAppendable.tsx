@@ -7,7 +7,6 @@ import {
   type ReactNode,
   forwardRef,
   memo,
-  useCallback,
   useId,
   useImperativeHandle,
   useMemo,
@@ -15,6 +14,7 @@ import {
   useState,
 } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
@@ -59,7 +59,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     }, [disabled, size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
-    const isUpdatingFilesDirectly = useRef(false)
+    const isUpdatingFilesRef = useRef(false)
 
     const inputRef = useRef<HTMLInputElement>(null)
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
@@ -67,58 +67,54 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       () => inputRef.current,
     )
 
-    const unstableRef = useRef({ onChange, files })
-    unstableRef.current = { onChange, files }
+    const latest = useLatest({ onChange, files })
 
-    const updateFiles = useCallback((newFiles: File[]) => {
-      if (!inputRef.current) {
-        return
-      }
-
-      unstableRef.current.onChange?.(newFiles)
-
-      const buff = new DataTransfer()
-      newFiles.forEach((file) => {
-        buff.items.add(file)
-      })
-
-      isUpdatingFilesDirectly.current = true
-      inputRef.current.files = buff.files
-      isUpdatingFilesDirectly.current = false
-
-      setFiles(newFiles)
-    }, [])
-
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        // Safari において、input.files への直接代入時はonChangeを発火させない
-        if (isUpdatingFilesDirectly.current) {
-          return
-        }
-
-        const newFiles = Array.from(e.target.files ?? [])
-
-        updateFiles([...unstableRef.current.files, ...newFiles])
-      },
-      [updateFiles],
-    )
-
-    const handleDelete = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => {
+    const functions = useMemo(() => {
+      const updateFiles = (newFiles: File[]) => {
         if (!inputRef.current) {
           return
         }
 
-        const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = unstableRef.current.files.filter((_, i) => index !== i)
+        latest.onChange?.(newFiles)
 
-        // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-        inputRef.current.value = ''
+        const buff = new DataTransfer()
+        newFiles.forEach((file) => {
+          buff.items.add(file)
+        })
 
-        updateFiles(newFiles)
-      },
-      [updateFiles],
-    )
+        isUpdatingFilesRef.current = true
+        inputRef.current.files = buff.files
+        isUpdatingFilesRef.current = false
+
+        setFiles(newFiles)
+      }
+
+      return {
+        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
+          // Safari において、input.files への直接代入時はonChangeを発火させない
+          if (isUpdatingFilesRef.current) {
+            return
+          }
+
+          const newFiles = Array.from(e.target.files ?? [])
+
+          updateFiles([...latest.files, ...newFiles])
+        },
+        handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
+          if (!inputRef.current) {
+            return
+          }
+
+          const index = parseInt(e.currentTarget.value, 10)
+          const newFiles = latest.files.filter((_, i) => index !== i)
+
+          // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
+          inputRef.current.value = ''
+
+          updateFiles(newFiles)
+        },
+      }
+    }, [latest])
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
@@ -128,7 +124,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
               <FileListItem
                 key={index}
                 value={index}
-                onDeleteClick={handleDelete}
+                handleDeleteClick={functions.handleDelete}
                 destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
@@ -143,7 +139,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
             multiple
             data-smarthr-ui-input="true"
             type="file"
-            onChange={handleChange}
+            onChange={functions.handleChange}
             disabled={disabled}
             ref={inputRef}
             aria-invalid={error || undefined}
@@ -160,20 +156,20 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
 type FileListItemProps = PropsWithChildren<{
   value: number
-  onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
+  handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
   destroyLabel: string
   className: string
 }>
 
 const FileListItem = memo<FileListItemProps>(
-  ({ value, onDeleteClick, destroyLabel, className, children }) => (
+  ({ value, handleDeleteClick, destroyLabel, className, children }) => (
     <li className={className}>
       <span className="smarthr-ui-InputFile-fileName">{children}</span>
       <Button
         variant="text"
         prefix={<FaTrashCanIcon />}
         value={value}
-        onClick={onDeleteClick}
+        onClick={handleDeleteClick}
         className="smarthr-ui-InputFile-deleteButton"
       >
         {destroyLabel}
