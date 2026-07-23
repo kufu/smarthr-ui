@@ -85,7 +85,7 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
       role="tooltip"
       aria-hidden={!isVisible}
       className={classNames.container}
-      style={style}
+      style={isVisible ? style : undefined}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}
