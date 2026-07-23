@@ -1,6 +1,6 @@
 import { type FC, memo, useMemo } from 'react'
 
-import { useIntl } from '../../../../intl'
+import { Localizer, useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
@@ -25,23 +25,15 @@ const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => (
   </Dropdown>
 )
 
-const MemoizedDropdownTrigger = memo(() => {
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
-    }),
-    [localize],
-  )
-
-  return (
-    <DropdownTrigger>
-      <Button variant="skeleton" size="S" className="[&&&]:shr-border-transparent">
-        <FaCircleQuestionIcon alt={translated.help} />
-      </Button>
-    </DropdownTrigger>
-  )
-})
+const MemoizedDropdownTrigger = memo(() => (
+  <DropdownTrigger>
+    <Button variant="skeleton" size="S" className="[&&&]:shr-border-transparent">
+      <FaCircleQuestionIcon
+        alt={<Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />}
+      />
+    </Button>
+  </DropdownTrigger>
+))
 
 const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
   const { localize } = useIntl()
