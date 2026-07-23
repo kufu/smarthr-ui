@@ -16,7 +16,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -169,22 +169,8 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 
 const SelectButton = memo<
   ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
->(({ onClick, label, ...rest }) => {
-  const { localize } = useIntl()
-
-  const buttonLabel = useMemo(
-    () =>
-      label ||
-      localize({
-        id: 'smarthr-ui/DropZone/selectButtonLabel',
-        defaultText: 'ファイルを選択',
-      }),
-    [label, localize],
-  )
-
-  return (
-    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
-      {buttonLabel}
-    </Button>
-  )
-})
+>(({ onClick, label, ...rest }) => (
+  <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
+    {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
+  </Button>
+))
