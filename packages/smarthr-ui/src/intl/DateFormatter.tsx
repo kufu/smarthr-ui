@@ -2,9 +2,7 @@
 
 import dayjs from 'dayjs'
 
-import { useDateFormat } from './useDateFormat'
-
-import type { FormatDateProps } from './useDateFormat'
+import { type FormatDateProps, useDateFormat } from './useDateFormat'
 
 /**
  * 日付を現在のロケールに応じてフォーマットして表示するコンポーネント

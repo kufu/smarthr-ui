@@ -11,8 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useLatest } from '../../../hooks/useLatest'
-import { useIntl } from '../../../intl'
+import { useAvailableLocales, useIntl } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -104,10 +103,13 @@ export const LanguageSwitcher: FC<Props> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const { localize, availableLocales } = useIntl()
+  const { localize } = useIntl()
+  const availableLocales = useAvailableLocales()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
-      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
+      locales: Object.entries(localeMap).filter(([code]) =>
+        availableLocales.includes(code as Locale),
+      ),
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
     [localeMap, availableLocales],
@@ -134,17 +136,14 @@ export const LanguageSwitcher: FC<Props> = ({
     }
   }, [enableNew, invert])
 
-  const latest = useLatest({ onLanguageSelect })
-
-  const hasOnLanguageSelect = !!onLanguageSelect
-
-  const functions = useMemo(
-    () => ({
-      handleClickLanguageSelect: hasOnLanguageSelect
-        ? (e: MouseEvent<HTMLButtonElement>) => latest.onLanguageSelect?.(e.currentTarget.value)
+  const onClickLanguageSelect = useMemo(
+    () =>
+      onLanguageSelect
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            onLanguageSelect(e.currentTarget.value)
+          }
         : undefined,
-    }),
-    [hasOnLanguageSelect, latest],
+    [onLanguageSelect],
   )
 
   return (
@@ -164,7 +163,7 @@ export const LanguageSwitcher: FC<Props> = ({
               className={classNames.languageItem}
               buttonStyle={classNames.languageButton}
               current={currentLang === code}
-              handleClick={functions.handleClickLanguageSelect}
+              onClick={onClickLanguageSelect}
               iconAlt={checkIconAlt}
             >
               {label}
@@ -183,12 +182,12 @@ const LanguageListItemButton = memo<{
   buttonStyle: string
   current: boolean
   iconAlt: ReactNode
-  handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, iconAlt, handleClick }) => (
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ code, children, buttonStyle, className, current, iconAlt, onClick }) => (
   <li key={code} className={className} aria-current={current} lang={code}>
     <Button
       value={code}
-      onClick={handleClick}
+      onClick={onClick}
       wide
       prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
       className={buttonStyle}

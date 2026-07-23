@@ -2,9 +2,7 @@
 
 import dayjs from 'dayjs'
 
-import { useDateFormat } from './useDateFormat'
-
-import type { FormatTimestampProps } from './useDateFormat'
+import { type FormatTimestampProps, useDateFormat } from './useDateFormat'
 
 /**
  * タイムスタンプ（日付＋時刻）を現在のロケールに応じてフォーマットして表示するコンポーネント
