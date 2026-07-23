@@ -110,6 +110,23 @@ type Props = Omit<VariantProps<typeof classNameGenerator>, 'rowGap' | 'columnGap
   }> &
   ComponentPropsWithRef<'div'>
 
+/**
+ * @deprecated Clusterのlayout propを使用してください
+ * @example
+ * ```tsx
+ * // Before
+ * <Sidebar right>
+ *   <div>メイン</div>
+ *   <div>サブ</div>
+ * </Sidebar>
+ *
+ * // After
+ * <Cluster layout="main sub">
+ *   <div>メイン</div>
+ *   <div>サブ</div>
+ * </Cluster>
+ * ```
+ */
 export const Sidebar = forwardRef<HTMLDivElement, Props>(
   (
     {

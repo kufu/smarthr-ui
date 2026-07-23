@@ -1,6 +1,7 @@
 export { Stack } from './Stack'
 export { Cluster } from './Cluster'
 export { Reel } from './Reel'
+/** @deprecated Clusterのlayout propを使用してください */
 export { Sidebar } from './Sidebar'
 export { Center } from './Center'
 export { Container } from './Container'
