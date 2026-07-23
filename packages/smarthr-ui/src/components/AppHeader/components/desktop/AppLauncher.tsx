@@ -161,28 +161,24 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           <Section className={classNames.mainInner}>
             <Cluster className={classNames.contentHead} align="center" justify="space-between">
               <MemoizedSubSubBlockHeading>
-                {mode === 'search' ? (
-                  <Translate>
+                <Translate>
+                  {mode === 'search' ? (
                     <Localizer
                       id="smarthr-ui/AppHeader/Launcher/searchResultText"
                       defaultText="検索結果"
                     />
-                  </Translate>
-                ) : page === 'favorite' ? (
-                  <Translate>
+                  ) : page === 'favorite' ? (
                     <Localizer
                       id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
                       defaultText="よく使うアプリ"
                     />
-                  </Translate>
-                ) : (
-                  <Translate>
+                  ) : (
                     <Localizer
                       id="smarthr-ui/AppHeader/Launcher/allModeText"
                       defaultText="すべてのアプリ"
                     />
-                  </Translate>
-                )}
+                  )}
+                </Translate>
               </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (
