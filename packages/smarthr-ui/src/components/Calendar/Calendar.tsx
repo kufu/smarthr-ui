@@ -15,7 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { useDateFormat, useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
@@ -53,7 +53,7 @@ const classNameGenerator = tv({
 
 export const Calendar = forwardRef<HTMLDivElement, Props>(
   ({ from = minDate, to, onSelectDate, value, className, ...rest }, ref) => {
-    const { formatDate, getWeekStartDay } = useIntl()
+    const { formatDate, getWeekStartDay } = useDateFormat()
 
     const classNames = useMemo(() => {
       const { container, yearMonth, header, monthButtons, tableLayout, yearSelectButton } =
