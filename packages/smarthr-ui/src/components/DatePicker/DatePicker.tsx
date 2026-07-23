@@ -162,6 +162,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       showAlternative,
       onBlur,
       selectedDate,
+      isInputFocused,
     })
 
     const functions = useMemo(() => {
@@ -327,7 +328,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
         const firstCalendarButton = calendarButtons[0]
 
-        if (isInputFocused) {
+        if (latest.isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
             functions.closeCalendar()
@@ -363,7 +364,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       return () => {
         window.removeEventListener('keydown', handleKeyDown)
       }
-    }, [functions, isInputFocused])
+    }, [functions, latest])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
