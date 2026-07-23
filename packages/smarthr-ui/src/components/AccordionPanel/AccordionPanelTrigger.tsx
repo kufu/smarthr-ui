@@ -88,7 +88,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
       triggerId={triggerId}
       isExpanded={isExpanded}
       contentId={contentId}
-      handleClickTrigger={handleClickTrigger}
+      actualOnClick={handleClickTrigger}
       handleKeyDown={handleKeyDown}
       classNames={classNames}
       iconPosition={iconPosition}
@@ -107,7 +107,7 @@ const MemoizedHeadingButton = memo<
       triggerId: string
       isExpanded: boolean
       contentId: string
-      handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
+      actualOnClick: ((e: MouseEvent<HTMLButtonElement>) => void) | undefined
       handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
       classNames: {
         button: string
@@ -128,7 +128,7 @@ const MemoizedHeadingButton = memo<
     triggerId,
     isExpanded,
     contentId,
-    handleClickTrigger,
+    actualOnClick,
     handleKeyDown,
     classNames,
     iconPosition,
@@ -145,7 +145,7 @@ const MemoizedHeadingButton = memo<
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        onClick={handleClickTrigger}
+        onClick={actualOnClick}
         onKeyDown={handleKeyDown}
         className={classNames.button}
         data-component="AccordionHeaderButton"
