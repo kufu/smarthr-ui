@@ -1,13 +1,12 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 import {
   type PrimitiveType,
   type MessageDescriptor as ReactIntlMessageDescriptor,
   useIntl as useReactIntl,
 } from 'react-intl'
 
-import { useAvailableLocales } from './IntlProvider'
 import { locales, type typedJa } from './locales'
 
 import type { FormatXMLElementFn, Options as IntlMessageFormatOptions } from 'intl-messageformat'
@@ -23,8 +22,6 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
  * useIntlフックの戻り値の型定義
  */
 export type UseIntlReturn = {
-  /** 利用可能なロケールのリスト */
-  availableLocales: string[]
   /** メッセージのローカライズ関数 */
   localize: <T extends keyof Messages>(
     descriptor: MessageDescriptor<T>,
@@ -50,30 +47,27 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
  * }
  *
  * @example
- * // 利用可能なロケールの確認
+ * // 現在のロケールの取得
  * const Component = () => {
- *   const { availableLocales, locale } = useIntl()
+ *   const { locale } = useIntl()
  *   return <div>現在のロケール: {locale}</div>
  * }
  */
 export const useIntl = (): UseIntlReturn => {
   const intl = useReactIntl()
-  const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
-  const availableLocales = useAvailableLocales()
 
-  const localize = useCallback(
-    <T extends keyof Messages>(
-      descriptor: MessageDescriptor<T>,
-      values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
-      opts?: IntlMessageFormatOptions,
-    ): string =>
-      intl.formatMessage({ ...descriptor, defaultMessage: descriptor.defaultText }, values, opts),
+  const result = useMemo(
+    () => ({
+      localize: <T extends keyof Messages>(
+        descriptor: MessageDescriptor<T>,
+        values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>,
+        opts?: IntlMessageFormatOptions,
+      ): string =>
+        intl.formatMessage({ ...descriptor, defaultMessage: descriptor.defaultText }, values, opts),
+      locale: isValidLocale(intl.locale) ? intl.locale : 'ja',
+    }),
     [intl],
   )
 
-  return {
-    availableLocales,
-    localize,
-    locale,
-  }
+  return result
 }

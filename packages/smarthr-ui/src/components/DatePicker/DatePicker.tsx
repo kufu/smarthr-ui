@@ -5,12 +5,10 @@ import {
   type ChangeEvent,
   type ComponentProps,
   type ComponentPropsWithRef,
-  type FocusEventHandler,
   type MouseEvent,
   type ReactNode,
   forwardRef,
   memo,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -20,6 +18,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTheme'
 import { Calendar } from '../Calendar'
@@ -28,7 +27,6 @@ import { Input } from '../Input'
 
 import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
-import { useGlobalKeyDown } from './useGlobalKeyDown'
 
 type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
 type AbstractProps = {
@@ -92,8 +90,15 @@ const classNameGenerator = tv({
 const DEFAULT_DATE_TO_STRING_FORMAT = 'YYYY/MM/DD'
 const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
-const RETURN_NULL = () => null
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+
+const parseStringDate = (
+  str: string | null | undefined,
+  parseInputFn: ((input: string) => Date | null) | undefined,
+) => {
+  if (!str) return null
+  return parseInputFn ? parseInputFn(str) : parseJpnDateString(str)
+}
 
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
 export const DatePicker = forwardRef<HTMLInputElement, Props>(
@@ -136,41 +141,47 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [className])
 
-    const stringToDate = useMemo(
-      () =>
-        parseInput
-          ? (str?: string | null) => (str ? parseInput(str) : null)
-          : (str?: string | null) => (str ? parseJpnDateString(str) : null),
-      [parseInput],
-    )
-
-    const dateToString = useMemo(() => formatDate || DEFAULT_DATE_TO_STRING, [formatDate])
-    const dateToAlternativeFormat = useMemo(
-      () => (showAlternative ? (d: Date | null) => (d ? showAlternative(d) : null) : RETURN_NULL),
-      [showAlternative],
-    )
-
-    const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
+    const [isInputFocused, setIsInputFocused] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
-    const [isInputFocused, setIsInputFocused] = useState(false)
     const [isCalendarShown, setIsCalendarShown] = useState(false)
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
+    const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
+      parseStringDate(value, parseInput),
     )
 
-    const baseUpdateDate = useCallback(
-      (newDate: Date | null) => {
+    const latest = useLatest({
+      onChange,
+      onChangeDate,
+      parseInput,
+      formatDate,
+      showAlternative,
+      onBlur,
+      isInputFocused,
+      selectedDate,
+    })
+
+    const functions = useMemo(() => {
+      const dateToString = (date: Date | null) =>
+        latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
+
+      const dateToAlternativeFormat = (d: Date | null) => {
+        if (!latest.showAlternative) return null
+        return d ? latest.showAlternative(d) : null
+      }
+
+      const stringToDate = (str: string | null | undefined) =>
+        parseStringDate(str, latest.parseInput)
+
+      const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
           !inputRef.current ||
-          newDate === selectedDate ||
-          (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
+          newDate === latest.selectedDate ||
+          (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
           return
@@ -190,65 +201,87 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
 
-        return [nextDate, formatValue, errors] as [Date | null, string, string[]]
-      },
-      [selectedDate, dateToString, dateToAlternativeFormat],
-    )
-    const updateDate = useMemo(() => {
-      if (onChange) {
-        return (e: ChangeLikeEvent, newDate: Date | null) => {
-          const result = baseUpdateDate(newDate)
+        if (latest.onChange) {
+          e.preventDefault()
+          e.stopPropagation()
 
-          if (result) {
-            e.preventDefault()
-            e.stopPropagation()
+          const event = new Event('change', { bubbles: true })
+          const input = inputRef.current
 
-            const [nextDate, formatValue, errors] = result
-            const event = new Event('change', { bubbles: true })
-            // HINT: resultが存在する時点でinputRef.currentは必ず存在する
-            const input = inputRef.current as HTMLInputElement
-
-            input.dispatchEvent(event)
-            onChange(
-              // HINT: 型問題のため別途オブジェクトをイベントに見立てる
-              {
-                stopPropagation: () => {
-                  event.stopPropagation()
-                },
-                preventDefault: () => {
-                  event.preventDefault()
-                },
-                target: input,
-                currentTarget: input,
-              } as ChangeEvent<HTMLInputElement>,
-              { date: nextDate, formatValue, errors },
-            )
-          }
+          input.dispatchEvent(event)
+          latest.onChange(
+            // HINT: 型問題のため別途オブジェクトをイベントに見立てる
+            {
+              stopPropagation: () => {
+                event.stopPropagation()
+              },
+              preventDefault: () => {
+                event.preventDefault()
+              },
+              target: input,
+              currentTarget: input,
+            } as ChangeEvent<HTMLInputElement>,
+            { date: nextDate, formatValue, errors },
+          )
+        } else if (latest.onChangeDate) {
+          latest.onChangeDate(nextDate, formatValue, { errors })
         }
       }
 
-      return onChangeDate
-        ? (_e: ChangeLikeEvent, newDate: Date | null) => {
-            const result = baseUpdateDate(newDate)
+      const closeCalendar = () => setIsCalendarShown(false)
 
-            if (result) {
-              const [nextDate, formatValue, errors] = result
-
-              onChangeDate(nextDate, formatValue, { errors })
-            }
-          }
-        : (_e: ChangeLikeEvent, newDate: Date | null) => {
-            baseUpdateDate(newDate)
-          }
-    }, [onChange, onChangeDate, baseUpdateDate])
-
-    const closeCalendar = useCallback(() => setIsCalendarShown(false), [])
-    const openCalendar = useCallback(() => {
-      if (inputWrapperRef.current) {
-        setIsCalendarShown(true)
-        setInputRect(inputWrapperRef.current.getBoundingClientRect())
+      const openCalendar = () => {
+        if (inputWrapperRef.current) {
+          setIsCalendarShown(true)
+          setInputRect(inputWrapperRef.current.getBoundingClientRect())
+        }
       }
-    }, [])
+
+      return {
+        stringToDate,
+        dateToString,
+        dateToAlternativeFormat,
+        closeCalendar,
+        openCalendar,
+        handleBlur: (e: React.FocusEvent<HTMLInputElement>) => {
+          setIsInputFocused(false)
+          updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
+          latest.onBlur?.(e)
+        },
+        handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (ESCAPE_KEY_REGEX.test(e.key)) {
+            e.stopPropagation()
+            // delay hiding calendar because calendar will be displayed when input is focused
+            requestAnimationFrame(closeCalendar)
+
+            if (inputRef.current) inputRef.current.focus()
+          }
+        },
+        handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter') {
+            const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
+            ;(isExpanded ? closeCalendar : openCalendar)()
+            updateDate(e, stringToDate(e.currentTarget.value))
+          }
+        },
+        handleFocusInput: () => {
+          setIsInputFocused(true)
+          openCalendar()
+        },
+        handleSelectDateCalendar: (e: ChangeLikeEvent, selected: Date | null) => {
+          updateDate(e, selected)
+          // delay hiding calendar because calendar will be displayed when input is focused
+          requestAnimationFrame(closeCalendar)
+
+          if (inputRef.current) inputRef.current.focus()
+        },
+      }
+    }, [latest])
+
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => inputRef.current,
+    )
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
@@ -261,11 +294,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
        * - if the given value is not date formattable.
        */
       if (!isInputFocused) {
-        const newDate = stringToDate(value)
+        const newDate = functions.stringToDate(value)
 
         if (newDate && dayjs(newDate).isValid()) {
-          inputRef.current.value = dateToString(newDate)
-          setAlternativeFormat(dateToAlternativeFormat(newDate))
+          inputRef.current.value = functions.dateToString(newDate)
+          setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
           setSelectedDate(newDate)
 
           return
@@ -275,15 +308,15 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       inputRef.current.value = value || ''
-    }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
+    }, [value, isInputFocused, functions])
 
     useOuterClick(
       useMemo(() => [inputWrapperRef, calendarPortalRef], [inputWrapperRef, calendarPortalRef]),
-      closeCalendar,
+      functions.closeCalendar,
     )
 
-    const handleKeyDown = useCallback(
-      (e: KeyboardEvent) => {
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
         if (!inputRef.current || !calendarPortalRef.current || e.key !== 'Tab') {
           return
         }
@@ -296,10 +329,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
         const firstCalendarButton = calendarButtons[0]
 
-        if (isInputFocused) {
+        if (latest.isInputFocused) {
           if (e.shiftKey) {
             // move focus from Input to previous elements of DatePicker
-            closeCalendar()
+            functions.closeCalendar()
 
             return
           }
@@ -323,83 +356,29 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         } else if (currentFocused === calendarButtonAry.at(-1)) {
           // move focus from Calendar to next elements of DatePicker
           inputRef.current.focus()
-          closeCalendar()
-        }
-      },
-      [isInputFocused, closeCalendar],
-    )
-
-    const baseHandleBlur = useCallback<FocusEventHandler<HTMLInputElement>>(
-      (e) => {
-        setIsInputFocused(false)
-        updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
-      },
-      [stringToDate, updateDate],
-    )
-    const handleBlur = useMemo<FocusEventHandler<HTMLInputElement>>(
-      () =>
-        onBlur
-          ? (e) => {
-              baseHandleBlur(e)
-              onBlur(e)
-            }
-          : baseHandleBlur,
-      [onBlur, baseHandleBlur],
-    )
-
-    useGlobalKeyDown(handleKeyDown)
-
-    const caretIconColor = useMemo(() => {
-      if (isInputFocused || isCalendarShown) return theme.textColor.black
-      if (disabled) return theme.textColor.disabled
-
-      return theme.textColor.grey
-    }, [isInputFocused, isCalendarShown, disabled, theme.textColor])
-
-    const onDelegateKeyDown = useMemo(() => {
-      if (!isCalendarShown) {
-        return undefined
-      }
-
-      return (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (ESCAPE_KEY_REGEX.test(e.key)) {
-          e.stopPropagation()
-          // delay hiding calendar because calendar will be displayed when input is focused
-          requestAnimationFrame(closeCalendar)
-
-          if (inputRef.current) inputRef.current.focus()
+          functions.closeCalendar()
         }
       }
-    }, [isCalendarShown, closeCalendar])
-    const onKeyPressInput = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-          ;(isCalendarShown ? openCalendar : closeCalendar)()
-          updateDate(e, stringToDate(e.currentTarget.value))
-        }
-      },
-      [isCalendarShown, updateDate, closeCalendar, openCalendar, stringToDate],
-    )
-    const onFocusInput = useCallback(() => {
-      setIsInputFocused(true)
-      openCalendar()
-    }, [openCalendar])
-    const onSelectDateCalendar = useCallback(
-      (e: ChangeLikeEvent, selected: Date | null) => {
-        updateDate(e, selected)
-        // delay hiding calendar because calendar will be displayed when input is focused
-        requestAnimationFrame(closeCalendar)
 
-        if (inputRef.current) inputRef.current.focus()
-      },
-      [updateDate, closeCalendar],
-    )
-    const onDelegateClick = !isCalendarShown && !disabled ? openCalendar : undefined
+      window.addEventListener('keydown', handleKeyDown)
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown)
+      }
+    }, [functions, latest])
+
+    const caretIconColor =
+      isInputFocused || isCalendarShown
+        ? theme.textColor.black
+        : disabled
+          ? theme.textColor.disabled
+          : theme.textColor.grey
 
     return (
+      // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
-        onClick={onDelegateClick}
-        onKeyDown={onDelegateKeyDown}
+        onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
+        onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
         className={classNames.container}
         style={containerStyle}
@@ -410,10 +389,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             data-smarthr-ui-input="true"
             width="100%"
             name={name}
-            onChange={isCalendarShown ? closeCalendar : undefined}
-            onKeyPress={onKeyPressInput}
-            onFocus={onFocusInput}
-            onBlur={handleBlur}
+            onChange={isCalendarShown ? functions.closeCalendar : undefined}
+            onKeyPress={functions.handleKeyPressInput}
+            onFocus={functions.handleFocusInput}
+            onBlur={functions.handleBlur}
             suffix={
               <InputSuffixIcon
                 alternativeFormat={showAlternative ? alternativeFormat : null}
@@ -437,7 +416,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
               value={selectedDate || undefined}
               from={from}
               to={to}
-              onSelectDate={onSelectDateCalendar}
+              onSelectDate={functions.handleSelectDateCalendar}
             />
           </Portal>
         )}

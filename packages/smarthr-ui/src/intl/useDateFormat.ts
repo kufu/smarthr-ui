@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 import { useIntl as useReactIntl } from 'react-intl'
 
 import { locales } from './locales'
@@ -23,7 +23,7 @@ export type FormatDateProps = {
   /**
    * フォーマットオプション
    */
-  options?: Intl.DateTimeFormatOptions & {
+  options?: Omit<Intl.DateTimeFormatOptions, 'dateStyle' | 'timeStyle'> & {
     /**
      * 日本語ロケールでスラッシュを無効化し、月を長形式で表示する
      * @example
@@ -56,7 +56,7 @@ export type FormatTimeProps = {
   /**
    * フォーマットオプション
    */
-  options?: Intl.DateTimeFormatOptions
+  options?: Omit<Intl.DateTimeFormatOptions, 'dateStyle' | 'timeStyle'>
 }
 
 export type FormatTimestampProps = {
@@ -149,9 +149,6 @@ export type UseDateFormatReturn = {
    * @returns 週の開始日（0 = 日曜日, 1 = 月曜日, ..., 6 = 土曜日）
    */
   getWeekStartDay: () => number
-
-  /** 現在のロケール */
-  locale: keyof typeof locales
 }
 
 const WEEK_START_DAYS = {
@@ -302,16 +299,21 @@ const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
  * @example
  * // 週の開始日の取得
  * const Component = () => {
- *   const { getWeekStartDay, locale } = useDateFormat()
+ *   const { getWeekStartDay } = useDateFormat()
  *   return <div>週の開始日: {getWeekStartDay()}</div>
  * }
  */
 export const useDateFormat = (): UseDateFormatReturn => {
   const intl = useReactIntl()
-  const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
 
-  const formatDate = useCallback(
-    ({ date, parts = ['year', 'month', 'day'], options }: FormatDateProps): string => {
+  const functions = useMemo(() => {
+    const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
+
+    const formatDate = ({
+      date,
+      parts = ['year', 'month', 'day'],
+      options,
+    }: FormatDateProps): string => {
       const {
         disableSlashInJa = false,
         capitalizeFirstLetter = false,
@@ -364,12 +366,9 @@ export const useDateFormat = (): UseDateFormatReturn => {
       }
 
       return applyCapitalization(formattedResult, capitalizeFirstLetter)
-    },
-    [intl, locale],
-  )
+    }
 
-  const formatTime = useCallback(
-    ({ date, parts = ['hour', 'minute'], options }: FormatTimeProps): string => {
+    const formatTime = ({ date, parts = ['hour', 'minute'], options }: FormatTimeProps): string => {
       const formatOptions = options || {}
 
       const hasPart = parts.reduce(
@@ -393,26 +392,19 @@ export const useDateFormat = (): UseDateFormatReturn => {
       }
 
       return intl.formatDate(date, actualFormatOptions)
-    },
-    [intl, locale],
-  )
+    }
 
-  const formatTimestamp = useCallback(
-    ({ date, timeParts = ['hour', 'minute'] }: FormatTimestampProps): string => {
-      const formattedDate = formatDate({ date, parts: ['year', 'month', 'day'] })
-      const formattedTime = formatTime({ date, parts: timeParts })
-      return `${formattedDate} ${formattedTime}`
-    },
-    [formatDate, formatTime],
-  )
+    return {
+      formatDate,
+      formatTime,
+      formatTimestamp: ({ date, timeParts = ['hour', 'minute'] }: FormatTimestampProps): string => {
+        const formattedDate = formatDate({ date, parts: ['year', 'month', 'day'] })
+        const formattedTime = formatTime({ date, parts: timeParts })
+        return `${formattedDate} ${formattedTime}`
+      },
+      getWeekStartDay: (): number => DATE_FORMATS[locale].weekStartDay,
+    }
+  }, [intl])
 
-  const getWeekStartDay = (): number => DATE_FORMATS[locale].weekStartDay
-
-  return {
-    formatDate,
-    formatTime,
-    formatTimestamp,
-    getWeekStartDay,
-    locale,
-  }
+  return functions
 }

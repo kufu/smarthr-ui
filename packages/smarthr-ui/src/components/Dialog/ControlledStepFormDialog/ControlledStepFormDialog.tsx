@@ -5,19 +5,20 @@ import {
   type FC,
   type FormEvent,
   type ReactNode,
-  useCallback,
   useContext,
   useMemo,
   useRef,
 } from 'react'
 
-import { Localizer } from '../../../intl'
+import { useLatest } from '../../../hooks/useLatest'
+import { useIntl } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
 import {
   StepFormDialogContentInner,
+  type AbstractProps as StepFormDialogContentInnerAbstractProps,
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
@@ -33,15 +34,30 @@ import type { DialogProps /** コンテンツなにもないDialogの基本props
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
+type DefaultTextsType = Record<
+  'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel',
+  ReactNode
+>
+
 type AbstractProps = Omit<
   StepFormDialogContentInnerProps,
-  'heading' | 'activeStep' | 'submitButton' | 'closeButton' | 'backButton'
+  | 'heading'
+  | 'activeStep'
+  | 'submitButton'
+  | 'closeButton'
+  | 'backButton'
+  | 'handleClickClose'
+  | 'handleClickBack'
+  | 'handleSubmit'
 > &
   DialogProps & {
     heading: HeadingType
     submitButton: ButtonArgType | ObjectButtonType
     closeButton?: ButtonArgType | ObjectButtonType
     backButton?: ButtonArgType | ObjectButtonType
+    onSubmit: StepFormDialogContentInnerAbstractProps['handleSubmit']
+    onClickClose: () => void
+    onClickBack?: () => void
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
@@ -76,8 +92,26 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   isOpen,
   ...rest
 }) => {
+  const { localize } = useIntl()
+  const defaultTexts: DefaultTextsType = useMemo(
+    () => ({
+      closeButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
+        defaultText: 'キャンセル',
+      }),
+      nextButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
+        defaultText: '次へ',
+      }),
+      backButtonLabel: localize({
+        id: 'smarthr-ui/StepFormDialog/backButtonLabel',
+        defaultText: '戻る',
+      }),
+    }),
+    [localize],
+  )
   const { currentStep } = useContext(StepFormDialogContext)
-  const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
+  const activeStep = currentStep?.stepNumber ?? 1
 
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
@@ -88,7 +122,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     button: originalSubmitButton,
     currentStep,
     defaultValues: {
-      text: <Localizer id="smarthr-ui/StepFormDialog/nextButtonLabel" defaultText="次へ" />,
+      text: defaultTexts.nextButtonLabel,
       theme: 'primary' as const,
     },
   })
@@ -96,54 +130,54 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     () => ({
       ...tempSubmitButton,
       text:
-        tempSubmitButton.functionCall.text || activeStep === stepLength ? (
-          tempSubmitButton.text
-        ) : (
-          <Localizer id="smarthr-ui/StepFormDialog/nextButtonLabel" defaultText="次へ" />
-        ),
+        tempSubmitButton.functionCall.text || activeStep === stepLength
+          ? tempSubmitButton.text
+          : defaultTexts.nextButtonLabel,
     }),
-    [tempSubmitButton, activeStep, stepLength],
+    [tempSubmitButton, activeStep, stepLength, defaultTexts.nextButtonLabel],
   )
   const closeButton = useStepFormDialogButton({
     button: originalCloseButton,
     currentStep,
     defaultValues: {
-      text: <Localizer id="smarthr-ui/StepFormDialog/closeButtonLabel" defaultText="キャンセル" />,
+      text: defaultTexts.closeButtonLabel,
     },
   })
   const backButton = useStepFormDialogButton({
     button: originalBackButton,
     currentStep,
     defaultValues: {
-      text: <Localizer id="smarthr-ui/StepFormDialog/backButtonLabel" defaultText="戻る" />,
+      text: defaultTexts.backButtonLabel,
     },
   })
 
   const focusTrapRef = useRef<FocusTrapRef>(null)
 
-  const actualOnClickClose = useCallback(() => {
-    if (isOpen) {
-      focusTrapRef.current?.focus()
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+  const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 
-  const onDelegateSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
-      if (isOpen) {
-        focusTrapRef.current?.focus()
-        onSubmit(e, helpers)
-      }
-    },
-    [onSubmit, isOpen],
+  const functions = useMemo(
+    () => ({
+      handleClickClose: () => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onClickClose()
+        }
+      },
+      handleSubmit: (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onSubmit(e, helpers)
+        }
+      },
+      handleClickBack: () => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onClickBack?.()
+        }
+      },
+    }),
+    [latest],
   )
-
-  const actualOnClickBack = useCallback(() => {
-    if (isOpen) {
-      focusTrapRef.current?.focus()
-      onClickBack?.()
-    }
-  }, [isOpen, onClickBack])
 
   return (
     <DialogContentInner
@@ -164,9 +198,9 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         submitButton={submitButton}
         closeButton={closeButton}
         backButton={backButton}
-        onClickClose={actualOnClickClose}
-        onSubmit={onDelegateSubmit}
-        onClickBack={actualOnClickBack}
+        handleClickClose={functions.handleClickClose}
+        handleSubmit={functions.handleSubmit}
+        handleClickBack={functions.handleClickBack}
         responseStatus={responseStatus}
       >
         {children}

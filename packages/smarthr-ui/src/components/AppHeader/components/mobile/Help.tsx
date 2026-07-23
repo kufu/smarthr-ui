@@ -52,7 +52,8 @@ const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
           elementAs="a"
           href={helpPageUrl}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="help"
+          referrerPolicy="no-referrer-when-downgrade"
           prefix={<FaCircleQuestionIcon />}
         >
           <Translate>{translated.help}</Translate>

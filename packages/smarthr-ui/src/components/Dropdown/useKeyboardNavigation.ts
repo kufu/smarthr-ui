@@ -1,5 +1,6 @@
-import { type RefObject, useCallback, useContext, useEffect } from 'react'
+import { type RefObject, useContext, useEffect } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
 import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
@@ -13,20 +14,32 @@ export function useKeyboardNavigation(
 ) {
   const { triggerElementRef, rootTriggerRef, onClickCloser } = useContext(DropdownContext)
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+  const latest = useLatest({
+    wrapperRef,
+    triggerElementRef,
+    rootTriggerRef,
+    dummyFocusRef,
+    onClickCloser,
+  })
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Tab') {
-        if (!wrapperRef.current || !triggerElementRef.current || !rootTriggerRef?.current) {
+        if (
+          !latest.wrapperRef.current ||
+          !latest.triggerElementRef.current ||
+          !latest.rootTriggerRef?.current
+        ) {
           return
         }
 
-        const tabbablesInContent = tabbable(wrapperRef.current)
+        const tabbablesInContent = tabbable(latest.wrapperRef.current)
 
         if (tabbablesInContent.length === 0) {
           return
         }
 
-        const trigger = tabbable(triggerElementRef.current).at(-1)
+        const trigger = tabbable(latest.triggerElementRef.current).at(-1)
         const firstTabbable = tabbablesInContent[0]
 
         if (e.target === trigger) {
@@ -41,57 +54,54 @@ export function useKeyboardNavigation(
 
           return
         } else if (e.shiftKey) {
-          if (e.target === firstTabbable || e.target === dummyFocusRef.current) {
+          if (e.target === firstTabbable || e.target === latest.dummyFocusRef.current) {
             // focus the Trigger
             e.preventDefault()
             trigger!.focus()
-            onClickCloser()
+            latest.onClickCloser()
           }
         } else if (e.target === tabbablesInContent.at(-1)) {
           // move focus next of the Trigger
-          const rootTrigger = tabbable(rootTriggerRef.current).at(-1)
+          const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
 
           if (rootTrigger) {
             rootTrigger.focus()
-            onClickCloser()
+            latest.onClickCloser()
           }
         }
       } else if (KEY_ESCAPE.test(e.key)) {
-        if (e.target && e.target === dummyFocusRef.current) {
-          onClickCloser()
+        if (e.target && e.target === latest.dummyFocusRef.current) {
+          latest.onClickCloser()
 
           return
         }
 
-        const trigger = getFirstTabbable(triggerElementRef)
+        const trigger = getFirstTabbable(latest.triggerElementRef)
 
         if (trigger && e.target === trigger) {
           // close the dropdown when the Trigger is focused and Esc key is pressed
-          onClickCloser()
+          latest.onClickCloser()
 
           return
         }
 
-        if (wrapperRef.current) {
-          for (const inner of tabbable(wrapperRef.current)) {
+        if (latest.wrapperRef.current) {
+          for (const inner of tabbable(latest.wrapperRef.current)) {
             if (inner === e.target) {
               // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-              onClickCloser()
+              latest.onClickCloser()
 
               break
             }
           }
         }
       }
-    },
-    [wrapperRef, triggerElementRef, rootTriggerRef, dummyFocusRef, onClickCloser],
-  )
+    }
 
-  useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [handleKeyDown])
+  }, [latest])
 }

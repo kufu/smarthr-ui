@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 
-import { IntlProvider } from './IntlProvider'
+import { IntlProvider, useAvailableLocales } from './IntlProvider'
 import { convertLang } from './localeMap'
 import { locales } from './locales'
 import { useDateFormat } from './useDateFormat'
@@ -29,7 +29,7 @@ describe('intl', () => {
           {children}
         </IntlProvider>
       )
-      const { availableLocales } = renderHook(() => useIntl(), { wrapper }).result.current
+      const availableLocales = renderHook(() => useAvailableLocales(), { wrapper }).result.current
       expect(availableLocales).toEqual(['ja', 'en-us'])
     })
 
@@ -37,7 +37,7 @@ describe('intl', () => {
       const wrapper: FC<PropsWithChildren> = ({ children }) => (
         <IntlProvider locale="ja">{children}</IntlProvider>
       )
-      const { availableLocales } = renderHook(() => useIntl(), { wrapper }).result.current
+      const availableLocales = renderHook(() => useAvailableLocales(), { wrapper }).result.current
       expect(availableLocales).toEqual(Object.keys(locales))
     })
 

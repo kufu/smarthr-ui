@@ -3,7 +3,7 @@
 import { type PropsWithChildren, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { Localizer } from '../../intl'
+import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -26,21 +26,38 @@ type Props = PropsWithChildren<{
   sort?: sortTypes
 }>
 
-const SORT_LABELS = {
-  asc: <Localizer id="smarthr-ui/Th/sortDirectionAsc" defaultText="昇順" />,
-  desc: <Localizer id="smarthr-ui/Th/sortDirectionDesc" defaultText="降順" />,
-  none: <Localizer id="smarthr-ui/Th/sortDirectionNone" defaultText="並び替えなし" />,
-} as const
-
 export const ThSortButton = memo<Props>(({ align, sort, onSort, children }) => {
-  const sortLabel = useMemo(() => (sort ? SORT_LABELS[sort] : undefined), [sort])
+  const { localize } = useIntl()
+
+  const sortLabel = useMemo(() => {
+    switch (sort) {
+      case 'asc':
+        return localize({
+          id: 'smarthr-ui/Th/sortDirectionAsc',
+          defaultText: '昇順',
+        })
+      case 'desc':
+        return localize({
+          id: 'smarthr-ui/Th/sortDirectionDesc',
+          defaultText: '降順',
+        })
+      case 'none':
+        return localize({
+          id: 'smarthr-ui/Th/sortDirectionNone',
+          defaultText: '並び替えなし',
+        })
+    }
+
+    return undefined
+  }, [sort, localize])
+
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
   return (
     <UnstyledButton onClick={onSort} className={className}>
       {children}
       <SortIcon />
-      <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
+      {sortLabel && <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>}
     </UnstyledButton>
   )
 })
