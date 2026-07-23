@@ -10,6 +10,7 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -95,21 +96,35 @@ export const AccordionPanelTrigger: FC<Props> = ({
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
-  const handleClick = useCallback(
+  const unstableRef = useRef({
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+  })
+  unstableRef.current = {
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+  }
+
+  const stableOnClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onClickTrigger?.(e.currentTarget.value, !isExpanded)
-      if (onClickProps) {
+      const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+      unstableRef.current.onClickTrigger?.(e.currentTarget.value, newIsExpanded)
+      if (unstableRef.current.onClickProps) {
         const newExpandedItems = getNewExpandedItems(
-          expandedItems,
+          unstableRef.current.expandedItems,
           e.currentTarget.value,
-          !isExpanded,
+          newIsExpanded,
           expandableMultiply,
         )
-        onClickProps(mapToKeyArray(newExpandedItems))
+        unstableRef.current.onClickProps(mapToKeyArray(newExpandedItems))
       }
     },
-    [isExpanded, expandedItems, expandableMultiply, onClickTrigger, onClickProps],
+    [expandableMultiply],
   )
+
+  const actualOnClick = onClickTrigger || onClickProps ? stableOnClick : undefined
 
   const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
     (e): void => {
@@ -157,7 +172,7 @@ export const AccordionPanelTrigger: FC<Props> = ({
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        onClick={onClickTrigger || onClickProps ? handleClick : undefined}
+        onClick={actualOnClick}
         onKeyDown={handleKeyDown}
         className={classNames.button}
         data-component="AccordionHeaderButton"
