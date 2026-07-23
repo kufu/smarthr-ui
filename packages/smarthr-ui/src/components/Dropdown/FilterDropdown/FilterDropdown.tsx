@@ -172,15 +172,11 @@ export const FilterDropdown: FC<Props> = ({
 
   const classNames = classNamesMapper[filtered ? 'filtered' : 'unfiltered']
 
-  const triggerText = useMemo(
-    () =>
-      trigger.text || (
-        <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
-      ),
-    [trigger.text],
-  )
+  const buttonValues = useMemo(() => {
+    const triggerText = trigger.text || (
+      <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
+    )
 
-  const { buttonSuffix, buttonContent } = useMemo(() => {
     const FilterIcon = (
       <span className={classNames.iconWrapper}>
         <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
@@ -197,22 +193,24 @@ export const FilterDropdown: FC<Props> = ({
 
     if (trigger.onlyIcon) {
       return {
-        buttonSuffix: undefined,
-        buttonContent: FilterIcon,
+        suffix: undefined,
+        content: FilterIcon,
+        triggerText,
       }
     }
 
     return {
-      buttonSuffix: FilterIcon,
-      buttonContent: triggerText,
+      suffix: FilterIcon,
+      content: triggerText,
+      triggerText,
     }
-  }, [filtered, triggerText, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
+  }, [filtered, trigger.text, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: triggerText }}>
-        <Button {...rest} suffix={buttonSuffix} size={trigger.size}>
-          {buttonContent}
+      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: buttonValues.triggerText }}>
+        <Button {...rest} suffix={buttonValues.suffix} size={trigger.size}>
+          {buttonValues.content}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
