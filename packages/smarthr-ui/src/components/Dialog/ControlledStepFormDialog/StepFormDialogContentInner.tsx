@@ -1,7 +1,16 @@
 'use client'
 
-import { type FC, type FormEvent, type PropsWithChildren, useCallback, useContext } from 'react'
+import {
+  type FC,
+  type FormEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useContext,
+  useMemo,
+} from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
@@ -39,7 +48,7 @@ export type AbstractProps = PropsWithChildren<
      * @param e フォームイベント
      * @param helpers ステップ操作用のヘルパー関数群
      */
-    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
+    handleSubmit: (e: FormEvent<HTMLFormElement>, helpers: StepFormHelpers) => void
     /** キャンセルボタン */
     closeButton: CommonButtonType
     /** 戻るボタン */
@@ -49,11 +58,11 @@ export type AbstractProps = PropsWithChildren<
 
 export type StepFormDialogContentInnerProps = AbstractProps & {
   firstStep: StepItem
-  onClickClose: () => void
+  handleClickClose: () => void
   responseStatus?: ResponseStatus
   /** ステップの総数 */
   stepLength: number
-  onClickBack?: () => void
+  handleClickBack?: () => void
 }
 
 const BUTTON_COLUMN_GAP = {
@@ -83,60 +92,70 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   backButton,
   stepLength,
   firstStep,
-  onSubmit,
-  onClickClose,
+  handleSubmit,
+  handleClickClose,
   responseStatus,
-  onClickBack,
+  handleClickBack,
 }) => {
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
     useContext(StepFormDialogContext)
 
-  const handleCloseAction = useCallback(() => {
-    onClickClose()
-    setTimeout(() => {
-      // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
-      stepQueueRef.current = []
-      setCurrentStep(firstStep)
-    }, 300)
-  }, [firstStep, stepQueueRef, setCurrentStep, onClickClose])
+  const latest = useLatest({
+    handleClickClose,
+    handleSubmit,
+    handleClickBack,
+    currentStep,
+    firstStep,
+    setCurrentStep,
+    stepQueueRef,
+    scrollerRef,
+  })
 
-  const changeCurrentStep = useCallback(
-    (step: Parameters<typeof setCurrentStep>[0]) => {
-      setCurrentStep(step)
+  const functions = useMemo(() => {
+    const handleCloseAction = () => {
+      latest.handleClickClose()
+      setTimeout(() => {
+        // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
+        latest.stepQueueRef.current = []
+        latest.setCurrentStep(latest.firstStep)
+      }, 300)
+    }
+
+    const changeCurrentStep = (step: Parameters<typeof setCurrentStep>[0]) => {
+      latest.setCurrentStep(step)
 
       // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
-      if (scrollerRef.current) {
-        scrollerRef.current.scroll(0, 0)
+      if (latest.scrollerRef.current) {
+        latest.scrollerRef.current.scroll(0, 0)
       }
-    },
-    [setCurrentStep, scrollerRef],
-  )
+    }
 
-  const handleSubmitAction = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-      // 親formが意図せずsubmitされてしまう場合がある
-      e.stopPropagation()
+    return {
+      handleCloseAction,
+      handleSubmitAction: (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+        // 親formが意図せずsubmitされてしまう場合がある
+        e.stopPropagation()
 
-      const helpers: StepFormHelpers = {
-        goto: (nextStep: StepItem) => {
-          stepQueueRef.current.push(currentStep)
-          changeCurrentStep(nextStep)
-        },
-        close: handleCloseAction,
-        currentStep,
-      }
+        const helpers: StepFormHelpers = {
+          goto: (nextStep: StepItem) => {
+            latest.stepQueueRef.current.push(latest.currentStep)
+            changeCurrentStep(nextStep)
+          },
+          close: handleCloseAction,
+          currentStep: latest.currentStep,
+        }
 
-      onSubmit(e, helpers)
-    },
-    [currentStep, stepQueueRef, onSubmit, handleCloseAction, changeCurrentStep],
-  )
-  const handleBackAction = useCallback(() => {
-    onClickBack?.()
+        latest.handleSubmit(e, helpers)
+      },
+      handleBackAction: () => {
+        latest.handleClickBack?.()
 
-    changeCurrentStep(stepQueueRef.current.pop() ?? firstStep)
-  }, [firstStep, stepQueueRef, onClickBack, changeCurrentStep])
+        changeCurrentStep(latest.stepQueueRef.current.pop() ?? latest.firstStep)
+      },
+    }
+  }, [latest])
 
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
@@ -145,7 +164,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
-      <form onSubmit={handleSubmitAction}>
+      <form onSubmit={functions.handleSubmitAction}>
         <div className={CLASS_NAMES.wrapper}>
           <DialogHeading
             id={heading.id}
@@ -162,36 +181,29 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           <div className={CLASS_NAMES.actionArea}>
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
-                <Button
-                  onClick={handleBackAction}
+                <BackButton
+                  handleClick={functions.handleBackAction}
                   variant={backButton.theme}
                   disabled={backButton.disabled || calcedResponseStatus.isProcessing}
-                  className="smarthr-ui-Dialog-backButton"
-                >
-                  {backButton.text}
-                </Button>
+                  text={backButton.text}
+                />
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
                 {!closeButton.hidden && (
-                  <Button
-                    onClick={handleCloseAction}
+                  <CloseButton
+                    handleClick={functions.handleCloseAction}
                     variant={closeButton.theme}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-closeButton"
-                  >
-                    {closeButton.text}
-                  </Button>
+                    text={closeButton.text}
+                  />
                 )}
                 {!submitButton.hidden && (
-                  <Button
-                    type="submit"
+                  <SubmitButton
                     variant={submitButton.theme}
                     disabled={submitButton.disabled}
                     loading={calcedResponseStatus.isProcessing}
-                    className="smarthr-ui-Dialog-actionButton"
-                  >
-                    {submitButton.text}
-                  </Button>
+                    text={submitButton.text}
+                  />
                 )}
               </Cluster>
             </Cluster>
@@ -205,3 +217,52 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     </Section>
   )
 }
+
+const BackButton = memo<{
+  handleClick: () => void
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  text: ReactNode
+}>(({ handleClick, variant, disabled, text }) => (
+  <Button
+    onClick={handleClick}
+    variant={variant}
+    disabled={disabled}
+    className="smarthr-ui-Dialog-backButton"
+  >
+    {text}
+  </Button>
+))
+
+const CloseButton = memo<{
+  handleClick: () => void
+  variant: CommonButtonType['theme']
+  disabled: boolean
+  text: ReactNode
+}>(({ handleClick, variant, disabled, text }) => (
+  <Button
+    onClick={handleClick}
+    variant={variant}
+    disabled={disabled}
+    className="smarthr-ui-Dialog-closeButton"
+  >
+    {text}
+  </Button>
+))
+
+const SubmitButton = memo<{
+  variant: CommonButtonType['theme']
+  disabled: boolean | undefined
+  loading: boolean
+  text: ReactNode
+}>(({ variant, disabled, loading, text }) => (
+  <Button
+    type="submit"
+    variant={variant}
+    disabled={disabled}
+    loading={loading}
+    className="smarthr-ui-Dialog-actionButton"
+  >
+    {text}
+  </Button>
+))
