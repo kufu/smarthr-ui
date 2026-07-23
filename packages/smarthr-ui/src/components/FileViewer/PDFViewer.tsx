@@ -78,7 +78,17 @@ type Props = ViewerProps & {
 }
 
 export const PDFViewer: FC<Props> = memo(
-  ({ scale, rotation, file, width, onLoad, onPDFLoaded, onPassword, onLoadError, search }) => {
+  ({
+    scale,
+    rotation,
+    file,
+    width,
+    handleLoad,
+    handlePDFLoaded,
+    onPassword,
+    onLoadError,
+    search,
+  }) => {
     const matches = search?.matches
     const currentMatchIndex = search?.currentMatchIndex
     const onPageTextLoaded = search?.registerPageText
@@ -92,20 +102,20 @@ export const PDFViewer: FC<Props> = memo(
     }, [])
 
     const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!onLoad && !onPDFLoaded) {
+      if (!handleLoad && !handlePDFLoaded) {
         return undefined
       }
 
       return (page) => {
-        if (onPDFLoaded && rotation === undefined) {
-          onPDFLoaded(page.rotate)
+        if (handlePDFLoaded && rotation === undefined) {
+          handlePDFLoaded(page.rotate)
         }
         // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (onLoad && page.pageNumber === pdfNumPages) {
-          onLoad()
+        if (handleLoad && page.pageNumber === pdfNumPages) {
+          handleLoad()
         }
       }
-    }, [onLoad, onPDFLoaded, pdfNumPages, rotation])
+    }, [handleLoad, handlePDFLoaded, pdfNumPages, rotation])
 
     const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
       if (!matches || matches.length === 0) {
