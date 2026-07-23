@@ -172,11 +172,15 @@ export const FilterDropdown: FC<Props> = ({
 
   const classNames = classNamesMapper[filtered ? 'filtered' : 'unfiltered']
 
-  const { buttonSuffix, buttonContent } = useMemo(() => {
-    const triggerText = trigger.text || (
-      <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
-    )
+  const triggerText = useMemo(
+    () =>
+      trigger.text || (
+        <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
+      ),
+    [trigger.text],
+  )
 
+  const { buttonSuffix, buttonContent } = useMemo(() => {
     const FilterIcon = (
       <span className={classNames.iconWrapper}>
         <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
@@ -202,18 +206,11 @@ export const FilterDropdown: FC<Props> = ({
       buttonSuffix: FilterIcon,
       buttonContent: triggerText,
     }
-  }, [filtered, trigger.text, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
+  }, [filtered, triggerText, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger
-        tooltip={{
-          show: trigger.onlyIcon,
-          message: trigger.text || (
-            <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
-          ),
-        }}
-      >
+      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: triggerText }}>
         <Button {...rest} suffix={buttonSuffix} size={trigger.size}>
           {buttonContent}
         </Button>
