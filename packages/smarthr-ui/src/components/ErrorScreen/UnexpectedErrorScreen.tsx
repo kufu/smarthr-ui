@@ -1,6 +1,6 @@
 'use client'
 
-import { Localizer, useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { Stack } from '../Layout'
 import { HelpLink } from '../TextLink'
 
@@ -13,7 +13,6 @@ type Props = {
 }
 
 export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
-  const { localize } = useIntl()
   const errorInfoLinkValues = {
     errorInfoLink: (
       <HelpLink href="https://support.smarthr.jp/ja/help/articles/360036353773/">
@@ -27,16 +26,15 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
 
   return (
     <ErrorScreen
-      title={localize({
-        id: 'smarthr-ui/UnexpectedErrorScreen/title',
-        defaultText: '予期しないエラーが発生しました',
-      })}
+      title={
+        <Localizer
+          id="smarthr-ui/UnexpectedErrorScreen/title"
+          defaultText="予期しないエラーが発生しました"
+        />
+      }
       links={[
         {
-          label: localize({
-            id: 'smarthr-ui/ErrorScreen/homeLink',
-            defaultText: 'ホームに戻る',
-          }),
+          label: <Localizer id="smarthr-ui/ErrorScreen/homeLink" defaultText="ホームに戻る" />,
           url: homeUrl,
         },
       ]}
