@@ -161,8 +161,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       formatDate,
       showAlternative,
       onBlur,
-      selectedDate,
       isInputFocused,
+      selectedDate,
     })
 
     const functions = useMemo(() => {
