@@ -13,7 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
@@ -237,33 +237,19 @@ const ToggleableButton: FC<{
   onClick: () => void
   contentId: string
   className: string
-}> = ({ active, onClick, contentId, className }) => {
-  const { localize } = useIntl()
-
-  const buttonLabels = useMemo(
-    () => ({
-      open: localize({
-        id: 'smarthr-ui/InformationPanel/openButtonLabel',
-        defaultText: '開く',
-      }),
-      close: localize({
-        id: 'smarthr-ui/InformationPanel/closeButtonLabel',
-        defaultText: '閉じる',
-      }),
-    }),
-    [localize],
-  )
-
-  return (
-    <Button
-      aria-expanded={active}
-      aria-controls={contentId}
-      onClick={onClick}
-      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-      size="S"
-      className={className}
-    >
-      {active ? buttonLabels.close : buttonLabels.open}
-    </Button>
-  )
-}
+}> = ({ active, onClick, contentId, className }) => (
+  <Button
+    aria-expanded={active}
+    aria-controls={contentId}
+    onClick={onClick}
+    suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+    size="S"
+    className={className}
+  >
+    {active ? (
+      <Localizer id="smarthr-ui/InformationPanel/closeButtonLabel" defaultText="閉じる" />
+    ) : (
+      <Localizer id="smarthr-ui/InformationPanel/openButtonLabel" defaultText="開く" />
+    )}
+  </Button>
+)
