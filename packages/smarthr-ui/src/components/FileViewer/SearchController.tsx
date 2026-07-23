@@ -4,7 +4,7 @@ import { type ChangeEvent, type FC, type KeyboardEvent, memo, useCallback, useMe
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
-import { Localizer, useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
 import { SearchInput } from '../Input'
@@ -42,21 +42,11 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     goPrev: onClickPrev,
     clear: onClickClear,
   } = search
-  const { localize } = useIntl()
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
     const { wrapper, inputArea } = classNameGenerator({ mobile })
     return { wrapper: wrapper(), inputArea: inputArea() }
   }, [mobile])
-  const translated = useMemo(
-    () => ({
-      searchInputTooltipMessage: localize({
-        id: 'smarthr-ui/FileViewer/searchInputTooltipMessage',
-        defaultText: 'PDF内のテキストを検索',
-      }),
-    }),
-    [localize],
-  )
 
   const hasMatches = matchCount > 0
   const displayedCurrent = hasMatches ? currentMatchIndex + 1 : 0
@@ -100,7 +90,12 @@ export const SearchController: FC<Props> = memo(({ search }) => {
       <div className={classNames.inputArea}>
         <SearchInput
           name="file_viewer_search"
-          tooltipMessage={translated.searchInputTooltipMessage}
+          tooltipMessage={
+            <Localizer
+              id="smarthr-ui/FileViewer/searchInputTooltipMessage"
+              defaultText="PDF内のテキストを検索"
+            />
+          }
           value={query}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
