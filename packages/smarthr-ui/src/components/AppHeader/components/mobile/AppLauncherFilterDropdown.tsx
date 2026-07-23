@@ -1,10 +1,10 @@
 'use client'
 
-import { type MouseEvent, type PropsWithChildren, memo, useCallback, useMemo } from 'react'
+import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../../../hooks/useTheme'
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
@@ -43,35 +43,13 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
     }
   }, [])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      favorite: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
-        defaultText: 'よく使うアプリ',
-      }),
-      all: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/allModeText',
-        defaultText: 'すべてのアプリ',
-      }),
-      checkIconAlt: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownSelected',
-        defaultText: '選択中',
-      }),
-    }),
-    [localize],
-  )
-
   return (
     <Dropdown>
-      <MemoizedDropdownTrigger className={classNames.trigger}>
-        {translated[page]}
-      </MemoizedDropdownTrigger>
+      <MemoizedDropdownTrigger className={classNames.trigger} page={page} />
       <DropdownContent>
         <ContentBody
           page={page}
           onSelectPage={onSelectPage}
-          translated={translated}
           className={classNames.contentBody}
           buttonClassName={classNames.contentButton}
         />
@@ -80,11 +58,23 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
   )
 })
 
-const MemoizedDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) => (
+const MemoizedDropdownTrigger = memo<{ page: Launcher['page']; className: string }>(
+  ({ page, className }) => (
     <DropdownTrigger>
       <Button className={className} size="S" suffix={<FaCaretDownIcon />}>
-        <Translate>{children}</Translate>
+        <Translate>
+          {page === 'favorite' ? (
+            <Localizer
+              id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
+              defaultText="よく使うアプリ"
+            />
+          ) : (
+            <Localizer
+              id="smarthr-ui/AppHeader/Launcher/allModeText"
+              defaultText="すべてのアプリ"
+            />
+          )}
+        </Translate>
       </Button>
     </DropdownTrigger>
   ),
@@ -92,11 +82,10 @@ const MemoizedDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
 
 const ContentBody = memo<
   Props & {
-    translated: { favorite: string; all: string; checkIconAlt: string }
     className: string
     buttonClassName: string
   }
->(({ page, onSelectPage, translated, className, buttonClassName }) => {
+>(({ page, onSelectPage, className, buttonClassName }) => {
   const theme = useTheme()
   const isFavorite = page === 'favorite'
 
@@ -110,7 +99,11 @@ const ContentBody = memo<
   const buttonPrefix = (
     <FaCheckIcon
       color={theme.textColor.main}
-      alt={<Translate>{translated.checkIconAlt}</Translate>}
+      alt={
+        <Translate>
+          <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected" defaultText="選択中" />
+        </Translate>
+      }
     />
   )
 
@@ -124,7 +117,12 @@ const ContentBody = memo<
         className={buttonClassName}
         prefix={isFavorite && buttonPrefix}
       >
-        <Translate>{translated.favorite}</Translate>
+        <Translate>
+          <Localizer
+            id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
+            defaultText="よく使うアプリ"
+          />
+        </Translate>
       </Button>
       <Button
         value="all"
@@ -134,7 +132,9 @@ const ContentBody = memo<
         className={buttonClassName}
         prefix={!isFavorite && buttonPrefix}
       >
-        <Translate>{translated.all}</Translate>
+        <Translate>
+          <Localizer id="smarthr-ui/AppHeader/Launcher/allModeText" defaultText="すべてのアプリ" />
+        </Translate>
       </Button>
     </div>
   )

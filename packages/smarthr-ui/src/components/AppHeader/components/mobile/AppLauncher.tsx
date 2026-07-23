@@ -1,7 +1,7 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer, useIntl } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
@@ -62,21 +62,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   }, [])
 
   const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      searchInputTitle: localize({
+  const searchInputTitle = useMemo(
+    () =>
+      localize({
         id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
         defaultText: 'アプリ名を入力してください。',
       }),
-      searchResultText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
-        defaultText: '検索結果',
-      }),
-      helpText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/helpText',
-        defaultText: 'よく使うアプリとは',
-      }),
-    }),
     [localize],
   )
 
@@ -85,8 +76,8 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       <div className={classNames.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
+          title={searchInputTitle}
+          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
           suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
@@ -96,7 +87,9 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
 
       <Cluster className={classNames.headArea} justify="space-between" align="center">
         {mode === 'search' ? (
-          <SearchResultText>{translated.searchResultText}</SearchResultText>
+          <SearchResultText>
+            <Localizer id="smarthr-ui/AppHeader/Launcher/searchResultText" defaultText="検索結果" />
+          </SearchResultText>
         ) : (
           <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
         )}
@@ -110,7 +103,9 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         <AppLauncherFeatures features={features} page={page} />
       </Scroller>
 
-      <BottomArea className={classNames.bottomArea}>{translated.helpText}</BottomArea>
+      <BottomArea className={classNames.bottomArea}>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
+      </BottomArea>
     </div>
   )
 }
