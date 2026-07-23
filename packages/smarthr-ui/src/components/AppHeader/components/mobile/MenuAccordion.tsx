@@ -6,10 +6,9 @@ import {
   memo,
   useCallback,
   useId,
-  useMemo,
 } from 'react'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../../../Icon'
@@ -47,21 +46,6 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
   ({ isOpen, setIsOpen, title, id }) => {
     const onClickButton = useCallback(() => setIsOpen((prev) => !prev), [setIsOpen])
 
-    const { localize } = useIntl()
-    const translated = useMemo(
-      () => ({
-        close: localize({
-          id: 'smarthr-ui/AppHeader/MobileHeader/closeMenuAccordion',
-          defaultText: '閉じる',
-        }),
-        open: localize({
-          id: 'smarthr-ui/AppHeader/MobileHeader/openMenuAccordion',
-          defaultText: '開く',
-        }),
-      }),
-      [localize],
-    )
-
     return (
       <Cluster justify="space-between" align="center">
         <Heading type="subSubBlockTitle">
@@ -76,9 +60,23 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
           onClick={onClickButton}
         >
           {isOpen ? (
-            <FaCaretUpIcon alt={translated.close} />
+            <FaCaretUpIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/closeMenuAccordion"
+                  defaultText="閉じる"
+                />
+              }
+            />
           ) : (
-            <FaCaretDownIcon alt={translated.open} />
+            <FaCaretDownIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/openMenuAccordion"
+                  defaultText="開く"
+                />
+              }
+            />
           )}
         </Button>
       </Cluster>

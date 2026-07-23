@@ -6,13 +6,13 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
-  useCallback,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
@@ -24,10 +24,12 @@ import type { DialogSize } from './types'
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
    */
   onClickOverlay?: () => void
   /**
    * エスケープキーを押下した時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
    */
   onPressEscape?: () => void
   /**
@@ -123,27 +125,29 @@ export const DialogContentInner: FC<Props> = ({
 
   const innerRef = useRef<HTMLDivElement>(null)
 
-  // 外部propsのonPressEscapeをrefに保存
-  const onPressEscapeRef = useRef(onPressEscape)
-  onPressEscapeRef.current = onPressEscape
+  const latest = useLatest({ onPressEscape, onClickOverlay })
 
-  // stableなcallbackを作成
-  const memoizedOnPressEscape = useCallback(() => {
-    onPressEscapeRef.current?.()
-  }, [])
+  const functions = useMemo(() => {
+    if (!isOpen) {
+      return {
+        onPressEscape: undefined,
+        onClickOverlay: undefined,
+      }
+    }
 
-  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
+    return {
+      onPressEscape: () => latest.onPressEscape?.(),
+      onClickOverlay: () => latest.onClickOverlay?.(),
+    }
+  }, [isOpen, latest])
 
+  useHandleEscape(functions.onPressEscape)
   useBodyScrollLock(isOpen)
 
   return (
     <DialogOverlap isOpen={isOpen}>
       <div id={id} className={classNames.layout} style={style}>
-        <Overlay
-          isOpen={isOpen}
-          onClickOverlay={onClickOverlay}
-          className={classNames.background}
-        />
+        <Overlay onClickOverlay={functions.onClickOverlay} className={classNames.background} />
         <div
           {...rest}
           ref={innerRef}
@@ -162,14 +166,9 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: string }>(
-  ({ onClickOverlay, isOpen, className }) => {
-    const onClick = useMemo(
-      () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
-      [isOpen, onClickOverlay],
-    )
-
+const Overlay = memo<{ onClickOverlay: (() => void) | undefined; className: string }>(
+  ({ onClickOverlay, className }) => (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    return <div onClick={onClick} className={className} role="presentation" />
-  },
+    <div onClick={onClickOverlay} className={className} role="presentation" />
+  ),
 )

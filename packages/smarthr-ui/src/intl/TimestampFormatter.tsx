@@ -2,9 +2,7 @@
 
 import dayjs from 'dayjs'
 
-import { useIntl } from './useIntl'
-
-import type { FormatTimestampProps } from './useIntl'
+import { type FormatTimestampProps, useDateFormat } from './useDateFormat'
 
 /**
  * タイムスタンプ（日付＋時刻）を現在のロケールに応じてフォーマットして表示するコンポーネント
@@ -31,6 +29,6 @@ export const TimestampFormatter = ({
   date: string | Date
 }) => {
   const date = dayjs(orgDate).toDate()
-  const { formatTimestamp } = useIntl()
+  const { formatTimestamp } = useDateFormat()
   return <time dateTime={date.toISOString()}>{formatTimestamp({ ...rest, date })}</time>
 }

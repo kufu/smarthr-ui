@@ -3,9 +3,7 @@
 import dayjs from 'dayjs'
 import { memo } from 'react'
 
-import { useIntl } from './useIntl'
-
-import type { FormatTimeProps } from './useIntl'
+import { type FormatTimeProps, useDateFormat } from './useDateFormat'
 
 /**
  * 時刻を現在のロケールに応じてフォーマットして表示するコンポーネント
@@ -36,7 +34,7 @@ import type { FormatTimeProps } from './useIntl'
 export const TimeFormatter = memo<Omit<FormatTimeProps, 'date'> & { date: string | Date }>(
   ({ date: orgDate, ...rest }) => {
     const date = dayjs(orgDate).toDate()
-    const { formatTime } = useIntl()
+    const { formatTime } = useDateFormat()
     return <time dateTime={date.toISOString()}>{formatTime({ ...rest, date })}</time>
   },
 )

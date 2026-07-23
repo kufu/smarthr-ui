@@ -5,9 +5,10 @@ import {
   type KeyboardEventHandler,
   useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
+
+import { useLatest } from '../../hooks/useLatest'
 
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, type ItemNodeLike, RootNode } from './models'
@@ -68,61 +69,64 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     return [...node.getAncestors().map((n) => n.value), node.value]
   }, [rootNode, value])
 
-  const unstableRef = useRef({ onSelectItem, value, rootNode })
-  unstableRef.current = { onSelectItem, value, rootNode }
+  const latest = useLatest({ onSelectItem, value, rootNode })
 
   // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
-  const onDelegateKeyDown: KeyboardEventHandler = useCallback((e) => {
-    const selectedNode = unstableRef.current.value
-      ? unstableRef.current.rootNode.findByValue(unstableRef.current.value)
-      : undefined
+  const onDelegateKeyDown: KeyboardEventHandler = useCallback(
+    (e) => {
+      const selectedNode = latest.value ? latest.rootNode.findByValue(latest.value) : undefined
 
-    if (!selectedNode) {
-      return
-    }
-
-    let target: ItemNode | undefined = undefined
-
-    switch (e.key) {
-      case 'ArrowUp': {
-        target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
-
-        break
+      if (!selectedNode) {
+        return
       }
-      case 'ArrowDown': {
-        target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
 
-        break
-      }
-      case 'ArrowLeft': {
-        const node = selectedNode.parent
+      let target: ItemNode | undefined = undefined
 
-        if (node instanceof ItemNode) {
-          target = node
+      switch (e.key) {
+        case 'ArrowUp': {
+          target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
+
+          break
         }
+        case 'ArrowDown': {
+          target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
 
-        break
+          break
+        }
+        case 'ArrowLeft': {
+          const node = selectedNode.parent
+
+          if (node instanceof ItemNode) {
+            target = node
+          }
+
+          break
+        }
+        case 'ArrowRight':
+        case 'Enter':
+        case ' ': {
+          target = selectedNode.getFirstChild()
+
+          break
+        }
       }
-      case 'ArrowRight':
-      case 'Enter':
-      case ' ': {
-        target = selectedNode.getFirstChild()
 
-        break
+      if (target) {
+        e.preventDefault()
+        latest.onSelectItem?.(target.value)
+        document.getElementById(getElementIdFromNode(target.value))?.focus()
       }
-    }
+    },
+    [latest],
+  )
 
-    if (target) {
-      e.preventDefault()
-      unstableRef.current.onSelectItem?.(target.value)
-      document.getElementById(getElementIdFromNode(target.value))?.focus()
-    }
-  }, [])
-
-  const onChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    unstableRef.current.onSelectItem?.(e.currentTarget.value)
-  }, [])
+  const onChangeInput = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      latest.onSelectItem?.(e.currentTarget.value)
+    },
+    [latest],
+  )
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions

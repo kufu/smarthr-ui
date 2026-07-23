@@ -20,7 +20,8 @@ import Draggable from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
-import { useIntl } from '../../../intl'
+import { useLatest } from '../../../hooks/useLatest'
+import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
 import { Base, type BaseElementProps } from '../../Base'
@@ -213,8 +214,7 @@ export const ModelessDialog: FC<Props> = ({
   }, [localize, wrapperPosition, debounceLiveRegionText])
 
   // 外部propsをrefに保存
-  const unstableRef = useRef({ isOpen, onClickClose, onPressEscape })
-  unstableRef.current = { isOpen, onClickClose, onPressEscape }
+  const latest = useLatest({ isOpen, onClickClose, onPressEscape })
 
   const positionStyle = useMemo(
     () => ({
@@ -228,44 +228,47 @@ export const ModelessDialog: FC<Props> = ({
     [centering, top, left, right, bottom, width, height, size],
   )
 
-  const handleArrowKey = useCallback((e: KeyboardEvent) => {
-    if (!unstableRef.current.isOpen || document.activeElement !== e.currentTarget) {
-      return
-    }
+  const handleArrowKey = useCallback(
+    (e: KeyboardEvent) => {
+      if (!latest.isOpen || document.activeElement !== e.currentTarget) {
+        return
+      }
 
-    const movingDistance = 20
+      const movingDistance = 20
 
-    switch (e.key) {
-      case 'ArrowUp':
-        setPosition((prev) => ({
-          x: prev.x,
-          y: prev.y - movingDistance,
-        }))
-        e.preventDefault()
-        break
-      case 'ArrowDown':
-        setPosition((prev) => ({
-          x: prev.x,
-          y: prev.y + movingDistance,
-        }))
-        e.preventDefault()
-        break
-      case 'ArrowLeft':
-        setPosition((prev) => ({
-          x: prev.x - movingDistance,
-          y: prev.y,
-        }))
-        e.preventDefault()
-        break
-      case 'ArrowRight':
-        setPosition((prev) => ({
-          x: prev.x + movingDistance,
-          y: prev.y,
-        }))
-        e.preventDefault()
-        break
-    }
-  }, [])
+      switch (e.key) {
+        case 'ArrowUp':
+          setPosition((prev) => ({
+            x: prev.x,
+            y: prev.y - movingDistance,
+          }))
+          e.preventDefault()
+          break
+        case 'ArrowDown':
+          setPosition((prev) => ({
+            x: prev.x,
+            y: prev.y + movingDistance,
+          }))
+          e.preventDefault()
+          break
+        case 'ArrowLeft':
+          setPosition((prev) => ({
+            x: prev.x - movingDistance,
+            y: prev.y,
+          }))
+          e.preventDefault()
+          break
+        case 'ArrowRight':
+          setPosition((prev) => ({
+            x: prev.x + movingDistance,
+            y: prev.y,
+          }))
+          e.preventDefault()
+          break
+      }
+    },
+    [latest],
+  )
 
   useEffect(() => {
     if (wrapperRef.current instanceof Element) {
@@ -315,16 +318,19 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [isOpen])
 
-  const actualOnClickClose = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    lastFocusElementRef.current?.focus()
-    unstableRef.current.onClickClose?.(e)
-  }, [])
+  const actualOnClickClose = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      lastFocusElementRef.current?.focus()
+      latest.onClickClose?.(e)
+    },
+    [latest],
+  )
 
   // stableなcallbackを作成
   const memoizedOnPressEscape = useCallback(() => {
     lastFocusElementRef.current?.focus()
-    unstableRef.current.onPressEscape?.()
-  }, [])
+    latest.onPressEscape?.()
+  }, [latest])
 
   useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
 
@@ -449,23 +455,17 @@ const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
 const CloseButton = memo<{
   className: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ onClick, className }) => {
-  const { localize } = useIntl()
-  const closeButtonIconAlt = localize({
-    id: 'smarthr-ui/ModelessDialog/closeButtonIconAlt',
-    defaultText: '閉じる',
-  })
-
-  return (
-    <div className={className}>
-      <Button
-        type="button"
-        size="S"
-        onClick={onClick}
-        className="smarthr-ui-ModelessDialog-closeButton"
-      >
-        <FaXmarkIcon alt={closeButtonIconAlt} />
-      </Button>
-    </div>
-  )
-})
+}>(({ onClick, className }) => (
+  <div className={className}>
+    <Button
+      type="button"
+      size="S"
+      onClick={onClick}
+      className="smarthr-ui-ModelessDialog-closeButton"
+    >
+      <FaXmarkIcon
+        alt={<Localizer id="smarthr-ui/ModelessDialog/closeButtonIconAlt" defaultText="閉じる" />}
+      />
+    </Button>
+  </div>
+))

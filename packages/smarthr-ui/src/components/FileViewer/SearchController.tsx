@@ -4,7 +4,7 @@ import { type ChangeEvent, type FC, type KeyboardEvent, memo, useCallback, useMe
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
-import { useIntl } from '../../intl'
+import { Localizer, useIntl } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
 import { SearchInput } from '../Input'
@@ -53,14 +53,6 @@ export const SearchController: FC<Props> = memo(({ search }) => {
       searchInputTooltipMessage: localize({
         id: 'smarthr-ui/FileViewer/searchInputTooltipMessage',
         defaultText: 'PDF内のテキストを検索',
-      }),
-      previousMatchAlt: localize({
-        id: 'smarthr-ui/FileViewer/previousMatchAlt',
-        defaultText: '前の検索結果へ',
-      }),
-      nextMatchAlt: localize({
-        id: 'smarthr-ui/FileViewer/nextMatchAlt',
-        defaultText: '次の検索結果へ',
       }),
     }),
     [localize],
@@ -128,14 +120,20 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         disabled={!hasMatches}
         className="shr-rounded-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
-        <FaAngleUpIcon alt={translated.previousMatchAlt} />
+        <FaAngleUpIcon
+          alt={
+            <Localizer id="smarthr-ui/FileViewer/previousMatchAlt" defaultText="前の検索結果へ" />
+          }
+        />
       </Button>
       <Button
         onClick={onClickNext}
         disabled={!hasMatches}
         className="shr-rounded-s-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
-        <FaAngleDownIcon alt={translated.nextMatchAlt} />
+        <FaAngleDownIcon
+          alt={<Localizer id="smarthr-ui/FileViewer/nextMatchAlt" defaultText="次の検索結果へ" />}
+        />
       </Button>
     </div>
   )

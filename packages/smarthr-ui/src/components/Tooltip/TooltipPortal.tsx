@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../hooks/useTheme'
@@ -32,42 +32,42 @@ type VerticalType = 'top' | 'middle' | 'bottom'
 
 export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parentRect, isIcon }) => {
   const theme = useTheme()
-  const portalRef = useRef<HTMLDivElement>(null)
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
-  useEffect(() => {
-    if (!portalRef.current || !parentRect) {
-      return
-    }
+  const portalRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (!element || !parentRect) {
+        return
+      }
 
-    const portal = portalRef.current
+      const action = () => {
+        const vertical = calculateVertical(element.offsetHeight, parentRect)
+        const horizontal = calculateHorizontal(element.offsetWidth, parentRect, theme)
 
-    const action = () => {
-      const vertical = calculateVertical(portal.offsetHeight, parentRect)
-      const horizontal = calculateHorizontal(portal.offsetWidth, parentRect, theme)
+        setStyle({
+          insetBlockStart: vertical.insetBlockStart,
+          insetInlineStart: horizontal.insetInlineStart,
+          insetInlineEnd: horizontal.insetInlineEnd,
+          maxWidth: horizontal.maxWidth,
+          maxHeight: vertical.maxHeight,
+        })
+        setActualVertical(vertical.alignment)
+        setActualHorizontal(horizontal.alignment)
+      }
+      const debouncedAction = debounce(action, 100)
 
-      setStyle({
-        insetBlockStart: vertical.insetBlockStart,
-        insetInlineStart: horizontal.insetInlineStart,
-        insetInlineEnd: horizontal.insetInlineEnd,
-        maxWidth: horizontal.maxWidth,
-        maxHeight: vertical.maxHeight,
-      })
-      setActualVertical(vertical.alignment)
-      setActualHorizontal(horizontal.alignment)
-    }
-    const debouncedAction = debounce(action, 100)
+      action()
 
-    action()
+      window.addEventListener('resize', debouncedAction)
 
-    window.addEventListener('resize', debouncedAction)
-
-    return () => {
-      window.removeEventListener('resize', debouncedAction)
-    }
-  }, [parentRect, theme])
+      return () => {
+        window.removeEventListener('resize', debouncedAction)
+      }
+    },
+    [parentRect, theme],
+  )
 
   const classNames = useMemo(() => {
     const { container, balloon, balloonText } = classNameGenerator()
@@ -85,7 +85,7 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
       role="tooltip"
       aria-hidden={!isVisible}
       className={classNames.container}
-      style={style}
+      style={isVisible ? style : undefined}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}

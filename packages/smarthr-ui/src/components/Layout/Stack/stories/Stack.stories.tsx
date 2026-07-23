@@ -51,14 +51,7 @@ export const AlignStory: StoryObj<typeof Stack> = {
   },
   render: (args) => {
     type Align =
-      | 'center'
-      | 'start'
-      | 'flex-start'
-      | 'end'
-      | 'flex-end'
-      | 'baseline'
-      | 'stretch'
-      | undefined
+      'center' | 'start' | 'flex-start' | 'end' | 'flex-end' | 'baseline' | 'stretch' | undefined
     return (
       <Stack>
         {(['stretch', 'flex-start', 'center', 'flex-end'] as Align[]).map((align) => (

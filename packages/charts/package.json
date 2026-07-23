@@ -46,7 +46,7 @@
     "react": "^19.0.3",
     "react-dom": "^19.0.3",
     "react-intl": "^7.0.4 || ^8.0.0 || ^10.0.0",
-    "smarthr-ui": "^74.0.0",
+    "smarthr-ui": "workspace:^",
     "styled-components": "^5.0.1"
   },
   "dependencies": {
