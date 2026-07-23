@@ -22,7 +22,7 @@ export type Option = {
   /** ボタンに表示する内容 */
   content: ReactNode
   /** ボタンの `aria-label` */
-  'aria-label'?: string
+  ariaLabel?: string
   /** ボタンを disabled にするかどうか */
   disabled?: boolean
 }
@@ -187,11 +187,13 @@ export const SegmentedControl: FC<Props> = ({
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
           const checked = value === option.value
+          const { ariaLabel, ...optionRest } = option
 
           return (
             <SegmentedControlButton
-              {...option}
+              {...optionRest}
               key={option.value}
+              aria-label={ariaLabel}
               handleClick={functions.handleClickOption}
               size={size}
               checked={checked}
@@ -208,8 +210,9 @@ export const SegmentedControl: FC<Props> = ({
 
 const SegmentedControlButton = memo<
   Pick<Props, 'size'> &
-    Omit<Props['options'][number], 'content'> & {
+    Omit<Props['options'][number], 'content' | 'ariaLabel'> & {
       content: ReactNode
+      'aria-label'?: string
       handleClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
       checked: boolean
       tabIndex: number
