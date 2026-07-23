@@ -228,6 +228,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       const closeCalendar = () => setIsCalendarShown(false)
+
       const openCalendar = () => {
         if (inputWrapperRef.current) {
           setIsCalendarShown(true)
