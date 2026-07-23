@@ -46,7 +46,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-transition-group": "^4.4.12",
     "@types/styled-components": "^5.1.36",
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "^6.0.3",
     "autoprefixer": "^10.4.27",
     "babel-plugin-polyfill-corejs2": "^0.4.17",
     "babel-plugin-polyfill-regenerator": "^0.6.8",
