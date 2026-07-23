@@ -259,7 +259,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         },
         handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
-            ;(isCalendarShown ? openCalendar : closeCalendar)()
+            ;(isCalendarShown ? closeCalendar : openCalendar)()
             updateDate(e, stringToDate(e.currentTarget.value))
           }
         },
