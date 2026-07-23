@@ -126,6 +126,10 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
         defaultText: 'よく使うアプリ',
       }),
+      allModeText: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+        defaultText: 'すべてのアプリ',
+      }),
     }),
     [localize],
   )
@@ -150,6 +154,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           page={page}
           changePage={changePage}
           favoriteModeText={translated.favoriteModeText}
+          allModeText={translated.allModeText}
           classNames={classNames}
         />
         <div className={classNames.main}>
@@ -165,10 +170,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
                   ) : page === 'favorite' ? (
                     translated.favoriteModeText
                   ) : (
-                    <Localizer
-                      id="smarthr-ui/AppHeader/Launcher/allModeText"
-                      defaultText="すべてのアプリ"
-                    />
+                    translated.allModeText
                   )}
                 </Translate>
               </MemoizedSubSubBlockHeading>
@@ -197,6 +199,7 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 const SideNavs = memo<
   Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
     favoriteModeText: string
+    allModeText: string
     classNames: {
       side: string
       unselectedSideNav: string
@@ -205,7 +208,7 @@ const SideNavs = memo<
       help: string
     }
   }
->(({ mode, page, changePage, favoriteModeText, classNames }) => {
+>(({ mode, page, changePage, favoriteModeText, allModeText, classNames }) => {
   const theme = useTheme()
   const listHeadingId = useId()
   const isNotSearch = mode !== 'search'
@@ -227,18 +230,11 @@ const SideNavs = memo<
     () => [
       {
         id: 'all',
-        title: (
-          <Translate>
-            <Localizer
-              id="smarthr-ui/AppHeader/Launcher/allModeText"
-              defaultText="すべてのアプリ"
-            />
-          </Translate>
-        ),
+        title: <Translate>{allModeText}</Translate>,
         current: isAll,
       },
     ],
-    [isAll],
+    [isAll, allModeText],
   )
 
   const onClick = useCallback(
