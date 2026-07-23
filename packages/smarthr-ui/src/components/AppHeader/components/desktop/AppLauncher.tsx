@@ -1,10 +1,10 @@
 'use client'
 
-import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../../../hooks/useTheme'
-import { useIntl } from '../../../../intl'
+import { Localizer, useIntl } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
@@ -116,54 +116,20 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   }, [])
 
   const { localize } = useIntl()
-  const translated = useMemo<
-    Record<
-      Launcher['page'] | 'listText' | 'searchInputTitle' | 'helpText' | 'searchResultText',
-      ReactNode
-    >
-  >(
+  const translated = useMemo(
     () => ({
-      favorite: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
-            defaultText: 'よく使うアプリ',
-          })}
-        </Translate>
-      ),
-      all: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/allModeText',
-            defaultText: 'すべてのアプリ',
-          })}
-        </Translate>
-      ),
-      listText: (
-        <Translate>
-          {localize({ id: 'smarthr-ui/AppHeader/Launcher/listText', defaultText: 'アプリ一覧' })}
-        </Translate>
-      ),
       searchInputTitle: localize({
         id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
         defaultText: 'アプリ名を入力してください。',
       }),
-      helpText: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/helpText',
-            defaultText: 'よく使うアプリとは',
-          })}
-        </Translate>
-      ),
-      searchResultText: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
-            defaultText: '検索結果',
-          })}
-        </Translate>
-      ),
+      favoriteModeText: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
+        defaultText: 'よく使うアプリ',
+      }),
+      allModeText: localize({
+        id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+        defaultText: 'すべてのアプリ',
+      }),
     }),
     [localize],
   )
@@ -173,7 +139,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       <div className={classNames.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle as string}
+          title={translated.searchInputTitle}
           tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
@@ -187,14 +153,24 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
           mode={mode}
           page={page}
           changePage={changePage}
-          translated={translated}
+          favoriteModeText={translated.favoriteModeText}
+          allModeText={translated.allModeText}
           classNames={classNames}
         />
         <div className={classNames.main}>
           <Section className={classNames.mainInner}>
             <Cluster className={classNames.contentHead} align="center" justify="space-between">
               <MemoizedSubSubBlockHeading>
-                {mode === 'search' ? translated.searchResultText : translated[page]}
+                {mode === 'search' ? (
+                  <Localizer
+                    id="smarthr-ui/AppHeader/Launcher/searchResultText"
+                    defaultText="検索結果"
+                  />
+                ) : page === 'favorite' ? (
+                  translated.favoriteModeText
+                ) : (
+                  translated.allModeText
+                )}
               </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (
@@ -220,7 +196,8 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 
 const SideNavs = memo<
   Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
-    translated: { favorite: ReactNode; listText: ReactNode; all: ReactNode; helpText: ReactNode }
+    favoriteModeText: string
+    allModeText: string
     classNames: {
       side: string
       unselectedSideNav: string
@@ -229,8 +206,9 @@ const SideNavs = memo<
       help: string
     }
   }
->(({ mode, page, changePage, translated, classNames }) => {
+>(({ mode, page, changePage, favoriteModeText, allModeText, classNames }) => {
   const theme = useTheme()
+  const listHeadingId = useId()
   const isNotSearch = mode !== 'search'
   const isFavorite = isNotSearch && page === 'favorite'
   const isAll = isNotSearch && page === 'all'
@@ -239,22 +217,22 @@ const SideNavs = memo<
     () => [
       {
         id: 'favorite',
-        title: translated.favorite,
+        title: <Translate>{favoriteModeText}</Translate>,
         prefix: <FaStarIcon color={isFavorite ? theme.textColor.white : undefined} />,
         current: isFavorite,
       },
     ],
-    [isFavorite, translated, theme.textColor.white],
+    [isFavorite, favoriteModeText, theme.textColor.white],
   )
   const selectedItems = useMemo(
     () => [
       {
         id: 'all',
-        title: translated.all,
+        title: <Translate>{allModeText}</Translate>,
         current: isAll,
       },
     ],
-    [isAll, translated],
+    [isAll, allModeText],
   )
 
   const onClick = useCallback(
@@ -266,11 +244,7 @@ const SideNavs = memo<
 
   return (
     <div className={classNames.side}>
-      <SideNav
-        className={classNames.unselectedSideNav}
-        size="S"
-        aria-label={typeof translated.favorite === 'string' ? translated.favorite : undefined}
-      >
+      <SideNav className={classNames.unselectedSideNav} size="S" aria-label={favoriteModeText}>
         {unselectedItems.map((item) => (
           <SideNavItemButton
             key={item.id}
@@ -287,14 +261,8 @@ const SideNavs = memo<
       <hr />
 
       <Section>
-        <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
-          {translated.listText}
-        </MemoizedSubSubBlockHeading>
-        <SideNav
-          className={classNames.selectedSideNav}
-          size="S"
-          aria-label={typeof translated.listText === 'string' ? translated.listText : undefined}
-        >
+        <MemoizedAppListHeading id={listHeadingId} className={classNames.sideNavHeading} />
+        <SideNav className={classNames.selectedSideNav} size="S" aria-labelledby={listHeadingId}>
           {selectedItems.map((item) => (
             <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
               {item.title}
@@ -303,7 +271,11 @@ const SideNavs = memo<
         </SideNav>
       </Section>
 
-      <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
+      <HelpLinkArea className={classNames.help}>
+        <Translate>
+          <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
+        </Translate>
+      </HelpLinkArea>
     </div>
   )
 })
@@ -322,7 +294,15 @@ const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children,
 const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
   ({ children, className }) => (
     <Heading type="subSubBlockTitle" className={className}>
-      {children}
+      <Translate>{children}</Translate>
     </Heading>
   ),
 )
+
+const MemoizedAppListHeading = memo<{ id: string; className?: string }>(({ id, className }) => (
+  <Heading type="subSubBlockTitle" id={id} className={className}>
+    <Translate>
+      <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
+    </Translate>
+  </Heading>
+))
