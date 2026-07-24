@@ -13,6 +13,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { flatArrayToMap } from '../../libs/map'
 
 import { getNewExpandedItems } from './accordionPanelHelper'
@@ -90,12 +91,14 @@ export const AccordionPanel: FC<Props> = ({
     [rounded, className],
   )
 
-  const onClickRef = useRef(onClick)
-  onClickRef.current = onClick
+  const latest = useLatest({ onClick })
 
-  const onClickProps = useCallback((items: string[]) => {
-    onClickRef.current?.(items)
-  }, [])
+  const onClickProps = useCallback(
+    (items: string[]) => {
+      latest.onClick?.(items)
+    },
+    [latest],
+  )
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
