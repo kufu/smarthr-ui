@@ -106,34 +106,14 @@ export const FilterDropdown: FC<Props> = ({
       : (orgTrigger as ObjectTriggerType)
   const { localize } = useIntl()
 
-  const decorated = useMemo(
-    () => ({
-      filteredIconAlt:
-        (typeof filtered === 'object' && filtered.iconAlt) ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/status',
-          defaultText: '適用中',
-        }),
-      applyText:
-        applyText ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/applyText',
-          defaultText: '適用',
-        }),
-      cancelText:
-        cancelText ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/cancelText',
-          defaultText: 'キャンセル',
-        }),
-      resetText:
-        resetText ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/resetText',
-          defaultText: '絞り込み条件を解除',
-        }),
-    }),
-    [filtered, applyText, cancelText, resetText, localize],
+  const filteredIconAlt = useMemo(
+    () =>
+      (typeof filtered === 'object' && filtered.iconAlt) ||
+      localize({
+        id: 'smarthr-ui/FilterDropdown/status',
+        defaultText: '適用中',
+      }),
+    [filtered, localize],
   )
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
@@ -183,10 +163,7 @@ export const FilterDropdown: FC<Props> = ({
 
         {filtered && (
           // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-          <FaCircleCheckIcon
-            aria-label={decorated.filteredIconAlt}
-            className={classNames.filteredIcon}
-          />
+          <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
         )}
       </span>
     )
@@ -204,7 +181,7 @@ export const FilterDropdown: FC<Props> = ({
       content: triggerText,
       triggerText,
     }
-  }, [filtered, trigger.text, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
+  }, [filtered, trigger.text, filteredIconAlt, trigger.onlyIcon, classNames])
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
@@ -227,7 +204,12 @@ export const FilterDropdown: FC<Props> = ({
                     onClick={onReset}
                     disabled={calcedResponseStatus.isProcessing}
                   >
-                    {decorated.resetText}
+                    {resetText || (
+                      <Localizer
+                        id="smarthr-ui/FilterDropdown/resetText"
+                        defaultText="絞り込み条件を解除"
+                      />
+                    )}
                   </Button>
                 </div>
               )}
@@ -239,7 +221,12 @@ export const FilterDropdown: FC<Props> = ({
               >
                 <DropdownCloser>
                   <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
-                    {decorated.cancelText}
+                    {cancelText || (
+                      <Localizer
+                        id="smarthr-ui/FilterDropdown/cancelText"
+                        defaultText="キャンセル"
+                      />
+                    )}
                   </Button>
                 </DropdownCloser>
                 <DropdownCloser>
@@ -248,7 +235,9 @@ export const FilterDropdown: FC<Props> = ({
                     onClick={onApply}
                     loading={calcedResponseStatus.isProcessing}
                   >
-                    {decorated.applyText}
+                    {applyText || (
+                      <Localizer id="smarthr-ui/FilterDropdown/applyText" defaultText="適用" />
+                    )}
                   </Button>
                 </DropdownCloser>
               </Cluster>
