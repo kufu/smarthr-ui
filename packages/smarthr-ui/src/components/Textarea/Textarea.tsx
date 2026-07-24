@@ -130,6 +130,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
+    const textareaStyle = useMemo(
+      () => ({ width: typeof width === 'number' ? `${width}px` : width }),
+      [width],
+    )
+    const countError = maxLetters && count > maxLetters
+    const classNames = useMemo(() => {
+      const { textareaEl, counter } = classNameGenerator()
+
+      return {
+        textarea: textareaEl({ className }),
+        counter: counter({ error: !!countError }),
+      }
+    }, [countError, className])
+
     const onChangeRef = useRef(onChange)
     onChangeRef.current = onChange
 
@@ -161,11 +175,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     )
 
     const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
-
-    useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
-      ref,
-      () => textareaRef.current,
-    )
 
     const updateCounters = useMemo(() => {
       if (!maxLetters) return undefined
@@ -236,26 +245,17 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       [latest],
     )
 
+    useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
+      ref,
+      () => textareaRef.current,
+    )
+
     // value 変更時にもカウントを更新する
     useEffect(() => {
       if (value && maxLetters) {
         updateCounters?.(value)
       }
     }, [maxLetters, updateCounters, value])
-
-    const textareaStyle = useMemo(
-      () => ({ width: typeof width === 'number' ? `${width}px` : width }),
-      [width],
-    )
-    const countError = maxLetters && count > maxLetters
-    const classNames = useMemo(() => {
-      const { textareaEl, counter } = classNameGenerator()
-
-      return {
-        textarea: textareaEl({ className }),
-        counter: counter({ error: !!countError }),
-      }
-    }, [countError, className])
 
     const body = (
       <textarea
