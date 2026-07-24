@@ -6,7 +6,6 @@ import {
   type ReactNode,
   forwardRef,
   startTransition,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -125,6 +124,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+    const counterSpanRef = useRef<HTMLSpanElement>(null)
+    const previousTextRef = useRef<string>('')
     const currentValue = defaultValue || value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
@@ -144,71 +145,25 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       }
     }, [countError, className])
 
-    const getCounterMessage = useCallback(
-      (counterValue: number) => {
-        if (maxLetters === undefined) return
-
-        if (counterValue > maxLetters) {
-          // {count}文字オーバー
-          return (
-            <Localizer
-              id="smarthr-ui/Textarea/maxLettersExceeded"
-              defaultText="{exceededLetters}文字オーバー"
-              values={{ exceededLetters: counterValue - maxLetters }}
-            />
-          )
-        }
-
-        // あと{count}文字
-        return (
-          <Localizer
-            id="smarthr-ui/Textarea/availableLetters"
-            defaultText="あと{availableLetters}文字"
-            values={{ availableLetters: maxLetters - counterValue }}
-          />
-        )
-      },
-      [maxLetters],
-    )
-
-    const updateCounters = useMemo(() => {
-      if (!maxLetters) return undefined
-
-      const updateCount = debounce((newValue: TextareaValue) => {
-        startTransition(() => {
-          setCount(getStringLength(newValue))
-        })
-      }, 200)
-
-      // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-      const updateSrMessage = debounce((newValue: TextareaValue) => {
-        startTransition(() => {
-          const counterText = getCounterMessage(getStringLength(newValue))
-
-          if (counterText) {
-            setSrCounterMessage(counterText)
-          }
-        })
-      }, 1000)
-
-      return (newValue: TextareaValue) => {
-        updateCount(newValue)
-        updateSrMessage(newValue)
-      }
-    }, [maxLetters, getCounterMessage])
-
     const latest = useLatest({
       onChange,
       autoFocus,
       autoResize,
       maxRows,
       theme,
-      updateCounters,
       rows,
     })
 
-    const functions = useMemo(
-      () => ({
+    const functions = useMemo(() => {
+      const updateCount = maxLetters
+        ? debounce((newValue: TextareaValue) => {
+            startTransition(() => {
+              setCount(getStringLength(newValue))
+            })
+          }, 200)
+        : undefined
+
+      return {
         callbackRef: (element: HTMLTextAreaElement | null) => {
           textareaRef.current = element
           if (element) {
@@ -226,7 +181,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         },
         handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
           const newValue = e.target.value
-          latest.updateCounters?.(newValue)
+          updateCount?.(newValue)
 
           // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
           e.target.rows = latest.rows
@@ -244,21 +199,39 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
 
           latest.onChange?.(e)
         },
-      }),
-      [latest],
-    )
+        // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
+        updateSrMessage: debounce((text: string) => {
+          startTransition(() => {
+            setSrCounterMessage(text)
+          })
+        }, 1000),
+        updateCount,
+      }
+    }, [maxLetters, latest])
 
     useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
       ref,
       () => textareaRef.current,
     )
 
+    // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
+    useEffect(() => {
+      if (!maxLetters || !counterSpanRef.current) return
+
+      const currentText = counterSpanRef.current.textContent || ''
+
+      if (currentText !== previousTextRef.current) {
+        previousTextRef.current = currentText
+        functions.updateSrMessage(currentText)
+      }
+    }, [count, maxLetters, functions])
+
     // value 変更時にもカウントを更新する
     useEffect(() => {
       if (value && maxLetters) {
-        updateCounters?.(value)
+        functions.updateCount?.(value)
       }
-    }, [maxLetters, updateCounters, value])
+    }, [value, maxLetters, functions])
 
     const body = (
       <textarea
@@ -287,8 +260,25 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           />
         </VisuallyHiddenText>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
-        <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>
-          {getCounterMessage(count)}
+        <span
+          ref={counterSpanRef}
+          id={actualMaxLettersId}
+          aria-hidden={true}
+          className={classNames.counter}
+        >
+          {count > maxLetters ? (
+            <Localizer
+              id="smarthr-ui/Textarea/maxLettersExceeded"
+              defaultText="{exceededLetters}文字オーバー"
+              values={{ exceededLetters: count - maxLetters }}
+            />
+          ) : (
+            <Localizer
+              id="smarthr-ui/Textarea/availableLetters"
+              defaultText="あと{availableLetters}文字"
+              values={{ availableLetters: maxLetters - count }}
+            />
+          )}
         </span>
       </span>
     ) : (
