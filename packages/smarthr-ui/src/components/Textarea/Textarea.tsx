@@ -174,8 +174,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       [maxLetters],
     )
 
-    const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
-
     const updateCounters = useMemo(() => {
       if (!maxLetters) return undefined
 
@@ -285,7 +283,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         </VisuallyHiddenText>
         <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
         <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>
-          {counterVisualMessage}
+          {getCounterMessage(count)}
         </span>
       </span>
     ) : (
