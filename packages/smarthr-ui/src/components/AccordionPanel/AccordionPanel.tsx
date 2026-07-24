@@ -3,6 +3,7 @@
 import {
   type ComponentProps,
   type FC,
+  type MouseEvent,
   type PropsWithChildren,
   type RefObject,
   createContext,
@@ -39,7 +40,7 @@ export const AccordionPanelContext = createContext<{
   expandedItems: Map<string, string>
   expandableMultiply: boolean
   parentRef: RefObject<HTMLDivElement> | null
-  handleClickTrigger: (itemName: string, isExpanded: boolean) => void
+  handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
@@ -94,12 +95,15 @@ export const AccordionPanel: FC<Props> = ({
   const latest = useLatest({ onClick })
 
   const handleClickTrigger = useCallback(
-    (itemName: string, isExpanded: boolean) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
+      const itemName = e.currentTarget.value
+      const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+
       setExpanded((prevExpandedItems) => {
         const newExpandedItems = getNewExpandedItems(
           prevExpandedItems,
           itemName,
-          isExpanded,
+          newIsExpanded,
           expandableMultiply,
         )
 
