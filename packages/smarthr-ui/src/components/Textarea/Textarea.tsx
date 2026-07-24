@@ -250,7 +250,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const body = (
       <textarea
         {...rest}
-        {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
+        aria-describedby={maxLetters ? `${maxLettersNoticeId} ${actualMaxLettersId}` : undefined}
         data-smarthr-ui-input="true"
         value={value}
         defaultValue={defaultValue}
