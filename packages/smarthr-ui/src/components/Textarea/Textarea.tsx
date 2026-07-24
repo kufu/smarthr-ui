@@ -144,9 +144,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       }
     }, [countError, className])
 
-    const onChangeRef = useRef(onChange)
-    onChangeRef.current = onChange
-
     const getCounterMessage = useCallback(
       (counterValue: number) => {
         if (maxLetters === undefined) return
@@ -202,27 +199,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       }
     }, [maxLetters, getCounterMessage])
 
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLTextAreaElement>) => {
-        const newValue = e.target.value
-        updateCounters?.(newValue)
-
-        // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = rows
-
-        if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows, theme.leading.NORMAL)
-          // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
-          e.target.rows = currentRows
-          setInterimRows(currentRows)
-        }
-
-        onChangeRef.current?.(e)
-      },
-      [updateCounters, autoResize, maxRows, rows, theme.leading.NORMAL],
-    )
-
-    const latest = useLatest({ autoFocus, autoResize, maxRows, theme })
+    const latest = useLatest({
+      onChange,
+      autoFocus,
+      autoResize,
+      maxRows,
+      theme,
+      updateCounters,
+      rows,
+    })
 
     const functions = useMemo(
       () => ({
@@ -240,6 +225,26 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
               )
             }
           }
+        },
+        handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
+          const newValue = e.target.value
+          latest.updateCounters?.(newValue)
+
+          // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
+          e.target.rows = latest.rows
+
+          if (latest.autoResize) {
+            const currentRows = calculateIdealRows(
+              e.target,
+              latest.maxRows,
+              latest.theme.leading.NORMAL,
+            )
+            // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
+            e.target.rows = currentRows
+            setInterimRows(currentRows)
+          }
+
+          latest.onChange?.(e)
         },
       }),
       [latest],
@@ -264,7 +269,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         data-smarthr-ui-input="true"
         value={value}
         defaultValue={defaultValue}
-        onChange={handleChange}
+        onChange={functions.handleChange}
         ref={functions.callbackRef}
         aria-invalid={error || countError || undefined}
         rows={interimRows}
