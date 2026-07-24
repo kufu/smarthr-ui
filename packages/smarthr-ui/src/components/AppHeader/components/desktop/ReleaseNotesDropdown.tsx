@@ -3,7 +3,7 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
@@ -28,35 +28,22 @@ const BOX_SHADOW_STYLE = { boxShadow: 'none' }
 export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, loading, error }) => {
   const wrapperClassName = useMemo(() => wrapperClassNameGenerator(), [])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      releaseNote: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotes',
-        defaultText: 'リリースノート',
-      }),
-      loadError: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotesLoadError',
-        defaultText: 'リリースノートの読み込みに失敗しました。\n時間をおいて、やり直してください。',
-      }),
-      seeAll: localize({
-        id: 'smarthr-ui/AppHeader/seeAllReleaseNotes',
-        defaultText: 'すべてのリリースノートを見る',
-      }),
-    }),
-    [localize],
-  )
-
   return (
     <div className="shr-border-l-shorthand shr-ms-0.5">
       <Dropdown>
-        <ReleaseNoteDropdownTrigger>{translated.releaseNote}</ReleaseNoteDropdownTrigger>
+        <ReleaseNoteDropdownTrigger />
         <DropdownContent className="shr-mr-1.25" controllable>
           <div className="shr-w-[400px]">
             {loading ? (
               <StyledLoader />
             ) : error || !links ? (
-              <LoadErrorText>{translated.loadError}</LoadErrorText>
+              <LoadErrorText>
+                <Localizer
+                  id="smarthr-ui/AppHeader/releaseNotesLoadError"
+                  defaultText={`リリースノートの読み込みに失敗しました。
+時間をおいて、やり直してください。`}
+                />
+              </LoadErrorText>
             ) : (
               <div className={wrapperClassName}>
                 {links.slice(0, 5).map(({ title, url }, index) => (
@@ -64,7 +51,12 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
                     {title}
                   </ArticleLink>
                 ))}
-                <SeeAllTextLink href={indexUrl}>{translated.seeAll}</SeeAllTextLink>
+                <SeeAllTextLink href={indexUrl}>
+                  <Localizer
+                    id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+                    defaultText="すべてのリリースノートを見る"
+                  />
+                </SeeAllTextLink>
               </div>
             )}
           </div>
@@ -74,13 +66,15 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
   )
 }
 
-const ReleaseNoteDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
+const ReleaseNoteDropdownTrigger = memo(() => (
   <DropdownTrigger>
     <Button
       suffix={<FaCaretDownIcon />}
       className="shr-rounded-none shr-border-none shr-font-normal [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
     >
-      <Translate>{children}</Translate>
+      <Translate>
+        <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
+      </Translate>
     </Button>
   </DropdownTrigger>
 ))
