@@ -1,7 +1,7 @@
 import { type FC, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { OpenInNewTabIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
@@ -36,21 +36,6 @@ export const ReleaseNote = memo(() => {
 const ActualReleaseNote: FC<{
   data: Exclude<Required<HeaderProps>['releaseNote'], null>
 }> = ({ data }) => {
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      error: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotesLoadError',
-        defaultText: 'リリースノートの読み込みに失敗しました。\n時間をおいて、やり直してください。',
-      }),
-      seeAll: localize({
-        id: 'smarthr-ui/AppHeader/seeAllReleaseNotes',
-        defaultText: 'すべてのリリースノートを見る',
-      }),
-    }),
-    [localize],
-  )
-
   const classNames = useMemo(() => {
     const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = classNameGenerator()
 
@@ -69,7 +54,13 @@ const ActualReleaseNote: FC<{
           <Loader />
         </Center>
       ) : data.error ? (
-        <Translate>{translated.error}</Translate>
+        <Translate>
+          <Localizer
+            id="smarthr-ui/AppHeader/releaseNotesLoadError"
+            defaultText={`リリースノートの読み込みに失敗しました。
+時間をおいて、やり直してください。`}
+          />
+        </Translate>
       ) : (
         <Stack>
           {data.links.slice(0, 5).map((link) => (
@@ -98,7 +89,12 @@ const ActualReleaseNote: FC<{
           className={classNames.indexLinkAnchor}
           suffix={<OpenInNewTabIcon className={classNames.icon} />}
         >
-          <Translate>{translated.seeAll}</Translate>
+          <Translate>
+            <Localizer
+              id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+              defaultText="すべてのリリースノートを見る"
+            />
+          </Translate>
         </TextLink>
       </div>
     </div>

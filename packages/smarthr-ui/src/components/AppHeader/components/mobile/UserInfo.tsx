@@ -1,7 +1,7 @@
 import { type FC, memo, useCallback, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Localizer, useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -55,17 +55,6 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
 
   const dialogOpen = useCallback(() => setLanguageDialogOpen(true), [])
   const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      userSetting: localize({
-        id: 'smarthr-ui/AppHeader/userSettings',
-        defaultText: '個人設定',
-      }),
-    }),
-    [localize],
-  )
 
   const classNames = useMemo(() => {
     const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } =
@@ -125,7 +114,9 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
                   rel="noopener noreferrer"
                   prefix={<FaGearIcon />}
                 >
-                  <Translate>{translated.userSetting}</Translate>
+                  <Translate>
+                    <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
+                  </Translate>
                 </CommonButton>
               )}
             </div>
