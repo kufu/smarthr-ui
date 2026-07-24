@@ -1,7 +1,7 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { localeMap, useIntl } from '../../../../intl'
+import { Localizer, localeMap, useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'
@@ -59,18 +59,7 @@ export const DesktopHeader: FC<HeaderProps> = ({
     }
   }, [className])
 
-  const { localize, locale } = useIntl()
-  const translated = useMemo(
-    () => ({
-      appLauncherLabel: localize({
-        id: 'smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel',
-        defaultText: 'アプリ',
-      }),
-      school: localize({ id: 'smarthr-ui/AppHeader/school', defaultText: 'スクール' }),
-      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
-    }),
-    [localize],
-  )
+  const { locale } = useIntl()
 
   return (
     <>
@@ -88,7 +77,10 @@ export const DesktopHeader: FC<HeaderProps> = ({
               {features && features.length > 0 && (
                 <Dropdown>
                   <AppLauncherButton enableNew={enableNew} className={classNames.appsButton}>
-                    {translated.appLauncherLabel}
+                    <Localizer
+                      id="smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel"
+                      defaultText="アプリ"
+                    />
                   </AppLauncherButton>
                   <DropdownContent controllable>
                     <AppLauncher features={features} />
@@ -102,7 +94,9 @@ export const DesktopHeader: FC<HeaderProps> = ({
                   prefix={<FaGraduationCapIcon />}
                   className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
                 >
-                  <Translate>{translated.school}</Translate>
+                  <Translate>
+                    <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
+                  </Translate>
                 </HeaderLink>
               )}
             </>
@@ -119,7 +113,9 @@ export const DesktopHeader: FC<HeaderProps> = ({
               }
               enableNew={enableNew}
             >
-              <Translate>{translated.help}</Translate>
+              <Translate>
+                <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
+              </Translate>
             </HeaderLink>
           )}
 
