@@ -107,7 +107,7 @@ const MemoizedHeadingButton = memo<
       triggerId: string
       isExpanded: boolean
       contentId: string
-      actualOnClick: ((e: MouseEvent<HTMLButtonElement>) => void) | undefined
+      actualOnClick: (e: MouseEvent<HTMLButtonElement>) => void
       handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
       classNames: {
         button: string

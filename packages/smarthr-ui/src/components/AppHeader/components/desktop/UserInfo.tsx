@@ -1,7 +1,7 @@
 import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { AnchorButton, Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownMenuButton, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
@@ -139,14 +139,6 @@ export const ActualUserInfo: FC<Props & { displayName: string }> = ({
     }
   }, [enableNew])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      userSetting: localize({ id: 'smarthr-ui/AppHeader/userSettings', defaultText: '個人設定' }),
-    }),
-    [localize],
-  )
-
   const currentTenantName = useMemo(
     () => tenants?.find((tenant) => tenant.id === currentTenantId)?.name,
     [tenants, currentTenantId],
@@ -177,7 +169,7 @@ export const ActualUserInfo: FC<Props & { displayName: string }> = ({
           className={classNames.userSummary}
         />
         <DropdownContentButton href={accountUrl} className={classNames.dropdownContentButton}>
-          {translated.userSetting}
+          <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
         </DropdownContentButton>
         {desktopAdditionalContent}
       </DropdownMenuButton>
@@ -190,7 +182,9 @@ export const ActualUserInfo: FC<Props & { displayName: string }> = ({
         {displayName}
       </DisplayNameDropdownTrigger>
       <DropdownContent className={classNames.dropdownContent}>
-        <AccountLink href={accountUrl}>{translated.userSetting}</AccountLink>
+        <AccountLink href={accountUrl}>
+          <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
+        </AccountLink>
         {desktopAdditionalContent}
       </DropdownContent>
     </Dropdown>
