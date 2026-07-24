@@ -3,11 +3,11 @@
 import {
   type ComponentProps,
   type FC,
+  type KeyboardEventHandler,
   type MouseEvent,
   type PropsWithChildren,
   type RefObject,
   createContext,
-  useCallback,
   useMemo,
   useRef,
   useState,
@@ -17,7 +17,13 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { useLatest } from '../../hooks/useLatest'
 import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
 
-import { getNewExpandedItems } from './accordionPanelHelper'
+import {
+  focusFirstSibling,
+  focusLastSibling,
+  focusNextSibling,
+  focusPreviousSibling,
+  getNewExpandedItems,
+} from './accordionPanelHelper'
 
 type AbstractProps = PropsWithChildren<{
   /** アイコンの左右位置 */
@@ -41,12 +47,14 @@ export const AccordionPanelContext = createContext<{
   expandableMultiply: boolean
   parentRef: RefObject<HTMLDivElement> | null
   handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
+  handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
   expandableMultiply: true,
   parentRef: null,
   handleClickTrigger: () => {},
+  handleKeyDown: () => {},
 })
 
 const ROUNDED = {
@@ -92,33 +100,67 @@ export const AccordionPanel: FC<Props> = ({
     [rounded, className],
   )
 
-  const latest = useLatest({ onClick })
+  const latest = useLatest({ onClick, expandableMultiply })
 
-  const handleClickTrigger = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      const itemName = e.currentTarget.value
-      const newIsExpanded = e.currentTarget.getAttribute('aria-expanded') !== 'true'
+  const functions = useMemo(
+    () => ({
+      handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => {
+        const { currentTarget } = e
 
-      setExpanded((prevExpandedItems) => {
-        const newExpandedItems = getNewExpandedItems(
-          prevExpandedItems,
-          itemName,
-          newIsExpanded,
-          expandableMultiply,
-        )
+        setExpanded((prevExpandedItems) => {
+          const newExpandedItems = getNewExpandedItems(
+            prevExpandedItems,
+            currentTarget.value,
+            currentTarget.getAttribute('aria-expanded') !== 'true',
+            latest.expandableMultiply,
+          )
 
-        latest.onClick?.(mapToKeyArray(newExpandedItems))
+          latest.onClick?.(mapToKeyArray(newExpandedItems))
 
-        return newExpandedItems
-      })
-    },
-    [expandableMultiply, latest],
+          return newExpandedItems
+        })
+      },
+      handleKeyDown: (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
+        if (!parentRef.current) {
+          return
+        }
+
+        const item = e.target as HTMLElement
+
+        switch (e.key) {
+          case 'Home': {
+            e.preventDefault()
+            focusFirstSibling(parentRef.current)
+            break
+          }
+          case 'End': {
+            e.preventDefault()
+            focusLastSibling(parentRef.current)
+            break
+          }
+          case 'ArrowLeft':
+          case 'ArrowUp': {
+            e.preventDefault()
+            focusPreviousSibling(item, parentRef.current)
+            break
+          }
+          case 'ArrowRight':
+          case 'ArrowDown': {
+            e.preventDefault()
+            focusNextSibling(item, parentRef.current)
+            break
+          }
+        }
+      },
+    }),
+    [latest],
   )
 
   return (
     <AccordionPanelContext.Provider
       value={{
-        handleClickTrigger,
+        handleClickTrigger: functions.handleClickTrigger,
+        handleKeyDown: functions.handleKeyDown,
         expandedItems,
         iconPosition,
         expandableMultiply,
