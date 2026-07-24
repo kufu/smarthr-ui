@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
 import { usePortal } from '../../../../hooks/usePortal'
-import { Localizer, useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
 import { Translate } from '../common/Translate'
@@ -60,25 +60,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   const className = useMemo(() => classNameGenerator(), [])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      launcherListText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
-      management: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/managementMenu',
-        defaultText: '管理メニュー',
-      }),
-      releaseNote: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotes',
-        defaultText: 'リリースノート',
-      }),
-    }),
-    [localize],
-  )
-
   return (
     <>
       <OpenButton
@@ -89,14 +70,26 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
       />
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
-          <FeatureButton className={className}>{translated.launcherListText}</FeatureButton>
+          <FeatureButton className={className}>
+            <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
+          </FeatureButton>
           <NavigationAccordion appName={appName} menuClose={close} className={className} />
           {additionalContent && (
-            <AdditionalContent title={translated.management} className={className}>
+            <AdditionalContent
+              title={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/managementMenu"
+                  defaultText="管理メニュー"
+                />
+              }
+              className={className}
+            >
               {additionalContent}
             </AdditionalContent>
           )}
-          <ReleaseNoteButton className={className}>{translated.releaseNote}</ReleaseNoteButton>
+          <ReleaseNoteButton className={className}>
+            <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
+          </ReleaseNoteButton>
         </MenuDialog>,
       )}
     </>
