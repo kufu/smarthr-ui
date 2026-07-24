@@ -16,6 +16,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
@@ -123,7 +124,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
     const maxLettersNoticeId = `${maxLettersId}-notice`
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const currentValue = defaultValue || value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
@@ -212,19 +213,28 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       [updateCounters, autoResize, maxRows, rows, theme.leading.NORMAL],
     )
 
-    // autoFocus時に、フォーカスを当てる
-    useEffect(() => {
-      if (autoFocus && textareaRef.current) {
-        textareaRef.current.focus()
-      }
-    }, [autoFocus])
+    const latest = useLatest({ autoFocus, autoResize, maxRows, theme })
 
-    // autoResize時に、初期値での高さを指定
-    useEffect(() => {
-      if (autoResize && textareaRef.current) {
-        setInterimRows(calculateIdealRows(textareaRef.current, maxRows, theme.leading.NORMAL))
-      }
-    }, [setInterimRows, maxRows, autoResize, theme.leading.NORMAL])
+    const functions = useMemo(
+      () => ({
+        callbackRef: (element: HTMLTextAreaElement | null) => {
+          textareaRef.current = element
+          if (element) {
+            // autoFocus時に、フォーカスを当てる
+            if (latest.autoFocus) {
+              element.focus()
+            }
+            // autoResize時に、初期値での高さを指定
+            if (latest.autoResize) {
+              setInterimRows(
+                calculateIdealRows(element, latest.maxRows, latest.theme.leading.NORMAL),
+              )
+            }
+          }
+        },
+      }),
+      [latest],
+    )
 
     // value 変更時にもカウントを更新する
     useEffect(() => {
@@ -255,7 +265,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
         value={value}
         defaultValue={defaultValue}
         onChange={handleChange}
-        ref={textareaRef}
+        ref={functions.callbackRef}
         aria-invalid={error || countError || undefined}
         rows={interimRows}
         className={classNames.textarea}
