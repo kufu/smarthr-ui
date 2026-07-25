@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithoutRef,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -32,6 +32,7 @@ import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
+import type { PropsWithHTMLAttributes } from '../../../types'
 import type { DialogSize } from '../types'
 
 type AbstractProps = PropsWithChildren<{
@@ -89,10 +90,15 @@ type AbstractProps = PropsWithChildren<{
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
 }>
-type Props = AbstractProps &
-  Omit<DialogBodyProps, keyof AbstractProps> &
-  Omit<BaseElementProps, keyof AbstractProps> &
-  Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
+
+type ComponentProps = PropsWithHTMLAttributes<
+  AbstractProps &
+    Omit<
+      DialogBodyProps & BaseElementProps & VariantProps<typeof classNameGenerator>,
+      keyof AbstractProps
+    >,
+  'div'
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -134,7 +140,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const ModelessDialog: FC<Props> = ({
+export const ModelessDialog: FC<ComponentProps> = ({
   heading,
   children,
   contentBgColor,
@@ -190,7 +196,7 @@ export const ModelessDialog: FC<Props> = ({
     y: 0,
   })
   const [draggableBounds, setDraggableBounds] =
-    useState<ComponentProps<typeof Draggable>['bounds']>()
+    useState<ComponentPropsWithoutRef<typeof Draggable>['bounds']>()
   const debounceLiveRegionText = useMemo(() => debounce(setDebouncedLiveRegionText, 600), [])
 
   useEffect(() => {
