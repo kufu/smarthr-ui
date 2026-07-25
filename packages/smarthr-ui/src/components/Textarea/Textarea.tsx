@@ -144,21 +144,26 @@ const MaxLettersTextarea: FC<
   })
 
   const functions = useMemo(() => {
-    const updateCount = debounce((newValue: TextareaValue) => {
+    // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
+    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
+    const updateSrMessage = debounce(() => {
+      startTransition(() => {
+        if (counterSpanRef.current) {
+          setSrCounterMessage(counterSpanRef.current.textContent || '')
+        }
+      })
+    }, 1000)
+    const actualUpdateCount = debounce((newValue: TextareaValue) => {
       startTransition(() => {
         setCount(getStringLength(newValue))
       })
     }, 200)
+    const updateCount = (newValue: TextareaValue) => {
+      actualUpdateCount(newValue)
+      updateSrMessage()
+    }
 
     return {
-      // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-      updateSrMessage: debounce(() => {
-        startTransition(() => {
-          if (counterSpanRef.current) {
-            setSrCounterMessage(counterSpanRef.current.textContent || '')
-          }
-        })
-      }, 1000),
       updateCount,
       handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
         updateCount(e.target.value)
@@ -166,11 +171,6 @@ const MaxLettersTextarea: FC<
       },
     }
   }, [latest])
-
-  // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
-  useEffect(() => {
-    functions.updateSrMessage()
-  }, [count, functions])
 
   // value 変更時にもカウントを更新する
   useEffect(() => {
