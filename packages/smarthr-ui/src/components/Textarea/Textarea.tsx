@@ -152,9 +152,11 @@ const MaxLettersTextarea: FC<
 
     return {
       // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-      updateSrMessage: debounce((text: string) => {
+      updateSrMessage: debounce(() => {
         startTransition(() => {
-          setSrCounterMessage(text)
+          if (counterSpanRef.current) {
+            setSrCounterMessage(counterSpanRef.current.textContent || '')
+          }
         })
       }, 1000),
       updateCount,
@@ -167,9 +169,7 @@ const MaxLettersTextarea: FC<
 
   // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
   useEffect(() => {
-    if (counterSpanRef.current) {
-      functions.updateSrMessage(counterSpanRef.current.textContent || '')
-    }
+    functions.updateSrMessage()
   }, [count, functions])
 
   // value 変更時にもカウントを更新する
