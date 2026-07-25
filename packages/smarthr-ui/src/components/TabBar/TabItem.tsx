@@ -5,12 +5,11 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
@@ -71,19 +70,23 @@ export const TabItem: FC<Props> = ({
   onClick,
   ...rest
 }) => {
-  const onClickRef = useRef(onClick)
-  onClickRef.current = onClick
+  const latest = useLatest({ onClick })
 
-  const actualOnClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    onClickRef.current(e)
-  }, [])
+  const functions = useMemo(
+    () => ({
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onClick(e)
+      },
+    }),
+    [latest],
+  )
 
   const tabAttrs = {
     role: 'tab',
     'aria-selected': selected,
   }
   const buttonAttrs = {
-    onClick: actualOnClick,
+    handleClick: functions.handleClick,
     disabled,
   }
 
@@ -107,7 +110,13 @@ export const TabItem: FC<Props> = ({
   return <TabButton {...rest} {...tabAttrs} {...buttonAttrs} />
 }
 
-const TabButton = memo<PropsWithChildren<Props>>(({ id, children, suffix, className, ...rest }) => {
+const TabButton = memo<
+  PropsWithChildren<
+    Omit<Props, 'onClick'> & {
+      handleClick?: NonNullable<Props['onClick']>
+    }
+  >
+>(({ id, children, suffix, handleClick, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = classNameGenerator()
 
@@ -119,7 +128,14 @@ const TabButton = memo<PropsWithChildren<Props>>(({ id, children, suffix, classN
   }, [className])
 
   return (
-    <UnstyledButton {...rest} type="button" value={id} id={id} className={classNames.wrapper}>
+    <UnstyledButton
+      {...rest}
+      type="button"
+      value={id}
+      id={id}
+      onClick={handleClick}
+      className={classNames.wrapper}
+    >
       <span className={classNames.label}>{children}</span>
       {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}
     </UnstyledButton>
