@@ -71,16 +71,21 @@ export const TabItem: FC<Props> = ({
   onClick,
   ...rest
 }) => {
-  const tabAttrs = {
-    role: 'tab',
-    'aria-selected': selected,
-  }
   const onClickRef = useRef(onClick)
   onClickRef.current = onClick
 
   const actualOnClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
     onClickRef.current(e)
   }, [])
+
+  const tabAttrs = {
+    role: 'tab',
+    'aria-selected': selected,
+  }
+  const buttonAttrs = {
+    onClick: actualOnClick,
+    disabled,
+  }
 
   if (disabled && disabledReason) {
     const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
@@ -92,12 +97,12 @@ export const TabItem: FC<Props> = ({
         aria-disabled={disabled}
         className="focus-visible:shr-focus-indicator"
       >
-        <TabButton {...rest} onClick={actualOnClick} disabled={disabled} suffix={Icon} />
+        <TabButton {...rest} {...buttonAttrs} suffix={Icon} />
       </Tooltip>
     )
   }
 
-  return <TabButton {...rest} {...tabAttrs} onClick={actualOnClick} disabled={disabled} />
+  return <TabButton {...rest} {...tabAttrs} {...buttonAttrs} />
 }
 
 const TabButton = memo<PropsWithChildren<Props>>(({ id, children, suffix, className, ...rest }) => {
