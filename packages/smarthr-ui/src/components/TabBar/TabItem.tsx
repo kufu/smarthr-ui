@@ -88,8 +88,6 @@ export const TabItem: FC<Props> = ({
   }
 
   if (disabled && disabledReason) {
-    const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
-
     return (
       <Tooltip
         {...tabAttrs}
@@ -97,7 +95,11 @@ export const TabItem: FC<Props> = ({
         aria-disabled={disabled}
         className="focus-visible:shr-focus-indicator"
       >
-        <TabButton {...rest} {...buttonAttrs} suffix={Icon} />
+        <TabButton
+          {...rest}
+          {...buttonAttrs}
+          suffix={disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />}
+        />
       </Tooltip>
     )
   }
