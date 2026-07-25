@@ -66,7 +66,18 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
 export const Th: FC<Props> = ({ sort, onSort, ...rest }) =>
   sort ? <SortableTh {...rest} sort={sort} onSort={onSort} /> : <ActualTh {...rest} />
 
-const SortableTh: FC<Props> = (props) => <ActualTh {...props} />
+const SortableTh: FC<
+  Omit<Props, 'sort'> & {
+    sort: NonNullable<Props['sort']>
+  }
+> = ({ sort, ...rest }) => {
+  const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
+    () => (sort === 'none' ? 'none' : `${sort}ending`),
+    [sort],
+  )
+
+  return <ActualTh {...rest} sort={sort} aria-sort={ariaSort} />
+}
 
 const ActualTh = memo<Props>(
   ({ children, sort, onSort, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
@@ -87,19 +98,8 @@ const ActualTh = memo<Props>(
       [style, contentWidth],
     )
 
-    const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
-      () => (sort ? (sort === 'none' ? 'none' : `${sort}ending`) : undefined),
-      [sort],
-    )
-
     return (
-      <th
-        {...rest}
-        aria-sort={ariaSort}
-        data-fixed={fixed}
-        className={actualClassName}
-        style={actualStyle}
-      >
+      <th {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle}>
         {sort ? (
           <ThSortButton align={align} onSort={onSort} sort={sort}>
             {children}
