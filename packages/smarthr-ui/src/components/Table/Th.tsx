@@ -1,6 +1,7 @@
 import {
   type AriaAttributes,
   type ComponentPropsWithoutRef,
+  type FC,
   type PropsWithChildren,
   memo,
   useMemo,
@@ -62,7 +63,12 @@ const convertContentWidth = (contentWidth?: CellContentWidth) => {
   return contentWidth
 }
 
-export const Th = memo<Props>(
+export const Th: FC<Props> = ({ sort, onSort, ...rest }) =>
+  sort ? <SortableTh {...rest} sort={sort} onSort={onSort} /> : <ActualTh {...rest} />
+
+const SortableTh: FC<Props> = (props) => <ActualTh {...props} />
+
+const ActualTh = memo<Props>(
   ({ children, sort, onSort, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ className, align, vAlign })
@@ -71,9 +77,7 @@ export const Th = memo<Props>(
         return base
       }
 
-      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: fixed })
-
-      return `${base} ${shadow}`
+      return `${base} ${reelShadowClassNameGenerator({ showShadow: false, direction: fixed })}`
     }, [align, className, fixed, vAlign])
     const actualStyle = useMemo(
       () => ({
