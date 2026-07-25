@@ -178,9 +178,7 @@ const MaxLettersTextarea: FC<
 
   // value 変更時にもカウントを更新する
   useEffect(() => {
-    if (value) {
-      functions.updateCount(value)
-    }
+    functions.updateCount(value ?? '')
   }, [value, functions])
 
   return (
