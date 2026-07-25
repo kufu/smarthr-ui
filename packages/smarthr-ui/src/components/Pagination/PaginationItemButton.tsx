@@ -37,16 +37,10 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
   )
 
   const { Component, attrs } = useMemo(() => {
-    const common = {
-      'aria-label': ariaLabel,
-      'aria-current': disabled ? 'page' : undefined,
-    }
-
     if (hrefTemplate) {
       return {
         Component: AnchorButton,
         attrs: {
-          ...common,
           // HINT: elementAsにnext/linkを設定した場合、hrefがundefinedでは
           // エラーになってしまうため、undefinedで指定されていない状態にする
           ...(disabled
@@ -65,15 +59,21 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
     return {
       Component: Button,
       attrs: {
-        ...common,
         disabled,
         value: page,
       } as ComponentProps<typeof Button>,
     }
-  }, [disabled, page, hrefTemplate, linkAs, ariaLabel])
+  }, [disabled, page, hrefTemplate, linkAs])
 
   return (
-    <Component {...attrs} variant="secondary" size="S" className={className}>
+    <Component
+      {...attrs}
+      variant="secondary"
+      size="S"
+      aria-label={ariaLabel}
+      aria-current={disabled ? 'page' : undefined}
+      className={className}
+    >
       {page}
     </Component>
   )
