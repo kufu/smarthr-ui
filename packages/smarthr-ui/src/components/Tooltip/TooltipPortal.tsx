@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../hooks/useTheme'
@@ -23,6 +23,16 @@ const classNameGenerator = tv({
     balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { container, balloon, balloonText } = classNameGenerator()
+
+  return {
+    container: container(),
+    balloon: balloon(),
+    balloonText: balloonText(),
+  }
+})()
 
 const OUTER_MARGIN = 10
 const SPACING = 5
@@ -69,31 +79,21 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
     [parentRect, theme],
   )
 
-  const classNames = useMemo(() => {
-    const { container, balloon, balloonText } = classNameGenerator()
-
-    return {
-      container: container(),
-      balloon: balloon(),
-      balloonText: balloonText(),
-    }
-  }, [])
-
   return (
     <div
       ref={portalRef}
       role="tooltip"
       aria-hidden={!isVisible}
-      className={classNames.container}
+      className={CLASS_NAMES.container}
       style={isVisible ? style : undefined}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}
         vertical={actualVertical}
         triggerIcon={isIcon}
-        className={classNames.balloon}
+        className={CLASS_NAMES.balloon}
       >
-        <div id={messageId} className={classNames.balloonText}>
+        <div id={messageId} className={CLASS_NAMES.balloonText}>
           {message}
         </div>
       </ControlledTooltip>

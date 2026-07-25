@@ -68,21 +68,19 @@ const sortIconClassNameGenerator = tv({
   },
 })
 
-const SortIcon = memo(() => {
-  const classNames = useMemo(() => {
-    const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
+const SORT_ICON_CLASS_NAMES = (() => {
+  const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
 
-    return {
-      wrapper: wrapper(),
-      upIcon: upIcon(),
-      downIcon: downIcon(),
-    }
-  }, [])
+  return {
+    wrapper: wrapper(),
+    upIcon: upIcon(),
+    downIcon: downIcon(),
+  }
+})()
 
-  return (
-    <span className={classNames.wrapper}>
-      <FaSortUpIcon className={classNames.upIcon} />
-      <FaSortDownIcon className={classNames.downIcon} />
-    </span>
-  )
-})
+const SortIcon = memo(() => (
+  <span className={SORT_ICON_CLASS_NAMES.wrapper}>
+    <FaSortUpIcon className={SORT_ICON_CLASS_NAMES.upIcon} />
+    <FaSortDownIcon className={SORT_ICON_CLASS_NAMES.downIcon} />
+  </span>
+))
