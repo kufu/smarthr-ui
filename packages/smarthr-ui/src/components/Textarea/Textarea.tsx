@@ -100,7 +100,19 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ maxLetters, ...rest }, ref) =>
+  maxLetters ? (
+    <MaxLettersTextarea {...rest} ref={ref} maxLetters={maxLetters} />
+  ) : (
+    <ActualTextarea {...rest} ref={ref} />
+  ),
+)
+
+const MaxLettersTextarea = forwardRef<HTMLTextAreaElement, Props>((props, ref) => (
+  <ActualTextarea {...props} ref={ref} />
+))
+
+const ActualTextarea = forwardRef<HTMLTextAreaElement, Props>(
   (
     {
       autoFocus,
@@ -180,8 +192,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
           }
         },
         handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
-          const newValue = e.target.value
-          updateCount?.(newValue)
+          updateCount?.(e.target.value)
 
           // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
           e.target.rows = latest.rows
