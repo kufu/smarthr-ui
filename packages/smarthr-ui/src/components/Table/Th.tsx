@@ -1,5 +1,4 @@
 import {
-  type AriaAttributes,
   type ComponentPropsWithoutRef,
   type FC,
   type PropsWithChildren,
@@ -73,11 +72,6 @@ const SortableTh: FC<
     sort: NonNullable<Props['sort']>
   }
 > = ({ sort, onSort, ...rest }) => {
-  const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
-    () => (sort === 'none' ? 'none' : `${sort}ending`),
-    [sort],
-  )
-
   const latest = useLatest({ onSort })
   const hasOnSort = !!onSort
 
@@ -92,7 +86,14 @@ const SortableTh: FC<
     [hasOnSort, latest],
   )
 
-  return <ActualTh {...rest} sort={sort} handleSort={functions.handleSort} aria-sort={ariaSort} />
+  return (
+    <ActualTh
+      {...rest}
+      sort={sort}
+      handleSort={functions.handleSort}
+      aria-sort={sort === 'none' ? sort : `${sort}ending`}
+    />
+  )
 }
 
 const ActualTh = memo<
