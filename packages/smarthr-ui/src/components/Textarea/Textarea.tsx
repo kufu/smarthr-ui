@@ -125,8 +125,10 @@ const MaxLettersTextarea: FC<
 
   const counterSpanRef = useRef<HTMLSpanElement>(null)
   const previousTextRef = useRef<string>('')
-  const currentValue = defaultValue || value
-  const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
+  const [count, setCount] = useState(() => {
+    const currentValue = defaultValue || value
+    return currentValue ? getStringLength(currentValue) : 0
+  })
   const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
   const countError = count > maxLetters
