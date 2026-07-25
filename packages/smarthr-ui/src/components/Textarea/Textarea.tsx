@@ -119,7 +119,7 @@ const MaxLettersTextarea: FC<
   Omit<LocalTextareaProps, 'maxLetters'> & {
     maxLetters: number
   }
-> = ({ maxLetters, error, value, defaultValue, onChange, externalRef, ...rest }) => {
+> = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
   const maxLettersId = useId()
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
@@ -187,7 +187,6 @@ const MaxLettersTextarea: FC<
     <span className="shr-relative">
       <ActualTextarea
         {...rest}
-        externalRef={externalRef}
         value={value}
         defaultValue={defaultValue}
         onChange={functions.handleChange}
@@ -235,8 +234,6 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   rows = 2,
   error,
   onChange,
-  value,
-  defaultValue,
   externalRef,
   ...rest
 }) => {
@@ -311,8 +308,6 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     <textarea
       {...rest}
       data-smarthr-ui-input="true"
-      value={value}
-      defaultValue={defaultValue}
       onChange={functions.handleChange}
       ref={functions.callbackRef}
       aria-invalid={error || undefined}
