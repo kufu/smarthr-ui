@@ -71,7 +71,7 @@ const SortableTh: FC<
   Omit<Props, 'sort'> & {
     sort: NonNullable<Props['sort']>
   }
-> = ({ sort, onSort, ...rest }) => {
+> = ({ sort, onSort, align, children, ...rest }) => {
   const latest = useLatest({ onSort })
   const hasOnSort = !!onSort
 
@@ -87,32 +87,16 @@ const SortableTh: FC<
   )
 
   return (
-    <ActualTh
-      {...rest}
-      sort={sort}
-      handleSort={functions.handleSort}
-      aria-sort={sort === 'none' ? sort : `${sort}ending`}
-    />
+    <ActualTh {...rest} align={align} aria-sort={sort === 'none' ? sort : `${sort}ending`}>
+      <ThSortButton align={align} handleSort={functions.handleSort} sort={sort}>
+        {children}
+      </ThSortButton>
+    </ActualTh>
   )
 }
 
-const ActualTh = memo<
-  Omit<Props, 'onSort'> & {
-    handleSort?: Props['onSort']
-  }
->(
-  ({
-    children,
-    sort,
-    handleSort,
-    align,
-    vAlign,
-    fixed,
-    contentWidth,
-    className,
-    style,
-    ...rest
-  }) => {
+const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
+  ({ children, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ className, align, vAlign })
 
@@ -132,13 +116,7 @@ const ActualTh = memo<
 
     return (
       <th {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle}>
-        {sort ? (
-          <ThSortButton align={align} handleSort={handleSort} sort={sort}>
-            {children}
-          </ThSortButton>
-        ) : (
-          children
-        )}
+        {children}
       </th>
     )
   },
