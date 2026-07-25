@@ -25,6 +25,17 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = classNameGenerator()
+
+  return {
+    iconButton: iconButton(),
+    iconButtonInner: iconButtonInner(),
+    dropdownUserName: dropdownUserName(),
+    dropdownButtonArea: dropdownButtonArea(),
+  }
+})()
+
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
 
 export const UserInfo = memo<Props>(
@@ -56,24 +67,12 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
   const dialogOpen = useCallback(() => setLanguageDialogOpen(true), [])
   const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
 
-  const classNames = useMemo(() => {
-    const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } =
-      classNameGenerator()
-
-    return {
-      iconButton: iconButton(),
-      iconButtonInner: iconButtonInner(),
-      dropdownUserName: dropdownUserName(),
-      dropdownButtonArea: dropdownButtonArea(),
-    }
-  }, [])
-
   return (
     <>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="skeleton" size="S" className={classNames.iconButton}>
-            <span className={classNames.iconButtonInner}>
+          <Button variant="skeleton" size="S" className={CLASS_NAMES.iconButton}>
+            <span className={CLASS_NAMES.iconButtonInner}>
               <FaUserLargeIcon
                 alt={
                   <Localizer
@@ -88,12 +87,12 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
         </DropdownTrigger>
 
         <DropdownContent>
-          <div className={classNames.dropdownUserName}>
+          <div className={CLASS_NAMES.dropdownUserName}>
             <p>{displayName}</p>
           </div>
 
           {(locale || accountUrl) && (
-            <div className={classNames.dropdownButtonArea}>
+            <div className={CLASS_NAMES.dropdownButtonArea}>
               {locale && (
                 <CommonButton
                   elementAs="button"
