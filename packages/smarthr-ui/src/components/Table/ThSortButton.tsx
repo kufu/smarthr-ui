@@ -22,15 +22,15 @@ type sortTypes = 'asc' | 'desc' | 'none'
 
 type Props = PropsWithChildren<{
   align?: VariantProps<typeof sortButtonClassNameGenerator>['align']
-  onSort?: () => void
+  handleSort?: () => void
   sort?: sortTypes
 }>
 
-export const ThSortButton = memo<Props>(({ align, sort, onSort, children }) => {
+export const ThSortButton = memo<Props>(({ align, sort, handleSort, children }) => {
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
   return (
-    <UnstyledButton onClick={onSort} className={className}>
+    <UnstyledButton onClick={handleSort} className={className}>
       {children}
       <SortIcon />
       {sort && (

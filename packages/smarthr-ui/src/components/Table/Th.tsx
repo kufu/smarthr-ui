@@ -8,6 +8,8 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
+
 import { ThSortButton } from './ThSortButton'
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
@@ -70,17 +72,46 @@ const SortableTh: FC<
   Omit<Props, 'sort'> & {
     sort: NonNullable<Props['sort']>
   }
-> = ({ sort, ...rest }) => {
+> = ({ sort, onSort, ...rest }) => {
   const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
     () => (sort === 'none' ? 'none' : `${sort}ending`),
     [sort],
   )
 
-  return <ActualTh {...rest} sort={sort} aria-sort={ariaSort} />
+  const latest = useLatest({ onSort })
+  const hasOnSort = !!onSort
+
+  const functions = useMemo(
+    () => ({
+      handleSort: hasOnSort
+        ? () => {
+            latest.onSort?.()
+          }
+        : undefined,
+    }),
+    [hasOnSort, latest],
+  )
+
+  return <ActualTh {...rest} sort={sort} handleSort={functions.handleSort} aria-sort={ariaSort} />
 }
 
-const ActualTh = memo<Props>(
-  ({ children, sort, onSort, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
+const ActualTh = memo<
+  Omit<Props, 'onSort'> & {
+    handleSort?: Props['onSort']
+  }
+>(
+  ({
+    children,
+    sort,
+    handleSort,
+    align,
+    vAlign,
+    fixed,
+    contentWidth,
+    className,
+    style,
+    ...rest
+  }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ className, align, vAlign })
 
@@ -101,7 +132,7 @@ const ActualTh = memo<Props>(
     return (
       <th {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle}>
         {sort ? (
-          <ThSortButton align={align} onSort={onSort} sort={sort}>
+          <ThSortButton align={align} handleSort={handleSort} sort={sort}>
             {children}
           </ThSortButton>
         ) : (
