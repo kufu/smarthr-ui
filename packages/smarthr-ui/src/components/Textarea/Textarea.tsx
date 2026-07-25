@@ -124,7 +124,6 @@ const MaxLettersTextarea: FC<
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
   const counterSpanRef = useRef<HTMLSpanElement>(null)
-  const previousTextRef = useRef<string>('')
   const [count, setCount] = useState(() => {
     const currentValue = defaultValue || value
     return currentValue ? getStringLength(currentValue) : 0
@@ -168,13 +167,8 @@ const MaxLettersTextarea: FC<
 
   // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
   useEffect(() => {
-    if (!counterSpanRef.current) return
-
-    const currentText = counterSpanRef.current.textContent || ''
-
-    if (currentText !== previousTextRef.current) {
-      previousTextRef.current = currentText
-      functions.updateSrMessage(currentText)
+    if (counterSpanRef.current) {
+      functions.updateSrMessage(counterSpanRef.current.textContent || '')
     }
   }, [count, functions])
 
