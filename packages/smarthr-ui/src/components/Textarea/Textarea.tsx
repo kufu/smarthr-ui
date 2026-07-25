@@ -119,7 +119,7 @@ const MaxLettersTextarea: FC<
   Omit<LocalTextareaProps, 'maxLetters'> & {
     maxLetters: number
   }
-> = ({ maxLetters, className, error, value, defaultValue, onChange, externalRef, ...rest }) => {
+> = ({ maxLetters, error, value, defaultValue, onChange, externalRef, ...rest }) => {
   const maxLettersId = useId()
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
@@ -193,7 +193,6 @@ const MaxLettersTextarea: FC<
         onChange={functions.handleChange}
         aria-describedby={`${maxLettersNoticeId} ${maxLettersId}`}
         aria-invalid={error || countError || undefined}
-        className={className}
       />
       <VisuallyHiddenText id={maxLettersNoticeId}>
         <Localizer
