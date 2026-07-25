@@ -192,7 +192,7 @@ const MaxLettersTextarea: FC<
         defaultValue={defaultValue}
         onChange={functions.handleChange}
         aria-describedby={`${maxLettersNoticeId} ${maxLettersId}`}
-        aria-invalid={error || countError || undefined}
+        error={error || countError}
       />
       <VisuallyHiddenText id={maxLettersNoticeId}>
         <Localizer
