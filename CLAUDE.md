@@ -128,6 +128,46 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
   - subject は日本語で記述（`subject-case` ルールは無効化されている）
   - リリースは release-please で管理。`feat` → minor、`fix` → patch、`!` → major
 
+### スタイリング
+
+#### classNamesの定数化
+tailwind-variants (`tv()`) で生成したクラス名は、引数や依存配列が空の場合は`useMemo`ではなく定数として定義します：
+
+```typescript
+// ✅ 引数なし・依存配列なしの場合は定数化
+const CLASS_NAMES = (() => {
+  const { trigger, contentBody, contentButton } = classNameGenerator()
+
+  return {
+    trigger: trigger(),
+    contentBody: contentBody(),
+    contentButton: contentButton(),
+  }
+})()
+
+// ❌ 不要なuseMemo
+const classNames = useMemo(() => {
+  const { trigger, contentBody, contentButton } = classNameGenerator()
+
+  return {
+    trigger: trigger(),
+    contentBody: contentBody(),
+    contentButton: contentButton(),
+  }
+}, [])  // 空の依存配列
+```
+
+**命名規則:**
+- **メインのコンポーネント**: `CLASS_NAMES`
+- **サブコンポーネントやヘルパー関数内**: `XXX_CLASS_NAMES`（例: `ITEM_CLASS_NAMES`, `HEADER_CLASS_NAMES`）
+
+複数の定数化されたclassNamesが同一ファイル内に存在する場合、衝突を避けるため接頭辞を付けて区別します。
+
+**理由:**
+- 引数・依存配列がない場合、`useMemo`のオーバーヘッドが無駄
+- 即時関数（IIFE）で中間変数をスコープから隔離
+- `const`で再代入を防止
+
 ### パフォーマンス最適化パターン
 
 #### useLatest + functions パターン
