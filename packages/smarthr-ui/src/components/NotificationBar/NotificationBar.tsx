@@ -226,7 +226,18 @@ export const NotificationBar: FC<Props> = ({
             </Cluster>
           )}
         </Cluster>
-        <CloseButton onClose={onClose} className={classNames.closeButton} />
+        {onClose && (
+          <Button variant="text" size="S" onClick={onClose} className={classNames.closeButton}>
+            <FaXmarkIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/NotificationBar/closeButtonIconAlt"
+                  defaultText="閉じる"
+                />
+              }
+            />
+          </Button>
+        )}
       </div>
     </WrapBase>
   )
@@ -252,16 +263,3 @@ const MessageArea = memo<
     </Text>
   )
 })
-
-const CloseButton = memo<Pick<Props, 'onClose'> & { className: string }>(
-  ({ onClose, className }) =>
-    onClose && (
-      <Button variant="text" size="S" onClick={onClose} className={className}>
-        <FaXmarkIcon
-          alt={
-            <Localizer id="smarthr-ui/NotificationBar/closeButtonIconAlt" defaultText="閉じる" />
-          }
-        />
-      </Button>
-    ),
-)
