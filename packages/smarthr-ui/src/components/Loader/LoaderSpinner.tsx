@@ -1,10 +1,11 @@
 'use client'
 
-import { type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import type { FC, ReactNode } from 'react'
 
 type Props = {
   /** ローダーの大きさ */
@@ -116,7 +117,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' }) => {
+export const LoaderSpinner: FC<Props> = ({ size = 'M', alt, type = 'primary' }) => {
   // HINT: LoaderSpinnerは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
   const classNames = (() => {
     const { spinner, line, cog, cogInner } = classNameGenerator({
@@ -158,4 +159,4 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
       </VisuallyHiddenText>
     </span>
   )
-})
+}
