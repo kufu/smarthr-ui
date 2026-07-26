@@ -185,22 +185,17 @@ export const NotificationBar: FC<Props> = ({
   ...rest
 }) => {
   const actualRole = role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')
-  const { WrapBase, baseProps } = useMemo(
-    () =>
-      base === 'base'
-        ? {
-            WrapBase: Base,
-            baseProps: {
-              layer,
-              overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
-            },
-          }
-        : {
-            WrapBase: Fragment,
-            baseProps: {},
-          },
-    [base, layer],
-  )
+  let WrapBase = Fragment
+  let baseProps = {}
+
+  if (base === 'base') {
+    WrapBase = Base
+    baseProps = {
+      layer,
+      overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
+    }
+  }
+
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
