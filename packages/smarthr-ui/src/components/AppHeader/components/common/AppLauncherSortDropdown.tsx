@@ -36,6 +36,16 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { trigger, contentBody, contentButton } = classNameGenerator()
+
+  return {
+    trigger: trigger(),
+    contentBody: contentBody(),
+    contentButton: contentButton(),
+  }
+})()
+
 type Props = {
   sortType: Launcher['sortType']
   onSelectSortType: (sortType: Launcher['sortType']) => void
@@ -43,16 +53,6 @@ type Props = {
 
 export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
-
-  const classNames = useMemo(() => {
-    const { trigger, contentBody, contentButton } = classNameGenerator()
-
-    return {
-      trigger: trigger(),
-      contentBody: contentBody(),
-      contentButton: contentButton(),
-    }
-  }, [])
 
   const options = useMemo<Array<[Launcher['sortType'], JSX.Element]>>(
     () => [
@@ -102,18 +102,18 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
 
   return (
     <Dropdown>
-      <TriggerButton triggerRef={triggerRef} className={classNames.trigger}>
+      <TriggerButton triggerRef={triggerRef} className={CLASS_NAMES.trigger}>
         <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownLabel" defaultText="表示順" />
       </TriggerButton>
       <DropdownContent controllable>
-        <div role="listbox" className={classNames.contentBody}>
+        <div role="listbox" className={CLASS_NAMES.contentBody}>
           {options.map(([value, children], i) => (
             <OptionButton
               key={i}
               value={value}
               selected={value === sortType}
               onClick={onClickOption}
-              className={classNames.contentButton}
+              className={CLASS_NAMES.contentButton}
             >
               {children}
             </OptionButton>
