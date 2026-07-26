@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, memo, useMemo } from 'react'
+import { type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -117,7 +117,8 @@ const classNameGenerator = tv({
 })
 
 export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' }) => {
-  const classNames = useMemo(() => {
+  // HINT: LoaderSpinnerは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
+  const classNames = (() => {
     const { spinner, line, cog, cogInner } = classNameGenerator({
       type,
       size,
@@ -133,7 +134,7 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
       line3: line({ lineNum: 3 }),
       line4: line({ lineNum: 4 }),
     }
-  }, [type, size])
+  })()
 
   const lineBody = (
     <>
