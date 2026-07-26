@@ -88,9 +88,16 @@ const classNameGenerator = tv({
   ],
 })
 
+const DEFAULT_PADDING = {
+  block: 2,
+  inline: 2,
+  narrowModeBlock: 1.5,
+  narrowModeInline: 1,
+} as const
+
 export const Container: FC<Props> = ({
   size = 'DEFAULT',
-  padding = { block: 2, inline: 2, narrowModeBlock: 1.5, narrowModeInline: 1 },
+  padding = DEFAULT_PADDING,
   className,
   ...rest
 }) => {
