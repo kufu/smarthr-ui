@@ -184,13 +184,7 @@ export const NotificationBar: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const actualRole = useMemo(() => {
-    if (role) {
-      return role
-    }
-
-    return ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert'
-  }, [role, type])
+  const actualRole = role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')
   const { WrapBase, baseProps } = useMemo(
     () =>
       base === 'base'
