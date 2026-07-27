@@ -132,7 +132,6 @@ export const usePDFSearch = (fileUrl: string) => {
 
     return {
       resetMatchState,
-      setQuery,
       registerPageText: (pageIndex: number, texts: string[]) => {
         pageTextsRef.current.set(pageIndex, texts.map(normalize))
         // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
@@ -140,7 +139,6 @@ export const usePDFSearch = (fileUrl: string) => {
           recalculate(queryRef.current)
         }
       },
-      clear,
       goNext,
       goPrev,
       handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
@@ -185,11 +183,7 @@ export const usePDFSearch = (fileUrl: string) => {
       matches,
       matchCount,
       currentMatchIndex,
-      // TODO: テストのために公開している。handleKeyDownQueryに統合後、整理する
-      setQuery: functions.setQuery,
       registerPageText: functions.registerPageText,
-      // TODO: テストのために公開している。handleKeyDownQueryに統合後、整理する
-      clear: functions.clear,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
       handleChangeQuery: functions.handleChangeQuery,

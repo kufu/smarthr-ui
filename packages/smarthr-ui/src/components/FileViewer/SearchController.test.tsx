@@ -11,42 +11,15 @@ const renderController = ({
   matchCount = 10,
   currentMatchIndex = 0,
 }: { query?: string; matchCount?: number; currentMatchIndex?: number } = {}) => {
-  const goNext = vi.fn()
-  const goPrev = vi.fn()
-  const clear = vi.fn()
-
   const search: UsePDFSearch = {
     query,
     handleChangeQuery: vi.fn(),
-    handleKeyDownQuery: vi.fn((e) => {
-      if (e.nativeEvent.isComposing) {
-        return
-      }
-      switch (e.key) {
-        case 'Enter': {
-          e.preventDefault()
-          if (e.shiftKey) {
-            goPrev()
-          } else {
-            goNext()
-          }
-          break
-        }
-        case 'Escape': {
-          if (query !== '') {
-            e.preventDefault()
-            clear()
-          }
-          break
-        }
-      }
-    }),
+    handleKeyDownQuery: vi.fn(),
     matches: [],
     matchCount,
     currentMatchIndex,
-    goNext,
-    goPrev,
-    clear,
+    goNext: vi.fn(),
+    goPrev: vi.fn(),
     registerPageText: vi.fn(),
   }
   render(
@@ -58,44 +31,20 @@ const renderController = ({
 }
 
 describe('SearchController', () => {
-  describe('IME 変換確定中のキー操作', () => {
-    test('変換確定中（isComposing）の Enter ではナビゲーションしない', () => {
-      const { input, search } = renderController()
-      fireEvent.keyDown(input, { key: 'Enter', isComposing: true })
-      expect(search.goNext).not.toHaveBeenCalled()
-      expect(search.goPrev).not.toHaveBeenCalled()
-    })
-
-    test('変換確定中（isComposing）の Escape では検索をクリアしない', () => {
-      const { input, search } = renderController()
-      fireEvent.keyDown(input, { key: 'Escape', isComposing: true })
-      expect(search.clear).not.toHaveBeenCalled()
-    })
+  test('キー入力時に handleKeyDownQuery が呼ばれる', () => {
+    const { input, search } = renderController()
+    fireEvent.keyDown(input, { key: 'Enter' })
+    expect(search.handleKeyDownQuery).toHaveBeenCalledTimes(1)
   })
 
-  describe('通常のキー操作', () => {
-    test('Enter では次の検索結果へ移動する', () => {
-      const { input, search } = renderController()
-      fireEvent.keyDown(input, { key: 'Enter' })
-      expect(search.goNext).toHaveBeenCalledTimes(1)
-    })
-
-    test('Shift+Enter では前の検索結果へ移動する', () => {
-      const { input, search } = renderController()
-      fireEvent.keyDown(input, { key: 'Enter', shiftKey: true })
-      expect(search.goPrev).toHaveBeenCalledTimes(1)
-    })
-
-    test('Escape では検索をクリアする', () => {
-      const { input, search } = renderController()
-      fireEvent.keyDown(input, { key: 'Escape' })
-      expect(search.clear).toHaveBeenCalledTimes(1)
-    })
-
-    test('query が空の場合は Escape でクリアしない', () => {
-      const { input, search } = renderController({ query: '' })
-      fireEvent.keyDown(input, { key: 'Escape' })
-      expect(search.clear).not.toHaveBeenCalled()
-    })
+  test('キーイベントオブジェクトが handleKeyDownQuery に渡される', () => {
+    const { input, search } = renderController()
+    fireEvent.keyDown(input, { key: 'Escape', shiftKey: true })
+    expect(search.handleKeyDownQuery).toHaveBeenCalledWith(
+      expect.objectContaining({
+        key: 'Escape',
+        shiftKey: true,
+      }),
+    )
   })
 })
