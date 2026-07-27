@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -120,25 +120,22 @@ export const usePDFSearch = (fileUrl: string) => {
         setQueryState('')
         functions.resetMatchState()
       },
+      goNext: () => {
+        setCurrentMatchIndex((prev) => {
+          if (latest.matchCount === 0) return -1
+          if (prev < 0) return 0
+          return (prev + 1) % latest.matchCount
+        })
+      },
+      goPrev: () => {
+        setCurrentMatchIndex((prev) => {
+          if (latest.matchCount === 0) return -1
+          if (prev < 0) return latest.matchCount - 1
+          return (prev - 1 + latest.matchCount) % latest.matchCount
+        })
+      },
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- 将来的にlatest.matchCountを使用する予定
   }, [latest])
-
-  const goNext = useCallback(() => {
-    setCurrentMatchIndex((prev) => {
-      if (matchCount === 0) return -1
-      if (prev < 0) return 0
-      return (prev + 1) % matchCount
-    })
-  }, [matchCount])
-
-  const goPrev = useCallback(() => {
-    setCurrentMatchIndex((prev) => {
-      if (matchCount === 0) return -1
-      if (prev < 0) return matchCount - 1
-      return (prev - 1 + matchCount) % matchCount
-    })
-  }, [matchCount])
 
   useEffect(() => {
     pageTextsRef.current.clear()
@@ -150,16 +147,16 @@ export const usePDFSearch = (fileUrl: string) => {
   return useMemo(
     () => ({
       query,
-      setQuery: functions.setQuery,
       matches,
       matchCount,
       currentMatchIndex,
-      goNext,
-      goPrev,
-      clear: functions.clear,
+      setQuery: functions.setQuery,
       registerPageText: functions.registerPageText,
+      clear: functions.clear,
+      goNext: functions.goNext,
+      goPrev: functions.goPrev,
     }),
-    [query, matches, matchCount, currentMatchIndex, goNext, goPrev, functions],
+    [query, matches, matchCount, currentMatchIndex, functions],
   )
 }
 
