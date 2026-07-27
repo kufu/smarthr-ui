@@ -139,10 +139,17 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       [latest],
     )
 
-    const wrapperClassName = useMemo(
-      () => wrapperClassNameGenerator({ disabled, readOnly, className }),
-      [disabled, readOnly, className],
-    )
+    const classNames = useMemo(() => {
+      const { input, affix } = innerClassNameGenerator({ disabled })
+
+      return {
+        wrapper: wrapperClassNameGenerator({ disabled, readOnly, className }),
+        input: input(),
+        prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
+        suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
+      }
+    }, [disabled, readOnly, className])
+
     const wrapperStyle = useMemo(() => {
       const color = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
       const maxWidth = typeof width === 'number' ? `${width}px` : width
@@ -155,24 +162,14 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       }
     }, [width, bgColor, theme.backgroundColor])
 
-    const innerClassNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator({ disabled })
-
-      return {
-        input: input(),
-        prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
-        suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
-      }
-    }, [disabled])
-
     return (
       <span
         role="presentation"
         onClick={functions.handleDelegateClick}
-        className={wrapperClassName}
+        className={classNames.wrapper}
         style={wrapperStyle}
       >
-        {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
+        {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
           {...rest}
           type={type}
@@ -187,9 +184,9 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           readOnly={readOnly}
           ref={functions.handleInnerRef}
           aria-invalid={error || undefined}
-          className={innerClassNames.input}
+          className={classNames.input}
         />
-        {suffix && <span className={innerClassNames.suffix}>{suffix}</span>}
+        {suffix && <span className={classNames.suffix}>{suffix}</span>}
       </span>
     )
   },
