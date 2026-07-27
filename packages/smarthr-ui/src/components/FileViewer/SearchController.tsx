@@ -33,15 +33,7 @@ const classNameGenerator = tv({
 })
 
 export const SearchController: FC<Props> = memo(({ search }) => {
-  const {
-    query,
-    setQuery,
-    matchCount,
-    currentMatchIndex,
-    goNext: onClickNext,
-    goPrev: onClickPrev,
-    clear: onClickClear,
-  } = search
+  const { query, setQuery, matchCount, currentMatchIndex, goNext, goPrev, clear } = search
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
     const { wrapper, inputArea } = classNameGenerator({ mobile })
@@ -66,22 +58,22 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         case 'Enter': {
           e.preventDefault()
           if (e.shiftKey) {
-            onClickPrev()
+            goPrev()
           } else {
-            onClickNext()
+            goNext()
           }
           break
         }
         case 'Escape': {
           if (query !== '') {
             e.preventDefault()
-            onClickClear()
+            clear()
           }
           break
         }
       }
     },
-    [onClickNext, onClickPrev, onClickClear, query],
+    [goNext, goPrev, clear, query],
   )
 
   return (
@@ -110,7 +102,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         />
       </div>
       <Button
-        onClick={onClickPrev}
+        onClick={goPrev}
         disabled={noMatches}
         className="shr-rounded-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
@@ -121,7 +113,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         />
       </Button>
       <Button
-        onClick={onClickNext}
+        onClick={goNext}
         disabled={noMatches}
         className="shr-rounded-s-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
