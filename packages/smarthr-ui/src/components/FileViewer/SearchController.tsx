@@ -1,9 +1,10 @@
 'use client'
 
-import { type ChangeEvent, type FC, type KeyboardEvent, memo, useCallback, useMemo } from 'react'
+import { type ChangeEvent, type FC, type KeyboardEvent, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
@@ -42,38 +43,44 @@ export const SearchController: FC<Props> = memo(({ search }) => {
 
   const noMatches = matchCount === 0
 
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setQuery(e.target.value)
-    },
-    [setQuery],
-  )
+  const latest = useLatest({
+    setQuery,
+    goNext,
+    goPrev,
+    clear,
+    query,
+  })
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.nativeEvent.isComposing) {
-        return
-      }
-      switch (e.key) {
-        case 'Enter': {
-          e.preventDefault()
-          if (e.shiftKey) {
-            goPrev()
-          } else {
-            goNext()
-          }
-          break
+  const functions = useMemo(
+    () => ({
+      handleChange: (e: ChangeEvent<HTMLInputElement>) => {
+        latest.setQuery(e.target.value)
+      },
+      handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.nativeEvent.isComposing) {
+          return
         }
-        case 'Escape': {
-          if (query !== '') {
+        switch (e.key) {
+          case 'Enter': {
             e.preventDefault()
-            clear()
+            if (e.shiftKey) {
+              latest.goPrev()
+            } else {
+              latest.goNext()
+            }
+            break
           }
-          break
+          case 'Escape': {
+            if (latest.query !== '') {
+              e.preventDefault()
+              latest.clear()
+            }
+            break
+          }
         }
-      }
-    },
-    [goNext, goPrev, clear, query],
+      },
+    }),
+    [latest],
   )
 
   return (
@@ -88,8 +95,8 @@ export const SearchController: FC<Props> = memo(({ search }) => {
             />
           }
           value={query}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          onChange={functions.handleChange}
+          onKeyDown={functions.handleKeyDown}
           width="100%"
           suffix={
             query !== '' ? (
