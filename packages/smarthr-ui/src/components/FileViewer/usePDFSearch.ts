@@ -115,15 +115,14 @@ export const usePDFSearch = (fileUrl: string) => {
           recalculate(queryRef.current)
         }
       },
+      clear: () => {
+        queryRef.current = ''
+        setQueryState('')
+        functions.resetMatchState()
+      },
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- 将来的にlatest.matchCountを使用する予定
   }, [latest])
-
-  const clear = useCallback(() => {
-    queryRef.current = ''
-    setQueryState('')
-    functions.resetMatchState()
-  }, [functions])
 
   const goNext = useCallback(() => {
     setCurrentMatchIndex((prev) => {
@@ -157,10 +156,10 @@ export const usePDFSearch = (fileUrl: string) => {
       currentMatchIndex,
       goNext,
       goPrev,
-      clear,
+      clear: functions.clear,
       registerPageText: functions.registerPageText,
     }),
-    [query, matches, matchCount, currentMatchIndex, goNext, goPrev, clear, functions],
+    [query, matches, matchCount, currentMatchIndex, goNext, goPrev, functions],
   )
 }
 
