@@ -150,24 +150,20 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       }
     }, [disabled, readOnly, className])
 
-    const wrapperStyle = useMemo(() => {
-      const color = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
-      const maxWidth = typeof width === 'number' ? `${width}px` : width
-
-      return {
-        borderColor: color,
-        backgroundColor: color,
-        maxWidth,
-        width: maxWidth ? '100%' : undefined,
-      }
-    }, [width, bgColor, theme.backgroundColor])
+    const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
+    const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
 
     return (
       <span
         role="presentation"
         onClick={functions.handleDelegateClick}
         className={classNames.wrapper}
-        style={wrapperStyle}
+        style={{
+          borderColor: styleColor,
+          backgroundColor: styleColor,
+          maxWidth: styleMaxWidth,
+          width: styleMaxWidth ? '100%' : undefined,
+        }}
       >
         {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
