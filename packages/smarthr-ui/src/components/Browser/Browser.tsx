@@ -8,6 +8,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
+
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, type ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
@@ -67,15 +69,14 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     return [...node.getAncestors().map((n) => n.value), node.value]
   }, [rootNode, value])
 
-  const selectedNode = useMemo(
-    () => (value ? rootNode.findByValue(value) : undefined),
-    [value, rootNode],
-  )
+  const latest = useLatest({ onSelectItem, value, rootNode })
 
   // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
   // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
   const onDelegateKeyDown: KeyboardEventHandler = useCallback(
     (e) => {
+      const selectedNode = latest.value ? latest.rootNode.findByValue(latest.value) : undefined
+
       if (!selectedNode) {
         return
       }
@@ -113,19 +114,18 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
 
       if (target) {
         e.preventDefault()
-        onSelectItem?.(target.value)
+        latest.onSelectItem?.(target.value)
         document.getElementById(getElementIdFromNode(target.value))?.focus()
       }
     },
-    [selectedNode, onSelectItem],
+    [latest],
   )
 
-  const onChangeInput = useMemo(
-    () =>
-      onSelectItem
-        ? (e: ChangeEvent<HTMLInputElement>) => onSelectItem(e.currentTarget.value)
-        : undefined,
-    [onSelectItem],
+  const onChangeInput = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      latest.onSelectItem?.(e.currentTarget.value)
+    },
+    [latest],
   )
 
   return (
@@ -137,7 +137,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
           items={colItems}
           index={index}
           value={selectedPath[index]}
-          onChangeInput={onChangeInput}
+          onChangeInput={onSelectItem ? onChangeInput : undefined}
           className={classNames.column}
         />
       ))}

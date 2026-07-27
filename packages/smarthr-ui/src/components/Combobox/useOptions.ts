@@ -1,6 +1,8 @@
 import { useCallback, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
 
+import { useLatest } from '../../hooks/useLatest'
+
 import { areItemsEqual, convertMatchableString } from './helper'
 
 import type { ComboboxItem, ComboboxOption } from './types'
@@ -39,9 +41,11 @@ export const useMultiOptions = <T>({
   selected: Array<ComboboxItem<T>>
   isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
 }) => {
+  const latest = useLatest({ isItemSelected })
+
   const isSelected = useCallback(
-    (item: ComboboxItem<T>) => isItemSelected(item, selected),
-    [selected, isItemSelected],
+    (item: ComboboxItem<T>) => latest.isItemSelected(item, selected),
+    [selected, latest],
   )
 
   return useOptions<T>(rest, isSelected)
@@ -54,43 +58,38 @@ function useOptions<T>(
   const newItemId = useId()
   const optionIdPrefix = useId()
 
-  const existedOptions: Array<ComboboxOption<T>> = useMemo(
-    () =>
-      items.map((item, i) => ({
-        id: `${optionIdPrefix}-${i}`,
-        selected: isSelected(item),
-        isNew: false,
-        item,
-      })),
-    [isSelected, items, optionIdPrefix],
-  )
-  const addingOption: ComboboxOption<T> | null = useMemo(
-    () =>
-      creatable && inputValue && items.every((item) => item.label !== inputValue)
-        ? {
-            id: newItemId,
-            isNew: true,
-            selected: false,
-            item: { label: inputValue, value: inputValue },
-          }
-        : null,
-    [inputValue, items, creatable, newItemId],
-  )
-
-  const allOptions: Array<ComboboxOption<T>> = useMemo(
-    () => (addingOption ? [addingOption, ...existedOptions] : existedOptions),
-    [existedOptions, addingOption],
-  )
-
   const options = useMemo(() => {
+    const existedOptions: Array<ComboboxOption<T>> = items.map((item, i) => ({
+      id: `${optionIdPrefix}-${i}`,
+      selected: isSelected(item),
+      isNew: false,
+      item,
+    }))
+
+    const allOptions =
+      creatable && inputValue && items.every((item) => item.label !== inputValue)
+        ? [
+            {
+              id: newItemId,
+              isNew: true,
+              selected: false,
+              item: { label: inputValue, value: inputValue },
+            } as ComboboxOption<T>,
+            ...existedOptions,
+          ]
+        : existedOptions
+
     if (isFilteringDisabled || !inputValue) {
       return allOptions
     }
 
+    const convertedInputtedValue = convertMatchableString(inputValue)
+
     return allOptions.filter(({ item: { label } }) =>
-      convertMatchableString(innerText(label)).includes(convertMatchableString(inputValue)),
+      convertMatchableString(innerText(label)).includes(convertedInputtedValue),
     )
-  }, [allOptions, inputValue, isFilteringDisabled])
+    // TODO: itemsの安定化方法を検討中
+  }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])
 
   return {
     options,

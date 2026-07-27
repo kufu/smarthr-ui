@@ -5,7 +5,6 @@ import { IntlProvider } from '../../intl'
 
 import { DropZone } from './DropZone'
 
-// FileList のモックヘルパー
 const createFileList = (files: File[]): FileList => {
   const fileList = {
     length: files.length,
@@ -23,9 +22,25 @@ const createFileList = (files: File[]): FileList => {
   return fileList as FileList
 }
 
+// jsdom は input.files への FileList 代入をサポートしないため、セッターをスタブする
+const stubInputFilesSetter = () => {
+  const original = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'files')!
+  beforeEach(() => {
+    Object.defineProperty(HTMLInputElement.prototype, 'files', {
+      ...original,
+      set: vi.fn(),
+    })
+  })
+  afterEach(() => {
+    Object.defineProperty(HTMLInputElement.prototype, 'files', original)
+  })
+}
+
 describe('DropZone', () => {
   describe('onSelectFiles', () => {
     describe('ファイルをドロップした場合', () => {
+      stubInputFilesSetter()
+
       it('onSelectFiles が発火する', () => {
         const onSelectFiles = vi.fn()
         const { container } = render(

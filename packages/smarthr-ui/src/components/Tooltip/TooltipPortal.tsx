@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../hooks/useTheme'
@@ -9,6 +9,7 @@ import { debounce } from '../../libs/debounce'
 import { ControlledTooltip } from './ControlledTooltip'
 
 type Props = {
+  messageId: string
   message: ReactNode
   isVisible: boolean
   parentRect: DOMRect | null
@@ -23,76 +24,78 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { container, balloon, balloonText } = classNameGenerator()
+
+  return {
+    container: container(),
+    balloon: balloon(),
+    balloonText: balloonText(),
+  }
+})()
+
 const OUTER_MARGIN = 10
 const SPACING = 5
 
 type HorizontalType = 'left' | 'center' | 'right'
 type VerticalType = 'top' | 'middle' | 'bottom'
 
-export const TooltipPortal: FC<Props> = ({ message, isVisible, parentRect, isIcon }) => {
+export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parentRect, isIcon }) => {
   const theme = useTheme()
-  const portalRef = useRef<HTMLDivElement>(null)
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
-  useEffect(() => {
-    if (!portalRef.current || !parentRect) {
-      return
-    }
+  const portalRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (!element || !parentRect) {
+        return
+      }
 
-    const portal = portalRef.current
+      const action = () => {
+        const vertical = calculateVertical(element.offsetHeight, parentRect)
+        const horizontal = calculateHorizontal(element.offsetWidth, parentRect, theme)
 
-    const action = () => {
-      const vertical = calculateVertical(portal.offsetHeight, parentRect)
-      const horizontal = calculateHorizontal(portal.offsetWidth, parentRect, theme)
+        setStyle({
+          insetBlockStart: vertical.insetBlockStart,
+          insetInlineStart: horizontal.insetInlineStart,
+          insetInlineEnd: horizontal.insetInlineEnd,
+          maxWidth: horizontal.maxWidth,
+          maxHeight: vertical.maxHeight,
+        })
+        setActualVertical(vertical.alignment)
+        setActualHorizontal(horizontal.alignment)
+      }
+      const debouncedAction = debounce(action, 100)
 
-      setStyle({
-        insetBlockStart: vertical.insetBlockStart,
-        insetInlineStart: horizontal.insetInlineStart,
-        insetInlineEnd: horizontal.insetInlineEnd,
-        maxWidth: horizontal.maxWidth,
-        maxHeight: vertical.maxHeight,
-      })
-      setActualVertical(vertical.alignment)
-      setActualHorizontal(horizontal.alignment)
-    }
-    const debouncedAction = debounce(action, 100)
+      action()
 
-    action()
+      window.addEventListener('resize', debouncedAction)
 
-    window.addEventListener('resize', debouncedAction)
-
-    return () => {
-      window.removeEventListener('resize', debouncedAction)
-    }
-  }, [parentRect, theme])
-
-  const classNames = useMemo(() => {
-    const { container, balloon, balloonText } = classNameGenerator()
-
-    return {
-      container: container(),
-      balloon: balloon(),
-      balloonText: balloonText(),
-    }
-  }, [])
+      return () => {
+        window.removeEventListener('resize', debouncedAction)
+      }
+    },
+    [parentRect, theme],
+  )
 
   return (
     <div
       ref={portalRef}
       role="tooltip"
       aria-hidden={!isVisible}
-      className={classNames.container}
-      style={style}
+      className={CLASS_NAMES.container}
+      style={isVisible ? style : undefined}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}
         vertical={actualVertical}
         triggerIcon={isIcon}
-        className={classNames.balloon}
+        className={CLASS_NAMES.balloon}
       >
-        <div className={classNames.balloonText}>{message}</div>
+        <div id={messageId} className={CLASS_NAMES.balloonText}>
+          {message}
+        </div>
       </ControlledTooltip>
     </div>
   )

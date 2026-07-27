@@ -14,11 +14,7 @@ import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { Gap } from '../../types'
 
 type StyleType =
-  | 'screenTitle'
-  | 'sectionTitle'
-  | 'blockTitle'
-  | 'subBlockTitle'
-  | 'subSubBlockTitle'
+  'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
 export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
   screenTitle: {
@@ -213,9 +209,12 @@ const ActualText = <T extends ElementType = 'span'>({
       className,
     })
   }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
+  const hasIcon = !!icon
+  const iconGap = icon?.gap
+
   const wrapperClassName = useMemo(
-    () => (icon ? wrapperClassNameGenerator({ gap: icon.gap || 0.25 }) : ''),
-    [icon],
+    () => (hasIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
+    [hasIcon, iconGap],
   )
 
   return (

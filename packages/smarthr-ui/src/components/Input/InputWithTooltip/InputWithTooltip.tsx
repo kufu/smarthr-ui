@@ -26,13 +26,7 @@ export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
 
     return (
       // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
-      <Tooltip
-        message={tooltipMessage}
-        tabIndex={-1}
-        ariaDescribedbyTarget="inner"
-        className={actualClassName}
-        style={style}
-      >
+      <Tooltip message={tooltipMessage} tabIndex={-1} className={actualClassName} style={style}>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <Input {...rest} ref={ref} width={style.width} />
       </Tooltip>

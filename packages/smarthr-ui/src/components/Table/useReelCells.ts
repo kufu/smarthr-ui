@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -6,10 +6,7 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-export const useReelCells = (
-  children: ReactNode,
-  tableWrapperRef: React.RefObject<HTMLDivElement>,
-) => {
+export const useReelCells = (tableWrapperRef: React.RefObject<HTMLDivElement>) => {
   const [showShadow, setShowShadow] = useState(false)
 
   useEffect(() => {
@@ -91,17 +88,23 @@ export const useReelCells = (
     handleScroll()
     wrapper.addEventListener('scroll', handleScroll)
 
-    const observer = new ResizeObserver(handleScroll)
+    const resizeObserver = new ResizeObserver(handleScroll)
+    resizeObserver.observe(wrapper)
 
-    observer.observe(wrapper)
+    // HINT: Paginationと組み合わせた際などにテーブル構造の変更を検知して再生成
+    const mutationObserver = new MutationObserver(handleScroll)
+    mutationObserver.observe(wrapper, {
+      childList: true,
+      subtree: true,
+    })
 
     return () => {
       wrapper.removeEventListener('scroll', handleScroll)
-      observer.unobserve(wrapper)
+      resizeObserver.unobserve(wrapper)
+      mutationObserver.disconnect()
       allClean()
     }
-    // HINT: Paginationと組み合わせた際などに再生成したい
-  }, [children, tableWrapperRef])
+  }, [tableWrapperRef])
 
-  return { tableWrapperRef, showShadow }
+  return { showShadow }
 }

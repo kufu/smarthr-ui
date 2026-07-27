@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaCircleXmarkIcon } from '../../Icon'
@@ -154,31 +154,24 @@ const BaseDestroyButton = <T,>({
   className: string
   iconStyle: string
 }) => {
-  const { localize } = useIntl()
+  const onDeleteRef = useRef(onDelete)
+  onDeleteRef.current = onDelete
+  const itemRef = useRef(item)
+  itemRef.current = item
+
   const onClick = useCallback(() => {
-    onDelete(item)
-  }, [item, onDelete])
-  const onKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLButtonElement>) => {
-      if (EXEC_DESTROY_KEY.test(e.key)) {
-        e.stopPropagation()
+    onDeleteRef.current(itemRef.current)
+  }, [])
 
-        // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
-        // このタイミングで明示的に削除処理を実行する
-        onClick()
-      }
-    },
-    [onClick],
-  )
+  const onKeyDown = useCallback((e: KeyboardEvent<HTMLButtonElement>) => {
+    if (EXEC_DESTROY_KEY.test(e.key)) {
+      e.stopPropagation()
 
-  const destroyButtonIconAltSuffix = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix',
-        defaultText: 'を削除',
-      }),
-    [localize],
-  )
+      // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+      // このタイミングで明示的に削除処理を実行する
+      onDeleteRef.current(itemRef.current)
+    }
+  }, [])
 
   return (
     <UnstyledButton
@@ -190,7 +183,9 @@ const BaseDestroyButton = <T,>({
       onKeyDown={onKeyDown}
       className={className}
     >
-      <VisuallyHiddenText id={suffixTextId}>{destroyButtonIconAltSuffix}</VisuallyHiddenText>
+      <VisuallyHiddenText id={suffixTextId}>
+        <Localizer id="smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix" defaultText="を削除" />
+      </VisuallyHiddenText>
       <FaCircleXmarkIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
     </UnstyledButton>
   )

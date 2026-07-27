@@ -1,1 +1,1 @@
-export { defaultFontSize as fontSize } from '../themes/createFontSize'
+export { defaultFontSize as fontSize } from '../themes'

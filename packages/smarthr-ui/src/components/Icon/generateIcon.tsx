@@ -1,5 +1,3 @@
-'use client'
-
 import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -73,17 +71,18 @@ export const generateIcon = (SvgIcon: IconType) => {
       size,
       ...rest
     }) => {
-      const actualAriaHidden = useMemo(() => {
-        if (ariaHidden !== undefined) {
-          return ariaHidden
-        }
-
-        if (alt !== undefined || (ariaLabel === undefined && ariaLabelledby === undefined)) {
-          return true
-        }
-
-        return undefined
-      }, [ariaHidden, alt, ariaLabel, ariaLabelledby])
+      const actualAriaHidden =
+        ariaHidden !== undefined
+          ? ariaHidden
+          : alt !== undefined || (ariaLabel === undefined && ariaLabelledby === undefined)
+            ? true
+            : undefined
+      const replacedColor =
+        color && existsColor(color)
+          ? colorSet[color] in textColor
+            ? textColor[colorSet[color] as keyof typeof textColor]
+            : (defaultColorPalette[colorSet[color] as keyof typeof defaultColorPalette] as string)
+          : color
 
       const classNames = useMemo(() => {
         const { icon, wrapperWithAlt } = classNameGenerator()
@@ -93,20 +92,6 @@ export const generateIcon = (SvgIcon: IconType) => {
           wrapperWithAlt: wrapperWithAlt(),
         }
       }, [className])
-
-      const replacedColor = useMemo(() => {
-        if (color && existsColor(color)) {
-          const colorName = colorSet[color]
-
-          if (colorName in textColor) {
-            return textColor[colorName as keyof typeof textColor]
-          }
-
-          return defaultColorPalette[colorName as keyof typeof defaultColorPalette] as string
-        }
-
-        return color
-      }, [color])
 
       const iconSize = size ? fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (

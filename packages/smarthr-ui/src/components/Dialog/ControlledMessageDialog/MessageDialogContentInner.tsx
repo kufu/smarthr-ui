@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, memo, useMemo } from 'react'
 
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
@@ -55,23 +55,12 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
 
 const FooterCluster = memo<
   Pick<MessageDialogContentInnerProps, 'onClickClose' | 'closeButton'> & { className: string }
->(({ onClickClose, closeButton, className }) => {
-  const { localize } = useIntl()
-
-  const defaultText = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/MessageDialog/closeButtonLabel',
-        defaultText: '閉じる',
-      }),
-    [localize],
-  )
-
-  return (
-    <Cluster as="footer" justify="flex-end" className={className}>
-      <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
-        {closeButton ?? defaultText}
-      </Button>
-    </Cluster>
-  )
-})
+>(({ onClickClose, closeButton, className }) => (
+  <Cluster as="footer" justify="flex-end" className={className}>
+    <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
+      {closeButton ?? (
+        <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />
+      )}
+    </Button>
+  </Cluster>
+))

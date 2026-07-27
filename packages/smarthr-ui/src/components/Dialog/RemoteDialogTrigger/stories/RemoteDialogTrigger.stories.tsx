@@ -26,3 +26,16 @@ export default {
 } as Meta<typeof RemoteDialogTrigger>
 
 export const Playground: StoryObj<typeof RemoteDialogTrigger> = {}
+
+export const Disabled: StoryObj<typeof RemoteDialogTrigger> = {
+  render: (args) => (
+    <>
+      <RemoteDialogTrigger {...args}>
+        <Button disabled>ダイアログを開く（disabled）</Button>
+      </RemoteDialogTrigger>
+      <MessageDialog id="remote-dialog" heading="リモートトリガーメッセージダイアログ">
+        RemoteDialogTrigger
+      </MessageDialog>
+    </>
+  ),
+}

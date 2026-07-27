@@ -13,6 +13,7 @@
   "ignore": ["**/*.stories.tsx", "rollup.*.config.js", "vitest.config.ts", "vitest-setup.js"],
   "ignoreDependencies": [
     "@rollup/plugin-commonjs",
+    "@rollup/plugin-json",
     "@rollup/plugin-node-resolve",
     "@rollup/plugin-replace",
     "@rollup/plugin-typescript",

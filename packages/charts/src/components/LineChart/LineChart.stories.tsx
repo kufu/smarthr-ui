@@ -1,4 +1,4 @@
-import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/testData'
+import { chartJsOptionsExamples, multi20Datasets, multiSmall, singleSmall } from '../__stories__/testData'
 
 import { LineChart } from './LineChart'
 
@@ -50,6 +50,15 @@ export const Default: Story = {
 export const MultipleDatasets: Story = {
   args: {
     data: multiSmall,
+  },
+}
+
+export const ManyDatasets: Story = {
+  args: {
+    data: {
+      labels: ['A', 'B', 'C', 'D', 'E'],
+      datasets: multi20Datasets,
+    },
   },
 }
 

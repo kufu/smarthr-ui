@@ -7,13 +7,21 @@ export type FileForViewer = {
   alt?: string
 }
 
+export type PDFSearchMatch = {
+  pageIndex: number
+  itemIndex: number
+  matchStart: number
+  matchLength: number
+  globalIndex: number
+}
+
 export type ViewerProps = {
   file: FileForViewer
   scale: number
   rotation: number | undefined
   width: number
-  onLoad: () => void
-  onPDFLoaded?: (defaultRotation: number) => void
+  handleLoad: () => void
+  handlePDFLoaded?: (defaultRotation: number) => void
   /**
    * PDFファイルのパスワード入力を要求されたときに呼ばれるコールバック関数。PdfViewerでのみ使用されます。
    */

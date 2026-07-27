@@ -28,36 +28,25 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
     )
   }, [expanded, id])
 
-  const handleDisclosureChange = useCallback(
-    (e: CustomEvent<DisclosureChangeEventDetail>) => {
+  useEffect(() => {
+    const handleDisclosureChange = (e: CustomEvent<DisclosureChangeEventDetail>) => {
       if (id === e.detail.id) {
         setExpanded(e.detail.expanded)
       }
-    },
-    [id],
-  )
+    }
 
-  useEffect(() => {
     document.addEventListener(DISCLOSURE_CHANGE_EVENT, handleDisclosureChange)
     return () => {
       document.removeEventListener(DISCLOSURE_CHANGE_EVENT, handleDisclosureChange)
     }
-  }, [id, handleDisclosureChange])
+  }, [id])
 
-  const safeSetExpanded: Setter = useCallback(
-    (value) => {
-      // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
-      requestAnimationFrame(() => {
-        if (typeof value === 'function') {
-          const newValue = value(expanded)
-          setExpanded(newValue)
-        } else {
-          setExpanded(value)
-        }
-      })
-    },
-    [expanded],
-  )
+  const safeSetExpanded: Setter = useCallback((value) => {
+    // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
+    requestAnimationFrame(() => {
+      setExpanded(value)
+    })
+  }, [])
 
   return [expanded, safeSetExpanded]
 }

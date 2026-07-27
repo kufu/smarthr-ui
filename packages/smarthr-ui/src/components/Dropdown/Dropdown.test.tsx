@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { act } from 'react'
+import { act, useState } from 'react'
 
 import { Button } from '../Button'
 import { Stack } from '../Layout'
@@ -86,5 +86,48 @@ describe('Dropdown', () => {
     expect(screen.getByRole('button', { name: 'Button3' })).toHaveFocus()
     await userEvent.tab()
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
+  })
+
+  describe('トリガーボタンの disabled が動的に切り替わる場合', () => {
+    const ToggleTemplate = ({ initialDisabled }: { initialDisabled: boolean }) => {
+      const [disabled, setDisabled] = useState(initialDisabled)
+
+      return (
+        <>
+          <Button onClick={() => setDisabled((d) => !d)}>Toggle</Button>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button disabled={disabled}>Trigger</Button>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <Stack>
+                <Button>Button1</Button>
+                <Button>Button2</Button>
+              </Stack>
+            </DropdownContent>
+          </Dropdown>
+        </>
+      )
+    }
+
+    it('disabled から enabled に変わった後、トリガーをクリックするとドロップダウンが開くこと', async () => {
+      const user = userEvent.setup()
+      render(<ToggleTemplate initialDisabled={true} />)
+
+      await user.click(screen.getByRole('button', { name: 'Toggle' }))
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
+    })
+
+    it('enabled から disabled に変わった後、トリガーをクリックしてもドロップダウンが開かないこと', async () => {
+      const user = userEvent.setup()
+      render(<ToggleTemplate initialDisabled={false} />)
+
+      await user.click(screen.getByRole('button', { name: 'Toggle' }))
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
+    })
   })
 })

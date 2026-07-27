@@ -33,7 +33,10 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || innerRef.current === null) {
+      // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
+      // ここで preventDefault してしまうと、Dialog 内で日本語入力中に Tab を押しても
+      // 変換候補が確定されず、未確定文字列がそのまま入力されてしまう。
+      if (e.key !== 'Tab' || e.isComposing || innerRef.current === null) {
         return
       }
 

@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useRef, useState } from 'react'
 
@@ -119,6 +119,32 @@ describe('Dialog', () => {
     expect(screen.getByRole('button', { name: 'close' })).toHaveFocus()
     await userEvent.tab()
     expect(screen.getByRole('textbox', { name: 'dialog_datepicker' })).toHaveFocus()
+  })
+
+  it('IME 変換中の Tab はフォーカストラップの対象外になること', async () => {
+    renderWithIntl(<DialogTemplate />)
+
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
+    expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
+
+    // ダイアログ内の最後の tabbable 要素 (close ボタン) にフォーカスを移し、
+    // 通常であれば Tab で最初の要素に戻る（preventDefault される）状態を再現する。
+    const closeButton = screen.getByRole('button', { name: 'close' })
+    closeButton.focus()
+    expect(closeButton).toHaveFocus()
+
+    // IME 変換中 (isComposing: true) の Tab では preventDefault されないことを確認する。
+    // このとき、フォーカスは Tab の本来の挙動 (IME の変換候補選択) に委ねられ、
+    // FocusTrap は介入しない。
+    const event = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      isComposing: true,
+      bubbles: true,
+      cancelable: true,
+    })
+    fireEvent(closeButton, event)
+    expect(event.defaultPrevented).toBe(false)
   })
 
   const DialogTemplateWithFocusTrap: FC = () => {

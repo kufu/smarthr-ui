@@ -1,6 +1,8 @@
 'use client'
 
-import { type FC, type ReactElement, useEffect, useMemo, useRef } from 'react'
+import { type FC, type ReactElement, useEffect, useRef } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 import { useDisclosure } from './useDisclosure'
 
@@ -22,39 +24,68 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   const [expanded, setExpanded] = useDisclosure(targetId)
   const ref = useRef<HTMLSpanElement | null>(null)
 
-  const actualOnClick = useMemo(() => {
-    const toggleExpanded = () => {
-      setExpanded((current) => !current)
-    }
-
-    if (onClick) {
-      return (e: MouseEvent) => {
-        onClick(toggleExpanded, e)
-      }
-    }
-
-    return toggleExpanded
-  }, [onClick, setExpanded])
+  const latest = useLatest({ onClick, setExpanded })
 
   useEffect(() => {
-    if (!ref.current) {
+    const wrapper = ref.current
+    if (!wrapper) {
       return
     }
 
-    const button = ref.current.querySelector('button')
+    let currentCleanup: (() => void) | undefined
 
-    if (!button) {
-      throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
+    const setupButton = () => {
+      currentCleanup?.()
+      currentCleanup = undefined
+
+      const button = wrapper.querySelector('button')
+
+      if (!button) {
+        throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
+      }
+
+      button.setAttribute('aria-expanded', expanded.toString())
+      button.setAttribute('aria-controls', targetId)
+
+      // Button は native disabled ではなく aria-disabled を使うため、
+      // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
+      if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+        const actualOnClick = (e: MouseEvent) => {
+          const toggleExpanded = () => {
+            latest.setExpanded((current) => !current)
+          }
+
+          if (latest.onClick) {
+            latest.onClick(toggleExpanded, e)
+          } else {
+            toggleExpanded()
+          }
+        }
+
+        button.addEventListener('click', actualOnClick)
+
+        currentCleanup = () => {
+          button.removeEventListener('click', actualOnClick)
+        }
+      }
     }
 
-    button.setAttribute('aria-expanded', expanded.toString())
-    button.setAttribute('aria-controls', targetId)
-    button.addEventListener('click', actualOnClick)
+    setupButton()
+
+    const observer = new MutationObserver(setupButton)
+    observer.observe(wrapper, {
+      childList: true,
+      subtree: true,
+      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+      attributes: true,
+      attributeFilter: ['disabled', 'aria-disabled'],
+    })
 
     return () => {
-      button.removeEventListener('click', actualOnClick)
+      currentCleanup?.()
+      observer.disconnect()
     }
-  }, [expanded, children, actualOnClick, targetId])
+  }, [expanded, targetId, latest])
 
   // HINT: 念の為spanに対して外部からstyleを当てられるようにしておく。
   // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる

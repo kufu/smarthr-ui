@@ -5,11 +5,11 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
@@ -58,37 +58,65 @@ type AbstractProps = PropsWithChildren<{
     message: ReactNode
   }
   /** タブをクリックした時に発火するコールバック関数 */
-  onClick: (tabId: string) => void
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>
 type Props = AbstractProps &
   Omit<ComponentProps<typeof UnstyledButton>, keyof AbstractProps | 'aria-selected' | 'type'>
 
-export const TabItem: FC<Props> = ({ selected = false, disabled, disabledReason, ...rest }) => {
+export const TabItem: FC<Props> = ({
+  selected = false,
+  disabled,
+  disabledReason,
+  onClick,
+  ...rest
+}) => {
+  const latest = useLatest({ onClick })
+
+  const functions = useMemo(
+    () => ({
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onClick(e)
+      },
+    }),
+    [latest],
+  )
+
   const tabAttrs = {
     role: 'tab',
     'aria-selected': selected,
   }
+  const buttonAttrs = {
+    handleClick: functions.handleClick,
+    disabled,
+  }
 
   if (disabled && disabledReason) {
-    const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
-
     return (
       <Tooltip
         {...tabAttrs}
         message={disabledReason.message}
-        ariaDescribedbyTarget="inner"
         aria-disabled={disabled}
         className="focus-visible:shr-focus-indicator"
       >
-        <TabButton {...rest} disabled={disabled} suffix={Icon} />
+        <TabButton
+          {...rest}
+          {...buttonAttrs}
+          suffix={disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />}
+        />
       </Tooltip>
     )
   }
 
-  return <TabButton {...rest} {...tabAttrs} disabled={disabled} />
+  return <TabButton {...rest} {...tabAttrs} {...buttonAttrs} />
 }
 
-const TabButton: FC<Props> = ({ id, children, suffix, onClick, className, ...rest }) => {
+const TabButton = memo<
+  PropsWithChildren<
+    Omit<Props, 'onClick'> & {
+      handleClick?: NonNullable<Props['onClick']>
+    }
+  >
+>(({ id, children, suffix, handleClick, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = classNameGenerator()
 
@@ -99,29 +127,17 @@ const TabButton: FC<Props> = ({ id, children, suffix, onClick, className, ...res
     }
   }, [className])
 
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => onClick(e.currentTarget.value),
-    [onClick],
-  )
-
   return (
     <UnstyledButton
       {...rest}
       type="button"
       value={id}
       id={id}
+      onClick={handleClick}
       className={classNames.wrapper}
-      onClick={actualOnClick}
     >
-      <TabLabel className={classNames.label}>{children}</TabLabel>
-      <TabButtonSuffix className={classNames.suffixWrapper}>{suffix}</TabButtonSuffix>
+      <span className={classNames.label}>{children}</span>
+      {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}
     </UnstyledButton>
   )
-}
-
-const TabLabel = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
-  <span className={className}>{children}</span>
-))
-const TabButtonSuffix = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) => children && <span className={className}>{children}</span>,
-)
+})

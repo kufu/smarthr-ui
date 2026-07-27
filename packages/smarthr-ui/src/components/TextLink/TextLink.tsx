@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { OpenInNewTabIcon } from '../Icon'
 
 import type { ElementRef, ElementRefProps } from '../../types'
@@ -83,45 +84,30 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     ref: Ref<ElementRef<T>>,
   ) => {
     const Anchor = elementAs || 'a'
-    const actualSuffix = useMemo(() => {
-      // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
-      if (target === '_blank' && !prefix && suffix === undefined) {
-        return <OpenInNewTabIcon />
-      }
-
-      return suffix
-    }, [prefix, suffix, target])
-    const actualHref = useMemo(() => {
-      if (href) {
-        return href
-      }
-
-      if (onClick) {
-        return ''
-      }
-
-      return undefined
-    }, [href, onClick])
-    const actualRel = useMemo(
-      () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
-      [rel, target],
-    )
+    // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
+    const actualSuffix =
+      target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
+    const actualHref = href ? href : onClick ? '' : undefined
+    const actualRel = rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel
     const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
 
-    const actualOnClick = useMemo(() => {
-      if (!onClick) {
-        return undefined
-      }
+    const latest = useLatest({ onClick, href })
 
-      if (href) {
-        return onClick
-      }
+    const hasOnClick = !!onClick
 
-      return (e: MouseEvent) => {
-        e.preventDefault()
-        onClick(e)
-      }
-    }, [onClick, href])
+    const functions = useMemo(
+      () => ({
+        handleClick: hasOnClick
+          ? (e: MouseEvent) => {
+              if (!latest.href) {
+                e.preventDefault()
+              }
+              latest.onClick?.(e)
+            }
+          : undefined,
+      }),
+      [hasOnClick, latest],
+    )
 
     return (
       <Anchor
@@ -130,7 +116,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         href={actualHref}
         target={target}
         rel={actualRel}
-        onClick={actualOnClick}
+        onClick={functions.handleClick}
         className={anchorClassName}
       >
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}

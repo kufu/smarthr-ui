@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
@@ -52,11 +53,14 @@ export default {
   // pnpm起因での問題がおきないようにしている
   preserveSymlinks: false,
   plugins: [
+    json(),
     typescript({
       tsconfig: './tsconfig.build.json',
       noEmit: true,
     }),
-    preserveDirectives(),
+    preserveDirectives({
+      exclude: '**/*.json',
+    }),
     commonjs(),
     nodeResolve(),
     // node_modulesのままだとimportできないケースがあったので、vendorにrenameしている

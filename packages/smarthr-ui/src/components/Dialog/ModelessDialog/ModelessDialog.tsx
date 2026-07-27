@@ -20,7 +20,8 @@ import Draggable from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
-import { useIntl } from '../../../intl'
+import { useLatest } from '../../../hooks/useLatest'
+import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
 import { Base, type BaseElementProps } from '../../Base'
@@ -212,6 +213,9 @@ export const ModelessDialog: FC<Props> = ({
     debounceLiveRegionText(txt)
   }, [localize, wrapperPosition, debounceLiveRegionText])
 
+  // 外部propsをrefに保存
+  const latest = useLatest({ isOpen, onClickClose, onPressEscape })
+
   const positionStyle = useMemo(
     () => ({
       top: centering.top ?? top,
@@ -226,7 +230,7 @@ export const ModelessDialog: FC<Props> = ({
 
   const handleArrowKey = useCallback(
     (e: KeyboardEvent) => {
-      if (!isOpen || document.activeElement !== e.currentTarget) {
+      if (!latest.isOpen || document.activeElement !== e.currentTarget) {
         return
       }
 
@@ -263,7 +267,7 @@ export const ModelessDialog: FC<Props> = ({
           break
       }
     },
-    [isOpen],
+    [latest],
   )
 
   useEffect(() => {
@@ -317,28 +321,18 @@ export const ModelessDialog: FC<Props> = ({
   const actualOnClickClose = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       lastFocusElementRef.current?.focus()
-      onClickClose?.(e)
+      latest.onClickClose?.(e)
     },
-    [onClickClose],
+    [latest],
   )
 
-  const actualOnPressEscape = useMemo(
-    () =>
-      onPressEscape
-        ? () => {
-            lastFocusElementRef.current?.focus()
-            onPressEscape()
-          }
-        : undefined,
-    [onPressEscape],
-  )
+  // stableなcallbackを作成
+  const memoizedOnPressEscape = useCallback(() => {
+    lastFocusElementRef.current?.focus()
+    latest.onPressEscape?.()
+  }, [latest])
 
-  useHandleEscape(
-    useMemo(
-      () => (actualOnPressEscape && isOpen ? actualOnPressEscape : undefined),
-      [isOpen, actualOnPressEscape],
-    ),
-  )
+  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
 
   useEffect(() => {
     const focusHandler = (e: FocusEvent) => {
@@ -461,23 +455,17 @@ const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
 const CloseButton = memo<{
   className: string
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ onClick, className }) => {
-  const { localize } = useIntl()
-  const closeButtonIconAlt = localize({
-    id: 'smarthr-ui/ModelessDialog/closeButtonIconAlt',
-    defaultText: '閉じる',
-  })
-
-  return (
-    <div className={className}>
-      <Button
-        type="button"
-        size="S"
-        onClick={onClick}
-        className="smarthr-ui-ModelessDialog-closeButton"
-      >
-        <FaXmarkIcon alt={closeButtonIconAlt} />
-      </Button>
-    </div>
-  )
-})
+}>(({ onClick, className }) => (
+  <div className={className}>
+    <Button
+      type="button"
+      size="S"
+      onClick={onClick}
+      className="smarthr-ui-ModelessDialog-closeButton"
+    >
+      <FaXmarkIcon
+        alt={<Localizer id="smarthr-ui/ModelessDialog/closeButtonIconAlt" defaultText="閉じる" />}
+      />
+    </Button>
+  </div>
+))

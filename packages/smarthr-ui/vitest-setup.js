@@ -37,3 +37,13 @@ const installRectStubs = (proto) => {
 
 if (typeof Element !== 'undefined') installRectStubs(Element.prototype)
 if (typeof Range !== 'undefined') installRectStubs(Range.prototype)
+
+// ResizeObserver のモック
+global.ResizeObserver = class ResizeObserver {
+  constructor(callback) {
+    this.callback = callback
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}

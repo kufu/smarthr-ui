@@ -184,29 +184,18 @@ export const NotificationBar: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const actualRole = useMemo(() => {
-    if (role) {
-      return role
-    }
+  const actualRole = role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')
+  let WrapBase = Fragment
+  let baseProps = {}
 
-    return ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert'
-  }, [role, type])
-  const { WrapBase, baseProps } = useMemo(
-    () =>
-      base === 'base'
-        ? {
-            WrapBase: Base,
-            baseProps: {
-              layer,
-              overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
-            },
-          }
-        : {
-            WrapBase: Fragment,
-            baseProps: {},
-          },
-    [base, layer],
-  )
+  if (base === 'base') {
+    WrapBase = Base
+    baseProps = {
+      layer,
+      overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
+    }
+  }
+
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
@@ -237,7 +226,18 @@ export const NotificationBar: FC<Props> = ({
             </Cluster>
           )}
         </Cluster>
-        <CloseButton onClose={onClose} className={classNames.closeButton} />
+        {onClose && (
+          <Button variant="text" size="S" onClick={onClose} className={classNames.closeButton}>
+            <FaXmarkIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/NotificationBar/closeButtonIconAlt"
+                  defaultText="閉じる"
+                />
+              }
+            />
+          </Button>
+        )}
       </div>
     </WrapBase>
   )
@@ -263,16 +263,3 @@ const MessageArea = memo<
     </Text>
   )
 })
-
-const CloseButton = memo<Pick<Props, 'onClose'> & { className: string }>(
-  ({ onClose, className }) =>
-    onClose && (
-      <Button variant="text" size="S" onClick={onClose} className={className}>
-        <FaXmarkIcon
-          alt={
-            <Localizer id="smarthr-ui/NotificationBar/closeButtonIconAlt" defaultText="閉じる" />
-          }
-        />
-      </Button>
-    ),
-)
