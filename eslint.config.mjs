@@ -66,6 +66,15 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
+      'smarthr/best-practice-for-interactive-element': [
+        'error',
+        {
+          additionalInteractiveComponentRegex: [
+            'RichTextEditor',
+            'FlexibleRichTextEditor',
+          ],
+        },
+      ],
       'smarthr/best-practice-for-consecutive-definition-list': 'off',
       'smarthr/best-practice-for-default-props': 'off',
       'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
