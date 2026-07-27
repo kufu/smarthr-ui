@@ -134,7 +134,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
             node.focus()
           }
         },
-        onDelegateClickFocus: () => innerRef.current?.focus(),
+        handleDelegateClick: () => innerRef.current?.focus(),
       }),
       [latest],
     )
@@ -168,7 +168,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={functions.onDelegateClickFocus}
+        onClick={functions.handleDelegateClick}
         className={wrapperClassName}
         style={wrapperStyle}
       >
