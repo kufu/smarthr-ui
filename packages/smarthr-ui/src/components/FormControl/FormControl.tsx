@@ -387,7 +387,10 @@ const LabelCluster = memo<
       </>
     )
 
-    const attrs = {
+    const attrs: {
+      label: { 'aria-hidden': 'true' } | { as: 'label'; htmlFor: string; id: string } | null
+      visuallyHidden: { as: 'legend' | 'label'; htmlFor?: string; id?: string } | null
+    } = {
       label: null,
       visuallyHidden: null,
     }
