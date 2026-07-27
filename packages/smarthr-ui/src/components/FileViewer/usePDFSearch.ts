@@ -102,12 +102,6 @@ export const usePDFSearch = (fileUrl: string) => {
       })
     }
 
-    const setQuery = (nextQuery: string) => {
-      queryRef.current = nextQuery
-      setQueryState(nextQuery)
-      recalculate(nextQuery, { resetSelection: true })
-    }
-
     const goNext = () => {
       setCurrentMatchIndex((prev) => {
         if (latest.matchCount === 0) return -1
@@ -124,12 +118,6 @@ export const usePDFSearch = (fileUrl: string) => {
       })
     }
 
-    const clear = () => {
-      queryRef.current = ''
-      setQueryState('')
-      resetMatchState()
-    }
-
     return {
       resetMatchState,
       registerPageText: (pageIndex: number, texts: string[]) => {
@@ -142,7 +130,11 @@ export const usePDFSearch = (fileUrl: string) => {
       goNext,
       goPrev,
       handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
-        setQuery(e.target.value)
+        const nextQuery = e.target.value
+
+        queryRef.current = nextQuery
+        setQueryState(nextQuery)
+        recalculate(nextQuery, { resetSelection: true })
       },
       handleKeyDownQuery: (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.nativeEvent.isComposing) {
@@ -161,7 +153,9 @@ export const usePDFSearch = (fileUrl: string) => {
           case 'Escape': {
             if (queryRef.current !== '') {
               e.preventDefault()
-              clear()
+              queryRef.current = ''
+              setQueryState('')
+              resetMatchState()
             }
             break
           }
