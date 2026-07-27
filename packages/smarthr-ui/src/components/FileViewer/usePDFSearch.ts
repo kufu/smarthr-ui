@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
+
 import type { PDFSearchMatch } from './types'
 
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -56,13 +58,17 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const resetMatchState = useCallback(() => {
-    setMatches([])
-    setCurrentMatchIndex(-1)
-  }, [])
+  const latest = useLatest({
+    matchCount,
+  })
 
-  const recalculate = useCallback(
-    (nextQuery: string, options?: { resetSelection?: boolean }) => {
+  const functions = useMemo(() => {
+    const resetMatchState = () => {
+      setMatches([])
+      setCurrentMatchIndex(-1)
+    }
+
+    const recalculate = (nextQuery: string, options?: { resetSelection?: boolean }) => {
       if (nextQuery === '') {
         resetMatchState()
         return
@@ -93,17 +99,22 @@ export const usePDFSearch = (fileUrl: string) => {
         if (prev >= globalIndex) return globalIndex - 1
         return prev
       })
-    },
-    [resetMatchState],
-  )
+    }
+
+    return {
+      resetMatchState,
+      recalculate,
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 将来的にlatest.matchCountを使用する予定
+  }, [latest])
 
   const setQuery = useCallback(
     (nextQuery: string) => {
       queryRef.current = nextQuery
       setQueryState(nextQuery)
-      recalculate(nextQuery, { resetSelection: true })
+      functions.recalculate(nextQuery, { resetSelection: true })
     },
-    [recalculate],
+    [functions],
   )
 
   const registerPageText = useCallback(
@@ -111,17 +122,17 @@ export const usePDFSearch = (fileUrl: string) => {
       pageTextsRef.current.set(pageIndex, texts.map(normalize))
       // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
       if (queryRef.current !== '') {
-        recalculate(queryRef.current)
+        functions.recalculate(queryRef.current)
       }
     },
-    [recalculate],
+    [functions],
   )
 
   const clear = useCallback(() => {
     queryRef.current = ''
     setQueryState('')
-    resetMatchState()
-  }, [resetMatchState])
+    functions.resetMatchState()
+  }, [functions])
 
   const goNext = useCallback(() => {
     setCurrentMatchIndex((prev) => {
@@ -143,8 +154,8 @@ export const usePDFSearch = (fileUrl: string) => {
     pageTextsRef.current.clear()
     queryRef.current = ''
     setQueryState('')
-    resetMatchState()
-  }, [fileUrl, resetMatchState])
+    functions.resetMatchState()
+  }, [fileUrl, functions])
 
   return useMemo(
     () => ({
