@@ -48,8 +48,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     return { wrapper: wrapper(), inputArea: inputArea() }
   }, [mobile])
 
-  const hasMatches = matchCount > 0
-  const displayedCurrent = hasMatches ? currentMatchIndex + 1 : 0
+  const noMatches = matchCount === 0
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +102,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
           suffix={
             query !== '' ? (
               <Text size="S" aria-live="polite" className="shr-tabular-nums">
-                {`${displayedCurrent}/${matchCount}`}
+                {`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
               </Text>
             ) : undefined
           }
@@ -112,7 +111,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
       </div>
       <Button
         onClick={onClickPrev}
-        disabled={!hasMatches}
+        disabled={noMatches}
         className="shr-rounded-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
         <FaAngleUpIcon
@@ -123,7 +122,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
       </Button>
       <Button
         onClick={onClickNext}
-        disabled={!hasMatches}
+        disabled={noMatches}
         className="shr-rounded-s-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
         <FaAngleDownIcon
