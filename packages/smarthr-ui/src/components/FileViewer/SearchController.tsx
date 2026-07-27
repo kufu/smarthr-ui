@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, type FC, type KeyboardEvent, memo, useMemo } from 'react'
+import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
@@ -34,7 +34,7 @@ const classNameGenerator = tv({
 })
 
 export const SearchController: FC<Props> = memo(({ search }) => {
-  const { query, setQuery, matchCount, currentMatchIndex, goNext, goPrev, clear } = search
+  const { query, handleChangeQuery, matchCount, currentMatchIndex, goNext, goPrev, clear } = search
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
     const { wrapper, inputArea } = classNameGenerator({ mobile })
@@ -44,7 +44,6 @@ export const SearchController: FC<Props> = memo(({ search }) => {
   const noMatches = matchCount === 0
 
   const latest = useLatest({
-    setQuery,
     goNext,
     goPrev,
     clear,
@@ -53,9 +52,6 @@ export const SearchController: FC<Props> = memo(({ search }) => {
 
   const functions = useMemo(
     () => ({
-      handleChange: (e: ChangeEvent<HTMLInputElement>) => {
-        latest.setQuery(e.target.value)
-      },
       handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.nativeEvent.isComposing) {
           return
@@ -95,7 +91,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
             />
           }
           value={query}
-          onChange={functions.handleChange}
+          onChange={handleChangeQuery}
           onKeyDown={functions.handleKeyDown}
           width="100%"
           suffix={

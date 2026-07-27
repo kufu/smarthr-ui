@@ -13,7 +13,7 @@ const renderController = ({
 }: { query?: string; matchCount?: number; currentMatchIndex?: number } = {}) => {
   const search: UsePDFSearch = {
     query,
-    setQuery: vi.fn(),
+    handleChangeQuery: vi.fn(),
     matches: [],
     matchCount,
     currentMatchIndex,

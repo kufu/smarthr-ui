@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -101,13 +101,15 @@ export const usePDFSearch = (fileUrl: string) => {
       })
     }
 
+    const setQuery = (nextQuery: string) => {
+      queryRef.current = nextQuery
+      setQueryState(nextQuery)
+      recalculate(nextQuery, { resetSelection: true })
+    }
+
     return {
       resetMatchState,
-      setQuery: (nextQuery: string) => {
-        queryRef.current = nextQuery
-        setQueryState(nextQuery)
-        recalculate(nextQuery, { resetSelection: true })
-      },
+      setQuery,
       registerPageText: (pageIndex: number, texts: string[]) => {
         pageTextsRef.current.set(pageIndex, texts.map(normalize))
         // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
@@ -134,6 +136,9 @@ export const usePDFSearch = (fileUrl: string) => {
           return (prev - 1 + latest.matchCount) % latest.matchCount
         })
       },
+      handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
+        setQuery(e.target.value)
+      },
     }
   }, [latest])
 
@@ -150,11 +155,13 @@ export const usePDFSearch = (fileUrl: string) => {
       matches,
       matchCount,
       currentMatchIndex,
+      // TODO: テストのために公開している。整理する
       setQuery: functions.setQuery,
       registerPageText: functions.registerPageText,
       clear: functions.clear,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
+      handleChangeQuery: functions.handleChangeQuery,
     }),
     [query, matches, matchCount, currentMatchIndex, functions],
   )
