@@ -387,49 +387,32 @@ const LabelCluster = memo<
       </>
     )
 
-    const attrs = useMemo(() => {
-      if (unrecommendedHideLabel) {
-        return {
-          label: null,
-          visuallyHidden: isFieldset
-            ? {
-                as: 'legend',
-              }
-            : {
-                as: 'label',
-                htmlFor: managedHtmlFor,
-                id: managedLabelId,
-              },
-        }
-      }
+    const attrs: {
+      label: { 'aria-hidden': 'true' } | { as: 'label'; htmlFor: string; id: string } | null
+      visuallyHidden: { as: 'legend' | 'label'; htmlFor?: string; id?: string } | null
+    } = {
+      label: null,
+      visuallyHidden: null,
+    }
 
-      if (isFieldset) {
-        return {
-          label: { 'aria-hidden': 'true' } as const,
-          visuallyHidden: { as: 'legend' },
-        }
-      }
+    if (isFieldset) {
+      attrs.visuallyHidden = { as: 'legend' }
 
-      return {
-        label: {
-          as: 'label' as const,
-          htmlFor: managedHtmlFor,
-          id: managedLabelId,
-        },
-        visuallyHidden: null,
+      if (!unrecommendedHideLabel) {
+        attrs.label = { 'aria-hidden': 'true' } as const
       }
-    }, [managedLabelId, managedHtmlFor, unrecommendedHideLabel, isFieldset])
+    } else {
+      attrs[unrecommendedHideLabel ? 'visuallyHidden' : 'label'] = {
+        as: 'label',
+        htmlFor: managedHtmlFor,
+        id: managedLabelId,
+      }
+    }
 
     return (
       <>
         {attrs.visuallyHidden && (
-          <VisuallyHiddenText {...attrs.visuallyHidden}>
-            {
-              // HINT: innerTextでは正しく文字が取得できない場合がある
-              // 安全策としてinnerTextが空を取得してきたらbody自体を埋めこみます
-              innerText(body) || body
-            }
-          </VisuallyHiddenText>
+          <VisuallyHiddenText {...attrs.visuallyHidden}>{body}</VisuallyHiddenText>
         )}
         {attrs.label && (
           <Cluster justify="space-between">
