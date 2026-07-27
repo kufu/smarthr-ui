@@ -1,11 +1,25 @@
+const MAPPER = {
+  '−': '-',
+  ー: '-',
+  '．': '.',
+  '０': '0',
+  '１': '1',
+  '２': '2',
+  '３': '3',
+  '４': '4',
+  '５': '5',
+  '６': '6',
+  '７': '7',
+  '８': '8',
+  '９': '9',
+}
 export function formatCurrency(value?: string) {
   if (!value) {
     return ''
   }
 
   const converted = value
-    .replace(/[０-９．]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0)) // convert number and dot to half-width
-    .replace(/[−ー]/, '-') // replace full-width minus
+    .replace(/[０-９．−ー]/g, (s) => MAPPER[s] || s) // convert number and dot to half-width
     .replace(/^(-?)0+(?!\.|$)/, '$1') // remove 0 at the front of integer part
 
   if (isNaN(Number(converted)) || converted.match(/[^0-9.-]/g)) {
