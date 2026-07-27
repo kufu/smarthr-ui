@@ -387,38 +387,24 @@ const LabelCluster = memo<
       </>
     )
 
-    const attrs = useMemo(() => {
-      if (unrecommendedHideLabel) {
-        return {
-          label: null,
-          visuallyHidden: isFieldset
-            ? {
-                as: 'legend',
-              }
-            : {
-                as: 'label',
-                htmlFor: managedHtmlFor,
-                id: managedLabelId,
-              },
-        }
-      }
+    const attrs = {
+      label: null,
+      visuallyHidden: null,
+    }
 
-      if (isFieldset) {
-        return {
-          label: { 'aria-hidden': 'true' } as const,
-          visuallyHidden: { as: 'legend' },
-        }
-      }
+    if (isFieldset) {
+      attrs.visuallyHidden = { as: 'legend' }
 
-      return {
-        label: {
-          as: 'label' as const,
-          htmlFor: managedHtmlFor,
-          id: managedLabelId,
-        },
-        visuallyHidden: null,
+      if (!unrecommendedHideLabel) {
+        attrs.label = { 'aria-hidden': 'true' } as const
       }
-    }, [managedLabelId, managedHtmlFor, unrecommendedHideLabel, isFieldset])
+    } else {
+      attrs[unrecommendedHideLabel ? 'visuallyHidden' : 'label'] = {
+        as: 'label',
+        htmlFor: managedHtmlFor,
+        id: managedLabelId,
+      }
+    }
 
     return (
       <>
