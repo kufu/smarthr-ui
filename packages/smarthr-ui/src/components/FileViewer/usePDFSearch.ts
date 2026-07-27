@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { type ChangeEvent, type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -58,9 +58,7 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const latest = useLatest({
-    matchCount,
-  })
+  const latest = useLatest({ matchCount })
 
   const functions = useMemo(() => {
     const resetMatchState = () => {
@@ -101,13 +99,24 @@ export const usePDFSearch = (fileUrl: string) => {
       })
     }
 
+    const goNext = () => {
+      setCurrentMatchIndex((prev) => {
+        if (latest.matchCount === 0) return -1
+        if (prev < 0) return 0
+        return (prev + 1) % latest.matchCount
+      })
+    }
+
+    const goPrev = () => {
+      setCurrentMatchIndex((prev) => {
+        if (latest.matchCount === 0) return -1
+        if (prev < 0) return latest.matchCount - 1
+        return (prev - 1 + latest.matchCount) % latest.matchCount
+      })
+    }
+
     return {
       resetMatchState,
-      setQuery: (nextQuery: string) => {
-        queryRef.current = nextQuery
-        setQueryState(nextQuery)
-        recalculate(nextQuery, { resetSelection: true })
-      },
       registerPageText: (pageIndex: number, texts: string[]) => {
         pageTextsRef.current.set(pageIndex, texts.map(normalize))
         // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
@@ -115,24 +124,39 @@ export const usePDFSearch = (fileUrl: string) => {
           recalculate(queryRef.current)
         }
       },
-      clear: () => {
-        queryRef.current = ''
-        setQueryState('')
-        functions.resetMatchState()
+      goNext,
+      goPrev,
+      handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
+        const nextQuery = e.target.value
+
+        queryRef.current = nextQuery
+        setQueryState(nextQuery)
+        recalculate(nextQuery, { resetSelection: true })
       },
-      goNext: () => {
-        setCurrentMatchIndex((prev) => {
-          if (latest.matchCount === 0) return -1
-          if (prev < 0) return 0
-          return (prev + 1) % latest.matchCount
-        })
-      },
-      goPrev: () => {
-        setCurrentMatchIndex((prev) => {
-          if (latest.matchCount === 0) return -1
-          if (prev < 0) return latest.matchCount - 1
-          return (prev - 1 + latest.matchCount) % latest.matchCount
-        })
+      handleKeyDownQuery: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.nativeEvent.isComposing) {
+          return
+        }
+        switch (e.key) {
+          case 'Enter': {
+            e.preventDefault()
+            if (e.shiftKey) {
+              goPrev()
+            } else {
+              goNext()
+            }
+            break
+          }
+          case 'Escape': {
+            if (queryRef.current !== '') {
+              e.preventDefault()
+              queryRef.current = ''
+              setQueryState('')
+              resetMatchState()
+            }
+            break
+          }
+        }
       },
     }
   }, [latest])
@@ -150,11 +174,11 @@ export const usePDFSearch = (fileUrl: string) => {
       matches,
       matchCount,
       currentMatchIndex,
-      setQuery: functions.setQuery,
       registerPageText: functions.registerPageText,
-      clear: functions.clear,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
+      handleChangeQuery: functions.handleChangeQuery,
+      handleKeyDownQuery: functions.handleKeyDownQuery,
     }),
     [query, matches, matchCount, currentMatchIndex, functions],
   )
