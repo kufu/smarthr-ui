@@ -8,7 +8,7 @@ export function formatCurrency(value?: string) {
     .replace(/[−ー]/, '-') // replace full-width minus
     .replace(/^(-?)0+(?!\.|$)/, '$1') // remove 0 at the front of integer part
 
-  if (converted.match(/[^0-9.-]/g) || isNaN(Number(converted))) {
+  if (isNaN(Number(converted)) || converted.match(/[^0-9.-]/g)) {
     // if value includes non-numeric characters, return value as it is
     // otherwise, we assume `converted` contains only numeric characters
     return value
