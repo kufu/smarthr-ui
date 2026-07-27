@@ -59,15 +59,7 @@ export const PageHeading = memo<Props>(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
-    const actualTypography = useMemo(() => {
-      const defaultTypography = STYLE_TYPE_MAP.screenTitle
-
-      if (size) {
-        return { ...defaultTypography, size }
-      }
-
-      return defaultTypography
-    }, [size])
+    const typography = STYLE_TYPE_MAP.screenTitle
 
     const pseudoTitleId = useId()
 
@@ -108,7 +100,13 @@ export const PageHeading = memo<Props>(
     const Component = visuallyHidden ? VisuallyHiddenText : Text
 
     return (
-      <Component {...rest} {...actualTypography} as="h1" className={actualClassName}>
+      <Component
+        {...rest}
+        {...typography}
+        size={size || typography.size}
+        as="h1"
+        className={actualClassName}
+      >
         {children}
       </Component>
     )
