@@ -125,17 +125,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 
     const latest = useLatest({ autoFocus })
 
-    const attrsByType =
-      type === 'number'
-        ? {
-            max,
-            onWheel: disableWheel,
-          }
-        : {
-            max:
-              max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined,
-          }
-
     const functions = useMemo(
       () => ({
         handleInnerRef: (node: HTMLInputElement | null) => {
@@ -186,9 +175,12 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
         <input
           {...rest}
-          {...attrsByType}
           type={type}
           data-smarthr-ui-input="true"
+          max={
+            max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
+          }
+          onWheel={type === 'number' ? disableWheel : undefined}
           onFocus={onFocus}
           onBlur={onBlur}
           disabled={disabled}
