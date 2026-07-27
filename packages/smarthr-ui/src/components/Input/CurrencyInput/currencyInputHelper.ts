@@ -31,15 +31,11 @@ export function formatCurrency(value?: string) {
   const [integerPart, decimalPart] = converted.split('.')
   const commaed = integerPart.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
 
-  if (!decimalPart) {
-    return commaed
+  if (decimalPart) {
+    const excludedEndZero = decimalPart.replace(/0+$/, '')
+
+    return excludedEndZero ? [commaed, excludedEndZero].join('.') : commaed
   }
 
-  const excludedEndZero = decimalPart.replace(/0+$/, '')
-
-  if (excludedEndZero.length === 0) {
-    return commaed
-  }
-
-  return [commaed, excludedEndZero].join('.')
+  return commaed
 }
