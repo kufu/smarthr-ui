@@ -13,7 +13,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type locales, useIntl } from '../../../../intl'
+import { type typedJa, useIntl } from '../../../../intl'
 import { FaCheckIcon } from '../../../Icon'
 
 const SWATCHES_PER_ROW = 6
@@ -71,8 +71,8 @@ const classNameGenerator = tv({
   },
 })
 
-type LocaleKey = keyof typeof locales.ja
-type LocaleDefaultText<K extends LocaleKey> = (typeof locales.ja)[K]
+type LocaleKey = keyof typeof typedJa
+type LocaleDefaultText<K extends LocaleKey> = (typeof typedJa)[K]
 
 export type ColorPaletteEntry = {
   value: string

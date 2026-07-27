@@ -50,8 +50,7 @@ const buildHoveredInfo = (
 ): HoveredTableInfo | null => {
   const pos = resolveTablePos(editor, tableEl)
   if (pos === null) return null
-  const displayEl = resolveDisplayEl(tableEl)
-  const displayRect = displayEl.getBoundingClientRect()
+  const displayRect = resolveDisplayEl(tableEl).getBoundingClientRect()
   const containerRect = container.getBoundingClientRect()
   const proseMirrorRect = editor.view.dom.getBoundingClientRect()
   return {

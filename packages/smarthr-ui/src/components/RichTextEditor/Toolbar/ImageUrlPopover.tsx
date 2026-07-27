@@ -36,14 +36,6 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
   const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 })
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const titleText = localize({
-    id: 'smarthr-ui/RichTextEditor/imageFromUrl',
-    defaultText: 'URLから挿入',
-  })
-  const urlLabelText = localize({
-    id: 'smarthr-ui/RichTextEditor/imageUrlLabel',
-    defaultText: '画像URL',
-  })
   const requiredMessage = localize({
     id: 'smarthr-ui/RichTextEditor/imageUrlRequired',
     defaultText: 'URLを入力してください',
@@ -51,14 +43,6 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
   const invalidMessage = localize({
     id: 'smarthr-ui/RichTextEditor/imageUrlInvalid',
     defaultText: '有効なURL（http:// または https://）を入力してください',
-  })
-  const insertText = localize({
-    id: 'smarthr-ui/RichTextEditor/imageInsertButton',
-    defaultText: '挿入',
-  })
-  const cancelText = localize({
-    id: 'smarthr-ui/RichTextEditor/imageCancelButton',
-    defaultText: 'キャンセル',
   })
 
   useEffect(() => {
@@ -134,6 +118,22 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
 
   if (!isOpen) return null
 
+  const titleText = localize({
+    id: 'smarthr-ui/RichTextEditor/imageFromUrl',
+    defaultText: 'URLから挿入',
+  })
+  const urlLabelText = localize({
+    id: 'smarthr-ui/RichTextEditor/imageUrlLabel',
+    defaultText: '画像URL',
+  })
+  const insertText = localize({
+    id: 'smarthr-ui/RichTextEditor/imageInsertButton',
+    defaultText: '挿入',
+  })
+  const cancelText = localize({
+    id: 'smarthr-ui/RichTextEditor/imageCancelButton',
+    defaultText: 'キャンセル',
+  })
   return createPortal(
     <div
       role="dialog"

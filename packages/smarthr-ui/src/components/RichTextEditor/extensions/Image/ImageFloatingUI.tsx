@@ -41,7 +41,6 @@ const BAR_HEIGHT = 36
 export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   const { localize } = useIntl()
   const info = useActiveImageRect(editor, containerRef)
-  const classNames = classNameGenerator()
 
   const handleDelete = useCallback(() => {
     if (info) {
@@ -55,6 +54,13 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
 
   const { getButtonProps } = useRovingToolbar({ onEscape: handleEscape })
 
+  if (!info) return null
+
+  const idealTop = info.rect.top - BAR_HEIGHT - BAR_GAP
+  const top = Math.max(idealTop, info.viewport.top)
+  const left = info.rect.left
+
+  const classNames = classNameGenerator()
   const toolbarLabel = localize({
     id: 'smarthr-ui/RichTextEditor/imageToolbar',
     defaultText: '画像の操作',
@@ -67,13 +73,6 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
     id: 'smarthr-ui/RichTextEditor/imageDeleteShort',
     defaultText: '削除',
   })
-
-  if (!info) return null
-
-  const idealTop = info.rect.top - BAR_HEIGHT - BAR_GAP
-  const top = Math.max(idealTop, info.viewport.top)
-  const left = info.rect.left
-
   return (
     <div
       role="toolbar"
