@@ -1,10 +1,9 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
-import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
@@ -34,7 +33,15 @@ const classNameGenerator = tv({
 })
 
 export const SearchController: FC<Props> = memo(({ search }) => {
-  const { query, handleChangeQuery, matchCount, currentMatchIndex, goNext, goPrev, clear } = search
+  const {
+    query,
+    handleChangeQuery,
+    handleKeyDownQuery,
+    matchCount,
+    currentMatchIndex,
+    goNext,
+    goPrev,
+  } = search
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
     const { wrapper, inputArea } = classNameGenerator({ mobile })
@@ -42,42 +49,6 @@ export const SearchController: FC<Props> = memo(({ search }) => {
   }, [mobile])
 
   const noMatches = matchCount === 0
-
-  const latest = useLatest({
-    goNext,
-    goPrev,
-    clear,
-    query,
-  })
-
-  const functions = useMemo(
-    () => ({
-      handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.nativeEvent.isComposing) {
-          return
-        }
-        switch (e.key) {
-          case 'Enter': {
-            e.preventDefault()
-            if (e.shiftKey) {
-              latest.goPrev()
-            } else {
-              latest.goNext()
-            }
-            break
-          }
-          case 'Escape': {
-            if (latest.query !== '') {
-              e.preventDefault()
-              latest.clear()
-            }
-            break
-          }
-        }
-      },
-    }),
-    [latest],
-  )
 
   return (
     <div className={classNames.wrapper}>
@@ -92,7 +63,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
           }
           value={query}
           onChange={handleChangeQuery}
-          onKeyDown={functions.handleKeyDown}
+          onKeyDown={handleKeyDownQuery}
           width="100%"
           suffix={
             query !== '' ? (

@@ -1,4 +1,4 @@
-import { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type ChangeEvent, type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -60,6 +60,7 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const latest = useLatest({
     matchCount,
+    query,
   })
 
   const functions = useMemo(() => {
@@ -107,6 +108,28 @@ export const usePDFSearch = (fileUrl: string) => {
       recalculate(nextQuery, { resetSelection: true })
     }
 
+    const goNext = () => {
+      setCurrentMatchIndex((prev) => {
+        if (latest.matchCount === 0) return -1
+        if (prev < 0) return 0
+        return (prev + 1) % latest.matchCount
+      })
+    }
+
+    const goPrev = () => {
+      setCurrentMatchIndex((prev) => {
+        if (latest.matchCount === 0) return -1
+        if (prev < 0) return latest.matchCount - 1
+        return (prev - 1 + latest.matchCount) % latest.matchCount
+      })
+    }
+
+    const clear = () => {
+      queryRef.current = ''
+      setQueryState('')
+      resetMatchState()
+    }
+
     return {
       resetMatchState,
       setQuery,
@@ -117,27 +140,34 @@ export const usePDFSearch = (fileUrl: string) => {
           recalculate(queryRef.current)
         }
       },
-      clear: () => {
-        queryRef.current = ''
-        setQueryState('')
-        functions.resetMatchState()
-      },
-      goNext: () => {
-        setCurrentMatchIndex((prev) => {
-          if (latest.matchCount === 0) return -1
-          if (prev < 0) return 0
-          return (prev + 1) % latest.matchCount
-        })
-      },
-      goPrev: () => {
-        setCurrentMatchIndex((prev) => {
-          if (latest.matchCount === 0) return -1
-          if (prev < 0) return latest.matchCount - 1
-          return (prev - 1 + latest.matchCount) % latest.matchCount
-        })
-      },
+      clear,
+      goNext,
+      goPrev,
       handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value)
+      },
+      handleKeyDownQuery: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.nativeEvent.isComposing) {
+          return
+        }
+        switch (e.key) {
+          case 'Enter': {
+            e.preventDefault()
+            if (e.shiftKey) {
+              goPrev()
+            } else {
+              goNext()
+            }
+            break
+          }
+          case 'Escape': {
+            if (queryRef.current !== '') {
+              e.preventDefault()
+              clear()
+            }
+            break
+          }
+        }
       },
     }
   }, [latest])
@@ -155,13 +185,15 @@ export const usePDFSearch = (fileUrl: string) => {
       matches,
       matchCount,
       currentMatchIndex,
-      // TODO: テストのために公開している。整理する
+      // TODO: テストのために公開している。handleKeyDownQueryに統合後、整理する
       setQuery: functions.setQuery,
       registerPageText: functions.registerPageText,
+      // TODO: テストのために公開している。handleKeyDownQueryに統合後、整理する
       clear: functions.clear,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
       handleChangeQuery: functions.handleChangeQuery,
+      handleKeyDownQuery: functions.handleKeyDownQuery,
     }),
     [query, matches, matchCount, currentMatchIndex, functions],
   )

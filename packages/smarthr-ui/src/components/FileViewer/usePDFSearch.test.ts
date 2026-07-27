@@ -130,7 +130,9 @@ describe('usePDFSearch', () => {
   test('入力時はハイライトのみ表示し、未選択(-1)のままにする（スクロールしない）', () => {
     const { result } = setup(['abc abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     expect(result.current.matchCount).toBe(3)
     expect(result.current.matches.length).toBeGreaterThan(0)
@@ -140,7 +142,9 @@ describe('usePDFSearch', () => {
   test('未選択から goNext で先頭ヒット(0)へ移動する', () => {
     const { result } = setup(['abc abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
@@ -151,7 +155,9 @@ describe('usePDFSearch', () => {
   test('未選択から goPrev で末尾ヒットへ移動する', () => {
     const { result } = setup(['abc abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goPrev()
@@ -162,7 +168,9 @@ describe('usePDFSearch', () => {
   test('goNext は末尾の次で先頭へループする', () => {
     const { result } = setup(['abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
@@ -179,7 +187,9 @@ describe('usePDFSearch', () => {
   test('検索語を変更すると選択がリセットされ、次の Enter で再び先頭から始まる', () => {
     const { result } = setup(['abc abc xyz'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
@@ -190,21 +200,29 @@ describe('usePDFSearch', () => {
     expect(result.current.currentMatchIndex).toBe(1)
 
     act(() => {
-      result.current.setQuery('xyz')
+      result.current.handleChangeQuery({
+        target: { value: 'xyz' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     expect(result.current.currentMatchIndex).toBe(-1)
   })
 
-  test('clear で query・matches・選択がすべてリセットされる', () => {
+  test('Escape キーで query・matches・選択がすべてリセットされる', () => {
     const { result } = setup(['abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
     })
     act(() => {
-      result.current.clear()
+      result.current.handleKeyDownQuery({
+        key: 'Escape',
+        nativeEvent: { isComposing: false },
+        preventDefault: vi.fn(),
+      } as unknown as React.KeyboardEvent<HTMLInputElement>)
     })
     expect(result.current.query).toBe('')
     expect(result.current.matches).toEqual([])
