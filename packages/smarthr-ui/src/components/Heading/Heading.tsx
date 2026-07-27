@@ -74,23 +74,19 @@ export const Heading = memo<Props>(
       role = 'heading'
       ariaLevel = level
     }
-    const as = unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span')
 
     const actualClassName = useMemo(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
-    let typography = STYLE_TYPE_MAP[type]
-
-    if (type === 'sectionTitle' && size) {
-      typography = { ...typography, size }
-    }
+    const typography = STYLE_TYPE_MAP[type]
 
     const commonProps = {
-      as,
+      as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
       role,
       'aria-level': ariaLevel,
       className: actualClassName,
+      size: type === 'sectionTitle' && size ? size : typography.size,
     }
 
     if (visuallyHidden) {
