@@ -50,23 +50,6 @@ export type ElementProps = Omit<
 >
 type Props = AbstractProps & ElementProps
 
-const generateTagProps = (level: number, unrecommendedTag?: HeadingTagTypes) => {
-  let role = undefined
-  let ariaLevel = undefined
-
-  // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
-  if (!unrecommendedTag && level > 6) {
-    role = 'heading'
-    ariaLevel = level
-  }
-
-  return {
-    as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
-    role,
-    'aria-level': ariaLevel,
-  }
-}
-
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',
   variants: {
@@ -82,35 +65,38 @@ const classNameGenerator = tv({
 export const Heading = memo<Props>(
   ({ unrecommendedTag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest }) => {
     const level = useContext(LevelContext)
-    const tagProps = useMemo(
-      () => generateTagProps(level, unrecommendedTag),
-      [level, unrecommendedTag],
-    )
+
+    let role = undefined
+    let ariaLevel = undefined
+
+    // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
+    if (!unrecommendedTag && level > 6) {
+      role = 'heading'
+      ariaLevel = level
+    }
+    const as = unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span')
+
     const actualClassName = useMemo(
       () => classNameGenerator({ visuallyHidden, className }),
       [className, visuallyHidden],
     )
-    const actualTypography = useMemo(() => {
-      const defaultTypography = STYLE_TYPE_MAP[type]
+    let typography = STYLE_TYPE_MAP[type]
 
-      if (type === 'sectionTitle' && size) {
-        return { ...defaultTypography, size }
-      }
-
-      return defaultTypography
-    }, [type, size])
+    if (type === 'sectionTitle' && size) {
+      typography = { ...typography, size }
+    }
 
     const commonProps = {
-      ...rest,
-      ...actualTypography,
-      ...tagProps,
+      as,
+      role,
+      'aria-level': ariaLevel,
       className: actualClassName,
     }
 
     if (visuallyHidden) {
-      return <VisuallyHiddenText {...commonProps} />
+      return <VisuallyHiddenText {...rest} {...typography} {...commonProps} />
     }
 
-    return <Text {...commonProps} icon={icon} />
+    return <Text {...rest} {...typography} {...commonProps} icon={icon} />
   },
 )
