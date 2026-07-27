@@ -2,17 +2,17 @@
 
 import {
   type ComponentPropsWithRef,
+  type MutableRefObject,
   type ReactNode,
   type WheelEvent,
   forwardRef,
-  useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useTheme } from '../../hooks/useTheme'
 
 type AbstractProps = {
@@ -116,12 +116,14 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const innerRef = useRef<HTMLInputElement>(null)
+    const innerRef: MutableRefObject<HTMLInputElement | null> = useRef(null)
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => innerRef.current,
     )
+
+    const latest = useLatest({ autoFocus })
 
     const attrsByType =
       type === 'number'
@@ -134,13 +136,19 @@ export const Input = forwardRef<HTMLInputElement, Props>(
               max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined,
           }
 
-    const onDelegateClickFocus = useCallback(() => innerRef.current?.focus(), [])
+    const functions = useMemo(
+      () => ({
+        handleInnerRef: (node: HTMLInputElement | null) => {
+          innerRef.current = node
 
-    useEffect(() => {
-      if (autoFocus && innerRef.current) {
-        innerRef.current.focus()
-      }
-    }, [autoFocus])
+          if (latest.autoFocus && node) {
+            node.focus()
+          }
+        },
+        onDelegateClickFocus: () => innerRef.current?.focus(),
+      }),
+      [latest],
+    )
 
     const wrapperClassName = useMemo(
       () => wrapperClassNameGenerator({ disabled, readOnly, className }),
@@ -171,7 +179,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={onDelegateClickFocus}
+        onClick={functions.onDelegateClickFocus}
         className={wrapperClassName}
         style={wrapperStyle}
       >
@@ -185,7 +193,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           onBlur={onBlur}
           disabled={disabled}
           readOnly={readOnly}
-          ref={innerRef}
+          ref={functions.handleInnerRef}
           aria-invalid={error || undefined}
           className={innerClassNames.input}
         />
