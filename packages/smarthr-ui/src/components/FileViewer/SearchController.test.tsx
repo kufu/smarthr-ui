@@ -20,7 +20,7 @@ const renderController = ({
     currentMatchIndex,
     goNext: vi.fn(),
     goPrev: vi.fn(),
-    registerPageText: vi.fn(),
+    generateHandlePDFPageGetTextSuccess: vi.fn(),
   }
   render(
     <IntlProvider locale="ja">
