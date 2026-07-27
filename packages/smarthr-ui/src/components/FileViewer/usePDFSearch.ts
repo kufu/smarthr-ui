@@ -58,10 +58,7 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const latest = useLatest({
-    matchCount,
-    query,
-  })
+  const latest = useLatest({ matchCount })
 
   const functions = useMemo(() => {
     const resetMatchState = () => {
