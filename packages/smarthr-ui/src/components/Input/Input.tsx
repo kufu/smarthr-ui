@@ -87,6 +87,14 @@ const innerClassNameGenerator = tv({
   },
 })
 
+// HINT: PC版ブラウザで年が6桁入力できる場合、コピー&ペーストが正常に動作しないなど、UI上の問題が発生する場合がある
+// 回避のためmaxで年四桁を指定する
+const DEFAULT_MAX_ATTR = {
+  date: '9999-12-31',
+  'datetime-local': '9999-12-31T23:59',
+  month: '9999-12',
+}
+
 export const Input = forwardRef<HTMLInputElement, Props>(
   (
     {
@@ -115,31 +123,16 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const attrsByType = useMemo(() => {
-      switch (type) {
-        case 'number':
-          return {
+    const attrsByType =
+      type === 'number'
+        ? {
             max,
             onWheel: disableWheel,
           }
-        // HINT: PC版ブラウザで年が6桁入力できる場合、コピー&ペーストが正常に動作しないなど、UI上の問題が発生する場合がある
-        // 回避のためmaxで年四桁を指定する
-        case 'date':
-          return {
-            max: max || '9999-12-31',
+        : {
+            max:
+              max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined,
           }
-        case 'datetime-local':
-          return {
-            max: max || '9999-12-31T23:59',
-          }
-        case 'month':
-          return {
-            max: max || '9999-12',
-          }
-      }
-
-      return { max }
-    }, [max, type])
 
     const onDelegateClickFocus = useCallback(() => innerRef.current?.focus(), [])
 
