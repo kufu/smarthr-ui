@@ -10,6 +10,8 @@ import {
 
 import { useLatest } from '../../hooks/useLatest'
 
+import { buildCustomTextRenderer } from './buildCustomTextRenderer'
+
 import type { PDFSearchMatch } from './types'
 import type { Page } from 'react-pdf'
 
@@ -187,19 +189,27 @@ export const usePDFSearch = (fileUrl: string) => {
     functions.resetMatchState()
   }, [fileUrl, functions])
 
+  const customTextRenderer = useMemo(() => {
+    if (matches.length === 0) {
+      return undefined
+    }
+    return buildCustomTextRenderer(matches)
+  }, [matches])
+
   return useMemo(
     () => ({
       query,
       matches,
       matchCount,
       currentMatchIndex,
+      customTextRenderer,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
       handleChangeQuery: functions.handleChangeQuery,
       handleKeyDownQuery: functions.handleKeyDownQuery,
       generateHandlePDFPageGetTextSuccess: functions.generateHandlePDFPageGetTextSuccess,
     }),
-    [query, matches, matchCount, currentMatchIndex, functions],
+    [query, matches, matchCount, currentMatchIndex, customTextRenderer, functions],
   )
 }
 

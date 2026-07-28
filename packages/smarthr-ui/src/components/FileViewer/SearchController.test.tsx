@@ -18,6 +18,7 @@ const renderController = ({
     matches: [],
     matchCount,
     currentMatchIndex,
+    customTextRenderer: undefined,
     goNext: vi.fn(),
     goPrev: vi.fn(),
     generateHandlePDFPageGetTextSuccess: vi.fn(),
