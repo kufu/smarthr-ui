@@ -5,6 +5,7 @@ import {
   type ComponentProps,
   type FC,
   type MouseEvent,
+  type PropsWithChildren,
   type ReactNode,
   memo,
   useCallback,
@@ -51,6 +52,26 @@ type Props = {
 
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onLoadError?: () => void
+}
+
+// 共通のprops（ImageとPDFで共有）
+type CommonViewerProps = {
+  file: FileForViewer
+  scale: number
+  rotation: number | undefined
+  loaded: boolean
+  width: number
+  hasWidth: boolean
+  setWidth: React.Dispatch<React.SetStateAction<number>>
+  scaleSteps: number[] | undefined
+  functions: {
+    scaleUp: () => void
+    scaleDown: () => void
+    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
+    rotate: () => void
+    handleLoaded: () => void
+  }
   onLoadError?: () => void
 }
 
@@ -115,86 +136,12 @@ export const FileViewer: FC<Props> = ({
   )
 }
 
-// 共通のprops（ImageとPDFで共有）
-type CommonViewerProps = {
-  file: FileForViewer
-  scale: number
-  rotation: number | undefined
-  loaded: boolean
-  width: number
-  hasWidth: boolean
-  setWidth: React.Dispatch<React.SetStateAction<number>>
-  scaleSteps: number[] | undefined
-  functions: {
-    scaleUp: () => void
-    scaleDown: () => void
-    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
-    rotate: () => void
-    handleLoaded: () => void
+const PDFFileViewer: FC<
+  CommonViewerProps & {
+    setRotation: React.Dispatch<React.SetStateAction<number | undefined>>
+    onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
   }
-  onLoadError?: () => void
-}
-
-// ImageFileViewer用
-type ImageFileViewerProps = CommonViewerProps
-
-// PDFFileViewer用（CommonViewerPropsに加えてPDF固有のpropsを追加）
-type PDFFileViewerProps = CommonViewerProps & {
-  setRotation: React.Dispatch<React.SetStateAction<number | undefined>>
-  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
-}
-
-// ActualFileViewer用
-type ActualFileViewerProps = {
-  scale: number
-  loaded: boolean
-  hasWidth: boolean
-  setWidth: React.Dispatch<React.SetStateAction<number>>
-  scaleSteps: number[] | undefined
-  functions: {
-    scaleUp: () => void
-    scaleDown: () => void
-    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
-    rotate: () => void
-  }
-  searchController?: ReactNode
-  children?: ReactNode
-}
-
-const ImageFileViewer: FC<ImageFileViewerProps> = ({
-  file,
-  scale,
-  rotation,
-  loaded,
-  width,
-  hasWidth,
-  setWidth,
-  scaleSteps,
-  functions,
-  onLoadError,
-}) => (
-  <ActualFileViewer
-    scale={scale}
-    loaded={loaded}
-    hasWidth={hasWidth}
-    setWidth={setWidth}
-    scaleSteps={scaleSteps}
-    functions={functions}
-  >
-    {file.contentType.startsWith('image/') ? (
-      <ImageViewer
-        scale={scale}
-        rotation={rotation}
-        file={file}
-        width={width}
-        handleLoad={functions.handleLoaded}
-        onLoadError={onLoadError}
-      />
-    ) : undefined}
-  </ActualFileViewer>
-)
-
-const PDFFileViewer: FC<PDFFileViewerProps> = ({
+> = ({
   file,
   scale,
   rotation,
@@ -241,16 +188,49 @@ const PDFFileViewer: FC<PDFFileViewerProps> = ({
   )
 }
 
-const ActualFileViewer: FC<ActualFileViewerProps> = ({
+const ImageFileViewer: FC<CommonViewerProps> = ({
+  file,
   scale,
+  rotation,
   loaded,
+  width,
   hasWidth,
   setWidth,
   scaleSteps,
   functions,
-  searchController,
-  children,
-}) => {
+  onLoadError,
+}) => (
+  <ActualFileViewer
+    scale={scale}
+    loaded={loaded}
+    hasWidth={hasWidth}
+    setWidth={setWidth}
+    scaleSteps={scaleSteps}
+    functions={functions}
+  >
+    {file.contentType.startsWith('image/') ? (
+      <ImageViewer
+        scale={scale}
+        rotation={rotation}
+        file={file}
+        width={width}
+        handleLoad={functions.handleLoaded}
+        onLoadError={onLoadError}
+      />
+    ) : undefined}
+  </ActualFileViewer>
+)
+
+const ActualFileViewer: FC<
+  PropsWithChildren<
+    Pick<
+      CommonViewerProps,
+      'scale' | 'loaded' | 'hasWidth' | 'setWidth' | 'scaleSteps' | 'functions'
+    > & {
+      searchController?: ReactNode
+    }
+  >
+> = ({ scale, loaded, hasWidth, setWidth, scaleSteps, functions, searchController, children }) => {
   const ref = useRef<HTMLDivElement>(null)
   const loading = !loaded
 
