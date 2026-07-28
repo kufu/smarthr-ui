@@ -8,7 +8,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -72,7 +71,7 @@ type CommonViewerProps = {
     rotate: () => void
     handleLoaded: () => void
   }
-  onLoadError?: () => void
+  handleLoadError?: () => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -90,7 +89,8 @@ export const FileViewer: FC<Props> = ({
 
   const hasWidth = fixedWidth !== undefined
 
-  const latest = useLatest({ scaleStep, rotation })
+  const latest = useLatest({ scaleStep, rotation, onLoadError })
+  const hasOnLoadError = !!onLoadError
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
@@ -113,8 +113,9 @@ export const FileViewer: FC<Props> = ({
       handleLoaded: () => {
         setLoaded(true)
       },
+      handleLoadError: hasOnLoadError ? () => latest.onLoadError() : undefined,
     }
-  }, [latest])
+  }, [hasOnLoadError, latest])
 
   const commonAttrs = {
     file,
@@ -126,7 +127,7 @@ export const FileViewer: FC<Props> = ({
     setWidth,
     scaleSteps,
     functions,
-    onLoadError,
+    handleLoadError: functions.handleLoadError,
   }
 
   return file.contentType === 'application/pdf' ? (
@@ -153,15 +154,9 @@ const PDFFileViewer: FC<
   functions,
   setRotation,
   onPassword,
-  onLoadError,
+  handleLoadError,
 }) => {
   const search = usePDFSearch(file.url)
-  const handlePDFLoaded = useCallback(
-    (defaultRotation: number) => {
-      setRotation(defaultRotation)
-    },
-    [setRotation],
-  )
 
   return (
     <ActualFileViewer
@@ -179,9 +174,9 @@ const PDFFileViewer: FC<
         file={file}
         width={width}
         handleLoad={functions.handleLoaded}
-        handlePDFLoaded={handlePDFLoaded}
+        handlePDFLoaded={setRotation}
         onPassword={onPassword}
-        onLoadError={onLoadError}
+        handleLoadError={handleLoadError}
         search={search}
       />
     </ActualFileViewer>
@@ -198,7 +193,7 @@ const ImageFileViewer: FC<CommonViewerProps> = ({
   setWidth,
   scaleSteps,
   functions,
-  onLoadError,
+  handleLoadError,
 }) => (
   <ActualFileViewer
     scale={scale}
@@ -215,7 +210,7 @@ const ImageFileViewer: FC<CommonViewerProps> = ({
         file={file}
         width={width}
         handleLoad={functions.handleLoaded}
-        onLoadError={onLoadError}
+        handleLoadError={handleLoadError}
       />
     ) : undefined}
   </ActualFileViewer>
