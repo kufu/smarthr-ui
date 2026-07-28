@@ -74,16 +74,16 @@ export const FileViewer: FC<Props> = ({
   const latest = useLatest({ scaleStep, rotation })
 
   const functions = useMemo(() => {
-    // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
-    const getActualScaleStep = () => latest.scaleStep ?? defaultScaleStep
+    const calculateScale = (mode: 'add' | 'sub') => {
+      // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+      setScale((currentScale) =>
+        new Decimal(currentScale)[mode](latest.scaleStep ?? defaultScaleStep).toNumber(),
+      )
+    }
 
     return {
-      scaleUp: () => {
-        setScale((currentScale) => new Decimal(currentScale).add(getActualScaleStep()).toNumber())
-      },
-      scaleDown: () => {
-        setScale((currentScale) => new Decimal(currentScale).sub(getActualScaleStep()).toNumber())
-      },
+      scaleUp: () => calculateScale('add'),
+      scaleDown: () => calculateScale('sub'),
       handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
         setScale(Number(e.currentTarget.value)),
       rotate: () => {
