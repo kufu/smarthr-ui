@@ -79,7 +79,7 @@ export const PDFViewer: FC<Props> = memo(
     handleLoad,
     handlePDFLoaded,
     onPassword,
-    onLoadError,
+    handleLoadError,
     search,
   }) => {
     const matches = search?.matches
@@ -145,7 +145,7 @@ export const PDFViewer: FC<Props> = memo(
             options={options}
             file={file.url}
             onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={onLoadError}
+            onLoadError={handleLoadError}
             rotate={rotation}
             className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
             externalLinkTarget="_blank"

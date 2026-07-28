@@ -62,7 +62,7 @@ const ImageDisplay = memo<
 )
 
 export const ImageViewer: FC<ViewerProps> = memo(
-  ({ scale, rotation, file, width, handleLoad, onLoadError }) => {
+  ({ scale, rotation, file, width, handleLoad, handleLoadError }) => {
     const imageRef = useRef<HTMLImageElement>(null)
     const [viewConfig, setViewConfig] = useState({
       wrapperWidth: 0,
@@ -125,7 +125,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
         src={file.url}
         alt={file.alt}
         handleLoad={functions.handleLoad}
-        onError={onLoadError}
+        onError={handleLoadError}
         imageRef={imageRef}
       />
     )
