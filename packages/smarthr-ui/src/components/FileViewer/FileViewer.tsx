@@ -71,7 +71,7 @@ export const FileViewer: FC<Props> = ({
 
   const search = usePDFSearch(file.url)
 
-  const latest = useLatest({ scaleStep })
+  const latest = useLatest({ scaleStep, rotation })
 
   const functions = useMemo(
     () => ({
@@ -86,16 +86,15 @@ export const FileViewer: FC<Props> = ({
       },
       handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
         setScale(Number(e.currentTarget.value)),
+      rotate: () => {
+        // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+        const currentRotation = latest.rotation ?? 0
+        const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
+        setRotation(newRotation)
+      },
     }),
     [latest],
   )
-
-  const rotate = useCallback(() => {
-    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
-    const currentRotation = rotation ?? 0
-    const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
-    setRotation(newRotation)
-  }, [rotation])
 
   const handleLoaded = useCallback(() => {
     setLoaded(true)
@@ -132,7 +131,6 @@ export const FileViewer: FC<Props> = ({
           scale={scale}
           scaleSteps={scaleSteps || defaultScaleSteps}
           functions={functions}
-          handleClickRotateButton={rotate}
           searchController={isPDF ? <SearchController search={search} /> : undefined}
         />
       </div>
@@ -183,8 +181,8 @@ type ControllerProps = {
     scaleUp: () => void
     scaleDown: () => void
     handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
+    rotate: () => void
   }
-  handleClickRotateButton: () => void
   searchController?: ReactNode
 }
 
@@ -199,7 +197,7 @@ const controllerClassNameGenerator = tv({
 })
 
 const Controller: FC<ControllerProps> = memo(
-  ({ scale, scaleSteps, functions, handleClickRotateButton, searchController }) => {
+  ({ scale, scaleSteps, functions, searchController }) => {
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
 
@@ -246,7 +244,7 @@ const Controller: FC<ControllerProps> = memo(
               />
             </Button>
           </div>
-          <Button onClick={handleClickRotateButton} className="shr-p-0.75">
+          <Button onClick={functions.rotate} className="shr-p-0.75">
             <FaArrowRotateLeftIcon
               alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
             />
