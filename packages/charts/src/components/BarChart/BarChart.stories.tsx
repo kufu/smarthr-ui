@@ -1,4 +1,9 @@
-import { chartJsOptionsExamples, multi20Datasets, multiSmall, singleSmall } from '../__stories__/testData'
+import {
+  chartJsOptionsExamples,
+  multi20Datasets,
+  multiSmall,
+  singleSmall,
+} from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
 
@@ -39,6 +44,9 @@ export const Playground: Story = {
     options: {
       control: 'object',
     },
+    disablePattern: {
+      control: 'boolean',
+    },
   },
 }
 
@@ -51,6 +59,14 @@ export const Default: Story = {
 export const MultipleDatasets: Story = {
   args: {
     data: multiSmall,
+  },
+}
+
+export const WithoutPattern: Story = {
+  name: 'disablePattern',
+  args: {
+    data: multiSmall,
+    disablePattern: true,
   },
 }
 
