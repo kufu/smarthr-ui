@@ -122,7 +122,10 @@ describe('usePDFSearch', () => {
   const setup = (texts: string[]) => {
     const view = renderHook(() => usePDFSearch('file-url'))
     act(() => {
-      view.result.current.registerPageText(0, texts)
+      const textContent = {
+        items: texts.map((str) => ({ str })),
+      }
+      view.result.current.generateHandlePDFPageGetTextSuccess(0)(textContent)
     })
     return view
   }
@@ -334,6 +337,59 @@ describe('usePDFSearch', () => {
 
       expect(preventDefaultSpy).not.toHaveBeenCalled()
       expect(result.current.query).toBe('') // 変わらず空
+    })
+  })
+
+  describe('generateHandlePDFPageGetTextSuccess', () => {
+    test('PDFのテキストを抽出してページに登録する', () => {
+      const { result } = renderHook(() => usePDFSearch('file-url'))
+      const textContent = {
+        items: [{ str: 'Hello' }, { str: 'World' }],
+      }
+
+      act(() => {
+        result.current.generateHandlePDFPageGetTextSuccess(0)(textContent)
+      })
+
+      // 検索すると登録されたテキストがヒットする
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'Hello' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      expect(result.current.matchCount).toBeGreaterThan(0)
+      expect(result.current.matches.length).toBeGreaterThan(0)
+    })
+
+    test('全ページ読み込み前に検索が始まっても後から読んだページがヒットする', () => {
+      const { result } = renderHook(() => usePDFSearch('file-url'))
+
+      // 最初にページ0を登録
+      act(() => {
+        result.current.generateHandlePDFPageGetTextSuccess(0)({
+          items: [{ str: 'page0' }],
+        })
+      })
+
+      // 検索開始
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'page' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      const matchCountAfterPage0 = result.current.matchCount
+
+      // 後からページ1を登録
+      act(() => {
+        result.current.generateHandlePDFPageGetTextSuccess(1)({
+          items: [{ str: 'page1' }],
+        })
+      })
+
+      // 新しいページの内容も検索結果に含まれる
+      expect(result.current.matchCount).toBeGreaterThan(matchCountAfterPage0)
     })
   })
 })

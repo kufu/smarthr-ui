@@ -1,8 +1,21 @@
-import { type ChangeEvent, type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  type ChangeEvent,
+  type ComponentProps,
+  type KeyboardEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
 import type { PDFSearchMatch } from './types'
+import type { Page } from 'react-pdf'
+
+type PDFTextContent = Parameters<
+  NonNullable<ComponentProps<typeof Page>['onGetTextSuccess']>
+>[number]
 
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -117,13 +130,6 @@ export const usePDFSearch = (fileUrl: string) => {
 
     return {
       resetMatchState,
-      registerPageText: (pageIndex: number, texts: string[]) => {
-        pageTextsRef.current.set(pageIndex, texts.map(normalize))
-        // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
-        if (queryRef.current !== '') {
-          recalculate(queryRef.current)
-        }
-      },
       goNext,
       goPrev,
       handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
@@ -158,6 +164,19 @@ export const usePDFSearch = (fileUrl: string) => {
           }
         }
       },
+      generateHandlePDFPageGetTextSuccess: (pageIndex: number) => (textContent: PDFTextContent) => {
+        const texts = textContent.items.reduce<string[]>((acc, item) => {
+          if ('str' in item) {
+            acc.push(item.str)
+          }
+          return acc
+        }, [])
+        pageTextsRef.current.set(pageIndex, texts.map(normalize))
+        // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
+        if (queryRef.current !== '') {
+          recalculate(queryRef.current)
+        }
+      },
     }
   }, [latest])
 
@@ -174,11 +193,11 @@ export const usePDFSearch = (fileUrl: string) => {
       matches,
       matchCount,
       currentMatchIndex,
-      registerPageText: functions.registerPageText,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
       handleChangeQuery: functions.handleChangeQuery,
       handleKeyDownQuery: functions.handleKeyDownQuery,
+      generateHandlePDFPageGetTextSuccess: functions.generateHandlePDFPageGetTextSuccess,
     }),
     [query, matches, matchCount, currentMatchIndex, functions],
   )
