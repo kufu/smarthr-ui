@@ -232,7 +232,7 @@ const ActualFileViewer: FC<
   >
 > = ({ scale, loaded, hasWidth, setWidth, scaleSteps, functions, searchController, children }) => {
   const ref = useRef<HTMLDivElement>(null)
-  const loading = !loaded
+  const loading = children && !loaded
 
   useEffect(() => {
     if (!ref.current || hasWidth) {
