@@ -71,25 +71,21 @@ export const FileViewer: FC<Props> = ({
 
   const search = usePDFSearch(file.url)
 
-  const latest = useLatest({ setScale, scaleStep })
+  const latest = useLatest({ scaleStep })
 
   const functions = useMemo(
     () => ({
       // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
       scaleUp: () => {
         const internalScaleStep = latest.scaleStep ?? defaultScaleStep
-        latest.setScale((currentScale) =>
-          new Decimal(currentScale).add(internalScaleStep).toNumber(),
-        )
+        setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
       },
       scaleDown: () => {
         const internalScaleStep = latest.scaleStep ?? defaultScaleStep
-        latest.setScale((currentScale) =>
-          new Decimal(currentScale).sub(internalScaleStep).toNumber(),
-        )
+        setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
       },
       handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
-        latest.setScale(Number(e.currentTarget.value)),
+        setScale(Number(e.currentTarget.value)),
     }),
     [latest],
   )
