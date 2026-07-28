@@ -18,6 +18,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { DropdownMenuButton } from '../Dropdown'
@@ -183,20 +184,27 @@ const Controller: FC<ControllerProps> = memo(
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
 
-    // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
-    const internalScaleStep = scaleStep ?? defaultScaleStep
+    const latest = useLatest({ setScale, scaleStep })
 
-    const scaleUp = useCallback(() => {
-      setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
-    }, [internalScaleStep, setScale])
-
-    const scaleDown = useCallback(() => {
-      setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
-    }, [internalScaleStep, setScale])
-
-    const onClickScaleStep = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => setScale(Number(e.currentTarget.value)),
-      [setScale],
+    const functions = useMemo(
+      () => ({
+        // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+        scaleUp: () => {
+          const internalScaleStep = latest.scaleStep ?? defaultScaleStep
+          latest.setScale((currentScale) =>
+            new Decimal(currentScale).add(internalScaleStep).toNumber(),
+          )
+        },
+        scaleDown: () => {
+          const internalScaleStep = latest.scaleStep ?? defaultScaleStep
+          latest.setScale((currentScale) =>
+            new Decimal(currentScale).sub(internalScaleStep).toNumber(),
+          )
+        },
+        onClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
+          latest.setScale(Number(e.currentTarget.value)),
+      }),
+      [latest],
     )
 
     return (
@@ -206,7 +214,7 @@ const Controller: FC<ControllerProps> = memo(
         <Cluster gap={0.5} className="shr-justify-self-center">
           <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
             <Button
-              onClick={scaleDown}
+              onClick={functions.scaleDown}
               disabled={scale <= scaleSteps[0]}
               className="shr-rounded-r-none shr-border-none"
             >
@@ -229,14 +237,14 @@ const Controller: FC<ControllerProps> = memo(
                 <Button
                   key={step.toString()}
                   value={step}
-                  onClick={onClickScaleStep}
+                  onClick={functions.onClickScaleStep}
                   className="shr-rounded-none shr-border-0"
                 >
                   {`${(step * 100).toFixed(0)}%`}
                 </Button>
               ))}
             </DropdownMenuButton>
-            <Button onClick={scaleUp} className="shr-rounded-l-none shr-border-0">
+            <Button onClick={functions.scaleUp} className="shr-rounded-l-none shr-border-0">
               <FaMagnifyingGlassPlusIcon
                 alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
               />
