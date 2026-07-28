@@ -78,7 +78,7 @@ export const PDFViewer: FC<Props> = memo(
     width,
     handleLoad,
     handlePDFLoaded,
-    onPassword,
+    handlePassword,
     handleLoadError,
     search,
   }) => {
@@ -150,7 +150,7 @@ export const PDFViewer: FC<Props> = memo(
             className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
             externalLinkTarget="_blank"
             loading={null}
-            onPassword={onPassword}
+            onPassword={handlePassword}
           >
             {Array.from({ length: pdfNumPages }).map((_, i) => (
               <Page
