@@ -201,7 +201,7 @@ const Controller: FC<ControllerProps> = memo(
             new Decimal(currentScale).sub(internalScaleStep).toNumber(),
           )
         },
-        onClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
+        handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
           latest.setScale(Number(e.currentTarget.value)),
       }),
       [latest],
@@ -237,7 +237,7 @@ const Controller: FC<ControllerProps> = memo(
                 <Button
                   key={step.toString()}
                   value={step}
-                  onClick={functions.onClickScaleStep}
+                  onClick={functions.handleClickScaleStep}
                   className="shr-rounded-none shr-border-0"
                 >
                   {`${(step * 100).toFixed(0)}%`}
