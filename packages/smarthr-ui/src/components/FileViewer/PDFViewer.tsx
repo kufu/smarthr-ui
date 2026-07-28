@@ -1,17 +1,9 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ComponentProps, type FC, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Scroller } from '../Scroller'
 
 import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
@@ -78,8 +70,8 @@ export const PDFViewer: FC<Props> = memo(
     width,
     handleLoad,
     handlePDFLoaded,
-    onPassword,
-    onLoadError,
+    handlePassword,
+    handleLoadError,
     search,
   }) => {
     const matches = search?.matches
@@ -87,27 +79,34 @@ export const PDFViewer: FC<Props> = memo(
     const [pdfNumPages, setPdfNumPages] = useState(1)
     const rootRef = useRef<HTMLDivElement>(null)
 
-    const onDocumentLoadSuccess = useCallback<
-      NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
-    >(({ numPages }) => {
-      setPdfNumPages(numPages)
-    }, [])
+    const latest = useLatest({
+      rotation,
+      pdfNumPages,
+      handleLoad,
+      handlePDFLoaded,
+    })
 
-    const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!handleLoad && !handlePDFLoaded) {
-        return undefined
+    const functions = useMemo(() => {
+      const handleDocumentLoadSuccess: NonNullable<
+        ComponentProps<typeof Document>['onLoadSuccess']
+      > = ({ numPages }) => {
+        setPdfNumPages(numPages)
       }
-
-      return (page) => {
-        if (handlePDFLoaded && rotation === undefined) {
-          handlePDFLoaded(page.rotate)
+      const handlePageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = (page) => {
+        if (latest.rotation === undefined) {
+          latest.handlePDFLoaded(page.rotate)
         }
         // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (handleLoad && page.pageNumber === pdfNumPages) {
-          handleLoad()
+        if (page.pageNumber === latest.pdfNumPages) {
+          latest.handleLoad()
         }
       }
-    }, [handleLoad, handlePDFLoaded, pdfNumPages, rotation])
+
+      return {
+        handleDocumentLoadSuccess,
+        handlePageLoad,
+      }
+    }, [latest])
 
     useEffect(() => {
       const root = rootRef.current
@@ -144,13 +143,13 @@ export const PDFViewer: FC<Props> = memo(
           <Document
             options={options}
             file={file.url}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={onLoadError}
+            onLoadSuccess={functions.handleDocumentLoadSuccess}
+            onLoadError={handleLoadError}
             rotate={rotation}
             className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
             externalLinkTarget="_blank"
             loading={null}
-            onPassword={onPassword}
+            onPassword={handlePassword}
           >
             {Array.from({ length: pdfNumPages }).map((_, i) => (
               <Page
@@ -159,7 +158,7 @@ export const PDFViewer: FC<Props> = memo(
                 width={width}
                 scale={scale}
                 className="shr-w-full"
-                onLoadSuccess={onPageLoad}
+                onLoadSuccess={functions.handlePageLoad}
                 onGetTextSuccess={search?.generateHandlePDFPageGetTextSuccess(i)}
                 customTextRenderer={search?.customTextRenderer}
                 loading={null}

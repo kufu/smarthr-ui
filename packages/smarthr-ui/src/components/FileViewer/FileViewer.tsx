@@ -8,7 +8,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -51,7 +50,7 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
   onLoadError?: () => void
 }
 
@@ -72,7 +71,7 @@ type CommonViewerProps = {
     rotate: () => void
     handleLoaded: () => void
   }
-  onLoadError?: () => void
+  handleLoadError?: () => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -90,7 +89,9 @@ export const FileViewer: FC<Props> = ({
 
   const hasWidth = fixedWidth !== undefined
 
-  const latest = useLatest({ scaleStep, rotation })
+  const latest = useLatest({ scaleStep, rotation, onLoadError, onPassword })
+  const hasOnLoadError = !!onLoadError
+  const hasOnPassword = !!onPassword
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
@@ -113,8 +114,10 @@ export const FileViewer: FC<Props> = ({
       handleLoaded: () => {
         setLoaded(true)
       },
+      handleLoadError: hasOnLoadError ? () => latest.onLoadError() : undefined,
+      handlePassword: hasOnPassword ? (...rest) => latest.onPassword(...rest) : undefined,
     }
-  }, [latest])
+  }, [hasOnLoadError, hasOnPassword, latest])
 
   const commonAttrs = {
     file,
@@ -126,11 +129,15 @@ export const FileViewer: FC<Props> = ({
     setWidth,
     scaleSteps,
     functions,
-    onLoadError,
+    handleLoadError: functions.handleLoadError,
   }
 
   return file.contentType === 'application/pdf' ? (
-    <PDFFileViewer {...commonAttrs} setRotation={setRotation} onPassword={onPassword} />
+    <PDFFileViewer
+      {...commonAttrs}
+      setRotation={setRotation}
+      handlePassword={functions.handlePassword}
+    />
   ) : (
     <ImageFileViewer {...commonAttrs} />
   )
@@ -139,7 +146,7 @@ export const FileViewer: FC<Props> = ({
 const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
-    onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+    handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
   }
 > = ({
   file,
@@ -152,16 +159,10 @@ const PDFFileViewer: FC<
   scaleSteps,
   functions,
   setRotation,
-  onPassword,
-  onLoadError,
+  handlePassword,
+  handleLoadError,
 }) => {
   const search = usePDFSearch(file.url)
-  const handlePDFLoaded = useCallback(
-    (defaultRotation: number) => {
-      setRotation(defaultRotation)
-    },
-    [setRotation],
-  )
 
   return (
     <ActualFileViewer
@@ -179,9 +180,9 @@ const PDFFileViewer: FC<
         file={file}
         width={width}
         handleLoad={functions.handleLoaded}
-        handlePDFLoaded={handlePDFLoaded}
-        onPassword={onPassword}
-        onLoadError={onLoadError}
+        handlePDFLoaded={setRotation}
+        handlePassword={handlePassword}
+        handleLoadError={handleLoadError}
         search={search}
       />
     </ActualFileViewer>
@@ -198,7 +199,7 @@ const ImageFileViewer: FC<CommonViewerProps> = ({
   setWidth,
   scaleSteps,
   functions,
-  onLoadError,
+  handleLoadError,
 }) => (
   <ActualFileViewer
     scale={scale}
@@ -215,7 +216,7 @@ const ImageFileViewer: FC<CommonViewerProps> = ({
         file={file}
         width={width}
         handleLoad={functions.handleLoaded}
-        onLoadError={onLoadError}
+        handleLoadError={handleLoadError}
       />
     ) : undefined}
   </ActualFileViewer>
@@ -283,15 +284,7 @@ const ActualFileViewer: FC<
   )
 }
 
-type ControllerProps = {
-  scale: number
-  scaleSteps: number[]
-  functions: {
-    scaleUp: () => void
-    scaleDown: () => void
-    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
-    rotate: () => void
-  }
+type ControllerProps = Pick<CommonViewerProps, 'scale' | 'scaleSteps' | 'functions'> & {
   searchController?: ReactNode
 }
 
@@ -309,11 +302,12 @@ const Controller: FC<ControllerProps> = memo(
   ({ scale, scaleSteps, functions, searchController }) => {
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
+    // HINT: PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー
+    const spacer = !mobile && <div role="presentation" aria-hidden="true" />
 
     return (
       <div className={className}>
-        {/* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */}
-        {!mobile && <div role="presentation" aria-hidden="true" />}
+        {spacer}
         <Cluster gap={0.5} className="shr-justify-self-center">
           <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
             <Button
@@ -362,8 +356,7 @@ const Controller: FC<ControllerProps> = memo(
         {searchController ? (
           <div className="shr-min-w-0 shr-justify-self-stretch">{searchController}</div>
         ) : (
-          /* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */
-          !mobile && <div role="presentation" aria-hidden="true" />
+          spacer
         )}
       </div>
     )

@@ -21,10 +21,10 @@ export type ViewerProps = {
   rotation: number | undefined
   width: number
   handleLoad: () => void
-  handlePDFLoaded?: (defaultRotation: number) => void
+  handlePDFLoaded: (defaultRotation: number) => void
   /**
    * PDFファイルのパスワード入力を要求されたときに呼ばれるコールバック関数。PdfViewerでのみ使用されます。
    */
-  onPassword?: ComponentProps<typeof Document>['onPassword']
-  onLoadError?: () => void
+  handlePassword?: ComponentProps<typeof Document>['onPassword']
+  handleLoadError?: () => void
 }
