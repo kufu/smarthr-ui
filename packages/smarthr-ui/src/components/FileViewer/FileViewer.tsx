@@ -92,13 +92,12 @@ export const FileViewer: FC<Props> = ({
         const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
         setRotation(newRotation)
       },
+      handleLoaded: () => {
+        setLoaded(true)
+      },
     }),
     [latest],
   )
-
-  const handleLoaded = useCallback(() => {
-    setLoaded(true)
-  }, [])
 
   const handlePDFLoaded = useCallback((defaultRotation: number) => {
     setRotation(defaultRotation)
@@ -147,7 +146,7 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              handleLoad={handleLoaded}
+              handleLoad={functions.handleLoaded}
               handlePDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={onLoadError}
@@ -159,7 +158,7 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              handleLoad={handleLoaded}
+              handleLoad={functions.handleLoaded}
               onLoadError={onLoadError}
             />
           ) : (
