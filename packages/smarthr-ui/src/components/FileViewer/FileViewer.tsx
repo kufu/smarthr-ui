@@ -63,7 +63,7 @@ type CommonViewerProps = {
   loaded: boolean
   width: number
   hasWidth: boolean
-  setWidth: React.Dispatch<React.SetStateAction<number>>
+  setWidth: (value: number) => void
   scaleSteps: number[] | undefined
   functions: {
     scaleUp: () => void
@@ -138,7 +138,7 @@ export const FileViewer: FC<Props> = ({
 
 const PDFFileViewer: FC<
   CommonViewerProps & {
-    setRotation: React.Dispatch<React.SetStateAction<number | undefined>>
+    setRotation: (value: number | undefined) => void
     onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
   }
 > = ({
