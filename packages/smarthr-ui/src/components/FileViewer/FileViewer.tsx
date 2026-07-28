@@ -73,31 +73,29 @@ export const FileViewer: FC<Props> = ({
 
   const latest = useLatest({ scaleStep, rotation })
 
-  const functions = useMemo(
-    () => ({
-      // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+  const functions = useMemo(() => {
+    // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+    const getActualScaleStep = () => latest.scaleStep ?? defaultScaleStep
+
+    return {
       scaleUp: () => {
-        const internalScaleStep = latest.scaleStep ?? defaultScaleStep
-        setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
+        setScale((currentScale) => new Decimal(currentScale).add(getActualScaleStep()).toNumber())
       },
       scaleDown: () => {
-        const internalScaleStep = latest.scaleStep ?? defaultScaleStep
-        setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
+        setScale((currentScale) => new Decimal(currentScale).sub(getActualScaleStep()).toNumber())
       },
       handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
         setScale(Number(e.currentTarget.value)),
       rotate: () => {
         // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
         const currentRotation = latest.rotation ?? 0
-        const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
-        setRotation(newRotation)
+        setRotation(currentRotation === 0 ? 270 : currentRotation - 90)
       },
       handleLoaded: () => {
         setLoaded(true)
       },
-    }),
-    [latest],
-  )
+    }
+  }, [latest])
 
   const handlePDFLoaded = useCallback((defaultRotation: number) => {
     setRotation(defaultRotation)
