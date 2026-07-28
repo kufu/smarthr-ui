@@ -283,15 +283,7 @@ const ActualFileViewer: FC<
   )
 }
 
-type ControllerProps = {
-  scale: number
-  scaleSteps: number[]
-  functions: {
-    scaleUp: () => void
-    scaleDown: () => void
-    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
-    rotate: () => void
-  }
+type ControllerProps = Pick<CommonViewerProps, 'scale' | 'scaleSteps' | 'functions'> & {
   searchController?: ReactNode
 }
 
@@ -309,11 +301,12 @@ const Controller: FC<ControllerProps> = memo(
   ({ scale, scaleSteps, functions, searchController }) => {
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
+    // HINT: PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー
+    const spacer = !mobile && <div role="presentation" aria-hidden="true" />
 
     return (
       <div className={className}>
-        {/* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */}
-        {!mobile && <div role="presentation" aria-hidden="true" />}
+        {spacer}
         <Cluster gap={0.5} className="shr-justify-self-center">
           <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
             <Button
@@ -362,8 +355,7 @@ const Controller: FC<ControllerProps> = memo(
         {searchController ? (
           <div className="shr-min-w-0 shr-justify-self-stretch">{searchController}</div>
         ) : (
-          /* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */
-          !mobile && <div role="presentation" aria-hidden="true" />
+          spacer
         )}
       </div>
     )
