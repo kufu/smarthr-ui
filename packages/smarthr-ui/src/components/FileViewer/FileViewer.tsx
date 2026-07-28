@@ -3,11 +3,9 @@
 import Decimal from 'decimal.js'
 import {
   type ComponentProps,
-  type Dispatch,
   type FC,
   type MouseEvent,
   type ReactNode,
-  type SetStateAction,
   memo,
   useCallback,
   useEffect,
@@ -73,6 +71,29 @@ export const FileViewer: FC<Props> = ({
 
   const search = usePDFSearch(file.url)
 
+  const latest = useLatest({ setScale, scaleStep })
+
+  const functions = useMemo(
+    () => ({
+      // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+      scaleUp: () => {
+        const internalScaleStep = latest.scaleStep ?? defaultScaleStep
+        latest.setScale((currentScale) =>
+          new Decimal(currentScale).add(internalScaleStep).toNumber(),
+        )
+      },
+      scaleDown: () => {
+        const internalScaleStep = latest.scaleStep ?? defaultScaleStep
+        latest.setScale((currentScale) =>
+          new Decimal(currentScale).sub(internalScaleStep).toNumber(),
+        )
+      },
+      handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
+        latest.setScale(Number(e.currentTarget.value)),
+    }),
+    [latest],
+  )
+
   const rotate = useCallback(() => {
     // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
     const currentRotation = rotation ?? 0
@@ -113,9 +134,8 @@ export const FileViewer: FC<Props> = ({
       <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
         <Controller
           scale={scale}
-          setScale={setScale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          scaleStep={scaleStep}
+          functions={functions}
           onClickRotateButton={rotate}
           searchController={isPDF ? <SearchController search={search} /> : undefined}
         />
@@ -162,9 +182,12 @@ export const FileViewer: FC<Props> = ({
 
 type ControllerProps = {
   scale: number
-  setScale: Dispatch<SetStateAction<number>>
   scaleSteps: number[]
-  scaleStep?: number
+  functions: {
+    scaleUp: () => void
+    scaleDown: () => void
+    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
+  }
   onClickRotateButton: () => void
   searchController?: ReactNode
 }
@@ -180,32 +203,9 @@ const controllerClassNameGenerator = tv({
 })
 
 const Controller: FC<ControllerProps> = memo(
-  ({ scale, setScale, scaleSteps, scaleStep, onClickRotateButton, searchController }) => {
+  ({ scale, scaleSteps, functions, onClickRotateButton, searchController }) => {
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
-
-    const latest = useLatest({ setScale, scaleStep })
-
-    const functions = useMemo(
-      () => ({
-        // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
-        scaleUp: () => {
-          const internalScaleStep = latest.scaleStep ?? defaultScaleStep
-          latest.setScale((currentScale) =>
-            new Decimal(currentScale).add(internalScaleStep).toNumber(),
-          )
-        },
-        scaleDown: () => {
-          const internalScaleStep = latest.scaleStep ?? defaultScaleStep
-          latest.setScale((currentScale) =>
-            new Decimal(currentScale).sub(internalScaleStep).toNumber(),
-          )
-        },
-        handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
-          latest.setScale(Number(e.currentTarget.value)),
-      }),
-      [latest],
-    )
 
     return (
       <div className={className}>
