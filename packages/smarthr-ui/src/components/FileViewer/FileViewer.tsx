@@ -38,7 +38,7 @@ import { usePDFSearch } from './usePDFSearch'
 
 import type { FileForViewer } from './types'
 
-const defaultScaleStep = new Decimal(0.2)
+const defaultScaleStep = 0.2
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
 type Props = {
@@ -183,10 +183,8 @@ const Controller: FC<ControllerProps> = memo(
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
 
-    const internalScaleStep = useMemo(
-      () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
-      [scaleStep],
-    )
+    // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+    const internalScaleStep = scaleStep ?? defaultScaleStep
 
     const scaleUp = useCallback(() => {
       setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
