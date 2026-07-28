@@ -50,7 +50,7 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
   onLoadError?: () => void
 }
 
@@ -89,8 +89,9 @@ export const FileViewer: FC<Props> = ({
 
   const hasWidth = fixedWidth !== undefined
 
-  const latest = useLatest({ scaleStep, rotation, onLoadError })
+  const latest = useLatest({ scaleStep, rotation, onLoadError, onPassword })
   const hasOnLoadError = !!onLoadError
+  const hasOnPassword = !!onPassword
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
@@ -114,8 +115,9 @@ export const FileViewer: FC<Props> = ({
         setLoaded(true)
       },
       handleLoadError: hasOnLoadError ? () => latest.onLoadError() : undefined,
+      handlePassword: hasOnPassword ? (...rest) => latest.onPassword(...rest) : undefined,
     }
-  }, [hasOnLoadError, latest])
+  }, [hasOnLoadError, hasOnPassword, latest])
 
   const commonAttrs = {
     file,
@@ -131,7 +133,11 @@ export const FileViewer: FC<Props> = ({
   }
 
   return file.contentType === 'application/pdf' ? (
-    <PDFFileViewer {...commonAttrs} setRotation={setRotation} onPassword={onPassword} />
+    <PDFFileViewer
+      {...commonAttrs}
+      setRotation={setRotation}
+      handlePassword={functions.handlePassword}
+    />
   ) : (
     <ImageFileViewer {...commonAttrs} />
   )
@@ -140,7 +146,7 @@ export const FileViewer: FC<Props> = ({
 const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
-    onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+    handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
   }
 > = ({
   file,
@@ -153,7 +159,7 @@ const PDFFileViewer: FC<
   scaleSteps,
   functions,
   setRotation,
-  onPassword,
+  handlePassword,
   handleLoadError,
 }) => {
   const search = usePDFSearch(file.url)
@@ -175,7 +181,7 @@ const PDFFileViewer: FC<
         width={width}
         handleLoad={functions.handleLoaded}
         handlePDFLoaded={setRotation}
-        onPassword={onPassword}
+        handlePassword={handlePassword}
         handleLoadError={handleLoadError}
         search={search}
       />
