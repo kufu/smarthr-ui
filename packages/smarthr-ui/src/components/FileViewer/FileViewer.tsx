@@ -132,7 +132,7 @@ export const FileViewer: FC<Props> = ({
           scale={scale}
           scaleSteps={scaleSteps || defaultScaleSteps}
           functions={functions}
-          onClickRotateButton={rotate}
+          handleClickRotateButton={rotate}
           searchController={isPDF ? <SearchController search={search} /> : undefined}
         />
       </div>
@@ -184,7 +184,7 @@ type ControllerProps = {
     scaleDown: () => void
     handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
   }
-  onClickRotateButton: () => void
+  handleClickRotateButton: () => void
   searchController?: ReactNode
 }
 
@@ -199,7 +199,7 @@ const controllerClassNameGenerator = tv({
 })
 
 const Controller: FC<ControllerProps> = memo(
-  ({ scale, scaleSteps, functions, onClickRotateButton, searchController }) => {
+  ({ scale, scaleSteps, functions, handleClickRotateButton, searchController }) => {
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
 
@@ -246,7 +246,7 @@ const Controller: FC<ControllerProps> = memo(
               />
             </Button>
           </div>
-          <Button onClick={onClickRotateButton} className="shr-p-0.75">
+          <Button onClick={handleClickRotateButton} className="shr-p-0.75">
             <FaArrowRotateLeftIcon
               alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
             />
