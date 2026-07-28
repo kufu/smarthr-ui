@@ -3,9 +3,11 @@
 import Decimal from 'decimal.js'
 import {
   type ComponentProps,
+  type Dispatch,
   type FC,
   type MouseEvent,
   type ReactNode,
+  type SetStateAction,
   memo,
   useCallback,
   useEffect,
@@ -70,19 +72,6 @@ export const FileViewer: FC<Props> = ({
 
   const search = usePDFSearch(file.url)
 
-  const internalScaleStep = useMemo(
-    () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
-    [scaleStep],
-  )
-
-  const scaleUp = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
-  }, [internalScaleStep])
-
-  const scaleDown = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
-  }, [internalScaleStep])
-
   const rotate = useCallback(() => {
     // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
     const currentRotation = rotation ?? 0
@@ -125,8 +114,7 @@ export const FileViewer: FC<Props> = ({
           scale={scale}
           setScale={setScale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          onClickScaleUpButton={scaleUp}
-          onClickScaleDownButton={scaleDown}
+          scaleStep={scaleStep}
           onClickRotateButton={rotate}
           searchController={isPDF ? <SearchController search={search} /> : undefined}
         />
@@ -173,10 +161,9 @@ export const FileViewer: FC<Props> = ({
 
 type ControllerProps = {
   scale: number
-  setScale: (scale: number) => void
+  setScale: Dispatch<SetStateAction<number>>
   scaleSteps: number[]
-  onClickScaleUpButton: () => void
-  onClickScaleDownButton: () => void
+  scaleStep?: number
   onClickRotateButton: () => void
   searchController?: ReactNode
 }
@@ -192,17 +179,22 @@ const controllerClassNameGenerator = tv({
 })
 
 const Controller: FC<ControllerProps> = memo(
-  ({
-    scale,
-    setScale,
-    scaleSteps,
-    onClickScaleUpButton,
-    onClickScaleDownButton,
-    onClickRotateButton,
-    searchController,
-  }) => {
+  ({ scale, setScale, scaleSteps, scaleStep, onClickRotateButton, searchController }) => {
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
+
+    const internalScaleStep = useMemo(
+      () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
+      [scaleStep],
+    )
+
+    const scaleUp = useCallback(() => {
+      setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
+    }, [internalScaleStep, setScale])
+
+    const scaleDown = useCallback(() => {
+      setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
+    }, [internalScaleStep, setScale])
 
     const onClickScaleStep = useCallback(
       (e: MouseEvent<HTMLButtonElement>) => setScale(Number(e.currentTarget.value)),
@@ -216,7 +208,7 @@ const Controller: FC<ControllerProps> = memo(
         <Cluster gap={0.5} className="shr-justify-self-center">
           <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
             <Button
-              onClick={onClickScaleDownButton}
+              onClick={scaleDown}
               disabled={scale <= scaleSteps[0]}
               className="shr-rounded-r-none shr-border-none"
             >
@@ -246,7 +238,7 @@ const Controller: FC<ControllerProps> = memo(
                 </Button>
               ))}
             </DropdownMenuButton>
-            <Button onClick={onClickScaleUpButton} className="shr-rounded-l-none shr-border-0">
+            <Button onClick={scaleUp} className="shr-rounded-l-none shr-border-0">
               <FaMagnifyingGlassPlusIcon
                 alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
               />
