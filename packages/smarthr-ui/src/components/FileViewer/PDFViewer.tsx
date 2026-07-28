@@ -93,7 +93,7 @@ export const PDFViewer: FC<Props> = memo(
         setPdfNumPages(numPages)
       }
       const handlePageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = (page) => {
-        if (latest.handlePDFLoaded && latest.rotation === undefined) {
+        if (latest.rotation === undefined) {
           latest.handlePDFLoaded(page.rotate)
         }
         // DocumentのLoadだとページごとの読み込みが考慮されないため
