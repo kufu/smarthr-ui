@@ -14,11 +14,7 @@ import { Document, Page, pdfjs } from 'react-pdf'
 
 import { Scroller } from '../Scroller'
 
-import {
-  SELECTED_MATCH_CLASS,
-  buildCustomTextRenderer,
-  matchSelector,
-} from './buildCustomTextRenderer'
+import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
@@ -56,8 +52,6 @@ const options = {
   // cMapUrl: '/cmaps/',
   cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
-
-type CustomTextRenderer = NonNullable<ComponentProps<typeof Page>['customTextRenderer']>
 
 // pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer スコープで上書きし、検索ハイライト色を変更している。
 const HighlightOverrideStyle = () => (
@@ -115,13 +109,6 @@ export const PDFViewer: FC<Props> = memo(
       }
     }, [handleLoad, handlePDFLoaded, pdfNumPages, rotation])
 
-    const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
-      if (!matches || matches.length === 0) {
-        return undefined
-      }
-      return buildCustomTextRenderer(matches)
-    }, [matches])
-
     useEffect(() => {
       const root = rootRef.current
       if (!root) return
@@ -174,7 +161,7 @@ export const PDFViewer: FC<Props> = memo(
                 className="shr-w-full"
                 onLoadSuccess={onPageLoad}
                 onGetTextSuccess={search?.generateHandlePDFPageGetTextSuccess(i)}
-                customTextRenderer={customTextRenderer}
+                customTextRenderer={search?.customTextRenderer}
                 loading={null}
               />
             ))}
