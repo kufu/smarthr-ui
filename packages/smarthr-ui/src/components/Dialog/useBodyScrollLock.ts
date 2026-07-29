@@ -6,9 +6,8 @@ export const useBodyScrollLock = (isOpen: boolean) => {
 
     const scrollBarWidth = window.innerWidth - document.body.clientWidth
     const originalPaddingRight = getComputedStyle(document.body).getPropertyValue('padding-right')
-    const paddingRight = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
 
-    document.body.style.paddingInlineEnd = paddingRight
+    document.body.style.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
     document.body.style.overflow = 'hidden'
 
     return () => {
