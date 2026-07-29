@@ -18,6 +18,9 @@ export const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }
   </span>
 ))
 
+const FILE_NAME_BUTTON_CLASSNAME = 'smarthr-ui-InputFile-fileName'
+const PREVIEW_BUTTON_CLASSNAME = `${FILE_NAME_BUTTON_CLASSNAME} shr-p-0 shr-font-normal shr-text-link`
+
 const PreviewButton: FC<{
   file: File
   handlePreviewClick: (file: File) => void
@@ -26,7 +29,7 @@ const PreviewButton: FC<{
     variant="tertiary"
     prefix={<FaFileLinesIcon />}
     onClick={() => handlePreviewClick(file)}
-    className="smarthr-ui-InputFile-fileButton shr-p-0"
+    className={PREVIEW_BUTTON_CLASSNAME}
   >
     {file.name}
   </Button>
@@ -50,7 +53,7 @@ const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
       download={file.name}
       prefix={<FaFileArrowDownIcon />}
       variant="text"
-      className="smarthr-ui-InputFile-fileButton shr-p-0 shr-font-normal shr-text-link"
+      className={PREVIEW_BUTTON_CLASSNAME}
     >
       {file.name}
     </AnchorButton>
@@ -76,7 +79,7 @@ export const FileListItem = memo<FileListItemProps>(
           <DownloadAnchorButton file={file} />
         )
       ) : (
-        <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
+        <span className={FILE_NAME_BUTTON_CLASSNAME}>{file.name}</span>
       )}
       <Button
         variant="text"
