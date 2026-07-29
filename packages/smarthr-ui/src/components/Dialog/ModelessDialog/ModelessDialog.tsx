@@ -203,7 +203,6 @@ export const ModelessDialog: FC<Props> = ({
     [centering, top, left, right, bottom, width, height, size],
   )
 
-  // 外部propsをrefに保存
   const latest = useLatest({ isOpen, onClickClose, onPressEscape })
 
   const functions = useMemo(
@@ -247,16 +246,16 @@ export const ModelessDialog: FC<Props> = ({
             break
         }
       },
-      actualOnClickClose: (e: MouseEvent<HTMLButtonElement>) => {
+      handleClickClose: (e: MouseEvent<HTMLButtonElement>) => {
         lastFocusElementRef.current?.focus()
         latest.onClickClose?.(e)
       },
-      memoizedOnPressEscape: () => {
+      handlePressEscape: () => {
         lastFocusElementRef.current?.focus()
         latest.onPressEscape?.()
       },
-      onDragStart: (_: any, data: { x: number; y: number }) => setPosition(data),
-      onDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
+      handleDragStart: (_: any, data: { x: number; y: number }) => setPosition(data),
+      handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
         setPosition((prev) => ({
           x: prev.x + data.deltaX,
           y: prev.y + data.deltaY,
@@ -334,7 +333,7 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [isOpen])
 
-  useHandleEscape(isOpen ? functions.memoizedOnPressEscape : undefined)
+  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
   useEffect(() => {
     const focusHandler = (e: FocusEvent) => {
@@ -353,8 +352,8 @@ export const ModelessDialog: FC<Props> = ({
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
-        onStart={functions.onDragStart}
-        onDrag={functions.onDrag}
+        onStart={functions.handleDragStart}
+        onDrag={functions.handleDrag}
         position={position}
         bounds={draggableBounds}
         nodeRef={wrapperRef}
@@ -382,7 +381,7 @@ export const ModelessDialog: FC<Props> = ({
               <Heading>{heading}</Heading>
             </div>
             <CloseButton
-              handleClick={functions.actualOnClickClose}
+              handleClick={functions.handleClickClose}
               className={classNames.closeButtonLayout}
             />
           </div>
