@@ -6,6 +6,7 @@ import {
   type ReactNode,
   forwardRef,
   memo,
+  useEffect,
   useId,
   useImperativeHandle,
   useMemo,
@@ -22,7 +23,7 @@ import { Stack } from '../Layout'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
 import { classNameGenerator } from './style'
-import { downloadFile, isImageOrPdf } from './utils'
+import { isImageOrPdf } from './utils'
 
 import type { Props } from './types'
 
@@ -170,17 +171,7 @@ const FileListItem = memo<FileListItemProps>(
             {file.name}
           </Button>
         ) : (
-          <AnchorButton
-            href="#"
-            prefix={<FaFileArrowDownIcon />}
-            onClick={(e) => {
-              e.preventDefault()
-              downloadFile(file)
-            }}
-            className="smarthr-ui-InputFile-fileButton"
-          >
-            {file.name}
-          </AnchorButton>
+          <DownloadAnchorButton file={file} className="smarthr-ui-InputFile-fileButton" />
         )}
         <Button
           variant="text"
@@ -195,6 +186,30 @@ const FileListItem = memo<FileListItemProps>(
     )
   },
 )
+
+const DownloadAnchorButton = memo<{ file: File; className: string }>(({ file, className }) => {
+  const [href, setHref] = useState('')
+
+  useEffect(() => {
+    const url = URL.createObjectURL(file)
+    setHref(url)
+
+    return () => {
+      URL.revokeObjectURL(url)
+    }
+  }, [file])
+
+  return (
+    <AnchorButton
+      href={href}
+      download={file.name}
+      prefix={<FaFileArrowDownIcon />}
+      className={className}
+    >
+      {file.name}
+    </AnchorButton>
+  )
+})
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
