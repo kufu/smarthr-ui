@@ -30,8 +30,7 @@ export const DialogWrapper: FC<PropsWithChildren> = (props) => {
     <DialogContext.Provider
       {...props}
       value={{
-        handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
-        handleDelegateClickClose: functions.handleDelegateClickClose,
+        ...functions,
         active,
       }}
     />
