@@ -12,14 +12,15 @@ export function useKeyboardNavigation(
   wrapperRef: RefObject<HTMLDivElement>,
   dummyFocusRef: RefObject<HTMLElement>,
 ) {
-  const { triggerElementRef, rootTriggerRef, handleClickCloser } = useContext(DropdownContext)
+  const { triggerElementRef, rootTriggerRef, handleDelegateClickCloser } =
+    useContext(DropdownContext)
 
   const latest = useLatest({
     wrapperRef,
     triggerElementRef,
     rootTriggerRef,
     dummyFocusRef,
-    handleClickCloser,
+    handleDelegateClickCloser,
   })
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export function useKeyboardNavigation(
             // focus the Trigger
             e.preventDefault()
             trigger!.focus()
-            latest.handleClickCloser()
+            latest.handleDelegateClickCloser()
           }
         } else if (e.target === tabbablesInContent.at(-1)) {
           // move focus next of the Trigger
@@ -66,12 +67,12 @@ export function useKeyboardNavigation(
 
           if (rootTrigger) {
             rootTrigger.focus()
-            latest.handleClickCloser()
+            latest.handleDelegateClickCloser()
           }
         }
       } else if (KEY_ESCAPE.test(e.key)) {
         if (e.target && e.target === latest.dummyFocusRef.current) {
-          latest.handleClickCloser()
+          latest.handleDelegateClickCloser()
 
           return
         }
@@ -80,7 +81,7 @@ export function useKeyboardNavigation(
 
         if (trigger && e.target === trigger) {
           // close the dropdown when the Trigger is focused and Esc key is pressed
-          latest.handleClickCloser()
+          latest.handleDelegateClickCloser()
 
           return
         }
@@ -89,7 +90,7 @@ export function useKeyboardNavigation(
           for (const inner of tabbable(latest.wrapperRef.current)) {
             if (inner === e.target) {
               // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-              latest.handleClickCloser()
+              latest.handleDelegateClickCloser()
 
               break
             }

@@ -18,7 +18,8 @@ const classNameGenerator = tv({
 type Props = PropsWithChildren<ComponentProps<'div'>>
 
 export const DropdownCloser: FC<Props> = ({ children, className }) => {
-  const { handleClickCloser: onDelegateClick, controllable } = useContext(DropdownContentContext)
+  const { handleDelegateClickCloser: onDelegateClick, controllable } =
+    useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
   const actualClassName = useMemo(
