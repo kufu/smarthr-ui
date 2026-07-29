@@ -49,6 +49,9 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
       isOpen={isOpen}
       onClickClose={onClose}
       heading={file?.name ?? ''}
+      height="75svh"
+      size="M"
+      resizable
       footer={
         <Button variant="primary" prefix={<FaFileArrowDownIcon />} onClick={handleDownload}>
           <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
