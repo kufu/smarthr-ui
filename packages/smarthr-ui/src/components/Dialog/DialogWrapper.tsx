@@ -4,14 +4,14 @@ import { type FC, type PropsWithChildren, createContext, useMemo, useState } fro
 
 type DialogContextType = {
   handleDelegateClickTrigger: () => void
-  onClickClose: () => void
+  handleDelegateClickClose: () => void
   active: boolean
 }
 
 const noop = () => undefined
 export const DialogContext = createContext<DialogContextType>({
   handleDelegateClickTrigger: noop,
-  onClickClose: noop,
+  handleDelegateClickClose: noop,
   active: false,
 })
 
@@ -21,7 +21,7 @@ export const DialogWrapper: FC<PropsWithChildren> = (props) => {
   const functions = useMemo(
     () => ({
       handleDelegateClickTrigger: () => setActive(true),
-      handleClickClose: () => setActive(false),
+      handleDelegateClickClose: () => setActive(false),
     }),
     [],
   )
@@ -31,7 +31,7 @@ export const DialogWrapper: FC<PropsWithChildren> = (props) => {
       {...props}
       value={{
         handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
-        onClickClose: functions.handleClickClose,
+        handleDelegateClickClose: functions.handleDelegateClickClose,
         active,
       }}
     />
