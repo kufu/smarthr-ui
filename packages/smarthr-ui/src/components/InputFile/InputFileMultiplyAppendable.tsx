@@ -24,7 +24,6 @@ import { Stack } from '../Layout'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
 import { classNameGenerator } from './style'
-import { isImageOrPdf } from './utils'
 
 import type { Props } from './types'
 
@@ -158,7 +157,7 @@ type FileListItemProps = {
 
 const FileListItem = memo<FileListItemProps>(
   ({ file, index, handleDeleteClick, handlePreviewClick, className }) => {
-    const isPreviewable = isImageOrPdf(file.type)
+    const isPreviewable = file.type.startsWith('image/') || file.type === 'application/pdf'
 
     return (
       <li className={className}>

@@ -10,8 +10,6 @@ import { FileViewer } from '../FileViewer'
 import { Center, Cluster } from '../Layout'
 import { Loader } from '../Loader'
 
-import { downloadFile } from './utils'
-
 type Props = {
   file: File | null
   onClose: () => void
@@ -24,9 +22,14 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
   const latest = useLatest({ file })
 
   const handleDownload = useCallback(() => {
-    if (latest.file) {
-      downloadFile(latest.file)
-    }
+    if (!latest.file) return
+
+    const url = URL.createObjectURL(latest.file)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = latest.file.name
+    a.click()
+    URL.revokeObjectURL(url)
   }, [latest])
 
   useEffect(() => {
