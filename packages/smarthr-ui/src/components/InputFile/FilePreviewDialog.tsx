@@ -7,7 +7,7 @@ import { Button } from '../Button'
 import { ModelessDialog } from '../Dialog'
 import { FileViewer } from '../FileViewer'
 import { FaFileArrowDownIcon } from '../Icon'
-import { Center } from '../Layout'
+import { Center, Cluster } from '../Layout'
 import { Loader } from '../Loader'
 
 import { downloadFile } from './utils'
@@ -53,9 +53,11 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
       size="M"
       resizable
       footer={
-        <Button variant="primary" prefix={<FaFileArrowDownIcon />} onClick={handleDownload}>
-          <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
-        </Button>
+        <Cluster justify="end" className="shr-px-1.5 shr-py-1">
+          <Button prefix={<FaFileArrowDownIcon />} onClick={handleDownload}>
+            <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
+          </Button>
+        </Cluster>
       }
     >
       {blobUrl ? (
