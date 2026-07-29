@@ -3,7 +3,6 @@
 import {
   type ChangeEvent,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
   forwardRef,
   memo,
@@ -18,10 +17,12 @@ import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
-import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
+import { FaFileArrowDownIcon, FaFileLinesIcon, FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
+import { FilePreviewDialog } from './FilePreviewDialog'
 import { classNameGenerator } from './style'
+import { downloadFile, isImageOrPdf } from './utils'
 
 import type { Props } from './types'
 
@@ -33,6 +34,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
+    const [previewFile, setPreviewFile] = useState<File | null>(null)
     const labelId = useId()
 
     const classNames = useMemo(() => {
@@ -113,12 +115,12 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
             {files.map((file, index) => (
               <FileListItem
                 key={index}
-                value={index}
+                file={file}
+                index={index}
                 handleDeleteClick={functions.handleDelete}
+                handlePreviewClick={setPreviewFile}
                 className={classNames.fileItem}
-              >
-                {file.name}
-              </FileListItem>
+              />
             ))}
           </BaseColumn>
         )}
@@ -138,32 +140,54 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
+        <FilePreviewDialog file={previewFile} onClose={() => setPreviewFile(null)} />
       </Stack>
     )
   },
 )
 
-type FileListItemProps = PropsWithChildren<{
-  value: number
+type FileListItemProps = {
+  file: File
+  index: number
   handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
+  handlePreviewClick: (file: File) => void
   className: string
-}>
+}
 
 const FileListItem = memo<FileListItemProps>(
-  ({ value, handleDeleteClick, className, children }) => (
-    <li className={className}>
-      <span className="smarthr-ui-InputFile-fileName">{children}</span>
-      <Button
-        variant="text"
-        prefix={<FaTrashCanIcon />}
-        value={value}
-        onClick={handleDeleteClick}
-        className="smarthr-ui-InputFile-deleteButton"
-      >
-        <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
-      </Button>
-    </li>
-  ),
+  ({ file, index, handleDeleteClick, handlePreviewClick, className }) => {
+    const isPreviewable = isImageOrPdf(file.type)
+
+    const handleFileClick = () => {
+      if (isPreviewable) {
+        handlePreviewClick(file)
+      } else {
+        downloadFile(file)
+      }
+    }
+
+    return (
+      <li className={className}>
+        <Button
+          variant="text"
+          prefix={isPreviewable ? <FaFileLinesIcon /> : <FaFileArrowDownIcon />}
+          onClick={handleFileClick}
+          className="smarthr-ui-InputFile-fileButton"
+        >
+          {file.name}
+        </Button>
+        <Button
+          variant="text"
+          prefix={<FaTrashCanIcon />}
+          value={index}
+          onClick={handleDeleteClick}
+          className="smarthr-ui-InputFile-deleteButton"
+        >
+          <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
+        </Button>
+      </li>
+    )
+  },
 )
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (

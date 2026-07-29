@@ -63,6 +63,7 @@ export const locale = {
   'smarthr-ui/InformationPanel/closeButtonLabel': '閉じる',
   'smarthr-ui/InformationPanel/openButtonLabel': '開く',
   'smarthr-ui/InputFile/destroy': '削除',
+  'smarthr-ui/InputFile/download': 'ダウンロード',
   'smarthr-ui/LanguageSwitcher/checkIconAlt': '選択中',
   'smarthr-ui/Loader/alt': '処理中',
   'smarthr-ui/MessageDialog/closeButtonLabel': '閉じる',
