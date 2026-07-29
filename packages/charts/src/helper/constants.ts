@@ -34,6 +34,13 @@ export const SHAPE_TYPES = [
   'triangle-inverted',
 ] as const
 
+/**
+ * ドーナツチャートのセグメント同士の間隔（px）。
+ * 白のボーダーで隙間を表現すると背景が白でない場所で線が浮くため、
+ * 背景色に依存しない spacing で実際に隙間を空ける。
+ */
+export const DOUGHNUT_SEGMENT_SPACING = 8
+
 export const CUTOUT_BY_THICKNESS = {
   S: '85%',
   M: '75%',

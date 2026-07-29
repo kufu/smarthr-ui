@@ -5,7 +5,7 @@ import { Doughnut } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { createDoughnutChartOptions, registerChartComponents } from '../../config'
-import { CUTOUT_BY_THICKNESS, getChartColors } from '../../helper'
+import { CUTOUT_BY_THICKNESS, DOUGHNUT_SEGMENT_SPACING, getChartColors } from '../../helper'
 
 import type { Chart, ChartData, ChartDataset, ChartOptions } from 'chart.js'
 
@@ -17,6 +17,11 @@ type Props = {
   data: ChartData<'doughnut'>
   title?: string
   thickness?: 'S' | 'M' | 'L'
+  /**
+   * セグメント同士の間隔を空けるかどうか。
+   * 隣接する色が直接触れるとコントラストが確保できないため既定で有効。
+   */
+  withSegmentSpacing?: boolean
   className?: string
   options?: Partial<ChartOptions<'doughnut'>>
 }
@@ -25,6 +30,7 @@ export const DoughnutChart: React.FC<Props> = ({
   data,
   title,
   thickness = 'M',
+  withSegmentSpacing = true,
   className,
   options: externalOptions,
 }) => {
@@ -43,6 +49,9 @@ export const DoughnutChart: React.FC<Props> = ({
       ...data,
       datasets: data.datasets.map((dataset) => ({
         ...dataset,
+        // セグメントが1つだけのときは隙間を空ける相手がおらず、円の始点に切れ込みが
+        // 入るだけになるため無効にする。
+        spacing: withSegmentSpacing && segmentCount > 1 ? DOUGHNUT_SEGMENT_SPACING : 0,
         backgroundColor: chartColors.map(
           (c) => c.backgroundColor,
         ) as ChartDataset<'doughnut'>['backgroundColor'],
@@ -53,7 +62,7 @@ export const DoughnutChart: React.FC<Props> = ({
         hoverBorderWidth: chartColors[0]?.hoverBorderWidth,
       })),
     }),
-    [data, chartColors],
+    [data, chartColors, segmentCount, withSegmentSpacing],
   )
 
   const chartOptions: ChartOptions<'doughnut'> = useMemo(

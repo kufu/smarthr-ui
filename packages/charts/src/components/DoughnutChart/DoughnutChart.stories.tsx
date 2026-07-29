@@ -28,11 +28,13 @@ export const Playground: Story = {
     data: doughnutSmall,
     title: 'Doughnut Chart',
     thickness: 'M',
+    withSegmentSpacing: true,
   },
   argTypes: {
     data: { control: 'object' },
     title: { control: 'text' },
     thickness: { control: 'radio', options: ['S', 'M', 'L'] },
+    withSegmentSpacing: { control: 'boolean' },
     options: { control: 'object' },
   },
 }
