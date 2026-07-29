@@ -191,30 +191,6 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
-  const debounceLiveRegionText = useMemo(() => debounce(setDebouncedLiveRegionText, 600), [])
-
-  useEffect(() => {
-    if (!wrapperPosition) {
-      setDebouncedLiveRegionText('')
-      return
-    }
-
-    const txt = localize(
-      {
-        id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
-        defaultText: '上から{top}px、左から{left}px',
-      },
-      {
-        top: Math.trunc(wrapperPosition.top).toString(),
-        left: Math.trunc(wrapperPosition.left).toString(),
-      },
-    )
-
-    debounceLiveRegionText(txt)
-  }, [localize, wrapperPosition, debounceLiveRegionText])
-
-  // 外部propsをrefに保存
-  const latest = useLatest({ isOpen, onClickClose, onPressEscape })
 
   const positionStyle = useMemo(
     () => ({
@@ -227,6 +203,11 @@ export const ModelessDialog: FC<Props> = ({
     }),
     [centering, top, left, right, bottom, width, height, size],
   )
+
+  const debounceLiveRegionText = useMemo(() => debounce(setDebouncedLiveRegionText, 600), [])
+
+  // 外部propsをrefに保存
+  const latest = useLatest({ isOpen, onClickClose, onPressEscape })
 
   const handleArrowKey = useCallback(
     (e: KeyboardEvent) => {
@@ -269,6 +250,48 @@ export const ModelessDialog: FC<Props> = ({
     },
     [latest],
   )
+
+  const actualOnClickClose = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      lastFocusElementRef.current?.focus()
+      latest.onClickClose?.(e)
+    },
+    [latest],
+  )
+
+  // stableなcallbackを作成
+  const memoizedOnPressEscape = useCallback(() => {
+    lastFocusElementRef.current?.focus()
+    latest.onPressEscape?.()
+  }, [latest])
+
+  const onDragStart = useCallback((_: any, data: { x: number; y: number }) => setPosition(data), [])
+  const onDrag = useCallback((_: any, data: { deltaX: number; deltaY: number }) => {
+    setPosition((prev) => ({
+      x: prev.x + data.deltaX,
+      y: prev.y + data.deltaY,
+    }))
+  }, [])
+
+  useEffect(() => {
+    if (!wrapperPosition) {
+      setDebouncedLiveRegionText('')
+      return
+    }
+
+    const txt = localize(
+      {
+        id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
+        defaultText: '上から{top}px、左から{left}px',
+      },
+      {
+        top: Math.trunc(wrapperPosition.top).toString(),
+        left: Math.trunc(wrapperPosition.left).toString(),
+      },
+    )
+
+    debounceLiveRegionText(txt)
+  }, [localize, wrapperPosition, debounceLiveRegionText])
 
   useEffect(() => {
     if (wrapperRef.current instanceof Element) {
@@ -318,20 +341,6 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [isOpen])
 
-  const actualOnClickClose = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      lastFocusElementRef.current?.focus()
-      latest.onClickClose?.(e)
-    },
-    [latest],
-  )
-
-  // stableなcallbackを作成
-  const memoizedOnPressEscape = useCallback(() => {
-    lastFocusElementRef.current?.focus()
-    latest.onPressEscape?.()
-  }, [latest])
-
   useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
 
   useEffect(() => {
@@ -345,14 +354,6 @@ export const ModelessDialog: FC<Props> = ({
     document.addEventListener('focus', focusHandler, true)
 
     return () => document.removeEventListener('focus', focusHandler, true)
-  }, [])
-
-  const onDragStart = useCallback((_: any, data: { x: number; y: number }) => setPosition(data), [])
-  const onDrag = useCallback((_: any, data: { deltaX: number; deltaY: number }) => {
-    setPosition((prev) => ({
-      x: prev.x + data.deltaX,
-      y: prev.y + data.deltaY,
-    }))
   }, [])
 
   return createPortal(
