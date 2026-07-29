@@ -169,7 +169,7 @@ const FileListItem = memo<FileListItemProps>(
     return (
       <li className={className}>
         <Button
-          variant="text"
+          variant="tertiary"
           prefix={isPreviewable ? <FaFileLinesIcon /> : <FaFileArrowDownIcon />}
           onClick={handleFileClick}
           className="smarthr-ui-InputFile-fileButton"
