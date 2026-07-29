@@ -9,7 +9,6 @@ import {
   type ReactNode,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -204,74 +203,68 @@ export const ModelessDialog: FC<Props> = ({
     [centering, top, left, right, bottom, width, height, size],
   )
 
-  const debounceLiveRegionText = useMemo(() => debounce(setDebouncedLiveRegionText, 600), [])
-
   // 外部propsをrefに保存
   const latest = useLatest({ isOpen, onClickClose, onPressEscape })
 
-  const handleArrowKey = useCallback(
-    (e: KeyboardEvent) => {
-      if (!latest.isOpen || document.activeElement !== e.currentTarget) {
-        return
-      }
+  const functions = useMemo(
+    () => ({
+      debounceLiveRegionText: debounce(setDebouncedLiveRegionText, 600),
+      handleArrowKeyDown: (e: KeyboardEvent) => {
+        if (!latest.isOpen || document.activeElement !== e.currentTarget) {
+          return
+        }
 
-      const movingDistance = 20
+        const movingDistance = 20
 
-      switch (e.key) {
-        case 'ArrowUp':
-          setPosition((prev) => ({
-            x: prev.x,
-            y: prev.y - movingDistance,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowDown':
-          setPosition((prev) => ({
-            x: prev.x,
-            y: prev.y + movingDistance,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowLeft':
-          setPosition((prev) => ({
-            x: prev.x - movingDistance,
-            y: prev.y,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowRight':
-          setPosition((prev) => ({
-            x: prev.x + movingDistance,
-            y: prev.y,
-          }))
-          e.preventDefault()
-          break
-      }
-    },
+        switch (e.key) {
+          case 'ArrowUp':
+            setPosition((prev) => ({
+              x: prev.x,
+              y: prev.y - movingDistance,
+            }))
+            e.preventDefault()
+            break
+          case 'ArrowDown':
+            setPosition((prev) => ({
+              x: prev.x,
+              y: prev.y + movingDistance,
+            }))
+            e.preventDefault()
+            break
+          case 'ArrowLeft':
+            setPosition((prev) => ({
+              x: prev.x - movingDistance,
+              y: prev.y,
+            }))
+            e.preventDefault()
+            break
+          case 'ArrowRight':
+            setPosition((prev) => ({
+              x: prev.x + movingDistance,
+              y: prev.y,
+            }))
+            e.preventDefault()
+            break
+        }
+      },
+      actualOnClickClose: (e: MouseEvent<HTMLButtonElement>) => {
+        lastFocusElementRef.current?.focus()
+        latest.onClickClose?.(e)
+      },
+      memoizedOnPressEscape: () => {
+        lastFocusElementRef.current?.focus()
+        latest.onPressEscape?.()
+      },
+      onDragStart: (_: any, data: { x: number; y: number }) => setPosition(data),
+      onDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
+        setPosition((prev) => ({
+          x: prev.x + data.deltaX,
+          y: prev.y + data.deltaY,
+        }))
+      },
+    }),
     [latest],
   )
-
-  const actualOnClickClose = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      lastFocusElementRef.current?.focus()
-      latest.onClickClose?.(e)
-    },
-    [latest],
-  )
-
-  // stableなcallbackを作成
-  const memoizedOnPressEscape = useCallback(() => {
-    lastFocusElementRef.current?.focus()
-    latest.onPressEscape?.()
-  }, [latest])
-
-  const onDragStart = useCallback((_: any, data: { x: number; y: number }) => setPosition(data), [])
-  const onDrag = useCallback((_: any, data: { deltaX: number; deltaY: number }) => {
-    setPosition((prev) => ({
-      x: prev.x + data.deltaX,
-      y: prev.y + data.deltaY,
-    }))
-  }, [])
 
   useEffect(() => {
     if (!wrapperPosition) {
@@ -290,8 +283,8 @@ export const ModelessDialog: FC<Props> = ({
       },
     )
 
-    debounceLiveRegionText(txt)
-  }, [localize, wrapperPosition, debounceLiveRegionText])
+    functions.debounceLiveRegionText(txt)
+  }, [localize, wrapperPosition, functions])
 
   useEffect(() => {
     if (wrapperRef.current instanceof Element) {
@@ -341,7 +334,7 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [isOpen])
 
-  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
+  useHandleEscape(isOpen ? functions.memoizedOnPressEscape : undefined)
 
   useEffect(() => {
     const focusHandler = (e: FocusEvent) => {
@@ -360,8 +353,8 @@ export const ModelessDialog: FC<Props> = ({
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
-        onStart={onDragStart}
-        onDrag={onDrag}
+        onStart={functions.onDragStart}
+        onDrag={functions.onDrag}
         position={position}
         bounds={draggableBounds}
         nodeRef={wrapperRef}
@@ -380,13 +373,16 @@ export const ModelessDialog: FC<Props> = ({
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
           <div className={classNames.header}>
-            <Handler handleArrowKeyDown={handleArrowKey} className={classNames.dialogHandler} />
+            <Handler
+              handleArrowKeyDown={functions.handleArrowKeyDown}
+              className={classNames.dialogHandler}
+            />
             <div id={labelId} className={classNames.heading}>
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
             <CloseButton
-              handleClick={actualOnClickClose}
+              handleClick={functions.actualOnClickClose}
               className={classNames.closeButtonLayout}
             />
           </div>
