@@ -12,14 +12,14 @@ export function useKeyboardNavigation(
   wrapperRef: RefObject<HTMLDivElement>,
   dummyFocusRef: RefObject<HTMLElement>,
 ) {
-  const { triggerElementRef, rootTriggerRef, onClickCloser } = useContext(DropdownContext)
+  const { triggerElementRef, rootTriggerRef, handleClickCloser } = useContext(DropdownContext)
 
   const latest = useLatest({
     wrapperRef,
     triggerElementRef,
     rootTriggerRef,
     dummyFocusRef,
-    onClickCloser,
+    handleClickCloser,
   })
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export function useKeyboardNavigation(
             // focus the Trigger
             e.preventDefault()
             trigger!.focus()
-            latest.onClickCloser()
+            latest.handleClickCloser()
           }
         } else if (e.target === tabbablesInContent.at(-1)) {
           // move focus next of the Trigger
@@ -66,12 +66,12 @@ export function useKeyboardNavigation(
 
           if (rootTrigger) {
             rootTrigger.focus()
-            latest.onClickCloser()
+            latest.handleClickCloser()
           }
         }
       } else if (KEY_ESCAPE.test(e.key)) {
         if (e.target && e.target === latest.dummyFocusRef.current) {
-          latest.onClickCloser()
+          latest.handleClickCloser()
 
           return
         }
@@ -80,7 +80,7 @@ export function useKeyboardNavigation(
 
         if (trigger && e.target === trigger) {
           // close the dropdown when the Trigger is focused and Esc key is pressed
-          latest.onClickCloser()
+          latest.handleClickCloser()
 
           return
         }
@@ -89,7 +89,7 @@ export function useKeyboardNavigation(
           for (const inner of tabbable(latest.wrapperRef.current)) {
             if (inner === e.target) {
               // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-              latest.onClickCloser()
+              latest.handleClickCloser()
 
               break
             }
