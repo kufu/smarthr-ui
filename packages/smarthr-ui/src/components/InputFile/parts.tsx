@@ -26,7 +26,7 @@ const PreviewButton: FC<{
     variant="tertiary"
     prefix={<FaFileLinesIcon />}
     onClick={() => handlePreviewClick(file)}
-    className="smarthr-ui-InputFile-fileButton"
+    className="smarthr-ui-InputFile-fileButton shr-p-0"
   >
     {file.name}
   </Button>
@@ -50,7 +50,7 @@ const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
       download={file.name}
       prefix={<FaFileArrowDownIcon />}
       variant="text"
-      className="smarthr-ui-InputFile-fileButton shr-p-0.25 shr-font-normal shr-text-link"
+      className="smarthr-ui-InputFile-fileButton shr-p-0 shr-font-normal shr-text-link"
     >
       {file.name}
     </AnchorButton>
