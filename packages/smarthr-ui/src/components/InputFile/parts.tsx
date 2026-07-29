@@ -49,7 +49,8 @@ const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
       href={href}
       download={file.name}
       prefix={<FaFileArrowDownIcon />}
-      className="smarthr-ui-InputFile-fileButton"
+      variant="text"
+      className="smarthr-ui-InputFile-fileButton shr-p-0.25 shr-font-normal shr-text-link"
     >
       {file.name}
     </AnchorButton>
