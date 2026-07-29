@@ -22,10 +22,15 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
 
   useEffect(() => {
     if (!file) {
-      if (blobUrl) {
-        URL.revokeObjectURL(blobUrl)
-        setBlobUrl(undefined)
-      }
+      setBlobUrl((current) => {
+        if (current) {
+          URL.revokeObjectURL(current)
+          return undefined
+        }
+
+        return current
+      })
+
       return
     }
 
@@ -35,7 +40,7 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
     return () => {
       URL.revokeObjectURL(url)
     }
-  }, [file, blobUrl])
+  }, [file])
 
   const handleDownload = () => {
     if (file) {
