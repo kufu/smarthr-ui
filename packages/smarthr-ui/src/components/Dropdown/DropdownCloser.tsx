@@ -25,15 +25,16 @@ export const DropdownCloser: FC<Props> = ({ children, className }) => {
     () => classNameGenerator({ controllable, className }),
     [controllable, className],
   )
-  const style = useMemo(
-    () => ({
-      maxHeight: controllable ? undefined : maxHeight,
-    }),
-    [maxHeight, controllable],
-  )
 
   return (
-    <div role="presentation" onClick={onDelegateClick} className={actualClassName} style={style}>
+    <div
+      role="presentation"
+      onClick={onDelegateClick}
+      className={actualClassName}
+      style={{
+        maxHeight: controllable ? undefined : maxHeight,
+      }}
+    >
       {children}
     </div>
   )

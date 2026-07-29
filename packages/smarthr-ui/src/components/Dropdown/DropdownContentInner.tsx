@@ -65,7 +65,7 @@ export const DropdownContentInner: FC<Props> = ({
     [isActive, className],
   )
 
-  const style = useMemo(() => {
+  const style = (() => {
     const defaultMargin = theme.spacingByChar(0.5)
     const leftMargin =
       contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
@@ -79,13 +79,7 @@ export const DropdownContentInner: FC<Props> = ({
       insetInlineEnd: contentBox.right || undefined,
       maxWidth: maxWidthStyle,
     }
-  }, [contentBox.left, contentBox.right, contentBox.top, theme])
-  const controllableWrapperStyleProps = useMemo(
-    () => ({
-      maxHeight: contentBox.maxHeight || undefined,
-    }),
-    [contentBox.maxHeight],
-  )
+  })()
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -133,7 +127,13 @@ export const DropdownContentInner: FC<Props> = ({
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
-        <div style={controllableWrapperStyleProps}>{children}</div>
+        <div
+          style={{
+            maxHeight: contentBox.maxHeight || undefined,
+          }}
+        >
+          {children}
+        </div>
       ) : (
         <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
           <DropdownCloser>{children}</DropdownCloser>
