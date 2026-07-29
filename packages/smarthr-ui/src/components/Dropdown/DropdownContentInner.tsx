@@ -110,6 +110,16 @@ export const DropdownContentInner: FC<Props> = ({
     }
   }, [triggerRect])
 
+  // setIsActive(true) と同じ useEffect 内で直接 focus() を呼ぶことはできない。
+  // このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
+  // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
+  // shr-invisible (visibility: hidden) でレンダリングされる。
+  // ちらつき防止には実寸法を保持したまま視覚的に隠せる visibility: hidden が唯一の手段となる。
+  // visibility: hidden の要素はフォーカスを受け付けないため、setIsActive(true) の直後に
+  // focus() を呼んでも DOM がまだ更新されておらず無効になる。
+  //
+  // useEffect([isActive]) であれば、isActive=true になった後の render commit 後に
+  // 必ず実行されることが保証されるため、この実装が最も信頼性が高い。
   useEffect(() => {
     if (isActive) {
       focusTargetRef.current?.focus()
