@@ -18,7 +18,7 @@ export const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }
   </span>
 ))
 
-export const PreviewButton: FC<{
+const PreviewButton: FC<{
   file: File
   handlePreviewClick: (file: File) => void
 }> = ({ file, handlePreviewClick }) => (
@@ -32,7 +32,7 @@ export const PreviewButton: FC<{
   </Button>
 )
 
-export const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
+const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
   const [href, setHref] = useState('')
 
   useEffect(() => {
@@ -59,32 +59,33 @@ export const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
 type FileListItemProps = {
   file: File
   index: number
+  previewable: boolean
   handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
   handlePreviewClick: (file: File) => void
   className: string
 }
 
 export const FileListItem = memo<FileListItemProps>(
-  ({ file, index, handleDeleteClick, handlePreviewClick, className }) => {
-    const isPreviewable = file.type.startsWith('image/') || file.type === 'application/pdf'
-
-    return (
-      <li className={className}>
-        {isPreviewable ? (
+  ({ file, index, previewable, handleDeleteClick, handlePreviewClick, className }) => (
+    <li className={className}>
+      {previewable ? (
+        file.type.startsWith('image/') || file.type === 'application/pdf' ? (
           <PreviewButton file={file} handlePreviewClick={handlePreviewClick} />
         ) : (
           <DownloadAnchorButton file={file} />
-        )}
-        <Button
-          variant="text"
-          prefix={<FaTrashCanIcon />}
-          value={index}
-          onClick={handleDeleteClick}
-          className="smarthr-ui-InputFile-deleteButton"
-        >
-          <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
-        </Button>
-      </li>
-    )
-  },
+        )
+      ) : (
+        <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
+      )}
+      <Button
+        variant="text"
+        prefix={<FaTrashCanIcon />}
+        value={index}
+        onClick={handleDeleteClick}
+        className="smarthr-ui-InputFile-deleteButton"
+      >
+        <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
+      </Button>
+    </li>
+  ),
 )

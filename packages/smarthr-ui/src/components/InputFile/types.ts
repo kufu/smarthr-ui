@@ -9,6 +9,8 @@ type AbstractProps = VariantProps<typeof classNameGenerator> & {
   onChange?: (files: File[]) => void
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
+  /** ファイルのプレビュー機能を有効にするかどうか */
+  previewable?: boolean
   error?: boolean
   multiple?:
     | boolean

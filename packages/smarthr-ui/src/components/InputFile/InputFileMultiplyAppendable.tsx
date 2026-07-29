@@ -25,7 +25,17 @@ const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
   (
-    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
+    {
+      className,
+      size,
+      label,
+      hasFileList = true,
+      previewable = false,
+      onChange,
+      disabled = false,
+      error,
+      ...rest
+    },
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
@@ -126,6 +136,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
                 key={index}
                 file={file}
                 index={index}
+                previewable={previewable}
                 handleDeleteClick={functions.handleDelete}
                 handlePreviewClick={setPreviewFile}
                 className={classNames.fileItem}
@@ -149,11 +160,13 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
-        <FilePreviewDialog
-          file={previewFile}
-          handleClose={functions.handleClosePreview}
-          handleDownload={functions.handleDownload}
-        />
+        {previewable && (
+          <FilePreviewDialog
+            file={previewFile}
+            handleClose={functions.handleClosePreview}
+            handleDownload={functions.handleDownload}
+          />
+        )}
       </Stack>
     )
   },
