@@ -21,20 +21,20 @@ type Props = {
   /**
    * 棒グラフの柄を無効化するか
    */
-  disablePattern?: boolean
+  disablePatterns?: boolean
 }
 
 export const BarChart: React.FC<Props> = ({
   data,
   title,
   options: externalOptions,
-  disablePattern,
+  disablePatterns,
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
   const chartColors = useMemo(
-    () => getChartColors(data.datasets.length, disablePattern),
-    [data.datasets.length, disablePattern],
+    () => getChartColors(data.datasets.length, disablePatterns),
+    [data.datasets.length, disablePatterns],
   )
 
   const ariaLabel = useMemo(() => {

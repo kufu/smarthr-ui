@@ -44,7 +44,7 @@ export const Playground: Story = {
     options: {
       control: 'object',
     },
-    disablePattern: {
+    disablePatterns: {
       control: 'boolean',
     },
   },
@@ -63,10 +63,10 @@ export const MultipleDatasets: Story = {
 }
 
 export const WithoutPattern: Story = {
-  name: 'disablePattern',
+  name: 'disablePatterns',
   args: {
     data: multiSmall,
-    disablePattern: true,
+    disablePatterns: true,
   },
 }
 
