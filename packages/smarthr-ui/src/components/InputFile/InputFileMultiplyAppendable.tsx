@@ -163,14 +163,11 @@ const FileListItem = memo<FileListItemProps>(
     return (
       <li className={className}>
         {isPreviewable ? (
-          <Button
-            variant="tertiary"
-            prefix={<FaFileLinesIcon />}
-            onClick={() => handlePreviewClick(file)}
+          <PreviewButton
+            file={file}
+            handlePreviewClick={handlePreviewClick}
             className="smarthr-ui-InputFile-fileButton"
-          >
-            {file.name}
-          </Button>
+          />
         ) : (
           <DownloadAnchorButton file={file} className="smarthr-ui-InputFile-fileButton" />
         )}
@@ -186,6 +183,21 @@ const FileListItem = memo<FileListItemProps>(
       </li>
     )
   },
+)
+
+const PreviewButton: FC<{
+  file: File
+  handlePreviewClick: (file: File) => void
+  className: string
+}> = ({ file, handlePreviewClick, className }) => (
+  <Button
+    variant="tertiary"
+    prefix={<FaFileLinesIcon />}
+    onClick={() => handlePreviewClick(file)}
+    className={className}
+  >
+    {file.name}
+  </Button>
 )
 
 const DownloadAnchorButton: FC<{ file: File; className: string }> = ({ file, className }) => {
