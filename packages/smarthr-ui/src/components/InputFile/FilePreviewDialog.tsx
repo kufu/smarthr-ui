@@ -1,8 +1,7 @@
 'use client'
 
-import { type FC, memo, useCallback, useEffect, useState } from 'react'
+import { type FC, memo, useEffect, useState } from 'react'
 
-import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { ModelessDialog } from '../Dialog'
@@ -13,24 +12,12 @@ import { Loader } from '../Loader'
 type Props = {
   file: File | null
   onClose: () => void
+  onDownload: () => void
 }
 
-export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
+export const FilePreviewDialog: FC<Props> = memo(({ file, onClose, onDownload }) => {
   const [blobUrl, setBlobUrl] = useState<string>()
   const isOpen = !!file
-
-  const latest = useLatest({ file })
-
-  const handleDownload = useCallback(() => {
-    if (!latest.file) return
-
-    const url = URL.createObjectURL(latest.file)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = latest.file.name
-    a.click()
-    URL.revokeObjectURL(url)
-  }, [latest])
 
   useEffect(() => {
     if (!file) {
@@ -64,7 +51,7 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
       resizable
       footer={
         <Cluster justify="end" className="shr-px-1.5 shr-py-1">
-          <Button onClick={handleDownload}>
+          <Button onClick={onDownload}>
             <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
           </Button>
         </Cluster>

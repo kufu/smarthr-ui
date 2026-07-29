@@ -60,7 +60,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       () => inputRef.current,
     )
 
-    const latest = useLatest({ onChange, files })
+    const latest = useLatest({ onChange, files, previewFile })
 
     const functions = useMemo(() => {
       const updateFiles = (newFiles: File[]) => {
@@ -106,6 +106,17 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
           updateFiles(newFiles)
         },
+        handleDownload: () => {
+          const file = latest.previewFile
+          if (!file) return
+
+          const url = URL.createObjectURL(file)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = file.name
+          a.click()
+          URL.revokeObjectURL(url)
+        },
       }
     }, [latest])
 
@@ -141,7 +152,11 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
-        <FilePreviewDialog file={previewFile} onClose={() => setPreviewFile(null)} />
+        <FilePreviewDialog
+          file={previewFile}
+          onClose={() => setPreviewFile(null)}
+          onDownload={functions.handleDownload}
+        />
       </Stack>
     )
   },
