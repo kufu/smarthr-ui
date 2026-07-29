@@ -18,7 +18,7 @@ type Props = {
 
 export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
   const [blobUrl, setBlobUrl] = useState<string>()
-  const isOpen = file !== null
+  const isOpen = !!file
 
   useEffect(() => {
     if (!file) {
@@ -59,12 +59,12 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
         </Cluster>
       }
     >
-      {blobUrl ? (
+      {isOpen && blobUrl ? (
         <FileViewer
           file={{
             url: blobUrl,
-            contentType: file?.type ?? '',
-            alt: file?.name ?? '',
+            contentType: file.type,
+            alt: file.name,
           }}
         />
       ) : (
