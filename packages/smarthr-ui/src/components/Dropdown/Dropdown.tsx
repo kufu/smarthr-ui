@@ -58,15 +58,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   const { rootTriggerRef } = useContext(DropdownContext)
-  const { createPortal, portalRoot, isPortalRootMounted, isChildPortal, PortalParentProvider } =
-    usePortal()
+  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal()
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
   const contentId = useId()
 
   const latest = useLatest({
     active,
-    isPortalRootMounted,
     isChildPortal,
     portalRoot,
     onOpen,
