@@ -1,7 +1,8 @@
 'use client'
 
-import { type FC, memo, useEffect, useState } from 'react'
+import { type FC, memo, useCallback, useEffect, useState } from 'react'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { ModelessDialog } from '../Dialog'
@@ -19,6 +20,14 @@ type Props = {
 export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
   const [blobUrl, setBlobUrl] = useState<string>()
   const isOpen = !!file
+
+  const latest = useLatest({ file })
+
+  const handleDownload = useCallback(() => {
+    if (latest.file) {
+      downloadFile(latest.file)
+    }
+  }, [latest])
 
   useEffect(() => {
     if (!file) {
@@ -41,12 +50,6 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose }) => {
       URL.revokeObjectURL(url)
     }
   }, [file])
-
-  const handleDownload = () => {
-    if (file) {
-      downloadFile(file)
-    }
-  }
 
   return (
     <ModelessDialog
