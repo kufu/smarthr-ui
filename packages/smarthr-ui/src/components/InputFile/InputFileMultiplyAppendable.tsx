@@ -106,6 +106,9 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
           updateFiles(newFiles)
         },
+        handleClosePreview: () => {
+          setPreviewFile(null)
+        },
         handleDownload: () => {
           const file = latest.previewFile
           if (!file) return
@@ -154,7 +157,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         </span>
         <FilePreviewDialog
           file={previewFile}
-          handleClose={() => setPreviewFile(null)}
+          handleClose={functions.handleClosePreview}
           handleDownload={functions.handleDownload}
         />
       </Stack>
