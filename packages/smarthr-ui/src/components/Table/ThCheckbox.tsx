@@ -9,7 +9,7 @@ import { ControlledTooltip } from '../Tooltip'
 
 import { Th } from './Th'
 
-type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
@@ -31,7 +31,7 @@ const classNameGenerator = tv({
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, className, ...rest }, ref) => {
+  ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }, ref) => {
     const { localize } = useIntl()
 
     const localizedText = useMemo(
@@ -66,6 +66,8 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
         fixed={fixed}
         className={classNames.wrapper}
         aria-label={localizedText.checkColumnName}
+        rowSpan={rowSpan}
+        colSpan={colSpan}
       >
         <label className={classNames.inner}>
           <ControlledTooltip
