@@ -11,11 +11,11 @@ import { Loader } from '../Loader'
 
 type Props = {
   file: File | null
-  onClose: () => void
-  onDownload: () => void
+  handleClose: () => void
+  handleDownload: () => void
 }
 
-export const FilePreviewDialog: FC<Props> = memo(({ file, onClose, onDownload }) => {
+export const FilePreviewDialog: FC<Props> = memo(({ file, handleClose, handleDownload }) => {
   const [blobUrl, setBlobUrl] = useState<string>()
   const isOpen = !!file
 
@@ -44,14 +44,14 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, onClose, onDownload })
   return (
     <ModelessDialog
       isOpen={isOpen}
-      onClickClose={onClose}
+      onClickClose={handleClose}
       heading={file?.name ?? ''}
       height="75svh"
       size="M"
       resizable
       footer={
         <Cluster justify="end" className="shr-px-1.5 shr-py-1">
-          <Button onClick={onDownload}>
+          <Button onClick={handleDownload}>
             <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
           </Button>
         </Cluster>
