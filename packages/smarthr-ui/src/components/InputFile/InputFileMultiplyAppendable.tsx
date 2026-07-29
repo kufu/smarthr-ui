@@ -2,12 +2,8 @@
 
 import {
   type ChangeEvent,
-  type FC,
   type MouseEvent,
-  type ReactNode,
   forwardRef,
-  memo,
-  useEffect,
   useId,
   useImperativeHandle,
   useMemo,
@@ -16,13 +12,11 @@ import {
 } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
-import { Localizer } from '../../intl'
 import { BaseColumn } from '../Base'
-import { AnchorButton, Button } from '../Button'
-import { FaFileArrowDownIcon, FaFileLinesIcon, FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
+import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
 import type { Props } from './types'
@@ -164,86 +158,3 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     )
   },
 )
-
-type FileListItemProps = {
-  file: File
-  index: number
-  handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
-  handlePreviewClick: (file: File) => void
-  className: string
-}
-
-const FileListItem = memo<FileListItemProps>(
-  ({ file, index, handleDeleteClick, handlePreviewClick, className }) => {
-    const isPreviewable = file.type.startsWith('image/') || file.type === 'application/pdf'
-
-    return (
-      <li className={className}>
-        {isPreviewable ? (
-          <PreviewButton file={file} handlePreviewClick={handlePreviewClick} />
-        ) : (
-          <DownloadAnchorButton file={file} />
-        )}
-        <Button
-          variant="text"
-          prefix={<FaTrashCanIcon />}
-          value={index}
-          onClick={handleDeleteClick}
-          className="smarthr-ui-InputFile-deleteButton"
-        >
-          <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
-        </Button>
-      </li>
-    )
-  },
-)
-
-const PreviewButton: FC<{
-  file: File
-  handlePreviewClick: (file: File) => void
-}> = ({ file, handlePreviewClick }) => (
-  <Button
-    variant="tertiary"
-    prefix={<FaFileLinesIcon />}
-    onClick={() => handlePreviewClick(file)}
-    className="smarthr-ui-InputFile-fileButton"
-  >
-    {file.name}
-  </Button>
-)
-
-const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
-  const [href, setHref] = useState('')
-
-  useEffect(() => {
-    const url = URL.createObjectURL(file)
-    setHref(url)
-
-    return () => {
-      URL.revokeObjectURL(url)
-    }
-  }, [file])
-
-  return (
-    <AnchorButton
-      href={href}
-      download={file.name}
-      prefix={<FaFileArrowDownIcon />}
-      className="smarthr-ui-InputFile-fileButton"
-    >
-      {file.name}
-    </AnchorButton>
-  )
-}
-
-const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
-  <span className={className}>
-    <FaFolderOpenIcon />
-  </span>
-))
-
-const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }) => (
-  <span id={id} aria-hidden="true">
-    {label}
-  </span>
-))
