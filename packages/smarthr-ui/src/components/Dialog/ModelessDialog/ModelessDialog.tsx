@@ -380,7 +380,7 @@ export const ModelessDialog: FC<Props> = ({
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
           <div className={classNames.header}>
-            <Handler onArrowKeyDown={handleArrowKey} className={classNames.dialogHandler} />
+            <Handler handleArrowKeyDown={handleArrowKey} className={classNames.dialogHandler} />
             <div id={labelId} className={classNames.heading}>
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
@@ -404,8 +404,8 @@ export const ModelessDialog: FC<Props> = ({
 
 const Handler = memo<{
   className: string
-  onArrowKeyDown: (e: KeyboardEvent) => void
-}>(({ onArrowKeyDown: onDelegateKeyDown, ...rest }) => {
+  handleArrowKeyDown: (e: KeyboardEvent) => void
+}>(({ handleArrowKeyDown, ...rest }) => {
   const { localize } = useIntl()
 
   return (
@@ -422,7 +422,7 @@ const Handler = memo<{
           defaultText: 'ドラッグ可能',
         })}
         aria-describedby="handler-description"
-        onKeyDown={onDelegateKeyDown}
+        onKeyDown={handleArrowKeyDown}
       >
         <FaGripIcon />
       </button>
