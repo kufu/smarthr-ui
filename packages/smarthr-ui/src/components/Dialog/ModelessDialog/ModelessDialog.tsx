@@ -380,12 +380,15 @@ export const ModelessDialog: FC<Props> = ({
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
           <div className={classNames.header}>
-            <Handler onArrowKeyDown={handleArrowKey} className={classNames.dialogHandler} />
+            <Handler handleArrowKeyDown={handleArrowKey} className={classNames.dialogHandler} />
             <div id={labelId} className={classNames.heading}>
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
-            <CloseButton onClick={actualOnClickClose} className={classNames.closeButtonLayout} />
+            <CloseButton
+              handleClick={actualOnClickClose}
+              className={classNames.closeButtonLayout}
+            />
           </div>
           <DialogBody
             contentBgColor={contentBgColor}
@@ -404,41 +407,33 @@ export const ModelessDialog: FC<Props> = ({
 
 const Handler = memo<{
   className: string
-  onArrowKeyDown: (e: KeyboardEvent) => void
-}>(({ onArrowKeyDown: onDelegateKeyDown, ...rest }) => {
+  handleArrowKeyDown: (e: KeyboardEvent) => void
+}>(({ handleArrowKeyDown, ...rest }) => {
   const { localize } = useIntl()
-  const accessibleDefaultTexts = useMemo(
-    () => ({
-      dialogHandlerAriaRoleDescription: localize({
-        id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaRoleDescription',
-        defaultText: 'ドラッグ可能',
-      }),
-      dialogHandlerDescription: localize({
-        id: 'smarthr-ui/ModelessDialog/dialogHandlerDescription',
-        defaultText: '矢印キーを押して上下左右に移動できます',
-      }),
-      dialogHandlerAriaLabel: localize({
-        id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel',
-        defaultText: 'ダイアログの位置',
-      }),
-    }),
-    [localize],
-  )
 
   return (
     <>
       <button
         {...rest}
         type="button"
-        aria-label={accessibleDefaultTexts.dialogHandlerAriaLabel}
-        aria-roledescription={accessibleDefaultTexts.dialogHandlerAriaRoleDescription}
+        aria-label={localize({
+          id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel',
+          defaultText: 'ダイアログの位置',
+        })}
+        aria-roledescription={localize({
+          id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaRoleDescription',
+          defaultText: 'ドラッグ可能',
+        })}
         aria-describedby="handler-description"
-        onKeyDown={onDelegateKeyDown}
+        onKeyDown={handleArrowKeyDown}
       >
         <FaGripIcon />
       </button>
       <div className="shr-hidden" id="handler-description">
-        {accessibleDefaultTexts.dialogHandlerDescription}
+        {localize({
+          id: 'smarthr-ui/ModelessDialog/dialogHandlerDescription',
+          defaultText: '矢印キーを押して上下左右に移動できます',
+        })}
       </div>
     </>
   )
@@ -455,13 +450,13 @@ const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
 
 const CloseButton = memo<{
   className: string
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ onClick, className }) => (
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ handleClick, className }) => (
   <div className={className}>
     <Button
       type="button"
       size="S"
-      onClick={onClick}
+      onClick={handleClick}
       className="smarthr-ui-ModelessDialog-closeButton"
     >
       <FaXmarkIcon
