@@ -385,7 +385,10 @@ export const ModelessDialog: FC<Props> = ({
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
-            <CloseButton onClick={actualOnClickClose} className={classNames.closeButtonLayout} />
+            <CloseButton
+              handleClick={actualOnClickClose}
+              className={classNames.closeButtonLayout}
+            />
           </div>
           <DialogBody
             contentBgColor={contentBgColor}
@@ -447,13 +450,13 @@ const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
 
 const CloseButton = memo<{
   className: string
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ onClick, className }) => (
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ handleClick, className }) => (
   <div className={className}>
     <Button
       type="button"
       size="S"
-      onClick={onClick}
+      onClick={handleClick}
       className="smarthr-ui-ModelessDialog-closeButton"
     >
       <FaXmarkIcon
