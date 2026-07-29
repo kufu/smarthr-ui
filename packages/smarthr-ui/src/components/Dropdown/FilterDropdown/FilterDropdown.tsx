@@ -152,42 +152,29 @@ export const FilterDropdown: FC<Props> = ({
 
   const classNames = classNamesMapper[filtered ? 'filtered' : 'unfiltered']
 
-  const buttonValues = useMemo(() => {
-    const triggerText = trigger.text || (
-      <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
-    )
+  const triggerText = trigger.text || (
+    <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
+  )
 
-    const FilterIcon = (
-      <span className={classNames.iconWrapper}>
-        <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
+  const FilterIcon = (
+    <span className={classNames.iconWrapper}>
+      <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
 
-        {filtered && (
-          // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-          <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
-        )}
-      </span>
-    )
+      {filtered && (
+        // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
+        <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
+      )}
+    </span>
+  )
 
-    if (trigger.onlyIcon) {
-      return {
-        suffix: undefined,
-        content: FilterIcon,
-        triggerText,
-      }
-    }
-
-    return {
-      suffix: FilterIcon,
-      content: triggerText,
-      triggerText,
-    }
-  }, [filtered, trigger.text, filteredIconAlt, trigger.onlyIcon, classNames])
+  const suffix = trigger.onlyIcon ? undefined : FilterIcon
+  const content = trigger.onlyIcon ? FilterIcon : triggerText
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: buttonValues.triggerText }}>
-        <Button {...rest} suffix={buttonValues.suffix} size={trigger.size}>
-          {buttonValues.content}
+      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: triggerText }}>
+        <Button {...rest} suffix={suffix} size={trigger.size}>
+          {content}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
