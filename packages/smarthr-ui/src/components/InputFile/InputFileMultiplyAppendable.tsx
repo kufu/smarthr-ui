@@ -2,6 +2,7 @@
 
 import {
   type ChangeEvent,
+  type FC,
   type MouseEvent,
   type ReactNode,
   forwardRef,
@@ -187,7 +188,7 @@ const FileListItem = memo<FileListItemProps>(
   },
 )
 
-const DownloadAnchorButton = memo<{ file: File; className: string }>(({ file, className }) => {
+const DownloadAnchorButton: FC<{ file: File; className: string }> = ({ file, className }) => {
   const [href, setHref] = useState('')
 
   useEffect(() => {
@@ -209,7 +210,7 @@ const DownloadAnchorButton = memo<{ file: File; className: string }>(({ file, cl
       {file.name}
     </AnchorButton>
   )
-})
+}
 
 const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
