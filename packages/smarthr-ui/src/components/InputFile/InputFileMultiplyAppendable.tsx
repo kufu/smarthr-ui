@@ -16,7 +16,7 @@ import {
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { BaseColumn } from '../Base'
-import { Button } from '../Button'
+import { AnchorButton, Button } from '../Button'
 import { FaFileArrowDownIcon, FaFileLinesIcon, FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
@@ -158,24 +158,30 @@ const FileListItem = memo<FileListItemProps>(
   ({ file, index, handleDeleteClick, handlePreviewClick, className }) => {
     const isPreviewable = isImageOrPdf(file.type)
 
-    const handleFileClick = () => {
-      if (isPreviewable) {
-        handlePreviewClick(file)
-      } else {
-        downloadFile(file)
-      }
-    }
-
     return (
       <li className={className}>
-        <Button
-          variant="tertiary"
-          prefix={isPreviewable ? <FaFileLinesIcon /> : <FaFileArrowDownIcon />}
-          onClick={handleFileClick}
-          className="smarthr-ui-InputFile-fileButton"
-        >
-          {file.name}
-        </Button>
+        {isPreviewable ? (
+          <Button
+            variant="tertiary"
+            prefix={<FaFileLinesIcon />}
+            onClick={() => handlePreviewClick(file)}
+            className="smarthr-ui-InputFile-fileButton"
+          >
+            {file.name}
+          </Button>
+        ) : (
+          <AnchorButton
+            href="#"
+            prefix={<FaFileArrowDownIcon />}
+            onClick={(e) => {
+              e.preventDefault()
+              downloadFile(file)
+            }}
+            className="smarthr-ui-InputFile-fileButton"
+          >
+            {file.name}
+          </AnchorButton>
+        )}
         <Button
           variant="text"
           prefix={<FaTrashCanIcon />}
