@@ -1,22 +1,24 @@
 const BALLOON_ARROW_POSITION = 29 // length between Balloon edge and center of arrow
 
+type Props = {
+  parentRect: DOMRect
+  scrollOffset: { top: number; left: number }
+  tooltipSize: { width: number; height: number }
+  vertical: 'top' | 'middle' | 'bottom'
+  horizontal: 'left' | 'center' | 'right'
+  isIcon?: boolean
+  outerMargin: number
+}
+
 export function getTooltipRect({
   parentRect,
   scrollOffset,
   tooltipSize,
   vertical,
   horizontal,
-  isIcon = false,
+  isIcon,
   outerMargin,
-}: {
-  parentRect: DOMRect
-  scrollOffset: { top: number; left: number }
-  tooltipSize: { width: number; height: number }
-  vertical: 'top' | 'middle' | 'bottom'
-  horizontal: 'left' | 'center' | 'right'
-  isIcon: boolean
-  outerMargin: number
-}): { top: number; left: number; $width: number; $height: number } {
+}: Props): { top: number; left: number; $width: number; $height: number } {
   let top: number = 0
   let left: number = 0
 
@@ -45,21 +47,12 @@ export function getTooltipRect({
   switch (vertical) {
     case 'top':
     case 'bottom': {
-      switch (horizontal) {
-        case 'right':
-          left =
-            parentRect.left +
-            parentRect.width -
-            tooltipSize.width +
-            calculateIconGap(isIcon, parentRect.width)
-          break
-        case 'center':
-          left = parentRect.left + (parentRect.width - tooltipSize.width) / 2
-          break
-        case 'left':
-          left = parentRect.left - calculateIconGap(isIcon, parentRect.width)
-          break
-      }
+      left = calculateLeftWithVerticalTopOrBottom({
+        horizontal,
+        parentRect,
+        tooltipSize,
+        isIcon,
+      })
 
       break
     }
@@ -73,5 +66,26 @@ export function getTooltipRect({
   }
 }
 
-const calculateIconGap = (isIcon: boolean, parentRectWidth: number) =>
+const calculateLeftWithVerticalTopOrBottom = ({
+  horizontal,
+  parentRect,
+  tooltipSize,
+  isIcon,
+}: Pick<Props, 'horizontal' | 'parentRect' | 'tooltipSize' | 'isIcon'>) => {
+  switch (horizontal) {
+    case 'right':
+      return (
+        parentRect.left +
+        parentRect.width -
+        tooltipSize.width +
+        calculateIconGap(isIcon, parentRect.width)
+      )
+    case 'center':
+      return parentRect.left + (parentRect.width - tooltipSize.width) / 2
+    case 'left':
+      return parentRect.left - calculateIconGap(isIcon, parentRect.width)
+  }
+}
+
+const calculateIconGap = (isIcon: boolean | undefined, parentRectWidth: number) =>
   isIcon ? BALLOON_ARROW_POSITION - parentRectWidth / 2 : 0 // to align center of Balloon arrow and icon
