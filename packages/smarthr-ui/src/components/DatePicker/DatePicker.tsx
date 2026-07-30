@@ -123,12 +123,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const containerStyle = useMemo(
-      () => ({
-        width: typeof width === 'number' ? `${width}px` : width,
-      }),
-      [width],
-    )
     const classNames = useMemo(() => {
       const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } =
         classNameGenerator()
@@ -381,7 +375,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
         className={classNames.container}
-        style={containerStyle}
+        style={{
+          width: typeof width === 'number' ? `${width}px` : width,
+        }}
       >
         <div ref={inputWrapperRef}>
           <Input
