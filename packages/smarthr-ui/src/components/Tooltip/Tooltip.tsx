@@ -4,11 +4,8 @@ import {
   type BaseSyntheticEvent,
   type ComponentProps,
   type FC,
-  type FocusEvent,
-  type PointerEvent,
   type PropsWithChildren,
   type ReactNode,
-  type TouchEvent,
   useCallback,
   useId,
   useMemo,
@@ -144,68 +141,10 @@ export const Tooltip: FC<Props> = ({
     },
     [ellipsisOnly],
   )
-  const onDelegatePointerEnter = useMemo(
-    () =>
-      onPointerEnter
-        ? (e: PointerEvent<HTMLSpanElement>) => {
-            onPointerEnter(e)
-            toShowAction(e)
-          }
-        : toShowAction,
-    [onPointerEnter, toShowAction],
-  )
-  const onDelegateTouchStart = useMemo(
-    () =>
-      onTouchStart
-        ? (e: TouchEvent<HTMLSpanElement>) => {
-            onTouchStart(e)
-            toShowAction(e)
-          }
-        : toShowAction,
-    [onTouchStart, toShowAction],
-  )
-  const onDelegateFocus = useMemo(
-    () =>
-      onFocus
-        ? (e: FocusEvent<HTMLSpanElement>) => {
-            onFocus(e)
-            toShowAction(e)
-          }
-        : toShowAction,
-    [onFocus, toShowAction],
-  )
-
-  const toCloseAction = useCallback(() => setIsVisible(false), [])
-  const onDelegatePointerLeave = useMemo(
-    () =>
-      onPointerLeave
-        ? (e: PointerEvent<HTMLSpanElement>) => {
-            onPointerLeave(e)
-            toCloseAction()
-          }
-        : toCloseAction,
-    [onPointerLeave, toCloseAction],
-  )
-  const onDelegateTouchEnd = useMemo(
-    () =>
-      onTouchEnd
-        ? (e: TouchEvent<HTMLSpanElement>) => {
-            onTouchEnd(e)
-            toCloseAction()
-          }
-        : toCloseAction,
-    [onTouchEnd, toCloseAction],
-  )
-  const onDelegateBlur = useMemo(
-    () =>
-      onBlur
-        ? (e: FocusEvent<HTMLSpanElement>) => {
-            onBlur(e)
-            toCloseAction()
-          }
-        : toCloseAction,
-    [onBlur, toCloseAction],
-  )
+  const toCloseAction = useCallback(() => {
+    setRect(null)
+    setIsVisible(false)
+  }, [])
 
   const isIcon = triggerType === 'icon'
   const actualClassName = useMemo(
@@ -222,12 +161,30 @@ export const Tooltip: FC<Props> = ({
       aria-describedby={
         isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
       }
-      onPointerEnter={onDelegatePointerEnter}
-      onTouchStart={onDelegateTouchStart}
-      onFocus={onDelegateFocus}
-      onPointerLeave={onDelegatePointerLeave}
-      onTouchEnd={onDelegateTouchEnd}
-      onBlur={onDelegateBlur}
+      onPointerEnter={(delegateEvent) => {
+        onPointerEnter?.(delegateEvent)
+        toShowAction(delegateEvent)
+      }}
+      onTouchStart={(delegateEvent) => {
+        onTouchStart?.(delegateEvent)
+        toShowAction(delegateEvent)
+      }}
+      onFocus={(delegateEvent) => {
+        onFocus?.(delegateEvent)
+        toShowAction(delegateEvent)
+      }}
+      onPointerLeave={(delegateEvent) => {
+        onPointerLeave?.(delegateEvent)
+        toCloseAction()
+      }}
+      onTouchEnd={(delegateEvent) => {
+        onTouchEnd?.(delegateEvent)
+        toCloseAction()
+      }}
+      onBlur={(delegateEvent) => {
+        onBlur?.(delegateEvent)
+        toCloseAction()
+      }}
       className={actualClassName}
     >
       {portalRoot &&

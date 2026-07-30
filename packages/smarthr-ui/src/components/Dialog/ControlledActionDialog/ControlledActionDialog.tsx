@@ -1,7 +1,8 @@
 'use client'
 
-import { type ComponentProps, type FC, type ReactNode, useCallback } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -22,12 +23,20 @@ type ObjectCloseButtonType = ActionDialogContentInnerProps['closeButton']
 
 type AbstractProps = Omit<
   ActionDialogContentInnerProps,
-  'heading' | 'actionButton' | 'closeButton'
+  'heading' | 'actionButton' | 'closeButton' | 'handleClickAction' | 'handleClickClose'
 > &
   DialogProps & {
     heading: HeadingType
     actionButton: ReactNode | ObjectActionButtonType
     closeButton?: ReactNode | ObjectCloseButtonType
+    /**
+     * アクションボタンをクリックした時に発火するコールバック関数
+     */
+    onClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => void
+    /**
+     * 閉じるボタンをクリックした時に発火するコールバック関数
+     */
+    onClickClose: () => void
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
@@ -68,19 +77,22 @@ export const ControlledActionDialog: FC<Props> = ({
     buttonObjectConverter,
   )
 
-  const actualOnClickClose = useCallback(() => {
-    if (isOpen) {
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+  const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
-  const actualOnClickAction = useCallback(
-    (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
-      if (isOpen) {
-        onClickAction(e, helpers)
-      }
-    },
-    [isOpen, onClickAction],
+  const functions = useMemo(
+    () => ({
+      handleClickClose: () => {
+        if (latest.isOpen) {
+          latest.onClickClose()
+        }
+      },
+      handleClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
+        if (latest.isOpen) {
+          latest.onClickAction(e, helpers)
+        }
+      },
+    }),
+    [latest],
   )
 
   return createPortal(
@@ -97,8 +109,8 @@ export const ControlledActionDialog: FC<Props> = ({
         contentPadding={contentPadding}
         actionButton={actionButton}
         closeButton={closeButton}
-        onClickClose={actualOnClickClose}
-        onClickAction={actualOnClickAction}
+        handleClickClose={functions.handleClickClose}
+        handleClickAction={functions.handleClickAction}
         subActionArea={subActionArea}
         responseStatus={responseStatus}
       >

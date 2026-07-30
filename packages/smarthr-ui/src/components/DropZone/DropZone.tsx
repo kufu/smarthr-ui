@@ -8,7 +8,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useCallback,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -16,7 +15,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { useLatest } from '../../hooks/useLatest'
+import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -95,60 +95,55 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         button: button(),
       }
     }, [disabled, error, filesDraggedOver])
+
+    const latest = useLatest({ onSelectFiles })
+
+    const functions = useMemo(
+      () => ({
+        handleDrop: (e: DragEvent<HTMLElement>) => {
+          overrideEventDefault(e)
+          setFilesDraggedOver(false)
+
+          if (e.dataTransfer.types.includes('Files')) {
+            if (fileRef.current) {
+              fileRef.current.files = e.dataTransfer.files
+            }
+            latest.onSelectFiles(e, e.dataTransfer.files)
+          }
+        },
+        handleDragOver: (e: DragEvent<HTMLElement>) => {
+          overrideEventDefault(e)
+          setFilesDraggedOver(true)
+        },
+        handleDragLeave: () => {
+          setFilesDraggedOver(false)
+        },
+        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
+          latest.onSelectFiles(e, e.target.files)
+        },
+        handleClickButton: () => {
+          fileRef.current!.click()
+        },
+      }),
+      [latest],
+    )
+
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => fileRef.current,
     )
 
-    const onDrop = useCallback(
-      (e: DragEvent<HTMLElement>) => {
-        overrideEventDefault(e)
-        setFilesDraggedOver(false)
-
-        if (e.dataTransfer.types.includes('Files')) {
-          if (fileRef.current) {
-            fileRef.current.files = e.dataTransfer.files
-          }
-          onSelectFiles(e, e.dataTransfer.files)
-        }
-      },
-      [setFilesDraggedOver, onSelectFiles],
-    )
-
-    const onDragOver = useCallback(
-      (e: DragEvent<HTMLElement>) => {
-        overrideEventDefault(e)
-        setFilesDraggedOver(true)
-      },
-      [setFilesDraggedOver],
-    )
-
-    const onDragLeave = useCallback(() => {
-      setFilesDraggedOver(false)
-    }, [setFilesDraggedOver])
-
-    const onChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        onSelectFiles(e, e.target.files)
-      },
-      [onSelectFiles],
-    )
-
-    const onClickButton = useCallback(() => {
-      fileRef.current!.click()
-    }, [])
-
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
+        onDrop={functions.handleDrop}
+        onDragOver={functions.handleDragOver}
+        onDragLeave={functions.handleDragLeave}
         className={classNames.wrapper}
       >
         {children}
         <SelectButton
-          onClick={onClickButton}
+          handleClick={functions.handleClickButton}
           disabled={disabled}
           className={classNames.button}
           label={selectButtonLabel}
@@ -164,7 +159,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             disabled={disabled}
             tabIndex={-1}
             aria-invalid={error || undefined}
-            onChange={onChange}
+            onChange={functions.handleChange}
           />
         </VisuallyHiddenText>
       </div>
@@ -173,23 +168,9 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 )
 
 const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
->(({ onClick, label, ...rest }) => {
-  const { localize } = useIntl()
-
-  const buttonLabel = useMemo(
-    () =>
-      label ||
-      localize({
-        id: 'smarthr-ui/DropZone/selectButtonLabel',
-        defaultText: 'ファイルを選択',
-      }),
-    [label, localize],
-  )
-
-  return (
-    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
-      {buttonLabel}
-    </Button>
-  )
-})
+  ComponentPropsWithoutRef<typeof Button> & { handleClick: () => void; label?: string }
+>(({ handleClick, label, ...rest }) => (
+  <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={handleClick}>
+    {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
+  </Button>
+))

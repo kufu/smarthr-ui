@@ -19,6 +19,7 @@ import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
 import { useIntl } from '../../../intl'
@@ -192,7 +193,7 @@ const ActualMultiCombobox = <T,>(
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
 
-  const unstableRef = useRef({
+  const latest = useLatest({
     onChange,
     onChangeInput,
     onAdd,
@@ -208,22 +209,6 @@ const ActualMultiCombobox = <T,>(
     highlighted,
     isComposing,
   })
-  unstableRef.current = {
-    onChange,
-    onChangeInput,
-    onAdd,
-    onSelect,
-    onDelete,
-    onChangeSelected,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    isItemSelected,
-    selectedItems,
-    isFocused,
-    highlighted,
-    isComposing,
-  }
   const { options } = useMultiOptions({
     items,
     selected: selectedItems,
@@ -232,51 +217,52 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
   })
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
-  const actualOnDelete = useCallback((item: ComboboxItem<T>) => {
-    const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
+  const actualOnDelete = useCallback(
+    (item: ComboboxItem<T>) => {
+      const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
-    if (unstableRef.current.onDelete) {
-      handlers.push((deletingItem: ComboboxItem<T>) => unstableRef.current.onDelete!(deletingItem))
-    }
-    if (unstableRef.current.onChangeSelected) {
-      handlers.push((deletingItem: ComboboxItem<T>) =>
-        unstableRef.current.onChangeSelected!(
-          unstableRef.current.selectedItems.filter(
-            (selected) => !areItemsEqual(selected, deletingItem),
+      if (latest.onDelete) {
+        handlers.push((deletingItem: ComboboxItem<T>) => latest.onDelete!(deletingItem))
+      }
+      if (latest.onChangeSelected) {
+        handlers.push((deletingItem: ComboboxItem<T>) =>
+          latest.onChangeSelected!(
+            latest.selectedItems.filter((selected) => !areItemsEqual(selected, deletingItem)),
           ),
-        ),
-      )
-    }
+        )
+      }
 
-    if (handlers.length > 0) {
-      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        handlers.forEach((h) => h(item))
-      })
-    }
-  }, [])
+      if (handlers.length > 0) {
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          handlers.forEach((h) => h(item))
+        })
+      }
+    },
+    [latest],
+  )
   const actualOnSelect = useCallback(
     (selected: ComboboxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = unstableRef.current.selectedItems.find((item) =>
+        const matchedSelectedItem = latest.selectedItems.find((item) =>
           areItemsEqual(item, selected),
         )
 
         if (matchedSelectedItem === undefined) {
-          unstableRef.current.onSelect?.(selected)
-          unstableRef.current.onChangeSelected?.(unstableRef.current.selectedItems.concat(selected))
+          latest.onSelect?.(selected)
+          latest.onChangeSelected?.(latest.selectedItems.concat(selected))
 
           // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          unstableRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         } else if (matchedSelectedItem.deletable !== false) {
           actualOnDelete(selected)
         }
       })
     },
-    [actualOnDelete],
+    [actualOnDelete, latest],
   )
 
   const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({
@@ -302,29 +288,29 @@ const ActualMultiCombobox = <T,>(
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   const focus = useCallback(() => {
-    unstableRef.current.onFocus?.()
+    latest.onFocus?.()
     setIsFocused(true)
-  }, [])
+  }, [latest])
 
   const blur = useCallback(() => {
-    if (unstableRef.current.isFocused) {
-      unstableRef.current.onBlur?.()
+    if (latest.isFocused) {
+      latest.onBlur?.()
       setIsFocused(false)
       resetDeletionButtonFocus()
     }
-  }, [resetDeletionButtonFocus])
+  }, [resetDeletionButtonFocus, latest])
 
   const outerClickRef = useMemo(() => [outerRef, listBoxRef], [listBoxRef])
   useOuterClick(outerClickRef, blur)
 
   useEffect(() => {
-    if (unstableRef.current.highlighted) {
+    if (latest.highlighted) {
       setHighlighted(false)
       inputRef.current?.select()
     } else {
       setInputValueIfUncontrolled('')
     }
-  }, [selectedItems, setInputValueIfUncontrolled, inputRef])
+  }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
 
   useEffect(() => {
     if (isFocused) {
@@ -335,13 +321,13 @@ const ActualMultiCombobox = <T,>(
   const isInputEmpty = !inputValue
 
   const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (unstableRef.current.isComposing) return
+    if (isComposing) return
 
     if (ESCAPE_KEY_REGEX.test(e.key)) {
       e.stopPropagation()
       blur()
     } else if (e.key === 'Tab') {
-      if (unstableRef.current.isFocused) {
+      if (isFocused) {
         // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
         inputRef.current?.focus()
       }
@@ -356,15 +342,13 @@ const ActualMultiCombobox = <T,>(
     } else if (
       e.key === 'Backspace' &&
       isInputEmpty &&
-      unstableRef.current.selectedItems.length > 0 &&
-      unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1].deletable !==
-        false
+      selectedItems.length > 0 &&
+      selectedItems[selectedItems.length - 1].deletable !== false
     ) {
       e.preventDefault()
       e.stopPropagation()
 
-      const lastItem =
-        unstableRef.current.selectedItems[unstableRef.current.selectedItems.length - 1]
+      const lastItem = selectedItems[selectedItems.length - 1]
 
       actualOnDelete(lastItem)
       setHighlighted(true)
@@ -380,33 +364,31 @@ const ActualMultiCombobox = <T,>(
 
   const onDelegateClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
-      if (!disabled && !unstableRef.current.isFocused) {
+      if (!disabled && !latest.isFocused) {
         if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
           focus()
         }
       }
     },
-    [disabled, focus],
+    [disabled, focus, latest],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const handlers = [unstableRef.current.onChange, unstableRef.current.onChangeInput].filter(
-        (h) => !!h,
-      )
+      const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
 
       handlers.forEach((h) => h(e))
       setInputValueIfUncontrolled(e.currentTarget.value)
     },
-    [setInputValueIfUncontrolled],
+    [setInputValueIfUncontrolled, latest],
   )
   const onFocusInput = useCallback(() => {
-    if (unstableRef.current.isFocused) {
+    if (latest.isFocused) {
       resetDeletionButtonFocus()
     } else {
       resetDeletionButtonFocus()
       focus()
     }
-  }, [resetDeletionButtonFocus, focus])
+  }, [resetDeletionButtonFocus, focus, latest])
   const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
   const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
@@ -419,10 +401,13 @@ const ActualMultiCombobox = <T,>(
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const onDelegateKeyPress = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    preventDefaultWithPressEnter(e)
-    unstableRef.current.onKeyPress?.(e)
-  }, [])
+  const onDelegateKeyPress = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      preventDefaultWithPressEnter(e)
+      latest.onKeyPress?.(e)
+    },
+    [latest],
+  )
 
   const selectedListId = useId()
 

@@ -54,14 +54,10 @@ const StepItem: FC<
     index: number
   }
 > = ({ Component, step, previousStepStatus, index, activeIndex }) => {
-  const isPrevStepCompleted = useMemo(() => {
-    if (!previousStepStatus) return false
-
-    const statusType =
-      typeof previousStepStatus === 'object' ? previousStepStatus.type : previousStepStatus
-
-    return statusType === 'completed'
-  }, [previousStepStatus])
+  const isPrevStepCompleted = previousStepStatus
+    ? (typeof previousStepStatus === 'object' ? previousStepStatus.type : previousStepStatus) ===
+      'completed'
+    : false
 
   return (
     <Component

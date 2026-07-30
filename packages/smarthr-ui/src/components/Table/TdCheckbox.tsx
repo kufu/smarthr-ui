@@ -10,7 +10,7 @@ type AbstractProps = PropsWithChildren<{
   /** Checkboxのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
   'aria-labelledby': string
 }> &
-  Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed'>
+  Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 type Props = Omit<CheckboxProps, keyof AbstractProps> & AbstractProps
 
 const classNameGenerator = tv({
@@ -26,7 +26,7 @@ const classNameGenerator = tv({
 })
 
 export const TdCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, children, className, ...rest }, ref) => {
+  ({ vAlign, fixed, children, className, rowSpan, colSpan, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner, checkbox } = classNameGenerator()
 
@@ -39,7 +39,13 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Props>(
 
     return (
       // Td に必要な属性やイベントは不要
-      <Td vAlign={vAlign} fixed={fixed} className={classNames.wrapper}>
+      <Td
+        vAlign={vAlign}
+        fixed={fixed}
+        className={classNames.wrapper}
+        rowSpan={rowSpan}
+        colSpan={colSpan}
+      >
         <label className={classNames.inner}>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
