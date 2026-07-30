@@ -94,13 +94,17 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
   const { mobile } = useEnvironment()
+  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
+  const actualMobileType = mobile ? mobileType : undefined
   const actualSubActionArea =
-    typeof subActionArea === 'function' ? subActionArea({ mobileType }) : subActionArea
+    typeof subActionArea === 'function'
+      ? subActionArea({ mobileType: actualMobileType })
+      : subActionArea
 
   const styles = useMemo(() => {
     const { wrapper, actionArea, actionAreaInner, buttonArea, message } = dialogContentInner({
       mobile,
-      mobileType,
+      mobileType: actualMobileType,
     })
 
     return {
@@ -110,11 +114,11 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       buttonArea: buttonArea(),
       message: message(),
     }
-  }, [mobile, mobileType])
+  }, [mobile, actualMobileType])
 
   return (
     <Section className={styles.wrapper}>
-      <DialogHeader mobileType={mobileType}>
+      <DialogHeader mobileType={actualMobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>

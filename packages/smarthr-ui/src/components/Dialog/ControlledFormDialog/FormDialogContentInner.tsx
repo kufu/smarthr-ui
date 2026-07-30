@@ -98,12 +98,16 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }) => {
   const calculatedResponseStatus = useResponseStatus(responseStatus)
   const { mobile } = useEnvironment()
+  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
+  const actualMobileType = mobile ? mobileType : undefined
   const actualSubActionArea =
-    typeof subActionArea === 'function' ? subActionArea({ mobileType }) : subActionArea
+    typeof subActionArea === 'function'
+      ? subActionArea({ mobileType: actualMobileType })
+      : subActionArea
 
   const styles = useMemo(() => {
     const { form, wrapper, actionArea, actionAreaInner, buttonArea, message } =
-      formDialogContentInner({ mobile, mobileType })
+      formDialogContentInner({ mobile, mobileType: actualMobileType })
 
     return {
       form: form(),
@@ -113,12 +117,12 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
       buttonArea: buttonArea(),
       message: message(),
     }
-  }, [mobile, mobileType])
+  }, [mobile, actualMobileType])
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={styles.wrapper}>
-      <DialogHeader mobileType={mobileType}>
+      <DialogHeader mobileType={actualMobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <form className={styles.form} onSubmit={handleSubmit}>

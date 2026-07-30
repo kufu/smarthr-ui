@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useEnvironment } from '../../hooks/useEnvironment'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
@@ -117,19 +118,23 @@ export const DialogContentInner: FC<Props> = ({
   mobileType,
   ...rest
 }) => {
+  const { mobile } = useEnvironment()
+  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
+  const actualMobileType = mobile ? mobileType : undefined
+
   const classNames = useMemo(() => {
     const { layout, inner, background } = classNameGenerator()
 
     return {
-      layout: layout({ size, mobileType }),
-      inner: inner({ mobileType, className }),
+      layout: layout({ size, mobileType: actualMobileType }),
+      inner: inner({ mobileType: actualMobileType, className }),
       background: background(),
     }
-  }, [size, mobileType, className])
+  }, [size, actualMobileType, className])
   // width は deprecated なので、size が指定されている場合は width を無視する
   // mobileType の場合は幅いっぱいなので width を無視する
   const actualWidth =
-    size || mobileType ? undefined : typeof width === 'number' ? `${width}px` : width
+    size || actualMobileType ? undefined : typeof width === 'number' ? `${width}px` : width
 
   const latest = useLatest({ onPressEscape, onClickOverlay })
 
@@ -162,7 +167,7 @@ export const DialogContentInner: FC<Props> = ({
   }, [isOpen])
 
   return (
-    <DialogOverlap isOpen={isOpen} mobileType={mobileType}>
+    <DialogOverlap isOpen={isOpen} mobileType={actualMobileType}>
       <div
         id={id}
         className={classNames.layout}

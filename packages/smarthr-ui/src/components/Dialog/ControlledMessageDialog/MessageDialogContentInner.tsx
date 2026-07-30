@@ -38,20 +38,22 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   mobileType,
 }) => {
   const { mobile } = useEnvironment()
-  const isSheet = mobileType === 'sheet'
+  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
+  const actualMobileType = mobile ? mobileType : undefined
+  const isSheet = actualMobileType === 'sheet'
 
   const styles = useMemo(() => {
-    const { wrapper, actionArea } = dialogContentInner({ mobile, mobileType })
+    const { wrapper, actionArea } = dialogContentInner({ mobile, mobileType: actualMobileType })
 
     return {
       wrapper: wrapper(),
       actionArea: actionArea(),
     }
-  }, [mobile, mobileType])
+  }, [mobile, actualMobileType])
 
   return (
     <Section className={styles.wrapper}>
-      <DialogHeader mobileType={mobileType}>
+      <DialogHeader mobileType={actualMobileType}>
         <DialogHeading {...heading} />
         {isSheet && (
           <CloseButton handleClickClose={handleClickClose} closeButton={closeButton} iconOnly />
