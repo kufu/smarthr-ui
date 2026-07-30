@@ -6,11 +6,11 @@ import {
   type FormEvent,
   type MouseEventHandler,
   type ReactNode,
-  isValidElement,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer, useIntl } from '../../../intl'
 import { Button, type AbstractProps as ButtonProps } from '../../Button'
@@ -49,6 +49,8 @@ type AbstractProps = {
   onClose?: () => void
 }
 type Props = AbstractProps & Omit<ComponentProps<'button'>, keyof AbstractProps>
+
+const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
 const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 const ON_SUBMIT = (e: FormEvent) => {
@@ -95,15 +97,10 @@ export const FilterDropdown: FC<Props> = ({
   onClose,
   ...rest
 }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const trigger: ObjectTriggerType =
-    !orgTrigger || typeof orgTrigger !== 'object' || isValidElement(orgTrigger)
-      ? {
-          text: orgTrigger as ReactNode,
-        }
-      : (orgTrigger as ObjectTriggerType)
+  const trigger = useObjectAttributes<ReactNode | ObjectTriggerType, ObjectTriggerType>(
+    orgTrigger,
+    triggerObjectConverter,
+  )
   const { localize } = useIntl()
 
   const filteredIconAlt = useMemo(
