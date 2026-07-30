@@ -24,15 +24,10 @@ export function getTooltipRect({
 
   if (vertical === 'middle') {
     top = parentRect.top + (parentRect.height - tooltipSize.height) / 2
-
-    switch (horizontal) {
-      case 'right':
-        left = parentRect.left - tooltipSize.width - outerMargin
-        break
-      default:
-        left = parentRect.left + parentRect.width + outerMargin
-        break
-    }
+    left =
+      horizontal === 'right'
+        ? parentRect.left - tooltipSize.width - outerMargin
+        : parentRect.left + parentRect.width + outerMargin
   } else {
     switch (vertical) {
       case 'top':
