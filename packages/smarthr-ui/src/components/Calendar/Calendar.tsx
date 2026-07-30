@@ -148,7 +148,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
           setCurrentMonth((prev) => prev.year(year))
           setIsSelectingYear(false)
         },
-        onClickSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
+        handleClickSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation()
           setIsSelectingYear((current) => !current)
         },
@@ -165,7 +165,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
           <YearSelectButton
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
-            onClick={functions.onClickSelectYear}
+            handleClick={functions.handleClickSelectYear}
             className={classNames.yearSelectButton}
           />
           <MonthDirectionCluster
@@ -206,10 +206,10 @@ const YearMonthRender = memo<PropsWithChildren<{ className: string }>>(
 const YearSelectButton = memo<{
   'aria-expanded': boolean
   'aria-controls': string
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>((props) => (
-  <Button {...props} size="S">
+}>(({ handleClick, ...rest }) => (
+  <Button {...rest} onClick={handleClick} size="S">
     <FaCaretDownIcon
       alt={<Localizer id="smarthr-ui/Calendar/selectYear" defaultText="年を選択する" />}
     />
