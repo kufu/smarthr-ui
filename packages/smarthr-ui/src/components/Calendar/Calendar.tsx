@@ -95,21 +95,19 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       [value, formattedFrom.date, formattedTo.date],
     )
 
-    const [currentMonth, setCurrentMonth] = useState(
-      (() => {
-        if (isValidValue) {
-          return dayjs(value)
-        }
+    const [currentMonth, setCurrentMonth] = useState(() => {
+      if (isValidValue) {
+        return dayjs(value)
+      }
 
-        const today = dayjs()
+      const today = dayjs()
 
-        return formattedTo.day.isBefore(today)
-          ? formattedTo.day
-          : formattedFrom.day.isAfter(today)
-            ? formattedFrom.day
-            : today
-      })(),
-    )
+      return formattedTo.day.isBefore(today)
+        ? formattedTo.day
+        : formattedFrom.day.isAfter(today)
+          ? formattedFrom.day
+          : today
+    })
     const [isSelectingYear, setIsSelectingYear] = useState(false)
 
     const yearPickerId = useId()
