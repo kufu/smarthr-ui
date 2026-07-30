@@ -70,20 +70,16 @@ const calculateLeftWithVerticalTopOrBottom = ({
   tooltipSize,
   isIcon,
 }: Pick<Props, 'horizontal' | 'parentRect' | 'tooltipSize' | 'isIcon'>) => {
+  if (horizontal === 'center') {
+    return parentRect.left + (parentRect.width - tooltipSize.width) / 2
+  }
+
+  const iconGap = isIcon ? BALLOON_ARROW_POSITION - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
+
   switch (horizontal) {
     case 'right':
-      return (
-        parentRect.left +
-        parentRect.width -
-        tooltipSize.width +
-        calculateIconGap(isIcon, parentRect.width)
-      )
-    case 'center':
-      return parentRect.left + (parentRect.width - tooltipSize.width) / 2
+      return parentRect.left + parentRect.width - tooltipSize.width + iconGap
     case 'left':
-      return parentRect.left - calculateIconGap(isIcon, parentRect.width)
+      return parentRect.left - iconGap
   }
 }
-
-const calculateIconGap = (isIcon: boolean | undefined, parentRectWidth: number) =>
-  isIcon ? BALLOON_ARROW_POSITION - parentRectWidth / 2 : 0 // to align center of Balloon arrow and icon
