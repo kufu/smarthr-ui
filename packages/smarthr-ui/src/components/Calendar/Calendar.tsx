@@ -138,17 +138,23 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       }
     }, [currentMonth, formatDate, getWeekStartDay])
 
-    const onSelectYear = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
-      const year = parseInt(e.currentTarget.value, 10)
-      setCurrentMonth((prev) => prev.year(year))
-      setIsSelectingYear(false)
-    }, [])
+    const functions = useMemo(
+      () => ({
+        onSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation()
 
-    const onClickSelectYear = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
-      setIsSelectingYear((current) => !current)
-    }, [])
+          const year = parseInt(e.currentTarget.value, 10)
+
+          setCurrentMonth((prev) => prev.year(year))
+          setIsSelectingYear(false)
+        },
+        onClickSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation()
+          setIsSelectingYear((current) => !current)
+        },
+      }),
+      [],
+    )
 
     return (
       <div {...rest} ref={ref} className={classNames.container}>
@@ -159,7 +165,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
           <YearSelectButton
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
-            onClick={onClickSelectYear}
+            onClick={functions.onClickSelectYear}
             className={classNames.yearSelectButton}
           />
           <MonthDirectionCluster
@@ -176,7 +182,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
             fromYear={formattedFrom.year}
             toYear={formattedTo.year}
             selectedYear={value?.getFullYear()}
-            onSelectYear={onSelectYear}
+            onSelectYear={functions.onSelectYear}
             isDisplayed={isSelectingYear}
             id={yearPickerId}
           />
