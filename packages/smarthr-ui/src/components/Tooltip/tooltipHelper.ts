@@ -1,3 +1,5 @@
+const BALLOON_ARROW_POSITION = 29 // length between Balloon edge and center of arrow
+
 export function getTooltipRect({
   parentRect,
   scrollOffset,
@@ -15,87 +17,57 @@ export function getTooltipRect({
   isIcon: boolean
   outerMargin: number
 }): { top: number; left: number; $width: number; $height: number } {
-  const top = getTop({
-    parentRect,
-    tooltipHeight: tooltipSize.height,
-    vertical,
-    outerMargin,
-  })
-  const left = getLeft({
-    parentRect,
-    tooltipWidth: tooltipSize.width,
-    horizontal,
-    vertical,
-    isIcon,
-    outerMargin,
-  })
+  let top: number = 0
 
-  return {
-    top: top + scrollOffset.top,
-    left: left + scrollOffset.left,
-    $width: tooltipSize.width,
-    $height: tooltipSize.height,
-  }
-}
-
-function getTop({
-  parentRect,
-  tooltipHeight,
-  vertical,
-  outerMargin,
-}: {
-  parentRect: DOMRect
-  tooltipHeight: number
-  vertical: 'top' | 'middle' | 'bottom'
-  outerMargin: number
-}): number {
   switch (vertical) {
     case 'top':
-      return parentRect.top + parentRect.height + outerMargin
+      top = parentRect.top + parentRect.height + outerMargin
+      break
     case 'middle':
-      return parentRect.top + (parentRect.height - tooltipHeight) / 2
+      top = parentRect.top + (parentRect.height - tooltipSize.height) / 2
+      break
     case 'bottom':
-      return parentRect.top - tooltipHeight - outerMargin
+      top = parentRect.top - tooltipSize.height - outerMargin
+      break
   }
-}
 
-const BALLOON_ARROW_POSITION = 29 // length between Balloon edge and center of arrow
+  let left: number = 0
 
-function getLeft({
-  parentRect,
-  tooltipWidth,
-  horizontal,
-  vertical,
-  isIcon,
-  outerMargin,
-}: {
-  parentRect: DOMRect
-  tooltipWidth: number
-  horizontal: 'left' | 'center' | 'right'
-  vertical: 'top' | 'middle' | 'bottom'
-  isIcon: boolean
-  outerMargin: number
-}): number {
   switch (vertical) {
     case 'middle':
       switch (horizontal) {
         case 'right':
-          return parentRect.left - tooltipWidth - outerMargin
+          left = parentRect.left - tooltipSize.width - outerMargin
+          break
         default:
-          return parentRect.left + parentRect.width + outerMargin
+          left = parentRect.left + parentRect.width + outerMargin
+          break
       }
+      break
     case 'top':
     case 'bottom': {
       const iconGap = isIcon ? BALLOON_ARROW_POSITION - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
 
       switch (horizontal) {
         case 'right':
-          return parentRect.left + parentRect.width - tooltipWidth + iconGap
+          left = parentRect.left + parentRect.width - tooltipSize.width + iconGap
+          break
         case 'center':
-          return parentRect.left + (parentRect.width - tooltipWidth) / 2
+          left = parentRect.left + (parentRect.width - tooltipSize.width) / 2
+          break
         case 'left':
-          return parentRect.left - iconGap
+          left = parentRect.left - iconGap
+          break
       }
+
+      break
     }
+  }
+
+  return {
+    top: top + scrollOffset.top,
+    left: left + scrollOffset.left,
+    $width: tooltipSize.width,
+    $height: tooltipSize.height,
   }
 }
