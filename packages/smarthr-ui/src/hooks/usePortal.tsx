@@ -80,11 +80,8 @@ export function usePortal() {
     [portalRoot],
   )
 
-  const isPortalRootMounted = useCallback(() => portalRoot !== null, [portalRoot])
-
   return {
     portalRoot,
-    isPortalRootMounted,
     isChildPortal,
     PortalParentProvider,
     createPortal: wrappedCreatePortal,
