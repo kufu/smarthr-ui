@@ -1,4 +1,4 @@
-import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
+import { type ElementType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
@@ -33,48 +33,27 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
         },
         { page },
       ),
-    [localize, page],
+    [page, localize],
   )
 
-  const { Component, attrs } = useMemo(() => {
-    const common = {
-      'aria-label': ariaLabel,
-      'aria-current': disabled ? 'page' : undefined,
-    }
+  const commonAttr = {
+    variant: 'secondary',
+    size: 'S',
+    'aria-label': ariaLabel,
+    'aria-current': disabled ? 'page' : undefined,
+    className,
+    children: page,
+  } as const
 
-    if (hrefTemplate) {
-      return {
-        Component: AnchorButton,
-        attrs: {
-          ...common,
-          // HINT: elementAsにnext/linkを設定した場合、hrefがundefinedでは
-          // エラーになってしまうため、undefinedで指定されていない状態にする
-          ...(disabled
-            ? {
-                href: undefined,
-                elementAs: undefined,
-              }
-            : {
-                href: hrefTemplate(page),
-                elementAs: linkAs,
-              }),
-        } as ComponentProps<typeof AnchorButton>,
-      }
-    }
+  if (hrefTemplate) {
+    return (
+      <AnchorButton
+        {...commonAttr}
+        href={disabled ? undefined : hrefTemplate(page)}
+        elementAs={disabled ? undefined : linkAs}
+      />
+    )
+  }
 
-    return {
-      Component: Button,
-      attrs: {
-        ...common,
-        disabled,
-        value: page,
-      } as ComponentProps<typeof Button>,
-    }
-  }, [disabled, page, hrefTemplate, linkAs, ariaLabel])
-
-  return (
-    <Component {...attrs} variant="secondary" size="S" className={className}>
-      {page}
-    </Component>
-  )
+  return <Button {...commonAttr} disabled={disabled} value={page} />
 }

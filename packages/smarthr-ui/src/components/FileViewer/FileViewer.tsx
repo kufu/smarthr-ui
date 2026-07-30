@@ -16,6 +16,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { DropdownMenuButton } from '../Dropdown'
@@ -36,7 +37,7 @@ import { usePDFSearch } from './usePDFSearch'
 
 import type { FileForViewer } from './types'
 
-const defaultScaleStep = new Decimal(0.2)
+const defaultScaleStep = 0.2
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
 type Props = {
@@ -50,7 +51,7 @@ type Props = {
 
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
-  onLoadError?: () => void
+  onLoadError?: (error: unknown) => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -70,29 +71,31 @@ export const FileViewer: FC<Props> = ({
 
   const search = usePDFSearch(file.url)
 
-  const internalScaleStep = useMemo(
-    () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
-    [scaleStep],
-  )
+  const latest = useLatest({ scaleStep, rotation })
 
-  const scaleUp = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
-  }, [internalScaleStep])
+  const functions = useMemo(() => {
+    const calculateScale = (mode: 'add' | 'sub') => {
+      // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+      setScale((currentScale) =>
+        new Decimal(currentScale)[mode](latest.scaleStep ?? defaultScaleStep).toNumber(),
+      )
+    }
 
-  const scaleDown = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
-  }, [internalScaleStep])
-
-  const rotate = useCallback(() => {
-    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
-    const currentRotation = rotation ?? 0
-    const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
-    setRotation(newRotation)
-  }, [rotation])
-
-  const handleLoaded = useCallback(() => {
-    setLoaded(true)
-  }, [])
+    return {
+      scaleUp: () => calculateScale('add'),
+      scaleDown: () => calculateScale('sub'),
+      handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
+        setScale(Number(e.currentTarget.value)),
+      rotate: () => {
+        // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+        const currentRotation = latest.rotation ?? 0
+        setRotation(currentRotation === 0 ? 270 : currentRotation - 90)
+      },
+      handleLoaded: () => {
+        setLoaded(true)
+      },
+    }
+  }, [latest])
 
   const handlePDFLoaded = useCallback((defaultRotation: number) => {
     setRotation(defaultRotation)
@@ -123,11 +126,8 @@ export const FileViewer: FC<Props> = ({
       <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
         <Controller
           scale={scale}
-          setScale={setScale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          onClickScaleUpButton={scaleUp}
-          onClickScaleDownButton={scaleDown}
-          onClickRotateButton={rotate}
+          functions={functions}
           searchController={isPDF ? <SearchController search={search} /> : undefined}
         />
       </div>
@@ -144,8 +144,8 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
-              onPDFLoaded={handlePDFLoaded}
+              handleLoad={functions.handleLoaded}
+              handlePDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={onLoadError}
               search={search}
@@ -156,7 +156,7 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
+              handleLoad={functions.handleLoaded}
               onLoadError={onLoadError}
             />
           ) : (
@@ -173,11 +173,13 @@ export const FileViewer: FC<Props> = ({
 
 type ControllerProps = {
   scale: number
-  setScale: (scale: number) => void
   scaleSteps: number[]
-  onClickScaleUpButton: () => void
-  onClickScaleDownButton: () => void
-  onClickRotateButton: () => void
+  functions: {
+    scaleUp: () => void
+    scaleDown: () => void
+    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
+    rotate: () => void
+  }
   searchController?: ReactNode
 }
 
@@ -192,22 +194,9 @@ const controllerClassNameGenerator = tv({
 })
 
 const Controller: FC<ControllerProps> = memo(
-  ({
-    scale,
-    setScale,
-    scaleSteps,
-    onClickScaleUpButton,
-    onClickScaleDownButton,
-    onClickRotateButton,
-    searchController,
-  }) => {
+  ({ scale, scaleSteps, functions, searchController }) => {
     const { mobile } = useEnvironment()
     const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
-
-    const onClickScaleStep = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => setScale(Number(e.currentTarget.value)),
-      [setScale],
-    )
 
     return (
       <div className={className}>
@@ -216,7 +205,7 @@ const Controller: FC<ControllerProps> = memo(
         <Cluster gap={0.5} className="shr-justify-self-center">
           <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
             <Button
-              onClick={onClickScaleDownButton}
+              onClick={functions.scaleDown}
               disabled={scale <= scaleSteps[0]}
               className="shr-rounded-r-none shr-border-none"
             >
@@ -239,20 +228,20 @@ const Controller: FC<ControllerProps> = memo(
                 <Button
                   key={step.toString()}
                   value={step}
-                  onClick={onClickScaleStep}
+                  onClick={functions.handleClickScaleStep}
                   className="shr-rounded-none shr-border-0"
                 >
                   {`${(step * 100).toFixed(0)}%`}
                 </Button>
               ))}
             </DropdownMenuButton>
-            <Button onClick={onClickScaleUpButton} className="shr-rounded-l-none shr-border-0">
+            <Button onClick={functions.scaleUp} className="shr-rounded-l-none shr-border-0">
               <FaMagnifyingGlassPlusIcon
                 alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
               />
             </Button>
           </div>
-          <Button onClick={onClickRotateButton} className="shr-p-0.75">
+          <Button onClick={functions.rotate} className="shr-p-0.75">
             <FaArrowRotateLeftIcon
               alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
             />

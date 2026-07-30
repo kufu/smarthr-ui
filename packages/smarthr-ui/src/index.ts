@@ -159,6 +159,8 @@ export { ThemeProvider } from './hooks/useTheme'
 export {
   IntlProvider,
   useIntl,
+  useDateFormat,
+  useAvailableLocales,
   DateFormatter,
   TimeFormatter,
   TimestampFormatter,

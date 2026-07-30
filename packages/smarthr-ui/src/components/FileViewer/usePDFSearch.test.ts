@@ -122,7 +122,10 @@ describe('usePDFSearch', () => {
   const setup = (texts: string[]) => {
     const view = renderHook(() => usePDFSearch('file-url'))
     act(() => {
-      view.result.current.registerPageText(0, texts)
+      const textContent = {
+        items: texts.map((str) => ({ str })),
+      }
+      view.result.current.generateHandlePDFPageGetTextSuccess(0)(textContent)
     })
     return view
   }
@@ -130,7 +133,9 @@ describe('usePDFSearch', () => {
   test('入力時はハイライトのみ表示し、未選択(-1)のままにする（スクロールしない）', () => {
     const { result } = setup(['abc abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     expect(result.current.matchCount).toBe(3)
     expect(result.current.matches.length).toBeGreaterThan(0)
@@ -140,7 +145,9 @@ describe('usePDFSearch', () => {
   test('未選択から goNext で先頭ヒット(0)へ移動する', () => {
     const { result } = setup(['abc abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
@@ -151,7 +158,9 @@ describe('usePDFSearch', () => {
   test('未選択から goPrev で末尾ヒットへ移動する', () => {
     const { result } = setup(['abc abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goPrev()
@@ -162,7 +171,9 @@ describe('usePDFSearch', () => {
   test('goNext は末尾の次で先頭へループする', () => {
     const { result } = setup(['abc abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
@@ -179,7 +190,9 @@ describe('usePDFSearch', () => {
   test('検索語を変更すると選択がリセットされ、次の Enter で再び先頭から始まる', () => {
     const { result } = setup(['abc abc xyz'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
@@ -190,25 +203,193 @@ describe('usePDFSearch', () => {
     expect(result.current.currentMatchIndex).toBe(1)
 
     act(() => {
-      result.current.setQuery('xyz')
+      result.current.handleChangeQuery({
+        target: { value: 'xyz' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     expect(result.current.currentMatchIndex).toBe(-1)
   })
 
-  test('clear で query・matches・選択がすべてリセットされる', () => {
+  test('Escape キーで query・matches・選択がすべてリセットされる', () => {
     const { result } = setup(['abc'])
     act(() => {
-      result.current.setQuery('abc')
+      result.current.handleChangeQuery({
+        target: { value: 'abc' },
+      } as React.ChangeEvent<HTMLInputElement>)
     })
     act(() => {
       result.current.goNext()
     })
     act(() => {
-      result.current.clear()
+      result.current.handleKeyDownQuery({
+        key: 'Escape',
+        nativeEvent: { isComposing: false },
+        preventDefault: vi.fn(),
+      } as unknown as React.KeyboardEvent<HTMLInputElement>)
     })
     expect(result.current.query).toBe('')
     expect(result.current.matches).toEqual([])
     expect(result.current.matchCount).toBe(0)
     expect(result.current.currentMatchIndex).toBe(-1)
+  })
+
+  describe('handleKeyDownQuery のキーボード操作', () => {
+    test('IME変換確定中（isComposing）のEnterではナビゲーションしない', () => {
+      const { result } = setup(['abc'])
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'abc' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+      act(() => {
+        result.current.goNext() // 初期選択を設定
+      })
+
+      const beforeIndex = result.current.currentMatchIndex
+
+      act(() => {
+        result.current.handleKeyDownQuery({
+          key: 'Enter',
+          nativeEvent: { isComposing: true },
+          preventDefault: vi.fn(),
+        } as unknown as React.KeyboardEvent<HTMLInputElement>)
+      })
+
+      expect(result.current.currentMatchIndex).toBe(beforeIndex) // 変わらない
+    })
+
+    test('IME変換確定中のEscapeでは検索をクリアしない', () => {
+      const { result } = setup(['abc'])
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'abc' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      const beforeQuery = result.current.query
+
+      act(() => {
+        result.current.handleKeyDownQuery({
+          key: 'Escape',
+          nativeEvent: { isComposing: true },
+          preventDefault: vi.fn(),
+        } as unknown as React.KeyboardEvent<HTMLInputElement>)
+      })
+
+      expect(result.current.query).toBe(beforeQuery)
+    })
+
+    test('EnterでgoNextが呼ばれ次の検索結果へ移動する', () => {
+      const { result } = setup(['abc abc'])
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'abc' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      const preventDefaultSpy = vi.fn()
+      act(() => {
+        result.current.handleKeyDownQuery({
+          key: 'Enter',
+          nativeEvent: { isComposing: false },
+          preventDefault: preventDefaultSpy,
+        } as unknown as React.KeyboardEvent<HTMLInputElement>)
+      })
+
+      expect(preventDefaultSpy).toHaveBeenCalled()
+      expect(result.current.currentMatchIndex).toBe(0) // goNextが呼ばれて0に
+    })
+
+    test('Shift+EnterでgoPrevが呼ばれ前の検索結果へ移動する', () => {
+      const { result } = setup(['abc abc'])
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'abc' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      const preventDefaultSpy = vi.fn()
+      act(() => {
+        result.current.handleKeyDownQuery({
+          key: 'Enter',
+          shiftKey: true,
+          nativeEvent: { isComposing: false },
+          preventDefault: preventDefaultSpy,
+        } as unknown as React.KeyboardEvent<HTMLInputElement>)
+      })
+
+      expect(preventDefaultSpy).toHaveBeenCalled()
+      expect(result.current.currentMatchIndex).toBe(1) // goPrevが呼ばれて末尾(1)に
+    })
+
+    test('queryが空の場合はEscapeで検索をクリアしない', () => {
+      const { result } = setup(['abc'])
+      // queryは空のまま
+
+      const preventDefaultSpy = vi.fn()
+      act(() => {
+        result.current.handleKeyDownQuery({
+          key: 'Escape',
+          nativeEvent: { isComposing: false },
+          preventDefault: preventDefaultSpy,
+        } as unknown as React.KeyboardEvent<HTMLInputElement>)
+      })
+
+      expect(preventDefaultSpy).not.toHaveBeenCalled()
+      expect(result.current.query).toBe('') // 変わらず空
+    })
+  })
+
+  describe('generateHandlePDFPageGetTextSuccess', () => {
+    test('PDFのテキストを抽出してページに登録する', () => {
+      const { result } = renderHook(() => usePDFSearch('file-url'))
+      const textContent = {
+        items: [{ str: 'Hello' }, { str: 'World' }],
+      }
+
+      act(() => {
+        result.current.generateHandlePDFPageGetTextSuccess(0)(textContent)
+      })
+
+      // 検索すると登録されたテキストがヒットする
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'Hello' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      expect(result.current.matchCount).toBeGreaterThan(0)
+      expect(result.current.matches.length).toBeGreaterThan(0)
+    })
+
+    test('全ページ読み込み前に検索が始まっても後から読んだページがヒットする', () => {
+      const { result } = renderHook(() => usePDFSearch('file-url'))
+
+      // 最初にページ0を登録
+      act(() => {
+        result.current.generateHandlePDFPageGetTextSuccess(0)({
+          items: [{ str: 'page0' }],
+        })
+      })
+
+      // 検索開始
+      act(() => {
+        result.current.handleChangeQuery({
+          target: { value: 'page' },
+        } as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      const matchCountAfterPage0 = result.current.matchCount
+
+      // 後からページ1を登録
+      act(() => {
+        result.current.generateHandlePDFPageGetTextSuccess(1)({
+          items: [{ str: 'page1' }],
+        })
+      })
+
+      // 新しいページの内容も検索結果に含まれる
+      expect(result.current.matchCount).toBeGreaterThan(matchCountAfterPage0)
+    })
   })
 })

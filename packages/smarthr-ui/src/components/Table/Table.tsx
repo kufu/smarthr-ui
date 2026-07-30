@@ -4,7 +4,7 @@ import { type ComponentProps, type FC, type PropsWithChildren, useMemo, useRef }
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { TableReel } from './TableReel'
-import { TableScrollContext } from './TableScrollContext'
+import { TableScroller } from './TableScroller'
 
 type AbstractProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
@@ -152,12 +152,12 @@ export const Table: FC<Props> = ({
   const renderedTable = <table {...rest} className={classNames.table} />
 
   return (
-    <TableScrollContext ref={tableWrapperRef} fixedHead={fixedHead}>
+    <TableScroller ref={tableWrapperRef} fixedHead={fixedHead}>
       {reel ? (
         <TableReel tableWrapperRef={tableWrapperRef}>{renderedTable}</TableReel>
       ) : (
         renderedTable
       )}
-    </TableScrollContext>
+    </TableScroller>
   )
 }

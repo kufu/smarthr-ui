@@ -9,7 +9,7 @@ import { ControlledTooltip } from '../Tooltip'
 
 import { Th } from './Th'
 
-type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
@@ -31,24 +31,20 @@ const classNameGenerator = tv({
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, className, ...rest }, ref) => {
+  ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }, ref) => {
     const { localize } = useIntl()
 
-    const checkAllInvisibleLabel = useMemo(
-      () =>
-        localize({
+    const localizedText = useMemo(
+      () => ({
+        checkAllInvisibleLabel: localize({
           id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
           defaultText: 'すべての項目を選択/解除',
         }),
-      [localize],
-    )
-
-    const checkColumnName = useMemo(
-      () =>
-        localize({
+        checkColumnName: localize({
           id: 'smarthr-ui/ThCheckbox/checkColumnName',
           defaultText: '選択',
         }),
+      }),
       [localize],
     )
 
@@ -65,7 +61,14 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
 
     return (
       // Th に必要な属性やイベントは不要
-      <Th vAlign={vAlign} fixed={fixed} className={classNames.wrapper} aria-label={checkColumnName}>
+      <Th
+        vAlign={vAlign}
+        fixed={fixed}
+        className={classNames.wrapper}
+        aria-label={localizedText.checkColumnName}
+        rowSpan={rowSpan}
+        colSpan={colSpan}
+      >
         <label className={classNames.inner}>
           <ControlledTooltip
             as="span"
@@ -73,7 +76,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
             vertical="middle"
             className={classNames.balloon}
           >
-            <span className="shr-block shr-p-0.5">{checkAllInvisibleLabel}</span>
+            <span className="shr-block shr-p-0.5">{localizedText.checkAllInvisibleLabel}</span>
           </ControlledTooltip>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />

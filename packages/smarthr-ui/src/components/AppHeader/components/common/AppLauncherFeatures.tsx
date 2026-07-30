@@ -1,7 +1,7 @@
-import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { AnchorButton } from '../../../Button'
 import { FaArrowRightIcon, FaStarIcon } from '../../../Icon'
 import { LineClamp } from '../../../LineClamp'
@@ -24,6 +24,16 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { empty, list, listItem } = classNameGenerator()
+
+  return {
+    empty: empty(),
+    list: list(),
+    listItem: listItem(),
+  }
+})()
+
 type Props = {
   features: Array<Launcher['feature']>
   page: Launcher['page']
@@ -32,51 +42,30 @@ type Props = {
 export const AppLauncherFeatures: FC<Props> = ({ features, page }) =>
   features.length === 0 ? <EmptyList /> : <FeatureList features={features} page={page} />
 
-const EmptyList = memo(() => {
-  const className = useMemo(() => {
-    const { empty } = classNameGenerator()
-
-    return empty()
-  }, [])
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/AppHeader/Launcher/emptyText',
-        defaultText: '該当するアプリが見つかりませんでした。',
-      }),
-    [localize],
-  )
-
-  return (
-    <div className={className}>
-      <Text size="S">
-        <Translate>{translated}</Translate>
-      </Text>
-    </div>
-  )
-})
+const EmptyList = memo(() => (
+  <div className={CLASS_NAMES.empty}>
+    <Text size="S">
+      <Translate>
+        <Localizer
+          id="smarthr-ui/AppHeader/Launcher/emptyText"
+          defaultText="該当するアプリが見つかりませんでした。"
+        />
+      </Translate>
+    </Text>
+  </div>
+))
 
 const FeatureList: FC<Props> = ({ features, page }) => {
-  const classNames = useMemo(() => {
-    const { list, listItem } = classNameGenerator()
-
-    return {
-      list: list(),
-      listItem: listItem(),
-    }
-  }, [])
-
   const isFavorite = page === 'favorite'
 
   return (
-    <ul className={classNames.list}>
+    <ul className={CLASS_NAMES.list}>
       {features.map((feature) => (
         <FeatureListItem
           key={feature.id}
           href={feature.url}
           isFavorite={isFavorite}
-          className={classNames.listItem}
+          className={CLASS_NAMES.listItem}
         >
           {feature.name}
         </FeatureListItem>

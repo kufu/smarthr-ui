@@ -68,29 +68,25 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
   const shadowRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
-    const el = ref.current
-    const shadowEl = shadowRef.current
-
-    if (!el || !shadowEl) return
-
     // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
     const checkOverflow = () => {
-      setTooltipVisible(shadowEl.clientHeight > el.clientHeight)
+      if (ref.current && shadowRef.current) {
+        setTooltipVisible(shadowRef.current.clientHeight > ref.current.clientHeight)
+      }
     }
 
     checkOverflow()
 
-    const resizeObserver = new ResizeObserver(checkOverflow)
-    resizeObserver.observe(el)
-    resizeObserver.observe(shadowEl)
+    window.addEventListener('resize', checkOverflow)
 
     return () => {
-      resizeObserver.unobserve(el)
-      resizeObserver.unobserve(shadowEl)
+      window.removeEventListener('resize', checkOverflow)
     }
-  }, [maxLines])
+    // TODO: 将来的にMutationObserverに置き換えて、children の変更を監視する実装に変更する
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
+  }, [children, maxLines])
 
   const classNames = useMemo(() => {
     const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
