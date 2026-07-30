@@ -69,6 +69,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   }, [rootNode, value])
 
   const latest = useLatest({ onSelectItem, value, rootNode })
+  const hasOnSelectItem = !!onSelectItem
 
   const functions = useMemo(() => {
     // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
@@ -120,11 +121,13 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
 
     return {
       onDelegateKeyDown,
-      onChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
-        latest.onSelectItem?.(e.currentTarget.value)
-      },
+      onChangeInput: hasOnSelectItem
+        ? (e: ChangeEvent<HTMLInputElement>) => {
+            latest.onSelectItem?.(e.currentTarget.value)
+          }
+        : undefined,
     }
-  }, [latest])
+  }, [hasOnSelectItem, latest])
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
@@ -140,7 +143,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
           items={colItems}
           index={index}
           value={selectedPath[index]}
-          onChangeInput={onSelectItem ? functions.onChangeInput : undefined}
+          onChangeInput={functions.onChangeInput}
           className={classNames.column}
         />
       ))}
