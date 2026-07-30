@@ -140,7 +140,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
 
     const functions = useMemo(
       () => ({
-        onSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
+        handleSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation()
 
           const year = parseInt(e.currentTarget.value, 10)
@@ -182,7 +182,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
             fromYear={formattedFrom.year}
             toYear={formattedTo.year}
             selectedYear={value?.getFullYear()}
-            onSelectYear={functions.onSelectYear}
+            handleSelectYear={functions.handleSelectYear}
             isDisplayed={isSelectingYear}
             id={yearPickerId}
           />
