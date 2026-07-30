@@ -100,7 +100,7 @@ export const Bottom: StoryObj<typeof FloatArea> = {
     <Stack gap={1.5}>
       {[...Array(15)].map((_, index) => (
         <Panel padding={1.5} key={index}>
-          <p>bottom を確認するための Base</p>
+          <p>bottom を確認するための Panel</p>
         </Panel>
       ))}
       <FloatArea {...args} />
