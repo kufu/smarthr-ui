@@ -1,4 +1,4 @@
-import { type FC, memo, useCallback, useMemo, useState } from 'react'
+import { type FC, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../../intl'
@@ -64,8 +64,13 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
 }) => {
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
 
-  const dialogOpen = useCallback(() => setLanguageDialogOpen(true), [])
-  const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
+  const functions = useMemo(
+    () => ({
+      dialogOpen: () => setLanguageDialogOpen(true),
+      dialogClose: () => setLanguageDialogOpen(false),
+    }),
+    [],
+  )
 
   return (
     <>
@@ -97,7 +102,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
                 <CommonButton
                   elementAs="button"
                   type="button"
-                  onClick={dialogOpen}
+                  onClick={functions.dialogOpen}
                   prefix={<FaGlobeIcon />}
                   // eslint-disable-next-line smarthr/require-i18n-text
                 >
@@ -124,8 +129,8 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
       </Dropdown>
 
       {locale && (
-        <Dialog isOpen={languageDialogOpen} onClickOverlay={dialogClose} width={246}>
-          <LanguageSelector locale={locale} onClickClose={dialogClose} />
+        <Dialog isOpen={languageDialogOpen} onClickOverlay={functions.dialogClose} width={246}>
+          <LanguageSelector locale={locale} onClickClose={functions.dialogClose} />
         </Dialog>
       )}
     </>

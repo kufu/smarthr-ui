@@ -31,7 +31,7 @@ type DropdownContextType = {
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
   rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
   memoizedOnClickTrigger: (rect: Rect) => void
-  onClickCloser: () => void
+  handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
   contentId: string
 }
@@ -46,7 +46,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   memoizedOnClickTrigger: () => {
     /* noop */
   },
-  onClickCloser: () => {
+  handleDelegateClickCloser: () => {
     /* noop */
   },
   DropdownContentRoot: () => null,
@@ -93,7 +93,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     [latest],
   )
 
-  const onClickCloser = useCallback(() => {
+  const handleDelegateClickCloser = useCallback(() => {
     setActive(false)
     latest.onClose?.()
 
@@ -132,7 +132,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
           memoizedOnClickTrigger,
-          onClickCloser,
+          handleDelegateClickCloser,
           DropdownContentRoot,
           contentId,
         }}
