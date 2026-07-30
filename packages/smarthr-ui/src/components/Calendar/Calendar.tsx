@@ -138,14 +138,12 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       }
     }, [currentMonth, formatDate, getWeekStartDay])
 
-    const onSelectYear = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation()
-        setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
-        setIsSelectingYear(false)
-      },
-      [currentMonth],
-    )
+    const onSelectYear = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      const year = parseInt(e.currentTarget.value, 10)
+      setCurrentMonth((prev) => prev.year(year))
+      setIsSelectingYear(false)
+    }, [])
 
     const onClickSelectYear = useCallback((e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
