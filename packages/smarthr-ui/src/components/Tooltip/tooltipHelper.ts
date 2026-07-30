@@ -25,6 +25,21 @@ export function getTooltipRect({
   switch (vertical) {
     case 'top':
       top = parentRect.top + parentRect.height + outerMargin
+      left = calculateLeftWithVerticalTopOrBottom({
+        horizontal,
+        parentRect,
+        tooltipSize,
+        isIcon,
+      })
+      break
+    case 'bottom':
+      top = parentRect.top - tooltipSize.height - outerMargin
+      left = calculateLeftWithVerticalTopOrBottom({
+        horizontal,
+        parentRect,
+        tooltipSize,
+        isIcon,
+      })
       break
     case 'middle':
       top = parentRect.top + (parentRect.height - tooltipSize.height) / 2
@@ -39,23 +54,6 @@ export function getTooltipRect({
       }
 
       break
-    case 'bottom':
-      top = parentRect.top - tooltipSize.height - outerMargin
-      break
-  }
-
-  switch (vertical) {
-    case 'top':
-    case 'bottom': {
-      left = calculateLeftWithVerticalTopOrBottom({
-        horizontal,
-        parentRect,
-        tooltipSize,
-        isIcon,
-      })
-
-      break
-    }
   }
 
   return {
