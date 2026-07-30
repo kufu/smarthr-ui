@@ -11,6 +11,7 @@ import {
   getProgressDoughnutColors,
 } from '../../helper'
 import { roundedProgressPlugin } from '../../plugins'
+import { DoughnutCenterContent, useChartAreaTracker } from '../DoughnutCenterContent'
 
 import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin, TooltipItem } from 'chart.js'
 
@@ -26,9 +27,11 @@ type Props = {
     labels: [string, string]
     datasets: [{ data: [number, number] }]
   }
-  /** アクセシブルネームの元 */
-  title?: string
-  /** 中央（穴の中）に重ねる内容 */
+  /**
+   * 中央（穴の中）に重ねる内容。
+   * 何の進捗かという文脈は見出しなど利用者側で与える（chart.js の title は
+   * canvas 上部に文字を描いてドーナツを縮めてしまうため受け取らない）。
+   */
   children?: React.ReactNode
   /** ドーナツの太さ。既定 'S' */
   thickness?: 'S' | 'M' | 'L'
@@ -40,7 +43,6 @@ type Props = {
 
 export const ProgressDoughnutChart: React.FC<Props> = ({
   data,
-  title,
   children,
   thickness = 'S',
   tone = 1,
@@ -50,16 +52,16 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
   const chartId = useId()
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const colors = useMemo(() => getProgressDoughnutColors(tone), [tone])
+  const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
   const ariaLabel = useMemo(() => {
-    const prefix = title ? `${title} ` : ''
     // 初期フォーカス時点で SR 利用者にも進捗の概要が伝わるよう、data から
     // 「ラベル 値」のサマリを算出して含める（矢印キー操作前でも内容が分かる）。
     const summary = data.labels
       .map((segmentLabel, index) => `${segmentLabel} ${data.datasets[0].data[index]}`)
       .join(' ')
-    return `${prefix}ドーナツグラフ ${summary}`
-  }, [title, data])
+    return `ドーナツグラフ ${summary}`
+  }, [data])
 
   const chartData: ChartData<'doughnut'> = useMemo(
     () => ({
@@ -103,7 +105,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         cutout: externalOptions?.cutout ?? CUTOUT_BY_THICKNESS[thickness],
         plugins: {
           ...externalOptions?.plugins,
-          title: title ? { display: true, text: title } : { display: false },
+          title: { display: false },
           legend: { display: false },
           tooltip: {
             callbacks: {
@@ -127,7 +129,15 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
           },
         },
       }) as ChartOptions<'doughnut'>,
-    [title, thickness, chartId, externalOptions, colors],
+    [thickness, chartId, externalOptions, colors],
+  )
+
+  // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を
+  // chart 生成時（mount 時）にしか読まないため、children が後から付いたときに追加しても
+  // 登録されず、chartArea が null のままで中央コンテンツが出なくなる。
+  const plugins = useMemo(
+    () => [roundedProgressPlugin as Plugin<'doughnut'>, chartAreaPlugin],
+    [chartAreaPlugin],
   )
 
   return (
@@ -140,17 +150,10 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         ref={chartRef}
         data={chartData}
         options={chartOptions}
-        plugins={[roundedProgressPlugin as Plugin<'doughnut'>]}
+        plugins={plugins}
         aria-label={ariaLabel}
       />
-      {children !== null && children !== undefined && (
-        <div
-          className="shr-pointer-events-none shr-absolute shr-inset-0 shr-flex shr-flex-col shr-items-center shr-justify-center"
-          aria-hidden="true"
-        >
-          {children}
-        </div>
-      )}
+      <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
     </div>
   )
 }

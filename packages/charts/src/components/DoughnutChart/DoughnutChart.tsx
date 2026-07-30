@@ -5,9 +5,16 @@ import { Doughnut } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { createDoughnutChartOptions, registerChartComponents } from '../../config'
-import { CUTOUT_BY_THICKNESS, DOUGHNUT_SEGMENT_SPACING, getChartColors } from '../../helper'
+import {
+  CUTOUT_BY_THICKNESS,
+  DOUGHNUT_SEGMENT_DIVIDER_WIDTH,
+  SMARTHR_DEFAULT_COLORS,
+  getChartColors,
+} from '../../helper'
+import { doughnutSegmentDividerPlugin } from '../../plugins'
+import { DoughnutCenterContent, useChartAreaTracker } from '../DoughnutCenterContent'
 
-import type { Chart, ChartData, ChartDataset, ChartOptions } from 'chart.js'
+import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart.js'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -17,11 +24,8 @@ type Props = {
   data: ChartData<'doughnut'>
   title?: string
   thickness?: 'S' | 'M' | 'L'
-  /**
-   * セグメント同士の間隔を空けるかどうか。
-   * 隣接する色が直接触れるとコントラストが確保できないため既定で有効。
-   */
-  withSegmentSpacing?: boolean
+  /** ドーナツの穴の中央に重ねる内容 */
+  children?: React.ReactNode
   className?: string
   options?: Partial<ChartOptions<'doughnut'>>
 }
@@ -30,7 +34,7 @@ export const DoughnutChart: React.FC<Props> = ({
   data,
   title,
   thickness = 'M',
-  withSegmentSpacing = true,
+  children,
   className,
   options: externalOptions,
 }) => {
@@ -38,6 +42,7 @@ export const DoughnutChart: React.FC<Props> = ({
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
   const chartColors = useMemo(() => getChartColors<'doughnut'>(segmentCount), [segmentCount])
+  const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
   const ariaLabel = useMemo(() => {
     const prefix = title ? `${title} ` : ''
@@ -49,20 +54,18 @@ export const DoughnutChart: React.FC<Props> = ({
       ...data,
       datasets: data.datasets.map((dataset) => ({
         ...dataset,
-        // セグメントが1つだけのときは隙間を空ける相手がおらず、円の始点に切れ込みが
-        // 入るだけになるため無効にする。
-        spacing: withSegmentSpacing && segmentCount > 1 ? DOUGHNUT_SEGMENT_SPACING : 0,
         backgroundColor: chartColors.map(
           (c) => c.backgroundColor,
         ) as ChartDataset<'doughnut'>['backgroundColor'],
-        borderColor: chartColors.map(
-          (c) => c.borderColor,
-        ) as ChartDataset<'doughnut'>['borderColor'],
+        // 隣接する色が直接触れるとコントラストを確保できず境界が判別しづらいが、
+        // borderWidth で枠を付けると輪郭全周に線が乗って外周がぼやけるため、
+        // 継ぎ目だけを doughnutSegmentDividerPlugin に描かせる。
+        borderWidth: 0,
         hoverBorderColor: chartColors[0]?.hoverBorderColor,
         hoverBorderWidth: chartColors[0]?.hoverBorderWidth,
       })),
     }),
-    [data, chartColors, segmentCount, withSegmentSpacing],
+    [data, chartColors],
   )
 
   const chartOptions: ChartOptions<'doughnut'> = useMemo(
@@ -76,9 +79,23 @@ export const DoughnutChart: React.FC<Props> = ({
           keyboardNavigation: {
             liveRegionId: chartId,
           },
+          doughnutSegmentDivider: {
+            // チャートは Base（WHITE）の上に置かれる前提。BACKGROUND は Base の背後に
+            // 敷く色（#f8f7f6）なので、白背景の上では薄い線として残ってしまう。
+            color: SMARTHR_DEFAULT_COLORS.WHITE,
+            width: DOUGHNUT_SEGMENT_DIVIDER_WIDTH,
+          },
         },
       }) as ChartOptions<'doughnut'>,
     [title, thickness, chartId, externalOptions],
+  )
+
+  // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を
+  // chart 生成時（mount 時）にしか読まないため、children が後から付いたときに追加しても
+  // 登録されず、chartArea が null のままで中央コンテンツが出なくなる。
+  const plugins = useMemo(
+    () => [doughnutSegmentDividerPlugin as Plugin<'doughnut'>, chartAreaPlugin],
+    [chartAreaPlugin],
   )
 
   return (
@@ -91,8 +108,10 @@ export const DoughnutChart: React.FC<Props> = ({
         ref={chartRef}
         data={enhancedData}
         options={chartOptions}
+        plugins={plugins}
         aria-label={ariaLabel}
       />
+      <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
     </div>
   )
 }

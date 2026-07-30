@@ -29,7 +29,6 @@ export const Playground: Story = {
       labels: ['インストール済', '未インストール'],
       datasets: [{ data: [780, 420] }],
     },
-    title: 'インストール率',
     thickness: 'S',
     tone: 1,
     children: (
@@ -45,7 +44,6 @@ export const Playground: Story = {
   },
   argTypes: {
     data: { control: 'object' },
-    title: { control: 'text' },
     thickness: { control: 'radio', options: ['S', 'M', 'L'] },
     tone: { control: { type: 'range', min: 0, max: 5 } },
   },
@@ -57,7 +55,6 @@ export const Default: Story = {
       labels: ['インストール済', '未インストール'],
       datasets: [{ data: [780, 420] }],
     },
-    title: 'インストール率',
   },
 }
 
@@ -68,7 +65,6 @@ export const WithCenterContent: Story = {
       labels: ['インストール済', '未インストール'],
       datasets: [{ data: [780, 420] }],
     },
-    title: 'インストール率',
     children: (
       <>
         <Text size="XXL" weight="bold">

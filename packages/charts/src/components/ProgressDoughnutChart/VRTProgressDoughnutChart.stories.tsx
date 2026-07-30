@@ -13,7 +13,6 @@ export default {
       <div className="shr-h-[300px] shr-w-[300px]">
         <ProgressDoughnutChart
           data={{ labels: ['インストール済', '未インストール'], datasets: [{ data: [780, 420] }] }}
-          title="インストール率"
           thickness="S"
         >
           <Text size="XXL" weight="bold">
@@ -26,7 +25,6 @@ export default {
       <div className="shr-h-[300px] shr-w-[300px]">
         <ProgressDoughnutChart
           data={{ labels: ['完了', '未完了'], datasets: [{ data: [0, 100] }] }}
-          title="進捗ゼロ"
           thickness="S"
         >
           <Text size="XXL" weight="bold">
@@ -39,7 +37,6 @@ export default {
       <div className="shr-h-[300px] shr-w-[300px]">
         <ProgressDoughnutChart
           data={{ labels: ['完了', '未完了'], datasets: [{ data: [100, 0] }] }}
-          title="完了"
           thickness="S"
         >
           <Text size="XXL" weight="bold">
@@ -52,7 +49,6 @@ export default {
       <div className="shr-h-[300px] shr-w-[300px]">
         <ProgressDoughnutChart
           data={{ labels: ['進捗', '残り'], datasets: [{ data: [40, 60] }] }}
-          title="太さM"
           thickness="M"
           tone={3}
         >
@@ -66,7 +62,6 @@ export default {
       <div className="shr-h-[300px] shr-w-[300px]">
         <ProgressDoughnutChart
           data={{ labels: ['処理済', '未処理'], datasets: [{ data: [75, 25] }] }}
-          title="ラベルのみ"
           thickness="L"
         />
       </div>

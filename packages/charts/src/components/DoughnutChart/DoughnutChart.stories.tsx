@@ -1,3 +1,5 @@
+import { Text } from 'smarthr-ui'
+
 import { doughnutSmall } from '../__stories__/testData'
 
 import { DoughnutChart } from './DoughnutChart'
@@ -28,13 +30,11 @@ export const Playground: Story = {
     data: doughnutSmall,
     title: 'Doughnut Chart',
     thickness: 'M',
-    withSegmentSpacing: true,
   },
   argTypes: {
     data: { control: 'object' },
     title: { control: 'text' },
     thickness: { control: 'radio', options: ['S', 'M', 'L'] },
-    withSegmentSpacing: { control: 'boolean' },
     options: { control: 'object' },
   },
 }
@@ -50,5 +50,22 @@ export const Title: Story = {
   args: {
     data: doughnutSmall,
     title: '雇用形態の内訳',
+  },
+}
+
+export const WithCenterContent: Story = {
+  name: 'with center content',
+  args: {
+    data: doughnutSmall,
+    children: (
+      <>
+        <Text size="XXL" weight="bold">
+          1,200人
+        </Text>
+        <Text size="S" color="TEXT_GREY">
+          雇用形態の内訳
+        </Text>
+      </>
+    ),
   },
 }

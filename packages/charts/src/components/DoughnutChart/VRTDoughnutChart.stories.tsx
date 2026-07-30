@@ -1,3 +1,5 @@
+import { Text } from 'smarthr-ui'
+
 // eslint-disable-next-line smarthr/require-barrel-import
 import { Stack } from '../../../../smarthr-ui/src/components/Layout'
 import { doughnutSingleSegment, doughnutSmall, doughnutWithZero } from '../__stories__/testData'
@@ -28,19 +30,35 @@ export default {
         <DoughnutChart data={doughnutSmall} thickness="L" title="太さL" />
       </div>
 
-      {/* パターン5: セグメント1つ（隙間が入らないこと） */}
+      {/* パターン5: セグメント1つ（境界のボーダーが切れ込みにならないこと） */}
       <div className="shr-h-[400px]">
         <DoughnutChart data={doughnutSingleSegment} title="セグメント1つ" />
       </div>
 
-      {/* パターン6: 値0のセグメントを含む（隙間だけが残らないこと） */}
+      {/* パターン6: 値0のセグメントを含む（ボーダーだけが残らないこと） */}
       <div className="shr-h-[400px]">
         <DoughnutChart data={doughnutWithZero} title="値0を含む" />
       </div>
 
-      {/* パターン7: 隙間なし */}
+      {/* パターン7: 中央コンテンツあり（タイトルなし＝凡例分だけ上にずれる） */}
       <div className="shr-h-[400px]">
-        <DoughnutChart data={doughnutSmall} title="隙間なし" withSegmentSpacing={false} />
+        <DoughnutChart data={doughnutSmall}>
+          <Text size="XXL" weight="bold">
+            1,200人
+          </Text>
+          <Text size="S" color="TEXT_GREY">
+            雇用形態の内訳
+          </Text>
+        </DoughnutChart>
+      </div>
+
+      {/* パターン8: 中央コンテンツあり＋タイトルあり（タイトル分もずれること） */}
+      <div className="shr-h-[400px]">
+        <DoughnutChart data={doughnutSmall} title="雇用形態の内訳">
+          <Text size="XXL" weight="bold">
+            1,200人
+          </Text>
+        </DoughnutChart>
       </div>
     </Stack>
   ),

@@ -35,11 +35,11 @@ export const SHAPE_TYPES = [
 ] as const
 
 /**
- * ドーナツチャートのセグメント同士の間隔（px）。
- * 白のボーダーで隙間を表現すると背景が白でない場所で線が浮くため、
- * 背景色に依存しない spacing で実際に隙間を空ける。
+ * ドーナツチャートのセグメント同士の継ぎ目に引く境界線の太さ（px）。
+ * dataset の borderWidth だと輪郭全周に線が付いて外周がぼやけるため、
+ * doughnutSegmentDividerPlugin が継ぎ目にだけこの太さで線を描く。
  */
-export const DOUGHNUT_SEGMENT_SPACING = 8
+export const DOUGHNUT_SEGMENT_DIVIDER_WIDTH = 3
 
 export const CUTOUT_BY_THICKNESS = {
   S: '85%',
