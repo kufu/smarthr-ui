@@ -45,17 +45,19 @@ export function getTooltipRect({
   switch (vertical) {
     case 'top':
     case 'bottom': {
-      const iconGap = isIcon ? BALLOON_ARROW_POSITION - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
-
       switch (horizontal) {
         case 'right':
-          left = parentRect.left + parentRect.width - tooltipSize.width + iconGap
+          left =
+            parentRect.left +
+            parentRect.width -
+            tooltipSize.width +
+            calculateIconGap(isIcon, parentRect.width)
           break
         case 'center':
           left = parentRect.left + (parentRect.width - tooltipSize.width) / 2
           break
         case 'left':
-          left = parentRect.left - iconGap
+          left = parentRect.left - calculateIconGap(isIcon, parentRect.width)
           break
       }
 
@@ -70,3 +72,6 @@ export function getTooltipRect({
     $height: tooltipSize.height,
   }
 }
+
+const calculateIconGap = (isIcon: boolean, parentRectWidth: number) =>
+  isIcon ? BALLOON_ARROW_POSITION - parentRectWidth / 2 : 0 // to align center of Balloon arrow and icon
