@@ -60,17 +60,15 @@ const StepItem: FC<
     previousStepStatus: Step['status'] | undefined
     index: number
   }
-> = ({ Component, step, previousStepStatus, index, activeIndex }) => {
+> = ({ Component, step: { status, ...stepRest }, previousStepStatus, index, activeIndex }) => {
   const { type: statusType, text: statusText } = useObjectAttributes<
     Step['status'],
     ObjectStepStatus
-  >(step.status, statusObjectConverter)
+  >(status, statusObjectConverter)
   const isPrevStepCompleted = previousStepStatus
     ? (typeof previousStepStatus === 'object' ? previousStepStatus.type : previousStepStatus) ===
       'completed'
     : false
-
-  const { status: _status, ...stepRest } = step
 
   return (
     <Component
