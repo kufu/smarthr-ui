@@ -15,7 +15,9 @@ export default {
       sub: 'アクションダイアログのサブタイトル',
     },
     actionButton: '保存',
-    subActionArea: <Button>サブアクション</Button>,
+    subActionArea: ({ mobileType }) => (
+      <Button variant={mobileType === 'sheet' ? 'tertiary' : 'secondary'}>サブアクション</Button>
+    ),
     contentBgColor: 'BACKGROUND',
     responseStatus: {
       status: 'success',

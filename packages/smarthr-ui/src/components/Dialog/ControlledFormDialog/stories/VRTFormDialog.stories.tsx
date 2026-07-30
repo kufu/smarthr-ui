@@ -17,7 +17,9 @@ export default {
       sub: 'フォームダイアログのサブタイトル',
     },
     actionButton: '送信',
-    subActionArea: <Button>サブアクション</Button>,
+    subActionArea: ({ mobileType }) => (
+      <Button variant={mobileType === 'sheet' ? 'tertiary' : 'secondary'}>サブアクション</Button>
+    ),
     contentBgColor: 'BACKGROUND',
     responseStatus: {
       status: 'success',
