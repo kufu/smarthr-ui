@@ -43,12 +43,20 @@ export function getTooltipRect({
         break
     }
 
-    left = calculateLeftWithVerticalTopOrBottom({
-      horizontal,
-      parentRect,
-      tooltipSize,
-      isIcon,
-    })
+    if (horizontal === 'center') {
+      left = parentRect.left + (parentRect.width - tooltipSize.width) / 2
+    } else {
+      const iconGap = isIcon ? BALLOON_ARROW_POSITION - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
+
+      switch (horizontal) {
+        case 'right':
+          left = parentRect.left + parentRect.width - tooltipSize.width + iconGap
+          break
+        case 'left':
+          left = parentRect.left - iconGap
+          break
+      }
+    }
   }
 
   return {
@@ -56,25 +64,5 @@ export function getTooltipRect({
     left: left + scrollOffset.left,
     $width: tooltipSize.width,
     $height: tooltipSize.height,
-  }
-}
-
-const calculateLeftWithVerticalTopOrBottom = ({
-  horizontal,
-  parentRect,
-  tooltipSize,
-  isIcon,
-}: Pick<Props, 'horizontal' | 'parentRect' | 'tooltipSize' | 'isIcon'>) => {
-  if (horizontal === 'center') {
-    return parentRect.left + (parentRect.width - tooltipSize.width) / 2
-  }
-
-  const iconGap = isIcon ? BALLOON_ARROW_POSITION - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
-
-  switch (horizontal) {
-    case 'right':
-      return parentRect.left + parentRect.width - tooltipSize.width + iconGap
-    case 'left':
-      return parentRect.left - iconGap
   }
 }
