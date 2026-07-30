@@ -18,6 +18,7 @@ export function getTooltipRect({
   outerMargin: number
 }): { top: number; left: number; $width: number; $height: number } {
   let top: number = 0
+  let left: number = 0
 
   switch (vertical) {
     case 'top':
@@ -25,16 +26,7 @@ export function getTooltipRect({
       break
     case 'middle':
       top = parentRect.top + (parentRect.height - tooltipSize.height) / 2
-      break
-    case 'bottom':
-      top = parentRect.top - tooltipSize.height - outerMargin
-      break
-  }
 
-  let left: number = 0
-
-  switch (vertical) {
-    case 'middle':
       switch (horizontal) {
         case 'right':
           left = parentRect.left - tooltipSize.width - outerMargin
@@ -43,7 +35,14 @@ export function getTooltipRect({
           left = parentRect.left + parentRect.width + outerMargin
           break
       }
+
       break
+    case 'bottom':
+      top = parentRect.top - tooltipSize.height - outerMargin
+      break
+  }
+
+  switch (vertical) {
     case 'top':
     case 'bottom': {
       const iconGap = isIcon ? BALLOON_ARROW_POSITION - parentRect.width / 2 : 0 // to align center of Balloon arrow and icon
