@@ -74,7 +74,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   const functions = useMemo(() => {
     // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
     // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
-    const onDelegateKeyDown: KeyboardEventHandler = (e) => {
+    const handleDelegateKeyDown: KeyboardEventHandler = (e) => {
       const selectedNode = latest.value ? latest.rootNode.findByValue(latest.value) : undefined
 
       if (!selectedNode) {
@@ -120,8 +120,8 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     }
 
     return {
-      onDelegateKeyDown,
-      onChangeInput: hasOnSelectItem
+      handleDelegateKeyDown,
+      handleChangeInput: hasOnSelectItem
         ? (e: ChangeEvent<HTMLInputElement>) => {
             latest.onSelectItem?.(e.currentTarget.value)
           }
@@ -134,7 +134,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     <div
       {...rest}
       role="application"
-      onKeyDown={functions.onDelegateKeyDown}
+      onKeyDown={functions.handleDelegateKeyDown}
       className={classNames.wrapper}
     >
       {columns.map((colItems, index) => (
@@ -143,7 +143,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
           items={colItems}
           index={index}
           value={selectedPath[index]}
-          onChangeInput={functions.onChangeInput}
+          handleChangeInput={functions.handleChangeInput}
           className={classNames.column}
         />
       ))}
