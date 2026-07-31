@@ -45,7 +45,7 @@ export const Playground: Story = {
   argTypes: {
     data: { control: 'object' },
     thickness: { control: 'radio', options: ['S', 'M', 'L'] },
-    tone: { control: { type: 'range', min: 0, max: 5 } },
+    tone: { control: { type: 'range', min: 1, max: 5, step: 1 } },
   },
 }
 

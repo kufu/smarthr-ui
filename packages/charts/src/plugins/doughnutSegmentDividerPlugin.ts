@@ -1,5 +1,9 @@
 import type { Chart } from 'chart.js'
 
+const FULL_CIRCLE = Math.PI * 2
+/** 円が閉じているかの判定に使う許容誤差（ラジアン） */
+const CIRCLE_EPSILON = 1e-6
+
 export type DoughnutSegmentDividerOptions = {
   /** 境界線の色。省略時は描かない */
   color?: string
@@ -70,7 +74,20 @@ export const doughnutSegmentDividerPlugin = {
     ctx.strokeStyle = color
     ctx.lineWidth = width
 
+    // 半円などの部分ドーナツでは先頭と末尾が接していない。円が閉じているかどうかで
+    // 先頭の startAngle が継ぎ目なのか弧の開いた端なのかが変わる。
+    const isClosedCircle =
+      visibleArcs.reduce((sum, { arc }) => sum + arc.circumference, 0) >=
+      FULL_CIRCLE - CIRCLE_EPSILON
+
     visibleArcs.forEach(({ arc, index }, order) => {
+      // 円が閉じていないときの先頭の startAngle は継ぎ目ではなく弧の開いた端なので、
+      // ここに線を引くと開始位置に不要な突起が出る（実測で純白2pxが乗り、
+      // セグメントの色面も削られる）。
+      if (order === 0 && !isClosedCircle) {
+        return
+      }
+
       // startAngle は「ひとつ前のセグメントの endAngle」と一致するので、各セグメントの
       // startAngle に線を引けば全ての継ぎ目を一度ずつ描ける。
       const previous = visibleArcs[(order - 1 + visibleArcs.length) % visibleArcs.length]

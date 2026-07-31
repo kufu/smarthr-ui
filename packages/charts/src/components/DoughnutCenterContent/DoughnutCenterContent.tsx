@@ -54,10 +54,16 @@ const CENTER_CONTENT_CLASS_NAMES = classNameGenerator()
 type Props = {
   /** useChartAreaTracker が返す描画領域。未確定のうちは null */
   chartArea: ChartAreaRect | null
+  /**
+   * 支援技術から隠すか。
+   * 中央の内容が別の要素（ProgressDoughnutChart の <progress> など）で
+   * すでに伝えられている場合に、二重に読み上げられるのを防ぐために使う。
+   */
+  ariaHidden?: boolean
   children?: React.ReactNode
 }
 
-export const DoughnutCenterContent: React.FC<Props> = ({ chartArea, children }) => {
+export const DoughnutCenterContent: React.FC<Props> = ({ chartArea, ariaHidden, children }) => {
   // chartArea が確定する前に描くと canvas の左上に寄った状態が一瞬見えるため、
   // 最初のレイアウトが終わるまで描画しない。
   if (chartArea === null || children === null || children === undefined) {
@@ -67,6 +73,7 @@ export const DoughnutCenterContent: React.FC<Props> = ({ chartArea, children }) 
   return (
     <div
       className={CENTER_CONTENT_CLASS_NAMES}
+      aria-hidden={ariaHidden}
       style={{
         top: chartArea.top,
         left: chartArea.left,

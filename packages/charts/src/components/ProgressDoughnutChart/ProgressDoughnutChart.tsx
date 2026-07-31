@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
@@ -36,7 +36,7 @@ type Props = {
   /** ドーナツの太さ。既定 'S' */
   thickness?: 'S' | 'M' | 'L'
   /** 進捗色の濃淡。既定は基準色 tone=1 */
-  tone?: 0 | 1 | 2 | 3 | 4 | 5
+  tone?: 1 | 2 | 3 | 4 | 5
   className?: string
   options?: Partial<ChartOptions<'doughnut'>>
 }
@@ -49,18 +49,22 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
   className,
   options: externalOptions,
 }) => {
-  const chartId = useId()
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const colors = useMemo(() => getProgressDoughnutColors(tone), [tone])
   const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
-  const ariaLabel = useMemo(() => {
-    // 初期フォーカス時点で SR 利用者にも進捗の概要が伝わるよう、data から
-    // 「ラベル 値」のサマリを算出して含める（矢印キー操作前でも内容が分かる）。
-    const summary = data.labels
-      .map((segmentLabel, index) => `${segmentLabel} ${data.datasets[0].data[index]}`)
-      .join(' ')
-    return `ドーナツグラフ ${summary}`
+  // 支援技術には円弧ではなく <progress> として見せるため、その属性を data から算出する。
+  const progress = useMemo(() => {
+    const [progressValue, remainingValue] = data.datasets[0].data
+    const total = progressValue + remainingValue
+
+    return {
+      // 進捗セグメントのラベルが「何の進捗か」を表す（例: インストール済）
+      label: data.labels[0],
+      // 進捗と残りが両方 0 だと max=0 で <progress> が不正になるため 1 に置き換える
+      max: total > 0 ? total : 1,
+      value: progressValue,
+    }
   }, [data])
 
   const chartData: ChartData<'doughnut'> = useMemo(
@@ -117,9 +121,6 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
               },
             },
           },
-          keyboardNavigation: {
-            liveRegionId: chartId,
-          },
           roundedProgress: {
             segmentIndex: 0,
             color: colors.progress,
@@ -129,7 +130,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
           },
         },
       }) as ChartOptions<'doughnut'>,
-    [thickness, chartId, externalOptions, colors],
+    [thickness, externalOptions, colors],
   )
 
   // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を
@@ -142,18 +143,38 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
 
   return (
     <div className={`shr-relative shr-h-full shr-w-full ${className ?? ''}`}>
-      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
+      {/*
+        このコンポーネントは「グラフ」ではなく「丸くなった <progress>」として扱う。
+        そのため円弧の canvas は支援技術から隠し、代わりに視覚的に隠した <progress>
+        を見せる（キーボードで円弧を辿る必要がなくなるため tabIndex や
+        keyboardNavigation も持たない）。
+      */}
       <Doughnut
-        tabIndex={0}
-        role="application"
+        aria-hidden="true"
         ref={chartRef}
         data={chartData}
         options={chartOptions}
         plugins={plugins}
-        aria-label={ariaLabel}
       />
-      <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
+      {/*
+        名前は <label> で囲まず aria-label で与える。<label> のテキストは
+        「読み上げ順に現れるテキストノード」と「progress のアクセシブルネーム」を
+        兼ねてしまい、VoiceOver では停止点が2つに分かれて同じ語を2回聞くことになる。
+        割合（65% など）は支援技術が max / value から算出するので持たせない。
+      */}
+      <VisuallyHiddenText
+        as="progress"
+        aria-label={progress.label}
+        max={progress.max}
+        value={progress.value}
+      />
+      {/*
+        中央の内容は進捗を視覚的に言い換えたものなので、<progress> と二重に
+        読み上げられないよう支援技術からは隠す。
+      */}
+      <DoughnutCenterContent chartArea={chartArea} ariaHidden>
+        {children}
+      </DoughnutCenterContent>
     </div>
   )
 }

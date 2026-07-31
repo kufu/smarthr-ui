@@ -23,7 +23,11 @@ describe('getProgressDoughnutColors', () => {
     expect(getProgressDoughnutColors(99).progress).toBe(
       SINGLE_CHART_COLORS[SINGLE_CHART_COLORS.length - 1],
     )
-    expect(getProgressDoughnutColors(-1).progress).toBe(SINGLE_CHART_COLORS[0])
+    expect(getProgressDoughnutColors(-1).progress).toBe(SINGLE_CHART_COLORS[1])
+  })
+
+  it('最も淡い色(index 0)はdisabledに見えるため選べない', () => {
+    expect(getProgressDoughnutColors(0).progress).toBe(SINGLE_CHART_COLORS[1])
   })
 
   it('hover色は1段濃い色を返す', () => {

@@ -46,7 +46,7 @@ export const DoughnutChart: React.FC<Props> = ({
 
   const ariaLabel = useMemo(() => {
     const prefix = title ? `${title} ` : ''
-    return `${prefix}ドーナツグラフ ${segmentCount}個のセグメント`
+    return `${prefix}ドーナツグラフ ${segmentCount}個の項目`
   }, [title, segmentCount])
 
   const enhancedData: ChartData<'doughnut'> = useMemo(
