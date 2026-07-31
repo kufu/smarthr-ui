@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.1.1...smarthr-ui-v99.0.0) (2026-07-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **intl:** useIntlから日付フォーマット機能をuseDateFormatに分離 ([#6484](https://github.com/kufu/smarthr-ui/issues/6484))
+
+### Bug Fixes
+
+* **Badge:** Badgeにforced-colors時のoutlineを追加 ([#6498](https://github.com/kufu/smarthr-ui/issues/6498)) ([8c25031](https://github.com/kufu/smarthr-ui/commit/8c250313c892557bb76d5c561e4bd6b1ab013201))
+* **FileViewer:** onLoadError の引数の型を修正 ([#6637](https://github.com/kufu/smarthr-ui/issues/6637)) ([3fbe3d8](https://github.com/kufu/smarthr-ui/commit/3fbe3d86130bf88dc7f0853ad0ab04622e4d0ccb))
+* **TdCheckbox/ThCheckbox:** rowSpanとcolSpanが有効にしてTd/Thコンポネントの機能パリティにしました ([#6630](https://github.com/kufu/smarthr-ui/issues/6630)) ([a0d9b93](https://github.com/kufu/smarthr-ui/commit/a0d9b93aadbfce1e97e2f448fc97b4bd92a26376))
+* **Tooltip:** ツールチップを閉じる際にrectをリセット ([#6565](https://github.com/kufu/smarthr-ui/issues/6565)) ([6be2087](https://github.com/kufu/smarthr-ui/commit/6be20879648f797a2f6eff06d33682d3b0d146ae))
+
+
+### Code Refactoring
+
+* **intl:** useIntlから日付フォーマット機能をuseDateFormatに分離 ([#6484](https://github.com/kufu/smarthr-ui/issues/6484)) ([077d4e7](https://github.com/kufu/smarthr-ui/commit/077d4e7c76a4e6805822526008d51b1c0dff5243))
+
 ## [98.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.1.0...smarthr-ui-v98.1.1) (2026-07-23)
 
 

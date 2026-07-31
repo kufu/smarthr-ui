@@ -14,6 +14,7 @@ overrides:
   js-yaml@>=4.0.0 <=4.1.1: '>=4.3.0'
   '@babel/core@<=7.29.0': '>=7.29.7'
   sharp@<0.35.0: '>=0.35.3'
+  brace-expansion@>=5.0.0 <5.0.8: '>=5.0.8'
 
 importers:
 
@@ -239,9 +240,6 @@ importers:
       tailwindcss:
         specifier: ^3.4.19
         version: 3.4.19(ts-node@10.9.2(@swc/core@1.15.17)(@types/node@20.19.35)(typescript@5.9.3))
-      typescript-eslint:
-        specifier: ^8.64.0
-        version: 8.64.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
     devDependencies:
       '@babel/core':
         specifier: '>=7.29.7'
@@ -405,6 +403,9 @@ importers:
       tsx:
         specifier: ^4.20.6
         version: 4.23.1
+      typescript-eslint:
+        specifier: ^8.64.0
+        version: 8.64.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
       vite:
         specifier: 7.3.5
         version: 7.3.5(@types/node@20.19.35)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.9.0)
@@ -2965,9 +2966,9 @@ packages:
   brace-expansion@2.1.2:
     resolution: {integrity: sha512-w5JZcKgdhDOgOwm8H+KgbosopHMuGcl6qbulwjtz3SM7I7P3yW1eAjzMPLrIE+NQ9vjgANKHWeMHnrT0OXW1oA==}
 
-  brace-expansion@5.0.7:
-    resolution: {integrity: sha512-7oFy703dxfY3/NLxC1fh2SUCQ0H9rmAY+5EpDVfXjUTTs+HEwR2nYaqLv+GWcTsumwxPfiz6CzCNkwXwBUwqCA==}
-    engines: {node: 18 || 20 || >=22}
+  brace-expansion@5.0.8:
+    resolution: {integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==}
+    engines: {node: 20 || >=22}
 
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
@@ -8720,7 +8721,7 @@ snapshots:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.7:
+  brace-expansion@5.0.8:
     dependencies:
       balanced-match: 4.0.2
 
@@ -10478,7 +10479,7 @@ snapshots:
 
   minimatch@10.2.5:
     dependencies:
-      brace-expansion: 5.0.7
+      brace-expansion: 5.0.8
 
   minimatch@3.1.5:
     dependencies:

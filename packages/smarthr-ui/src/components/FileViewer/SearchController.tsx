@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, type FC, type KeyboardEvent, memo, useCallback, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
@@ -35,12 +35,12 @@ const classNameGenerator = tv({
 export const SearchController: FC<Props> = memo(({ search }) => {
   const {
     query,
-    setQuery,
+    handleChangeQuery,
+    handleKeyDownQuery,
     matchCount,
     currentMatchIndex,
-    goNext: onClickNext,
-    goPrev: onClickPrev,
-    clear: onClickClear,
+    goNext,
+    goPrev,
   } = search
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
@@ -48,42 +48,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     return { wrapper: wrapper(), inputArea: inputArea() }
   }, [mobile])
 
-  const hasMatches = matchCount > 0
-  const displayedCurrent = hasMatches ? currentMatchIndex + 1 : 0
-
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setQuery(e.target.value)
-    },
-    [setQuery],
-  )
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.nativeEvent.isComposing) {
-        return
-      }
-      switch (e.key) {
-        case 'Enter': {
-          e.preventDefault()
-          if (e.shiftKey) {
-            onClickPrev()
-          } else {
-            onClickNext()
-          }
-          break
-        }
-        case 'Escape': {
-          if (query !== '') {
-            e.preventDefault()
-            onClickClear()
-          }
-          break
-        }
-      }
-    },
-    [onClickNext, onClickPrev, onClickClear, query],
-  )
+  const noMatches = matchCount === 0
 
   return (
     <div className={classNames.wrapper}>
@@ -97,13 +62,13 @@ export const SearchController: FC<Props> = memo(({ search }) => {
             />
           }
           value={query}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          onChange={handleChangeQuery}
+          onKeyDown={handleKeyDownQuery}
           width="100%"
           suffix={
             query !== '' ? (
               <Text size="S" aria-live="polite" className="shr-tabular-nums">
-                {`${displayedCurrent}/${matchCount}`}
+                {`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
               </Text>
             ) : undefined
           }
@@ -111,8 +76,8 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         />
       </div>
       <Button
-        onClick={onClickPrev}
-        disabled={!hasMatches}
+        onClick={goPrev}
+        disabled={noMatches}
         className="shr-rounded-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
         <FaAngleUpIcon
@@ -122,8 +87,8 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         />
       </Button>
       <Button
-        onClick={onClickNext}
-        disabled={!hasMatches}
+        onClick={goNext}
+        disabled={noMatches}
         className="shr-rounded-s-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
         <FaAngleDownIcon

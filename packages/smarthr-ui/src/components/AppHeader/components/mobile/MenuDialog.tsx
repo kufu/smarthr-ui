@@ -7,13 +7,13 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { Localizer, useIntl } from '../../../../intl'
+import { useLocalize } from '../../../../hooks/useLocalize'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
@@ -90,20 +90,16 @@ export const Content: FC<
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
     useContext(AppLauncherContext)
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      launcherListText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
-      latestReleaseNotes: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
-        defaultText: '最新のリリースノート',
-      }),
-    }),
-    [localize],
-  )
+  const translated = useLocalize({
+    launcherListText: {
+      id: 'smarthr-ui/AppHeader/Launcher/listText',
+      defaultText: 'アプリ一覧',
+    },
+    latestReleaseNotes: {
+      id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
+      defaultText: '最新のリリースノート',
+    },
+  })
 
   const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
   const clearAppLauncher = useCallback(

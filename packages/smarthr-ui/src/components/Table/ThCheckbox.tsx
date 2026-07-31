@@ -3,13 +3,13 @@
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { useLocalize } from '../../hooks/useLocalize'
 import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 import { ControlledTooltip } from '../Tooltip'
 
 import { Th } from './Th'
 
-type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
+type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
 
 const classNameGenerator = tv({
@@ -31,22 +31,17 @@ const classNameGenerator = tv({
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, className, ...rest }, ref) => {
-    const { localize } = useIntl()
-
-    const localizedText = useMemo(
-      () => ({
-        checkAllInvisibleLabel: localize({
-          id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
-          defaultText: 'すべての項目を選択/解除',
-        }),
-        checkColumnName: localize({
-          id: 'smarthr-ui/ThCheckbox/checkColumnName',
-          defaultText: '選択',
-        }),
-      }),
-      [localize],
-    )
+  ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }, ref) => {
+    const localized = useLocalize({
+      checkAllInvisibleLabel: {
+        id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
+        defaultText: 'すべての項目を選択/解除',
+      },
+      checkColumnName: {
+        id: 'smarthr-ui/ThCheckbox/checkColumnName',
+        defaultText: '選択',
+      },
+    })
 
     const classNames = useMemo(() => {
       const { wrapper, inner, balloon, checkbox } = classNameGenerator()
@@ -65,7 +60,9 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
         vAlign={vAlign}
         fixed={fixed}
         className={classNames.wrapper}
-        aria-label={localizedText.checkColumnName}
+        aria-label={localized.checkColumnName}
+        rowSpan={rowSpan}
+        colSpan={colSpan}
       >
         <label className={classNames.inner}>
           <ControlledTooltip
@@ -74,7 +71,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
             vertical="middle"
             className={classNames.balloon}
           >
-            <span className="shr-block shr-p-0.5">{localizedText.checkAllInvisibleLabel}</span>
+            <span className="shr-block shr-p-0.5">{localized.checkAllInvisibleLabel}</span>
           </ControlledTooltip>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />

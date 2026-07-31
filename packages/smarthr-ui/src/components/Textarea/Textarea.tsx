@@ -242,10 +242,6 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const [interimRows, setInterimRows] = useState(rows)
 
-  const textareaStyle = useMemo(
-    () => ({ width: typeof width === 'number' ? `${width}px` : width }),
-    [width],
-  )
   const classNames = useMemo(() => {
     const { textareaEl } = classNameGenerator()
 
@@ -313,7 +309,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
       aria-invalid={error || undefined}
       rows={interimRows}
       className={classNames.textarea}
-      style={textareaStyle}
+      style={{ width: typeof width === 'number' ? `${width}px` : width }}
     />
   )
 }
