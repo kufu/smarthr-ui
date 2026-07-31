@@ -1,7 +1,8 @@
-import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { useLocalize } from '../../../../hooks/useLocalize'
+import { Localizer } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
@@ -36,6 +37,18 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    searchArea: searchArea(),
+    headArea: headArea(),
+    scrollArea: scrollArea(),
+    bottomArea: bottomArea(),
+  }
+})()
+
 export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   const {
     features,
@@ -49,44 +62,20 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const classNames = useMemo(() => {
-    const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      searchArea: searchArea(),
-      headArea: headArea(),
-      scrollArea: scrollArea(),
-      bottomArea: bottomArea(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      searchInputTitle: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
-        defaultText: 'アプリ名を入力してください。',
-      }),
-      searchResultText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
-        defaultText: '検索結果',
-      }),
-      helpText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/helpText',
-        defaultText: 'よく使うアプリとは',
-      }),
-    }),
-    [localize],
-  )
+  const { searchInputTitle } = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+  })
 
   return (
-    <div className={classNames.wrapper}>
-      <div className={classNames.searchArea}>
+    <div className={CLASS_NAMES.wrapper}>
+      <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
+          title={searchInputTitle}
+          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
           width="100%"
           value={searchQuery}
           suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
@@ -94,9 +83,11 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         />
       </div>
 
-      <Cluster className={classNames.headArea} justify="space-between" align="center">
+      <Cluster className={CLASS_NAMES.headArea} justify="space-between" align="center">
         {mode === 'search' ? (
-          <SearchResultText>{translated.searchResultText}</SearchResultText>
+          <SearchResultText>
+            <Localizer id="smarthr-ui/AppHeader/Launcher/searchResultText" defaultText="検索結果" />
+          </SearchResultText>
         ) : (
           <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
         )}
@@ -106,11 +97,13 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         )}
       </Cluster>
 
-      <Scroller className={classNames.scrollArea} styleType="scroll">
+      <Scroller className={CLASS_NAMES.scrollArea} styleType="scroll">
         <AppLauncherFeatures features={features} page={page} />
       </Scroller>
 
-      <BottomArea className={classNames.bottomArea}>{translated.helpText}</BottomArea>
+      <BottomArea className={CLASS_NAMES.bottomArea}>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
+      </BottomArea>
     </div>
   )
 }

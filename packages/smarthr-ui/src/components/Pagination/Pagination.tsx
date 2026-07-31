@@ -198,33 +198,24 @@ const ItemButtons = memo<
     return range(Math.max(current - actualPadding, 1), Math.min(current + actualPadding, total) + 1)
   }, [current, total, padding, withoutNumbers])
 
-  const controllerAttrs = useMemo(
-    () => ({
-      prev: {
-        disabled: current === 1,
-        direction: 'prev' as const,
-        hrefTemplate,
-        linkAs,
-      },
-      next: {
-        disabled: current === total,
-        direction: 'next' as const,
-        hrefTemplate,
-        linkAs,
-      },
-    }),
-    [current, total, hrefTemplate, linkAs],
-  )
+  const prevAttrs = {
+    disabled: current === 1,
+    direction: 'prev' as const,
+    hrefTemplate,
+    linkAs,
+  }
+  const nextAttrs = {
+    disabled: current === total,
+    direction: 'next' as const,
+    hrefTemplate,
+    linkAs,
+  }
 
   return (
     <Cluster as="ul" className={classNames.list}>
-      <DoubleIconItemButton
-        {...controllerAttrs.prev}
-        targetPage={1}
-        className={classNames.firstListItem}
-      />
+      <DoubleIconItemButton {...prevAttrs} targetPage={1} className={classNames.firstListItem} />
       <li className={classNames.prevListItem}>
-        <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
+        <PaginationControllerItemButton {...prevAttrs} targetPage={current - 1} />
       </li>
       {pageNumbers.map((page) => (
         <NumberItemButton
@@ -236,13 +227,9 @@ const ItemButtons = memo<
         />
       ))}
       <li className={classNames.nextListItem}>
-        <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
+        <PaginationControllerItemButton {...nextAttrs} targetPage={current + 1} />
       </li>
-      <DoubleIconItemButton
-        {...controllerAttrs.next}
-        targetPage={total}
-        className={classNames.lastListItem}
-      />
+      <DoubleIconItemButton {...nextAttrs} targetPage={total} className={classNames.lastListItem} />
     </Cluster>
   )
 })

@@ -4,8 +4,8 @@
   "description": "SmartHR ui components built with React.",
   "author": "SmartHR-UI Team",
   "devDependencies": {
-    "@commitlint/cli": "^20.5.3",
-    "@commitlint/config-conventional": "^20.5.3",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
     "@rollup/plugin-json": "^6.1.0",
     "eslint": "^9.39.5",
     "eslint-config-smarthr": "14.8.1",

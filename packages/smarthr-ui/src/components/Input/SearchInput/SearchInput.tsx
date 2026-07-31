@@ -27,20 +27,19 @@ const classNameGenerator = tv({
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ width, className, ...rest }, ref) => {
-    const labelStyle = useMemo(
-      () => ({
-        width: typeof width === 'number' ? `${width}px` : width,
-      }),
-      [width],
-    )
+    const labelStyle = {
+      width: typeof width === 'number' ? `${width}px` : width,
+    }
+    const existsWidth = !!labelStyle.width
+
     const classNames = useMemo(() => {
-      const { label, input } = classNameGenerator({ existsWidth: !!labelStyle.width })
+      const { label, input } = classNameGenerator({ existsWidth })
 
       return {
         label: label({ className }),
         input: input(),
       }
-    }, [labelStyle.width, className])
+    }, [existsWidth, className])
 
     return (
       <label className={classNames.label} style={labelStyle}>

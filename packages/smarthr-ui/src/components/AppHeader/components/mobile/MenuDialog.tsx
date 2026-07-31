@@ -7,13 +7,13 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { useLocalize } from '../../../../hooks/useLocalize'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
@@ -43,6 +43,16 @@ const classNameGenerator = tv({
     content: 'shr-p-1',
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { wrapper, header, content } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    header: header(),
+    content: content(),
+  }
+})()
 
 type Props = PropsWithChildren<{
   isOpen: boolean
@@ -80,34 +90,16 @@ export const Content: FC<
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
     useContext(AppLauncherContext)
 
-  const classNames = useMemo(() => {
-    const { wrapper, header, content } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      header: header(),
-      content: content(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      launcherListText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
-      latestReleaseNotes: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
-        defaultText: '最新のリリースノート',
-      }),
-      closeMenu: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/closeMenu',
-        defaultText: 'メニューを閉じる',
-      }),
-    }),
-    [localize],
-  )
+  const translated = useLocalize({
+    launcherListText: {
+      id: 'smarthr-ui/AppHeader/Launcher/listText',
+      defaultText: 'アプリ一覧',
+    },
+    latestReleaseNotes: {
+      id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
+      defaultText: '最新のリリースノート',
+    },
+  })
 
   const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
   const clearAppLauncher = useCallback(
@@ -136,8 +128,8 @@ export const Content: FC<
   )
 
   return (
-    <Section role="dialog" aria-modal="true" className={classNames.wrapper} ref={domRef}>
-      <div className={classNames.header}>
+    <Section role="dialog" aria-modal="true" className={CLASS_NAMES.wrapper} ref={domRef}>
+      <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
             <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
@@ -155,7 +147,14 @@ export const Content: FC<
           )}
 
           <Button variant="secondary" size="S" onClick={dialogClose}>
-            <FaXmarkIcon alt={translated.closeMenu} />
+            <FaXmarkIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/closeMenu"
+                  defaultText="メニューを閉じる"
+                />
+              }
+            />
           </Button>
         </Cluster>
       </div>
@@ -163,7 +162,7 @@ export const Content: FC<
       {isAppLauncherSelected && features && features.length > 0 ? (
         <AppLauncher features={features} />
       ) : (
-        <Scroller direction="vertical" className={classNames.content}>
+        <Scroller direction="vertical" className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (
