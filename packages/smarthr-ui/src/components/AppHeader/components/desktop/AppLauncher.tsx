@@ -4,7 +4,7 @@ import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } fr
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../../../hooks/useTheme'
-import { Localizer, useIntl } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
@@ -115,24 +115,20 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      searchInputTitle: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
-        defaultText: 'アプリ名を入力してください。',
-      }),
-      favoriteModeText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
-        defaultText: 'よく使うアプリ',
-      }),
-      allModeText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/allModeText',
-        defaultText: 'すべてのアプリ',
-      }),
-    }),
-    [localize],
-  )
+  const translated = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+    favoriteModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
+      defaultText: 'よく使うアプリ',
+    },
+    allModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+      defaultText: 'すべてのアプリ',
+    },
+  })
 
   return (
     <div className={CLASS_NAMES.wrapper}>
