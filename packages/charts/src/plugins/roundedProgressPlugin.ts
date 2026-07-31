@@ -57,8 +57,11 @@ export const roundedProgressPlugin = {
       return
     }
 
-    // 進捗が 0（円弧なし）または全周のときは何もしない（全周は丸端が不要）
-    if (arc.circumference <= 0 || arc.circumference >= Math.PI * 2) {
+    // 進捗が 0 のときは描く円弧がない。
+    // 全周（100%）はここで打ち切ってはいけない。進捗の塗りは透明にしてあり
+    // 見た目はこのプラグインだけが描いているため、打ち切るとリングが消える。
+    // 全周では丸端同士が同じ位置で重なるので、そのまま描いて問題ない。
+    if (arc.circumference <= 0) {
       return
     }
 
