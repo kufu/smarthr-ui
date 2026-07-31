@@ -20,9 +20,9 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { useLocalize } from '../../../hooks/useLocalize'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
-import { useIntl } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
@@ -184,7 +184,6 @@ const ActualMultiCombobox = <T,>(
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
@@ -442,14 +441,12 @@ const ActualMultiCombobox = <T,>(
     }
   }, [isFocused, disabled, className])
 
-  const selectedListAriaLabel = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
-        defaultText: '選択済みアイテム',
-      }),
-    [localize],
-  )
+  const { selectedListAriaLabel } = useLocalize({
+    selectedListAriaLabel: {
+      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
+      defaultText: '選択済みアイテム',
+    },
+  })
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions

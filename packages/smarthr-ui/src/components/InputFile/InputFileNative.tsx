@@ -15,7 +15,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
@@ -38,16 +38,6 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
   ) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
-    const { localize } = useIntl()
-
-    const destroyLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/InputFile/destroy',
-          defaultText: '削除',
-        }),
-      [localize],
-    )
 
     const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
@@ -117,7 +107,6 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
                 key={index}
                 value={index}
                 handleDeleteClick={functions.handleDelete}
-                destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
                 {file.name}
@@ -148,12 +137,11 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
 type FileListItemProps = PropsWithChildren<{
   value: number
   handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
-  destroyLabel: string
   className: string
 }>
 
 const FileListItem = memo<FileListItemProps>(
-  ({ value, handleDeleteClick, destroyLabel, className, children }) => (
+  ({ value, handleDeleteClick, className, children }) => (
     <li className={className}>
       <span className="smarthr-ui-InputFile-fileName shr-wrap-break-word shr-min-w-[0]">
         {children}
@@ -165,7 +153,7 @@ const FileListItem = memo<FileListItemProps>(
         onClick={handleDeleteClick}
         className="smarthr-ui-InputFile-deleteButton"
       >
-        {destroyLabel}
+        <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
       </Button>
     </li>
   ),

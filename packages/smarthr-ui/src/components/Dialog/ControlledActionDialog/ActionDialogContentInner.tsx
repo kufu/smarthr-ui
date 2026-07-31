@@ -7,11 +7,10 @@ import {
   type ReactNode,
   memo,
   useCallback,
-  useMemo,
 } from 'react'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
@@ -176,21 +175,8 @@ const CloseButton = memo<{
   handleClick: ActionDialogContentInnerProps['handleClickClose']
   disabled: boolean
   text: ReactNode
-}>(({ handleClick, disabled, text }) => {
-  const { localize } = useIntl()
-
-  const defaultText = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/ActionDialog/closeButtonLabel',
-        defaultText: 'キャンセル',
-      }),
-    [localize],
-  )
-
-  return (
-    <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
-      {text ?? defaultText}
-    </Button>
-  )
-})
+}>(({ handleClick, disabled, text }) => (
+  <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+    {text ?? <Localizer id="smarthr-ui/ActionDialog/closeButtonLabel" defaultText="キャンセル" />}
+  </Button>
+))

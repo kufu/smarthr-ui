@@ -42,23 +42,15 @@ const ICON_MAPPER = {
 }
 
 const ActualStepStatusIcon: FC<ActualProps> = ({ status, className, ...rest }) => {
-  const actualStatus = useMemo(() => {
-    const isObject = typeof status === 'object'
-    const statusType = isObject ? status.type : status
-    const { alt, Component } = ICON_MAPPER[statusType]
-
-    return {
-      type: statusType,
-      text: isObject ? status.text || alt : alt,
-      Component,
-    }
-  }, [status])
+  const isObject = typeof status === 'object'
+  const statusType = isObject ? status.type : status
+  const { alt, Component } = ICON_MAPPER[statusType]
+  const actualAlt = isObject ? status.text || alt : alt
 
   const actualClassName = useMemo(
-    () => classNameGenerator({ status: actualStatus.type, className }),
-    [actualStatus.type, className],
+    () => classNameGenerator({ status: statusType, className }),
+    [statusType, className],
   )
-  const Component = actualStatus.Component
 
-  return <Component {...rest} alt={actualStatus.text} className={actualClassName} />
+  return <Component {...rest} alt={actualAlt} className={actualClassName} />
 }
