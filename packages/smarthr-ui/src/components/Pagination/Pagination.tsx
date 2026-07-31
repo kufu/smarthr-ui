@@ -11,7 +11,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
-import { useLocalize } from '../../hooks/useLocalize'
+import { useLocalize } from '../../intl'
 import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
 import { Nav } from '../SectioningContent'

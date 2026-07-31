@@ -11,7 +11,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { useLocalize } from '../../../hooks/useLocalize'
+import { useLocalize } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'

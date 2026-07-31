@@ -12,8 +12,7 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { useLocalize } from '../../../../hooks/useLocalize'
-import { Localizer } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
