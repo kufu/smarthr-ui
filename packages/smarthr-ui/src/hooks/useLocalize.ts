@@ -4,11 +4,13 @@ import { useIntl } from '../intl'
 
 type LocalizeProps = Parameters<ReturnType<typeof useIntl>['localize']>[0]
 
-export const useLocalize = (props: { [key: string]: LocalizeProps }) => {
+export const useLocalize = <T extends { [key: string]: LocalizeProps }>(
+  props: T,
+): { [K in keyof T]: string } => {
   const { localize } = useIntl()
 
   const localized = useMemo(() => {
-    const result: { [key: string]: string } = {}
+    const result = {} as { [K in keyof T]: string }
 
     for (const i in props) {
       result[i] = localize(props[i])
