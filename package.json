@@ -15,7 +15,7 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.9.5",
     "prettier-config-smarthr": "^1.0.1",
-    "prettier-plugin-tailwindcss": "^0.7.4",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "stylelint": "^17.14.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.2",
