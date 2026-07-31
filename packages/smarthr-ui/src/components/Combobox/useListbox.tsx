@@ -69,6 +69,18 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    dropdownList: dropdownList(),
+    helpMessage: helpMessage(),
+    loaderWrapper: loaderWrapper(),
+    noItems: noItems(),
+  }
+})()
+
 export const useListbox = <T,>({
   options,
   dropdownHelpMessage,
@@ -265,22 +277,10 @@ export const useListbox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-  const classNames = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      dropdownList: dropdownList(),
-      helpMessage: helpMessage(),
-      loaderWrapper: loaderWrapper(),
-      noItems: noItems(),
-    }
-  }, [])
-
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <div className={classNames.wrapper} style={wrapperStyle}>
+        <div className={CLASS_NAMES.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
             <VisuallyHiddenText role="status">
               <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
@@ -291,12 +291,12 @@ export const useListbox = <T,>({
             ref={listBoxRef}
             role="listbox"
             aria-hidden={!isExpanded}
-            className={classNames.dropdownList}
+            className={CLASS_NAMES.dropdownList}
             style={dropdownListStyle}
           >
             {dropdownHelpMessage && (
               <Text
-                className={classNames.helpMessage}
+                className={CLASS_NAMES.helpMessage}
                 icon={<FaCircleInfoIcon color="TEXT_GREY" />}
                 as="p"
               >
@@ -305,11 +305,11 @@ export const useListbox = <T,>({
             )}
             {isExpanded ? (
               isLoading ? (
-                <div className={classNames.loaderWrapper}>
+                <div className={CLASS_NAMES.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
               ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={classNames.noItems}>
+                <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
                   {orgNoResultText ?? (
                     <Localizer
                       id="smarthr-ui/Combobox/noResultsText"
@@ -347,7 +347,6 @@ export const useListbox = <T,>({
       handleAdd,
       handleHoverOption,
       handleSelect,
-      classNames,
       dropdownListStyle,
       wrapperStyle,
       createPortal,

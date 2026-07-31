@@ -14,11 +14,7 @@ import { Document, Page, pdfjs } from 'react-pdf'
 
 import { Scroller } from '../Scroller'
 
-import {
-  SELECTED_MATCH_CLASS,
-  buildCustomTextRenderer,
-  matchSelector,
-} from './buildCustomTextRenderer'
+import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
@@ -57,9 +53,6 @@ const options = {
   cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
-type CustomTextRenderer = NonNullable<ComponentProps<typeof Page>['customTextRenderer']>
-type TextContent = Parameters<NonNullable<ComponentProps<typeof Page>['onGetTextSuccess']>>[number]
-
 // pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer スコープで上書きし、検索ハイライト色を変更している。
 const HighlightOverrideStyle = () => (
   <style>{`
@@ -91,7 +84,6 @@ export const PDFViewer: FC<Props> = memo(
   }) => {
     const matches = search?.matches
     const currentMatchIndex = search?.currentMatchIndex
-    const onPageTextLoaded = search?.registerPageText
     const [pdfNumPages, setPdfNumPages] = useState(1)
     const rootRef = useRef<HTMLDivElement>(null)
 
@@ -116,27 +108,6 @@ export const PDFViewer: FC<Props> = memo(
         }
       }
     }, [handleLoad, handlePDFLoaded, pdfNumPages, rotation])
-
-    const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
-      if (!matches || matches.length === 0) {
-        return undefined
-      }
-      return buildCustomTextRenderer(matches)
-    }, [matches])
-
-    const handleGetTextSuccess = useCallback(
-      (pageIndex: number) => (textContent: TextContent) => {
-        if (!onPageTextLoaded) return
-        const texts = textContent.items.reduce<string[]>((acc, item) => {
-          if ('str' in item) {
-            acc.push(item.str)
-          }
-          return acc
-        }, [])
-        onPageTextLoaded(pageIndex, texts)
-      },
-      [onPageTextLoaded],
-    )
 
     useEffect(() => {
       const root = rootRef.current
@@ -189,8 +160,8 @@ export const PDFViewer: FC<Props> = memo(
                 scale={scale}
                 className="shr-w-full"
                 onLoadSuccess={onPageLoad}
-                onGetTextSuccess={handleGetTextSuccess(i)}
-                customTextRenderer={customTextRenderer}
+                onGetTextSuccess={search?.generateHandlePDFPageGetTextSuccess(i)}
+                customTextRenderer={search?.customTextRenderer}
                 loading={null}
               />
             ))}

@@ -1,4 +1,4 @@
-import { type FC, memo, useCallback, useMemo, useState } from 'react'
+import { type FC, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../../intl'
@@ -24,6 +24,17 @@ const classNameGenerator = tv({
     dropdownButtonArea: ['shr-border-t-shorthand shr-p-0.5'],
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = classNameGenerator()
+
+  return {
+    iconButton: iconButton(),
+    iconButtonInner: iconButtonInner(),
+    dropdownUserName: dropdownUserName(),
+    dropdownButtonArea: dropdownButtonArea(),
+  }
+})()
 
 type Props = UserInfoProps & Pick<HeaderProps, 'locale'>
 
@@ -53,27 +64,20 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
 }) => {
   const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
 
-  const dialogOpen = useCallback(() => setLanguageDialogOpen(true), [])
-  const dialogClose = useCallback(() => setLanguageDialogOpen(false), [])
-
-  const classNames = useMemo(() => {
-    const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } =
-      classNameGenerator()
-
-    return {
-      iconButton: iconButton(),
-      iconButtonInner: iconButtonInner(),
-      dropdownUserName: dropdownUserName(),
-      dropdownButtonArea: dropdownButtonArea(),
-    }
-  }, [])
+  const functions = useMemo(
+    () => ({
+      dialogOpen: () => setLanguageDialogOpen(true),
+      dialogClose: () => setLanguageDialogOpen(false),
+    }),
+    [],
+  )
 
   return (
     <>
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="skeleton" size="S" className={classNames.iconButton}>
-            <span className={classNames.iconButtonInner}>
+          <Button variant="skeleton" size="S" className={CLASS_NAMES.iconButton}>
+            <span className={CLASS_NAMES.iconButtonInner}>
               <FaUserLargeIcon
                 alt={
                   <Localizer
@@ -88,17 +92,17 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
         </DropdownTrigger>
 
         <DropdownContent>
-          <div className={classNames.dropdownUserName}>
+          <div className={CLASS_NAMES.dropdownUserName}>
             <p>{displayName}</p>
           </div>
 
           {(locale || accountUrl) && (
-            <div className={classNames.dropdownButtonArea}>
+            <div className={CLASS_NAMES.dropdownButtonArea}>
               {locale && (
                 <CommonButton
                   elementAs="button"
                   type="button"
-                  onClick={dialogOpen}
+                  onClick={functions.dialogOpen}
                   prefix={<FaGlobeIcon />}
                   // eslint-disable-next-line smarthr/require-i18n-text
                 >
@@ -125,8 +129,8 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
       </Dropdown>
 
       {locale && (
-        <Dialog isOpen={languageDialogOpen} onClickOverlay={dialogClose} width={246}>
-          <LanguageSelector locale={locale} onClickClose={dialogClose} />
+        <Dialog isOpen={languageDialogOpen} onClickOverlay={functions.dialogClose} width={246}>
+          <LanguageSelector locale={locale} onClickClose={functions.dialogClose} />
         </Dialog>
       )}
     </>

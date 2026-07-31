@@ -22,15 +22,15 @@ type sortTypes = 'asc' | 'desc' | 'none'
 
 type Props = PropsWithChildren<{
   align?: VariantProps<typeof sortButtonClassNameGenerator>['align']
-  onSort?: () => void
+  handleSort?: () => void
   sort?: sortTypes
 }>
 
-export const ThSortButton = memo<Props>(({ align, sort, onSort, children }) => {
+export const ThSortButton = memo<Props>(({ align, sort, handleSort, children }) => {
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
   return (
-    <UnstyledButton onClick={onSort} className={className}>
+    <UnstyledButton onClick={handleSort} className={className}>
       {children}
       <SortIcon />
       {sort && (
@@ -68,21 +68,19 @@ const sortIconClassNameGenerator = tv({
   },
 })
 
-const SortIcon = memo(() => {
-  const classNames = useMemo(() => {
-    const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
+const SORT_ICON_CLASS_NAMES = (() => {
+  const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
 
-    return {
-      wrapper: wrapper(),
-      upIcon: upIcon(),
-      downIcon: downIcon(),
-    }
-  }, [])
+  return {
+    wrapper: wrapper(),
+    upIcon: upIcon(),
+    downIcon: downIcon(),
+  }
+})()
 
-  return (
-    <span className={classNames.wrapper}>
-      <FaSortUpIcon className={classNames.upIcon} />
-      <FaSortDownIcon className={classNames.downIcon} />
-    </span>
-  )
-})
+const SortIcon = memo(() => (
+  <span className={SORT_ICON_CLASS_NAMES.wrapper}>
+    <FaSortUpIcon className={SORT_ICON_CLASS_NAMES.upIcon} />
+    <FaSortDownIcon className={SORT_ICON_CLASS_NAMES.downIcon} />
+  </span>
+))

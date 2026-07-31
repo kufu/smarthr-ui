@@ -1,6 +1,6 @@
 'use client'
 
-import { type MouseEvent, memo, useCallback, useMemo } from 'react'
+import { type MouseEvent, memo, useCallback } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../../../hooks/useTheme'
@@ -32,31 +32,29 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) => {
-  const classNames = useMemo(() => {
-    const { trigger, contentBody, contentButton } = classNameGenerator()
+const CLASS_NAMES = (() => {
+  const { trigger, contentBody, contentButton } = classNameGenerator()
 
-    return {
-      trigger: trigger(),
-      contentBody: contentBody(),
-      contentButton: contentButton(),
-    }
-  }, [])
+  return {
+    trigger: trigger(),
+    contentBody: contentBody(),
+    contentButton: contentButton(),
+  }
+})()
 
-  return (
-    <Dropdown>
-      <MemoizedDropdownTrigger className={classNames.trigger} page={page} />
-      <DropdownContent>
-        <ContentBody
-          page={page}
-          onSelectPage={onSelectPage}
-          className={classNames.contentBody}
-          buttonClassName={classNames.contentButton}
-        />
-      </DropdownContent>
-    </Dropdown>
-  )
-})
+export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) => (
+  <Dropdown>
+    <MemoizedDropdownTrigger className={CLASS_NAMES.trigger} page={page} />
+    <DropdownContent>
+      <ContentBody
+        page={page}
+        onSelectPage={onSelectPage}
+        className={CLASS_NAMES.contentBody}
+        buttonClassName={CLASS_NAMES.contentButton}
+      />
+    </DropdownContent>
+  </Dropdown>
+))
 
 const MemoizedDropdownTrigger = memo<{ page: Launcher['page']; className: string }>(
   ({ page, className }) => (
