@@ -1,7 +1,8 @@
-import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Localizer, useIntl } from '../../../../intl'
+import { useLocalize } from '../../../../hooks/useLocalize'
+import { Localizer } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
@@ -61,15 +62,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const { localize } = useIntl()
-  const searchInputTitle = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
-        defaultText: 'アプリ名を入力してください。',
-      }),
-    [localize],
-  )
+  const { searchInputTitle } = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+  })
 
   return (
     <div className={CLASS_NAMES.wrapper}>
