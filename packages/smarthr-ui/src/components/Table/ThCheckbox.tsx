@@ -3,7 +3,7 @@
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLocalize } from '../../hooks/useLocalize'
+import { useLocalize } from '../../intl'
 import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
 import { ControlledTooltip } from '../Tooltip'
 
