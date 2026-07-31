@@ -37,6 +37,6 @@
     "vitest",
     "wait-on"
   ],
-  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "vitest", "knip"],
+  "ignoreBinaries": ["tsc", "eslint", "prettier", "stylelint", "tailwindcss", "vitest", "knip"],
   "ignoreExportsUsedInFile": true
 }
