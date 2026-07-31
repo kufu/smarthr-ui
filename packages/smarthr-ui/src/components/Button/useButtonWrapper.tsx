@@ -50,14 +50,7 @@ export type Props = ButtonProps | AnchorProps
 
 // HINT: useButtonWrapperの引数を調整する場合、以下も調整する
 type FilteredProps =
-  | 'size'
-  | 'wide'
-  | 'variant'
-  | 'className'
-  | 'prefix'
-  | 'suffix'
-  | 'children'
-  | 'isAnchor'
+  'size' | 'wide' | 'variant' | 'className' | 'prefix' | 'suffix' | 'children' | 'isAnchor'
 export type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
 export type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
 

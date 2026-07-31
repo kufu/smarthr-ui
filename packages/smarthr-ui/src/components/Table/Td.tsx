@@ -10,8 +10,7 @@ export type AbstractProps = PropsWithChildren<
     /** 横スクロール時、カラムを左右いずれかに固定 */
     fixed?: 'left' | 'right'
     contentWidth?:
-      | CellContentWidth
-      | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
+      CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
   }
 >
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'td'>, keyof AbstractProps>

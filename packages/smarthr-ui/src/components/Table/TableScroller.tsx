@@ -1,0 +1,98 @@
+'use client'
+
+import {
+  type ComponentPropsWithRef,
+  type ForwardedRef,
+  type PropsWithChildren,
+  forwardRef,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+} from 'react'
+import { tv } from 'tailwind-variants'
+
+import { defaultHtmlFontSize } from '../../themes'
+import { Scroller } from '../Scroller'
+
+type Props = PropsWithChildren &
+  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
+    fixedHead?: boolean
+  }
+
+const classNameGenerator = tv({
+  slots: {
+    // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
+    wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
+  },
+})
+
+const classNames = (() => {
+  const { wrapper } = classNameGenerator()
+  return {
+    wrapper: wrapper(),
+  }
+})()
+
+export const TableScroller = forwardRef<HTMLDivElement, Props>(
+  ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
+    const commonProps = {
+      direction: 'both' as const,
+      className: classNames.wrapper,
+    }
+
+    return fixedHead ? (
+      <FixedHeadTableScroller {...rest} {...commonProps} forwardedRef={forwardedRef}>
+        {children}
+      </FixedHeadTableScroller>
+    ) : (
+      <Scroller {...rest} {...commonProps} ref={forwardedRef}>
+        {children}
+      </Scroller>
+    )
+  },
+)
+
+type FixedHeadTableScrollerProps = PropsWithChildren &
+  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
+    forwardedRef: ForwardedRef<HTMLDivElement>
+    direction: 'both'
+  }
+
+const FixedHeadTableScroller = ({
+  children,
+  forwardedRef,
+  direction,
+  ...rest
+}: FixedHeadTableScrollerProps) => {
+  const innerRef = useRef<HTMLDivElement | null>(null)
+
+  const setRefs = useCallback(
+    (node: HTMLDivElement) => {
+      innerRef.current = node
+      if (forwardedRef) {
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(node)
+        } else {
+          forwardedRef.current = node
+        }
+      }
+    },
+    [forwardedRef],
+  )
+
+  // thead の高さ分だけ scroll-padding-top を設定
+  useLayoutEffect(() => {
+    if (!innerRef.current) return
+    const thead = innerRef.current.querySelector('thead')
+    if (thead) {
+      const { height } = thead.getBoundingClientRect()
+      innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
+    }
+  }, [])
+
+  return (
+    <Scroller {...rest} ref={setRefs} direction={direction}>
+      {children}
+    </Scroller>
+  )
+}

@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
 
@@ -20,36 +22,48 @@ export function useRemoteTrigger({
   id,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
-  const togglerRef = useRef<Pick<Props, 'onToggle' | 'onOpen' | 'onClose'>>({
+  const latest = useLatest({
     onToggle,
     onOpen,
     onClose,
+    orgOnClickClose,
+    orgOnPressEscape,
   })
 
-  const onClickClose = useCallback(() => {
-    if (orgOnClickClose) {
-      return orgOnClickClose(() => {
-        setIsOpen(false)
-      })
+  const functions = useMemo(() => {
+    const updateIsOpen = (newIsOpen: boolean) => {
+      setIsOpen(newIsOpen)
+      latest.onToggle?.(newIsOpen)
+      latest[newIsOpen ? 'onOpen' : 'onClose']?.()
     }
 
-    setIsOpen(false)
-  }, [orgOnClickClose])
+    return {
+      updateIsOpen,
+      handleClickClose: () => {
+        if (latest.orgOnClickClose) {
+          return latest.orgOnClickClose(() => {
+            updateIsOpen(false)
+          })
+        }
 
-  const onPressEscape = useCallback(() => {
-    if (orgOnPressEscape) {
-      return orgOnPressEscape(() => {
-        setIsOpen(false)
-      })
+        updateIsOpen(false)
+      },
+      handlePressEscape: () => {
+        if (latest.orgOnPressEscape) {
+          return latest.orgOnPressEscape(() => {
+            updateIsOpen(false)
+          })
+        }
+
+        updateIsOpen(false)
+      },
     }
-
-    setIsOpen(false)
-  }, [orgOnPressEscape])
+  }, [latest])
 
   useEffect(() => {
     const handler = ((e: Event & { detail: { id: string } }) => {
       if (id === e.detail.id) {
-        setIsOpen(true)
+        functions.updateIsOpen(true)
       }
     }) as Parameters<typeof document.addEventListener>['1']
 
@@ -58,27 +72,11 @@ export function useRemoteTrigger({
     return () => {
       document.removeEventListener(TRIGGER_EVENT, handler)
     }
-  }, [id])
-
-  useEffect(() => {
-    togglerRef.current.onToggle = onToggle
-    togglerRef.current.onOpen = onOpen
-    togglerRef.current.onClose = onClose
-  }, [onToggle, onOpen, onClose])
-
-  useEffect(() => {
-    togglerRef.current.onToggle?.(isOpen)
-
-    if (isOpen) {
-      togglerRef.current.onOpen?.()
-    } else {
-      togglerRef.current.onClose?.()
-    }
-  }, [isOpen])
+  }, [id, functions])
 
   return {
     isOpen,
-    onClickClose,
-    onPressEscape,
+    handleClickClose: functions.handleClickClose,
+    handlePressEscape: functions.handlePressEscape,
   }
 }

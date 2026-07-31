@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
+import { type ComponentProps, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LoaderSpinner } from './LoaderSpinner'
@@ -34,7 +34,8 @@ const classNameGenerator = tv({
 
 export const Loader = memo<Props>(
   ({ size = 'M', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
-    const classNames = useMemo(() => {
+    // HINT: Loaderは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
+    const classNames = (() => {
       const { wrapper, textSlot } = classNameGenerator({
         type,
       })
@@ -43,7 +44,7 @@ export const Loader = memo<Props>(
         wrapper: wrapper({ className }),
         text: textSlot(),
       }
-    }, [type, className])
+    })()
 
     return (
       <span {...rest} role={role} className={classNames.wrapper}>

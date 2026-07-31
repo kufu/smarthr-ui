@@ -5,12 +5,12 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
-  isValidElement,
   memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { useTheme } from '../../hooks/useTheme'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
@@ -25,6 +25,8 @@ type AbstractProps = PropsWithChildren<{
   maxColumns?: number
 }>
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+
+const termObjectConverter = (term: ReactNode): ObjectTermType => ({ text: term })
 
 const classNameGenerator = tv({
   slots: {
@@ -53,15 +55,10 @@ export const DefinitionListItem: FC<Props> = ({
   className,
 }) => {
   const theme = useTheme()
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const term: ObjectTermType =
-    !orgTerm || typeof orgTerm !== 'object' || isValidElement(orgTerm)
-      ? {
-          text: orgTerm as ReactNode,
-        }
-      : (orgTerm as ObjectTermType)
+  const term = useObjectAttributes<ReactNode | ObjectTermType, ObjectTermType>(
+    orgTerm,
+    termObjectConverter,
+  )
 
   const classNames = useMemo(() => {
     const cs = classNameGenerator()

@@ -1,12 +1,4 @@
-import {
-  type PropsWithChildren,
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import { tv } from 'tailwind-variants'
+import { type PropsWithChildren, forwardRef, useImperativeHandle, useRef, useState } from 'react'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
@@ -17,17 +9,13 @@ type Props = PropsWithChildren<{
   inputRect: DOMRect
 }>
 
-const classNameGenerator = tv({
-  base: 'smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none',
-})
-
 const initialPosition = {
   top: '0px',
   left: '0px',
 }
 
 export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest }, ref) => {
-  const { isPortalRootMounted, createPortal } = usePortal()
+  const { portalRoot, createPortal } = usePortal()
   const containerRef = useRef<HTMLDivElement>(null)
 
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
@@ -43,9 +31,14 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest },
         left: `${position.left}px`,
       })
     }
-  }, [inputRect, isPortalRootMounted])
+  }, [inputRect, portalRoot])
 
-  const className = useMemo(() => classNameGenerator(), [])
-
-  return createPortal(<div {...rest} ref={containerRef} className={className} style={style} />)
+  return createPortal(
+    <div
+      {...rest}
+      ref={containerRef}
+      className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none"
+      style={style}
+    />,
+  )
 })

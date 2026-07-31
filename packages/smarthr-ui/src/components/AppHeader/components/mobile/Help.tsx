@@ -1,6 +1,6 @@
-import { type FC, memo, useMemo } from 'react'
+import { type FC, memo } from 'react'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
@@ -25,59 +25,44 @@ const ActualHelp: FC<Props> = ({ helpPageUrl, schoolUrl }) => (
   </Dropdown>
 )
 
-const MemoizedDropdownTrigger = memo(() => {
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
-    }),
-    [localize],
-  )
+const MemoizedDropdownTrigger = memo(() => (
+  <DropdownTrigger>
+    <Button variant="skeleton" size="S" className="[&&&]:shr-border-transparent">
+      <FaCircleQuestionIcon
+        alt={<Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />}
+      />
+    </Button>
+  </DropdownTrigger>
+))
 
-  return (
-    <DropdownTrigger>
-      <Button variant="skeleton" size="S" className="[&&&]:shr-border-transparent">
-        <FaCircleQuestionIcon alt={translated.help} />
-      </Button>
-    </DropdownTrigger>
-  )
-})
-
-const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => {
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
-      school: localize({ id: 'smarthr-ui/AppHeader/school', defaultText: 'スクール' }),
-    }),
-    [localize],
-  )
-
-  return (
-    <div className="shr-p-0.5">
-      {helpPageUrl && (
-        <CommonButton
-          elementAs="a"
-          href={helpPageUrl}
-          target="_blank"
-          rel="help"
-          referrerPolicy="no-referrer-when-downgrade"
-          prefix={<FaCircleQuestionIcon />}
-        >
-          <Translate>{translated.help}</Translate>
-        </CommonButton>
-      )}
-      {schoolUrl && (
-        <CommonButton
-          elementAs="a"
-          href={schoolUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          prefix={<FaGraduationCapIcon />}
-        >
-          <Translate>{translated.school}</Translate>
-        </CommonButton>
-      )}
-    </div>
-  )
-})
+const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => (
+  <div className="shr-p-0.5">
+    {helpPageUrl && (
+      <CommonButton
+        elementAs="a"
+        href={helpPageUrl}
+        target="_blank"
+        rel="help"
+        referrerPolicy="no-referrer-when-downgrade"
+        prefix={<FaCircleQuestionIcon />}
+      >
+        <Translate>
+          <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
+        </Translate>
+      </CommonButton>
+    )}
+    {schoolUrl && (
+      <CommonButton
+        elementAs="a"
+        href={schoolUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<FaGraduationCapIcon />}
+      >
+        <Translate>
+          <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
+        </Translate>
+      </CommonButton>
+    )}
+  </div>
+))

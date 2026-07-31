@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
 import { FaCircleXmarkIcon } from '../../Icon'
@@ -154,8 +154,6 @@ const BaseDestroyButton = <T,>({
   className: string
   iconStyle: string
 }) => {
-  const { localize } = useIntl()
-
   const onDeleteRef = useRef(onDelete)
   onDeleteRef.current = onDelete
   const itemRef = useRef(item)
@@ -175,15 +173,6 @@ const BaseDestroyButton = <T,>({
     }
   }, [])
 
-  const destroyButtonIconAltSuffix = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix',
-        defaultText: 'を削除',
-      }),
-    [localize],
-  )
-
   return (
     <UnstyledButton
       ref={buttonRef}
@@ -194,7 +183,9 @@ const BaseDestroyButton = <T,>({
       onKeyDown={onKeyDown}
       className={className}
     >
-      <VisuallyHiddenText id={suffixTextId}>{destroyButtonIconAltSuffix}</VisuallyHiddenText>
+      <VisuallyHiddenText id={suffixTextId}>
+        <Localizer id="smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix" defaultText="を削除" />
+      </VisuallyHiddenText>
       <FaCircleXmarkIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
     </UnstyledButton>
   )
