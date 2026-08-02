@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentType,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -15,7 +15,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import Draggable from 'react-draggable'
+import Draggable, { type DraggableProps } from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
@@ -32,6 +32,10 @@ import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
 import type { DialogSize } from '../types'
+
+// react-draggable@4.7.0 の型定義で `props: DraggableProps`（非 Partial）が宣言されており
+// defaultProps 相当のすべての props が JSX 上で必須扱いになる型の後退を回避するためキャスト
+const DraggableCompat = Draggable as ComponentType<Partial<DraggableProps>>
 
 type AbstractProps = PropsWithChildren<{
   /**
@@ -188,8 +192,7 @@ export const ModelessDialog: FC<Props> = ({
     x: 0,
     y: 0,
   })
-  const [draggableBounds, setDraggableBounds] =
-    useState<ComponentProps<typeof Draggable>['bounds']>()
+  const [draggableBounds, setDraggableBounds] = useState<DraggableProps['bounds']>(false)
 
   const positionStyle = useMemo(
     () => ({
@@ -350,7 +353,7 @@ export const ModelessDialog: FC<Props> = ({
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
-      <Draggable
+      <DraggableCompat
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={functions.handleDragStart}
         onDrag={functions.handleDrag}
@@ -395,7 +398,7 @@ export const ModelessDialog: FC<Props> = ({
           {footer && <div className={classNames.footer}>{footer}</div>}
           <LiveRegion regionText={debouncedLiveRegionText} />
         </Base>
-      </Draggable>
+      </DraggableCompat>
     </DialogOverlap>,
   )
 }
