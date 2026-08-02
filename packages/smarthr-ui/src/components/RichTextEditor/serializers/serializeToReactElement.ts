@@ -4,6 +4,16 @@ import { type ReactNode, createElement } from 'react'
 import { isAllowedLineHeight } from '../extensions/LineHeight'
 import { ALL_FEATURES, configureExtensions } from '../extensions/configureExtensions'
 
+import {
+  isSafeColor,
+  isSafeFontSize,
+  isSafeImageSrc,
+  isSafeLinkTarget,
+  isSafeUrl,
+  isSafeYoutubeSrc,
+  parseNumericAttr,
+} from './safeAttributes'
+
 import type { RichTextJSON } from '../types'
 import type { Mark, Node } from '@tiptap/pm/model'
 import type { AnyExtension } from '@tiptap/react'
@@ -11,33 +21,6 @@ import type { AnyExtension } from '@tiptap/react'
 type ReactNodeMapping = (ctx: { node: Node; children?: ReactNode | ReactNode[] }) => ReactNode
 
 type ReactMarkMapping = (ctx: { mark: Mark; children?: ReactNode | ReactNode[] }) => ReactNode
-
-const SAFE_LINK_TARGETS = new Set(['_blank', '_self', '_parent', '_top'])
-
-const isSafeUrl = (url: unknown): url is string =>
-  typeof url === 'string' && /^https?:\/\/|^mailto:/i.test(url.trim())
-
-export const isSafeImageSrc = (src: unknown): src is string =>
-  typeof src === 'string' && /^https?:\/\//i.test(src)
-
-const isSafeYoutubeSrc = (src: unknown): src is string =>
-  typeof src === 'string' &&
-  /^https?:\/\/(www\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\//i.test(src)
-
-const isSafeColor = (color: unknown): color is string =>
-  typeof color === 'string' &&
-  (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(color) ||
-    /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/i.test(color) ||
-    /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(?:0|1|0?\.\d+)\s*\)$/i.test(color))
-
-const isSafeFontSize = (fontSize: unknown): fontSize is string =>
-  typeof fontSize === 'string' && /^\d+(\.\d+)?px$/.test(fontSize)
-
-const parseNumericAttr = (value: unknown): number | undefined => {
-  if (typeof value === 'number') return value
-  if (typeof value === 'string' && /^\d+(\.\d+)?$/.test(value)) return parseFloat(value)
-  return undefined
-}
 
 let cachedExtensions: AnyExtension[] | null = null
 
@@ -101,9 +84,7 @@ const markMapping: Record<string, ReactMarkMapping> = {
       'a',
       {
         href: isSafeUrl(href) ? href : undefined,
-        target: SAFE_LINK_TARGETS.has(mark.attrs.target as string)
-          ? (mark.attrs.target as string)
-          : undefined,
+        target: isSafeLinkTarget(mark.attrs.target) ? mark.attrs.target : undefined,
         rel: 'noopener noreferrer',
       },
       children,

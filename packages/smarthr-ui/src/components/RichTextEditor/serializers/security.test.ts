@@ -306,4 +306,112 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(html).toContain('background-color:rgba(0, 0, 255, 0.5)')
     })
   })
+
+  // serializeToReactElement は nodeMapping/markMapping で属性を検証しているが、
+  // serializeToHTML は Tiptap 拡張の renderHTML に委ねており、style 値として
+  // 使われる属性が未検証のまま出力される。両経路が同じ allowlist に従うことを保証する。
+  describe('直接JSON入力のサニタイズ（serializeToHTML）', () => {
+    const textStyleDoc = (attrs: Record<string, unknown>) => ({
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', marks: [{ type: 'textStyle', attrs }], text: 'styled' }],
+        },
+      ],
+    })
+
+    it('textStyle の color に追記されたCSS宣言が出力されない', () => {
+      const html = serializeToHTML(
+        textStyleDoc({ color: 'red;background-image:url(https://evil.example/x)' }),
+      )
+      expect(html).not.toContain('background-image')
+      expect(html).not.toContain('evil.example')
+    })
+
+    it('textStyle の backgroundColor に追記されたCSS宣言が出力されない', () => {
+      const html = serializeToHTML(
+        textStyleDoc({ backgroundColor: 'red;background-image:url(https://evil.example/y)' }),
+      )
+      expect(html).not.toContain('background-image')
+      expect(html).not.toContain('evil.example')
+    })
+
+    it('textStyle の fontSize に追記されたCSS宣言が出力されない', () => {
+      const html = serializeToHTML(textStyleDoc({ fontSize: '12px;position:fixed' }))
+      expect(html).not.toContain('position')
+    })
+
+    it('textStyle の安全な color/backgroundColor/fontSize は保持される', () => {
+      const html = serializeToHTML(
+        textStyleDoc({ color: '#ff0000', backgroundColor: 'rgb(0, 0, 255)', fontSize: '12px' }),
+      )
+      expect(html).toContain('#ff0000')
+      expect(html).toContain('rgb(0, 0, 255)')
+      expect(html).toContain('12px')
+    })
+
+    it('textAlign に追記されたCSS宣言が出力されない', () => {
+      const html = serializeToHTML({
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            attrs: { textAlign: 'left;position:fixed' },
+            content: [{ type: 'text', text: 'x' }],
+          },
+        ],
+      })
+      expect(html).not.toContain('position')
+    })
+
+    it('安全な textAlign は保持される', () => {
+      const html = serializeToHTML({
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            attrs: { textAlign: 'center' },
+            content: [{ type: 'text', text: 'x' }],
+          },
+        ],
+      })
+      expect(html).toContain('text-align: center')
+    })
+
+    it('link の不正な target が出力されない', () => {
+      const html = serializeToHTML({
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                marks: [
+                  { type: 'link', attrs: { href: 'https://example.com', target: 'evil_frame' } },
+                ],
+                text: 'click',
+              },
+            ],
+          },
+        ],
+      })
+      expect(html).not.toContain('evil_frame')
+    })
+
+    it('image の数値でない width/height が出力されない', () => {
+      const html = serializeToHTML({
+        type: 'doc',
+        content: [
+          {
+            type: 'image',
+            attrs: { src: 'https://example.com/a.png', width: '100"><script>x', height: 'evil' },
+          },
+        ],
+      })
+      assertSafe(html)
+      expect(html).not.toContain('evil')
+    })
+  })
 })
