@@ -9,6 +9,7 @@ type RichTextEditorContextValue = {
   editor: Editor
   features: readonly RichTextFeature[]
   headingLevels: ReadonlyArray<1 | 2 | 3 | 4>
+  disabled?: boolean
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   onImageUploadError?: (error: unknown, file: File) => void
   acceptedMimeTypes?: string[]
@@ -22,6 +23,7 @@ type ProviderProps = {
   editor: Editor
   features: readonly RichTextFeature[]
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
+  disabled?: boolean
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   onImageUploadError?: (error: unknown, file: File) => void
   acceptedMimeTypes?: string[]
@@ -32,6 +34,7 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   editor,
   features,
   headingLevels = DEFAULT_HEADING_LEVELS,
+  disabled,
   onImageUpload,
   onImageUploadError,
   acceptedMimeTypes,
@@ -42,6 +45,7 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
       editor,
       features,
       headingLevels,
+      disabled,
       onImageUpload,
       onImageUploadError,
       acceptedMimeTypes,

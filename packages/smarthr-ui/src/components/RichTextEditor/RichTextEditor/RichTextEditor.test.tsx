@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { createRef } from 'react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { IntlProvider } from '../../../intl'
 import { FormControl } from '../../FormControl'
@@ -89,6 +90,81 @@ describe('RichTextEditor', () => {
     })
     const boldButton = screen.getByLabelText('太字')
     expect(boldButton).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  describe('disabled', () => {
+    const ALL_FEATURES = [
+      'bold',
+      'italic',
+      'strike',
+      'underline',
+      'code',
+      'codeBlock',
+      'bulletList',
+      'orderedList',
+      'blockquote',
+      'horizontalRule',
+      'link',
+      'heading',
+      'color',
+      'backgroundColor',
+      'fontSize',
+      'lineHeight',
+      'textAlign',
+      'image',
+      'youtube',
+      'table',
+    ] as const
+
+    it('ツールバーは表示したまま、すべてのボタンを無効化する', async () => {
+      render(<RichTextEditor disabled features={ALL_FEATURES} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+
+      const buttons = within(screen.getByRole('toolbar')).getAllByRole('button')
+      expect(buttons.length).toBeGreaterThan(0)
+      for (const button of buttons) {
+        expect(button).toBeDisabled()
+      }
+    })
+
+    it('ツールバーのボタンを押しても本文が変化せずonChangeも発火しない', async () => {
+      const ref = createRef<RichTextEditorController>()
+      const onChange = vi.fn()
+      render(
+        <RichTextEditor
+          ref={ref}
+          disabled
+          features={['horizontalRule', 'bold']}
+          defaultValue={{
+            type: 'doc',
+            content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello' }] }],
+          }}
+          onChange={onChange}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+      const before = JSON.stringify(ref.current!.getJSON())
+
+      await userEvent.click(screen.getByLabelText('水平線'))
+      await userEvent.click(screen.getByLabelText('太字'))
+
+      expect(JSON.stringify(ref.current!.getJSON())).toBe(before)
+      expect(screen.getByLabelText('太字')).toHaveAttribute('aria-pressed', 'false')
+      expect(onChange).not.toHaveBeenCalled()
+    })
+
+    it('disabledでないときはツールバーのボタンが有効', async () => {
+      render(<RichTextEditor features={['bold']} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+      expect(screen.getByLabelText('太字')).toBeEnabled()
+    })
   })
 
   describe('showCharacterCount', () => {

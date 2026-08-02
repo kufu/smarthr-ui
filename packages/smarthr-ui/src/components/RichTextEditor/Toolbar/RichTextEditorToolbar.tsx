@@ -64,7 +64,7 @@ type CustomItem = {
 type ToolbarItem = ButtonItem | CustomItem
 
 export const RichTextEditorToolbar: FC = memo(() => {
-  const { editor, features } = useRichTextEditorContext()
+  const { editor, features, disabled } = useRichTextEditorContext()
   const { localize } = useIntl()
   const state = useToolbarState(editor)
 
@@ -290,8 +290,14 @@ export const RichTextEditorToolbar: FC = memo(() => {
       toolbarItems.push({ type: 'youtube', key: 'youtube-insert', disabled: state.isNodeSelected })
     }
 
+    // editorのeditable解除だけではツールバー由来のコマンドは止まらない（Tiptapのcommandはeditableを見ない）ため、
+    // 各itemのdisabledを一括で上書きしてネイティブのdisabled状態に落とす
+    if (disabled) {
+      return toolbarItems.map((item) => ({ ...item, disabled: true }))
+    }
+
     return toolbarItems
-  }, [features, state, editor, localize])
+  }, [features, state, editor, localize, disabled])
 
   const handleEscape = useCallback(() => {
     editor.commands.focus()

@@ -241,6 +241,7 @@ export const RichTextEditor = memo(
           editor={editor}
           features={features}
           headingLevels={headingLevels}
+          disabled={disabled}
           onImageUpload={onImageUpload}
           onImageUploadError={onImageUploadError}
           acceptedMimeTypes={acceptedMimeTypes}
