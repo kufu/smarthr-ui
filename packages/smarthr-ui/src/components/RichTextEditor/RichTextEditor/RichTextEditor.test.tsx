@@ -167,6 +167,78 @@ describe('RichTextEditor', () => {
     })
   })
 
+  // features は「新しく適用できる操作」の制限であり、読み込める書式の制限ではない。
+  describe('features 外の書式を含む入力', () => {
+    const RICH_VALUE: RichTextJSON = {
+      type: 'doc',
+      content: [
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '見出し' }] },
+        {
+          type: 'paragraph',
+          content: [
+            { type: 'text', text: '斜体', marks: [{ type: 'italic' }] },
+            {
+              type: 'text',
+              text: '赤字',
+              marks: [{ type: 'textStyle', attrs: { color: '#ff0000' } }],
+            },
+          ],
+        },
+        { type: 'paragraph', content: [{ type: 'text', text: '無関係な段落' }] },
+      ],
+    }
+
+    it('defaultValue の features 外の書式を保持する', async () => {
+      render(<RichTextEditor features={['bold']} defaultValue={RICH_VALUE} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByText('見出し')).toBeInTheDocument()
+      })
+      expect(screen.getByText('斜体')).toBeInTheDocument()
+      expect(screen.getByText('無関係な段落')).toBeInTheDocument()
+    })
+
+    it('value（controlled）の features 外の書式を保持する', async () => {
+      render(<RichTextEditor features={['bold']} value={RICH_VALUE} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByText('見出し')).toBeInTheDocument()
+      })
+      expect(screen.getByText('無関係な段落')).toBeInTheDocument()
+    })
+
+    it('content（HTML）の features 外の書式を保持する', async () => {
+      render(
+        <RichTextEditor
+          features={['bold']}
+          content={{
+            format: 'html',
+            content: '<h2>見出し</h2><p><em>斜体</em></p><p>無関係な段落</p>',
+          }}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => {
+        expect(screen.getByText('見出し')).toBeInTheDocument()
+      })
+      expect(screen.getByText('斜体')).toBeInTheDocument()
+      expect(screen.getByText('無関係な段落')).toBeInTheDocument()
+    })
+
+    it('features 外の書式を保持したままHTMLを出力する', async () => {
+      const ref = createRef<RichTextEditorController>()
+      render(<RichTextEditor ref={ref} features={['bold']} defaultValue={RICH_VALUE} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => {
+        expect(screen.getByText('見出し')).toBeInTheDocument()
+      })
+
+      const html = ref.current!.getHTML()
+      expect(html).toContain('<h2>')
+      expect(html).toContain('<em>')
+      expect(html).toContain('#ff0000')
+    })
+  })
+
   describe('showCharacterCount', () => {
     it('shows character count when showCharacterCount is true', async () => {
       render(

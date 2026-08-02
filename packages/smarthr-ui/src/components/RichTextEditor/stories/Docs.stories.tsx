@@ -112,6 +112,9 @@ export const Overview: Story = {
           <Text color="TEXT_GREY">
             features propで有効にする書式を選択できます。undo / redo は常に表示されます。
             <br />
+            features は「編集中に新しく適用できる書式」の指定です。value / defaultValue / content に
+            features 以外の書式が含まれていても、その書式は保持されたまま表示・出力されます。
+            <br />
             Enter で段落分割（&lt;p&gt;）、Shift+Enter / Cmd+Enter
             で同じ段落内の改行（&lt;br&gt;）です。
           </Text>
@@ -405,7 +408,8 @@ export const BasicUsage: Story = {
         <Text color="TEXT_GREY">
           FormControlで包むと、ラベル・エラーメッセージ・ヘルプメッセージが自動で接続されます。
           features
-          propで有効にする書式を選択できます。指定しない書式はツールバーに表示されず、ショートカットキーも無効になります。
+          propで有効にする書式を選択できます。指定しない書式はツールバーに表示されず、ショートカットキー・Markdown入力も無効になり、ペースト時には取り除かれます。
+          既に入力値に含まれている書式は取り除かれず、そのまま保持されます。
         </Text>
         <FormControl label="本文" helpMessage="ツールバーで書式を設定してください。">
           <RichTextEditor

@@ -17,6 +17,7 @@ import {
 } from './Image/imageUploadPlaceholder'
 import { LineHeight } from './LineHeight'
 import { CustomTable } from './Table/CustomTable'
+import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
 
 import type { ImageUploadResult, RichTextFeature } from '../types'
 import type { AnyExtension, Editor } from '@tiptap/react'
@@ -83,46 +84,53 @@ export const configureExtensions = ({
 }: ConfigureExtensionsOptions): AnyExtension[] => {
   const has = (f: RichTextFeature) => features.includes(f)
 
+  // schemaは常に全書式を載せる。featuresに無い書式が入力に含まれていても失わないため。
+  // Tiptapは未知のmark/nodeを含むJSONを受け取るとドキュメント全体を空にするので、
+  // featuresでschemaを削ると既存データが消える。
+  // featuresは「新しく適用できる操作」の制限として、操作だけを剥がして表現する。
+  const restrictedNames = getRestrictedExtensionNames(features)
+
+  // headingLevelsが空指定のときは見出しを適用させない。
+  // schemaにはデフォルトのレベルを載せて既存の見出しを読めるようにする。
+  const headingEnabled = has('heading') && headingLevels.length > 0
+  if (!headingEnabled) {
+    restrictedNames.add('heading')
+  }
+
+  const restrict = createOperationRestrictor(restrictedNames)
+
   const extensions: AnyExtension[] = [
     StarterKit.configure({
-      heading: has('heading') && headingLevels.length > 0 ? { levels: [...headingLevels] } : false,
-      bold: has('bold') ? {} : false,
-      italic: has('italic') ? {} : false,
-      strike: has('strike') ? {} : false,
-      underline: has('underline') ? {} : false,
-      code: has('code') ? {} : false,
-      codeBlock: has('codeBlock') ? {} : false,
-      blockquote: has('blockquote') ? {} : false,
-      bulletList: has('bulletList') ? {} : false,
-      orderedList: has('orderedList') ? {} : false,
-      horizontalRule: has('horizontalRule') ? {} : false,
-      link: has('link')
-        ? { openOnClick: false, autolink: true, protocols: ['http', 'https', 'mailto'] }
-        : false,
+      heading: { levels: [...(headingEnabled ? headingLevels : DEFAULT_HEADING_LEVELS)] },
+      link: { openOnClick: false, autolink: true, protocols: ['http', 'https', 'mailto'] },
+    }).extend({
+      addExtensions() {
+        return (this.parent?.() ?? []).map(restrict)
+      },
     }),
-  ]
-
-  if (has('textAlign')) {
-    extensions.push(
+    restrict(
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
-    )
-  }
-
-  if (has('image')) {
-    extensions.push(
+    ),
+    restrict(
       CustomImage.configure({
         allowBase64: false,
-        resize: {
-          enabled: true,
-          alwaysPreserveAspectRatio: true,
-          minWidth: 100,
-          minHeight: 100,
-        },
+        // featuresにimageが無いときはドラッグリサイズもさせない（NodeView側の機能なので
+        // STRIPPED_OPERATIONSでは外れない）
+        resize: has('image')
+          ? {
+              enabled: true,
+              alwaysPreserveAspectRatio: true,
+              minWidth: 100,
+              minHeight: 100,
+            }
+          : { enabled: false },
       }),
-    )
+    ),
+  ]
 
+  if (has('image')) {
     // アップロード中プレースホルダ（ドキュメント非汚染の Decoration）
     extensions.push(
       Extension.create({
@@ -156,45 +164,27 @@ export const configureExtensions = ({
     }
   }
 
-  if (has('youtube')) {
-    extensions.push(
+  extensions.push(
+    restrict(
       Youtube.configure({
         nocookie: true,
         allowFullscreen: true,
       }),
-    )
-  }
-
-  if (has('table')) {
+    ),
     // renderWrapper: true で HTML 出力にも <div class="tableWrapper"> を含める。
     // これで RichTextViewer 側でも横スクロール用 wrapper が機能する。
-    extensions.push(
-      CustomTable.configure({ resizable: true, renderWrapper: true }),
-      TableRow,
-      TableHeader,
-      TableCell,
-    )
-  }
-
-  if (has('color') || has('fontSize') || has('backgroundColor')) {
-    extensions.push(TextStyle.configure())
-  }
-
-  if (has('color')) {
-    extensions.push(Color.configure())
-  }
-
-  if (has('backgroundColor')) {
-    extensions.push(BackgroundColor.configure())
-  }
-
-  if (has('fontSize')) {
-    extensions.push(FontSize.configure())
-  }
-
-  if (has('lineHeight')) {
-    extensions.push(LineHeight.configure({ types: ['paragraph', 'heading'] }))
-  }
+    restrict(CustomTable.configure({ resizable: true, renderWrapper: true })),
+    TableRow,
+    TableHeader,
+    TableCell,
+    // textStyleはcolor/backgroundColor/fontSizeの入れ物。これがschemaに無いと
+    // textStyle markを含むJSONでドキュメント全体が消えるため常に載せる。
+    TextStyle.configure(),
+    restrict(Color.configure()),
+    restrict(BackgroundColor.configure()),
+    restrict(FontSize.configure()),
+    restrict(LineHeight.configure({ types: ['paragraph', 'heading'] })),
+  )
 
   if (placeholder) {
     extensions.push(

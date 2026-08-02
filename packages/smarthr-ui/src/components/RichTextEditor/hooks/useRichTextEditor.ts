@@ -5,6 +5,7 @@ import { type RefObject, useEffect, useMemo } from 'react'
 
 import { collectImageSrcs, diffRemovedSrcs } from '../extensions/Image/collectImageSrcs'
 import { configureExtensions } from '../extensions/configureExtensions'
+import { createPasteFilter } from '../extensions/pasteFilter'
 import { createChangeMeta } from '../serializers/createChangeMeta'
 
 import type { ImageUploadResult, RichTextFeature, RichTextJSON } from '../types'
@@ -64,6 +65,14 @@ export const useRichTextEditor = ({
     [featuresKey, headingLevelsKey, placeholder, onImageUpload, onImageUploadError, mimeTypesKey],
   )
 
+  // schemaは全書式を載せているのでペーストはschemaで止まらない。
+  // featuresの許可リストで絞るのはこのフィルタの責務。
+  const transformPasted = useMemo(
+    () => createPasteFilter(features),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [featuresKey],
+  )
+
   const editor = useEditor({
     extensions,
     content: isControlled ? value : defaultValue,
@@ -71,6 +80,7 @@ export const useRichTextEditor = ({
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
     editorProps: {
+      transformPasted,
       handleKeyDown: (_view, event) => {
         // Alt+F10 でtoolbarへフォーカス移動
         if (event.altKey && event.key === 'F10' && toolbarRef?.current) {
