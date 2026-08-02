@@ -86,7 +86,21 @@ export const RadioButtonPanel: FC<Props> = ({
   'aria-describedby': ariaDescribedby,
   ...rest
 }) => {
+  const descriptionId = useId()
   const hasDescription = !!children
+
+  const actualAriaDescribedBy =
+    [hasDescription ? descriptionId : undefined, ariaDescribedby].reduce<string>(
+      (prev, describedBy) => {
+        if (describedBy) {
+          return prev ? `${prev} ${describedBy}` : describedBy
+        }
+
+        return prev
+      },
+      '',
+    ) || undefined
+
   const classNames = useMemo(() => {
     const { base, description, radio } = classNameGenerator({
       className,
@@ -94,7 +108,7 @@ export const RadioButtonPanel: FC<Props> = ({
     })
 
     return { base: base(), description: description(), radio: radio() }
-  }, [className, hasDescription])
+  }, [hasDescription, className])
 
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
@@ -110,15 +124,13 @@ export const RadioButtonPanel: FC<Props> = ({
     // （ブラウザの標準動作でinputがクリックされ、そのイベントが親に伝わる）
   }, [])
 
-  const descriptionId = useId()
-
   return (
     <Base padding={1} onClick={onDelegateClick} as={as} className={classNames.base}>
       <RadioButton
         {...rest}
         onClick={onClick}
         ref={innerRef}
-        aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
+        aria-describedby={actualAriaDescribedBy}
         className={classNames.radio}
       >
         {label}
