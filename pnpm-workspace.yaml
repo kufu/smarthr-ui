@@ -48,6 +48,8 @@ minimumReleaseAgeExclude:
   - '@next/swc-win32-x64-msvc@16.2.11'
   # Renovate security update: postcss@8.5.18
   - postcss@8.5.18
+  # Renovate security update: js-yaml@5.2.2
+  - js-yaml@5.2.2
 allowBuilds:
   '@swc/core': true
   canvas: true
@@ -66,7 +68,7 @@ overrides:
   tar@<=7.5.15: '>=7.5.21'
   vite@>=7.0.0 <=7.3.4: '>=7.3.6'
   react-draggable: 4.5.0
-  js-yaml@>=4.0.0 <=4.1.1: '>=4.3.0'
+  js-yaml@>=4.0.0 <=5.2.1: '>=5.2.2'
   '@babel/core@<=7.29.0': '>=8.0.1'
   sharp@<0.35.0: '>=0.35.3'
   brace-expansion@>=5.0.0 <5.0.8: '>=5.0.8'
