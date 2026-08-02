@@ -77,29 +77,8 @@ const isRadioButtonElementClicked = (path: EventTarget[], currentTarget: EventTa
   return false
 }
 
-export const RadioButtonPanel: FC<Props> = ({
-  onClick,
-  as,
-  className,
-  children,
-  label,
-  'aria-describedby': ariaDescribedby,
-  ...rest
-}) => {
-  const descriptionId = useId()
+export const RadioButtonPanel: FC<Props> = ({ children, className, ...rest }) => {
   const hasDescription = !!children
-
-  const actualAriaDescribedBy =
-    [hasDescription ? descriptionId : undefined, ariaDescribedby].reduce<string>(
-      (prev, describedBy) => {
-        if (describedBy) {
-          return prev ? `${prev} ${describedBy}` : describedBy
-        }
-
-        return prev
-      },
-      '',
-    ) || undefined
 
   const classNames = useMemo(() => {
     const { base, description, radio } = classNameGenerator({
@@ -110,9 +89,50 @@ export const RadioButtonPanel: FC<Props> = ({
     return { base: base(), description: description(), radio: radio() }
   }, [hasDescription, className])
 
+  return hasDescription ? (
+    <DescriptionRadioButtonPanel {...rest} classNames={classNames}>
+      {children}
+    </DescriptionRadioButtonPanel>
+  ) : (
+    <ActualRadioButtonPanel {...rest} classNames={classNames}>
+      {children}
+    </ActualRadioButtonPanel>
+  )
+}
+
+type LowerProps = Omit<Props, 'className'> & {
+  classNames: {
+    base: string
+    description: string
+    radio: string
+  }
+}
+
+const DescriptionRadioButtonPanel: FC<LowerProps> = ({
+  'aria-describedby': ariaDescribedby,
+  classNames,
+  children,
+  ...rest
+}) => {
+  const descriptionId = useId()
+
+  return (
+    <ActualRadioButtonPanel
+      {...rest}
+      aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
+      classNames={classNames}
+    >
+      <div id={descriptionId} className={classNames.description}>
+        {children}
+      </div>
+    </ActualRadioButtonPanel>
+  )
+}
+
+const ActualRadioButtonPanel: FC<LowerProps> = ({ as, classNames, children, label, ...rest }) => {
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
-  const onDelegateClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleDelegateClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     // RadioButtonの要素（labelまたはinput）以外がクリックされた場合（description や Base の余白）
     if (!isRadioButtonElementClicked(e.nativeEvent.composedPath(), e.currentTarget)) {
       // Base要素のclickイベントは止める（実装の詳細を隠蔽し、input要素のclickのみを親に伝える）
@@ -125,21 +145,11 @@ export const RadioButtonPanel: FC<Props> = ({
   }, [])
 
   return (
-    <Base padding={1} onClick={onDelegateClick} as={as} className={classNames.base}>
-      <RadioButton
-        {...rest}
-        onClick={onClick}
-        ref={innerRef}
-        aria-describedby={actualAriaDescribedBy}
-        className={classNames.radio}
-      >
+    <Base padding={1} onClick={handleDelegateClick} as={as} className={classNames.base}>
+      <RadioButton {...rest} ref={innerRef} className={classNames.radio}>
         {label}
       </RadioButton>
-      {children && (
-        <div id={descriptionId} className={classNames.description}>
-          {children}
-        </div>
-      )}
+      {children}
     </Base>
   )
 }
