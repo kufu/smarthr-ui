@@ -19,6 +19,7 @@ import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { normalizeToJSON } from '../serializers/normalizeToJSON'
+import { serializeToHTML } from '../serializers/serializeToHTML'
 import { editorContentClasses } from '../styles'
 
 import type {
@@ -145,7 +146,9 @@ export const RichTextEditor = memo(
           focus: () => editor?.chain().focus().run(),
           clear: () => editor?.chain().focus().clearContent().run(),
           getJSON: () => (editor?.getJSON() ?? { type: 'doc', content: [] }) as RichTextJSON,
-          getHTML: () => editor?.getHTML() ?? '',
+          // editor.getHTML() は拡張の renderHTML をそのまま使うためサニタイズされない。
+          // onChange の meta.html と同じ結果を返すよう共通シリアライザーを通す。
+          getHTML: () => (editor ? serializeToHTML(editor.getJSON()) : ''),
           getText: () => editor?.getText() ?? '',
           isEmpty: () => editor?.isEmpty ?? true,
           toggleBold: () => editor?.chain().focus().toggleBold().run(),

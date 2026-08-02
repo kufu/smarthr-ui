@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import { createRef } from 'react'
 import { describe, expect, it } from 'vitest'
 
 import { IntlProvider } from '../../../intl'
@@ -6,6 +7,7 @@ import { FormControl } from '../../FormControl'
 
 import { RichTextEditor } from './RichTextEditor'
 
+import type { ExternalRichTextValue, RichTextEditorController, RichTextJSON } from '../types'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
@@ -156,6 +158,99 @@ describe('RichTextEditor', () => {
       await waitFor(() => {
         expect(screen.getByRole('textbox')).toBeInTheDocument()
       })
+    })
+  })
+
+  // imperative API と onChange の meta.html はどちらも「HTML出力」を返すため、
+  // どちらを使ってもサニタイズ結果が同じでなければならない。
+  describe('ref.getHTML()', () => {
+    const IMPERATIVE_FEATURES = ['image', 'color', 'backgroundColor', 'fontSize'] as const
+
+    const renderWithRef = async (props: {
+      defaultValue?: RichTextJSON
+      content?: ExternalRichTextValue
+    }) => {
+      const ref = createRef<RichTextEditorController>()
+      render(<RichTextEditor {...props} ref={ref} features={IMPERATIVE_FEATURES} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => {
+        expect(screen.getByRole('textbox')).toBeInTheDocument()
+      })
+      return ref
+    }
+
+    it('直接JSONで渡された画像の危険な src を除去する', async () => {
+      const ref = await renderWithRef({
+        defaultValue: {
+          type: 'doc',
+          content: [{ type: 'image', attrs: { src: 'javascript:alert(1)', alt: 'x' } }],
+        },
+      })
+      expect(ref.current?.getHTML()).not.toContain('javascript:')
+    })
+
+    it('直接JSONで渡された textStyle のCSS宣言追記を除去する', async () => {
+      const ref = await renderWithRef({
+        defaultValue: {
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  marks: [
+                    {
+                      type: 'textStyle',
+                      attrs: { color: 'red;background-image:url(https://evil.example/x)' },
+                    },
+                  ],
+                  text: 'styled',
+                },
+              ],
+            },
+          ],
+        },
+      })
+      const html = ref.current?.getHTML() ?? ''
+      expect(html).not.toContain('background-image')
+      expect(html).not.toContain('evil.example')
+    })
+
+    it('HTML入力から読み込んだ危険なCSS値を除去する', async () => {
+      const ref = await renderWithRef({
+        content: {
+          format: 'html',
+          content: '<p><span style="background-color: url(javascript:alert(1))">x</span></p>',
+        },
+      })
+      expect(ref.current?.getHTML()).not.toContain('javascript:')
+    })
+
+    it('安全なコンテンツは保持する', async () => {
+      const ref = await renderWithRef({
+        defaultValue: {
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  marks: [{ type: 'textStyle', attrs: { color: '#ff0000', fontSize: '20px' } }],
+                  text: 'styled',
+                },
+              ],
+            },
+          ],
+        },
+      })
+      const html = ref.current?.getHTML() ?? ''
+      // 共通シリアライザー経由になり、DOM往復による rgb() 正規化を受けず原値のまま出る
+      expect(html).toContain('#ff0000')
+      expect(html).toContain('20px')
+      expect(html).toContain('styled')
     })
   })
 })
