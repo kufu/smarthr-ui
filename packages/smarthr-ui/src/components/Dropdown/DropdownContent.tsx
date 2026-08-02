@@ -9,10 +9,10 @@ import {
 } from './DropdownContentInner'
 
 export const DropdownContentContext = createContext<{
-  onClickCloser: () => void
+  handleDelegateClickCloser: () => void
   controllable: boolean
 }>({
-  onClickCloser: () => {
+  handleDelegateClickCloser: () => {
     /* noop */
   },
   controllable: false,
@@ -29,11 +29,12 @@ type AbstractProps = PropsWithChildren<{
 type Props = AbstractProps & Omit<InnerElementProps, keyof AbstractProps>
 
 export const DropdownContent: FC<Props> = ({ controllable = false, ...rest }) => {
-  const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
+  const { DropdownContentRoot, triggerRect, handleDelegateClickCloser } =
+    useContext(DropdownContext)
 
   return (
     <DropdownContentRoot>
-      <DropdownContentContext.Provider value={{ onClickCloser, controllable }}>
+      <DropdownContentContext.Provider value={{ handleDelegateClickCloser, controllable }}>
         <DropdownContentInner {...rest} triggerRect={triggerRect} controllable={controllable} />
       </DropdownContentContext.Provider>
     </DropdownContentRoot>

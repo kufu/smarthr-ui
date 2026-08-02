@@ -5,12 +5,10 @@ import {
   type ChangeEvent,
   type ComponentProps,
   type ComponentPropsWithRef,
-  type FocusEventHandler,
   type MouseEvent,
   type ReactNode,
   forwardRef,
   memo,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -125,12 +123,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const containerStyle = useMemo(
-      () => ({
-        width: typeof width === 'number' ? `${width}px` : width,
-      }),
-      [width],
-    )
     const classNames = useMemo(() => {
       const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } =
         classNameGenerator()
@@ -175,6 +167,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         if (!latest.showAlternative) return null
         return d ? latest.showAlternative(d) : null
       }
+
+      const stringToDate = (str: string | null | undefined) =>
+        parseStringDate(str, latest.parseInput)
 
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
@@ -227,9 +222,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
       }
 
-      const stringToDate = (str: string | null | undefined) =>
-        parseStringDate(str, latest.parseInput)
-
       const closeCalendar = () => setIsCalendarShown(false)
 
       const openCalendar = () => {
@@ -239,20 +231,44 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
       }
 
-      const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-        setIsInputFocused(false)
-        updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
-        latest.onBlur?.(e)
-      }
-
       return {
         stringToDate,
         dateToString,
         dateToAlternativeFormat,
-        updateDate,
         closeCalendar,
         openCalendar,
-        handleBlur,
+        handleBlur: (e: React.FocusEvent<HTMLInputElement>) => {
+          setIsInputFocused(false)
+          updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
+          latest.onBlur?.(e)
+        },
+        handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (ESCAPE_KEY_REGEX.test(e.key)) {
+            e.stopPropagation()
+            // delay hiding calendar because calendar will be displayed when input is focused
+            requestAnimationFrame(closeCalendar)
+
+            if (inputRef.current) inputRef.current.focus()
+          }
+        },
+        handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter') {
+            const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
+            ;(isExpanded ? closeCalendar : openCalendar)()
+            updateDate(e, stringToDate(e.currentTarget.value))
+          }
+        },
+        handleFocusInput: () => {
+          setIsInputFocused(true)
+          openCalendar()
+        },
+        handleSelectDateCalendar: (e: ChangeLikeEvent, selected: Date | null) => {
+          updateDate(e, selected)
+          // delay hiding calendar because calendar will be displayed when input is focused
+          requestAnimationFrame(closeCalendar)
+
+          if (inputRef.current) inputRef.current.focus()
+        },
       }
     }, [latest])
 
@@ -352,51 +368,16 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           ? theme.textColor.disabled
           : theme.textColor.grey
 
-    const onDelegateKeyDown = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (ESCAPE_KEY_REGEX.test(e.key)) {
-          e.stopPropagation()
-          // delay hiding calendar because calendar will be displayed when input is focused
-          requestAnimationFrame(functions.closeCalendar)
-
-          if (inputRef.current) inputRef.current.focus()
-        }
-      },
-      [functions],
-    )
-    const onKeyPressInput = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-          const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true'
-          ;(isExpanded ? functions.closeCalendar : functions.openCalendar)()
-          functions.updateDate(e, functions.stringToDate(e.currentTarget.value))
-        }
-      },
-      [functions],
-    )
-    const onFocusInput = useCallback(() => {
-      setIsInputFocused(true)
-      functions.openCalendar()
-    }, [functions])
-    const onSelectDateCalendar = useCallback(
-      (e: ChangeLikeEvent, selected: Date | null) => {
-        functions.updateDate(e, selected)
-        // delay hiding calendar because calendar will be displayed when input is focused
-        requestAnimationFrame(functions.closeCalendar)
-
-        if (inputRef.current) inputRef.current.focus()
-      },
-      [functions],
-    )
-
     return (
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
         onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
-        onKeyDown={isCalendarShown ? onDelegateKeyDown : undefined}
+        onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
         className={classNames.container}
-        style={containerStyle}
+        style={{
+          width: typeof width === 'number' ? `${width}px` : width,
+        }}
       >
         <div ref={inputWrapperRef}>
           <Input
@@ -405,8 +386,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             width="100%"
             name={name}
             onChange={isCalendarShown ? functions.closeCalendar : undefined}
-            onKeyPress={onKeyPressInput}
-            onFocus={onFocusInput}
+            onKeyPress={functions.handleKeyPressInput}
+            onFocus={functions.handleFocusInput}
             onBlur={functions.handleBlur}
             suffix={
               <InputSuffixIcon
@@ -431,7 +412,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
               value={selectedDate || undefined}
               from={from}
               to={to}
-              onSelectDate={onSelectDateCalendar}
+              onSelectDate={functions.handleSelectDateCalendar}
             />
           </Portal>
         )}

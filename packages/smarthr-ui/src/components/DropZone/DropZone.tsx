@@ -16,7 +16,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -100,7 +100,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 
     const functions = useMemo(
       () => ({
-        onDrop: (e: DragEvent<HTMLElement>) => {
+        handleDrop: (e: DragEvent<HTMLElement>) => {
           overrideEventDefault(e)
           setFilesDraggedOver(false)
 
@@ -111,17 +111,17 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             latest.onSelectFiles(e, e.dataTransfer.files)
           }
         },
-        onDragOver: (e: DragEvent<HTMLElement>) => {
+        handleDragOver: (e: DragEvent<HTMLElement>) => {
           overrideEventDefault(e)
           setFilesDraggedOver(true)
         },
-        onDragLeave: () => {
+        handleDragLeave: () => {
           setFilesDraggedOver(false)
         },
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
           latest.onSelectFiles(e, e.target.files)
         },
-        onClickButton: () => {
+        handleClickButton: () => {
           fileRef.current!.click()
         },
       }),
@@ -136,14 +136,14 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
-        onDrop={functions.onDrop}
-        onDragOver={functions.onDragOver}
-        onDragLeave={functions.onDragLeave}
+        onDrop={functions.handleDrop}
+        onDragOver={functions.handleDragOver}
+        onDragLeave={functions.handleDragLeave}
         className={classNames.wrapper}
       >
         {children}
         <SelectButton
-          onClick={functions.onClickButton}
+          handleClick={functions.handleClickButton}
           disabled={disabled}
           className={classNames.button}
           label={selectButtonLabel}
@@ -159,7 +159,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             disabled={disabled}
             tabIndex={-1}
             aria-invalid={error || undefined}
-            onChange={functions.onChange}
+            onChange={functions.handleChange}
           />
         </VisuallyHiddenText>
       </div>
@@ -168,23 +168,9 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 )
 
 const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
->(({ onClick, label, ...rest }) => {
-  const { localize } = useIntl()
-
-  const buttonLabel = useMemo(
-    () =>
-      label ||
-      localize({
-        id: 'smarthr-ui/DropZone/selectButtonLabel',
-        defaultText: 'ファイルを選択',
-      }),
-    [label, localize],
-  )
-
-  return (
-    <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
-      {buttonLabel}
-    </Button>
-  )
-})
+  ComponentPropsWithoutRef<typeof Button> & { handleClick: () => void; label?: string }
+>(({ handleClick, label, ...rest }) => (
+  <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={handleClick}>
+    {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
+  </Button>
+))

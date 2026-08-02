@@ -97,24 +97,12 @@ export const Tooltip: FC<Props> = ({
   const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
 
   const isLabel = type === 'label'
+  const isIcon = triggerType === 'icon'
 
-  useEnhancedEffect(() => {
-    setPortalRoot(fullscreenElement ?? document.body)
-  }, [fullscreenElement])
-
-  useEnhancedEffect(() => {
-    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
-
-    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
-
-    setIsFocusableChild(focusable)
-    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
-
-    // focusableな要素に直接aria属性を設定
-    if (focusable) {
-      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
-    }
-  }, [tabIndex, isLabel, messageId])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isIcon, className }),
+    [isIcon, className],
+  )
 
   const toShowAction = useCallback(
     (e: BaseSyntheticEvent) => {
@@ -141,13 +129,28 @@ export const Tooltip: FC<Props> = ({
     },
     [ellipsisOnly],
   )
-  const toCloseAction = useCallback(() => setIsVisible(false), [])
+  const toCloseAction = useCallback(() => {
+    setRect(null)
+    setIsVisible(false)
+  }, [])
 
-  const isIcon = triggerType === 'icon'
-  const actualClassName = useMemo(
-    () => classNameGenerator({ isIcon, className }),
-    [isIcon, className],
-  )
+  useEnhancedEffect(() => {
+    setPortalRoot(fullscreenElement ?? document.body)
+  }, [fullscreenElement])
+
+  useEnhancedEffect(() => {
+    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
+
+    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
+
+    setIsFocusableChild(focusable)
+    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
+
+    // focusableな要素に直接aria属性を設定
+    if (focusable) {
+      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+    }
+  }, [tabIndex, isLabel, messageId])
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
