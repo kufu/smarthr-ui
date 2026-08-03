@@ -5,9 +5,9 @@ packages:
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
-  # Security update: brace-expansion@2.1.4
+  # Security update: brace-expansion@2.1.4 (2026-07-30 公開。minimumReleaseAge 経過後に削除可)
   - brace-expansion@2.1.4
-  # Security update: brace-expansion@5.0.9
+  # Security update: brace-expansion@5.0.9 (2026-07-30 公開。minimumReleaseAge 経過後に削除可)
   - brace-expansion@5.0.9
 allowBuilds:
   '@swc/core': true
