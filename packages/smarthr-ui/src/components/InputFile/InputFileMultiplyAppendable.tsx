@@ -32,7 +32,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       hasFileList = true,
       previewable = false,
       onChange,
-      disabled = false,
+      disabled,
       error,
       ...rest
     },
@@ -47,13 +47,13 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
       return {
         wrapper: wrapper({ className }),
-        inputWrapper: inputWrapper({ size, disabled }),
+        inputWrapper: inputWrapper({ size }),
         fileList: fileList(),
         fileItem: fileItem(),
         input: input(),
         prefix: prefix(),
       }
-    }, [disabled, size, className])
+    }, [size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
@@ -129,7 +129,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
-        {!disabled && hasFileList && files.length > 0 && (
+        {hasFileList && !disabled && files.length > 0 && (
           <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
