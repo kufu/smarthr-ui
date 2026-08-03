@@ -22,10 +22,10 @@ import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
-import { Base, type BaseElementProps } from '../../Base'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
+import { Panel, type PanelElementProps } from '../../Panel'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
@@ -89,7 +89,7 @@ type AbstractProps = PropsWithChildren<{
 }>
 type Props = AbstractProps &
   Omit<DialogBodyProps, keyof AbstractProps> &
-  Omit<BaseElementProps, keyof AbstractProps> &
+  Omit<PanelElementProps, keyof AbstractProps> &
   Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
 
 const classNameGenerator = tv({
@@ -357,7 +357,7 @@ export const ModelessDialog: FC<Props> = ({
         bounds={draggableBounds ?? false}
         nodeRef={wrapperRef}
       >
-        <Base
+        <Panel
           {...rest}
           ref={wrapperRef}
           role="dialog"
@@ -393,7 +393,7 @@ export const ModelessDialog: FC<Props> = ({
           </DialogBody>
           {footer && <div className={classNames.footer}>{footer}</div>}
           <LiveRegion regionText={debouncedLiveRegionText} />
-        </Base>
+        </Panel>
       </Draggable>
     </DialogOverlap>,
   )
