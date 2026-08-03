@@ -64,14 +64,6 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-const CLASS_NAMES = (() => {
-  const { wrapper, button } = classNameGenerator()
-  return {
-    wrapper: wrapper(),
-    button: button(),
-  }
-})()
-
 export const DropZone = forwardRef<HTMLInputElement, Props>(
   (
     { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
@@ -79,6 +71,15 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
   ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
+    // FIXME: className を wrapper に適用するバグ修正時に className を依存配列に追加する
+
+    const classNames = useMemo(() => {
+      const { wrapper, button } = classNameGenerator()
+      return {
+        wrapper: wrapper(),
+        button: button(),
+      }
+    }, [])
 
     const latest = useLatest({ onSelectFiles })
 
@@ -123,7 +124,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         onDrop={functions.handleDrop}
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
-        className={CLASS_NAMES.wrapper}
+        className={classNames.wrapper}
         data-files-dragged-over={filesDraggedOver || undefined}
       >
         {children}
@@ -131,6 +132,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           handleClick={functions.handleClickButton}
           disabled={disabled}
           label={selectButtonLabel}
+          className={classNames.button}
         />
         <VisuallyHiddenText>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
@@ -155,12 +157,13 @@ const SelectButton = memo<{
   handleClick: () => void
   disabled?: boolean
   label?: string
-}>(({ handleClick, disabled, label }) => (
+  className: string
+}>(({ handleClick, disabled, label, className }) => (
   <Button
     prefix={<FaFolderOpenIcon />}
     onClick={handleClick}
     disabled={disabled}
-    className={CLASS_NAMES.button}
+    className={className}
   >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
   </Button>
