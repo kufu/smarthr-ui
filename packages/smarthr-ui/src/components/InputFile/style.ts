@@ -10,6 +10,8 @@ export const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator',
       'has-[[aria-invalid]]:shr-border-danger',
+      'has-[:not(:disabled)]:hover:shr-border-darken has-[:not(:disabled)]:hover:shr-bg-white-darken has-[:not(:disabled)]:hover:shr-text-black',
+      'has-[:disabled]:shr-border-disabled has-[:disabled]:shr-bg-white-darken has-[:disabled]:shr-text-disabled',
     ],
     input: [
       'smarthr-ui-InputFile-input',
@@ -26,14 +28,6 @@ export const classNameGenerator = tv({
       },
       S: {
         inputWrapper: 'shr-p-0.5 shr-text-sm',
-      },
-    },
-    disabled: {
-      true: {
-        inputWrapper: 'shr-border-disabled shr-bg-white-darken shr-text-disabled',
-      },
-      false: {
-        inputWrapper: 'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
       },
     },
   },
