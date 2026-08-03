@@ -56,7 +56,6 @@ const wrapperClassNameGenerator = tv({
     'has-[[aria-invalid]]:shr-border-danger',
     'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken has-[:disabled]:[&&&]:shr-border-default/50',
     'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
-    'group/input',
   ],
 })
 const innerClassNameGenerator = tv({
@@ -73,7 +72,7 @@ const innerClassNameGenerator = tv({
     ],
     affix: [
       'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
-      'group-has-[:disabled]/input:shr-text-disabled group-has-[:disabled]/input:shr-opacity-100',
+      '[.smarthr-ui-Input:has(:disabled)_&]:shr-text-disabled [.smarthr-ui-Input:has(:disabled)_&]:shr-opacity-100',
     ],
   },
 })
