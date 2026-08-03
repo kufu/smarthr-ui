@@ -74,6 +74,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
+    // HINT: valueは基本innerRef.current.valueと同等のため、innerRef.current.valueの変換だけでなりたつ
+    // controlledの場合、valueが変更された場合を検知する必要があるため依存関係に含める必要はある
     useEffect(() => {
       if (!isFocused && innerRef.current) {
         functions.formatCurrencyValue(innerRef.current.value)
