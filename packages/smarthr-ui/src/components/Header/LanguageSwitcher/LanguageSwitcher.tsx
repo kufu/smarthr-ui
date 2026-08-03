@@ -150,10 +150,9 @@ export const LanguageSwitcher: FC<Props> = ({
             <LanguageListItemButton
               key={code}
               code={code}
-              className={classNames.languageItem}
-              buttonStyle={classNames.languageButton}
               current={currentLang === code}
               handleClick={handleClickLanguageSelect}
+              classNames={classNames}
             >
               {label}
             </LanguageListItemButton>
@@ -167,12 +166,14 @@ export const LanguageSwitcher: FC<Props> = ({
 const LanguageListItemButton = memo<{
   code: string
   children: string
-  className: string
-  buttonStyle: string
   current: boolean
   handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, handleClick }) => (
-  <li className={className} aria-current={current} lang={code}>
+  classNames: {
+    languageItem: string
+    languageButton: string
+  }
+}>(({ code, children, current, handleClick, classNames }) => (
+  <li className={classNames.languageItem} aria-current={current} lang={code}>
     <Button
       value={code}
       onClick={handleClick}
@@ -185,7 +186,7 @@ const LanguageListItemButton = memo<{
           />
         ) : null
       }
-      className={buttonStyle}
+      className={classNames.languageButton}
     >
       {children}
     </Button>
