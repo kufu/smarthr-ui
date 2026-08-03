@@ -100,7 +100,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
-        {!disabled && hasFileList && files.length > 0 && (
+        {hasFileList && !disabled && files.length > 0 && (
           <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
