@@ -1,17 +1,14 @@
 import { type ElementType, type FC, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
 import { AnchorButton, Button } from '../Button'
 
-const classNameGenerator = tv({
-  base: [
-    'shr-rounded-s',
-    'aria-current-page:[&&&]:shr-cursor-default aria-current-page:[&&&]:shr-bg-main aria-current-page:[&&&]:shr-text-white',
-    'aria-current-page:focus-visible:[&&&]:shr-focus-indicator',
-    'aria-current-page:[&&&]:shr-border-solid aria-current-page:[&&&]:shr-border-main',
-  ],
-})
+const CLASS_NAME = [
+  'shr-rounded-s',
+  'aria-current-page:[&&&]:shr-cursor-default aria-current-page:[&&&]:shr-bg-main aria-current-page:[&&&]:shr-text-white',
+  'aria-current-page:focus-visible:[&&&]:shr-focus-indicator',
+  'aria-current-page:[&&&]:shr-border-solid aria-current-page:[&&&]:shr-border-main',
+].join(' ')
 
 type Props = {
   page: number
@@ -22,7 +19,6 @@ type Props = {
 
 export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, linkAs }) => {
   const { localize } = useIntl()
-  const className = useMemo(() => classNameGenerator(), [])
 
   const ariaLabel = useMemo(
     () =>
@@ -41,7 +37,7 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
     size: 'S',
     'aria-label': ariaLabel,
     'aria-current': disabled ? 'page' : undefined,
-    className,
+    className: CLASS_NAME,
     children: page,
   } as const
 
