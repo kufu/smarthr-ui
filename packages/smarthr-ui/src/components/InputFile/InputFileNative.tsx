@@ -32,10 +32,7 @@ type Props = Omit<CommonProps, 'multiple'> & {
 }
 
 export const InputFileNative = forwardRef<HTMLInputElement, Props>(
-  (
-    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
-    ref,
-  ) => {
+  ({ className, size, label, hasFileList = true, onChange, disabled, error, ...rest }, ref) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
 

@@ -28,10 +28,7 @@ import type { Props } from './types'
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
-  (
-    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
-    ref,
-  ) => {
+  ({ className, size, label, hasFileList = true, onChange, disabled, error, ...rest }, ref) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
 
