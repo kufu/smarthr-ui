@@ -54,7 +54,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         callbackRef: (node: HTMLInputElement | null) => {
           innerRef.current = node
 
-          if (latest.value === undefined && latest.defaultValue !== undefined) {
+          if (node !== null && latest.value === undefined && latest.defaultValue !== undefined) {
             formatCurrencyValue(latest.defaultValue)
           }
         },
