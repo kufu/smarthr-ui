@@ -172,7 +172,7 @@ const LanguageListItemButton = memo<{
   current: boolean
   handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
 }>(({ code, children, buttonStyle, className, current, handleClick }) => (
-  <li key={code} className={className} aria-current={current} lang={code}>
+  <li className={className} aria-current={current} lang={code}>
     <Button
       value={code}
       onClick={handleClick}
@@ -195,15 +195,16 @@ const LanguageListItemButton = memo<{
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: string }
 >(({ narrow, invert, className, label }) => {
+  const Icon = invert ? LanguageIcon : FaGlobeIcon
   let prefix: ReactNode = undefined
   let body: ReactNode = label
 
   if (narrow) {
     // narrowの時はprefixなし、bodyにアイコン
-    body = invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />
+    body = <Icon alt={label} />
   } else {
     // narrowでない時はprefixにアイコン、bodyはlabel
-    prefix = invert ? <LanguageIcon /> : <FaGlobeIcon />
+    prefix = <Icon />
   }
 
   return (
