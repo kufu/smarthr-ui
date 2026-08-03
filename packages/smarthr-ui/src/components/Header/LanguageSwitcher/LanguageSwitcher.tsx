@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useAvailableLocales } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
@@ -43,7 +44,7 @@ const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayL
   return (currentIndex + 1) % arrayLength
 }
 
-const onDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
+const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
   }
@@ -126,14 +127,18 @@ export const LanguageSwitcher: FC<Props> = ({
     }
   }, [enableNew, invert])
 
-  const onClickLanguageSelect = useMemo(
-    () =>
-      onLanguageSelect
+  const latest = useLatest({ onLanguageSelect })
+
+  const hasOnLanguageSelect = !!onLanguageSelect
+  const functions = useMemo(
+    () => ({
+      handleClickLanguageSelect: hasOnLanguageSelect
         ? (e: MouseEvent<HTMLButtonElement>) => {
-            onLanguageSelect(e.currentTarget.value)
+            latest.onLanguageSelect!(e.currentTarget.value)
           }
         : undefined,
-    [onLanguageSelect],
+    }),
+    [hasOnLanguageSelect, latest],
   )
 
   return (
@@ -144,16 +149,15 @@ export const LanguageSwitcher: FC<Props> = ({
         className={classNames.switchButton}
         label="Language"
       />
-      <DropdownContent onKeyDown={onDelegateKeyDownContent}>
+      <DropdownContent onKeyDown={handleDelegateKeyDownContent}>
         <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
               key={code}
               code={code}
-              className={classNames.languageItem}
-              buttonStyle={classNames.languageButton}
               current={currentLang === code}
-              onClick={onClickLanguageSelect}
+              handleClick={functions.handleClickLanguageSelect}
+              classNames={classNames}
             >
               {label}
             </LanguageListItemButton>
@@ -167,15 +171,17 @@ export const LanguageSwitcher: FC<Props> = ({
 const LanguageListItemButton = memo<{
   code: string
   children: string
-  className: string
-  buttonStyle: string
   current: boolean
-  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, onClick }) => (
-  <li key={code} className={className} aria-current={current} lang={code}>
+  handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
+  classNames: {
+    languageItem: string
+    languageButton: string
+  }
+}>(({ code, children, current, handleClick, classNames }) => (
+  <li className={classNames.languageItem} aria-current={current} lang={code}>
     <Button
       value={code}
-      onClick={onClick}
+      onClick={handleClick}
       wide
       prefix={
         current ? (
@@ -185,7 +191,7 @@ const LanguageListItemButton = memo<{
           />
         ) : null
       }
-      className={buttonStyle}
+      className={classNames.languageButton}
     >
       {children}
     </Button>
@@ -195,15 +201,16 @@ const LanguageListItemButton = memo<{
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: string }
 >(({ narrow, invert, className, label }) => {
+  const Icon = invert ? LanguageIcon : FaGlobeIcon
   let prefix: ReactNode = undefined
   let body: ReactNode = label
 
   if (narrow) {
     // narrowの時はprefixなし、bodyにアイコン
-    body = invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />
+    body = <Icon alt={label} />
   } else {
     // narrowでない時はprefixにアイコン、bodyはlabel
-    prefix = invert ? <LanguageIcon /> : <FaGlobeIcon />
+    prefix = <Icon />
   }
 
   return (
