@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useAvailableLocales } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
@@ -126,14 +127,18 @@ export const LanguageSwitcher: FC<Props> = ({
     }
   }, [enableNew, invert])
 
-  const handleClickLanguageSelect = useMemo(
-    () =>
-      onLanguageSelect
+  const latest = useLatest({ onLanguageSelect })
+
+  const hasOnLanguageSelect = !!onLanguageSelect
+  const functions = useMemo(
+    () => ({
+      handleClickLanguageSelect: hasOnLanguageSelect
         ? (e: MouseEvent<HTMLButtonElement>) => {
-            onLanguageSelect(e.currentTarget.value)
+            latest.onLanguageSelect!(e.currentTarget.value)
           }
         : undefined,
-    [onLanguageSelect],
+    }),
+    [hasOnLanguageSelect, latest],
   )
 
   return (
@@ -151,7 +156,7 @@ export const LanguageSwitcher: FC<Props> = ({
               key={code}
               code={code}
               current={currentLang === code}
-              handleClick={handleClickLanguageSelect}
+              handleClick={functions.handleClickLanguageSelect}
               classNames={classNames}
             >
               {label}
