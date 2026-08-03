@@ -9,12 +9,12 @@ overrides:
   esbuild@<=0.24.2: '>=0.28.1'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
   tar@<=7.5.15: '>=7.5.22'
-  vite@>=7.0.0 <=7.3.4: '>=7.3.6'
   react-draggable: 4.7.0
   js-yaml@>=4.0.0 <=5.2.1: '>=5.2.2'
   '@babel/core@<=7.29.0': '>=8.0.1'
   sharp@<0.35.0: '>=0.35.3'
-  brace-expansion@>=5.0.0 <5.0.8: '>=5.0.8'
+  brace-expansion@>=2.0.0 <2.1.4: '>=2.1.4 <3'
+  brace-expansion@>=4.0.0 <5.0.9: '>=5.0.9'
 
 importers:
 
@@ -1797,7 +1797,7 @@ packages:
     resolution: {integrity: sha512-J4BaTocTOYFkMHIra1JDWrMWpNmBl4EkplIwHEsV8aeUOtdWjwSnln9U7twjMFTAEB7mptNtSKyVi1Y2W9sDJw==}
     peerDependencies:
       typescript: '>= 4.3.x'
-      vite: '>=7.3.6'
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -2392,7 +2392,7 @@ packages:
     resolution: {integrity: sha512-cdU3Q2/wEaT8h+mApFToRiF/0hYKH1eAkD0scQn67aODgp7xnkr0YHcdA+8w0Uxd2V7U8crV/cmT/HD0ELVOGw==}
     peerDependencies:
       storybook: ^9.1.20
-      vite: '>=7.3.6'
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0
 
   '@storybook/cli@9.1.20':
     resolution: {integrity: sha512-9YR9+akCrs84r34Iu3CmpAQ7cNk+7SiSfERVNGja8/fyzrJwUOM1qvo4kqluyfXazZDm1yJIqKx6tJMRKsoueg==}
@@ -2430,7 +2430,7 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       storybook: ^9.1.20
-      vite: '>=7.3.6'
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0
 
   '@storybook/react@9.1.20':
     resolution: {integrity: sha512-TJhqzggs7HCvLhTXKfx8HodnVq9YizsB2J31s9v6olU0UCxbCY+FYaCF+XdE8qUCyefGRZgHKzGBIczJ/q9e2g==}
@@ -2759,7 +2759,7 @@ packages:
     resolution: {integrity: sha512-VIcFLdRi/VYRU8OL/puL7QXMYafHmqOnwTZY50U1JPlCNj30PxCMx65c494b1K9be9hX83KVt0+gTEwTWLqToA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: '>=7.3.6'
+      vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
   '@vitest/expect@3.2.4':
     resolution: {integrity: sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig==}
@@ -2771,7 +2771,7 @@ packages:
     resolution: {integrity: sha512-46ryTE9RZO/rfDd7pEqFl7etuyzekzEhUbTW3BvmeO/BcCMEgq59BKhek3dXDWgAj4oMK6OZi+vRr1wPW6qjEQ==}
     peerDependencies:
       msw: ^2.4.9
-      vite: '>=7.3.6'
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0-0
     peerDependenciesMeta:
       msw:
         optional: true
@@ -2782,7 +2782,7 @@ packages:
     resolution: {integrity: sha512-v0xaezt+DKEmKfaxg133ldzADrwLGd7Ze1MfQQTYfvs8OqZIwbxyxaYURivwV7sWy5fqn3rH5uOrSp07bp44Ow==}
     peerDependencies:
       msw: ^2.4.9
-      vite: '>=7.3.6'
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       msw:
         optional: true
@@ -3036,11 +3036,11 @@ packages:
   brace-expansion@1.1.16:
     resolution: {integrity: sha512-IDw48K2/2kRkg9LdJxurvq3lV3aBgq0REY89duEqFRthjlPdXHKMj7EnQOXVckxzgisinf3nHfrcE2FufFLXMw==}
 
-  brace-expansion@2.1.2:
-    resolution: {integrity: sha512-w5JZcKgdhDOgOwm8H+KgbosopHMuGcl6qbulwjtz3SM7I7P3yW1eAjzMPLrIE+NQ9vjgANKHWeMHnrT0OXW1oA==}
+  brace-expansion@2.1.4:
+    resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
 
-  brace-expansion@5.0.8:
-    resolution: {integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==}
+  brace-expansion@5.0.9:
+    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
     engines: {node: 20 || >=22}
 
   braces@3.0.3:
@@ -5952,7 +5952,7 @@ packages:
       '@vitest/ui': 4.1.10
       happy-dom: '*'
       jsdom: '*'
-      vite: '>=7.3.6'
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
@@ -8911,11 +8911,11 @@ snapshots:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
-  brace-expansion@2.1.2:
+  brace-expansion@2.1.4:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.8:
+  brace-expansion@5.0.9:
     dependencies:
       balanced-match: 4.0.2
 
@@ -10705,7 +10705,7 @@ snapshots:
 
   minimatch@10.2.5:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: 5.0.9
 
   minimatch@3.1.5:
     dependencies:
@@ -10713,7 +10713,7 @@ snapshots:
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 2.1.2
+      brace-expansion: 2.1.4
 
   minimist@1.2.8: {}
 
