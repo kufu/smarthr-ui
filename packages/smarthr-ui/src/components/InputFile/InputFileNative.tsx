@@ -16,10 +16,10 @@ import {
 
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
-import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
+import { Groupbox } from '../Panel'
 
 import { classNameGenerator } from './style'
 
@@ -32,10 +32,7 @@ type Props = Omit<CommonProps, 'multiple'> & {
 }
 
 export const InputFileNative = forwardRef<HTMLInputElement, Props>(
-  (
-    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
-    ref,
-  ) => {
+  ({ className, size, label, hasFileList = true, onChange, disabled, error, ...rest }, ref) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
 
@@ -44,13 +41,13 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
 
       return {
         wrapper: wrapper({ className }),
-        inputWrapper: inputWrapper({ size, disabled }),
+        inputWrapper: inputWrapper({ size }),
         fileList: fileList(),
         fileItem: fileItem(),
         input: input(),
         prefix: prefix(),
       }
-    }, [disabled, size, className])
+    }, [size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
@@ -100,8 +97,8 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
-        {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
+        {hasFileList && !disabled && files.length > 0 && (
+          <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
                 key={index}
@@ -112,7 +109,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
                 {file.name}
               </FileListItem>
             ))}
-          </BaseColumn>
+          </Groupbox>
         )}
         <span className={classNames.inputWrapper}>
           <input
