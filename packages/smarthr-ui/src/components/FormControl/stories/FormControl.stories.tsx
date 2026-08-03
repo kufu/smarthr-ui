@@ -5,6 +5,7 @@ import { FaAddressBookIcon } from '../../Icon'
 import { CurrencyInput, Input } from '../../Input'
 import { InputFile } from '../../InputFile'
 import { Cluster, Stack } from '../../Layout'
+import { RadioButton } from '../../RadioButton'
 import { Select } from '../../Select'
 import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
@@ -201,5 +202,27 @@ export const SupplementaryMessage: StoryObj<typeof FormControl> = {
   name: 'supplementaryMessage',
   args: {
     supplementaryMessage: '入力要素に紐づく補足メッセージ',
+  },
+}
+
+export const AsFieldset: StoryObj<typeof FormControl> = {
+  name: 'as="fieldset"（legend文言のaria-label追加を確認）',
+  args: {
+    as: 'fieldset',
+    label: '性別',
+    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
+    children: (
+      <Stack gap={0.5}>
+        <RadioButton name="gender" value="male" aria-label="hoge">
+          男性
+        </RadioButton>
+        <RadioButton name="gender" value="female">
+          女性
+        </RadioButton>
+        <RadioButton name="gender" value="other">
+          その他
+        </RadioButton>
+      </Stack>
+    ),
   },
 }

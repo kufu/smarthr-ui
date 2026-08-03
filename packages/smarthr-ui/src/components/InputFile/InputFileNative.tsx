@@ -12,8 +12,8 @@ import {
 } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
-import { BaseColumn } from '../Base'
 import { Stack } from '../Layout'
+import { Groupbox } from '../Panel'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
 import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
@@ -122,7 +122,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
         {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
+          <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
                 key={index}
@@ -134,7 +134,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
                 className={classNames.fileItem}
               />
             ))}
-          </BaseColumn>
+          </Groupbox>
         )}
         <span className={classNames.inputWrapper}>
           <input

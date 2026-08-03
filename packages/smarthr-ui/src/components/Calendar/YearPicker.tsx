@@ -22,7 +22,7 @@ type AbstractProps = {
   /** 選択可能な終了年 */
   toYear: number
   /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
+  handleSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
   /** 表示フラグ */
   isDisplayed: boolean
   /** HTMLのid属性 */
@@ -64,7 +64,7 @@ const ActualYearPicker: FC<ActualProps> = ({
   selectedYear,
   fromYear,
   toYear,
-  onSelectYear,
+  handleSelectYear,
   id,
   ...rest
 }) => {
@@ -103,7 +103,7 @@ const ActualYearPicker: FC<ActualProps> = ({
             focusingRef={focusingRef}
             className={CLASS_NAMES.yearButton}
             childrenStyle={CLASS_NAMES.yearWrapper}
-            onClick={onSelectYear}
+            handleClick={handleSelectYear}
           />
         ))}
       </Scroller>
@@ -118,8 +118,8 @@ const YearButton = memo<{
   focusingRef: RefObject<HTMLButtonElement>
   className: string
   childrenStyle: string
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ year, thisYear, selected, focusingRef, handleClick, className, childrenStyle }) => {
   const { localize } = useIntl()
   const isThisYear = thisYear === year
 
@@ -128,7 +128,7 @@ const YearButton = memo<{
       ref={isThisYear ? focusingRef : null}
       value={year}
       aria-pressed={selected}
-      onClick={onClick}
+      onClick={handleClick}
       className={className}
       data-this-year={isThisYear}
       aria-label={

@@ -127,27 +127,24 @@ export const DialogContentInner: FC<Props> = ({
 
   const latest = useLatest({ onPressEscape, onClickOverlay })
 
-  const functions = useMemo(() => {
-    if (!isOpen) {
-      return {
-        onPressEscape: undefined,
-        onClickOverlay: undefined,
-      }
-    }
+  const functions = useMemo(
+    () => ({
+      handlePressEscape: () => latest.onPressEscape?.(),
+      handleClickOverlay: () => latest.onClickOverlay?.(),
+    }),
+    [latest],
+  )
 
-    return {
-      onPressEscape: () => latest.onPressEscape?.(),
-      onClickOverlay: () => latest.onClickOverlay?.(),
-    }
-  }, [isOpen, latest])
-
-  useHandleEscape(functions.onPressEscape)
+  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
   useBodyScrollLock(isOpen)
 
   return (
     <DialogOverlap isOpen={isOpen}>
       <div id={id} className={classNames.layout} style={style}>
-        <Overlay onClickOverlay={functions.onClickOverlay} className={classNames.background} />
+        <Overlay
+          handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
+          className={classNames.background}
+        />
         <div
           {...rest}
           ref={innerRef}
@@ -166,9 +163,9 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Overlay = memo<{ onClickOverlay: (() => void) | undefined; className: string }>(
-  ({ onClickOverlay, className }) => (
+const Overlay = memo<{ handleClickOverlay: (() => void) | undefined; className: string }>(
+  ({ handleClickOverlay, className }) => (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    <div onClick={onClickOverlay} className={className} role="presentation" />
+    <div onClick={handleClickOverlay} className={className} role="presentation" />
   ),
 )
