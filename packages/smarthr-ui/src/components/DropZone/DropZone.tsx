@@ -135,6 +135,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           className={classNames.button}
         />
         <VisuallyHiddenText>
+          {/* TODO: この input にアクセシブルネームが設定されていない。VisuallyHiddenText で視覚的に隠されているが aria-hidden ではないためアクセシビリティツリーに残る。aria-label 等で適切なラベルを付与する必要がある */}
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
