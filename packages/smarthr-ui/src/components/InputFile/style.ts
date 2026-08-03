@@ -13,8 +13,6 @@ export const classNameGenerator = tv({
       'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
       'has-[:disabled]:shr-border-disabled has-[:disabled]:shr-bg-white-darken has-[:disabled]:shr-text-disabled',
       'has-[:disabled]:hover:shr-border-disabled has-[:disabled]:hover:shr-text-disabled',
-      'has-[[aria-disabled="true"]]:shr-border-disabled has-[[aria-disabled="true"]]:shr-bg-white-darken has-[[aria-disabled="true"]]:shr-text-disabled',
-      'has-[[aria-disabled="true"]]:hover:shr-border-disabled has-[[aria-disabled="true"]]:hover:shr-text-disabled',
     ],
     input: [
       'smarthr-ui-InputFile-input',
