@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
+import { Panel } from '../Panel'
 import { RadioButton } from '../RadioButton'
 
 type Props = ComponentProps<typeof RadioButton> & {
@@ -143,11 +143,11 @@ const ActualRadioButtonPanel: FC<LowerProps> = ({ as, classNames, children, labe
   }, [])
 
   return (
-    <Base padding={1} onClick={handleDelegateClick} as={as} className={classNames.base}>
+    <Panel padding={1} onClick={handleDelegateClick} as={as} className={classNames.base}>
       <RadioButton {...rest} ref={innerRef} className={classNames.radio}>
         {label}
       </RadioButton>
       {children}
-    </Base>
+    </Panel>
   )
 }
