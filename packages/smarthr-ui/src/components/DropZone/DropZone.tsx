@@ -131,7 +131,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         <SelectButton
           handleClick={functions.handleClickButton}
           disabled={disabled}
-          className={CLASS_NAMES.button}
           label={selectButtonLabel}
         />
         <VisuallyHiddenText>
@@ -154,9 +153,17 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 )
 
 const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> & { handleClick: () => void; label?: string }
+  Omit<ComponentPropsWithoutRef<typeof Button>, 'className'> & {
+    handleClick: () => void
+    label?: string
+  }
 >(({ handleClick, label, ...rest }) => (
-  <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={handleClick}>
+  <Button
+    {...rest}
+    prefix={<FaFolderOpenIcon />}
+    onClick={handleClick}
+    className={CLASS_NAMES.button}
+  >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
   </Button>
 ))
