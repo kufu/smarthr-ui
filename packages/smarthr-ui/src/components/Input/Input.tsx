@@ -54,7 +54,8 @@ const wrapperClassNameGenerator = tv({
     'contrast-more:shr-border-high-contrast',
     'focus-within:shr-focus-indicator',
     'has-[[aria-invalid]]:shr-border-danger',
-    'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken has-[:disabled]:[&&&]:shr-border-default/50',
+    'has-[:disabled]:[&&&]:shr-border-default/50',
+    'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
     'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
   ],
 })
