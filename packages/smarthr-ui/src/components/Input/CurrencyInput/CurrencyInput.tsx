@@ -78,7 +78,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       if (!isFocused && innerRef.current) {
         functions.formatCurrencyValue(innerRef.current.value)
       }
-    }, [isFocused, value, functions])
+    }, [value, isFocused, functions])
 
     return (
       <Input
