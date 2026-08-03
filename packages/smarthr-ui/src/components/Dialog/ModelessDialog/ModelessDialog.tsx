@@ -354,7 +354,7 @@ export const ModelessDialog: FC<Props> = ({
         onStart={functions.handleDragStart}
         onDrag={functions.handleDrag}
         position={position}
-        bounds={draggableBounds}
+        bounds={draggableBounds ?? false}
         nodeRef={wrapperRef}
       >
         <Base
