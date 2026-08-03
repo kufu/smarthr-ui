@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -188,8 +187,7 @@ export const ModelessDialog: FC<Props> = ({
     x: 0,
     y: 0,
   })
-  const [draggableBounds, setDraggableBounds] =
-    useState<ComponentProps<typeof Draggable>['bounds']>()
+  const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
   const positionStyle = useMemo(
     () => ({
@@ -351,11 +349,12 @@ export const ModelessDialog: FC<Props> = ({
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
       <Draggable
+        {...Draggable.defaultProps}
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={functions.handleDragStart}
         onDrag={functions.handleDrag}
         position={position}
-        bounds={draggableBounds}
+        bounds={draggableBounds ?? false}
         nodeRef={wrapperRef}
       >
         <Panel
