@@ -49,7 +49,8 @@ const createResizeHandle = (direction: ResizableNodeViewDirection): HTMLElement 
  * 同期するよう修正する。さらに公式 PR でも未対応の width/height（style）まで
  * 同期し、ポップオーバーによるサイズ変更もライブで反映されるようにする。
  *
- * onResize / onCommit / options / visibility・onload の扱いは標準実装と同一。
+ * onResize / onCommit / options は標準実装と同一。読み込み完了まで隠す挙動も踏襲するが、
+ * 標準に無い onerror を足して失敗時に操作できる状態へ戻す。
  */
 export const CustomImage = Image.extend({
   addNodeView() {
@@ -76,15 +77,25 @@ export const CustomImage = Image.extend({
       })
       el.src = HTMLAttributes.src
 
+      // 読み込み失敗の目印を外す。src が変わったときだけ呼ぶ（onUpdate は無関係な
+      // 編集でも走るため、毎回外すと壊れたままの画像から目印が消えてしまう）。
+      // 実測では属性更新で NodeView ごと作り直されて <img> も新品になるが、
+      // 再利用された場合に古い失敗表示が残らないよう保険として持つ。
+      const clearLoadFailure = () => {
+        delete el.dataset.imageError
+      }
+
       // src を要素へ同期する（空文字/未設定なら属性自体を外す）。公式 PR #7568 準拠。
       const syncImageSource = (src: unknown) => {
         if (typeof src === 'string' && src !== '') {
           if (el.getAttribute('src') !== src) {
             el.src = src
+            clearLoadFailure()
           }
         } else {
           if (el.hasAttribute('src')) {
             el.removeAttribute('src')
+            clearLoadFailure()
           }
           if (el.src !== '') {
             el.src = ''
@@ -179,9 +190,25 @@ export const CustomImage = Image.extend({
       const dom = nodeView.dom
       dom.style.visibility = 'hidden'
       dom.style.pointerEvents = 'none'
-      el.onload = () => {
+
+      const revealImage = () => {
         dom.style.visibility = ''
         dom.style.pointerEvents = ''
+      }
+
+      el.onload = () => {
+        clearLoadFailure()
+        revealImage()
+      }
+
+      // 標準実装は onload しか見ていないため、404・期限切れの署名URL・ネットワーク障害で
+      // 読み込みに失敗すると永久に不可視かつ pointer-events: none のまま残り、
+      // マウスでの選択も削除もできなくなる。失敗しても操作できる状態へ戻す。
+      // 目印は属性で付け、見た目（枠線と最小サイズ）は styles.ts のCSSに寄せる。
+      // alt テキストは <img> のまま残すので、読み上げ内容は成功時と変わらない。
+      el.onerror = () => {
+        el.dataset.imageError = 'true'
+        revealImage()
       }
 
       return nodeView

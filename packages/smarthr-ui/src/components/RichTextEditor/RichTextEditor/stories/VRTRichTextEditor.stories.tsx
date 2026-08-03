@@ -313,3 +313,28 @@ export const VRTImageWithWidth: Story = {
     </Stack>
   ),
 }
+
+// 読み込みに失敗する画像。壊れていても選択・削除できるよう、非表示にせず枠線と
+// 最小サイズで存在を示す（幅・高さ指定なしだと箱が潰れてクリックできないため）。
+const brokenImageContent = {
+  type: 'doc' as const,
+  content: [
+    {
+      type: 'paragraph',
+      content: [{ type: 'text', text: '読み込みに失敗する画像:' }],
+    },
+    {
+      type: 'image',
+      attrs: { src: 'https://example.com/does-not-exist.png', alt: '読み込めない画像' },
+    },
+  ],
+}
+
+export const VRTBrokenImage: Story = {
+  name: '読み込み失敗画像',
+  render: () => (
+    <FormControl label="読み込み失敗画像">
+      <RichTextEditor features={['image']} defaultValue={brokenImageContent} />
+    </FormControl>
+  ),
+}

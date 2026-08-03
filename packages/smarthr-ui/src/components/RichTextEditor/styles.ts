@@ -35,6 +35,10 @@ export const editorContentClasses = [
   // RichTextViewer 側(staticContentClasses)も block で揃えている。
   '[&_.ProseMirror_img]:shr-my-0.5 [&_.ProseMirror_img]:shr-block [&_.ProseMirror_img]:shr-max-w-full',
   '[&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-offset-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-outline-main',
+  // 読み込みに失敗した画像（CustomImage の onerror が data-image-error を付ける）
+  // 幅・高さが未指定の壊れた画像は箱が潰れてクリックできなくなるため、最小サイズを確保する。
+  // 枠線と背景は「ここに画像があるが表示できない」ことを示すためのもの。
+  '[&_.ProseMirror_img[data-image-error]]:shr-min-h-[3em] [&_.ProseMirror_img[data-image-error]]:shr-min-w-[3em] [&_.ProseMirror_img[data-image-error]]:shr-border [&_.ProseMirror_img[data-image-error]]:shr-border-dashed [&_.ProseMirror_img[data-image-error]]:shr-border-grey [&_.ProseMirror_img[data-image-error]]:shr-bg-white-darken [&_.ProseMirror_img[data-image-error]]:shr-p-0.25 [&_.ProseMirror_img[data-image-error]]:shr-text-sm [&_.ProseMirror_img[data-image-error]]:shr-text-grey',
   // image resize container
   '[&_.ProseMirror_[data-resize-container]]:shr-w-fit [&_.ProseMirror_[data-resize-container]]:shr-max-w-full [&_.ProseMirror_[data-resize-container]]:shr-my-0.5',
   '[&_.ProseMirror_[data-resize-container]_img]:shr-my-0',
