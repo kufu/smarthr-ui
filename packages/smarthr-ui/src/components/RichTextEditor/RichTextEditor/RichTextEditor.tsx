@@ -220,6 +220,27 @@ export const RichTextEditor = memo(
         return () => observer.disconnect()
       }, [editor])
 
+      // disabled/readOnlyはどちらも本文がcontenteditable="false"になるだけで区別が付かない。
+      // role="textbox"を明示している以上、対応する状態も明示しないと支援技術に伝わらない。
+      // 値false（aria-disabled="false"）ではなく属性ごと外すのは、ariaの既定値がfalseであり
+      // 「未指定」と同義のため。
+      useEffect(() => {
+        if (!editor || !contentRef.current) return
+        const proseMirrorEl = contentRef.current.querySelector<HTMLElement>('.ProseMirror')
+        if (!proseMirrorEl) return
+
+        const toggleAriaState = (name: string, isOn: boolean | undefined) => {
+          if (isOn) {
+            proseMirrorEl.setAttribute(name, 'true')
+          } else {
+            proseMirrorEl.removeAttribute(name)
+          }
+        }
+
+        toggleAriaState('aria-disabled', disabled)
+        toggleAriaState('aria-readonly', readOnly)
+      }, [editor, disabled, readOnly])
+
       useEffect(() => {
         if (!editor || !contentRef.current) return
         const proseMirrorEl = contentRef.current.querySelector<HTMLElement>('.ProseMirror')

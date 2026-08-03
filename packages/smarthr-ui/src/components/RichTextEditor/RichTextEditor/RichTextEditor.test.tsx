@@ -167,6 +167,45 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('disabled / readOnly の状態通知', () => {
+    const findTextbox = async () => {
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      return textbox
+    }
+
+    it('通常時は aria-disabled も aria-readonly も付かない', async () => {
+      render(<RichTextEditor />, { wrapper: Wrapper })
+      const textbox = await findTextbox()
+      expect(textbox).not.toHaveAttribute('aria-disabled')
+      expect(textbox).not.toHaveAttribute('aria-readonly')
+    })
+
+    it('disabled のとき aria-disabled が付く', async () => {
+      render(<RichTextEditor disabled />, { wrapper: Wrapper })
+      const textbox = await findTextbox()
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-disabled', 'true'))
+      expect(textbox).not.toHaveAttribute('aria-readonly')
+    })
+
+    it('readOnly のとき aria-readonly が付く', async () => {
+      render(<RichTextEditor readOnly />, { wrapper: Wrapper })
+      const textbox = await findTextbox()
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-readonly', 'true'))
+      expect(textbox).not.toHaveAttribute('aria-disabled')
+    })
+
+    it('disabled を解除すると aria-disabled が外れる', async () => {
+      const { rerender } = render(<RichTextEditor disabled />, { wrapper: Wrapper })
+      const textbox = await findTextbox()
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-disabled', 'true'))
+
+      // rerenderはrender時のwrapperを自動で再適用するため、ここでWrapperを重ねない
+      // （重ねると要素の型が変わってRichTextEditorが再マウントされ、別のDOMを見ることになる）
+      rerender(<RichTextEditor />)
+      await waitFor(() => expect(textbox).not.toHaveAttribute('aria-disabled'))
+    })
+  })
+
   // features は「新しく適用できる操作」の制限であり、読み込める書式の制限ではない。
   describe('features 外の書式を含む入力', () => {
     const RICH_VALUE: RichTextJSON = {
