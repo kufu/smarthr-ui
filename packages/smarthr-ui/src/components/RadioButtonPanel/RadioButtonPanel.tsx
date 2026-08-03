@@ -94,9 +94,7 @@ export const RadioButtonPanel: FC<Props> = ({ children, className, ...rest }) =>
       {children}
     </DescriptionRadioButtonPanel>
   ) : (
-    <ActualRadioButtonPanel {...rest} classNames={classNames}>
-      {children}
-    </ActualRadioButtonPanel>
+    <ActualRadioButtonPanel {...rest} classNames={classNames} />
   )
 }
 
