@@ -16,10 +16,10 @@ import {
 
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
-import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
+import { Groupbox } from '../Panel'
 
 import { classNameGenerator } from './style'
 
@@ -106,7 +106,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
         {hasFileList && !disabled && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
+          <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
                 key={index}
@@ -117,7 +117,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
                 {file.name}
               </FileListItem>
             ))}
-          </BaseColumn>
+          </Groupbox>
         )}
         <span className={classNames.inputWrapper}>
           <input
