@@ -46,6 +46,14 @@ const canRun = (editor: Editor, command: string): boolean => {
   }
 }
 
+// Tiptap の color/backgroundColor/fontSize は style 未指定の span を parse すると
+// `element.style.xxx` が返す空文字をそのまま属性値にする。空文字は「未指定」と同義なので
+// null に倒す（renderHTML 側も falsy を未指定として扱っている）。
+// parseHTML を上書きして根元で潰す手もあるが、upstream の属性定義を丸ごと自前で抱えることに
+// なるため、直接 JSON を渡された場合も含めて値を読む側で正規化する。
+const normalizeStyleValue = (value: unknown): string | null =>
+  typeof value === 'string' && value.length > 0 ? value : null
+
 export const useToolbarState = (editor: Editor) =>
   useEditorState({
     editor,
@@ -73,17 +81,15 @@ export const useToolbarState = (editor: Editor) =>
               ? 4
               : null) as 1 | 2 | 3 | 4 | null,
       isLink: e.isActive('link'),
-      currentColor: (e.getAttributes('textStyle').color as string) ?? null,
-      currentBackgroundColor: (e.getAttributes('textStyle').backgroundColor as string) ?? null,
-      currentFontSize: (e.getAttributes('textStyle').fontSize as string) ?? null,
+      currentColor: normalizeStyleValue(e.getAttributes('textStyle').color),
+      currentBackgroundColor: normalizeStyleValue(e.getAttributes('textStyle').backgroundColor),
+      currentFontSize: normalizeStyleValue(e.getAttributes('textStyle').fontSize),
       currentLineHeight:
-        (e.getAttributes('paragraph').lineHeight as string) ??
-        (e.getAttributes('heading').lineHeight as string) ??
-        null,
+        normalizeStyleValue(e.getAttributes('paragraph').lineHeight) ??
+        normalizeStyleValue(e.getAttributes('heading').lineHeight),
       currentTextAlign:
-        (e.getAttributes('paragraph').textAlign as string) ??
-        (e.getAttributes('heading').textAlign as string) ??
-        null,
+        normalizeStyleValue(e.getAttributes('paragraph').textAlign) ??
+        normalizeStyleValue(e.getAttributes('heading').textAlign),
       isInHeading: e.isActive('heading'),
 
       canBold: canRun(e, 'toggleBold'),
