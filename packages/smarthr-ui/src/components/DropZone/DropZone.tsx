@@ -29,18 +29,10 @@ const classNameGenerator = tv({
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
       'has-[.smarthr-ui-DropZone-Button:disabled]:shr-cursor-not-allowed',
       'has-[[aria-invalid]]:[&_.smarthr-ui-DropZone-Button]:shr-border-danger',
+      '[&:not([data-files-dragged-over])]:shr-border-dashed',
+      'data-[files-dragged-over]:shr-border-main',
     ],
     button: 'smarthr-ui-DropZone-Button',
-  },
-  variants: {
-    filesDraggedOver: {
-      true: {
-        wrapper: 'shr-border-main',
-      },
-      false: {
-        wrapper: 'shr-border-dashed',
-      },
-    },
   },
 })
 
@@ -81,12 +73,12 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
     const classNames = useMemo(() => {
-      const { wrapper, button } = classNameGenerator({ filesDraggedOver })
+      const { wrapper, button } = classNameGenerator()
       return {
         wrapper: wrapper(),
         button: button(),
       }
-    }, [filesDraggedOver])
+    }, [])
 
     const latest = useLatest({ onSelectFiles })
 
@@ -132,6 +124,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
         className={classNames.wrapper}
+        data-files-dragged-over={filesDraggedOver || undefined}
       >
         {children}
         <SelectButton
