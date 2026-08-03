@@ -27,15 +27,16 @@ type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
   ({ onFormatValue, onFocus, onBlur, value, defaultValue, className = '', ...rest }, ref) => {
-    const innerRef = useRef<HTMLInputElement | null>(null)
+    const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
+    const [actualDefaultValue] = useState(() =>
+      defaultValue !== undefined ? formatCurrency(defaultValue) : defaultValue,
+    )
 
     const latest = useLatest({
       onFocus,
       onBlur,
       onFormatValue,
-      value,
-      defaultValue,
     })
 
     const functions = useMemo(() => {
@@ -45,18 +46,10 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           latest.onFormatValue?.(formatted)
         }
       }
-      const formatCurrencyValue = (raw = '') => {
-        formatValue(formatCurrency(raw))
-      }
 
       return {
-        formatCurrencyValue,
-        callbackRef: (node: HTMLInputElement | null) => {
-          innerRef.current = node
-
-          if (node !== null && latest.value === undefined && latest.defaultValue !== undefined) {
-            formatCurrencyValue(latest.defaultValue)
-          }
+        formatCurrencyValue: (raw = '') => {
+          formatValue(formatCurrency(raw))
         },
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
@@ -96,10 +89,10 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...rest}
-        ref={functions.callbackRef}
+        ref={innerRef}
         type="text"
         value={value}
-        defaultValue={defaultValue}
+        defaultValue={actualDefaultValue}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
         className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
