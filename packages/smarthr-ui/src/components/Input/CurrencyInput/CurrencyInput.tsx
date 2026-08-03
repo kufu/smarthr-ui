@@ -75,14 +75,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     )
 
     useEffect(() => {
-      if (!isFocused) {
-        if (value !== undefined) {
-          // for controlled component
-          functions.formatCurrencyValue(value)
-        } else if (innerRef.current) {
-          // for uncontrolled component
-          functions.formatCurrencyValue(innerRef.current.value)
-        }
+      if (!isFocused && innerRef.current) {
+        functions.formatCurrencyValue(innerRef.current.value)
       }
     }, [isFocused, value, functions])
 
