@@ -129,16 +129,15 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
       >
         {children}
         <SelectButton
-          handleClick={functions.handleClickButton}
-          disabled={disabled}
           label={selectButtonLabel}
+          disabled={disabled}
+          handleClick={functions.handleClickButton}
           className={classNames.button}
         />
         <VisuallyHiddenText>
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
-            data-smarthr-ui-input="true"
             ref={fileRef}
             type="file"
             multiple={multiple}
@@ -146,6 +145,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             tabIndex={-1}
             aria-invalid={error || undefined}
             onChange={functions.handleChange}
+            data-smarthr-ui-input="true"
           />
         </VisuallyHiddenText>
       </div>
@@ -154,15 +154,15 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 )
 
 const SelectButton = memo<{
-  handleClick: () => void
-  disabled?: boolean
   label?: string
+  disabled?: boolean
+  handleClick: () => void
   className: string
-}>(({ handleClick, disabled, label, className }) => (
+}>(({ label, disabled, handleClick, className }) => (
   <Button
     prefix={<FaFolderOpenIcon />}
-    onClick={handleClick}
     disabled={disabled}
+    onClick={handleClick}
     className={className}
   >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
