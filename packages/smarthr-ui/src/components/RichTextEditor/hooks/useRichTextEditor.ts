@@ -3,7 +3,6 @@
 import { useEditor } from '@tiptap/react'
 import { type RefObject, useEffect, useMemo } from 'react'
 
-import { collectImageSrcs, diffRemovedSrcs } from '../extensions/Image/collectImageSrcs'
 import { configureExtensions } from '../extensions/configureExtensions'
 import { createPasteFilter } from '../extensions/pasteFilter'
 import { createChangeMeta } from '../serializers/createChangeMeta'
@@ -24,7 +23,6 @@ type UseRichTextEditorOptions = {
   toolbarRef?: RefObject<HTMLDivElement | null>
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   onImageUploadError?: (error: unknown, file: File) => void
-  onImageRemove?: (src: string) => void
   acceptedMimeTypes?: string[]
 }
 
@@ -42,7 +40,6 @@ export const useRichTextEditor = ({
   toolbarRef,
   onImageUpload,
   onImageUploadError,
-  onImageRemove,
   acceptedMimeTypes,
 }: UseRichTextEditorOptions) => {
   const isControlled = value !== undefined
@@ -94,19 +91,10 @@ export const useRichTextEditor = ({
         return false
       },
     },
-    onUpdate: ({ editor: e, transaction }) => {
+    onUpdate: ({ editor: e }) => {
       const json = e.getJSON() as RichTextJSON
       const characterCount = e.getText({ blockSeparator: '' }).length
       onChange?.(json, createChangeMeta(json, characterCount))
-
-      if (onImageRemove && transaction.docChanged) {
-        const before = collectImageSrcs(transaction.before)
-        const after = collectImageSrcs(transaction.doc)
-        const removed = diffRemovedSrcs(before, after)
-        for (const src of removed) {
-          onImageRemove(src)
-        }
-      }
     },
     onFocus: () => onFocus?.(),
     onBlur: () => onBlur?.(),

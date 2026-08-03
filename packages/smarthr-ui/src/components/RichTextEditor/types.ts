@@ -58,11 +58,16 @@ type RichTextEditorBaseProps = {
   editorClassName?: string
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   showCharacterCount?: boolean
+  /**
+   * 画像をアップロードする。アップロード先は利用者が用意する。
+   *
+   * エディタはファイルの削除を行わない（編集中の削除は undo で取り消せるうえ、
+   * リロードやタブ閉じでは通知もできないため）。不要になった画像の回収は、
+   * 保存確定時に旧文書との差分をサーバ側で取って行う。
+   */
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   /** 画像アップロード失敗時に呼ばれる。通知方法は利用者に委ねる。 */
   onImageUploadError?: (error: unknown, file: File) => void
-  /** 画像がドキュメントから削除されたときに、その画像の src ごとに呼ばれる。 */
-  onImageRemove?: (src: string) => void
   acceptedMimeTypes?: string[]
 }
 

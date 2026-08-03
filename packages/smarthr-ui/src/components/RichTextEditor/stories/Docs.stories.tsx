@@ -372,6 +372,21 @@ export const Overview: Story = {
             </tbody>
           </table>
         </Stack>
+
+        <Stack gap={0.5}>
+          <Text styleType="blockTitle">画像の扱い</Text>
+          <Text color="TEXT_GREY">
+            画像のアップロード先は <code>onImageUpload</code> で利用者が実装します。失敗した場合は{' '}
+            <code>onImageUploadError</code> が呼ばれます。
+            <br />
+            SmartHR UI は保存先を持たないため、不要になった画像の削除もエディタは行いません。
+            <br />
+            編集中の削除をもとにファイルを消すと、undo
+            で戻したときやリロードしたときに復元できないデータ欠損になります。
+            <br />
+            不要になった画像の回収は、保存確定時に旧文書と新文書の差分をサーバ側で取って行ってください。
+          </Text>
+        </Stack>
       </Stack>
     )
   },
