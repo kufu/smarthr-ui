@@ -368,8 +368,8 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
       react-ga4:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^3.0.1
+        version: 3.0.1
       react-intl:
         specifier: ^10.1.18
         version: 10.1.18(@types/react@18.3.31)(react@19.2.8)
@@ -5124,8 +5124,8 @@ packages:
       react: '>= 16.3.0'
       react-dom: '>= 16.3.0'
 
-  react-ga4@2.1.0:
-    resolution: {integrity: sha512-ZKS7PGNFqqMd3PJ6+C2Jtz/o1iU9ggiy8Y8nUeksgVuvNISbmrQtJiZNvC/TjDsqD0QlU5Wkgs7i+w9+OjHhhQ==}
+  react-ga4@3.0.1:
+    resolution: {integrity: sha512-GyCc01bSheWXjzGDyHsXMOqk/SP5Cf/JrcJTg4hcpKx4eeSwaJKpJUc+ipF4ffLTZkmabmf3ZGBv4OKHTXNXyA==}
 
   react-icons@5.7.0:
     resolution: {integrity: sha512-LBLy340Rzqy6+/yVhZKT3B/QpP1BZaesGqasf09HPOBzRarcDIFH0WwXlXQfE7q7ipxK4MSiC5DIBWURCny6fw==}
@@ -11309,7 +11309,7 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  react-ga4@2.1.0: {}
+  react-ga4@3.0.1: {}
 
   react-icons@5.7.0(react@19.2.8):
     dependencies:
