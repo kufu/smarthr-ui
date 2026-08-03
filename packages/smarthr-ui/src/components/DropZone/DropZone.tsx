@@ -153,7 +153,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 )
 
 const SelectButton = memo<
-  Omit<ComponentPropsWithoutRef<typeof Button>, 'className'> & {
+  Omit<ComponentPropsWithoutRef<typeof Button>, 'className' | 'onClick'> & {
     handleClick: () => void
     label?: string
   }
