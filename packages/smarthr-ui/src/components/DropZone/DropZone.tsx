@@ -3,7 +3,6 @@
 import {
   type ChangeEvent,
   type ComponentPropsWithRef,
-  type ComponentPropsWithoutRef,
   type DragEvent,
   type PropsWithChildren,
   forwardRef,
@@ -152,16 +151,15 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
   },
 )
 
-const SelectButton = memo<
-  Omit<ComponentPropsWithoutRef<typeof Button>, 'className' | 'onClick'> & {
-    handleClick: () => void
-    label?: string
-  }
->(({ handleClick, label, ...rest }) => (
+const SelectButton = memo<{
+  handleClick: () => void
+  disabled?: boolean
+  label?: string
+}>(({ handleClick, disabled, label }) => (
   <Button
-    {...rest}
     prefix={<FaFolderOpenIcon />}
     onClick={handleClick}
+    disabled={disabled}
     className={CLASS_NAMES.button}
   >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
