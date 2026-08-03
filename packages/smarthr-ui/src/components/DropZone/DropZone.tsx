@@ -65,6 +65,14 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
+const CLASS_NAMES = (() => {
+  const { wrapper, button } = classNameGenerator()
+  return {
+    wrapper: wrapper(),
+    button: button(),
+  }
+})()
+
 export const DropZone = forwardRef<HTMLInputElement, Props>(
   (
     { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
@@ -72,13 +80,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
   ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-    const classNames = useMemo(() => {
-      const { wrapper, button } = classNameGenerator()
-      return {
-        wrapper: wrapper(),
-        button: button(),
-      }
-    }, [])
 
     const latest = useLatest({ onSelectFiles })
 
@@ -123,14 +124,14 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         onDrop={functions.handleDrop}
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
-        className={classNames.wrapper}
+        className={CLASS_NAMES.wrapper}
         data-files-dragged-over={filesDraggedOver || undefined}
       >
         {children}
         <SelectButton
           handleClick={functions.handleClickButton}
           disabled={disabled}
-          className={classNames.button}
+          className={CLASS_NAMES.button}
           label={selectButtonLabel}
         />
         <VisuallyHiddenText>
