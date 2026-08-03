@@ -9,12 +9,10 @@ export const classNameGenerator = tv({
       'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-bg-white shr-font-bold shr-leading-none',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator',
-      'has-[[aria-invalid]]:shr-border-danger',
+      '[&&&]:has-[[aria-invalid]]:shr-border-danger',
       'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
       'has-[:disabled]:shr-border-disabled has-[:disabled]:shr-bg-white-darken has-[:disabled]:shr-text-disabled',
       'has-[:disabled]:hover:shr-border-disabled has-[:disabled]:hover:shr-text-disabled',
-      // disabled+errorの場合はerrorを優先（has-[[aria-invalid]]の(0,2,0)よりhasを重ねて(0,3,0)にする）
-      'has-[[aria-invalid]]:has-[:disabled]:shr-border-danger',
     ],
     input: [
       'smarthr-ui-InputFile-input',
