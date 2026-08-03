@@ -5,6 +5,7 @@ import { type FC, type MouseEvent, type ReactNode, memo, useEffect, useState } f
 import { Localizer } from '../../intl'
 import { AnchorButton, Button } from '../Button'
 import { FaFileArrowDownIcon, FaFileLinesIcon, FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
   <span className={className}>
@@ -31,7 +32,14 @@ const PreviewButton: FC<{
     onClick={() => handlePreviewClick(file)}
     className={PREVIEW_BUTTON_CLASSNAME}
   >
-    {file.name}
+    <span aria-hidden="true">{file.name}</span>
+    <VisuallyHiddenText>
+      <Localizer
+        id="smarthr-ui/InputFile/previewLabel"
+        defaultText="{fileName}のプレビューを開く"
+        values={{ fileName: file.name }}
+      />
+    </VisuallyHiddenText>
   </Button>
 )
 
@@ -55,7 +63,14 @@ const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
       variant="text"
       className={PREVIEW_BUTTON_CLASSNAME}
     >
-      {file.name}
+      <span aria-hidden="true">{file.name}</span>
+      <VisuallyHiddenText>
+        <Localizer
+          id="smarthr-ui/InputFile/downloadLabel"
+          defaultText="{fileName}をダウンロード"
+          values={{ fileName: file.name }}
+        />
+      </VisuallyHiddenText>
     </AnchorButton>
   )
 }
