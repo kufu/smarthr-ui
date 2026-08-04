@@ -21,7 +21,7 @@ type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = FormDialogContentInnerProps['actionButton']
 type ObjectCloseButtonType = FormDialogContentInnerProps['closeButton']
 
-type AbstractProps = Omit<
+type BaseProps = Omit<
   FormDialogContentInnerProps,
   'heading' | 'actionButton' | 'closeButton' | 'handleClickClose' | 'handleSubmit'
 > &
@@ -38,7 +38,7 @@ type AbstractProps = Omit<
      */
     onClickClose: () => void
   }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,

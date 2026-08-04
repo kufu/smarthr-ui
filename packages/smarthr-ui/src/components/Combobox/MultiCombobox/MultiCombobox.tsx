@@ -22,7 +22,7 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../../hooks/useLatest'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
-import { useIntl } from '../../../intl'
+import { useLocalize } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
@@ -33,9 +33,9 @@ import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 
-import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
+import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
-type AbstractProps<T> = ComboboxProps<T> & {
+type BaseProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテムのリスト
    */
@@ -74,8 +74,7 @@ type AbstractProps<T> = ComboboxProps<T> & {
    */
   noResultText?: ReactNode
 }
-type Props<T> = AbstractProps<T> &
-  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
+type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
 
 const NOOP = () => undefined
 
@@ -184,7 +183,6 @@ const ActualMultiCombobox = <T,>(
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
@@ -442,14 +440,12 @@ const ActualMultiCombobox = <T,>(
     }
   }, [isFocused, disabled, className])
 
-  const selectedListAriaLabel = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
-        defaultText: '選択済みアイテム',
-      }),
-    [localize],
-  )
+  const { selectedListAriaLabel } = useLocalize({
+    selectedListAriaLabel: {
+      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
+      defaultText: '選択済みアイテム',
+    },
+  })
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions

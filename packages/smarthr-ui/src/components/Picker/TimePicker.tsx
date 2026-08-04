@@ -11,7 +11,7 @@ type Props = {
 
 /** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
 export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
-  ({ disabled, error, readOnly, className, ...rest }, ref) => {
+  ({ error, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner } = classNameGenerator('Time')
 
@@ -27,10 +27,8 @@ export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
           {...rest}
           ref={ref}
           type="time"
-          disabled={disabled}
-          readOnly={readOnly}
-          aria-invalid={error || undefined}
           className={classNames.inner}
+          aria-invalid={error || undefined}
           data-smarthr-ui-input="true"
         />
       </span>

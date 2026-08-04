@@ -3,7 +3,6 @@ import {
   type ComponentProps,
   type FC,
   type KeyboardEventHandler,
-  useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -38,7 +37,7 @@ const classNameGenerator = tv({
   ],
 })
 
-type AbstractProps = {
+type BaseProps = {
   /** 表示する item の配列 */
   items: ItemNodeLike[]
   /** 選択中の item の値 */
@@ -46,7 +45,7 @@ type AbstractProps = {
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
@@ -70,11 +69,12 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   }, [rootNode, value])
 
   const latest = useLatest({ onSelectItem, value, rootNode })
+  const hasOnSelectItem = !!onSelectItem
 
-  // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
-  // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
-  const onDelegateKeyDown: KeyboardEventHandler = useCallback(
-    (e) => {
+  const functions = useMemo(() => {
+    // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
+    // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
+    const handleDelegateKeyDown: KeyboardEventHandler = (e) => {
       const selectedNode = latest.value ? latest.rootNode.findByValue(latest.value) : undefined
 
       if (!selectedNode) {
@@ -117,27 +117,33 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
         latest.onSelectItem?.(target.value)
         document.getElementById(getElementIdFromNode(target.value))?.focus()
       }
-    },
-    [latest],
-  )
+    }
 
-  const onChangeInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      latest.onSelectItem?.(e.currentTarget.value)
-    },
-    [latest],
-  )
+    return {
+      handleDelegateKeyDown,
+      handleChangeInput: hasOnSelectItem
+        ? (e: ChangeEvent<HTMLInputElement>) => {
+            latest.onSelectItem?.(e.currentTarget.value)
+          }
+        : undefined,
+    }
+  }, [hasOnSelectItem, latest])
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-    <div {...rest} role="application" onKeyDown={onDelegateKeyDown} className={classNames.wrapper}>
+    <div
+      {...rest}
+      role="application"
+      onKeyDown={functions.handleDelegateKeyDown}
+      className={classNames.wrapper}
+    >
       {columns.map((colItems, index) => (
         <BrowserColumn
           key={index}
           items={colItems}
           index={index}
           value={selectedPath[index]}
-          onChangeInput={onSelectItem ? onChangeInput : undefined}
+          handleChangeInput={functions.handleChangeInput}
           className={classNames.column}
         />
       ))}

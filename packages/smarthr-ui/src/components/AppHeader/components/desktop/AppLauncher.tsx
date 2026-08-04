@@ -4,7 +4,7 @@ import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } fr
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../../../hooks/useTheme'
-import { Localizer, useIntl } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
@@ -71,6 +71,37 @@ const appLauncher = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const {
+    wrapper,
+    searchArea,
+    inner,
+    side,
+    sideNav,
+    sideNavHeading,
+    help,
+    main,
+    mainInner,
+    contentHead,
+    scrollArea,
+  } = appLauncher()
+
+  return {
+    wrapper: wrapper(),
+    searchArea: searchArea(),
+    inner: inner(),
+    side: side(),
+    unselectedSideNav: sideNav({ selected: false }),
+    selectedSideNav: sideNav({ noIcon: true, selected: true }),
+    sideNavHeading: sideNavHeading(),
+    help: help(),
+    main: main(),
+    mainInner: mainInner(),
+    contentHead: contentHead(),
+    scrollArea: scrollArea(),
+  }
+})()
+
 export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   const {
     features,
@@ -84,59 +115,24 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     onClickClearSearchQuery,
   } = useAppLauncher(baseFeatures)
 
-  const classNames = useMemo(() => {
-    const {
-      wrapper,
-      searchArea,
-      inner,
-      side,
-      sideNav,
-      sideNavHeading,
-      help,
-      main,
-      mainInner,
-      contentHead,
-      scrollArea,
-    } = appLauncher()
-
-    return {
-      wrapper: wrapper(),
-      searchArea: searchArea(),
-      inner: inner(),
-      side: side(),
-      unselectedSideNav: sideNav({ selected: false }),
-      selectedSideNav: sideNav({ noIcon: true, selected: true }),
-      sideNavHeading: sideNavHeading(),
-      help: help(),
-      main: main(),
-      mainInner: mainInner(),
-      contentHead: contentHead(),
-      scrollArea: scrollArea(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      searchInputTitle: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
-        defaultText: 'アプリ名を入力してください。',
-      }),
-      favoriteModeText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
-        defaultText: 'よく使うアプリ',
-      }),
-      allModeText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/allModeText',
-        defaultText: 'すべてのアプリ',
-      }),
-    }),
-    [localize],
-  )
+  const translated = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+    favoriteModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
+      defaultText: 'よく使うアプリ',
+    },
+    allModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+      defaultText: 'すべてのアプリ',
+    },
+  })
 
   return (
-    <div className={classNames.wrapper}>
-      <div className={classNames.searchArea}>
+    <div className={CLASS_NAMES.wrapper}>
+      <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
           title={translated.searchInputTitle}
@@ -148,18 +144,17 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         />
       </div>
 
-      <div className={classNames.inner}>
+      <div className={CLASS_NAMES.inner}>
         <SideNavs
           mode={mode}
           page={page}
           changePage={changePage}
           favoriteModeText={translated.favoriteModeText}
           allModeText={translated.allModeText}
-          classNames={classNames}
         />
-        <div className={classNames.main}>
-          <Section className={classNames.mainInner}>
-            <Cluster className={classNames.contentHead} align="center" justify="space-between">
+        <div className={CLASS_NAMES.main}>
+          <Section className={CLASS_NAMES.mainInner}>
+            <Cluster className={CLASS_NAMES.contentHead} align="center" justify="space-between">
               <MemoizedSubSubBlockHeading>
                 {mode === 'search' ? (
                   <Localizer
@@ -178,7 +173,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
               )}
             </Cluster>
 
-            <Scroller className={classNames.scrollArea}>
+            <Scroller className={CLASS_NAMES.scrollArea}>
               <AppLauncherFeatures features={features} page={page} />
             </Scroller>
           </Section>
@@ -198,15 +193,8 @@ const SideNavs = memo<
   Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
     favoriteModeText: string
     allModeText: string
-    classNames: {
-      side: string
-      unselectedSideNav: string
-      sideNavHeading: string
-      selectedSideNav: string
-      help: string
-    }
   }
->(({ mode, page, changePage, favoriteModeText, allModeText, classNames }) => {
+>(({ mode, page, changePage, favoriteModeText, allModeText }) => {
   const theme = useTheme()
   const listHeadingId = useId()
   const isNotSearch = mode !== 'search'
@@ -243,8 +231,8 @@ const SideNavs = memo<
   )
 
   return (
-    <div className={classNames.side}>
-      <SideNav className={classNames.unselectedSideNav} size="S" aria-label={favoriteModeText}>
+    <div className={CLASS_NAMES.side}>
+      <SideNav className={CLASS_NAMES.unselectedSideNav} size="S" aria-label={favoriteModeText}>
         {unselectedItems.map((item) => (
           <SideNavItemButton
             key={item.id}
@@ -261,8 +249,8 @@ const SideNavs = memo<
       <hr />
 
       <Section>
-        <MemoizedAppListHeading id={listHeadingId} className={classNames.sideNavHeading} />
-        <SideNav className={classNames.selectedSideNav} size="S" aria-labelledby={listHeadingId}>
+        <MemoizedAppListHeading id={listHeadingId} className={CLASS_NAMES.sideNavHeading} />
+        <SideNav className={CLASS_NAMES.selectedSideNav} size="S" aria-labelledby={listHeadingId}>
           {selectedItems.map((item) => (
             <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
               {item.title}
@@ -271,7 +259,7 @@ const SideNavs = memo<
         </SideNav>
       </Section>
 
-      <HelpLinkArea className={classNames.help}>
+      <HelpLinkArea className={CLASS_NAMES.help}>
         <Translate>
           <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
         </Translate>

@@ -4,12 +4,12 @@ import { tv } from 'tailwind-variants'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-type AbstractProps = {
+type BaseProps = {
   start: number
   end: number
   total?: number
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({ base: 'shr-text-base' })
 

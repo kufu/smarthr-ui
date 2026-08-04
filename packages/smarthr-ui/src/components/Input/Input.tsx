@@ -2,20 +2,20 @@
 
 import {
   type ComponentPropsWithRef,
+  type MutableRefObject,
   type ReactNode,
   type WheelEvent,
   forwardRef,
-  useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useTheme } from '../../hooks/useTheme'
 
-type AbstractProps = {
+type BaseProps = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -35,7 +35,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps | 'onWheel'>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
 
 export const backgroundColor = {
   BACKGROUND: 'background',
@@ -54,15 +54,10 @@ const wrapperClassNameGenerator = tv({
     'contrast-more:shr-border-high-contrast',
     'focus-within:shr-focus-indicator',
     'has-[[aria-invalid]]:shr-border-danger',
+    'has-[:disabled]:[&&&]:shr-border-default/50',
+    'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
+    'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
   ],
-  variants: {
-    disabled: {
-      true: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
-    },
-    readOnly: {
-      true: '[&&&]:shr-border-[theme(backgroundColor.column)] [&&&]:shr-bg-column',
-    },
-  },
 })
 const innerClassNameGenerator = tv({
   slots: {
@@ -76,16 +71,20 @@ const innerClassNameGenerator = tv({
       // マジックナンバーになるが、ほかに適切なプロパティがないため、min-widthで最低幅を指定することで防ぐ
       '[&[type="datetime-local"]]:shr-min-w-[11em] [&[type="month"]]:shr-min-w-[8em] [&[type="time"]]:shr-min-w-[5em]',
     ],
-    affix: 'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
-  },
-  variants: {
-    disabled: {
-      true: {
-        affix: 'shr-text-disabled shr-opacity-100',
-      },
-    },
+    affix: [
+      'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
+      '[.smarthr-ui-Input:has(:disabled)_&]:shr-text-disabled [.smarthr-ui-Input:has(:disabled)_&]:shr-opacity-100',
+    ],
   },
 })
+
+// HINT: PC版ブラウザで年が6桁入力できる場合、コピー&ペーストが正常に動作しないなど、UI上の問題が発生する場合がある
+// 回避のためmaxで年四桁を指定する
+const DEFAULT_MAX_ATTR = {
+  date: '9999-12-31',
+  'datetime-local': '9999-12-31T23:59',
+  month: '9999-12',
+}
 
 export const Input = forwardRef<HTMLInputElement, Props>(
   (
@@ -108,95 +107,73 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const innerRef = useRef<HTMLInputElement>(null)
+    const innerRef: MutableRefObject<HTMLInputElement | null> = useRef(null)
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => innerRef.current,
     )
 
-    const attrsByType = useMemo(() => {
-      switch (type) {
-        case 'number':
-          return {
-            max,
-            onWheel: disableWheel,
-          }
-        // HINT: PC版ブラウザで年が6桁入力できる場合、コピー&ペーストが正常に動作しないなど、UI上の問題が発生する場合がある
-        // 回避のためmaxで年四桁を指定する
-        case 'date':
-          return {
-            max: max || '9999-12-31',
-          }
-        case 'datetime-local':
-          return {
-            max: max || '9999-12-31T23:59',
-          }
-        case 'month':
-          return {
-            max: max || '9999-12',
-          }
-      }
+    const latest = useLatest({ autoFocus })
 
-      return { max }
-    }, [max, type])
+    const functions = useMemo(
+      () => ({
+        handleInnerRef: (node: HTMLInputElement | null) => {
+          innerRef.current = node
 
-    const onDelegateClickFocus = useCallback(() => innerRef.current?.focus(), [])
-
-    useEffect(() => {
-      if (autoFocus && innerRef.current) {
-        innerRef.current.focus()
-      }
-    }, [autoFocus])
-
-    const wrapperClassName = useMemo(
-      () => wrapperClassNameGenerator({ disabled, readOnly, className }),
-      [disabled, readOnly, className],
+          if (latest.autoFocus && node) {
+            node.focus()
+          }
+        },
+        handleDelegateClick: () => innerRef.current?.focus(),
+      }),
+      [latest],
     )
-    const wrapperStyle = useMemo(() => {
-      const color = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
-      const maxWidth = typeof width === 'number' ? `${width}px` : width
+
+    const classNames = useMemo(() => {
+      const { input, affix } = innerClassNameGenerator()
 
       return {
-        borderColor: color,
-        backgroundColor: color,
-        maxWidth,
-        width: maxWidth ? '100%' : undefined,
-      }
-    }, [width, bgColor, theme.backgroundColor])
-
-    const innerClassNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator({ disabled })
-
-      return {
+        wrapper: wrapperClassNameGenerator({ className }),
         input: input(),
         prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
         suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
       }
-    }, [disabled])
+    }, [className])
+
+    const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
+    const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
 
     return (
       <span
         role="presentation"
-        onClick={onDelegateClickFocus}
-        className={wrapperClassName}
-        style={wrapperStyle}
+        onClick={functions.handleDelegateClick}
+        className={classNames.wrapper}
+        style={{
+          borderColor: styleColor,
+          backgroundColor: styleColor,
+          maxWidth: styleMaxWidth,
+          width: styleMaxWidth ? '100%' : undefined,
+        }}
       >
-        {prefix && <span className={innerClassNames.prefix}>{prefix}</span>}
+        {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
           {...rest}
-          {...attrsByType}
           type={type}
           data-smarthr-ui-input="true"
+          max={
+            max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
+          }
+          onWheel={type === 'number' ? disableWheel : undefined}
           onFocus={onFocus}
           onBlur={onBlur}
           disabled={disabled}
           readOnly={readOnly}
-          ref={innerRef}
+          ref={functions.handleInnerRef}
           aria-invalid={error || undefined}
-          className={innerClassNames.input}
+          className={classNames.input}
         />
-        {suffix && <span className={innerClassNames.suffix}>{suffix}</span>}
+        {suffix && <span className={classNames.suffix}>{suffix}</span>}
       </span>
     )
   },

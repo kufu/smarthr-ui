@@ -1,7 +1,10 @@
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+'use client'
+
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 const OPTION_INCREMENT_AMOUNT = 100
-const RETURN_NULL = () => null
 
 export function usePartialRendering<T>({
   items,
@@ -10,35 +13,29 @@ export function usePartialRendering<T>({
   items: T[]
   minLength?: number
 }) {
-  const limiter = useCallback((length: number) => Math.max(length, minLength), [minLength])
-
-  const [currentItemLength, setCurrentItemLength] = useState(limiter(OPTION_INCREMENT_AMOUNT))
-
-  useEffect(() => {
-    setCurrentItemLength((current) => limiter(current))
-  }, [limiter])
-
+  const [currentItemLength, setCurrentItemLength] = useState(() =>
+    Math.max(OPTION_INCREMENT_AMOUNT, minLength),
+  )
   // minLength も考慮した実際のアイテム数を算出
   const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
 
-  const renderIntersection = useCallback(
-    () => (
-      <Intersection
-        onIntersect={() => {
-          setCurrentItemLength((current) => limiter(current + OPTION_INCREMENT_AMOUNT))
-        }}
-      />
-    ),
-    [limiter],
-  )
+  const latest = useLatest({ minLength })
+
+  const handleIntersect = useCallback(() => {
+    setCurrentItemLength((current) => Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength))
+  }, [latest])
+
+  useEffect(() => {
+    setCurrentItemLength((current) => Math.max(current, minLength))
+  }, [minLength])
 
   return {
     items: partialItems,
-    renderIntersection: currentItemLength >= items.length ? RETURN_NULL : renderIntersection,
+    handleIntersect: currentItemLength < items.length ? handleIntersect : undefined,
   }
 }
 
-const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
+export const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -51,14 +48,14 @@ const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
     // スクロール最下部に到達する度に表示するアイテム数を増加させるための IntersectionObserver
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        onIntersect()
+        handleIntersect()
       }
     })
 
     observer.observe(target)
 
     return () => observer.disconnect()
-  }, [onIntersect])
+  }, [handleIntersect])
 
   return <div ref={ref} />
-}
+})

@@ -25,7 +25,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
 import { useActiveOption } from './useActiveOption'
-import { usePartialRendering } from './usePartialRendering'
+import { Intersection, usePartialRendering } from './usePartialRendering'
 
 import type { ComboboxItem, ComboboxOption } from './types'
 
@@ -68,6 +68,18 @@ const classNameGenerator = tv({
     noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    dropdownList: dropdownList(),
+    helpMessage: helpMessage(),
+    loaderWrapper: loaderWrapper(),
+    noItems: noItems(),
+  }
+})()
 
 export const useListbox = <T,>({
   options,
@@ -210,7 +222,7 @@ export const useListbox = <T,>({
 
   const { createPortal } = usePortal()
   const listBoxId = useId()
-  const { items: partialOptions, renderIntersection } = usePartialRendering({
+  const { items: partialOptions, handleIntersect } = usePartialRendering({
     items: options,
     minLength: useMemo(
       () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
@@ -265,22 +277,10 @@ export const useListbox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-  const classNames = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      dropdownList: dropdownList(),
-      helpMessage: helpMessage(),
-      loaderWrapper: loaderWrapper(),
-      noItems: noItems(),
-    }
-  }, [])
-
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <div className={classNames.wrapper} style={wrapperStyle}>
+        <div className={CLASS_NAMES.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
             <VisuallyHiddenText role="status">
               <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
@@ -291,12 +291,12 @@ export const useListbox = <T,>({
             ref={listBoxRef}
             role="listbox"
             aria-hidden={!isExpanded}
-            className={classNames.dropdownList}
+            className={CLASS_NAMES.dropdownList}
             style={dropdownListStyle}
           >
             {dropdownHelpMessage && (
               <Text
-                className={classNames.helpMessage}
+                className={CLASS_NAMES.helpMessage}
                 icon={<FaCircleInfoIcon color="TEXT_GREY" />}
                 as="p"
               >
@@ -305,11 +305,11 @@ export const useListbox = <T,>({
             )}
             {isExpanded ? (
               isLoading ? (
-                <div className={classNames.loaderWrapper}>
+                <div className={CLASS_NAMES.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
               ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={classNames.noItems}>
+                <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
                   {orgNoResultText ?? (
                     <Localizer
                       id="smarthr-ui/Combobox/noResultsText"
@@ -330,13 +330,13 @@ export const useListbox = <T,>({
                 ))
               )
             ) : null}
-            {renderIntersection()}
+            {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
           </Scroller>
         </div>,
       ),
     [
       activeOption?.id,
-      renderIntersection,
+      handleIntersect,
       partialOptions,
       options.length,
       isExpanded,
@@ -347,7 +347,6 @@ export const useListbox = <T,>({
       handleAdd,
       handleHoverOption,
       handleSelect,
-      classNames,
       dropdownListStyle,
       wrapperStyle,
       createPortal,

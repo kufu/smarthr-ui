@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
+import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../hooks/useTheme'
@@ -23,6 +23,16 @@ const classNameGenerator = tv({
     balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { container, balloon, balloonText } = classNameGenerator()
+
+  return {
+    container: container(),
+    balloon: balloon(),
+    balloonText: balloonText(),
+  }
+})()
 
 const OUTER_MARGIN = 10
 const SPACING = 5
@@ -69,31 +79,21 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
     [parentRect, theme],
   )
 
-  const classNames = useMemo(() => {
-    const { container, balloon, balloonText } = classNameGenerator()
-
-    return {
-      container: container(),
-      balloon: balloon(),
-      balloonText: balloonText(),
-    }
-  }, [])
-
   return (
     <div
       ref={portalRef}
       role="tooltip"
       aria-hidden={!isVisible}
-      className={classNames.container}
+      className={CLASS_NAMES.container}
       style={isVisible ? style : undefined}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}
         vertical={actualVertical}
         triggerIcon={isIcon}
-        className={classNames.balloon}
+        className={CLASS_NAMES.balloon}
       >
-        <div id={messageId} className={classNames.balloonText}>
+        <div id={messageId} className={CLASS_NAMES.balloonText}>
           {message}
         </div>
       </ControlledTooltip>
@@ -157,12 +157,12 @@ const calculateHorizontal = (
   const portalHalfWidth = portalWidth / 2
   const edgeSpacing = theme.spacingByChar(0.5)
 
+  const leftSpacing = triggerAlignCenter - portalHalfWidth
+  const rightSpacingEdge = document.body.clientWidth - SPACING
+
   // トリガを中心に左右に十分な余白がある場合
-  if (
-    triggerAlignCenter - portalHalfWidth > SPACING &&
-    triggerAlignCenter + portalHalfWidth < document.body.clientWidth - SPACING
-  ) {
-    const insetInlineStart = `${triggerAlignCenter - portalHalfWidth}px`
+  if (leftSpacing > SPACING && triggerAlignCenter + portalHalfWidth < rightSpacingEdge) {
+    const insetInlineStart = `${leftSpacing}px`
 
     return {
       insetInlineStart,
@@ -185,7 +185,7 @@ const calculateHorizontal = (
   }
 
   // トリガが画面右寄りの場合
-  const insetInlineEnd = `${document.body.clientWidth - parentRect.right - scrollX - SPACING}px`
+  const insetInlineEnd = `${rightSpacingEdge - parentRect.right - scrollX}px`
 
   return {
     insetInlineStart: undefined,

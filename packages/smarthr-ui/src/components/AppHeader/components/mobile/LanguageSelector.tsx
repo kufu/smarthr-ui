@@ -22,6 +22,17 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
+
+  return {
+    header: header(),
+    headerTitle: headerTitle(),
+    buttonWrapper: buttonWrapper(),
+    button: button(),
+  }
+})()
+
 type Props = {
   locale: LocaleProps
   onClickClose: () => void
@@ -38,16 +49,6 @@ export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose
     }),
     [availableLocales],
   )
-  const classNames = useMemo(() => {
-    const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
-
-    return {
-      header: header(),
-      headerTitle: headerTitle(),
-      buttonWrapper: buttonWrapper(),
-      button: button(),
-    }
-  }, [])
 
   const onClickLocale = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -60,17 +61,17 @@ export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose
     <Section>
       <SelectorHeading
         onClickClose={onClickClose}
-        wrapperClassName={classNames.header}
-        className={classNames.headerTitle}
+        wrapperClassName={CLASS_NAMES.header}
+        className={CLASS_NAMES.headerTitle}
       />
-      <div className={classNames.buttonWrapper}>
+      <div className={CLASS_NAMES.buttonWrapper}>
         {locales.map(([localeKey, label]) => (
           <LocaleButton
             key={localeKey}
             value={localeKey as Locale}
             onClick={onClickLocale}
             selected={localeKey === locale}
-            className={classNames.button}
+            className={CLASS_NAMES.button}
           >
             {label}
           </LocaleButton>
@@ -104,7 +105,7 @@ const LocaleButton = memo<{
     elementAs="button"
     type="button"
     value={value}
-    onClick={onClick}
+    handleClick={onClick}
     prefix={selected && <FaCheckIcon color="MAIN" />}
     className={className}
   >
