@@ -28,7 +28,7 @@ import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
 import { areItemsEqual } from '../helper'
 import { useFocusControl } from '../useFocusControl'
-import { useListbox } from '../useListbox'
+import { ListBox, useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
@@ -263,7 +263,7 @@ const ActualMultiCombobox = <T,>(
     [actualOnDelete, latest],
   )
 
-  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({
+  const { listBoxProps, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -518,7 +518,7 @@ const ActualMultiCombobox = <T,>(
         iconStyle={classNames.suffixIcon}
       />
 
-      {renderListBox()}
+      <ListBox {...listBoxProps} />
     </div>
   )
 }
