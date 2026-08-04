@@ -17,9 +17,10 @@ import type { DialogProps } from '../types'
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading'> &
+type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
   DialogProps & {
     heading: HeadingType
+    onClickClose: MessageDialogContentInnerProps['handleClickClose']
   }
 type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
@@ -73,7 +74,7 @@ export const ControlledMessageDialog: FC<Props> = ({
         heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
-        onClickClose={functions.handleClickClose}
+        handleClickClose={functions.handleClickClose}
         closeButton={closeButton}
       >
         {children}
