@@ -83,11 +83,11 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     (rect: Rect) => {
       if (latest.active) {
         setActive(false)
-        latest.onClose?.()
+        requestAnimationFrame(() => latest.onClose?.())
       } else {
         setActive(true)
         setTriggerRect(rect)
-        latest.onOpen?.()
+        requestAnimationFrame(() => latest.onOpen?.())
       }
     },
     [latest],
@@ -95,7 +95,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const handleDelegateClickCloser = useCallback(() => {
     setActive(false)
-    latest.onClose?.()
+    requestAnimationFrame(() => latest.onClose?.())
 
     // return focus to the Trigger
     getFirstTabbable(triggerElementRef)?.focus()
@@ -111,7 +111,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
         if (latest.active) {
           setActive(false)
-          latest.onClose?.()
+          requestAnimationFrame(() => latest.onClose?.())
         }
       }
     }
