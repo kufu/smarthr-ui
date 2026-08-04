@@ -4,6 +4,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
   type RefObject,
+  memo,
   useCallback,
   useEffect,
   useId,
@@ -92,7 +93,6 @@ export const useListbox = <T,>({
   triggerRef,
   noResultText: orgNoResultText,
 }: Props<T>) => {
-  const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
 
@@ -220,7 +220,6 @@ export const useListbox = <T,>({
     [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
   )
 
-  const { createPortal } = usePortal()
   const listBoxId = useId()
   const { items: partialOptions, handleIntersect } = usePartialRendering({
     items: options,
@@ -257,107 +256,153 @@ export const useListbox = <T,>({
     [setActiveOption],
   )
 
-  const wrapperStyle = useMemo(() => {
-    const { top, left } = listBoxRect
-
-    return {
-      top: `${top}px`,
-      left: `${left}px`,
-      width: `${triggerWidth}px`,
-    }
-  }, [listBoxRect, triggerWidth])
-  const dropdownListStyle = useMemo(() => {
-    const { left, height } = listBoxRect
-    const dropdownListWidth = dropdownWidth || triggerWidth
-
-    return {
-      width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-      maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
-      height: height ? `${height}px` : undefined,
-    }
-  }, [listBoxRect, triggerWidth, dropdownWidth, theme])
-
-  const renderListBox = useCallback(
-    () =>
-      createPortal(
-        <div className={CLASS_NAMES.wrapper} style={wrapperStyle}>
-          {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">
-              <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
-            </VisuallyHiddenText>
-          )}
-          <Scroller
-            id={listBoxId}
-            ref={listBoxRef}
-            role="listbox"
-            aria-hidden={!isExpanded}
-            className={CLASS_NAMES.dropdownList}
-            style={dropdownListStyle}
-          >
-            {dropdownHelpMessage && (
-              <Text
-                className={CLASS_NAMES.helpMessage}
-                icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-                as="p"
-              >
-                {dropdownHelpMessage}
-              </Text>
-            )}
-            {isExpanded ? (
-              isLoading ? (
-                <div className={CLASS_NAMES.loaderWrapper}>
-                  <Loader aria-hidden />
-                </div>
-              ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
-                  {orgNoResultText ?? (
-                    <Localizer
-                      id="smarthr-ui/Combobox/noResultsText"
-                      defaultText="一致する選択肢がありません。"
-                    />
-                  )}
-                </p>
-              ) : (
-                partialOptions.map((option) => (
-                  <ItemButton
-                    key={option.id}
-                    option={option}
-                    onAdd={handleAdd}
-                    onSelect={handleSelect}
-                    onMouseOver={handleHoverOption}
-                    activeRef={option.id === activeOption?.id ? activeRef : undefined}
-                  />
-                ))
-              )
-            ) : null}
-            {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
-          </Scroller>
-        </div>,
-      ),
-    [
-      activeOption?.id,
-      handleIntersect,
-      partialOptions,
-      options.length,
-      isExpanded,
-      isLoading,
-      dropdownHelpMessage,
-      listBoxId,
-      orgNoResultText,
-      handleAdd,
-      handleHoverOption,
-      handleSelect,
-      dropdownListStyle,
-      wrapperStyle,
-      createPortal,
-    ],
-  )
+  const listBoxProps = {
+    activeOptionId: activeOption?.id,
+    handleIntersect,
+    partialOptions,
+    optionsLength: options.length,
+    isExpanded,
+    isLoading,
+    dropdownHelpMessage,
+    noResultText: orgNoResultText,
+    listBoxId,
+    listBoxRef,
+    handleAdd,
+    handleHoverOption,
+    handleSelect,
+    activeRef,
+    listBoxRect,
+    triggerWidth,
+    dropdownWidth,
+  }
 
   return {
-    renderListBox,
+    listBoxProps,
     activeOption,
     onKeyDownListBox,
     listBoxId,
     listBoxRef,
   }
 }
+
+type ListBoxProps<T> = {
+  activeOptionId: string | undefined
+  handleIntersect: (() => void) | undefined
+  partialOptions: Array<ComboboxOption<T>>
+  optionsLength: number
+  isExpanded: boolean
+  isLoading?: boolean
+  noResultText?: ReactNode
+  dropdownHelpMessage?: ReactNode
+  listBoxId: string
+  listBoxRef: RefObject<HTMLDivElement>
+  handleAdd: ((option: ComboboxOption<T>) => void) | undefined
+  handleHoverOption: (option: ComboboxOption<T>) => void
+  handleSelect: (option: ComboboxOption<T>) => void
+  activeRef: RefObject<HTMLButtonElement>
+  listBoxRect: { top: number; left: number; height?: number }
+  triggerWidth: number
+  dropdownWidth?: string | number
+}
+
+export const ListBox = memo(
+  <T,>({
+    activeOptionId,
+    handleIntersect,
+    partialOptions,
+    optionsLength,
+    isExpanded,
+    isLoading,
+    noResultText,
+    dropdownHelpMessage,
+    listBoxId,
+    listBoxRef,
+    handleAdd,
+    handleHoverOption,
+    handleSelect,
+    activeRef,
+    listBoxRect,
+    triggerWidth,
+    dropdownWidth,
+  }: ListBoxProps<T>) => {
+    const { createPortal } = usePortal()
+    const theme = useTheme()
+
+    const wrapperStyle = useMemo(() => {
+      const { top, left } = listBoxRect
+
+      return {
+        top: `${top}px`,
+        left: `${left}px`,
+        width: `${triggerWidth}px`,
+      }
+    }, [listBoxRect, triggerWidth])
+
+    const dropdownListStyle = useMemo(() => {
+      const { left, height } = listBoxRect
+      const dropdownListWidth = dropdownWidth || triggerWidth
+
+      return {
+        width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
+        maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
+        height: height ? `${height}px` : undefined,
+      }
+    }, [listBoxRect, triggerWidth, dropdownWidth, theme])
+
+    return createPortal(
+      <div className={CLASS_NAMES.wrapper} style={wrapperStyle}>
+        {isExpanded && isLoading && (
+          <VisuallyHiddenText role="status">
+            <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
+          </VisuallyHiddenText>
+        )}
+        <Scroller
+          id={listBoxId}
+          ref={listBoxRef}
+          role="listbox"
+          aria-hidden={!isExpanded}
+          className={CLASS_NAMES.dropdownList}
+          style={dropdownListStyle}
+        >
+          {dropdownHelpMessage && (
+            <Text
+              className={CLASS_NAMES.helpMessage}
+              icon={<FaCircleInfoIcon color="TEXT_GREY" />}
+              as="p"
+            >
+              {dropdownHelpMessage}
+            </Text>
+          )}
+          {isExpanded ? (
+            isLoading ? (
+              <div className={CLASS_NAMES.loaderWrapper}>
+                <Loader aria-hidden />
+              </div>
+            ) : optionsLength === 0 ? (
+              <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
+                {noResultText ?? (
+                  <Localizer
+                    id="smarthr-ui/Combobox/noResultsText"
+                    defaultText="一致する選択肢がありません。"
+                  />
+                )}
+              </p>
+            ) : (
+              partialOptions.map((option) => (
+                <ItemButton
+                  key={option.id}
+                  option={option}
+                  onAdd={handleAdd}
+                  onSelect={handleSelect}
+                  onMouseOver={handleHoverOption}
+                  activeRef={option.id === activeOptionId ? activeRef : undefined}
+                />
+              ))
+            )
+          ) : null}
+          {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
+        </Scroller>
+      </div>,
+    )
+  },
+) as <T>(props: ListBoxProps<T>) => ReactNode
