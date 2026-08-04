@@ -42,7 +42,7 @@ type ObjectLabelType = {
   /** ラベルに適用する `id` 値 */
   id?: string
 }
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** グループのラベル名 */
   label: ReactNode | ObjectLabelType
   /** タイトル右の領域 */
@@ -65,8 +65,7 @@ type AbstractProps = PropsWithChildren<{
   disabled?: boolean
   as?: string | ComponentType<any>
 }>
-type Props = AbstractProps &
-  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'aria-labelledby'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
 
 const labelObjectConverter = (label: ReactNode) => ({ text: label })
 

@@ -17,12 +17,12 @@ import type { DialogProps } from '../types'
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
+type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
   DialogProps & {
     heading: HeadingType
     onClickClose: MessageDialogContentInnerProps['handleClickClose']
   }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,

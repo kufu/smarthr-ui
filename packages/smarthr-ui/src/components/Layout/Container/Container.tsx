@@ -8,12 +8,12 @@ import { paddingBlock, paddingInline } from '../../../tailwind'
 
 import type { Gap } from '../../../types'
 
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   Omit<VariantProps<typeof classNameGenerator>, 'paddingBlock' | 'paddingInline'> & {
     padding?: Gap | SeparatePadding
   }
 >
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 type SeparatePadding = {
   block?: Gap

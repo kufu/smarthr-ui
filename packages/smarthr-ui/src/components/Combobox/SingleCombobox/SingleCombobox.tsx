@@ -30,9 +30,9 @@ import { Input } from '../../Input'
 import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
+import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
-type AbstractProps<T> = ComboboxProps<T> & {
+type BaseProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -71,8 +71,7 @@ type AbstractProps<T> = ComboboxProps<T> & {
    */
   noResultText?: ReactNode
 }
-type Props<T> = AbstractProps<T> &
-  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
+type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
 
 const NOOP = () => undefined
 

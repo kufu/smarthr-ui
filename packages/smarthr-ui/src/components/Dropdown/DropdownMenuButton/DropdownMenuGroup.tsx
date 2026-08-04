@@ -13,10 +13,10 @@ import { Text } from '../../Text'
 
 import { renderButtonList } from './DropdownMenuButton'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   name?: ReactNode
 }>
-type Props = AbstractProps & Omit<ComponentProps<'li'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'li'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

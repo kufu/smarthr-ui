@@ -13,8 +13,8 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'span'>, keyof AbstractProps>
+type BaseProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

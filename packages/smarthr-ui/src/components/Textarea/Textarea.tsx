@@ -25,7 +25,7 @@ import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-type AbstractProps = {
+type BaseProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
   /** コンポーネントの幅 */
@@ -45,7 +45,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'textarea'>, keyof BaseProps>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {

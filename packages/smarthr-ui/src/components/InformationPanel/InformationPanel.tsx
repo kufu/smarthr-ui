@@ -36,7 +36,7 @@ type ObjectHeadingType = {
   unrecommendedTag?: HeadingTagTypes
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** パネルのタイトル */
   heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
@@ -48,7 +48,7 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<PanelElementProps, keyof AbstractProps>
+type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 

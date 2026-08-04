@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../hooks/useLatest'
 import { useTheme } from '../../hooks/useTheme'
 
-type AbstractProps = {
+type BaseProps = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -35,7 +35,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps | 'onWheel'>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
 
 export const backgroundColor = {
   BACKGROUND: 'background',

@@ -32,7 +32,7 @@ import { useDialogPortal } from '../useDialogPortal'
 
 import type { DialogSize } from '../types'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * ダイアログのタイトルの内容
    */
@@ -87,10 +87,10 @@ type AbstractProps = PropsWithChildren<{
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
 }>
-type Props = AbstractProps &
-  Omit<DialogBodyProps, keyof AbstractProps> &
-  Omit<PanelElementProps, keyof AbstractProps> &
-  Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
+type Props = BaseProps &
+  Omit<DialogBodyProps, keyof BaseProps> &
+  Omit<PanelElementProps, keyof BaseProps> &
+  Omit<VariantProps<typeof classNameGenerator>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

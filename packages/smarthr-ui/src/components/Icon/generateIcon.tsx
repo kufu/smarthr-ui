@@ -40,12 +40,12 @@ type IconProps = {
   size?: FontSizes
 }
 
-type AbstractProps = {
+type BaseProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
 }
-export type Props = AbstractProps &
-  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
+export type Props = BaseProps &
+  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof BaseProps>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています

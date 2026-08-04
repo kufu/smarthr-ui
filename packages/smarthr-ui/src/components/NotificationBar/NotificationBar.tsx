@@ -136,7 +136,7 @@ const classNameGenerator = tv({
 })
 
 type StyleVariants = VariantProps<typeof classNameGenerator>
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** コンポーネント右の領域 */
@@ -147,10 +147,10 @@ type AbstractProps = PropsWithChildren<
       role?: 'alert' | 'status'
     }
 >
-type BaseProps = Pick<ComponentProps<typeof Panel>, 'layer'>
-type Props = AbstractProps &
-  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps> &
-  Omit<BaseProps, keyof AbstractProps>
+type PanelLayerProps = Pick<ComponentProps<typeof Panel>, 'layer'>
+type Props = PanelLayerProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof PanelLayerProps> &
+  Omit<BaseProps, keyof PanelLayerProps>
 
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,

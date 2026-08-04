@@ -41,7 +41,7 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
@@ -60,8 +60,8 @@ type AbstractProps = PropsWithChildren<{
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>
-type Props = AbstractProps &
-  Omit<ComponentProps<typeof UnstyledButton>, keyof AbstractProps | 'aria-selected' | 'type'>
+type Props = BaseProps &
+  Omit<ComponentProps<typeof UnstyledButton>, keyof BaseProps | 'aria-selected' | 'type'>
 
 export const TabItem: FC<Props> = ({
   selected = false,
