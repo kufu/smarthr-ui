@@ -222,7 +222,7 @@ export const useListbox = <T,>({
 
   const { createPortal } = usePortal()
   const listBoxId = useId()
-  const { items: partialOptions, onIntersect } = usePartialRendering({
+  const { items: partialOptions, handleIntersect } = usePartialRendering({
     items: options,
     minLength: useMemo(
       () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
@@ -330,13 +330,13 @@ export const useListbox = <T,>({
                 ))
               )
             ) : null}
-            {onIntersect && <Intersection onIntersect={onIntersect} />}
+            {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
           </Scroller>
         </div>,
       ),
     [
       activeOption?.id,
-      onIntersect,
+      handleIntersect,
       partialOptions,
       options.length,
       isExpanded,
