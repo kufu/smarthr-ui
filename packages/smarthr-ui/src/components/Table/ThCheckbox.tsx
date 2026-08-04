@@ -9,8 +9,8 @@ import { ControlledTooltip } from '../Tooltip'
 
 import { Th } from './Th'
 
-type AbstractProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
+type BaseProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
+type Props = BaseProps & Omit<CheckboxProps, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

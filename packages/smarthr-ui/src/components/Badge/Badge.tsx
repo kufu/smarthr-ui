@@ -9,7 +9,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** 件数 */
   count?: number
   /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
@@ -21,7 +21,7 @@ type AbstractProps = PropsWithChildren<{
   /** ドット表示するかどうか */
   dot?: boolean
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

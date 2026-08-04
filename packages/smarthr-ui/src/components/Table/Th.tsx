@@ -14,7 +14,7 @@ import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-export type AbstractProps = PropsWithChildren<
+export type BaseProps = PropsWithChildren<
   {
     /** 並び替え状態 */
     sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
@@ -25,7 +25,7 @@ export type AbstractProps = PropsWithChildren<
     contentWidth?: CellContentWidth
   } & VariantProps<typeof classNameGenerator>
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'th'>, keyof AbstractProps | 'onClick'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'th'>, keyof BaseProps | 'onClick'>
 
 const classNameGenerator = tv({
   base: [

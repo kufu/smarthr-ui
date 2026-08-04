@@ -34,7 +34,7 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -56,7 +56,7 @@ type AbstractProps = PropsWithChildren<{
   /** ファイル選択ボタンのラベル */
   selectButtonLabel?: string
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()

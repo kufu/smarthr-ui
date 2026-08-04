@@ -32,7 +32,7 @@ type StylingProps =
       size?: never
     }
 
-export type AbstractProps = PropsWithChildren<{
+export type BaseProps = PropsWithChildren<{
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
@@ -46,9 +46,9 @@ export type AbstractProps = PropsWithChildren<{
 
 export type ElementProps = Omit<
   ComponentProps<'h1'>,
-  keyof AbstractProps | keyof TextProps | 'role' | 'aria-level'
+  keyof BaseProps | keyof TextProps | 'role' | 'aria-level'
 >
-type Props = AbstractProps & ElementProps
+type Props = BaseProps & ElementProps
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',

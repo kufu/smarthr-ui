@@ -37,7 +37,7 @@ const classNameGenerator = tv({
   ],
 })
 
-type AbstractProps = {
+type BaseProps = {
   /** 表示する item の配列 */
   items: ItemNodeLike[]
   /** 選択中の item の値 */
@@ -45,7 +45,7 @@ type AbstractProps = {
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])

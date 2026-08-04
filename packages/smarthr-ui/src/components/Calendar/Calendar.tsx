@@ -24,7 +24,7 @@ import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getMonthArray, getToDate, isBetween, minDate } from './calendarHelper'
 
-type AbstractProps = {
+type BaseProps = {
   /** 選択可能な開始日 */
   from?: Date
   /** 選択可能な終了日 */
@@ -34,7 +34,7 @@ type AbstractProps = {
   /** 選択された日付 */
   value?: Date
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 type DayJsType = ReturnType<typeof dayjs>
 

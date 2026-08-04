@@ -20,7 +20,7 @@ import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../I
 
 import type { Locale } from '../../../intl'
 
-export type AbstractProps = {
+export type BaseProps = {
   narrow?: boolean
   localeMap: Partial<Record<Locale, string>>
   locale?: string
@@ -29,7 +29,7 @@ export type AbstractProps = {
   onLanguageSelect?: (code: string) => void
 } & VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/

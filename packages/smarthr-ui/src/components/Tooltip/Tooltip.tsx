@@ -33,7 +33,7 @@ const getFullscreenElementOnSSR = () => null
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
   /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
@@ -47,8 +47,8 @@ type AbstractProps = PropsWithChildren<{
   /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
-type Props = AbstractProps &
-  Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby' | 'aria-labelledby'>
+type Props = BaseProps &
+  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby'>
 
 const classNameGenerator = tv({
   base: [
