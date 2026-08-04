@@ -325,29 +325,27 @@ export const ListBox = memo(
       ),
     })
 
-    const wrapperStyle = useMemo(() => {
-      const { top, left } = listBoxRect
-
-      return {
-        top: `${top}px`,
-        left: `${left}px`,
-        width: `${triggerWidth}px`,
-      }
-    }, [listBoxRect, triggerWidth])
-
-    const dropdownListStyle = useMemo(() => {
-      const { left, height } = listBoxRect
+    const styles = useMemo(() => {
+      const { top, left, height } = listBoxRect
       const dropdownListWidth = dropdownWidth || triggerWidth
 
       return {
-        width: typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-        maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
-        height: height ? `${height}px` : undefined,
+        wrapper: {
+          top: `${top}px`,
+          left: `${left}px`,
+          width: `${triggerWidth}px`,
+        },
+        dropdownList: {
+          width:
+            typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
+          maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
+          height: height ? `${height}px` : undefined,
+        },
       }
     }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
     return createPortal(
-      <div className={CLASS_NAMES.wrapper} style={wrapperStyle}>
+      <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         {isExpanded && isLoading && (
           <VisuallyHiddenText role="status">
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
@@ -359,7 +357,7 @@ export const ListBox = memo(
           role="listbox"
           aria-hidden={!isExpanded}
           className={CLASS_NAMES.dropdownList}
-          style={dropdownListStyle}
+          style={styles.dropdownList}
         >
           {dropdownHelpMessage && (
             <Text
