@@ -315,7 +315,7 @@ export const ListBox = memo(
     const { createPortal } = usePortal()
     const theme = useTheme()
 
-    const { items: partialOptions, handleIntersect } = usePartialRendering({
+    const { items, handleIntersect } = usePartialRendering({
       items: options,
       minLength: useMemo(
         () =>
@@ -383,7 +383,7 @@ export const ListBox = memo(
                 )}
               </p>
             ) : (
-              partialOptions.map((option) => (
+              items.map((option) => (
                 <ItemButton
                   key={option.id}
                   option={option}
