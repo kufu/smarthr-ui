@@ -49,7 +49,7 @@ export const panelClassNameGenerator = tv({
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   Omit<
     VariantProps<typeof panelClassNameGenerator>,
     'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
@@ -61,8 +61,8 @@ type AbstractProps = PropsWithChildren<
     as?: string | ComponentType<any>
   }
 >
-export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = BaseProps & ElementProps
 
 type SeparatePadding = {
   block?: Gap

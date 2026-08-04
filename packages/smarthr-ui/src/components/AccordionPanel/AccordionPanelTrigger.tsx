@@ -22,7 +22,7 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 
 import type { TextProps } from '../Text'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
   headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
@@ -30,7 +30,7 @@ type AbstractProps = PropsWithChildren<{
    */
   unrecommendedHeadingTag?: HeadingTagTypes
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'button'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

@@ -14,7 +14,7 @@ import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 import { Scroller } from '../Scroller'
 
-type AbstractProps = {
+type BaseProps = {
   /** 選択された年 */
   selectedYear?: number
   /** 選択可能な開始年 */
@@ -28,7 +28,7 @@ type AbstractProps = {
   /** HTMLのid属性 */
   id: string
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 type ActualProps = Omit<Props, 'isDisplayed'>
 
 const classNameGenerator = tv({
