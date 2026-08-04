@@ -221,13 +221,6 @@ export const useListbox = <T,>({
   )
 
   const listBoxId = useId()
-  const { items: partialOptions, handleIntersect } = usePartialRendering({
-    items: options,
-    minLength: useMemo(
-      () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
-      [activeOption, options],
-    ),
-  })
 
   const handleAdd = useMemo(
     () =>
@@ -258,9 +251,7 @@ export const useListbox = <T,>({
 
   const listBoxProps = {
     activeOptionId: activeOption?.id,
-    handleIntersect,
-    partialOptions,
-    optionsLength: options.length,
+    options,
     isExpanded,
     isLoading,
     dropdownHelpMessage,
@@ -287,9 +278,7 @@ export const useListbox = <T,>({
 
 type ListBoxProps<T> = {
   activeOptionId: string | undefined
-  handleIntersect: (() => void) | undefined
-  partialOptions: Array<ComboboxOption<T>>
-  optionsLength: number
+  options: Array<ComboboxOption<T>>
   isExpanded: boolean
   isLoading?: boolean
   noResultText?: ReactNode
@@ -308,9 +297,7 @@ type ListBoxProps<T> = {
 export const ListBox = memo(
   <T,>({
     activeOptionId,
-    handleIntersect,
-    partialOptions,
-    optionsLength,
+    options,
     isExpanded,
     isLoading,
     noResultText,
@@ -327,6 +314,16 @@ export const ListBox = memo(
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
     const theme = useTheme()
+
+    const { items: partialOptions, handleIntersect } = usePartialRendering({
+      items: options,
+      minLength: useMemo(
+        () =>
+          (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) +
+          1,
+        [activeOptionId, options],
+      ),
+    })
 
     const wrapperStyle = useMemo(() => {
       const { top, left } = listBoxRect
@@ -378,7 +375,7 @@ export const ListBox = memo(
               <div className={CLASS_NAMES.loaderWrapper}>
                 <Loader aria-hidden />
               </div>
-            ) : optionsLength === 0 ? (
+            ) : options.length === 0 ? (
               <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
                 {noResultText ?? (
                   <Localizer
