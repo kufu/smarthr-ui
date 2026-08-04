@@ -124,7 +124,6 @@ const MaxLettersTextarea: FC<
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
   const counterSpanRef = useRef<HTMLSpanElement>(null)
-  const isFirstRenderRef = useRef(true)
   const [count, setCount] = useState(() => {
     const currentValue = defaultValue || value
     return currentValue ? getStringLength(currentValue) : 0
@@ -159,7 +158,17 @@ const MaxLettersTextarea: FC<
         setCount(getStringLength(newValue))
       })
     }, 200)
+
+    // 初回レンダリング時はスクリーンリーダー向けメッセージなどを更新したくないためskipする
+    // (実際のユーザー操作による変更でのみ更新すれば良い)
+    // useEffectでupdateCountが必ず呼びだされる
+    let firstCallUpdateCount = true
     const updateCount = (newValue: TextareaValue) => {
+      if (firstCallUpdateCount) {
+        firstCallUpdateCount = false
+        return
+      }
+
       actualUpdateCount(newValue)
       updateSrMessage()
     }
@@ -173,18 +182,8 @@ const MaxLettersTextarea: FC<
     }
   }, [latest])
 
-  // value 変更時にもカウントを更新する
-  // 初回レンダリング時はスクリーンリーダー向けメッセージなどを更新したくないためskipする
-  // (実際のユーザー操作による変更でのみ更新すれば良い)
   useEffect(() => {
-    if (isFirstRenderRef.current) {
-      isFirstRenderRef.current = false
-      return
-    }
-
-    if (value) {
-      functions.updateCount(value)
-    }
+    functions.updateCount(value ?? '')
   }, [value, functions])
 
   return (
