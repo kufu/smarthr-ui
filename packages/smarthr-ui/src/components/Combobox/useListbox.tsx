@@ -333,8 +333,6 @@ export const ListBox = memo(
     useEffect(() => {
       setCurrentItemLength((current) => Math.max(current, minLength))
     }, [minLength])
-    const showIntersect = currentItemLength < options.length
-
     const styles = useMemo(() => {
       const { top, left, height } = listBoxRect
       const dropdownListWidth = dropdownWidth || triggerWidth
@@ -405,7 +403,7 @@ export const ListBox = memo(
               ))
             )
           ) : null}
-          {showIntersect && <Intersection handleIntersect={handleIntersect} />}
+          {currentItemLength < options.length && <Intersection handleIntersect={handleIntersect} />}
         </Scroller>
       </div>,
     )
