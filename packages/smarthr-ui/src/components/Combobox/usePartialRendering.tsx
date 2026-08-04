@@ -31,7 +31,7 @@ export function usePartialRendering<T>({
 
   return {
     items: partialItems,
-    handleIntersect: currentItemLength >= items.length ? undefined : handleIntersect,
+    handleIntersect: currentItemLength < items.length ? handleIntersect : undefined,
   }
 }
 
