@@ -249,26 +249,24 @@ export const useListbox = <T,>({
     [setActiveOption],
   )
 
-  const listBoxProps = {
-    activeOptionId: activeOption?.id,
-    options,
-    isExpanded,
-    isLoading,
-    dropdownHelpMessage,
-    noResultText,
-    listBoxId,
-    listBoxRef,
-    handleAdd,
-    handleHoverOption,
-    handleSelect,
-    activeRef,
-    listBoxRect,
-    triggerWidth,
-    dropdownWidth,
-  }
-
   return {
-    listBoxProps,
+    listBoxProps: {
+      activeOptionId: activeOption?.id,
+      options,
+      isExpanded,
+      isLoading,
+      dropdownHelpMessage,
+      noResultText,
+      listBoxId,
+      listBoxRef,
+      handleAdd,
+      handleHoverOption,
+      handleSelect,
+      activeRef,
+      listBoxRect,
+      triggerWidth,
+      dropdownWidth,
+    },
     activeOption,
     onKeyDownListBox,
     listBoxId,
