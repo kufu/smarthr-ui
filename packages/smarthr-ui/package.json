@@ -54,7 +54,7 @@
     "glob": "13.0.6",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
-    "npm-run-all2": "^8.0.4",
+    "npm-run-all2": "^9.0.2",
     "playwright": "^1.62.0",
     "plop": "^4.0.5",
     "postcss": "^8.5.23",
