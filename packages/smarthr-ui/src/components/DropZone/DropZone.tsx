@@ -27,7 +27,7 @@ const classNameGenerator = tv({
       'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
       'has-[.smarthr-ui-DropZone-Button:disabled]:shr-cursor-not-allowed',
-      'has-[[aria-invalid]]:[&&&_.smarthr-ui-DropZone-Button]:shr-border-danger',
+      'data-[error]:[&_.smarthr-ui-DropZone-Button]:shr-border-danger',
       '[&:not([data-files-dragged-over])]:shr-border-dashed',
       'data-[files-dragged-over]:shr-border-main',
     ],
@@ -125,6 +125,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
         className={classNames.wrapper}
+        data-error={error || undefined}
         data-files-dragged-over={filesDraggedOver || undefined}
       >
         {children}
