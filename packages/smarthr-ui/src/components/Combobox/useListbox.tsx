@@ -91,7 +91,7 @@ export const useListbox = <T,>({
   isExpanded,
   isLoading,
   triggerRef,
-  noResultText: orgNoResultText,
+  noResultText,
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
@@ -255,7 +255,7 @@ export const useListbox = <T,>({
     isExpanded,
     isLoading,
     dropdownHelpMessage,
-    noResultText: orgNoResultText,
+    noResultText,
     listBoxId,
     listBoxRef,
     handleAdd,
