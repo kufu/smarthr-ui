@@ -27,11 +27,10 @@ const classNameGenerator = tv({
       'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
       'has-[.smarthr-ui-DropZone-Button:disabled]:shr-cursor-not-allowed',
-      'data-[error]:[&_.smarthr-ui-DropZone-Button]:shr-border-danger',
       '[&:not([data-files-dragged-over])]:shr-border-dashed',
       'data-[files-dragged-over]:shr-border-main',
     ],
-    button: 'smarthr-ui-DropZone-Button',
+    button: ['smarthr-ui-DropZone-Button', 'data-[error]:shr-border-danger'],
   },
 })
 
@@ -125,13 +124,13 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
         className={classNames.wrapper}
-        data-error={error || undefined}
         data-files-dragged-over={filesDraggedOver || undefined}
       >
         {children}
         <SelectButton
           label={selectButtonLabel}
           disabled={disabled}
+          error={error}
           handleClick={functions.handleClickButton}
           className={classNames.button}
         />
@@ -158,12 +157,14 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 const SelectButton = memo<{
   label?: string
   disabled?: boolean
+  error?: boolean
   handleClick: () => void
   className: string
-}>(({ label, disabled, handleClick, className }) => (
+}>(({ label, disabled, error, handleClick, className }) => (
   <Button
     prefix={<FaFolderOpenIcon />}
     disabled={disabled}
+    data-error={error || undefined}
     onClick={handleClick}
     className={className}
   >
