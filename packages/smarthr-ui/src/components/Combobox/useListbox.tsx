@@ -15,6 +15,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
@@ -26,7 +27,6 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
 import { useActiveOption } from './useActiveOption'
-import { Intersection, usePartialRendering } from './usePartialRendering'
 
 import type { ComboboxItem, ComboboxOption } from './types'
 
@@ -51,6 +51,8 @@ type Rect = {
 
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
+
+const OPTION_INCREMENT_AMOUNT = 100
 
 const classNameGenerator = tv({
   slots: {
@@ -313,15 +315,25 @@ export const ListBox = memo(
     const { createPortal } = usePortal()
     const theme = useTheme()
 
-    const { items, handleIntersect } = usePartialRendering({
-      items: options,
-      minLength: useMemo(
-        () =>
-          (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) +
-          1,
-        [activeOptionId, options],
-      ),
-    })
+    const minLength = useMemo(
+      () =>
+        (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
+      [activeOptionId, options],
+    )
+    const [currentItemLength, setCurrentItemLength] = useState(() =>
+      Math.max(OPTION_INCREMENT_AMOUNT, minLength),
+    )
+    const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
+    const latest = useLatest({ minLength })
+    const handleIntersect = useCallback(() => {
+      setCurrentItemLength((current) =>
+        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+      )
+    }, [latest])
+    useEffect(() => {
+      setCurrentItemLength((current) => Math.max(current, minLength))
+    }, [minLength])
+    const showIntersect = currentItemLength < options.length
 
     const styles = useMemo(() => {
       const { top, left, height } = listBoxRect
@@ -393,9 +405,33 @@ export const ListBox = memo(
               ))
             )
           ) : null}
-          {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
+          {showIntersect && <IntersectionTrigger handleIntersect={handleIntersect} />}
         </Scroller>
       </div>,
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
+
+const IntersectionTrigger = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const target = ref.current
+
+    if (target === null) {
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        handleIntersect()
+      }
+    })
+
+    observer.observe(target)
+
+    return () => observer.disconnect()
+  }, [handleIntersect])
+
+  return <div ref={ref} />
+})
