@@ -405,14 +405,14 @@ export const ListBox = memo(
               ))
             )
           ) : null}
-          {showIntersect && <IntersectionTrigger handleIntersect={handleIntersect} />}
+          {showIntersect && <Intersection handleIntersect={handleIntersect} />}
         </Scroller>
       </div>,
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
 
-const IntersectionTrigger = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
+const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
