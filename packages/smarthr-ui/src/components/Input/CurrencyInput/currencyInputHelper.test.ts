@@ -40,5 +40,23 @@ describe('currencyInputHelper', () => {
     it('returns blank string when arg is undefined', () => {
       expect(formatCurrency()).toBe('')
     })
+
+    it('is idempotent', () => {
+      const testCases = [
+        '12345678.1234',
+        'ー１２３４．５',
+        '000001234',
+        '0.1234',
+        '12.0345000',
+        '12.0000',
+        '12345a',
+        '1.2.3',
+      ]
+      testCases.forEach((testCase) => {
+        const once = formatCurrency(testCase)
+        const twice = formatCurrency(once)
+        expect(twice).toBe(once)
+      })
+    })
   })
 })

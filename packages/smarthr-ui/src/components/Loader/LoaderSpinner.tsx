@@ -1,10 +1,11 @@
 'use client'
 
-import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import type { FC, ReactNode } from 'react'
 
 type Props = {
   /** ローダーの大きさ */
@@ -116,10 +117,9 @@ const classNameGenerator = tv({
   },
 })
 
-export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' }) => {
-  const { localize } = useIntl()
-
-  const classNames = useMemo(() => {
+export const LoaderSpinner: FC<Props> = ({ size = 'M', alt, type = 'primary' }) => {
+  // HINT: LoaderSpinnerは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
+  const classNames = (() => {
     const { spinner, line, cog, cogInner } = classNameGenerator({
       type,
       size,
@@ -135,12 +135,7 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
       line3: line({ lineNum: 3 }),
       line4: line({ lineNum: 4 }),
     }
-  }, [type, size])
-
-  const actualAlt = useMemo(
-    () => alt ?? localize({ id: 'smarthr-ui/Loader/alt', defaultText: '処理中' }),
-    [alt, localize],
-  )
+  })()
 
   const lineBody = (
     <>
@@ -159,7 +154,9 @@ export const LoaderSpinner = memo<Props>(({ size = 'M', alt, type = 'primary' })
       <span className={classNames.line2}>{lineBody}</span>
       <span className={classNames.line3}>{lineBody}</span>
       <span className={classNames.line4}>{lineBody}</span>
-      <VisuallyHiddenText>{actualAlt}</VisuallyHiddenText>
+      <VisuallyHiddenText>
+        {alt ?? <Localizer id="smarthr-ui/Loader/alt" defaultText="処理中" />}
+      </VisuallyHiddenText>
     </span>
   )
-})
+}

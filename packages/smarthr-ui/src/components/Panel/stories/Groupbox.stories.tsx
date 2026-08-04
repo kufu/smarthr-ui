@@ -1,21 +1,21 @@
 import { backgroundColor } from '../../../tailwind'
 import { defaultBackgroundColor as backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
-import { baseClassNameGenerator } from '../Base'
-import { BaseColumn } from '../BaseColumn'
+import { Groupbox } from '../Groupbox'
+import { panelClassNameGenerator } from '../Panel'
 
 import type { Gap } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
-const basePadding = Object.keys(baseClassNameGenerator.variants.paddingBlock)
+const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
   .sort() as Gap[]
 
 export default {
-  title: 'Components/Base/BaseColumn',
-  component: BaseColumn,
-  render: (args) => <BaseColumn {...args} />,
+  title: 'Components/Panel/Groupbox',
+  component: Groupbox,
+  render: (args) => <Groupbox {...args} />,
   argTypes: {
     padding: {
       options: basePadding,
@@ -32,69 +32,69 @@ export default {
     },
     chromatic: { disableSnapshot: true },
   },
-} as Meta<typeof BaseColumn>
+} as Meta<typeof Groupbox>
 
-export const Playground: StoryObj<typeof BaseColumn> = {
+export const Playground: StoryObj<typeof Groupbox> = {
   args: {},
 }
 
-export const Padding: StoryObj<typeof BaseColumn> = {
+export const Padding: StoryObj<typeof Groupbox> = {
   name: 'padding',
   render: (args) => (
     <Stack>
       {[undefined, ...basePadding].map((padding) => (
-        <BaseColumn {...args} padding={padding} key={padding}>
+        <Groupbox {...args} padding={padding} key={padding}>
           padding: {padding}
-        </BaseColumn>
+        </Groupbox>
       ))}
-      <BaseColumn padding={{ block: 1, inline: 1.5 }}>
+      <Groupbox padding={{ block: 1, inline: 1.5 }}>
         padding: {'{{ block: 1, inline: 1.5 }}'}
-      </BaseColumn>
-      <BaseColumn padding={{ block: 1 }}>padding: {'{{ block: 1 }}'}</BaseColumn>
+      </Groupbox>
+      <Groupbox padding={{ block: 1 }}>padding: {'{{ block: 1 }}'}</Groupbox>
     </Stack>
   ),
 }
 
-export const BgColor: StoryObj<typeof BaseColumn> = {
+export const BgColor: StoryObj<typeof Groupbox> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
       {Object.keys(backgroundColor).map((bgColor) => (
-        <BaseColumn {...args} bgColor={bgColor as any} key={bgColor}>
+        <Groupbox {...args} bgColor={bgColor as any} key={bgColor}>
           {bgColor}
-        </BaseColumn>
+        </Groupbox>
       ))}
     </Stack>
   ),
 }
-export const Rounded: StoryObj<typeof BaseColumn> = {
+export const Rounded: StoryObj<typeof Groupbox> = {
   name: 'rounded',
   render: (args) => (
     <Stack>
-      <BaseColumn {...args}>rounded未指定</BaseColumn>
-      <BaseColumn {...args} rounded={true}>
+      <Groupbox {...args}>rounded未指定</Groupbox>
+      <Groupbox {...args} rounded={true}>
         rounded: true
-      </BaseColumn>
-      <BaseColumn {...args} rounded="all">
+      </Groupbox>
+      <Groupbox {...args} rounded="all">
         rounded: all
-      </BaseColumn>
-      <BaseColumn {...args} rounded="top">
+      </Groupbox>
+      <Groupbox {...args} rounded="top">
         rounded: top
-      </BaseColumn>
-      <BaseColumn {...args} rounded="right">
+      </Groupbox>
+      <Groupbox {...args} rounded="right">
         rounded: right
-      </BaseColumn>
-      <BaseColumn {...args} rounded="bottom">
+      </Groupbox>
+      <Groupbox {...args} rounded="bottom">
         rounded: bottom
-      </BaseColumn>
-      <BaseColumn {...args} rounded="left">
+      </Groupbox>
+      <Groupbox {...args} rounded="left">
         rounded: left
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   ),
 }
 
-export const As: StoryObj<typeof BaseColumn> = {
+export const As: StoryObj<typeof Groupbox> = {
   name: 'as',
   args: {
     as: 'section',

@@ -291,7 +291,7 @@ export const useListbox = <T,>({
 
 type ListBoxProps<T> = {
   activeOptionId: string | undefined
-  handleIntersect: (() => void) | null
+  handleIntersect: (() => void) | undefined
   partialOptions: Array<ComboboxOption<T>>
   optionsLength: number
   isExpanded: boolean

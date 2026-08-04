@@ -1,4 +1,6 @@
-import { type FC, memo, useCallback, useEffect, useRef, useState } from 'react'
+'use client'
+
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -11,29 +13,29 @@ export function usePartialRendering<T>({
   items: T[]
   minLength?: number
 }) {
-  const limiter = useCallback((length: number) => Math.max(length, minLength), [minLength])
+  const [currentItemLength, setCurrentItemLength] = useState(() =>
+    Math.max(OPTION_INCREMENT_AMOUNT, minLength),
+  )
+  // minLength も考慮した実際のアイテム数を算出
+  const partialItems = useMemo(() => items.slice(0, currentItemLength), [currentItemLength, items])
 
-  const [currentItemLength, setCurrentItemLength] = useState(limiter(OPTION_INCREMENT_AMOUNT))
-
-  const latest = useLatest({ limiter })
+  const latest = useLatest({ minLength })
 
   const handleIntersect = useCallback(() => {
-    setCurrentItemLength((current) => latest.limiter(current + OPTION_INCREMENT_AMOUNT))
+    setCurrentItemLength((current) => Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength))
   }, [latest])
 
   useEffect(() => {
-    setCurrentItemLength((current) => limiter(current))
-  }, [limiter])
+    setCurrentItemLength((current) => Math.max(current, minLength))
+  }, [minLength])
 
   return {
-    // minLength も考慮した実際のアイテム数を算出
-    // itemsはunstableなのでuseMemoは毎回再計算されるため、直接計算する
-    items: items.slice(0, currentItemLength),
-    handleIntersect: currentItemLength < items.length ? handleIntersect : null,
+    items: partialItems,
+    handleIntersect: currentItemLength < items.length ? handleIntersect : undefined,
   }
 }
 
-export const Intersection: FC<{ handleIntersect: () => void }> = memo(({ handleIntersect }) => {
+export const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

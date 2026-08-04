@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
 import { usePortal } from '../../../../hooks/usePortal'
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
 import { Translate } from '../common/Translate'
@@ -60,42 +60,36 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 
   const className = useMemo(() => classNameGenerator(), [])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      open: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/openMenu',
-        defaultText: 'メニューを開く',
-      }),
-      launcherListText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
-      management: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/managementMenu',
-        defaultText: '管理メニュー',
-      }),
-      releaseNote: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotes',
-        defaultText: 'リリースノート',
-      }),
-    }),
-    [localize],
-  )
-
   return (
     <>
-      <OpenButton onClick={open} alt={translated.open} />
+      <OpenButton
+        onClick={open}
+        alt={
+          <Localizer id="smarthr-ui/AppHeader/MobileHeader/openMenu" defaultText="メニューを開く" />
+        }
+      />
       {createPortal(
         <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
-          <FeatureButton className={className}>{translated.launcherListText}</FeatureButton>
+          <FeatureButton className={className}>
+            <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
+          </FeatureButton>
           <NavigationAccordion appName={appName} menuClose={close} className={className} />
           {additionalContent && (
-            <AdditionalContent title={translated.management} className={className}>
+            <AdditionalContent
+              title={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/managementMenu"
+                  defaultText="管理メニュー"
+                />
+              }
+              className={className}
+            >
               {additionalContent}
             </AdditionalContent>
           )}
-          <ReleaseNoteButton className={className}>{translated.releaseNote}</ReleaseNoteButton>
+          <ReleaseNoteButton className={className}>
+            <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
+          </ReleaseNoteButton>
         </MenuDialog>,
       )}
     </>
@@ -149,7 +143,7 @@ const NavigationAccordion = memo<
 >(({ appName, menuClose, className }) => {
   const { navigations } = useContext(NavigationContext)
 
-  const children = <Navigation navigations={navigations} onClickNavigation={menuClose} />
+  const children = <Navigation navigations={navigations} handleClickNavigation={menuClose} />
 
   return navigations.length > 0 && appName ? (
     <ActualNavigationAccordion appName={appName} className={className}>
@@ -210,11 +204,11 @@ const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
 const ActualReleaseNoteButton = memo<
   PropsWithChildren<{ className: string; setIsReleaseNoteSelected: (selected: boolean) => void }>
 >(({ setIsReleaseNoteSelected, children, className }) => {
-  const onClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
+  const handleClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
 
   return (
     <div className={className}>
-      <MenuButton onClick={onClick}>{children}</MenuButton>
+      <MenuButton handleClick={handleClick}>{children}</MenuButton>
     </div>
   )
 })

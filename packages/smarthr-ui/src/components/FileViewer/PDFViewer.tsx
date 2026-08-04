@@ -14,11 +14,7 @@ import { Document, Page, pdfjs } from 'react-pdf'
 
 import { Scroller } from '../Scroller'
 
-import {
-  SELECTED_MATCH_CLASS,
-  buildCustomTextRenderer,
-  matchSelector,
-} from './buildCustomTextRenderer'
+import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
@@ -57,9 +53,6 @@ const options = {
   cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
-type CustomTextRenderer = NonNullable<ComponentProps<typeof Page>['customTextRenderer']>
-type TextContent = Parameters<NonNullable<ComponentProps<typeof Page>['onGetTextSuccess']>>[number]
-
 // pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer スコープで上書きし、検索ハイライト色を変更している。
 const HighlightOverrideStyle = () => (
   <style>{`
@@ -78,10 +71,19 @@ type Props = ViewerProps & {
 }
 
 export const PDFViewer: FC<Props> = memo(
-  ({ scale, rotation, file, width, onLoad, onPDFLoaded, onPassword, onLoadError, search }) => {
+  ({
+    scale,
+    rotation,
+    file,
+    width,
+    handleLoad,
+    handlePDFLoaded,
+    onPassword,
+    onLoadError,
+    search,
+  }) => {
     const matches = search?.matches
     const currentMatchIndex = search?.currentMatchIndex
-    const onPageTextLoaded = search?.registerPageText
     const [pdfNumPages, setPdfNumPages] = useState(1)
     const rootRef = useRef<HTMLDivElement>(null)
 
@@ -92,41 +94,20 @@ export const PDFViewer: FC<Props> = memo(
     }, [])
 
     const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!onLoad && !onPDFLoaded) {
+      if (!handleLoad && !handlePDFLoaded) {
         return undefined
       }
 
       return (page) => {
-        if (onPDFLoaded && rotation === undefined) {
-          onPDFLoaded(page.rotate)
+        if (handlePDFLoaded && rotation === undefined) {
+          handlePDFLoaded(page.rotate)
         }
         // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (onLoad && page.pageNumber === pdfNumPages) {
-          onLoad()
+        if (handleLoad && page.pageNumber === pdfNumPages) {
+          handleLoad()
         }
       }
-    }, [onLoad, onPDFLoaded, pdfNumPages, rotation])
-
-    const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
-      if (!matches || matches.length === 0) {
-        return undefined
-      }
-      return buildCustomTextRenderer(matches)
-    }, [matches])
-
-    const handleGetTextSuccess = useCallback(
-      (pageIndex: number) => (textContent: TextContent) => {
-        if (!onPageTextLoaded) return
-        const texts = textContent.items.reduce<string[]>((acc, item) => {
-          if ('str' in item) {
-            acc.push(item.str)
-          }
-          return acc
-        }, [])
-        onPageTextLoaded(pageIndex, texts)
-      },
-      [onPageTextLoaded],
-    )
+    }, [handleLoad, handlePDFLoaded, pdfNumPages, rotation])
 
     useEffect(() => {
       const root = rootRef.current
@@ -179,8 +160,8 @@ export const PDFViewer: FC<Props> = memo(
                 scale={scale}
                 className="shr-w-full"
                 onLoadSuccess={onPageLoad}
-                onGetTextSuccess={handleGetTextSuccess(i)}
-                customTextRenderer={customTextRenderer}
+                onGetTextSuccess={search?.generateHandlePDFPageGetTextSuccess(i)}
+                customTextRenderer={search?.customTextRenderer}
                 loading={null}
               />
             ))}

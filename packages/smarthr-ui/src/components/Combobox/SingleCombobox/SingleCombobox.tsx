@@ -22,7 +22,7 @@ import { tv } from 'tailwind-variants'
 import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
 import { useTheme } from '../../../hooks/useTheme'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
@@ -30,9 +30,9 @@ import { Input } from '../../Input'
 import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
+import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
-type AbstractProps<T> = ComboboxProps<T> & {
+type BaseProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -71,8 +71,7 @@ type AbstractProps<T> = ComboboxProps<T> & {
    */
   noResultText?: ReactNode
 }
-type Props<T> = AbstractProps<T> &
-  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
+type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
 
 const NOOP = () => undefined
 
@@ -124,7 +123,6 @@ type SuffixButtonsProps = {
   clearButtonRef: RefObject<HTMLButtonElement>
   onClickIcon: (e: MouseEvent) => void
   caretIconColor: string
-  destroyButtonIconAlt: string
   classNames: {
     clearButton: string
     clearButtonIcon: string
@@ -139,7 +137,6 @@ const SuffixButtons = memo<SuffixButtonsProps>(
     clearButtonRef,
     onClickIcon: onDelegateClickIcon,
     caretIconColor,
-    destroyButtonIconAlt,
     classNames,
   }) => (
     <>
@@ -150,7 +147,9 @@ const SuffixButtons = memo<SuffixButtonsProps>(
       >
         <FaCircleXmarkIcon
           color="TEXT_BLACK"
-          alt={destroyButtonIconAlt}
+          alt={
+            <Localizer id="smarthr-ui/SingleCombobox/destroyButtonIconAlt" defaultText="クリア" />
+          }
           className={classNames.clearButtonIcon}
         />
       </UnstyledButton>
@@ -201,7 +200,6 @@ const ActualSingleCombobox = <T,>(
   ref: Ref<HTMLInputElement>,
 ) => {
   const theme = useTheme()
-  const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -452,15 +450,6 @@ const ActualSingleCombobox = <T,>(
     }
   }, [hasSelectedItem, disabled, readOnly, className])
 
-  const destroyButtonIconAlt = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
-        defaultText: 'クリア',
-      }),
-    [localize],
-  )
-
   return (
     <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
@@ -496,7 +485,6 @@ const ActualSingleCombobox = <T,>(
             clearButtonRef={clearButtonRef}
             onClickIcon={onClickInput}
             caretIconColor={caretIconColor}
-            destroyButtonIconAlt={destroyButtonIconAlt}
             classNames={{
               clearButton: classNames.clearButton,
               clearButtonIcon: classNames.clearButtonIcon,

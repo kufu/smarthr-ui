@@ -2,7 +2,7 @@ import type { classNameGenerator } from './style'
 import type { ComponentPropsWithRef, ReactNode } from 'react'
 import type { VariantProps } from 'tailwind-variants'
 
-type AbstractProps = VariantProps<typeof classNameGenerator> & {
+type BaseProps = VariantProps<typeof classNameGenerator> & {
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
@@ -17,4 +17,4 @@ type AbstractProps = VariantProps<typeof classNameGenerator> & {
         appendable?: boolean
       }
 }
-export type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps>
+export type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>

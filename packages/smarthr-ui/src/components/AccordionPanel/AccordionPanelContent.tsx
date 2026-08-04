@@ -16,8 +16,8 @@ import { getIsInclude } from '../../libs/map'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-type AbstractProps = PropsWithChildren
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type BaseProps = PropsWithChildren
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [

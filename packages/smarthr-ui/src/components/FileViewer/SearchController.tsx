@@ -1,10 +1,10 @@
 'use client'
 
-import { type ChangeEvent, type FC, type KeyboardEvent, memo, useCallback, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/useEnvironment'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
 import { SearchInput } from '../Input'
@@ -35,88 +35,40 @@ const classNameGenerator = tv({
 export const SearchController: FC<Props> = memo(({ search }) => {
   const {
     query,
-    setQuery,
+    handleChangeQuery,
+    handleKeyDownQuery,
     matchCount,
     currentMatchIndex,
-    goNext: onClickNext,
-    goPrev: onClickPrev,
-    clear: onClickClear,
+    goNext,
+    goPrev,
   } = search
-  const { localize } = useIntl()
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
     const { wrapper, inputArea } = classNameGenerator({ mobile })
     return { wrapper: wrapper(), inputArea: inputArea() }
   }, [mobile])
-  const translated = useMemo(
-    () => ({
-      searchInputTooltipMessage: localize({
-        id: 'smarthr-ui/FileViewer/searchInputTooltipMessage',
-        defaultText: 'PDF内のテキストを検索',
-      }),
-      previousMatchAlt: localize({
-        id: 'smarthr-ui/FileViewer/previousMatchAlt',
-        defaultText: '前の検索結果へ',
-      }),
-      nextMatchAlt: localize({
-        id: 'smarthr-ui/FileViewer/nextMatchAlt',
-        defaultText: '次の検索結果へ',
-      }),
-    }),
-    [localize],
-  )
 
-  const hasMatches = matchCount > 0
-  const displayedCurrent = hasMatches ? currentMatchIndex + 1 : 0
-
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setQuery(e.target.value)
-    },
-    [setQuery],
-  )
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.nativeEvent.isComposing) {
-        return
-      }
-      switch (e.key) {
-        case 'Enter': {
-          e.preventDefault()
-          if (e.shiftKey) {
-            onClickPrev()
-          } else {
-            onClickNext()
-          }
-          break
-        }
-        case 'Escape': {
-          if (query !== '') {
-            e.preventDefault()
-            onClickClear()
-          }
-          break
-        }
-      }
-    },
-    [onClickNext, onClickPrev, onClickClear, query],
-  )
+  const noMatches = matchCount === 0
 
   return (
     <div className={classNames.wrapper}>
       <div className={classNames.inputArea}>
         <SearchInput
           name="file_viewer_search"
-          tooltipMessage={translated.searchInputTooltipMessage}
+          tooltipMessage={
+            <Localizer
+              id="smarthr-ui/FileViewer/searchInputTooltipMessage"
+              defaultText="PDF内のテキストを検索"
+            />
+          }
           value={query}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          onChange={handleChangeQuery}
+          onKeyDown={handleKeyDownQuery}
           width="100%"
           suffix={
             query !== '' ? (
               <Text size="S" aria-live="polite" className="shr-tabular-nums">
-                {`${displayedCurrent}/${matchCount}`}
+                {`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
               </Text>
             ) : undefined
           }
@@ -124,18 +76,24 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         />
       </div>
       <Button
-        onClick={onClickPrev}
-        disabled={!hasMatches}
+        onClick={goPrev}
+        disabled={noMatches}
         className="shr-rounded-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
-        <FaAngleUpIcon alt={translated.previousMatchAlt} />
+        <FaAngleUpIcon
+          alt={
+            <Localizer id="smarthr-ui/FileViewer/previousMatchAlt" defaultText="前の検索結果へ" />
+          }
+        />
       </Button>
       <Button
-        onClick={onClickNext}
-        disabled={!hasMatches}
+        onClick={goNext}
+        disabled={noMatches}
         className="shr-rounded-s-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
       >
-        <FaAngleDownIcon alt={translated.nextMatchAlt} />
+        <FaAngleDownIcon
+          alt={<Localizer id="smarthr-ui/FileViewer/nextMatchAlt" defaultText="次の検索結果へ" />}
+        />
       </Button>
     </div>
   )
