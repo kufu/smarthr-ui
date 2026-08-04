@@ -52,7 +52,7 @@ type Props = {
   itemHasChildren: boolean
   tabIndex: 0 | -1
   columnIndex: number
-  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
+  handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const KEYDOWN_REGEX = /^((Arrow(Right|Left|Up|Down))|Enter| )$/
@@ -69,7 +69,7 @@ export const BrowserItem: FC<Props> = ({
   itemHasChildren,
   tabIndex,
   columnIndex,
-  onChangeInput,
+  handleChangeInput,
 }) => {
   const inputId = useMemo(() => getElementIdFromNode(itemValue), [itemValue])
   const classNames = useMemo(() => {
@@ -90,7 +90,7 @@ export const BrowserItem: FC<Props> = ({
         value={itemValue}
         tabIndex={tabIndex}
         onKeyDown={HANDLE_KEYDOWN}
-        onChange={onChangeInput}
+        onChange={handleChangeInput}
         checked={selected}
       />
       <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />

@@ -6,7 +6,7 @@ import { Cluster, Sidebar, Stack } from '../Layout'
 import { Section } from '../SectioningContent'
 import { Text } from '../Text'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   datetime: Date | string
   /** 日付の代わりに表示するテキスト */
   dateLabel?: string
@@ -19,8 +19,8 @@ type AbstractProps = PropsWithChildren<{
   /** 現在のアイテムかどうか */
   current?: boolean
 }>
-type Props = AbstractProps &
-  Omit<ComponentProps<typeof Stack>, keyof AbstractProps | 'inline' | 'gap' | 'align' | 'as'>
+type Props = BaseProps &
+  Omit<ComponentProps<typeof Stack>, keyof BaseProps | 'inline' | 'gap' | 'align' | 'as'>
 
 const classNameGenerator = tv({
   slots: {

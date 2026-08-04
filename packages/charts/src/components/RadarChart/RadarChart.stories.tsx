@@ -1,4 +1,4 @@
-import { radarMultiSmall, radarSingleSmall } from '../__stories__/testData'
+import { multi20Datasets, radarMultiSmall, radarSingleSmall } from '../__stories__/testData'
 
 import { RadarChart } from './RadarChart'
 
@@ -50,6 +50,15 @@ export const Default: Story = {
 export const MultipleDatasets: Story = {
   args: {
     data: radarMultiSmall,
+  },
+}
+
+export const ManyDatasets: Story = {
+  args: {
+    data: {
+      labels: ['企画力', '実行力', '協調性', '分析力', 'コミュニケーション'],
+      datasets: multi20Datasets,
+    },
   },
 }
 

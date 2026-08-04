@@ -8,12 +8,12 @@ import { paddingBlock, paddingInline } from '../../../tailwind'
 
 import type { Gap } from '../../../types'
 
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   Omit<VariantProps<typeof classNameGenerator>, 'paddingBlock' | 'paddingInline'> & {
     padding?: Gap | SeparatePadding
   }
 >
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 type SeparatePadding = {
   block?: Gap
@@ -88,9 +88,16 @@ const classNameGenerator = tv({
   ],
 })
 
+const DEFAULT_PADDING = {
+  block: 2,
+  inline: 2,
+  narrowModeBlock: 1.5,
+  narrowModeInline: 1,
+} as const
+
 export const Container: FC<Props> = ({
   size = 'DEFAULT',
-  padding = { block: 2, inline: 2, narrowModeBlock: 1.5, narrowModeInline: 1 },
+  padding = DEFAULT_PADDING,
   className,
   ...rest
 }) => {

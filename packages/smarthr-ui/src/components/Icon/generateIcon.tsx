@@ -40,12 +40,12 @@ type IconProps = {
   size?: FontSizes
 }
 
-type AbstractProps = {
+type BaseProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
 }
-export type Props = AbstractProps &
-  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
+export type Props = BaseProps &
+  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof BaseProps>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
@@ -71,17 +71,18 @@ export const generateIcon = (SvgIcon: IconType) => {
       size,
       ...rest
     }) => {
-      const actualAriaHidden = useMemo(() => {
-        if (ariaHidden !== undefined) {
-          return ariaHidden
-        }
-
-        if (alt !== undefined || (ariaLabel === undefined && ariaLabelledby === undefined)) {
-          return true
-        }
-
-        return undefined
-      }, [ariaHidden, alt, ariaLabel, ariaLabelledby])
+      const actualAriaHidden =
+        ariaHidden !== undefined
+          ? ariaHidden
+          : alt !== undefined || (ariaLabel === undefined && ariaLabelledby === undefined)
+            ? true
+            : undefined
+      const replacedColor =
+        color && existsColor(color)
+          ? colorSet[color] in textColor
+            ? textColor[colorSet[color] as keyof typeof textColor]
+            : (defaultColorPalette[colorSet[color] as keyof typeof defaultColorPalette] as string)
+          : color
 
       const classNames = useMemo(() => {
         const { icon, wrapperWithAlt } = classNameGenerator()
@@ -91,20 +92,6 @@ export const generateIcon = (SvgIcon: IconType) => {
           wrapperWithAlt: wrapperWithAlt(),
         }
       }, [className])
-
-      const replacedColor = useMemo(() => {
-        if (color && existsColor(color)) {
-          const colorName = colorSet[color]
-
-          if (colorName in textColor) {
-            return textColor[colorName as keyof typeof textColor]
-          }
-
-          return defaultColorPalette[colorName as keyof typeof defaultColorPalette] as string
-        }
-
-        return color
-      }, [color])
 
       const iconSize = size ? fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (

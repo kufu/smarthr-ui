@@ -14,7 +14,7 @@ import { useIntl } from '../../intl'
 import { UnstyledButton } from '../Button'
 import { Scroller } from '../Scroller'
 
-type AbstractProps = {
+type BaseProps = {
   /** 選択された年 */
   selectedYear?: number
   /** 選択可能な開始年 */
@@ -22,13 +22,13 @@ type AbstractProps = {
   /** 選択可能な終了年 */
   toYear: number
   /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
+  handleSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
   /** 表示フラグ */
   isDisplayed: boolean
   /** HTMLのid属性 */
   id: string
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 type ActualProps = Omit<Props, 'isDisplayed'>
 
 const classNameGenerator = tv({
@@ -46,6 +46,17 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
+
+  return {
+    overlay: overlay(),
+    container: container(),
+    yearButton: yearButton(),
+    yearWrapper: yearWrapper(),
+  }
+})()
+
 export const YearPicker: FC<Props> = ({ isDisplayed, ...rest }) =>
   isDisplayed ? <ActualYearPicker {...rest} /> : null
 
@@ -53,20 +64,10 @@ const ActualYearPicker: FC<ActualProps> = ({
   selectedYear,
   fromYear,
   toYear,
-  onSelectYear,
+  handleSelectYear,
   id,
   ...rest
 }) => {
-  const classNames = useMemo(() => {
-    const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
-
-    return {
-      overlay: overlay(),
-      container: container(),
-      yearButton: yearButton(),
-      yearWrapper: yearWrapper(),
-    }
-  }, [])
   const focusingRef = useRef<HTMLButtonElement>(null)
 
   const thisYear = useMemo(() => new Date().getFullYear(), [])
@@ -91,8 +92,8 @@ const ActualYearPicker: FC<ActualProps> = ({
   }, [])
 
   return (
-    <div {...rest} id={id} className={classNames.overlay}>
-      <Scroller className={classNames.container}>
+    <div {...rest} id={id} className={CLASS_NAMES.overlay}>
+      <Scroller className={CLASS_NAMES.container}>
         {yearArray.map((year) => (
           <YearButton
             key={year}
@@ -100,9 +101,9 @@ const ActualYearPicker: FC<ActualProps> = ({
             thisYear={thisYear}
             selected={selectedYear === year}
             focusingRef={focusingRef}
-            className={classNames.yearButton}
-            childrenStyle={classNames.yearWrapper}
-            onClick={onSelectYear}
+            className={CLASS_NAMES.yearButton}
+            childrenStyle={CLASS_NAMES.yearWrapper}
+            handleClick={handleSelectYear}
           />
         ))}
       </Scroller>
@@ -117,8 +118,8 @@ const YearButton = memo<{
   focusingRef: RefObject<HTMLButtonElement>
   className: string
   childrenStyle: string
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ year, thisYear, selected, focusingRef, onClick, className, childrenStyle }) => {
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ year, thisYear, selected, focusingRef, handleClick, className, childrenStyle }) => {
   const { localize } = useIntl()
   const isThisYear = thisYear === year
 
@@ -127,7 +128,7 @@ const YearButton = memo<{
       ref={isThisYear ? focusingRef : null}
       value={year}
       aria-pressed={selected}
-      onClick={onClick}
+      onClick={handleClick}
       className={className}
       data-this-year={isThisYear}
       aria-label={

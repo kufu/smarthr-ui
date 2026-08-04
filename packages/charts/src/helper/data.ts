@@ -3,6 +3,7 @@ import { draw } from '@smarthr/patternomaly'
 import {
   BORDER_DASHES,
   CHART_COLORS,
+  PATTERN_SIZE,
   POINT_STYLES,
   SHAPE_TYPES,
   SMARTHR_DEFAULT_COLORS,
@@ -105,6 +106,7 @@ export const getRadarChartColors = (dataLength: number): RadarChartColorConfig[]
 // TODO: SINGLE_CHART_COLORS を使うオプションを追加する
 export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   dataLength: number,
+  disablePatterns = false,
 ): Array<
   Pick<ChartDataset<T>, 'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'>
 > => {
@@ -118,7 +120,10 @@ export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   for (let i = 0; i < dataLength; i++) {
     const color = getColor(i)
     colors.push({
-      backgroundColor: i > 0 ? draw(SHAPE_TYPES[i % SHAPE_TYPES.length], color) : color,
+      backgroundColor:
+        !disablePatterns && i > 0
+          ? draw(SHAPE_TYPES[i % SHAPE_TYPES.length], color, undefined, PATTERN_SIZE)
+          : color,
       borderColor: color,
       hoverBorderColor: SMARTHR_DEFAULT_COLORS.OUTLINE,
       hoverBorderWidth: 4,

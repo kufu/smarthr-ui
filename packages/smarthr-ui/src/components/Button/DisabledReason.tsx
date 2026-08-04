@@ -1,4 +1,4 @@
-import { type FC, type FunctionComponent, type JSX, type ReactNode, memo, useMemo } from 'react'
+import { type FC, type FunctionComponent, type JSX, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleInfoIcon } from '../Icon'
@@ -26,27 +26,25 @@ const classNameGenerator = tv({
   },
 })
 
-export const DisabledReason: FC<Props> = ({ button, disabledReason }) => {
-  const classNames = useMemo(() => {
-    const { wrapper, tooltip } = classNameGenerator()
+const CLASS_NAMES = (() => {
+  const { wrapper, tooltip } = classNameGenerator()
 
-    return {
-      wrapper: wrapper(),
-      tooltip: tooltip(),
-    }
-  }, [])
+  return {
+    wrapper: wrapper(),
+    tooltip: tooltip(),
+  }
+})()
 
-  return (
-    <div className={classNames.wrapper}>
-      {button}
-      <TooltipIcon
-        icon={disabledReason.icon}
-        message={disabledReason.message}
-        className={classNames.tooltip}
-      />
-    </div>
-  )
-}
+export const DisabledReason: FC<Props> = ({ button, disabledReason }) => (
+  <div className={CLASS_NAMES.wrapper}>
+    {button}
+    <TooltipIcon
+      icon={disabledReason.icon}
+      message={disabledReason.message}
+      className={CLASS_NAMES.tooltip}
+    />
+  </div>
+)
 
 const TooltipIcon = memo<{
   icon?: FunctionComponent

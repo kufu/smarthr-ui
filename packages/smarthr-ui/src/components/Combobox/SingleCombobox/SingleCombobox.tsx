@@ -20,8 +20,9 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../../hooks/useClick'
+import { useLatest } from '../../../hooks/useLatest'
 import { useTheme } from '../../../hooks/useTheme'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
@@ -29,9 +30,9 @@ import { Input } from '../../Input'
 import { useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
+import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
-type AbstractProps<T> = ComboboxProps<T> & {
+type BaseProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -70,8 +71,7 @@ type AbstractProps<T> = ComboboxProps<T> & {
    */
   noResultText?: ReactNode
 }
-type Props<T> = AbstractProps<T> &
-  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
+type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
 
 const NOOP = () => undefined
 
@@ -123,7 +123,6 @@ type SuffixButtonsProps = {
   clearButtonRef: RefObject<HTMLButtonElement>
   onClickIcon: (e: MouseEvent) => void
   caretIconColor: string
-  destroyButtonIconAlt: string
   classNames: {
     clearButton: string
     clearButtonIcon: string
@@ -138,7 +137,6 @@ const SuffixButtons = memo<SuffixButtonsProps>(
     clearButtonRef,
     onClickIcon: onDelegateClickIcon,
     caretIconColor,
-    destroyButtonIconAlt,
     classNames,
   }) => (
     <>
@@ -149,7 +147,9 @@ const SuffixButtons = memo<SuffixButtonsProps>(
       >
         <FaCircleXmarkIcon
           color="TEXT_BLACK"
-          alt={destroyButtonIconAlt}
+          alt={
+            <Localizer id="smarthr-ui/SingleCombobox/destroyButtonIconAlt" defaultText="クリア" />
+          }
           className={classNames.clearButtonIcon}
         />
       </UnstyledButton>
@@ -200,7 +200,6 @@ const ActualSingleCombobox = <T,>(
   ref: Ref<HTMLInputElement>,
 ) => {
   const theme = useTheme()
-  const { localize } = useIntl()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -210,7 +209,7 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const unstableRef = useRef({
+  const latest = useLatest({
     onChange,
     onChangeInput,
     onAdd,
@@ -228,24 +227,6 @@ const ActualSingleCombobox = <T,>(
     isComposing,
     isEditing,
   })
-  unstableRef.current = {
-    onChange,
-    onChangeInput,
-    onAdd,
-    onSelect,
-    onClear,
-    onClearClick,
-    onChangeSelected,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    defaultItem,
-    selectedItem,
-    isFocused,
-    isExpanded,
-    isComposing,
-    isEditing,
-  }
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
@@ -262,25 +243,28 @@ const ActualSingleCombobox = <T,>(
     dropdownHelpMessage,
     dropdownWidth,
     onAdd,
-    onSelect: useCallback((selected: ComboboxItem<T>) => {
-      unstableRef.current.onSelect?.(selected)
-      unstableRef.current.onChangeSelected?.(selected)
+    onSelect: useCallback(
+      (selected: ComboboxItem<T>) => {
+        latest.onSelect?.(selected)
+        latest.onChangeSelected?.(selected)
 
-      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        setIsExpanded(false)
-        // HINT:
-        // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-        // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
-        //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
-        //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
-        //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
-        unstableRef.current.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-      })
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          setIsExpanded(false)
+          // HINT:
+          // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+          // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
+          //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
+          //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
+          //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+        })
 
-      setIsEditing(false)
-    }, []),
+        setIsEditing(false)
+      },
+      [latest],
+    ),
     isExpanded,
     isLoading,
     triggerRef: outerRef,
@@ -288,58 +272,61 @@ const ActualSingleCombobox = <T,>(
   })
 
   const selectDefaultItem = useCallback(() => {
-    if (unstableRef.current.onSelect && unstableRef.current.defaultItem) {
-      unstableRef.current.onSelect(unstableRef.current.defaultItem)
+    if (latest.onSelect && latest.defaultItem) {
+      latest.onSelect(latest.defaultItem)
     }
-  }, [])
+  }, [latest])
 
   const focus = useCallback(() => {
-    unstableRef.current.onFocus?.()
+    latest.onFocus?.()
     inputRef.current?.focus()
     setIsFocused(true)
 
-    if (!unstableRef.current.isFocused) {
+    if (!latest.isFocused) {
       setIsExpanded(true)
     }
-  }, [])
+  }, [latest])
   const unfocus = useCallback(() => {
-    if (!unstableRef.current.isFocused) return
+    if (!latest.isFocused) return
 
-    unstableRef.current.onBlur?.()
+    latest.onBlur?.()
 
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (unstableRef.current.selectedItem) {
-      setInputValue(innerText(unstableRef.current.selectedItem.label))
+    if (latest.selectedItem) {
+      setInputValue(innerText(latest.selectedItem.label))
     } else {
       selectDefaultItem()
     }
-  }, [selectDefaultItem])
-  const onClickClear = useCallback((e: MouseEvent) => {
-    e.stopPropagation()
+  }, [selectDefaultItem, latest])
+  const onClickClear = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation()
 
-    let isExecutedPreventDefault = false
+      let isExecutedPreventDefault = false
 
-    unstableRef.current.onClearClick?.({
-      ...e,
-      preventDefault: () => {
-        e.preventDefault()
-        isExecutedPreventDefault = true
-      },
-    })
+      latest.onClearClick?.({
+        ...e,
+        preventDefault: () => {
+          e.preventDefault()
+          isExecutedPreventDefault = true
+        },
+      })
 
-    if (!isExecutedPreventDefault) {
-      unstableRef.current.onClear?.()
-      unstableRef.current.onChangeSelected?.(null)
+      if (!isExecutedPreventDefault) {
+        latest.onClear?.()
+        latest.onChangeSelected?.(null)
 
-      inputRef.current?.focus()
+        inputRef.current?.focus()
 
-      setIsFocused(true)
-      setIsExpanded(true)
-    }
-  }, [])
+        setIsFocused(true)
+        setIsExpanded(true)
+      }
+    },
+    [latest],
+  )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
       if (disabled || readOnly) {
@@ -350,37 +337,40 @@ const ActualSingleCombobox = <T,>(
 
       inputRef.current?.focus()
 
-      if (!unstableRef.current.isExpanded) {
+      if (!latest.isExpanded) {
         setIsExpanded(true)
       }
     },
-    [disabled, readOnly],
+    [disabled, readOnly, latest],
   )
-  const actualOnChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    unstableRef.current.onChange?.(e)
-    unstableRef.current.onChangeInput?.(e)
+  const actualOnChangeInput = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      latest.onChange?.(e)
+      latest.onChangeInput?.(e)
 
-    if (!unstableRef.current.isEditing) setIsEditing(true)
+      if (!latest.isEditing) setIsEditing(true)
 
-    const { value } = e.currentTarget
+      const { value } = e.currentTarget
 
-    setInputValue(value)
+      setInputValue(value)
 
-    if (value === '') {
-      unstableRef.current.onClear?.()
-      unstableRef.current.onChangeSelected?.(null)
-    }
-  }, [])
+      if (value === '') {
+        latest.onClear?.()
+        latest.onChangeSelected?.(null)
+      }
+    },
+    [latest],
+  )
   const onCompositionStart = useCallback(() => setIsComposing(true), [])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (unstableRef.current.isComposing) {
+      if (latest.isComposing) {
         return
       }
 
       if (ESCAPE_KEY_REGEX.test(e.key)) {
-        if (unstableRef.current.isExpanded) {
+        if (latest.isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
         }
@@ -393,23 +383,26 @@ const ActualSingleCombobox = <T,>(
 
         inputRef.current?.focus()
 
-        if (!unstableRef.current.isExpanded) {
+        if (!latest.isExpanded) {
           setIsExpanded(true)
         }
       }
       onKeyDownListBox(e)
     },
-    [unfocus, onKeyDownListBox],
+    [unfocus, onKeyDownListBox, latest],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
-  const handleKeyPress = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') e.preventDefault()
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') e.preventDefault()
 
-    unstableRef.current.onKeyPress?.(e)
-  }, [])
+      latest.onKeyPress?.(e)
+    },
+    [latest],
+  )
 
   const caretIconColor = isFocused
     ? theme.textColor.black
@@ -455,15 +448,6 @@ const ActualSingleCombobox = <T,>(
     }
   }, [hasSelectedItem, disabled, readOnly, className])
 
-  const destroyButtonIconAlt = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/SingleCombobox/destroyButtonIconAlt',
-        defaultText: 'クリア',
-      }),
-    [localize],
-  )
-
   return (
     <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
       <Input
@@ -499,7 +483,6 @@ const ActualSingleCombobox = <T,>(
             clearButtonRef={clearButtonRef}
             onClickIcon={onClickInput}
             caretIconColor={caretIconColor}
-            destroyButtonIconAlt={destroyButtonIconAlt}
             classNames={{
               clearButton: classNames.clearButton,
               clearButtonIcon: classNames.clearButtonIcon,

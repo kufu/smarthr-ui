@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.1.1...smarthr-ui-v99.0.0) (2026-07-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **intl:** useIntlから日付フォーマット機能をuseDateFormatに分離 ([#6484](https://github.com/kufu/smarthr-ui/issues/6484))
+
+### Bug Fixes
+
+* **Badge:** Badgeにforced-colors時のoutlineを追加 ([#6498](https://github.com/kufu/smarthr-ui/issues/6498)) ([8c25031](https://github.com/kufu/smarthr-ui/commit/8c250313c892557bb76d5c561e4bd6b1ab013201))
+* **FileViewer:** onLoadError の引数の型を修正 ([#6637](https://github.com/kufu/smarthr-ui/issues/6637)) ([3fbe3d8](https://github.com/kufu/smarthr-ui/commit/3fbe3d86130bf88dc7f0853ad0ab04622e4d0ccb))
+* **TdCheckbox/ThCheckbox:** rowSpanとcolSpanが有効にしてTd/Thコンポネントの機能パリティにしました ([#6630](https://github.com/kufu/smarthr-ui/issues/6630)) ([a0d9b93](https://github.com/kufu/smarthr-ui/commit/a0d9b93aadbfce1e97e2f448fc97b4bd92a26376))
+* **Tooltip:** ツールチップを閉じる際にrectをリセット ([#6565](https://github.com/kufu/smarthr-ui/issues/6565)) ([6be2087](https://github.com/kufu/smarthr-ui/commit/6be20879648f797a2f6eff06d33682d3b0d146ae))
+
+
+### Code Refactoring
+
+* **intl:** useIntlから日付フォーマット機能をuseDateFormatに分離 ([#6484](https://github.com/kufu/smarthr-ui/issues/6484)) ([077d4e7](https://github.com/kufu/smarthr-ui/commit/077d4e7c76a4e6805822526008d51b1c0dff5243))
+
+## [98.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.1.0...smarthr-ui-v98.1.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **AppHeader:** ヘルプリンクのrel属性をHelpLinkと統一 ([#6508](https://github.com/kufu/smarthr-ui/issues/6508)) ([a2aba4d](https://github.com/kufu/smarthr-ui/commit/a2aba4dee55311ca9f1868eb4a2586ff60ab6fa7))
+* **DatePicker:** Enterキー押下時のカレンダー開閉ロジックを修正 ([#6559](https://github.com/kufu/smarthr-ui/issues/6559)) ([fb322d6](https://github.com/kufu/smarthr-ui/commit/fb322d6a44424756544bc1d6e598c6b3f5909e59))
+
+## [98.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.0.0...smarthr-ui-v98.1.0) (2026-07-15)
+
+
+### Features
+
+* **FileViewer:** 表示 PDF 内のテキストを検索できる機能を追加 ([#6309](https://github.com/kufu/smarthr-ui/issues/6309)) ([61e03b7](https://github.com/kufu/smarthr-ui/commit/61e03b7e496f47c62e607e09dbc4928acf2e1bbf))
+* useLatestフックを追加してunstableRefパターンを改善 ([#6483](https://github.com/kufu/smarthr-ui/issues/6483)) ([a728adb](https://github.com/kufu/smarthr-ui/commit/a728adb695a7efd6a5bc440be3c402871cc0ce93))
+
+
+### Bug Fixes
+
+* disabled なトリガーで Dialog・Disclosure が発火しないようにする ([#6497](https://github.com/kufu/smarthr-ui/issues/6497)) ([a5bea7f](https://github.com/kufu/smarthr-ui/commit/a5bea7f76ee6f31696bbb9d116e363ef4fafb928))
+
 ## [98.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v97.0.0...smarthr-ui-v98.0.0) (2026-07-09)
 
 

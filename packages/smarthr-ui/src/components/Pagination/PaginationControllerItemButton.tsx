@@ -1,8 +1,8 @@
-import { type ComponentProps, type ElementType, type FC, useMemo } from 'react'
-
 import { Localizer } from '../../intl'
 import { AnchorButton, Button } from '../Button'
 import { FaAnglesLeftIcon, FaAnglesRightIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
+
+import type { ElementType, FC } from 'react'
 
 type Props = {
   targetPage: number
@@ -57,36 +57,22 @@ export const PaginationControllerItemButton: FC<Props> = ({
 }) => {
   const { Icon, alt } = ICON_MAPPER[direction][double ? 'double' : 'single']
 
-  const { Component, attrs } = useMemo(() => {
-    if (hrefTemplate) {
-      return {
-        Component: AnchorButton,
-        // HINT: elementAsにnext/linkを設定した場合、hrefがundefinedでは
-        // エラーになってしまうため、undefinedで指定されていない状態にする
-        attrs: (disabled
-          ? {
-              href: undefined,
-              elementAs: undefined,
-            }
-          : {
-              href: hrefTemplate(targetPage),
-              elementAs: linkAs,
-            }) as ComponentProps<typeof AnchorButton>,
-      }
-    }
+  const commonAttrs = {
+    variant: 'secondary',
+    size: 'S',
+    className: 'shr-rounded-s',
+    children: <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />,
+  } as const
 
-    return {
-      Component: Button,
-      attrs: {
-        disabled,
-        value: targetPage,
-      } as ComponentProps<typeof Button>,
-    }
-  }, [targetPage, disabled, hrefTemplate, linkAs])
+  if (hrefTemplate) {
+    return (
+      <AnchorButton
+        {...commonAttrs}
+        href={disabled ? undefined : hrefTemplate(targetPage)}
+        elementAs={disabled ? undefined : linkAs}
+      />
+    )
+  }
 
-  return (
-    <Component {...attrs} variant="secondary" size="S" className="shr-rounded-s">
-      <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />
-    </Component>
-  )
+  return <Button {...commonAttrs} disabled={disabled} value={targetPage} />
 }

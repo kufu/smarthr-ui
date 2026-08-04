@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
@@ -25,7 +25,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
 import { useActiveOption } from './useActiveOption'
-import { usePartialRendering } from './usePartialRendering'
+import { Intersection, usePartialRendering } from './usePartialRendering'
 
 import type { ComboboxItem, ComboboxOption } from './types'
 
@@ -69,6 +69,18 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    dropdownList: dropdownList(),
+    helpMessage: helpMessage(),
+    loaderWrapper: loaderWrapper(),
+    noItems: noItems(),
+  }
+})()
+
 export const useListbox = <T,>({
   options,
   dropdownHelpMessage,
@@ -83,7 +95,6 @@ export const useListbox = <T,>({
   const theme = useTheme()
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
-  const { localize } = useIntl()
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
@@ -211,7 +222,7 @@ export const useListbox = <T,>({
 
   const { createPortal } = usePortal()
   const listBoxId = useId()
-  const { items: partialOptions, renderIntersection } = usePartialRendering({
+  const { items: partialOptions, handleIntersect } = usePartialRendering({
     items: options,
     minLength: useMemo(
       () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
@@ -266,49 +277,26 @@ export const useListbox = <T,>({
     }
   }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-  const classNames = useMemo(() => {
-    const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      dropdownList: dropdownList(),
-      helpMessage: helpMessage(),
-      loaderWrapper: loaderWrapper(),
-      noItems: noItems(),
-    }
-  }, [])
-
-  const texts = useMemo(
-    () => ({
-      loadingText: localize({ id: 'smarthr-ui/Combobox/loadingText', defaultText: '処理中' }),
-      noResultText:
-        orgNoResultText ??
-        localize({
-          id: 'smarthr-ui/Combobox/noResultsText',
-          defaultText: '一致する選択肢がありません。',
-        }),
-    }),
-    [orgNoResultText, localize],
-  )
-
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <div className={classNames.wrapper} style={wrapperStyle}>
+        <div className={CLASS_NAMES.wrapper} style={wrapperStyle}>
           {isExpanded && isLoading && (
-            <VisuallyHiddenText role="status">{texts.loadingText}</VisuallyHiddenText>
+            <VisuallyHiddenText role="status">
+              <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
+            </VisuallyHiddenText>
           )}
           <Scroller
             id={listBoxId}
             ref={listBoxRef}
             role="listbox"
             aria-hidden={!isExpanded}
-            className={classNames.dropdownList}
+            className={CLASS_NAMES.dropdownList}
             style={dropdownListStyle}
           >
             {dropdownHelpMessage && (
               <Text
-                className={classNames.helpMessage}
+                className={CLASS_NAMES.helpMessage}
                 icon={<FaCircleInfoIcon color="TEXT_GREY" />}
                 as="p"
               >
@@ -317,12 +305,17 @@ export const useListbox = <T,>({
             )}
             {isExpanded ? (
               isLoading ? (
-                <div className={classNames.loaderWrapper}>
+                <div className={CLASS_NAMES.loaderWrapper}>
                   <Loader aria-hidden />
                 </div>
               ) : options.length === 0 ? (
-                <p role="alert" aria-live="polite" className={classNames.noItems}>
-                  {texts.noResultText}
+                <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
+                  {orgNoResultText ?? (
+                    <Localizer
+                      id="smarthr-ui/Combobox/noResultsText"
+                      defaultText="一致する選択肢がありません。"
+                    />
+                  )}
                 </p>
               ) : (
                 partialOptions.map((option) => (
@@ -337,24 +330,23 @@ export const useListbox = <T,>({
                 ))
               )
             ) : null}
-            {renderIntersection()}
+            {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
           </Scroller>
         </div>,
       ),
     [
       activeOption?.id,
-      renderIntersection,
+      handleIntersect,
       partialOptions,
       options.length,
       isExpanded,
       isLoading,
       dropdownHelpMessage,
       listBoxId,
-      texts,
+      orgNoResultText,
       handleAdd,
       handleHoverOption,
       handleSelect,
-      classNames,
       dropdownListStyle,
       wrapperStyle,
       createPortal,

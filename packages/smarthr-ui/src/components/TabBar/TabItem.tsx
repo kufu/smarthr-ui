@@ -5,12 +5,11 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { UnstyledButton } from '../Button'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
@@ -42,7 +41,7 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
@@ -61,8 +60,8 @@ type AbstractProps = PropsWithChildren<{
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>
-type Props = AbstractProps &
-  Omit<ComponentProps<typeof UnstyledButton>, keyof AbstractProps | 'aria-selected' | 'type'>
+type Props = BaseProps &
+  Omit<ComponentProps<typeof UnstyledButton>, keyof BaseProps | 'aria-selected' | 'type'>
 
 export const TabItem: FC<Props> = ({
   selected = false,
@@ -71,20 +70,27 @@ export const TabItem: FC<Props> = ({
   onClick,
   ...rest
 }) => {
+  const latest = useLatest({ onClick })
+
+  const functions = useMemo(
+    () => ({
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onClick(e)
+      },
+    }),
+    [latest],
+  )
+
   const tabAttrs = {
     role: 'tab',
     'aria-selected': selected,
   }
-  const onClickRef = useRef(onClick)
-  onClickRef.current = onClick
-
-  const actualOnClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-    onClickRef.current(e)
-  }, [])
+  const buttonAttrs = {
+    handleClick: functions.handleClick,
+    disabled,
+  }
 
   if (disabled && disabledReason) {
-    const Icon = disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />
-
     return (
       <Tooltip
         {...tabAttrs}
@@ -92,15 +98,25 @@ export const TabItem: FC<Props> = ({
         aria-disabled={disabled}
         className="focus-visible:shr-focus-indicator"
       >
-        <TabButton {...rest} onClick={actualOnClick} disabled={disabled} suffix={Icon} />
+        <TabButton
+          {...rest}
+          {...buttonAttrs}
+          suffix={disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />}
+        />
       </Tooltip>
     )
   }
 
-  return <TabButton {...rest} {...tabAttrs} onClick={actualOnClick} disabled={disabled} />
+  return <TabButton {...rest} {...tabAttrs} {...buttonAttrs} />
 }
 
-const TabButton = memo<PropsWithChildren<Props>>(({ id, children, suffix, className, ...rest }) => {
+const TabButton = memo<
+  PropsWithChildren<
+    Omit<Props, 'onClick'> & {
+      handleClick?: NonNullable<Props['onClick']>
+    }
+  >
+>(({ id, children, suffix, handleClick, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = classNameGenerator()
 
@@ -112,7 +128,14 @@ const TabButton = memo<PropsWithChildren<Props>>(({ id, children, suffix, classN
   }, [className])
 
   return (
-    <UnstyledButton {...rest} type="button" value={id} id={id} className={classNames.wrapper}>
+    <UnstyledButton
+      {...rest}
+      type="button"
+      value={id}
+      id={id}
+      onClick={handleClick}
+      className={classNames.wrapper}
+    >
       <span className={classNames.label}>{children}</span>
       {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}
     </UnstyledButton>
