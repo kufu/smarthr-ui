@@ -10,9 +10,9 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
 
-import type { AbstractProps } from './types'
+import type { BaseProps } from './types'
 
-type Props = AbstractProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof AbstractProps>
+type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

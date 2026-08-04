@@ -2,11 +2,11 @@ import { type ComponentProps, type FC, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../../tailwind'
-import { Base } from '../Base'
+import { Panel } from '../Panel'
 
-type AbstractProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'> &
+type BaseProps = Omit<ComponentProps<typeof Panel>, 'radius' | 'layer'> &
   VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
@@ -27,11 +27,11 @@ const classNameGenerator = tv({
   },
 })
 
-export const BaseColumn: FC<Props> = ({ bgColor, rounded, padding = 1, className, ...rest }) => {
+export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ bgColor, rounded, className }),
     [bgColor, rounded, className],
   )
 
-  return <Base {...rest} padding={padding} layer={0} className={actualClassName} />
+  return <Panel {...rest} padding={padding} layer={0} className={actualClassName} />
 }

@@ -5,59 +5,24 @@ packages:
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
-  # Security update: esbuild@0.28.1
-  - esbuild@0.28.1
-  - '@esbuild/aix-ppc64@0.28.1'
-  - '@esbuild/android-arm@0.28.1'
-  - '@esbuild/android-arm64@0.28.1'
-  - '@esbuild/android-x64@0.28.1'
-  - '@esbuild/darwin-arm64@0.28.1'
-  - '@esbuild/darwin-x64@0.28.1'
-  - '@esbuild/freebsd-arm64@0.28.1'
-  - '@esbuild/freebsd-x64@0.28.1'
-  - '@esbuild/linux-arm@0.28.1'
-  - '@esbuild/linux-arm64@0.28.1'
-  - '@esbuild/linux-ia32@0.28.1'
-  - '@esbuild/linux-loong64@0.28.1'
-  - '@esbuild/linux-mips64el@0.28.1'
-  - '@esbuild/linux-ppc64@0.28.1'
-  - '@esbuild/linux-riscv64@0.28.1'
-  - '@esbuild/linux-s390x@0.28.1'
-  - '@esbuild/linux-x64@0.28.1'
-  - '@esbuild/netbsd-arm64@0.28.1'
-  - '@esbuild/netbsd-x64@0.28.1'
-  - '@esbuild/openbsd-arm64@0.28.1'
-  - '@esbuild/openbsd-x64@0.28.1'
-  - '@esbuild/openharmony-arm64@0.28.1'
-  - '@esbuild/sunos-x64@0.28.1'
-  - '@esbuild/win32-arm64@0.28.1'
-  - '@esbuild/win32-ia32@0.28.1'
-  - '@esbuild/win32-x64@0.28.1'
-  # Renovate security update: tar@7.5.21
-  - tar@7.5.21
-  # Security update: next@16.2.11
-  - next@16.2.11
-  - '@next/env@16.2.11'
-  - '@next/swc-darwin-arm64@16.2.11'
-  - '@next/swc-darwin-x64@16.2.11'
-  - '@next/swc-linux-arm64-gnu@16.2.11'
-  - '@next/swc-linux-arm64-musl@16.2.11'
-  - '@next/swc-linux-x64-gnu@16.2.11'
-  - '@next/swc-linux-x64-musl@16.2.11'
-  - '@next/swc-win32-arm64-msvc@16.2.11'
-  - '@next/swc-win32-x64-msvc@16.2.11'
+  # Security update: brace-expansion@2.1.4 (2026-07-30 公開。minimumReleaseAge 経過後に削除可)
+  - brace-expansion@2.1.4
+  # Security update: brace-expansion@5.0.9 (2026-07-30 公開。minimumReleaseAge 経過後に削除可)
+  - brace-expansion@5.0.9
 allowBuilds:
   '@swc/core': true
   canvas: true
   esbuild: true
   sharp: true
 overrides:
-  postcss@<8.5.10: ^8.5.19
+  postcss@<8.5.10: ^8.5.23
+  # esbuild@0.28.1 より新しいバージョンが minimumReleaseAge を超過したタイミングで削除可
   esbuild@<=0.24.2: '>=0.28.1'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
-  tar@<=7.5.15: '>=7.5.21'
-  vite@>=7.0.0 <=7.3.4: '>=7.3.6'
-  react-draggable: 4.5.0
-  js-yaml@>=4.0.0 <=4.1.1: '>=4.3.0'
-  '@babel/core@<=7.29.0': '>=7.29.7'
+  tar@<=7.5.15: '>=7.5.22'
+  react-draggable: 4.7.0
+  js-yaml@>=4.0.0 <=5.2.1: '>=5.2.2'
+  '@babel/core@<=7.29.0': '>=8.0.1'
   sharp@<0.35.0: '>=0.35.3'
+  brace-expansion@>=2.0.0 <2.1.4: '>=2.1.4 <3'
+  brace-expansion@>=4.0.0 <5.0.9: '>=5.0.9'

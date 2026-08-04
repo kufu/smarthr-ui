@@ -15,7 +15,7 @@ import { UnstyledButton } from '../Button'
 
 import { isBetween } from './calendarHelper'
 
-type AbstractProps = {
+type BaseProps = {
   /** 現在の日付 */
   current: {
     day: DayJsType
@@ -30,7 +30,7 @@ type AbstractProps = {
   /** 選択された日付 */
   selectedDayText: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'table'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'table'>, keyof BaseProps>
 
 type DayJsType = ReturnType<typeof dayjs>
 

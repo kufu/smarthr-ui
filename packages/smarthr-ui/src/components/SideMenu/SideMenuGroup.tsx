@@ -10,10 +10,10 @@ import { tv } from 'tailwind-variants'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   heading: ReactNode
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractProps>
+type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -28,7 +28,7 @@ export const SideMenuGroup = ({
   children,
   className,
   ...rest
-}: AbstractProps & ElementProps) => {
+}: BaseProps & ElementProps) => {
   const classNames = useMemo(() => {
     const { wrapper, list, groupHeading } = classNameGenerator()
 

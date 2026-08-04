@@ -28,13 +28,13 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   triggerRect: Rect
   controllable: boolean
 }>
 
-export type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+export type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & ElementProps
 
 type DropdownContentInnerContextType = {
   maxHeight: string
@@ -65,7 +65,7 @@ export const DropdownContentInner: FC<Props> = ({
     [isActive, className],
   )
 
-  const style = useMemo(() => {
+  const style = (() => {
     const defaultMargin = theme.spacingByChar(0.5)
     const leftMargin =
       contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
@@ -79,13 +79,7 @@ export const DropdownContentInner: FC<Props> = ({
       insetInlineEnd: contentBox.right || undefined,
       maxWidth: maxWidthStyle,
     }
-  }, [contentBox.left, contentBox.right, contentBox.top, theme])
-  const controllableWrapperStyleProps = useMemo(
-    () => ({
-      maxHeight: contentBox.maxHeight || undefined,
-    }),
-    [contentBox.maxHeight],
-  )
+  })()
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -110,6 +104,16 @@ export const DropdownContentInner: FC<Props> = ({
     }
   }, [triggerRect])
 
+  // setIsActive(true) と同じ useEffect 内で直接 focus() を呼ぶことはできない。
+  // このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
+  // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
+  // shr-invisible (visibility: hidden) でレンダリングされる。
+  // ちらつき防止には実寸法を保持したまま視覚的に隠せる visibility: hidden が唯一の手段となる。
+  // visibility: hidden の要素はフォーカスを受け付けないため、setIsActive(true) の直後に
+  // focus() を呼んでも DOM がまだ更新されておらず無効になる。
+  //
+  // useEffect([isActive]) であれば、isActive=true になった後の render commit 後に
+  // 必ず実行されることが保証されるため、この実装が最も信頼性が高い。
   useEffect(() => {
     if (isActive) {
       focusTargetRef.current?.focus()
@@ -123,7 +127,13 @@ export const DropdownContentInner: FC<Props> = ({
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
-        <div style={controllableWrapperStyleProps}>{children}</div>
+        <div
+          style={{
+            maxHeight: contentBox.maxHeight || undefined,
+          }}
+        >
+          {children}
+        </div>
       ) : (
         <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
           <DropdownCloser>{children}</DropdownCloser>

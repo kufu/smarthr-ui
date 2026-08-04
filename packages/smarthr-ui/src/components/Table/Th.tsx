@@ -14,7 +14,7 @@ import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-export type AbstractProps = PropsWithChildren<
+export type BaseProps = PropsWithChildren<
   {
     /** 並び替え状態 */
     sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
@@ -25,7 +25,7 @@ export type AbstractProps = PropsWithChildren<
     contentWidth?: CellContentWidth
   } & VariantProps<typeof classNameGenerator>
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'th'>, keyof AbstractProps | 'onClick'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'th'>, keyof BaseProps | 'onClick'>
 
 const classNameGenerator = tv({
   base: [
@@ -54,15 +54,6 @@ const classNameGenerator = tv({
     vAlign: 'middle',
   },
 })
-
-const convertContentWidth = (contentWidth?: CellContentWidth) => {
-  if (typeof contentWidth === 'number') {
-    // Th は fontSize.S のため、rem で指定する
-    return `${contentWidth}rem`
-  }
-
-  return contentWidth
-}
 
 export const Th: FC<Props> = ({ sort, onSort, ...rest }) =>
   sort ? <SortableTh {...rest} sort={sort} onSort={onSort} /> : <ActualTh {...rest} />
@@ -105,17 +96,18 @@ const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
       }
 
       return `${base} ${reelShadowClassNameGenerator({ showShadow: false, direction: fixed })}`
-    }, [align, className, fixed, vAlign])
-    const actualStyle = useMemo(
-      () => ({
-        ...style,
-        width: convertContentWidth(contentWidth),
-      }),
-      [style, contentWidth],
-    )
+    }, [align, fixed, vAlign, className])
 
     return (
-      <th {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle}>
+      <th
+        {...rest}
+        data-fixed={fixed}
+        className={actualClassName}
+        style={{
+          ...style,
+          width: typeof contentWidth === 'number' ? `${contentWidth}rem` : contentWidth,
+        }}
+      >
         {children}
       </th>
     )
